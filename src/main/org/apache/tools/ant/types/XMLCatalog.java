@@ -74,16 +74,16 @@ import org.apache.tools.ant.util.FileUtils;
  * This data type provides a catalog of DTD locations.
  * <p>
  * <code>
- * &lt;catalog&gt;<br>
+ * &lt;xmlcatalog&gt;<br>
  * &nbsp;&nbsp;&lt;dtd publicId="" location="/path/to/file.jar" /&gt;<br>
- * &nbsp;&nbsp;&lt;dtd publicId location="/path/to/file2.jar" /gt;<br>
+ * &nbsp;&nbsp;&lt;dtd publicId="" location="/path/to/file2.jar" /&gt;<br>
  * &nbsp;&nbsp;&lt;entity publicId="" location="/path/to/file3.jar" /&gt;<br>
  * &nbsp;&nbsp;&lt;entity publicId="" location="/path/to/file4.jar" /&gt;<br>
- * &lt;/catalog&gt;<br>
+ * &lt;/xmlcatalog&gt;<br>
  * </code>
  * <p>
  * The object implemention <code>sometask</code> must provide a method called
- * <code>createCatalog</code> which returns an instance of 
+ * <code>createXMLCatalog</code> which returns an instance of 
  * <code>XMLCatalog</code>. Nested DTD and entity definitions are handled by
  * the XMLCatalog object and must be labeled <code>dtd</code> and
  * <code>entity</code> respectively.</p>
