@@ -509,6 +509,10 @@ Other changes:
   information to applications that read the archives using
   java.util.ZipInputStream.  Bugzilla Report 19195.
 
+* <copy> and <move> can now handle mappers that return multiple
+  mappings per source path. This behaviour is enabled by using
+  an enablemultiplemapping attribute. Bugzilla Report 21320.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
