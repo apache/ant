@@ -229,9 +229,7 @@ public class DirectoryScannerTest extends BuildFileTest {
     public void testSetFollowLinks() throws IOException {
         if (supportsSymlinks) {
             File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
-            if (JavaEnvUtils.isKaffe()) {
-                System.err.println("link exists pre-test? " + linkFile.exists());
-            }
+            System.err.println("link exists pre-test? " + linkFile.exists());
             
             try {
                 // add conditions and more commands as soon as the need arises
@@ -250,10 +248,8 @@ public class DirectoryScannerTest extends BuildFileTest {
                 }
 
                 File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
-            if (JavaEnvUtils.isKaffe()) {
                 System.err.println("link exists after exec? " + linkFile.exists());
                 System.err.println("Ant knows it is a link? " + FileUtils.getFileUtils().isSymbolicLink(dir, "ThisIsALink"));
-            }
 
                 DirectoryScanner ds = new DirectoryScanner();
 
@@ -311,15 +307,11 @@ public class DirectoryScannerTest extends BuildFileTest {
                            !haveTaskdefsPackage);
 
             } finally {
-            if (JavaEnvUtils.isKaffe()) {
                 System.err.println("link exists pre-delete? " + linkFile.exists());
-            }
                 if (!linkFile.delete()) {
                     throw new RuntimeException("Failed to delete " + linkFile);
                 }
-            if (JavaEnvUtils.isKaffe()) {
                 System.err.println("link exists post-delete? " + linkFile.exists());
-            }
             }
         }
     }
