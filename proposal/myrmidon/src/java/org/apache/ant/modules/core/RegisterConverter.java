@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.deployer.TskDeployer;
-import org.apache.myrmidon.components.type.DefaultComponentFactory;
+import org.apache.myrmidon.components.type.DefaultTypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
 
@@ -111,7 +111,7 @@ public class RegisterConverter
         {
             m_converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
 
-            final DefaultComponentFactory factory = new DefaultComponentFactory( new URL[] { url } );
+            final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
             factory.addNameClassMapping( m_classname, m_classname );
 
             try { m_typeManager.registerType( Converter.ROLE, m_classname, factory ); }

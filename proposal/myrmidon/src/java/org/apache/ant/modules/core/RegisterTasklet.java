@@ -11,7 +11,7 @@ import java.net.URL;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.deployer.DeploymentException;
-import org.apache.myrmidon.components.type.DefaultComponentFactory;
+import org.apache.myrmidon.components.type.DefaultTypeFactory;
 
 /**
  * Method to register a single tasklet.
@@ -36,8 +36,7 @@ public class RegisterTasklet
         }
         else
         {
-            final DefaultComponentFactory factory =
-                new DefaultComponentFactory( new URL[] { url } );
+            final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
             factory.addNameClassMapping( name, className );
             try { getTypeManager().registerType( Task.ROLE, name, factory ); }
             catch( final Exception e )

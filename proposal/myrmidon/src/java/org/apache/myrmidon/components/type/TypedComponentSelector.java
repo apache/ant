@@ -90,7 +90,7 @@ public class TypedComponentSelector
     /**
      * Populate the ComponentSelector.
      */
-    public void register( final String name, final ComponentFactory factory )
+    public void register( final String name, final TypeFactory factory )
     {
         m_factorys.put( name, factory );
     }
@@ -114,12 +114,16 @@ public class TypedComponentSelector
     private Component createComponent( final String name )
         throws ComponentException
     {
-        final ComponentFactory factory = (ComponentFactory)m_factorys.get( name );
+        final TypeFactory factory = (TypeFactory)m_factorys.get( name );
         
         if( null == factory ) return null;
         else
         {
-            return factory.create( name );
+            try { return (Component)factory.create( name ); }
+            catch( final TypeException te )
+            {
+                throw new ComponentException( "Failed to create type " + name, te );
+            }
         }
     }
 }

@@ -28,8 +28,7 @@ import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.type.ComponentFactory;
-import org.apache.myrmidon.components.type.DefaultComponentFactory;
+import org.apache.myrmidon.components.type.DefaultTypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
 import org.xml.sax.SAXException;
@@ -116,9 +115,7 @@ public class DefaultTskDeployer
         throws DeploymentException
     {
         final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
-
-        final DefaultComponentFactory factory =
-            new DefaultComponentFactory( new URL[] { url } );
+        final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
 
         try
         {
@@ -164,8 +161,7 @@ public class DefaultTskDeployer
             {
                 if( converters[ i ].getAttribute( "classname" ).equals( name ) )
                 {
-                    final DefaultComponentFactory factory =
-                        new DefaultComponentFactory( new URL[] { url } );
+                    final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
                     handleConverter( converters[ i ], url, factory );
                     break;
                 }
@@ -196,8 +192,7 @@ public class DefaultTskDeployer
             {
                 if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    final DefaultComponentFactory factory =
-                        new DefaultComponentFactory( new URL[] { url } );
+                    final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
                     handleDataType( datatypes[ i ], url, factory );
                     break;
                 }
@@ -227,8 +222,7 @@ public class DefaultTskDeployer
             {
                 if( tasks[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    final DefaultComponentFactory factory =
-                        new DefaultComponentFactory( new URL[] { url } );
+                    final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
                     handleTask( tasks[ i ], url, factory );
                     break;
                 }
@@ -336,7 +330,7 @@ public class DefaultTskDeployer
 
     private void handleConverter( final Configuration converter,
                                   final URL url,
-                                  final DefaultComponentFactory factory )
+                                  final DefaultTypeFactory factory )
         throws Exception
     {
         final String name = converter.getAttribute( "classname" );
@@ -354,7 +348,7 @@ public class DefaultTskDeployer
 
     private void handleTask( final Configuration task,
                              final URL url,
-                             final DefaultComponentFactory factory )
+                             final DefaultTypeFactory factory )
         throws Exception
     {
         final String name = task.getAttribute( "name" );
@@ -369,7 +363,7 @@ public class DefaultTskDeployer
 
     private void handleDataType( final Configuration datatype,
                                  final URL url,
-                                 final DefaultComponentFactory factory )
+                                 final DefaultTypeFactory factory )
         throws Exception
     {
         final String name = datatype.getAttribute( "name" );

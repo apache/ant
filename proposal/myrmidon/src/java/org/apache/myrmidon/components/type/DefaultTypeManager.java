@@ -56,7 +56,7 @@ public class DefaultTypeManager
 
     public void registerType( final String role, 
                               final String shorthandName, 
-                              final ComponentFactory factory ) 
+                              final TypeFactory factory ) 
         throws Exception
     {
         final TypedComponentSelector selector = createSelector( role + "Selector" );

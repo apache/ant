@@ -20,6 +20,6 @@ public interface TypeManager
 {
     String ROLE = "org.apache.myrmidon.components.type.TypeManager";
 
-    void registerType( String role, String shorthandName, ComponentFactory factory )
+    void registerType( String role, String shorthandName, TypeFactory factory )
         throws Exception;
 }

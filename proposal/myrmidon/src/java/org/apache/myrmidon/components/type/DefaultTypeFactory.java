@@ -10,17 +10,15 @@ package org.apache.myrmidon.components.type;
 import java.net.URL;
 import java.util.HashMap;
 import java.net.URLClassLoader;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 
 /**
- * Create a component based on name.
+ * Create a type instance based on name.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
  */
-public class DefaultComponentFactory
-    implements ComponentFactory
+public class DefaultTypeFactory
+    implements TypeFactory
 {
     ///A Map of shortnames to classnames
     private final HashMap        m_classNames = new HashMap();
@@ -34,18 +32,18 @@ public class DefaultComponentFactory
     ///The parent classLoader (if any)
     private ClassLoader          m_classLoader;
 
-    public DefaultComponentFactory( final URL[] urls )
+    public DefaultTypeFactory( final URL[] urls )
     {
         this( urls, Thread.currentThread().getContextClassLoader() );
     }
 
-    public DefaultComponentFactory( final URL[] urls, final ClassLoader parent )
+    public DefaultTypeFactory( final URL[] urls, final ClassLoader parent )
     {
         m_urls = urls;
         m_parent = parent;
     }
 
-    public DefaultComponentFactory( final ClassLoader classLoader )
+    public DefaultTypeFactory( final ClassLoader classLoader )
     {
         this( null, null );
         m_classLoader = classLoader;
@@ -57,36 +55,36 @@ public class DefaultComponentFactory
     }
 
     /**
-     * Create a Component with appropriate name.
+     * Create a type instance with appropriate name.
      *
      * @param name the name
-     * @return the created component
-     * @exception ComponentException if an error occurs
+     * @return the created instance
+     * @exception TypeException if an error occurs
      */
-    public Component create( final String name )
-        throws ComponentException
+    public Object create( final String name )
+        throws TypeException
     {
         final String className = getClassName( name );
 
         try
         {
-            return (Component)getClassLoader().loadClass( className ).newInstance();
+            return getClassLoader().loadClass( className ).newInstance();
         }
         catch( final Exception e )
         {
-            throw new ComponentException( "Unable to instantiate '" + name + "'", e );
+            throw new TypeException( "Unable to instantiate '" + name + "'", e );
         }
     }
 
     private String getClassName( final String name )
-        throws ComponentException
+        throws TypeException
     {
         final String className = (String)m_classNames.get( name );
 
         if( null == className )
         {
-            throw new ComponentException( "Malconfigured factory, no clasname for '" + 
-                                          name + "'" );
+            throw new TypeException( "Malconfigured factory, no clasname for '" + 
+                                     name + "'" );
         }
         
         return className;

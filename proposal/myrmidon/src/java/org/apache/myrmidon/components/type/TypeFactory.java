@@ -7,16 +7,13 @@
  */
 package org.apache.myrmidon.components.type;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-
 /**
  * Create a component based on role and hint.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
  */
-public interface ComponentFactory
+public interface TypeFactory
 {
     /**
      * Create a Component with appropriate name.
@@ -25,6 +22,6 @@ public interface ComponentFactory
      * @return the created component
      * @exception ComponentException if an error occurs
      */
-    Component create( String name )
-        throws ComponentException;
+    Object create( String name )
+        throws TypeException;
 }
