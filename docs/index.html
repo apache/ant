@@ -726,10 +726,10 @@ does not exist.</p>
 <hr>
 <h2><a name="cvs">Cvs</a></h2>
 <h3>Description</h3>
-<p>Checks out a package/module from a <a href="http://www.cyclic.com/">CVS</a>
-repository.</p>
+<p>Handles packages/modules retrieved from a 
+<a href="http://www.cyclic.com/">CVS</a> repository.</p>
 <p>When doing automated builds, the <a href="#get">get task</a> should be
-preferred, because of speed.</p>
+preferred over the <i>checkout</i> command, because of speed.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -738,9 +738,14 @@ preferred, because of speed.</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
+    <td valign="top">command</td>
+    <td valign="top">the CVS command to execute.</td>
+    <td align="center" valign="top">No, default &quot;checkout&quot;</td>
+  </tr>
+  <tr>
     <td valign="top">cvsRoot</td>
     <td valign="top">the CVSROOT variable.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">dest</td>
@@ -750,12 +755,22 @@ preferred, because of speed.</p>
   <tr>
     <td valign="top">package</td>
     <td valign="top">the package/module to check out.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">tag</td>
     <td valign="top">the tag of the package/module to check out.</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">quiet</td>
+    <td valign="top">supress informational messages.</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
+  </tr>
+  <tr>
+    <td valign="top">noexec</td>
+    <td valign="top">report only, don't change any files.</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -765,6 +780,9 @@ preferred, because of speed.</p>
   /&gt;</pre>
 <p>checks out the package/module &quot;jakarta-tools&quot; from the CVS
 repository pointed to by the cvsRoot attribute, and stores the files in &quot;${ws.dir}&quot;.</p>
+<pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot; /&gt;</pre>
+<p>updates the package/module that has previously been checked out into
+&quot;${ws.dir}&quot;.</p>
 <hr>
     <td valign="top">comma separated list of filenam<h2><a name="delete">Delete</a></h2>
 <h3>Description</h3>

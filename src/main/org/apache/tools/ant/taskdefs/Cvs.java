@@ -69,6 +69,9 @@ public class Cvs extends Exec {
     private String cvsRoot;
     private String pack;
     private String tag;
+    private String command = "checkout";
+    private boolean quiet = false;
+    private boolean noexec = false;
     
     public void execute() throws BuildException {
 
@@ -76,16 +79,32 @@ public class Cvs extends Exec {
 	// execution so that we don't rely on having native CVS stuff around (SM)
 	
 	StringBuffer sb=new StringBuffer();
-	sb.append(" cvs -d ").append( cvsRoot ).append(" checkout ");
+	sb.append(" cvs ");
+        if (cvsRoot != null) { 
+            sb.append("-d ").append(cvsRoot).append(" ");
+        }
+
+        sb.append(noexec ? "-n " : "")
+            .append(quiet  ? "-q " : "")
+            .append(command).append(" ");
+		
 	if (tag!=null)
             sb.append("-r ").append(tag).append(" ");
 
-	sb.append( pack );
+	if (pack != null) {
+            sb.append(pack);
+	}
 
         run(sb.toString());
     }
 
     public void setCvsRoot(String root) {
+        // Check if not real cvsroot => set it to null 
+        if (root != null) { 
+            if (root.trim().equals("")) 
+                root = null; 
+        } 
+
 	this.cvsRoot = root;
     }
 
@@ -107,6 +126,17 @@ public class Cvs extends Exec {
         this.tag = p; 
     } 
 
+    public void setCommand(String c) {
+	this.command = c;
+    }
+    
+    public void setQuiet(String q) {
+        quiet = Project.toBoolean(q);
+    }
+    
+    public void setNoexec(String ne) {
+        noexec = Project.toBoolean(ne);
+    }
 }
 
 
