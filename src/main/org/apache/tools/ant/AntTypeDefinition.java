@@ -73,21 +73,6 @@ public class AntTypeDefinition {
     private ClassLoader classLoader;
 
     /**
-     * Clone this definition and changed the cloned definitions' project.
-     * @return    the cloned definition
-     */
-    public AntTypeDefinition copy() {
-        AntTypeDefinition copy = new AntTypeDefinition();
-        copy.name = name;
-        copy.clazz = clazz;
-        copy.adapterClass = adapterClass;
-        copy.className = className;
-        copy.classLoader = classLoader;
-        copy.adaptToClass = adaptToClass;
-        return copy;
-    }
-
-    /**
      * set the definition's name
      * @param name the name of the definition
      */
