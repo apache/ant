@@ -18,11 +18,11 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.myrmidon.api.LogLevel;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
 import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
-import org.apache.myrmidon.api.LogLevel;
 
 /**
  * Default implementation of TaskContext.
@@ -38,7 +38,8 @@ public class DefaultTaskContext
 
     // Property name validator allows digits, but no internal whitespace.
     private static DefaultNameValidator m_propertyNameValidator = new DefaultNameValidator();
-    static {
+    static
+    {
         m_propertyNameValidator.setAllowInternalWhitespace( false );
     }
 
