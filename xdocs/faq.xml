@@ -612,9 +612,21 @@ shell-prompt> cat < foo
         this.</p>
 
         <p>You can disable this banner by invoking Ant with the
-        <code>-emacs</code> switch. Alternatively, you can add the
-        following snippet to your <code>.emacs</code> to make Emacs
-        understand Ant&apos;s output.</p>
+        <code>-emacs</code> switch.  To make Ant autodetect
+        Emacs&apos; compile mode, put this into your
+        <code>.antrc</code> (contributed by Ville Skytt&#228;).</p>
+
+        <source><![CDATA[
+# Detect (X)Emacs compile mode
+if [ "$EMACS" = "t" ] ; then 
+  ANT_ARGS="$ANT_ARGS -emacs" 
+  ANT_OPTS="$ANT_OPTS -Dbuild.compiler.emacs=true" 
+fi 
+]]></source>
+
+        <p>Alternatively, you can add the following snippet to your
+        <code>.emacs</code> to make Emacs understand Ant&apos;s
+        output.</p>
 
         <source><![CDATA[
 (require 'compile)

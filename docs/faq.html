@@ -1353,9 +1353,37 @@ shell-prompt&gt; cat &lt; foo
         regular expressions in your editor that would account for
         this.</p>
                                         <p>You can disable this banner by invoking Ant with the
-        <code>-emacs</code> switch. Alternatively, you can add the
-        following snippet to your <code>.emacs</code> to make Emacs
-        understand Ant's output.</p>
+        <code>-emacs</code> switch.  To make Ant autodetect
+        Emacs' compile mode, put this into your
+        <code>.antrc</code> (contributed by Ville Skyttä).</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+# Detect (X)Emacs compile mode
+if [ &quot;$EMACS&quot; = &quot;t&quot; ] ; then 
+  ANT_ARGS=&quot;$ANT_ARGS -emacs&quot; 
+  ANT_OPTS=&quot;$ANT_OPTS -Dbuild.compiler.emacs=true&quot; 
+fi 
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>Alternatively, you can add the following snippet to your
+        <code>.emacs</code> to make Emacs understand Ant's
+        output.</p>
                                           <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
       <tr>
