@@ -65,28 +65,20 @@ import java.awt.event.WindowEvent;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ExitCmd implements Command {
-    /** Name of the exit command. */
-    public static final String ACTION_NAME = "exit";
-
-    /** Window to send close event to. */
-    private Window _window = null;
-
+public class ExitCmd extends AbstractCommand {
 	/** 
 	 * Standard constructor. 
 	 * 
-	 * @param context Application context.
 	 */
-    public ExitCmd(AppContext context) {
-        _window = context.getParentFrame();
+    public ExitCmd() {
     }
 
 	/** 
 	 * Send a close event to the parent window. 
 	 * 
 	 */
-    public void execute() {
+    public void run() {
         // Manually send a window close event to the window.
-		WindowUtils.sendCloseEvent(_window);
+		WindowUtils.sendCloseEvent(getContext().getParentFrame());
     }
 }

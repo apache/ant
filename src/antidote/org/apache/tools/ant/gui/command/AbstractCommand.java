@@ -51,85 +51,49 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.event;
+package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.AppContext;
-import org.apache.tools.ant.gui.command.DisplayErrorCmd;
-import org.apache.tools.ant.gui.command.Command;
-import org.apache.tools.ant.gui.util.StackFrame;
 
 
 /**
- * Event fired whenever there is an error of any sort.
+ * Convenience base class for Command implementations.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ErrorEvent extends AntEvent {
-    /** Text description of error. */
-    private String _message = null;
-    /** Throwable associated with the error. */
-    private Throwable _ex = null;
+public abstract class AbstractCommand implements Command {
+	/** Application context. */
+	private AppContext _context = null;
 
 	/** 
-	 * Standard constructor.
+	 * Default ctor.
+	 * 
+	 */
+    protected AbstractCommand() {
+    }
+
+	/** 
+	 * Set the application context.
 	 * 
 	 * @param context Application context.
-	 * @param message Message about the error.
-	 * @param ex Throwable associated with the error.
 	 */
-    public ErrorEvent(AppContext context, String message, Throwable ex) {
-        super(context);
-        _message = message;
-        _ex = ex;
+    public void setContext(AppContext context) {
+        _context = context;
     }
 
 	/** 
-	 * Message centric constructor.
+	 * Get the application context that was provided to setContext();
 	 * 
-	 * @param context Application context.
-	 * @param message Message to display.
+	 * @return Application context.
 	 */
-    public ErrorEvent(AppContext context, String message) { 
-        this(context, message, null);
+    protected AppContext getContext() {
+        return _context;
     }
 
 	/** 
-	 * Throwable centric constructor.
+	 * Run the command. From interface Runnable.
 	 * 
-	 * @param context Application context.
-	 * @param ex Throwable behind the error.
 	 */
-    public ErrorEvent(AppContext context, Throwable ex) {
-        this(context, ex.getMessage(), ex);
-    }
-
-	/** 
-	 * Create the appropriate response command to this event.
-	 * 
-	 * @return Command representing an appropriate response to this event.
-	 */
-    public Command createDefaultCmd() {
-        Command retval = new DisplayErrorCmd(_message, _ex);
-        retval.setContext(getContext());
-        return retval;
-    }
-
-	/** 
-	 * Create human readable version of this.
-	 * 
-	 * @return String representation.a
-	 */
-    public String toString() {
-        StringBuffer buf = new StringBuffer("Error: ");
-
-        if(_message != null) {
-            buf.append(_message);
-            buf.append('\n');
-        }
-        if(_ex != null) {
-            buf.append(StackFrame.toString(_ex));
-        }
-        return buf.toString();
-    }
+    public abstract void run();
 
 }

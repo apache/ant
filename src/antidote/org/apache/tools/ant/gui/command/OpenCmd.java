@@ -67,23 +67,12 @@ import java.io.File;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class OpenCmd implements Command {
-    /** Name of the action the command maps to. */
-    public static final String ACTION_NAME = "open";
-
-    /** The application context */
-    private AppContext _context = null;
-    /** Filter for showing only XML files. */
-    private FileFilter _filter = null;
-
+public class OpenCmd extends AbstractCommand {
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context. 
 	 */
-    public OpenCmd(AppContext context) {
-        _context = context;
-        _filter = new XMLFileFilter(_context.getResources());
+    public OpenCmd() {
     }
 
 	/** 
@@ -92,14 +81,16 @@ public class OpenCmd implements Command {
      * operation be completed.
 	 * 
 	 */
-    public void execute() {
+    public void run() {
+        FileFilter filter = new XMLFileFilter(getContext().getResources());
+
         JFileChooser chooser = new JFileChooser();
-        chooser.addChoosableFileFilter(_filter);
-        int val = chooser.showOpenDialog(_context.getParentFrame());
+        chooser.addChoosableFileFilter(filter);
+        int val = chooser.showOpenDialog(getContext().getParentFrame());
         if(val == JFileChooser.APPROVE_OPTION) {
             File selected = chooser.getSelectedFile();
-            _context.getEventBus().postEvent(
-                new OpenRequestEvent(_context, selected));
+            getContext().getEventBus().postEvent(
+                new OpenRequestEvent(getContext(), selected));
         }
     }
 }

@@ -1,4 +1,10 @@
 TODO List:
+    * Implement some for of refid hyperlinking functionality.
+
+    * Provide some sort of class path debugging support.
+
+    * Eat own dog food more.
+
     * Dispatch tree node change events when the properties editor changes a 
       node value. This will make sure that the node gets displayed correctly in
       the project navigator.

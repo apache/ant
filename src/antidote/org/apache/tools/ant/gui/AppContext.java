@@ -155,6 +155,16 @@ public class AppContext {
     }
 
 	/** 
+	 * Determine if the given BuildListener is registered.
+	 * 
+	 * @param l Listener to test for.
+	 * @return True if listener has been added, false if unknown.
+	 */
+    public boolean isRegisteredBuildListener(BuildListener l) {
+        return _buildListeners.contains(l);
+    }
+
+	/** 
 	 * Get the set of current build listeners.
 	 * 
      * @return Set of current build listeners.

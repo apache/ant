@@ -96,11 +96,13 @@ public class Main {
 
             f.setVisible(true);
 
-
             // XXX this will change once full command line argument parsing
             // is supported.
             if(args.length > 0) {
-                new LoadFileCmd(context, new File(args[0])).execute();
+                LoadFileCmd load = new LoadFileCmd();
+                load.setFile(new File(args[0]));
+                load.setContext(context);
+                load.run();
             }
         }
         catch(Exception ex) {

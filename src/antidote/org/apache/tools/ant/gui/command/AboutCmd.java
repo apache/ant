@@ -64,25 +64,20 @@ import java.awt.event.WindowEvent;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class AboutCmd implements Command {
-    /** Name of the about command. */
-    public static final String ACTION_NAME = "about";
-	/** Application context. */
-	private AppContext _context = null;
+public class AboutCmd extends AbstractCommand {
+
 	/** 
 	 * Standard constructor. 
 	 * 
-	 * @param window 
 	 */
-    public AboutCmd(AppContext context) {
-        _context = context;
+    public AboutCmd() {
     }
 
 	/** 
 	 * Show the about box.
 	 * 
 	 */
-    public void execute() {
-		new About(_context);
+    public void run() {
+		new About(getContext());
     }
 }

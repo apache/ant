@@ -62,34 +62,28 @@ import org.apache.tools.ant.gui.event.ErrorEvent;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class BuildCmd implements Command {
-    /** Name of the action the command maps to. */
-    public static final String ACTION_NAME = "startBuild";
-
-    /** The application context */
-    private AppContext _context = null;
+public class BuildCmd extends AbstractCommand {
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context. 
 	 */
-    public BuildCmd(AppContext context) {
-        _context = context;
+    public BuildCmd() {
     }
 
 	/** 
 	 * Start the Ant build.
 	 * 
 	 */
-    public void execute() {
-        ProjectProxy project = _context.getProject();
+    public void run() {
+        ProjectProxy project = getContext().getProject();
         if(project != null) {
             try {
                 project.build();
             }
             catch(Throwable ex) {
-                _context.getEventBus().postEvent(new ErrorEvent(_context, ex));
+                getContext().getEventBus().postEvent(
+                    new ErrorEvent(getContext(), ex));
             }
         }
     }

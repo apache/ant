@@ -60,28 +60,21 @@ import org.apache.tools.ant.gui.ChangeLookAndFeel;
  *
  * @version $Revision$
  * @author Erik Meade
+ * @author Simeon Fitch
  */
-public class ChangeLookAndFeelCmd implements Command {
-    /** Name of the action the command maps to. */
-    public static final String ACTION_NAME = "changeLookAndFeel";
-
-    /** The application context */
-    private AppContext _context = null;
-
+public class ChangeLookAndFeelCmd extends AbstractCommand {
 	/**
 	 * Standard ctor.
 	 *
-	 * @param context Application context.
 	 */
-    public ChangeLookAndFeelCmd(AppContext context) {
-        _context = context;
+    public ChangeLookAndFeelCmd() {
     }
 
 	/**
 	 * Successfully do nothing.
 	 *
 	 */
-    public void execute() {
-		new ChangeLookAndFeel(_context);
+    public void run() {
+		new ChangeLookAndFeel(getContext());
 	}
 }

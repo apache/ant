@@ -62,39 +62,28 @@ import org.apache.tools.ant.gui.ide.EmacsNotifier;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class EmacsNotifyCmd implements Command {
-    /** Action command. */
-    public static final String ACTION_NAME = "notifyEmacs";
-
+public class EmacsNotifyCmd extends AbstractCommand {
     /** A global notifier can be used as it stores no state. */
     private static EmacsNotifier _notifier = new EmacsNotifier();
-    /** Application context. */
-    private AppContext _context = null;
-    /** State notification should be in. */
-    private boolean _notify = false;
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context.
      * @param state True if notifying on, false for notifying off.
 	 */
-    public EmacsNotifyCmd(AppContext context, boolean state) {
-        _context = context;
-        _notify = state;
+    public EmacsNotifyCmd() {
     }
 
 	/** 
 	 * Turn on or off the notifying of emacs.
 	 * 
 	 */
-    public void execute() {
-        if(_notify) {
-            _context.addBuildListener(_notifier);
+    public void run() {
+        if(getContext().isRegisteredBuildListener(_notifier)) {
+            getContext().removeBuildListener(_notifier);
         }
         else {
-            _context.removeBuildListener(_notifier);
+            getContext().addBuildListener(_notifier);
         }
-        
     }
 }

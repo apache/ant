@@ -85,7 +85,10 @@ public class OpenRequestEvent extends AntEvent {
 	 * @return Load command.
 	 */
     public Command createDefaultCmd() {
-        return new LoadFileCmd(getAppContext(), _file);
+        LoadFileCmd load = new LoadFileCmd();
+        load.setFile(_file);
+        load.setContext(getContext());
+        return load;
     }
 }
 

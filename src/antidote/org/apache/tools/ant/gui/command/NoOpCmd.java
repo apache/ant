@@ -59,10 +59,10 @@ package org.apache.tools.ant.gui.command;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class NoOpCmd implements Command {
+public class NoOpCmd extends AbstractCommand {
 	/** 
 	 * Successfully do nothing.
 	 * 
 	 */
-    public void execute() {}
+    public void run() {}
 }

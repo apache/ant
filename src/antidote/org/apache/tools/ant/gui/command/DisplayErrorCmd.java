@@ -65,25 +65,28 @@ import java.awt.event.ActionEvent;
  * @version $Revision$ 
  * @author Simeon H.K. Fitch 
  */
-public class DisplayErrorCmd implements Command {
-    /** The application context */
-    private AppContext _context = null;
+public class DisplayErrorCmd extends AbstractCommand {
     /** Text description of error. */
     private String _message = null;
     /** Throwable associated with the error. */
     private Throwable _ex = null;
 
 	/** 
+	 * Default ctor.
+	 * 
+	 */
+    public DisplayErrorCmd() {
+    }
+
+	/** 
 	 * Standard constuctor.
 	 * 
-	 * @param context Application context.
 	 * @param message Error message.
 	 * @param ex Throwable assocated with error.
 	 */
-    public DisplayErrorCmd(AppContext context, String message, Throwable ex) {
-        _context = context;
-        _message = message;
-        _ex = ex;
+    public DisplayErrorCmd(String message, Throwable ex) {
+        setMessage(message);
+        setThrowable(_ex);
     }
 
 	/** 
@@ -92,20 +95,38 @@ public class DisplayErrorCmd implements Command {
 	 * @param context Application context.
 	 * @param message Error message.
 	 */
-    public DisplayErrorCmd(AppContext context, String message) {
-        this(context, message, null);
+    public DisplayErrorCmd(String message) {
+        this(message, null);
+    }
+
+	/** 
+	 * Set the error message.
+	 * 
+	 * @param message Error message.
+	 */
+    public void setMessage(String message) {
+        _message = message;
+    }
+
+	/** 
+	 * Set the throwable associated with the error.
+	 * 
+	 * @param ex Throwable associated with the error.
+	 */
+    public void setThrowable(Throwable ex) {
+        _ex = ex;
     }
 
 	/** 
 	 * Display the error.
 	 * 
 	 */
-    public void execute() {
-        // XXX change this so that exceptions can be optionally shown.
-        String title = _context.getResources().getString(getClass(), "title"); 
+    public void run() {
+        String title = getContext().getResources().
+            getString(getClass(), "title"); 
 
         JOptionPane.showMessageDialog(
-            _context.getParentFrame(), new MsgPanel(),
+            getContext().getParentFrame(), new MsgPanel(),
             title, JOptionPane.ERROR_MESSAGE);
     }
 
@@ -116,7 +137,7 @@ public class DisplayErrorCmd implements Command {
             add(new JLabel(_message));
             if(_ex != null) {
                 add(new JLabel(_ex.getMessage()));
-                JButton b = new JButton(_context.getResources().
+                JButton b = new JButton(getContext().getResources().
                                         getString(DisplayErrorCmd.class, 
                                                   "expand"));
                 b.addActionListener(this);

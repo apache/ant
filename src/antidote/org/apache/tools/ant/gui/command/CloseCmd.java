@@ -62,28 +62,22 @@ import org.apache.tools.ant.gui.event.ProjectClosedEvent;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class CloseCmd implements Command {
-    /** Name of the exit command. */
-    public static final String ACTION_NAME = "close";
-
-    /** Application context. */
-    private AppContext _context = null;
+public class CloseCmd extends AbstractCommand {
 
 	/** 
 	 * Standard constructor. 
 	 * 
-	 * @param window 
 	 */
-    public CloseCmd(AppContext context) {
-        _context = context;
+    public CloseCmd() {
     }
 
 	/** 
 	 * Send a close event to the parent window. 
 	 * 
 	 */
-    public void execute() {
-        _context.setProject(null);
-        _context.getEventBus().postEvent(new ProjectClosedEvent(_context));
+    public void run() {
+        getContext().setProject(null);
+        getContext().getEventBus().postEvent(
+            new ProjectClosedEvent(getContext()));
     }
 }

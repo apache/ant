@@ -53,6 +53,15 @@
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.ProjectProxy;
+import org.apache.tools.ant.gui.event.ErrorEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.apache.tools.ant.gui.XMLFileFilter;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -61,16 +70,98 @@ import org.apache.tools.ant.gui.AppContext;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class SaveAsCmd extends SaveCmd {
-    /** Name of the action the command maps to. */
-    public static final String ACTION_NAME = "saveas";
+public class SaveAsCmd extends AbstractCommand {
+    /** File to save to. */
+    private File _file = null;
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context.
 	 */
-    public SaveAsCmd(AppContext context) {
-        super(context, null);
+    public SaveAsCmd() {
     }
+
+	/** 
+	 * Set the file to save to. 
+	 * 
+	 * @param file File to save to.
+	 */
+    public void setFile(File file) {
+        _file = file;
+    }
+
+
+	/** 
+	 * Save the project to the current file name.
+	 * 
+	 */
+    public void run() {
+        FileFilter filter = new XMLFileFilter(getContext().getResources());
+
+        ProjectProxy project = getContext().getProject();
+        if(project != null) {
+            if(_file == null) {
+                // XXX code here to select a file to save to.
+                JFileChooser chooser = new JFileChooser();
+                chooser.addChoosableFileFilter(filter);
+                int val = chooser.showSaveDialog(
+                    getContext().getParentFrame());
+                if(val == JFileChooser.APPROVE_OPTION) {
+                    _file = chooser.getSelectedFile();
+                    if(_file.exists()) {
+                        String title = getContext().getResources().
+                            getString(SaveCmd.class, "title");
+                        String message = getContext().getResources().
+                            getMessage(SaveCmd.class, "overwrite", 
+                                       new Object[] {_file.toString()});
+                        val = JOptionPane.showConfirmDialog(
+                            getContext().getParentFrame(), message, title, 
+                            JOptionPane.YES_NO_OPTION);
+                        // If cancelled unset file.
+                        if(val != JOptionPane.YES_OPTION) {
+                            _file = null;
+                        }
+                    }
+                }
+            }
+            
+            if(_file != null) {
+                project.setFile(_file);
+                FileWriter out = null;
+                try {
+                    out = new FileWriter(_file);
+                    project.write(out);
+                }
+                catch(IOException ex) {
+                    String message = getContext().getResources().getMessage(
+                        SaveCmd.class, "saveError", 
+                        new Object[] { _file.toString() });
+                    
+                    getContext().getEventBus().
+                        postEvent(new ErrorEvent(getContext(), message));
+                }
+                finally {
+                    if (out != null) {
+                        try {
+                            out.flush();
+                            out.close();
+                        }
+                        catch(IOException ex) {
+                            // Intentionally ignored.
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            // We shouldn't ever get here.
+            String message = getContext().getResources().getString(
+                SaveCmd.class, "noProject"); 
+            
+            getContext().getEventBus().
+                postEvent(new ErrorEvent(getContext(), message));
+            
+        }
+    }
+
 }

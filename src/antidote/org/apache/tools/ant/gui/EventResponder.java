@@ -114,44 +114,17 @@ class EventResponder {
         public boolean eventPosted(EventObject event) {
             String command = ((ActionEvent)event).getActionCommand();
 
-            // XXX turn this switch structure into a command
-            // lookup using an initialized hash table.
-            if(command.equals(OpenCmd.ACTION_NAME)) {
-                new OpenCmd(_context).execute();
-            }
-            else if(command.equals(SaveCmd.ACTION_NAME)) {
-                new SaveCmd(_context).execute();
-            }
-            else if(command.equals(SaveAsCmd.ACTION_NAME)) {
-                new SaveAsCmd(_context).execute();
-            }
-            else if(command.equals(BuildCmd.ACTION_NAME)) {
-                new BuildCmd(_context).execute();
-            }
-            else if(command.equals(CloseCmd.ACTION_NAME)) {
-                new CloseCmd(_context).execute();
-            }
-            else if(command.equals(ExitCmd.ACTION_NAME)) {
-                new ExitCmd(_context).execute();
-            }
-            else if(command.equals(AboutCmd.ACTION_NAME)) {
-                new AboutCmd(_context).execute();
-            }
-            else if(command.equals(ChangeLookAndFeelCmd.ACTION_NAME)) {
-                new ChangeLookAndFeelCmd(_context).execute();
-            }
-            else if(command.equals(ChangeLookAndFeelCmd.ACTION_NAME)) {
-                new ChangeLookAndFeelCmd(_context).execute();
-            }
-            else if(command.equals(EmacsNotifyCmd.ACTION_NAME)) {
-                AbstractButton source = (AbstractButton) event.getSource();
-                new EmacsNotifyCmd(_context, source.isSelected()).execute();
+            Command cmd = 
+                _context.getActions().getActionCommand(command, _context);
+            if(cmd != null) {
+                cmd.run();
+                return false;
             }
             else {
 				// XXX log me.
                 System.err.println("Unhandled action: " + command);
+                return true;
             }
-            return true;
         }
     }
 
@@ -186,8 +159,8 @@ class EventResponder {
         public boolean eventPosted(EventObject event) {
             AntEvent e = (AntEvent) event;
             Command cmd = e.createDefaultCmd();
-            cmd.execute();
-            return true;
+            cmd.run();
+            return cmd instanceof NoOpCmd;
         }
     }
 

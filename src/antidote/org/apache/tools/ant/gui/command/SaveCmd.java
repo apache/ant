@@ -53,15 +53,6 @@
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.AppContext;
-import org.apache.tools.ant.gui.ProjectProxy;
-import org.apache.tools.ant.gui.event.ErrorEvent;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import org.apache.tools.ant.gui.XMLFileFilter;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.JOptionPane;
 
 /**
  * Command to execute the saving of the current build file.
@@ -69,106 +60,18 @@ import javax.swing.JOptionPane;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class SaveCmd implements Command {
-    /** Name of the action the command maps to. */
-    public static final String ACTION_NAME = "save";
+public class SaveCmd extends SaveAsCmd {
 
-    /** The application context */
-    private AppContext _context = null;
-    /** Filter for showing only XML files. */
-    private FileFilter _filter = null;
-    /** File to save to. */
-    private File _file = null;
+    public SaveCmd() {
+    }
 
 	/** 
-	 * Standard ctor with file.
+	 * Set the application context.
 	 * 
 	 * @param context Application context.
-	 * @param file File to save to, or null.
 	 */
-    public SaveCmd(AppContext context, File file) {
-        _context = context;
-        _filter = new XMLFileFilter(_context.getResources());
-        _file = file;
-    }
-
-	/** 
-	 * Standard ctor.
-	 * 
-	 * @param context Application context. 
-	 */
-    public SaveCmd(AppContext context) {
-        this(context, context.getProject() == null ? null : 
-             context.getProject().getFile());
-    }
-
-	/** 
-	 * Save the project to the current file name.
-	 * 
-	 */
-    public void execute() {
-        ProjectProxy project = _context.getProject();
-        if(project != null) {
-            if(_file == null) {
-                // XXX code here to select a file to save to.
-                JFileChooser chooser = new JFileChooser();
-                chooser.addChoosableFileFilter(_filter);
-                int val = chooser.showSaveDialog(_context.getParentFrame());
-                if(val == JFileChooser.APPROVE_OPTION) {
-                    _file = chooser.getSelectedFile();
-                    if(_file.exists()) {
-                        String title = _context.getResources().getString(
-                            SaveCmd.class, "title");                         
-                        String message = _context.getResources().getMessage(
-                            SaveCmd.class, "overwrite", 
-                            new Object[] {_file.toString()});
-                        val = JOptionPane.showConfirmDialog(
-                            _context.getParentFrame(), message, title, 
-                            JOptionPane.YES_NO_OPTION);
-                        // If cancelled unset file.
-                        if(val != JOptionPane.YES_OPTION) {
-                            _file = null;
-                        }
-                    }
-                }
-            }
-            
-            if(_file != null) {
-                project.setFile(_file);
-                FileWriter out = null;
-                try {
-                    out = new FileWriter(_file);
-                    project.write(out);
-                }
-                catch(IOException ex) {
-                    String message = _context.getResources().getMessage(
-                        SaveCmd.class, "saveError", 
-                        new Object[] { _file.toString() });
-                    
-                    _context.getEventBus().
-                        postEvent(new ErrorEvent(_context, message));
-                }
-                finally {
-                    if (out != null) {
-                        try {
-                            out.flush();
-                            out.close();
-                        }
-                        catch(IOException ex) {
-                            // Intentionally ignored.
-                        }
-                    }
-                }
-            }
-        }
-        else {
-            // We shouldn't ever get here.
-            String message = _context.getResources().getString(
-                SaveCmd.class, "noProject"); 
-            
-            _context.getEventBus().
-                postEvent(new ErrorEvent(_context, message));
-            
-        }
+    public void setContext(AppContext context) {
+        super.setContext(context);
+        setFile(context.getProject().getFile());
     }
 }

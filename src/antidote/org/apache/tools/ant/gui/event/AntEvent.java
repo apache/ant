@@ -81,7 +81,7 @@ public abstract class AntEvent extends EventObject {
 	 * 
 	 * @return Application context.
 	 */
-    protected AppContext getAppContext() {
+    protected AppContext getContext() {
         return (AppContext) getSource();
     }
 

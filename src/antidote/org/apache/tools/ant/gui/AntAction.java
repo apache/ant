@@ -76,6 +76,7 @@ public class AntAction extends AbstractAction {
     public static final String ENABLE_ON = "enableOn";
     public static final String DISABLE_ON = "disableOn";
     public static final String TOGGLE = "toggle";
+    public static final String COMMAND = "command";
 
     /** Property resources. */
     private  ResourceBundle _resources =  null;
@@ -125,6 +126,19 @@ public class AntAction extends AbstractAction {
         String toggle = getString(TOGGLE);
         if(toggle != null) {
             _toggle = Boolean.valueOf(toggle).booleanValue();
+        }
+
+        // See if there is a command associated with the action.
+        String command = getString(COMMAND);
+        if(command != null) {
+            try {
+                Class cmd = Class.forName(command);
+                putValue(COMMAND, cmd);
+            }
+            catch(Exception ex) {
+                // XXX log me.
+                ex.printStackTrace();
+            }
         }
 
         // Add an icon if any (which means it'll show up on the tool bar).
@@ -288,6 +302,16 @@ public class AntAction extends AbstractAction {
 	 */
     public boolean isToggle() {
         return _toggle;
+    }
+
+
+	/** 
+	 * Get the assciated command class.
+	 * 
+	 * @return Command class.
+	 */
+    public Class getCommandClass() {
+        return (Class) getValue(COMMAND);
     }
 
     /** 

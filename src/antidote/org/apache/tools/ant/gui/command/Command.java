@@ -52,13 +52,28 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.AppContext;
+
+
 
 /**
- * Interface for commands.  Details TBD
+ * Interface for commands.  Implementation needs to have a default ctor. 
+ * Details TBD
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface Command {
-    public void execute();
+public interface Command extends Runnable {
+	/** 
+	 * Set the application context.
+	 * 
+	 * @param context Application context.
+	 */
+    public void setContext(AppContext context);
+
+	/** 
+	 * Run the command. From interface Runnable.
+	 * 
+	 */
+    public void run();
 }

@@ -64,20 +64,23 @@ import java.io.IOException;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class LoadFileCmd implements Command {
-    /** The application context */
-    private AppContext _context = null;
+public class LoadFileCmd extends  AbstractCommand {
     /** The file to load. */
     private File _file = null;
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context.
-	 * @param file The file to load.
 	 */
-    public LoadFileCmd(AppContext context, File file) {
-        _context = context;
+    public LoadFileCmd() {
+    }
+
+	/** 
+	 * Set the file to load.
+	 * 
+	 * @param file File to load.
+	 */
+    public void setFile(File file) {
         _file = file;
     }
 
@@ -85,26 +88,26 @@ public class LoadFileCmd implements Command {
 	 * Open the file and load it.
 	 * 
 	 */
-    public void execute() {
+    public void run() {
         if(!_file.exists()) {
-            String message = _context.getResources().getMessage(
+            String message = getContext().getResources().getMessage(
                 getClass(), "noFile", new Object[] { _file.toString() });
 
-            _context.getEventBus().
-                postEvent(new ErrorEvent(_context, message));
+            getContext().getEventBus().
+                postEvent(new ErrorEvent(getContext(), message));
         }
         else {
             try {
-                ProjectProxy project = new ProjectProxy(_context, _file);
-                _context.setProject(project);
+                ProjectProxy project = new ProjectProxy(getContext(), _file);
+                getContext().setProject(project);
             }
             catch(Exception ex) {
-                String message = _context.getResources().getMessage(
+                String message = getContext().getResources().getMessage(
                     getClass(), "loadError", 
                     new Object[] { _file.toString() });
 
-                _context.getEventBus().
-                    postEvent(new ErrorEvent(_context, message, ex));
+                getContext().getEventBus().
+                    postEvent(new ErrorEvent(getContext(), message, ex));
             }
         }
     }
