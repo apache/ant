@@ -212,7 +212,8 @@ public class JavaEnvUtils {
             return jExecutable.getAbsolutePath();
         } else {
             // fall back to JRE bin directory, also catches JDK 1.0 and 1.1
-            // where java.home points to the root of the JDK
+            // where java.home points to the root of the JDK and Mac OS X where
+            // the whole directory layout is different from Sun's
             return getJreExecutable(command);
         }
     }
