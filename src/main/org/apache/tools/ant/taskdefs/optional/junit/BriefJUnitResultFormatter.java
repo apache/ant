@@ -70,6 +70,9 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
      */
     private String systemError = null;
 
+    /**
+     * Constructor for BriefJUnitResultFormatter.
+     */
     public BriefJUnitResultFormatter() {
         results = new StringWriter();
         resultWriter = new PrintWriter(results);
@@ -77,16 +80,23 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * Sets the stream the formatter is supposed to write its results to.
+     * @param out the output stream to write to
      */
     public void setOutput(OutputStream out) {
         this.out = out;
         output = new PrintWriter(out);
     }
 
+    /**
+     * @see JUnitResultFormatter#setSystemOutput(String)
+     */
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
+    /**
+     * @see JUnitResultFormatter#setSystemError(String)
+     */
     public void setSystemError(String err) {
         systemError = err;
     }
@@ -155,12 +165,14 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * A test started.
+     * @param test a test
      */
     public void startTest(Test test) {
     }
 
     /**
      * A test ended.
+     * @param test a test
      */
     public void endTest(Test test) {
     }
@@ -169,6 +181,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
+     * @param test a test
+     * @param t    the exception thrown by the test
      */
     public void addFailure(Test test, Throwable t) {
         formatError("\tFAILED", test, t);
@@ -178,6 +192,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener for JUnit &gt; 3.4.
      *
      * <p>A Test failed.
+     * @param test a test
+     * @param t    the assertion failed by the test
      */
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
@@ -185,6 +201,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * A test caused an error.
+     * @param test  a test
+     * @param error the error thrown by the test
      */
     public void addError(Test test, Throwable error) {
         formatError("\tCaused an ERROR", test, error);
@@ -192,6 +210,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * Format the test for printing..
+     * @param test a test
+     * @return the formatted testname
      */
     protected String formatTest(Test test) {
         if (test == null) {
@@ -203,6 +223,9 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * Format an error and print it.
+     * @param type the type of error
+     * @param test the test that failed
+     * @param error the exception that the test threw
      */
     protected synchronized void formatError(String type, Test test,
                                             Throwable error) {
