@@ -632,6 +632,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 }
             }
 
+            project.setUserProperty("ant.file."+context.currentProjectName,
+                    context.buildFile.toString());
+
             if( context.ignoreProjectTag ) {
                 // no further processing
                 return;
