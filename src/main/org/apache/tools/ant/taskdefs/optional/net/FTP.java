@@ -561,6 +561,9 @@ public class FTP
             return listFiles(directory, true);
         }
         private void checkRemoteSensitivity(FTPFile[] array, String directory) {
+            if (array == null) {
+                return;
+            }
             boolean candidateFound = false;
             String target = null;
             for (int icounter = 0; icounter < array.length; icounter++) {
