@@ -114,3 +114,9 @@ reception
 
 * keep the interface for Tasks as similar to the one of Ant1 as
   possible - i.e. don't break something just because we can.
+
+* tasks provide some way to identify their attributes from the
+  outside. Possible solutions include a special method like
+  getProperties(), an external describing file shipping with the task
+  class or special javadoc comments parsed by a custom doclet.
+
