@@ -251,9 +251,7 @@ Legal:
             <src path="${build.src}" />
             -->
 
-            <patternset refid="myrmidon-launcher.include"/>
             <patternset refid="myrmidon-framework.include"/>
-            <patternset refid="myrmidon-container.include"/>
             <patternset refid="ant1.todo.include"/>
             <patternset refid="selftest.include"/>
             <patternset refid="selftest-extension1.include"/>
@@ -269,20 +267,10 @@ Legal:
     </target>
 
     <target name="setup-patterns" depends="check_for_optional_packages">
-        <patternset id="myrmidon-launcher.include">
-            <include name="org/apache/myrmidon/launcher/**" />
-        </patternset>
 
         <patternset id="myrmidon-framework.include">
             <include name="org/apache/myrmidon/interfaces/**" />
             <include name="org/apache/myrmidon/framework/**" />
-        </patternset>
-
-        <patternset id="myrmidon-container.include">
-            <include name="org/apache/myrmidon/components/**" />
-            <include name="org/apache/myrmidon/frontends/**" />
-            <include name="org/apache/myrmidon/*" />
-            <exclude name="**/TransformingProjectBuilder.java" unless="trax.present"/>
         </patternset>
 
         <property name="ant.package" value="org/apache/tools/todo"/>
@@ -390,14 +378,6 @@ Legal:
             </fileset>
         </antlib-descriptor>
 
-        <antlib-descriptor libName="container"
-            destdir="${gen.dir}"
-            classpathref="project.class.path">
-            <fileset dir="${java.dir}">
-                <patternset refid="myrmidon-container.include"/>
-            </fileset>
-        </antlib-descriptor>
-
         <antlib-descriptor libName="selftest"
             destdir="${gen.dir}"
             classpathref="project.class.path">
@@ -421,20 +401,6 @@ Legal:
         <mkdir dir="${build.bin}/lib"/>
         <mkdir dir="${build.lib}"/>
         <mkdir dir="${build.ext}"/>
-
-        <jar jarfile="${build.bin}/myrmidon-launcher.jar"
-            basedir="${build.classes}"
-            manifest="${manifest.dir}/myrmidon-launcher.mf">
-            <patternset refid="myrmidon-launcher.include"/>
-        </jar>
-
-        <antlib-jar jarfile="${build.bin}/lib/myrmidon-container.jar"
-            basedir="${build.classes}"
-            manifest="${manifest.dir}/myrmidon-container.mf"
-            rolesDescriptor="${gen.dir}/container-ant-roles.xml"
-            descriptor="${gen.dir}/container-ant-descriptor.xml" >
-            <patternset refid="myrmidon-container.include"/>
-        </antlib-jar>
 
         <antlib-jar jarfile="${build.lib}/myrmidon-framework.jar"
             basedir="${build.classes}"

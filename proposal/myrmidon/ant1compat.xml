@@ -14,7 +14,7 @@
     <path id="project.class.path">
         <pathelement location="build/classes"/>
         <fileset dir="lib">
-            <include name="*.jar"/>
+            <include name="**/*.jar"/>
         </fileset>
     </path>
 
