@@ -28,6 +28,9 @@ Fixed bugs:
 
 * <java> ignored the append attribute, Bugzilla Report 26137.
 
+* The gcj compiler adapter for <javac> failed if the destination
+  directory didn't exist.  Bugzilla Report 25856.
+
 Other changes:
 --------------
 * Translate task logs a debug message specifying the number of files
