@@ -55,7 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 /**
- * Task to perform Checkout command to Continuus
+ * Performs Continuus checkout command.
+ *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMCheckout extends CCMCheck {

@@ -71,8 +71,9 @@ import org.apache.tools.ant.types.Reference;
 
 
 /**
- * BorlandGenerateClient is dedicated to the Borland Application Server 4.5
- * This task generates the client jar using as input the ejb jar file.
+ * Generates a Borland Application Server 4.5 client JAR using as
+ * input the EJB JAR file.
+ *
  * Two mode are available: java mode (default) and fork mode. With the fork mode,
  * it is impossible to add classpath to the commmand line.
  * 
@@ -99,21 +100,37 @@ public class BorlandGenerateClient extends Task {
     /** hold the mode (java|fork) */
     String mode = JAVA_MODE;
 
+    /**
+     * Command launching mode: java or fork.
+     */
     public void setMode(String s) {
         mode = s;
     }
+
+    /**
+     * If true, turn on the debug mode for each of the Borland tools launched.
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
+    /**
+     * EJB JAR file.
+     */
     public void setEjbjar(File ejbfile) {
         ejbjarfile = ejbfile;
     }
-    
+
+    /**
+     * Client JAR file name.
+     */
     public void setClientjar(File clientjar) {
         clientjarfile = clientjar;
     }
 
+    /**
+     * Path to use for classpath.
+     */
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
             this.classpath = classpath;
@@ -121,14 +138,20 @@ public class BorlandGenerateClient extends Task {
             this.classpath.append(classpath);
         }
     }
-    
+
+    /**
+     * Adds path to the classpath.
+     */
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(project);
         }
         return this.classpath.createPath();
     }
-    
+
+    /**
+     * Reference to existing path, to use as a classpath.
+     */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
