@@ -53,13 +53,16 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileWriter;
 
 import javax.ejb.deployment.EntityDescriptor;
 import javax.ejb.deployment.DeploymentDescriptor;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.Path;
 
 /**
  * A helper class which performs the actual work of the ejbc task.
@@ -69,7 +72,7 @@ import org.apache.tools.ant.types.Path;
  *
  * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
  */
-public class EjbcHelper implements Ejbc.Helper {
+public class EjbcHelper {
     /**
      * The root directory of the tree containing the serialised deployment desciptors. 
      */
@@ -89,126 +92,42 @@ public class EjbcHelper implements Ejbc.Helper {
      * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
      * classes <b>and</b> the implementation classes of the home and remote interfaces.
      */
-    private Path classpath;
+    private String classpath;
     
     /**
      * The source directory for the home and remote interfaces. This is used to determine if
      * the generated deployment classes are out of date.
      */
     private File sourceDirectory;
-
-    /**
-     * The array of descriptor filenames to be processed
-     */
-    private String[] files;
-
-    /**
-     * The Ejbc task that this helper is helping
-     */
-    private Ejbc ejbcTask;
    
     /**
      * The names of the serialised deployment descriptors
      */
     String[] descriptors; 
 
-    public EjbcHelper() {
-    }
-      
-    public void initialize(Ejbc ejbcTask) {
-        this.ejbcTask = ejbcTask;
+    /**
+     * Command line interface for the ejbc helper task.
+     */    
+    public static void main(String[] args) throws Exception {
+        EjbcHelper helper = new EjbcHelper(args);
+        helper.process();
     }
 
     /**
-     * Set the directory from where the serialised deployment descriptors are
-     * to be read.
-     *
-     * @param dir the directory containing the serialised deployment descriptors.
-     */
-    public void setDescriptorDir(File dir) {
-        descriptorDirectory = dir;
-    }
-    
-    /**
-     * Set the directory into which the support classes, RMI stubs, etc are to be written
-     *
-     * @param dir the directory into which code is generated
-     */
-    public void setDest(File dir) {
-        generatedFilesDirectory = dir;
-    }
-
-    /**
-     * Set the generated manifest file. 
-     *
-     * For each EJB that is processed an entry is created in this file. This can then be used
-     * to create a jar file for dploying the beans.
-     *
-     * @param manfestFilename the manifest file to be generated.
-     */
-    public void setManifest(File manifestFile) {
-        this.manifestFile = manifestFile;
-    }
-    
-    /**
-     * Set the classpath to be used for this compilation.
-     */
-    public void setClasspath(Path classpath) {
-        this.classpath = classpath;
-    }
-
-    /**
-     * Set the list of desciptors which ar eto be processed.
-     *
-     * @param descriptors an array of serialised deployment descriptor filenames to be processed.
-     */
-    public void setDescriptors(String[] descriptors) {
-        this.descriptors = descriptors;
-    }
-
-
-
-    /**
-     * Set the directory containing the source code for the home interface, remote interface
-     * and public key class definitions.
-     *
-     * @param dir the directory containg the source tree for the EJB's interface classes.
-     */
-    public void setSrc(File dir) {
-        sourceDirectory = dir;
-    }
-
-    /**
-     * Perform the weblogic compiles.
-     */
-    public void execute() throws BuildException {
-        try {
-            String manifest = "Manifest-Version: 1.0\n\n";
-            for (int i = 0; i < descriptors.length; ++i) {
-                String descriptorName = descriptors[i];
-                File descriptorFile = new File(descriptorDirectory, descriptorName);
-                
-                if (isRegenRequired(descriptorFile)) {
-                    ejbcTask.log("Running ejbc for " + descriptorFile.getName(), Project.MSG_INFO);
-                    regenerateSupportClasses(descriptorFile);
-                }
-                else {
-                    ejbcTask.log(descriptorFile.getName() + " is up to date", Project.MSG_VERBOSE);
-                }
-                manifest += "Name: " + descriptorFile.getName() + "\nEnterprise-Bean: True\n\n";
-            }
-            
-            FileWriter fw = new FileWriter(manifestFile);
-            PrintWriter pw = new PrintWriter(fw);
-            pw.print(manifest);
-            fw.flush();
-            fw.close();
-        }
-        catch (IOException e) {
-            throw new BuildException(e);
+     * Initialise the EjbcHelper by reading the command arguments.
+     */    
+    private EjbcHelper(String[] args) {
+        int index = 0;
+        descriptorDirectory = new File(args[index++]);
+        generatedFilesDirectory = new File(args[index++]);
+        sourceDirectory = new File(args[index++]);
+        manifestFile = new File(args[index++]);
+        
+        descriptors = new String[args.length - index];
+        for (int i = 0; index < args.length; ++i) {
+            descriptors[i] = args[index++];
         }
     }
-
 
     /**
      * Determine if the weblogic EJB support classes need to be regenerated
@@ -291,8 +210,7 @@ public class EjbcHelper implements Ejbc.Helper {
             }
         }
         catch (Throwable descriptorLoadException) {
-            ejbcTask.log("Exception occurred reading " + descriptorFile.getName() + " - continuing", 
-                          Project.MSG_WARN);
+            System.out.println("Exception occurred reading " + descriptorFile.getName() + " - continuing");
             // any problems - just regenerate
             return true;
         }
@@ -306,56 +224,55 @@ public class EjbcHelper implements Ejbc.Helper {
     }
 
     /**
+     * Process the descriptors in turn generating support classes for each and a manifest
+     * file for all of the beans.
+     */            
+    private void process() throws Exception {
+        String manifest = "Manifest-Version: 1.0\n\n";
+        for (int i = 0; i < descriptors.length; ++i) {
+            String descriptorName = descriptors[i];
+            File descriptorFile = new File(descriptorDirectory, descriptorName);
+            
+            if (isRegenRequired(descriptorFile)) {
+                System.out.println("Running ejbc for " + descriptorFile.getName());
+                regenerateSupportClasses(descriptorFile);
+            }
+            else {
+                System.out.println(descriptorFile.getName() + " is up to date");
+            }
+            manifest += "Name: " + descriptorFile.getName() + "\nEnterprise-Bean: True\n\n";
+        }
+        
+        FileWriter fw = new FileWriter(manifestFile);
+        PrintWriter pw = new PrintWriter(fw);
+        pw.print(manifest);
+        fw.flush();
+        fw.close();
+    }
+
+    /**
      * Perform the weblogic.ejbc call to regenerate the support classes.
      *
      * Note that this method relies on an undocumented -noexit option to the 
      * ejbc tool to stop the ejbc tool exiting the VM altogether.
      */
-    private void regenerateSupportClasses(File descriptorFile) {
-        Project project = ejbcTask.getProject();
-        String javaHome = System.getProperty("java.home");
+    private void regenerateSupportClasses(File descriptorFile) throws Exception {
+        // create a Java task to do the rebuild
 
-        String compiler = project.getProperty("build.compiler");
-        String[] args = null;
+        String[] args = {"-noexit",
+                         "-keepgenerated",
+                         "-d", generatedFilesDirectory.getPath(),
+                         descriptorFile.getPath()};
         
-        if (compiler != null && compiler.equalsIgnoreCase("jikes")) {
-            Path execClassPath = new Path(project);
-            if (Project.getJavaVersion() == Project.JAVA_1_1) {
-                execClassPath.addExisting(new Path(project, System.getProperty("java.home")
-                                          + "/lib/classes.zip"));
-            } else {
-                execClassPath.addExisting(new Path(project,
-                                                System.getProperty("java.home")
-                                                + "/lib/rt.jar"));
-                // Just keep the old version as well and let addExisting
-                // sort it out.
-                execClassPath.addExisting(new Path(project,
-                                                System.getProperty("java.home")
-                                                + "/jre/lib/rt.jar"));
-            }
-            execClassPath.append(classpath);
-    
-            args = new String[] {"-noexit",
-                                 "-keepgenerated",
-                                 "-compiler", "Jikes",
-                                 "-d", generatedFilesDirectory.getPath(),
-                                 "-classpath", execClassPath.toString(), 
-                                 descriptorFile.getPath()};
-        }
-        else {            
-            args = new String[]{"-noexit",
-                                "-keepgenerated",
-                                "-d", generatedFilesDirectory.getPath(),
-                                "-classpath", classpath.toString(), 
-                                descriptorFile.getPath()};
-        }
-                                       
         try {
             weblogic.ejbc.main(args);
         }
         catch (Exception e) {
-            e.printStackTrace();
-            throw new BuildException(e);
+            // run with no exit for better reporting
+            String[] newArgs = {"-keepgenerated",
+                         "-d", generatedFilesDirectory.getPath(),
+                         descriptorFile.getPath()};
+            weblogic.ejbc.main(newArgs);
         }
     }
 }
