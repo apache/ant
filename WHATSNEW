@@ -38,6 +38,9 @@ Fixed bugs:
 * Ant now fails with a more useful message if a new process will be
   forked in a directory and that directory doesn't exist.
 
+* <splash> used to break the build on non-GUI environments.  Bugzilla
+  report 11482.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces-J 2.6.1

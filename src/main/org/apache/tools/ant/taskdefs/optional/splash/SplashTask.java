@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 Apache Software Foundation
+ * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class SplashTask extends Task {
     /**
      * Proxy password; required if <tt>user</tt> is set.
      */
-     public void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -170,9 +170,9 @@ public class SplashTask extends Task {
             }
         }
 
+        boolean success = false;
         if (in != null) {
             DataInputStream din = new DataInputStream(in);
-            boolean success = false;
             try {
                 ByteArrayOutputStream bout = new ByteArrayOutputStream();
                 int data;
@@ -181,10 +181,14 @@ public class SplashTask extends Task {
                 }
 
                 log("Got ByteArray, creating splash",  Project.MSG_DEBUG);
-                ImageIcon img = new ImageIcon(bout.toByteArray());
 
-                splash = new SplashScreen(img);
-                success = true;
+                try {
+                    ImageIcon img = new ImageIcon(bout.toByteArray());
+                    splash = new SplashScreen(img);
+                    success = true;
+                } catch (Throwable e) {
+                    logHeadless(e);
+                }
             } catch (Exception e) {
                 throw new BuildException(e);
             } finally {
@@ -199,16 +203,28 @@ public class SplashTask extends Task {
                 }
             }
         } else {
-            splash = new SplashScreen("Image Unavailable.");
+            try {
+                splash = new SplashScreen("Image Unavailable.");
+                success = true;
+            } catch (Throwable e) {
+                logHeadless(e);
+            }
         }
 
-        splash.setVisible(true);
-        splash.toFront();
-        getProject().addBuildListener(splash);
-        try {
-            Thread.sleep(showDuration);
-        } catch (InterruptedException e) {
+        if (success) {
+            splash.setVisible(true);
+            splash.toFront();
+            getProject().addBuildListener(splash);
+            try {
+                Thread.sleep(showDuration);
+            } catch (InterruptedException e) {
+            }
         }
+    }
 
+    private void logHeadless(Throwable e) {
+        log("failed to display SplashScreen, caught "
+            + e.getClass().getName() + " with message: " + e.getMessage(),
+            Project.MSG_WARN);
     }
 }
