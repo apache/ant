@@ -70,11 +70,6 @@ Fixed bugs:
   StringIndexOutOfBoundsException on all OSes where os.name is shorter
   than seven characters.  Bugzilla Report 18105.
 
-* starteam checkout can now handle deleted labels.  Bugzilla Report 17646.
-
-* The Unix wrapper script failed if you invoked it as a relative
-  symlink and ANT_HOME has not been set.  Bugzilla Report 17721.
-
 * <copy> and <move>'s failonerror didn't apply to filesets pointing to
   non-existant directories.  Bugzilla Report 18414.
 
@@ -235,6 +230,11 @@ Fixed bugs:
 
 * The prefix attribute of <zipfileset> would not generate directory
   entries for the prefix itself.  Bugzilla Report 18403.
+
+* starteam checkout can now handle deleted labels.  Bugzilla Report 17646.
+
+* The Unix wrapper script failed if you invoked it as a relative
+  symlink and ANT_HOME has not been set.  Bugzilla Report 17721.
 
 Other Changes:
 --------------
