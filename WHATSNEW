@@ -26,6 +26,9 @@ Fixed bugs:
 
 * <style>'s style attribute no handles absolute paths correctly.
 
+* <delete includeemptydirs="true"> now deletes more than just the leaf
+  directories.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
