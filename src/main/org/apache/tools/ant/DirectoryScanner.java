@@ -366,18 +366,6 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     }
 
     /**
-     * Breaks a path up into a Vector of path elements, tokenizing on
-     * <code>File.separator</code>.
-     *
-     * @param path Path to tokenize. Must not be <code>null</code>.
-     *
-     * @return a Vector of path elements from the tokenized path
-     */
-    private static Vector tokenizePath (String path) {
-        return SelectorUtils.tokenizePath(path);
-    }
-
-    /**
      * Sets the base directory to be scanned. This is the directory which is
      * scanned recursively. All '/' and '\' characters are replaced by
      * <code>File.separatorChar</code>, so the separator used need not match
@@ -934,7 +922,7 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     /**
      * <p>Returns the names of the directories which were selected out and
      * therefore not ultimately included.</p>
-     * 
+     *
      * <p>The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.</p>
      *
