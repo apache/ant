@@ -22,19 +22,20 @@ import java.util.Enumeration;
 
 /**
  * <tt>Xor</tt> task to exclusive or operations.
- * This does not shortcut stuff
+ * This does not shortcut stuff.
  */
 public class Xor extends ConditionBase implements Condition {
 
     /**
-     * @return true if all the contained conditions evaluates to true
+     * Evaluate the contained conditions.
+     * @return the result of xoring the conditions together.
      * @throws org.apache.tools.ant.BuildException
-     *          if an error occurs
+     *          if an error occurs.
      */
     public boolean eval() throws BuildException {
         Enumeration e = getConditions();
         //initial state is false.
-        boolean state=false;
+        boolean state = false;
         while (e.hasMoreElements()) {
             Condition c = (Condition) e.nextElement();
             //every condition is xored against the previous one
