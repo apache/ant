@@ -72,6 +72,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.types.DTDLocation;
 import org.xml.sax.XMLReader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.Parser;
@@ -123,10 +125,7 @@ public class XMLValidateTask extends Task {
         = new ValidatorErrorHandler(); // to report sax parsing errors
     protected Hashtable features = new Hashtable();
 
-    /**
-     * The list of configured DTD locations
-     */
-    public Vector dtdLocations = new Vector();
+    private XMLCatalog xmlCatalog = new XMLCatalog();
 
     /**
      * Specify how parser error are to be handled.
@@ -214,31 +213,36 @@ public class XMLValidateTask extends Task {
     }
 
     /**
+     *
+     */
+    public void addConfiguredXMLCatalog(XMLCatalog catalog) {
+        xmlCatalog.addConfiguredXMLCatalog(catalog);
+    }
+
+    /**
      * specifify a set of file to be checked
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
+    public void init() throws BuildException {
+        super.init();
+        xmlCatalog.setProject(project);
+    }
+
     /**
      * Create a DTD location record. This stores the location of a DTD. The DTD is identified
-     * by its public Id. The location may either be a file location or a resource location.
+     * by its public Id.
      */
     public DTDLocation createDTD() {
         DTDLocation dtdLocation = new DTDLocation();
-        dtdLocations.addElement(dtdLocation);
-
+        xmlCatalog.addDTD(dtdLocation);
         return dtdLocation;
     }
 
     protected EntityResolver getEntityResolver() {
-        LocalResolver resolver = new LocalResolver();
-
-        for (Enumeration i = dtdLocations.elements(); i.hasMoreElements();) {
-            DTDLocation location = (DTDLocation) i.nextElement();
-            resolver.registerDTD(location);
-        }
-        return resolver;
+        return xmlCatalog;
     }
 
     public void execute() throws BuildException {
@@ -470,95 +474,6 @@ public class XMLValidateTask extends Task {
                 }
             }
             return e.getMessage();
-        }
-    }
-
-    public static class DTDLocation 
-        extends org.apache.tools.ant.types.DTDLocation {
-    }
-
-    private class LocalResolver
-        implements EntityResolver {
-        private Hashtable fileDTDs = new Hashtable();
-        private Hashtable resourceDTDs = new Hashtable();
-        private Hashtable urlDTDs = new Hashtable();
-
-        public LocalResolver() {}
-
-        public void registerDTD(String publicId, String location) {
-            if (location == null) {
-                return;
-            }
-
-            File fileDTD = project.resolveFile(location);
-            if (fileDTD.exists()) {
-                if (publicId != null) {
-                    fileDTDs.put(publicId, fileDTD);
-                    log("Mapped publicId " + publicId + " to file " + fileDTD, 
-                        Project.MSG_VERBOSE);
-                }
-                return;
-            }
-
-            if (LocalResolver.this.getClass().getResource(location) != null) {
-                if (publicId != null) {
-                    resourceDTDs.put(publicId, location);
-                    log("Mapped publicId " + publicId + " to resource " 
-                        + location, Project.MSG_VERBOSE);
-                }
-            }
-
-            try {
-                if (publicId != null) {
-                    URL urldtd = new URL(location);
-                    urlDTDs.put(publicId, urldtd);
-                }
-            } catch (MalformedURLException e) {
-                //ignored
-            }
-        }
-
-        public InputSource resolveEntity(String publicId, String systemId)
-            throws SAXException {
-            File dtdFile = (File) fileDTDs.get(publicId);
-            if (dtdFile != null) {
-                try {
-                    log("Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE);
-                    return new InputSource(new FileInputStream(dtdFile));
-                } catch (FileNotFoundException ex) {
-                    // ignore
-                }
-            }
-
-            String dtdResourceName = (String) resourceDTDs.get(publicId);
-            if (dtdResourceName != null) {
-                InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
-                if (is != null) {
-                    log("Resolved " + publicId + " to local resource " 
-                        + dtdResourceName, Project.MSG_VERBOSE);
-                    return new InputSource(is);
-                }
-            }
-
-            URL dtdUrl = (URL) urlDTDs.get(publicId);
-            if (dtdUrl != null) {
-                try {
-                    InputStream is = dtdUrl.openStream();
-                    log("Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE);
-                    return new InputSource(is);
-                } catch (IOException ioe) {
-                    //ignore
-                }
-            }
-
-            log("Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity",
-                Project.MSG_INFO);
-
-            return null;
-        }
-
-        public void registerDTD(DTDLocation location) {
-            registerDTD(location.getPublicId(), location.getLocation());
         }
     }
 }
