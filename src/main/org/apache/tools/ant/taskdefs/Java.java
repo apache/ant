@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
@@ -169,14 +171,14 @@ public class Java extends Task {
             if (failOnError) {
                 throw e;
             } else {
-                log(e.getMessage(), Project.MSG_ERR);
+                log(e);
                 return 0;
             }
         } catch (Throwable t) {
             if (failOnError) {
                 throw new BuildException(t);
             } else {
-                log(t.getMessage(), Project.MSG_ERR);
+                log(t);
                 return 0;
             }
         }
@@ -667,41 +669,41 @@ public class Java extends Task {
      */
     private int fork(String[] command) throws BuildException {
 
-            Execute exe
-                = new Execute(redirector.createHandler(), createWatchdog());
-            exe.setAntRun(getProject());
+        Execute exe
+            = new Execute(redirector.createHandler(), createWatchdog());
+        exe.setAntRun(getProject());
 
-            if (dir == null) {
-                dir = getProject().getBaseDir();
-            } else if (!dir.exists() || !dir.isDirectory()) {
-                throw new BuildException(dir.getAbsolutePath()
-                                         + " is not a valid directory",
-                                         getLocation());
+        if (dir == null) {
+            dir = getProject().getBaseDir();
+        } else if (!dir.exists() || !dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()
+                                     + " is not a valid directory",
+                                     getLocation());
+        }
+
+        exe.setWorkingDirectory(dir);
+
+        String[] environment = env.getVariables();
+        if (environment != null) {
+            for (int i = 0; i < environment.length; i++) {
+                log("Setting environment variable: " + environment[i],
+                    Project.MSG_VERBOSE);
             }
+        }
+        exe.setNewenvironment(newEnvironment);
+        exe.setEnvironment(environment);
 
-            exe.setWorkingDirectory(dir);
-
-            String[] environment = env.getVariables();
-            if (environment != null) {
-                for (int i = 0; i < environment.length; i++) {
-                    log("Setting environment variable: " + environment[i],
-                        Project.MSG_VERBOSE);
-                }
+        exe.setCommandline(command);
+        try {
+            int rc = exe.execute();
+            redirector.complete();
+            if (exe.killedProcess()) {
+                throw new BuildException("Timeout: killed the sub-process");
             }
-            exe.setNewenvironment(newEnvironment);
-            exe.setEnvironment(environment);
-
-            exe.setCommandline(command);
-            try {
-                int rc = exe.execute();
-                redirector.complete();
-                if (exe.killedProcess()) {
-                    throw new BuildException("Timeout: killed the sub-process");
-                }
-                return rc;
-            } catch (IOException e) {
-                throw new BuildException(e, getLocation());
-            }
+            return rc;
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
+        }
     }
 
     /**
@@ -709,36 +711,36 @@ public class Java extends Task {
      */
     private void spawn(String[] command) throws BuildException {
 
-            Execute exe
-                = new Execute();
-            exe.setAntRun(getProject());
+        Execute exe
+            = new Execute();
+        exe.setAntRun(getProject());
 
-            if (dir == null) {
-                dir = getProject().getBaseDir();
-            } else if (!dir.exists() || !dir.isDirectory()) {
-                throw new BuildException(dir.getAbsolutePath()
-                                         + " is not a valid directory",
-                                         getLocation());
+        if (dir == null) {
+            dir = getProject().getBaseDir();
+        } else if (!dir.exists() || !dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()
+                                     + " is not a valid directory",
+                                     getLocation());
+        }
+
+        exe.setWorkingDirectory(dir);
+
+        String[] environment = env.getVariables();
+        if (environment != null) {
+            for (int i = 0; i < environment.length; i++) {
+                log("Setting environment variable: " + environment[i],
+                    Project.MSG_VERBOSE);
             }
+        }
+        exe.setNewenvironment(newEnvironment);
+        exe.setEnvironment(environment);
 
-            exe.setWorkingDirectory(dir);
-
-            String[] environment = env.getVariables();
-            if (environment != null) {
-                for (int i = 0; i < environment.length; i++) {
-                    log("Setting environment variable: " + environment[i],
-                        Project.MSG_VERBOSE);
-                }
-            }
-            exe.setNewenvironment(newEnvironment);
-            exe.setEnvironment(environment);
-
-            exe.setCommandline(command);
-            try {
-                exe.spawn();
-            } catch (IOException e) {
-                throw new BuildException(e, getLocation());
-            }
+        exe.setCommandline(command);
+        try {
+            exe.spawn();
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
+        }
     }
     /**
      * Executes the given classname with the given arguments as it
@@ -780,4 +782,14 @@ public class Java extends Task {
         return new ExecuteWatchdog(timeout.longValue());
     }
 
+    /**
+     * @since 1.6.2
+     */
+    private void log(Throwable t) {
+        StringWriter sw = new StringWriter();
+        PrintWriter w = new PrintWriter(sw);
+        t.printStackTrace(w);
+        w.close();
+        log(sw.toString(), Project.MSG_ERR);
+    }
 }

@@ -35,6 +35,9 @@ Fixed bugs:
 
 * NPE when running commons listener. Bugzilla Report 27373.
 
+* <java> swallowed the stack trace of exceptions thrown by the
+  executed program if run in the same VM.
+
 Other changes:
 --------------
 
