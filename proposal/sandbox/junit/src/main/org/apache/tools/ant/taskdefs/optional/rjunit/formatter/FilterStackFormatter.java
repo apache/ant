@@ -92,6 +92,8 @@ public class FilterStackFormatter extends FilterFormatter {
         "org.apache.tools.ant."
     };
 
+    private final String[] filters = getFilters();
+
     /**
      * Creates a new <tt>FilterStackFormatter</tt>
      * @param formatter the formatter to be filtered.
@@ -129,12 +131,31 @@ public class FilterStackFormatter extends FilterFormatter {
      * @return <tt>true</tt> if the line is accepted, <tt>false</tt> if not.
      */
     protected boolean accept(String line) {
-        for (int i = 0; i < DEFAULT_TRACE_FILTERS.length; i++) {
-            if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) > 0) {
+        for (int i = 0; i < filters.length; i++) {
+            if (line.indexOf(filters[i]) > 0) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * @return the filters to use for this
+     */
+    protected static String[] getFilters(){
+        // @fixme hack for now, need something better.
+        // using configuration properties ?
+        String filters = System.getProperty("ant.rjunit.stacktrace.filters");
+        if (filters == null){
+            return DEFAULT_TRACE_FILTERS;
+        }
+        StringTokenizer st = new StringTokenizer(filters, ",");
+        String[] results = new String[ st.countTokens() ];
+        int i = 0;
+        while (st.hasMoreTokens()){
+            results[i++] = st.nextToken();
+        }
+        return results;
     }
 
 }

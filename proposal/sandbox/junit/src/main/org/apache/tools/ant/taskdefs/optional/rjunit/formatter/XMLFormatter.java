@@ -53,8 +53,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional.rjunit.formatter;
 
-import java.util.Hashtable;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -62,14 +64,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.optional.rjunit.JUnitHelper;
 import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestSummary;
+import org.apache.tools.ant.util.DOMElementWriter;
 
 /**
  * XML Formatter. Due to the nature of the XML we are forced to store
  * everything in memory until it is finished. It might be resource
  * intensive when running lots of testcases.
+ *
+ * <testsuites stop="true">
+ *  <testsuite name="" time="">
+ *    <testcase name="" time="">
+ *      <error/>
+ *    </testcase>
+ *    <testcase name="" time="">
+ *      <failure/>
+ *    </testcase>
+ *  </testsuite>
+ * </testsuites>
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
@@ -133,42 +148,93 @@ public class XMLFormatter extends BaseStreamFormatter {
     private Document doc = getDocumentBuilder().newDocument();
 
     /**  The wrapper for the whole testsuite. */
-    private Element rootElement = doc.createElement(TESTSUITE);
+    private Element rootElement = doc.createElement(TESTSUITES);
 
-    /** Element for the current test. */
-    private Hashtable testElements = new Hashtable();
+    private Element lastTestElement = null;
+    private TestRunEvent lastTestEvent = null;
+    private Element lastSuiteElement = null;
 
-    /** Timing helper. */
-    private Hashtable testStarts = new Hashtable();
+    public void onSuiteStarted(TestRunEvent evt) {
+        String fullclassname = evt.getName();
+        int pos = fullclassname.lastIndexOf('.');
+
+        // a missing . might imply no package at all. Don't get fooled.
+        String pkgName = (pos == -1) ? "" : fullclassname.substring(0, pos);
+        String classname = (pos == -1) ? fullclassname : fullclassname.substring(pos + 1);
+
+        Element suite = doc.createElement(TESTSUITE);
+        suite.setAttribute(ATTR_NAME, classname);
+        suite.setAttribute(ATTR_PACKAGE, pkgName);
+        rootElement.appendChild(suite);
+        lastSuiteElement = suite;
+    }
+
+    public void onSuiteEnded(TestRunEvent evt) {
+        Element suite = lastSuiteElement;
+        TestSummary summary = evt.getSummary();
+        suite.setAttribute(ATTR_TIME, String.valueOf(summary.elapsedTime()/1000.0f));
+        suite.setAttribute(ATTR_TESTS, String.valueOf(summary.runCount()));
+        suite.setAttribute(ATTR_FAILURES, String.valueOf(summary.failureCount()));
+        suite.setAttribute(ATTR_ERRORS, String.valueOf(summary.errorCount()));
+        lastSuiteElement = null;
+    }
+
+    public void onRunEnded(TestRunEvent evt) {
+        // Output properties
+        Element propsElement = doc.createElement(PROPERTIES);
+        rootElement.appendChild(propsElement);
+        Properties props = evt.getProperties();
+        if (props != null) {
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                Element propElement = doc.createElement(PROPERTY);
+                propElement.setAttribute(ATTR_NAME, name);
+                propElement.setAttribute(ATTR_VALUE, props.getProperty(name));
+                propsElement.appendChild(propElement);
+            }
+        }
+        close();
+    }
+
+    public void onRunStarted(TestRunEvent evt) {
+        //
+    }
+
+    public void onRunStopped(TestRunEvent evt) {
+        // add a stop attribute ?
+        onRunEnded(evt);
+    }
 
     public void onTestStarted(TestRunEvent evt) {
-        //@fixme, eh, a testname only can obviouslly be a duplicate...
-        testStarts.put(evt.getName(), evt);
-        Element currentTest = doc.createElement(TESTCASE);
-        currentTest.setAttribute(ATTR_NAME, evt.getName());
-        rootElement.appendChild(currentTest);
-        testElements.put(evt.getName(), currentTest);
-        //removeEvent(evt);
+        Element test = doc.createElement(TESTCASE);
+        String name = JUnitHelper.getTestName(evt.getName());
+        test.setAttribute(ATTR_NAME, name);
+        String suiteName = JUnitHelper.getSuiteName(evt.getName());
+        lastSuiteElement.appendChild(test);
+        lastTestElement = test;
+        lastTestEvent = evt;
     }
 
     public void onTestEnded(TestRunEvent evt) {
-        Element currentTest = (Element) testElements.get(evt.getName());
         // with a TestSetup, startTest and endTest are not called.
-        if (currentTest == null) {
+        if (lastTestEvent == null) {
             onTestStarted(evt);
-            currentTest = (Element) testElements.get(evt.getName());
         }
-        TestRunEvent start = (TestRunEvent)testStarts.get(evt.getName());
-        float time = ((evt.getTimeStamp() - start.getTimeStamp()) / 1000.0f);
-        currentTest.setAttribute(ATTR_TIME, Float.toString(time));
-        removeEvent(evt);
+        float time = (evt.getTimeStamp() - lastTestEvent.getTimeStamp()) / 1000.0f;
+        lastTestElement.setAttribute(ATTR_TIME, Float.toString(time));
+        lastTestElement = null;
+        lastTestEvent = null;
+    }
+
+    public void onTestError(TestRunEvent evt) {
+        onTestFailure(evt);
     }
 
     public void onTestFailure(TestRunEvent evt) {
         String type = evt.getType() == TestRunEvent.TEST_FAILURE ? FAILURE : ERROR;
         Element nested = doc.createElement(type);
-        Element currentTest = (Element) testElements.get(evt.getName());
-        currentTest.appendChild(nested);
+        lastTestElement.appendChild(nested);
 
         String[] args = parseFirstLine(evt.getStackTrace());
         if (args[1] != null && args[1].length() > 0) {
@@ -177,12 +243,7 @@ public class XMLFormatter extends BaseStreamFormatter {
         nested.setAttribute(ATTR_TYPE, args[0]);
         Text text = doc.createTextNode(evt.getStackTrace());
         nested.appendChild(text);
-        removeEvent(evt);
-    }
-
-    protected void removeEvent(TestRunEvent evt){
-        testStarts.remove(evt.getName());
-        testElements.remove(evt.getName());
+        onTestEnded(evt);
     }
 
     protected void close() {
@@ -191,7 +252,7 @@ public class XMLFormatter extends BaseStreamFormatter {
         getWriter().println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         try {
             domWriter.write(rootElement, getWriter(), 0, "  ");
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new BuildException(e);
         } finally {
             super.close();
@@ -212,7 +273,7 @@ public class XMLFormatter extends BaseStreamFormatter {
             return new String[]{trace, ""};
         }
         String line = trace.substring(0, pos);
-        pos = line.indexOf(':');
+        pos = line.indexOf(": ");
         if (pos != -1) {
             String classname = line.substring(0, pos).trim();
             String message = line.substring(pos + 1).trim();
