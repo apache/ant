@@ -16,14 +16,13 @@ import java.util.Date;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 import org.apache.tools.ant.taskdefs.file.Mkdir;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * Instruments Java classes with <a href="http://www.reliable-systems.com/tools/">
@@ -504,16 +503,6 @@ public class IContract extends MatchingTask
     public void setClasspath( Path path )
     {
         createClasspath().append( path );
-    }
-
-    /**
-     * Adds a reference to a classpath defined elsewhere.
-     *
-     * @param reference referenced classpath
-     */
-    public void setClasspathRef( Reference reference )
-    {
-        createClasspath().setRefid( reference );
     }
 
     /**

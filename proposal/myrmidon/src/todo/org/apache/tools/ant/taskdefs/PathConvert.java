@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * This task converts path and classpath information to a specific target OS
@@ -26,26 +25,21 @@ import org.apache.tools.ant.types.Reference;
  */
 public class PathConvert extends Task
 {
-
-    // Members
-    private Path path = null;// Path to be converted
-    private Reference refid = null;// Reference to path/fileset to convert
-    private String targetOS = null;// The target OS type
-    private boolean targetWindows = false;// Set when targetOS is set
-    private boolean onWindows = false;// Set if we're running on windows
-    private String property = null;// The property to receive the results
-    private ArrayList prefixMap = new ArrayList();// Path prefix map
-    private String pathSep = null;// User override on path sep char
-    private String dirSep = null;
+    private Path m_path;// Path to be converted
+    private String m_targetOS;// The target OS type
+    private boolean m_targetWindows;// Set when targetOS is set
+    private boolean m_onWindows;// Set if we're running on windows
+    private String m_property;// The property to receive the results
+    private ArrayList m_prefixMap = new ArrayList();// Path prefix map
+    private String m_pathSep;// User override on path sep char
+    private String m_dirSep;
 
     /**
      * Override the default directory separator string for the target os
-     *
-     * @param sep The new DirSep value
      */
-    public void setDirSep( String sep )
+    public void setDirSep( final String dirSep )
     {
-        dirSep = sep;
+        m_dirSep = dirSep;
     }
 
     /**
@@ -53,34 +47,18 @@ public class PathConvert extends Task
      *
      * @param sep The new PathSep value
      */
-    public void setPathSep( String sep )
+    public void setPathSep( final String pathSep )
     {
-        pathSep = sep;
+        m_pathSep = pathSep;
     }
 
     /**
      * Set the value of the proprty attribute - this is the property into which
      * our converted path will be placed.
-     *
-     * @param p The new Property value
      */
-    public void setProperty( String p )
+    public void setProperty( final String property )
     {
-        property = p;
-    }
-
-    /**
-     * Adds a reference to a PATH or FILESET defined elsewhere.
-     *
-     * @param r The new Refid value
-     */
-    public void setRefid( Reference r )
-        throws TaskException
-    {
-        if( path != null )
-            throw noChildrenAllowed();
-
-        refid = r;
+        m_property = property;
     }
 
     /**
@@ -88,13 +66,13 @@ public class PathConvert extends Task
      *
      * @param target The new Targetos value
      */
-    public void setTargetos( String target )
+    public void setTargetos( String targetOS )
         throws TaskException
     {
-        targetOS = target.toLowerCase();
+        m_targetOS = targetOS.toLowerCase();
 
-        if( !targetOS.equals( "windows" ) && !target.equals( "unix" ) &&
-            !targetOS.equals( "netware" ) )
+        if( !m_targetOS.equals( "windows" ) && !targetOS.equals( "unix" ) &&
+            !m_targetOS.equals( "netware" ) )
         {
             throw new TaskException( "targetos must be one of 'unix', 'netware', or 'windows'" );
         }
@@ -106,60 +84,35 @@ public class PathConvert extends Task
         // the same assumptions can be made as with windows -
         // that ; is the path separator
 
-        targetWindows = ( targetOS.equals( "windows" ) || targetOS.equals( "netware" ) );
-    }
-
-    /**
-     * Has the refid attribute of this element been set?
-     *
-     * @return The Reference value
-     */
-    public boolean isReference()
-    {
-        return refid != null;
+        m_targetWindows = ( m_targetOS.equals( "windows" ) || m_targetOS.equals( "netware" ) );
     }
 
     /**
      * Create a nested MAP element
-     *
-     * @return Description of the Returned Value
      */
-    public MapEntry createMap()
+    public void addMap( final MapEntry entry )
     {
-
-        MapEntry entry = new MapEntry();
-        prefixMap.add( entry );
-        return entry;
+        m_prefixMap.add( entry );
     }
 
     /**
      * Create a nested PATH element
-     *
-     * @return Description of the Returned Value
      */
     public Path createPath()
         throws TaskException
     {
-        if( isReference() )
-            throw noChildrenAllowed();
-
-        if( path == null )
+        if( m_path == null )
         {
-            path = new Path();
+            m_path = new Path();
         }
-        return path.createPath();
+        return m_path.createPath();
     }
 
-    /**
-     * Do the execution.
-     *
-     * @exception TaskException Description of Exception
-     */
     public void execute()
         throws TaskException
     {
         // If we are a reference, the create a Path from the reference
-        validateSetup();// validate our setup
+        validate();// validate our setup
 
         // Currently, we deal with only two path formats: Unix and Windows
         // And Unix is everything that is not Windows
@@ -170,17 +123,17 @@ public class PathConvert extends Task
         // for NetWare, piggy-back on Windows, since here and in the
         // apply code, the same assumptions can be made as with windows -
         // that \\ is an OK separator, and do comparisons case-insensitive.
-        onWindows = ( ( osname.indexOf( "windows" ) >= 0 ) ||
+        m_onWindows = ( ( osname.indexOf( "windows" ) >= 0 ) ||
             ( osname.indexOf( "netware" ) >= 0 ) );
 
         // Determine the from/to char mappings for dir sep
-        char fromDirSep = onWindows ? '\\' : '/';
-        char toDirSep = dirSep.charAt( 0 );
+        char fromDirSep = m_onWindows ? '\\' : '/';
+        char toDirSep = m_dirSep.charAt( 0 );
 
         StringBuffer rslt = new StringBuffer( 100 );
 
         // Get the list of path components in canonical form
-        String[] elems = path.list();
+        String[] elems = m_path.list();
 
         for( int i = 0; i < elems.length; i++ )
         {
@@ -194,16 +147,16 @@ public class PathConvert extends Task
             elem = elem.replace( fromDirSep, toDirSep );
 
             if( i != 0 )
-                rslt.append( pathSep );
+                rslt.append( m_pathSep );
             rslt.append( elem );
         }
 
         // Place the result into the specified property
         String value = rslt.toString();
 
-        getLogger().debug( "Set property " + property + " = " + value );
+        getLogger().debug( "Set property " + m_property + " = " + value );
 
-        setProperty( property, value );
+        setProperty( m_property, value );
     }
 
     /**
@@ -217,7 +170,7 @@ public class PathConvert extends Task
     private String mapElement( String elem )
         throws TaskException
     {
-        int size = prefixMap.size();
+        int size = m_prefixMap.size();
 
         if( size != 0 )
         {
@@ -227,7 +180,7 @@ public class PathConvert extends Task
 
             for( int i = 0; i < size; i++ )
             {
-                MapEntry entry = (MapEntry)prefixMap.get( i );
+                MapEntry entry = (MapEntry)m_prefixMap.get( i );
                 String newElem = entry.apply( elem );
 
                 // Note I'm using "!=" to see if we got a new object back from
@@ -245,34 +198,23 @@ public class PathConvert extends Task
     }
 
     /**
-     * Creates an exception that indicates that this XML element must not have
-     * child elements if the refid attribute is set.
-     *
-     * @return Description of the Returned Value
-     */
-    private TaskException noChildrenAllowed()
-    {
-        return new TaskException( "You must not specify nested PATH elements when using refid" );
-    }
-
-    /**
      * Validate that all our parameters have been properly initialized.
      *
      * @throws TaskException if something is not setup properly
      */
-    private void validateSetup()
+    private void validate()
         throws TaskException
     {
 
-        if( path == null )
+        if( m_path == null )
             throw new TaskException( "You must specify a path to convert" );
 
-        if( property == null )
+        if( m_property == null )
             throw new TaskException( "You must specify a property" );
 
         // Must either have a target OS or both a dirSep and pathSep
 
-        if( targetOS == null && pathSep == null && dirSep == null )
+        if( m_targetOS == null && m_pathSep == null && m_dirSep == null )
             throw new TaskException( "You must specify at least one of targetOS, dirSep, or pathSep" );
 
         // Determine the separator strings.  The dirsep and pathsep attributes
@@ -280,24 +222,24 @@ public class PathConvert extends Task
         String dsep = File.separator;
         String psep = File.pathSeparator;
 
-        if( targetOS != null )
+        if( m_targetOS != null )
         {
-            psep = targetWindows ? ";" : ":";
-            dsep = targetWindows ? "\\" : "/";
+            psep = m_targetWindows ? ";" : ":";
+            dsep = m_targetWindows ? "\\" : "/";
         }
 
-        if( pathSep != null )
+        if( m_pathSep != null )
         {// override with pathsep=
-            psep = pathSep;
+            psep = m_pathSep;
         }
 
-        if( dirSep != null )
+        if( m_dirSep != null )
         {// override with dirsep=
-            dsep = dirSep;
+            dsep = m_dirSep;
         }
 
-        pathSep = psep;
-        dirSep = dsep;
+        m_pathSep = psep;
+        m_dirSep = dsep;
     }
 
     /**
@@ -305,24 +247,20 @@ public class PathConvert extends Task
      * this: &lt;map from="d:" to="/foo"/> <p>
      *
      * When running on windows, the prefix comparison will be case insensitive.
-     *
-     * @author RT
      */
     public class MapEntry
     {
-
-        // Members
-        private String from = null;
-        private String to = null;
+        private String m_from;
+        private String m_to;
 
         /**
          * Set the "from" attribute of the map entry
          *
          * @param from The new From value
          */
-        public void setFrom( String from )
+        public void setFrom( final String from )
         {
-            this.from = from;
+            m_from = from;
         }
 
         /**
@@ -330,9 +268,9 @@ public class PathConvert extends Task
          *
          * @param to The new To value
          */
-        public void setTo( String to )
+        public void setTo( final String to )
         {
-            this.to = to;
+            m_to = to;
         }
 
         /**
@@ -344,33 +282,32 @@ public class PathConvert extends Task
         public String apply( String elem )
             throws TaskException
         {
-            if( from == null || to == null )
+            if( m_from == null || m_to == null )
             {
                 throw new TaskException( "Both 'from' and 'to' must be set in a map entry" );
             }
 
             // If we're on windows, then do the comparison ignoring case
-            String cmpElem = onWindows ? elem.toLowerCase() : elem;
-            String cmpFrom = onWindows ? from.toLowerCase() : from;
+            final String cmpElem = m_onWindows ? elem.toLowerCase() : elem;
+            final String cmpFrom = m_onWindows ? m_from.toLowerCase() : m_from;
 
             // If the element starts with the configured prefix, then convert the prefix
             // to the configured 'to' value.
 
             if( cmpElem.startsWith( cmpFrom ) )
             {
-                int len = from.length();
-
+                final int len = m_from.length();
                 if( len >= elem.length() )
                 {
-                    elem = to;
+                    elem = m_to;
                 }
                 else
                 {
-                    elem = to + elem.substring( len );
+                    elem = m_to + elem.substring( len );
                 }
             }
 
             return elem;
         }
-    }// User override on directory sep char
+    }
 }
