@@ -229,6 +229,7 @@ h6 {
 			<h2>Tests</h2>
 			<p>
 			<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+        <xsl:call-template name="testcase.test.header"/>
 			  <!--
 			  test can even not be started at all (failure to load the class)
 			  so report the error directly
