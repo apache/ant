@@ -14,16 +14,33 @@ import org.apache.myrmidon.api.AbstractTask;
 /**
  * This is a simple task used to dump out all the proeprtys in the
  * runtime. Useful for debugging behaviour in ant build directives.
- * Could possibly be moved to a new antlib.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:jimcook@visualxs.com">Jim Cook</a>
  * @version $Revision$ $Date$
  * @ant.task name="property-dump"
+ * @todo Consider moving to new antlib
  */
 public class PropertyDump
     extends AbstractTask
 {
+    /**
+     * The prefix which the keys must start with if they are
+     * to be dumped.
+     */
+    private String m_prefix;
+
+    /**
+     * Set the prefix which the keys must start with if they are
+     * to be dumped. If not specified then all keys are dumped.
+     *
+     * @param prefix the prefix
+     */
+    public void setPrefix( final String prefix )
+    {
+        m_prefix = prefix;
+    }
+
     /**
      * Printout all the properties in ant runtime.
      */
@@ -35,6 +52,14 @@ public class PropertyDump
         {
             final String key = (String)iterator.next();
             final Object value = properties.get( key );
+
+            //Check to see if property starts with specified prefix
+            //and if it doesn't then skip property
+            if( null != m_prefix && !key.startsWith( m_prefix ) )
+            {
+                continue;
+            }
+
             getContext().info( key + "=" + value );
         }
     }
