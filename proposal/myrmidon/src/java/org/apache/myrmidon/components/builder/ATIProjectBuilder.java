@@ -32,7 +32,7 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class XSLProjectBuilder
+public class ATIProjectBuilder
     extends DefaultProjectBuilder
     implements Parameterizable
 {
@@ -103,6 +103,14 @@ public class XSLProjectBuilder
         }
         else
         {
+            final String[] names = m_parameters.getNames();
+            for( int i = 0; i < names.length; i++ )
+            {
+                final String name = names[ i ];
+                final String value = m_parameters.getParameter( name );
+                transformer.setParameter( name, value );
+            }
+
             final SAXResult result = new SAXResult( handler );
             transformer.transform( new StreamSource( sourceID.toString() ), result );
         }        

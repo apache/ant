@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 
 <?xsl-param name="foo" value="bar"?>
+<?xsl-params location="sample.properties"?>
 <?xsl-stylesheet href="template-simple.xsl"?>
 
-<!-- next is ignored -->
-<?xsl-params-old location="foo.properties"?>
 <!--
 ==============================================================================
 

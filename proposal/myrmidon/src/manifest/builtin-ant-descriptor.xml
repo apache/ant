@@ -5,7 +5,7 @@
     <listener name="default" classname="org.apache.myrmidon.listeners.DefaultProjectListener"/>
     <aspect name="noop" classname="org.apache.myrmidon.aspects.NoopAspectHandler"/>
     <project-builder name="ant" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
-    <project-builder name="ati" classname="org.apache.myrmidon.components.builder.XSLProjectBuilder"/>
+    <project-builder name="ati" classname="org.apache.myrmidon.components.builder.ATIProjectBuilder"/>
 
     <!-- basic tasks/datatypes/coverters required in most environments -->
     <task name="pattern" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
