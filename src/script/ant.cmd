@@ -1,10 +1,22 @@
 /* 
-    Copyright (c) 2003 The Apache Software Foundation.  All rights
-    reserved.
-
-    Run ant 
+    Copyright 2003-2004 The Apache Software Foundation
+  
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+  
+        http://www.apache.org/licenses/LICENSE-2.0
+  
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ 
+    Run ant
 */
 
+'@echo off'
 parse arg mode envarg '::' antarg
 
 if mode\='.' & mode\='..' & mode\='/' then do
@@ -21,14 +33,7 @@ x = setlocal()
 
 env="OS2ENVIRONMENT"
 antenv = _getenv_('antenv')
-if _testenv_() = 0 then do
-  interpret 'call "' || antenv || '"' '"' || envarg || '"'
-  if _testenv_() = 0 then do
-    say 'Ant environment is not set properly'
-    x = endlocal()
-    exit 16
-  end
-end
+if _testenv_() = 0 then interpret 'call "' || antenv || '"' '"' || envarg || '"'
 
 if mode = '' then mode = _getenv_('ANT_MODE' '..')
 if mode \= '/' then do
@@ -39,15 +44,31 @@ if mode \= '/' then do
   interpret 'call "' || runrc || '"' antrc '"' || mode || '"'
 end
 
+if _testenv_() = 0 then do
+  say 'Ant environment is not set properly'
+  x = endlocal()
+  exit 16
+end
+
 settings = '-Dant.home=' || ANT_HOME '-Djava.home=' || JAVA_HOME
 
 java = _getenv_('javacmd' 'java')
 opts = value('ANT_OPTS',,env)
 args = value('ANT_ARGS',,env)
 lcp = value('LOCALCLASSPATH',,env)
-if lcp\='' then lcp = '-cp' lcp
+cp = value('CLASSPATH',,env)
+if value('ANT_USE_CP',,env) \= '' then do
+  if lcp \= '' & right(lcp, 1) \= ';' then lcp = lcp || ';'
+  lcp = lcp || cp
+  'SET CLASSPATH='
+end
+if lcp\='' then lcp = '-classpath' lcp
 
-java opts lcp 'org.apache.tools.ant.Main' settings args antarg
+cmd = java opts lcp '-jar' ANT_HOME ||'\lib\ant-launcher.jar' settings args antarg
+launcher = stream(ANT_HOME ||'\lib\ant-launcher.jar', 'C', 'query exists')
+if launcher = '' then entry = 'org.apache.tools.ant.Main'
+else entry = 'org.apache.tools.ant.launch.Launcher'
+java opts lcp entry settings args antarg
 
 x = endlocal()
 
