@@ -141,8 +141,8 @@ Note: This document was updated in the context of releasing Ant 1.6.
     file under /usr/local/apache2/logs
 
 16. When the final beta is considered OK, propose a vote on dev@ant to
-    officially adopt the latest beta as the Ant 1.6 release. If it is passed,
-    (it usually does,) this would be labelled ANT_16 and built in a similar
+    officially adopt the latest beta as the Ant 1.6.0 release. If it is passed,
+    (it usually does,) this would be labelled ANT_160 and built in a similar
     fashion to the above process.
 
 17. BUT
@@ -162,6 +162,9 @@ Note: This document was updated in the context of releasing Ant 1.6.
 
 18. Change the links in /xdocs/bindownload.xml and /xdocs/srcdownload.xml,
     regenerate the HTML files, commit and update the site.
+
+    Updating the site includes updating the online manual which should display
+    the manual of ant 1.6.0 instead of 1.5.4
 
     As the mirrors may need some days to pick up the new release, you
     may want to add a note to that effect to the pages and remove it a few
