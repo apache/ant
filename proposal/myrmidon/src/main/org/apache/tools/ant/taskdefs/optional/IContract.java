@@ -731,7 +731,7 @@ public class IContract extends MatchingTask
             Path baseClasspath = createClasspath();
 
             // Might need to add the core classes if we're not using Sun's Javac (like Jikes)
-            String compiler = getProject().getProperty( "build.compiler" );
+            String compiler = getProperty( "build.compiler" ).toString();
             ClasspathHelper classpathHelper = new ClasspathHelper( compiler );
             classpathHelper.modify( baseClasspath );
 
