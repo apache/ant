@@ -40,4 +40,16 @@
           if="TESTDEST.was.created"/>
   </target>
 
+  <target name="testConcatNoNewline">
+    <concat>
+      <fileset dir="concat-input"/>
+    </concat>
+  </target>
+
+  <target name="testConcatNoNewlineEncoding">
+    <concat encoding="ASCII">
+      <fileset dir="concat-input"/>
+    </concat>
+  </target>
+
 </project>

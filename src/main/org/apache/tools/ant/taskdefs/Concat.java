@@ -63,8 +63,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -360,7 +360,7 @@ public class Concat extends Task {
                     }
 
                     is = new FileInputStream(input[i]);
-                    byte[] buffer = new byte[8096];
+                    byte[] buffer = new byte[8192];
                     while (true) {
                         int bytesRead = is.read(buffer);
                         if (bytesRead == -1) { // EOF
@@ -390,24 +390,22 @@ public class Concat extends Task {
                 }
             }
 
-        } else { // user specified encoding, assume line oriented input
+        } else { // user specified encoding
 
-            PrintWriter out = null;
+            Writer out = null;
             BufferedReader in = null;
 
             try {
                 if (destinationFile == null) {
                     // Log using WARN so it displays in 'quiet' mode.
-                    out = new PrintWriter(
-                              new OutputStreamWriter(
-                                  new LogOutputStream(this, Project.MSG_WARN)));
+                    out = new OutputStreamWriter(
+                              new LogOutputStream(this, Project.MSG_WARN));
                 } else {
-                    out = new PrintWriter(
-                              new OutputStreamWriter(
-                                  new FileOutputStream(destinationFile
-                                                       .getAbsolutePath(),
-                                                       append),
-                                  encoding));
+                    out = new OutputStreamWriter(
+                              new FileOutputStream(destinationFile
+                                                   .getAbsolutePath(),
+                                                   append),
+                              encoding);
                     
                     // This flag should only be recognized for the first
                     // file. In the context of a single 'cat', we always
@@ -421,11 +419,17 @@ public class Concat extends Task {
                                 encoding));
 
                     String line;
-                    while ((line = in.readLine()) != null) {
-                        // Log the line, using WARN so it displays in
-                        // 'quiet' mode.
-                        out.println(line);
+                    char[] buffer = new char[4096];
+                    while (true) {
+                        int charsRead = in.read(buffer);
+                        if (charsRead == -1) { // EOF
+                            break;
+                        }
+                        
+                        // Write the read data.
+                        out.write(buffer, 0, charsRead);
                     }
+                    out.flush();
                     in.close();
                     in = null;
                 }

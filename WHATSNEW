@@ -55,6 +55,10 @@ Fixed bugs:
 
 * <cvschangelog> could miss today's changes.
 
+* entity includes would cause exceptions if path names included spaces.
+
+* <concat> could append newline characters between concatenated files.
+
 Other changes:
 --------------
 * <setproxy> lets you set the username and password for proxies that want authentication

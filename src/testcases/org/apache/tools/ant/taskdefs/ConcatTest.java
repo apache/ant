@@ -166,4 +166,11 @@ public class ConcatTest
                             "src/etc/testcases/taskdefs/thisfiledoesnotexist does not exist.");
     }
 
+    public void testConcatNoNewline() {
+        expectLog("testConcatNoNewline", "ab");
+    }
+
+    public void testConcatNoNewlineEncoding() {
+        expectLog("testConcatNoNewlineEncoding", "ab");
+    }
 }
