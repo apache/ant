@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.condition;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
 import org.apache.tools.ant.taskdefs.Checksum;
@@ -24,9 +23,10 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public abstract class ConditionBase extends ProjectComponent
+public abstract class ConditionBase
+    extends ProjectComponent
 {
-    private ArrayList conditions = new ArrayList();
+    private ArrayList m_conditions = new ArrayList();
 
     /**
      * Add an &lt;and&gt; condition "container".
@@ -36,7 +36,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addAnd( And a )
     {
-        conditions.add( a );
+        m_conditions.add( a );
     }
 
     /**
@@ -47,7 +47,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addAvailable( Available a )
     {
-        conditions.add( a );
+        m_conditions.add( a );
     }
 
     /**
@@ -58,7 +58,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addChecksum( Checksum c )
     {
-        conditions.add( c );
+        m_conditions.add( c );
     }
 
     /**
@@ -69,7 +69,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addEquals( Equals e )
     {
-        conditions.add( e );
+        m_conditions.add( e );
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addHttp( Http h )
     {
-        conditions.add( h );
+        m_conditions.add( h );
     }
 
     /**
@@ -91,7 +91,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addIsSet( IsSet i )
     {
-        conditions.add( i );
+        m_conditions.add( i );
     }
 
     /**
@@ -102,7 +102,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addNot( Not n )
     {
-        conditions.add( n );
+        m_conditions.add( n );
     }
 
     /**
@@ -113,7 +113,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addOr( Or o )
     {
-        conditions.add( o );
+        m_conditions.add( o );
     }
 
     /**
@@ -122,9 +122,9 @@ public abstract class ConditionBase extends ProjectComponent
      * @param o The feature to be added to the Os attribute
      * @since 1.1
      */
-    public void addOs( Os o )
+    public void addOs( final OsCondition o )
     {
-        conditions.add( o );
+        m_conditions.add( o );
     }
 
     /**
@@ -135,7 +135,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addSocket( Socket s )
     {
-        conditions.add( s );
+        m_conditions.add( s );
     }
 
     /**
@@ -146,7 +146,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     public void addUptodate( UpToDate u )
     {
-        conditions.add( u );
+        m_conditions.add( u );
     }
 
     /**
@@ -168,7 +168,7 @@ public abstract class ConditionBase extends ProjectComponent
      */
     protected int countConditions()
     {
-        return conditions.size();
+        return m_conditions.size();
     }
 
     /**
@@ -193,7 +193,7 @@ public abstract class ConditionBase extends ProjectComponent
             Object o = null;
             try
             {
-                o = conditions.get( currentElement++ );
+                o = m_conditions.get( currentElement++ );
             }
             catch( ArrayIndexOutOfBoundsException e )
             {

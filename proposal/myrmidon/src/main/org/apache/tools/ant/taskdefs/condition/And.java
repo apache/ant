@@ -19,22 +19,22 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class And extends ConditionBase implements Condition
+public class And
+    extends ConditionBase
+    implements Condition
 {
-
     public boolean eval()
         throws TaskException
     {
-        Enumeration enum = getConditions();
+        final Enumeration enum = getConditions();
         while( enum.hasMoreElements() )
         {
-            Condition c = (Condition)enum.nextElement();
-            if( !c.eval() )
+            final Condition condition = (Condition)enum.nextElement();
+            if( !condition.eval() )
             {
                 return false;
             }
         }
         return true;
     }
-
 }
