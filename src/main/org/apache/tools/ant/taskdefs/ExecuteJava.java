@@ -174,6 +174,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (loader != null) {
                 loader.resetThreadContextLoader();
                 loader.cleanup();
+                loader = null;
             }
             if (sysProperties != null) {
                 sysProperties.restoreSystem();

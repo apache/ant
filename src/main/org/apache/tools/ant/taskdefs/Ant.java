@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.Set;
 import java.util.HashSet;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;

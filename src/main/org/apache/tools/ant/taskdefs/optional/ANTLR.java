@@ -402,13 +402,17 @@ public class ANTLR extends Task {
      * @since Ant 1.6
      */
     protected boolean is272() {
+        AntClassLoader l = null;
         try {
-            AntClassLoader l = new AntClassLoader(getProject(),
-                                                  commandline.getClasspath());
+            l = getProject().createClassLoader(commandline.getClasspath());
             l.loadClass("antlr.Version");
             return true;
         } catch (ClassNotFoundException e) {
             return false;
-        } // end of try-catch
+        } finally {
+            if (l != null) {
+                l.cleanup();
+            }
+        }
     }
 }
