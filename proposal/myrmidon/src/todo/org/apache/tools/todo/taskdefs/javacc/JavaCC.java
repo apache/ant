@@ -222,7 +222,6 @@ public class JavaCC
 
         final Path classpath = exe.getClassPath();
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
-        PathUtil.addJavaRuntime( classpath );
 
         exe.setMaxMemory( "140M" );
         exe.getSysProperties().addVariable( "install.root", javaccHome.getAbsolutePath() );

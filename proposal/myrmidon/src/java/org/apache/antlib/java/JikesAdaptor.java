@@ -10,6 +10,7 @@ package org.apache.antlib.java;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.java.JavaRuntimeClassPath;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.PathUtil;
@@ -53,7 +54,7 @@ public class JikesAdaptor
         }
 
         // Add the runtime
-        PathUtil.addJavaRuntime( classpath );
+        classpath.add( new JavaRuntimeClassPath() );
 
         // Build the command line
         final Commandline cmd = exe.getCommandline();
