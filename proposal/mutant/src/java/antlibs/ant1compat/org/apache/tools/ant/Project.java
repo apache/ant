@@ -355,6 +355,28 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
+     * Returns the current datatype definition hashtable. The returned 
+     * hashtable is "live" and so should not be modified.
+     * 
+     * @return a map of from datatype name to implementing class 
+     *         (String to Class). 
+     */
+    public Hashtable getDataTypeDefinitions() {
+        return dataClassDefinitions;
+    }
+
+    /**
+     * Returns the current task definition hashtable. The returned hashtable is 
+     * "live" and so should not be modified.
+     * 
+     * @return a map of from task name to implementing class 
+     *         (String to Class). 
+     */
+    public Hashtable getTaskDefinitions() {
+        return taskClassDefinitions;
+    }
+
+    /**
      * Gets the buildListeners of the Project
      *
      * @return A Vector of BuildListener instances
