@@ -67,7 +67,7 @@ import org.w3c.dom.*;
  *
  * @author The original author of XmlLogger
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:bailliez@noos.fr">Stephane Bailliez</tt>
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</tt>
  */
 public class DOMElementWriter {
 
@@ -131,6 +131,9 @@ public class DOMElementWriter {
                 break;
                 
             case Node.TEXT_NODE:
+                out.write(encode(child.getNodeValue()));
+                break;
+                
             case Node.CDATA_SECTION_NODE:
                 out.write("<![CDATA[");
                 out.write(((Text)child).getData());
@@ -170,10 +173,11 @@ public class DOMElementWriter {
         out.write(element.getTagName());
         out.write(">");
         out.write(lSep);
+        out.flush();
     }
 
     /**
-     * Escape &lt;, &amp; and &quot; as their entities.
+     * Escape &lt;, &gt; &amp; &apos; and &quot; as their entities.
      */
     public String encode(String value) {
         sb.setLength(0);
@@ -182,6 +186,12 @@ public class DOMElementWriter {
             switch (c) {
             case '<':
                 sb.append("&lt;");
+                break;
+            case '>':
+                sb.append("&gt;");
+                break;
+            case '\'':
+                sb.append("&apos;");
                 break;
             case '\"':
                 sb.append("&quot;");
