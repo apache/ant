@@ -168,7 +168,7 @@ public class Depend extends MatchingTask {
                 File depFile = new File(cache, info.relativeName + ".dep");
                 if (depFile.exists() && depFile.lastModified() > info.absoluteFile.lastModified()) {
                     // depFile exists and is newer than the class file
-                    // need to read dependency list from tyhe file.
+                    // need to read dependency list from the file.
                     dependencyList = readDependencyList(depFile);
                 }
             }
@@ -235,7 +235,7 @@ public class Depend extends MatchingTask {
                         deleteAffectedFiles(affectedClassName);
                     }
                     else {
-                        // without closer we may delete an inner class but not the
+                        // without closure we may delete an inner class but not the
                         // top level class which will not trigger a recompile.
                            
                         if (affectedClassName.indexOf("$") != -1) {
@@ -245,7 +245,8 @@ public class Depend extends MatchingTask {
                             log("Top level class = " + topLevelClassName, Project.MSG_INFO);
                             ClassFileInfo topLevelClassInfo 
                                 = (ClassFileInfo)classFileInfoMap.get(topLevelClassName);
-                            if (topLevelClassInfo.absoluteFile.exists()) {
+                            if (topLevelClassInfo != null &&
+                                topLevelClassInfo.absoluteFile.exists()) {
                                 log("Deleting file " + topLevelClassInfo.absoluteFile.getPath() + " since " + 
                                     "one of its inner classes was removed", Project.MSG_VERBOSE);
                                 topLevelClassInfo.absoluteFile.delete();
