@@ -58,11 +58,12 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.SrcFile;
 
 /**
  * Abstract Base class for unpack tasks.
  *
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 
 public abstract class Unpack extends Task {
@@ -72,14 +73,16 @@ public abstract class Unpack extends Task {
 
     /**
      * @deprecated setSrc(String) is deprecated and is replaced with
-     *             setSrc(File) to make Ant's Introspection
+     *             setSrc(SrcFile) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
      */
     public void setSrc(String src) {
         log("DEPRECATED - The setSrc(String) method has been deprecated."
-            + " Use setSrc(File) instead.");
-        setSrc(project.resolveFile(src));
+            + " Use setSrc(SrcFile) instead.");
+        SrcFile sf = new SrcFile();
+        sf.setFile(project.resolveFile(src));
+        setSrc(sf);
     }
 
     /**
@@ -94,8 +97,8 @@ public abstract class Unpack extends Task {
         setDest(project.resolveFile(dest));
     }
 
-    public void setSrc(File src) {
-        source = src;
+    public void setSrc(SrcFile srcFile) {
+        source = srcFile.getFile();
     }
 
     public void setDest(File dest) {
@@ -105,14 +108,6 @@ public abstract class Unpack extends Task {
     private void validate() throws BuildException {
         if (source == null) {
             throw new BuildException("No Src specified", location);
-        }
-
-        if (!source.exists()) {
-            throw new BuildException("Src doesn't exist", location);
-        }
-
-        if (source.isDirectory()) {
-            throw new BuildException("Cannot expand a directory", location);
         }
 
         if (dest == null) {
