@@ -214,12 +214,22 @@ public class ZipOutputStream extends FilterOutputStream {
     /**
      * Deflater object for output 
      *
+     * <p>This attribute is only protected to provide a level of API
+     * backwards compatibility.  This class used to extend {@link
+     * java.util.zip.DeflaterOutputStream DeflaterOutputStream} up to
+     * Revision 1.13.</p>
+     *
      * @since 1.14
      */
     protected Deflater def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
     
     /**
      * Deflater buffer
+     *
+     * <p>This attribute is only protected to provide a level of API
+     * backwards compatibility.  This class used to extend {@link
+     * java.util.zip.DeflaterOutputStream DeflaterOutputStream} up to
+     * Revision 1.13.</p>
      *
      * @since 1.14
      */
