@@ -78,6 +78,7 @@ import java.io.IOException;
  * over as few files as possible, perhaps following it with an &lt;uptodate;&gt
  * to keep the descendent routines conditional.
  *
+ * @author not specified
  */
 public class DifferentSelector extends MappingSelector {
 
@@ -88,7 +89,7 @@ public class DifferentSelector extends MappingSelector {
 
     /**
      * This flag tells the selector to ignore file times in the comparison
-     * @param ignoreFileTimes
+     * @param ignoreFileTimes if true ignore file times
      */
     public void setIgnoreFileTimes(boolean ignoreFileTimes) {
         this.ignoreFileTimes = ignoreFileTimes;
@@ -96,9 +97,9 @@ public class DifferentSelector extends MappingSelector {
 
     /**
      * this test is our selection test that compared the file with the destfile
-     * @param srcfile
-     * @param destfile
-     * @return
+     * @param srcfile the source file
+     * @param destfile the destination file
+     * @return true if the files are different
      */
     protected boolean selectionTest(File srcfile, File destfile) {
 

@@ -73,14 +73,14 @@ public interface SelectorScanner {
      *
      * @return list of directories not selected
      */
-    public String[] getDeselectedDirectories();
+    String[] getDeselectedDirectories();
 
     /**
      * Files which were selected out of a scan.
      *
      * @return list of files not selected
      */
-    public String[] getDeselectedFiles();
+    String[] getDeselectedFiles();
 
 
 }

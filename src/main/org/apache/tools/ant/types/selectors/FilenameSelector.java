@@ -69,14 +69,25 @@ public class FilenameSelector extends BaseExtendSelector {
 
     private String pattern = null;
     private boolean casesensitive = true;
-    private boolean negated = false;
-    public final static String NAME_KEY = "name";
-    public final static String CASE_KEY = "casesensitive";
-    public final static String NEGATE_KEY = "negate";
 
+    private boolean negated = false;
+    /** Used for parameterized custom selector */
+    public static final String NAME_KEY = "name";
+    /** Used for parameterized custom selector */
+    public static final String CASE_KEY = "casesensitive";
+    /** Used for parameterized custom selector */
+    public static final String NEGATE_KEY = "negate";
+
+    /**
+     * Creates a new <code>FilenameSelector</code> instance.
+     *
+     */
     public FilenameSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{filenameselector name: ");
         buf.append(pattern);

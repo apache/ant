@@ -76,11 +76,18 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
     private String userProvidedExpression = null;
     private RegularExpression myRegExp = null;
     private Regexp myExpression = null;
-    public final static String EXPRESSION_KEY = "expression";
+    /** Key to used for parameterized custom selector */
+    public static final String EXPRESSION_KEY = "expression";
 
+    /**
+     * Creates a new <code>ContainsRegexpSelector</code> instance.
+     */
     public ContainsRegexpSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer(
                 "{containsregexpselector expression: ");
@@ -162,7 +169,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
 
             while (teststr != null) {
 
-                if (myExpression.matches(teststr) == true) {
+                if (myExpression.matches(teststr)) {
                     return true;
                 }
                 teststr = in.readLine();
@@ -176,7 +183,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
                 try {
                     in.close();
                 } catch (Exception e) {
-                    throw new BuildException("Could not close file " 
+                    throw new BuildException("Could not close file "
                                              + filename);
                 }
             }

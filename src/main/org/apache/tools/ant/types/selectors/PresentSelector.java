@@ -78,9 +78,16 @@ public class PresentSelector extends BaseSelector {
     private FileNameMapper map = null;
     private boolean destmustexist = true;
 
+    /**
+     * Creates a new <code>PresentSelector</code> instance.
+     *
+     */
     public PresentSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{presentselector targetdir: ");
         if (targetdir == null) {
@@ -115,6 +122,8 @@ public class PresentSelector extends BaseSelector {
 
     /**
      * Defines the FileNameMapper to use (nested mapper element).
+     * @return a mapper to be configured
+     * @throws BuildException if more that one mapper defined
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
@@ -197,6 +206,9 @@ public class PresentSelector extends BaseSelector {
      * presence is allowed and required.
      */
     public static class FilePresence extends EnumeratedAttribute {
+        /**
+         * @return the values as an array of strings
+         */
         public String[] getValues() {
             return new String[]{"srconly", "both"};
         }

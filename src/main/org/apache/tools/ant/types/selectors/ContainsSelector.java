@@ -76,14 +76,26 @@ public class ContainsSelector extends BaseExtendSelector {
     private String contains = null;
     private boolean casesensitive = true;
     private boolean ignorewhitespace = false;
-    public final static String CONTAINS_KEY = "text";
-    public final static String CASE_KEY = "casesensitive";
-    public final static String WHITESPACE_KEY = "ignorewhitespace";
+    /** Key to used for parameterized custom selector */
+    public static final String EXPRESSION_KEY = "expression";
+    /** Used for parameterized custom selector */
+    public static final String CONTAINS_KEY = "text";
+    /** Used for parameterized custom selector */
+    public static final String CASE_KEY = "casesensitive";
+    /** Used for parameterized custom selector */
+    public static final String WHITESPACE_KEY = "ignorewhitespace";
 
 
+    /**
+     * Creates a new <code>ContainsSelector</code> instance.
+     *
+     */
     public ContainsSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{containsselector text: ");
         buf.append(contains);
@@ -218,7 +230,7 @@ public class ContainsSelector extends BaseExtendSelector {
                 try {
                     in.close();
                 } catch (Exception e) {
-                    throw new BuildException("Could not close file " 
+                    throw new BuildException("Could not close file "
                                              + filename);
                 }
             }

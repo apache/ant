@@ -77,18 +77,30 @@ public class DateSelector extends BaseExtendSelector {
     private boolean includeDirs = false;
     private int granularity = 0;
     private int cmp = 2;
-    public final static String MILLIS_KEY = "millis";
-    public final static String DATETIME_KEY = "datetime";
-    public final static String CHECKDIRS_KEY = "checkdirs";
-    public final static String GRANULARITY_KEY = "granularity";
-    public final static String WHEN_KEY = "when";
+    /** Key to used for parameterized custom selector */
+    public static final String MILLIS_KEY = "millis";
+    /** Key to used for parameterized custom selector */
+    public static final String DATETIME_KEY = "datetime";
+    /** Key to used for parameterized custom selector */
+    public static final String CHECKDIRS_KEY = "checkdirs";
+    /** Key to used for parameterized custom selector */
+    public static final String GRANULARITY_KEY = "granularity";
+    /** Key to used for parameterized custom selector */
+    public static final String WHEN_KEY = "when";
 
+    /**
+     * Creates a new <code>DateSelector</code> instance.
+     *
+     */
     public DateSelector() {
         if (Os.isFamily("dos")) {
             granularity = 2000;
         }
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{dateselector date: ");
         buf.append(dateTime);
@@ -118,6 +130,7 @@ public class DateSelector extends BaseExtendSelector {
 
     /**
      * Returns the millisecond value the selector is set for.
+     * @return the millisecond value
      */
     public long getMillis() {
         return millis;
@@ -163,6 +176,7 @@ public class DateSelector extends BaseExtendSelector {
     /**
      * Sets the number of milliseconds leeway we will give before we consider
      * a file not to have matched a date.
+     * @param granularity the number of milliconds leeway
      */
     public void setGranularity(int granularity) {
         this.granularity = granularity;
@@ -246,7 +260,7 @@ public class DateSelector extends BaseExtendSelector {
      */
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
-        if (file.isDirectory() && (includeDirs == false)) {
+        if (file.isDirectory() && (!includeDirs)) {
             return true;
         }
         if (cmp == 0) {
@@ -263,6 +277,9 @@ public class DateSelector extends BaseExtendSelector {
      * <p>
      */
     public static class TimeComparisons extends EnumeratedAttribute {
+        /**
+         * @return the values as an array of strings
+         */
         public String[] getValues() {
             return new String[]{"before", "after", "equal"};
         }

@@ -69,11 +69,19 @@ public class TypeSelector extends BaseExtendSelector {
 
     private String type = null;
 
-    public final static String TYPE_KEY = "type";
+    /** Key to used for parameterized custom selector */
+    public static final String TYPE_KEY = "type";
 
+    /**
+     * Creates a new <code>TypeSelector</code> instance.
+     *
+     */
     public TypeSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{typeselector type: ");
         buf.append(type);
@@ -83,6 +91,7 @@ public class TypeSelector extends BaseExtendSelector {
 
     /**
      * Set the type of file to require.
+     * @param fileTypes the type of file - file or dir
      */
     public void setType(FileType fileTypes) {
         this.type = fileTypes.getValue();
@@ -146,9 +155,14 @@ public class TypeSelector extends BaseExtendSelector {
      * Enumerated attribute with the values for types of file
      */
     public static class FileType extends EnumeratedAttribute {
+        /** the string value for file */
         public static final String FILE = "file";
+        /** the string value for dir */
         public static final String DIR = "dir";
 
+        /**
+         * @return the values as an array of strings
+         */
         public String[] getValues() {
             return new String[]{FILE, DIR};
         }

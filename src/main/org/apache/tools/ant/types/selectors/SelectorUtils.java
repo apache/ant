@@ -674,7 +674,7 @@ public final class SelectorUtils {
 
     /**
      * removes from a pattern all tokens to the right containing wildcards
-     * @param input
+     * @param input the input string
      * @return the leftmost part of the pattern without wildcards
      */
     public static String rtrimWildcardTokens(String input) {

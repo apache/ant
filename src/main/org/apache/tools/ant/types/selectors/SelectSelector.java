@@ -81,6 +81,9 @@ public class SelectSelector extends BaseSelectorContainer {
     public SelectSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer();
         if (hasSelectors()) {
@@ -111,6 +114,7 @@ public class SelectSelector extends BaseSelectorContainer {
 
     /**
      * Indicates whether there are any selectors here.
+     * @return whether any selectors are in this container
      */
     public boolean hasSelectors() {
         if (isReference()) {
@@ -121,6 +125,7 @@ public class SelectSelector extends BaseSelectorContainer {
 
     /**
      * Gives the count of the number of selectors in this container
+     * @return the number of selectors in this container
      */
     public int selectorCount() {
         if (isReference()) {
@@ -131,6 +136,8 @@ public class SelectSelector extends BaseSelectorContainer {
 
     /**
      * Returns the set of selectors as an array.
+     * @param p the current project
+     * @return an array of selectors in this container
      */
     public FileSelector[] getSelectors(Project p) {
         if (isReference()) {
@@ -141,6 +148,7 @@ public class SelectSelector extends BaseSelectorContainer {
 
     /**
      * Returns an enumerator for accessing the set of selectors.
+     * @return an enumerator that goes through each of the selectors
      */
     public Enumeration selectorElements() {
         if (isReference()) {
@@ -177,6 +185,7 @@ public class SelectSelector extends BaseSelectorContainer {
     /**
      * Ensures that the selector passes the conditions placed
      * on it with <code>if</code> and <code>unless</code>.
+     * @return true if conditions are passed
      */
     public boolean passesConditions() {
         if (ifProperty != null
@@ -192,6 +201,7 @@ public class SelectSelector extends BaseSelectorContainer {
     /**
      * Sets the if attribute to a property which must exist for the
      * selector to select any files.
+     * @param ifProperty the property to check
      */
     public void setIf(String ifProperty) {
         this.ifProperty = ifProperty;
@@ -200,6 +210,7 @@ public class SelectSelector extends BaseSelectorContainer {
     /**
      * Sets the unless attribute to a property which cannot exist for the
      * selector to select any files.
+     * @param unlessProperty the property to check
      */
     public void setUnless(String unlessProperty) {
         this.unlessProperty = unlessProperty;

@@ -71,12 +71,21 @@ public class DepthSelector extends BaseExtendSelector {
 
     public int min = -1;
     public int max = -1;
-    public final static String MIN_KEY = "min";
-    public final static String MAX_KEY = "max";
+    /** Used for parameterized custom selector */
+    public static final String MIN_KEY = "min";
+    /** Used for parameterized custom selector */
+    public static final String MAX_KEY = "max";
 
+    /**
+     * Creates a new <code>DepthSelector</code> instance.
+     *
+     */
     public DepthSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{depthselector min: ");
         buf.append(min);
@@ -169,20 +178,20 @@ public class DepthSelector extends BaseExtendSelector {
 
         int depth = -1;
         // If you felt daring, you could cache the basedir absolute path
-        String abs_base = basedir.getAbsolutePath();
-        String abs_file = file.getAbsolutePath();
-        StringTokenizer tok_base = new StringTokenizer(abs_base,
+        String absBase = basedir.getAbsolutePath();
+        String absFile = file.getAbsolutePath();
+        StringTokenizer tokBase = new StringTokenizer(absBase,
                 File.separator);
-        StringTokenizer tok_file = new StringTokenizer(abs_file,
+        StringTokenizer tokFile = new StringTokenizer(absFile,
                 File.separator);
-        while (tok_file.hasMoreTokens()) {
-            String filetoken = tok_file.nextToken();
-            if (tok_base.hasMoreTokens()) {
-                String basetoken = tok_base.nextToken();
+        while (tokFile.hasMoreTokens()) {
+            String filetoken = tokFile.nextToken();
+            if (tokBase.hasMoreTokens()) {
+                String basetoken = tokBase.nextToken();
                 // Sanity check. Ditch it if you want faster performance
                 if (!basetoken.equals(filetoken)) {
                     throw new BuildException("File " + filename
-                            + " does not appear within " + abs_base
+                            + " does not appear within " + absBase
                             + "directory");
                 }
             } else {
@@ -192,9 +201,9 @@ public class DepthSelector extends BaseExtendSelector {
                 }
             }
         }
-        if (tok_base.hasMoreTokens()) {
+        if (tokBase.hasMoreTokens()) {
             throw new BuildException("File " + filename
-                + " is outside of " + abs_base + "directory tree");
+                + " is outside of " + absBase + "directory tree");
         }
         if (min > -1 && depth < min) {
             return false;

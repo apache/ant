@@ -67,10 +67,17 @@ import java.io.File;
  */
 public class DependSelector extends MappingSelector {
 
+    /**
+     * Creates a new <code>DependSelector</code> instance.
+     *
+     */
     public DependSelector() {
 
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{dependselector targetdir: ");
         if (targetdir == null) {
@@ -94,9 +101,9 @@ public class DependSelector extends MappingSelector {
 
     /**
      * this test is our selection test that compared the file with the destfile
-     * @param srcfile
-     * @param destfile
-     * @return
+     * @param srcfile the source file
+     * @param destfile the destination file
+     * @return true if destination is out of date
      */
     public boolean selectionTest(File srcfile, File destfile) {
         boolean selected = SelectorUtils.isOutOfDate(srcfile, destfile,

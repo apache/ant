@@ -65,6 +65,7 @@ import java.io.File;
 /**
  * A mapping selector is an abstract class adding mapping support to the base
  * selector
+ * @author not specified
  */
 public abstract class MappingSelector extends BaseSelector {
     protected File targetdir = null;
@@ -72,6 +73,10 @@ public abstract class MappingSelector extends BaseSelector {
     protected FileNameMapper map = null;
     protected int granularity = 0;
 
+    /**
+     * Creates a new <code>MappingSelector</code> instance.
+     *
+     */
     public MappingSelector() {
         if (Os.isFamily("dos")) {
             granularity = 2000;
@@ -91,6 +96,8 @@ public abstract class MappingSelector extends BaseSelector {
 
     /**
      * Defines the FileNameMapper to use (nested mapper element).
+     * @return a mapper to be configured
+     * @throws BuildException if more that one mapper defined
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
@@ -155,7 +162,7 @@ public abstract class MappingSelector extends BaseSelector {
      * this test is our selection test that compared the file with the destfile
      * @param srcfile file to test; may be null
      * @param destfile destination file
-     * @return
+     * @return true if source file compares with destination file
      */
     protected abstract boolean selectionTest(File srcfile, File destfile);
 
@@ -163,6 +170,7 @@ public abstract class MappingSelector extends BaseSelector {
      * Sets the number of milliseconds leeway we will give before we consider
      * a file out of date. Defaults to 2000 on MS-DOS derivatives as the FAT
      * file system.
+     * @param granularity the leeway in milliseconds
      */
     public void setGranularity(int granularity) {
         this.granularity = granularity;

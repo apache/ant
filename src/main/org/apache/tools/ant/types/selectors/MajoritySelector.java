@@ -79,6 +79,9 @@ public class MajoritySelector extends BaseSelectorContainer {
     public MajoritySelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer();
         if (hasSelectors()) {
@@ -89,6 +92,13 @@ public class MajoritySelector extends BaseSelectorContainer {
         return buf.toString();
     }
 
+    /**
+     * A attribute to specify what will happen if number
+     * of yes votes is the same as the number of no votes
+     * defaults to true
+     *
+     * @param tiebreaker the value to give if there is a tie
+     */
     public void setAllowtie(boolean tiebreaker) {
         allowtie = tiebreaker;
     }

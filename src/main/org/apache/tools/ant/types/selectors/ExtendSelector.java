@@ -138,6 +138,7 @@ public class ExtendSelector extends BaseSelector {
 
     /**
      * Set the classpath to load the classname specified using an attribute.
+     * @param classpath the classpath to use
      */
     public final void setClasspath(Path classpath) {
         if (isReference()) {
@@ -152,6 +153,7 @@ public class ExtendSelector extends BaseSelector {
 
     /**
      * Specify the classpath to use to load the Selector (nested element).
+     * @return a classpath to be configured
      */
     public final Path createClasspath() {
         if (isReference()) {
@@ -165,6 +167,7 @@ public class ExtendSelector extends BaseSelector {
 
     /**
      * Get the classpath
+     * @return the classpath
      */
     public final Path getClasspath() {
         return classpath;
@@ -173,6 +176,7 @@ public class ExtendSelector extends BaseSelector {
     /**
      * Set the classpath to use for loading a custom selector by using
      * a reference.
+     * @param r a reference to the classpath
      */
     public void setClasspathref(Reference r) {
         if (isReference()) {
@@ -211,6 +215,8 @@ public class ExtendSelector extends BaseSelector {
      * since we know we must have them all by now. And since we must know
      * both classpath and classname, creating the class is deferred to here
      * as well.
+     *
+     * @exception BuildException if an error occurs
      */
     public boolean isSelected(File basedir, String filename, File file)
             throws BuildException {

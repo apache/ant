@@ -71,13 +71,23 @@ public class SizeSelector extends BaseExtendSelector {
     private long multiplier = 1;
     private long sizelimit = -1;
     private int cmp = 2;
-    public final static String SIZE_KEY = "value";
-    public final static String UNITS_KEY = "units";
-    public final static String WHEN_KEY = "when";
+    /** Used for parameterized custom selector */
+    public static final String SIZE_KEY = "value";
+    /** Used for parameterized custom selector */
+    public static final String UNITS_KEY = "units";
+    /** Used for parameterized custom selector */
+    public static final String WHEN_KEY = "when";
 
+    /**
+     * Creates a new <code>SizeSelector</code> instance.
+     *
+     */
     public SizeSelector() {
     }
 
+    /**
+     * @return a string describing this object
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer("{sizeselector value: ");
         buf.append(sizelimit);
@@ -270,6 +280,9 @@ public class SizeSelector extends BaseExtendSelector {
      * standard. It disambiguates things for us, though.
      */
     public static class ByteUnits extends EnumeratedAttribute {
+        /**
+         * @return the values as an array of strings
+         */
         public String[] getValues() {
             return new String[]{"K", "k", "kilo", "KILO",
                                 "Ki", "KI", "ki", "kibi", "KIBI",
@@ -287,6 +300,9 @@ public class SizeSelector extends BaseExtendSelector {
      * Enumerated attribute with the values for size comparison.
      */
     public static class SizeComparisons extends EnumeratedAttribute {
+        /**
+         * @return the values as an array of strings
+         */
         public String[] getValues() {
             return new String[]{"less", "more", "equal"};
         }
