@@ -187,9 +187,8 @@ public class CallTarget extends Task {
         throws IOException {
         if (callee != null) {
             return callee.handleInput(buffer, offset, length);
-        } else {
-            return super.handleInput(buffer, offset, length);
         }
+        return super.handleInput(buffer, offset, length);
     }
 
     /**

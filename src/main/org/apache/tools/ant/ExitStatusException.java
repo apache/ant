@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public class ExitStatusException extends BuildException {
     private int status;
 
     /**
-     * Constructs an <CODE>ExitStatusException</CODE>.
+     * Constructs an <code>ExitStatusException</code>.
      * @param status the associated status code
      */
     public ExitStatusException(int status) {
@@ -36,7 +36,7 @@ public class ExitStatusException extends BuildException {
     }
 
     /**
-     * Constructs an <CODE>ExitStatusException</CODE>.
+     * Constructs an <code>ExitStatusException</code>.
      * @param msg the associated message
      * @param status the associated status code
      */
@@ -47,7 +47,7 @@ public class ExitStatusException extends BuildException {
 
     /**
      * Get the status code.
-     * @return <CODE>int</CODE>
+     * @return <code>int</code>
      */
     public int getStatus() {
         return status;

@@ -237,20 +237,20 @@ public class Concat extends Task {
 
     /**
      * Add a header to the concatenated output
-     * @param header the header
+     * @param headerToAdd the header
      * @since Ant 1.6
      */
-    public void addHeader(TextElement header) {
-        this.header = header;
+    public void addHeader(TextElement headerToAdd) {
+        this.header = headerToAdd;
     }
 
     /**
      * Add a footer to the concatenated output
-     * @param footer the footer
+     * @param footerToAdd the footer
      * @since Ant 1.6
      */
-    public void addFooter(TextElement footer) {
-        this.footer = footer;
+    public void addFooter(TextElement footerToAdd) {
+        this.footer = footerToAdd;
     }
 
     /**

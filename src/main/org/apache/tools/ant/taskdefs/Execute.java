@@ -17,25 +17,30 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.OutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Runs an external program.
@@ -481,7 +486,8 @@ public class Execute {
             }
             return getExitValue();
         } finally {
-            // remove the process to the list of those to destroy if the VM exits
+            // remove the process to the list of those to destroy if
+            // the VM exits
             //
             processDestroyer.remove(process);
         }
@@ -506,8 +512,8 @@ public class Execute {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                project.log("interruption in the sleep after having spawned a process",
-                    Project.MSG_VERBOSE);
+                project.log("interruption in the sleep after having spawned a"
+                            + " process", Project.MSG_VERBOSE);
             }
         }
         OutputStream dummyOut = new OutputStream() {
@@ -521,7 +527,8 @@ public class Execute {
         handler.start();
         process.getOutputStream().close();
 
-        project.log("spawned process " + process.toString(), Project.MSG_VERBOSE);
+        project.log("spawned process " + process.toString(),
+                    Project.MSG_VERBOSE);
     }
 
     /**
@@ -645,7 +652,7 @@ public class Execute {
 
     /**
      * Close the streams belonging to the given Process.
-     * @param process   the <CODE>Process</CODE>.
+     * @param process   the <code>Process</code>.
      */
     public static void closeStreams(Process process) {
         FileUtils.close(process.getInputStream());
@@ -717,7 +724,8 @@ public class Execute {
          * @param env           The environment for the new process.  If null,
          *                      the environment of the current process is used.
          * @return the created Process.
-         * @throws IOException  if attempting to run a command in a specific directory.
+         * @throws IOException if attempting to run a command in a
+         * specific directory.
          */
         public Process exec(Project project, String[] cmd, String[] env)
              throws IOException {
@@ -771,7 +779,8 @@ public class Execute {
          * @param project the Ant project.
          * @param cmd the command line to execute as an array of strings.
          * @param env the environment to set as an array of strings.
-         * @param workingDir the working directory where the command should run.
+         * @param workingDir the working directory where the command
+         * should run.
          * @return the created Process.
          * @throws IOException probably forwarded from Runtime#exec.
          */
@@ -820,7 +829,8 @@ public class Execute {
          * @param cmd the command line to execute as an array of strings.
          * @param env the environment to set as an array of strings.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env)
             throws IOException {
@@ -849,7 +859,8 @@ public class Execute {
          * @param env the environment to set as an array of strings.
          * @param workingDir working directory where the command should run.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -897,7 +908,8 @@ public class Execute {
          * @param env the environment to set as an array of strings.
          * @param workingDir working directory where the command should run.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -942,7 +954,8 @@ public class Execute {
          * @param env the environment to set as an array of strings.
          * @param workingDir working directory where the command should run.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -976,7 +989,8 @@ public class Execute {
          * @param env the environment to set as an array of strings.
          * @param workingDir working directory where the command should run.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -993,7 +1007,8 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "Property 'ant.home' not found");
             }
-            String antRun = project.resolveFile(antHome + File.separator + myScript).toString();
+            String antRun = project.resolveFile(antHome + File.separator 
+                                                + myScript).toString();
 
             // Build the command
             File commandDir = workingDir;
@@ -1032,7 +1047,8 @@ public class Execute {
          * @param env the environment to set as an array of strings.
          * @param workingDir working directory where the command should run.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -1049,7 +1065,8 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "Property 'ant.home' not found");
             }
-            String antRun = project.resolveFile(antHome + File.separator + myScript).toString();
+            String antRun = project.resolveFile(antHome + File.separator 
+                                                + myScript).toString();
 
             // Build the command
             File commandDir = workingDir;
@@ -1083,7 +1100,8 @@ public class Execute {
          * @param cmd the command line to execute as an array of strings.
          * @param env the environment to set as an array of strings.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env)
             throws IOException {
@@ -1104,7 +1122,8 @@ public class Execute {
          * @param env the environment to set as an array of strings.
          * @param workingDir working directory where the command should run.
          * @return the created Process.
-         * @throws IOException forwarded from the exec method of the command launcher.
+         * @throws IOException forwarded from the exec method of the
+         * command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {

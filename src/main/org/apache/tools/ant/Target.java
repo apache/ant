@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ public class Target implements TaskContainer {
 
     /** Sole constructor. */
     public Target() {
+        //empty
     }
 
     /**
@@ -79,7 +80,7 @@ public class Target implements TaskContainer {
     /**
      * Sets the location of this target's definition.
      *
-     * @param location   <CODE>Location</CODE>
+     * @param location   <code>Location</code>
      * @since 1.6.2
      */
     public void setLocation(Location location) {
@@ -89,7 +90,7 @@ public class Target implements TaskContainer {
     /**
      * Get the location of this target's definition.
      *
-     * @return <CODE>Location</CODE>
+     * @return <code>Location</code>
      * @since 1.6.2
      */
     public Location getLocation() {
@@ -208,11 +209,8 @@ public class Target implements TaskContainer {
      * @return an enumeration of the dependencies of this target
      */
     public Enumeration getDependencies() {
-        if (dependencies != null) {
-            return Collections.enumeration(dependencies);
-        } else {
-            return new CollectionUtils.EmptyEnumeration();
-        }
+        return (dependencies != null ? Collections.enumeration(dependencies) 
+                                     : new CollectionUtils.EmptyEnumeration());
     }
 
     /**
@@ -224,7 +222,8 @@ public class Target implements TaskContainer {
     public boolean dependsOn(String other) {
         Project p = getProject();
         Hashtable t = (p == null) ? null : p.getTargets();
-        return (p != null && p.topoSort(getName(), t, false).contains(t.get(other)));
+        return (p != null 
+                && p.topoSort(getName(), t, false).contains(t.get(other)));
     }
 
     /**

@@ -79,7 +79,7 @@ public class Ant extends Task {
     private String antFile = null;
 
     /** the output */
-    private String output  = null;
+    private String output = null;
 
     /** should we inherit properties from the parent ? */
     private boolean inheritAll = true;
@@ -112,6 +112,7 @@ public class Ant extends Task {
      * simple constructor
      */
     public Ant() {
+        //default
     }
 
     /**
@@ -223,67 +224,61 @@ public class Ant extends Task {
 
     /**
      * @see Task#handleOutput(String)
-     *
      * @since Ant 1.5
      */
-    public void handleOutput(String output) {
+    public void handleOutput(String outputToHandle) {
         if (newProject != null) {
-            newProject.demuxOutput(output, false);
+            newProject.demuxOutput(outputToHandle, false);
         } else {
-            super.handleOutput(output);
+            super.handleOutput(outputToHandle);
         }
     }
 
     /**
      * @see Task#handleInput(byte[], int, int)
-     *
      * @since Ant 1.6
      */
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (newProject != null) {
             return newProject.demuxInput(buffer, offset, length);
-        } else {
-            return super.handleInput(buffer, offset, length);
         }
+        return super.handleInput(buffer, offset, length);
     }
 
     /**
      * @see Task#handleFlush(String)
-     *
      * @since Ant 1.5.2
      */
-    public void handleFlush(String output) {
+    public void handleFlush(String toFlush) {
         if (newProject != null) {
-            newProject.demuxFlush(output, false);
+            newProject.demuxFlush(toFlush, false);
         } else {
-            super.handleFlush(output);
+            super.handleFlush(toFlush);
         }
     }
 
     /**
      * @see Task#handleErrorOutput(String)
-     *
      * @since Ant 1.5
      */
-    public void handleErrorOutput(String output) {
+    public void handleErrorOutput(String errorOutputToHandle) {
         if (newProject != null) {
-            newProject.demuxOutput(output, true);
+            newProject.demuxOutput(errorOutputToHandle, true);
         } else {
-            super.handleErrorOutput(output);
+            super.handleErrorOutput(errorOutputToHandle);
         }
     }
 
     /**
      * @see Task#handleErrorFlush(String)
-     *
      * @since Ant 1.5.2
      */
-    public void handleErrorFlush(String output) {
+    public void handleErrorFlush(String errorOutputToFlush) {
         if (newProject != null) {
-            newProject.demuxFlush(output, true);
+            newProject.demuxFlush(errorOutputToFlush, true);
         } else {
-            super.handleErrorFlush(output);
+            super.handleErrorFlush(errorOutputToFlush);
         }
     }
 
@@ -344,11 +339,10 @@ public class Ant extends Task {
                     if (getTaskName().equals("antcall")) {
                         throw new BuildException("antcall must not be used at"
                                                  + " the top level.");
-                    } else {
-                        throw new BuildException(getTaskName() + " task at the"
-                                                 + " top level must not invoke"
-                                                 + " its own build file.");
                     }
+                    throw new BuildException(getTaskName() + " task at the"
+                                + " top level must not invoke"
+                                + " its own build file.");
                 }
             }
 
@@ -375,28 +369,29 @@ public class Ant extends Task {
                 if (locals.contains(owningTargetName)) {
                     throw new BuildException(getTaskName() + " task calling "
                                              + "its own parent target.");
-                } else {
-                    boolean circular = false;
-                    for (Iterator it = locals.iterator(); !circular && it.hasNext();) {
-                        Target other = (Target) (getProject().getTargets().get(
-                            (String) (it.next())));
-                        circular |= (other != null
-                            && other.dependsOn(owningTargetName));
-                    }
-                    if (circular) {
-                        throw new BuildException(getTaskName()
-                                                 + " task calling a target"
-                                                 + " that depends on"
-                                                 + " its parent target \'"
-                                                 + owningTargetName
-                                                 + "\'.");
-                    }
+                }
+                boolean circular = false;
+                for (Iterator it = locals.iterator(); 
+                     !circular && it.hasNext();) {
+                    Target other = 
+                        (Target) (getProject().getTargets().get(it.next()));
+                    circular |= (other != null
+                                 && other.dependsOn(owningTargetName));
+                }
+                if (circular) {
+                    throw new BuildException(getTaskName()
+                                             + " task calling a target"
+                                             + " that depends on"
+                                             + " its parent target \'"
+                                             + owningTargetName
+                                             + "\'.");
                 }
             }
 
             addReferences();
 
-            if (locals.size() > 0 && !(locals.size() == 1 && locals.get(0) == "")) {
+            if (locals.size() > 0 && !(locals.size() == 1 
+                                       && locals.get(0) == "")) {
                 Throwable t = null;
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
@@ -567,7 +562,8 @@ public class Ant extends Task {
      * Copies all properties from the given table to the new project -
      * omitting those that have already been set in the new project as
      * well as properties named basedir or ant.file.
-     * @param props properties <code>Hashtable</code> to copy to the new project.
+     * @param props properties <code>Hashtable</code> to copy to the
+     * new project.
      * @since Ant 1.6
      */
     private void addAlmostAll(Hashtable props) {
@@ -593,10 +589,10 @@ public class Ant extends Task {
      * Defaults to the current project's basedir, unless inheritall
      * has been set to false, in which case it doesn't have a default
      * value. This will override the basedir setting of the called project.
-     * @param d new directory as <code>File</code>.
+     * @param dir new directory as <code>File</code>.
      */
-    public void setDir(File d) {
-        this.dir = d;
+    public void setDir(File dir) {
+        this.dir = dir;
     }
 
     /**
@@ -604,23 +600,23 @@ public class Ant extends Task {
      * to be a filename relative to the dir attribute given.
      * @param s the <code>String</code> build file name.
      */
-    public void setAntfile(String s) {
+    public void setAntfile(String antFile) {
         // @note: it is a string and not a file to handle relative/absolute
         // otherwise a relative file will be resolved based on the current
         // basedir.
-        this.antFile = s;
+        this.antFile = antFile;
     }
 
     /**
      * The target of the new Ant project to execute.
      * Defaults to the new project's default target.
-     * @param s the name of the target to invoke.
+     * @param targetToAdd the name of the target to invoke.
      */
-    public void setTarget(String s) {
-        if (s.equals("")) {
+    public void setTarget(String targetToAdd) {
+        if (targetToAdd.equals("")) {
             throw new BuildException("target attribute must not be empty");
         }
-        targets.add(s);
+        targets.add(targetToAdd);
         targetAttributeSet = true;
     }
 
@@ -628,10 +624,10 @@ public class Ant extends Task {
      * Set the filename to write the output to. This is relative to the value
      * of the dir attribute if it has been set or to the base directory of the
      * current project otherwise.
-     * @param s the name of the file to which the output should go.
+     * @param outputFile the name of the file to which the output should go.
      */
-    public void setOutput(String s) {
-        this.output = s;
+    public void setOutput(String outputFile) {
+        this.output = outputFile;
     }
 
     /**
@@ -653,15 +649,15 @@ public class Ant extends Task {
     /**
      * Add a Reference element identifying a data type to carry
      * over to the new project.
-     * @param r <code>Reference</code> to add.
+     * @param ref <code>Reference</code> to add.
      */
-    public void addReference(Reference r) {
-        references.addElement(r);
+    public void addReference(Reference ref) {
+        references.addElement(ref);
     }
 
     /**
      * Add a target to this Ant invocation.
-     * @param t the <CODE>TargetElement</CODE> to add.
+     * @param t the <code>TargetElement</code> to add.
      * @since Ant 1.6.3
      */
     public void addConfiguredTarget(TargetElement t) {
@@ -702,7 +698,7 @@ public class Ant extends Task {
 
         /** Creates a reference to be configured by Ant. */
         public Reference() {
-            super();
+                super();
         }
 
         private String targetid = null;
@@ -740,11 +736,12 @@ public class Ant extends Task {
          * Default constructor.
          */
         public TargetElement() {
+                //default
         }
 
         /**
          * Set the name of this TargetElement.
-         * @param name   the <CODE>String</CODE> target name.
+         * @param name   the <code>String</code> target name.
          */
         public void setName(String name) {
             this.name = name;
@@ -752,7 +749,7 @@ public class Ant extends Task {
 
         /**
          * Get the name of this TargetElement.
-         * @return <CODE>String</CODE>.
+         * @return <code>String</code>.
          */
         public String getName() {
             return name;

@@ -61,6 +61,7 @@ public class Apt
 
         /** Constructor for Option */
         public Option() {
+                //default
         }
 
         /**
@@ -121,8 +122,7 @@ public class Apt
      * @param compiler not used.
      */
     public void setCompiler(String compiler) {
-        log(ERROR_IGNORING_COMPILER_OPTION,
-                Project.MSG_WARN);
+        log(ERROR_IGNORING_COMPILER_OPTION, Project.MSG_WARN);
     }
 
     /**

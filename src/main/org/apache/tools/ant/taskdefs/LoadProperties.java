@@ -133,7 +133,7 @@ public class LoadProperties extends Task {
     }
 
     /**
-     * get the classpath used by this <CODE>LoadProperties</CODE>.
+     * get the classpath used by this <code>LoadProperties</code>.
      * @return The classpath
      */
     public Path getClasspath() {
@@ -252,5 +252,4 @@ public class LoadProperties extends Task {
         filterChains.addElement(filter);
     }
 
-//end class
 }

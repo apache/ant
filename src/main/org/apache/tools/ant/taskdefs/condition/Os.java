@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import java.util.Locale;
+
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -45,11 +46,11 @@ public class Os implements Condition {
      *
      */
     public Os() {
+        //default
     }
 
     /**
      * Constructor that sets the family attribute
-     *
      * @param family a String value
      */
     public Os(String family) {

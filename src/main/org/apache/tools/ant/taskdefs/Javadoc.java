@@ -48,21 +48,21 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * Generates Javadoc documentation for a collection
  * of source code.
  *
- * <P>Current known limitations are:
+ * <p>Current known limitations are:
  *
- * <P><UL>
- *    <LI>patterns must be of the form "xxx.*", every other pattern doesn't
+ * <p><ul>
+ *    <li>patterns must be of the form "xxx.*", every other pattern doesn't
  *        work.
- *    <LI>there is no control on arguments sanity since they are left
+ *    <li>there is no control on arguments sanity since they are left
  *        to the javadoc implementation.
- *    <LI>argument J in javadoc1 is not supported (what is that for anyway?)
- * </UL>
+ *    <li>argument J in javadoc1 is not supported (what is that for anyway?)
+ * </ul>
  *
- * <P>If no <CODE>doclet</CODE> is set, then the <CODE>version</CODE> and
- * <CODE>author</CODE> are by default <CODE>"yes"</CODE>.
+ * <p>If no <code>doclet</code> is set, then the <code>version</code> and
+ * <code>author</code> are by default <code>"yes"</code>.
  *
- * <P>Note: This task is run on another VM because the Javadoc code calls
- * <CODE>System.exit()</CODE> which would break Ant functionality.
+ * <p>Note: This task is run on another VM because the Javadoc code calls
+ * <code>System.exit()</code> which would break Ant functionality.
  *
  * @since Ant 1.1
  *
@@ -270,6 +270,7 @@ public class Javadoc extends Task {
          * Default constructor
          */
         public SourceFile() {
+                //empty
         }
 
         /**
@@ -1190,8 +1191,8 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Represents a link triplet (href, whether link is offline, location of the
-     * package list if off line)
+     * Represents a link triplet (href, whether link is offline,
+     * location of the package list if off line)
      */
     public class LinkArgument {
         private String href;
@@ -1199,6 +1200,7 @@ public class Javadoc extends Task {
         private File packagelistLoc;
 
         public LinkArgument() {
+                //empty
         }
 
         public void setHref(String hr) {
@@ -1269,6 +1271,7 @@ public class Javadoc extends Task {
 
         /** Sole constructor. */
         public TagArgument () {
+                //empty
         }
 
         /**
@@ -1401,6 +1404,7 @@ public class Javadoc extends Task {
         private Vector packages = new Vector();
 
         public GroupArgument() {
+                //empty
         }
 
         public void setTitle(String src) {
@@ -1705,9 +1709,11 @@ public class Javadoc extends Task {
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {
-                            throw new BuildException("The package list "
-                                                     + " location for link " + la.getHref()
-                                                     + " must be provided because the link is "
+                            throw new BuildException("The package list"
+                                                     + " location for link " 
+                                                     + la.getHref()
+                                                     + " must be provided "
+                                                     + "because the link is "
                                                      + "offline");
                         }
                         File packageListFile =
@@ -1794,21 +1800,28 @@ public class Javadoc extends Task {
                             // The tag element is not used as a fileset,
                             // but specifies the tag directly.
                             toExecute.createArgument().setValue ("-tag");
-                            toExecute.createArgument().setValue (ta.getParameter());
+                            toExecute.createArgument()
+                                .setValue (ta.getParameter());
                         } else {
-                            // The tag element is used as a fileset. Parse all the files and
-                            // create -tag arguments.
-                            DirectoryScanner tagDefScanner = ta.getDirectoryScanner(getProject());
+                            // The tag element is used as a
+                            // fileset. Parse all the files and create
+                            // -tag arguments.
+                            DirectoryScanner tagDefScanner = 
+                                ta.getDirectoryScanner(getProject());
                             String[] files = tagDefScanner.getIncludedFiles();
                             for (int i = 0; i < files.length; i++) {
                                 File tagDefFile = new File(tagDir, files[i]);
                                 try {
                                     BufferedReader in
-                                        = new BufferedReader(new FileReader(tagDefFile));
+                                        = new BufferedReader(
+                                              new FileReader(tagDefFile)
+                                              );
                                     String line = null;
                                     while ((line = in.readLine()) != null) {
-                                        toExecute.createArgument().setValue ("-tag");
-                                        toExecute.createArgument().setValue (line);
+                                        toExecute.createArgument()
+                                            .setValue("-tag");
+                                        toExecute.createArgument()
+                                            .setValue(line);
                                     }
                                     in.close();
                                 } catch (IOException ioe) {
@@ -1870,8 +1883,8 @@ public class Javadoc extends Task {
                         .setValue("@" + tmpList.getAbsolutePath());
                 }
                 srcListWriter = new PrintWriter(
-                                                new FileWriter(tmpList.getAbsolutePath(),
-                                                               true));
+                                    new FileWriter(tmpList.getAbsolutePath(),
+                                                   true));
             }
 
             Enumeration e = packagesToDoc.elements();
@@ -1932,7 +1945,8 @@ public class Javadoc extends Task {
             exe.setCommandline(toExecute.getCommandline());
             int ret = exe.execute();
             if (ret != 0 && failOnError) {
-                throw new BuildException("Javadoc returned " + ret, getLocation());
+                throw new BuildException("Javadoc returned " + ret,
+                                         getLocation());
             }
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, getLocation());

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -341,36 +341,36 @@ public abstract class AbstractCvsTask extends Task {
                                          + retCode
                                          + StringUtils.LINE_SEP
                                          + "Command line was ["
-                                         + actualCommandLine + "]", getLocation());
+                                         + actualCommandLine + "]",
+                                         getLocation());
             }
         } catch (IOException e) {
             if (failOnError) {
                 throw new BuildException(e, getLocation());
-            } else {
-                log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
             }
+            log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
         } catch (BuildException e) {
-            if (failOnError) {
-                throw(e);
-            } else {
+                if (failOnError) {
+                        throw(e);
+                }
                 Throwable t = e.getException();
                 if (t == null) {
-                    t = e;
+                        t = e;
                 }
                 log("Caught exception: " + t.getMessage(), Project.MSG_WARN);
-            }
         } catch (Exception e) {
-            if (failOnError) {
-                throw new BuildException(e, getLocation());
-            } else {
+                if (failOnError) {
+                        throw new BuildException(e, getLocation());
+                }
                 log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
-            }
+                
         }
     }
 
     /**
      * do the work
-     * @throws BuildException if failonerror is set to true and the cvs command fails.
+     * @throws BuildException if failonerror is set to true and the
+     * cvs command fails.
      */
     public void execute() throws BuildException {
 
@@ -615,8 +615,8 @@ public abstract class AbstractCvsTask extends Task {
 
     /**
      * Use the most recent revision no later than the given date.
-     * @param p a date as string in a format that the CVS executable can understand
-     * see man cvs
+     * @param p a date as string in a format that the CVS executable
+     * can understand see man cvs
      */
     public void setDate(String p) {
         if (p != null && p.trim().length() > 0) {
@@ -738,7 +738,8 @@ public abstract class AbstractCvsTask extends Task {
         if (cvsPackage != null) {
             c.createArgument().setLine(cvsPackage);
         }
-        if (this.compression > 0 && this.compression <= MAXIMUM_COMRESSION_LEVEL) {
+        if (this.compression > 0
+            && this.compression <= MAXIMUM_COMRESSION_LEVEL) {
             c.createArgument(true).setValue("-z" + this.compression);
         }
         if (quiet && !reallyquiet) {

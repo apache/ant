@@ -16,16 +16,17 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.JAXPUtils;
-import org.xml.sax.XMLReader;
+
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.XMLReader;
 
 /**
- * test for the XML parser supporting a particular feature
+ * Test for the XML parser supporting a particular feature
  * @since Ant 1.7
  */
 public class ParserSupports extends ProjectComponent implements Condition {
@@ -42,12 +43,13 @@ public class ParserSupports extends ProjectComponent implements Condition {
             " not recognized: ";
     private static final String NOT_SUPPORTED =
             " not supported: ";
-    public static final String ERROR_NO_ATTRIBUTES = "Neither feature or property are set";
-    public static final String ERROR_NO_VALUE = "A value is needed when testing for property support";
+    public static final String ERROR_NO_ATTRIBUTES = 
+        "Neither feature or property are set";
+    public static final String ERROR_NO_VALUE = 
+        "A value is needed when testing for property support";
 
     /**
      * Feature to probe for.
-     *
      * @param feature
      */
     public void setFeature(String feature) {
@@ -71,33 +73,30 @@ public class ParserSupports extends ProjectComponent implements Condition {
         this.value = value;
     }
 
-
-
     /**
-     * validate the args, then try to set the feature or property
+     * Validate the args, then try to set the feature or property
      * @return
      * @throws BuildException
      */
     public boolean eval() throws BuildException {
-        if(feature!=null && property!=null) {
+        if (feature != null && property != null) {
             throw new BuildException(ERROR_BOTH_ATTRIBUTES);
         }
-        if(feature==null && property==null) {
+        if (feature == null && property == null) {
             throw new BuildException(ERROR_NO_ATTRIBUTES);
         }
         //pick a value that is good for everything
-        if(feature!=null) {
+        if (feature != null) {
             return evalFeature();
-        } else {
-            if(value==null) {
-                throw new BuildException(ERROR_NO_VALUE);
-            }
-            return evalProperty();
         }
+        if (value == null) {
+            throw new BuildException(ERROR_NO_VALUE);
+        }
+        return evalProperty();
     }
 
     /**
-     * get our reader
+     * Get our reader
      * @return a reader
      */
     private XMLReader getReader() {
@@ -106,7 +105,7 @@ public class ParserSupports extends ProjectComponent implements Condition {
     }
 
     /**
-     * set a feature
+     * Set a feature
      * @return true if the feature could be set
      */
     public boolean evalFeature() {
@@ -116,7 +115,7 @@ public class ParserSupports extends ProjectComponent implements Condition {
         }
         boolean v= Project.toBoolean(value);
         try {
-            reader.setFeature(feature,v);
+            reader.setFeature(feature, v);
         } catch (SAXNotRecognizedException e) {
             log(FEATURE+NOT_RECOGNIZED+feature,Project.MSG_VERBOSE);
             return false;
@@ -128,8 +127,7 @@ public class ParserSupports extends ProjectComponent implements Condition {
     }
 
     /**
-     * set a feature
-     *
+     * Set a property
      * @return true if the feature could be set
      */
     public boolean evalProperty() {
@@ -145,6 +143,4 @@ public class ParserSupports extends ProjectComponent implements Condition {
         }
         return true;
     }
-
-
 }
