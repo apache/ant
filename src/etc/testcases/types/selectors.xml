@@ -250,7 +250,11 @@
               algorithmclass="${pkg.test}.MockAlgorithm"
               cacheclass="${pkg.test}.MockCache"
               comparatorclass="${pkg.test}.MockComparator"
-          />
+          >
+              <classpath>
+                  <pathelement location="${build.tests.value}"/>
+              </classpath>
+          </modified>
       </fileset>
       <fileset id="fs.full" dir="${test.dir}/src"/>
       <property name="fs.mod.value"  refid="fs.mod"/>

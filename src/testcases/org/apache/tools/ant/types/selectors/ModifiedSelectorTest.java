@@ -28,6 +28,7 @@ import java.text.RuleBasedCollator;
 // Ant
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.Path;
 
 // inside MockProject
 import org.apache.tools.ant.Project;
@@ -42,7 +43,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.*;
 /**
  * Unit tests for ModifiedSelector.
  *
- * @version 2004-07-07
+ * @version 2004-07-12
  * @since  Ant 1.6
  */
 public class ModifiedSelectorTest extends BaseSelectorTest {
@@ -53,6 +54,9 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
     /** Package of the CacheSelector classes. */
     private static String pkg = "org.apache.tools.ant.types.selectors.modifiedselector";
+
+    /** Path where the testclasses are. */
+    private Path testclasses = null;
 
 
     //  =====================  constructors, factories  =====================
@@ -75,57 +79,22 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     //  =====================  JUnit stuff  =====================
 
 
+    public void setUp() {
+        // project reference is set in super.setUp()
+        super.setUp();
+        // init the testclasses path object
+        Project prj = getProject();
+        if (prj != null) {
+            testclasses = new Path(prj, prj.getProperty("build.tests.value"));
+        }
+    }
 
-    /* There are two tests which cannot run until the test package is added
-     * to the core classloader. See comment in ModifiedSelelector.loadClass().
-     * The tests should pass then - but because the usual build wont add
-     * these classes I exclude them from being executed:
-     * - classloaderProblem_testCustomAlgorithm2
-     * - classloaderProblem_testCustomClasses
-     *
-     * For activating decomment the suite method.
-     *
-     * the addTest-part can be generated via grep and sed:
-     *   grep "void test" ModifiedSelectorTest.java
-     *   | sed -e 's/() {/"));/'
-     *         -e 's/public void /    suite.addTest(new ModifiedSelectorTest("/'
-     */
 
     /* * /
     // for test only - ignore tests where we arent work at the moment
     public static junit.framework.Test suite() {
         junit.framework.TestSuite suite= new junit.framework.TestSuite();
         suite.addTest(new ModifiedSelectorTest("testValidateWrongCache"));
-        suite.addTest(new ModifiedSelectorTest("testValidateWrongAlgorithm"));
-        suite.addTest(new ModifiedSelectorTest("testValidateWrongComparator"));
-        suite.addTest(new ModifiedSelectorTest("testIllegalCustomAlgorithm"));
-        suite.addTest(new ModifiedSelectorTest("testNonExistentCustomAlgorithm"));
-        suite.addTest(new ModifiedSelectorTest("testCustomAlgorithm"));
-        suite.addTest(new ModifiedSelectorTest("testPropcacheInvalid"));
-        suite.addTest(new ModifiedSelectorTest("testPropertyfileCache"));
-        suite.addTest(new ModifiedSelectorTest("testCreatePropertiesCacheDirect"));
-        suite.addTest(new ModifiedSelectorTest("testCreatePropertiesCacheViaModifiedSelector"));
-        suite.addTest(new ModifiedSelectorTest("testCreatePropertiesCacheViaCustomSelector"));
-        suite.addTest(new ModifiedSelectorTest("testHashvalueAlgorithm"));
-        suite.addTest(new ModifiedSelectorTest("testDigestAlgorithmMD5"));
-        suite.addTest(new ModifiedSelectorTest("testDigestAlgorithmSHA"));
-        suite.addTest(new ModifiedSelectorTest("testChecksumAlgorithm"));
-        suite.addTest(new ModifiedSelectorTest("testChecksumAlgorithmCRC"));
-        suite.addTest(new ModifiedSelectorTest("testChecksumAlgorithmAdler"));
-        suite.addTest(new ModifiedSelectorTest("testEqualComparator"));
-        suite.addTest(new ModifiedSelectorTest("testRuleComparator"));
-        suite.addTest(new ModifiedSelectorTest("testEqualComparatorViaSelector"));
-        suite.addTest(new ModifiedSelectorTest("testSeldirs"));
-        suite.addTest(new ModifiedSelectorTest("testScenario1"));
-        suite.addTest(new ModifiedSelectorTest("testScenarioCoreSelectorDefaults"));
-        suite.addTest(new ModifiedSelectorTest("testScenarioCoreSelectorSettings"));
-        suite.addTest(new ModifiedSelectorTest("testScenarioCustomSelectorSettings"));
-
-        suite.addTest(new ModifiedSelectorTest("classloaderProblem_testDelayUpdateTaskFinished"));
-        suite.addTest(new ModifiedSelectorTest("classloaderProblem_testDelayUpdateTargetFinished"));
-        suite.addTest(new ModifiedSelectorTest("classloaderProblem_testDelayUpdateBuildFinished"));
-        suite.addTest(new ModifiedSelectorTest("classloaderProblem_testCustomAlgorithm2"));
-        suite.addTest(new ModifiedSelectorTest("classloaderProblem_testCustomClasses"));
         return suite;
     }
     /* */
@@ -216,13 +185,13 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     }
 
 
-    public void classloaderProblem_testCustomAlgorithm2() {
+    public void testCustomAlgorithm2() {
         String algo = getAlgoName("org.apache.tools.ant.types.selectors.MockAlgorithm");
         assertTrue("Wrong algorithm used: "+algo, algo.startsWith("MockAlgorithm"));
     }
 
 
-    public void classloaderProblem_testCustomClasses() {
+    public void testCustomClasses() {
         BFT bft = new BFT();
         bft.setUp();
         try {
@@ -248,17 +217,17 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     }
 
 
-    public void classloaderProblem_testDelayUpdateTaskFinished() {
+    public void testDelayUpdateTaskFinished() {
         doDelayUpdateTest(1);
     }
 
 
-    public void classloaderProblem_testDelayUpdateTargetFinished() {
+    public void testDelayUpdateTargetFinished() {
         doDelayUpdateTest(2);
     }
 
 
-    public void classloaderProblem_testDelayUpdateBuildFinished() {
+    public void testDelayUpdateBuildFinished() {
         doDelayUpdateTest(3);
     }
 
@@ -281,6 +250,11 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         sel.setProject(project);
         sel.setUpdate(true);
         sel.setDelayUpdate(true);
+        // sorry - otherwise we will get a ClassCastException because the MockCache
+        // is loaded by two different classloader ...
+        sel.setClassLoader(this.getClass().getClassLoader());
+        sel.addClasspath(testclasses);
+
         sel.setAlgorithmClass("org.apache.tools.ant.types.selectors.MockAlgorithm");
         sel.setCacheClass("org.apache.tools.ant.types.selectors.MockCache");
         sel.configure();
@@ -313,6 +287,8 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      */
     private String getAlgoName(String classname) {
         ModifiedSelector sel = new ModifiedSelector();
+        // add the test classes to its classpath
+        sel.addClasspath(testclasses);
         sel.setAlgorithmClass(classname);
         // let the selector do its checks
         sel.validate();

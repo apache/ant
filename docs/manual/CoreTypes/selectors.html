@@ -684,22 +684,19 @@
       <tr>
         <td valign="top"> algorithmclass </td>
         <td valign="top"> Classname of custom algorithm implementation. Lower
-          priority than <i>algorithm</i>.
-          <!-- NOTE --> (see <a href="#ModSelNote">note</a> for restrictions) </td>
+          priority than <i>algorithm</i>. </td>
         <td valign="top" align="center"> No </td>
       </tr>
       <tr>
         <td valign="top"> cacheclass </td>
         <td valign="top"> Classname of custom cache implementation. Lower
-          priority than <i>cache</i>.
-          <!-- NOTE --> (see <a href="#ModSelNote">note</a> for restrictions) </td>
+          priority than <i>cache</i>. </td>
         <td valign="top" align="center"> No </td>
       </tr>
       <tr>
         <td valign="top"> comparatorclass </td>
         <td valign="top"> Classname of custom comparator implementation. Lower
-          priority than <i>comparator</i>.
-          <!-- NOTE --> (see <a href="#ModSelNote">note</a> for restrictions) </td>
+          priority than <i>comparator</i>. </td>
         <td valign="top" align="center"> No </td>
       </tr>
       <tr>
@@ -803,6 +800,10 @@
       </tr>
     </table>
 
+    <p>The <code>&lt;modified&gt;</code> selector supports a nested
+    <code>&lt;classpath&gt;</code> element that represents a <a href="../using.html#path">
+    PATH like structure</a> for finding custom interface implementations. </p>
+
     <p>Here are some examples of how to use the Modified Selector:</p>
 
     <blockquote><pre>
@@ -868,23 +869,22 @@
   Apache Forrest</a>). Here all <b>changed</b> files are uploaded to the server. The
   CacheSelector saves therefore much upload time.</p>
 
+    <blockquote><pre>
+  &lt;modified cacheclassname="com.mycompany.MyCache"&gt;
+      &lt;classpath&gt;
+          &lt;pathelement location="lib/mycompony-antutil.jar"/&gt;
+      &lt;/classpath&gt;
+  &lt;/modified&gt;
+    </pre></blockquote>
+    <p>Uses <tt>com.mycompany.MyCache</tt> from a jar outside of Ants own classpath
+    as cache implementation</p>
 
-  <!-- NOTE -->
-  <i>(see <a href="#ModSelNote">note</a> for restrictions)</i>
   <a name="ModSelNote"></a>
   <h4>Note on RuleBasedCollator</h4>
   <p>The RuleBasedCollator needs a format for its work, but its needed while
   instantiation. There is a problem in the initialization algorithm for this
   case. Therefore you should not use this (or tell me the workaround :-).</p>
 
-  <p>The selector can not find the specified algorithm-, cache- or comparator-
-  class if the selector is loaded from a different classloader.
-  To be able to use your own classes you have to ensure that the selector
-  can find the classes by adding the your package to the core: <ul>
-  <li> by placing your JAR in %ANT_HOME/lib </li>
-  <li> by adding '-lib myclasses/' while invocation </li>
-  <li> by placing your JAR in ${ant.home}/.ant/lib </li>
-  </ul></p>
 
 
     <a name="selectcontainers"></a>

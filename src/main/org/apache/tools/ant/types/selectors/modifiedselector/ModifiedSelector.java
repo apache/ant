@@ -32,6 +32,7 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.selectors.BaseExtendSelector;
 
 
@@ -81,6 +82,17 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  *       </filelist>
  *   </copy>
  * </pre></p>
+ *
+ * <p>If you want to provide your own interface implementation you can do
+ * that via the *classname attributes. If the classes are not on Ant´s core
+ * classpath, you will have to provide the path via nested &lt;classpath&gt;
+ * element, so that the selector can find the classes. <pre>
+ *   <modified cacheclassname="com.mycompany.MyCache">
+ *       <classpath>
+ *           <pathelement location="lib/mycompony-antutil.jar"/>
+ *       </classpath>
+ *   </modified>
+ * </p>
  *
  * <p>All these three examples copy the files from <i>src</i> to <i>dest</i>
  * using the ModifiedSelector. The ModifiedSelector uses the <i>PropertyfileCache
@@ -205,6 +217,8 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * </table>
  * If another name is used a BuildException "Invalid parameter" is thrown. </p>
  *
+ * <p>Additionally this selector supports a nested &lt;classpath&gt;. </p>
+ *
  * <p>This selector uses reflection for setting the values of its three interfaces
  * (using org.apache.tools.ant.IntrospectionHelper) therefore no special
  * 'configuration interfaces' has to be implemented by new caches, algorithms or
@@ -214,7 +228,7 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * a nested <i><param name="algorithm.provider" value="MyProvider"/></i>.
  *
  *
- * @version 2004-07-09
+ * @version 2004-07-12
  * @since  Ant 1.6
  */
 public class ModifiedSelector extends BaseExtendSelector implements BuildListener {
@@ -282,6 +296,12 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
      * @see #configure
      */
     private Vector specialParameter = new Vector();
+
+    /** The classloader of this class. */
+    private ClassLoader myClassLoader = null;
+
+    /** provided classpath for the classloader */
+    private Path classpath = null;
 
 
     // -----  constructors  -----
@@ -467,22 +487,8 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
     protected Object loadClass(String classname, String msg, Class type) {
         try {
             // load the specified class
+            Object rv = getClassLoader().loadClass(classname).newInstance();
 
-            /* TODO: the selector cant find the specified class if the
-             * selector is loaded from a different classloader.
-             * See ModifiedSelectorTest.testCustom<Algorithm|Cache|Comparator|Classes>().
-             * To be able to run these tests you have to ensure that <junit> can find
-             * the classes by adding the test package to the core:
-             * - by placing the ant-testutils.jar in %ANT_HOME/lib
-             * - by adding '-lib build/testcases' while invocation
-             *
-             * IMO this is not only a problem for the Mock-Classes inside the
-             * tests. The *classname attributes are designed for the user to
-             * provide his own implementations. Therefore they should be
-             * found ... Workaround again: -lib, ~/.ant/lib, ant.home/lib
-             * JHM
-             */
-            Object rv = Class.forName(classname).newInstance();
             if (!type.isInstance(rv)) {
                 throw new BuildException("Specified class (" + classname + ") " + msg);
             }
@@ -493,7 +499,6 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
             throw new BuildException(e);
         }
     }
-
 
 
     // -----  the selection work  -----
@@ -626,6 +631,48 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
      */
     public void setDelayUpdate(boolean delayUpdate) {
         this.delayUpdate = delayUpdate;
+    }
+
+
+    /**
+     * Add the classpath.
+     * @param path the classpath
+     */
+    public void addClasspath(Path path) {
+        if (classpath != null) {
+            throw new BuildException("<classpath> can be set only once.");
+        }
+        classpath = path;
+    }
+
+
+    /**
+     * Returns and initializes the classloader for this class.
+     * @return the classloader
+     */
+    public ClassLoader getClassLoader() {
+        if (myClassLoader == null) {
+            myClassLoader = (classpath == null)
+                          // the usual classloader
+                          ? getClass().getClassLoader()
+                          // additional use the provided classpath
+                          : new org.apache.tools.ant.AntClassLoader(getProject(), classpath);
+        }
+        return myClassLoader;
+    }
+
+
+    /**
+     * Set the used ClassLoader.
+     * If you invoke this selector by API (e.g. inside some testcases) the selector
+     * will use a different classloader for loading the interface implementations than
+     * the caller. Therefore you will get a ClassCastException if you get the
+     * implementations from the selector and cast them.
+     * @param loader the ClassLoader to use
+     * @see ModifiedSelectorTest#doDelayUpdateTest(int key)
+     */
+    public void setClassLoader(ClassLoader loader) {
+        myClassLoader = loader;
     }
 
 
