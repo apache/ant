@@ -54,8 +54,6 @@
 
 package org.apache.tools.ant.helper;
 
-import org.apache.tools.ant.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,6 +73,14 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.FileUtils;
+
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.RuntimeConfigurable;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
+import org.apache.tools.ant.UnknownElement;
 
 /**
  * Sax2 based project reader
@@ -629,7 +635,7 @@ public class ProjectHelper2 extends ProjectHelper {
             String dup = project.getProperty(antFileProp);
             if (dup != null) {
                 File dupFile = new File(dup);
-                if( context.ignoreProjectTag && 
+                if( context.ignoreProjectTag &&
                     !dupFile.equals(context.buildFile)) {
                     project.log("Duplicated project name in import. Project "+
                         context.currentProjectName + " defined first in " +
