@@ -55,7 +55,8 @@ public interface TaskContext
      *
      * @return the map of all property names to values
      */
-    Map getProperties();
+    Map getProperties()
+        throws TaskException;
 
     /**
      * Retrieve a service that is offered by the runtime.
