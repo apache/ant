@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -82,5 +84,7 @@ public class WarTest extends BuildFileTest {
      */
     public void testLibRefs() {
         executeTarget("testlibrefs");
+        File f = getProject().resolveFile("working/WEB-INF/lib/war.xml");
+        assertTrue("File has been put into lib", f.exists());
     }
 }

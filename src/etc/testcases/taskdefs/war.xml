@@ -12,10 +12,11 @@
   </target>
   
   <target name="testlibrefs" depends="setup">
-    <fileset id="test" dir="." includes="foobar"/>
+    <fileset id="test" dir="." includes="war.xml"/>
     <war webxml="war.xml" destfile="${working.dir}/test.war">
       <lib refid="test"/>
     </war>
+    <unzip src="${working.dir}/test.war" dest="${working.dir}"/>
   </target>
   
   <target name="clean">
