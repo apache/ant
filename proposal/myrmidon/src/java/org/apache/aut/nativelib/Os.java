@@ -205,7 +205,7 @@ public class Os
 
     /**
      * Determines if the OS on which Ant is executing matches the given OS
-     * family, name, architecture and version
+     * family, name, architecture and version.
      *
      * @param family The OS family
      * @param name The OS name
@@ -275,7 +275,7 @@ public class Os
         boolean isVersion = true;
         if( version != null )
         {
-            isVersion = version.equals( OS_VERSION );
+            isVersion = version.equalsIgnoreCase( OS_VERSION );
         }
         return isVersion;
     }
@@ -285,7 +285,7 @@ public class Os
         boolean isArch = true;
         if( arch != null )
         {
-            isArch = arch.equals( OS_ARCH );
+            isArch = arch.equalsIgnoreCase( OS_ARCH );
         }
         return isArch;
     }
@@ -295,7 +295,7 @@ public class Os
         boolean isName = true;
         if( name != null )
         {
-            isName = name.equals( OS_NAME );
+            isName = name.equalsIgnoreCase( OS_NAME );
         }
         return isName;
     }
