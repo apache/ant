@@ -55,7 +55,7 @@ $JAVACMD = "java" if $JAVACMD eq "";
 #and perl is not too hot at hinting which box it is on.
 #here I assume ":" 'cept on win32 and dos. Add extra tests here as needed.
 my $s=":";
-if(($^O eq "MSWin32") || ($^O eq "dos"))
+if(($^O eq "MSWin32") || ($^O eq "dos") || ($^O eq "cygwin"))
         {
         $s=";";
         }
@@ -101,19 +101,21 @@ else
                 "to the installation directory of java\n";
         }
 
+#set JVM options and Ant arguments, if any
+my @ANT_OPTS=split(" ", $ENV{ANT_OPTS});
+my @ANT_ARGS=split(" ", $ENV{ANT_ARGS});
+
 #jikes
-my @ANT_OPTS=split $ENV{ANT_OPTS};
 if($ENV{JIKESPATH} ne "")
         {
         push @ANT_OPTS, "-Djikes.class.path=$ENV{JIKESPATH}";
         }
 
 #construct arguments to java
-
 my @ARGS;
 push @ARGS, "-classpath", "$localpath", "-Dant.home=$HOME";
 push @ARGS, @ANT_OPTS;
-push @ARGS, "org.apache.tools.ant.Main";
+push @ARGS, "org.apache.tools.ant.Main", @ANT_ARGS;
 push @ARGS, @ARGV;
 
 print "\n $JAVACMD @ARGS\n\n" if ($debug);

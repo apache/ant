@@ -106,12 +106,16 @@ during the execution of Ant.  See the next section for example.</p>
 set):</p>
 
 <ul>
-  <li><code>JAVACMD</code> full path of the Java executable.  Use this
+  <li><code>JAVACMD</code> - full path of the Java executable.  Use this
   to invoke a different JVM than <code>JAVA_HOME/bin/java(.exe)</code>.</li>
 
-  <li><code>ANT_OPTS</code> command line arguments that should be
-  passed to the JVM - for example, you can define properties or set
+  <li><code>ANT_OPTS</code> - command-line arguments that should be
+  passed to the JVM. For example, you can define properties or set
   the maximum Java heap size here.</li>
+
+  <li><code>ANT_ARGS</code> - Ant command-line arguments. For example,
+  set <code>ANT_ARGS</code> to point to a different logger and to
+  include the <code>-find</code> flag.</li>
 </ul>
 
 <h2>Running Ant by Hand</h2>
