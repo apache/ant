@@ -1,5 +1,11 @@
 TODO List:
 
+    * Add editors for defining file sets, and other "sets".
+
+    * Write wizzard framework.
+
+    * Implement a build progress reporter.
+
     * Implement a "Worker Thread" pattern that allows workers to have
       their work done in a thread property registered with Antidote, and
       provide support to that worker to provide progress updates via
@@ -16,10 +22,6 @@ TODO List:
     * Add ability to put an "all" or "don't care" specifyer on the action
       "enableOn" and "disableOn" properties.
 
-    * Add ability to create new "nodes" in the build tree.
-
-    * Add editors for defining file sets, and other "sets".
-
     * Add ability to view task dependencies more fully.
 
     * Add better editors for specific tasks.
@@ -29,22 +31,12 @@ TODO List:
 
     * Implement some for of refid hyperlinking functionality.
 
-    * Write wizzard framework.
-
     * Implement context sensitive menus for the console window, allowing
       an error to be selected and invoked in IDE.
 
     * Write preferences framwork, including persistence support.
 
     * Provide some sort of class path debugging support.
-
-    * Eat own dog food more.
-
-    * Dispatch tree node change events when the properties editor changes a 
-      node value. This will make sure that the node gets displayed correctly in
-      the project navigator.
-
-    * Implement a build progress reporter.
 
     * Add "syntax" colorization to the console window {done}, 
       with a preferences editor for setting up the styles {not-done}.
@@ -60,6 +52,8 @@ TODO List:
       dependencies (local and cascading).
 
     * Acquire or implement a logging facility.
+
+    * Eat more dog food.
 
 (pending Ant 2.0)
     
