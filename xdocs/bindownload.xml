@@ -90,7 +90,7 @@ Other mirrors: <select name="Preferred">
 <section name="Old Ant Releases">
 
 <p>Older releases of Ant can be found <a
-href="http://jakarta.apache.org/builds/ant/release/">here</a>.  Those
+href="http://ant.apache.org/old-releases/">here</a>.  Those
 releases are only provided as <code>zip</code> archives that can be
 extracted by <code>jar xf </code><em>archive.zip</em> - we highly
 recommend to not use those releases but upgrade to Ant's <a
