@@ -236,6 +236,9 @@ public class Zip extends MatchingTask {
         if (dirs.length > 0 && fullpath.length() > 0)
             throw new BuildException("fullpath attribute may only be specified for filesets that specify a single file.");
         for (int i = 0; i < dirs.length; i++) {
+            if ("".equals(dirs[i])) {
+                continue;
+            }
             String name = dirs[i].replace(File.separatorChar,'/');
             if (!name.endsWith("/")) {
                 name += "/";
