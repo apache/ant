@@ -96,7 +96,6 @@ class ChangeLogParser
                 break;
             case GET_REVISION:
                 processRevision( line );
-                //Was a fall through ....
                 break;
 
             case GET_DATE:
@@ -169,6 +168,12 @@ class ChangeLogParser
         {
             m_revision = line.substring( 9 );
             m_status = GET_DATE;
+        }
+        else if( line.startsWith( "======" ) )
+        {
+            //There was no revisions in this changelog
+            //entry so lets move unto next file
+            m_status = GET_FILE;
         }
     }
 
