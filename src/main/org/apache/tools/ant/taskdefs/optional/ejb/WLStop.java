@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,17 +54,16 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 
-import org.apache.tools.ant.BuildException;
+import java.io.File;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 
-import java.io.File;
-
 /**
  * Shutdown a Weblogic server.
- 
+
  *
  * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
  */
@@ -78,22 +77,22 @@ public class WLStop extends Task {
      * The weblogic username to use to request the shutdown.
      */
     private String username;
-    
+
     /**
      * The password to use to shutdown the weblogic server.
      */
     private String password;
-    
+
     /**
      * The URL which the weblogic server is listening on.
      */
     private String serverURL;
-    
+
     /**
      * The delay (in seconds) to wait before shutting down.
      */
     private int delay = 0;
-    
+
     /**
      * The location of the BEA Home under which this server is run.
      * WL6 only
@@ -104,7 +103,7 @@ public class WLStop extends Task {
      * Do the work.
      *
      * The work is actually done by creating a separate JVM to run the weblogic admin task
-     * This approach allows the classpath of the helper task to be set. 
+     * This approach allows the classpath of the helper task to be set.
      *
      * @exception BuildException if someting goes wrong with the build
      */
@@ -112,31 +111,30 @@ public class WLStop extends Task {
         if (username == null || password == null) {
             throw new BuildException("weblogic username and password must both be set");
         }
-            
+
         if (serverURL == null) {
             throw new BuildException("The url of the weblogic server must be provided.");
         }
-        
-        Java weblogicAdmin = (Java)project.createTask("java");
+
+        Java weblogicAdmin = (Java) project.createTask("java");
         weblogicAdmin.setFork(true);
         weblogicAdmin.setClassname("weblogic.Admin");
         String args;
-        
+
         if (beaHome == null) {
             args = serverURL + " SHUTDOWN " + username + " " + password + " " + delay;
+        } else {
+            args = " -url " + serverURL +
+                    " -username " + username +
+                    " -password " + password +
+                    " SHUTDOWN " + " " + delay;
         }
-        else {
-            args = " -url " + serverURL + 
-                   " -username " + username +
-                   " -password " + password +
-                   " SHUTDOWN " + " " + delay;
-        }            
 
-        weblogicAdmin.setArgs(args);
-        weblogicAdmin.setClasspath(classpath);                         
+        weblogicAdmin.createArg().setLine(args);
+        weblogicAdmin.setClasspath(classpath);
         weblogicAdmin.execute();
     }
-    
+
     /**
      * Set the classpath to be used for this compilation.
      *
@@ -145,7 +143,7 @@ public class WLStop extends Task {
     public void setClasspath(Path path) {
         this.classpath = path;
     }
-    
+
     /**
      * Add the classpath for the user classes
      */
@@ -164,7 +162,7 @@ public class WLStop extends Task {
     public void setUser(String s) {
         this.username = s;
     }
-    
+
     /**
      * Set the password to use to request shutdown of the server.
      *
@@ -173,7 +171,7 @@ public class WLStop extends Task {
     public void setPassword(String s) {
         this.password = s;
     }
-    
+
     /**
      * Set the URL to which the weblogic server is listening.
      *
@@ -202,5 +200,5 @@ public class WLStop extends Task {
     public void setBEAHome(File beaHome) {
         this.beaHome = beaHome;
     }
-    
+
 }
