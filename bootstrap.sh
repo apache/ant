@@ -23,6 +23,12 @@ if [ ! -f "$JAVA_HOME/bin/java" ] ; then
   exit
 fi
 
+if [ ! -x "$JAVA_HOME/bin/java" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly."
+  echo "  We cannot execute JAVA_HOME/bin/java"
+  exit
+fi
+
 # More Cygwin support
 if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
   CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
@@ -77,12 +83,7 @@ mkdir -p ${CLASSDIR}
 
 echo ... Compiling Ant Classes
 
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/util/regexp/RegexpMatcher.java ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/util/*.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/types/*.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/*.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java ${TOOLS}/ant/util/regexp/RegexpMatcher.java ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java ${TOOLS}/ant/*.java ${TOOLS}/ant/taskdefs/*.java
 
 echo ... Copying Required Files
 
