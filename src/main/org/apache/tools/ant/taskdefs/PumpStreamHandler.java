@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,7 @@ import java.io.OutputStream;
  * TODO: standard input of the subprocess is not implemented.
  *
  * @author thomas.haas@softwired-inc.com
+ * @since Ant 1.2
  */
 public class PumpStreamHandler implements ExecuteStreamHandler {
 
@@ -139,7 +140,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
 
     /**
-     * Creates a stream pumper to copy the given input stream to the given output stream.
+     * Creates a stream pumper to copy the given input stream to the
+     * given output stream.
      */
     protected Thread createPump(InputStream is, OutputStream os) {
         final Thread result = new Thread(new StreamPumper(is, os));

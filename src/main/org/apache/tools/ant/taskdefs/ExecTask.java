@@ -78,6 +78,8 @@ import java.io.FileNotFoundException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
  *
+ * @since Ant 1.2
+ *
  * @ant.task category="control"
  */
 public class ExecTask extends Task {
@@ -259,10 +261,12 @@ public class ExecTask extends Task {
             throw new BuildException("no executable specified", location);
         }
         if (dir != null && !dir.exists()) {
-            throw new BuildException("The directory you specified does not exist");
+            throw new BuildException("The directory you specified does not "
+                                     + "exist");
         }
         if (dir != null && !dir.isDirectory()) {
-            throw new BuildException("The directory you specified is not a directory");
+            throw new BuildException("The directory you specified is not a "
+                                     + "directory");
         }
     }
 

@@ -72,6 +72,7 @@ import java.util.StringTokenizer;
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @since Ant 1.1
  */
 
 public abstract class MatchingTask extends Task {
@@ -178,7 +179,8 @@ public abstract class MatchingTask extends Task {
             "Please use the excludes attribute.",
             Project.MSG_WARN);
         if (ignoreString != null && ignoreString.length() > 0) {
-            StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
+            StringTokenizer tok = new StringTokenizer(ignoreString, ", ", 
+                                                      false);
             while (tok.hasMoreTokens()) {
                 createExclude().setName("**/"+tok.nextToken().trim()+"/**");
             }

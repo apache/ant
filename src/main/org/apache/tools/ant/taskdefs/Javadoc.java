@@ -102,6 +102,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="java"
  */
 
@@ -225,12 +227,12 @@ public class Javadoc extends Task {
 
     private Commandline cmd = new Commandline();
     private static boolean javadoc1 =
-        (JavaEnvUtils.getJavaVersion() == Project.JAVA_1_1);
+        (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1);
 
     private static boolean javadoc4 =
-        (JavaEnvUtils.getJavaVersion() != Project.JAVA_1_1 &&
-         JavaEnvUtils.getJavaVersion() != Project.JAVA_1_2 &&
-         JavaEnvUtils.getJavaVersion() != Project.JAVA_1_3);
+        (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
+         JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2 &&
+         JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_3);
 
     private void addArgIf(boolean b, String arg) {
         if (b) {
@@ -244,9 +246,8 @@ public class Javadoc extends Task {
                 cmd.createArgument().setValue(key);
                 cmd.createArgument().setValue(value);
             } else {
-                project.log(this,
-                            "Warning: Leaving out empty argument '" + key + "'",
-                            Project.MSG_WARN);
+                log("Warning: Leaving out empty argument '" + key + "'", 
+                    Project.MSG_WARN);
             }
         }
     }
@@ -569,8 +570,9 @@ public class Javadoc extends Task {
         if (!javadoc1) {
             LinkArgument le = createLink();
             le.setOffline(true);
-            String linkOfflineError = "The linkoffline attribute must include a URL and " +
-                "a package-list file location separated by a space";
+            String linkOfflineError = "The linkoffline attribute must include"
+                + " an URL and a package-list file location separated by a"
+                + " space";
             if (src.trim().length() == 0) {
                 throw new BuildException(linkOfflineError);
             }
@@ -679,8 +681,8 @@ public class Javadoc extends Task {
      */
     public TagArgument createTag() {
         if (!javadoc4) {
-            project.log ("-tag option not supported on JavaDoc < 1.4", 
-                         Project.MSG_VERBOSE);
+            log ("-tag option not supported on JavaDoc < 1.4", 
+                 Project.MSG_VERBOSE);
         }
         TagArgument ta = new TagArgument();
         tags.addElement (ta);
@@ -694,7 +696,8 @@ public class Javadoc extends Task {
      */
     static final String[] SCOPE_ELEMENTS = {
         "overview", "packages", "types", "constructors",
-        "methods", "fields"};
+        "methods", "fields"
+    };
 
     /**
      * Class representing a -tag argument.
@@ -749,9 +752,10 @@ public class Javadoc extends Task {
          *                     Must not be <code>null</code>, 
          *                     should not be empty.
          * 
-         * @exception BuildException if all is specified along with other elements,
-         * if any elements are repeated, if no elements are specified, 
-         * or if any unrecognised elements are specified.
+         * @exception BuildException if all is specified along with
+         * other elements, if any elements are repeated, if no
+         * elements are specified, or if any unrecognised elements are
+         * specified.
          */
         public void setScope (String verboseScope) throws BuildException {
             verboseScope=verboseScope.toLowerCase (Locale.US);
@@ -780,12 +784,13 @@ public class Javadoc extends Task {
                             break;
                     }
                     if (i==SCOPE_ELEMENTS.length) {
-                        throw new BuildException ("Unrecognised scope element: "+next);
+                        throw new BuildException ("Unrecognised scope element: "
+                                                  + next);
                     } 
                     else {
                         if (elements[i]) {
-                            getProject().log ("Repeated tag scope element: "+next, 
-                                              Project.MSG_VERBOSE);
+                            getProject().log ("Repeated tag scope element: "
+                                              + next, Project.MSG_VERBOSE);
                         }
                         elements[i]=true;
                         gotNotAll=true;
@@ -794,11 +799,12 @@ public class Javadoc extends Task {
             }
             
             if (gotNotAll && gotAll) {
-                throw new BuildException ("Mixture of \"all\" and other scope elements "+
-                                          "in tag parameter.");
+                throw new BuildException ("Mixture of \"all\" and other scope "
+                                          + "elements in tag parameter.");
             }
             if (!gotNotAll && !gotAll) {
-                throw new BuildException ("No scope elements specified in tag parameter.");
+                throw new BuildException ("No scope elements specified in tag "
+                                          + "parameter.");
             }
             if (gotAll) {
                 this.scope="a";
@@ -912,7 +918,7 @@ public class Javadoc extends Task {
      * the 1.4 version or a different doclet than the standard doclet
      * is used.
      *
-     * @since 1.86, Ant 1.5
+     * @since Ant 1.5
      */
     public void setSource(String source) {
         this.source = source;
@@ -930,27 +936,27 @@ public class Javadoc extends Task {
 
         log("Generating Javadoc", Project.MSG_INFO);
 
-        if (doctitle != null) {
-            cmd.createArgument().setValue("-doctitle");
-            cmd.createArgument().setValue(expand(doctitle.getText()));
-        }
-        if (header != null) {
-            cmd.createArgument().setValue("-header");
-            cmd.createArgument().setValue(expand(header.getText()));
-        }
-        if (footer != null) {
-            cmd.createArgument().setValue("-footer");
-            cmd.createArgument().setValue(expand(footer.getText()));
-        }
-        if (bottom != null) {
-            cmd.createArgument().setValue("-bottom");
-            cmd.createArgument().setValue(expand(bottom.getText()));
-        }
-
         Commandline toExecute = (Commandline)cmd.clone();
         toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
 
 // ------------------------------------------------ general javadoc arguments
+        if (doctitle != null) {
+            toExecute.createArgument().setValue("-doctitle");
+            toExecute.createArgument().setValue(expand(doctitle.getText()));
+        }
+        if (header != null) {
+            toExecute.createArgument().setValue("-header");
+            toExecute.createArgument().setValue(expand(header.getText()));
+        }
+        if (footer != null) {
+            toExecute.createArgument().setValue("-footer");
+            toExecute.createArgument().setValue(expand(footer.getText()));
+        }
+        if (bottom != null) {
+            toExecute.createArgument().setValue("-bottom");
+            toExecute.createArgument().setValue(expand(bottom.getText()));
+        }
+
         if (classpath == null) {
             classpath = Path.systemClasspath;
         } else {
@@ -964,8 +970,10 @@ public class Javadoc extends Task {
             toExecute.createArgument().setPath(sourcePath);
         } else {
             toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setValue(sourcePath.toString() +
-                                                System.getProperty("path.separator") + classpath.toString());
+            toExecute.createArgument()
+                .setValue(sourcePath.toString() 
+                          + System.getProperty("path.separator") 
+                          + classpath.toString());
         }
 
         if (version && doclet == null) {
@@ -982,15 +990,13 @@ public class Javadoc extends Task {
             }
         }
 
-
 // --------------------------------- javadoc2 arguments for default doclet
-
-// XXX: how do we handle a custom doclet?
 
         if (!javadoc1) {
             if (doclet != null) {
                 if (doclet.getName() == null) {
-                    throw new BuildException("The doclet name must be specified.", location);
+                    throw new BuildException("The doclet name must be "
+                                             + "specified.", location);
                 }
                 else {
                     toExecute.createArgument().setValue("-doclet");
@@ -1003,15 +1009,18 @@ public class Javadoc extends Task {
                             toExecute.createArgument().setPath(docletPath);
                         }
                     }
-                    for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
+                    for (Enumeration e = doclet.getParams(); 
+                         e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
                         if (param.getName() == null) {
-                            throw new BuildException("Doclet parameters must have a name");
+                            throw new BuildException("Doclet parameters must "
+                                                     + "have a name");
                         }
 
                         toExecute.createArgument().setValue(param.getName());
                         if (param.getValue() != null) {
-                            toExecute.createArgument().setValue(param.getValue());
+                            toExecute.createArgument()
+                                .setValue(param.getValue());
                         }
                     }
                 }
@@ -1027,24 +1036,33 @@ public class Javadoc extends Task {
                     LinkArgument la = (LinkArgument)e.nextElement();
 
                     if (la.getHref() == null) {
-                        throw new BuildException("Links must provide the URL to the external class documentation.");
+                        throw new BuildException("Links must provide the URL "
+                                                 + "to the external class "
+                                                 + "documentation.");
                     }
 
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {
-                            throw new BuildException("The package list location for link " + la.getHref() +
-                                                     " must be provided because the link is offline");
+                            throw new BuildException("The package list "
+                                                     + " location for link " 
+                                                     + la.getHref()
+                                                     + " must be provided "
+                                                     + "because the link is "
+                                                     + "offline");
                         }
-                        File packageList = new File(packageListLocation, "package-list");
+                        File packageList = 
+                            new File(packageListLocation, "package-list");
                         if (packageList.exists()) {
                             toExecute.createArgument().setValue("-linkoffline");
                             toExecute.createArgument().setValue(la.getHref());
-                            toExecute.createArgument().setValue(packageListLocation.getAbsolutePath());
+                            toExecute.createArgument()
+                                .setValue(packageListLocation
+                                          .getAbsolutePath());
                         }
                         else {
-                            log("Warning: No package list was found at " + packageListLocation,
-                                Project.MSG_VERBOSE);
+                            log("Warning: No package list was found at " 
+                                + packageListLocation, Project.MSG_VERBOSE);
                         }
                     }
                     else {
@@ -1087,7 +1105,9 @@ public class Javadoc extends Task {
                     String title = ga.getTitle();
                     String packages = ga.getPackages();
                     if (title == null || packages == null) {
-                        throw new BuildException("The title and packages must be specified for group elements.");
+                        throw new BuildException("The title and packages must "
+                                                 + "be specified for group "
+                                                 + "elements.");
                     }
                     toExecute.createArgument().setValue("-group");
                     toExecute.createArgument().setValue(expand(title));
@@ -1104,15 +1124,16 @@ public class Javadoc extends Task {
                         toExecute.createArgument().setValue ("-tag");
                         toExecute.createArgument().setValue (ta.getParameter());
                     } else {
-                        ExtensionInfo tagletInfo 
-                            = (ExtensionInfo) element;
+                        ExtensionInfo tagletInfo = (ExtensionInfo) element;
                         toExecute.createArgument().setValue("-taglet");
-                        toExecute.createArgument().setValue(tagletInfo.getName());
+                        toExecute.createArgument().setValue(tagletInfo
+                                                            .getName());
                         if (tagletInfo.getPath() != null) {
-                            Path tagletPath 
-                                = tagletInfo.getPath().concatSystemClasspath("ignore");
+                            Path tagletPath = tagletInfo.getPath()
+                                .concatSystemClasspath("ignore");
                             if (tagletPath.size() != 0) {
-                                toExecute.createArgument().setValue("-tagletpath");
+                                toExecute.createArgument()
+                                    .setValue("-tagletpath");
                                 toExecute.createArgument().setPath(tagletPath);
                             }
                         }
@@ -1155,7 +1176,8 @@ public class Javadoc extends Task {
                 }
             }
             if (packages.size() > 0) {
-                evaluatePackages(toExecute, sourcePath, packages, excludePackages);
+                evaluatePackages(toExecute, sourcePath, packages, 
+                                 excludePackages);
             }
         }
 
@@ -1169,10 +1191,13 @@ public class Javadoc extends Task {
                 if (useExternalFile) {
                     if (tmpList == null) {
                         tmpList = fileUtils.createTempFile("javadoc", "", null);
-                        toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
+                        toExecute.createArgument()
+                            .setValue("@" + tmpList.getAbsolutePath());
                     }
-                    srcListWriter = new PrintWriter(new FileWriter(tmpList.getAbsolutePath(),
-                                                                   true));
+                    srcListWriter = new PrintWriter(
+                                        new FileWriter(tmpList
+                                                       .getAbsolutePath(),
+                                                       true));
                 }
 
                 Enumeration enum = sourceFiles.elements();
@@ -1270,7 +1295,7 @@ public class Javadoc extends Task {
 
         String[] list = sourcePath.list();
         if (list == null) {
-          list = new String[0];
+            list = new String[0];
         }
 
         FileSet fs = new FileSet();
@@ -1302,10 +1327,10 @@ public class Javadoc extends Task {
         try {
             if (useExternalFile) {
                 tmpList = fileUtils.createTempFile("javadoc", "", null);
-                toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
+                toExecute.createArgument()
+                    .setValue("@" + tmpList.getAbsolutePath());
                 packageListWriter = new PrintWriter(new FileWriter(tmpList));
             }
-
 
             for (int j=0; j<list.length; j++) {
                 File source = project.resolveFile(list[j]);
@@ -1326,7 +1351,8 @@ public class Javadoc extends Task {
                         });
 
                     if (files.length > 0) {
-                        String pkgDir = packageDirs[i].replace('/','.').replace('\\','.');
+                        String pkgDir = 
+                            packageDirs[i].replace('/','.').replace('\\','.');
                         if (!addedPackages.contains(pkgDir)) {
                             if (useExternalFile) {
                                 packageListWriter.println(pkgDir);
@@ -1360,7 +1386,8 @@ public class Javadoc extends Task {
         //
         private String queuedLine = null;
         protected void processLine(String line, int messageLevel) {
-            if (messageLevel == Project.MSG_INFO && line.startsWith("Generating ")) {
+            if (messageLevel == Project.MSG_INFO 
+                && line.startsWith("Generating ")) {
                 if (queuedLine != null) {
                     super.processLine(queuedLine, Project.MSG_VERBOSE);
                 }

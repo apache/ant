@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,10 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-
 import org.apache.tools.ant.Task;
-
-
 
 import java.io.IOException;
 
@@ -66,6 +63,7 @@ import java.io.IOException;
  * Logs standard output and error of a subprocess to the log system of ant.
  *
  * @author thomas.haas@softwired-inc.com
+ * @since Ant 1.2
  */
 public class LogStreamHandler extends PumpStreamHandler {
 

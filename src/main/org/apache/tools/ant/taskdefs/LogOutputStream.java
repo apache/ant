@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,7 @@ import java.io.ByteArrayOutputStream;
  * of data written to the stream.
  *
  * @author thomas.haas@softwired-inc.com
+ * @since Ant 1.2
  */
 public class LogOutputStream extends OutputStream {
 
