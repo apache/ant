@@ -11,8 +11,13 @@
             location="../../src/main"/>
   <property name="docs.src"
             location="../../xdocs"/>
+  <property name="xdocs.dir"
+            location="xdocs"/>
+            
   <property name="build.dir" location="build"/>
+  <property name="antdoclet.src.dir" location="src"/>
   <property name="gen.dir" location="${build.dir}/gen"/>
+  <property name="build.docs.dir" location="${build.dir}/docs"/>
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
   <property name="optional.type.package" value="${ant.package}/types/optional"/>
@@ -410,12 +415,22 @@
     <path>
       <fileset dir="${ant.home}/lib" includes="*.jar"/>
     </path>
+    <!-- do not remove this. This is an extension point used by things like Axis
+      and other projects that autogen their task docs -->
+    <pathelement path="${xdoclet.extra.classpath}" />
   </path>
 
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${gen.dir}" />
-    <echoproperties/>
+    <mkdir dir="${build.docs.dir}" />
+    <property name="xdoclet.classpath.asprop"
+        refid="xdoclet.classpath"/>
+    <echo level="verbose">
+    xdoclet.classpath=${xdoclet.classpath}
+    xdoclet.extra.classpath=${xdoclet.extra.classpath}
+    </echo>
+    <!-- <echoproperties/> -->
   </target>
 
   <target name="clean">
@@ -423,7 +438,7 @@
     <delete dir="${gen.dir}"/>
   </target>
 
-  <target name="gen" depends="package">
+  <target name="declare-tasks" depends="package">
     <taskdef name="antdoclet"
              classname="org.apache.ant.xdoclet.AntDocletTask">
       <classpath>
@@ -431,10 +446,14 @@
         <pathelement location="${build.dir}/classes"/>
       </classpath>
     </taskdef>
+  </target>
+  
+  <target name="gen" depends="declare-tasks"
+    description="generate the XML files from the annotated source">
     <antdoclet destdir="${gen.dir}"
                excludedtags="@version,@author"
                force="${xdoclet.force}"
-               mergedir="src">
+               mergedir="${antdoclet.src.dir}">
       <fileset dir="${src.root}">
         <selector id="conditional-patterns">
           <not>
@@ -485,16 +504,23 @@
     </antdoclet>
   </target>
 
-  <target name="docs"> <!-- depends="gen" -->
-    <mkdir dir="${build.dir}/docs" />
-    <!-- Copy stuff so things are in the correct relative location. -->
-    <copy todir="${build.dir}/docs">
+  <target name="prepare-for-docs">
+    <copy todir="${build.docs.dir}">
       <fileset dir="${basedir}/../../docs" includes="artwork/**" />
     </copy>
-    <mkdir dir="${basedir}/xdocs" />
-    <copy todir="${basedir}/xdocs">
+    <mkdir dir="${xdocs.dir}" />
+    <copy todir="${xdocs.dir}">
       <fileset dir="${docs.src}" includes="stylesheets/project.xml" />
     </copy>
+  </target>
+  
+  <!--inserted for external build files to call -->
+  
+  <target name="gen-and-prepare-for-docs"
+   depends="gen,prepare-for-docs" />
+   
+  <target name="docs" depends="prepare-for-docs" >
+    <!-- Copy stuff so things are in the correct relative location. -->
     <!-- Generate HTML using DVSL -->
     <ant dir="dvsl"/>
   </target>
@@ -502,7 +528,7 @@
   <target name="compile" depends="init">
     <mkdir dir="${build.dir}/classes"/>
     <javac destdir="${build.dir}/classes"
-           srcdir="src"
+           srcdir="${antdoclet.src.dir}"
            deprecation="on"
            debug="true"
            classpathref="xdoclet.classpath"
