@@ -120,3 +120,5 @@ reception
   getProperties(), an external describing file shipping with the task
   class or special javadoc comments parsed by a custom doclet.
 
+* allow build file writers to modify logging (verbosity for example)
+  on a target by target or task by task basis.
