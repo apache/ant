@@ -283,6 +283,7 @@ public class MacroDef extends AntlibDefinition  {
     public static class Attribute {
         private String name;
         private String defaultValue;
+        private String description;
 
         /**
          * The name of the attribute.
@@ -319,6 +320,21 @@ public class MacroDef extends AntlibDefinition  {
          */
         public String getDefault() {
             return defaultValue;
+        }
+
+        /**
+         * @param desc Description of the element.
+         */
+        public void setDescription(String desc) {
+            description = desc;
+        }
+
+        /**
+         * @return the description of the element, or <code>null</code> if   
+         *         no description is available.
+         */
+        public String getDescription() {
+            return description;
         }
 
         /**
@@ -367,6 +383,8 @@ public class MacroDef extends AntlibDefinition  {
     public static class TemplateElement {
         private String name;
         private boolean optional = false;
+	private String description;
+
         /**
          * The name of the element.
          *
@@ -402,6 +420,21 @@ public class MacroDef extends AntlibDefinition  {
          */
         public boolean isOptional() {
             return optional;
+        }
+
+        /**
+         * @param desc Description of the element.
+         */
+        public void setDescription(String desc) {
+            description = desc;
+        }
+
+        /**
+         * @return the description of the element, or <code>null</code> if   
+         *         no description is available.
+         */
+        public String getDescription() {
+            return description;
         }
 
         /**
