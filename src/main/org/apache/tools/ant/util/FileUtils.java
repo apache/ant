@@ -1327,7 +1327,7 @@ public class FileUtils {
      * implicitly not up do date.
      * @param source source file (should be the older)
      * @param dest dest file (should be the newer)
-     * @param granularity: an offset added to the source time.
+     * @param granularity an offset added to the source time.
      * @return true if the source is older than the dest, taking the
      *  granularity into account
      * @since Ant1.7
