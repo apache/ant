@@ -19,7 +19,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.components.classloader.DefaultClassLoaderManager;
 import org.apache.myrmidon.components.configurer.DefaultConfigurer;
-import org.apache.myrmidon.components.converter.DefaultConverterRegistry;
 import org.apache.myrmidon.components.converter.DefaultMasterConverter;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.executor.DefaultExecutor;
