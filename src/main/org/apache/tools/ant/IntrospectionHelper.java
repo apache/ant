@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.lang.reflect.*;
 import java.io.File;
@@ -460,13 +461,12 @@ public class IntrospectionHelper  {
                 };
 
         // EnumeratedAttributes have their own helper class
-        } else if (org.apache.tools.ant.EnumeratedAttribute.class.isAssignableFrom(arg)) {
+        } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(arg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value) 
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
-                            EnumeratedAttribute ea = 
-                                (EnumeratedAttribute)arg.newInstance();
+                            org.apache.tools.ant.types.EnumeratedAttribute ea = (org.apache.tools.ant.types.EnumeratedAttribute)arg.newInstance();
                             ea.setValue(value);
                             m.invoke(parent, new EnumeratedAttribute[] {ea});
                         } catch (InstantiationException ie) {

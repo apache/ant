@@ -54,7 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.IntrospectionHelper;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -64,7 +68,7 @@ import java.io.*;
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
 
 public class AntStructure extends Task {
