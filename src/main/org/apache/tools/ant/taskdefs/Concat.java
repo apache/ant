@@ -159,17 +159,11 @@ public class Concat extends Task {
     /** 1.1 utilities and copy utilities */
     private static FileUtils     fileUtils = FileUtils.newFileUtils();
 
-    // Constructors.
-
-    /**
-     * Public, no-argument constructor. Required by Ant.
-     */
-    public Concat() {}
-
     // Attribute setters.
 
     /**
      * Sets the destination file, or uses the console if not specified.
+     * @param destinationFile the destination file
      */
     public void setDestfile(File destinationFile) {
         this.destinationFile = destinationFile;
@@ -180,6 +174,7 @@ public class Concat extends Task {
      * <code>true</code> the stream data will be appended to the
      * existing file, otherwise the existing file will be
      * overwritten. Defaults to <code>false</code>.
+     * @param append if true append to the file.
      */
     public void setAppend(boolean append) {
         this.append = append;
@@ -187,6 +182,8 @@ public class Concat extends Task {
 
     /**
      * Sets the character encoding
+     * @param encoding the encoding of the input stream and unless
+     *        outputencoding is set, the outputstream.
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -197,6 +194,7 @@ public class Concat extends Task {
 
     /**
      * Sets the character encoding for outputting
+     * @param outputEncoding the encoding for the output file
      * @since Ant 1.6
      */
     public void setOutputEncoding(String outputEncoding) {
@@ -205,6 +203,8 @@ public class Concat extends Task {
 
     /**
      * Force overwrite existing destination file
+     * @param force if true always overwrite, otherwise only overwrite
+     *              if the output file is older any of the input files.
      * @since Ant 1.6
      */
     public void setForce(boolean force) {
@@ -215,6 +215,7 @@ public class Concat extends Task {
 
     /**
      * Path of files to concatenate.
+     * @return the path used for concatenating
      * @since Ant 1.6
      */
      public Path createPath() {
@@ -225,6 +226,7 @@ public class Concat extends Task {
 
     /**
      * Set of files to concatenate.
+     * @param set the set of files
      */
     public void addFileset(FileSet set) {
         sources.addElement(set);
@@ -232,6 +234,7 @@ public class Concat extends Task {
 
     /**
      * List of files to concatenate.
+     * @param list the list of files
      */
     public void addFilelist(FileList list) {
         sources.addElement(list);
@@ -239,6 +242,7 @@ public class Concat extends Task {
 
     /**
      * Adds a FilterChain.
+     * @param filterChain a filterchain to filter the concatenated input
      * @since Ant 1.6
      */
     public void addFilterChain(FilterChain filterChain) {
@@ -250,6 +254,7 @@ public class Concat extends Task {
 
     /**
      * This method adds text which appears in the 'concat' element.
+     * @param text the text to be concated.
      */
     public void addText(String text) {
         if (textBuffer == null) {
@@ -265,6 +270,7 @@ public class Concat extends Task {
 
     /**
      * Add a header to the concatenated output
+     * @param header the header
      * @since Ant 1.6
      */
     public void addHeader(TextElement header) {
@@ -273,6 +279,7 @@ public class Concat extends Task {
 
     /**
      * Add a footer to the concatenated output
+     * @param footer the footer
      * @since Ant 1.6
      */
     public void addFooter(TextElement footer) {
@@ -282,6 +289,8 @@ public class Concat extends Task {
     /**
      * Append line.separator to files that do not end
      * with a line.separator, default false.
+     * @param fixLastLine if true make sure each input file has
+     *                    new line on the concatenated stream
      * @since Ant 1.6
      */
     public void setFixLastLine(boolean fixLastLine) {
@@ -290,7 +299,11 @@ public class Concat extends Task {
 
     /**
      * Specify the end of line to find and to add if
-     * not present at end of each input file.
+     * not present at end of each input file. This attribute
+     * is used in conjuction with fixlastline.
+     * @param enum the type of new line to add -
+     *              cr, mac, lf, unix, crlf, or dos
+     * @since Ant 1.6
      */
     public void setEol(FixCRLF.CrLf enum) {
         String s = enum.getValue();
@@ -306,6 +319,7 @@ public class Concat extends Task {
     /**
      * set the output writer, this is to allow
      * concat to be used as a nested element
+     * @param outputWriter the output writer
      * @since Ant 1.6
      */
     public void setWriter(Writer outputWriter) {
@@ -315,8 +329,7 @@ public class Concat extends Task {
     /**
      * This method performs the concatenation.
      */
-    public void execute()
-        throws BuildException {
+    public void execute() {
 
         // treat empty nested text as no text
         sanitizeText();
@@ -329,17 +342,16 @@ public class Concat extends Task {
         // Sanity check our inputs.
         if (sources.size() == 0 && textBuffer == null) {
             // Nothing to concatenate!
-            throw new BuildException("At least one file " +
-                                     "must be provided, or " +
-                                     "some text.");
+            throw new BuildException(
+                "At least one file must be provided, or some text.");
         }
 
         // If using filesets, disallow inline text. This is similar to
         // using GNU 'cat' with file arguments -- stdin is simply
         // ignored.
         if (sources.size() > 0 && textBuffer != null) {
-            throw new BuildException("Cannot include inline text " +
-                                     "when using filesets.");
+            throw new BuildException(
+                "Cannot include inline text when using filesets.");
         }
 
         // Iterate thru the sources - paths, filesets and filelists
@@ -501,10 +513,18 @@ public class Concat extends Task {
                                      + ioex.getMessage(), ioex);
         } finally {
             if (reader != null) {
-                try {reader.close();} catch (IOException ignore) {}
+                try {
+                    reader.close();
+                } catch (IOException ignore) {
+                    // ignore
+                }
             }
             if (os != null) {
-                try {os.close();} catch (IOException ignore) {}
+                try {
+                    os.close();
+                } catch (IOException ignore) {
+                    // ignore
+                }
             }
         }
     }
@@ -573,6 +593,11 @@ public class Concat extends Task {
             return filtering;
         }
 
+        /**
+         * The encoding of the text element
+         *
+         * @param encoding the name of the charset used to encode
+         */
         public void setEncoding(String encoding) {
             this.encoding = encoding;
         }
@@ -603,13 +628,18 @@ public class Concat extends Task {
                 throw new BuildException(ex);
             } finally {
                 if (reader != null) {
-                    try {reader.close();} catch (Throwable t) {}
+                    try {
+                        reader.close();
+                    } catch (Throwable t) {
+                        // ignore
+                    }
                 }
             }
         }
 
         /**
          * set the text using inline
+         * @param value the text to place inline
          */
         public void addText(String value) {
             if (value.trim().length() == 0) {
@@ -628,13 +658,14 @@ public class Concat extends Task {
 
         /**
          * whether to call text.trim()
+         * @param trim if true trim the text
          */
         public void setTrim(boolean trim) {
             this.trim = trim;
         }
 
         /**
-         * return the text, after possible trimming
+         * @return the text, after possible trimming
          */
         public String getValue() {
             if (value == null) {
@@ -745,7 +776,7 @@ public class Concat extends Task {
          * @exception IOException - possiblely thrown by the reads to the
          *            reader objects.
          */
-        public int read(char cbuf[], int off, int len)
+        public int read(char[] cbuf, int off, int len)
             throws IOException {
 
             int amountRead = 0;
@@ -761,8 +792,9 @@ public class Concat extends Task {
                     len--;
                     off++;
                     amountRead++;
-                    if (len == 0)
+                    if (len == 0) {
                         return amountRead;
+                    }
                     continue;
                 }
 
@@ -778,12 +810,13 @@ public class Concat extends Task {
                     }
                 } else {
                     if (fixLastLine) {
-                        for (int i = nRead; i > (nRead-lastChars.length);
-                             --i) {
+                        for (int i = nRead;
+                                 i > (nRead - lastChars.length);
+                                 --i) {
                             if (i < 0) {
                                 break;
                             }
-                            addLastChar(cbuf[off+i]);
+                            addLastChar(cbuf[off + i]);
                         }
                     }
                     len -= nRead;
@@ -814,10 +847,10 @@ public class Concat extends Task {
          * add a character to the lastchars buffer
          */
         private void addLastChar(char ch) {
-            for (int i = lastChars.length-2; i >= 0; --i) {
-                lastChars[i] = lastChars[i+1];
+            for (int i = lastChars.length - 2; i >= 0; --i) {
+                lastChars[i] = lastChars[i + 1];
             }
-            lastChars[lastChars.length-1] = ch;
+            lastChars[lastChars.length - 1] = ch;
         }
 
         /**
@@ -826,8 +859,9 @@ public class Concat extends Task {
          */
         private boolean isMissingEndOfLine() {
             for (int i = 0; i < lastChars.length; ++i) {
-                if (lastChars[i] != eolString.charAt(i))
+                if (lastChars[i] != eolString.charAt(i)) {
                     return true;
+                }
             }
             return false;
         }
