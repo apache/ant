@@ -71,7 +71,7 @@ public class Clone extends UnknownElement {
                 + cloneref + "\"", Project.MSG_VERBOSE);
             Method m = ob.getClass().getMethod("clone", NO_ARGS);
             try {
-                Object bo = m.invoke(ob, NO_ARGS);
+                Object bo = m.invoke(ob, (Object[])NO_ARGS);
                 if (bo == null) {
                     throw new BuildException(m.toString() + " returned null");
                 }
