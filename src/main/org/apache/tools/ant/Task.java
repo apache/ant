@@ -66,9 +66,9 @@ import java.util.Enumeration;
  */
 public abstract class Task extends ProjectComponent {
     /** Target this task belongs to, if any. */
-    protected Target target = null;
+    protected Target target;
     /** Description of this task, if any. */
-    protected String description = null;
+    protected String description;
     /** Location within the build file of this task definition. */
     protected Location location = Location.UNKNOWN_LOCATION;
     /**
