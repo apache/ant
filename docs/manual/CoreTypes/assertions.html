@@ -10,30 +10,30 @@
 
 <h2><a name="assertions">Assertions</a></h2>
 <p>
-The assertion type enables or disables the Java1.4 assertion feature, 
-on a whole java program, or components of a program. It can be used
-in &lt;java&gt; and &lt;junit&gt; to add extra validation to code.   
+The <tt>assertions</tt> type enables or disables the Java 1.4 assertions feature,
+on a whole Java program, or components of a program. It can be used
+in <a href="../CoreTasks/java.html">&lt;java&gt;</a> and
+<a href="../OptionalTasks/junit.html">&lt;junit&gt;</a> to add extra validation to code.  
 
 <p>
 Assertions are covered in the 
-<a href="http://java.sun.com/j2se/1.4.2/docs/guide/lang/assert.html">
-Java 1.4.2</a> documentation, and the 
-<a href="http://java.sun.com/docs/books/jls/assert-spec.html">
-Java Language Specification</a>
+<a href="http://java.sun.com/j2se/1.4.2/docs/guide/lang/assert.html">J2SDK 1.4 documentation</a>,
+and the
+<a href="http://java.sun.com/docs/books/jls/assert-spec.html">Java Language Specification</a>.
 
 <p>
-The key points to note are that a <tt>java.lang.AssertionError</tt> error
+The key points to note are that a <tt>java.lang.AssertionError</tt>
 is thrown when an assertion fails, and that the facility is only available 
-on Java1.4 and later. To enable assertions one must set <tt>source="1.4"</tt>,
- "1.5" or later in &lt;javac&gt; when the source is being compiled, and
+on Java 1.4 and later. To enable assertions one must set <tt>source="1.4"</tt>
+(or later) in <tt>&lt;javac&gt;</tt> when the source is being compiled, and
 that the code must contain <tt>assert</tt> statements to be tested. The
 result of such an action is code that neither compiles or runs on earlier
 versions of Java. For this reason Ant itself currently contains no assertions.
 <p>
 
 When assertions are enabled (or disabled) in a task through nested 
-assertions elements, the classloader or command line is modified with the 
-appopriate options. This means that the JVM executed must be a Java1.4
+assertions elements, the class loader or command line is modified with the 
+appropriate options. This means that the JVM executed must be a Java 1.4
 or later JVM, even if there are no assertions in the code. Attempting to
 enable assertions on earlier VMs will result in an "Unrecognized option" 
 error and the JVM will not start.  
@@ -53,23 +53,23 @@ error and the JVM will not start.
   <tr>
     <td valign="top">enableSystemAssertions</td>
     <td valign="top">Flag to turn system assertions on or off.</td>
-    <td valign="top" align="center">No, default is 'unspecified'</td>
+    <td valign="top" align="center">No; default is "unspecified"</td>
   </tr>
 </table>
 <p>
-When the System assertions have neither been enabled or disabled, then 
-the JVM is not given any assertion information -the default action of the
+When system assertions have been neither enabled nor disabled, then
+the JVM is not given any assertion information - the default action of the
  current JVMs is to disable system assertions. 
 <p>
 Note also that there is no apparent documentation for what parts of the
-system have built in assertions. 
+JRE come with useful assertions.
 
 <h3>Nested elements</h3>
 
 <h4>enable</h4>
 <p>
 Enable assertions in portions of code.
-
+If neither a package nor class is specified, assertions are turned on in <i>all</i> (user) code.
 </p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -79,14 +79,14 @@ Enable assertions in portions of code.
   </tr>
   <tr>
     <td valign="top">class</td>
-    <td valign="top">The name of a class to enable assertions on.</td>
+    <td valign="top">The name of a class on which to enable assertions.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">package</td>
     <td valign="top">
-    The name of a package to turn assertions on. Use "..." for 
-    the anonymous package.
+    The name of a package in which to enable assertions on all classes. (Includes subpackages.)
+    Use "<tt>...</tt>" for the anonymous package.
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -105,14 +105,14 @@ Disable assertions in portions of code.
   </tr>
   <tr>
     <td valign="top">class</td>
-    <td valign="top">The name of a class to disable assertions for.</td>
+    <td valign="top">The name of a class on which to disable assertions.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">package</td>
     <td valign="top">
-    The name of a package to turn assertions off on. Use "..." for 
-    the anonymous package.
+    The name of a package in which to disable assertions on all classes. (Includes subpackages.)
+    Use "<tt>...</tt>" for the anonymous package.
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -125,46 +125,52 @@ assertions where they have been enabled in a parent package.
 
 <h4>Examples</h4>
 
+<h5>Example: enable assertions in all user classes</h5>
+
+All classes not in the JRE (i.e. all non-system classes) will have assertions turned on.
+<pre>
+&lt;assertions&gt;
+  &lt;enable/&gt;
+&lt;/assertions&gt;
+</pre>
+
 <h5>Example: enable a single class</h5>
 
 Enable assertions in a class called Test
 <pre>
-&lt;assertions &gt;
-  &lt;enable class="Test" /&gt;
+&lt;assertions&gt;
+  &lt;enable class="Test"/&gt;
 &lt;/assertions&gt;
 </pre>
 
 <h5>Example: enable a package</h5>
 
-Enable assertions in a all packages below org.apache
+Enable assertions in the <tt>org.apache</tt> package
+and all packages starting with the <tt>org.apache.</tt> prefix
 <pre>
-&lt;assertions &gt;
-  &lt;enable package="org.apache" /&gt;
+&lt;assertions&gt;
+  &lt;enable package="org.apache"/&gt;
 &lt;/assertions&gt;
 </pre>
 
 <h5>Example: System assertions</h5>
 
-Example: set system assertions and all org.apache packages except
-for ant, and the class org.apache.tools.ant.Main.
+Example: enable system assertions and assertions in all <tt>org.apache</tt> packages except
+for Ant (but including <tt>org.apache.tools.ant.Main</tt>)
 <pre>
-    &lt;java fork="true" failonerror="true"
-      classname="${classname}"
-      classpathref="assert.classpath"&gt;
-      &lt;assertions enableSystemAssertions="true" &gt;
-        &lt;enable package="org.apache" /&gt;
-        &lt;disable package="org.apache.ant" /&gt;
-        &lt;enable class="org.apache.tools.ant.Main"/&gt;
-      &lt;/assertions&gt;
-    &lt;/java&gt;
+&lt;assertions enableSystemAssertions="true"&gt;
+  &lt;enable package="org.apache"/&gt;
+  &lt;disable package="org.apache.tools.ant"/&gt;
+  &lt;enable class="org.apache.tools.ant.Main"/&gt;
+&lt;/assertions&gt;
 </pre>
 
 <h5>Example: disabled and anonymous package assertions</h5>
 
 Disable system assertions; enable those in the anonymous package
 <pre>
-&lt;assertions enableSystemAssertions="false" &gt;
-  &lt;enable package="..." /&gt;
+&lt;assertions enableSystemAssertions="false"&gt;
+  &lt;enable package="..."/&gt;
 &lt;/assertions&gt;
 </pre>
 
@@ -174,19 +180,15 @@ Disable system assertions; enable those in the anonymous package
 This type is a datatype, so you can declare assertions and use them later
 
 <pre>
-&lt;assertions id="project.assertions" &gt;
-  &lt;enable package="org.apache.test" /&gt;
+&lt;assertions id="project.assertions"&gt;
+  &lt;enable package="org.apache.test"/&gt;
 &lt;/assertions&gt;
 
-&lt;java fork="true" failonerror="true"
-  classname="${classname}"
-  classpathref="assert.classpath"&gt;
-  &lt;assertions refid="project.assertions"/&gt;
-&lt;/java&gt;
+&lt;assertions refid="project.assertions"/&gt;
 </pre>
 
 <hr>
-<p align="center">Copyright &copy; 2003 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2003-2004 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>
