@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
@@ -93,36 +95,27 @@ public class PatternSet
 
     /**
      * Sets the name of the file containing the includes patterns.
-     *
-     * @param includesFile The file to fetch the include patterns from.
-     * @exception TaskException Description of Exception
      */
     public void setIncludesfile( File includesFile )
     {
         createIncludesFile().setName( includesFile.getAbsolutePath() );
     }
 
-    /**
-     * Returns the filtered include patterns.
-     */
-    public String[] getExcludePatterns( Project p )
+    public String[] getExcludePatterns( final TaskContext context )
         throws TaskException
     {
-        readFiles( p );
-        return makeArray( m_excludeList );
+        readFiles( context );
+        return makeArray( m_excludeList, context );
     }
 
     /**
      * Returns the filtered include patterns.
-     *
-     * @param p Description of Parameter
-     * @return The IncludePatterns value
      */
-    public String[] getIncludePatterns( Project p )
+    public String[] getIncludePatterns( final TaskContext context )
         throws TaskException
     {
-        readFiles( p );
-        return makeArray( m_includeList );
+        readFiles( context );
+        return makeArray( m_includeList, context );
     }
 
     /**
@@ -131,7 +124,7 @@ public class PatternSet
     protected void append( PatternSet other )
         throws TaskException
     {
-        String[] incl = other.getIncludePatterns( null );
+        String[] incl = other.getIncludePatterns( (TaskContext)null );
         if( incl != null )
         {
             for( int i = 0; i < incl.length; i++ )
@@ -140,7 +133,7 @@ public class PatternSet
             }
         }
 
-        String[] excl = other.getExcludePatterns( null );
+        String[] excl = other.getExcludePatterns( (TaskContext)null );
         if( excl != null )
         {
             for( int i = 0; i < excl.length; i++ )
@@ -155,7 +148,7 @@ public class PatternSet
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createExclude()
+    public Pattern createExclude()
     {
         return addPatternToList( m_excludeList );
     }
@@ -165,7 +158,7 @@ public class PatternSet
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createExcludesFile()
+    public Pattern createExcludesFile()
     {
         return addPatternToList( m_excludesFileList );
     }
@@ -173,7 +166,7 @@ public class PatternSet
     /**
      * add a name entry on the include list
      */
-    public NameEntry createInclude()
+    public Pattern createInclude()
     {
         return addPatternToList( m_includeList );
     }
@@ -181,7 +174,7 @@ public class PatternSet
     /**
      * add a name entry on the include files list
      */
-    public NameEntry createIncludesFile()
+    public Pattern createIncludesFile()
     {
         return addPatternToList( m_includesFileList );
     }
@@ -204,17 +197,17 @@ public class PatternSet
     /**
      * add a name entry to the given list
      */
-    private NameEntry addPatternToList( final ArrayList list )
+    private Pattern addPatternToList( final ArrayList list )
     {
-        final NameEntry result = new NameEntry( this );
+        final Pattern result = new Pattern();
         list.add( result );
         return result;
     }
 
     /**
-     * Convert a vector of NameEntry elements into an array of Strings.
+     * Convert a vector of Pattern elements into an array of Strings.
      */
-    private String[] makeArray( final ArrayList list )
+    private String[] makeArray( final ArrayList list, final TaskContext context )
     {
         if( list.size() == 0 )
         {
@@ -224,8 +217,8 @@ public class PatternSet
         final ArrayList tmpNames = new ArrayList();
         for( Iterator e = list.iterator(); e.hasNext(); )
         {
-            final NameEntry ne = (NameEntry)e.next();
-            final String pattern = ne.evalName( null );
+            final Pattern ne = (Pattern)e.next();
+            final String pattern = ne.evaluateName( context );
             if( pattern != null && pattern.length() > 0 )
             {
                 tmpNames.add( pattern );
@@ -239,7 +232,7 @@ public class PatternSet
     /**
      * Read includesfile ot excludesfile if not already done so.
      */
-    private void readFiles( Project p )
+    private void readFiles( final TaskContext context )
         throws TaskException
     {
         if( m_includesFileList.size() > 0 )
@@ -247,17 +240,18 @@ public class PatternSet
             Iterator e = m_includesFileList.iterator();
             while( e.hasNext() )
             {
-                NameEntry ne = (NameEntry)e.next();
-                String fileName = ne.evalName( p );
+                Pattern ne = (Pattern)e.next();
+                String fileName = ne.evaluateName( (TaskContext)null );
                 if( fileName != null )
                 {
                     File inclFile = resolveFile( fileName );
-                    if( !inclFile.exists() ) {
+                    if( !inclFile.exists() )
+                    {
                         throw new TaskException( "Includesfile "
                                                  + inclFile.getAbsolutePath()
                                                  + " not found." );
                     }
-                    readPatterns( inclFile, m_includeList, p );
+                    readPatterns( inclFile, m_includeList, null );
                 }
             }
             m_includesFileList.clear();
@@ -268,17 +262,18 @@ public class PatternSet
             Iterator e = m_excludesFileList.iterator();
             while( e.hasNext() )
             {
-                NameEntry ne = (NameEntry)e.next();
-                String fileName = ne.evalName( p );
+                Pattern ne = (Pattern)e.next();
+                String fileName = ne.evaluateName( null );
                 if( fileName != null )
                 {
                     File exclFile = resolveFile( fileName );
-                    if( !exclFile.exists() ) {
+                    if( !exclFile.exists() )
+                    {
                         throw new TaskException( "Excludesfile "
                                                  + exclFile.getAbsolutePath()
                                                  + " not found." );
                     }
-                    readPatterns( exclFile, m_excludeList, p );
+                    readPatterns( exclFile, m_excludeList, null );
                 }
             }
             m_excludesFileList.clear();
@@ -305,7 +300,7 @@ public class PatternSet
             patternReader =
                 new BufferedReader( new FileReader( patternfile ) );
 
-            // Create one NameEntry in the appropriate pattern list for each
+            // Create one Pattern in the appropriate pattern list for each
             // line in the file.
             String line = patternReader.readLine();
             while( line != null )

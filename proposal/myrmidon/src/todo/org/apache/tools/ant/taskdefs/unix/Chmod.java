@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.NameEntry;
 import org.apache.tools.ant.types.PatternSet;
 
 /**
@@ -119,7 +119,7 @@ public class Chmod
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createExclude()
+    public Pattern createExclude()
         throws TaskException
     {
         m_defaultSetDefined = true;
@@ -131,7 +131,7 @@ public class Chmod
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createInclude()
+    public Pattern createInclude()
         throws TaskException
     {
         m_defaultSetDefined = true;

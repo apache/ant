@@ -9,10 +9,10 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.NameEntry;
 import org.apache.tools.ant.types.PatternSet;
 
 /**
@@ -93,7 +93,7 @@ public abstract class MatchingTask
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createExclude()
+    public Pattern createExclude()
         throws TaskException
     {
         return m_fileset.createExclude();
@@ -104,7 +104,7 @@ public abstract class MatchingTask
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createExcludesFile()
+    public Pattern createExcludesFile()
         throws TaskException
     {
         return m_fileset.createExcludesFile();
@@ -115,7 +115,7 @@ public abstract class MatchingTask
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createInclude()
+    public Pattern createInclude()
         throws TaskException
     {
         return m_fileset.createInclude();
@@ -126,7 +126,7 @@ public abstract class MatchingTask
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createIncludesFile()
+    public Pattern createIncludesFile()
         throws TaskException
     {
         return m_fileset.createIncludesFile();

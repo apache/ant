@@ -10,6 +10,7 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
@@ -33,10 +34,6 @@ public class FileSet
     private boolean m_useDefaultExcludes = true;
     private boolean m_isCaseSensitive = true;
     private File m_dir;
-
-    public FileSet()
-    {
-    }
 
     /**
      * Sets case sensitivity of the file system
@@ -76,9 +73,9 @@ public class FileSet
      *
      * @param excl The file to fetch the exclude patterns from.
      */
-    public void setExcludesfile( final File excl )
+    public void setExcludesfile( final File excludesfile )
     {
-        m_defaultPatterns.setExcludesfile( excl );
+        m_defaultPatterns.setExcludesfile( excludesfile );
     }
 
     /**
@@ -87,7 +84,7 @@ public class FileSet
      *
      * @param includes the string containing the include patterns
      */
-    public void setIncludes( String includes )
+    public void setIncludes( final String includes )
     {
         m_defaultPatterns.setIncludes( includes );
     }
@@ -97,9 +94,9 @@ public class FileSet
      *
      * @param incl The file to fetch the include patterns from.
      */
-    public void setIncludesfile( File incl )
+    public void setIncludesfile( final File includesfile )
     {
-        m_defaultPatterns.setIncludesfile( incl );
+        m_defaultPatterns.setIncludesfile( includesfile );
     }
 
     public void setupDirectoryScanner( final FileScanner ds )
@@ -124,8 +121,8 @@ public class FileSet
             m_dir + " with " + m_defaultPatterns;
         getLogger().debug( message );
 
-        ds.setIncludes( m_defaultPatterns.getIncludePatterns( null ) );
-        ds.setExcludes( m_defaultPatterns.getExcludePatterns( null ) );
+        ds.setIncludes( m_defaultPatterns.getIncludePatterns( getContext() ) );
+        ds.setExcludes( m_defaultPatterns.getExcludePatterns( getContext() ) );
         if( m_useDefaultExcludes )
         {
             ds.addDefaultExcludes();
@@ -167,7 +164,7 @@ public class FileSet
     /**
      * add a name entry on the exclude list
      */
-    public NameEntry createExclude()
+    public Pattern createExclude()
     {
         return m_defaultPatterns.createExclude();
     }
@@ -175,7 +172,7 @@ public class FileSet
     /**
      * add a name entry on the include files list
      */
-    public NameEntry createExcludesFile()
+    public Pattern createExcludesFile()
     {
         return m_defaultPatterns.createExcludesFile();
     }
@@ -183,7 +180,7 @@ public class FileSet
     /**
      * add a name entry on the include list
      */
-    public NameEntry createInclude()
+    public Pattern createInclude()
     {
         return m_defaultPatterns.createInclude();
     }
@@ -191,7 +188,7 @@ public class FileSet
     /**
      * add a name entry on the include files list
      */
-    public NameEntry createIncludesFile()
+    public Pattern createIncludesFile()
     {
         return m_defaultPatterns.createIncludesFile();
     }

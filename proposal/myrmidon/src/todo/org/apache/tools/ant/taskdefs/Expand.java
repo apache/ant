@@ -200,7 +200,7 @@ public class Expand extends MatchingTask
             for( int v = 0; v < patternsets.size(); v++ )
             {
                 PatternSet p = (PatternSet)patternsets.get( v );
-                String[] incls = p.getIncludePatterns( null );
+                String[] incls = p.getIncludePatterns( getContext() );
                 if( incls != null )
                 {
                     for( int w = 0; w < incls.length; w++ )
@@ -213,7 +213,7 @@ public class Expand extends MatchingTask
                         }
                     }
                 }
-                String[] excls = p.getExcludePatterns( null );
+                String[] excls = p.getExcludePatterns( getContext() );
                 if( excls != null )
                 {
                     for( int w = 0; w < excls.length; w++ )

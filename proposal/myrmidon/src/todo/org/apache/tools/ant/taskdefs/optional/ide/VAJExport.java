@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.types.PatternSet;
-import org.apache.tools.ant.types.NameEntry;
 
 /**
  * Export packages from the Visual Age for Java workspace. The packages are
@@ -144,7 +144,7 @@ public class VAJExport extends VAJTask
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createExclude()
+    public Pattern createExclude()
     {
         return patternSet.createExclude();
     }
@@ -154,7 +154,7 @@ public class VAJExport extends VAJTask
      *
      * @return Description of the Returned Value
      */
-    public NameEntry createInclude()
+    public Pattern createInclude()
     {
         return patternSet.createInclude();
     }
@@ -175,8 +175,8 @@ public class VAJExport extends VAJTask
 
         // delegate the export to the VAJUtil object.
         getUtil().exportPackages( destDir,
-                                  patternSet.getIncludePatterns( null ),
-                                  patternSet.getExcludePatterns( null ),
+                                  patternSet.getIncludePatterns( getContext() ),
+                                  patternSet.getExcludePatterns( getContext() ),
                                   exportClasses, exportDebugInfo,
                                   exportResources, exportSources,
                                   useDefaultExcludes, overwrite );
