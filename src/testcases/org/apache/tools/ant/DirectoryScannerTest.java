@@ -346,7 +346,19 @@ public class DirectoryScannerTest extends BuildFileTest {
             }
         }
     }
-
+    public void testExcludeOneFile() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {
+            "**/*.xml"
+        });
+        ds.setExcludes(new String[] {
+            "alpha/beta/b*xml"
+        });
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                     new String[] {});
+    }
     public void testExcludeHasPrecedence() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
