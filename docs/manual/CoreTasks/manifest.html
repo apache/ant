@@ -87,6 +87,14 @@ href="#attribute">attribute</a> elements into sections.</p>
 <pre>
   &lt;manifest file=&quot;MANIFEST.MF&quot;&gt;
     &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;
+    &lt;section name=&quot;common&quot;&gt;
+      &lt;attribute name=&quot;Specification-Title&quot; value=&quot;Example&quot; /&gt;
+      &lt;attribute name=&quot;Specification-Version&quot; value=&quot;${version}&quot; /&gt;
+      &lt;attribute name=&quot;Specification-Vendor&quot; value=&quot;Example Organization&quot; /&gt;
+      &lt;attribute name=&quot;Implementation-Title&quot; value=&quot;common&quot; /&gt;
+      &lt;attribute name=&quot;Implementation-Version&quot; value=&quot;${version} ${TODAY}&quot; /&gt; 
+      &lt;attribute name=&quot;Implementation-Vendor&quot; value=&quot;Example Corp.&quot; /&gt;
+    &lt;/section&gt;
     &lt;section name=&quot;common/class1.class&quot;&gt;
       &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
     &lt;/section&gt;
@@ -94,17 +102,33 @@ href="#attribute">attribute</a> elements into sections.</p>
 </pre>
 
 <p>Creates or replaces the file MANIFEST.MF.  Note that the Built-By
-attribute will take the value of the Ant property ${user.name}. The
-manifest produced by the above would look like this:
-</p>
+attribute will take the value of the Ant property ${user.name}.  The
+same is true for the ${version} and ${TODAY} properties.  This example
+produces a MANIFEST.MF that contains 
+<a href="http://java.sun.com/products/jdk/1.2/docs/guide/versioning/index.html">package
+version identification</a> for the package <code>common</code>.</p>
+
+<p>The manifest produced by the above would look like this:</p>
+
 <pre><code>Manifest-Version: 1.0
 Built-By: bodewig
 Created-By: Apache Ant 1.5alpha
 
+Name: common
+Specification-Title: Example
+Specification-Vendor: Example Organization
+Implementation-Vendor: Example Corp.
+Specification-Version: 1.1
+Implementation-Version: 1.1 February 19 2002
+Implementation-Title: common
+
 Name: common/class1.class
-Sealed: false</code></pre>
+Sealed: false
+
+</code></pre>
+
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>
