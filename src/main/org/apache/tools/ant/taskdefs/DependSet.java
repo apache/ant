@@ -231,6 +231,7 @@ public class DependSet extends MatchingTask {
                  log("Warning: "+targetFiles[i]+" modified in the future.", 
                      Project.MSG_WARN);
               }
+
               if (oldestTarget == null ||
                   dest.lastModified() < oldestTargetTime) {
                   oldestTargetTime = dest.lastModified();
@@ -256,8 +257,7 @@ public class DependSet extends MatchingTask {
               FileList sourceFL         = (FileList) enumSourceLists.nextElement();
               String[] sourceFiles      = sourceFL.getFiles(project);
 
-              int i = 0;
-              do {
+              for (int i=0; upToDate && i < sourceFiles.length; i++) {
                  File src = new File(sourceFL.getDir(project), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
@@ -276,7 +276,7 @@ public class DependSet extends MatchingTask {
                     log(oldestTarget + " is out of date with respect to " +
                         sourceFiles[i], Project.MSG_VERBOSE);
                  }
-              } while (upToDate && (++i < sourceFiles.length) );
+              }
            }
         }
 
