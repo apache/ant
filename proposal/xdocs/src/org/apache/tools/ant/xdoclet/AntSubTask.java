@@ -56,8 +56,10 @@ package org.apache.tools.ant.xdoclet;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.PackageDoc;
+import com.sun.javadoc.Tag;
 import xdoclet.TemplateSubTask;
 import xdoclet.XDocletException;
+import xdoclet.XDocletTagSupport;
 import xdoclet.tags.PackageTagsHandler;
 
 import java.io.File;
@@ -88,7 +90,7 @@ public class AntSubTask extends TemplateSubTask {
 
     /**
      * @todo pull out to utility method
-     * @todo add more logic (like execute method signature)
+     * @todo revisit deprecated removal - perhaps need an @ant.task ignore="true"?
      */
     public static final boolean isAntTask(ClassDoc clazz) {
         if (clazz.isAbstract()) {
@@ -100,14 +102,44 @@ public class AntSubTask extends TemplateSubTask {
             return false;
         }
 
-        MethodDoc[] methods = clazz.methods();
-        for (int i = 0; i < methods.length; i++) {
-            if ("execute".equals(methods[i].name())) {
-                return true;
+        // remove deprecated tasks (controversial!)
+        Tag[] tags = clazz.tags();
+        for (int i=0; i < tags.length; i++) {
+            if ("@deprecated".equals(tags[i].name())) {
+                return false;
             }
         }
 
+        if (hasExecuteMethod(clazz)) {
+            return true;
+        }
+
         return false;
+    }
+
+    private static boolean hasExecuteMethod (ClassDoc clazz) {
+        if (clazz == null) {
+            return false;
+        }
+
+        // It ain't a task if we've climbed back to Task itself
+        if ("org.apache.tools.ant.Task".equals(clazz.qualifiedName())) {
+            return false;
+        }
+
+        // need to check that only runtime exceptions are thrown?
+        MethodDoc[] methods = clazz.methods();
+        for (int i = 0; i < methods.length; i++) {
+            if ("execute".equals(methods[i].name())) {
+                if (methods[i].parameters().length == 0) {
+                    if (methods[i].returnType().typeName().equals("void")) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return hasExecuteMethod(clazz.superclass());
     }
 
     /**
