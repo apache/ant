@@ -311,8 +311,7 @@ public class JavaEnvUtils {
     }
 
     /**
-     * testing helper method; kept here for unification of changes.
-     * @return
+     * Testing helper method; kept here for unification of changes.
      */
     public static Vector getJrePackageTestCases() {
         Vector tests=new Vector();

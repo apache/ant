@@ -100,7 +100,7 @@ public class CollectionUtils {
     }
 
     /**
-     * Hashtable.equals() doesn't do any good in 1.1
+     * Hashtable.equals() doesn't do any good in 1.1.
      *
      * <p>Follows the equals contract of Java 2's Map.</p>
      *

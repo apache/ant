@@ -319,14 +319,15 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * what is the classname we are definining? Can be null
+     * Returns the classname of the object we are defining. 
+     * May be <code>null</code>.
      */
     public String getClassname() {
         return value;
     }
 
     /**
-     * the full class name of the object being defined.
+     * The full class name of the object being defined.
      * Required, unless file or resource have
      * been specified.
      */
@@ -335,8 +336,8 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * this must be implemented by subclasses; it is the callback
-     * they will get to add a new definition of their type
+     * This must be implemented by subclasses; it is the callback
+     * they will get to add a new definition of their type.
      */
     protected abstract void addDefinition(String name, Class c);
 }

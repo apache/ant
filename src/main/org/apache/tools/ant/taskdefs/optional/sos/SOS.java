@@ -202,8 +202,9 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the address and port of SourceOffSite Server,
-     * eg. 192.168.0.1:8888 ; required. 
+     * Sets the address and port of SourceOffSite Server,
+     * for example 192.168.0.1:8888.
+     * This attribute is required. 
      *
      * @param  sosServerPath  The new sosServerPath value
      */

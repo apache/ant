@@ -183,8 +183,7 @@ public class Replace extends MatchingTask {
         }
 
         /**
-         * get the replacement value for this filter token
-         * @return
+         * Get the replacement value for this filter token.
          */
         public String getReplaceValue() {
             if (property != null) {

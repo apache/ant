@@ -179,7 +179,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     private String rmicopts;
 
     /**
-     * <code>true</code> if the RMI Skel. and Stub. must be modified to
+     * Whether or not the RMI skeleton and stub must be modified to
      * implement the implicit propagation of the security context (the
      * transactional context is always provided). The default is
      * <code>false</code>.
@@ -329,7 +329,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #jarsuffix}.
+     * Set the {@link #suffix jar suffix}.
      *
      * @param aString the string to use as the suffix.
      */

@@ -247,8 +247,8 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * Set the delimiter that separates SQL statements;
-     * optional, default &quot;;&quot;
+     * Sets the delimiter that separates SQL statements.
+     * Optional, defaults to &quot;;&quot;.
      *
      * <p>For example, set this to "go" and delimitertype to "ROW" for
      * Sybase ASE or MS SQL Server.</p>

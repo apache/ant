@@ -109,7 +109,8 @@ public class Concat extends Task {
     private File destinationFile = null;
 
     /**
-     * If the destination file exists, should the stream be appended? 
+     * Whether or not the stream should be appended if the destination file 
+     * exists.
      * Defaults to <code>false</code>.
      */
     private boolean append = false;

@@ -80,30 +80,30 @@ import org.apache.tools.ant.util.FileUtils;
 public class TempFile extends Task {
 
     /**
-     *  name of property to set
+     * Name of property to set.
      */
     private String property;
 
     /**
-     *  directory to create the file in. can be null
+     * Directory to create the file in. Can be null.
      */
     private File destDir = null;
 
     /**
-     *  prefix for the file
+     * Prefix for the file.
      */
     private String prefix;
 
     /**
-     *  suffix for the file
+     * Suffix for the file.
      */
     private String suffix = "";
 
 
     /**
-     *  The property you wish to assign the temporary file to
+     * Sets the property you wish to assign the temporary file to.
      *
-     *@param  property  The property to set
+     * @param  property  The property to set
      */
     public void setProperty(String property) {
         this.property = property;
@@ -111,10 +111,10 @@ public class TempFile extends Task {
 
 
     /**
-     *  destination directory. If null, 
-     the parent directory is used instead
+     * Sets the destination directory. If null, 
+     * the parent directory is used instead.
      *
-     *@param  destDir  The new destDir value
+     * @param  destDir  The new destDir value
      */
     public void setDestDir(File destDir) {
         this.destDir = destDir;
@@ -122,9 +122,9 @@ public class TempFile extends Task {
 
 
     /**
-     *  optional prefix string
+     * Sets the optional prefix string.
      *
-     *@param  prefix  string to prepend to generated string
+     * @param  prefix  string to prepend to generated string
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
@@ -132,9 +132,9 @@ public class TempFile extends Task {
 
 
     /**
-     *  Suffix string for the temp file (optional)
+     * Sets the suffix string for the temp file (optional)
      *
-     *@param  suffix  suffix including any "." , e.g ".xml"
+     * @param  suffix  suffix including any "." , e.g ".xml"
      */
     public void setSuffix(String suffix) {
         this.suffix = suffix;
@@ -142,7 +142,7 @@ public class TempFile extends Task {
 
 
     /**
-     *  create the temp file
+     * Creates the temporary file.
      *
      *@exception  BuildException  if something goes wrong with the build
      */

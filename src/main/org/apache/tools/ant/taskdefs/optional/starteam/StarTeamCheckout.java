@@ -112,8 +112,8 @@ public class StarTeamCheckout extends TreeBasedTask {
     }
 
     /**
-     * Should all all local files <i>not<i> in StarTeam be deleted?
-     * Optional, defaults to "true".     
+     * Whether or not all local files <i>not<i> in StarTeam should be deleted.
+     * Optional, defaults to <code>true</code>.
      * @param value  the value to set the attribute to.
      */
     public void setDeleteUncontrolled(boolean value) {

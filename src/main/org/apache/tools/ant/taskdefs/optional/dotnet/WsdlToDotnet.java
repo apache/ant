@@ -165,7 +165,8 @@ public class WsdlToDotnet extends Task  {
     }
 
     /**
-     * Should failure halt the build? optional, default=true
+     * Whether or not a failure should halt the build.
+     * Optional - default is <code>true</code>.
      * @param failOnError new failure option
      */
     public void setFailOnError(boolean failOnError) {

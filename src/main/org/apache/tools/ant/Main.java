@@ -140,7 +140,7 @@ public class Main {
     private boolean projectHelp = false;
 
     /**
-     * Is a logfile being used?  This is used to
+     * Whether or not a logfile is being used. This is used to
      * check if the output streams must be closed.
      */
     private static boolean isLogFileUsed = false;

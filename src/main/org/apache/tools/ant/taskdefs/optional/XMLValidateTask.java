@@ -121,10 +121,11 @@ public class XMLValidateTask extends Task {
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
     /**
-     * Specify how parser error are to be handled; 
-     * optional, default=true
+     * Specify how parser error are to be handled. 
+     * Optional, default is <code>true</code>.
      * <p>
-     * If set to <code>true</code> (default), throw a buildException if the parser yields an error.
+     * If set to <code>true</code> (default), throw a buildException if the 
+     * parser yields an error.
      */
     public void setFailOnError(boolean fail) {
 

@@ -108,7 +108,7 @@ public class SetProxy extends Task {
     private String socksProxyHost = null;
     
     /**
-     * socks proxy port. 1080 is the default
+     * Socks proxy port. Default is 1080.
      */
     private int socksProxyPort = 1080;
 

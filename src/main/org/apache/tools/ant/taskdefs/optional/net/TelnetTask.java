@@ -268,7 +268,8 @@ public class TelnetTask extends Task {
         }
 
         /**
-         * should the message be echoed to the log? default=true.
+         * Whether or not the message should be echoed to the log.
+         * Defaults to <code>true</code>.
          */
         public void setEcho(boolean b) {
            echoString = b;

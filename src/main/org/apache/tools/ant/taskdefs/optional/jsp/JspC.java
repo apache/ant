@@ -210,7 +210,8 @@ public class JspC extends MatchingTask {
 
     /* ------------------------------------------------------------ */
     /**
-     * should the build halt if compilation fails? default=true
+     * Whether or not the build should halt if compilation fails.
+     * Defaults to <code>true</code>.
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;

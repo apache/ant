@@ -102,7 +102,7 @@ import java.util.Vector;
  * <ul>
  *   <li>sun (the standard compiler of the JDK)</li>
  *   <li>kaffe (the standard compiler of 
- *       {@ link <a href="http://www.kaffe.org">Kaffe</a>})</li>
+ *       {@link <a href="http://www.kaffe.org">Kaffe</a>})</li>
  *   <li>weblogic</li>
  * </ul>
  * 
@@ -363,9 +363,9 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Include ant's own classpath in this task's classpath?
-     * sets whether to include the Ant run-time libraries;
-     * optional defaults to true.
+     * Sets whether or not to include ant's own classpath in this task's 
+     * classpath.
+     * Optional; default is <code>true</code>.
      */
     public void setIncludeantruntime(boolean include) {
         includeAntRuntime = include;

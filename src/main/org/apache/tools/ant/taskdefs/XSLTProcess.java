@@ -734,8 +734,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
-     * Specific configuration for the TRaX liaison... support for
-     * all other has been dropped so this liaison will soon look
+     * Specific configuration for the TRaX liaison. Support for
+     * all others has been dropped so this liaison will soon look
      * like the exact copy of JAXP interface..
      * @param liaison the TRaXLiaison to configure.
      */

@@ -136,14 +136,16 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Leave added files writable? Default: false. 
+     * Whether or not to leave added files writable.
+     * Default is <code>false</code>.
      */
     public final void setWritable(boolean argWritable) {
         m_Writable = argWritable;
     }
 
     /**
-     * @return the 'make writable' command if the attribute was 'true', otherwise an empty string
+     * The 'make writable' command if the attribute was <code>true</code>, 
+     * otherwise an empty string.
      */
     public void getWritableCommand(Commandline cmd) {
         if (!m_Writable) {

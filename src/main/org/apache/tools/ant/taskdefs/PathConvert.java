@@ -237,11 +237,12 @@ public class PathConvert extends Task {
 
     /**
      * Set targetos to a platform to one of
-     * "windows", "unix", "netware", or "os/2"; required unless
-     * unless pathsep and/or dirsep are specified.
+     * "windows", "unix", "netware", or "os/2".
+     * 
+     * Required unless unless pathsep and/or dirsep are specified.
      *
      * @deprecated use the method taking a TargetOs argument instead
-     * @see #setTargetos(TargetOs)
+     * @see #setTargetos(PathConvert.TargetOs)
      */
     public void setTargetos(String target) {
         TargetOs to = new TargetOs();
