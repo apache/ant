@@ -226,7 +226,7 @@
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
                unless="xalan.present" />
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
-      <exclude name="${optional.packahe}/sitraka/*" unless="jakarta.oro.present"/>
+      <exclude name="${optional.package}/sitraka/**" unless="jakarta.oro.present"/>
     </javac>
     
     <copy todir="${build.classes}">
