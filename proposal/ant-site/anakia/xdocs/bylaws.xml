@@ -27,7 +27,7 @@
     <subsection name="Project Management Committee">
       <p>
         The Project Management Committee (PMC) for Apache Ant was created by a resolution of the
-        board of the Apache Software Foundation (ASF)on 18th Novembr 2002. The PMC is responsible
+        board of the Apache Software Foundation (ASF)on 18th November 2002. The PMC is responsible
         to the board and the ASF for the management and oversight of the Apache Ant codebase.
         The responsibilites of the PMC include
       </p>
@@ -36,7 +36,7 @@
         <li>Deciding what is distributed as products of the Apache Ant project. In particular
             all releases must be approved by the PMC
         </li>
-        <li>Maintaining the project's shared resources, including the codebase respository,
+        <li>Maintaining the project's shared resources, including the codebase repository,
             mailing lists, websites.
         </li>
         <li>Speaking on behalf of the project.
@@ -51,10 +51,10 @@
 
       <p>
         Membership of the PMC is by invitation only and must be approved by a consensus of active PMC members.
-        A PMC member is considered inactive by their own declaration of by not contributing in any form to the
+        A PMC member is considered inactive by their own declaration or by not contributing in any form to the
         project for over six months. An inactive member can become active again by reversing whichever condition
         made them inactive (i.e., by reversing their earlier declaration or by once again contributing toward the
-        project's work). Membership can be revoked by a unanimous vote of all the active PMC members other
+        project's work). Membership can be revoked by an unanimous vote of all the active PMC members other
         than the member in question.
       </p>
 
