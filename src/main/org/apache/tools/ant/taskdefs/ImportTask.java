@@ -154,7 +154,9 @@ public class ImportTask extends Task {
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
-        File importedFile = FILE_UTILS.resolveFile(buildFile,  file);
+
+        File buildFileParent = new File(buildFile.getParent());
+        File importedFile = FILE_UTILS.resolveFile(buildFileParent,  file);
 
         if (!importedFile.exists()) {
             String message =
