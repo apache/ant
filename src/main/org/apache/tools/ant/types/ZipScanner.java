@@ -202,66 +202,6 @@ public class ZipScanner extends DirectoryScanner {
     }
 
     /**
-     * Returns the resources of the files which matched at least one of the
-     * include patterns and none of the exclude patterns.
-     * The names are relative to the base directory.
-     *
-     * @return resource information for the files which matched at
-     * least one of the include patterns and none of the exclude
-     * patterns.
-     *
-     * @since Ant 1.5.2
-     */
-    public Resource[] getIncludedFileResources() {
-        if (srcFile != null) {
-            Vector myvector = new Vector();
-            // first check if the archive needs to be scanned again
-            scanme();
-            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
-                Resource myresource= (Resource) e.nextElement();
-                if (!myresource.isDirectory() && match(myresource.getName())) {
-                    myvector.addElement(myresource.clone());
-                }
-            }
-            Resource[] resources = new Resource[myvector.size()];
-            myvector.copyInto(resources);
-            return resources;
-        } else {
-            return super.getIncludedFileResources();
-        }
-    }
-
-    /**
-     * Returns the resources of the files which matched at least one of the
-     * include patterns and none of the exclude patterns.
-     * The names are relative to the base directory.
-     *
-     * @return resource information for the files which matched at
-     * least one of the include patterns and none of the exclude
-     * patterns.
-     *
-     * @since Ant 1.5.2
-     */
-    public Resource[] getIncludedDirectoryResources() {
-        if (srcFile != null) {
-            Vector myvector = new Vector();
-            // first check if the archive needs to be scanned again
-            scanme();
-            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
-                Resource myresource= (Resource) e.nextElement();
-                if (myresource.isDirectory() && match(myresource.getName())) {
-                    myvector.addElement(myresource.clone());
-                }
-            }
-            Resource[] resources = new Resource[myvector.size()];
-            myvector.copyInto(resources);
-            return resources;
-        } else {
-            return super.getIncludedDirectoryResources();
-        }
-    }
-
-    /**
      * @param name path name of the file sought in the archive
      *
      * @since Ant 1.5.2

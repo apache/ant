@@ -187,20 +187,6 @@ public class DirectoryScannerTest extends TestCase {
         assertTrue("(1) zip package included", haveZipPackage);
         assertTrue("(1) taskdefs package not included", !haveTaskdefsPackage);
 
-        haveZipPackage = false;
-        Resource[] includedResources = ds.getIncludedDirectoryResources();
-        for (int i=0; i<includedResources.length; i++) {
-            if (includedResources[i].getName().equals("zip")) {
-                haveZipPackage = true;
-            } else if (includedResources[i].getName().equals("ant" 
-                                                             + File.separator
-                                                             + "taskdefs")) {
-                haveTaskdefsPackage = true;
-            }
-        }
-        assertTrue("(1b) zip package included", haveZipPackage);
-        assertTrue("(1b) taskdefs package not included", !haveTaskdefsPackage);
-
         ds = new DirectoryScanner();
         ds.setBasedir(dir);
         ds.setExcludes(new String[] {"ant"});
@@ -216,22 +202,6 @@ public class DirectoryScannerTest extends TestCase {
         }
         assertTrue("(2) zip package included", haveZipPackage);
         assertTrue("(2) taskdefs package included", haveTaskdefsPackage);
-
-        haveZipPackage = false;
-        haveTaskdefsPackage = false;
-        includedResources = ds.getIncludedDirectoryResources();
-        for (int i=0; i<includedResources.length; i++) {
-            if (includedResources[i].getName().equals("zip")) {
-                haveZipPackage = true;
-            } else if (includedResources[i].getName().equals("ant"
-                                                             + File.separator
-                                                             + "taskdefs")) {
-                haveTaskdefsPackage = true;
-            }
-        }
-        assertTrue("(2b) zip package included", haveZipPackage);
-        assertTrue("(2b) taskdefs package included", haveTaskdefsPackage);
-
     }
 
 }

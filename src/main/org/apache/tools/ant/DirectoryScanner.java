@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
@@ -151,7 +152,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
-public class DirectoryScanner implements ResourceScanner, SelectorScanner {
+public class DirectoryScanner implements FileScanner, SelectorScanner, ResourceFactory {
 
     /**
      * Patterns which should be excluded by default.
@@ -811,27 +812,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
     }
 
     /**
-     * Returns the resources of the files which matched at least one
-     * of the include patterns and none of the exclude patterns.  The
-     * names are relative to the base directory.
-     *
-     * @return resource information for the files which matched at
-     * least one of the include patterns and none of the exclude
-     * patterns.
-     *
-     * @since Ant 1.5.2
-     */
-    public Resource[] getIncludedFileResources() {
-        String[] names = getIncludedFiles();
-        int count = names.length;
-        Resource[] resources = new Resource[count];
-        for (int i = 0; i < count; i++) {
-            resources[i] = getResource(names[i]);
-        }
-        return resources;
-    }
-
-    /**
      * Returns the names of the files which matched none of the include
      * patterns. The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
@@ -898,26 +878,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
         return directories;
     }
 
-    /**
-     * Returns the resource object for the directories which matched
-     * at least one of the include patterns and none of the exclude
-     * patterns.  The names are relative to the base directory.
-     *
-     * @return the names of the directories which matched at least one of the
-     * include patterns and none of the exclude patterns.
-     *
-     * @since Ant 1.5.2
-     */
-    public Resource[] getIncludedDirectoryResources() {
-        String[] names = getIncludedDirectories();
-        int count = names.length;
-        Resource[] resources = new Resource[count];
-        for (int i = 0; i < count; i++) {
-            resources[i] = getResource(names[i]);
-        }
-        return resources;
-    }
-    
     /**
      * Returns the names of the directories which matched none of the include
      * patterns. The names are relative to the base directory. This involves
@@ -994,12 +954,7 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {
-        File f = null;
-        if (basedir != null) {
-            f = new File(basedir, name);
-        } else {
-            f = new File(name);
-        }            
+        File f = fileUtils.resolveFile(basedir, name);
         return new Resource(name, f.exists(), f.lastModified(), 
                             f.isDirectory());
     }

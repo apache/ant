@@ -73,7 +73,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ResourceScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
@@ -441,10 +440,15 @@ public class Zip extends MatchingTask {
                         PatternSet.NameEntry ne = oldFiles.createExclude();
                         ne.setName((String) addedFiles.elementAt(i));
                     }
-                    addResources(oldFiles, 
-                                 oldFiles.getDirectoryScanner(getProject())
-                                         .getIncludedFileResources(),
-                                 zOut);
+                    DirectoryScanner ds = 
+                        oldFiles.getDirectoryScanner(getProject());
+                    String[] f = ds.getIncludedFiles();
+                    Resource[] r = new Resource[f.length];
+                    for (int i = 0; i < f.length; i++) {
+                        r[i] = ds.getResource(f[i]);
+                    }
+                    
+                    addResources(oldFiles, r, zOut);
                 }
                 finalizeZipOutputStream(zOut);
 
@@ -801,13 +805,20 @@ public class Zip extends MatchingTask {
     protected Resource[][] grabResources(FileSet[] filesets) {
         Resource[][] result = new Resource[filesets.length][];
         for (int i = 0; i < filesets.length; i++) {
-            ResourceScanner rs = filesets[i].getDirectoryScanner(getProject());
-            Resource[] files = rs.getIncludedFileResources();
-            Resource[] directories = rs.getIncludedDirectoryResources();
-            result[i] = new Resource[files.length + directories.length];
-            System.arraycopy(directories, 0, result[i], 0, directories.length);
-            System.arraycopy(files, 0, result[i], directories.length, 
-                             files.length);
+            DirectoryScanner rs = 
+                filesets[i].getDirectoryScanner(getProject());
+            Vector resources = new Vector();
+            String[] directories = rs.getIncludedDirectories();
+            for (int j = 0; j < directories.length; j++) {
+                resources.add(rs.getResource(directories[j]));
+            }
+            String[] files = rs.getIncludedFiles();
+            for (int j = 0; j < files.length; j++) {
+                resources.add(rs.getResource(files[j]));
+            }
+            
+            result[i] = new Resource[resources.size()];
+            resources.copyInto(result[i]);
         }
         return result;
     }
