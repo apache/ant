@@ -1461,11 +1461,10 @@ public final class IntrospectionHelper implements BuildListener {
             rObject = ((PreSetDef.PreSetDefinition) addedObject).createObject(
                 project);
         }
-        final Method method = addMethod;
         final Object nestedObject = addedObject;
         final Object realObject = rObject;
 
-        return new NestedCreator(method) {
+        return new NestedCreator(addMethod) {
             Object create(Project project, Object parent, Object ignore)
                 throws InvocationTargetException, IllegalAccessException {
                 if (!method.getName().endsWith("Configured")) {
