@@ -327,9 +327,11 @@ public class ProjectHelper {
 
         public void init(String tag, AttributeList attrs) throws SAXParseException {
             task = project.createTask(tag);
+            project.currentTask = task;
             configure(task, attrs);
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
             task.init();
+            project.currentTask = null;
 
             // Top level tasks don't have associated targets
             if (target != null) {
@@ -355,20 +357,20 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedPropertyHandler(this, task).init(name, attrs);
+            new NestedElementHandler(this, task).init(name, attrs);
         }
     }
 
     /**
      * Handler for all nested properties.
      */
-    private class NestedPropertyHandler extends AbstractHandler {
+    private class NestedElementHandler extends AbstractHandler {
         private DocumentHandler parentHandler;
 
         private Object target;
         private Object child;
 
-        public NestedPropertyHandler(DocumentHandler parentHandler, Object target) {
+        public NestedElementHandler(DocumentHandler parentHandler, Object target) {
             super(parentHandler);
 
             this.target = target;
@@ -393,7 +395,7 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedPropertyHandler(this, child).init(name, attrs);
+            new NestedElementHandler(this, child).init(name, attrs);
         }
     }
 

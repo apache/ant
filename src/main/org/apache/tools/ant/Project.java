@@ -430,12 +430,12 @@ public class Project {
         Vector sortedTargets = topoSort(targetName, targets);
 
         int curidx = 0;
-        String curtarget;
+        Target curtarget;
 
         do {
-            curtarget = (String) sortedTargets.elementAt(curidx++);
-            runTarget(curtarget, targets);
-        } while (!curtarget.equals(targetName));
+            curtarget = (Target) sortedTargets.elementAt(curidx++);
+            runTarget(curtarget);
+        } while (!curtarget.getName().equals(targetName));
     }
 
     public File resolveFile(String fileName) {
@@ -679,14 +679,10 @@ public class Project {
     // Given a string defining a target name, and a Hashtable
     // containing the "name to Target" mapping, pick out the
     // Target and execute it.
-    private final void runTarget(String target, Hashtable targets)
+    public void runTarget(Target target)
         throws BuildException {
 
-        currentTarget = (Target)targets.get(target);
-        if (currentTarget == null) {
-            throw new RuntimeException("Unexpected missing target `"+target+
-                                       "' in this project.");
-        }
+        currentTarget = target;
 
         try {
             fireTargetStarted();
@@ -803,7 +799,7 @@ public class Project {
             throw new RuntimeException("Unexpected internal error: expected to pop "+root+" but got "+p);
         }
         state.put(root, VISITED);
-        ret.addElement(root);
+        ret.addElement(target);
     }
 
     private static BuildException makeCircularException(String end, Stack stk) {
