@@ -131,7 +131,9 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     public void start() {
         outputThread.start();
         errorThread.start();
-        inputThread.start();
+        if (inputThread != null) {
+            inputThread.start();
+        }
     }
 
     public void stop() {
