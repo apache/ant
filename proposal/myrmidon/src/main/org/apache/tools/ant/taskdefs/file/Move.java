@@ -38,7 +38,7 @@ public class Move
 {
     public Move()
     {
-        setForceOverwrite( true );
+        setOverwrite( true );
     }
 
     /**

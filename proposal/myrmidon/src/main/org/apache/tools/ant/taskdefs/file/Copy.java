@@ -15,18 +15,18 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
-import org.apache.tools.ant.util.mappers.Mapper;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.mappers.FlatFileNameMapper;
 import org.apache.tools.ant.util.mappers.IdentityMapper;
-import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.util.mappers.Mapper;
 
 /**
  * A consolidated copy task. Copies a file or directory to a new file or
@@ -53,7 +53,7 @@ public class Copy
 
     private boolean m_filtering;
     private boolean m_preserveLastModified;
-    private boolean m_forceOverwrite;
+    private boolean m_overwrite;
     private boolean m_flatten;
     private boolean m_includeEmpty = true;
 
@@ -114,7 +114,7 @@ public class Copy
      */
     public void setOverwrite( final boolean overwrite )
     {
-        m_forceOverwrite = overwrite;
+        m_overwrite = overwrite;
     }
 
     /**
@@ -207,7 +207,7 @@ public class Copy
                     m_destFile = new File( m_destDir, m_file.getName() );
                 }
 
-                if( m_forceOverwrite ||
+                if( m_overwrite ||
                     ( m_file.lastModified() > m_destFile.lastModified() ) )
                 {
                     m_fileCopyMap.put( m_file.getAbsolutePath(), m_destFile.getAbsolutePath() );
@@ -291,7 +291,7 @@ public class Copy
                                         final File toDir )
         throws TaskException
     {
-        if( m_forceOverwrite )
+        if( m_overwrite )
         {
             final ArrayList list = new ArrayList( names.length );
             for( int i = 0; i < names.length; i++ )
@@ -346,7 +346,7 @@ public class Copy
                     final File src = new File( fromFile );
                     final File dest = new File( toFile );
 
-                    if( m_forceOverwrite )
+                    if( m_overwrite )
                     {
                         FileUtil.forceDelete( dest );
                     }
@@ -415,11 +415,6 @@ public class Copy
     /**
      * Compares source files to destination files to see if they should be
      * copied.
-     *
-     * @param fromDir Description of Parameter
-     * @param toDir Description of Parameter
-     * @param files Description of Parameter
-     * @param dirs Description of Parameter
      */
     protected void scan( File fromDir, File toDir, String[] files, String[] dirs )
         throws TaskException
@@ -445,10 +440,6 @@ public class Copy
             buildMap( fromDir, toDir, dirs, mapper, m_dirCopyMap );
         }
     }
-
-    //************************************************************************
-    //  protected and private methods
-    //************************************************************************
 
     /**
      * Ensure we have a consistent and legal set of attributes, and set any
@@ -531,7 +522,7 @@ public class Copy
 
     protected boolean isForceOverwrite()
     {
-        return m_forceOverwrite;
+        return m_overwrite;
     }
 
     protected boolean isIncludeEmpty()
@@ -557,10 +548,5 @@ public class Copy
     protected File getDestDir()
     {
         return m_destDir;
-    }
-
-    protected void setForceOverwrite( final boolean forceOverwrite )
-    {
-        m_forceOverwrite = forceOverwrite;
     }
 }
