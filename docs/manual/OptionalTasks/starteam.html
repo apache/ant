@@ -170,7 +170,7 @@ If false (default) has no effect.
             username="auser"
             password="secret"
             rootlocalfolder="C:\dev\buildtest\co"
-	    force="true"
+            force="true"
   /&gt;
 </pre>
 
@@ -184,7 +184,7 @@ created for them and any non-StarTeam files found in the tree will be deleted.
             username="auser"
             password="secret"
             rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 And this is a simpler way of accomplishing the same thing as the previous example, using the URL attribute.
@@ -197,7 +197,7 @@ And this is a simpler way of accomplishing the same thing as the previous exampl
             rootstarteamfolder="\Dev"
             excludes="*.bak *.old"
             label="v2.6.001"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -211,7 +211,7 @@ end in <i>.bak</i> or <i>.old</i> with the label <i>v2.6.001</i>.
             rootlocalfolder="C:\dev\buildtest\co"
             includes="*.htm,*.html"
             excludes="index.*"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -227,8 +227,8 @@ not be checked out by this command.
             rootlocalfolder="C:\dev\buildtest\co"
             includes="*.htm,*.html"
             excludes="index.*"
-	    forced="true"
-	    recursive="false"
+            forced="true"
+            recursive="false"
   /&gt;
 </pre>
 This example is like the previous one, but will only check out files in 
@@ -240,7 +240,7 @@ C:\dev\buildtest\co, because of the turning off of the recursive attribute.
             password="secret"
             rootstarteamfolder="src/java"
             rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 <br></br>
@@ -258,7 +258,7 @@ C:\dev\buildtest\co, because of the turning off of the recursive attribute.
             password="secret"
             rootstarteamfolder="src/java"
             rootlocalfolder="C:\dev\buildtest\co\src\java"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -351,7 +351,7 @@ change it.  If false (default) lock status will not change.
             username="auser"
             password="secret"
             rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -365,7 +365,7 @@ For files and folders in the local tree but not in starteam, nothing will be don
             username="auser"
             password="secret"
             rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 And this is a simpler way of giving the same commands as the command above using the URL shortcut.
@@ -377,7 +377,7 @@ And this is a simpler way of giving the same commands as the command above using
             rootlocalfolder="C:\dev\buildtest\co"
             rootstarteamfolder="\Dev"
             excludes="*.bak *.old"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -391,7 +391,7 @@ end in <i>.bak</i> or <i>.old</i> from the tree rooted at"C:\dev\buildtest\co" .
             rootlocalfolder="C:\dev\buildtest\co"
             includes="*.htm,*.html"
             excludes="index.*"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -408,8 +408,8 @@ not be checked in by this command.
             rootstarteamfolder="src/java"
             includes="*.htm,*.html"
             excludes="index.*"
-	    forced="true"
-	    recursive="false"
+            forced="true"
+            recursive="false"
   /&gt;
 </pre>
 This example is like the previous one, but will only check in files from 
@@ -422,8 +422,8 @@ C:\dev\buildtest\co, because of the turning off of the recursive attribute.
             rootlocalfolder="C:\dev\buildtest\co"
             rootstarteamfolder="src/java"
             includes="version.txt"
-	    forced="true"
-	    recursive="false"
+            forced="true"
+            recursive="false"
   /&gt;
 </pre>
 This example is like the previous one, but will only check only in one file, C:\dev\buildtest\co\version.txt to the StarTeam folder src/java.
@@ -435,10 +435,10 @@ This example is like the previous one, but will only check only in one file, C:\
             rootlocalfolder="C:\dev\buildtest\co"
             rootstarteamfolder="src/java"
             includes="version.java"
-	    forced="true"
-	    recursive="false"
-	    addUncontrolled="true"
-	    comment="Fix Bug #667"
+            forced="true"
+            recursive="false"
+            addUncontrolled="true"
+            comment="Fix Bug #667"
   /&gt;
 </pre>
 This example is like the previous one, but will only check only in one file, C:\dev\buildtest\co\version.java to the StarTeam folder src/java.  Because the <i>addUncontrolled</i> attribute has been set, if StarTeam does not already control this file in this location, it will be added to the repository.  Also, it will write a comment to the repository for this version of the file.
@@ -449,7 +449,7 @@ This example is like the previous one, but will only check only in one file, C:\
             password="secret"
             rootstarteamfolder="src/java"
             rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 <br></br>
@@ -467,7 +467,7 @@ This example is like the previous one, but will only check only in one file, C:\
             password="secret"
             rootstarteamfolder="src/java"
             rootlocalfolder="C:\dev\buildtest\co\src\java"
-	    forced="true"
+            forced="true"
   /&gt;
 </pre>
 
@@ -606,8 +606,8 @@ while adding a <i>rootlocalfolder</i> and an <i>excludes</i> param ...
   &lt;stlist url="WASHINGTON:49201/build"
              username="auser"
              password="secret"
-	     rootlocalfolder="srcdir2"
-	     excludes="*.properties"
+             rootlocalfolder="srcdir2"
+             excludes="*.properties"
  /&gt;
 </pre>
 

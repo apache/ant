@@ -82,7 +82,7 @@ import java.util.Vector;
 import java.net.URL;
 
 /**
- * Ant task to run JUnit tests.
+ * Runs JUnit tests.
  *
  * <p> JUnit is a framework to create unit test. It has been initially
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
@@ -175,8 +175,8 @@ public class JUnitTask extends Task {
     private boolean showOutput = false;
 
     /**
-     * Tells this task whether to smartly filter the stack frames of
-     * JUnit testcase errors and failures before reporting them.
+     * If true, smartly filter the stack frames of
+     * JUnit errors and failures before reporting them.
      *
      * <p>This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test) however it can possibly be overridden by their
@@ -195,8 +195,8 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Tells this task to halt when there is an error in a test.  this
-     * property is applied on all BatchTest (batchtest) and JUnitTest
+     * If true, stop the build process when there is an error in a test.
+     * This property is applied on all BatchTest (batchtest) and JUnitTest
      * (test) however it can possibly be overridden by their own
      * properties.
      * @param value <tt>true</tt> if it should halt, otherwise
@@ -213,8 +213,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Tells this task to set the named property to "true" when there
-     * is a error in a test.
+     * Property to set to "true" if there is a error in a test.
      *
      * <p>This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test), however, it can possibly be overriden by
@@ -233,8 +232,9 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Tells this task to halt when there is a failure in a test.
-     * this property is applied on all BatchTest (batchtest) and
+     * If true, stop the build process if a test fails
+     * (errors are considered failures as well).
+     * This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test) however it can possibly be overridden by their
      * own properties.
      * @param value <tt>true</tt> if it should halt, otherwise
@@ -251,8 +251,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Tells this task to set the named property to "true" when there
-     * is a failure in a test.  
+     * Property to set to "true" if there is a failure in a test.
      *
      * <p>This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test), however, it can possibly be overriden by
@@ -271,7 +270,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Tells whether a JVM should be forked for each testcase.
+     * If true, JVM should be forked for each test.
      *
      * <p>It avoids interference between testcases and possibly avoids
      * hanging the build.  this property is applied on all BatchTest
@@ -292,8 +291,10 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Tells whether the task should print a short summary of the
-     * task.
+     * If true, print one-line statistics for each test, or "withOutAndErr"
+     * to also show standard output and error.
+     *
+     * Can take the values on, off, and withOutAndErr.
      * @param value <tt>true</tt> to print a summary,
      * <tt>withOutAndErr</tt> to include the test&apos;s output as
      * well, <tt>false</tt> otherwise.
@@ -351,8 +352,10 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Set a new VM to execute the testcase. Default is
-     * <tt>java</tt>. Ignored if no JVM is forked.
+     * The command used to invoke the Java Virtual Machine,
+     * default is 'java'. The command is resolved by
+     * java.lang.Runtime.exec(). Ignored if fork is disabled.
+     *
      * @param   value   the new VM to use instead of <tt>java</tt>
      * @see #setFork(boolean)
      *
@@ -363,7 +366,8 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Create a new JVM argument. Ignored if no JVM is forked.
+     * Adds a JVM argument; ignored if not forking.
+     *
      * @return create a new JVM argument so that any argument can be
      * passed to the JVM.
      * @see #setFork(boolean)
@@ -386,8 +390,9 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Add a nested sysproperty element. This might be useful to tranfer
-     * Ant properties to the testcases when JVM forking is not enabled.
+     * Adds a system property that tests can access.
+     * This might be useful to tranfer Ant properties to the
+     * testcases when JVM forking is not enabled.
      *
      * @since Ant 1.3
      */
@@ -396,7 +401,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * <code>&lt;classpath&gt;</code> allows classpath to be set for tests.
+     * Adds path to classpath used for tests.
      *
      * @since Ant 1.2
      */
@@ -405,7 +410,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Add a nested env element - an environment variable.
+     * Adds an environment variable; used when forking.
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
      *
@@ -416,7 +421,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Use a completely new environment.
+     * If true, use a new environment when forked.
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
      *
@@ -438,8 +443,8 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Create a new set of testcases (also called ..batchtest) and add
-     * it to the list.
+     * Adds a set of tests based on pattern matching.
+     *
      * @return  a new instance of a batch test.
      * @see BatchTest
      *
@@ -461,7 +466,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Whether to include ant.jar, optional.jar and junit.jar in the forked VM.
+     * If true, include ant.jar, optional.jar and junit.jar in the forked VM.
      *
      * @since Ant 1.5
      */
@@ -470,7 +475,9 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Whether to send output of the testcases to Ant's logging system or not.
+     * If true, send any output generated by tests to Ant's logging system
+     * as well as to the formatters.
+     * By default only the formatters receive the output.
      *
      * <p>Output will always be passed to the formatters and not by
      * shown by default.  This option should for example be set for

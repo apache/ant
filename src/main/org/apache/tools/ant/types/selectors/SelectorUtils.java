@@ -522,16 +522,6 @@ strLoop:
         return ret;
     }
 
-    /**
-     * Helper method which corrects paths to use forward slashes.
-     *
-     * @param pattern the path pattern which needs correcting
-     * @return corrected pattern
-     */
-    public static String fixPath(String pattern) {
-        return pattern.replace('/',File.separatorChar).replace('\\',
-                File.separatorChar);
-    }
 
     /**
      * Returns dependency information on these two files. If src has been

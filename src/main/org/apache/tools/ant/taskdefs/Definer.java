@@ -84,7 +84,15 @@ public abstract class Definer extends Task {
     private File file;
     private String resource;
     private boolean reverseLoader = false;
-
+    private String loaderId = null;
+    private String classpathId = null;
+    
+    private static final String REUSE_LOADER_REF = "ant.reuse.loader";
+    
+    /**
+     * @deprecated stop using this attribute
+     * @ant.attribute ignore="true"
+     */
     public void setReverseLoader(boolean reverseLoader) {
         this.reverseLoader = reverseLoader;
         log("The reverseloader attribute is DEPRECATED. It will be removed", 
@@ -104,6 +112,9 @@ public abstract class Definer extends Task {
         }
     }
 
+    /**
+     * Create the classpath to be used when searching for component being defined
+     */ 
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(project);
@@ -111,10 +122,31 @@ public abstract class Definer extends Task {
         return this.classpath.createPath();
     }
 
+    /**
+     * reference to a classpath to use when loading the files.
+     * To actually share the same loader, set loaderref as well
+     */
     public void setClasspathRef(Reference r) {
+        classpathId=r.getRefId();
         createClasspath().setRefid(r);
     }
 
+    /**
+     * Use the reference to locate the loader. If the loader is not
+     * found, taskdef will use the specified classpath and register it
+     * with the specified name.
+     *     
+     * This allow multiple taskdef/typedef to use the same class loader,
+     * so they can be used together. It eliminate the need to
+     * put them in the CLASSPATH.
+     *
+     * @since Ant 1.5
+     */
+    public void setLoaderRef(Reference r) {
+        loaderId = r.getRefId();
+    }
+
+    
     public void execute() throws BuildException {
         AntClassLoader al = createLoader();
 
@@ -188,6 +220,10 @@ public abstract class Definer extends Task {
         }
     }
     
+    /**
+     * create the classloader then hand the definition off to the subclass;
+     * @throws BuildException when the class wont load for any reason
+     */
     private void addDefinition(ClassLoader al, String name, String value)
         throws BuildException {
         try {
@@ -205,8 +241,35 @@ public abstract class Definer extends Task {
         }
     }
 
-
+    /**
+     * create a classloader for this definition
+     */
     private AntClassLoader createLoader() {
+        // magic property 
+        if (project.getProperty(REUSE_LOADER_REF) != null) {
+            // Generate the 'reuse' name automatically from the reference.
+            // This allows <taskdefs> that work on both ant1.4 and ant1.5.
+            // ( in 1.4 it'll require the task/type to be in classpath if they
+            //   are used togheter ).
+            if (loaderId == null && classpathId != null) {
+                loaderId = "ant.loader." + classpathId;
+            }
+        }
+        
+        // If a loader has been set ( either by loaderRef or magic property )
+        if (loaderId != null) {
+            Object reusedLoader = project.getReference(loaderId);
+            if (reusedLoader != null) {
+                if (reusedLoader instanceof AntClassLoader) {
+                    return (AntClassLoader)reusedLoader;
+                }
+                // In future the reference object may be the <loader> type
+                // if( reusedLoader instanceof Loader ) {
+                //      return ((Loader)reusedLoader).getLoader(project);
+                // }
+            }
+        }
+       
         AntClassLoader al = null;
         if (classpath != null) {
             al = new AntClassLoader(project, classpath, !reverseLoader);
@@ -218,28 +281,62 @@ public abstract class Definer extends Task {
         // task we want to define will never be a Task but always
         // be wrapped into a TaskAdapter.
         al.addSystemPackageRoot("org.apache.tools.ant");
+
+
+        // If the loader is new, record it for future uses by other
+        // task/typedefs
+        if (loaderId != null) {
+            if (project.getReference(loaderId) == null) {
+                project.addReference(loaderId, al);
+            }
+        }
+
         return al;
     }
 
+    /**
+     * Name of the property file  to load
+     * ant name/classname pairs from.
+     */
     public void setFile(File file) {
         this.file = file;
     }
 
+    /**
+     * Name of the property resource to load
+     * ant name/classname pairs from.
+     */
     public void setResource(String res) {
         this.resource = res;
     }
 
+    /**
+     * Name of the property resource to load
+     * ant name/classname pairs from.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * what is the classname we are definining? Can be null
+     */
     public String getClassname() {
         return value;
     }
 
+    /**
+     * the full class name of the object being defined.
+     * Required, unless file or resource have
+     * been specified.
+     */
     public void setClassname(String v) {
         value = v;
     }
 
+    /**
+     * this must be implemented by subclasses; it is the callback
+     * they will get to add a new definition of their type
+     */
     protected abstract void addDefinition(String name, Class c);
 }

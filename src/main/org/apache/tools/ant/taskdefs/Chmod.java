@@ -75,6 +75,8 @@ import org.apache.tools.ant.types.PatternSet;
  * @since Ant 1.1
  *
  * @ant.task category="filesystem"
+ * @todo Refactor so it does not extend from ExecuteOn and then turn around
+ *       and unsupport several attributes.
  */
 public class Chmod extends ExecuteOn {
 
@@ -99,6 +101,10 @@ public class Chmod extends ExecuteOn {
         defaultSet.setProject(project);
     }
 
+    /**
+     * The file or single directory of which the permissions must be changed.
+     * @param src
+     */
     public void setFile(File src) {
         FileSet fs = new FileSet();
         fs.setDir(new File(src.getParent()));
@@ -106,17 +112,25 @@ public class Chmod extends ExecuteOn {
         addFileset(fs);
     }
 
+    /**
+     * The directory which holds the files whose permissions must be changed.
+     * @param src
+     */
     public void setDir(File src) {
         defaultSet.setDir(src);
     }
 
+    /**
+     * The new permissions.
+     * @param perm
+     */
     public void setPerm(String perm) {
         createArg().setValue(perm);
         havePerm = true;
     }
 
     /**
-     * add a name entry on the include list
+     * Add a name entry on the include list.
      */
     public PatternSet.NameEntry createInclude() {
         defaultSetDefined = true;
@@ -124,7 +138,7 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
-     * add a name entry on the exclude list
+     * Add a name entry on the exclude list.
      */
     public PatternSet.NameEntry createExclude() {
         defaultSetDefined = true;
@@ -132,7 +146,7 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
-     * add a set of patterns
+     * Add a set of patterns.
      */
     public PatternSet createPatternSet() {
         defaultSetDefined = true;
@@ -218,17 +232,25 @@ public class Chmod extends ExecuteOn {
         }
     }
 
-
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setExecutable(String e) {
         throw new BuildException(taskType 
             + " doesn\'t support the executable attribute", location);
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setCommand(Commandline cmdl) {
         throw new BuildException(taskType 
             + " doesn\'t support the command attribute", location);
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(taskType 
             + " doesn\'t support the skipemptyfileset attribute", location);

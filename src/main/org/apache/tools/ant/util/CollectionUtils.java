@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.util;
 
+import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -66,9 +67,9 @@ import java.util.Vector;
 public class CollectionUtils {
 
     /**
-     * Believe it or not, Vector.equals() doesn't do any good in 1.1
+     * Vector.equals() doesn't do any good in 1.1
      *
-     * @since 1.1, Ant 1.5
+     * @since Ant 1.5
      */
     public static boolean equals(Vector v1, Vector v2) {
         if (v1 == v2) {
@@ -91,6 +92,45 @@ public class CollectionUtils {
             }
         }
         
+        // don't need to check e2.hasMoreElements as the Vectors have
+        // same size.
+
+        return true;
+    }
+
+    /**
+     * Hashtable.equals() doesn't do any good in 1.1
+     *
+     * <p>Follows the equals contract of Java 2's Map.</p>
+     *
+     * @since Ant 1.5
+     */
+    public static boolean equals(Dictionary d1, Dictionary d2) {
+        if (d1 == d2) {
+            return true;
+        }
+        
+        if (d1 == null || d2 == null) {
+            return false;
+        }
+
+        if (d1.size() != d2.size()) {
+            return false;
+        }
+
+        Enumeration e1 = d1.keys();
+        while (e1.hasMoreElements()) {
+            Object key = e1.nextElement();
+            Object value1 = d1.get(key);
+            Object value2 = d2.get(key);
+            if (value2 == null || !value1.equals(value2)) {
+                return false;
+            }
+        }
+        
+        // don't need the opposite check as the Dictionaries have the
+        // same size, so we've also covered all keys of d2 already.
+
         return true;
     }
 }

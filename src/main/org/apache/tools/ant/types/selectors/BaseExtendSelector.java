@@ -83,7 +83,7 @@ public abstract class BaseExtendSelector extends BaseSelector implements
     }
 
     /**
-     * Set all the Parameters for this dynamic selector, collected by
+     * Set all the Parameters for this custom selector, collected by
      * the ExtendSelector class.
      *
      * @param parameters the complete set of parameters for this selector
@@ -94,7 +94,7 @@ public abstract class BaseExtendSelector extends BaseSelector implements
 
     /**
      * Allows access to the parameters gathered and set within the
-     * <extendselect> tag.
+     * &lt;custom&gt; tag.
      *
      * @return the set of parameters defined for this selector
      */

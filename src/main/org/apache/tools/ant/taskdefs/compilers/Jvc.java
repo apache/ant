@@ -106,7 +106,11 @@ public class Jvc extends DefaultCompilerAdapter {
 
         // jvc has no option for source-path so we
         // will add it to classpath.
-        classpath.append(src);
+        if (compileSourcepath != null) {
+            classpath.append(compileSourcepath);
+        } else {
+            classpath.append(src);
+        }
 
         Commandline cmd = new Commandline();
         cmd.setExecutable("jvc");

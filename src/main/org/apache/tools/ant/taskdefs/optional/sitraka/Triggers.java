@@ -72,6 +72,10 @@ public class Triggers {
     public Triggers() {
     }
 
+
+    /**
+     * add a method trigger
+     */
     public void addMethod(Method method) {
         triggers.addElement(method);
     }
@@ -90,16 +94,29 @@ public class Triggers {
     }
 
 
+    /**
+     * A trigger for the coverage report
+     */
     public static class Method {
         protected String name;
         protected String event;
         protected String action;
         protected String param;
 
+        /**
+         * The name of the method(s) as a regular expression. The name
+         * is the fully qualified name on the form <tt>package.classname.method</tt>
+         *  required.
+         */        
         public void setName(String value) {
             name = value;
         }
 
+        /**
+         * the event on the method that will trigger the action. Must be
+         * &quot;enter&quot; or &quot;exit&quot;
+         *  required.
+         */
         public void setEvent(String value) {
             if (eventMap.get(value) == null) {
                 throw new BuildException("Invalid event, must be one of " + eventMap);
@@ -107,6 +124,12 @@ public class Triggers {
             event = value;
         }
 
+        /**
+         * The action to execute; required. Must be one of &quot;clear&quot;,
+         * &quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
+         * or &quot;exit&quot;. They respectively clear recording, pause recording, 
+         * resume recording, take a snapshot, suspend the recording and exit the program.
+         */
         public void setAction(String value) throws BuildException {
             if (actionMap.get(value) == null) {
                 throw new BuildException("Invalid action, must be one of " + actionMap);
@@ -114,6 +137,9 @@ public class Triggers {
             action = value;
         }
 
+        /**
+         * A alphanumeric custom name for the snapshot; optional.
+         */
         public void setParam(String value) {
             param = value;
         }

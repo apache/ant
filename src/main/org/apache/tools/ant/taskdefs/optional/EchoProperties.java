@@ -57,9 +57,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
-import java.util.Properties;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -105,8 +105,8 @@ import java.io.FileOutputStream;
 public class EchoProperties extends Task {
 
     /**
-     *  File object pointing to the output file. If this is null, then we output
-     *  to the project log, not to a file.
+     *  File object pointing to the output file. If this is null, then
+     *  we output to the project log, not to a file.
      */
     private File destfile = null;
 
@@ -135,7 +135,8 @@ public class EchoProperties extends Task {
 
 
     /**
-     *  Sets the failure mode for the task.
+     * If true, the task will fail if an error occurs writing the properties
+     * file, otherwise errors are just logged.
      *
      *@param  failonerror  <tt>true</tt> if IO exceptions are reported as build
      *      exceptions, or <tt>false</tt> if IO exceptions are ignored.
@@ -172,13 +173,14 @@ public class EchoProperties extends Task {
         //copy the properties file
         Hashtable allProps = project.getProperties();
 
+        OutputStream os = null;
         try {
             if (destfile == null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                saveProperties(allProps, baos);
-                log(baos.toString(), Project.MSG_INFO);
+                os = new ByteArrayOutputStream();
+                saveProperties(allProps, os);
+                log(os.toString(), Project.MSG_INFO);
             } else {
-                OutputStream os = new FileOutputStream(this.destfile);
+                os = new FileOutputStream(this.destfile);
                 saveProperties(allProps, os);
             }
         } catch (IOException ioe) {
@@ -189,6 +191,13 @@ public class EchoProperties extends Task {
                         location);
             } else {
                 log(message, Project.MSG_INFO);
+            }
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();                    
+                } catch (IOException e) {
+                }
             }
         }
     }
@@ -209,17 +218,13 @@ public class EchoProperties extends Task {
         Properties props = new Properties();
         Enumeration enum = allProps.keys();
         while (enum.hasMoreElements()) {
-            String name = (String) enum.nextElement();
-                String value = (String) allProps.get(name);
+            String name = enum.nextElement().toString();
+            String value = allProps.get(name).toString();
             if (prefix == null || name.indexOf(prefix) == 0) {
                 props.put(name, value);
             }
         }
-        try {
-            jdkSaveProperties(props, os, "Ant properties");
-        } finally {
-            os.close();
-        }
+        jdkSaveProperties(props, os, "Ant properties");
     }
     
     
@@ -275,7 +280,7 @@ public class EchoProperties extends Task {
      *@param header prepend this header to the property output
      */
     protected void jdk10SaveProperties(Properties props, OutputStream os,
-            String header) {
+                                       String header) {
         props.save(os, header);
     }
 }

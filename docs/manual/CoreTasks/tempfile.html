@@ -1,0 +1,66 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Tempfile Task</title>
+</head>
+
+<body>
+
+<h2><a name="echo">Tempfile</a></h2>
+<h3>Description</h3>
+<p>
+This task sets a property to the name of a temporary file.  Unlike the
+Java1.2 method to create a temporary file, this task does work with Java1.1.
+It does not actually create the temporary file, but it does guarantee
+that the file did not exist when the task was executed.
+</p>
+<p> 
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">The directory the temporary file should
+      be located in. If not set, the current directory is used.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">prefix</td>
+    <td valign="top">A prefix for the temporary file name.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">The name of the property to set with the
+      value of the temporary file name.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">A suffix for the temporary file name.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<pre>  &lt;tempfile property=&quot;temp.file&quot;/&gt;</pre>
+will set <code>temp.file</code> to the name of a new
+temporary file.
+<pre>  &lt;tempfile property=&quot;temp.file&quot; suffix=&quot;.xml&quot;/&gt;</pre>
+will set <code>temp.file</code> to the name of a new
+temporary file with a suffix of <code>.xml</code>.
+<pre>  &lt;tempfile property=&quot;temp.file&quot; destdir=&quot;build&quot;/&gt;</pre>
+will set <code>temp.file</code> to the name of a new
+temporary file located in the <code>build</code> sub-directory.
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software Foundation.
+All rights Reserved.</p>
+
+</body>
+</html>
+

@@ -59,7 +59,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
-import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.mail.MailMessage;
@@ -67,7 +66,7 @@ import org.apache.tools.mail.MailMessage;
 /**
  * Class responsible for sending email through raw protocol methods.
  *
- * @author roxspring@yahoo.com Rob Oxspring
+ * @author roxspring@imapmail.org Rob Oxspring
  * @since Ant 1.5
  */
 class PlainMailer extends Mailer {
@@ -78,9 +77,7 @@ class PlainMailer extends Mailer {
      */
     public void send() {
         try {
-            MailMessage mailMessage = new MailMessage(host);
-
-            mailMessage.setPort(port);
+            MailMessage mailMessage = new MailMessage(host,port);
 
             mailMessage.from(from.toString());
 
@@ -105,7 +102,7 @@ class PlainMailer extends Mailer {
                 mailMessage.setSubject(subject);
             }
 
-            mailMessage.setHeader("Date", (new Date()).toString());
+            mailMessage.setHeader("Date", getDate());
             mailMessage.setHeader("Content-Type", message.getMimeType());
 
             PrintStream out = mailMessage.getPrintStream();

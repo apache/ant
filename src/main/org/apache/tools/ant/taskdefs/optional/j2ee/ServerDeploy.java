@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- *  A task to support hot deployment tools for J2EE servers.
+ *  Controls hot deployment tools for J2EE servers.
  *
  *  This class is used as a framework for the creation of vendor specific
  *  hot deployment tools.
@@ -162,8 +162,8 @@ public class ServerDeploy extends Task {
     }
 
     /**
-     *  Sets the action field.
-     *  This is a required attribute.
+     *  The action to be performed, usually "deploy"; required.
+     *   Some tools support additional actions, such as "delete", "list", "undeploy", "update"...
      *  @param action A String representing the "action" attribute.
      */
     public void setAction(String action) {
@@ -180,9 +180,8 @@ public class ServerDeploy extends Task {
     }
 
     /**
-     *  Sets the source field (the path/filename of the component to be
-     *  deployed.
-     *  This is  <b>not</b> a required attribute.
+     *  The filename of the component to be deployed; optional
+     *  depending upon the tool and the action.
      *  @param source String representing the "source" attribute.
      */
     public void setSource(File source) {

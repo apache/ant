@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us">
+    <title>Programming Selectors in Ant</title>
+  </head>
+
+  <body>
+    <h2>Programming your own Selectors</h2>
+
+    <h3>Selector Programming API</h3>
+
+    <p>Want to define your own selectors? It's easy!</p>
+
+    <p>First, pick the type of selector that you want to define. There
+    are three types, and a recipe for each one follows. Chances are
+    you'll want to work with the first one, Custom Selectors.</p>
+
+    <h4>Custom Selectors</h4>
+
+        <p>This is the category that Ant provides specifically for youto
+        define your own Selectors. Anywhere you want to use your selector
+        you use the <code>&lt;custom&gt;</code> element and specify
+        the class name of your selector within it. See the
+        <a href="selectors.html#customselect">Custom Selectors</a>
+        section of the Selector page for details. The
+        <code>&lt;custom&gt;</code> element can be used anywhere
+        the core selectors can be used. It can be contained within
+        <a href="selectors.html#selectcontainers">Selector Containers</a>,
+        for example.</p>
+
+        <p>To create a new Custom Selector, you have to create a class that
+        implements
+        <code>org.apache.tools.ant.types.selectors.ExtendFileSelector</code>.
+        The easiest way to do that is through the convenience base class
+        <code>org.apache.tools.ant.types.selectors.BaseExtendSelector</code>,
+        which provides all of the methods for supporting
+        <code>&lt;param&gt;</code> tags. First, override the
+        <code>isSelected()</code> method, and optionally the
+        <code>verifySettings()</code> method. If your custom
+        selector requires parameters to be set, you can also override
+        the <code>setParameters()</code> method and interpret the
+        parameters that are passed in any way you like. Several of the
+        core selectors demonstrate how to do that because they can
+        also be used as custom selectors.</p>
+
+        <p><i>Note: If you don't need to set variables on your selector
+        with the the embedded <code>&lt;param&gt;</code>
+        elements, your custom selector could just implement the
+        <code>org.apache.tools.ant.types.selectors.FileSelector</code>
+        interface rather than the full
+        <code>org.apache.tools.ant.types.selectors.ExtendFileSelector</code>
+        interface. Using the latter will give you the most flexibility,
+        though.</i></p>
+
+        <p><i>Note: If you inherit from
+        <code>org.apache.tools.ant.types.selectors.BaseExtendSelector</code>
+        or
+        <code>org.apache.tools.ant.types.selectors.BaseSelector</code>,
+        any selector container will perform a validation pass before calling
+        the <code>isSelected()</code> method. Make sure that all
+        initialization is performed before the validation is done.</i></p>
+
+      <h4>Core Selectors</h4>
+
+        <p>These are the selectors used by Ant itself. To implement one of
+        these, you will have to alter some of the classes contained within
+        Ant.</p>
+
+        <ul>
+          <li><p>First, create a class that implements
+            <code>org.apache.tools.ant.types.selectors.FileSelector</code>.
+            You can either choose to implement all methods yourself from
+            scratch, or you can extend
+            <code>org.apache.tools.ant.types.selectors.BaseSelector</code>
+            instead, a convenience class that provides reasonable default
+            behaviour for many methods.</p>
+
+            <p>There is only one method required.
+            <code>public boolean isSelected(File basedir, String filename,
+              File file)</code>
+              is the real purpose of the whole exercise. It returns true
+              or false depending on whether the given file should be
+              selected from the list or not.</p>
+
+            <p>If you are using
+            <code>org.apache.tools.ant.types.selectors.BaseSelector</code>
+            there are also some predefined behaviours you can take advantage
+            of. Any time you encounter a problem when setting attributes or
+            adding tags, you can call setError(String errmsg) and the class
+            will know that there is a problem. Then, at the top of your
+            <code>isSelected()</code> method call <code>validate()</code> and
+            a BuildException will be thrown with the contents of your error
+            message. The <code>validate()</code> method also gives you a
+            last change to check your settings for consistency because it
+            calls <code>verifySettings()</code>. Override this method and
+            call <code>setError()</code> within it if you detect any
+            problems in how your selector is set up.</p>
+
+            <p>You may also want to override <code>toString()</code>.</p>
+
+          <li><p>Put an <code>add</code> method for your selector in
+            <code>org.apache.tools.ant.types.selectors.SelectorContainer</code>.
+            This is an interface, so you will also have to add an implementation
+            for the method in the classes which implement it, namely
+            <code>org.apache.tools.ant.types.AbstractFileSet</code> and
+            <code>org.apache.tools.ant.types.selectors.BaseSelectorContainer</code>.
+            Once it is in there, it will be available everywhere that core
+            selectors are appropriate.</p>
+        </ul>
+
+      <h4>Selector Containers</h4>
+        <p>Got an idea for a new Selector Container? Creating a new one is
+        no problem:</p>
+        <ul>
+          <li><p>Create a new class that implements
+            <code>org.apache.tools.ant.types.selectors.SelectorContainer</code>.
+            This will ensure that your new
+            Container can access any new selectors that come along. Again, there
+            is a convenience class available for you called
+            <code>org.apache.tools.ant.types.selectors.BaseSelectorContainer</code>.
+            </p>
+          <li><p>Implement the
+            <code>public boolean isSelected(String filename, File file)</code>
+            method to do the right thing. Chances are you'll want to iterate
+            over the selectors under you, so use
+            <code>selectorElements()</code> to get an iterator that will do
+            that.</p>
+          <li><p>Again, put an <code>add</code> method for your container in
+            <code>org.apache.tools.ant.types.selectors.SelectorContainer</code>
+            and its implementations
+            <code>org.apache.tools.ant.types.AbstractFileSet</code> and
+            <code>org.apache.tools.ant.types.selectors.BaseSelectorContainer</code>.
+            </p>
+        </ul>
+
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software
+Foundation. All rights Reserved.</p>
+
+  </body>
+
+</html>

@@ -78,6 +78,22 @@
     </zip>
   </target>
 
+  <target name="testUpdateNotNecessary" depends="feather">
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif"
+         update="true" />
+  </target>
+
+  <target name="testUpdateIsNecessary" depends="feather">
+    <sleep seconds="5" />
+    <touch file="../dummyfile" />
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif,dummyfile"
+         update="true" />
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
@@ -88,5 +104,6 @@
     <delete file="test8.zip"/>
     <delete file="asf-logo.gif.zip"/>
     <delete file="zipgroupfileset.zip"/>
+    <delete file="../dummyfile" />
   </target>
 </project>

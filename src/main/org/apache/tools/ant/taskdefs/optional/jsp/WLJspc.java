@@ -69,7 +69,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 /**
- * Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)
+ * Precompiles JSP's using WebLogic's JSP compiler (weblogic.jspc).
  * 
  * @author <a href="mailto:avik@aviksengupta.com">Avik Sengupta</a> http://www.webteksoftware.com
  * 

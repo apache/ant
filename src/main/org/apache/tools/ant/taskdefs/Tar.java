@@ -78,7 +78,7 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
 
 
 /**
- * Creates a TAR archive.
+ * Creates a tar archive.
  *
  * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
@@ -133,6 +133,9 @@ public class Tar extends MatchingTask {
 
     private TarCompressionMethod compression = new TarCompressionMethod();
 
+    /**
+     * Add a new fileset with the option to specify permissions
+     */
     public TarFileSet createTarFileSet() {
         TarFileSet fileset = new TarFileSet();
         filesets.addElement(fileset);
@@ -141,7 +144,7 @@ public class Tar extends MatchingTask {
 
 
     /**
-     * This is the name/location of where to create the tar file.
+     * Set is the name/location of where to create the tar file.
      * @deprecated for consistency with other tasks, please use setDestFile()
      */
     public void setTarfile(File tarFile) {
@@ -149,7 +152,7 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Sets the destfile attribute.
+     * Set is the name/location of where to create the tar file.
      * @since Ant 1.5
      * @param destFile The output of the tar
      */
@@ -165,14 +168,17 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Set how to handle long files.
-     *
+     * Set how to handle long files, those with a path&gt;100 chars.
+     * Optional, default=warn.
+     * <p>
      * Allowable values are
-     *   truncate - paths are truncated to the maximum length
-     *   fail - paths greater than the maximim cause a build exception
-     *   warn - paths greater than the maximum cause a warning and GNU is used
-     *   gnu - GNU extensions are used for any paths greater than the maximum.
-     *   omit - paths greater than the maximum are omitted from the archive
+     * <ul>
+     * <li>  truncate - paths are truncated to the maximum length
+     * <li>  fail - paths greater than the maximim cause a build exception
+     * <li>  warn - paths greater than the maximum cause a warning and GNU is used
+     * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
+     * <li>  omit - paths greater than the maximum are omitted from the archive
+     * </ul>
      * @deprecated setLongFile(String) is deprecated and is replaced with
      *             setLongFile(Tar.TarLongFileMode) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
@@ -186,14 +192,17 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Set how to handle long files.
-     *
+     * Set how to handle long files, those with a path&gt;100 chars.
+     * Optional, default=warn.
+     * <p>
      * Allowable values are
-     *   truncate - paths are truncated to the maximum length
-     *   fail - paths greater than the maximim cause a build exception
-     *   warn - paths greater than the maximum cause a warning and GNU is used
-     *   gnu - GNU extensions are used for any paths greater than the maximum.
-     *   omit - paths greater than the maximum are omitted from the archive
+     * <ul>
+     * <li>  truncate - paths are truncated to the maximum length
+     * <li>  fail - paths greater than the maximim cause a build exception
+     * <li>  warn - paths greater than the maximum cause a warning and GNU is used
+     * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
+     * <li>  omit - paths greater than the maximum are omitted from the archive
+     * </ul>
      */
     public void setLongfile(TarLongFileMode mode) {
         this.longFileMode = mode;
@@ -201,16 +210,20 @@ public class Tar extends MatchingTask {
 
     /**
      * Set compression method.
-     *
      * Allowable values are
-     *   none - no compression
-     *   gzip - Gzip compression
-     *   bzip2 - Bzip2 compression
+     * <ul>
+     * <li>  none - no compression
+     * <li>  gzip - Gzip compression
+     * <li>  bzip2 - Bzip2 compression
+     * </ul>
      */
     public void setCompression(TarCompressionMethod mode) {
         this.compression = mode;
     }
-
+    
+    /**
+     * do the business
+     */
     public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!",
@@ -324,7 +337,10 @@ public class Tar extends MatchingTask {
             filesets = savedFileSets;
         }
     }
-
+    
+    /**
+     * tar a file
+     */
     protected void tarFile(File file, TarOutputStream tOut, String vPath,
                            TarFileSet tarFileSet)
         throws IOException {
@@ -419,6 +435,9 @@ public class Tar extends MatchingTask {
         return sfs.restrict(files, baseDir, null, mm).length == 0;
     }
 
+    /**
+     * This is a FileSet with the option to specify permissions
+     */
     public static class TarFileSet extends FileSet {
         private String[] files = null;
 
@@ -457,6 +476,11 @@ public class Tar extends MatchingTask {
             return files;
         }
 
+        /**
+         * A 3 digit octal string, specify the user, group and 
+         * other modes in the standard Unix fashion; 
+         * optional, default=0644
+         */
         public void setMode(String octalString) {
             this.mode = 0100000 | Integer.parseInt(octalString, 8);
         }
@@ -465,6 +489,11 @@ public class Tar extends MatchingTask {
             return mode;
         }
 
+        /**
+         * The username for the tar entry 
+         * This is not the same as the UID, which is
+         * not currently set by the task.
+         */
         public void setUserName(String userName) {
             this.userName = userName;
         }
@@ -473,6 +502,11 @@ public class Tar extends MatchingTask {
             return userName;
         }
 
+        /**
+         * The groupname for the tar entry; optional, default=""
+         * This is not the same as the GID, which is
+         * not currently set by the task.
+         */
         public void setGroup(String groupName) {
             this.groupName = groupName;
         }
@@ -481,6 +515,11 @@ public class Tar extends MatchingTask {
             return groupName;
         }
 
+        /**
+         * If the prefix attribute is set, all files in the fileset
+         * are prefixed with that path in the archive.
+         * optional.
+         */
         public void setPrefix(String prefix) {
             this.prefix = prefix;
         }
@@ -489,6 +528,12 @@ public class Tar extends MatchingTask {
             return prefix;
         }
 
+        /**
+         * If the fullpath attribute is set, the file in the fileset
+         * is written with that path in the archive. The prefix attribute,
+         * if specified, is ignored. It is an error to have more than one file specified in
+         * such a fileset.
+         */
         public void setFullpath(String fullpath) {
             this.fullpath = fullpath;
         }
@@ -497,6 +542,11 @@ public class Tar extends MatchingTask {
             return fullpath;
         }
 
+        /**
+         * Flag to indicates whether leading `/'s should
+         * be preserved in the file names.
+         * Optional, default is <code>false</code>.
+         */
         public void setPreserveLeadingSlashes(boolean b) {
             this.preserveLeadingSlashes = b;
         }
@@ -507,7 +557,7 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Valid Modes for LongFile attribute to Tar Task
+     * Set of options for long file handling in the task. 
      *
      * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
      */

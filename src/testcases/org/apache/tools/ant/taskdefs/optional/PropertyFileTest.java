@@ -131,6 +131,7 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals("2003/01/21", project.getProperty("first.birthday"));
         assertEquals("0124", project.getProperty("olderThanAWeek"));
         assertEquals("37", project.getProperty("existing.prop"));
+        assertEquals("6",project.getProperty("int.without.value"));
     }
 
 /*

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="selectors-test" basedir="." default="setupfiles">
+
+  <property name="etc.dir" value=".."/>
+  <property name="test.dir"
+          value="selectortest"/>
+  <property name="mirror.dir"
+          value="selectortest2"/>
+
+  <target name="setupfiles">
+    <mkdir dir="${test.dir}" />
+    <mkdir dir="${test.dir}/zip" />
+    <mkdir dir="${test.dir}/tar" />
+    <mkdir dir="${test.dir}/tar/gz" />
+    <mkdir dir="${test.dir}/tar/bz2" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.md5"
+            tofile="${test.dir}/asf-logo.gif.md5" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.bz2"
+            tofile="${test.dir}/asf-logo.gif.bz2" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.gz"
+            tofile="${test.dir}/asf-logo.gif.gz" />
+    <copy file="${etc.dir}/taskdefs/expected/copy.filterset.filtered"
+            tofile="${test.dir}/copy.filterset.filtered" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.zip"
+            tofile="${test.dir}/zip/asf-logo.gif.zip" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.tar"
+            tofile="${test.dir}/tar/asf-logo.gif.tar" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo-huge.tar"
+            tofile="${test.dir}/tar/asf-logo-huge.tar" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.tar.gz"
+            tofile="${test.dir}/tar/gz/asf-logo.gif.tar.gz" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.tar.bz2"
+            tofile="${test.dir}/tar/bz2/asf-logo.gif.tar.bz2" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo-huge.tar.bz2"
+            tofile="${test.dir}/tar/bz2/asf-logo-huge.tar.bz2" />
+    <!-- Make linefeeds consistent between platforms -->
+    <fixcrlf srcdir="${test.dir}" includes="*.filtered" eol="lf"/>
+    <!-- Set a known base time for all files -->
+    <touch datetime="11/21/2001 4:55 AM">
+        <fileset dir="${test.dir}">
+            <include name="**/*"/>
+        </fileset>
+    </touch>
+    <!-- Then adjust individual ones -->
+    <touch file="${test.dir}/asf-logo.gif.bz2"
+            datetime="01/01/2001 12:00 AM"/>
+    <touch file="${test.dir}/asf-logo.gif.gz"
+            datetime="04/15/2002 2:30 PM"/>
+    <touch file="${test.dir}/zip/asf-logo.gif.zip"
+            datetime="05/10/2002 2:30 PM"/>
+    <touch file="${test.dir}/tar/asf-logo.gif.tar"
+            datetime="05/10/2002 2:29 PM"/>
+    <touch file="${test.dir}/tar/asf-logo-huge.tar"
+            datetime="05/10/2002 2:29 AM"/>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="${test.dir}" />
+  </target>
+
+  <target name="mirrorfiles">
+    <mkdir dir="${mirror.dir}" />
+    <mkdir dir="${mirror.dir}/zip" />
+    <mkdir dir="${mirror.dir}/tar" />
+    <mkdir dir="${mirror.dir}/tar/gz" />
+    <mkdir dir="${mirror.dir}/tar/bz2" />
+    <touch file="${mirror.dir}/asf-logo.gif.md5"/>
+    <touch file="${mirror.dir}/asf-logo.gif.bz2"/>
+    <sleep seconds="2"/>
+    <touch file="${mirror.dir}/zip/asf-logo.gif.zip"/>
+    <sleep seconds="3"/>
+    <touch file="${mirror.dir}/tar/asf-logo.gif.tar"/>
+    <sleep seconds="2"/>
+    <touch file="${mirror.dir}/tar/asf-logo-huge.tar"/>
+    <touch file="${mirror.dir}/tar/gz/asf-logo.gif.tar.gz"/>
+    <touch file="${mirror.dir}/tar/bz2/asf-logo.gif.tar.bz2"/>
+    <touch file="${mirror.dir}/tar/bz2/asf-logo-huge.tar.bz2"/>
+  </target>
+
+  <target name="cleanup.mirrorfiles">
+    <delete dir="${mirror.dir}" />
+  </target>
+
+</project>

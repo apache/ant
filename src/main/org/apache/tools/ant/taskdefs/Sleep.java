@@ -58,8 +58,19 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
 /**
- * A task to sleep for a period of time
+ * Sleep, or pause, for a period of time.
  *
+ * A task for sleeping a short period of time, useful when a
+ * build or deployment process requires an interval between tasks.
+ *<p>
+ * A negative value can be supplied to any of attributes provided the total sleep time 
+ * is positive, pending fundamental changes in physics and JVM
+ * execution tims</p>
+ * Note that sleep times are always hints to be interpred by the OS how it feels 
+ * small times may either be ignored or rounded up to a minimum timeslice. Note 
+ * also that the system clocks often have a fairly low granularity too, which complicates 
+ * measuring how long a sleep actually took.</p>
+*
  * @author steve_l@iseran.com steve loughran
  * @since Ant 1.4
  * @ant.task category="utility"
@@ -72,19 +83,21 @@ public class Sleep extends Task {
     private boolean failOnError = true;
 
     /**
-     * Description of the Field
+     * sleep seconds
      */
     private int seconds = 0;
+
     /**
-     * Description of the Field
+     * sleep hours 
      */
     private int hours = 0;
     /**
-     * Description of the Field
+     * sleep minutes
      */
     private int minutes = 0;
+
     /**
-     * Description of the Field
+     * sleep milliseconds
      */
     private int milliseconds = 0;
 
@@ -98,7 +111,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Sets the Seconds attribute of the Sleep object
+     * seconds to add to the sleep time
      *
      * @param seconds The new Seconds value
      */
@@ -108,7 +121,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Sets the Hours attribute of the Sleep object
+     * hours to add to the sleep time.
      *
      * @param hours The new Hours value
      */
@@ -118,7 +131,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Sets the Minutes attribute of the Sleep object
+     * minutes to add to the sleep time
      *
      * @param minutes The new Minutes value
      */
@@ -128,7 +141,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Sets the Milliseconds attribute of the Sleep object
+     * milliseconds to add to the sleep time
      *
      * @param milliseconds The new Milliseconds value
      */
@@ -151,7 +164,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Sets the FailOnError attribute of the MimeMail object
+     * flag controlling whether to break the build on an error.
      *
      * @param failOnError The new FailOnError value
      */

@@ -62,11 +62,32 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * proxy definition task. This allows all tasks in the build file
- * executed after this task to access the web through a proxy server
+ * Sets Java's web proxy properties, so that tasks and code run in
+ * the same JVM can have through-the-firewall access to remote web sites,
+ * and remote ftp sites.
+ * You can nominate an http and ftp proxy, or a socks server, reset the server 
+ * settings, or do nothing at all.
+ * <p> 
+ * Examples
+ * <pre>&lt;setproxy/&gt;</pre>
+ * do nothing
+ * <pre>&lt;setproxy proxyhost="firewall"/&gt;</pre>
+ * set the proxy to firewall:80
+ * <pre>&lt;setproxy proxyhost="firewall" proxyport="81"/&gt;</pre>
+ * set the proxy to firewall:81
+ * <pre>&lt;setproxy proxyhost=""/&gt;</pre>
+ * stop using the http proxy; don't change the socks settings
+ * <pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre>
+ * use socks via socksy:1080
+ * <pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
+ * stop using the socks server
+ 
+ 
+ 
  * @see <a href="http://java.sun.com/j2se/1.4/docs/guide/net/properties.html">
  *  java 1.4 network property list</a>
  * @author Steve Loughran
+  *@since       Ant 1.5
  * @ant.task
  */
 public class SetProxy extends Task {
@@ -98,7 +119,8 @@ public class SetProxy extends Task {
     private String nonProxyHosts = null;
 
     /**
-     * Set a proxy host. The port should be defined too.
+     * the HTTP/ftp proxy host. Set this to "" for the http proxy
+     * option to be disabled
      *
      * @param hostname the new proxy hostname
      */
@@ -108,7 +130,7 @@ public class SetProxy extends Task {
 
 
     /**
-     * set the proxy port number.
+     * the HTTP/ftp proxy port number; default is 80
      *
      * @param port port number of the proxy
      */
@@ -117,7 +139,8 @@ public class SetProxy extends Task {
     }
 
     /**
-     * Set the SocksProxyHost attribute
+     * The name of a Socks server. Set to "" to turn socks
+     * proxying off.
      *
      * @param host The new SocksProxyHost value
      */
@@ -127,7 +150,7 @@ public class SetProxy extends Task {
 
 
     /**
-     * Set the SocksProxyPort attribute
+     * Set the ProxyPort for socks connections. The default value is 1080
      *
      * @param port The new SocksProxyPort value
      */
@@ -136,8 +159,9 @@ public class SetProxy extends Task {
     }
 
     /**
-     * Specify a list of hosts to bypass the proxy on. These should be separated
-     * with the vertical bar character '|'.
+     * A list of hosts to bypass the proxy on. These should be separated
+     * with the vertical bar character '|'. Only in Java 1.4 does ftp use
+     * this list.
      * e.g. fozbot.corp.sun.com|*.eng.sun.com
      * @param nonProxyHosts lists of hosts to talk direct to
      */ 

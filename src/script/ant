@@ -69,6 +69,9 @@ if [ -z "$ANT_HOME" ] ; then
   cd $saveddir
 fi
 
+# set ANT_LIB location
+ANT_LIB=${ANT_HOME}/lib
+
 # For Cygwin, ensure paths are in UNIX format before anything is touched
 if $cygwin ; then
   [ -n "$ANT_HOME" ] &&
@@ -110,25 +113,28 @@ if $rpm_mode; then
     if [ -z "$LOCALCLASSPATH" ] ; then
       LOCALCLASSPATH=$JAVALIBDIR/$i.jar
     else
-      LOCALCLASSPATH="$i.jar":"$LOCALCLASSPATH"
+      LOCALCLASSPATH="$JAVALIBDIR/$i.jar":"$LOCALCLASSPATH"
     fi
   done
-else
-  # add in the dependency .jar files in non-RPM mode (the default)
-  DIRLIBS="${ANT_HOME}"/lib
-  for i in "${DIRLIBS}"/*.jar
-  do
-    # if the directory is empty, then it will return the input string
-    # this is stupid, so case for it
-    if [ "$i" != "${DIRLIBS}/*.jar" ] ; then
-      if [ -z "$LOCALCLASSPATH" ] ; then
-        LOCALCLASSPATH=$i
-      else
-        LOCALCLASSPATH="$i":"$LOCALCLASSPATH"
-      fi
-    fi
-  done
+
+# in rpm mode ant/lib is in /usr/share/java/ant
+ANT_LIB=${JAVALIBDIR}/ant
+
 fi
+
+# add in the dependency .jar files in non-RPM mode (the default)
+for i in "${ANT_LIB}"/*.jar
+do
+  # if the directory is empty, then it will return the input string
+  # this is stupid, so case for it
+  if [ "$i" != "${ANT_LIB}/*.jar" ] ; then
+    if [ -z "$LOCALCLASSPATH" ] ; then
+      LOCALCLASSPATH=$i
+    else
+      LOCALCLASSPATH="$i":"$LOCALCLASSPATH"
+    fi
+  fi
+done
 
 if [ -n "$JAVA_HOME" ] ; then
   if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
@@ -175,6 +181,7 @@ if $cygwin; then
   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
+  ANT_OPTS="$ANT_OPTS -Dcygwin.user.home="`cygpath --path --windows "$HOME"`
 fi
 
 "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"

@@ -74,8 +74,8 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Change log task.
- * The task will examine the output of cvs log and group related changes together.
+ * Examines the output of cvs log and group related changes together.
+ *
  * It produces an XML output representing the list of changes.
  * <PRE>
  * <FONT color=#0000ff>&lt;!-- Root element --&gt;</FONT>
@@ -102,7 +102,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
- * @ant.task name="changelog"
+ * @ant.task name="cvschangelog"
  */
 public class ChangeLogTask extends Task {
     /** User list */
@@ -192,7 +192,7 @@ public class ChangeLogTask extends Task {
 
 
     /**
-     * Set the numbers of days worth of log entries to process.
+     * Set the number of days worth of log entries to process.
      *
      * @param days the number of days of log to process.
      */

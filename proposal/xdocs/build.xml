@@ -45,6 +45,9 @@
       <pathelement location="${build.dir}"/>
     </path>
 
+    <property name="the.classpath" refid="xdoclet.classpath"/>
+    <echo>the.classpath = ${the.classpath}</echo>
+
     <taskdef name="document"
              classname="xdoclet.doc.DocumentDocletTask"
              classpathref="xdoclet.classpath"/>
@@ -71,7 +74,7 @@
            classpathref="xdoclet.classpath">
       <fileset dir="${src.dir}">
         <include name="**/*.java" unless="class.name"/>
-        <include name="**/${class.name}.java" if="class.name"/>
+        <include name="**/*${class.name}*.java" if="class.name"/>
       </fileset>
 
       <!-- Generate XML task descriptor files -->
@@ -79,9 +82,9 @@
              destinationfile="{0}.xml"/>
 
       <!-- Generate XML datatype descriptor files -->
-      <datatypes templateFile="${datatype_xdoc.template}"
+<!--      <datatypes templateFile="${datatype_xdoc.template}"
                  destdir="${gen.dir}/datatypes"
-                 destinationfile="{0}.xml"/>
+                 destinationfile="{0}.xml"/> -->
 
       <!-- @todo - with some additional logic in these subtasks, they
            could be used similar to above instead of <template> -->
@@ -91,14 +94,14 @@
                 destinationfile="task_defaults.properties"/>
 
       <!-- Generate datatype defaults.properties -->
-      <template subTaskClassName="org.apache.tools.ant.xdoclet.DatatypeSubTask"
+<!--      <template subTaskClassName="org.apache.tools.ant.xdoclet.DatatypeSubTask"
                 templateFile="${type.properties.template}"
-                destinationfile="type_defaults.properties"/>
+                destinationfile="type_defaults.properties"/> -->
 
       <!-- Generate to-do list -->
-      <info destdir="${gen.dir}/todo/ant"
+<!--      <info destdir="${gen.dir}/todo/ant"
             header="To-do List"
-            projectname="Ant"/>
+            projectname="Ant"/> -->
     </xdocs>
 
   </target>

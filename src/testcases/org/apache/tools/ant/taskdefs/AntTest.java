@@ -161,6 +161,7 @@ public class AntTest extends BuildFileTest {
         if (ae != null) {
             throw ae;
         }
+        project.removeBuildListener(bc);
     }
 
     public void testReferenceInheritance() {
@@ -252,6 +253,44 @@ public class AntTest extends BuildFileTest {
         getProject().removeBuildListener(ic);
     }
 
+    public void testRefId() {
+        Path testPath = new Path(project);
+        testPath.createPath().setPath(System.getProperty("java.class.path"));
+        PropertyChecker pc = 
+            new PropertyChecker("testprop",
+                                new String[] {null, 
+                                              testPath.toString()});
+        project.addBuildListener(pc);
+        executeTarget("testRefid");
+        AssertionFailedError ae = pc.getError();
+        if (ae != null) {
+            throw ae;
+        }
+        project.removeBuildListener(pc);
+    }
+
+    public void testUserPropertyWinsInheritAll() {
+        getProject().setUserProperty("test", "7");
+        expectLogContaining("test-property-override-inheritall-start",
+                            "The value of test is 7");
+    }
+
+    public void testUserPropertyWinsNoInheritAll() {
+        getProject().setUserProperty("test", "7");
+        expectLogContaining("test-property-override-no-inheritall-start",
+                            "The value of test is 7");
+    }
+
+    public void testOverrideWinsInheritAll() {
+        expectLogContaining("test-property-override-inheritall-start",
+                            "The value of test is 4");
+    }
+
+    public void testOverrideWinsNoInheritAll() {
+        expectLogContaining("test-property-override-no-inheritall-start",
+                            "The value of test is 4");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
@@ -271,13 +310,8 @@ public class AntTest extends BuildFileTest {
         public void targetStarted(BuildEvent event) {
             if (error == null) {
                 try {
-                    if (calls == expectedBasedirs.length) {
-                        assertEquals("cleanup",
-                                     event.getTarget().getName());
-                    } else {
-                        assertEquals(expectedBasedirs[calls++],
-                                     event.getProject().getBaseDir().getAbsolutePath());
-                    }
+                    assertEquals(expectedBasedirs[calls++],
+                                 event.getProject().getBaseDir().getAbsolutePath());
                 } catch (AssertionFailedError e) {
                     error = e;
                 }
@@ -403,5 +437,41 @@ public class AntTest extends BuildFileTest {
         }
 
     }
+
+    private class PropertyChecker implements BuildListener {
+        private String[] expectedValues;
+        private String key;
+        private int calls = 0;
+        private AssertionFailedError error;
+
+        PropertyChecker(String key, String[] values) {
+            this.key = key;
+            this.expectedValues = values;
+        }
+
+        public void buildStarted(BuildEvent event) {}
+        public void buildFinished(BuildEvent event) {}
+        public void targetFinished(BuildEvent event){}
+        public void taskStarted(BuildEvent event) {}
+        public void taskFinished(BuildEvent event) {}
+        public void messageLogged(BuildEvent event) {}
+
+        public void targetStarted(BuildEvent event) {
+            if (error == null) {
+                try {
+                    assertEquals(expectedValues[calls++],
+                                 event.getProject().getProperty(key));
+                } catch (AssertionFailedError e) {
+                    error = e;
+                }
+            }
+        }
+
+        AssertionFailedError getError() {
+            return error;
+        }
+
+    }
+
 
 }

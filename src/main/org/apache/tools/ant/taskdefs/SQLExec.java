@@ -54,15 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.FileSet;
 
 import java.io.File;
@@ -79,22 +74,36 @@ import java.io.FileInputStream;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.Properties;
-import java.util.Hashtable;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import java.sql.Driver;
 import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLWarning;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 /**
- * Reads in a text file containing SQL statements seperated with semicolons
- * and executes it in a given db.
- * Comments may be created with REM -- or //.
+ * Executes a series of SQL statements on a database using JDBC.
+ *
+ * <p>Statements can
+ * either be read in from a text file using the <i>src</i> attribute or from 
+ * between the enclosing SQL tags.</p>
+ * 
+ * <p>Multiple statements can be provided, separated by semicolons (or the 
+ * defined <i>delimiter</i>). Individual lines within the statements can be 
+ * commented using either --, // or REM at the start of the line.</p>
+ * 
+ * <p>The <i>autocommit</i> attribute specifies whether auto-commit should be 
+ * turned on or off whilst executing the statements. If auto-commit is turned 
+ * on each statement will be executed and committed. If it is turned off the 
+ * statements will all be executed as one transaction.</p>
+ * 
+ * <p>The <i>onerror</i> attribute specifies how to proceed when an error occurs 
+ * during the execution of one of the statements. 
+ * The possible values are: <b>continue</b> execution, only show the error;
+ * <b>stop</b> execution and commit transaction;
+ * and <b>abort</b> execution and transaction and fail task.</p>
+
  * 
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
@@ -106,6 +115,9 @@ import java.sql.ResultSetMetaData;
  */
 public class SQLExec extends JDBCTask {
 
+    /**
+     * delimiters we support, "normal" and "row"
+     */
     public static class DelimiterType extends EnumeratedAttribute {
         public static final String NORMAL = "normal";
         public static final String ROW = "row";
@@ -125,19 +137,16 @@ public class SQLExec extends JDBCTask {
      */
     private Connection conn = null;
 
+    /**
+     * files to load
+     */
     private Vector filesets = new Vector();
 
-        
-        
     /**
      * SQL statement
      */
     private Statement statement = null;
 
-    
-    
-    
-    
     /**
      * SQL input file
      */
@@ -180,7 +189,6 @@ public class SQLExec extends JDBCTask {
     private File output = null;
 
     
-    
     /**
      * Action to perform if an error is found
      **/
@@ -196,19 +204,18 @@ public class SQLExec extends JDBCTask {
      */
     private boolean append = false;
 
-
-    
-    
         
     /**
-     * Set the name of the sql file to be run.
+     * Set the name of the SQL file to be run.
+     * Required unless statements are enclosed in the build file
      */
     public void setSrc(File srcFile) {
         this.srcFile = srcFile;
     }
     
     /**
-     * Set the sql command to execute
+     * Set an inline SQL command to execute. 
+     * NB: Properties are not expanded in this text.
      */
     public void addText(String sql) {
         this.sqlCommand += sql;
@@ -223,7 +230,7 @@ public class SQLExec extends JDBCTask {
 
 
     /**
-     * Set the sql command to execute
+     * Add a SQL transaction to execute
      */
     public Transaction createTransaction() {
         Transaction t = new Transaction();
@@ -231,11 +238,8 @@ public class SQLExec extends JDBCTask {
         return t;
     }
     
-        
-        
-    
     /**
-     * Set the file encoding to use on the sql files read in
+     * Set the file encoding to use on the SQL files read in
      *
      * @param encoding the encoding to use on the files
      */
@@ -243,11 +247,9 @@ public class SQLExec extends JDBCTask {
         this.encoding = encoding;
     }
     
-    
-        
-    
     /**
-     * Set the statement delimiter.
+     * Set the delimiter that separates SQL statements; 
+     * optional, default &quot;;&quot;
      *
      * <p>For example, set this to "go" and delimitertype to "ROW" for
      * Sybase ASE or MS SQL Server.</p>
@@ -257,7 +259,7 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * Set the Delimiter type for this sql task. 
+     * Set the delimiter type: "normal" or "row" (default "normal").
      *
      * <p>The delimiter type takes two values - normal and row. Normal
      * means that any occurence of the delimiter terminate the SQL
@@ -269,28 +271,32 @@ public class SQLExec extends JDBCTask {
     }
     
     /**
-     * Set the print flag.
+     * Print result sets from the statements;
+     * optional, default false
      */
     public void setPrint(boolean print) {
         this.print = print;
     }
     
     /**
-     * Set the showheaders flag.
+     * Print headers for result sets from the 
+     * statements; optional, default true.
      */
     public void setShowheaders(boolean showheaders) {
         this.showheaders = showheaders;
     }
 
     /**
-     * Set the output file.
+     * Set the output file; 
+     * optional, defaults to the Ant log.
      */
     public void setOutput(File output) {
         this.output = output;
     }
 
     /**
-     * Shall we append to an existing file?
+     * whether output should be appended to or overwrite
+     * an existing file.  Defaults to false.
      *
      * @since Ant 1.5
      */
@@ -299,9 +305,9 @@ public class SQLExec extends JDBCTask {
     }
 
     
-    
     /**
-     * Set the action to perform onerror
+     * Action to perform when statement fails: continue, stop, or abort
+     * optional; default &quot;abort&quot;
      */
     public void setOnerror(OnError action) {
         this.onError = action.getValue();
@@ -326,9 +332,9 @@ public class SQLExec extends JDBCTask {
                 }
             }
         
-           	if (srcFile != null && !srcFile.exists()) {
-		   	 	throw new BuildException("Source file does not exist!", location);
-			}
+            if (srcFile != null && !srcFile.exists()) {
+                throw new BuildException("Source file does not exist!", location);
+            }
 
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
@@ -349,10 +355,10 @@ public class SQLExec extends JDBCTask {
             Transaction t = createTransaction();
             t.setSrc(srcFile);
             t.addText(sqlCommand);
-			conn = getConnection();
-			if (!isValidRdbms(conn)) {
-				return;
-			}
+            conn = getConnection();
+            if (!isValidRdbms(conn)) {
+                return;
+            }
             try {
                 statement = conn.createStatement();
 
@@ -418,6 +424,9 @@ public class SQLExec extends JDBCTask {
     }
 
 
+    /**
+     * read in lines and execute them
+     */
     protected void runStatements(Reader reader, PrintStream out) 
         throws SQLException, IOException {
         String sql = "";
@@ -553,8 +562,8 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * Enumerated attribute with the values "continue", "stop" and "abort"
-     * for the onerror attribute.  
+     * The action a task should perform on an error,
+     * one of "continue", "stop" and "abort"
      */
     public static class OnError extends EnumeratedAttribute {
         public String[] getValues() {
@@ -572,14 +581,23 @@ public class SQLExec extends JDBCTask {
         private File tSrcFile = null;
         private String tSqlCommand = "";
 
+        /**
+         *
+         */
         public void setSrc(File src) {
             this.tSrcFile = src;
         }
 
+        /**
+         *
+         */
         public void addText(String sql) {
             this.tSqlCommand += sql;
         }
 
+        /**
+         *
+         */
         private void runTransaction(PrintStream out) 
             throws IOException, SQLException {
             if (tSqlCommand.length() != 0) {

@@ -109,28 +109,50 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     protected String P4CmdOpts = "";
 
     //Setters called by Ant
+    
+    /**
+     * The p4d server and port to connect to;
+     * optional, default "perforce:1666"
+     */
     public void setPort(String P4Port) {
         this.P4Port = "-p" + P4Port;
     }
 
+    /**
+     * The p4 client spec to use;
+     * optional, defaults to the current user
+     */
     public void setClient(String P4Client) {
         this.P4Client = "-c" + P4Client;
     }
 
+    /**
+     * The p4 username;
+     * optional, defaults to the current user
+     */
     public void setUser(String P4User) {
         this.P4User = "-u" + P4User;
     }
 
+    /**
+     * The client, branch or label view to operate upon;
+     * optional default "//..."
+     */
     public void setView(String P4View) {
         this.P4View = P4View;
     }
 
+    /**
+     * Set extra command options; only used on some
+     * of the Perforce tasks.
+     */ 
     public void setCmdopts(String P4CmdOpts) {
         this.P4CmdOpts = P4CmdOpts;
     }
 
     /**
-     * Optionally throw a BuildException if p4 command fails
+     * whether to stop the build (true, default) 
+     * or keep going if an error is returned from the p4 command
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;

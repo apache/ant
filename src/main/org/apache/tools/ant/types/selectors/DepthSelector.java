@@ -106,7 +106,7 @@ public class DepthSelector extends BaseExtendSelector {
     }
 
     /**
-     * When using this as a dynamic selector, this method will be called.
+     * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
      * @param parameters the complete set of parameters for this selector
@@ -150,7 +150,7 @@ public class DepthSelector extends BaseExtendSelector {
             setError("You must set at least one of the min or the " +
                     "max levels.");
         }
-        if (max < min) {
+        if (max < min && max > -1) {
             setError("The maximum depth is lower than the minimum.");
         }
     }

@@ -74,8 +74,7 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * <pre>
- * Task to do regular expression string replacements in a text
+ * Performs regular expression string replacements in a text
  * file.  The input file(s) must be able to be properly processed by
  * a Reader instance.  That is, they must be text only, no binary.
  *
@@ -85,6 +84,7 @@ import java.util.Vector;
  * is <code>org.apache.tools.ant.util.regexp.JakartaOroRegexp</code> and
  * requires the Jakarta Oro Package).
  *
+ * <pre>
  * For jdk  &lt;= 1.3, there are two available implementations:
  *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
  *        Requires  the jakarta-oro package
@@ -169,11 +169,19 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * file for which the regular expression should be replaced;
+     * required unless a nested fileset is supplied.
+     */
     public void setFile(File file) {
         this.file = file;
     }
 
 
+    /**
+     * the regular expression pattern to match in the file(s);
+     * required if no nested &lt;regexp&gt; is used
+     */
     public void setMatch(String match) {
         if (regex != null) {
             throw new BuildException("Only one regular expression is allowed");
@@ -184,21 +192,46 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * The substitution pattern to place in the file(s) in place
+     * of the regular expression.
+     * Required if no nested &lt;substitution&gt; is used
+     */
+                     
     public void setReplace(String replace) {
         if (subs != null) {
-            throw new BuildException("Only one substitution expression is allowed");
+            throw new BuildException("Only one substitution expression is "
+                                     + "allowed");
         }
 
         subs = new Substitution();
         subs.setExpression(replace);
     }
 
-
+    /**
+     * The flags to use when matching the regular expression.  For more
+     * information, consult the Perl5 syntax.
+     * <ul>
+     *  <li>g : Global replacement.  Replace all occurences found
+     *  <li>i : Case Insensitive.  Do not consider case in the match
+     *  <li>m : Multiline.  Treat the string as multiple lines of input, 
+     *         using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.
+     *  <li> s : Singleline.  Treat the string as a single line of input, using
+     *        "." to match any character, including a newline, which normally, it would not match.
+     *</ul>
+     */                     
     public void setFlags(String flags) {
         this.flags = flags;
     }
 
 
+    /**
+     * Process the file(s) one line at a time, executing the replacement
+     * on one line at a time.  This is useful if you
+     * want to only replace the first occurence of a regular expression on
+     * each line, which is not easy to do when processing the file as a whole.
+     * Defaults to <i>false</i>.</td>
+     */
     public void setByLine(String byline) {
         Boolean res = Boolean.valueOf(byline);
 
@@ -209,11 +242,19 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * list files to apply the replacement to
+     */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
 
+    /**
+     * A regular expression.
+     * You can use this element to refer to a previously
+     * defined regular expression datatype instance
+     */
     public RegularExpression createRegexp() {
         if (regex != null) {
             throw new BuildException("Only one regular expression is allowed.");
@@ -224,9 +265,14 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * A substitution pattern.  You can use this element to refer to a previously
+     * defined substitution pattern datatype instance.
+     */
     public Substitution createSubstitution() {
         if (subs != null) {
-            throw new BuildException("Only one substitution expression is allowed");
+            throw new BuildException("Only one substitution expression is "
+                                     + "allowed");
         }
 
         subs = new Substitution();
@@ -252,7 +298,7 @@ public class ReplaceRegExp extends Task {
     /** Perform the replace on the entire file  */
     protected void doReplace(File f, int options)
          throws IOException {
-        File parentDir = new File(new File(f.getAbsolutePath()).getParent());
+        File parentDir = fileUtils.getParentFile(f);
         File temp = fileUtils.createTempFile("replace", ".txt", parentDir);
 
         FileReader r = null;
@@ -268,12 +314,13 @@ public class ReplaceRegExp extends Task {
 
             boolean changes = false;
 
-            log("Replacing pattern '" + regex.getPattern(project) + "' with '" + subs.getExpression(project) +
+            log("Replacing pattern '" + regex.getPattern(project) + 
+                "' with '" + subs.getExpression(project) +
                 "' in '" + f.getPath() + "'" +
                 (byline ? " by line" : "") +
                 (flags.length() > 0 ? " with flags: '" + flags + "'" : "") +
                 ".",
-                Project.MSG_WARN);
+                Project.MSG_VERBOSE);
 
             if (byline) {
                 LineNumberReader lnr = new LineNumberReader(br);
@@ -318,10 +365,15 @@ public class ReplaceRegExp extends Task {
             w = null;
 
             if (changes) {
-                f.delete();
-                temp.renameTo(f);
-            } else {
-                temp.delete();
+                if (!f.delete()) {
+                    throw new BuildException("Couldn't delete " + f,
+                                             getLocation());
+                }
+                if (!temp.renameTo(f)) {
+                    throw new BuildException("Couldn't rename temporary file " 
+                                             + temp, getLocation());
+                }
+                temp = null;
             }
         } finally {
             try {
@@ -330,15 +382,16 @@ public class ReplaceRegExp extends Task {
                 }
             } catch (Exception e) {
             }
-            ;
 
             try {
                 if (w != null) {
-                    r.close();
+                    w.close();
                 }
             } catch (Exception e) {
             }
-            ;
+            if (temp != null) {
+                temp.delete();
+            }
         }
     }
 
@@ -353,7 +406,8 @@ public class ReplaceRegExp extends Task {
         }
 
         if (file != null && filesets.size() > 0) {
-            throw new BuildException("You cannot supply the 'file' attribute and filesets at the same time.");
+            throw new BuildException("You cannot supply the 'file' attribute "
+                                     + "and filesets at the same time.");
         }
 
         int options = 0;
@@ -378,12 +432,13 @@ public class ReplaceRegExp extends Task {
             try {
                 doReplace(file, options);
             } catch (IOException e) {
-                log("An error occurred processing file: '" + file.getAbsolutePath() + "': " + e.toString(),
+                log("An error occurred processing file: '" 
+                    + file.getAbsolutePath() + "': " + e.toString(),
                     Project.MSG_ERR);
             }
         } else if (file != null) {
-            log("The following file is missing: '" + file.getAbsolutePath() + "'",
-                Project.MSG_ERR);
+            log("The following file is missing: '" 
+                + file.getAbsolutePath() + "'", Project.MSG_ERR);
         }
 
         int sz = filesets.size();
@@ -395,18 +450,19 @@ public class ReplaceRegExp extends Task {
             String files[] = ds.getIncludedFiles();
 
             for (int j = 0; j < files.length; j++) {
-                File f = new File(files[j]);
+                File f = new File(fs.getDir(getProject()), files[j]);
 
                 if (f.exists()) {
                     try {
                         doReplace(f, options);
                     } catch (Exception e) {
-                        log("An error occurred processing file: '" + f.getAbsolutePath() + "': " + e.toString(),
+                        log("An error occurred processing file: '" 
+                            + f.getAbsolutePath() + "': " + e.toString(),
                             Project.MSG_ERR);
                     }
                 } else {
-                    log("The following file is missing: '" + file.getAbsolutePath() + "'",
-                        Project.MSG_ERR);
+                    log("The following file is missing: '" 
+                        + f.getAbsolutePath() + "'", Project.MSG_ERR);
                 }
             }
         }

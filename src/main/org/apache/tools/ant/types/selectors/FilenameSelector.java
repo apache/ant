@@ -123,9 +123,9 @@ public class FilenameSelector extends BaseExtendSelector {
 
     /**
      * You can optionally reverse the selection of this selector,
-     * thereby emulating an <exclude> tag, by setting the attribute
+     * thereby emulating an &lt;exclude&gt; tag, by setting the attribute
      * negate to true. This is identical to surrounding the selector
-     * with <not></not>.
+     * with &lt;not&gt;&lt;/not&gt;.
      *
      * @param negated whether to negate this selection
      */
@@ -134,7 +134,7 @@ public class FilenameSelector extends BaseExtendSelector {
     }
 
     /**
-     * When using this as a dynamic selector, this method will be called.
+     * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
      * @param parameters the complete set of parameters for this selector
@@ -187,8 +187,8 @@ public class FilenameSelector extends BaseExtendSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
 
-        return SelectorUtils.matchPath(pattern,filename,
-                casesensitive);
+        return (SelectorUtils.matchPath(pattern,filename,
+                casesensitive) == !(negated));
     }
 
 }

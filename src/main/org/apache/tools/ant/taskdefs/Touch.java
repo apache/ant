@@ -70,7 +70,7 @@ import java.util.Locale;
 import java.util.Vector;
 
 /**
- * Touch a file and/or fileset(s) -- corresponds to the Unix touch command.
+ * Touch a file and/or fileset(s); corresponds to the Unix touch command.
  *
  * <p>If the file to touch doesn't exist, an empty one is
  * created. </p>
@@ -88,7 +88,7 @@ import java.util.Vector;
  */
 public class Touch extends Task {
 
-    private File file;              // required
+    private File file;              
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
@@ -107,21 +107,25 @@ public class Touch extends Task {
     }
 
     /**
-     * Milliseconds since 01/01/1970 00:00 am.
+     * the new modification time of the file
+     * in milliseconds since midnight Jan 1 1970.
+     * Optional, default=now
      */
     public void setMillis(long millis) {
         this.millis = millis;
     }
 
     /**
-     * Date in the format MM/DD/YYYY HH:MM AM_PM.
+     * the new modification time of the file
+     * in the format MM/DD/YYYY HH:MM AM <i>or</i> PM;
+     * Optional, default=now
      */
     public void setDatetime(String dateTime) {
         this.dateTime = dateTime;
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Add a set of files to touch
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);

@@ -130,9 +130,4 @@ public class XalanLiaison implements XSLTLiaison {
         processor.setStylesheetParam(name, value);
     }
 
-    public void setOutputtype(String type) throws Exception {
-        if (!type.equals("xml")) { 
-            throw new BuildException("Unsupported output type: " + type);
-        }
-    }
 } //-- XalanLiaison

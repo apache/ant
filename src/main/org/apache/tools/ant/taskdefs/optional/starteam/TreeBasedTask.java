@@ -157,7 +157,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
     ///////////////////////////////////////////////////////////////
 
     /**
-     * Set the root folder in the Starteam repository for this operation
+     * Set the root of the subtree in the StarTeam repository from which to 
+     * work; optional.  Defaults to the root folder of the view ('/').
      * @param rootStarteamFolder the root folder
      */
     public void setRootStarteamFolder(String rootStarteamFolder) {
@@ -174,10 +175,10 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * Set the local folder corresponding to the
-     * starteam folder for this operation.
-     * If not specified, the StarTeam default will be used
-     * the default is used.
+     * Set the local folder that will be the root of the tree 
+     * to which files are checked out; optional.
+     * If this is not supplied, then the StarTeam "default folder" 
+     * associated with <tt>rootstarteamfolder</tt> is used.
      * @param rootLocalFolder the local folder that will mirror
      *                        this.rootStarteamFolder
      */
@@ -196,8 +197,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * sets the pattern of files to be included.  See setExcludes() for a
-     * description
+     * Declare files to include using standard <tt>includes</tt> patterns; optional. 
      * @param includes A string of filter patterns to include. Separate the
      *                 patterns by spaces.
      * @see #getIncludes()
@@ -210,7 +210,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     /**
      * Gets the patterns from the include filter. Rather that duplicate the
-     * details of AntStarTeanCheckOut's filtering here, refer to these
+     * details of AntStarTeamCheckOut's filtering here, refer to these
      * links:
      *
      * @return A string of filter patterns separated by spaces.
@@ -223,7 +223,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * Sets the exclude filter. When filtering files, AntStarTeamCheckOut
+     * Declare files to exclude using standard <tt>excludes</tt> patterns; optional. 
+     * When filtering files, AntStarTeamCheckOut
      * uses an unmodified version of <CODE>DirectoryScanner</CODE>'s
      * <CODE>match</CODE> method, so here are the patterns straight from the
      * Ant source code:
@@ -297,7 +298,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * Set the value of recursive.
+     * Flag to set to include files in subfolders in the operation; optional,
+     * default true.
      * @param v  Value to assign to recursive.
      */
     public void setRecursive(boolean v) {
@@ -313,7 +315,11 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * Set the value of forced.
+     * Flag to force actions regardless of the status 
+     * that StarTeam is maintaining for the file; optional, default false.  
+     * If <tt>rootlocalfolder</tt> is set then 
+     * this should be set "true" as otherwise the checkout will be based on statuses 
+     * which do not relate to the target folder.  
      * @param v  Value to assign to forced.
      */
     public void setForced(boolean v) {
