@@ -250,6 +250,12 @@ public class EjbJar extends MatchingTask {
     /** Stores a handle to the directory to put the Jar files in */
     private File destdir = null;
 
+    /**
+     * Instance variable that determines whether to use a package structure
+     * of a flat directory as the destination for the jar files.
+     */
+    private boolean flatdestdir = false;
+
     /** Instance variable that determines whether to generate weblogic jars. */
     private boolean generateweblogic = false;
 
@@ -280,6 +286,14 @@ public class EjbJar extends MatchingTask {
      */
     public void setDestdir(String inDir) {
         this.destdir = this.project.resolveFile(inDir);
+    }
+
+    /**
+     * Setter used to store the value of flatdestdir.
+     * @param inValue a string, either 'true' or 'false'.
+     */
+    public void setFlatdestdir(String inValue) {
+        this.flatdestdir = Boolean.valueOf(inValue).booleanValue();
     }
 
     /**
@@ -415,7 +429,12 @@ public class EjbJar extends MatchingTask {
     
 
     /**
-     *
+     * Helper method invoked by execute() for each WebLogic jar to be built.
+     * Encapsulates the logic of constructing a java task for calling
+     * weblogic.ejbc and executing it.
+     * @param sourceJar java.io.File representing the source (EJB1.1) jarfile.
+     * @param destJar java.io.File representing the destination, WebLogic
+     *        jarfile.
      */
     public void buildWeblogicJar(File sourceJar, File destJar) {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
@@ -505,8 +524,8 @@ public class EjbJar extends MatchingTask {
                 baseName = files[index].substring(0, endBaseName);
 
                 /* Parse the ejb deployment descriptor.  While it may not
-                 * look like much, passing 'this' in the above method allows
-                 * the parser to call us back when it finds interesting things.
+                 * look like much, we use a SAXParser and an inner class to
+                 * get hold of all the classfile names for the descriptor.
                  */
                 handler = new DescriptorHandler();
                 saxParser.parse(new InputSource
@@ -516,9 +535,8 @@ public class EjbJar extends MatchingTask {
 
                 ejbFiles = handler.getFiles();
         
-                /* Now that we've parsed the deployment descriptor we have the
-                 * bean name, so we can figure out all the .xml filenames and
-                 * add them to the set of files for the jar.
+                /* Now try to locate all of the deployment descriptors for the
+                 * jar, and if they exist, add them to the list of files.
                  */
 
                 // First the regular deployment descriptor
@@ -547,7 +565,14 @@ public class EjbJar extends MatchingTask {
                                  weblogicDD);
                 }
 
-                // Lastly for the jarfiles
+                // Lastly create File object for the Jar files. If we are using
+                // a flat destination dir, then we need to redefine baseName!
+                if (this.flatdestdir) {
+                    int startName = baseName.lastIndexOf(File.separator);
+                    int endName   = baseName.length();
+                    baseName = baseName.substring(startName, endName);
+                }
+
                 jarfile = new File(this.destdir,
                                    baseName
                                    + this.genericjarsuffix);
