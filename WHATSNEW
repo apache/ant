@@ -92,6 +92,9 @@ Other changes:
 * Added isSigned condition and task, and signedselector selector
   Bugzilla report 32126.
 
+* Added preserveLastModified attribute to signjar task.
+  Bugzilla report 30987.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

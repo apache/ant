@@ -66,6 +66,7 @@ public class SignJar extends Task {
     protected boolean verbose;
     protected boolean internalsf;
     protected boolean sectionsonly;
+    protected boolean preserveLastModified;
 
     /** The maximum amount of memory to use for Jar signer */
     private String maxMemory;
@@ -237,6 +238,7 @@ public class SignJar extends Task {
             return;
         }
 
+        long lastModified = jarSource.lastModified();
         final ExecTask cmd = (ExecTask) getProject().createTask("exec");
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("jarsigner"));
 
@@ -302,6 +304,15 @@ public class SignJar extends Task {
         cmd.setFailonerror(true);
         cmd.setTaskName(getTaskName());
         cmd.execute();
+
+        // restore the lastModified attribute
+        if (preserveLastModified) {
+            if (jarTarget != null) {
+                jarTarget.setLastModified(lastModified);
+            } else {
+                jarSource.setLastModified(lastModified);
+            }
+        }
     }
 
     protected boolean isUpToDate(File jarFile, File signedjarFile) {
@@ -344,6 +355,15 @@ public class SignJar extends Task {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    /**
+     * true to indicate that the signed jar modification date remains the same as the original.
+     * Defaults to false
+     * @param preserveLastModified if true preserve the last modified time
+     */
+    public void setPreserveLastModified(boolean preserveLastModified) {
+        this.preserveLastModified = preserveLastModified;
     }
 }
 

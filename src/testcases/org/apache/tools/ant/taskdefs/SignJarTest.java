@@ -66,4 +66,8 @@ public class SignJarTest extends BuildFileTest {
     public void testURLKeystoreHTTP() {
         executeTarget("urlKeystoreHTTP");
     }
+
+    public void testPreserveLastModified() {
+        executeTarget("preserveLastModified");
+    }
 }
