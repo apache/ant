@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.exec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -21,13 +20,14 @@ import org.apache.tools.ant.Task;
  *
  * @author thomas.haas@softwired-inc.com
  */
-public class LogOutputStream extends OutputStream
+public class LogOutputStream
+    extends OutputStream
 {
-    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    private boolean skip = false;
-    private int level = Project.MSG_INFO;
+    private final int m_level;
+    private final Task m_task;
 
-    private Task task;
+    private ByteArrayOutputStream m_buffer = new ByteArrayOutputStream();
+    private boolean m_skip;
 
     /**
      * Creates a new instance of this class.
@@ -35,15 +35,10 @@ public class LogOutputStream extends OutputStream
      * @param task the task for whom to log
      * @param level loglevel used to log data written to this stream.
      */
-    public LogOutputStream( Task task, int level )
+    public LogOutputStream( final Task task, final int level )
     {
-        this.task = task;
-        this.level = level;
-    }
-
-    public int getMessageLevel()
-    {
-        return level;
+        m_task = task;
+        m_level = level;
     }
 
     /**
@@ -54,8 +49,10 @@ public class LogOutputStream extends OutputStream
     public void close()
         throws IOException
     {
-        if( buffer.size() > 0 )
+        if( m_buffer.size() > 0 )
+        {
             processBuffer();
+        }
         super.close();
     }
 
@@ -66,37 +63,31 @@ public class LogOutputStream extends OutputStream
      * @param cc data to log (byte).
      * @exception IOException Description of Exception
      */
-    public void write( int cc )
+    public void write( final int ch )
         throws IOException
     {
-        final byte c = (byte)cc;
-        if( ( c == '\n' ) || ( c == '\r' ) )
+        if( ( ch == '\n' ) || ( ch == '\r' ) )
         {
-            if( !skip )
+            if( !m_skip )
+            {
                 processBuffer();
+            }
         }
         else
-            buffer.write( cc );
-        skip = ( c == '\r' );
+        {
+            m_buffer.write( (byte)ch );
+        }
+
+        m_skip = ( ch == '\r' );
     }
 
     /**
      * Converts the buffer to a string and sends it to <code>processLine</code>
      */
-    protected void processBuffer()
+    private void processBuffer()
     {
-        processLine( buffer.toString() );
-        buffer.reset();
-    }
-
-    /**
-     * Logs a line to the log system of ant.
-     *
-     * @param line the line to log.
-     */
-    protected void processLine( String line )
-    {
-        processLine( line, level );
+        processLine( m_buffer.toString(), m_level );
+        m_buffer.reset();
     }
 
     /**
@@ -107,6 +98,6 @@ public class LogOutputStream extends OutputStream
      */
     protected void processLine( String line, int level )
     {
-        task.log( line, level );
+        m_task.log( line, level );
     }
 }
