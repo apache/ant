@@ -144,7 +144,7 @@ public class JarLibResolveTask
     }
 
     /**
-     * Adds a URL resolveer to download a library from a URL
+     * Adds a URL resolver to download a library from a URL
      * to a local file.
      */
     public void addConfiguredUrl( final URLResolver url )
