@@ -144,4 +144,10 @@ public class CommandlineTest extends TestCase {
         assertEquals("1 \"2\'3\"", Commandline.toString(new String[] {"1", "2\'3"}));
         assertEquals("1 \'2\"3\'", Commandline.toString(new String[] {"1", "2\"3"}));
     }
+
+    /*
+    public void testAwkCommand(){
+        String s = Commandline.toString(new String[]{"awk", "'NR == 2 { print $NF }'"});
+        assertEquals("awk 'NR == 2 { print $NF }'", s);
+    } */
 }
