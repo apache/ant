@@ -83,7 +83,7 @@ public class Filter extends Task {
         this.value = value;
     }
 
-    public void setFiltersfile(File filterFile) {
+    public void setFiltersfile(File filtersFile) {
         this.filtersFile = filtersFile;
     }
 
