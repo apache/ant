@@ -70,7 +70,6 @@ public class FTPTest extends BuildFileTest{
         && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
 
     private FTPClient ftp;
-    private FTP ftptask;
     private boolean connectionSucceeded = true;
     private boolean loginSuceeded = true;
     private String tmpDir = null;
@@ -86,10 +85,9 @@ public class FTPTest extends BuildFileTest{
         getProject().executeTarget("setup");
         tmpDir = getProject().getProperty("tmp.dir");
         ftp = new FTPClient();
-        ftptask = new FTP();
         ftpFileSep = getProject().getProperty("ftp.filesep");
-        ftptask.setSeparator(ftpFileSep);
-        remoteTmpDir = ftptask.resolveFile(tmpDir);
+        myFTPTask.setSeparator(ftpFileSep);
+        remoteTmpDir = myFTPTask.resolveFile(tmpDir);
         String remoteHost = getProject().getProperty("ftp.host");
         int port = Integer.parseInt(getProject().getProperty("ftp.port"));
         String remoteUser = getProject().getProperty("ftp.user");
@@ -526,5 +524,10 @@ public class FTPTest extends BuildFileTest{
         public FTP.FTPDirectoryScanner newScanner(FTPClient client) {
             return new FTP.FTPDirectoryScanner(client);
         }
+        // provide public visibility
+        public String resolveFile(String file) {
+            return super.resolveFile(file);
+        }
+
     }
 }
