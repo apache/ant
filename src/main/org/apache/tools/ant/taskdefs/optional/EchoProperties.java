@@ -196,11 +196,11 @@ public class EchoProperties extends Task {
             String name = (String) enum.nextElement();
                 String value = (String) allProps.get(name);
             if (prefix == null || name.indexOf(prefix) == 0 ) {
-                props.setProperty(name, value);
+                props.put(name, value);
             }
         }
         try {
-            props.store(os, "Ant properties");
+            props.save(os, "Ant properties");
         } finally {
             os.close();
         }
