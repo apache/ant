@@ -295,19 +295,19 @@ Examples</h3>
 <pre>&lt;iplanet-ejbc ejbdescriptor="ejb-jar.xml"
               iasdescriptor="ias-ejb-jar.xml"
               dest="${build.classesdir}"
-              classpath="${ias.ejbc.cpath}" />
+              classpath="${ias.ejbc.cpath}" /&gt;
 
 &lt;iplanet-ejbc ejbdescriptor="ejb-jar.xml"
               iasdescriptor="ias-ejb-jar.xml"
               dest="${build.classesdir}"
               keepgenerated="yes"
               debug="yes"
-              iashome="${ias.home}" >
-              &lt;classpath>
-                  &lt;pathelement path="." />
-                  &lt;pathelement path="${build.classpath}" />
-              &lt;/classpath>
-&lt;/iplanet-ejbc>
+              iashome="${ias.home}" &gt;
+              &lt;classpath&gt;
+                  &lt;pathelement path="." /&gt;
+                  &lt;pathelement path="${build.classpath}" /&gt;
+              &lt;/classpath&gt;
+&lt;/iplanet-ejbc&gt;
 
 </pre>
 
@@ -1368,7 +1368,7 @@ in the descriptor dir:</p>
 
 <h3><a name="ejbjar_iplanet">iPlanet Application Server (iAS) element</a></h3>
 
-The &lt;iplanet> nested element is used to build iAS-specific stubs and
+The &lt;iplanet&gt; nested element is used to build iAS-specific stubs and
 skeletons and construct a JAR file which may be deployed to the iPlanet
 Application Server 6.0.  The build process will always determine if
 the EJB stubs/skeletons and the EJB-JAR file are up to date, and it will
@@ -1462,65 +1462,65 @@ If omitted, it defaults to ".jar". </td>
 </tr>
 </table>
 
-<p>As noted above, the iplanet element supports additional &lt;classpath>
+<p>As noted above, the iplanet element supports additional &lt;classpath&gt;
 nested elements.</p>
 <h3>
 Examples</h3>
-This example demonstrates the typical use of the &lt;iplanet> nested element.
+This example demonstrates the typical use of the &lt;iplanet&gt; nested element.
 It will name each EJB-JAR using the "basename" prepended to each standard
 EJB descriptor.  For example, if the descriptor named "Account-ejb-jar.xml"
 is processed, the EJB-JAR will be named "Account.jar"
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
-            descriptordir="${src}" >
+            descriptordir="${src}" &gt;
             &lt;iplanet destdir="${assemble.ejbjar}"
-                     classpath="${ias.ejbc.cpath}" />
-            &lt;include name="**/*-ejb-jar.xml"/>
-            &lt;exclude name="**/*ias-*.xml"/>
-    &lt;/ejbjar></pre>
+                     classpath="${ias.ejbc.cpath}" /&gt;
+            &lt;include name="**/*-ejb-jar.xml"/&gt;
+            &lt;exclude name="**/*ias-*.xml"/&gt;
+    &lt;/ejbjar&gt;</pre>
 This example demonstrates the use of a nested classpath element as well
 as some of the other optional attributes.
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
-            descriptordir="${src}" >
+            descriptordir="${src}" &gt;
             &lt;iplanet destdir="${assemble.ejbjar}"
                      iashome="${ias.home}"
                      debug="yes"
-                     keepgenerated="yes" >
-                     &lt;classpath>
-                         &lt;pathelement path="." />
-                         &lt;pathelement path="${build.classpath}" />
-                     &lt;/classpath>
-            &lt;/iplanet>
-            &lt;include name="**/*-ejb-jar.xml"/>
-            &lt;exclude name="**/*ias-*.xml"/>
-    &lt;/ejbjar></pre>
+                     keepgenerated="yes" &gt;
+                     &lt;classpath&gt;
+                         &lt;pathelement path="." /&gt;
+                         &lt;pathelement path="${build.classpath}" /&gt;
+                     &lt;/classpath&gt;
+            &lt;/iplanet&gt;
+            &lt;include name="**/*-ejb-jar.xml"/&gt;
+            &lt;exclude name="**/*ias-*.xml"/&gt;
+    &lt;/ejbjar&gt;</pre>
 This example demonstrates the use of basejarname attribute.  In this
 case, the completed EJB-JAR will be named "HelloWorld.jar"  If multiple
 EJB descriptors might be found, care must be taken to ensure that the completed
 JAR files don't overwrite each other.
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"
-            basejarname="HelloWorld" >
+            basejarname="HelloWorld" &gt;
             &lt;iplanet destdir="${assemble.ejbjar}"
-                     classpath="${ias.ejbc.cpath}"/>
-            &lt;include name="**/*-ejb-jar.xml"/>
-            &lt;exclude name="**/*ias-*.xml"/>
-    &lt;/ejbjar></pre>
+                     classpath="${ias.ejbc.cpath}"/&gt;
+            &lt;include name="**/*-ejb-jar.xml"/&gt;
+            &lt;exclude name="**/*ias-*.xml"/&gt;
+    &lt;/ejbjar&gt;</pre>
 This example demonstrates the use of the dtd nested element. If the local
 copies of the DTDs are included in the classpath, they will be automatically
 referenced without the nested elements.  In iAS 6.0 SP2, these local DTDs are
 found in the [iAS-install-directory]/APPS directory.  In iAS 6.0 SP3, these
 local DTDs are found in the [iAS-install-directory]/dtd directory.
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
-            descriptordir="${src}">
-            &lt;iplanet destdir="${assemble.ejbjar}">
-                     classpath="${ias.ejbc.cpath}" />
-            &lt;include name="**/*-ejb-jar.xml"/>
-            &lt;exclude name="**/*ias-*.xml"/>
+            descriptordir="${src}"&gt;
+            &lt;iplanet destdir="${assemble.ejbjar}"&gt;
+                     classpath="${ias.ejbc.cpath}" /&gt;
+            &lt;include name="**/*-ejb-jar.xml"/&gt;
+            &lt;exclude name="**/*ias-*.xml"/&gt;
             &lt;dtd publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN"
-                 location="${ias.home}/APPS/ejb-jar_1_1.dtd"/>
+                 location="${ias.home}/APPS/ejb-jar_1_1.dtd"/&gt;
             &lt;dtd publicId="-//Sun Microsystems, Inc.//DTD iAS Enterprise JavaBeans 1.0//EN"
-                 location="${ias.home}/APPS/IASEjb_jar_1_0.dtd"/>
-    &lt;/ejbjar></pre>
+                 location="${ias.home}/APPS/IASEjb_jar_1_0.dtd"/&gt;
+    &lt;/ejbjar&gt;</pre>
 
 <h3><a name="ejbjar_jonas">JOnAS (Java Open Application Server) element</a></h3>
 
