@@ -14,6 +14,19 @@
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
 
+            <subsection name="XPath-like Locators for tasks">
+
+                <p>Most tasks are grouped into some sort of task container. The task containers
+                can be things like workspaces, projects, targets or other tasks. Each of these
+                containers usually has a name. Thus we could refer to tasks via a path such as
+                "/avalon/compile/javac" would refer to the task "javac" in the target "compile"
+                in the project "avalon". In the past it has been requested that a task get access
+                to this path programatically - other people have also asked for access to things
+                like the currently running target. We need to assess this and decide whether we
+                wish to support it.</p>
+
+            </subsection>
+
             <subsection name="Embeddor HOWTO">
 
                 <p>Assigned To: Peter</p>
