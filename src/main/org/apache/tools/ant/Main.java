@@ -176,6 +176,7 @@ public class Main {
         Main m = null;
 
         try {
+            Diagnostics.validateVersion();
             m = new Main(args);
         } catch (Throwable exc) {
             printMessage(exc);
@@ -262,6 +263,9 @@ public class Main {
                 return;
             } else if (arg.equals("-version")) {
                 printVersion();
+                return;
+            } else if (arg.equals("-diagnostics")){
+                Diagnostics.doReport(System.out);
                 return;
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 msgOutputLevel = Project.MSG_WARN;
@@ -784,7 +788,6 @@ public class Main {
                 props.load(in);
                 in.close();
 
-                String lSep = System.getProperty("line.separator");
                 StringBuffer msg = new StringBuffer();
                 msg.append("Apache Ant version ");
                 msg.append(props.getProperty("VERSION"));

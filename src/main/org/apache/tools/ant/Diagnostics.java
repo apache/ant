@@ -55,48 +55,59 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.PrintWriter;
 import java.io.PrintStream;
 import java.util.Enumeration;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.tools.ant.util.JavaEnvUtils;
+
 /**
- * A little diagnostic helper that output some information
- * that may help in support.
+ * A little diagnostic helper that output some information that may help
+ * in support. It should quickly give correct information about the
+ * jar existing in ant.home/lib and the jar versions...
  *
  * @since Ant 1.5
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class Diagnostics {
+public final class Diagnostics {
+
+    /** utility class */
+    private Diagnostics(){
+    }
 
     /**
-     * Check if optional tasks are available and if they are implementation
-     * version identical with core.
-     * @return <tt>true</tt> if optional tasks are available and implementation
-     * version is correct. <tt>false</tt> if optional tasks are not available.
-     * @throws BuildException if the implementation version of optional tasks
-     * does not match the core implementation version.
+     * Check if optional tasks are available. Not that it does not check
+     * for implementation version. Use <tt>validateVersion()</tt> for this.
+     * @return <tt>true</tt> if optional tasks are available.
      */
     public static boolean isOptionalAvailable() {
-        Class optional = null;
         try {
-            optional = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
+            Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
         } catch (ClassNotFoundException e){
             return false;
         }
-
-        Package corePkg = Main.class.getPackage();
-        String coreVersion = corePkg.getImplementationVersion();
-        Package optionalPkg = optional.getPackage();
-        String optionalVersion = optionalPkg.getImplementationVersion();
-        if (coreVersion == null || !coreVersion.equals(optionalVersion) ){
-            throw new BuildException(
-                    "Invalid implementation version between Ant core and Ant optional tasks.\n" +
-                    " core    : " + corePkg + "\n" +
-                    " optional: " + optionalPkg);
-        }
         return true;
+    }
+
+    /**
+     * Check if core and optional implementation version do match.
+     * @throws BuildException if the implementation version of optional tasks
+     * does not match the core implementation version.
+     */
+    public static void validateVersion() throws BuildException {
+        try {
+            Class optional = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
+            String coreVersion = getImplementationVersion(Main.class);
+            String optionalVersion = getImplementationVersion(optional);
+            if (coreVersion == null || !coreVersion.equals(optionalVersion) ){
+                throw new BuildException(
+                        "Invalid implementation version between Ant core and Ant optional tasks.\n" +
+                        " core    : " + coreVersion + "\n" +
+                        " optional: " + optionalVersion);
+            }
+        } catch (ClassNotFoundException e){
+        }
     }
 
     /**
@@ -113,36 +124,63 @@ public class Diagnostics {
                 return name.endsWith(".jar");
             }
         };
-        return libDir.listFiles(filter);
+        // listFiles is JDK 1.2+ method...
+        String[] filenames = libDir.list(filter);
+        File[] files = new File[filenames.length];
+        for (int i = 0; i < filenames.length; i++){
+            files[i] = new File(libDir, filenames[i]);
+        }
+        return files;
     }
 
-
+    /**
+     * main entry point for command line
+     * @param args command line arguments.
+     */
     public static void main(String[] args){
         doReport(System.out);
     }
 
 
     /**
-     *
+     * Helper method to get the implementation version.
+     * @param clazz the class to get the information from.
+     * @return null if there is no package or implementation version.
+     * '?.?' for JDK 1.0 or 1.1.
+     */
+    private static String getImplementationVersion(Class clazz){
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)){
+                return "?.?";
+        }
+        Package pkg = clazz.getPackage();
+        if (pkg != null) {
+            return pkg.getImplementationVersion();
+        }
+        return null;
+    }
+
+    /**
+     * Print a report to the given stream.
+     * @param out the stream to print the report to.
      */
     public static void doReport(PrintStream out){
         out.println("------- Ant diagnostics report -------");
         out.println(Main.getAntVersion());
         out.println();
         out.println("-------------------------------------------");
-        out.println(" Implementation Version");
+        out.println(" Implementation Version (JDK1.2+ only)");
         out.println("-------------------------------------------");
-        out.println(" core tasks     : " + Main.class.getPackage().getImplementationVersion());
+        out.println(" core tasks     : " + getImplementationVersion(Main.class));
 
+        Class optional = null;
         try {
-            Class.forName(
+            optional = Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.Test");
+            out.println(" optional tasks : " + getImplementationVersion(optional));
         } catch (ClassNotFoundException e){
+            out.println(" optional tasks : not available");
         }
-
-        Package optionalPkg = Package.getPackage("org.apache.tools.ant.taskdefs.optional");
-        out.println(" optional tasks : " +
-                (optionalPkg == null ? "not available": optionalPkg.getImplementationVersion()) );
 
         out.println();
         out.println("-------------------------------------------");
@@ -162,10 +200,10 @@ public class Diagnostics {
             out.println("-------------------------------------------");
             Class which = Class.forName("org.apache.env.Which");
             Method method = which.getMethod("main", new Class[]{ String[].class });
-            method.invoke(null, new String[]{});
+            method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");
-            out.println("For detailed XML related diagnostics, get Which from http://xml.apache.org/commons/");
+            out.println("Download it at http://xml.apache.org/commons/");
         } catch (InvocationTargetException e) {
             error = e.getTargetException() == null ? e : e.getTargetException();
         } catch (Exception e) {
