@@ -57,6 +57,8 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 import java.io.*;
 import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.Date;
 
 /**
  * Task to compile RMI stubs and skeletons. This task can take the following
@@ -68,21 +70,28 @@ import java.util.StringTokenizer;
  * <li>sourceBase: The base directory for the generated stubs and skeletons
  * <li>classpath: Additional classpath, appended before the system classpath
  * </ul>
- * Of these arguments, the <b>base</b> and <b>class</b> are required.
+ * Of these arguments, <b>base</b> is required.
+ * <p>
+ * If classname is specified then only that classname will be compiled. If it
+ * is absent, then <b>base</b> is traversed for classes according to patterns.
  * <p>
  *
  * @author duncan@x180.com
  * @author ludovic.claude@websitewatchers.co.uk
+ * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
  */
 
-public class Rmic extends Task {
+public class Rmic extends MatchingTask {
 
     private String base;
     private String classname;
     private String sourceBase;
     private String stubVersion;
     private String compileClasspath;
+    private boolean verify = false;
     private boolean filtering = false;
+
+    private Vector compileList = new Vector();
 
     public void setBase(String base) {
         this.base = base;
@@ -118,26 +127,55 @@ public class Rmic extends Task {
         compileClasspath = project.translatePath(classpath);
     }
 
+    /**
+     * Indicates that the classes found by the directory match should be
+     * checked to see if they implement java.rmi.Remote.
+     * This defaults to false if not set.
+     */
+    public void setVerify(String verify) {
+        this.verify = Project.toBoolean(verify);
+    }
+
     public void execute() throws BuildException {
-        File baseFile = project.resolveFile(base);
+        File baseDir = project.resolveFile(base);
+        if (baseDir == null) {
+            throw new BuildException("base attribute must be set!", location);
+        }
+        if (!baseDir.exists()) {
+            throw new BuildException("base does not exist!", location);
+        }
+
+        if (verify) {
+            project.log("Verify has been turned on.", Project.MSG_INFO);
+        }
         File sourceBaseFile = null;
-        if (null != sourceBase)
+        if (null != sourceBase) {
             sourceBaseFile = project.resolveFile(sourceBase);
-        String classpath = getCompileClasspath(baseFile);
+        }
+        String classpath = getCompileClasspath(baseDir);
+
+        // scan base dirs to build up compile lists
+
+        DirectoryScanner ds = this.getDirectoryScanner(baseDir);
+
+        String[] files = ds.getIncludedFiles();
+
+        scanDir(baseDir, files, verify);
+
         // XXX
         // need to provide an input stream that we read in from!
 
         sun.rmi.rmic.Main compiler = new sun.rmi.rmic.Main(System.out, "rmic");
-            int argCount = 5;
+        int argCount = 5;
         int i = 0;
         if (null != stubVersion) argCount++;
         if (null != sourceBase) argCount++;
+        if (compileList.size() > 0) argCount += compileList.size() - 1;
         String[] args = new String[argCount];
         args[i++] = "-d";
-        args[i++] = baseFile.getAbsolutePath();
+        args[i++] = baseDir.getAbsolutePath();
         args[i++] = "-classpath";
         args[i++] = classpath;
-        args[i++] = classname;
         if (null != stubVersion) {
             if ("1.1".equals(stubVersion))
                 args[i++] = "-v1.1";
@@ -148,35 +186,162 @@ public class Rmic extends Task {
         }
         if (null != sourceBase) args[i++] = "-keepgenerated";
 
-        compiler.compile(args);
+        if (classname != null) {
+            if (shouldCompile(new File(baseDir, classname.replace('.', File.separatorChar)))) {
+                args[i++] = classname;
+                compiler.compile(args);
+            }
+        } else {
+            if (compileList.size() > 0) {
+                project.log("RMI Compiling " + compileList.size() +
+                            " classes to " + baseDir, Project.MSG_INFO);
+
+                for (int j = 0; j < compileList.size(); j++) {
+                    args[i++] = (String) compileList.elementAt(j);
+                }
+                compiler.compile(args);
+            }
+        }
 
         // Move the generated source file to the base directory
         if (null != sourceBase) {
-                String stubFileName = classname.replace('.', '/') + "_Stub.java";
-            File oldStubFile = new File(baseFile, stubFileName);
-            File newStubFile = new File(sourceBaseFile, stubFileName);
-            try {
-                project.copyFile(oldStubFile, newStubFile, filtering);
-                oldStubFile.delete();
-            } catch (IOException ioe) {
-                String msg = "Failed to copy " + oldStubFile + " to " +
-                             newStubFile + " due to " + ioe.getMessage();
-                throw new BuildException(msg);
-            }
-            if (!"1.2".equals(stubVersion)) {
-                String skelFileName = classname.replace('.', '/') + "_Skel.java";
-                File oldSkelFile = new File(baseFile, skelFileName);
-                File newSkelFile = new File(sourceBaseFile, skelFileName);
-                try {
-                    project.copyFile(oldSkelFile, newSkelFile, filtering);
-                    oldSkelFile.delete();
-                } catch (IOException ioe) {
-                    String msg = "Failed to copy " + oldSkelFile + " to " +
-                                  newSkelFile + " due to " + ioe.getMessage();
-                    throw new BuildException(msg);
+            if (classname != null) {
+                moveGeneratedFile(baseDir, sourceBaseFile, classname);
+            } else {
+                for (int j = 0; j < compileList.size(); j++) {
+                    moveGeneratedFile(baseDir, sourceBaseFile, (String) compileList.elementAt(j));
                 }
             }
         }
+    }
+
+    /**
+     * Move the generated source file(s) to the base directory
+     *
+     * @exception org.apache.tools.ant.BuildException When error copying/removing files.
+     */
+    private void moveGeneratedFile (File baseDir, File sourceBaseFile, String classname)
+            throws BuildException {
+        String stubFileName = classname.replace('.', File.separatorChar) + "_Stub.java";
+        File oldStubFile = new File(baseDir, stubFileName);
+        File newStubFile = new File(sourceBaseFile, stubFileName);
+        try {
+            project.copyFile(oldStubFile, newStubFile, filtering);
+            oldStubFile.delete();
+        } catch (IOException ioe) {
+            String msg = "Failed to copy " + oldStubFile + " to " +
+                newStubFile + " due to " + ioe.getMessage();
+            throw new BuildException(msg, ioe, location);
+        }
+        if (!"1.2".equals(stubVersion)) {
+            String skelFileName = classname.replace('.', '/') + "_Skel.java";
+            File oldSkelFile = new File(baseDir, skelFileName);
+            File newSkelFile = new File(sourceBaseFile, skelFileName);
+            try {
+                project.copyFile(oldSkelFile, newSkelFile, filtering);
+                oldSkelFile.delete();
+            } catch (IOException ioe) {
+                String msg = "Failed to copy " + oldSkelFile + " to " +
+                              newSkelFile + " due to " + ioe.getMessage();
+                throw new BuildException(msg, ioe, location);
+            }
+        }
+    }
+
+    /**
+     * Scans the directory looking for class files to be compiled.
+     * The result is returned in the class variable compileList.
+     */
+
+    protected void scanDir(File baseDir, String files[], boolean shouldVerify) {
+        compileList.removeAllElements();
+        for (int i = 0; i < files.length; i++) {
+            File baseFile = new File(baseDir, files[i]);
+            if (files[i].endsWith(".class") &&
+                !files[i].endsWith("_Stub.class") &&
+                !files[i].endsWith("_Skel.class")) {
+                if (shouldCompile(baseFile)) {
+                    String classname = files[i].replace(File.separatorChar, '.');
+                    classname = classname.substring(0, classname.indexOf(".class"));
+                    boolean shouldAdd = true;
+                    if (shouldVerify) {
+                        try {
+                            Class testClass = Class.forName(classname);
+                            // One cannot RMIC an interface
+                            if (testClass.isInterface() || !isValidRmiRemote(testClass)) {
+                                shouldAdd = false;
+                            }
+                        } catch (ClassNotFoundException e) {
+                            project.log("Unable to verify class " + classname + 
+                                    ". It could not be found.", Project.MSG_WARN);
+                        } catch (NoClassDefFoundError e) {
+                            project.log("Unable to verify class " + classname + 
+                                        ". It is not defined.", Project.MSG_WARN);
+                        }
+                    }
+                    if (shouldAdd) {
+                        project.log("Adding: " + classname + " to compile list",
+                                    Project.MSG_VERBOSE);
+                        compileList.addElement(classname);
+                    }
+                }
+            }
+        }
+    }
+
+ 
+    /**
+     * Check to see if the class or superclasses/interfaces implement
+     * java.rmi.Remote.
+     */
+    private boolean isValidRmiRemote (Class testClass) {
+        Class rmiRemote = java.rmi.Remote.class;
+        
+        if (rmiRemote.equals(testClass)) {
+            // This class is java.rmi.Remote
+            return true;
+        }
+        
+        Class [] interfaces = testClass.getInterfaces();
+        if (interfaces != null) {
+            for (int i = 0; i < interfaces.length; i++) {
+                if (rmiRemote.equals(interfaces[i])) {
+                    // This class directly implements java.rmi.Remote
+                    return true;
+                }
+                if (isValidRmiRemote(interfaces[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determine whether the class needs to be RMI compiled. It looks at the _Stub.class
+     * and _Skel.class files' last modification date and compares it with the class' class file.
+     */
+    private boolean shouldCompile (File classFile) {
+        long now = (new Date()).getTime();
+        File stubFile = new File(classFile.getAbsolutePath().substring(0,
+                classFile.getAbsolutePath().indexOf(".class")) + "_Stub.class");
+        File skelFile = new File(classFile.getAbsolutePath().substring(0,
+                classFile.getAbsolutePath().indexOf(".class")) + "_Skel.class");
+        if (classFile.exists()) {
+            if (classFile.lastModified() > now) {
+                project.log("Warning: file modified in the future: " +
+                            classFile, Project.MSG_WARN);
+            }
+
+            if (classFile.lastModified() > stubFile.lastModified()) {
+                return true;
+            } else if (classFile.lastModified() > skelFile.lastModified()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -235,7 +400,7 @@ public class Rmic extends Task {
                target.append(f.getAbsolutePath());
            } else {
                project.log("Dropping from classpath: "+
-                   f.getAbsolutePath(),project.MSG_VERBOSE);
+                           f.getAbsolutePath(), Project.MSG_VERBOSE);
            }
        }
 
