@@ -44,7 +44,10 @@ Fixed bugs:
   with gcj which has been impossible in Ant < 1.6.2.
 
 * <xslt> now sets the context classloader if you've specified a nested
-  <classpath>.  Bugzilla report 24802.
+  <classpath>.  Bugzilla Report 24802.
+
+* <zip> and friends would delete the original file when trying to update
+  a read-only archive.  Bugzilla Report 28419.
 
 Other changes:
 --------------

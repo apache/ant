@@ -312,6 +312,14 @@ public class Zip extends MatchingTask {
                                      + archiveType + " file to create!");
         }
 
+        if (zipFile.exists() && !zipFile.isFile()) {
+            throw new BuildException(zipFile + " is not a file.");
+        }
+
+        if (zipFile.exists() && !zipFile.canWrite()) {
+            throw new BuildException(zipFile + " is read-only.");
+        }
+
         // Renamed version of original file, if it exists
         File renamedFile = null;
         // Whether or not an actual update is required -
