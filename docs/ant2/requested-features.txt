@@ -259,6 +259,9 @@ V. Things we probably don't agree on.
  <include>
    <item-filter type="name" value="**/*.java"/>
    <item-filter type="permission" value="r"/>
+
+   <!-- could optionally be directory/or some other system specific features -->
+   <item-filter type="type" value="file"/> 
    <item-filter type="modify-time" 
                 operation="greater-than" 
                 value="29th Feb 2003"/>
@@ -400,3 +403,13 @@ V. Things we probably don't agree on.
 
 * Ignore any classes contained in the damned ext dirs of a JVM - possibly by launching
   with something like <code>jar -Djava.ext.dir=foo -jar ant.jar</code>
+
+* Set arithmetic for fileset/patternset/*set
+
+* inheritance of ant properties/datatypes/context etc in project hierarchy
+
+* inheritance of between ant datatypes. ie fileset A inherits from fileset B (includes 
+  all entries in A).
+
+* Homogenize notion of PATHs and filesets.
+
