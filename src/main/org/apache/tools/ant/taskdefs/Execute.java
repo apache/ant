@@ -33,6 +33,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 
@@ -56,6 +57,9 @@ public class Execute {
     private File workingDirectory = null;
     private Project project = null;
     private boolean newEnvironment = false;
+    //TODO: nothing appears to read this.
+    private boolean spawn = false;
+
 
     /** Controls whether the VM is used to launch commands, where possible */
     private boolean useVMLauncher = true;
@@ -64,7 +68,6 @@ public class Execute {
     private static CommandLauncher vmLauncher = null;
     private static CommandLauncher shellLauncher = null;
     private static Vector procEnvironment = null;
-    private boolean spawn = false;
 
     /** Used to destroy processes when the VM exits. */
     private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
@@ -75,9 +78,7 @@ public class Execute {
     static {
         // Try using a JDK 1.3 launcher
         try {
-            if (Os.isFamily("openvms")) {
-                vmLauncher = new VmsCommandLauncher();
-            } else if (!Os.isFamily("os/2")) {
+            if (!Os.isFamily("os/2")) {
                 vmLauncher = new Java13CommandLauncher();
             }
         } catch (NoSuchMethodException exc) {
@@ -124,8 +125,12 @@ public class Execute {
             shellLauncher
                 = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
         } else if (Os.isFamily("openvms")) {
-            // the vmLauncher already uses the shell
-            shellLauncher = vmLauncher;
+            // OpenVMS
+            try {
+                shellLauncher = new VmsCommandLauncher();
+            } catch (NoSuchMethodException exc) {
+            // Ignore and keep trying
+            }
         } else {
             // Generic
             shellLauncher = new ScriptCommandLauncher("bin/antRun",
@@ -304,6 +309,11 @@ public class Execute {
                    ExecuteWatchdog watchdog) {
         setStreamHandler(streamHandler);
         this.watchdog = watchdog;
+        //By default, use the shell launcher for VMS
+        //
+        if (Os.isFamily("openvms")) {
+            useVMLauncher = false;
+        }
     }
 
     /**
@@ -666,18 +676,9 @@ public class Execute {
      * @param process   the <CODE>Process</CODE>.
      */
     public static void closeStreams(Process process) {
-        try {
-            process.getInputStream().close();
-        } catch (IOException eyeOhEx) {
-        }
-        try {
-            process.getOutputStream().close();
-        } catch (IOException eyeOhEx) {
-        }
-        try {
-            process.getErrorStream().close();
-        } catch (IOException eyeOhEx) {
-        }
+        FileUtils.close(process.getInputStream());
+        FileUtils.close(process.getOutputStream());
+        FileUtils.close(process.getErrorStream());
     }
 
     /**
@@ -1151,7 +1152,8 @@ public class Execute {
          */
         private File createCommandFile(String[] cmd, String[] env)
             throws IOException {
-            File script = File.createTempFile("ANT", ".COM");
+            File script = FileUtils.newFileUtils().createTempFile("ANT", ".COM",null);
+            //TODO: bind the longevity of the file to the exe
             script.deleteOnExit();
             PrintWriter out = null;
             try {

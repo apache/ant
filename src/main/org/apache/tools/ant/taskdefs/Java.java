@@ -35,6 +35,8 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Assertions;
 import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.RedirectorElement;
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Launcher for Java applications. Allows use of
@@ -732,29 +734,8 @@ public class Java extends Task {
 
         Execute exe
             = new Execute(redirector.createHandler(), createWatchdog());
-        exe.setAntRun(getProject());
+        setupExecutable(exe, command);
 
-        if (dir == null) {
-            dir = getProject().getBaseDir();
-        } else if (!dir.exists() || !dir.isDirectory()) {
-            throw new BuildException(dir.getAbsolutePath()
-                                     + " is not a valid directory",
-                                     getLocation());
-        }
-
-        exe.setWorkingDirectory(dir);
-
-        String[] environment = env.getVariables();
-        if (environment != null) {
-            for (int i = 0; i < environment.length; i++) {
-                log("Setting environment variable: " + environment[i],
-                    Project.MSG_VERBOSE);
-            }
-        }
-        exe.setNewenvironment(newEnvironment);
-        exe.setEnvironment(environment);
-
-        exe.setCommandline(command);
         try {
             int rc = exe.execute();
             redirector.complete();
@@ -767,6 +748,8 @@ public class Java extends Task {
         }
     }
 
+
+
     /**
      * Executes the given classname with the given arguments in a separate VM.
      */
@@ -774,18 +757,33 @@ public class Java extends Task {
 
         Execute exe
             = new Execute();
-        exe.setAntRun(getProject());
-
-        if (dir == null) {
-            dir = getProject().getBaseDir();
-        } else if (!dir.exists() || !dir.isDirectory()) {
-            throw new BuildException(dir.getAbsolutePath()
-                                     + " is not a valid directory",
-                                     getLocation());
+        setupExecutable(exe, command);
+        try {
+            exe.spawn();
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
         }
+    }
 
-        exe.setWorkingDirectory(dir);
+    /**
+     * Do all configuration for an executable that
+     * is common across the {@link #fork(String[])} and
+     * {@link #spawn(String[])} methods
+     * @param exe executable
+     * @param command command to execute
+     */
+    private void setupExecutable(Execute exe, String[] command) {
+        exe.setAntRun(getProject());
+        setupWorkingDir(exe);
+        setupEnvironment(exe);
+        setupCommandLine(exe, command);
+    }
 
+    /**
+     * set up our environment variables
+     * @param exe
+     */
+    private void setupEnvironment(Execute exe) {
         String[] environment = env.getVariables();
         if (environment != null) {
             for (int i = 0; i < environment.length; i++) {
@@ -795,14 +793,69 @@ public class Java extends Task {
         }
         exe.setNewenvironment(newEnvironment);
         exe.setEnvironment(environment);
+    }
 
-        exe.setCommandline(command);
-        try {
-            exe.spawn();
-        } catch (IOException e) {
-            throw new BuildException(e, getLocation());
+    /**
+     * set the working dir of the new process
+     * @param exe
+     * @throws BuildException if the dir doesn't exist.
+     */
+    private void setupWorkingDir(Execute exe) {
+        if (dir == null) {
+            dir = getProject().getBaseDir();
+        } else if (!dir.exists() || !dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()
+                                     + " is not a valid directory",
+                                     getLocation());
+        }
+        exe.setWorkingDirectory(dir);
+    }
+
+    /**
+     * set the command line for the exe.
+     * On VMS, hands off to {@link #setupCommandLineForVMS(Execute, String[])}
+     * @param exe
+     * @param command
+     */
+    private void setupCommandLine(Execute exe, String[] command) {
+        //On VMS platform, we need to create a special java options file
+        //containing the arguments and classpath for the java command.
+        //The special file is supported by the "-V" switch on the VMS JVM.
+        if (Os.isFamily("openvms")) {
+            setupCommandLineForVMS(exe, command);
+        } else {
+            exe.setCommandline(command);
         }
     }
+
+    /**
+     * On VMS platform, we need to create a special java options file
+     * containing the arguments and classpath for the java command.
+     * The special file is supported by the "-V" switch on the VMS JVM.
+     *
+     * @param exe
+     * @param command
+     */
+    private void setupCommandLineForVMS(Execute exe, String[] command) {
+        //Use the VM launcher instead of shell launcher on VMS
+        exe.setVMLauncher(true);
+        File vmsJavaOptionFile=null;
+        try {
+            String [] args = new String[command.length-1];
+            System.arraycopy(command, 1, args, 0, command.length-1);
+            vmsJavaOptionFile = JavaEnvUtils.createVmsJavaOptionFile(args);
+            //we mark the file to be deleted on exit.
+            //the alternative would be to cache the filename and delete
+            //after execution finished, which is much better for long-lived runtimes
+            //though spawning complicates things...
+            vmsJavaOptionFile.deleteOnExit();
+            String [] vmsCmd = {command[0], "-V", vmsJavaOptionFile.getPath()};
+            exe.setCommandline(vmsCmd);
+        } catch (IOException e) {
+            throw new BuildException("Failed to create a temporary file for \"-V\" switch");
+        }
+    }
+
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.

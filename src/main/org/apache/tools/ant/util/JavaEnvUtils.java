@@ -17,6 +17,10 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.Vector;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
@@ -27,6 +31,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * @since Ant 1.5
  */
 public class JavaEnvUtils {
+
+    private JavaEnvUtils() {
+    }
 
     /** Are we on a DOS-based system */
     private static final boolean isDos = Os.isFamily("dos");
@@ -115,7 +122,7 @@ public class JavaEnvUtils {
      * @since Ant 1.5
      */
     public static boolean isJavaVersion(String version) {
-        return javaVersion == version;
+        return javaVersion.equals(version);
     }
 
     /**
@@ -331,5 +338,30 @@ public class JavaEnvUtils {
             buildJrePackages();
         }
         return jrePackages;
+    }
+    
+    /**
+     *
+     * Writes the command into a temporary DCL script and returns the
+     * corresponding File object.
+     * It is the job of the caller to delete the file on exit.
+     * @param cmd
+     * @return
+     * @throws IOException
+     */
+    public static File createVmsJavaOptionFile(String[] cmd)
+            throws IOException {
+        File script = FileUtils.newFileUtils()
+                .createTempFile("ANT", ".JAVA_OPTS", null);
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new BufferedWriter(new FileWriter(script)));
+            for (int i = 0; i < cmd.length; i++) {
+                out.println(cmd[i]);
+            }
+        } finally {
+            FileUtils.close(out);
+        }
+        return script;
     }
 }

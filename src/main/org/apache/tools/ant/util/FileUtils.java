@@ -1449,5 +1449,15 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Delete the file with {@link File#delete()} if the argument is not null.
+     * Do nothing on a null argument
+     * @param file file to delete
+     */
+    public static void delete(File file) {
+        if(file!=null) {
+            file.delete();
+        }
+    }
 }
 
