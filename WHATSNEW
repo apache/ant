@@ -159,6 +159,8 @@ Other changes:
 
 * Target now supports a Location member.  Bugzilla Report 28599.
 
+* New "pattern" attribute for <date> selector.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
