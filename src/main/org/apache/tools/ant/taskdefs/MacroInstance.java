@@ -294,9 +294,9 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     public void execute() {
         localProperties = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
-        for (int i = 0; i < macroDef.getAttributes().size(); ++i) {
-            MacroDef.Attribute attribute =
-                (MacroDef.Attribute) macroDef.getAttributes().get(i);
+        for (Iterator i = macroDef.getAttributes().values().iterator();
+             i.hasNext();) {
+            MacroDef.Attribute attribute = (MacroDef.Attribute) i.next();
             String value = (String) map.get(attribute.getName());
             if (value == null) {
                 value = attribute.getDefault();

@@ -78,7 +78,7 @@ import org.apache.tools.ant.UnknownElement;
 public class MacroDef extends AntlibDefinition  {
     private NestedSequential nestedSequential;
     private String     name;
-    private List       attributes = new ArrayList();
+    private Map        attributes = new HashMap();
     private Map        elements = new HashMap();
 
     /**
@@ -170,7 +170,7 @@ public class MacroDef extends AntlibDefinition  {
     /**
      * @return the nested Attributes
      */
-    public List getAttributes() {
+    public Map getAttributes() {
         return attributes;
     }
 
@@ -221,7 +221,12 @@ public class MacroDef extends AntlibDefinition  {
             throw new BuildException(
                 "the attribute nested element needed a \"name\" attribute");
         }
-        attributes.add(attribute);
+        if (attributes.get(attribute.getName()) != null) {
+            throw new BuildException(
+                "the attribute " + attribute.getName()
+                + " has already been specified");
+        }
+        attributes.put(attribute.getName(), attribute);
     }
 
     /**
@@ -233,6 +238,11 @@ public class MacroDef extends AntlibDefinition  {
         if (element.getName() == null) {
             throw new BuildException(
                 "the element nested element needed a \"name\" attribute");
+        }
+        if (elements.get(element.getName()) != null) {
+            throw new BuildException(
+                "the element " + element.getName()
+                + " has already been specified");
         }
         elements.put(element.getName(), element);
     }
