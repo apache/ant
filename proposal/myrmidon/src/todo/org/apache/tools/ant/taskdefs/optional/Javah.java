@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.JavaVersion;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -53,69 +51,51 @@ import org.apache.tools.ant.types.Reference;
  *      richard.beton@physics.org</a>
  */
 
-public class Javah extends Task
+public class Javah
+    extends AbstractLogEnabled
 {
-
     private final static String FAIL_MSG = "Compile failed, messages should have been provided.";
 
-    private ArrayList classes = new ArrayList( 2 );
-    private Path classpath = null;
-    private File outputFile = null;
-    private boolean verbose = false;
-    private boolean force = false;
-    private boolean old = false;
-    private boolean stubs = false;
-    private Path bootclasspath;
-    private String cls;
-    private File destDir;
+    private ArrayList m_classes = new ArrayList( 2 );
+    private Path m_classpath;
+    private File m_outputFile;
+    private boolean m_verbose;
+    private boolean m_force;
+    private boolean m_old;
+    private boolean m_stubs;
+    private Path m_bootclasspath;
+    private String m_cls;
+    private File m_destDir;
 
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new BootClasspathRef value
-     */
-    public void setBootClasspathRef( Reference r )
+    public void setBootclasspath( final Path bootclasspath )
+        throws TaskException
     {
-        createBootclasspath().setRefid( r );
-    }
-
-    public void setBootclasspath( Path src )
-    {
-        if( bootclasspath == null )
+        if( m_bootclasspath == null )
         {
-            bootclasspath = src;
+            m_bootclasspath = bootclasspath;
         }
         else
         {
-            bootclasspath.append( src );
+            m_bootclasspath.append( bootclasspath );
         }
     }
 
-    public void setClass( String cls )
+    public void setClass( final String cls )
     {
-        this.cls = cls;
+        m_cls = cls;
     }
 
-    public void setClasspath( Path src )
+    public void setClasspath( final Path classpath )
+        throws TaskException
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = src;
+            m_classpath = classpath;
         }
         else
         {
-            classpath.append( src );
+            m_classpath.append( classpath );
         }
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-    {
-        createClasspath().setRefid( r );
     }
 
     /**
@@ -124,196 +104,156 @@ public class Javah extends Task
      *
      * @param destDir The new Destdir value
      */
-    public void setDestdir( File destDir )
+    public void setDestdir( final File destDir )
     {
-        this.destDir = destDir;
+        m_destDir = destDir;
     }
 
     /**
      * Set the force-write flag.
-     *
-     * @param force The new Force value
      */
-    public void setForce( boolean force )
+    public void setForce( final boolean force )
     {
-        this.force = force;
+        m_force = force;
     }
 
     /**
      * Set the old flag.
-     *
-     * @param old The new Old value
      */
-    public void setOld( boolean old )
+    public void setOld( final boolean old )
     {
-        this.old = old;
+        m_old = old;
     }
-
-    ///**
-    // * Sets the extension directories that will be used during the
-    // * compilation.
-    // */
-    //public void setExtdirs(Path extdirs) {
-    //    if (this.extdirs == null) {
-    //        this.extdirs = extdirs;
-    //    } else {
-    //        this.extdirs.append(extdirs);
-    //    }
-    //}
-
-    ///**
-    // * Maybe creates a nested classpath element.
-    // */
-    //public Path createExtdirs() {
-    //    if (extdirs == null) {
-    //        extdirs = new Path(project);
-    //    }
-    //    return extdirs.createPath();
-    //}
 
     /**
      * Set the output file name.
-     *
-     * @param outputFile The new OutputFile value
      */
-    public void setOutputFile( File outputFile )
+    public void setOutputFile( final File outputFile )
     {
-        this.outputFile = outputFile;
+        m_outputFile = outputFile;
     }
 
     /**
      * Set the stubs flag.
-     *
-     * @param stubs The new Stubs value
      */
-    public void setStubs( boolean stubs )
+    public void setStubs( final boolean stubs )
     {
-        this.stubs = stubs;
+        m_stubs = stubs;
     }
 
     /**
      * Set the verbose flag.
-     *
-     * @param verbose The new Verbose value
      */
-    public void setVerbose( boolean verbose )
+    public void setVerbose( final boolean verbose )
     {
-        this.verbose = verbose;
+        m_verbose = verbose;
     }
 
     public Path createBootclasspath()
     {
-        if( bootclasspath == null )
+        if( m_bootclasspath == null )
         {
-            bootclasspath = new Path();
+            m_bootclasspath = new Path();
         }
-        return bootclasspath.createPath();
+        return m_bootclasspath.createPath();
     }
 
     public ClassArgument createClass()
     {
-        ClassArgument ga = new ClassArgument();
-        classes.add( ga );
+        final ClassArgument ga = new ClassArgument();
+        setupLogger( ga );
+        m_classes.add( ga );
         return ga;
     }
 
     public Path createClasspath()
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = new Path();
+            m_classpath = new Path();
         }
-        return classpath.createPath();
+        return m_classpath.createPath();
     }
 
     /**
      * Executes the task.
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
     {
-        // first off, make sure that we've got a srcdir
+        validate();
 
-        if( ( cls == null ) && ( classes.size() == 0 ) )
+        if( m_classpath == null )
         {
-            throw new TaskException( "class attribute must be set!" );
-        }
-
-        if( ( cls != null ) && ( classes.size() > 0 ) )
-        {
-            throw new TaskException( "set class attribute or class element, not both." );
-        }
-
-        if( destDir != null )
-        {
-            if( !destDir.isDirectory() )
-            {
-                throw new TaskException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
-            }
-            if( outputFile != null )
-            {
-                throw new TaskException( "destdir and outputFile are mutually exclusive" );
-            }
-        }
-
-        if( classpath == null )
-        {
-            classpath = Path.systemClasspath;
-        }
-
-        String compiler = getProject().getProperty( "build.compiler" );
-        if( compiler == null )
-        {
-            if( JavaVersion.JAVA1_2 != JavaVersion.getCurrentJavaVersion() )
-            {
-                compiler = "modern";
-            }
-            else
-            {
-                compiler = "classic";
-            }
+            m_classpath = Path.systemClasspath;
         }
 
         doClassicCompile();
     }
 
+    private void validate() throws TaskException
+    {
+        if( ( m_cls == null ) && ( m_classes.size() == 0 ) )
+        {
+            final String message = "class attribute must be set!";
+            throw new TaskException( message );
+        }
+
+        if( ( m_cls != null ) && ( m_classes.size() > 0 ) )
+        {
+            final String message = "set class attribute or class element, not both.";
+            throw new TaskException( message );
+        }
+
+        if( m_destDir != null )
+        {
+            if( !m_destDir.isDirectory() )
+            {
+                final String message = "destination directory \"" + m_destDir +
+                    "\" does not exist or is not a directory";
+                throw new TaskException( message );
+            }
+            if( m_outputFile != null )
+            {
+                final String message = "destdir and outputFile are mutually exclusive";
+                throw new TaskException( message );
+            }
+        }
+    }
+
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
      * &qout;niceSourceList&quot;
-     *
-     * @param cmd Description of Parameter
      */
-    protected void logAndAddFilesToCompile( Commandline cmd )
+    private void logAndAddFilesToCompile( final Commandline cmd )
     {
         int n = 0;
         getLogger().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceClassList = new StringBuffer();
-        if( cls != null )
+        if( m_cls != null )
         {
-            StringTokenizer tok = new StringTokenizer( cls, ",", false );
+            final StringTokenizer tok = new StringTokenizer( m_cls, ",", false );
             while( tok.hasMoreTokens() )
             {
-                String aClass = tok.nextToken().trim();
+                final String aClass = tok.nextToken().trim();
                 cmd.createArgument().setValue( aClass );
                 niceClassList.append( "    " + aClass + StringUtil.LINE_SEPARATOR );
                 n++;
             }
         }
 
-        Iterator enum = classes.iterator();
+        final Iterator enum = m_classes.iterator();
         while( enum.hasNext() )
         {
-            ClassArgument arg = (ClassArgument)enum.next();
-            String aClass = arg.getName();
+            final ClassArgument arg = (ClassArgument)enum.next();
+            final String aClass = arg.getName();
             cmd.createArgument().setValue( aClass );
             niceClassList.append( "    " + aClass + StringUtil.LINE_SEPARATOR );
             n++;
         }
 
-        StringBuffer prefix = new StringBuffer( "Class" );
+        final StringBuffer prefix = new StringBuffer( "Class" );
         if( n > 1 )
         {
             prefix.append( "es" );
@@ -326,64 +266,61 @@ public class Javah extends Task
 
     /**
      * Does the command line argument processing common to classic and modern.
-     *
-     * @return Description of the Returned Value
      */
     private Commandline setupJavahCommand()
+        throws TaskException
     {
-        Commandline cmd = new Commandline();
+        final Commandline cmd = new Commandline();
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
             cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( destDir );
+            cmd.createArgument().setFile( m_destDir );
         }
 
-        if( outputFile != null )
+        if( m_outputFile != null )
         {
             cmd.createArgument().setValue( "-o" );
-            cmd.createArgument().setFile( outputFile );
+            cmd.createArgument().setFile( m_outputFile );
         }
 
-        if( classpath != null )
+        if( m_classpath != null )
         {
             cmd.createArgument().setValue( "-classpath" );
-            cmd.createArgument().setPath( classpath );
+            cmd.createArgument().setPath( m_classpath );
         }
 
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArgument().setValue( "-verbose" );
         }
-        if( old )
+        if( m_old )
         {
             cmd.createArgument().setValue( "-old" );
         }
-        if( force )
+        if( m_force )
         {
             cmd.createArgument().setValue( "-force" );
         }
 
-        if( stubs )
+        if( m_stubs )
         {
-            if( !old )
+            if( !m_old )
             {
-                throw new TaskException( "stubs only available in old mode." );
+                final String message = "stubs only available in old mode.";
+                throw new TaskException( message );
             }
             cmd.createArgument().setValue( "-stubs" );
         }
-        if( bootclasspath != null )
+        if( m_bootclasspath != null )
         {
             cmd.createArgument().setValue( "-bootclasspath" );
-            cmd.createArgument().setPath( bootclasspath );
+            cmd.createArgument().setPath( m_bootclasspath );
         }
 
         logAndAddFilesToCompile( cmd );
         return cmd;
     }
-
-    // XXX
-    // we need a way to not use the current classpath.
 
     /**
      * Peforms a compile using the classic compiler that shipped with JDK 1.1
@@ -431,26 +368,6 @@ public class Javah extends Task
             {
                 throw new TaskException( "Error starting javah: ", ex );
             }
-        }
-    }
-
-    public class ClassArgument
-    {
-        private String name;
-
-        public ClassArgument()
-        {
-        }
-
-        public void setName( String name )
-        {
-            this.name = name;
-            getLogger().info( "ClassArgument.name=" + name );
-        }
-
-        public String getName()
-        {
-            return name;
         }
     }
 }
