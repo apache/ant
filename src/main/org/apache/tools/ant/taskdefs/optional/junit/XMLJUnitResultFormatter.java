@@ -25,12 +25,16 @@ import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Date;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.DateUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -100,6 +104,13 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         rootElement = doc.createElement(TESTSUITE);
         rootElement.setAttribute(ATTR_NAME, suite.getName());
 
+        //add the timestamp
+        final String timestamp = DateUtils.format(new Date(),
+                DateUtils.ISO8601_DATETIME_PATTERN);
+        rootElement.setAttribute(TIMESTAMP,timestamp);
+        //and the hostname.
+        rootElement.setAttribute(HOSTNAME,getHostname());
+
         // Output properties
         Element propsElement = doc.createElement(PROPERTIES);
         rootElement.appendChild(propsElement);
@@ -113,6 +124,18 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
                 propElement.setAttribute(ATTR_VALUE, props.getProperty(name));
                 propsElement.appendChild(propElement);
             }
+        }
+    }
+
+    /**
+     * get the local hostname
+     * @return the name of the local host, or "localhost" if we cannot work it out
+     */
+    private String getHostname()  {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return "localhost";
         }
     }
 

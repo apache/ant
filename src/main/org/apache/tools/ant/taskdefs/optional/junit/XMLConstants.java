@@ -86,4 +86,13 @@ public interface XMLConstants {
     /** classname attribute for testcase elements */
     String ATTR_CLASSNAME = "classname";
 
+    /**
+     * timestamp of test cases
+     */
+    String TIMESTAMP = "timestamp";
+
+    /**
+     * name of host running the tests
+     */ 
+    String HOSTNAME = "hostname";
 }
