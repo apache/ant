@@ -78,7 +78,7 @@ import org.apache.tools.ant.BuildException;
  * Uses the JavaMail classes to send Mime format email.
  *
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  */
 class MimeMailer
     extends Mailer
@@ -93,8 +93,9 @@ class MimeMailer
             props.put( "mail.smtp.host", host );
             props.put( "mail.smtp.port", String.valueOf( port ) );
 
-            //Aside, the JDK is clearly unaware of the scottish 'session', which
-            //involves excessive quantities of alcohol :-)
+            // Aside, the JDK is clearly unaware of the scottish
+            // 'session', which //involves excessive quantities of
+            // alcohol :-)
             Session sesh = Session.getDefaultInstance( props, null );
 
             //create the message
@@ -108,12 +109,16 @@ class MimeMailer
             }
             else
             {
-                msg.setFrom( new InternetAddress( from.getAddress(), from.getName() ) );
+                msg.setFrom( new InternetAddress( from.getAddress(), 
+                                                  from.getName() ) );
             }
 
-            msg.setRecipients( Message.RecipientType.TO, internetAddresses( toList ) );
-            msg.setRecipients( Message.RecipientType.CC, internetAddresses( ccList ) );
-            msg.setRecipients( Message.RecipientType.BCC, internetAddresses( bccList ) );
+            msg.setRecipients( Message.RecipientType.TO, 
+                               internetAddresses( toList ) );
+            msg.setRecipients( Message.RecipientType.CC, 
+                               internetAddresses( ccList ) );
+            msg.setRecipients( Message.RecipientType.BCC, 
+                               internetAddresses( bccList ) );
 
             if( subject != null )
             {
@@ -139,7 +144,8 @@ class MimeMailer
                 if( !file.exists() || !file.canRead() )
                 {
                     throw new BuildException( "File \"" + file.getAbsolutePath()
-                                              + "\" does not exist or is not readable." );
+                                              + "\" does not exist or is not "
+                                              + "readable." );
                 }
                 FileDataSource fileData = new FileDataSource( file );
                 DataHandler fileDataHandler = new DataHandler( fileData );
@@ -175,7 +181,8 @@ class MimeMailer
             }
             else
             {
-                addrs[ i ] = new InternetAddress( addr.getAddress(), addr.getName() );
+                addrs[ i ] = new InternetAddress( addr.getAddress(), 
+                                                  addr.getName() );
             }
         }
 

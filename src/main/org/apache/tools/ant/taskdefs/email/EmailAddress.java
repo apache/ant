@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs.email;
  * Holds an email address.
  *
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  */
 public class EmailAddress
 {
@@ -70,7 +70,8 @@ public class EmailAddress
     {
     }
 
-    /** Creates a new email address based on the given string
+    /** 
+     * Creates a new email address based on the given string
      * @param address the email address
      */
     public EmailAddress( String address )
@@ -78,7 +79,8 @@ public class EmailAddress
         this.address = address;
     }
 
-    /** sets the personal / display name of the address
+    /** 
+     * Sets the personal / display name of the address
      * @param name the display name
      */
     public void setName( String name )
@@ -86,7 +88,8 @@ public class EmailAddress
         this.name = name;
     }
 
-    /** sets the email address
+    /** 
+     * Sets the email address
      * @param address the actual email address
      */
     public void setAddress( String address )
@@ -94,7 +97,8 @@ public class EmailAddress
         this.address = address;
     }
 
-    /** Constructs a string "name &lt;address&gt;" or "address"
+    /** 
+     * Constructs a string "name &lt;address&gt;" or "address"
      * @return a string representation of the address
      */
     public String toString()
@@ -109,7 +113,8 @@ public class EmailAddress
         }
     }
 
-    /** returns the address
+    /** 
+     * Returns the address
      * @return the address part
      */
     public String getAddress()
@@ -117,7 +122,8 @@ public class EmailAddress
         return address;
     }
 
-    /** returns the display name
+    /** 
+     * Returns the display name
      * @return the display name part
      */
     public String getName()

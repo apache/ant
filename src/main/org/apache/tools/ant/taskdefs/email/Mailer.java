@@ -61,7 +61,7 @@ import org.apache.tools.ant.Task;
  * Base class for the various emailing implementations.
  *
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  */
 abstract class Mailer
 {
@@ -77,7 +77,8 @@ abstract class Mailer
     protected Task task;
     protected boolean includeFileNames = false;
 
-    /** sets the mail server
+    /** 
+     * Sets the mail server
      * @param host
      */
     public void setHost( String host )
@@ -85,7 +86,8 @@ abstract class Mailer
         this.host = host;
     }
 
-    /** sets the smtp port
+    /** 
+     * Sets the smtp port
      * @param port
      */
     public void setPort( int port )
@@ -93,7 +95,8 @@ abstract class Mailer
         this.port = port;
     }
 
-    /** sets the message
+    /** 
+     * Sets the message
      * @param m
      */
     public void setMessage( Message m )
@@ -101,7 +104,8 @@ abstract class Mailer
         this.message = m;
     }
 
-    /** sets the address to send from
+    /** 
+     * Sets the address to send from
      * @param from
      */
     public void setFrom( EmailAddress from )
@@ -109,7 +113,8 @@ abstract class Mailer
         this.from = from;
     }
 
-    /** set the to addresses
+    /** 
+     * Set the to addresses
      * @param list
      */
     public void setToList( Vector list )
@@ -117,7 +122,8 @@ abstract class Mailer
         this.toList = list;
     }
 
-    /** sets the cc addresses
+    /** 
+     * Sets the cc addresses
      * @param list
      */
     public void setCcList( Vector list )
@@ -125,7 +131,8 @@ abstract class Mailer
         this.ccList = list;
     }
 
-    /** sets the bcc addresses
+    /** 
+     * Sets the bcc addresses
      * @param list
      */
     public void setBccList( Vector list )
@@ -133,7 +140,8 @@ abstract class Mailer
         this.bccList = list;
     }
 
-    /** sets the files to attach
+    /** 
+     * Sets the files to attach
      * @param files
      */
     public void setFiles( Vector files )
@@ -141,7 +149,8 @@ abstract class Mailer
         this.files = files;
     }
 
-    /** sets the subject
+    /** 
+     * Sets the subject
      * @param subject
      */
     public void setSubject( String subject )
@@ -149,7 +158,8 @@ abstract class Mailer
         this.subject = subject;
     }
 
-    /** sets the owning task
+    /** 
+     * Sets the owning task
      * @param task
      */
     public void setTask( Task task )
@@ -157,7 +167,8 @@ abstract class Mailer
         this.task = task;
     }
 
-    /** indicates whether filenames should be listed in the body
+    /** 
+     * Indicates whether filenames should be listed in the body
      * @param b
      */
     public void setIncludeFileNames( boolean b )
@@ -165,7 +176,8 @@ abstract class Mailer
         this.includeFileNames = b;
     }
 
-    /** This method should send the email
+    /** 
+     * This method should send the email
      * @throws BuildException
      */
     public abstract void send()

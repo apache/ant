@@ -67,8 +67,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * A task to send SMTP email. This is a refactoring of the SendMail and MimeMail
- * tasks such that both are within a single task.
+ * A task to send SMTP email. This is a refactoring of the SendMail
+ * and MimeMail tasks such that both are within a single task.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  * @author glenn_twiggs@bmc.com
@@ -76,7 +76,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  *
  * @ant.task name="mail" category="network"
  */
@@ -152,7 +152,8 @@ public class EmailTask
     private Vector files = new Vector();
     private Vector filesets = new Vector();
 
-    /** Allows the build writer to choose the preferred encoding method
+    /** 
+     * Allows the build writer to choose the preferred encoding method
      * @param encoding The encoding (one of AUTO,MIME,UU,PLAIN)
      */
     public void setEncoding( Encoding encoding )
@@ -160,7 +161,8 @@ public class EmailTask
         this.encoding = encoding.getValue();
     }
 
-    /** Sets the mail server port
+    /** 
+     * Sets the mail server port
      * @param port The port to use
      */
     public void setMailport( int port )
@@ -168,7 +170,8 @@ public class EmailTask
         this.port = port;
     }
 
-    /** Sets the host
+    /** 
+     * Sets the host
      * @param host The host to connect to
      */
     public void setMailhost( String host )
@@ -176,7 +179,8 @@ public class EmailTask
         this.host = host;
     }
 
-    /** Sets the subject line of the email
+    /** 
+     * Sets the subject line of the email
      *
      * @param subject Subject of this email.
      */
@@ -185,34 +189,39 @@ public class EmailTask
         this.subject = subject;
     }
 
-    /** Shorthand method to set the message
+    /** 
+     * Shorthand method to set the message
      * @param message Message body of this email.
      */
     public void setMessage( String message )
     {
         if( this.message != null )
         {
-            throw new BuildException( "Only one message can be sent in an email" );
+            throw new BuildException( "Only one message can be sent in an "
+                                      + "email" );
         }
 
         this.message = new Message( message );
     }
 
-    /** Shorthand method to set the message from a file
+    /** 
+     * Shorthand method to set the message from a file
      * @param file The file from which to take the message
      */
     public void setMessageFile( File file )
     {
         if( this.message != null )
         {
-            throw new BuildException( "Only one message can be sent in an email" );
+            throw new BuildException( "Only one message can be sent in an "
+                                      + "email" );
         }
 
         this.message = new Message( file );
     }
 
-    /** Shorthand method to set type of the text message, text/plain by default but text/html
-     * or text/xml is quite feasible.
+    /** 
+     * Shorthand method to set type of the text message, text/plain by
+     * default but text/html or text/xml is quite feasible.
      *
      * @param type The new MessageMimeType value
      */
@@ -221,7 +230,8 @@ public class EmailTask
         this.messageMimeType = type;
     }
 
-    /** Add a message elemnt
+    /** 
+     * Add a message elemnt
      * @param message The message object
      * @throws BuildException if a message has already been added
      */
@@ -230,13 +240,15 @@ public class EmailTask
     {
         if( this.message != null )
         {
-            throw new BuildException( "Only one message can be sent in an email" );
+            throw new BuildException( "Only one message can be sent in an "
+                                      + "email" );
         }
 
         this.message = message;
     }
 
-    /** Adds a from address element
+    /** 
+     * Adds a from address element
      * @param address The address to send from
      */
     public void addFrom( EmailAddress address )
@@ -249,7 +261,8 @@ public class EmailTask
         this.from = address;
     }
 
-    /** Shorthand to set the from address element
+    /** 
+     * Shorthand to set the from address element
      *
      * @param address The address to send mail from
      */
@@ -263,7 +276,8 @@ public class EmailTask
         this.from = new EmailAddress( address );
     }
 
-    /** Adds a to address element
+    /** 
+     * Adds a to address element
      * @param address An email address
      */
     public void addTo( EmailAddress address )
@@ -271,8 +285,8 @@ public class EmailTask
         toList.addElement( address );
     }
 
-    /** Adds "to" address elements
-     *
+    /** 
+     * Adds "to" address elements
      *
      * @param list Comma separated list of addresses
      */
@@ -286,7 +300,8 @@ public class EmailTask
         }
     }
 
-    /** Adds "cc" address element
+    /** 
+     * Adds "cc" address element
      * @param address The email address
      */
     public void addCc( EmailAddress address )
@@ -294,8 +309,8 @@ public class EmailTask
         ccList.addElement( address );
     }
 
-    /** Adds "cc" address elements
-     *
+    /** 
+     * Adds "cc" address elements
      *
      * @param list Comma separated list of addresses
      */
@@ -309,7 +324,8 @@ public class EmailTask
         }
     }
 
-    /** Adds "bcc" address elements
+    /** 
+     * Adds "bcc" address elements
      * @param address The email address
      */
     public void addBcc( EmailAddress address )
@@ -317,8 +333,8 @@ public class EmailTask
         bccList.addElement( address );
     }
 
-    /** Adds "bcc" address elements
-     *
+    /** 
+     * Adds "bcc" address elements
      *
      * @param list comma separated list of addresses
      */
@@ -332,7 +348,8 @@ public class EmailTask
         }
     }
 
-    /** Indicates whether BuildExceptions should be passed back to the core
+    /** 
+     * Indicates whether BuildExceptions should be passed back to the core
      *
      * @param failOnError The new FailOnError value
      */
@@ -341,7 +358,8 @@ public class EmailTask
         this.failOnError = failOnError;
     }
 
-    /** Adds a list of files to be attached
+    /** 
+     * Adds a list of files to be attached
      *
      * @param filenames Comma separated list of files
      */
@@ -355,7 +373,8 @@ public class EmailTask
         }
     }
 
-    /** Adds a set of files (nested fileset attribute).
+    /** 
+     * Adds a set of files (nested fileset attribute).
      * @param fs The fileset
      */
     public void addFileset( FileSet fs )
@@ -363,16 +382,19 @@ public class EmailTask
         filesets.addElement( fs );
     }
 
-    /** Sets Includefilenames attribute
+    /** 
+     * Sets Includefilenames attribute
      *
-     * @param includeFileNames Whether to include filenames in the text of the message
+     * @param includeFileNames Whether to include filenames in the
+     * text of the message
      */
     public void setIncludefilenames( boolean includeFileNames )
     {
         this.includeFileNames = includeFileNames;
     }
 
-    /** Identifies whether file names should be included
+    /** 
+     * Identifies whether file names should be included
      * @return Identifies whether file names should be included
      */
     public boolean getIncludeFileNames()
@@ -380,10 +402,13 @@ public class EmailTask
         return includeFileNames;
     }
 
-    /** Sends an email
+    /** 
+     * Sends an email
      */
     public void execute()
     {
+        Message savedMessage = message;
+        Vector savedFiles = (Vector) files.clone();
         try
         {
             Mailer mailer = null;
@@ -392,11 +417,14 @@ public class EmailTask
             boolean autoFound = false;
 
             // try MIME format
-            if( encoding.equals( MIME ) || ( encoding.equals( AUTO ) && !autoFound ) )
+            if( encoding.equals( MIME ) 
+                || ( encoding.equals( AUTO ) && !autoFound ) )
             {
                 try
                 {
-                    mailer = (Mailer)Class.forName( "org.apache.tools.ant.taskdefs.email.MimeMailer" ).newInstance();
+                    mailer = 
+                        (Mailer) Class.forName( "org.apache.tools.ant.taskdefs.email.MimeMailer" )
+                        .newInstance();
                     autoFound = true;
                     log( "Using MIME mail", Project.MSG_VERBOSE );
                 }
@@ -407,11 +435,14 @@ public class EmailTask
             }
 
             // try UU format
-            if( encoding.equals( UU ) || ( encoding.equals( AUTO ) && !autoFound ) )
+            if( encoding.equals( UU ) 
+                || ( encoding.equals( AUTO ) && !autoFound ) )
             {
                 try
                 {
-                    mailer = (Mailer)Class.forName( "org.apache.tools.ant.taskdefs.email.UUMailer" ).newInstance();
+                    mailer = 
+                        (Mailer)Class.forName( "org.apache.tools.ant.taskdefs.email.UUMailer" )
+                        .newInstance();
                     autoFound = true;
                     log( "Using UU mail", Project.MSG_VERBOSE );
                 }
@@ -422,7 +453,8 @@ public class EmailTask
             }
 
             // try plain format
-            if( encoding.equals( PLAIN ) || ( encoding.equals( AUTO ) && !autoFound ) )
+            if( encoding.equals( PLAIN ) 
+                || ( encoding.equals( AUTO ) && !autoFound ) )
             {
                 mailer = new PlainMailer();
                 autoFound = true;
@@ -432,7 +464,8 @@ public class EmailTask
             // a valid mailer must be present by now
             if( mailer == null )
             {
-                throw new BuildException( "Failed to initialise encoding: " + encoding );
+                throw new BuildException( "Failed to initialise encoding: " 
+                                          + encoding );
             }
 
             // a valid message is required
@@ -450,7 +483,8 @@ public class EmailTask
             // at least one address to send to/cc/bcc is required
             if( toList.isEmpty() && ccList.isEmpty() && bccList.isEmpty() )
             {
-                throw new BuildException( "At least one of to,cc or bcc must be supplied" );
+                throw new BuildException( "At least one of to,cc or bcc must "
+                                          + "be supplied" );
             }
 
             // set the mimetype if not done already (and required)
@@ -458,7 +492,8 @@ public class EmailTask
             {
                 if( message.isMimeTypeSpecified() )
                 {
-                    throw new BuildException( "The mime type can only be specified in one location" );
+                    throw new BuildException( "The mime type can only be "
+                                              + "specified in one location" );
                 }
                 else
                 {
@@ -508,7 +543,8 @@ public class EmailTask
 
             // let the user know what happened
             int count = files.size();
-            log( "Sent email with " + count + " attachment" + ( count == 1?"":"s" ), Project.MSG_INFO );
+            log( "Sent email with " + count + " attachment" 
+                 + ( count == 1?"":"s" ), Project.MSG_INFO );
         }
         catch( BuildException e )
         {
@@ -517,6 +553,9 @@ public class EmailTask
             {
                 throw e;
             }
+        } finally {
+            message = savedMessage;
+            files = savedFiles;
         }
     }
 }

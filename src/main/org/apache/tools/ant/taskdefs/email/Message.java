@@ -63,7 +63,7 @@ import java.io.PrintStream;
  * Class representing an email message.
  *
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  */
 public class Message
 {
@@ -72,13 +72,15 @@ public class Message
     private String mimeType = "text/plain";
     private boolean specified = false;
 
-    /** creates a new empty message
+    /** 
+     * Creates a new empty message
      */
     public Message()
     {
     }
 
-    /** Creates a new message based on the given string
+    /** 
+     * Creates a new message based on the given string
      * @param text the message
      */
     public Message( String text )
@@ -86,7 +88,8 @@ public class Message
         addText( text );
     }
 
-    /** Creates a new message using the contents of the given file.
+    /** 
+     * Creates a new message using the contents of the given file.
      * @param file the source of the message
      */
     public Message( File file )
@@ -94,7 +97,8 @@ public class Message
         messageSource = file;
     }
 
-    /** Adds a textual part of the message
+    /** 
+     * Adds a textual part of the message
      * @param text some text to add
      */
     public void addText( String text )
@@ -102,7 +106,8 @@ public class Message
         buffer.append( text );
     }
 
-    /** Sets the source file of the message
+    /** 
+     * Sets the source file of the message
      * @param src the source of the message
      */
     public void setSrc( File src )
@@ -110,7 +115,8 @@ public class Message
         this.messageSource = src;
     }
 
-    /** Sets the content type for the message
+    /** 
+     * Sets the content type for the message
      * @param mimeType a mime type e.g. "text/plain"
      */
     public void setMimeType( String mimeType )
@@ -119,7 +125,8 @@ public class Message
         specified = true;
     }
 
-    /** Returns the content type
+    /** 
+     * Returns the content type
      * @return the mime type
      */
     public String getMimeType()
@@ -127,7 +134,8 @@ public class Message
         return mimeType;
     }
 
-    /** prints the message onto an output stream
+    /** 
+     * Prints the message onto an output stream
      * @param out The print stream to write to
      * @throws IOException if an error occurs
      */
@@ -158,7 +166,8 @@ public class Message
         }
     }
 
-    /** returns true iff the mimeType has been set.
+    /** 
+     * Returns true iff the mimeType has been set.
      * @return false if the default value is in use
      */
     public boolean isMimeTypeSpecified()

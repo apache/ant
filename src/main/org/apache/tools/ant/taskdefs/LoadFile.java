@@ -72,6 +72,7 @@ import java.util.Vector;
  *
  * @author Steve Loughran
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @since Ant 1.5
  * @ant.task category="utility"
  */
 public final class LoadFile extends Task {
@@ -103,7 +104,7 @@ public final class LoadFile extends Task {
     private final Vector filterChains = new Vector();
 
     /**
-     * Encoding to use for filenames, defaults to the platform's default
+     * Encoding to use for input, defaults to the platform's default
      * encoding. <p>
      *
      * For a list of possible values see <a href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
@@ -192,7 +193,8 @@ public final class LoadFile extends Task {
 
             if (text != null) {
                 project.setNewProperty(property, text);
-                log("loaded " + text.length() + " characters",Project.MSG_VERBOSE);
+                log("loaded " + text.length() + " characters",
+                    Project.MSG_VERBOSE);
                 log(property+" := "+text,Project.MSG_DEBUG);
             }
 

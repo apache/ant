@@ -66,12 +66,14 @@ import org.apache.tools.mail.MailMessage;
  * Class responsible for sending email through raw protocol methods.
  *
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  */
 class PlainMailer
     extends Mailer
 {
-    /** Sends the email using the apache {@link org.apache.tools.mail.MailMessage MailMessage} class.
+    /** 
+     * Sends the email using the apache MailMessage class.
+     * @see org.apache.tools.mail.MailMessage
      */
     public void send()
     {
@@ -129,7 +131,8 @@ class PlainMailer
 
     }
 
-    /** Attaches a file to this email
+    /** 
+     * Attaches a file to this email
      * @param file The file to attache
      * @param out The message stream to add to
      * @throws IOException if errors occur
@@ -140,7 +143,8 @@ class PlainMailer
         if( !file.exists() || !file.canRead() )
         {
             throw new BuildException( "File \"" + file.getName()
-                                      + "\" does not exist or is not readable." );
+                                      + "\" does not exist or is not "
+                                      + "readable." );
         }
 
         if( includeFileNames )

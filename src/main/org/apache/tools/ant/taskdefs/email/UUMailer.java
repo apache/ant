@@ -65,7 +65,7 @@ import sun.misc.UUEncoder;
  * An emailer that uuencodes attachments.
  *
  * @author roxspring@yahoo.com Rob Oxspring
- * @since 1.5
+ * @since Ant 1.5
  */
 class UUMailer
     extends PlainMailer
@@ -76,7 +76,8 @@ class UUMailer
         if( !file.exists() || !file.canRead() )
         {
             throw new BuildException( "File \"" + file.getName()
-                                      + "\" does not exist or is not readable." );
+                                      + "\" does not exist or is not "
+                                      + "readable." );
         }
 
         FileInputStream finstr = new FileInputStream( file );
