@@ -139,6 +139,9 @@ Fixed bugs:
   variable when logged into workstations using Novell authentication.
   Bugzilla Report 30366.
 
+* DependScanner.getResource() always returned nonexistent resources,
+  even when the resource actually existed.  Bugzilla Report 30558.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
