@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="concat-test" basedir="." default="test1">
+
+  <property name="tmp.file" value="concat.tmp" />
+  <property name="tmp.file.2" value="concat.tmp.2" />
+
+  <property name="world" value="World" />
+
+  <target name="test1">
+    <concat>
+    </concat>
+  </target>
+
+  <target name="test2">
+    <concat destfile="">Hello, ${world}!</concat>
+  </target>
+
+  <target name="test3">
+    <concat destfile="${tmp.file}">Hello, ${world}!</concat>
+  </target>
+
+  <target name="test4">
+    <concat destfile="${tmp.file.2}">
+      <fileset dir="${basedir}" includes="${tmp.file}" />
+      <filelist dir="${basedir}" files="${tmp.file},${tmp.file}" />
+    </concat>
+  </target>
+
+  <target name="test5">
+    <concat>Hello, ${world}!</concat>
+  </target>
+
+</project>
