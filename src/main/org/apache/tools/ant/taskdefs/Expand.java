@@ -63,9 +63,9 @@ import java.util.zip.*;
  * @author costin@dnt.ro
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
-public class Expand extends Task {
-    private String dest; // req
-    private String source; // req
+public class Expand extends MatchingTask {
+    private File dest; // req
+    private File source; // req
     
     /**
      * Do the work.
@@ -84,9 +84,28 @@ public class Expand extends Task {
         touch.setTaskName(getTaskName());
         touch.setLocation(getLocation());
         
-        File srcF=project.resolveFile(source);
-        File dir=project.resolveFile(dest);
+        if (source == null) {
+            throw new BuildException("Source attribute must be specified");
+        }
+
+        if (source.isDirectory()) {
+            // get all the files in the descriptor directory
+            DirectoryScanner ds = super.getDirectoryScanner(source);
+    
+            String[] files = ds.getIncludedFiles();
+            for (int i = 0; i < files.length; ++i) {
+                File file = new File(source, files[i]);
+                expandFile(touch, file, dest);
+            }
+        }
+        else {
+            expandFile(touch, source, dest);
+        }
         
+
+    }
+
+    private void expandFile(Touch touch, File srcF, File dir) {
         ZipInputStream zis = null;
 	try {
 	    
@@ -146,7 +165,7 @@ public class Expand extends Task {
      *
      * @param d Path to the directory.
      */
-    public void setDest(String d) {
+    public void setDest(File d) {
 	this.dest=d;
     }
 
@@ -155,7 +174,7 @@ public class Expand extends Task {
      *
      * @param s Path to zip-file.
      */
-    public void setSrc(String s) {
+    public void setSrc(File s) {
 	this.source = s;
     }
 }
