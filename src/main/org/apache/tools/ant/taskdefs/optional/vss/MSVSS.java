@@ -48,61 +48,60 @@ import org.apache.tools.ant.types.Commandline;
  */
 public abstract class MSVSS extends Task implements MSVSSConstants {
 
-    private String m_SSDir = null;
-    private String m_vssLogin = null;
-    private String m_vssPath = null;
-    private String m_serverPath = null;
+    private String ssDir = null;
+    private String vssLogin = null;
+    private String vssPath = null;
+    private String serverPath = null;
 
     /**  Version */
-    private String m_Version = null;
+    private String version = null;
     /**  Date */
-    private String m_Date = null;
+    private String date = null;
     /**  Label */
-    private String m_Label = null;
+    private String label = null;
     /**  Auto response */
-    private String m_AutoResponse = null;
+    private String autoResponse = null;
     /**  Local path */
-    private String m_LocalPath = null;
+    private String localPath = null;
     /**  Comment */
-    private String m_Comment = null;
+    private String comment = null;
     /**  From label */
-    private String m_FromLabel = null;
+    private String fromLabel = null;
     /**  To label */
-    private String m_ToLabel = null;
+    private String toLabel = null;
     /**  Output file name */
-    private String m_OutputFileName = null;
+    private String outputFileName = null;
     /**  User */
-    private String m_User = null;
+    private String user = null;
     /**  From date */
-    private String m_FromDate = null;
+    private String fromDate = null;
     /**  To date */
-    private String m_ToDate = null;
+    private String toDate = null;
     /**  History style */
-    private String m_Style = null;
+    private String style = null;
     /**  Quiet defaults to false */
-    private boolean m_Quiet = false;
+    private boolean quiet = false;
     /**  Recursive defaults to false */
-    private boolean m_Recursive = false;
+    private boolean recursive = false;
     /**  Writable defaults to false */
-    private boolean m_Writable = false;
+    private boolean writable = false;
     /**  Fail on error defaults to true */
-    private boolean m_FailOnError = true;
+    private boolean failOnError = true;
     /**  Get local copy for checkout defaults to true */
-    private boolean m_getLocalCopy = true;
+    private boolean getLocalCopy = true;
     /**  Number of days offset for History */
-    private int m_NumDays = Integer.MIN_VALUE;
+    private int numDays = Integer.MIN_VALUE;
     /**  Date format for History */
-    private DateFormat m_DateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+    private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
     /**  Timestamp for retreived files */
-    private CurrentModUpdated m_timestamp = null;
+    private CurrentModUpdated timestamp = null;
     /**  Behaviour for writable files */
-    private WritableFiles m_writablefiles = null;
+    private WritableFiles writableFiles = null;
 
     /**
      * Each sub-class must implemnt this method and return the constructed
      * command line to be executed. It is up to the sub-task to determine the
      * required attrubutes and their order.
-     *
      * @return    The Constructed command line.
      */
     abstract Commandline buildCmdLine();
@@ -110,11 +109,10 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     /**
      * Directory where <code>ss.exe</code> resides.
      * By default the task expects it to be in the PATH.
-     *
      * @param  dir  The directory containing ss.exe.
      */
     public final void setSsdir(String dir) {
-        m_SSDir = Project.translatePath(dir);
+        this.ssDir = Project.translatePath(dir);
     }
 
     /**
@@ -122,11 +120,10 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * <p>
      * You can omit the password if your database is not password protected.
      * If you have a password and omit it, Ant will hang.
-     *
-     * @param  login  The login string to use.
+     * @param  vssLogin  The login string to use.
      */
-    public final void setLogin(String login) {
-        m_vssLogin = login;
+    public final void setLogin(final String vssLogin) {
+        this.vssLogin = vssLogin;
     }
 
     /**
@@ -134,42 +131,38 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * the action on.
      * <p>
      * A prefix of 'vss://' will be removed if specified.
-     *
      * @param  vssPath  The VSS project path.
-     *
      * @ant.attribute group="required"
      */
     public final void setVsspath(String vssPath) {
         String projectPath;
-        if (vssPath.startsWith("vss://")) {
+        if (vssPath.startsWith("vss://")) { //$NON-NLS-1$
             projectPath = vssPath.substring(5);
         } else {
             projectPath = vssPath;
         }
 
         if (projectPath.startsWith(PROJECT_PREFIX)) {
-            m_vssPath = projectPath;
+            vssPath = projectPath;
         } else {
-            m_vssPath = PROJECT_PREFIX + projectPath;
+            vssPath = PROJECT_PREFIX + projectPath;
         }
     }
 
     /**
      * Directory where <code>srssafe.ini</code> resides.
-     *
      * @param  serverPath  The path to the VSS server.
      */
-    public final void setServerpath(String serverPath) {
-        m_serverPath = serverPath;
+    public final void setServerpath(final String serverPath) {
+        this.serverPath = serverPath;
     }
 
     /**
      * Indicates if the build should fail if the Sourcesafe command does. Defaults to true.
-     *
      * @param failOnError True if task should fail on any error.
      */
-    public final void setFailOnError (boolean failOnError) {
-        m_FailOnError = failOnError;
+    public final void setFailOnError(final boolean failOnError) {
+        this.failOnError = failOnError;
     }
 
     /**
@@ -191,256 +184,244 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     // Special setters for the sub-classes
 
-    protected void setInternalComment(String text) {
-        m_Comment = text;
+    protected void setInternalComment(final String comment) {
+        this.comment = comment;
     }
 
-    protected void setInternalAutoResponse(String text) {
-        m_AutoResponse = text;
+    protected void setInternalAutoResponse(final String autoResponse) {
+        this.autoResponse = autoResponse;
     }
 
-    protected void setInternalDate(String text) {
-        m_Date = text;
+    protected void setInternalDate(final String date) {
+        this.date = date;
     }
 
-    protected void setInternalDateFormat(DateFormat date) {
-        m_DateFormat = date;
+    protected void setInternalDateFormat(final DateFormat dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
-    protected void setInternalFailOnError(boolean fail) {
-        m_FailOnError = fail;
+    protected void setInternalFailOnError(final boolean failOnError) {
+        this.failOnError = failOnError;
     }
 
-    protected void setInternalFromDate(String text) {
-        m_FromDate = text;
+    protected void setInternalFromDate(final String fromDate) {
+        this.fromDate = fromDate;
     }
 
-    protected void setInternalFromLabel(String text) {
-        m_FromLabel = text;
+    protected void setInternalFromLabel(final String fromLabel) {
+        this.fromLabel = fromLabel;
     }
 
-    protected void setInternalLabel(String text) {
-        m_Label = text;
+    protected void setInternalLabel(final String label) {
+        this.label = label;
     }
 
-    protected void setInternalLocalPath(String text) {
-        m_LocalPath = text;
+    protected void setInternalLocalPath(final String localPath) {
+        this.localPath = localPath;
     }
 
-    protected void setInternalNumDays(int days) {
-        m_NumDays = days;
+    protected void setInternalNumDays(final int numDays) {
+        this.numDays = numDays;
     }
 
-    protected void setInternalOutputFilename(String text) {
-        m_OutputFileName = text;
+    protected void setInternalOutputFilename(final String outputFileName) {
+        this.outputFileName = outputFileName;
     }
 
-    protected void setInternalQuiet(boolean quiet) {
-        m_Quiet = quiet;
+    protected void setInternalQuiet(final boolean quiet) {
+        this.quiet = quiet;
     }
 
-    protected void setInternalRecursive(boolean recursive) {
-        m_Recursive = recursive;
+    protected void setInternalRecursive(final boolean recursive) {
+        this.recursive = recursive;
     }
 
-    protected void setInternalStyle(String style) {
-        m_Style = style;
+    protected void setInternalStyle(final String style) {
+        this.style = style;
     }
 
-    protected void setInternalToDate(String text) {
-        m_ToDate = text;
+    protected void setInternalToDate(final String toDate) {
+        this.toDate = toDate;
     }
 
-    protected void setInternalToLabel(String text) {
-        m_ToLabel = text;
+    protected void setInternalToLabel(final String toLabel) {
+        this.toLabel = toLabel;
     }
 
-    protected void setInternalUser(String user) {
-        m_User = user;
+    protected void setInternalUser(final String user) {
+        this.user = user;
     }
 
-    protected void setInternalVersion(String text) {
-        m_Version = text;
+    protected void setInternalVersion(final String version) {
+        this.version = version;
     }
 
-    protected void setInternalWritable(boolean writable) {
-        m_Writable = writable;
+    protected void setInternalWritable(final boolean writable) {
+        this.writable = writable;
     }
 
-    protected void setInternalFileTimeStamp(CurrentModUpdated timestamp) {
-        m_timestamp = timestamp;
+    protected void setInternalFileTimeStamp(final CurrentModUpdated timestamp) {
+        this.timestamp = timestamp;
     }
 
-    protected void setInternalWritableFiles(WritableFiles files) {
-        m_writablefiles = files;
+    protected void setInternalWritableFiles(final WritableFiles writableFiles) {
+        this.writableFiles = writableFiles;
     }
 
-    protected void setInternalGetLocalCopy(boolean get) {
-        m_getLocalCopy = get;
+    protected void setInternalGetLocalCopy(final boolean getLocalCopy) {
+        this.getLocalCopy = getLocalCopy;
     }
 
     /**
      * Gets the sscommand string. "ss" or "c:\path\to\ss"
-     *
      * @return    The path to ss.exe or just ss if sscommand is not set.
      */
     protected String getSSCommand() {
-        if (m_SSDir == null) {
+        if (ssDir == null) {
             return SS_EXE;
         }
-        return m_SSDir.endsWith(File.separator) ? m_SSDir + SS_EXE : m_SSDir
+        return ssDir.endsWith(File.separator) ? ssDir + SS_EXE : ssDir
                  + File.separator + SS_EXE;
     }
 
     /**
      * Gets the vssserverpath string.
-     *
      * @return    null if vssserverpath is not set.
      */
     protected String getVsspath() {
-        return m_vssPath;
+        return vssPath;
     }
 
     /**
-     *  Gets the quiet string. -O-
-     *
-     * @return    An empty string if quiet is not set or is false.
+     * Gets the quiet string. -O-
+     * @return An empty string if quiet is not set or is false.
      */
     protected String getQuiet() {
-        return m_Quiet ? FLAG_QUIET : "";
+        return quiet ? FLAG_QUIET : "";
     }
 
     /**
-     *  Gets the recursive string. "-R"
-     *
-     * @return    An empty string if recursive is not set or is false.
+     * Gets the recursive string. "-R"
+     * @return An empty string if recursive is not set or is false.
      */
     protected String getRecursive() {
-        return m_Recursive ? FLAG_RECURSION : "";
+        return recursive ? FLAG_RECURSION : "";
     }
 
     /**
-     *  Gets the writable string. "-W"
-     *
-     * @return    An empty string if writable is not set or is false.
+     * Gets the writable string. "-W"
+     * @return An empty string if writable is not set or is false.
      */
     protected String getWritable() {
-        return m_Writable ? FLAG_WRITABLE : "";
+        return writable ? FLAG_WRITABLE : "";
     }
 
     /**
-     *  Gets the label string. "-Lbuild1"
-     *
-     *  Max label length is 32 chars
-     *
-     * @return    An empty string if label is not set.
+     * Gets the label string. "-Lbuild1"
+     * Max label length is 32 chars
+     * @return An empty string if label is not set.
      */
     protected String getLabel() {
-        if (m_Label != null && m_Label.length() > 0) {
-                return FLAG_LABEL + getShortLabel();
-        } else {
-            return "";
-        }
+    	String shortLabel="";
+        if (label != null && label.length() > 0) {
+                shortLabel = FLAG_LABEL + getShortLabel();
+        } 
+        return shortLabel;
     }
     /**
-     * return at most the 30 first chars of the label, logging a warning message about the truncation
+     * Return at most the 30 first chars of the label, logging a warning message about the truncation
      * @return at most the 30 first chars of the label
      */
     private String getShortLabel() {
-        if (m_Label !=  null && m_Label.length() > 31) {
-            String label = m_Label.substring(0, 30);
-            log("Label is longer than 31 characters, truncated to: " + label, Project.MSG_WARN);
-            return label;
+    	String shortLabel;
+        if (label !=  null && label.length() > 31) {
+        	shortLabel = this.label.substring(0, 30);
+            log("Label is longer than 31 characters, truncated to: " + shortLabel, Project.MSG_WARN);
         } else {
-            return m_Label;
+        	shortLabel = label;
         }
+        return shortLabel;
     }
     /**
-     *  Gets the style string. "-Lbuild1"
-     *
-     * @return    An empty string if label is not set.
+     * Gets the style string. "-Lbuild1"
+     * @return An empty string if label is not set.
      */
     protected String getStyle() {
-        return m_Style != null ? m_Style : "";
+        return style != null ? style : "";
     }
 
     /**
-     *  Gets the version string. Returns the first specified of version "-V1.0",
-     *  date "-Vd01.01.01", label "-Vlbuild1".
-     *
-     * @return    An empty string if a version, date and label are not set.
+     * Gets the version string. Returns the first specified of version "-V1.0",
+     * date "-Vd01.01.01", label "-Vlbuild1".
+     * @return An empty string if a version, date and label are not set.
      */
     protected String getVersionDateLabel() {
-        if (m_Version != null) {
-            return FLAG_VERSION + m_Version;
-        } else if (m_Date != null) {
-            return FLAG_VERSION_DATE + m_Date;
+    	String versionDateLabel = "";
+        if (version != null) {
+        	versionDateLabel = FLAG_VERSION + version;
+        } else if (date != null) {
+        	versionDateLabel = FLAG_VERSION_DATE + date;
         } else {
             // Use getShortLabel() so labels longer then 30 char are truncated
             // and the user is warned
-            String label = getShortLabel();
-            if (label != null && !label.equals("")) {
-                return FLAG_VERSION_LABEL + label;
+            String shortLabel = getShortLabel();
+            if (shortLabel != null && !shortLabel.equals("")) {
+            	versionDateLabel = FLAG_VERSION_LABEL + shortLabel;
             }
         }
-        return "";
+        return versionDateLabel;
     }
 
     /**
-     *  Gets the version string.
-     *
-     * @return    An empty string if a version is not set.
+     * Gets the version string.
+     * @return An empty string if a version is not set.
      */
     protected String getVersion() {
-        return m_Version != null ? FLAG_VERSION + m_Version : "";
+        return version != null ? FLAG_VERSION + version : "";
     }
 
     /**
-     *  Gets the localpath string. "-GLc:\source" <p>
-     *
-     *  The localpath is created if it didn't exist.
-     *
-     * @return    An empty string if localpath is not set.
+     * Gets the localpath string. "-GLc:\source" <p>
+     * The localpath is created if it didn't exist.
+     * @return An empty string if localpath is not set.
      */
     protected String getLocalpath() {
-        if (m_LocalPath == null) {
-            return "";
-        } else {
-            // make sure m_LocalDir exists, create it if it doesn't
-            File dir = getProject().resolveFile(m_LocalPath);
+    	String lclPath = ""; //set to empty str if no local path return
+    	if (localPath != null) {
+    		//make sure m_LocalDir exists, create it if it doesn't
+            File dir = getProject().resolveFile(localPath);
             if (!dir.exists()) {
                 boolean done = dir.mkdirs();
                 if (!done) {
-                    String msg = "Directory " + m_LocalPath + " creation was not "
+                    String msg = "Directory " + localPath + " creation was not "
                             + "successful for an unknown reason";
                     throw new BuildException(msg, getLocation());
                 }
                 getProject().log("Created dir: " + dir.getAbsolutePath());
             }
-            return FLAG_OVERRIDE_WORKING_DIR + m_LocalPath;
-        }
+            lclPath = FLAG_OVERRIDE_WORKING_DIR + localPath;
+    	}
+        return lclPath;
     }
 
     /**
-     *  Gets the comment string. "-Ccomment text"
-     *
-     * @return    A comment of "-" if comment is not set.
+     * Gets the comment string. "-Ccomment text"
+     * @return A comment of "-" if comment is not set.
      */
     protected String getComment() {
-        return m_Comment != null ? FLAG_COMMENT + m_Comment : FLAG_COMMENT + "-";
+        return comment != null ? FLAG_COMMENT + comment : FLAG_COMMENT + "-";
     }
 
     /**
-     *  Gets the auto response string. This can be Y "-I-Y" or N "-I-N".
-     *
-     * @return    The default value "-I-" if autoresponse is not set.
+     * Gets the auto response string. This can be Y "-I-Y" or N "-I-N".
+     * @return The default value "-I-" if autoresponse is not set.
      */
     protected String getAutoresponse() {
-        if (m_AutoResponse == null) {
+        if (autoResponse == null) {
             return FLAG_AUTORESPONSE_DEF;
-        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
+        } else if (autoResponse.equalsIgnoreCase("Y")) {
             return FLAG_AUTORESPONSE_YES;
-        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
+        } else if (autoResponse.equalsIgnoreCase("N")) {
             return FLAG_AUTORESPONSE_NO;
         } else {
             return FLAG_AUTORESPONSE_DEF;
@@ -448,69 +429,65 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     *  Gets the login string. This can be user and password, "-Yuser,password"
-     *  or just user "-Yuser".
-     *
-     * @return    An empty string if login is not set.
+     * Gets the login string. This can be user and password, "-Yuser,password"
+     * or just user "-Yuser".
+     * @return An empty string if login is not set.
      */
     protected String getLogin() {
-        return m_vssLogin != null ? FLAG_LOGIN + m_vssLogin : "";
+        return vssLogin != null ? FLAG_LOGIN + vssLogin : "";
     }
 
     /**
-     *  Gets the output file string. "-Ooutput.file"
-     *
-     * @return    An empty string if user is not set.
+     * Gets the output file string. "-Ooutput.file"
+     * @return An empty string if user is not set.
      */
     protected String getOutput() {
-        return m_OutputFileName != null ? FLAG_OUTPUT + m_OutputFileName : "";
+        return outputFileName != null ? FLAG_OUTPUT + outputFileName : "";
     }
 
     /**
-     *  Gets the user string. "-Uusername"
-     *
-     * @return    An empty string if user is not set.
+     * Gets the user string. "-Uusername"
+     * @return An empty string if user is not set.
      */
     protected String getUser() {
-        return m_User != null ? FLAG_USER + m_User : "";
+        return user != null ? FLAG_USER + user : "";
     }
 
     /**
-     *  Gets the version string. This can be to-from "-VLbuild2~Lbuild1", from
-     *  "~Lbuild1" or to "-VLbuild2".
-     *
-     * @return    An empty string if neither tolabel or fromlabel are set.
+     * Gets the version string. This can be to-from "-VLbuild2~Lbuild1", from
+     * "~Lbuild1" or to "-VLbuild2".
+     * @return An empty string if neither tolabel or fromlabel are set.
      */
     protected String getVersionLabel() {
-        if (m_FromLabel == null && m_ToLabel == null) {
+        if (fromLabel == null && toLabel == null) {
             return "";
         }
-        if (m_FromLabel != null && m_ToLabel != null) {
-            if (m_FromLabel.length() > 31) {
-                m_FromLabel = m_FromLabel.substring(0, 30);
+        if (fromLabel != null && toLabel != null) {
+            if (fromLabel.length() > 31) {
+                fromLabel = fromLabel.substring(0, 30);
                 log("FromLabel is longer than 31 characters, truncated to: "
-                    + m_FromLabel, Project.MSG_WARN);
+                    + fromLabel, Project.MSG_WARN);
             }
-            if (m_ToLabel.length() > 31) {
-                m_ToLabel = m_ToLabel.substring(0, 30);
+            if (toLabel.length() > 31) {
+                toLabel = toLabel.substring(0, 30);
                 log("ToLabel is longer than 31 characters, truncated to: "
-                    + m_ToLabel, Project.MSG_WARN);
+                    + toLabel, Project.MSG_WARN);
             }
-            return FLAG_VERSION_LABEL + m_ToLabel + VALUE_FROMLABEL + m_FromLabel;
-        } else if (m_FromLabel != null) {
-            if (m_FromLabel.length() > 31) {
-                m_FromLabel = m_FromLabel.substring(0, 30);
+            return FLAG_VERSION_LABEL + toLabel + VALUE_FROMLABEL + fromLabel;
+        } else if (fromLabel != null) {
+            if (fromLabel.length() > 31) {
+                fromLabel = fromLabel.substring(0, 30);
                 log("FromLabel is longer than 31 characters, truncated to: "
-                    + m_FromLabel, Project.MSG_WARN);
+                    + fromLabel, Project.MSG_WARN);
             }
-            return FLAG_VERSION + VALUE_FROMLABEL + m_FromLabel;
+            return FLAG_VERSION + VALUE_FROMLABEL + fromLabel;
         } else {
-            if (m_ToLabel.length() > 31) {
-                m_ToLabel = m_ToLabel.substring(0, 30);
+            if (toLabel.length() > 31) {
+                toLabel = toLabel.substring(0, 30);
                 log("ToLabel is longer than 31 characters, truncated to: "
-                    + m_ToLabel, Project.MSG_WARN);
+                    + toLabel, Project.MSG_WARN);
             }
-            return FLAG_VERSION_LABEL + m_ToLabel;
+            return FLAG_VERSION_LABEL + toLabel;
         }
     }
 
@@ -520,50 +497,48 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @throws BuildException
      */
     protected String getVersionDate() throws BuildException {
-        if (m_FromDate == null && m_ToDate == null
-            && m_NumDays == Integer.MIN_VALUE) {
+        if (fromDate == null && toDate == null
+            && numDays == Integer.MIN_VALUE) {
             return "";
         }
-        if (m_FromDate != null && m_ToDate != null) {
-            return FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + m_FromDate;
-        } else if (m_ToDate != null && m_NumDays != Integer.MIN_VALUE) {
+        if (fromDate != null && toDate != null) {
+            return FLAG_VERSION_DATE + toDate + VALUE_FROMDATE + fromDate;
+        } else if (toDate != null && numDays != Integer.MIN_VALUE) {
             try {
-                return FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE
-                        + calcDate(m_ToDate, m_NumDays);
+                return FLAG_VERSION_DATE + toDate + VALUE_FROMDATE
+                        + calcDate(toDate, numDays);
             } catch (ParseException ex) {
-                String msg = "Error parsing date: " + m_ToDate;
+                String msg = "Error parsing date: " + toDate;
                 throw new BuildException(msg, getLocation());
             }
-        } else if (m_FromDate != null && m_NumDays != Integer.MIN_VALUE) {
+        } else if (fromDate != null && numDays != Integer.MIN_VALUE) {
             try {
-                return FLAG_VERSION_DATE + calcDate(m_FromDate, m_NumDays)
-                        + VALUE_FROMDATE + m_FromDate;
+                return FLAG_VERSION_DATE + calcDate(fromDate, numDays)
+                        + VALUE_FROMDATE + fromDate;
             } catch (ParseException ex) {
-                String msg = "Error parsing date: " + m_FromDate;
+                String msg = "Error parsing date: " + fromDate;
                 throw new BuildException(msg, getLocation());
             }
         } else {
-            return m_FromDate != null ? FLAG_VERSION + VALUE_FROMDATE
-                    + m_FromDate : FLAG_VERSION_DATE + m_ToDate;
+            return fromDate != null ? FLAG_VERSION + VALUE_FROMDATE
+                    + fromDate : FLAG_VERSION_DATE + toDate;
         }
     }
 
     /**
      * Builds and returns the -G- flag if required.
-     *
      * @return An empty string if get local copy is true.
      */
     protected String getGetLocalCopy() {
-        return (!m_getLocalCopy) ? FLAG_NO_GET : "";
+        return (!getLocalCopy) ? FLAG_NO_GET : "";
     }
 
     /**
      * Gets the value of the fail on error flag.
-     *
      * @return    True if the FailOnError flag has been set or if 'writablefiles=skip'.
      */
     private boolean getFailOnError() {
-        return getWritableFiles().equals(WRITABLE_SKIP) ? false : m_FailOnError;
+        return getWritableFiles().equals(WRITABLE_SKIP) ? false : failOnError;
     }
 
 
@@ -577,11 +552,11 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return The default file time flag, if not set.
      */
     public String getFileTimeStamp() {
-        if (m_timestamp == null) {
+        if (timestamp == null) {
             return "";
-        } else if (m_timestamp.getValue().equals(TIME_MODIFIED)) {
+        } else if (timestamp.getValue().equals(TIME_MODIFIED)) {
             return FLAG_FILETIME_MODIFIED;
-        } else if (m_timestamp.getValue().equals(TIME_UPDATED)) {
+        } else if (timestamp.getValue().equals(TIME_UPDATED)) {
             return FLAG_FILETIME_UPDATED;
         } else {
             return FLAG_FILETIME_DEF;
@@ -594,14 +569,14 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return An empty String, if not set.
      */
     public String getWritableFiles() {
-        if (m_writablefiles == null) {
+        if (writableFiles == null) {
             return "";
-        } else if (m_writablefiles.getValue().equals(WRITABLE_REPLACE)) {
+        } else if (writableFiles.getValue().equals(WRITABLE_REPLACE)) {
             return FLAG_REPLACE_WRITABLE;
-        } else if (m_writablefiles.getValue().equals(WRITABLE_SKIP)) {
+        } else if (writableFiles.getValue().equals(WRITABLE_SKIP)) {
             // ss.exe exits with '100', when files have been skipped
             // so we have to ignore the failure
-            m_FailOnError = false;
+            failOnError = false;
             return FLAG_SKIP_WRITABLE;
         } else {
             return "";
@@ -622,7 +597,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
             // If location of ss.ini is specified we need to set the
             // environment-variable SSDIR to this value
-            if (m_serverPath != null) {
+            if (serverPath != null) {
                 String[] env = exe.getEnvironment();
                 if (env == null) {
                     env = new String[0];
@@ -631,7 +606,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
                 for (int i = 0; i < env.length; i++) {
                     newEnv[i] = env[i];
                 }
-                newEnv[env.length] = "SSDIR=" + m_serverPath;
+                newEnv[env.length] = "SSDIR=" + serverPath;
 
                 exe.setEnvironment(newEnv);
             }
@@ -651,20 +626,18 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * Calculates the start date for version comparison.
      * <p>
      * Calculates the date numDay days earlier than startdate.
-     * @param   fromDate    The start date.
-     * @param   numDays     The number of days to add.
+     * @param   startDate    The start date.
+     * @param   daysToAdd     The number of days to add.
      * @return The calculated date.
      * @throws ParseException
      */
-    private String calcDate(String fromDate, int numDays) throws ParseException {
-        String toDate = null;
-        Date currdate = new Date();
-        Calendar calend = new GregorianCalendar();
-        currdate = m_DateFormat.parse(fromDate);
-        calend.setTime(currdate);
-        calend.add(Calendar.DATE, numDays);
-        toDate = m_DateFormat.format(calend.getTime());
-        return toDate;
+    private String calcDate(String startDate, int daysToAdd) throws ParseException {
+        Date currentDate = new Date();
+        Calendar calendar = new GregorianCalendar();
+        currentDate = dateFormat.parse(startDate);
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DATE, daysToAdd);
+        return dateFormat.format(calendar.getTime());
     }
 
     /**
