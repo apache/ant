@@ -62,32 +62,32 @@ package org.apache.tools.ant.taskdefs.optional.sos;
  */
 public interface SOSCmd {
     // soscmd Command options
-    public final static String COMMAND_SOS_EXE = "soscmd";
-    public final static String COMMAND_GET_FILE = "GetFile";
-    public final static String COMMAND_GET_PROJECT = "GetProject";
-    public final static String COMMAND_CHECKOUT_FILE = "CheckOutFile";
-    public final static String COMMAND_CHECKOUT_PROJECT = "CheckOutProject";
-    public final static String COMMAND_CHECKIN_FILE = "CheckInFile";
-    public final static String COMMAND_CHECKIN_PROJECT = "CheckInProject";
-    public final static String COMMAND_HISTORY = "GetFileHistory";
-    public final static String COMMAND_LABEL = "AddLabel";
-    public final static String PROJECT_PREFIX = "$";
+    String COMMAND_SOS_EXE = "soscmd";
+    String COMMAND_GET_FILE = "GetFile";
+    String COMMAND_GET_PROJECT = "GetProject";
+    String COMMAND_CHECKOUT_FILE = "CheckOutFile";
+    String COMMAND_CHECKOUT_PROJECT = "CheckOutProject";
+    String COMMAND_CHECKIN_FILE = "CheckInFile";
+    String COMMAND_CHECKIN_PROJECT = "CheckInProject";
+    String COMMAND_HISTORY = "GetFileHistory";
+    String COMMAND_LABEL = "AddLabel";
+    String PROJECT_PREFIX = "$";
     // soscmd Option flags
-    public final static String FLAG_COMMAND = "-command";
-    public final static String FLAG_VSS_SERVER = "-database";
-    public final static String FLAG_USERNAME = "-name";
-    public final static String FLAG_PASSWORD = "-password";
-    public final static String FLAG_COMMENT = "-log";
-    public final static String FLAG_WORKING_DIR = "-workdir";
-    public final static String FLAG_RECURSION = "-recursive";
-    public final static String FLAG_VERSION = "-revision";
-    public final static String FLAG_LABEL = "-label";
-    public final static String FLAG_NO_COMPRESSION = "-nocompress";
-    public final static String FLAG_NO_CACHE = "-nocache";
-    public final static String FLAG_SOS_SERVER = "-server";
-    public final static String FLAG_SOS_HOME = "-soshome";
-    public final static String FLAG_PROJECT = "-project";
-    public final static String FLAG_FILE = "-file";
-    public final static String FLAG_VERBOSE = "-verbose";
+    String FLAG_COMMAND = "-command";
+    String FLAG_VSS_SERVER = "-database";
+    String FLAG_USERNAME = "-name";
+    String FLAG_PASSWORD = "-password";
+    String FLAG_COMMENT = "-log";
+    String FLAG_WORKING_DIR = "-workdir";
+    String FLAG_RECURSION = "-recursive";
+    String FLAG_VERSION = "-revision";
+    String FLAG_LABEL = "-label";
+    String FLAG_NO_COMPRESSION = "-nocompress";
+    String FLAG_NO_CACHE = "-nocache";
+    String FLAG_SOS_SERVER = "-server";
+    String FLAG_SOS_HOME = "-soshome";
+    String FLAG_PROJECT = "-project";
+    String FLAG_FILE = "-file";
+    String FLAG_VERBOSE = "-verbose";
 }
 

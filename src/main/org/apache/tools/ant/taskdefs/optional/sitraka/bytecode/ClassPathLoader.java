@@ -119,10 +119,10 @@ public class ClassPathLoader {
     /** the interface to implement to look up for specific resources */
     public interface FileLoader {
         /** the file url that is looked for .class files */
-        public File getFile();
+        File getFile();
 
         /** return the set of classes found in the file */
-        public ClassFile[] getClasses() throws IOException;
+        ClassFile[] getClasses() throws IOException;
     }
 
     /**

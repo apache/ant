@@ -60,26 +60,26 @@ package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes;
  */
 public interface AttributeInfo {
 
-    public final static String SOURCE_FILE = "SourceFile";
+    String SOURCE_FILE = "SourceFile";
 
-    public final static String CONSTANT_VALUE = "ConstantValue";
+    String CONSTANT_VALUE = "ConstantValue";
 
-    public final static String CODE = "Code";
+    String CODE = "Code";
 
-    public final static String EXCEPTIONS = "Exceptions";
+    String EXCEPTIONS = "Exceptions";
 
-    public final static String LINE_NUMBER_TABLE = "LineNumberTable";
+    String LINE_NUMBER_TABLE = "LineNumberTable";
 
-    public final static String LOCAL_VARIABLE_TABLE = "LocalVariableTable";
+    String LOCAL_VARIABLE_TABLE = "LocalVariableTable";
 
-    public final static String INNER_CLASSES = "InnerClasses";
+    String INNER_CLASSES = "InnerClasses";
 
-    public final static String SOURCE_DIR = "SourceDir";
+    String SOURCE_DIR = "SourceDir";
 
-    public final static String SYNTHETIC = "Synthetic";
+    String SYNTHETIC = "Synthetic";
 
-    public final static String DEPRECATED = "Deprecated";
+    String DEPRECATED = "Deprecated";
 
-    public final static String UNKNOWN = "Unknown";
+    String UNKNOWN = "Unknown";
 
 }
