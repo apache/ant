@@ -267,6 +267,7 @@ public class XmlLogger implements BuildLogger {
                 parentElement.element.appendChild(targetElement.element);
             }
         }
+        targets.remove(target);
     }
 
     /**
@@ -324,6 +325,7 @@ public class XmlLogger implements BuildLogger {
                             + taskElement.element);
                 }
             }
+            tasks.remove(task);
         }
     }
 
