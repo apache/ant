@@ -198,7 +198,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the number of days to go back for Comparison
+     * Set the number of days to go back for Comparison.
      * <p>
      * The default value is 2 days. 
      */
@@ -207,7 +207,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
     
     /**
-     * Set the output file name for SourceSafe output
+     * Set the output file name for SourceSafe output.
      */
     public void setOutput(File outfile) {
         if ( outfile == null ) {
@@ -218,7 +218,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the Start Date for the Comparison of two versions in SourceSafe History
+     * Set the Start Date for the Comparison of two versions in SourceSafe History.
      */
     public void setDateFormat(String dateFormat) {
         if ( !(dateFormat.equals("") || dateFormat == null) ) {
@@ -344,7 +344,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Specify the detail of output
+     * Specify the detail of output.
      *
      * @param option valid values:
      * <ul>

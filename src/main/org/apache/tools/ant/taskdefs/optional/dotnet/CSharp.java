@@ -145,8 +145,9 @@ public class CSharp
         setIncludes(csc_file_pattern);
     }
 
-    /** name of the executable. the .exe suffix is deliberately not included
-     * in anticipation of the unix version
+    /** 
+     * Name of the executable. The .exe suffix is deliberately not 
+     * included in anticipation of the unix version
      */
     protected final static String csc_exe_name = "csc";
 

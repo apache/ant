@@ -451,7 +451,7 @@ public class IContract extends MatchingTask {
     /**
      * Sets the classpath to be used for invocation of iContract.
      *
-     * @path the classpath
+     * @param path the classpath
      */
     public void setClasspath( Path path ) {
         createClasspath().append( path );

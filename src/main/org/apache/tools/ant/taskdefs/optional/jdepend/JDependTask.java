@@ -125,7 +125,7 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Halt on Failure? default: false.
+     * Whether or not to halt on failure. Default: false.
      */
     public void setHaltonerror(boolean value) {
         _haltonerror = value;

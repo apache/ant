@@ -100,7 +100,6 @@ import java.io.FileOutputStream;
  *
  *@author     Matt Albrecht <a href="mailto:groboclown@users.sourceforge.net">
  *      groboclown@users.sourceforge.net</a>
- *@created    17-Jan-2002
  *@since      Ant 1.5
  */
 public class EchoProperties extends Task {

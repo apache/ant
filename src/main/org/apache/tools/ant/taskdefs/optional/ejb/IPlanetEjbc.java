@@ -84,7 +84,7 @@ import org.xml.sax.AttributeList;
  * Server (iAS).  The class will read a standard EJB descriptor (as well as an
  * EJB descriptor specific to iPlanet Application Server) to identify one or
  * more EJBs to process.  It will search for EJB "source" classes (the remote
- * interface, home interface, and EJB implementation class) and the EJB stubs
+; * interface, home interface, and EJB implementation class) and the EJB stubs
  * and skeletons in the specified destination directory.  Only if the stubs and
  * skeletons cannot be found or if they're out of date will the iPlanet
  * Application Server ejbc utility be run.
@@ -638,7 +638,7 @@ public class IPlanetEjbc {
      * have been processed, the list of EJBs found can be obtained by calling
      * the <code>getEjbs()</code> method.
      *
-     * @see    EjbInfo
+     * @see    IPlanetEjbc.EjbInfo
      * @author Greg Nelson
      *         <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */

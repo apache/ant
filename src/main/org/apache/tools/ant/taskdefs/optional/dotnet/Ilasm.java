@@ -120,7 +120,8 @@ public class Ilasm
         setIncludes(file_pattern);
     }
 
-    /** name of the executable. the .exe suffix is deliberately not included
+    /** 
+     * Name of the executable. The .exe suffix is deliberately not included
      * in anticipation of the unix version
      */
     protected final static String exe_name = "ilasm";
@@ -225,7 +226,7 @@ public class Ilasm
 
     /** test for a string containing something useful
      * @param string to test
-     * @returns true if the argument is not null or empty
+     * @return true if the argument is not null or empty
      */
     protected boolean notEmpty(String s) {
         return s != null && s.length() != 0;

@@ -215,7 +215,7 @@ public class JspC extends MatchingTask
     }
         
     /**
-     *  -uribase. the uri context of relative URI 
+     * The -uribase option. The uri context of relative URI 
      * references in the JSP pages. If it does not 
      * exist then it is derived from the location of the file
      * relative to the declared or derived value of -uriroot. 
@@ -231,7 +231,8 @@ public class JspC extends MatchingTask
     }
 
     /**
-     *  -uriroot <dir>The root directory that uri files should be resolved
+     *  The -uriroot option.
+     * <p>The root directory that uri files should be resolved
      *  against, (Default is the directory jspc is invoked from)
      *
      * @param  uriroot  The new Uribase value

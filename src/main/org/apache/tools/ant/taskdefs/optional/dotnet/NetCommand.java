@@ -84,7 +84,6 @@ all the command line/exe construction stuff. However, it may be handy in future
 to have a means of setting the path to point to the dotnet bin directory; in which
 case the shared code should go in here.
  @author Steve Loughran steve_l@iseran.com
- @created 2000-11-01
  @version 0.3
  */
 

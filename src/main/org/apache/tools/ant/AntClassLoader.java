@@ -87,9 +87,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     /**
      * An enumeration of all resources of a given name found within the
      * classpath of this class loader. This enumeration is used by the
-     * {@link #findResources(String) findResources} method, which is in
-     * turn used by the
-     * {@link ClassLoader#getResources ClassLoader.getResources} method.
+     * ClassLoader.findResources method, which is in
+     * turn used by the ClassLoader.getResources method.
      *
      * @see AntClassLoader#findResources(String)
      * @see java.lang.ClassLoader#getResources(String)

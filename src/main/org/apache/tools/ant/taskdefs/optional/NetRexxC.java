@@ -427,7 +427,7 @@ public class NetRexxC extends MatchingTask {
     }
 
     /**
-     * Executes the task, i.e. does the actual compiler call
+     * Executes the task - performs the actual compiler call.
      */
     public void execute() throws BuildException {
 

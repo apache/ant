@@ -175,7 +175,7 @@ public class MSVSSLABEL extends MSVSS
     }
 
     /**
-     * Set the label to apply in SourceSafe
+     * Set the label to apply in SourceSafe.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
@@ -211,7 +211,7 @@ public class MSVSSLABEL extends MSVSS
     }
 
     /**
-     * Set the stored version string
+     * Set the stored version string.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
@@ -235,7 +235,7 @@ public class MSVSSLABEL extends MSVSS
     }
 
     /**
-     * Set the comment to apply in SourceSafe
+     * Set the comment to apply in SourceSafe.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.

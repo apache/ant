@@ -191,7 +191,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Modify the RMI Skel. and Stub. to implement
+     * Modify the RMI Skeleton and Stub to implement
      * the implicit propagation of the transactionnal
      * context and security context.
      * For JOnAS 2.4 and next.

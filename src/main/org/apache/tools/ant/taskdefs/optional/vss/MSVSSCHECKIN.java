@@ -127,7 +127,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * Builds and returns the -GL flag command if required
+     * Builds and returns the -GL flag command if required.
      * <p>
      * The localpath is created if it didn't exist
      */
@@ -217,7 +217,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * Set the comment to apply in SourceSafe
+     * Set the comment to apply in SourceSafe.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.

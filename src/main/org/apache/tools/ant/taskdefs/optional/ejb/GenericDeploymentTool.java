@@ -419,7 +419,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *                           descriptor to be processed
      * @param saxParser          SAXParser which may be used to parse the XML
      *                           descriptor
-     * @thows BuildException     Thrown if the configuration is invalid
+     * @exception BuildException     Thrown if the configuration is invalid
      */
     protected void checkConfiguration(String descriptorFileName,
                                     SAXParser saxParser) throws BuildException {

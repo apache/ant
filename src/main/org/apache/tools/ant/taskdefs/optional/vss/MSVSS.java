@@ -130,7 +130,7 @@ public abstract class MSVSS extends Task {
     }
 
     /**
-     * Set the path to the item in vss to operate on
+     * Set the path to the item in vss to operate on.
      * <p>
      * Ant can't cope with a '$' sign in an attribute so we have to add it here.
      * Also we strip off any 'vss://' prefix which is an XMS special and should probably be removed!

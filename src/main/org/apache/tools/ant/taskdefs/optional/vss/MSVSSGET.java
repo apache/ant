@@ -194,7 +194,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Builds and returns the -GL flag command if required
+     * Builds and returns the -GL flag command if required.
      * <p>
      * The localpath is created if it didn't exist
      */
@@ -268,7 +268,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the stored version string
+     * Set the stored version string.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
@@ -284,7 +284,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the stored date string
+     * Set the stored date string.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
@@ -300,7 +300,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the labeled version to operate on in SourceSafe
+     * Set the labeled version to operate on in SourceSafe.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
@@ -316,7 +316,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Simple order of priority. Returns the first specified of version, date, label
+     * Simple order of priority. Returns the first specified of version, date, label.
      * If none of these was specified returns ""
      */
     public void getVersionCommand(Commandline cmd) {

@@ -120,7 +120,7 @@ public class RenameExtensions extends MatchingTask {
     }
 
     /**
-     * Executes the task, i.e. does the actual compiler call
+     * Executes the task.
      */
     public void execute() throws BuildException {
 

@@ -64,7 +64,7 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * A base class for creating tasks for executing commands on Continuus 5.1
+ * A base class for creating tasks for executing commands on Continuus 5.1.
  * <p>
  * The class extends the  task as it operates by executing the ccm.exe program
  * supplied with Continuus/Synergy. By default the task expects the ccm executable to be
