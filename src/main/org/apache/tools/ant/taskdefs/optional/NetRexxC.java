@@ -577,7 +577,7 @@ public class NetRexxC extends MatchingTask {
             BufferedReader in=new BufferedReader(new StringReader(out.toString()));
             log("replacing destdir '"+ddir+"' through sourcedir '"+sdir+"'", Project.MSG_VERBOSE);
             while ((l=in.readLine())!=null) {
-            	lb=new StringBuffer(l);
+                lb=new StringBuffer(l);
                 int idx;
                 while ((idx=l.indexOf(ddir))!=-1) { // path is mentioned in the message
                     lb.replace(idx,idx+dlen,sdir);
@@ -595,8 +595,8 @@ public class NetRexxC extends MatchingTask {
                 throw new BuildException("Compile failed, messages should have been provided.");
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace(); // we would like to know WHY this happened. Should never!
-            throw new BuildException("Unexpected IOException while playing with Strings: "+ioe.toString());
+            throw new BuildException("Unexpected IOException while playing with Strings",
+                                     ioe);
         } finally {
             // need to reset java.class.path property
             // since the NetRexx compiler has no option for the classpath
