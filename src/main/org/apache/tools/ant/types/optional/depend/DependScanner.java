@@ -89,6 +89,12 @@ public class DependScanner extends DirectoryScanner {
         return files;
     }
 
+    //inherit doc
+    public int getIncludedFilesCount() {
+        if (included == null) throw new IllegalStateException();
+        return included.size();
+    }
+
     /**
      * Scans the base directory for files that baseClass depends on
      *
@@ -157,6 +163,11 @@ public class DependScanner extends DirectoryScanner {
      */
     public String[] getIncludedDirectories() {
         return new String[0];
+    }
+
+    //inherit doc
+    public int getIncludedDirsCount() {
+        return 0;
     }
 
     /**
