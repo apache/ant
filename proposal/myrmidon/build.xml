@@ -521,9 +521,6 @@ Legal:
 
         <!-- Prepare test files -->
         <delete dir="${test.working.dir}"/>
-        <copy todir="${test.working.dir}">
-            <fileset dir="etc/testcases"/>
-        </copy>
 
         <!-- Prepare a dummy installation -->
         <copy todir="${test.working.dir}/dist">
@@ -565,7 +562,8 @@ Legal:
         </jar>
 
         <!-- Prepare the project tests -->
-        <copy file="src/manifest/testcases-ant-descriptor.xml" tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
+        <copy file="${test.working.dir}/org/apache/antlib/core/test/ant-descriptor.xml"
+            tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
 
         <!-- Run all the tests -->
         <junit printsummary="on" fork="false">
