@@ -55,6 +55,7 @@ package org.apache.tools.ant.util;
 
 import java.util.Date;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -80,7 +81,8 @@ public class DateUtilsTest extends TestCase {
     }
 
     public void testDateTimeISO(){
-        Calendar cal = Calendar.getInstance();
+        TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
+        Calendar cal = Calendar.getInstance(timeZone);
         cal.set(2002,1,23,10,11,12);
         String text = DateUtils.format(cal.getTime(),
                 DateUtils.ISO8601_DATETIME_PATTERN);
@@ -88,8 +90,9 @@ public class DateUtilsTest extends TestCase {
     }
 
     public void testDateISO(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(2002,1,23);
+        TimeZone timeZone = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance(timeZone);
+        emailtaskcal.set(2002,1,23);
         String text = DateUtils.format(cal.getTime(),
                 DateUtils.ISO8601_DATE_PATTERN);
         assertEquals("2002-02-23", text);
@@ -97,7 +100,8 @@ public class DateUtilsTest extends TestCase {
 
     public void testTimeISODate(){
         // make sure that elapsed time in set via date works
-        Calendar cal = Calendar.getInstance();
+        TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
+        Calendar cal = Calendar.getInstance(timeZone);
         cal.set(2002,1,23, 21, 11, 12);
         String text = DateUtils.format(cal.getTime(),
                 DateUtils.ISO8601_TIME_PATTERN);
