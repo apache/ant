@@ -423,6 +423,7 @@ public class ComponentHelper  {
                 }
                 task = taskA;
             }
+            task.setProject( project );
             task.setTaskType(taskType);
 
             // set default value, can be changed by the user
@@ -631,7 +632,9 @@ public class ComponentHelper  {
                         project.log("Loading with the core loader " + value,
                                 Project.MSG_DEBUG);
                         taskClass=project.getCoreLoader().loadClass(value);
-                        if( taskClass != null ) return taskClass;
+                        if( taskClass != null ) {
+                            return taskClass;
+                        }
                     } catch( Exception ex ) {
                     }
                 }
@@ -650,12 +653,17 @@ public class ComponentHelper  {
         // Hashtable implementation
         public Object get( Object key ) {
             Object orig=super.get( key );
-            if( orig!= null ) return orig;
-            if( ! (key instanceof String) ) return null;
+            if( orig!= null ) {
+                return orig;
+            }
+            if( ! (key instanceof String) ) {
+                return null;
+            }
             project.log("Get task " + key, Project.MSG_DEBUG );
             Object taskClass=getTask( (String) key);
-            if( taskClass != null)
+            if( taskClass != null) {
                 super.put( key, taskClass );
+            }
             return taskClass;
         }
 
