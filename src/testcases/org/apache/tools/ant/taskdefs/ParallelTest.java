@@ -58,9 +58,9 @@ public class ParallelTest extends BuildFileTest {
     /** tests basic operation of the parallel task */
     public void testBasic() {
         // should get no output at all
-        Project project = getProject();
-        project.setUserProperty("test.direct", DIRECT_MESSAGE);
-        project.setUserProperty("test.delayed", DELAYED_MESSAGE);
+        Project p = getProject();
+        p.setUserProperty("test.direct", DIRECT_MESSAGE);
+        p.setUserProperty("test.delayed", DELAYED_MESSAGE);
         expectOutputAndError("testBasic", "", "");
         String log = getLog();
         assertEquals("parallel tasks didn't output correct data", log,
@@ -71,9 +71,9 @@ public class ParallelTest extends BuildFileTest {
     /** tests basic operation of the parallel task */
     public void testThreadCount() {
         // should get no output at all
-        Project project = getProject();
-        project.setUserProperty("test.direct", DIRECT_MESSAGE);
-        project.setUserProperty("test.delayed", DELAYED_MESSAGE);
+        Project p = getProject();
+        p.setUserProperty("test.direct", DIRECT_MESSAGE);
+        p.setUserProperty("test.delayed", DELAYED_MESSAGE);
         expectOutputAndError("testThreadCount", "", "");
         String log = getLog();
         int pos = 0;
@@ -126,24 +126,24 @@ public class ParallelTest extends BuildFileTest {
     /** tests the failure of a task within a parallel construction */
     public void testFail() {
         // should get no output at all
-        Project project = getProject();
-        project.setUserProperty("test.failure", FAILURE_MESSAGE);
-        project.setUserProperty("test.delayed", DELAYED_MESSAGE);
+        Project p = getProject();
+        p.setUserProperty("test.failure", FAILURE_MESSAGE);
+        p.setUserProperty("test.delayed", DELAYED_MESSAGE);
         expectBuildExceptionContaining("testFail",
             "fail task in one parallel branch", FAILURE_MESSAGE);
     }
 
     /** tests the demuxing of output streams in a multithreaded situation */
     public void testDemux() {
-        Project project = getProject();
-        project.addTaskDefinition("demuxtest", DemuxOutputTask.class);
+        Project p = getProject();
+        p.addTaskDefinition("demuxtest", DemuxOutputTask.class);
         PrintStream out = System.out;
         PrintStream err = System.err;
-        System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
-        System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
+        System.setOut(new PrintStream(new DemuxOutputStream(p, false)));
+        System.setErr(new PrintStream(new DemuxOutputStream(p, true)));
 
         try {
-            project.executeTarget("testDemux");
+            p.executeTarget("testDemux");
         } finally {
             System.setOut(out);
             System.setErr(err);

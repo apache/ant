@@ -108,7 +108,7 @@ public class StyleTest extends BuildFileTest {
         Reader r = null;
         try {
             r = new FileReader(getProject().resolveFile(filename));
-            return  FileUtils.newFileUtils().readFully(r);
+            return  FileUtils.readFully(r);
         }
         finally {
             try {r.close();} catch (Throwable ignore) {}

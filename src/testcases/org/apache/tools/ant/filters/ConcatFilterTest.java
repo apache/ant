@@ -142,7 +142,7 @@ public class ConcatFilterTest extends BuildFileTest {
         try {
             File file = getProject().resolveFile(filename);
             java.io.FileReader rdr = new java.io.FileReader(file);
-            content = fu.readFully(rdr);
+            content = FileUtils.readFully(rdr);
             rdr.close();
             rdr = null;
         } catch (Exception e) {

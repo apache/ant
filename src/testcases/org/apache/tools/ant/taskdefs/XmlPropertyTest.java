@@ -141,10 +141,10 @@ public class XmlPropertyTest extends BuildFileTest {
 
                 //                System.out.println(msg + " (" + propertyFile.getName() + ") in (" + workingDir + ")");
 
-                Project project = new Project();
+                Project p = new Project();
 
                 XmlProperty xmlproperty = new XmlProperty();
-                xmlproperty.setProject(project);
+                xmlproperty.setProject(p);
                 xmlproperty.setFile(inputFile);
 
                 xmlproperty.setKeeproot(keepRoot);
@@ -156,17 +156,17 @@ public class XmlPropertyTest extends BuildFileTest {
                 // Set a property on the project to make sure that loading
                 // a property with the same name from an xml file will
                 // *not* change it.
-                project.setNewProperty("override.property.test", "foo");
+                p.setNewProperty("override.property.test", "foo");
 
                 xmlproperty.execute();
 
                 Properties props = new Properties();
                 props.load(new FileInputStream(propertyFile));
 
-                //printProperties(project.getProperties());
+                //printProperties(p.getProperties());
 
-                ensureProperties(msg, inputFile, workingDir, project, props);
-                ensureReferences(msg, inputFile, project.getReferences());
+                ensureProperties(msg, inputFile, workingDir, p, props);
+                ensureReferences(msg, inputFile, p.getReferences());
 
             } catch (IOException ex) {
                 fail(ex.toString());
@@ -181,9 +181,9 @@ public class XmlPropertyTest extends BuildFileTest {
      * to generic Project/Task configuration.
      */
     private static void ensureProperties (String msg, File inputFile,
-                                          File workingDir, Project project,
+                                          File workingDir, Project p,
                                           Properties properties) {
-        Hashtable xmlproperties = project.getProperties();
+        Hashtable xmlproperties = p.getProperties();
         // Every key identified by the Properties must have been loaded.
         Enumeration propertyKeyEnum = properties.propertyNames();
         while(propertyKeyEnum.hasMoreElements()){
@@ -202,7 +202,7 @@ public class XmlPropertyTest extends BuildFileTest {
                 // We don't have an adequate way of testing the actual
                 // *value* of the Path object, though...
                 String id = currentKey;
-                Object obj = project.getReferences().get(id);
+                Object obj = p.getReferences().get(id);
 
                 if ( obj == null ) {
                     fail(assertMsg + " Object ID does not exist.");

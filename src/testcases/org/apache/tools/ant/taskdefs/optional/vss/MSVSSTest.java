@@ -35,7 +35,6 @@ import org.apache.tools.ant.types.Path;
  */
 public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
 
-    private Project project;
     private Commandline commandline;
 
     private static final String VSS_SERVER_PATH = "\\\\server\\vss\\srcsafe.ini";

@@ -564,7 +564,7 @@ public class ExecuteOnTest extends BuildFileTest {
         FileReader reader = null;
         try {
             reader = new FileReader(getProject().resolveFile(filename));
-            result = FileUtils.newFileUtils().readFully(reader);
+            result = FileUtils.readFully(reader);
         } finally {
             if (reader != null) {
                 try {

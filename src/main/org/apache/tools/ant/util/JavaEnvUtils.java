@@ -67,6 +67,9 @@ public class JavaEnvUtils {
     /** Version constant for Java 1.5 */
     public static final String JAVA_1_5 = "1.5";
 
+    /** Whether this is the Kaffe VM */
+    private static boolean kaffeDetected;
+
     /** array of packages in the runtime */
     private static Vector jrePackages;
 
@@ -103,6 +106,13 @@ public class JavaEnvUtils {
             // swallow as we've hit the max class version that
             // we have
         }
+        kaffeDetected = false;
+        try {
+            Class.forName("kaffe.util.NotImplemented");
+            kaffeDetected = true;
+        } catch (Throwable t) {
+            // swallow as this simply doesn't seem to be Kaffe
+        }
     }
 
     /**
@@ -123,6 +133,16 @@ public class JavaEnvUtils {
      */
     public static boolean isJavaVersion(String version) {
         return javaVersion.equals(version);
+    }
+
+    /**
+     * Checks whether the current Java VM is Kaffe.
+     * @return true if the current Java VM is Kaffe.
+     * @since Ant 1.6.3
+     * @see http://www.kaffe.org/
+     */
+    public static boolean isKaffe() {
+        return kaffeDetected;
     }
 
     /**

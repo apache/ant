@@ -61,7 +61,7 @@ public class XMLFormatterWithCDATAOnSystemOut extends BuildFileTest {
             FileReader reader = null;
             try {
                 reader = new FileReader(f);
-                String content = FileUtils.newFileUtils().readFully(reader);
+                String content = FileUtils.readFully(reader);
                 assertTrue(content.indexOf("</RESPONSE>&#x5d;&#x5d;&gt;"
                                            + "</ERROR>") > 0);
             } finally {

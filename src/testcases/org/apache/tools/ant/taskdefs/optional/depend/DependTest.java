@@ -55,7 +55,6 @@ public class DependTest extends BuildFileTest {
      * Test direct dependency removal
      */
     public void testDirect() {
-        Project project = getProject();
         executeTarget("testdirect");
         Hashtable files = getResultFiles();
         assertEquals("Depend did not leave correct number of files", 3,
@@ -70,7 +69,6 @@ public class DependTest extends BuildFileTest {
      * Test dependency traversal (closure)
      */
     public void testClosure() {
-        Project project = getProject();
         executeTarget("testclosure");
         Hashtable files = getResultFiles();
         assertEquals("Depend did not leave correct number of files", 2,
@@ -83,7 +81,6 @@ public class DependTest extends BuildFileTest {
      * Test that inner class dependencies trigger deletion of the outer class
      */
     public void testInner() {
-        Project project = getProject();
         executeTarget("testinner");
         assertEquals("Depend did not leave correct number of files", 0,
             getResultFiles().size());
@@ -94,7 +91,6 @@ public class DependTest extends BuildFileTest {
      * the outer class
      */
     public void testInnerInner() {
-        Project project = getProject();
         executeTarget("testinnerinner");
         assertEquals("Depend did not leave correct number of files", 0,
             getResultFiles().size());
@@ -123,7 +119,7 @@ public class DependTest extends BuildFileTest {
      * fileset
      */
     private Hashtable getResultFiles() {
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        FileSet resultFileSet = (FileSet) project.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
@@ -139,7 +135,6 @@ public class DependTest extends BuildFileTest {
      * deleted
      */
     public void testInnerClosure() {
-        Project project = getProject();
         executeTarget("testinnerclosure");
         assertEquals("Depend did not leave correct number of files", 4,
             getResultFiles().size());

@@ -330,7 +330,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
     /** Checks whether a cache file is created. */
     public void testCreatePropertiesCacheDirect() {
-        File basedir   = getSelector().getProject().getBaseDir();
         File cachefile = new File(basedir, "cachefile.properties");
 
         PropertiesfileCache cache = new PropertiesfileCache();
@@ -348,7 +347,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
     /** Checks whether a cache file is created. */
     public void testCreatePropertiesCacheViaModifiedSelector() {
-        File basedir   = getSelector().getProject().getBaseDir();
         File cachefile = new File(basedir, "cachefile.properties");
         try {
 
@@ -826,7 +824,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     public void doScenarioTest(String target, String cachefilename) {
         BFT bft = new BFT();
         bft.setUp();
-        File basedir = bft.getProject().getBaseDir();
         File cachefile = new File(basedir, cachefilename);
         try {
             // do the actions

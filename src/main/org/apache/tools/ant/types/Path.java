@@ -574,7 +574,7 @@ public class Path extends DataType implements Cloneable {
      * Add the Java Runtime classes to this Path instance.
      */
     public void addJavaRuntime() {
-        if ("Kaffe".equals(System.getProperty("java.vm.name"))) {
+        if (JavaEnvUtils.isKaffe()) {
             // newer versions of Kaffe (1.1.1+) won't have this,
             // but this will be sorted by FileSet anyway.
             File kaffeShare = new File(System.getProperty("java.home")

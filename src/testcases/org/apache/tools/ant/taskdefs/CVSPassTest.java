@@ -27,11 +27,11 @@ import org.apache.tools.ant.BuildFileTest;
  */
 public class CVSPassTest extends BuildFileTest {
     private final String EOL = System.getProperty("line.separator");
-    private final String JAKARTA_URL =
+    private static final String JAKARTA_URL =
         ":pserver:anoncvs@jakarta.apache.org:/home/cvspublic Ay=0=h<Z";
-    private final String XML_URL =
+    private static final String XML_URL =
         ":pserver:anoncvs@xml.apache.org:/home/cvspublic Ay=0=h<Z";
-    private final String TIGRIS_URL =
+    private static final String TIGRIS_URL =
         ":pserver:guest@cvs.tigris.org:/cvs AIbdZ,";
 
 

@@ -34,10 +34,10 @@ import junit.framework.ComparisonFailure;
 public class ExecTaskTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
     private static final String BUILD_FILE = BUILD_PATH + "exec.xml";
-    private final int TIME_TO_WAIT = 1;
+    private static final int TIME_TO_WAIT = 1;
     /** maximum time allowed for the build in milliseconds */
-    private final int MAX_BUILD_TIME = 4000;
-    private final int SECURITY_MARGIN = 2000; // wait 2 second extras
+    private static final int MAX_BUILD_TIME = 4000;
+    private static final int SECURITY_MARGIN = 2000; // wait 2 second extras
     // the test failed with 100 ms of margin on cvs.apache.org on August 1st, 2003
     private File logFile;
     private MonitoredBuild myBuild = null;
@@ -465,7 +465,7 @@ public class ExecTaskTest extends BuildFileTest {
         FileReader reader = null;
         try {
             reader = new FileReader(getProject().resolveFile(filename));
-            result = FileUtils.newFileUtils().readFully(reader);
+            result = FileUtils.readFully(reader);
         } catch (IOException eyeOhEx) {
         } finally {
             if (reader != null) {

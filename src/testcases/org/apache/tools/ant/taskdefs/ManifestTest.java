@@ -191,8 +191,8 @@ public class ManifestTest extends BuildFileTest {
      * Tets long line wrapping
      */
     public void testLongLine() throws IOException, ManifestException {
-        Project project = getProject();
-        project.setUserProperty("test.longline", LONG_LINE);
+        Project p = getProject();
+        p.setUserProperty("test.longline", LONG_LINE);
         executeTarget("testLongLine");
 
         Manifest manifest = getManifest(EXPANDED_MANIFEST);
