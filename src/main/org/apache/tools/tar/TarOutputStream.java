@@ -164,7 +164,7 @@ public class TarOutputStream extends FilterOutputStream {
      * @param entry The TarEntry to be written to the archive.
      */
     public void putNextEntry(TarEntry entry) throws IOException {
-        if (entry.getName().length() > TarConstants.NAMELEN) {
+        if (entry.getName().length() >= TarConstants.NAMELEN) {
 
             if (longFileMode == LONGFILE_GNU) {
                 // create a TarEntry for the LongLink, the contents
