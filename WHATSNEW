@@ -220,7 +220,7 @@ Other changes:
   You can put in it all the strings described by p4 help usage. Refer to 
   the docs for more information.
 
-* new Perforce tasks <p4integrate> and <p4resolve>
+* new Perforce tasks <p4integrate> , <p4resolve>, and <p4labelsync>
 
 * <p4submit> will change the property p4.change if the Perforce server 
   renumbers the change list.
