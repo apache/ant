@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2001 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -100,145 +99,138 @@ import org.apache.tools.mail.MailMessage;
  */
 public class MailLogger extends DefaultLogger {
 
-  private StringBuffer buffer = new StringBuffer();
+    private StringBuffer buffer = new StringBuffer();
 
-  /**
-   *  Sends an e-mail with the log results.
-   *
-   *@param  event
-   */
-  public void buildFinished(BuildEvent event) {
-    super.buildFinished(event);
+    /**
+     *  Sends an e-mail with the log results.
+     *
+     * @param  event
+     */
+    public void buildFinished(BuildEvent event) {
+        super.buildFinished(event);
 
-    Project project = event.getProject();
-    Hashtable properties = project.getProperties();
+        Project project = event.getProject();
+        Hashtable properties = project.getProperties();
 
-    // overlay specified properties file (if any), which overrides project
-    // settings
-    Properties fileProperties = new Properties();
-    String filename = (String) properties.get("MailLogger.properties.file");
-    if (filename != null) {
-      InputStream is = null;
-      try {
-        is = new FileInputStream(filename);
-        if (is != null) {
-          fileProperties.load(is);
+        // overlay specified properties file (if any), which overrides project
+        // settings
+        Properties fileProperties = new Properties();
+        String filename = (String) properties.get("MailLogger.properties.file");
+        if (filename != null) {
+            InputStream is = null;
+            try {
+                is = new FileInputStream(filename);
+                fileProperties.load(is);
+            } catch (IOException ioe) {
+                // ignore because properties file is not required
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
         }
-      }
-      catch (IOException ioe) {
-        // ignore because properties file is not required
-      }
-      finally {
-        if (is != null) {
-          try {
-            is.close();
-          }
-          catch (IOException e) {
-          }
+
+        for (Enumeration enum = fileProperties.keys(); enum.hasMoreElements();) {
+            String key = (String) enum.nextElement();
+            properties.put(key, fileProperties.getProperty(key));
         }
-      }
+
+        boolean success = (event.getException() == null);
+        String prefix = success ? "success" : "failure";
+
+        try {
+            boolean notify = Project.toBoolean(getValue(properties,
+                    prefix + ".notify", "on"));
+
+            if (!notify) {
+                return;
+            }
+
+            String mailhost = getValue(properties, "mailhost", "localhost");
+            String from = getValue(properties, "from", null);
+
+            String toList = getValue(properties, prefix + ".to", null);
+            String subject = getValue(properties, prefix + ".subject",
+                    (success) ? "Build Success" : "Build Failure");
+
+            sendMail(mailhost, from, toList, subject, buffer.toString());
+        } catch (Exception e) {
+            System.out.println("MailLogger failed to send e-mail!");
+            e.printStackTrace();
+        }
     }
 
-    for (Enumeration enum = fileProperties.keys(); enum.hasMoreElements(); ) {
-      String key = (String) enum.nextElement();
-      properties.put(key, fileProperties.getProperty(key));
+
+    /**
+     *  Receives and buffers log messages.
+     *
+     * @param  message
+     */
+    protected void log(String message) {
+        buffer.append(message).append(StringUtils.LINE_SEP);
     }
 
-    boolean success = (event.getException() == null);
-    String prefix = success ? "success" : "failure";
 
-    try {
-      boolean notify = Project.toBoolean(getValue(properties,
-          prefix + ".notify", "on"));
+    /**
+     *  Gets the value of a property.
+     *
+     * @param  properties     Properties to obtain value from
+     * @param  name           suffix of property name. "MailLogger." will be
+     *      prepended internally.
+     * @param  defaultValue   value returned if not present in the properties. Set
+     *      to null to make required.
+     * @return                The value of the property, or default value.
+     * @exception  Exception  thrown if no default value is specified and the
+     *      property is not present in properties.
+     */
+    private String getValue(Hashtable properties, String name, String defaultValue)
+            throws Exception {
+        String propertyName = "MailLogger." + name;
+        String value = (String) properties.get(propertyName);
 
-      if (!notify) {
-        return;
-      }
+        if (value == null) {
+            value = defaultValue;
+        }
 
-      String mailhost = getValue(properties, "mailhost", "localhost");
-      String from = getValue(properties, "from", null);
+        if (value == null) {
+            throw new Exception("Missing required parameter: " + propertyName);
+        }
 
-      String toList = getValue(properties, prefix + ".to", null);
-      String subject = getValue(properties, prefix + ".subject",
-          (success) ? "Build Success" : "Build Failure");
-
-      sendMail(mailhost, from, toList, subject, buffer.toString());
-    }
-    catch (Exception e) {
-      System.out.println("MailLogger failed to send e-mail!");
-      e.printStackTrace();
-    }
-  }
-
-
-  /**
-   *  Receives and buffers log messages.
-   *
-   *@param  message
-   */
-  protected void log(String message) {
-    buffer.append(message + StringUtils.LINE_SEP);
-  }
-
-
-  /**
-   *  Gets the value of a property.
-   *
-   *@param  properties     Properties to obtain value from
-   *@param  name           suffix of property name. "MailLogger." will be
-   *      prepended internally.
-   *@param  defaultValue   value returned if not present in the properties. Set
-   *      to null to make required.
-   *@return                The value of the property, or default value.
-   *@exception  Exception  thrown if no default value is specified and the
-   *      property is not present in properties.
-   */
-  private String getValue(Hashtable properties, String name, String defaultValue)
-       throws Exception {
-    name = "MailLogger." + name;
-    Object object = properties.get(name);
-    String value = defaultValue;
-
-    if (object != null) {
-      value = (String) object;
+        return value;
     }
 
-    if (value == null) {
-      throw new Exception("Missing required parameter: " + name);
+
+    /**
+     *  Send the mail
+     *
+     * @param  mailhost         mail server
+     * @param  from             from address
+     * @param  toList           comma-separated recipient list
+     * @param  subject          mail subject
+     * @param  message          mail body
+     * @exception  IOException  thrown if sending message fails
+     */
+    private void sendMail(String mailhost, String from, String toList,
+                          String subject, String message) throws IOException {
+        MailMessage mailMessage = new MailMessage(mailhost);
+
+        mailMessage.from(from);
+
+        StringTokenizer t = new StringTokenizer(toList, ", ", false);
+        while (t.hasMoreTokens()) {
+            mailMessage.to(t.nextToken());
+        }
+
+        mailMessage.setSubject(subject);
+
+        PrintStream ps = mailMessage.getPrintStream();
+        ps.println(message);
+
+        mailMessage.sendAndClose();
     }
-
-    return value;
-  }
-
-
-  /**
-   *  Send the mail
-   *
-   *@param  mailhost         mail server
-   *@param  from             from address
-   *@param  toList           comma-separated recipient list
-   *@param  subject          mail subject
-   *@param  message          mail body
-   *@exception  IOException  thrown if sending message fails
-   */
-  private void sendMail(String mailhost, String from, String toList,
-      String subject, String message) throws IOException {
-    MailMessage mailMessage = new MailMessage(mailhost);
-
-    mailMessage.from(from);
-
-    StringTokenizer t = new StringTokenizer(toList, ", ", false);
-    while (t.hasMoreTokens()) {
-      mailMessage.to(t.nextToken());
-    }
-
-    mailMessage.setSubject(subject);
-
-    PrintStream ps = mailMessage.getPrintStream();
-    ps.println(message);
-
-    mailMessage.sendAndClose();
-  }
 }
 
 
