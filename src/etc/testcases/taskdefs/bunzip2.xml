@@ -2,7 +2,7 @@
 
 <project basedir="." default="cleanup">
 
-  <target name="realTest">
+  <target name="realTest" depends="cleanup">
     <bunzip2 src="expected/asf-logo-huge.tar.bz2" dest="asf-logo-huge.tar" />
   </target>
 

@@ -2,11 +2,11 @@
 
 <project basedir="." default="cleanup">
 
-  <target name="realTest">
+  <target name="realTest" depends="cleanup">
     <bzip2 src="expected/asf-logo-huge.tar" zipfile="asf-logo-huge.tar.bz2" />
   </target>
 
-  <target name="testDateCheck">
+  <target name="testDateCheck" depends="cleanup">
     <touch file="asf-logo.gif.bz2"/>
     <bzip2 src="../asf-logo.gif" zipfile="asf-logo.gif.bz2" />
   </target>
