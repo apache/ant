@@ -205,7 +205,7 @@ public abstract class DataType extends ProjectComponent {
     /**
      * check that it is ok to set attributes, i.e that no reference is defined
      * @since Ant 1.6
-     * @throw BuildException if not allowed
+     * @throws BuildException if not allowed
      */
     protected void checkAttributesAllowed() {
         if (isReference()) {
@@ -216,7 +216,7 @@ public abstract class DataType extends ProjectComponent {
     /**
      * check that it is ok to add children, i.e that no reference is defined
      * @since Ant 1.6
-     * @throw BuildException if not allowed
+     * @throws BuildException if not allowed
      */
     protected void checkChildrenAllowed() {
         if (isReference()) {

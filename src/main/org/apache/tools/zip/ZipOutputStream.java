@@ -256,8 +256,8 @@ public class ZipOutputStream extends FilterOutputStream {
      * access file).
      *
      * <p>For seekable streams, you don't need to calculate the CRC or
-     * uncompressed size for {@link #STORED STORED} entries before
-     * invoking {@link #putEntry putEntry}.
+     * uncompressed size for {@link #STORED} entries before
+     * invoking {@link #putNextEntry}.
      *
      * @since 1.17
      */

@@ -37,7 +37,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
  * @since Ant 1.6
  * @see BaseFilterReader
  * @see ChainableReader
- * @see DynamicConfigurator
+ * @see org.apache.tools.ant.DynamicConfigurator
  */
 public class TokenFilter extends BaseFilterReader
     implements ChainableReader {

@@ -161,9 +161,8 @@ public class ZipFile {
     }
 
     /**
-     * Returns all entries as {@link org.apache.tools.ant.ZipEntry
-     * ZipEntry} instances.
-     * @return all entries as ZipEntry instances.
+     * Returns all entries.
+     * @return all entries as {@link ZipEntry} instances
      */
     public Enumeration getEntries() {
         return entries.keys();
