@@ -297,7 +297,7 @@ public class Coverage extends Task {
         if (home == null || !home.isDirectory()) {
             throw new BuildException("Invalid home directory. Must point to JProbe home directory");
         }
-        home = new File(home, "Coverage");
+        home = new File(home, "coverage");
         File jar = new File(home, "coverage.jar");
         if (!jar.exists()) {
             throw new BuildException("Cannot find Coverage directory: " + home);

@@ -160,7 +160,7 @@ public class CovMerge extends Task {
         if (home == null || !home.isDirectory()) {
             throw new BuildException("Invalid home directory. Must point to JProbe home directory");
         }
-        home = new File(home, "Coverage");
+        home = new File(home, "coverage");
         File jar = new File(home, "coverage.jar");
         if (!jar.exists()) {
             throw new BuildException("Cannot find Coverage directory: " + home);
@@ -207,16 +207,17 @@ public class CovMerge extends Task {
             // last file is the output snapshot
             pw.println(project.resolveFile(tofile.getPath()));
             pw.flush();
-            return file;
         } catch (IOException e) {
+            throw new BuildException("I/O error while writing to " + file, e);
+        } finally {
             if (fw != null) {
                 try {
                     fw.close();
                 } catch (IOException ignored) {
                 }
             }
-            throw new BuildException("I/O error while writing to " + file, e);
         }
+        return file;
     }
 
     /** create a temporary file in the current dir (For JDK1.1 support) */

@@ -256,7 +256,7 @@ public class CovReport extends Task {
         if (home == null) {
             throw new BuildException("'home' attribute must be set to JProbe home directory");
         }
-        home = new File(home, "Coverage");
+        home = new File(home, "coverage");
         File jar = new File(home, "coverage.jar");
         if (!jar.exists()) {
             throw new BuildException("Cannot find Coverage directory: " + home);

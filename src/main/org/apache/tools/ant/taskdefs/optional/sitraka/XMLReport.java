@@ -210,7 +210,7 @@ public class XMLReport {
         DocumentBuilder dbuilder = newBuilder();
         InputSource is = new InputSource(new FileInputStream(file));
         if (jprobeHome != null) {
-            File dtdDir = new File(jprobeHome, "Dtd");
+            File dtdDir = new File(jprobeHome, "dtd");
             is.setSystemId("file:///" + dtdDir.getAbsolutePath() + "/");
         }
         report = dbuilder.parse(is);
@@ -324,7 +324,10 @@ public class XMLReport {
         // create the class element
         Element classElem = report.createElement("class");
         classElem.setAttribute("name", classFile.getName());
-        classElem.setAttribute("source", classFile.getSourceFile());
+        // source file possibly does not exist in the bytecode
+        if ( null != classFile.getSourceFile() ){
+            classElem.setAttribute("source", classFile.getSourceFile());
+        }
         // create the cov.data elem
         Element classData = report.createElement("cov.data");
         classElem.appendChild(classData);
