@@ -97,6 +97,10 @@
     </jar>
   </target>
   
+  <target name="testmethodparam" depends="src1setup, compile">
+    <classfileset id="result" dir="${classes.dir}" rootclass="E"/>
+  </target>
+  
   <target name="testinner" depends="src2setup, compile">
     <sleep seconds="3"/>
     <delete file="${tempsrc.dir}/B.java"/>

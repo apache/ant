@@ -158,4 +158,31 @@ public class ClassFileSetTest extends BuildFileTest {
     public void testByReference() {
         executeTarget("testbyreference");
     }
+    
+    /**
+     * Test that classes included in a method "System.out.println(MyClass.class)" are included.
+     */
+    public void testMethodParam() {
+        Project project = getProject();
+        executeTarget("testmethodparam");
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
+        }
+        assertEquals("Classfileset did not pick up expected number of "
+            + "class files", 5, files.size());
+        assertTrue("Result did not contain A.class",
+            files.containsKey("A.class"));
+        assertTrue("Result did not contain B.class",
+            files.containsKey("B.class"));
+        assertTrue("Result did not contain C.class",
+            files.containsKey("C.class"));
+        assertTrue("Result did not contain D.class",
+            files.containsKey("D.class"));
+        assertTrue("Result did not contain E.class",
+            files.containsKey("E.class"));
+    }    
 }
