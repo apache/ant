@@ -23,6 +23,7 @@ import java.io.EOFException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -31,6 +32,8 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.WeakHashMap;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.helper.DefaultExecutor;
@@ -157,11 +160,11 @@ public class Project {
      */
     private ClassLoader coreLoader = null;
 
-    /** Records the latest task to be executed on a thread (Thread to Task). */
-    private Hashtable threadTasks = new Hashtable();
+    /** Records the latest task to be executed on a thread. */
+    private Map/*<Thread,Task>*/ threadTasks = Collections.synchronizedMap(new WeakHashMap());
 
-    /** Records the latest task to be executed on a thread Group. */
-    private Hashtable threadGroupTasks = new Hashtable();
+    /** Records the latest task to be executed on a thread group. */
+    private Map/*<ThreadGroup,Task>*/ threadGroupTasks = Collections.synchronizedMap(new WeakHashMap());
 
     /**
      * Called to handle any input requests.
