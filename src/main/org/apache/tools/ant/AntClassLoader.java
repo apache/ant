@@ -178,6 +178,10 @@ public class AntClassLoader  extends ClassLoader {
      */
     private InputStream getResourceStream(File file, String resourceName) {
         try {
+            if (!file.exists()) {
+                return null;
+            }
+            
             if (file.isDirectory()) {
                 File resource = new File(file, resourceName); 
                 if (resource.exists()) {   
