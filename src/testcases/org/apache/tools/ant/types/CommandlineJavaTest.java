@@ -105,7 +105,7 @@ public class CommandlineJavaTest extends TestCase {
             fail("cloning should work without classpath specified");
         }
 
-        c.createClasspath(project).setLocation(project.resolveFile("lib/optional/junit.jar"));
+        c.createClasspath(project).setLocation(project.resolveFile("build.xml"));
         c.createClasspath(project).setLocation(project.resolveFile(
             System.getProperty("ant.home")+"/lib/ant.jar"));
         s = c.getCommandline();
@@ -113,8 +113,8 @@ public class CommandlineJavaTest extends TestCase {
         //        assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
-        assertTrue("junit.jar contained",
-               s[3].indexOf("junit.jar"+java.io.File.pathSeparator) >= 0);
+        assertTrue("build.xml contained",
+               s[3].indexOf("build.xml"+java.io.File.pathSeparator) >= 0);
         assertTrue("ant.jar contained", s[3].endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
         assertEquals("with classpath",
