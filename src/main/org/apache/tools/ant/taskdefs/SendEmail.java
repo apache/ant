@@ -216,11 +216,18 @@ public class SendEmail extends Task {
                         int length;
                         byte[] buf = new byte[bufsize];
 
-                        BufferedInputStream in = new BufferedInputStream(
-                            new FileInputStream(file), bufsize);
-
-                        while ((length = in.read(buf, 0, bufsize)) != -1) {
-                            out.write(buf, 0, length);
+                        BufferedInputStream in = null;
+                        try {
+                            in = new BufferedInputStream(
+                                new FileInputStream(file), bufsize);
+    
+                            while ((length = in.read(buf, 0, bufsize)) != -1) {
+                                out.write(buf, 0, length);
+                            }
+                        } finally {
+                            if (in != null) {
+                                in.close();
+                            }
                         }
 
                     } else {
