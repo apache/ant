@@ -97,7 +97,7 @@ public class Location implements Serializable {
      * Creates a location from the SAX locator using the system ID as
      * the filename.
      * 
-     * @param locator Must not be <code>null</code>.
+     * @param loc Must not be <code>null</code>.
      *
      * @since Ant 1.6
      */
