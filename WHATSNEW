@@ -278,6 +278,9 @@ Other changes:
 * <exec>, <sql> and <java> now support append attributes to allow
   appending the output to an existing file.
 
+* <java> now supports a timeout attribute analog to <exec> - it is 
+  highly recommended to only use it together with fork="true".
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
