@@ -214,7 +214,7 @@ public class DefaultWorkspace
             }
             catch( final DeploymentException de )
             {
-                final String message = REZ.getString( "no-deploy.error", typeLib, file );
+                final String message = REZ.getString( "no-deploy.error", typeLib.getLibrary(), file );
                 throw new TaskException( message, de );
             }
         }
@@ -339,9 +339,8 @@ public class DefaultWorkspace
      * Helper method to execute a target.
      *
      * @param project the Project
-     * @param target the name of the target
-     * @param context the context
-     * @param done the list of targets already executed in current run
+     * @param targetName the name of the target
+     * @param entry the context
      * @exception TaskException if an error occurs
      */
     private void execute( final Project project,
@@ -395,9 +394,9 @@ public class DefaultWorkspace
     /**
      * Method to execute a particular target instance.
      *
-     * @param targetName the name of target
+     * @param name the name of target
      * @param target the target
-     * @param context the context in which to execute
+     * @param frame the frame in which to execute
      * @exception TaskException if an error occurs
      */
     private void executeTarget( final String name,
@@ -445,7 +444,7 @@ public class DefaultWorkspace
      * Execute a task.
      *
      * @param task the task definition
-     * @param context the context
+     * @param frame the frame to execute in
      * @exception TaskException if an error occurs
      */
     private void executeTask( final Configuration task, final ExecutionFrame frame )
