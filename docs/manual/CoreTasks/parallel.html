@@ -37,6 +37,10 @@ thread will be blocked waiting for all the child threads to complete.</p>
 tasks in other threads will continue to run until all threads have completed. 
 In this sitiuation, the parallel task will also fail.</p>
 
+<p>The parallel task may be combined with the <a href="sequential.html">
+sequential</a> task to define sequences of tasks to be executed on each thread
+within the parallel block</p>
+
 <h3>Examples</h3>
 <pre>
 &lt;parallel&gt;
