@@ -172,5 +172,26 @@ public class WsdlToDotnetTest extends BuildFileTest {
                 "expected failure",
                 "WSDL returned: 1");
     }   
+     
+    /**
+     * A unit test for JUnit
+     */
+    public void testLocalWsdlVB() throws Exception {
+        executeTarget("testLocalWsdlVB");
+    } 
+    /**
+     * A unit test for JUnit
+     */
+    public void testLocalWsdlServerVB() throws Exception {
+        executeTarget("testLocalWsdlServerVB");
+    } 
+     /**
+     * A unit test for JUnit
+     */
+    public void testInvalidExtraOpsVB() throws Exception {
+        expectBuildExceptionContaining("testInvalidExtraOpsVB",
+                "expected failure",
+                "WSDL returned: 1");
+    }  
 }
 

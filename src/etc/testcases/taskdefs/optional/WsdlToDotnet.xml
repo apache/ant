@@ -13,6 +13,7 @@
   <property name="out.csc" location="${src.dir}/out.cs"/>
   <property name="out.app" location="${classes.dir}/out.dll"/>
   <property name="out.type" value="module"/>
+  <property name="out.vbc" location="${src.dir}/out.vb"/>
   <property name="endpoint"
     value="http://nagoya.apache.org:5049/Axis/StockQuoteService.jws" />
   <property name="endpoint.wsdl" 
@@ -42,9 +43,18 @@
       </or>
     </condition>
    <echo> csc.found=${csc.found}</echo>
+   <condition property="vbc.found">
+      <or>
+        <available file="vbc"     filepath="${env.PATH}" />
+        <available file="vbc.exe" filepath="${env.PATH}" />
+        <available file="vbc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> vbc.found=${vbc.found}</echo>
    <condition property="dotnetapps.found">
       <and>
         <isset property="csc.found"/>
+        <isset property="vbc.found"/>
         <isset property="wsdl.found"/>
       </and>
     </condition>
@@ -125,5 +135,49 @@
       srcFile="${local.wsdl}"
       extraOptions="/newOption:not-one-known-of"
       />
+  </target>
+
+
+  
+  <target name="testLocalWsdlVB" depends="init">
+    <wsdltodotnet destFile="${out.vbc}"
+      language="VB"
+      srcFile="${local.wsdl}"
+      />
+    <vbc 
+      srcDir="${src.dir}"
+      destFile="${out.app}"
+      targetType="${out.type}"
+      />
+    <available property="app.created" file="${out.app}"/>
+    <fail unless="app.created">No app created</fail>
+  </target>
+  
+  <target name="testLocalWsdlServerVB" 
+    depends="init" >
+    <wsdltodotnet destFile="${out.vbc}"
+      language="VB"
+      srcFile="${local.wsdl}"
+      server="true"
+      />
+    <vbc 
+      srcDir="${src.dir}"
+      destFile="${out.app}"
+      targetType="${out.type}" 
+      optionExplicit="true"
+      optionStrict="false"
+      optionCompare="text"
+      />
+    <available property="app.created" file="${out.app}"/>
+    <fail unless="app.created">No app created</fail>
+  </target>
+  
+  <target name="testInvalidExtraOpsVB" depends="init" if="vbc.found">
+    <wsdltodotnet destFile="${out.vbc}"
+      language="VB"
+      srcFile="${local.wsdl}"
+      extraOptions="/newOption:not-one-known-of"
+      />
   </target>    
+
 </project>
