@@ -97,9 +97,9 @@ public final class Environment
     private static synchronized Properties retrieveEnvironmentVariables()
         throws IOException, ExecException
     {
-        final Properties properties = new Properties();
         final String data = getEnvironmentText();
 
+        final Properties properties = new Properties();
         final BufferedReader in = new BufferedReader( new StringReader( data ) );
         String var = null;
         String line;
