@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,7 +79,10 @@ public class JavacExternal extends DefaultCompilerAdapter {
         logAndAddFilesToCompile(cmd);
 
         return 
-            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+            executeExternalCompile(cmd.getCommandline(), firstFileName,
+                                   !assumeJava11() && !assumeJava12() 
+                                   && !assumeJava13()) 
+            == 0;
     }
 
 }

@@ -109,6 +109,9 @@ Fixed bugs:
 * <replaceregexp> didn't work for multi-byte encodings if byline was false.
   Bugzilla Report 19187.
 
+* file names that include spaces need to be quoted inside the @argfile
+  argument using forked <javac> and JDK 1.4.  Bugzilla Report 10499.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.

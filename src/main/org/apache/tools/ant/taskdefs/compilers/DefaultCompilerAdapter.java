@@ -398,6 +398,25 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * system.
      */
     protected int executeExternalCompile(String[] args, int firstFileName) {
+        return executeExternalCompile(args, firstFileName, false);
+    }
+
+    /**
+     * Do the compile with the specified arguments.
+     * @param args - arguments to pass to process on command line
+     * @param firstFileName - index of the first source file in args,
+     * if the index is negative, no temporary file will ever be
+     * created, but this may hit the command line length limit on your
+     * system.
+     * @param quoteFilenames - if set to true, filenames containing
+     * spaces will be quoted when they appear in the external file.
+     * This is necessary when running JDK 1.4's javac and probably
+     * others.
+     *
+     * @since Ant 1.6
+     */
+    protected int executeExternalCompile(String[] args, int firstFileName,
+                                         boolean quoteFiles) {
         String[] commandArray = null;
         File tmpFile = null;
 
@@ -418,7 +437,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                     tmpFile = fileUtils.createTempFile("files", "", userDir);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
-                        out.println(args[i]);
+                        if (quoteFiles && args[i].indexOf(" ") > -1) {
+                            out.println("\"" + args[i] + "\"");
+                        } else {
+                            out.println(args[i]);
+                        }
                     }
                     out.flush();
                     commandArray = new String[firstFileName + 1];
