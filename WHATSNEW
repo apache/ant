@@ -81,13 +81,6 @@ Other changes:
 * It is now possible to specify the pattern created/parsed by <checksum>.
   Bugzilla Report 16539.
 
-* Added -nouserlib option to allow running ant without automatically loading
-  up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
-  Modified the build.sh and build.bat to use the option.
-
-* Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
-  variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
-
 * Added a new "failall" value for the onerror attribute of <typedef>.
   Bugzilla report 31685.
 
