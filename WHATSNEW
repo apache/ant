@@ -39,6 +39,8 @@ Fixed bugs:
   ant-starteam.  The stlist task now similarly displays that status correctly
   making it a more generally useful tool.  
 
+* <replace> would count some internal character replacements when
+  reporting the number of replaced tokens.
 
 Other changes:
 --------------
