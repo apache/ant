@@ -343,8 +343,9 @@ public class Copy extends Task {
      * The number of milliseconds leeway to give before deciding a
      * target is out of date.
      *
-     * <p>Default is 0 milliseconds, or 2 seconds on DOS systems.</p>
-     *
+     * <p>Default is 1 second, or 2 seconds on DOS systems.</p>
+     * @param granularity the granularity used to decide if a target is out of
+     * date.
      * @since Ant 1.6.2
      */
     public void setGranularity(long granularity) {
