@@ -87,6 +87,11 @@ public class JUnitVersionHelperTest extends TestCase {
                      JUnitVersionHelper.getTestCaseName(new Foo3()));
     }
 
+    public void testNameNotGetName() {
+        assertEquals("I'm a foo, too", 
+                     JUnitVersionHelper.getTestCaseName(new Foo4()));
+    }
+
     public void testNull() {
         assertEquals("unknown", JUnitVersionHelper.getTestCaseName(null));
     }
@@ -106,4 +111,9 @@ public class JUnitVersionHelperTest extends TestCase {
 
     public static class Foo3 extends Foo {
     }
+
+    public static class Foo4 extends Foo {
+        public String name() {return "I'm a foo, too";}
+    }
+
 }
