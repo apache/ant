@@ -377,6 +377,12 @@ public class Ant extends Task {
         } finally {
             // help the gc
             newProject = null;
+            Enumeration enum = properties.elements();
+            while (enum.hasMoreElements()) {
+                Property p = (Property) enum.nextElement();
+                p.setProject(null);
+            }
+
             if (output != null && out != null) {
                 try {
                     out.close();

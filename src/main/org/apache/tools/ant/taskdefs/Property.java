@@ -320,6 +320,10 @@ public class Property extends Task {
      * here is where it is loaded
      */
     public void execute() throws BuildException {
+        if (getProject() == null) {
+            throw new IllegalStateException("project has not been set");
+        }
+
         if (name != null) {
             if (value == null && ref == null) {
                 throw new BuildException("You must specify value, location or "
