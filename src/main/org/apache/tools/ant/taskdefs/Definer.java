@@ -91,6 +91,11 @@ public abstract class Definer extends Task {
             Project.MSG_WARN);
     }
     
+    /**
+     * Set the classpath to be used when searching for component being defined
+     * 
+     * @param classpath an Ant Path object containing the classpath.
+     */
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
             this.classpath = classpath;

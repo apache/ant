@@ -277,6 +277,8 @@ public class Javac extends MatchingTask {
 
     /**
      * Set the classpath to be used for this compilation.
+     * 
+     * @param classpath an Ant Path object containing the compilation classpath.
      */
     public void setClasspath(Path classpath) {
         if (compileClasspath == null) {

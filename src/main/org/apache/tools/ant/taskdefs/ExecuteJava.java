@@ -90,6 +90,11 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         this.javaCommand = javaCommand;
     }
 
+    /**
+     * Set the classpath to be used when running the Java class
+     * 
+     * @param p an Ant Path object containing the classpath.
+     */
     public void setClasspath(Path p) {
         classpath = p;
     }

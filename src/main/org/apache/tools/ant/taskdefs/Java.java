@@ -184,7 +184,9 @@ public class Java extends Task {
     }
 
     /**
-     * Set the classpath to be used for this compilation.
+     * Set the classpath to be used when running the Java class
+     * 
+     * @param s an Ant Path object containing the classpath.
      */
     public void setClasspath(Path s) {
         createClasspath().append(s);

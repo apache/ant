@@ -109,39 +109,92 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @ant.task category="java"
  */
 public class Javadoc extends Task {
-
+    /**
+     * Inner class used to manage doclet parameters.
+     */
     public class DocletParam {
+        /** The parameter name */
         private String name;
+        
+        /** The parameter value */
         private String value;
 
+        /**
+         * Set the name of the parameter.
+         *
+         * @param name the name of the doclet parameter
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * Get the parameter name.
+         *
+         * @return the parameter's name.
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Set the parameter value. 
+         *
+         * Note that only string values are supported. No resolution of file 
+         * paths is performed. 
+         *
+         * @param value the parameter value.
+         */
         public void setValue(String value) {
             this.value = value;
         }
 
+        /**
+         * Get the parameter value.
+         *
+         * @return the parameter value.
+         */
         public String getValue() {
             return value;
         }
     }
 
+    /**
+     * A project aware class used for Javadoc extensions which take a name
+     * and a path such as doclet and taglet arguments.
+     *
+     * @author Conor MacNeill
+     */
     public static class ExtensionInfo extends ProjectComponent {
+        /** The name of the extension */
         private String name;
+        
+        /** The optional path to use to load the extension */
         private Path path;
+        
+        /**
+         * Set the name of the extension
+         *
+         * @param name the extension's name.
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * Get the name of the extension.
+         *
+         * @return the extension's name.
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Set the path to use when loading the component.
+         *
+         * @param path a Path instance containing the classpath to use.
+         */
         public void setPath(Path path) {
             if (this.path == null) {
                 this.path = path;
@@ -150,10 +203,22 @@ public class Javadoc extends Task {
             }
         }
 
+        /**
+         * Get the extension's path.
+         *
+         * @return the path to be used to load the extension. 
+         * May be <code>null</code>
+         */
         public Path getPath() {
             return path;
         }
 
+        /**
+         * Create an empty nested path to be configured by Ant with the 
+         * classpath for the extension.
+         *
+         * @return a new Path instance to be configured.
+         */
         public Path createPath() {
             if (path == null) {
                 path = new Path(getProject());
@@ -163,16 +228,29 @@ public class Javadoc extends Task {
 
         /**
          * Adds a reference to a CLASSPATH defined elsewhere.
+         *
+         * @param r the reference containing the path.
          */
         public void setPathRef(Reference r) {
             createPath().setRefid(r);
         }
     }
-        
+    
+    /**
+     * This class stores info about doclets.
+     *
+     * @author Conor MacNeill
+     */
     public class DocletInfo extends ExtensionInfo {
-
+        
+        /** Collection of doclet parameters. */
         private Vector params = new Vector();
 
+        /** 
+         * Create a doclet parameter to be configured by Ant.
+         *
+         * @return a new DocletParam instance to be configured.
+         */
         public DocletParam createParam() {
             DocletParam param = new DocletParam();
             params.addElement(param);
@@ -180,45 +258,112 @@ public class Javadoc extends Task {
             return param;
         }
 
+        /**
+         * Get the doclet's parameters.
+         *
+         * @return an Enumeration of DocletParam instances.
+         */
         public Enumeration getParams() {
             return params.elements();
         }
     }
 
+    /**
+     * Used to track info about the packages to be javadoc'd
+     */
     public static class PackageName {
+        /** The package name */
         private String name;
+        
+        /**
+         * Set the name of the package
+         *
+         * @param name the package name.
+         */
         public void setName(String name) {
             this.name = name;
         }
+        
+        /** 
+         * Get the package name.
+         *
+         * @return the package's name.
+         */
         public String getName() {
             return name;
         }
+        
+        /**
+         * @see java.lang.Object#toString
+         */
         public String toString() {
             return getName();
         }
     }
 
+    /**
+     * This class is used to manage the source files to be processed.
+     */
     public static class SourceFile {
+        /** The source file */
         private File file;
+        
+        /**
+         * Set the source file.
+         *
+         * @param file the source file.
+         */
         public void setFile(File file) {
             this.file = file;
         }
+        
+        /**
+         * Get the source file.
+         *
+         * @return the source file.
+         */
         public File getFile() {
             return file;
         }
     }
 
+    /**
+     * An HTML element in the javadoc.
+     *
+     * This class is used for those javadoc elements which contain HTML such as
+     * footers, headers, etc.
+     */
     public static class Html {
+        /** The text for the element */
         private StringBuffer text = new StringBuffer();
+        
+        /**
+         * Add text to the element.
+         *
+         * @param t the text to be added.
+         */
         public void addText(String t) {
             text.append(t);
         }
+        
+        /**
+         * Get the current text for the element.
+         *
+         * @return the current text.
+         */
         public String getText() {
             return text.toString();
         }
     }
 
+    /**
+     * EnumeratedAttribute implementation supporting the javadoc scoping
+     * values.
+     */
     public static class AccessType extends EnumeratedAttribute {
+        /**
+         * @see EnumeratedAttributes#getValues().
+         */
         public String[] getValues() {
             // Protected first so if any GUI tool offers a default
             // based on enum #0, it will be right.
@@ -226,21 +371,38 @@ public class Javadoc extends Task {
         }
     }
 
+    /** The command line built to execute Javadoc. */
     private Commandline cmd = new Commandline();
+    
+    /** Flag which indicates if javadoc from JDK 1.1 is to be used. */
     private static boolean javadoc1 =
         (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1);
 
+    /** Flag which indicates if javadoc from JDK 1.4 is available */
     private static boolean javadoc4 =
         (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
          JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2 &&
          JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_3);
 
+    /**
+     * Utility method to add an argument to the command line conditionally
+     * based on the given flag.
+     *
+     * @param b the flag which controls if the argument is added.
+     * @param arg the argument value.
+     */
     private void addArgIf(boolean b, String arg) {
         if (b) {
             cmd.createArgument().setValue(arg);
         }
     }
 
+    /**
+     * Utility method to add a non JDK1.1 javadoc argument.
+     *
+     * @param key the argument name.
+     * @param value the argument value.
+     */
     private void add12ArgIfNotEmpty(String key, String value) {
         if (!javadoc1) {
             if (value != null && value.length() != 0) {
@@ -253,12 +415,22 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Utility method to add a non-JDK1.1 argument to the command line 
+     * conditionally based on the given flag.
+     *
+     * @param b the flag which controls if the argument is added.
+     * @param arg the argument value.
+     */
     private void add12ArgIf(boolean b, String arg) {
         if (!javadoc1 && b) {
             cmd.createArgument().setValue(arg);
         }
     }
 
+    /** 
+     * Flag which indicates if the task should fail if there is a javadoc error.
+     */
     private boolean failOnError = false;
     private Path sourcePath = null;
     private File destDir = null;
@@ -288,6 +460,8 @@ public class Javadoc extends Task {
     /**
      * Work around command line length limit by using an external file
      * for the sourcefiles.
+     *
+     * @param b true if an external file is to be used.
      */
     public void setUseExternalFile(boolean b) {
         if (!javadoc1) {
@@ -306,6 +480,12 @@ public class Javadoc extends Task {
         this.useDefaultExcludes = useDefaultExcludes;
     }
 
+    /**
+     * Set the maximum memory to be used by the javadoc process
+     *
+     * @param max a string indicating the maximum memory according to the 
+     *        JVM conventions (e.g. 128m is 128 Megabytes)
+     */
     public void setMaxmemory(String max){
         if (javadoc1) {
             cmd.createArgument().setValue("-J-mx" + max);
@@ -314,10 +494,20 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Set an additional parameter on the command line
+     *
+     * @param add the additional command line parameter for the javadoc task.
+     */
     public void setAdditionalparam(String add){
         cmd.createArgument().setLine(add);
     }
 
+    /**
+     * Specify where to find source file
+     *
+     * @param src a Path instance containing the various source directories.
+     */
     public void setSourcepath(Path src) {
         if (sourcePath == null) {
             sourcePath = src;
@@ -325,6 +515,13 @@ public class Javadoc extends Task {
             sourcePath.append(src);
         }
     }
+    
+    /**
+     * Create a path to be configured with the locations of the source
+     * files.
+     *
+     * @return a new Path instance to be configured by the Ant core.
+     */
     public Path createSourcepath() {
         if (sourcePath == null) {
             sourcePath = new Path(project);
@@ -334,16 +531,29 @@ public class Javadoc extends Task {
 
     /**
      * Adds a reference to a CLASSPATH defined elsewhere.
+     *
+     * @param r the reference containing the source path definition.
      */
     public void setSourcepathRef(Reference r) {
         createSourcepath().setRefid(r);
     }
 
+    /** 
+     * Set the directory where the Javadoc output will be generated.
+     *
+     * @param dir the destination directory.
+     */
     public void setDestdir(File dir) {
         destDir = dir;
         cmd.createArgument().setValue("-d");
         cmd.createArgument().setFile(destDir);
     }
+    
+    /**
+     * Set the list of source files to process.
+     *
+     * @param src a comma separated list of source files.
+     */
     public void setSourcefiles(String src) {
         StringTokenizer tok = new StringTokenizer(src, ",");
         while (tok.hasMoreTokens()) {
@@ -353,11 +563,26 @@ public class Javadoc extends Task {
             addSource(sf);
         }
     }
+    
+    /**
+     * Add a single source file.
+     *
+     * @param sf the source file to be processed.
+     */
     public void addSource(SourceFile sf) {
         sourceFiles.addElement(sf);
     }
-    public void setPackagenames(String src) {
-        StringTokenizer tok = new StringTokenizer(src, ",");
+    
+    /**
+     * Set the package names to be processed.
+     *
+     * @param packages a comma separated list of packages specs 
+     *        (may be wildcarded).
+     *
+     * @see #addPackage for wildcard information.
+     */
+    public void setPackagenames(String packages) {
+        StringTokenizer tok = new StringTokenizer(packages, ",");
         while (tok.hasMoreTokens()) {
             String p = tok.nextToken();
             PackageName pn = new PackageName();
@@ -365,12 +590,27 @@ public class Javadoc extends Task {
             addPackage(pn);
         }
     }
+    
+    /**
+     * Add a single package to be processed.
+     *
+     * If the package name ends with &quot;.*&quot; the Javadoc task
+     * will find and process all subpackages.
+     *
+     * @param pn the package name, possibly wildcarded.
+     */
     public void addPackage(PackageName pn) {
         packageNames.addElement(pn);
     }
 
-    public void setExcludePackageNames(String src) {
-        StringTokenizer tok = new StringTokenizer(src, ",");
+    /**
+     * Set the list of packages to be excluded.
+     *
+     * @param packages a comma separated list of packages to be excluded. 
+     *        This may not include wildcards.
+     */
+    public void setExcludePackageNames(String packages) {
+        StringTokenizer tok = new StringTokenizer(packages, ",");
         while (tok.hasMoreTokens()) {
             String p = tok.nextToken();
             PackageName pn = new PackageName();
@@ -378,45 +618,111 @@ public class Javadoc extends Task {
             addExcludePackage(pn);
         }
     }
+    
+    /**
+     * Add a package to be excluded from the javadoc run.
+     *
+     * @param pn the name of the package (wildcards are not permitted).
+     */
     public void addExcludePackage(PackageName pn) {
         excludePackageNames.addElement(pn);
     }
 
+    /**
+     * Specify the fiel containing the overview to be included in the generated
+     * documentation.
+     *
+     * @param f the file containing the overview.
+     */
     public void setOverview(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-overview");
             cmd.createArgument().setFile(f);
         }
     }
+    
+    /**
+     * Indicate whether only public classes and members are to be included in 
+     * the scope processed
+     *
+     * @param b true if scope is to be public.
+     */
     public void setPublic(boolean b) {
         addArgIf(b, "-public");
     }
+
+    /**
+     * Indicate whether only protected and public classes and members are to 
+     * be included in the scope processed
+     *
+     * @param b true if scope is to be protected.
+     */
     public void setProtected(boolean b) {
         addArgIf(b, "-protected");
     }
+
+    /**
+     * Indicate whether only package, protected and public classes and 
+     * members are to be included in the scope processed
+     *
+     * @param b true if scope is to be package level.
+     */
     public void setPackage(boolean b) {
         addArgIf(b, "-package");
     }
+    
+    /**
+     * Indicate whether all classes and 
+     * members are to be included in the scope processed
+     *
+     * @param b true if scope is to be private level.
+     */
     public void setPrivate(boolean b) {
         addArgIf(b, "-private");
     }
+    
+    /**
+     * Set the scope to be processed. This is an alternative to the
+     * use of the setPublic, setPrivate, etc methods. It gives better build
+     * file control over what scope is processed.
+     *
+     * @param at the scope to be processed.
+     */
     public void setAccess(AccessType at) {
         cmd.createArgument().setValue("-" + at.getValue());
     }
-    public void setDoclet(String src) {
+    
+    /**
+     * Set the class that starts the doclet used in generating the 
+     * documentation.
+     *
+     * @param docletName the name of the doclet class.
+     */
+    public void setDoclet(String docletName) {
         if (doclet == null) {
             doclet = new DocletInfo();
         }
-        doclet.setName(src);
+        doclet.setName(docletName);
     }
 
-    public void setDocletPath(Path src) {
+    /**
+     * Set the classpath used to find the doclet class.
+     *
+     * @param docletPath the doclet classpath.
+     */
+    public void setDocletPath(Path docletPath) {
         if (doclet == null) {
             doclet = new DocletInfo();
         }
-        doclet.setPath(src);
+        doclet.setPath(docletPath);
     }
 
+    /**
+     * Set the classpath used to find the doclet class by reference.
+     *
+     * @param r the reference to the Path instance to use as the doclet 
+     *        classpath.
+     */
     public void setDocletPathRef(Reference r) {
         if (doclet == null) {
             doclet = new DocletInfo();
@@ -424,15 +730,33 @@ public class Javadoc extends Task {
         doclet.createPath().setRefid(r);
     }
 
+    /**
+     * Create a doclet to be used in the documentation generation.
+     *
+     * @return a new DocletInfo instance to be configured.
+     */
     public DocletInfo createDoclet() {
         doclet = new DocletInfo();
         return doclet;
     }
 
+    /**
+     * Add a taglet
+     *
+     * @param tagletInfo information about the taglet.
+     */
     public void addTaglet(ExtensionInfo tagletInfo) {
         tags.addElement(tagletInfo);
     }
     
+    /**
+     * Indicate whether Javadoc should produce old style (JDK 1.1) 
+     * documentation.
+     *
+     * This is not supported by JDK 1.1 and has been phased out in JDK 1.4
+     * 
+     * @param b if true attempt to generate old style documentation.
+     */
     public void setOld(boolean b) {
         if (b) {
             if (javadoc1) {
@@ -446,13 +770,26 @@ public class Javadoc extends Task {
             }
         }
     }
-    public void setClasspath(Path src) {
+
+    /**
+     * Set the classpath to be used for this javadoc run.
+     * 
+     * @param path an Ant Path object containing the compilation 
+     *        classpath.
+     */
+    public void setClasspath(Path path) {
         if (classpath == null) {
-            classpath = src;
+            classpath = path;
         } else {
-            classpath.append(src);
+            classpath.append(path);
         }
     }
+    
+    /**
+     * Create a Path to be configured with the classpath to use
+     *
+     * @return a new Path instance to be configured with the classpath.
+     */
     public Path createClasspath() {
         if (classpath == null) {
             classpath = new Path(project);
@@ -462,18 +799,31 @@ public class Javadoc extends Task {
 
     /**
      * Adds a reference to a CLASSPATH defined elsewhere.
+     *
+     * @param r the reference to an instance defining the classpath.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
-    public void setBootclasspath(Path src) {
+    /** 
+     * Set the boot classpath to use.
+     *
+     * @param path the boot classpath.
+     */
+    public void setBootclasspath(Path path) {
         if (bootclasspath == null) {
-            bootclasspath = src;
+            bootclasspath = path;
         } else {
-            bootclasspath.append(src);
+            bootclasspath.append(path);
         }
     }
+    
+    /**
+     * Create a Path to be configured with the boot classpath
+     *
+     * @return a new Path instance to be configured with the boot classpath.
+     */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
             bootclasspath = new Path(project);
@@ -483,84 +833,200 @@ public class Javadoc extends Task {
 
     /**
      * Adds a reference to a CLASSPATH defined elsewhere.
+     *
+     * @param r the reference to an instance defining the bootclasspath.
      */
     public void setBootClasspathRef(Reference r) {
         createBootclasspath().setRefid(r);
     }
 
-    public void setExtdirs(String src) {
+    /**
+     * Set the location of the extensions directories.
+     *
+     * @param path the string version of the path.
+     * @deprecated Use the {@link #setExtdirs(Path)} version.
+     */
+    public void setExtdirs(String path) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-extdirs");
-            cmd.createArgument().setValue(src);
+            cmd.createArgument().setValue(path);
         }
     }
+
+    /**
+     * Set the location of the extensions directories.
+     *
+     * @param path a path containing the extension directories.
+     */
+    public void setExtdirs(Path path) {
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-extdirs");
+            cmd.createArgument().setPath(path);
+        }
+    }
+
+    /**
+     * Run javadoc in verbose mode
+     *
+     * @param b true if operation is to be verbose.
+     */
     public void setVerbose(boolean b) {
         add12ArgIf(b, "-verbose");
     }
-    public void setLocale(String src) {
+    
+    /**
+     * Set the local to use in documentation generation.
+     *
+     * @param locale the locale to use.
+     */
+    public void setLocale(String locale) {
         if (!javadoc1) {
             // createArgument(true) is necessary to make sure, -locale
             // is the first argument (required in 1.3+).
-            cmd.createArgument(true).setValue(src);
+            cmd.createArgument(true).setValue(locale);
             cmd.createArgument(true).setValue("-locale");
         }
     }
+    
+    /**
+     * Set the encoding name of the source files,
+     *
+     * @param enc the name of the encoding for the source files.
+     */
     public void setEncoding(String enc) {
         cmd.createArgument().setValue("-encoding");
         cmd.createArgument().setValue(enc);
     }
-    public void setVersion(boolean src) {
-        version = src;
+    
+    /**
+     * Include the version tag in the generated documentation.
+     *
+     * @param b true if the version tag should be included.
+     */
+    public void setVersion(boolean b) {
+        this.version = b;
     }
+    
+    /**
+     * Generate the &quot;use&quot page for each package.
+     *
+     * @param b true if the use page should be generated.
+     */
     public void setUse(boolean b) {
         add12ArgIf(b, "-use");
     }
-    public void setAuthor(boolean src) {
-        author = src;
+    
+    
+    /**
+     * Include the author tag in the generated documentation.
+     *
+     * @param b true if the author tag should be included.
+     */
+    public void setAuthor(boolean b) {
+        author = b;
     }
+    
+    /**
+     * Generate a split index
+     *
+     * @param b true if the index should be split into a file per letter.
+     */
     public void setSplitindex(boolean b) {
         add12ArgIf(b, "-splitindex");
     }
-    public void setWindowtitle(String src) {
-        add12ArgIfNotEmpty("-windowtitle", src);
+    
+    /**
+     * Set the title to be placed in the HTML &lt;title&gt; tag of the 
+     * generated documentation.
+     *
+     * @param title the window title to use.
+     */
+    public void setWindowtitle(String title) {
+        add12ArgIfNotEmpty("-windowtitle", title);
     }
-    public void setDoctitle(String src) {
+    
+    /**
+     * Set the title of the generated overview page.
+     *
+     * @param doctitle the Document title.
+     */
+    public void setDoctitle(String doctitle) {
         Html h = new Html();
-        h.addText(src);
+        h.addText(doctitle);
         addDoctitle(h);
     }
+    
+    /**
+     * Add a document title to use for the overview page.
+     *
+     * @param text the HTML element containing the document title.
+     */
     public void addDoctitle(Html text) {
         if (!javadoc1) {
             doctitle = text;
         }
     }
-    public void setHeader(String src) {
+    
+    /**
+     * Set the header text to be placed at the top of each output file.
+     *
+     * @param header the header text
+     */
+    public void setHeader(String header) {
         Html h = new Html();
-        h.addText(src);
+        h.addText(header);
         addHeader(h);
     }
+
+    /**
+     * Set the header text to be placed at the top of each output file.
+     *
+     * @param text the header text
+     */
     public void addHeader(Html text) {
         if (!javadoc1) {
             header = text;
         }
     }
 
-    public void setFooter(String src) {
+    /**
+     * Set the footer text to be placed at the bottom of each output file.
+     *
+     * @param footer the footer text.
+     */
+    public void setFooter(String footer) {
         Html h = new Html();
-        h.addText(src);
+        h.addText(footer);
         addFooter(h);
     }
+    
+    /**
+     * Set the footer text to be placed at the bottom of each output file.
+     *
+     * @param text the footer text.
+     */
     public void addFooter(Html text) {
         if (!javadoc1) {
             footer = text;
         }
     }
 
-    public void setBottom(String src) {
+    /**
+     * Set the text to be placed at the bottom of each output file.
+     *
+     * @param bottom the bottom text.
+     */
+    public void setBottom(String bottom) {
         Html h = new Html();
-        h.addText(src);
+        h.addText(bottom);
         addBottom(h);
     }
+    
+    /**
+     * Set the text to be placed at the bottom of each output file.
+     *
+     * @param text the bottom text.
+     */
     public void addBottom(Html text) {
         if (!javadoc1) {
             bottom = text;
@@ -572,7 +1038,7 @@ public class Javadoc extends Task {
             LinkArgument le = createLink();
             le.setOffline(true);
             String linkOfflineError = "The linkoffline attribute must include"
-                + " an URL and a package-list file location separated by a"
+                + " a URL and a package-list file location separated by a"
                 + " space";
             if (src.trim().length() == 0) {
                 throw new BuildException(linkOfflineError);
