@@ -89,7 +89,7 @@ Legal:
                        classname="org.apache.ant.datatypes.Pattern" />
 
     <property name="foo2">
-      <pattern name="*.java"/>
+      <pattern2 name="*.java"/>
     </property>
 
     <echo message="foo2=${foo2}" />
