@@ -175,6 +175,18 @@ public class FixCrLfTest extends BuildFileTest {
                            new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
     }
 
+    public void testFixFile() throws Exception {
+        executeTarget("testFixFile");
+        File created= new File(System.getProperty("root"),
+            "src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf");
+        assertTrue("didnt create output file",created.exists());
+    }
+
+    public void testFixFileExclusive() throws Exception {
+        expectBuildExceptionContaining("testFixFileExclusive",
+                FixCRLF.ERROR_FILE_AND_SRCDIR, FixCRLF.ERROR_FILE_AND_SRCDIR);
+    }
+
     /**
      * Bugzilla Report 20840
      *

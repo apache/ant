@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project default="cleanup" basedir=".">
+<project name="fixcrlf" default="cleanup" basedir=".">
   <target name="init">
     <mkdir dir="result" />
   </target>
@@ -160,6 +160,14 @@
   <!-- Bugzilla Report 20840 -->
   <target name="createParentDirs" depends="init">
     <fixcrlf srcdir="." destdir="result" includes="input/Junk1.java"/>
+  </target>
+
+  <target name="testFixFile" depends="init">
+    <fixcrlf file="input/longlines.crlf" destdir="result" />
+  </target>
+
+  <target name="testFixFileExclusive" depends="init">
+    <fixcrlf file="input/longlines.crlf" srcdir="input" destdir="result"/>
   </target>
 
 </project>

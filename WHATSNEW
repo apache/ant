@@ -116,6 +116,11 @@ Other changes:
 * Tighten security by sending storepass and keypass to signjar
   via the input stream of the forked process.
 
+* New task <schemavalidate> extends <xmlvalidate> with extra support
+  for XML Schema (XSD) files.
+
+* <fixcrlf> supports a file attribute for easy fixup of a single file.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
@@ -222,9 +227,6 @@ Other changes:
 
 * Pathconvert no longer requires that one of (targetos|pathsep|dirsep)
   be set; platform defaults are used when this is the case.
-  
-* New task <schemavalidate> extends <xmlvalidate> with extra support
-  for XML Schema (XSD) files. 
 
 Fixed bugs:
 -----------

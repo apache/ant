@@ -121,11 +121,13 @@ public class FixCRLF extends MatchingTask {
 
     private File srcDir;
     private File destDir = null;
+    private File file;
 
     /**
      * Encoding to assume for the files
      */
     private String encoding = null;
+    public static final String ERROR_FILE_AND_SRCDIR = "srcdir and file are mutually exclusive";
 
     /**
      * Defaults the properties based on the system type.
@@ -172,6 +174,14 @@ public class FixCRLF extends MatchingTask {
         this.javafiles = javafiles;
     }
 
+    /**
+     * set a single file to convert
+     * @since Ant1.7
+     * @param file
+     */
+    public void setFile(File file) {
+        this.file = file;
+    }
 
     /**
      * Specify how EndOfLine characters are to be handled.
@@ -314,6 +324,15 @@ public class FixCRLF extends MatchingTask {
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
 
+        if(file!=null) {
+            if(srcDir!=null) {
+                throw new BuildException(ERROR_FILE_AND_SRCDIR);
+            }
+            //patch file into the fileset
+            fileset.setFile(file);
+            //set our parent dir
+            srcDir=file.getParentFile();
+        }
         if (srcDir == null) {
             throw new BuildException("srcdir attribute must be set!");
         }
@@ -745,7 +764,7 @@ public class FixCRLF extends MatchingTask {
     }
 
 
-    class OneLiner implements Enumeration {
+    protected class OneLiner implements Enumeration {
 
         private int state = javafiles ? LOOKING : NOTJAVA;
 
