@@ -12,6 +12,7 @@
   <property name="map.ext" value=".copy2"/>
   <property name="rootScratchDir" value="test_multi_mapper_scratch_area"/>
   <property name="baseScratchSrc" value="${rootScratchDir}/src"/>
+  <property name="baseScratchDest" value="${rootScratchDir}/dest"/>
 
   <target name="setup">
     <delete dir="${baseScratchSrc}"/>
