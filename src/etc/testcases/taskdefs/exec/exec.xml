@@ -1,0 +1,29 @@
+<project name="exec-test" default="spawn" basedir=".">
+    <target name="init">
+        <!-- this property can be overriden programatically in the Java test case -->
+        <property name="timeToWait" value="10"/>
+        <!-- this property can be overriden programatically in the Java test case -->
+        <property name="logFile" value="/tmp/spawn.log"/>
+        <property environment="env"/>
+        <!-- UNIX -->
+        <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
+        <!-- CYGWIN -->
+        <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
+        <condition property="test.can.run">
+            <or>
+                <isset property="sh.executable"/>
+                <isset property="sh.exe.executable"/>
+            </or>
+        </condition>
+    </target>
+    <target name="spawn" depends="init" if="test.can.run">
+        <exec executable="sh" spawn="true">
+            <arg value="spawn.sh"/>
+            <arg value="${timeToWait}" />
+            <arg value="${logFile}" />
+        </exec>
+    </target>
+    <target name="cleanup">
+        <delete file="${logFile}"/>
+    </target>
+</project>
