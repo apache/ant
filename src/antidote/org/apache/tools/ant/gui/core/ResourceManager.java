@@ -77,7 +77,7 @@ public class ResourceManager {
 
     /** Image path. */
     private static final String IMG_PATH = 
-        File.separator + RESOURCE_PKG.replace('.', File.separatorChar);
+        '/' + RESOURCE_PKG.replace('.', '/');
 
     /** Resources to reference. */
     private ResourceBundle _resources = null;
@@ -312,9 +312,7 @@ public class ResourceManager {
         if(fileName == null) return null;
 
         ImageIcon icon = null;
-
         URL location = getClass().getResource(IMG_PATH + "/" + fileName);
-
         if(location != null) {
             icon = new ImageIcon(location);
         }
