@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.FileOutputStream;
@@ -221,7 +222,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      */
     protected void writeDOMTree(Document doc, File file) throws IOException {
         OutputStream out = new FileOutputStream( file );
-        PrintWriter wri = new PrintWriter(out);
+        PrintWriter wri = new PrintWriter(new OutputStreamWriter(out, "UTF8"));
         wri.write("<?xml version=\"1.0\"?>\n");
         (new DOMElementWriter()).write(doc.getDocumentElement(), wri, 0, "  ");
         wri.flush();

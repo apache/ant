@@ -162,7 +162,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         if (out != null) {
             Writer wri = null;
             try {
-                wri = new OutputStreamWriter(out);
+                wri = new OutputStreamWriter(out, "UTF8");
                 wri.write("<?xml version=\"1.0\"?>\n");
                 (new DOMElementWriter()).write(rootElement, wri, 0, "  ");
                 wri.flush();
