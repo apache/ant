@@ -52,6 +52,58 @@ public class ClassicConfigurer
     }
 
     /**
+     * Configure an object based on a configuration in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * The implementation of this method should only use the methods
+     * specified by the supplied class. It is an error for the specified
+     * class not to be a base class or interface compatible with specified
+     * object.
+     *
+     * @param object the object
+     * @param clazz the Class object to  use during configuration
+     * @param configuration the configuration
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    public void configureElement( Object object,
+                                  Class clazz,
+                                  Configuration configuration,
+                                  TaskContext context )
+        throws ConfigurationException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Configure named attribute of object in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * The implementation of this method should only use the methods
+     * specified by the supplied class. It is an error for the specified
+     * class not to be a base class or interface compatible with specified
+     * object.
+     *
+     * @param object the object
+     * @param clazz the Class object to  use during configuration
+     * @param name the attribute name
+     * @param value the attribute value
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    public void configureAttribute( Object object,
+                                    Class clazz,
+                                    String name,
+                                    String value,
+                                    TaskContext context )
+        throws ConfigurationException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Configure a task based on a configuration in a particular context.
      * This configuring can be done in different ways for different
      * configurers.
@@ -65,8 +117,8 @@ public class ClassicConfigurer
      * @exception ConfigurationException if an error occurs
      */
     public void configureElement( final Object object,
-                           final Configuration configuration,
-                           final TaskContext context )
+                                  final Configuration configuration,
+                                  final TaskContext context )
         throws ConfigurationException
     {
         if( DEBUG )
@@ -106,7 +158,7 @@ public class ClassicConfigurer
                     getLogger().debug( message );
                 }
 
-                configureAttribute( object, name, value, context );
+                doConfigureAttribute( object, name, value, context );
             }
 
             final Configuration[] children = configuration.getChildren();
@@ -122,7 +174,7 @@ public class ClassicConfigurer
                     getLogger().debug( message );
                 }
 
-                configureElement( object, child, context );
+                doConfigureElement( object, child, context );
             }
 
             final String content = configuration.getValue( null );
@@ -155,12 +207,12 @@ public class ClassicConfigurer
      * @exception ConfigurationException if an error occurs
      */
     public void configureAttribute( final Object object,
-                           final String name,
-                           final String value,
-                           final TaskContext context )
+                                    final String name,
+                                    final String value,
+                                    final TaskContext context )
         throws ConfigurationException
     {
-        configureAttribute( object, name, value, context );
+        doConfigureAttribute( object, name, value, context );
     }
 
     /**
@@ -179,10 +231,10 @@ public class ClassicConfigurer
         setValue( object, "addContent", content, context );
     }
 
-    private void configureAttribute( final Object object,
-                                     final String name,
-                                     final String value,
-                                     final TaskContext context )
+    private void doConfigureAttribute( final Object object,
+                                       final String name,
+                                       final String value,
+                                       final TaskContext context )
         throws ConfigurationException
     {
         final String methodName = getMethodNameFor( name );
@@ -431,9 +483,9 @@ public class ClassicConfigurer
         return sb.toString();
     }
 
-    private void configureElement( final Object object,
-                                   final Configuration configuration,
-                                   final TaskContext context )
+    private void doConfigureElement( final Object object,
+                                     final Configuration configuration,
+                                     final TaskContext context )
         throws ConfigurationException
     {
         final String name = configuration.getName();
@@ -474,7 +526,7 @@ public class ClassicConfigurer
         try
         {
             final Object created = method.invoke( object, new Object[ 0 ] );
-            configureElement( created, configuration, context );
+            doConfigureElement( created, configuration, context );
         }
         catch( final ConfigurationException ce )
         {
@@ -498,7 +550,7 @@ public class ClassicConfigurer
             final Class clazz = method.getParameterTypes()[ 0 ];
             final Object created = clazz.newInstance();
 
-            configureElement( created, configuration, context );
+            doConfigureElement( created, configuration, context );
             method.invoke( object, new Object[]{created} );
         }
         catch( final ConfigurationException ce )

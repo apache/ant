@@ -48,4 +48,50 @@ public interface Configurer
      */
     void configureAttribute( Object object, String name, String value, TaskContext context )
         throws ConfigurationException;
+
+    /**
+     * Configure an object based on a configuration in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * The implementation of this method should only use the methods
+     * specified by the supplied class. It is an error for the specified
+     * class not to be a base class or interface compatible with specified
+     * object.
+     *
+     * @param object the object
+     * @param clazz the Class object to  use during configuration
+     * @param configuration the configuration
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    void configureElement( Object object,
+                           Class clazz,
+                           Configuration configuration,
+                           TaskContext context )
+        throws ConfigurationException;
+
+    /**
+     * Configure named attribute of object in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * The implementation of this method should only use the methods
+     * specified by the supplied class. It is an error for the specified
+     * class not to be a base class or interface compatible with specified
+     * object.
+     *
+     * @param object the object
+     * @param clazz the Class object to  use during configuration
+     * @param name the attribute name
+     * @param value the attribute value
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    void configureAttribute( Object object,
+                             Class clazz,
+                             String name,
+                             String value,
+                             TaskContext context )
+        throws ConfigurationException;
 }

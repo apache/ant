@@ -78,14 +78,23 @@ public class DefaultConfigurer
      * @exception ConfigurationException if an error occurs
      */
     public void configureElement( final Object object,
-                           final Configuration configuration,
-                           final TaskContext context )
+                                  final Configuration configuration,
+                                  final TaskContext context )
+        throws ConfigurationException
+    {
+        configureElement( object, object.getClass(), configuration, context );
+    }
+
+    public void configureElement( final Object object,
+                                  final Class clazz,
+                                  final Configuration configuration,
+                                  final TaskContext context )
         throws ConfigurationException
     {
         try
         {
             // Configure the object
-            configureObject( object, configuration, context );
+            configureObject( object, clazz, configuration, context );
         }
         catch( final ReportableConfigurationException e )
         {
@@ -109,6 +118,7 @@ public class DefaultConfigurer
      * @throws Exception On error
      */
     private void configureObject( final Object object,
+                                  final Class clazz,
                                   final Configuration configuration,
                                   final TaskContext context )
         throws Exception
@@ -122,7 +132,7 @@ public class DefaultConfigurer
         {
             // Start configuration of the object
             final String elemName = configuration.getName();
-            final ObjectConfigurer configurer = getConfigurer( object.getClass() );
+            final ObjectConfigurer configurer = getConfigurer( clazz );
             final ConfigurationState state = configurer.startConfiguration( object );
 
             // Set each of the attributes
@@ -140,7 +150,7 @@ public class DefaultConfigurer
                 {
                     final String message =
                         REZ.getString( "no-such-attribute.error", elemName, name );
-                    throw new ReportableConfigurationException( message  );
+                    throw new ReportableConfigurationException( message );
                 }
                 catch( final Exception ce )
                 {
@@ -218,13 +228,34 @@ public class DefaultConfigurer
      * @exception ConfigurationException if an error occurs
      */
     public void configureAttribute( final Object object,
-                           final String name,
-                           final String value,
-                           final TaskContext context )
+                                    final String name,
+                                    final String value,
+                                    final TaskContext context )
+        throws ConfigurationException
+    {
+        configureAttribute( object, object.getClass(), name, value, context );
+    }
+
+    /**
+     * Configure named attribute of object in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * @param object the object
+     * @param name the attribute name
+     * @param value the attribute value
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    public void configureAttribute( final Object object,
+                                    final Class clazz,
+                                    final String name,
+                                    final String value,
+                                    final TaskContext context )
         throws ConfigurationException
     {
         // Locate the configurer for this object
-        final ObjectConfigurer configurer = getConfigurer( object.getClass() );
+        final ObjectConfigurer configurer = getConfigurer( clazz );
 
         // TODO - this ain't right, the validation is going to be screwed up
         final ConfigurationState state = configurer.startConfiguration( object );
@@ -471,7 +502,8 @@ public class DefaultConfigurer
         }
 
         // Configure the object
-        configureObject( child, element, context );
+        final Object object = child;
+        configureObject( object, object.getClass(), element, context );
 
         // Convert the object, if necessary
         if( !type.isInstance( child ) )
