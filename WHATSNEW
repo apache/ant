@@ -18,6 +18,10 @@ settings.
 JDK 1.1 and 1.2, even if the class could be found on the
 user-specified classpath.
 
+* z/OS now gets detected by the os condition.
+
+* <property environment=... /> now works on z/OS.
+
 Changes from Ant 1.4.1 to 1.5beta1
 ==================================
 
