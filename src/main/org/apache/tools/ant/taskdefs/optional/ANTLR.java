@@ -63,6 +63,7 @@ import java.net.URL;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
@@ -196,7 +197,13 @@ public class ANTLR extends Task {
                 ExecuteJava exe = new ExecuteJava();
                 exe.setJavaCommand(commandline.getJavaCommand());
                 exe.setClasspath(commandline.getClasspath());
-                exe.execute(project);
+                try {
+                    exe.execute(project);
+                } catch (ExitException e){
+                    if ( e.getStatus() != 0 ){
+                        throw new BuildException("ANTLR returned: " + e.getStatus(), location);
+                    }
+                }
             }
         }
     }
