@@ -117,7 +117,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
 
     /** The In memory version of the stylesheet */
     private Templates templates;
-    
+
     /** 
      * The modification time of the stylesheet from which the templates 
      * are read 
@@ -284,7 +284,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
      * @throws BuildException thrown if there is a problem creating
      * the factory.
      * @see #setFactory(String)
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     private TransformerFactory getFactory() throws BuildException {
         if (tfactory != null) {
@@ -344,6 +344,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
      * this method.
      * @param name the output property name.
      * @param value the output property value.
+     * @since Ant 1.5
      * @since Ant 1.5
      */
     public void setOutputProperty(String name, String value) {

@@ -113,8 +113,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /** Classpath to use when trying to load the XSL processor */
     private Path classpath = null;
-
-    /** implementation to use to communicate with the XSL processor */
+    
+    /** The Liason implementation to use to communicate with the XSL 
+     *  processor */
     private XSLTLiaison liaison;
 
     /** Flag which indicates if the stylesheet has been loaded into
@@ -147,6 +148,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Whether to style all files in the included directories as well.
+     *
      * @since Ant 1.5
      */
     private boolean performDirectoryScan = true;
@@ -159,7 +161,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * whether to reuse Transformer if transforming multiple files.
-     * @since 1.6
+     * @since 1.5.2
      */
     private boolean reuseLoadedStylesheet = true;
 
@@ -187,7 +189,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * <p>Setting this to true may get around a bug in certain
      * Xalan-J versions, default is false.</p>
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public void setReloadStylesheet(boolean b) {
         reuseLoadedStylesheet = !b;
@@ -714,7 +716,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             this.value = value;
         }
     }
-
 
     /**
      * Initialize internal instance of XMLCatalog
