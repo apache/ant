@@ -17,6 +17,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Location;
@@ -109,5 +112,34 @@ public class ImportTest extends BuildFileTest {
             "Did not see build exception",
             false);
     }
-}
 
+    public void testSymlinkedImports() throws Exception {
+        String ln = "/usr/bin/ln";
+        if (!new File(ln).exists()) {
+            ln = "/bin/ln";
+        }
+        if (!new File(ln).exists()) {
+            // Running on Windows or something, so skip it.
+            return;
+        }
+        String symlink = "src/etc/testcases/taskdefs/import/symlinks/d3b";
+        if (Runtime.getRuntime().exec(new String[] {ln, "-s", "d3a", symlink}).waitFor() != 0) {
+            throw new IOException("'" + ln + " -s d3a " + symlink + "' failed");
+        }
+        try {
+            configureProject(
+                "src/etc/testcases/taskdefs/import/symlinks/d1/p1.xml");
+            assertPropertyEquals(
+                "ant.file.p2",
+                new File("src/etc/testcases/taskdefs/import/symlinks/d2/p2.xml")
+                .getAbsolutePath());
+            assertPropertyEquals(
+                "ant.file.p3",
+                new File("src/etc/testcases/taskdefs/import/symlinks/d3b/p3.xml")
+                .getAbsolutePath());
+        } finally {
+            new File(symlink).delete();
+        }
+    }
+
+}
