@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,28 +85,28 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.Utils;
  */
 public class XMLReport {
     /** task caller, can be null, used for logging purpose */
-    protected Task task;
+    private Task task;
 
     /** the XML file to process just from CovReport */
-    protected File file;
+    private File file;
 
     /** jprobe home path. It is used to get the DTD */
-    protected File jprobeHome;
+    private File jprobeHome;
 
     /** parsed document */
-    protected Document report;
+    private Document report;
 
     /** mapping of class names to <code>ClassFile</code>s from the reference classpath.  It is used to filter the JProbe report. */
-    protected Hashtable classFiles;
+    private Hashtable classFiles;
 
     /** mapping package name / package node for faster access */
-    protected Hashtable pkgMap;
+    private Hashtable pkgMap;
 
     /** mapping classname / class node for faster access */
-    protected Hashtable classMap;
+    private Hashtable classMap;
 
     /** method filters */
-    protected ReportFilters filters;
+    private ReportFilters filters;
 
     /** create a new XML report, logging will be on stdout */
     public XMLReport(File file) {
@@ -383,7 +383,8 @@ public class XMLReport {
 
         int total_lines = 0;
         int total_methods = 0;
-        for (int i = 0; i < methods.size(); i++) {
+        final int count = methods.size();
+        for (int i = 0; i < count; i++) {
             // create the method element
             MethodInfo method = (MethodInfo) methods.elementAt(i);
             if (Utils.isAbstract(method.getAccessFlags())) {
