@@ -1,4 +1,8 @@
 #!/usr/bin/perl
+#
+#   Copyright (c) 2001,2003 The Apache Software Foundation.  All rights
+#   reserved.
+#
 #######################################################################
 #
 # antRun.pl
@@ -7,7 +11,7 @@
 # this is akin to antRun.bat, and antRun the SH script 
 #
 # created:         2001-10-18
-# last modified:   2001-11-13
+# last modified:   $Date$
 # author:          Jeff Tulley jtulley@novell.com 
 #######################################################################
 #be fussy about variables
