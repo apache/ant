@@ -157,7 +157,6 @@ public class Tar extends MatchingTask {
             // add the main fileset to the list of filesets to process.
             TarFileSet mainFileSet = new TarFileSet(fileset);
             mainFileSet.setDir(baseDir);
-            mainFileSet.setDefaultexcludes(useDefaultExcludes);
             filesets.addElement(mainFileSet);
         }
         
@@ -237,9 +236,16 @@ public class Tar extends MatchingTask {
         throws IOException
     {
         FileInputStream fIn = null;
-        if (file.isDirectory() && vPath.length() != 0 
-                && vPath.charAt(vPath.length() - 1) != '/')
-            vPath = vPath + "/";
+
+        // don't add "" to the archive
+        if (vPath.length() <= 0) {
+            return;
+        }
+        
+        if (file.isDirectory() && !vPath.endsWith("/")) {
+            vPath += "/";
+        }
+
         try {
             if (vPath.length() >= TarConstants.NAMELEN) {
                 if (longFileMode.equalsIgnoreCase(OMIT)) {
