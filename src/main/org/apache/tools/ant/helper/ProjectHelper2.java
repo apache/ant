@@ -101,6 +101,7 @@ public class ProjectHelper2 extends ProjectHelper {
         AntXmlContext context=new AntXmlContext(project, this);
         
         project.addReference( "ant.parsing.context", context );
+        project.addReference( "ant.targets", context.targetVector );
 
         parse(project, source,new RootHandler(context));
 
@@ -299,7 +300,13 @@ public class ProjectHelper2 extends ProjectHelper {
         /** The configuration file to parse. */
         public File buildFile;
 
-        /** 
+        /** Vector with all the targets, in the order they are
+         * defined. Project maintains a Hashtable, which is not ordered.
+         * This will allow description to know the original order.
+         */
+        public Vector targetVector=new Vector();
+
+        /**
          * Parent directory of the build file. Used for resolving entities
          * and setting the project's base directory.
          */
@@ -346,6 +353,7 @@ public class ProjectHelper2 extends ProjectHelper {
         public AntXmlContext(Project project, ProjectHelper2 helper) {
             this.project=project;
             implicitTarget.setName("");
+            targetVector.addElement( implicitTarget );
             this.helper=helper;
         }
 
@@ -679,6 +687,7 @@ public class ProjectHelper2 extends ProjectHelper {
             Project project=context.getProject();
             Target target = new Target();
             context.currentTarget=target;
+            context.targetVector.addElement( target );
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getQName(i);
