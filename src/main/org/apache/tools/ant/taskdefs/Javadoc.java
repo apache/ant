@@ -61,7 +61,6 @@ import java.io.FilenameFilter;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
-import java.util.Random;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -73,6 +72,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection
@@ -278,6 +278,8 @@ public class Javadoc extends Task {
     private Html bottom = null;
     private boolean useExternalFile = false;
     private File tmpList = null;
+
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * Work around command line length limit by using an external file
@@ -924,7 +926,7 @@ public class Javadoc extends Task {
                  */
                 if (useExternalFile) {
                     if (tmpList == null) {
-                        tmpList = createTempFile();
+                        tmpList = fileUtils.createTempFile("javadoc", "", null);
                         toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
                     }
                     srcListWriter = new PrintWriter(new FileWriter(tmpList.getAbsolutePath(), 
@@ -1055,7 +1057,7 @@ public class Javadoc extends Task {
         PrintWriter packageListWriter = null;
         try {
             if (useExternalFile) {
-                tmpList = createTempFile();
+                tmpList = fileUtils.createTempFile("javadoc", "", null);
                 toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
                 packageListWriter = new PrintWriter(new FileWriter(tmpList));
             }
@@ -1146,13 +1148,6 @@ public class Javadoc extends Task {
     protected String expand(String content) {
         return ProjectHelper.replaceProperties(project, content, 
                                                project.getProperties());
-    }
-
-    /**
-     * Creates a temporary file.
-     */
-    private File createTempFile() {
-        return new File("javadoc" + (new Random(System.currentTimeMillis())).nextLong());
     }
 
     private String getJavadocExecutableName()

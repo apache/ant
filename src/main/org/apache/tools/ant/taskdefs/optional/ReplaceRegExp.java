@@ -61,6 +61,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -162,6 +163,8 @@ public class ReplaceRegExp extends Task
     private RegularExpression regex;
     private Substitution subs;
 
+    private FileUtils fileUtils = FileUtils.newFileUtils();
+
     /***
      * Default Constructor
      */
@@ -260,7 +263,7 @@ public class ReplaceRegExp extends Task
         throws IOException
     {
         File parentDir = new File(new File(f.getAbsolutePath()).getParent());
-        File temp = createTempFile(parentDir);
+        File temp = fileUtils.createTempFile("replace", ".txt", parentDir);
 
         FileReader r = null;
         FileWriter w = null;
@@ -418,13 +421,6 @@ public class ReplaceRegExp extends Task
                 }
             }
         }
-    }
-
-    /**
-     * Creates a temporary file.
-     */
-    private File createTempFile(File dir) {
-        return new File(dir, "replace" + (new Random(System.currentTimeMillis())).nextLong()+".txt");
     }
 
 }

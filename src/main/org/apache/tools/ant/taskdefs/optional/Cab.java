@@ -62,6 +62,7 @@ import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +72,6 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 
 import java.util.Vector;
-import java.util.Random;
 import java.text.DecimalFormat;
 
 /**
@@ -92,6 +92,8 @@ public class Cab extends MatchingTask {
     protected String archiveType = "cab";
 
     private static String myos;
+
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * This is the name/location of where to 
@@ -213,27 +215,6 @@ public class Cab extends MatchingTask {
         return command;
     }
 
-    private static int counter = new Random().nextInt() % 100000;
-    protected File createTempFile(String prefix, String suffix)
-    {
-        if (suffix == null)
-        {
-            suffix = ".tmp";
-        }
-
-        String name = prefix +
-            new DecimalFormat("#####").format(new Integer(counter++)) +
-            suffix;
-
-        String tmpdir = System.getProperty("java.io.tmpdir");
-
-        // java.io.tmpdir is not present in 1.1
-        if (tmpdir == null)
-            return new File(name);
-        else
-            return new File(tmpdir, name);
-    }
-
     /**
      * Creates a list file.  This temporary file contains a list of all files
      * to be included in the cab, one file per line.
@@ -241,7 +222,7 @@ public class Cab extends MatchingTask {
     protected File createListFile(Vector files)
         throws IOException
     {
-        File listFile = createTempFile("ant", null);
+        File listFile = fileUtils.createTempFile("ant", "", null);
         
         PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
 
@@ -342,7 +323,7 @@ public class Cab extends MatchingTask {
                 exec.setDir(baseDir);
                 
                 if (!doVerbose) {
-                    outFile = createTempFile("ant", null);
+                    outFile = fileUtils.createTempFile("ant", "", null);
                     exec.setOutput(outFile);
                 }
                     

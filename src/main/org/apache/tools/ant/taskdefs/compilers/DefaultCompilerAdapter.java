@@ -63,12 +63,12 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -107,6 +107,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected File[] compileList;
     protected static String lSep = System.getProperty("line.separator");
     protected Javac attributes;
+
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     public void setJavac( Javac attributes ) {
         this.attributes = attributes;
@@ -362,7 +364,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             if (Commandline.toString(args).length() > 4096) {
                 PrintWriter out = null;
                 try {
-                    tmpFile = new File("jikes"+(new Random(System.currentTimeMillis())).nextLong());
+                    tmpFile = fileUtils.createTempFile("jikes", "", null);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         out.println(args[i]);

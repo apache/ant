@@ -63,8 +63,10 @@ import java.io.FileWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
-import java.util.StringTokenizer;
+import java.text.DecimalFormat;
+import java.util.Random;
 import java.util.Stack;
+import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException; 
 import org.apache.tools.ant.Project; 
@@ -79,9 +81,12 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * @author duncan@x180.com
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ *
+ * @version $Revision$
  */
  
 public class FileUtils {
+    private static Random rand = new Random(System.currentTimeMillis());
     private static Object lockReflection = new Object();
     private static java.lang.reflect.Method setLastModified = null;
 
@@ -466,6 +471,38 @@ public class FileUtils {
             path = path.replace('/', '\\');
         }
         return new File(path);
+    }
+
+    /**
+     * Create a temporary file in a given directory.
+     *
+     * <p>The file denoted by the returned abstract pathname did not
+     * exist before this method was invoked, any subsequent invocation
+     * of this method will yield a different file name.</p>
+     *
+     * <p>This method is different to File.createTempFile of JDK 1.2
+     * as it doesn't create the file itself and doesn't use platform
+     * specific temporary directory when the parentDir attribute is
+     * null.</p>
+     *
+     * @param parentDir Directory to create the temporary file in -
+     * current working directory will be assumed if this parameter is
+     * null.
+     *
+     * @since 1.8
+     */
+    public File createTempFile(String prefix, String suffix, File parentDir) {
+
+        File result = null;
+        DecimalFormat fmt = new DecimalFormat("#####");
+        synchronized (rand) {
+            do {
+                result = new File(parentDir, 
+                                  prefix + fmt.format(rand.nextInt()) 
+                                  + suffix);
+            } while (result.exists());
+        }
+        return result;
     }
 }
 

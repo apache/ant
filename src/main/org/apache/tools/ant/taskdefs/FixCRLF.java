@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -65,7 +66,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.Random;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -147,6 +147,8 @@ public class FixCRLF extends MatchingTask {
 
     private File srcDir;
     private File destDir = null;
+
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * Defaults the properties based on the system type.
@@ -356,19 +358,6 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Creates a temporary file.
-     */
-    private File createTempFile() {
-        String name = "fixcrlf" 
-            + (new Random(System.currentTimeMillis())).nextLong();
-        if (destDir == null) {
-            return new File(srcDir, name);
-        } else {
-            return new File(destDir, name);
-        }
-    }
-
-    /**
      * Checks for the inequality of two files
      */
     private boolean filesEqual(File file1, File file2) {
@@ -413,6 +402,7 @@ public class FixCRLF extends MatchingTask {
 
     private void processFile(String file) throws BuildException {
         File srcFile = new File(srcDir, file);
+        File destD = destDir == null ? srcDir : destDir;
         File tmpFile = null;
         BufferedWriter outWriter;
         OneLiner.BufferLine line;
@@ -423,7 +413,7 @@ public class FixCRLF extends MatchingTask {
         try {
             // Set up the output Writer
             try {
-                tmpFile = createTempFile();
+                tmpFile = fileUtils.createTempFile("fixcrlf", "", destD);
                 FileWriter writer = new FileWriter(tmpFile);
                 outWriter = new BufferedWriter(writer);
             } catch (IOException e) {
@@ -554,8 +544,7 @@ public class FixCRLF extends MatchingTask {
                 throw new BuildException(e);
             } // end of try-catch
             
-            File destFile = new File(destDir == null ? srcDir : destDir,
-                                     file);
+            File destFile = new File(destD, file);
 
             try {                                            
                 lines.close();

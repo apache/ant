@@ -274,6 +274,31 @@ public class FileUtilsTest extends TestCase {
     }
 
     /**
+     * Test createTempFile
+     */
+    public void testCreateTempFile() {
+        File parent = new File((new File("/tmp")).getAbsolutePath());
+        File tmp1 = fu.createTempFile("pre", ".suf", parent);
+        assertTrue("new file", !tmp1.exists());
+
+        String name = tmp1.getName();
+        assertTrue("starts with pre", name.startsWith("pre"));
+        assertTrue("ends with .suf", name.endsWith(".suf"));
+        assertEquals("is inside parent dir", 
+                     parent.getAbsolutePath(),
+                     tmp1.getParent());
+
+        File tmp2 = fu.createTempFile("pre", ".suf", parent);
+        assertTrue("files are different", 
+                   !tmp1.getAbsolutePath().equals(tmp2.getAbsolutePath()));
+
+        // null parent dir
+        File tmp3 = fu.createTempFile("pre", ".suf", null);
+        assertEquals((new File(tmp3.getName())).getAbsolutePath(),
+                     tmp3.getAbsolutePath());
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {
