@@ -23,6 +23,9 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.AndCondition;
+import org.apache.myrmidon.framework.conditions.IsSetCondition;
+import org.apache.myrmidon.framework.conditions.NotCondition;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
@@ -381,7 +384,7 @@ public class DefaultProjectBuilder
         }
 
         final String[] dependencies = buildDependsList( depends, target );
-        final Condition condition = buildCondition( ifCondition, unlessCondition, target );
+        final Condition condition = buildCondition( ifCondition, unlessCondition );
         final Target defaultTarget =
             new Target( condition, target.getChildren(), dependencies );
 
@@ -442,17 +445,13 @@ public class DefaultProjectBuilder
         return dependencies;
     }
 
-    private Condition buildCondition( final String ifCondition, final String unlessCondition, final Configuration target ) throws Exception
+    private Condition buildCondition( final String ifCondition,
+                                      final String unlessCondition )
+        throws Exception
     {
-        if( null != ifCondition && null != unlessCondition )
-        {
-            final String message =
-                REZ.getString( "ant.target-bad-logic.error", target.getLocation() );
-            throw new Exception( message );
-        }
+        final AndCondition condition = new AndCondition();
 
-        Condition condition = null;
-
+        // Add the 'if' condition
         if( null != ifCondition )
         {
             if( getLogger().isDebugEnabled() )
@@ -460,17 +459,20 @@ public class DefaultProjectBuilder
                 final String message = REZ.getString( "ant.target-if.notice", ifCondition );
                 getLogger().debug( message );
             }
-            condition = new Condition( true, ifCondition );
+            condition.add( new IsSetCondition( ifCondition ) );
         }
-        else if( null != unlessCondition )
+
+        // Add the 'unless' condition
+        if( null != unlessCondition )
         {
             if( getLogger().isDebugEnabled() )
             {
                 final String message = REZ.getString( "ant.target-unless.notice", unlessCondition );
                 getLogger().debug( message );
             }
-            condition = new Condition( false, unlessCondition );
+            condition.add( new NotCondition( new IsSetCondition( unlessCondition ) ) );
         }
+
         return condition;
     }
 

@@ -5,20 +5,22 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.condition;
+package org.apache.antlib.core;
 
-import java.util.Locale;
 import org.apache.aut.nativelib.Os;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Condition;
 
 /**
  * Condition to check the current OS.</p>
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ *
+ * @ant:type type="condition" name="os"
  */
 public class OsCondition
-    extends ConditionBase
     implements Condition
 {
     private String m_family;
@@ -29,18 +31,11 @@ public class OsCondition
     /**
      * Sets the desired OS family type
      *
-     * @param f      The OS family type desired<br />
-     *               Possible values:<br />
-     *               <ul><li>dos</li>
-     *               <li>mac</li>
-     *               <li>netware</li>
-     *               <li>os/2</li>
-     *               <li>unix</li>
-     *               <li>windows</li></ul>
+     * @param family The OS family type desired.
      */
     public void setFamily( final String family )
     {
-        m_family = family.toLowerCase( Locale.US );
+        m_family = family;
     }
 
     /**
@@ -50,7 +45,7 @@ public class OsCondition
      */
     public void setName( final String name )
     {
-        m_name = name.toLowerCase( Locale.US );
+        m_name = name;
     }
 
     /**
@@ -60,7 +55,7 @@ public class OsCondition
      */
     public void setArch( final String arch )
     {
-        m_arch = arch.toLowerCase( Locale.US );
+        m_arch = arch;
     }
 
     /**
@@ -68,17 +63,15 @@ public class OsCondition
      *
      * @param version   The OS version
      */
-    public void setVersion( String version )
+    public void setVersion( final String version )
     {
-        this.m_version = version.toLowerCase( Locale.US );
+        m_version = version;
     }
 
     /**
-     * Determines if the OS on which Ant is executing matches the type of
-     * that set in setFamily.
-     * @see Os#setFamily(String)
+     * Evaluates this condition.
      */
-    public boolean eval()
+    public boolean evaluate( final TaskContext context )
         throws TaskException
     {
         return Os.isOs( m_family, m_name, m_arch, m_version );

@@ -9,8 +9,9 @@ package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.taskdefs.condition.ConditionBase;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.framework.conditions.AndCondition;
+import org.apache.myrmidon.framework.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -35,13 +36,23 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 
-public class WaitFor extends ConditionBase
+public class WaitFor
+    extends AbstractTask
 {
     private long maxWaitMillis = 1000l * 60l * 3l;// default max wait time
     private long maxWaitMultiplier = 1l;
     private long checkEveryMillis = 500l;
     private long checkEveryMultiplier = 1l;
     private String timeoutProperty;
+    private AndCondition m_condition = new AndCondition();
+
+    /**
+     * Adds a condition.
+     */
+    public void add( final Condition condition )
+    {
+        m_condition.add( condition );
+    }
 
     /**
      * Set the time between each check
@@ -102,16 +113,6 @@ public class WaitFor extends ConditionBase
     public void execute()
         throws TaskException
     {
-        if( countConditions() > 1 )
-        {
-            throw new TaskException( "You must not nest more than one condition into <waitfor>" );
-        }
-        if( countConditions() < 1 )
-        {
-            throw new TaskException( "You must nest a condition into <waitfor>" );
-        }
-        Condition c = (Condition)getConditions().nextElement();
-
         maxWaitMillis *= maxWaitMultiplier;
         checkEveryMillis *= checkEveryMultiplier;
         long start = System.currentTimeMillis();
@@ -119,7 +120,7 @@ public class WaitFor extends ConditionBase
 
         while( System.currentTimeMillis() < end )
         {
-            if( c.eval() )
+            if( m_condition.evaluate( getContext() ) )
             {
                 return;
             }

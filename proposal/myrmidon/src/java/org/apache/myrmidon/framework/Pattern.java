@@ -11,6 +11,8 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.conditions.IsSetCondition;
+import org.apache.myrmidon.framework.conditions.NotCondition;
 
 /**
  * Basic data type for holding patterns.
@@ -77,7 +79,7 @@ public class Pattern
         throws TaskException
     {
         verifyConditionNull();
-        m_condition = new Condition( true, condition );
+        m_condition = new IsSetCondition( condition );
     }
 
     /**
@@ -90,7 +92,7 @@ public class Pattern
         throws TaskException
     {
         verifyConditionNull();
-        m_condition = new Condition( false, condition );
+        m_condition = new NotCondition( new IsSetCondition( condition ) );
     }
 
     public String evaluateName( final TaskContext context )

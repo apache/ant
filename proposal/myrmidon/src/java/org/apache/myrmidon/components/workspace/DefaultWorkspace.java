@@ -388,8 +388,7 @@ public class DefaultWorkspace
         {
             try
             {
-                final boolean result =
-                    condition.evaluate( frame.getContext() );
+                final boolean result = condition.evaluate( frame.getContext() );
                 if( !result )
                 {
                     final String message = REZ.getString( "skip-target.notice", name );

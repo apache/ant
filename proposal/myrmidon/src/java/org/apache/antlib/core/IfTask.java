@@ -14,6 +14,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.IsSetCondition;
+import org.apache.myrmidon.framework.conditions.NotCondition;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 
@@ -44,7 +46,7 @@ public class IfTask
         throws TaskException
     {
         verifyConditionNull();
-        m_condition = new Condition( true, condition );
+        m_condition = new IsSetCondition( condition );
     }
 
     /**
@@ -57,7 +59,7 @@ public class IfTask
         throws TaskException
     {
         verifyConditionNull();
-        m_condition = new Condition( false, condition );
+        m_condition = new NotCondition( new IsSetCondition( condition ) );
     }
 
     public void add( final Configuration task )

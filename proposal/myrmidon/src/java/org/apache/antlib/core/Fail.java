@@ -9,7 +9,6 @@ package org.apache.antlib.core;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Condition;
 
 /**
  * This is a task used to throw a TaskException.
@@ -22,7 +21,6 @@ public class Fail
     extends AbstractTask
 {
     private String m_message;
-    private Condition m_condition;
 
     public void setMessage( final String message )
     {
@@ -36,38 +34,16 @@ public class Fail
         m_message = message;
     }
 
-    public void setIf( final String ifCondition )
-    {
-        checkNullCondition();
-        m_condition = new Condition( true, ifCondition );
-    }
-
-    public void setUnless( final String unlessCondition )
-    {
-        checkNullCondition();
-        m_condition = new Condition( false, unlessCondition );
-    }
-
     public void execute()
         throws TaskException
     {
-        boolean failed = true;
-
-        if( null != m_condition )
+        if( null != m_message )
         {
-            failed = m_condition.evaluate( getContext() );
+            throw new TaskException( m_message );
         }
-
-        if( failed )
+        else
         {
-            if( null != m_message )
-            {
-                throw new TaskException( m_message );
-            }
-            else
-            {
-                throw new TaskException();
-            }
+            throw new TaskException();
         }
     }
 
@@ -78,14 +54,6 @@ public class Fail
             final String message = "Message can only be set once by " +
                 "either nested content or the message attribute";
             throw new IllegalStateException( message );
-        }
-    }
-
-    private void checkNullCondition()
-    {
-        if( null != m_condition )
-        {
-            throw new IllegalStateException( "Condition already set!" );
         }
     }
 }

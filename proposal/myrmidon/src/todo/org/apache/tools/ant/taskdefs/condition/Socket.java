@@ -9,6 +9,8 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.Condition;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
@@ -16,6 +18,8 @@ import org.apache.tools.ant.ProjectComponent;
  * are: server - the name of the server. port - the port number of the socket.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
+ *
+ * @ant:type type="condition" nam="socket"
  */
 public class Socket
     extends ProjectComponent
@@ -34,7 +38,10 @@ public class Socket
         this.server = server;
     }
 
-    public boolean eval()
+    /**
+     * Evaluates this condition.
+     */
+    public boolean evaluate( TaskContext context )
         throws TaskException
     {
         if( server == null )
@@ -49,6 +56,7 @@ public class Socket
         try
         {
             java.net.Socket socket = new java.net.Socket( server, port );
+            socket.close();
         }
         catch( IOException e )
         {

@@ -5,15 +5,18 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.Condition;
 
 /**
  * Simple String comparison condition.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ *
+ * @ant:type type="condition" nam="equals"
  */
 public class Equals implements Condition
 {
@@ -30,7 +33,13 @@ public class Equals implements Condition
         arg2 = a2;
     }
 
-    public boolean eval()
+    /**
+     * Evaluates this condition.
+     *
+     * @param context
+     *      The context to evaluate the condition in.
+     */
+    public boolean evaluate( final TaskContext context )
         throws TaskException
     {
         if( arg1 == null || arg2 == null )

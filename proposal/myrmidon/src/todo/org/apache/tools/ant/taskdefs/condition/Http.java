@@ -12,6 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.Condition;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
@@ -19,6 +21,8 @@ import org.apache.tools.ant.ProjectComponent;
  * the URL of the request.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
+ *
+ * @ant:type type="condition" nam="http"
  */
 public class Http
     extends ProjectComponent
@@ -31,7 +35,10 @@ public class Http
         spec = url;
     }
 
-    public boolean eval()
+    /**
+     * Evaluates this condition.
+     */
+    public boolean evaluate( final TaskContext context )
         throws TaskException
     {
         if( spec == null )

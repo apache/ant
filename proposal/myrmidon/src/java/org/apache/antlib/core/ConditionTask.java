@@ -5,11 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.antlib.core;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.taskdefs.condition.ConditionBase;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.framework.conditions.AndCondition;
+import org.apache.myrmidon.framework.Condition;
 
 /**
  * &lt;condition&gt; task as a generalization of &lt;available&gt; and
@@ -22,58 +23,58 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ *
+ * @ant:task name="condition"
  */
-public class ConditionTask extends ConditionBase
+public class ConditionTask
+    extends AbstractTask
 {
-    private String value = "true";
+    private AndCondition m_condition = new AndCondition();
+    private String m_property;
+    private String m_value = "true";
 
-    private String property;
+    /**
+     * Adds a condition.
+     */
+    public void add( final Condition condition )
+    {
+        m_condition.add( condition );
+    }
 
     /**
      * The name of the property to set. Required.
      *
      * @param p The new Property value
-     * @since 1.1
      */
-    public void setProperty( String p )
+    public void setProperty( final String p )
     {
-        property = p;
+        m_property = p;
     }
 
     /**
      * The value for the property to set. Defaults to "true".
      *
      * @param v The new Value value
-     * @since 1.1
      */
-    public void setValue( String v )
+    public void setValue( final String v )
     {
-        value = v;
+        m_value = v;
     }
 
     /**
      * See whether our nested condition holds and set the property.
-     *
-     * @exception TaskException Description of Exception
-     * @since 1.1
      */
     public void execute()
         throws TaskException
     {
-        if( countConditions() > 1 )
+        if( m_property == null )
         {
-            throw new TaskException( "You must not nest more than one condition into <condition>" );
+            throw new TaskException( "No property was specified" );
         }
-        if( countConditions() < 1 )
+
+        if( m_condition.evaluate( getContext() ) )
         {
-            throw new TaskException( "You must nest a condition into <condition>" );
-        }
-        Condition c = (Condition)getConditions().nextElement();
-        if( c.eval() )
-        {
-            final String name = property;
-            final Object value1 = value;
-            getContext().setProperty( name, value1 );
+            getContext().setProperty( m_property, m_value );
         }
     }
 }

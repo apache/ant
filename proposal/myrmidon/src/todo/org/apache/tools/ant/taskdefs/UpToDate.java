@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -31,7 +30,7 @@ import org.apache.tools.ant.util.mappers.MergingMapper;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public class UpToDate extends MatchingTask implements Condition
+public class UpToDate extends MatchingTask
 {
     private ArrayList sourceFileSets = new ArrayList();
 
