@@ -5,15 +5,20 @@ if [ "$ANT_HOME" = "" ] ; then
 fi
 export ANT_HOME
 
-ADDL_CLASSPATH=$ANT_HOME/lib/ant.jar
+LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
 
 if [ "$CLASSPATH" != "" ] ; then
-  CLASSPATH=$CLASSPATH:$ADDL_CLASSPATH
-else
- CLASSPATH=$ADDL_CLASSPATH
+  LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
 fi
-export CLASSPATH
 
-echo Building with classpath $CLASSPATH
+if test -f $JAVA_HOME/lib/tools.jar ; then
+  LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
+fi
 
-java org.apache.tools.ant.Main -Dant.home=$ANT_HOME $*
+echo
+echo Building with classpath: $LOCALCLASSPATH
+echo
+
+chmod 0755 $ANT_HOME/bin/antRun
+
+java -Dant.home=$ANT_HOME -classpath $LOCALCLASSPATH $ANT_OPTS org.apache.tools.ant.Main $*
