@@ -352,7 +352,9 @@
             <li>both - select files only if they are present both in the
               src and target directory trees
           </ul>
-          Default is both.
+          Default is both. Setting this attribute to &quot;srconly&quot;
+	  is equivalent to wrapping the selector in the &lt;not&gt;
+	  selector container.
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -362,7 +364,7 @@
 
     <blockquote><pre>
 &lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
-    &lt;present targetdir=&quot;${ant.1.4.1}/src/main&quot;/&gt;
+    &lt;present present=&quot;srconly&quot; targetdir=&quot;${ant.1.4.1}/src/main&quot;/&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
 
