@@ -2090,6 +2090,7 @@ public class Project {
         protected void initAll( ) {
             if( initAllDone ) return;
             project.log("InitAll", Project.MSG_DEBUG);
+            if( props==null ) return;
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
                 String key = (String) enum.nextElement();
@@ -2106,6 +2107,7 @@ public class Project {
         }
 
         protected Class getTask(String key) {
+            if( props==null ) return null; // for tasks loaded before init()
             String value=props.getProperty(key);
             if( value==null) {
                 project.log( "No class name for " + key, Project.MSG_VERBOSE );
@@ -2128,8 +2130,17 @@ public class Project {
         public Object get( Object key ) {
             Object orig=super.get( key );
             if( orig!= null ) return orig;
+            if( ! (key instanceof String) ) return null;
             project.log("Get task " + key, Project.MSG_DEBUG );
-            return getTask( (String) key);
+            Object taskClass=getTask( (String) key);
+            if( taskClass != null)
+                super.put( key, taskClass );
+            return taskClass;
         }
+
+        public boolean contains( Object key ) {
+            return get( key ) != null;
+        }
+
     }
 }
