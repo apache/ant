@@ -17,8 +17,9 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileTest;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -26,27 +27,19 @@ import junit.framework.AssertionFailedError;
 import java.io.File;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.FileList.
- *
- * <p>This doesn't actually test much, mainly reference handling.
- * Adapted from FileSetTest.</p>
- *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
+ * Some tests for filelist.
  */
 
-public class FileListTest extends TestCase {
-
-    private Project project;
+public class FileListTest extends BuildFileTest {
 
     public FileListTest(String name) {
         super(name);
     }
 
     public void setUp() {
-        project = new Project();
-        project.setBasedir(".");
+        configureProject("src/etc/testcases/types/filelist.xml");
     }
-
+    
     public void testEmptyElementIfIsReference() {
         FileList f = new FileList();
         f.setDir(project.resolveFile("."));
@@ -143,5 +136,17 @@ public class FileListTest extends TestCase {
         f3.setDir(project.resolveFile("."));
         File dir = f1.getDir(project);
         assertEquals("Dir is basedir", dir, project.getBaseDir());
+    }
+    
+    public void testSimple() {
+        expectLog("simple", "/abc/a");
+    }
+
+    public void testDouble() {
+        expectLog("double", "/abc/a:/abc/b");
+    }
+
+    public void testNested() {
+        expectLog("nested", "/abc/a:/abc/b");
     }
 }
