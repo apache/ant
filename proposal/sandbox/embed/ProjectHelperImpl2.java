@@ -88,22 +88,34 @@ import org.apache.tools.ant.util.JAXPUtils;
  */
 public class ProjectHelperImpl2 extends ProjectHelper {
     /* Stateless */
-    
+
+
+    public void parse(Project project, Object source) throws BuildException {
+        // Hook our internal tasks. XXX refactor 
+        try {
+            Class c=Class.forName("org.apache.tools.ant.types.SystemPath");
+            project.addDataTypeDefinition( "systemPath" , c );
+            c=Class.forName("org.apache.tools.ant.tasks.Import");
+            project.addTaskDefinition( "import" , c );
+        } catch (Exception ex ) {
+        }
+        AntXmlContext context=new AntXmlContext(this);
+        AntXmlContext.resetImports();
+        
+        project.addReference( "ant.parsing.context", context );
+        parse(project, source,new RootHandler(context));
+    }
+
     /**
      * Parses the project file, configuring the project as it goes.
      * 
      * @exception BuildException if the configuration is invalid or cannot 
      *                           be read
      */
-    public void parse(Project project, Object source) throws BuildException {
-        // Hook our one tasks.
-        try {
-            Class c=Class.forName("org.apache.tools.ant.types.SystemPath");
-            project.addDataTypeDefinition( "systemPath" , c );
-        } catch (Exception ex ) {
-        }
+    public void parse(Project project, Object source, RootHandler handler) throws BuildException {
         
-        AntXmlContext context=new AntXmlContext();
+        AntXmlContext context=handler.context;
+
         if(source instanceof File) {
             context.buildFile=(File)source;
 //         } else if( source instanceof InputStream ) {
@@ -125,9 +137,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             /**
              * SAX 2 style parser used to parse the given file. 
              */
-            org.xml.sax.XMLReader parser;
-    
-            parser =JAXPUtils.getXMLReader();
+            context.parser =JAXPUtils.getXMLReader();
 
             String uri = "file:" + context.buildFile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
@@ -139,13 +149,13 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             inputSource.setSystemId(uri);
             project.log("parsing buildfile " + context.buildFile + " with URI = " + uri, Project.MSG_VERBOSE);
 
-            DefaultHandler hb = new RootHandler(context);
+            DefaultHandler hb = handler;
 
-            parser.setContentHandler(hb);
-            parser.setEntityResolver(hb);
-            parser.setErrorHandler(hb);
-            parser.setDTDHandler(hb);
-            parser.parse(inputSource);
+            context.parser.setContentHandler(hb);
+            context.parser.setEntityResolver(hb);
+            context.parser.setErrorHandler(hb);
+            context.parser.setDTDHandler(hb);
+            context.parser.parse(inputSource);
         } catch(SAXParseException exc) {
             Location location =
                 new Location(exc.getSystemId(), exc.getLineNumber(), exc.getColumnNumber());
@@ -278,17 +288,21 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         /** The project to configure. */
         Project project;
         /** The configuration file to parse. */
-        File buildFile;
+        public File buildFile;
         /** 
          * Parent directory of the build file. Used for resolving entities
          * and setting the project's base directory.
          */
-        File buildFileParent;
+        public File buildFileParent;
         /** 
          * Locator for the configuration file parser. 
          * Used for giving locations of errors etc.
          */
         Locator locator;
+
+        public ProjectHelperImpl2 helper;
+        
+        org.xml.sax.XMLReader parser;
 
          /**
           * Target that all other targets will depend upon implicitly.
@@ -298,8 +312,17 @@ public class ProjectHelperImpl2 extends ProjectHelper {
           */
         Target implicitTarget = new Target();
 
-        public AntXmlContext() {
+        public boolean ignoreProjectTag=false;
+        public static Hashtable importedFiles = new Hashtable();
+        public static int importlevel = 0;
+
+        public static void resetImports() {
+            importedFiles.clear();
+        }
+
+        public AntXmlContext(ProjectHelperImpl2 helper) {
             implicitTarget.setName("");
+            this.helper=helper;
         }
         
         /**
@@ -503,11 +526,14 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             if (! qname.equals("project")) {
                 throw new SAXParseException("Config file is not of expected XML type", context.locator);
             }
-
+            
+            if( context.ignoreProjectTag ) {
+                return;
+            }
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getQName(i);
                 String value = attrs.getValue(i);
-
+                
                 if (key.equals("default")) {
                     def = value;
                 } else if (key.equals("name")) {
@@ -574,6 +600,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                        AntXmlContext context)
             throws SAXParseException
         {
+//             if (qname.equals("import")) {
+//                 return new ImportHandler();
+//             } else
             if (qname.equals("target")) {
                 return new TargetHandler();
             } else if (context.project.getDataTypeDefinitions().get(qname) != null) {
@@ -648,14 +677,51 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 throw new SAXParseException("target element appears without a name attribute",
                                             context.locator);
             }
-
+            Project project=context.project;
+            
             target = new Target();
             target.addDependency( "" );
             target.setName(name);
             target.setIf(ifCond);
             target.setUnless(unlessCond);
             target.setDescription(description);
-            context.project.addTarget(name, target);
+
+            // START IMPORT CHANGE XXX Move to Import task
+            int timesRedefined = 0;
+                
+            Hashtable currentTargets = project.getTargets();
+            project.log("Defined targets: "+currentTargets ,Project.MSG_VERBOSE);
+                        
+            //currently tracks only one level of super.
+            if(currentTargets.containsKey(name)){
+              timesRedefined++;
+            }
+                
+            if(timesRedefined>0){
+                           
+                project.log("Redefining target named: \""+name+"\"" ,Project.MSG_VERBOSE);
+                
+                //Adding old target as a new target with super.super[timesRedefined].super.name
+                Target oldTarget = (Target) currentTargets.get(name);
+                project.log("Current oldTarget named "+name+" is "+oldTarget.toString() ,Project.MSG_VERBOSE);
+                
+                String superTargetName = "";
+                for(int i=0; i < timesRedefined; i++){
+                   superTargetName += "super."; 
+                }
+                superTargetName = superTargetName + name; 
+                oldTarget.setName(superTargetName);
+                
+                project.addTarget(superTargetName, oldTarget);   
+            }
+                        
+            // if the target is redefined, it redefines it, otherwise just adds it             
+            project.addOrReplaceTarget(name, target);
+
+            project.log("targets are now: "+currentTargets.toString() ,Project.MSG_VERBOSE);
+
+            // END IMPORT CHANGE
+            // context.project.addTarget(name, target);
 
             if (id != null && !id.equals("")) {
                 context.project.addReference(id, target);
@@ -1087,5 +1153,107 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             return new NestedElementHandler(element, wrapper, target);
         }
     }
+
+//     /**
+//      * Handler for the root element. Its only child must be the "project" element.
+//      */
+//     static class ImportHandler extends AntHandler {
+
+//         /**
+//          * Initialisation routine called after handler creation
+//          * with the element name and attributes. The attributes which
+//          * this handler can deal with are: <code>"default"</code>,
+//          * <code>"name"</code>, <code>"id"</code> and <code>"basedir"</code>.
+//          *
+//          * @param tag Name of the element which caused this handler
+//          *            to be created. Should not be <code>null</code>.
+//          *            Ignored in this implementation.
+//          * @param attrs Attributes of the element which caused this
+//          *              handler to be created. Must not be <code>null</code>.
+//          *
+//          * @exception SAXParseException if an unexpected attribute is
+//          *            encountered or if the <code>"default"</code> attribute
+//          *            is missing.
+//          */
+//         public void onStartElement(String uri, String tag, String qname,
+//                                    Attributes attrs,
+//                                    AntXmlContext context)
+//             throws SAXParseException
+//         {
+//             context._importlevel++;
+//             Project project=context.project;
+//             project.log("importlevel: "+(context._importlevel-1)+" -> "+(context._importlevel),
+//                         Project.MSG_DEBUG);
+//             String file = null;
+//             for (int i = 0; i < attrs.getLength(); i++) {
+//                 String key = attrs.getQName(i);
+//                 String value = attrs.getValue(i);
+//                 if (key.equals("file")) {
+//                     file = value;
+//                 } else {
+//                     throw new SAXParseException("Unexpected attribute \"" + key + "\"", context.locator);
+//                 }
+//             }
+
+//             if (file == null) {
+//                 throw new SAXParseException("import element appears without a file attribute",
+//                                             context.locator);
+//             }
     
+//             file=project.replaceProperties(file);
+//             project.log("Importing file "+file+" from "+
+//                         context.buildFile.getAbsolutePath(),
+//                         Project.MSG_VERBOSE);
+
+//             // Paths are relative to the build file they're imported from,
+//             // *not* the current directory (same as entity includes).
+//             File importedFile = new File(file);
+//             if (!importedFile.isAbsolute()) {
+//                 importedFile = new File(context.buildFileParent, file);
+//             }
+//             if (!importedFile.exists()) {
+//                 throw new SAXParseException("Cannot find "+file+" imported from "+
+//                                             context.buildFile.getAbsolutePath(),
+//                                             context.locator);
+//             }
+
+//             // Add parent build file to the map to avoid cycles...
+//             String parentFilename = getPath(context.buildFile);
+//             if (!context._importedFiles.containsKey(parentFilename)) {
+//                 context._importedFiles.put(parentFilename, context.buildFile);
+//             }
+
+//             // Make sure we import the file only once
+//             String importedFilename = getPath(importedFile);
+//             if (context._importedFiles.containsKey(importedFilename)) {
+//                 project.log("\nSkipped already imported file:\n   "+importedFilename+"\n",
+//                             Project.MSG_WARN);
+//                 return;
+//             }
+//             else {
+//                 context._importedFiles.put(importedFilename, importedFile);
+//             }
+    
+//             org.xml.sax.XMLReader oldparser = context.parser;
+//             context.ignoreProjectTag=true;
+//             context.helper.parse(context.project, importedFile, new RootHandler(context));
+//             context.ignoreProjectTag=false;
+//             context.parser = oldparser;
+
+//             context._importlevel--;
+//             context.project.log("importlevel: "+context._importlevel+" <- "+
+//                                 (context._importlevel+1) ,Project.MSG_DEBUG);          
+//         }
+
+//         private static String getPath(File file) {
+//             try {
+//                 return file.getCanonicalPath();
+//             }
+//             catch (IOException e) {
+//                 return file.getAbsolutePath();
+//             }
+//         }
+//     }
+    
+
 }
