@@ -7,7 +7,7 @@
 
 <body>
 
-<h2><a name="changelog">ChangeLog</a></h2>
+<h2><a name="changelog">CvsChangeLog</a></h2>
 <h3>Description</h3>
 <p>Generates an XML-formatted report file of the change logs recorded in a
 <a href="http://www.cvshome.org/" target="_top">CVS</a> repository. </p>
@@ -87,27 +87,27 @@ the name specified in <code>displayname</code> rather than the user ID.
 
 
 <h3>Examples</h3>
-<pre>  &lt;changelog dir=&quot;dve/network&quot;
-             destfile=&quot;changelog.xml&quot;
+<pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
+                destfile=&quot;changelog.xml&quot;
   /&gt;</pre>
 
 <p>Generates a change log report for all the changes that have been made
 under the <code>dve/network</code> directory.
 It writes these changes into the file <code>changelog.xml</code>.</p>
 
-<pre>  &lt;changelog dir=&quot;dve/network&quot;
-             destfile=&quot;changelog.xml&quot;
-             daysinpast=&quot;10&quot;
+<pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
+                destfile=&quot;changelog.xml&quot;
+                daysinpast=&quot;10&quot;
   /&gt;</pre>
 
 <p>Generates a change log report for any changes that were made
 under the <code>dve/network</code> directory in the past 10 days.
 It writes these changes into the file <code>changelog.xml</code>.</p>
 
-<pre>  &lt;changelog dir=&quot;dve/network&quot;
-             destfile=&quot;changelog.xml&quot;
-             start=&quot;20 Feb 2002&quot;
-             end=&quot;20 Mar 2002&quot;
+<pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
+                destfile=&quot;changelog.xml&quot;
+                start=&quot;20 Feb 2002&quot;
+                end=&quot;20 Mar 2002&quot;
   /&gt;</pre>
 
 <p>Generates a change log report for any changes that were made
@@ -115,19 +115,19 @@ between February 20, 2002 and March 20, 2002
 under the <code>dve/network</code> directory.
 It writes these changes into the file <code>changelog.xml</code>.</p>
 
-<pre>  &lt;changelog dir=&quot;dve/network&quot;
-             destfile=&quot;changelog.xml&quot;
-             start=&quot;20 Feb 2002&quot;
+<pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
+                destfile=&quot;changelog.xml&quot;
+                start=&quot;20 Feb 2002&quot;
   /&gt;</pre>
 
 <p>Generates a change log report for any changes that were made
 after February 20, 2002 under the <code>dve/network</code> directory.
 It writes these changes into the file <code>changelog.xml</code>.</p>
 
-<pre>  &lt;changelog dir=&quot;dve/network&quot;
-             destfile=&quot;changelog.xml&quot;/&gt;
+<pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
+                destfile=&quot;changelog.xml&quot;/&gt;
        &lt;user displayname=&quot;Peter Donald&quot; userid=&quot;donaldp&quot;/&gt;
-  &lt;/changelog&gt;</pre>
+  &lt;/cvschangelog&gt;</pre>
 
 <p>Generates a change log report for all the changes that were made
 under the <code>dve/network</code> directory, substituting the name
