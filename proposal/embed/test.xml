@@ -1,14 +1,20 @@
 <project name="embed-test" default="main" basedir=".">
-  <property name="ant.src" location="../.." />
-  <property name="junit.jar" location="${ant.src}/lib/junit.jar" />
-  
-  <import file="build.xml" />
+  <property name="ant.src" location="../.."/>
+        
+  <import file="build.xml"/>
 
+  <target name="main">
+     <property name="junit.jar" location="${base.path}/junit3.7/junit.jar"/>
+     <echo>${junit.jar} ${velocity.jar}</echo>
 
-  <target name="main" >
     <path id="myJars" >
       <pathelement path="${junit.jar}" />
       <pathelement path="${jxpath.jar}" />
+      <pathelement path="${velocity-dep.jar}" />
+      <pathelement path="${velocity.jar}" />
+      <pathelement path="${jexl.jar}" />
+      <pathelement path="${commons-discovery.jar}" />
+      <pathelement path="${commons-logging.jar}" />
       <pathelement path="${ant.home}/lib/ant-sax2.jar" />
     </path>
 
@@ -22,9 +28,21 @@
       -->
     <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
              name="jxpath" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPathSet"
+             name="jxpathSet" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.VelocityProperties"
+             name="velocityProperties" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JexlProperties"
+             name="jexlProperties" />
 
     <!-- Init JxPath. '/' is the project -->
     <jxpath/>
+    <velocityProperties/>
+    <jexlProperties/>
+
+    <echo message="vel /references/myJars: ${vm:$ant.references.myJars}" />
+
+    <echo message="jexl /references/myJars: ${jexl:ant.references.myJars}" />
 
     <echo message="jxPath /targets[1]: ${jxpath:/targets[1]}" />
     <echo message="jxPath /references: ${jxpath:/references}" />
@@ -38,6 +56,8 @@
     <xmldom id="test.xml" file="test.xml"/>  
 
     <echo message="XMLDOM: ${jxpath:/references/test.xml/root/project/@name}" />
+
+    
   </target>
 
 
