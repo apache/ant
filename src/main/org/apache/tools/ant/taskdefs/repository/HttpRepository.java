@@ -31,6 +31,10 @@ import java.net.URL;
  * can share this datatype, it is *not* thread safe; you can only use it in one
  * thread at at time
  *
+ * Although it is biased towards HTTP, because the underlying &lt;get&gt; task
+ * supports different protocols, one is actually able to use other protocols
+ * such as ftp: or file: to retrieve content. 
+ *
  * @since Ant1.7
  */
 public abstract class HttpRepository extends Repository {
@@ -87,6 +91,21 @@ public abstract class HttpRepository extends Repository {
         this.url = url;
     }
 
+    /**
+     * set the base directory of the repository
+     * This creates a URL of the <tt>file://</tt> type
+     * and binds the URL of the repository to it.
+     * @param basedir
+     */
+    public void setBaseDir(File basedir) {
+        try {
+            URL url=basedir.toURL();
+            setUrl(url.toExternalForm());
+        } catch (MalformedURLException e) {
+            throw new BuildException(e);
+        }
+    }
+
     public String getUsername() {
         return username;
     }
@@ -112,26 +131,7 @@ public abstract class HttpRepository extends Repository {
     public void setPassword(String password) {
         this.password = password;
     }
-/*
 
-    public String getRealm() {
-        return realm;
-    }
-*/
-
-    /**
-     * set the realm for authentication; empty string is equivalent to "any
-     * realm" (the default)
-     *
-     * @param realm
-     */
-/*    public void setRealm(String realm) {
-        if (realm != null) {
-            this.realm = realm;
-        } else {
-            this.realm = null;
-        }
-    }*/
 
     public Libraries getOwner() {
         return owner;

@@ -56,6 +56,7 @@ public class MavenRepository extends HttpRepository {
         setUrl(MAVEN_URL);
     }
 
+    
     /**
      * set this to check the MD5 signatures. SECURITY IS NOT YET FUNCTIONAL
      * @param checkMD5

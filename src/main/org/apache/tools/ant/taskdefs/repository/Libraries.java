@@ -78,6 +78,12 @@ public final class Libraries extends Task {
      */
     private boolean useTimestamp = false;
 
+    /**
+     * flag to indicate if the libraries should be stored
+     * flat or in maven-style ($(project)/jars/) subdirectories.
+     */
+    private boolean flatten = false;
+
     public static final String ERROR_ONE_REPOSITORY_ONLY = "Only one repository is allowed";
     public static final String ERROR_NO_DEST_DIR = "No destination directory";
     public static final String ERROR_NO_REPOSITORY = "No repository defined";
@@ -290,6 +296,21 @@ public final class Libraries extends Task {
         this.useTimestamp = useTimestamp;
     }
 
+    public boolean isFlatten() {
+        return flatten;
+    }
+
+    /**
+     * Flatten flag.
+     * Store downloaded libraries into a single directory if true,
+     * store in project/jar subdirectores if false.
+     * default: false
+     * @param flatten
+     */
+    public void setFlatten(boolean flatten) {
+        this.flatten = flatten;
+    }
+
     /**
      * get the current policy list
      * @return
@@ -326,11 +347,8 @@ public final class Libraries extends Task {
      */
     public void execute() throws BuildException {
         validate();
-        if (isOffline()) {
-            log("No retrieval, task is \"offline\"");
-        } else {
-            doExecute();
-        }
+        //execute
+        doExecute();
         //validate the state
         verifyAllLibrariesPresent();
 
@@ -378,6 +396,11 @@ public final class Libraries extends Task {
             }
         }
 
+        if (isOffline()) {
+            log("No retrieval, task is \"offline\"");
+            retrieve=false;
+        }
+
         //see if we need to do a download
         if (!retrieve) {
             //if not, log it
@@ -393,7 +416,7 @@ public final class Libraries extends Task {
             }
         }
 
-        //now reverse iterate through all processed properties.
+        //now reverse iterate through all processed policies.
         for (int i = processedPolicies.size() - 1; i >= 0; i--) {
             LibraryPolicy libraryPolicy = (LibraryPolicy) processedPolicies.get(i);
             //and call their post-processor
@@ -408,7 +431,7 @@ public final class Libraries extends Task {
      * @return number of failed retrievals.
      */
     private int connectAndRetrieve(Repository repo, boolean useTimestamp) {
-        //connect the repository
+        //connect to the repository
         int failures = 0;
         repo.connect(this);
         try {
@@ -470,7 +493,7 @@ public final class Libraries extends Task {
         Iterator it = libraries.iterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
-            library.bind(destDir);
+            library.bind(destDir, flatten);
         }
     }
 

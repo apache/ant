@@ -35,6 +35,8 @@ public class Library implements EnabledLibraryElement {
      */
     private boolean enabled = true;
 
+    private static FileUtils FILE_UTILS = FileUtils.newFileUtils();
+
     /**
      * turn policy on/off
      *
@@ -241,18 +243,21 @@ public class Library implements EnabledLibraryElement {
      * calculate the destination file of a library; set {@link #libraryFile}
      * to the File thereof.
      *
-     * @param baseDir dir that
+     * @param baseDir dir that is used as the base for the operations
      *
+     * @param flatten flag to indicate whether the directory path is 'flat' or not.
      * @throws BuildException if invalid
      */
-    public void bind(File baseDir) {
+    public void bind(File baseDir, boolean flatten) {
         validate();
-        FileUtils fileUtils = FileUtils.newFileUtils();
-
         if (destinationName == null) {
-            destinationName = getMavenPath('/');
+            if(flatten) {
+                destinationName = getNormalFilename();
+            } else {
+                destinationName = getMavenPath('/');
+            }
         }
-        libraryFile = fileUtils.resolveFile(baseDir, destinationName);
+        libraryFile = FILE_UTILS.resolveFile(baseDir, destinationName);
         if (libraryFile.isDirectory()) {
             throw new BuildException(ERROR_FILE_IS_A_DIR
                 + libraryFile);

@@ -204,4 +204,7 @@ public class LibrariesTest extends BuildFileTest {
         execIfOnline("testNoSuffix");
     }
 
+    public void testFlatten() {
+        execIfOnline("testFlatten");
+    }
 }
