@@ -89,9 +89,11 @@ public class Jvc extends DefaultCompilerAdapter {
             classpath.append(bootclasspath);
         }
 
-        // jvc doesn't support an extension dir (-extdir)
-        // so we'll emulate it for compatibility and convenience.
-        classpath.addExtdirs(extdirs);
+        if (includeJavaRuntime) {
+            // jvc doesn't support an extension dir (-extdir)
+            // so we'll emulate it for compatibility and convenience.
+            classpath.addExtdirs(extdirs);
+        }
 
         classpath.append(getCompileClasspath());
 
