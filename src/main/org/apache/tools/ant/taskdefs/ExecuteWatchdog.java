@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.TimeoutObserver;
+import org.apache.tools.ant.util.Watchdog;
 
 /**
  * Destroys a process running for too long.
@@ -72,14 +74,12 @@ import org.apache.tools.ant.BuildException;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @see Execute
+ * @see org.apache.tools.ant.util.Watchdog
  */
-public class ExecuteWatchdog implements Runnable {
+public class ExecuteWatchdog implements TimeoutObserver {
         
     /** the process to execute and watch for duration */
     private Process process;
-
-    /** timeout duration. Once the process running time exceeds this it should be killed */
-    private int timeout;
 
     /** say whether or not the watchog is currently monitoring a process */
     private boolean watch = false;
@@ -90,16 +90,17 @@ public class ExecuteWatchdog implements Runnable {
     /** say whether or not the process was killed due to running overtime */
     private boolean     killedProcess = false;
 
+    /** will tell us whether timeout has occured */
+    private Watchdog watchdog;
+
     /**
      * Creates a new watchdog with a given timeout.
      *
      * @param timeout the timeout for the process in milliseconds. It must be greather than 0.
      */
     public ExecuteWatchdog(int timeout) {
-        if (timeout < 1) {
-            throw new IllegalArgumentException("timeout lesser than 1.");
-        }
-        this.timeout = timeout;
+        watchdog = new Watchdog(timeout);
+        watchdog.addTimeoutObserver(this);
     }
 
     /**
@@ -119,43 +120,28 @@ public class ExecuteWatchdog implements Runnable {
         this.killedProcess = false;
         this.watch = true;
         this.process = process;
-        final Thread thread = new Thread(this, "WATCHDOG");
-        thread.setDaemon(true);
-        thread.start();
+        watchdog.start();
     }
 
     /**
      * Stops the watcher. It will notify all threads possibly waiting on this object.
      */
     public synchronized void stop() {
+        watchdog.stop();
         watch = false;
-        notifyAll();
+        process = null;
     }
 
-
     /**
-     * Watches the process and terminates it, if it runs for to long.
+     * Called after watchdog has finished.
      */
-    public synchronized void run() {
+    public void timeoutOccured(Watchdog w) {
         try {
-            // This isn't a Task, don't have a Project object to log.
-            // project.log("ExecuteWatchdog: timeout = "+timeout+" msec",  Project.MSG_VERBOSE);
-            final long until = System.currentTimeMillis() + timeout;
-            long now;
-            while (watch && until > (now = System.currentTimeMillis())) {
-                try {
-                    wait(until - now);
-                } catch (InterruptedException e) {}
-            }
-
-            // if we are here, either someone stopped the watchdog,
-            // we are on timeout and the process must be killed, or
-            // we are on timeout and the process has already stopped.
             try {
                 // We must check if the process was not stopped
                 // before being here
                 process.exitValue();
-            } catch (IllegalThreadStateException e){
+            } catch (IllegalThreadStateException itse){
                 // the process is not terminated, if this is really
                 // a timeout and not a manual stop then kill it.
                 if (watch){
@@ -163,7 +149,7 @@ public class ExecuteWatchdog implements Runnable {
                     process.destroy();
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             caught = e;
         } finally {
             cleanUp();
