@@ -591,7 +591,9 @@ in the supplied directory (<i>dir</i> attribute) is used.</p>
 used.</p>
 <p>The properties of the current project will be available in the new project.
 These properties will override the properties that are set in the new project.
-(See also the <a href="#property">properties task</a>).</p>
+(See also the <a href="#property">properties task</a>).  You can set properties
+in the new project from the old project by using nested property tags. This
+allows you to parameterize your subprojects.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -606,8 +608,9 @@ These properties will override the properties that are set in the new project.
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">the directory to use as a basedir for the new Ant project.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top">the directory to use as a basedir for the new Ant project
+      Defaults to the current directory.</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">target</td>
@@ -622,11 +625,16 @@ These properties will override the properties that are set in the new project.
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot;
-  target=&quot;compile&quot; /&gt;</code></p>
-  <p><code>&lt;ant dir=&quot;subproject&quot; /&gt;</code></p>
-</blockquote>
+<pre>
+  &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot; /&gt;
+
+  &lt;ant dir=&quot;subproject&quot; /&gt;
+
+  &lt;ant antfile=&quot;subproject/property_based_subbuild.xml&quot;&gt;
+    &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot; /&gt;
+    &lt;property file=&quot;config/subproject/default.properties&quot; /&gt;
+  &lt;/ant&gt;
+</pre>
 <hr>
 <h2><a name="available">Available</a></h2>
 <h3>Description</h3>
