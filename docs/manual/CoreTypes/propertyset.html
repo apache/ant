@@ -26,6 +26,14 @@ supports this.</p>
       is used.  Default is &quot;<code>true</code>&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">negate</td>
+    <td valign="top">Whether to negate results.  If
+      &quot;<code>true</code>&quot;, all properties <i>not</i>
+      selected by nested elements will be returned.
+      Default is &quot;<code>false</code>&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
@@ -107,6 +115,9 @@ keys, for example:
 
 <p>collects all properties whose name starts with &quot;foo&quot;, but
 changes the names to start with &quot;bar&quot; instead.</p>
+
+<p>If supplied, the nested mapper will be applied
+subsequent to any negation of matched properties.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2003-2004 The Apache Software Foundation. All rights

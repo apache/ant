@@ -4,7 +4,6 @@ Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 Changes that could break older environments:
 --------------------------------------------
 
-
 Fixed bugs:
 -----------
 
@@ -107,6 +106,8 @@ Other changes:
 
 * <nice> task lets you set the priority of the current thread; non-forking
   <java> code will inherit this priority in their main thread.
+
+* New attribute "negate" on <propertyset> to invert selection criteria.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================

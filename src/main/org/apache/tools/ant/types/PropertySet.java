@@ -18,6 +18,9 @@
 package org.apache.tools.ant.types;
 
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Stack;
@@ -25,6 +28,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
@@ -37,7 +41,8 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 public class PropertySet extends DataType {
 
     private boolean dynamic = true;
-    private Vector cachedNames;
+    private boolean negate = false;
+    private Set cachedNames;
     private Vector ptyRefs = new Vector();
     private Vector setRefs = new Vector();
     private Mapper _mapper;
@@ -145,6 +150,11 @@ public class PropertySet extends DataType {
         this.dynamic = dynamic;
     }
 
+    public void setNegate(boolean negate) {
+        assertNotReference();
+        this.negate = negate;
+    }
+
     public boolean getDynamic() {
         return isReference() ? getRef().dynamic : dynamic;
     }
@@ -154,17 +164,29 @@ public class PropertySet extends DataType {
     }
 
     public Properties getProperties() {
-        Vector names = null;
+        Set names = null;
         Project prj = getProject();
+        Hashtable props =
+            prj == null ? System.getProperties() : prj.getProperties();
 
         if (getDynamic() || cachedNames == null) {
-            names = new Vector(); // :TODO: should be a Set!
+            names = new HashSet();
             if (isReference()) {
-                getRef().addPropertyNames(names, prj.getProperties());
+                getRef().addPropertyNames(names, props);
             } else {
-                addPropertyNames(names, prj.getProperties());
+                addPropertyNames(names, props);
             }
-
+            // Add this PropertySet's nested PropertySets' property names.
+            for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
+                PropertySet set = (PropertySet) e.nextElement();
+                names.addAll(set.getProperties().keySet());
+            }
+            if (negate) {
+                //make a copy...
+                HashSet complement = new HashSet(props.keySet());
+                complement.removeAll(names);
+                names = complement;
+            }
             if (!getDynamic()) {
                 cachedNames = names;
             }
@@ -178,9 +200,9 @@ public class PropertySet extends DataType {
             mapper = myMapper.getImplementation();
         }
         Properties properties = new Properties();
-        for (Enumeration e = names.elements(); e.hasMoreElements();) {
-            String name = (String) e.nextElement();
-            String value = prj.getProperty(name);
+        for (Iterator iter = names.iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
+            String value = (String) props.get(name);
             if (mapper != null) {
                 String[] newname = mapper.mapFileName(name);
                 if (newname != null) {
@@ -193,26 +215,26 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * @param  names the output vector to fill with the property names
+     * @param  names the output Set to fill with the property names
      *         matching this PropertySet selection criteria.
      * @param  properties the current Project properties, passed in to
      *         avoid needless duplication of the Hashtable during recursion.
      */
-    private void addPropertyNames(Vector names, Hashtable properties) {
+    private void addPropertyNames(Set names, Hashtable properties) {
         Project prj = getProject();
 
         // Add this PropertySet's property names.
         for (Enumeration e = ptyRefs.elements(); e.hasMoreElements();) {
             PropertyRef ref = (PropertyRef) e.nextElement();
             if (ref.name != null) {
-                if (prj.getProperty(ref.name) != null) {
-                    names.addElement(ref.name);
+                if (prj != null && prj.getProperty(ref.name) != null) {
+                    names.add(ref.name);
                 }
             } else if (ref.prefix != null) {
                 for (Enumeration p = properties.keys(); p.hasMoreElements();) {
                     String name = (String) p.nextElement();
                     if (name.startsWith(ref.prefix)) {
-                        names.addElement(name);
+                        names.add(name);
                     }
                 }
             } else if (ref.regex != null) {
@@ -222,37 +244,25 @@ public class PropertySet extends DataType {
                 for (Enumeration p = properties.keys(); p.hasMoreElements();) {
                     String name = (String) p.nextElement();
                     if (matcher.matches(name)) {
-                        names.addElement(name);
+                        names.add(name);
                     }
                 }
             } else if (ref.builtin != null) {
 
-                Enumeration e2 = null;
                 if (ref.builtin.equals(BuiltinPropertySetName.ALL)) {
-                    e2 = properties.keys();
+                    names.addAll(properties.keySet());
                 } else if (ref.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
-                    e2 = System.getProperties().keys();
+                    names.addAll(System.getProperties().keySet());
                 } else if (ref.builtin.equals(BuiltinPropertySetName
                                               .COMMANDLINE)) {
-                    e2 = getProject().getUserProperties().keys();
+                    names.addAll(getProject().getUserProperties().keySet());
                 } else {
                     throw new BuildException("Impossible: Invalid builtin "
                                              + "attribute!");
                 }
-
-                while (e2.hasMoreElements()) {
-                    names.addElement(e2.nextElement());
-                }
-
             } else {
                 throw new BuildException("Impossible: Invalid PropertyRef!");
             }
-        }
-
-        // Add this PropertySet's nested PropertySets' property names.
-        for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
-            PropertySet set = (PropertySet) e.nextElement();
-            set.addPropertyNames(names, properties);
         }
     }
 
