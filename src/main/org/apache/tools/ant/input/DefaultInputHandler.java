@@ -59,6 +59,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.KeepAliveInputStream;
 
 /**
  * Prompts on System.err, reads input from System.in
@@ -81,7 +82,10 @@ public class DefaultInputHandler implements InputHandler {
      */
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
-        DataInputStream in = new DataInputStream(getInputStream());
+        DataInputStream in = null;
+        try {
+            in = 
+                new DataInputStream(new KeepAliveInputStream(getInputStream()));
         do {
             System.err.println(prompt);
             try {
@@ -92,6 +96,15 @@ public class DefaultInputHandler implements InputHandler {
                                          e);
             }
         } while (!request.isInputValid());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    throw new BuildException("Failed to close input.", e);
+                }
+            }
+        }
     }
 
     /**
