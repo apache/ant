@@ -11,8 +11,8 @@
         starttoken="@"
         endtoken="@"
         bundle="${input.dir}/resources"
+        bundlecountry="DE"
         bundlelanguage="ger"
-        bundlecountry="de"
         forceoverwrite="yes"
         srcencoding="ISO8859_1"
         destencoding="ISO8859_1"
@@ -26,3 +26,4 @@
          <delete dir="${output.dir}" quiet="true"/>
      </target>
 </project>
+
