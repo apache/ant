@@ -223,3 +223,37 @@ MHoQpRsTAJ4qst3MhLm48fBAEnzuzi/BIKr+AgCfYaCB/AvPoncQbHc8BcNGRimR
 P9A=
 =hQhz
 -----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/EDF62C35 2002-04-10 Magesh Umasankar <umagesh@apache.org>
+sig        EDF62C35 2002-04-10  Magesh Umasankar <umagesh@apache.org>
+sig        5F6B8B72 2003-03-07  Stefan Bodewig <stefan.bodewig@freenet.de>
+sub  1024g/B5FFC53F 2002-04-10
+sig        EDF62C35 2002-04-10  Magesh Umasankar <umagesh@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.0.6-2 (MingW32)
+Comment: For info see http://www.gnupg.org
+
+mQGiBDy0ebgRBADuKIKD8PuJ4wKEV1h2AprwJjxCRx8vn48XNwfLZuvhw8cpArtK
+rZwhoGPPUPEEXgtTNerlKq4VwpAwcnvRz7oC/7aWkUbcR2sAyhfe2scohwPgw7Xv
++isWC0NDPdrxvXG/PUOG/cnELunr51ymybBqBxUd2gMhYIxPo67D+YPYLwCgwcZp
+yc/6kJa116ESWHrti342GD8D/1srpnRs9CiS1DQF1uZ1wW4vzj4VD61tKsjdWD8D
+V573R22iMDLSj4oMB536WxUH7snz8XsAKm/peqJ6G9m0smtmWA1ago5yzQj70WqF
+xzWBhHn2I/YfAQ8pb2s9q1lClj8elnCxT65L27ydBAZteejb2VqjtQ6iGy86PUT2
+wRUvBADZmoV1eIZJEM5NnxBv1EtvRYZtIQEzZ8dO2A1LOS7qlVr8IypljNPLGhzX
+VHNvVsjC9QMUSWeBsDedvQHQ3hJpIMnTI32XE1V4gX06gfVTZdhf2fLTtwnsHZp0
+oumqshGDVRhNJJdDYLikxWOxOfkNveKEqJFvtuBR+ZqqluQKebQlTWFnZXNoIFVt
+YXNhbmthciA8dW1hZ2VzaEBhcGFjaGUub3JnPohXBBMRAgAXBQI8tHm4BQsHCgME
+AxUDAgMWAgECF4AACgkQ76Pnee32LDWSRwCfeASWXvpdt7bSFPMtszU/7uPEktsA
+n23mYUN5WKJA1ZreW+0CcZ2ESnOviEYEExECAAYFAj5ogYgACgkQohFa4V9ri3IW
+YACgsxGig0PL0M86rJsA/IpXjBdg3ysAoJzsoUZ/7s2BxDfzF/FRTVIzS+TMuQEN
+BDy0eb8QBACBVb9YDJRp9Irzmq71Jf9FIPw+4g/cWpF3t/Eb7eSzMcOvTAXyNIWz
+aaOjHre7lFctHfq8ls/6gR7uqajiAnfQcfTcu7pp+F5KsU0Embt83SFzZ3aoJwET
+mB/LqUyrrGDiue3lU+flJO7UmcsRvtk0+BDkyCeB9HgfdpXbBLCyuwADBQP+PNxX
+4e1tg3ZJo/xNEnD2Re3HjmQRrr0RYJLUGjgQrAEONSgowx3IW8/JssmNJVjnYm0q
+jSKsb8rergCFJhPNZ8Dd/k00pKcrq+IN6j7WTYLqPce87zrGAZUtmDwDSp5mxy5E
+xWJJxsgBPk4YBQLzJt21A3BgK/i24Sze2VLbaZuIRgQYEQIABgUCPLR5vwAKCRDv
+o+d57fYsNa8xAJ4mLfonZbd64+YY9rfvhIh3Vsl3AACeLPPKtma2K6XCfhTBEDnj
+hzSr4vo=
+=lBfF
+-----END PGP PUBLIC KEY BLOCK-----
