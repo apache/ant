@@ -101,7 +101,7 @@ class ProcessDestroyer implements Runnable {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                Throwable t = e.getCause();
+                Throwable t = e.getTargetException();
                 if (t != null && t.getClass() == IllegalStateException.class) {
                     // shutdown already is in progress
                     running = true;
@@ -130,7 +130,7 @@ class ProcessDestroyer implements Runnable {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                Throwable t = e.getCause();
+                Throwable t = e.getTargetException();
                 if (t != null && t.getClass() == IllegalStateException.class) {
                     // shutdown already is in progress
                     running = true;
