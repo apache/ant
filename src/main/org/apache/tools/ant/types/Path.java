@@ -475,26 +475,32 @@ public class Path extends DataType implements Cloneable {
         Path result = new Path(project);
 
         String order = project.getProperty("build.sysclasspath");
-        if (order == null) order="first";
+        if (order == null) order="last";
 
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
             result.addExisting(Path.systemClasspath);
         
-        } else if (order.equals("last")) {
-            // last: don't trust the developer
-            result.addExisting(this);
-            result.addExisting(Path.systemClasspath);
-        
-        } else if (order.equals("ignore")) {
-            // ignore: don't trust anyone
-            result.addExisting(this);
-        
-        } else {
+        } else if (order.equals("first")) {
             // first: developer could use a little help
             result.addExisting(Path.systemClasspath);
             result.addExisting(this);
+
+        } else if (order.equals("ignore")) {
+            // ignore: don't trust anyone
+            result.addExisting(this);
+
+        } else {
+            // last: don't trust the developer
+            if (!order.equals("last")) {
+                project.log("invalid value for build.sysclasspath: " + order, 
+                            Project.MSG_WARN);
+            }
+
+            result.addExisting(this);
+            result.addExisting(Path.systemClasspath);
         }
+        
 
         return result;
 
