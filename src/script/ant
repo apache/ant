@@ -110,7 +110,7 @@ if $rpm_mode; then
     if [ -z "$LOCALCLASSPATH" ] ; then
       LOCALCLASSPATH=$JAVALIBDIR/$i.jar
     else
-      LOCALCLASSPATH="$i.jar":"$LOCALCLASSPATH"
+      LOCALCLASSPATH="$JAVALIBDIR/$i.jar":"$LOCALCLASSPATH"
     fi
   done
 else
