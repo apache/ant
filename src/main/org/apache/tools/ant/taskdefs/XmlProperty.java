@@ -426,7 +426,6 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             if (semanticAttributes && id == null
                 && container instanceof String) {
                 id = (String) container;
-                System.out.println("Setting id = " + id);
             }
 
             if (nodeText.trim().length() != 0) {
