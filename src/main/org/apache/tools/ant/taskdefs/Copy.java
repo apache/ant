@@ -199,6 +199,9 @@ public class Copy extends Task {
                 if (forceOverwrite || 
                     (file.lastModified() > destFile.lastModified())) {
                     fileCopyMap.put(file.getAbsolutePath(), destFile.getAbsolutePath());
+                } else {
+                    log(file + " omitted as " + destFile + " is up to date.",
+                        Project.MSG_VERBOSE);
                 }
             } else {
                 log("Could not find file " + file.getAbsolutePath() + " to copy.");
