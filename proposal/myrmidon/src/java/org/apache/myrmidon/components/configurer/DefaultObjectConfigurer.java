@@ -309,7 +309,8 @@ public class DefaultObjectConfigurer
     {
         // Make sure there are no pending created objects
         final DefaultConfigurationState defState = (DefaultConfigurationState)state;
-        for( int i = 0; i < m_allProps.size(); i++ )
+        final int size = m_allProps.size();
+        for( int i = 0; i < size; i++ )
         {
             if( defState.getCreatedObject( i ) != null )
             {
@@ -362,18 +363,25 @@ public class DefaultObjectConfigurer
     {
         final StringBuffer sb = new StringBuffer( methodName );
         sb.delete( 0, prefixLen );
-        for( int i = 0; i < sb.length(); i++ )
+
+        //Contains the index that we are up to in string buffer.
+        //May not be equal to i as length of string buffer may change
+        int index = 0;
+
+        final int size = sb.length();
+        for( int i = 0; i < size; i++ )
         {
-            char ch = sb.charAt( i );
+            char ch = sb.charAt( index );
             if( Character.isUpperCase( ch ) )
             {
-                if( i > 0 )
+                if( index > 0 )
                 {
-                    sb.insert( i, '-' );
-                    i++;
+                    sb.insert( index, '-' );
+                    index++;
                 }
-                sb.setCharAt( i, Character.toLowerCase( ch ) );
+                sb.setCharAt( index, Character.toLowerCase( ch ) );
             }
+            index++;
         }
         return sb.toString();
     }
