@@ -25,7 +25,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/09/19</p>
+<p>Version 1.2 - 2000/09/20</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -876,6 +876,7 @@ same patterns as the example before.</p>
   <li><a href="#taskdef">Taskdef</a></li>
   <li><a href="#touch">Touch</a></li>
   <li><a href="#tstamp">Tstamp</a></li>
+  <li><a href="#uptodate">Uptodate</a></li>
   <li><a href="#unzip">Unjar</a></li>
   <li><a href="#untar">Untar</a></li>
   <li><a href="#unzip">Unwar</a></li>
@@ -3757,6 +3758,40 @@ initialization target.</p>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;tstamp/&gt;</pre>
+<hr>
+<h2><a name="uptodate">Uptodate</a></h2>
+<h3>Description</h3>
+<p>Sets a property if a Target file is more up to date than a set of
+Source files. Source files are specified by nested &lt;srcfiles&gt;
+elements, these are <a href="#fileset">FileSet</a>s.</p>
+<p>The value part of the property being set is <i>true</i> if the timestamp of the 
+Target file is more recent than the timestamp of every Source file.</p>
+<p>Normally, this task is used to set properties that are useful to avoid target
+execution depending on the relative age of the specified files.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">the name of the property to set.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">targetfile</td>
+    <td valign="top">the file for which we want to determine the status.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;uptodate property=&quot;xmlBuild.notRequired&quot; targetfile=&quot;${deploy}\xmlClasses.jar&quot; &gt;
+    &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot; /&gt;
+  &lt;/uptodate&gt;</pre>
+<p>sets the property <code><i>xmlBuild.notRequired</i></code> to the value &quot;true&quot;
+if the <i>${deploy}/xmlClasses.jar</i> is more up to date than any of the DTD files in the <i>${src}/xml</i> directory.</p>
 <hr>
 <h2><a name="unzip">Unjar/Unwar/Unzip</a></h2>
 <h3>Description</h3>

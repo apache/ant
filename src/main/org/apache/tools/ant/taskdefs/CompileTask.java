@@ -65,6 +65,8 @@ import java.util.*;
  * which otherwise would require multiple executions of Ant.
  *
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
+ *
+ * @deprecated use &lt;taskdef&gt; elements nested into &lt;target&gt;s instead
  */
 
 public class CompileTask extends Javac {
@@ -84,6 +86,8 @@ public class CompileTask extends Javac {
      * do all the real work in init
      */
     public void init() {
+        log("!! CompileTask is deprecated. !!");
+        log("Use <taskdef> elements nested into <target>s instead");
 
         // create all the include entries from the task defs
         for (Enumeration e=taskList.elements(); e.hasMoreElements(); ) {
