@@ -236,7 +236,7 @@ public class jlink extends Object{
         		    //In that case, just ignore the error and go on to the
         		    //next entry.
     		        String mess = ex.getMessage();
-    		        if (mess.indexOf("duplicate") > 0){
+    		        if (mess.indexOf("duplicate") >= 0){
     		            //It was the duplicate entry.
     		            continue;
     		        } else {
