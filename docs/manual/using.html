@@ -30,7 +30,12 @@ to be unique. (For additional information, see the
   <tr>
     <td valign="top">default</td>
     <td valign="top">the default target to use when no target is supplied.</td>
-    <td align="center" valign="top"><!-- No.  No target will be run if omitted.--> Yes.</td>
+    <td align="center" valign="top">No; however, <b>since Ant 1.6.0</b>,
+        every project includes an implicit target that contains any and
+        all top-level tasks and/or types. This target will always be
+        executed as part of the project's initialization, even when Ant is
+        run with the <a href="running.html#options">-projecthelp</a> option.
+    </td>
   </tr>
   <tr>
     <td valign="top">basedir</td>
