@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.*;
 import java.util.Properties;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -130,16 +131,41 @@ public class XmlValidateTest extends BuildFileTest {
     /**
      * Test xml schema validation
      */
-    public void testXmlSchemaGood() {
-        executeTarget("testSchemaGood");
+    public void testXmlSchemaGood() throws BuildException {
+        try {
+            executeTarget("testSchemaGood");
+        } catch (BuildException e) {
+            if (e.getMessage()
+                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema") ||
+                e.getMessage()
+                .endsWith(" doesn't support feature http://apache.org/xml/features/validation/schema")) {
+                System.err.println(" skipped, parser doesn't support schema");
+            } else {
+                throw e;
+            }
+        }
     }
     /**
      * Test xml schema validation
      */
     public void testXmlSchemaBad() {
-        expectBuildExceptionContaining(
-                "testSchemaBad",
-                "Bad Schema Validation", "not a valid XML document");
+        try {
+            executeTarget("testSchemaBad");
+            fail("Should throw BuildException because 'Bad Schema Validation'");
 
+            expectBuildExceptionContaining("testSchemaBad",
+                                           "Bad Schema Validation", 
+                                           "not a valid XML document");
+        } catch (BuildException e) {
+            if (e.getMessage()
+                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema") ||
+                e.getMessage()
+                .endsWith(" doesn't support feature http://apache.org/xml/features/validation/schema")) {
+                System.err.println(" skipped, parser doesn't support schema");
+            } else {
+                assertTrue(e.getMessage()
+                           .indexOf("not a valid XML document") > -1);
+            }
+        }
     }
 }

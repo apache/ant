@@ -345,7 +345,8 @@ public class XMLValidateTask extends Task {
                 log("Using SAX1 parser " + reader.getClass().getName(),
                     Project.MSG_VERBOSE);
             }  else {
-                throw new BuildException(INIT_FAILED_MSG + readerClassName
+                throw new BuildException(INIT_FAILED_MSG 
+                                         + reader.getClass().getName()
                                          + " implements nor SAX1 Parser nor SAX2 XMLReader.");
             }
         }
@@ -356,19 +357,12 @@ public class XMLValidateTask extends Task {
         if (!(xmlReader instanceof ParserAdapter)) {
             // turn validation on
             if (!lenient) {
-                boolean ok = setFeature("http://xml.org/sax/features/validation", true, true);
-                if (!ok) {
-                    throw new BuildException(INIT_FAILED_MSG
-                                             + readerClassName
-                                             + " doesn't provide validation");
-                }
+                setFeature("http://xml.org/sax/features/validation", true);
             }
             // set the feature from the attribute list
             for (int i = 0; i < attributeList.size(); i++) {
                 Attribute feature = (Attribute) attributeList.elementAt(i);
-                setFeature(feature.getName(),
-                           feature.getValue(),
-                           true);
+                setFeature(feature.getName(), feature.getValue());
 
             }
         }
@@ -381,30 +375,20 @@ public class XMLValidateTask extends Task {
      * @param warn whether to war if the parser does not support the feature
 
      */
-    private boolean setFeature(String feature, boolean value, boolean warn) {
+    private void setFeature(String feature, boolean value) 
+        throws BuildException {
 
-        boolean  toReturn = false;
         try {
             xmlReader.setFeature(feature, value);
-            toReturn = true;
         } catch (SAXNotRecognizedException e) {
-            if (warn) {
-                log("Could not set feature '"
-                    + feature
-                    + "' because the '" +
-                       readerClassName + "' parser doesn't recognize it",
-                    Project.MSG_WARN);
-            }
+            throw new BuildException("Parser " + xmlReader.getClass().getName()
+                                     + " doesn't recognize feature "
+                                     + feature, e, getLocation());
         } catch (SAXNotSupportedException  e) {
-            if (warn) {
-                log("Could not set feature '"
-                    + feature
-                    + "' because the '" +
-                        readerClassName + "' parser doesn't support it",
-                    Project.MSG_WARN);
-            }
+            throw new BuildException("Parser " + xmlReader.getClass().getName()
+                                     + " doesn't support feature "
+                                     + feature, e, getLocation());
         }
-        return toReturn;
     }
 
     /**
