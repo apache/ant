@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!-- This style sheet should contain just a named templates that used in the other specific templates -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!-- import the commun templates -->
@@ -26,7 +24,16 @@
 				<xsl:call-template name="packageSummaryHeader"/>				
 				
 				<!-- write a summary for the package -->
-				<tr bgcolor="#EEEEE" valign="top">
+				<tr valign="top">
+				<xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
+				<xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
+					<xsl:attribute name="class">
+						<xsl:choose>
+						    <xsl:when test="$failureCount &gt; 0">Failure</xsl:when>
+							<xsl:when test="$errorCount &gt; 0">Error</xsl:when>
+							<xsl:otherwise>Pass</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
 					<td><xsl:value-of select="testsuite/@package"/></td>
 					<td><xsl:value-of select="sum(testsuite/@tests)"/></td>
 					<td><xsl:value-of select="sum(testsuite/@errors)"/></td>
@@ -52,12 +59,13 @@
 </xsl:template>
 
 <xsl:template match="testsuite">
-		<tr bgcolor="#EEEEE" valign="top">
+		<tr valign="top">
 			<!-- set a nice color depending if there is an error/failure -->
 			<xsl:attribute name="class">
 				<xsl:choose>
+				    <xsl:when test="@failures[.&gt; 0]">Failure</xsl:when>
 					<xsl:when test="@errors[.&gt; 0]">Error</xsl:when>
-					<xsl:when test="@failures[.&gt; 0]">Failure</xsl:when>
+					<xsl:otherwise>Pass</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
 		
@@ -66,7 +74,11 @@
 			<td><xsl:value-of select="@tests"/></td>
 			<td><xsl:value-of select="@errors"/></td>
 			<td><xsl:value-of select="@failures"/></td>
-			<td><xsl:value-of select="format-number(@time,'#,###0.000')"/></td>
+			<td>
+                <xsl:call-template name="display-time">
+                	<xsl:with-param name="value" select="@time"/>
+                </xsl:call-template>			
+			</td>
 		</tr>
 </xsl:template>
 

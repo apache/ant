@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:html="http://www.w3.org/Profiles/XHTML-transitional">
 
 <xsl:include href="toolkit.xsl"/>
@@ -43,13 +42,16 @@
 			}
 			H6 {
 			MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-			}
-			.Error {
-			font-weight:bold; color:red;
-			}
-			.Failure {
-			font-weight:bold; color:purple;
-			}
+			}	
+            .Error {
+            	font-weight:bold; background:#EEEEE0; color:purple;
+            }
+            .Failure {
+            	font-weight:bold; background:#EEEEE0; color:red;
+            }
+            .Pass {
+            	background:#EEEEE0;
+            }
 			</style>			
 		</HEAD>
 		<body text="#000000" bgColor="#ffffff">
@@ -95,19 +97,24 @@
 				<xsl:variable name="timeCount" select="sum(../testsuite[./@package = current()/@package]/@time)"/>
 				
 				<!-- write a summary for the package -->
-				<tr bgcolor="#EEEEE" valign="top">
+				<tr valign="top">
 					<!-- set a nice color depending if there is an error/failure -->
 					<xsl:attribute name="class">
 						<xsl:choose>
+						    <xsl:when test="$failureCount &gt; 0">Failure</xsl:when>
 							<xsl:when test="$errorCount &gt; 0">Error</xsl:when>
-							<xsl:when test="$failureCount &gt; 0">Failure</xsl:when>
+							<xsl:otherwise>Pass</xsl:otherwise>
 						</xsl:choose>
 					</xsl:attribute>				
 					<td><a href="#{@package}"><xsl:value-of select="@package"/></a></td>
 					<td><xsl:value-of select="$testCount"/></td>
 					<td><xsl:value-of select="$errorCount"/></td>
 					<td><xsl:value-of select="$failureCount"/></td>
-					<td><xsl:value-of select="format-number($timeCount,'#,###0.000')"/></td>					
+					<td>
+                        <xsl:call-template name="display-time">
+                        	<xsl:with-param name="value" select="$timeCount"/>
+                        </xsl:call-template>					
+					</td>					
 				</tr>
 			</xsl:for-each>
 		</table>		
@@ -145,12 +152,13 @@
 	<!-- It must match the table definition at the package level            -->
 	<!-- ================================================================== -->	
 	<xsl:template match="testsuite">
-		<tr bgcolor="#EEEEE" valign="top">
+		<tr valign="top">
 			<!-- set a nice color depending if there is an error/failure -->
 			<xsl:attribute name="class">
 				<xsl:choose>
+				    <xsl:when test="@failures[.&gt; 0]">Failure</xsl:when>
 					<xsl:when test="@errors[.&gt; 0]">Error</xsl:when>
-					<xsl:when test="@failures[.&gt; 0]">Failure</xsl:when>
+					<xsl:otherwise>Pass</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
 		
@@ -159,7 +167,11 @@
 			<td><xsl:value-of select="@tests"/></td>
 			<td><xsl:value-of select="@errors"/></td>
 			<td><xsl:value-of select="@failures"/></td>
-			<td><xsl:value-of select="format-number(@time,'#,###0.000')"/></td>
+			<td>
+                <xsl:call-template name="display-time">
+                	<xsl:with-param name="value" select="@time"/>
+                </xsl:call-template>
+			</td>
 		</tr>
 	</xsl:template>
 	

@@ -1,0 +1,64 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="mail">Mail</a></h2>
+<h3>Description</h3>
+<p>A task to send SMTP email.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">from</td>
+    <td valign="top">Email address of sender.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">tolist</td>
+    <td valign="top">Comma-separated list of recipients.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">message</td>
+    <td valign="top">Message to send in the body of the email.</td>
+    <td align="center" valign="middle" rowspan="2">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">files</td>
+    <td valign="top">Filename(s) of text to send in the body of the email. 
+	Multiple files are comma-separated.</td>
+  </tr>
+  <tr>
+    <td valign="top">mailhost</td>
+    <td valign="top">Host name of the mail server.</td>
+    <td align="center" valign="top">No, default to &quot;localhost&quot;</td>
+  </tr>
+  <tr>
+    <td valign="top">subject</td>
+    <td valign="top">Email subject line.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>
+  &lt;mail from=&quot;me&quot; tolist=&quot;you&quot; subject=&quot;Results of nightly build&quot;
+        files=&quot;build.log&quot;/&gt;</pre>
+<p>Sends an eMail from <i>me</i> to <i>you</i> with a subject of 
+<i>Results of nightly build</i> and includes the contents of <i>build.log</i>
+in the body of the message.</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

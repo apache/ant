@@ -62,46 +62,89 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
-/*
+/**
+ * Simple Metamata MParse task based on the original written by
+ * <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
+ * 
+ * This version was written for Metamata 2.0 available at
+ * <a href="http://www.metamata.com">http://www.metamata.com</a>
  *
- * @author thomas.haas@softwired-inc.com
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class MParse extends Task {
 
-    private Path userclasspath = null;
+    private Path classpath = null;
+    private Path sourcepath = null;
     private File metahome = null;
-    private File metaworkingdir = null;
     private File target = null;
-    private boolean cleanupHack = false;
+    private boolean verbose = false;
+    private boolean debugparser = false;
+    private boolean debugscanner = false;    
+    private boolean cleanup = false;
     private CommandlineJava cmdl = new CommandlineJava();
+    private File optionsFile = null;
 
-
+    /** location of metamata dev environment */
     public void setMetamatahome(File metamatahome) {
         this.metahome = metamatahome;
     }
 
-    public void setWorkingdir(File workingdir) {
-        this.metaworkingdir = workingdir;
-    }
-
+    /** the .jj file to process */
     public void setTarget(File target) {
         this.target = target;
     }
 
-    public Path createUserclasspath() {
-        if (userclasspath == null) {
-            userclasspath = new Path(project);
-        }
-        
-        return userclasspath;
+    /** create a classpath entry */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(project);
+        }        
+        return classpath;
     }
 
+    /** creates a sourcepath entry */
+    public Path createSourcepath() {
+        if (sourcepath == null) {
+            sourcepath = new Path(project);
+        }        
+        return sourcepath;
+    }
 
-    public void setCleanupHack(boolean value) {
-        cleanupHack = value;
+    /** set verbose mode */
+    public void setVerbose(boolean flag){
+        verbose = flag;
+    }
+
+    /** set scanner debug mode */
+    public void setDebugscanner(boolean flag){
+        debugscanner = flag;
+    }
+
+    /** set parser debug mode */
+    public void setDebugparser(boolean flag){
+        debugparser = flag;
+    }
+
+    /** set the hack to cleanup the temp file */
+    public void setCleanup(boolean value) {
+        cleanup = value;
+    }
+
+    /** Creates a nested jvmarg element. */
+    public Commandline.Argument createJvmarg() {
+        return cmdl.createVmArgument();
+    }
+
+    /**  -mx or -Xmx depending on VM version */
+    public void setMaxmemory(String max){
+        if (Project.getJavaVersion().startsWith("1.1")) {
+            createJvmarg().setValue("-mx" + max);
+        } else {
+            createJvmarg().setValue("-Xmx" + max);
+        }
     }
 
     public MParse() {
@@ -109,81 +152,200 @@ public class MParse extends Task {
         cmdl.setClassname("com.metamata.jj.MParse");
     }
 
-
+   
+    /** execute the command line */
     public void execute() throws BuildException {
-
-        if (target == null || !target.isFile()) {
-            throw new BuildException("Invalid target: " + target);
+        try {
+            setUp();
+            ExecuteStreamHandler handler = createStreamHandler();
+            _execute(handler);
+        } finally {
+            cleanUp();
         }
-        final File javaFile = new File(target.toString().substring(0,
-                                                                   target.toString().indexOf(".jj")) + ".java");
+    }
+    
+    /** return the default stream handler for this task */
+    protected ExecuteStreamHandler createStreamHandler(){
+        return new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_INFO);
+    }
+    
+    /**
+     * check the options and build the command line
+     */
+    protected void setUp() throws BuildException {
+        checkOptions();
+
+        // set the classpath as the jar files
+        File[] jars = getMetamataLibs();
+        final Path classPath = cmdl.createClasspath(project);
+        for (int i = 0; i < jars.length; i++){
+            classPath.createPathElement().setLocation(jars[i]);
+        }
+
+        // set the metamata.home property
+        final Commandline.Argument vmArgs = cmdl.createVmArgument();
+        vmArgs.setValue("-Dmetamata.home=" + metahome.getAbsolutePath() );
+
+
+        // write all the options to a temp file and use it ro run the process
+        String[] options = getOptions();
+        optionsFile = createTmpFile();
+        generateOptionsFile(optionsFile, options);
+        Commandline.Argument args = cmdl.createArgument();
+        args.setLine("-arguments " + optionsFile.getAbsolutePath());
+    }    
+
+    
+    /** execute the process with a specific handler */
+    protected void _execute(ExecuteStreamHandler handler) throws BuildException {
+        // target has been checked as a .jj, see if there is a matching
+        // java file and if it is needed to run to process the grammar
+        String pathname = target.getAbsolutePath();
+        int pos = pathname.length() - ".jj".length();
+        pathname = pathname.substring(0, pos) + ".java";
+        File javaFile = new File(pathname);
         if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
             project.log("Target is already build - skipping (" + target + ")");
             return;
         }
-        cmdl.createArgument().setValue(target.getAbsolutePath());
-
-        if (metahome == null || !metahome.isDirectory()) {
-            throw new BuildException("Metamatahome not valid.");
-        }
-        if (metaworkingdir == null || !metaworkingdir.isDirectory()) {
-            throw new BuildException("Workingdir not set.");
-        }
-        if (userclasspath == null) {
-            throw new BuildException("Userclasspath not set.");
-        }
-
-        final Path classpath = cmdl.createClasspath(project);
-        classpath.createPathElement().setLocation(new File(metahome.getAbsolutePath() + "/lib/metamatadebug.jar"));
-        classpath.createPathElement().setLocation(new File(metahome.getAbsolutePath() + "/lib/metamata.jar"));
-        classpath.createPathElement().setLocation(new File(metahome.getAbsolutePath() + "/lib/JavaCC.zip"));
-
-        final Commandline.Argument arg = cmdl.createVmArgument();
-        arg.setValue("-mx140M");
-        arg.setValue("-Dmwp=" + metaworkingdir.getAbsolutePath());
-        arg.setValue("-Dmetamata.home=" + metahome.getAbsolutePath());
-        arg.setValue("-Dmetamata.java=java");
-        arg.setValue("-Dmetamata.java.options=-mx140M");
-        arg.setValue("-Dmetamata.java.options.classpath=-classpath");
-        arg.setValue("-Dmetamata.java.compiler=javac");
-        arg.setValue("-Dmetamata.java.compiler.options.0=-J-mx64M");
-        arg.setValue("-Dmetamata.java.compiler.options.classpath=-classpath");
-        arg.setValue("-Dmetamata.language=en");
-        arg.setValue("-Dmetamata.country=US");
-        arg.setValue("-Dmetamata.classpath=" + userclasspath);
-
-        final Execute process = new Execute(new LogStreamHandler(this,
-                                                                 Project.MSG_INFO,
-                                                                 Project.MSG_INFO), null);
+        
+        final Execute process = new Execute(handler);
         log(cmdl.toString(), Project.MSG_VERBOSE);
         process.setCommandline(cmdl.getCommandline());
-
         try {
-            try {
-                if (process.execute() != 0) {
-                    throw new BuildException("MParse failed.");
-                }
-            } finally {
-                if (cleanupHack) {
-                    final File oo393 = new File(javaFile.getParent(),
-                                                "OO393.class");
-                    if (oo393.exists()) {
-                        project.log("Removing stale file: " + oo393.getName());
-                        oo393.delete();
-                    }
-                    final File sunjj = new File(javaFile.getParent(),
-                                                "__jj" + javaFile.getName().substring(0,
-                                                                                      javaFile.getName().indexOf(".java")) + ".sunjj");
-                    if (sunjj.exists()) {
-                        project.log("Removing stale file: " + sunjj.getName());
-                        sunjj.delete();
-                    }
-                }
+            if (process.execute() != 0) {
+                throw new BuildException("Metamata task failed.");
+            }
+        } catch (IOException e){
+            throw new BuildException("Failed to launch Metamata task: " + e);
+        }
+    }    
+    
+    /** clean up all the mess that we did with temporary objects */
+    protected void cleanUp(){
+        if (optionsFile != null){
+            optionsFile.delete();
+            optionsFile = null;
+        }
+        if (cleanup) {
+            String name = target.getName();
+            int pos = name.length() - ".jj".length();
+            name = "__jj" + name.substring(0, pos) + ".sunjj";
+            final File sunjj = new File(target.getParent(), name);
+            if (sunjj.exists()) {
+                project.log("Removing stale file: " + sunjj.getName());
+                sunjj.delete();
             }
         }
-        catch (IOException e) {
-            throw new BuildException("Failed to launch MParse: " + e);
+    }
+    
+    /**
+     * return an array of files containing the path to the needed
+     * libraries to run metamata. The file are not checked for
+     * existence. You should do this yourself if needed or simply let the
+     * forked process do it for you.
+     * @return array of jars/zips needed to run metamata.
+     */
+    protected File[] getMetamataLibs(){
+        Vector files = new Vector();
+        files.addElement( new File(metahome, "lib/metamata.jar") );
+        files.addElement( new File(metahome, "bin/lib/JavaCC.zip") );
+        
+        File[] array = new File[ files.size() ];
+        files.copyInto(array);
+        return array;
+    }
+    
+    
+    /**
+     * validate options set and resolve files and paths
+     * @throws BuildException thrown if an option has an incorrect state.
+     */
+    protected void checkOptions() throws BuildException {       
+        // check that the home is ok.
+        if (metahome == null || !metahome.exists()){
+            throw new BuildException("'metamatahome' must point to Metamata home directory.");
         }
+        metahome = project.resolveFile(metahome.getPath());
+        
+        // check that the needed jar exists.
+        File[] jars = getMetamataLibs();
+        for (int i = 0; i < jars.length; i++){
+            if (!jars[i].exists()){
+                throw new BuildException( jars[i] + " does not exist. Check your metamata installation.");
+            }           
+        }
+        
+        // check that the target is ok and resolve it.
+        if (target == null || !target.isFile() || !target.getName().endsWith(".jj") ) {
+            throw new BuildException("Invalid target: " + target);
+        }
+        target = project.resolveFile(target.getPath());
+    }    
+    
+    /**
+     * return all options of the command line as string elements
+     * @param an array of options corresponding to the setted options.
+     */
+    protected String[] getOptions(){
+        Vector options = new Vector();
+        if (verbose){
+            options.addElement("-verbose");
+        }
+        if (debugscanner){
+            options.addElement("-ds");
+        }
+        if (debugparser){
+            options.addElement("-dp");
+        }
+        if (classpath != null){
+            options.addElement("-classpath");
+            options.addElement(classpath.toString());
+        }
+        if (sourcepath != null){
+            options.addElement("-sourcepath");
+            options.addElement(sourcepath.toString());
+        }
+        options.addElement(target.getAbsolutePath());
+        
+        String[] array = new String[options.size()];
+        options.copyInto(array);
+        return array;
+    }
+    
+    /**
+     * write all options to a file with one option / line
+     * @param tofile the file to write the options to.
+     * @param options the array of options element to write to the file.
+     * @throws BuildException thrown if there is a problem while writing
+     * to the file.
+     */
+    protected void generateOptionsFile(File tofile, String[] options) throws BuildException {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(tofile);
+            PrintWriter pw = new PrintWriter(fw);
+            for (int i = 0; i < options.length; i++){
+                pw.println( options[i] );
+            }
+            pw.flush();
+        } catch (IOException e){
+            throw new BuildException("Error while writing options file " + tofile, e);
+        } finally {
+            if (fw != null){
+                try {
+                    fw.close();
+                } catch (IOException ignored){}
+            }
+        }
+    }
+    
+    /** create a temporary file in the current directory */
+    protected final static File createTmpFile(){
+        // must be compatible with JDK 1.1 !!!!
+        final long rand = (new Random(System.currentTimeMillis())).nextLong();
+        File file = new File("metamata" + rand + ".tmp");
+        return file;
     }
 
 }

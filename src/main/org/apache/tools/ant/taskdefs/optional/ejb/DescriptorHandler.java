@@ -243,7 +243,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             
             // Get the filename into a String object
             File classFile = null;
-            String className = currentText;
+            String className = currentText.trim();
 
             // If it's a primitive wrapper then we shouldn't try and put
             // it into the jar, so ignore it.

@@ -79,4 +79,11 @@ public class TarTest extends TaskdefsTest {
         expectBuildException("test3", "required argument not specified");
     }
 
+    public void test4() { 
+        expectBuildException("test4", "tar cannot include itself");
+    }
+
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
 }

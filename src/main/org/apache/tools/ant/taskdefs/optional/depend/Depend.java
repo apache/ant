@@ -110,7 +110,7 @@ public class Depend extends MatchingTask {
      * beyond direct dependencies to include all classes. So if A directly
      * affects B abd B directly affects C, then A indirectly affects C.
      */
-    private boolean closure;
+    private boolean closure = false;
 
     private void writeDependencyList(File depFile, Vector dependencyList) throws IOException {
         // new dependencies so need to write them out to the cache

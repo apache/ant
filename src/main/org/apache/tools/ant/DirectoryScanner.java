@@ -736,7 +736,7 @@ strLoop:
              * (2) an IO error occurred (why doesn't it throw an exception 
              *     then???)
              */
-            throw new BuildException("IO error scanning directory"
+            throw new BuildException("IO error scanning directory "
                                      + dir.getAbsolutePath());
         }
 

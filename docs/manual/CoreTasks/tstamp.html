@@ -1,0 +1,75 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="tstamp">Tstamp</a></h2>
+<h3>Description</h3>
+<p>Sets the DSTAMP, TSTAMP and TODAY properties in the current project. The
+DSTAMP is in the &quot;yyyymmdd&quot; format, the TSTAMP is in the &quot;hhmm&quot;
+format and TODAY is &quot;month day year&quot;.</p>
+<p>These properties can be used in the buildfile, for instance, to create
+timestamped filenames or used to replace placeholder tags inside documents to
+indicate, for example, the release date. The best place for this task is in your
+initialization target.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr> <td colspan="3"> No parameters</td>
+  </tr>
+</table>
+
+<h3>Nested Elements</h3>
+The tstamp task supports a format nested element which allows a property to be
+given the current date and time in a given format. The date/time patterns are as defined in the Java 
+SimpleDateFormat class. 
+
+
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">
+        The property which is to receive the date/time string in the given pattern
+    </td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">pattern</td>
+    <td valign="top">The date/time pattern to be used. The values are defined by the Java
+                     SimpleDateFormat class</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<p> Set the standard DSTAMP, TSTAMP and TODAY properties according to the formats above</p>
+<pre>  &lt;tstamp/&gt;</pre>
+
+<p> As for the above example, set the standard properties and also set the property 
+&quot;TODAY_UK&quot; with the date/time pattern &quot;d MMM yyyy&quot;</p>
+
+<pre>  &lt;tstamp&gt;
+    &lt;format property=&quot;TODAY_UK&quot; pattern=&quot;d MMMM yyyy&quot;&gt;
+  &lt;/tstamp&gt;
+</pre>
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
