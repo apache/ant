@@ -54,7 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
+
 import java.io.*;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -136,7 +140,7 @@ public class Rmic extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path();
+            compileClasspath = new Path(project);
         }
         return compileClasspath;
     }
@@ -368,7 +372,7 @@ public class Rmic extends MatchingTask {
     private String getCompileClasspath(File baseFile) {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
-        Path classpath = new Path(baseFile.getAbsolutePath());
+        Path classpath = new Path(project, baseFile.getAbsolutePath());
 
         // add our classpath to the mix
 
@@ -383,7 +387,7 @@ public class Rmic extends MatchingTask {
         if (Project.getJavaVersion().startsWith("1.2")) {
             String bootcp = System.getProperty("sun.boot.class.path");
             if (bootcp != null) {
-                addExistingToClasspath(classpath, new Path(bootcp));
+                addExistingToClasspath(classpath, new Path(project, bootcp));
             }
         }
         return classpath.toString();

@@ -54,7 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -139,7 +143,7 @@ public class Java extends Exec {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path();
+            classpath = new Path(project);
         }
         return classpath;
     }

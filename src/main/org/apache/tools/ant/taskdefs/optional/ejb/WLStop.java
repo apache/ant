@@ -54,8 +54,11 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 
@@ -116,7 +119,7 @@ public class WLStop extends Task {
         String args = serverURL + " SHUTDOWN " + username + " " + password + " " + delay;
 
         weblogicAdmin.setArgs(args);
-        weblogicAdmin.setClasspath(new Path(execClassPath));                         
+        weblogicAdmin.setClasspath(new Path(project, execClassPath));                         
         weblogicAdmin.execute();
     }
     

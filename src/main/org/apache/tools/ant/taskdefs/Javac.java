@@ -54,7 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
 
 import java.lang.reflect.Method;
 import java.io.*;
@@ -115,7 +118,7 @@ public class Javac extends MatchingTask {
      */
     public Path createSrc() {
         if (src != null) {
-            src = new Path();
+            src = new Path(project);
         }
         return src;
     }
@@ -155,7 +158,7 @@ public class Javac extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path();
+            compileClasspath = new Path(project);
         }
         return compileClasspath;
     }
@@ -177,7 +180,7 @@ public class Javac extends MatchingTask {
      */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
-            bootclasspath = new Path();
+            bootclasspath = new Path(project);
         }
         return bootclasspath;
     }
@@ -199,7 +202,7 @@ public class Javac extends MatchingTask {
      */
     public Path createExtdirs() {
         if (extdirs == null) {
-            extdirs = new Path();
+            extdirs = new Path(project);
         }
         return extdirs;
     }
@@ -349,7 +352,7 @@ public class Javac extends MatchingTask {
      * <code>classes.zip</code> be added to the classpath.  
      */
     private Path getCompileClasspath(boolean addRuntime) {
-        Path classpath = new Path();
+        Path classpath = new Path(project);
 
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
@@ -368,20 +371,23 @@ public class Javac extends MatchingTask {
         if (addRuntime) {
             if (Project.getJavaVersion() == Project.JAVA_1_1) {
                 addExistingToClasspath(classpath,
-                                       new Path(System.getProperty("java.home")
+                                       new Path(null,
+                                                System.getProperty("java.home")
                                                 + File.separator + "lib"
                                                 + File.separator 
                                                 + "classes.zip"));
             } else {
                 // JDK > 1.1 seems to set java.home to the JRE directory.
                 addExistingToClasspath(classpath,
-                                       new Path(System.getProperty("java.home")
+                                       new Path(null,
+                                                System.getProperty("java.home")
                                                 + File.separator + "lib"
                                                 + File.separator + "rt.jar"));
                 // Just keep the old version as well and let addExistingToPath
                 // sort it out.
                 addExistingToClasspath(classpath,
-                                       new Path(System.getProperty("java.home")
+                                       new Path(null,
+                                                System.getProperty("java.home")
                                                 + File.separator +"jre"
                                                 + File.separator + "lib"
                                                 + File.separator + "rt.jar"));
@@ -608,7 +614,7 @@ public class Javac extends MatchingTask {
     private void doJikesCompile() throws BuildException {
         log("Using jikes compiler", Project.MSG_VERBOSE);
 
-        Path classpath = new Path();
+        Path classpath = new Path(project);
 
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.

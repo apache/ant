@@ -56,7 +56,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Path;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
 
 import java.lang.reflect.InvocationTargetException;

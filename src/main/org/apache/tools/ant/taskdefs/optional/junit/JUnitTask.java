@@ -55,12 +55,12 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Path;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class JUnitTask extends Task {
      * @param junit path to junit classes.
      */
     public void setJunit(String junit) {
-        commandline.createClasspath().createPathElement().setLocation(junit);
+        commandline.createClasspath(project).createPathElement().setLocation(junit);
     }
 
     public void setDefaulthaltonerror(boolean value) {
@@ -155,7 +155,7 @@ public class JUnitTask extends Task {
 
 
     public Path createClasspath() {
-        return commandline.createClasspath();
+        return commandline.createClasspath(project);
     }
 
     public JUnitTest createTest() {
@@ -189,7 +189,7 @@ public class JUnitTask extends Task {
 
         final String oldclasspath = System.getProperty("java.class.path");
 
-        commandline.createClasspath().createPathElement().setPath(oldclasspath);
+        commandline.createClasspath(project).createPathElement().setPath(oldclasspath);
         /*
          * This doesn't work on JDK 1.1, should use a Classloader of our own 
          * anyway --SB

@@ -54,8 +54,11 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 
@@ -146,7 +149,7 @@ public class Ejbc extends MatchingTask {
         }
                                     
         helperTask.setArgs(args);
-        helperTask.setClasspath(new Path(execClassPath));
+        helperTask.setClasspath(new Path(project, execClassPath));
         if (helperTask.executeJava() != 0) {                         
             throw new BuildException("Execution of ejbc helper failed");
         }

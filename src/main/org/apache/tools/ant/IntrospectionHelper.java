@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.types.Path;
+
 import java.lang.reflect.*;
 import java.io.File;
 import java.util.*;
@@ -443,6 +445,16 @@ public class IntrospectionHelper  {
                     public void set(Project p, Object parent, String value) 
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new File[] {p.resolveFile(value)});
+                    }
+
+                };
+
+        // resolve relative paths through Project
+        } else if (org.apache.tools.ant.types.Path.class.equals(arg)) {
+            return new AttributeSetter() {
+                    public void set(Project p, Object parent, String value) 
+                        throws InvocationTargetException, IllegalAccessException {
+                        m.invoke(parent, new Path[] {new Path(p, value)});
                     }
 
                 };

@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.Path;
+import org.apache.tools.ant.Project;
 
 /*
  *
@@ -64,7 +64,7 @@ public class CommandlineJava {
 
     private Commandline vmCommand = new Commandline();
     private Commandline javaCommand = new Commandline();
-    private Path classpath = new Path();
+    private Path classpath = null;
     private String vmVersion;
 
 
@@ -93,7 +93,10 @@ public class CommandlineJava {
         javaCommand.setExecutable(classname);
     }
 
-    public Path createClasspath() {
+    public Path createClasspath(Project p) {
+        if (classpath == null) {
+            classpath = new Path(p);
+        }
         return classpath;
     }
 
@@ -103,14 +106,14 @@ public class CommandlineJava {
 
     public String[] getCommandline() {
         int size = vmCommand.size() + javaCommand.size();
-        if (classpath.size() > 0) {
+        if (classpath != null && classpath.size() > 0) {
             size += 2;
         }
         
         String[] result = new String[size];
         System.arraycopy(vmCommand.getCommandline(), 0, 
                          result, 0, vmCommand.size());
-        if (classpath.size() > 0) {
+        if (classpath != null && classpath.size() > 0) {
             result[vmCommand.size()] = "-classpath";
             result[vmCommand.size()+1] = classpath.toString();
         }
@@ -127,7 +130,7 @@ public class CommandlineJava {
 
     public int size() {
         int size = vmCommand.size() + javaCommand.size();
-        if (classpath.size() > 0) {
+        if (classpath != null && classpath.size() > 0) {
             size += 2;
         }
         return size;

@@ -54,7 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
 
 import java.io.*;
 import java.util.*;
@@ -137,7 +140,7 @@ public class Javadoc extends Exec {
         
         public Path createPath() {
             if (path == null) {
-                path = new Path();
+                path = new Path(getProject());
             }
             return path;
         }
@@ -219,7 +222,7 @@ public class Javadoc extends Exec {
     }
     public Path createSourcepath() {
         if (sourcePath == null) {
-            sourcePath = new Path();
+            sourcePath = new Path(project);
         }
         return sourcePath;
     }
@@ -278,7 +281,7 @@ public class Javadoc extends Exec {
     }
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path();
+            classpath = new Path(project);
         }
         return classpath;
     }
@@ -291,7 +294,7 @@ public class Javadoc extends Exec {
     }
     public Path createBootclasspath() {
         if (bootclasspath == null) {
-            bootclasspath = new Path();
+            bootclasspath = new Path(project);
         }
         return bootclasspath;
     }
@@ -448,6 +451,10 @@ public class Javadoc extends Exec {
     }
 
     public void execute() throws BuildException {
+        if ("javadoc2".equals(taskType)) {
+            log("!! javadoc2 is deprecated. Use javadoc instead. !!");
+        }
+
         if (sourcePath == null || destDir == null ) {
             String msg = "sourcePath and destDir attributes must be set!";
             throw new BuildException(msg);

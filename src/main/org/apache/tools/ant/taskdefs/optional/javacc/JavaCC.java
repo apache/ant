@@ -54,10 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.javacc;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +71,7 @@ import java.io.IOException;
  */
 public class JavaCC extends Task {
 
-    private Path userclasspath = new Path();
+    private Path userclasspath = null;
     private File metahome = null;
     private File metaworkingdir = null;
     private File target = null;
@@ -89,6 +92,10 @@ public class JavaCC extends Task {
     }
 
     public Path createUserclasspath() {
+        if (userclasspath == null) {
+            userclasspath = new Path(project);
+        }
+        
         return userclasspath;
     }
 
@@ -126,7 +133,7 @@ public class JavaCC extends Task {
             throw new BuildException("Userclasspath not set.");
         }
 
-        final Path classpath = cmdl.createClasspath();
+        final Path classpath = cmdl.createClasspath(project);
         classpath.createPathElement().setLocation(metahome.getAbsolutePath() + "/lib/metamatadebug.jar");
         classpath.createPathElement().setLocation(metahome.getAbsolutePath() + "/lib/metamata.jar");
         classpath.createPathElement().setLocation(metahome.getAbsolutePath() + "/lib/JavaCC.zip");

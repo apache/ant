@@ -53,8 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 
@@ -126,7 +129,7 @@ public class DDCreator extends MatchingTask {
         ddCreatorTask.setFork("yes");
         ddCreatorTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper");
         ddCreatorTask.setArgs(args);
-        ddCreatorTask.setClasspath(new Path(execClassPath));                         
+        ddCreatorTask.setClasspath(new Path(project, execClassPath));                         
         if (ddCreatorTask.executeJava() != 0) {                         
             throw new BuildException("Execution of ddcreator helper failed");
         }

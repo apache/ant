@@ -54,176 +54,18 @@
 
 package org.apache.tools.ant;
 
-import java.io.File;
-import java.util.Vector;
-import java.util.StringTokenizer;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-
 /**
- * This object represents a path as used by CLASSPATH or PATH
- * environment variable.
+ * This class has been moved to org.apache.tools.ant.types.
  *
- * <code>
- * &lt;sometask&gt;<br>
- * &nbsp;&nbsp;&lt;somepath&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file.jar" /&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file3.jar" /&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file4.jar" /&gt;
- * &nbsp;&nbsp;&lt;/somepath&gt;
- * &lt;/sometask&gt;<br>
- * </code>
- *
- * The object implemention <code>sometask</code> must provide a method called
- * <code>createSomepath</code> which returns an instance of <code>Path</code>.
- * Nested path definitions are handled by the Path object and must be labeled
- * <code>pathelement</code>.<p>
- *
- * The path element takes a parameter <code>path</code> which will be parsed
- * and split into single elements. It will usually be used
- * to define a path from an environment variable.
- *
- * @author Thomas.Haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @deprecated This class has been moved to org.apache.tools.ant.types.
  */
 
-public class Path {
-
-    private Vector definition;
-
-    public static Path systemClasspath = 
-        new Path(System.getProperty("java.class.path"));
-
-    public Path(String path) {
-        this();
-        setPath(path);
+public class Path extends org.apache.tools.ant.types.Path {
+    public Path(Project p, String path) {
+        super(p, path);
     }
 
-    public Path() {
-        definition = new Vector();
-    }
-
-    /**
-     * Adds a element definition to the path.
-     * @param location the location of the element to add (must not be
-     * <code>null</code> nor empty.
-     */
-    public void setLocation(String location) {
-        if (location != null && location.length() > 0) {
-            String element = translateFile(location);
-            if (definition.indexOf(element) == -1) {
-                definition.addElement(element);
-            }
-        }
-    }
-
-
-    /**
-     * Append the contents of the other Path instance to this.
-     */
-    public void append(Path other) {
-        String[] l = other.list();
-        for (int i=0; i<l.length; i++) {
-            if (definition.indexOf(l[i]) == -1) {
-                definition.addElement(l[i]);
-            }
-        }
-    }
-
-    /**
-     * Parses a path definition and creates single PathElements.
-     * @param path the path definition.
-     */
-    public void setPath(String path) {
-        final Vector elements = translatePath(path);
-        for (int i=0; i < elements.size(); i++) {
-            String element = (String) elements.elementAt(i);
-            if (definition.indexOf(element) == -1) {
-                definition.addElement(element);
-            }
-        }
-    }
-
-
-    public Path createPathElement() {
-        return this;
-    }
-
-
-    /**
-     * Returns all path elements defined by this and netsed path objects.
-     * @return list of path elements.
-     */
-    public String[] list() {
-        final String[] result = new String[definition.size()];
-        definition.copyInto(result);
-        return result;
-    }
-
-
-    /**
-     * Returns a textual representation of the path, which can be used as
-     * CLASSPATH or PATH environment variable definition.
-     * @return a textual representation of the path.
-     */
-    public String toString() {
-        final String[] list = list();
-
-        // empty path return empty string
-        if (list.length == 0) return "";
-
-        // path containing one or more elements
-        final StringBuffer result = new StringBuffer(list[0].toString());
-        for (int i=1; i < list.length; i++) {
-            result.append(File.pathSeparatorChar);
-            result.append(list[i]);
-        }
-
-        return result.toString();
-    }
-
-
-
-    public static Vector translatePath(String source) {
-        final Vector result = new Vector();
-        if (source == null) return result;
-
-        PathTokenizer tok = new PathTokenizer(source);
-        StringBuffer element = new StringBuffer();
-        while (tok.hasMoreTokens()) {
-            element.setLength(0);
-            element.append(tok.nextToken());
-            for (int i=0; i<element.length(); i++) {
-                translateFileSep(element, i);
-            }
-            result.addElement(element.toString());
-        }
-        return result;
-    }
-
-
-    public static String translateFile(String source) {
-        if (source == null) return "";
-
-        final StringBuffer result = new StringBuffer(source);
-        for (int i=0; i < result.length(); i++) {
-            translateFileSep(result, i);
-        }
-
-        return result.toString();
-    }
-
-
-    protected static boolean translateFileSep(StringBuffer buffer, int pos) {
-        if (buffer.charAt(pos) == '/' || buffer.charAt(pos) == '\\') {
-            buffer.setCharAt(pos, File.separatorChar);
-            return true;
-        }
-        return false;
-    }
-
-    public int size() {
-        return definition.size();
+    public Path(Project p) {
+        super(p);
     }
 }

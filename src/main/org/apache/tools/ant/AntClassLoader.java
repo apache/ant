@@ -75,7 +75,7 @@ public class AntClassLoader  extends ClassLoader {
     /**
      * The classpath that is to be used when loading classes using this class loader.
      */ 
-    private Path classpath;
+    private org.apache.tools.ant.types.Path classpath;
     
     /**
      * The project to which this class loader belongs.
@@ -93,7 +93,8 @@ public class AntClassLoader  extends ClassLoader {
      * @param project the project to ehich this classloader is to belong.
      * @param classpath the classpath to use to load the classes.
      */
-    public AntClassLoader(Project project, Path classpath) {
+    public AntClassLoader(Project project, 
+                          org.apache.tools.ant.types.Path classpath) {
         this.project = project;
         this.classpath = classpath;
     }
