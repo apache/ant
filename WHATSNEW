@@ -1,4 +1,4 @@
-Changes from Ant 1.5.3 to current CVS version
+Changes from Ant 1.5.4 to current CVS version
 =============================================
 
 Changes that could break older environments:
@@ -29,10 +29,6 @@ Changes that could break older environments:
 * The <ftp> and <telnet> tasks now require Jakarta Commons Net instead
   of the older ORO Netcomponents version.  See
   <http://jakarta.apache.org/commons/net/index.html>.
-
-* If the Visual Age tasks used to work for you, they may stop doing so
-  now - and we'd like to know about it.  The current set of tasks is
-  supposed to work with any version of VAJ starting with 3.0.
 
 * <input> will no longer prompt the user and wait for input if the
   addproperty attribute is set to a property that has already been
@@ -153,18 +149,6 @@ Fixed bugs:
 * Setting filesonly to true in <zip> and related tasks would cause the
   archives to be always recreated.  Bugzilla Report 19449.
 
-* The Visual Age for Java tasks didn't work (at least for versions 3.0
-  and higher).  Bugzilla Report 10016.
-
-* VAJImport task failed with NullPointerException when using DirectoryScanner.
-  Bugzilla Report 22080.
-
-* URL-encoding in <vaj*port> didn't work properly.
-
-* VAJRemoteUtil called getAbsolutePath instead of getPath
-  causing problems when using a Windows VAJ server from a UNIX server.
-  Bugzilla Report 20457.
-
 * file names that include spaces need to be quoted inside the @argfile
   argument using <javadoc> and JDK 1.4.  Bugzilla Report 16871.
 
@@ -243,8 +227,6 @@ Other changes:
 
 * A new attribute named skip is added to the TailFilter and
   HeadFilter filter readers.
-
-* Shipped XML parser is now Xerces 2.5.0
 
 * The filesetmanifest attribute of <jar> has been reenabled.
 
@@ -390,8 +372,6 @@ Other changes:
 * <sql> is able to display properly several resultsets if you are
   running a compound sql statement. Bugzilla Report 21594.
 
-* <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
-
 * A new <containsregexp> selector has been added, that selects files
   if their content matches a certain regular expression.
 
@@ -419,13 +399,6 @@ Other changes:
 * <stcheckout> has a new attribute "converteol" that can be used to
   control the automatic line-end conversion performed on ASCII files.
   Bugzilla Report 18884.
-
-* The VAJ tasks now support a haltonfailure attribute to conditionally
-  keep building even if they fail.
-
-* It is now possible to use the latest (versioned or unversioned) edition
-  in <vajload> by using special wildcard characters.  Also fixes
-  Bugzilla Report 2236.
 
 * Users can now modify the list of default excludes using the new
   defaultexcludes task.  Bugzilla Report 12700.
@@ -563,6 +536,45 @@ If set to true, the process will be spawned. Bugzilla Report 5907.
 * <zip> and friends have a new attribute "keepcompression" that can be
   used to incrementally build an archive mixing compressed and uncompressed
   entries.
+
+Changes from Ant 1.5.3 to Ant 1.5.4
+===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* If the Visual Age tasks used to work for you, they may stop doing so
+  now - and we'd like to know about it.  The current set of tasks is
+  supposed to work with any version of VAJ starting with 3.0.
+
+Fixed bugs:
+-----------
+
+* The Visual Age for Java tasks didn't work (at least for versions 3.0
+  and higher).  Bugzilla Report 10016.
+
+* URL-encoding in <vaj*port> didn't work properly.
+
+* VAJRemoteUtil called getAbsolutePath instead of getPath
+  causing problems when using a Windows VAJ server from a UNIX server.
+  Bugzilla Report 20457.
+
+* VAJImport task failed with NullPointerException when using DirectoryScanner.
+  Bugzilla Report 22080.
+
+Other changes:
+--------------
+
+* Shipped XML parser is now Xerces 2.5.0
+
+* <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
+
+* The VAJ tasks now support a haltonfailure attribute to conditionally
+  keep building even if they fail.
+
+* It is now possible to use the latest (versioned or unversioned) edition
+  in <vajload> by using special wildcard characters.  Also fixes
+  Bugzilla Report 2236.
 
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
