@@ -1,8 +1,7 @@
 This file contains the PGP keys of various developers.
-Please don't use them for email unless you have to. Their main
-purpose is code signing.
 
 Users: pgp < KEYS
+       gpg --import KEYS
 Developers: 
         pgp -kxa <your name> and append it to this file.
         (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
@@ -34,14 +33,17 @@ m9+jZ3jLcC0oav6iH+otL/lhk9t/JDM8LjD2kAkdWWoIvvuPyCx97gOzojIo0Ve2
 -----END PGP PUBLIC KEY BLOCK-----
 
 
-
-
 pub  1024D/51898504 2001-05-29 Conor MacNeill <conor@cortexebusiness.com.au>
+sig 3       51898504 2001-05-29   Conor MacNeill <conor@cortexebusiness.com.au>
+sig         5F6B8B72 2002-01-11   Stefan Bodewig <bodewig@apache.org>
 uid                            Conor MacNeill <conor@apache.org>
+sig 3       51898504 2001-05-29   Conor MacNeill <conor@cortexebusiness.com.au>
+sig         5F6B8B72 2002-01-11   Stefan Bodewig <bodewig@apache.org>
+sub  1024g/D1ECBA5D 2001-05-29
+sig         51898504 2001-05-29   Conor MacNeill <conor@cortexebusiness.com.au>
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.0.6 (MingW32)
-Comment: For info see http://www.gnupg.org
+Version: GnuPG v1.2.0 (GNU/Linux)
 
 mQGiBDsTqygRBACiZckNdclTlQFonLaIKBFGhMy0KKByw0x8XA4iwdbCXuF6xNIc
 HIFHajJ74AHchQ4d8xtomBy6b8yvFgWVeaZensvn69BlLeqGdyeJRzfPt6TgRnzZ
@@ -54,10 +56,13 @@ p9cXBACDHgLn7MAVLqUdYhRrUj/M+GOUpvBikEgoJJrEUmb5X4+++dffMh5HBIO4
 yJ5CLqYda64h/UA2kmmR2dfopmvDogYEMz/HU5voozxe7BEI7bQhQ29ub3IgTWFj
 TmVpbGwgPGNvbm9yQGFwYWNoZS5vcmc+iFcEExECABcFAjsTqygFCwcKAwQDFQMC
 AxYCAQIXgAAKCRCBBGRPUYmFBDgIAKCZztXqKhK6kXOnoGy7opCNmWU0lwCgsPDa
-4m+ruW3ch0rfbqtR75S52R+0LUNvbm9yIE1hY05laWxsIDxjb25vckBjb3J0ZXhl
-YnVzaW5lc3MuY29tLmF1PohXBBMRAgAXBQI7E6xMBQsHCgMEAxUDAgMWAgECF4AA
-CgkQgQRkT1GJhQTY0ACgmZmKheHzjPJs5hybpyvnvEiPYqYAn2+ryxdtz8XyOMEx
-GRmHNlhG7svsuQENBDsTqy0QBACfsCxJ6iCtgX8zjlVtMsMfDqu72x5sYatWKn8c
+4m+ruW3ch0rfbqtR75S52R+IRgQQEQIABgUCPD6eTgAKCRCiEVrhX2uLcqCcAKCr
+1Wylqju9YjBi5Twej9ze69JFBQCeOaMgo6yjnkcV3PnVInLlaMwPr5q0LUNvbm9y
+IE1hY05laWxsIDxjb25vckBjb3J0ZXhlYnVzaW5lc3MuY29tLmF1PohXBBMRAgAX
+BQI7E6xMBQsHCgMEAxUDAgMWAgECF4AACgkQgQRkT1GJhQTY0ACgmZmKheHzjPJs
+5hybpyvnvEiPYqYAn2+ryxdtz8XyOMExGRmHNlhG7svsiEYEEBECAAYFAjw+nlUA
+CgkQohFa4V9ri3JYYACg1WN+NCptfKVP1mbrIa+0ajztsiIAnAn+m70iwRRFZCxr
+jcULoY5SjyTLuQENBDsTqy0QBACfsCxJ6iCtgX8zjlVtMsMfDqu72x5sYatWKn8c
 u+4Oj5mi0x6azZIhwCa+K3ihLVOyG1mCRnzztGTIxWYRhq3TESIVOfgm+NgLGrmA
 XUTFyCT+21TExLCpuVZKmUHsWXLxDtfQ1diPeQpiQ8+Fvb/4jLGFjFIrQ2VjtFQn
 kumkSwADBgP9H0bF4hdMuVEcSJ9imxSoJshcOOA3Vd2+YiCTZhBygWM49wY5jNos
@@ -65,19 +70,31 @@ kumkSwADBgP9H0bF4hdMuVEcSJ9imxSoJshcOOA3Vd2+YiCTZhBygWM49wY5jNos
 nTCZ4TuB5CtzrKTlWLmPCPpFsGqe4KjMeKg/mqGqjPKl97xgStK9N9GIRgQYEQIA
 BgUCOxOrLQAKCRCBBGRPUYmFBMM6AJsF3FFyZGEmbt9aGG1W/u0oI9mcLgCfQyJ+
 aalbspazea4J9zgi59SSwOM=
-=Icm2
+=cBdR
 -----END PGP PUBLIC KEY BLOCK-----
 
-pub  1024D/5F6B8B72 2001-05-28 Stefan Bodewig <stefan.bodewig@freenet.de>
-sig 3       5F6B8B72 2003-03-07   Stefan Bodewig <stefan.bodewig@freenet.de>
-uid                            Stefan Bodewig <bodewig@apache.org>
-sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <stefan.bodewig@freenet.de>
+pub  1024D/5F6B8B72 2001-05-28 Stefan Bodewig <bodewig@apache.org>
+sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 sig         51898504 2002-01-11   Conor MacNeill <conor@cortexebusiness.com.au>
+sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
+sig 3       2261D073 2003-03-17   Astrid Keáler (Kess) <kess@kess-net.de>
+sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik <dirkx@apache.org>
+sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
 uid                            Stefan Bodewig <bodewig@bost.de>
-sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <stefan.bodewig@freenet.de>
+sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 sig         51898504 2002-01-11   Conor MacNeill <conor@cortexebusiness.com.au>
+sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
+sig 3       2261D073 2003-03-17   Astrid Keáler (Kess) <kess@kess-net.de>
+sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik <dirkx@apache.org>
+sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
+uid                            Stefan Bodewig <stefan.bodewig@freenet.de>
+sig 3       5F6B8B72 2003-03-07   Stefan Bodewig <bodewig@apache.org>
+sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
+sig 3       2261D073 2003-03-17   Astrid Keáler (Kess) <kess@kess-net.de>
+sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik <dirkx@apache.org>
+sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
 sub  1024g/24774157 2001-05-28
-sig         5F6B8B72 2001-05-28   Stefan Bodewig <stefan.bodewig@freenet.de>
+sig         5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.2.0 (GNU/Linux)
@@ -91,32 +108,55 @@ XaeW7iudHVr63rU5PViXObIQrdQl0D59j5brKj4vdlTyUw8kaHPvbKPDEOwvZq4Y
 LJQ5BACA1YilTeXRJqwFsNlpcxCHwlULD4QUVP496prQWf1B7Z6g0KvLGrQsO0Vn
 Jcn+fEqukysTJixSXCPebosltd4RalJIupVYkp4w6MJ7biaDAlLuNhDcI/AiXTmV
 dXUedVXIaM8I3Ne23gucwbAyc0Hvb+3cSAKRhl/azFQhuHBvlrQjU3RlZmFuIEJv
-ZGV3aWcgPGJvZGV3aWdAYXBhY2hlLm9yZz6IVwQTEQIAFwUCOxIiTgULBwoDBAMV
-AwIDFgIBAheAAAoJEKIRWuFfa4tyLJ4An2yKSQ1o+lIF2O6wR/E6NdgYAfkSAJ94
-8O9lic6ZQLUoVU5rjJURUvhVDYhGBBARAgAGBQI8PtWPAAoJEIEEZE9RiYUEnZIA
-njOkQx1BfxN9+E7Yiz4MOxqZjSUpAKDQi0Alv/VR61fmR7KHZ11J2g+HSLQgU3Rl
-ZmFuIEJvZGV3aWcgPGJvZGV3aWdAYm9zdC5kZT6IVwQTEQIAFwUCOxI5gQULBwoD
-BAMVAwIDFgIBAheAAAoJEKIRWuFfa4tyyboAoNoD/9Jgm/alxfAYELz05LMa/HLe
-AKDWTHqq7rMkppZoTUv2gWpVzrk5RIhGBBARAgAGBQI8PtWVAAoJEIEEZE9RiYUE
-0LMAn22/u01Lo3Bo5lDxxHSkayUkYq25AKCm20yaGFGtTDJW4Rdz50pfut1AwrQq
-U3RlZmFuIEJvZGV3aWcgPHN0ZWZhbi5ib2Rld2lnQGZyZWVuZXQuZGU+iFwEExEC
-ABwFAj5ogVwCGwMECwcDAgMVAgMDFgIBAh4BAheAAAoJEKIRWuFfa4tyTygAn14R
-Tq+IDDCEMBBr1G+if1+GrLsyAJ43th/U9a/40lYtTWyBLUH26ZskF7kBDQQ7EiJU
-EAQAzVKWS8QrkysydbTJu2/14wIbz2Coi93aAGelwCwXSxf50JpYdY3Lkcvd0FqT
-8bcEnz43MCSx8vlKubQtUpx9WMGIb4ixtShLJ4lAa6FJldhychz/dnxSNyz5N8W6
-sby4dTVxac0rloxjAOurGanhG7TMtgfDi0cEEoXRyAVoKyMAAwUD/j1pJm4Npq2m
-lJoE7MK3vAhgKwYHFflmJusmqvSAtRuFdT15pbMJrA5bAK+lA3SVOOhhWTCItlph
-SR2qxJCAcBTeOMqUi5ohFcCkSRNvwmDtH+80B3BehlEsEKNk8Z3moa2ch7Oxnb6X
-EXH5tGJ5Qvx9Qid6ZfBaXx7bc8yKyCb4iEYEGBECAAYFAjsSIlQACgkQohFa4V9r
-i3INMgCgnc22kj8TfjktU6u4SUUqud25ZZcAn0B2b0zPjKjGuiwdKSnkFbNcFS3g
-=rSF1
+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
+=gzOQ
 -----END PGP PUBLIC KEY BLOCK-----
 
-Type Bits/KeyID    Date       User ID
-pub  1024/697ECEDD 2000/04/06 Henri Gomez <hgomez@slib.fr>
-                              *** RPM SIGNING KEY ***
+pub  1024R/697ECEDD 2000-04-06 Henri Gomez <hgomez@slib.fr>
+sig         697ECEDD 2000-04-06   Henri Gomez <hgomez@slib.fr>
+
 -----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: 2.6.3i
+Version: GnuPG v1.2.0 (GNU/Linux)
 
 mQCNAzjsydwAAAEEAMpwFU/ci3/wR3ryCGp9Exr+Rx/hTQ7hWAJcVw8ejlBXlT4T
 yITlRUs0HGfRWxME2J55PuXXsIEPZzjfozNtvOyq8WlLlJ7iaiyWxVRoPJ25sSEj
@@ -127,60 +167,12 @@ sdcXVAcR8R7ILIRB5AY7a3bF+qMk0r+vO6oR878RKKn9AvtaAIOnrh6tr0tiPwf5
 XDUMySxIWJEF3SmJAy9Lq3bAl5GMzZCFHiS0NW2gtWgmr/u1RuM=
 =6l+I
 -----END PGP PUBLIC KEY BLOCK-----
-pub  1024D/EDF62C35 2002-04-10 Magesh Umasankar <umagesh@apache.org>
-sig        EDF62C35 2002-04-10  Magesh Umasankar <umagesh@apache.org>
-sub  1024g/B5FFC53F 2002-04-10
-sig        EDF62C35 2002-04-10  Magesh Umasankar <umagesh@apache.org>
+
+pub  1024R/397DCAD5 2002-07-03 Henri Gomez <hgomez@users.sourceforge.net>
+sig         397DCAD5 2002-07-03   Henri Gomez <hgomez@users.sourceforge.net>
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.0.6-2 (MingW32)
-Comment: For info see http://www.gnupg.org
-
-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
-FMEQOeOHNKvi+g==
-=p5Yy
------END PGP PUBLIC KEY BLOCK-----
-Type Bits/KeyID    Date       User ID
-pub  1024/397DCAD5 2002/07/03 Henri Gomez <hgomez@users.sourceforge.net>
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: 2.6.3i
+Version: GnuPG v1.2.0 (GNU/Linux)
 
 mQCNAz0i0UUAAAEEALXePN6IHne0W96YRMnR+4EXB6402QY5f8ZLcnSUZUH55Fb1
 qcZGBc3WRKlPiUvwBD+eVYgCpNSXF/H+oV1mawxNJN5XwqBEpfYmY8MRIPcqa61h
@@ -192,9 +184,14 @@ SI8o6l8EZzDX/PGwqEwzxHrbQkIgIktNn5ApIoazvdBpbkQfNj1vr2wWoMYPLAWM
 8xzecA==
 =UmZ8
 -----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/307A10A5 2002-07-18 Henri Gomez <hgomez@users.sourceforge.net>
+sig 3       307A10A5 2002-07-18   Henri Gomez <hgomez@users.sourceforge.net>
+sub  2048g/862B8F70 2002-07-18
+sig         307A10A5 2002-07-18   Henri Gomez <hgomez@users.sourceforge.net>
+
 -----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Version: GnuPG v1.2.0 (GNU/Linux)
 
 mQGiBD02vbERBAC1v8fR6gjERpaz4UMfdy0hRVWCPSbOdF+Swm/IenjVzErco6zb
 MTa13umUNrDPBy/tTWiCCZrOnqi7fgDzWqPEqrXJjKAFVLEWE6MmKylPPEPG1/bm
@@ -223,15 +220,15 @@ MHoQpRsTAJ4qst3MhLm48fBAEnzuzi/BIKr+AgCfYaCB/AvPoncQbHc8BcNGRimR
 P9A=
 =hQhz
 -----END PGP PUBLIC KEY BLOCK-----
+
 pub  1024D/EDF62C35 2002-04-10 Magesh Umasankar <umagesh@apache.org>
-sig        EDF62C35 2002-04-10  Magesh Umasankar <umagesh@apache.org>
-sig        5F6B8B72 2003-03-07  Stefan Bodewig <stefan.bodewig@freenet.de>
+sig 3       EDF62C35 2002-04-10   Magesh Umasankar <umagesh@apache.org>
+sig 3       5F6B8B72 2003-03-07   Stefan Bodewig <bodewig@apache.org>
 sub  1024g/B5FFC53F 2002-04-10
-sig        EDF62C35 2002-04-10  Magesh Umasankar <umagesh@apache.org>
+sig         EDF62C35 2002-04-10   Magesh Umasankar <umagesh@apache.org>
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.0.6-2 (MingW32)
-Comment: For info see http://www.gnupg.org
+Version: GnuPG v1.2.0 (GNU/Linux)
 
 mQGiBDy0ebgRBADuKIKD8PuJ4wKEV1h2AprwJjxCRx8vn48XNwfLZuvhw8cpArtK
 rZwhoGPPUPEEXgtTNerlKq4VwpAwcnvRz7oC/7aWkUbcR2sAyhfe2scohwPgw7Xv
