@@ -91,17 +91,6 @@ class ChangeLogParser {
     /** rcs entries */
     private final Hashtable m_entries = new Hashtable();
 
-    private final Properties m_userList;
-
-    /**
-     * Construct a parser that uses specified user list.
-     *
-     * @param userList the userlist
-     */
-    public ChangeLogParser(Properties userList) {
-        m_userList = userList;
-    }
-
     /**
      * Get a list of rcs entrys as an array.
      *
@@ -209,10 +198,6 @@ class ChangeLogParser {
             m_date = line.substring(6, 25);
             String lineData = line.substring(line.indexOf(";") + 1);
             m_author = lineData.substring(10, lineData.indexOf(";"));
-
-            if (m_userList.containsKey(m_author)) {
-                m_author = m_userList.getProperty(m_author);
-            }
 
             m_status = GET_COMMENT;
 

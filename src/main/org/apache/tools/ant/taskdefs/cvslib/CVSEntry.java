@@ -65,7 +65,7 @@ import java.util.Date;
  */
 class CVSEntry {
     private Date m_date;
-    private final String m_author;
+    private String m_author;
     private final String m_comment;
     private final Vector m_files = new Vector();
 
@@ -87,6 +87,10 @@ class CVSEntry {
         return m_date;
     }
 
+    void setAuthor(final String author) {
+	m_author = author;
+    }
+    
     String getAuthor() {
         return m_author;
     }

@@ -271,7 +271,7 @@ public class ChangeLogTask extends Task {
                 }
             }
 
-            final ChangeLogParser parser = new ChangeLogParser(userList);
+            final ChangeLogParser parser = new ChangeLogParser();
             final RedirectingStreamHandler handler =
                 new RedirectingStreamHandler(parser);
 
@@ -302,13 +302,14 @@ public class ChangeLogTask extends Task {
             final CVSEntry[] entrySet = parser.getEntrySetAsArray();
             final CVSEntry[] filteredEntrySet = filterEntrySet(entrySet);
 
+	    replaceAuthorIdWithName(userList,filteredEntrySet);
+
             writeChangeLog(filteredEntrySet);
 
         } finally {
             m_dir = savedDir;
         }
     }
-
 
     /**
      * Validate the parameters specified for task.
@@ -339,7 +340,6 @@ public class ChangeLogTask extends Task {
         }
     }
 
-
     /**
      * Load the userlist from the userList file (if specified) and add to
      * list of users.
@@ -357,7 +357,6 @@ public class ChangeLogTask extends Task {
             }
         }
     }
-
 
     /**
      * Filter the specified entrys accoridn to an appropriate rule.
@@ -389,6 +388,20 @@ public class ChangeLogTask extends Task {
         return resultArray;
     }
 
+    /**
+     * replace all known author's id's with their maven specified names
+     */
+    private void replaceAuthorIdWithName(final Properties userList,
+					 final CVSEntry[] entrySet) {
+        for (int i = 0; i < entrySet.length; i++ ) {
+	    
+            final CVSEntry entry = entrySet[ i ];
+            if (userList.containsKey(entry.getAuthor()))
+            {
+                entry.setAuthor(userList.getProperty(entry.getAuthor()));
+            }
+        }
+    }
 
     /**
      * Print changelog to file specified in task.
