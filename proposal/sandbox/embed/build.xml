@@ -2,12 +2,14 @@
   <property name="ant.src" location="../../.." />
   <property name="ant.build" location="${ant.src}/build" />
   <property name="debug" value="true"/>
-
+    
   <target name="main">
-    <copy file="ProjectHelperImpl2.java"  
+    <copy id="test" file="ProjectHelperImpl2.java"  
           todir="${ant.src}/src/main/org/apache/tools/ant/helper" />
     <copy file="RuntimeConfigurable2.java"  
           todir="${ant.src}/src/main/org/apache/tools/ant" />
+
+    <echo message="${toString:test}" />
 
     <javac srcdir="${ant.src}/src"  
            debug="${debug}"
@@ -27,6 +29,8 @@
       <include name="org/apache/tools/ant/helper/ProjectHelperImpl2*" />
       <include name="org/apache/tools/ant/RuntimeConfigurable2*" />
     </jar>
+
+    <copy file="ant-sax2.jar" todir="${ant.home}/lib" />
   </target>
 
   <target name="clean">

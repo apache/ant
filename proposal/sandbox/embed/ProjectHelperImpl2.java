@@ -97,6 +97,39 @@ public class ProjectHelperImpl2 extends ProjectHelper {
      */
     private static SAXParserFactory parserFactory = null;
 
+    /** Will prepare the class loader to allow dynamic modifications
+        of the classpath. Optional tasks are loaded in a different loader.
+    */
+    public void initClassLoader(Project project) {
+        try {
+            // reverse loader
+            AntClassLoader acl=new AntClassLoader( this.getClass().getClassLoader(), true );
+            acl.addLoaderPackageRoot( "org.apache.tools.ant.taskdefs.optional");
+
+            // XXX find the classpath
+            String antHome=project.getProperty( "ant.home" );
+            File optionalJar=new File( antHome + "/lib/optional.jar" );
+            System.out.println("Optional.jar = " +optionalJar.getAbsolutePath());
+            acl.addPathElement(optionalJar.getAbsolutePath() );
+            
+            // reload all optional tasks in this loader.
+            Hashtable tasks=project.getTaskDefinitions();
+            Enumeration keys=tasks.keys();
+            while( keys.hasMoreElements() ) {
+                String n=(String)keys.nextElement();
+                Class c=(Class)tasks.get(n);
+                if( ! c.getName().startsWith( "org.apache.tools.ant.taskdefs.optional" ))
+                    continue;
+                // System.out.println("Reloading " + n + " " + c + " " + c.getClassLoader() );
+                c=acl.loadClass( c.getName() );
+                tasks.put( n, c );
+                // System.out.println("Loaded " + n + " " + c.getClassLoader() );
+            }
+        } catch( Exception ex ) {
+            ex.printStackTrace();
+        }
+    }
+    
     /**
      * Parses the project file, configuring the project as it goes.
      * 
@@ -104,6 +137,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
      *                           be read
      */
     public void parse(Project project, Object source) throws BuildException {
+        // re-init class loader for optional.jar
+        initClassLoader( project );
+
         AntXmlContext context=new AntXmlContext();
         if(source instanceof File) {
             context.buildFile=(File)source;
