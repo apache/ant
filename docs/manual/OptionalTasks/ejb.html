@@ -634,6 +634,37 @@ beans in the jar.
 </p>
 
 </ul>
+
+<a name="ejbjar_deps"><h3>Dependencies</h3></a>
+<p>In addition to the bean classes, ejbjar is able to ad additional classes to the generated 
+ejbjar. These classes are typically the support classes which are used by the bean's classes or as
+parameters to the bean's methods.</p>
+
+<p>In versions of Ant prior to 1.5, ejbjar used reflection and attempted to add the super 
+classes and super interfaces of the bean classes. For this technique to work the bean 
+classes had to be loaded into Ant's JVM. This was not always possible due to class dependencies.
+</p>
+
+<p>The ejbjar task in Ant 1.5 uses the jakarta-BCEL library to analyze the bean's class 
+files directly, rather than loading them into the JVM. This also allows ejbjar to add all 
+of the required support classes for a bean and not just super classes.
+</p>
+
+<p>In Ant 1.5, a new attribute, <code>dependency</code> has been introduced to allow the 
+buildfile to control what additional classes are added to the generated jar. It takes three 
+possible values</p>
+<ul>
+<li><code>none</code> - only the bean classes and interfaces described in the bean's 
+descriptor are added to the jar.</li>
+<li><code>super</code> - this is the default value and replicates the original ejbjar 
+behaviour where super classes and super interfaces are added to the jar</li>
+<li><code>full</code> - In this mode all classes used by the bean's classes and interfaces
+are added to the jar</li>
+</ul>
+<p>The <code>super</code> and <code>full</code> values require the jakarta-BCEL library 
+to be available. If it is not, ejbjar will drop back to the behaviour corresponding to
+the value <code>none</code>.</p>   
+
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -723,6 +754,13 @@ beans in the jar.
                      to be placed in the root of the destdir, rather than
                      according to the location of the deployment descriptor
                      within the descriptor dir hierarchy.</td>
+    <td valign="top" align="center">No.</td>
+  </tr>
+  <tr>
+    <td valign="top">dependency</td>
+    <td valign="top">This attribute controls which additional classes and interfaces
+                     are added to the jar. Please refer to the description 
+                     <a href="#ejbjar_deps">above</a></td>
     <td valign="top" align="center">No.</td>
   </tr>
 </table>

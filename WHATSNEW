@@ -93,6 +93,12 @@ Other changes:
 --------------
 * New optional type, <classfileset> added.
 
+* <ejbjar> now allows control over which additional classes and interfaces
+  are added to the generated EJB jars. A new attribute "dependency" can be 
+  defines which classes are added. The addition of classes now uses 
+  the Jakarta-BCEL library rather than reflection, meaning bean classes are
+  no longer loaded into Ant's JVM. 
+
 * <available> has a new attribute named ignoreSystemClasses.
 
 * New task <cvschangelog/> generates an XML report of changes that occur
