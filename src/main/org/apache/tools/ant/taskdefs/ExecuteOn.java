@@ -312,7 +312,7 @@ public class ExecuteOn extends ExecTask {
             for (int i = 0; i < filelists.size(); i++) {
                 FileList list = (FileList) filelists.elementAt(i);
                 File base = list.getDir(getProject());
-                String[] names = list.getFiles(getProject());
+                String[] names = getFilesAndDirs(list);
 
                 for (int j = 0; j < names.length; j++) {
                     File f = new File(base, names[j]);
@@ -533,6 +533,23 @@ public class ExecuteOn extends ExecTask {
                                 mapper);
         } else {
             return ds.getIncludedDirectories();
+        }
+    }
+
+    /**
+     * Return the list of files or directories from this FileList that
+     * should be included on the command line.
+     *
+     * @since Ant 1.6.2
+     */
+    protected String[] getFilesAndDirs(FileList list) {
+        if (mapper != null) {
+            SourceFileScanner sfs = new SourceFileScanner(this);
+            return sfs.restrict(list.getFiles(getProject()),
+                                list.getDir(getProject()), destDir,
+                                mapper);
+        } else {
+            return list.getFiles(getProject());
         }
     }
 

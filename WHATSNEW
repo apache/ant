@@ -22,6 +22,9 @@ Fixed bugs:
 * Throw build exception if target repeated in build file, but allow targets
   to be repeated in imported files. 
 
+* <apply> didn't compare timestamps of source and targetfiles when
+  using a nested <filelist>.  Bugzilla Report 26985.
+
 Other changes:
 --------------
 
