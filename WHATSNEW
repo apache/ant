@@ -14,6 +14,9 @@ Other changes:
 * Translate task logs a debug message specifying the number of files
   that it processed.  Bugzilla Report 13938.
 
+* Enable to choose the regexp implementation without system property.
+  Bugzilla Report 15390.
+
 Changes from Ant 1.5.4 to Ant 1.6
 =================================
 
