@@ -103,6 +103,8 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         try {
             Class c=Class.forName("org.apache.tools.ant.taskdefs.SystemPath");
             project.addTaskDefinition( "systemPath" , c );
+            c=Class.forName("org.apache.tools.ant.taskdefs.Description");
+            project.addTaskDefinition( "description" , c );
             c=Class.forName("org.apache.tools.ant.taskdefs.Import");
             project.addTaskDefinition( "import" , c );
             c=Class.forName("org.apache.tools.ant.taskdefs.Taskdef2");
@@ -142,7 +144,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         
         AntXmlContext context=handler.context;
 
-        System.err.println("Parsing with PH2: " + source );
         if(source instanceof File) {
             context.buildFile=(File)source;
 //         } else if( source instanceof InputStream ) {
@@ -173,6 +174,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             inputStream = new FileInputStream(context.buildFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
+            System.err.println("Parsing with PH2: " + context.buildFile);
             project.log("parsing buildfile " + context.buildFile + " with URI = " + uri, Project.MSG_VERBOSE);
 
             DefaultHandler hb = handler;

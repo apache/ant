@@ -1,4 +1,5 @@
 <project name="embed" default="main" basedir=".">
+  <description>Embed proposal</description>
   <property file="${user.home}/build.properties" />
 
   <property name="base.path" location="/usr/share/java"/>

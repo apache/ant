@@ -1,6 +1,6 @@
 <project name="embed-test" default="main" basedir=".">
   <property name="ant.src" location="../.."/>
-        
+  <description>Test for embed proposal</description>        
   <import file="build.xml"/>
 
   <!-- This is a tricky problem: import will append tasks at the
