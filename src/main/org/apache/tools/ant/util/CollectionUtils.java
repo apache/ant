@@ -92,6 +92,9 @@ public class CollectionUtils {
             }
         }
         
+        // don't need to check e2.hasMoreElements as the Vectors
+        // same size.
+
         return true;
     }
 
@@ -125,16 +128,9 @@ public class CollectionUtils {
             }
         }
         
-        Enumeration e2 = d2.keys();
-        while (e2.hasMoreElements()) {
-            Object key = e2.nextElement();
-            Object value1 = d2.get(key);
-            Object value2 = d1.get(key);
-            if (value2 == null || !value1.equals(value2)) {
-                return false;
-            }
-        }
-        
+        // don't need the opposite check as the Dictionaries have the
+        // same size, so we've also covered all keys of d2 already.
+
         return true;
     }
 }
