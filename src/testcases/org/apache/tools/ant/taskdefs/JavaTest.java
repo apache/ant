@@ -196,6 +196,15 @@ public class JavaTest extends BuildFileTest {
          assertEquals("-1",project.getProperty("exitcode"));
      }
 
+    public void testRunFailWithFailOnError() {
+        expectBuildExceptionContaining("testRunFailWithFailOnError",
+            "non zero return code",
+            "Java returned:");
+    }
+
+    public void testRunSuccessWithFailOnError() {
+        executeTarget("testRunSuccessWithFailOnError");
+    }
     public void testSpawn() {
         FileUtils fileutils  = FileUtils.newFileUtils();
         File logFile = fileutils.createTempFile("spawn","log", project.getBaseDir());

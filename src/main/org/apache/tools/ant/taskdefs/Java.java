@@ -97,7 +97,7 @@ public class Java extends Task {
     private Long timeout = null;
     private Redirector redirector = new Redirector(this);
     private String resultProperty;
-    private Permissions perm;
+    private Permissions perm = null;
     
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
@@ -108,6 +108,7 @@ public class Java extends Task {
      */
     public void execute() throws BuildException {
         File savedDir = dir;
+        Permissions savedPermissions = perm;
 
         int err = -1;
         try {
@@ -122,6 +123,7 @@ public class Java extends Task {
             maybeSetResultPropertyValue(err);
         } finally {
             dir = savedDir;
+            perm = savedPermissions;
         }
     }
 
@@ -179,6 +181,11 @@ public class Java extends Task {
                     Project.MSG_WARN);
             }
 
+            if (perm == null && failOnError == true) {
+                perm = new Permissions();
+                log("running " + this.cmdl.getClassname()
+                    + " with default permissions (exit forbidden)", Project.MSG_VERBOSE);
+            }
             log("Running in same VM " + cmdl.describeJavaCommand(),
                 Project.MSG_VERBOSE);
         }

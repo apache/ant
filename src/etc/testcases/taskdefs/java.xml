@@ -139,7 +139,23 @@
     <echo message="exitcode = ${exitcode}"/>
   </target>
 
+    <target name="testRunFailWithFailOnError">
+      <java classname="${app}"
+        classpath="${tests-classpath.value}"
+        failonerror="true"
+        >
+        <arg value="2"/>
+      </java>
+    </target>
 
+    <target name="testRunSuccessWithFailOnError">
+      <java classname="${app}"
+        classpath="${tests-classpath.value}"
+        failonerror="true"
+        >
+        <arg value="0"/>
+      </java>
+    </target>
 
   <target name="testSpawn">
     <java classname="${spawnapp}" fork="true" spawn="true" classpath="${tests-classpath.value}">
