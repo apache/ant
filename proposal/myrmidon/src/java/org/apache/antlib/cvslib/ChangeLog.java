@@ -14,12 +14,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.ArrayList;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.IOUtil;
@@ -28,7 +28,6 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.DirectoryScanner;
 
 /**
  * Change log task.
@@ -220,7 +219,7 @@ public class ChangeLog
         }
         */
 
-        final ChangeLogParser parser = new ChangeLogParser( userList );
+        final ChangeLogParser parser = new ChangeLogParser( userList, getContext() );
         final Execute exe = new Execute();
         exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command );
@@ -297,7 +296,7 @@ public class ChangeLog
         final ArrayList results = new ArrayList();
         for( int i = 0; i < entrySet.length; i++ )
         {
-            final CVSEntry cvsEntry = entrySet[i ];
+            final CVSEntry cvsEntry = entrySet[ i ];
             final Date date = cvsEntry.getDate();
             if( null != m_start && m_start.after( date ) )
             {
@@ -312,7 +311,7 @@ public class ChangeLog
             results.add( cvsEntry );
         }
 
-        return (CVSEntry[])results.toArray( new CVSEntry[results.size() ] );
+        return (CVSEntry[])results.toArray( new CVSEntry[ results.size() ] );
     }
 
     /**

@@ -280,6 +280,12 @@ public class ChangeLogTask
             throw new BuildException( ioe.toString() );
         }
 
+        final String errors = handler.getErrors();
+        if( null != errors )
+        {
+            log( errors, Project.MSG_ERR );
+        }
+
         final CVSEntry[] entrySet = parser.getEntrySetAsArray();
         final CVSEntry[] filteredEntrySet = filterEntrySet( entrySet );
         writeChangeLog( filteredEntrySet );

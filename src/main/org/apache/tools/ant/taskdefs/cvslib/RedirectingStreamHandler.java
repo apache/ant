@@ -72,10 +72,23 @@ class RedirectingStreamHandler
     private final ChangeLogParser m_parser;
     private BufferedReader m_reader;
     private InputStreamReader m_error;
+    private final StringBuffer m_errors = new StringBuffer();
 
-    public RedirectingStreamHandler( final ChangeLogParser parser )
+    RedirectingStreamHandler( final ChangeLogParser parser )
     {
         m_parser = parser;
+    }
+
+    String getErrors()
+    {
+        if( 0 == m_errors.length() )
+        {
+            return null;
+        }
+        else
+        {
+            return m_errors.toString();
+        }
     }
 
     /**
@@ -127,7 +140,11 @@ class RedirectingStreamHandler
         //http://developer.java.sun.com/developer/bugParade/bugs/4329985.html)
         while( m_error.ready() )
         {
-            m_error.read();
+            final int value = m_error.read();
+            if( -1 != value )
+            {
+                m_errors.append( (char)value );
+            }
         }
     }
 

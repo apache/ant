@@ -12,9 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * A class used to parse the output of the CVS log command.
@@ -48,6 +49,8 @@ class ChangeLogParser
 
     private int m_status = GET_FILE;
 
+    private final TaskContext m_context;
+
     /** rcs entries */
     private final Hashtable m_entries = new Hashtable();
 
@@ -58,9 +61,11 @@ class ChangeLogParser
      *
      * @param userList the userlist
      */
-    public ChangeLogParser( Properties userList )
+    ChangeLogParser( final Properties userList,
+                     final TaskContext context )
     {
         m_userList = userList;
+        m_context = context;
     }
 
     /**
@@ -80,7 +85,7 @@ class ChangeLogParser
      */
     public void stderr( String line )
     {
-        //ignore
+        m_context.error( line );
     }
 
     /**
