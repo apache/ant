@@ -1,6 +1,6 @@
 <project name="rjunit-tests" basedir="." default="server-and-client">
 
-    <taskdef name="rjunit" classname="org.apache.tools.ant.taskdefs.optional.junit.RJUnitTask"/>
+    <taskdef name="rjunit" classname="org.apache.tools.ant.taskdefs.optional.rjunit.RJUnitTask"/>
 
     <target name="server-and-client">
         <echo message="java.class.path: ${java.class.path}"/>
