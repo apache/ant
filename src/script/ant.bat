@@ -56,20 +56,21 @@ goto end
 set LOCALCLASSPATH=%CLASSPATH%
 for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" %%i
 
-if exist "%JAVA_HOME%\bin\java.exe" goto gotJava
-echo
+if "%JAVA_HOME%" == "" goto noJavaHome
+if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
+set _JAVACMD=%JAVA_HOME%\bin\java.exe
+if exist "%JAVA_HOME%\lib\tools.jar" call "%ANT_HOME%\bin\lcp.bat" %JAVA_HOME%\lib\tools.jar
+if exist "%JAVA_HOME%\lib\classes.zip" call "%ANT_HOME%\bin\lcp.bat" %JAVA_HOME%\lib\classes.zip
+goto checkJikes
+
+:noJavaHome
+set _JAVACMD=java.exe
+echo.
 echo Warning: JAVA_HOME environment variable is not set.
 echo   If build fails because sun.* classes could not be found
 echo   you will need to set the JAVA_HOME environment variable
 echo   to the installation directory of java.
-echo
-
-:gotJava
-set _JAVACMD=%JAVA_HOME%\bin\java.exe
-if exist "%_JAVACMD%" goto checkJikes
-set _JAVACMD=java.exe
-if exist "%JAVA_HOME%\lib\tools.jar" call "%ANT_HOME%\bin\lcp.bat" %JAVA_HOME%\lib\tools.jar
-if exist "%JAVA_HOME%\lib\classes.zip" call "%ANT_HOME%\bin\lcp.bat" %JAVA_HOME%\lib\classes.zip
+echo.
 
 :checkJikes
 if not "%JIKESPATH%"=="" goto runAntWithJikes
@@ -87,7 +88,7 @@ set LOCALCLASSPATH=
 set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
-if not "%OS%"=="Windows_NT" @endlocal
+if "%OS%"=="Windows_NT" @endlocal
 
 :mainEnd
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
