@@ -1,3 +1,7 @@
+2000-11-24  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/Console.java: Added context colorization.
+
 2000-11-20  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/command/DisplayErrorCmd.java: Added

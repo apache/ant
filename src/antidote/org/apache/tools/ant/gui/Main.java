@@ -99,9 +99,8 @@ public class Main {
             // XXX this will change once full command line argument parsing
             // is supported.
             if(args.length > 0) {
-                LoadFileCmd load = new LoadFileCmd();
+                LoadFileCmd load = new LoadFileCmd(context);
                 load.setFile(new File(args[0]));
-                load.setContext(context);
                 load.run();
             }
         }

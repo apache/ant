@@ -1,4 +1,7 @@
 TODO List:
+    * Add a Progress Monitor for file loading (especially for slow boxen like
+      mine) .
+
     * Implement some for of refid hyperlinking functionality.
 
     * Provide some sort of class path debugging support.

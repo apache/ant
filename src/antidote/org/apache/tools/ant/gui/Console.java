@@ -55,10 +55,11 @@ package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.text.Document;
+import javax.swing.text.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
+import java.awt.Color;
 import java.util.EventObject;
 
 /**
@@ -72,7 +73,9 @@ public class Console extends AntEditor {
     private JTextPane _text = null;
     /** Selection of logging levels. */
     private JComboBox _logLevel = null;
-        
+    /** Display styles. */
+    private ConsoleStyleContext _styles = null;
+    
 	/** 
 	 * Standard ctor.
 	 * 
@@ -83,7 +86,8 @@ public class Console extends AntEditor {
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
 
-        _text = new NoWrapTextPane();
+        _styles = new ConsoleStyleContext();
+        _text = new JTextPane(_styles.getStyledDocument());
         _text.setEditable(false);
         JScrollPane scroller = new JScrollPane(_text);
         scroller.setVerticalScrollBarPolicy(
@@ -124,7 +128,6 @@ public class Console extends AntEditor {
             Document doc = _text.getDocument();
             try {
                 doc.remove(0, doc.getLength());
-                
             }
             catch(Exception ex) {
                 // Intentionally ignored.
@@ -145,6 +148,7 @@ public class Console extends AntEditor {
             }
 
             AntBuildEvent buildEvent = (AntBuildEvent) event;
+            Style style = null;
             String text = null;
 
             switch(buildEvent.getType().getValue()) {
@@ -152,9 +156,11 @@ public class Console extends AntEditor {
                   clearDisplay();
               case BuildEventType.BUILD_FINISHED_VAL:
                   text = buildEvent.getType().toString();
+                  style = _styles.getHeadingStyle();
                   break;
               case BuildEventType.TARGET_STARTED_VAL:
                   text = buildEvent.getEvent().getTarget().getName() + ":";
+                  style = _styles.getSubheadingStyle();
                   break;
               case BuildEventType.TARGET_FINISHED_VAL:
               case BuildEventType.TASK_STARTED_VAL:
@@ -165,17 +171,18 @@ public class Console extends AntEditor {
                   // selected filterint level.
                   LogLevelEnum level = 
                       (LogLevelEnum) _logLevel.getSelectedItem();
-                  if(buildEvent.getEvent().getPriority() <= level.getValue()) {
+                  int priority = buildEvent.getEvent().getPriority();
+                  if(priority <= level.getValue()) {
                       text = buildEvent.toString();
+                      style = _styles.getStyle(LogLevelEnum.fromInt(priority));
                   }
                   break;
             }
 
-
             if(text != null) {
                 try {
                     Document doc = _text.getDocument();
-                    doc.insertString(doc.getLength(), text, null);
+                    doc.insertString(doc.getLength(), text, style);
                     doc.insertString(doc.getLength(), "\n", null);
                 }
                 catch(Exception ex) {
@@ -201,19 +208,98 @@ public class Console extends AntEditor {
         }
     }
 
-    /** Specialization of JTextPane to provide proper wrapping behavior. */
-    private static class NoWrapTextPane extends JTextPane {
+    /** Style set for pretty display of the console messages. */
+    private static class ConsoleStyleContext extends StyleContext {
+        /** Name of the style used for headings. */
+        public static final String HEADING_STYLE = "headingStyle";
+        /** Name of the style used for subheadings. */
+        public static final String SUBHEADING_STYLE = "subheadingStyle";
+
+        /** XXX temporary list of style colors. To go away once a real set of
+         *  properties is implemented... */
+        private static final Color[] _colors = {
+            Color.red,
+            Color.magenta,
+            Color.black,
+            Color.darkGray,
+            Color.blue
+        };
+
         /** 
-         * Overridden to ensure that the JTextPane is only
-         * forced to match the viewport if it is smaller than
-         * the viewport.
+         * Default ctor.
          * 
-         * @return True if smaller than viewport, false otherwise.
          */
-        public boolean getScrollableTracksViewportWidth() {
-            ComponentUI ui = getUI();
-            return getParent() != null ? ui.getPreferredSize(this).width <=
-                getParent().getSize().width : true;
+        public ConsoleStyleContext() {
+            Style defaultStyle = getStyle(DEFAULT_STYLE);
+            StyleConstants.setFontSize(defaultStyle, 12);
+
+            Style msgBase = addStyle("msgBase", defaultStyle);
+            StyleConstants.setFontFamily(msgBase, "Monospaced");
+
+            LogLevelEnum[] levels = LogLevelEnum.getValues();
+            for(int i = 0; i < levels.length; i++) {
+                Style curr = addStyle(levels[i].toString(), msgBase);
+                StyleConstants.setFontSize(curr, 10);
+                StyleConstants.setForeground(curr, _colors[i]);
+            }
+
+            Style heading = addStyle(HEADING_STYLE, defaultStyle);
+            StyleConstants.setFontFamily(heading, "SansSerif");
+            StyleConstants.setBold(heading, true);
+            StyleConstants.setUnderline(heading, true);
+
+            Style subheading = addStyle(SUBHEADING_STYLE, heading);
+            StyleConstants.setFontSize(subheading, 10);
+            StyleConstants.setUnderline(subheading, false);
+        }
+
+        /** 
+         * Get the style to use for the given logging level.
+         * 
+         * @param level Logging level.
+         * @return Style to use for display.
+         */
+        Style getStyle(LogLevelEnum level) {
+            Style retval = getStyle(level.toString());
+            return retval == null ? getDefaultStyle() : retval;
+        }
+
+        /** 
+         * Get the default style.
+         * 
+         * @return Default style.
+         */
+        Style getDefaultStyle() {
+            return getStyle(DEFAULT_STYLE);
+        }
+
+        /** 
+         * Get the style to use for headings.
+         * 
+         * @return Heading style.
+         */
+        Style getHeadingStyle() {
+            return getStyle(HEADING_STYLE);
+        }
+
+        /** 
+         * Get the style to use for subheadings.
+         * 
+         * @return Subheading style.
+         */
+        Style getSubheadingStyle() {
+            return getStyle(SUBHEADING_STYLE);
+        }
+
+        /** 
+         * Get a StyledDocument initialized with this.
+         * 
+         * @return SytledDocument.
+         */
+        StyledDocument getStyledDocument() {
+            DefaultStyledDocument retval = new DefaultStyledDocument(this);
+            retval.setLogicalStyle(0, getDefaultStyle());
+            return retval;
         }
     }
 

@@ -104,6 +104,7 @@ import org.apache.tools.ant.gui.event.*;
 import org.apache.tools.ant.gui.command.Command;
 import javax.swing.*;
 import java.util.*;
+import java.lang.reflect.Constructor;
 
 /**
  * Manager of antidote actions. Receives its configuration from the action
@@ -113,6 +114,9 @@ import java.util.*;
  * @author Simeon Fitch 
  */
 public class ActionManager {
+    /** Parameters for the Command constructor. */
+    private static final Class[] COMMAND_CTOR_PARAMS = { AppContext.class };
+
     private  ResourceBundle _resources = 
         ResourceBundle.getBundle(
             "org.apache.tools.ant.gui.resources.action");
@@ -271,8 +275,10 @@ public class ActionManager {
             Class clazz = action.getCommandClass();
             if(clazz != null) {
                 try {
-                    retval = (Command) clazz.newInstance();
-                    retval.setContext(context);
+                    Constructor ctor = 
+                        clazz.getConstructor(COMMAND_CTOR_PARAMS);
+                    retval = (Command) ctor.newInstance(
+                        new Object[] { context });
                 }
                 catch(Exception ex) {
                     // XXX log me.
