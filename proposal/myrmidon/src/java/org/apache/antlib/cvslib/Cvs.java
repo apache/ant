@@ -17,11 +17,12 @@ import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
 
 /**
+ * Task to interact with a CVS repository.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:costin@dnt.ro">costin@dnt.ro</a>
  * @author <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author <a href="mailto:wwerner@picturesafe.de">Wolfgang Werner [wwerner@picturesafe.de]</a>
+ * @author <a href="mailto:wwerner@picturesafe.de">Wolfgang Werner</a>
  * @version $Revision$ $Date$
  */
 public class Cvs
@@ -109,9 +110,9 @@ public class Cvs
         m_dest = dest;
     }
 
-    public void setNoexec( boolean ne )
+    public void setNoexec( final boolean noexec )
     {
-        m_noexec = ne;
+        m_noexec = noexec;
     }
 
     public void setModule( final String module )
