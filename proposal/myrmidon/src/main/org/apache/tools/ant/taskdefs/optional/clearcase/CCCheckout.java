@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -413,8 +412,6 @@ public class CCCheckout extends ClearCase
         throws TaskException
     {
         Commandline commandLine = new Commandline();
-        Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if( getViewPath() == null )
@@ -430,11 +427,11 @@ public class CCCheckout extends ClearCase
 
         checkOptions( commandLine );
 
-        result = run( commandLine );
+        final int result = run( commandLine );
         if( result != 0 )
         {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " + commandLine.toString();
+            throw new TaskException( message );
         }
     }
 
