@@ -102,6 +102,9 @@ public abstract class SSHBase extends Task implements LogListener {
         this.host = host;
     }
 
+    public String getHost() {
+        return host;
+    }
     
     public void setFailonerror( boolean failure ) {
         failOnError = failure;
