@@ -178,7 +178,7 @@ public class Java extends Task
     public Path createClasspath()
         throws TaskException
     {
-        return cmdl.createClasspath( getProject() ).createPath();
+        return cmdl.createClasspath().createPath();
     }
 
     /**
