@@ -30,6 +30,9 @@
         <delete file="${patch.package}"/>
         <cvs command="-q diff -N" output="${patch.file}.tmp"/>
         <replace file="${patch.file}.tmp" token="? " value=""/>
+        <tstamp>
+            <format property="year" pattern="yyyy"/>
+        </tstamp>
         <fileset dir="${basedir}"
             includesfile="${patch.file}.tmp"
             excludes="${patch.file}.tmp,${patch.file}"
@@ -38,6 +41,7 @@
                 <and>
                     <contains text="Copyright"/>
                     <contains text="Apache Software Foundation"/>
+                    <contains text="${year}"/>
                 </and>
             </not>
         </fileset>
@@ -46,7 +50,7 @@
             property="no.copyright"
             refid="no.copyright.set"/>
         <fail if="no.copyright"
-            message="Please assign the Apache Ant Copyright to these files and retry:${line.separator}${no.copyright}"/>
+            message="Please assign the Apache Ant Copyright (for ${year}) to these files and retry:${line.separator}${no.copyright}"/>
     </target>
 
     <target name="patchpackage" depends="newfiles">
