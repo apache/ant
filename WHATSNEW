@@ -64,6 +64,9 @@ Other changes:
 * Added classpath attribute and nested classpath element to <property>
   to make the resource attribute more powerful.
 
+* ${} property expansion will now be performed on the patterns read
+  from files specified as includesfile or excludesfile attributes.
+
 Fixed bugs:
 -----------
 

@@ -93,7 +93,7 @@ public class FileSet extends DataType {
      * this element if you make it a reference.</p> 
      */
     public void setRefid(Reference r) throws BuildException {
-        if (dir != null || defaultPatterns.countPatterns() > 0) {
+        if (dir != null || defaultPatterns.hasPatterns()) {
             throw tooManyAttributes();
         }
         if (!additionalPatterns.isEmpty()) {

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.BuildException;
 
 import java.io.*;
@@ -79,6 +80,9 @@ public class PatternSet extends DataType {
     private Vector includeList = new Vector();
     private Vector excludeList = new Vector();
     
+    private File incl = null;
+    private File excl = null;
+
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
      * may be used to invalidate the entry based on the existence of a 
@@ -214,9 +218,8 @@ public class PatternSet extends DataType {
          if (!incl.exists()) {
              throw new BuildException("Includesfile "+incl.getAbsolutePath()
                                       +" not found.");
-         } else {
-             readPatterns(incl, includeList);
          }
+         this.incl = incl;
      }
 
     /**
@@ -231,16 +234,15 @@ public class PatternSet extends DataType {
          if (!excl.exists()) {
              throw new BuildException("Excludesfile "+excl.getAbsolutePath()
                                       +" not found.");
-         } else {
-             readPatterns(excl, excludeList);
          }
+         this.excl = excl;
      }
     
     /**
      *  Reads path matching patterns from a file and adds them to the
      *  includes or excludes list (as appropriate).  
      */
-    private void readPatterns(File patternfile, Vector patternlist)
+    private void readPatterns(File patternfile, Vector patternlist, Project p)
         throws BuildException {
         
         try {
@@ -253,6 +255,8 @@ public class PatternSet extends DataType {
             String line = patternReader.readLine();
             while (line != null) {
                 if (line.length() > 0) {
+                    line = ProjectHelper.replaceProperties(p, line,
+                                                           p.getProperties());
                     addPatternToList(patternlist).setName(line);
                 }
                 line = patternReader.readLine();
@@ -294,6 +298,7 @@ public class PatternSet extends DataType {
         if (isReference()) {
             return getRef(p).getIncludePatterns(p);
         } else {
+            readFiles(p);
             return makeArray(includeList, p);
         }
     }
@@ -305,6 +310,7 @@ public class PatternSet extends DataType {
         if (isReference()) {
             return getRef(p).getExcludePatterns(p);
         } else {
+            readFiles(p);
             return makeArray(excludeList, p);
         }
     }
@@ -312,8 +318,9 @@ public class PatternSet extends DataType {
     /**
      * helper for FileSet.
      */
-    int countPatterns() {
-        return includeList.size() + excludeList.size();
+    boolean hasPatterns() {
+        return incl != null || excl != null
+            || includeList.size() > 0 || excludeList.size() > 0;
     }
 
     /**
@@ -356,4 +363,18 @@ public class PatternSet extends DataType {
         return result;
     }
         
+    /**
+     * Read includefile ot excludefile if not already done so.
+     */
+    private void readFiles(Project p) {
+        if (incl != null) {
+            readPatterns(incl, includeList, p);
+            incl = null;
+        }
+        if (excl != null) {
+            readPatterns(excl, excludeList, p);
+            excl = null;
+        }
+    }
+
 }
