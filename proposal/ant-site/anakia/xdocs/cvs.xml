@@ -18,7 +18,6 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login<br/>
 password: anoncvs</source>
 
       <source>
-
 cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout [module-name]</source>
 
       <p>Modules available for access are (click the links to view the
