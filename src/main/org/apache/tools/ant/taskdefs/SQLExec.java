@@ -74,6 +74,15 @@ import java.sql.*;
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  */
 public class SQLExec extends Task {
+
+    static public class DelimiterType extends EnumeratedAttribute {
+        static public final String NORMAL = "normal";
+        static public final String ROW = "row";
+        public String[] getValues() {
+            return new String[] {NORMAL, ROW};
+        }
+    }
+    
     
     private int goodSql = 0, totalSql = 0;
 
@@ -135,6 +144,12 @@ public class SQLExec extends Task {
      * SQL Statement delimiter
      */
     private String delimiter = ";";
+    
+    /**
+     * The delimiter type indicating whether the delimiter will
+     * only be recognized on a line by itself
+     */
+    private String delimiterType = DelimiterType.NORMAL;
     
     /**
      * Print SQL results.
@@ -259,6 +274,16 @@ public class SQLExec extends Task {
         this.delimiter = delimiter;
     }
 
+    /**
+     * Set the Delimiter type for this sql task. The delimiter type takes
+     * two values - normal and row. Normal means that any occurence of the delimiter
+     * terminate the SQL command whereas with row, only a line containing just the
+     * delimiter is recognized as the end of the command.
+     */
+    public void setDelimiterType(DelimiterType delimiterType) {
+        this.delimiterType = delimiterType.getValue();
+    }
+    
     /**
      * Set the print flag.
      */
@@ -441,9 +466,8 @@ public class SQLExec extends Task {
                 line = line.trim();
                 if (line.startsWith("//")) continue;
                 if (line.startsWith("--")) continue;
-                if ( line.length() > 2 ) {
-                  if (line.substring(0,3).equalsIgnoreCase("REM")) continue;
-                }
+                if (line.length() > 2 &&
+                    line.substring(0,3).equalsIgnoreCase("REM")) continue;
 
                 sql += " " + line;
                 sql = sql.trim();
@@ -453,9 +477,10 @@ public class SQLExec extends Task {
                 // so we cannot just remove it, instead we must end it
                 if (line.indexOf("--") >= 0) sql += "\n";
 
-                if (sql.endsWith(delimiter)){
+                if (delimiterType.equals(DelimiterType.NORMAL) && sql.endsWith(delimiter) ||
+                    delimiterType.equals(DelimiterType.ROW) && line.equals(delimiter)) {
                     log("SQL: " + sql, Project.MSG_VERBOSE);
-                    execSQL(sql.substring(0, sql.length()-1), out);
+                    execSQL(sql.substring(0, sql.length() - delimiter.length()), out);
                     sql = "";
                 }
             }
