@@ -72,11 +72,21 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     private Thread inputThread;
     private Thread errorThread;
 
-    private OutputStream out, err;
+    private OutputStream out;
+    private OutputStream err;
+    private boolean closeOutOnStop = false;
+    private boolean closeErrOnStop = false;
 
-    public PumpStreamHandler(OutputStream out, OutputStream err) {
+    public PumpStreamHandler(OutputStream out, OutputStream err, 
+                             boolean closeOutOnStop, boolean closeErrOnStop) {
         this.out = out;
         this.err = err;
+        this.closeOutOnStop = closeOutOnStop;
+        this.closeErrOnStop = closeErrOnStop;
+    }
+
+    public PumpStreamHandler(OutputStream out, OutputStream err) {
+        this(out, err, false, false);
     }
 
     public PumpStreamHandler(OutputStream outAndErr) {
@@ -116,9 +126,15 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         } catch (InterruptedException e) {}
         try {
             err.flush();
+            if (closeErrOnStop) {
+                err.close();
+            }
         } catch (IOException e) {}
         try {
             out.flush();
+            if (closeOutOnStop) {
+                out.close();
+            }
         } catch (IOException e) {}
     }
 

@@ -54,18 +54,32 @@ Windows executable and is not aware of Cygwin conventions.
   <tr>
     <td valign="top">output</td>
     <td valign="top">the file to which the output of the command should be
-      redirected.</td>
+      redirected. If the error stream is not also redirected to a file
+      or poerperty, it will appear in the output</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">error</td>
+    <td valign="top">the file to which the standard error of the command should be
+      redirected. </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">append</td>
-    <td valign="top">whether output should be appended to or overwrite
-    an existing file.  Defaults to false.</td>
+    <td valign="top">whether output and error files should be appended to or overwritten.
+    Defaults to false.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
     <td valign="top">the name of a property in which the output of the 
+      command should be stored. Unless the error stream is redirected to a separate
+      file or stream, this property will include the error output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">errorproperty</td>
+    <td valign="top">the name of a property in which the standard error of the 
       command should be stored.</td>
     <td align="center" valign="top">No</td>
   </tr>

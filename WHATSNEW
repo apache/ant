@@ -122,6 +122,9 @@ Fixed bugs:
 
 * splash screen wouldn't disppear when build was finished.
 
+* <exec> output and error streams can now be redirected independently to either
+  a property or a file (or both)
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.

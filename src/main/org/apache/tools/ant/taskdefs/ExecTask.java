@@ -61,6 +61,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.OutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -68,6 +69,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -86,6 +88,8 @@ public class ExecTask extends Task {
 
     private String os;
     private File out;
+    private File error;
+    
     private File dir;
     protected boolean failOnError = false;
     protected boolean newEnvironment = false;
@@ -94,7 +98,9 @@ public class ExecTask extends Task {
     protected Commandline cmdl = new Commandline();
     private FileOutputStream fos = null;
     private ByteArrayOutputStream baos = null;
+    private ByteArrayOutputStream errorBaos = null;
     private String outputprop;
+    private String errorProperty;
     private String resultProperty;
     private boolean failIfExecFails = true;
     private boolean append = false;
@@ -160,10 +166,20 @@ public class ExecTask extends Task {
     }
 
     /**
-     * File the output of the process is redirected to.
+     * File the output of the process is redirected to. If error is not 
+     * redirected, it too will appear in the output
      */
     public void setOutput(File out) {
         this.out = out;
+    }
+
+    /**
+     * File the error stream of the process is redirected to.
+     *
+     * @since ant 1.6
+     */
+    public void setError(File error) {
+        this.error = error;
     }
 
     /**
@@ -172,6 +188,16 @@ public class ExecTask extends Task {
      */
     public void setOutputproperty(String outputprop) {
         this.outputprop = outputprop;
+    }
+
+    /**
+     * Property name whose value should be set to the error of
+     * the process.
+     *
+     * @since ant 1.6
+     */
+    public void setErrorProperty(String errorProperty) {
+        this.errorProperty = errorProperty;
     }
 
     /**
@@ -363,39 +389,48 @@ public class ExecTask extends Task {
         return exe;
     }
 
+    private void setPropertyFromBAOS(ByteArrayOutputStream baos, 
+                                     String propertyName) throws IOException {
+    
+        BufferedReader in =
+            new BufferedReader(new StringReader(Execute.toString(baos)));
+        String line = null;
+        StringBuffer val = new StringBuffer();
+        while ((line = in.readLine()) != null) {
+            if (val.length() != 0) {
+                val.append(StringUtils.LINE_SEP);
+            }
+            val.append(line);
+        }
+        getProject().setNewProperty(propertyName, val.toString());
+    }
+    
     /**
      * A Utility method for this classes and subclasses to run an
      * Execute instance (an external command).
      */
     protected final void runExecute(Execute exe) throws IOException {
-        int err = -1; // assume the worst
+        int returnCode = -1; // assume the worst
 
-        err = exe.execute();
+        returnCode = exe.execute();
         //test for and handle a forced process death
         if (exe.killedProcess()) {
             log("Timeout: killed the sub-process", Project.MSG_WARN);
         }
-        maybeSetResultPropertyValue(err);
-        if (err != 0) {
+        maybeSetResultPropertyValue(returnCode);
+        if (returnCode != 0) {
             if (failOnError) {
-                throw new BuildException(getTaskType() + " returned: " + err,
-                                         getLocation());
+                throw new BuildException(getTaskType() + " returned: " 
+                    + returnCode, getLocation());
             } else {
-                log("Result: " + err, Project.MSG_ERR);
+                log("Result: " + returnCode, Project.MSG_ERR);
             }
         }
         if (baos != null) {
-            BufferedReader in =
-                new BufferedReader(new StringReader(Execute.toString(baos)));
-            String line = null;
-            StringBuffer val = new StringBuffer();
-            while ((line = in.readLine()) != null) {
-                if (val.length() != 0) {
-                    val.append(StringUtils.LINE_SEP);
-                }
-                val.append(line);
-            }
-            getProject().setNewProperty(outputprop, val.toString());
+            setPropertyFromBAOS(baos, outputprop);
+        }
+        if (errorBaos != null) {
+            setPropertyFromBAOS(errorBaos, errorProperty);
         }
     }
 
@@ -427,26 +462,69 @@ public class ExecTask extends Task {
      * Create the StreamHandler to use with our Execute instance.
      */
     protected ExecuteStreamHandler createHandler() throws BuildException {
-        if (out != null)  {
+        OutputStream outputStream = null;
+        OutputStream errorStream = null;
+        
+        if (out == null && outputprop == null) {
+            outputStream = new LogOutputStream(this, Project.MSG_INFO);
+            errorStream = new LogOutputStream(this, Project.MSG_WARN);
+        } else {
+            if (out != null)  {
+                try {
+                    outputStream 
+                        = new FileOutputStream(out.getAbsolutePath(), append);
+                    log("Output redirected to " + out, Project.MSG_VERBOSE);
+                } catch (FileNotFoundException fne) {
+                    throw new BuildException("Cannot write to " + out, fne,
+                                             getLocation());
+                } catch (IOException ioe) {
+                    throw new BuildException("Cannot write to " + out, ioe,
+                                             getLocation());
+                }
+            }
+        
+            if (outputprop != null) {
+                baos = new ByteArrayOutputStream();
+                log("Output redirected to ByteArray", Project.MSG_VERBOSE);
+                if (out == null) {
+                    outputStream = baos;
+                } else {
+                    outputStream = new TeeOutputStream(outputStream, baos);
+                }
+            } else {
+                baos = null;
+            }
+            
+            errorStream = outputStream;
+        } 
+
+        if (error != null)  {
             try {
-                fos = new FileOutputStream(out.getAbsolutePath(), append);
-                log("Output redirected to " + out, Project.MSG_VERBOSE);
-                return new PumpStreamHandler(fos);
+                errorStream 
+                    = new FileOutputStream(error.getAbsolutePath(), append);
+                log("Error redirected to " + out, Project.MSG_VERBOSE);
             } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot write to " + out, fne,
+                throw new BuildException("Cannot write to " + error, fne,
                                          getLocation());
             } catch (IOException ioe) {
-                throw new BuildException("Cannot write to " + out, ioe,
+                throw new BuildException("Cannot write to " + error, ioe,
                                          getLocation());
             }
-        } else if (outputprop != null) {
-            baos = new ByteArrayOutputStream();
-            log("Output redirected to ByteArray", Project.MSG_VERBOSE);
-            return new PumpStreamHandler(baos);
-        } else {
-            return new LogStreamHandler(this,
-                                        Project.MSG_INFO, Project.MSG_WARN);
         }
+    
+        if (errorProperty != null) {
+            errorBaos = new ByteArrayOutputStream();
+            log("Error redirected to ByteArray", Project.MSG_VERBOSE);
+            if (error == null) {
+                errorStream = errorBaos;
+            } else {
+                errorStream = new TeeOutputStream(errorStream, errorBaos);
+            }
+        } else {
+            errorBaos = null;
+        }
+        
+        return new PumpStreamHandler(outputStream, errorStream, true, true);         
     }
 
     /**
