@@ -153,6 +153,7 @@ public class Symlink extends DispatchTask {
     /**
      * Create a symlink.
      * @throws BuildException on error.
+     * @since Ant 1.7
      */
     public void single() throws BuildException {
         try {
@@ -173,6 +174,7 @@ public class Symlink extends DispatchTask {
     /**
      * Delete a symlink.
      * @throws BuildException on error.
+     * @since Ant 1.7
      */
     public void delete() throws BuildException {
         try {
@@ -194,6 +196,7 @@ public class Symlink extends DispatchTask {
     /**
      * Restore symlinks.
      * @throws BuildException on error.
+     * @since Ant 1.7
      */
     public void recreate() throws BuildException {
         try {
@@ -229,6 +232,7 @@ public class Symlink extends DispatchTask {
     /**
      * Record symlinks.
      * @throws BuildException on error.
+     * @since Ant 1.7
      */
     public void record() throws BuildException {
         try {
