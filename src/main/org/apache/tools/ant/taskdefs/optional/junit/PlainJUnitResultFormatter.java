@@ -185,7 +185,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      */
     public void startTest(Test t) {
         lastTestStart = System.currentTimeMillis();
-        wri.print("Testcase: " + ((TestCase) t).name());
+        wri.print("Testcase: " 
+                  + JUnitVersionHelper.getTestCaseName((TestCase) t));
         failed = false;
     }
 
@@ -240,4 +241,5 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         t.printStackTrace(wri);
         wri.println("");
     }
+    
 } // PlainJUnitResultFormatter
