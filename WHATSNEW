@@ -574,6 +574,10 @@ Other changes:
 * <junit>'s XML formatter adds a new classname attribute to the <testcase>
   elements.
 
+* new <permissions> type add permission handling to the code
+  this type can be nested in the <java> and <junit> tasks.
+  Bugzilla Report 22533.
+
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
 

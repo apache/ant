@@ -99,6 +99,7 @@
     <java classname="${app}"
         classpath="${tests-classpath.value}"
         resultproperty="exitcode"
+        fork="true"
         >
     </java>
     <echo message="exitcode = ${exitcode}"/>
@@ -116,12 +117,40 @@
     <echo message="exitcode = ${exitcode}"/>
   </target>
 
+   <target name="testResultPropertyZeroNoFork">
+     <java classname="${app}"
+         classpath="${tests-classpath.value}"
+         resultproperty="exitcode"
+         fork="false"
+         >
+         <permissions/>
+     </java>
+     <echo message="exitcode = ${exitcode}"/>
+   </target>
+ 
+   <target name="testResultPropertyNonZeroNoFork">
+     <java classname="${app}"
+         classpath="${tests-classpath.value}"
+         resultproperty="exitcode"
+         failonerror="false"
+         fork="false"
+         >
+         <arg value="-1"/>
+         <permissions/>
+    </java>
+    <echo message="exitcode = ${exitcode}"/>
+  </target>
+
+
+
   <target name="testSpawn">
     <java classname="${spawnapp}" fork="true" spawn="true" classpath="${tests-classpath.value}">
       <arg value="${timeToWait}"/>
       <arg value="${logFile}" />
     </java>
   </target>
+
+
   <target name="cleanup">
       <delete file="${logFile}"/>
   </target>

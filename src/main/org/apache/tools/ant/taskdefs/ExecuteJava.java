@@ -65,6 +65,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.util.TimeoutObserver;
 import org.apache.tools.ant.util.Watchdog;
 
@@ -72,6 +73,7 @@ import org.apache.tools.ant.util.Watchdog;
  *
  * @author thomas.haas@softwired-inc.com
  * @author Stefan Bodewig
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  * @since Ant 1.2
  */
 public class ExecuteJava implements Runnable, TimeoutObserver {
@@ -79,6 +81,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     private Commandline javaCommand = null;
     private Path classpath = null;
     private CommandlineJava.SysProperties sysProperties = null;
+    private Permissions  perm = null;
     private Method main = null;
     private Long timeout = null;
     private Throwable caught = null;
@@ -100,6 +103,15 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
 
     public void setSystemProperties(CommandlineJava.SysProperties s) {
         sysProperties = s;
+    }
+    
+    /**
+     * Permissions for the application run.
+     * @since Ant 1.6
+     * @param permissions
+     */
+    public void setPermissions(Permissions permissions) {
+        perm = permissions;
     }
 
     /**
@@ -208,6 +220,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     public void run() {
         final Object[] argument = {javaCommand.getArguments()};
         try {
+            if(perm != null) {
+                perm.setSecurityManager();
+            }
             main.invoke(null, argument);
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
@@ -217,6 +232,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         } catch (Throwable t) {
             caught = t;
         } finally {
+            if(perm != null) {
+                perm.restoreSecurityManager();
+            }
             synchronized (this) {
                 notifyAll();
             }

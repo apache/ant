@@ -68,6 +68,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Assertions;
+import org.apache.tools.ant.types.Permissions;
 
 /**
  * Launcher for Java applications. Allows use of
@@ -78,6 +79,7 @@ import org.apache.tools.ant.types.Assertions;
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Stefan Bodewig
  * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  *
  * @since Ant 1.1
  *
@@ -95,7 +97,8 @@ public class Java extends Task {
     private Long timeout = null;
     private Redirector redirector = new Redirector(this);
     private String resultProperty;
-
+    private Permissions perm;
+    
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
     /**
@@ -109,7 +112,7 @@ public class Java extends Task {
         int err = -1;
         try {
             err = executeJava();
-            if (fork && err != 0) {
+            if (err != 0) {
                 if (failOnError) {
                     throw new BuildException("Java returned: " + err, getLocation());
                 } else {
@@ -152,6 +155,9 @@ public class Java extends Task {
             + "not compatible with spawn");
         }
         if (fork) {
+            if(perm != null) {
+                log("Permissions can not be set this way in forked mode.",Project.MSG_WARN);
+            }
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         } else {
             if (cmdl.getVmCommand().size() > 1) {
@@ -180,7 +186,7 @@ public class Java extends Task {
         try {
             if (fork) {
                 if (!spawn) {
-                    return run(cmdl.getCommandline());
+                    return fork(cmdl.getCommandline());
                 } else {
                     spawn(cmdl.getCommandline());
                     return 0;
@@ -248,6 +254,18 @@ public class Java extends Task {
         return cmdl.createBootclasspath(getProject()).createPath();
     }
 
+    /**
+     * Sets the permissions for the application run inside the same JVM.
+     * @since Ant 1.6
+     * @return .
+     */
+    public Permissions createPermissions() {
+        if (perm == null) {
+            perm = new Permissions();
+        }
+        return perm;
+    }
+    
     /**
      * Classpath to use, by reference.
      *
@@ -662,6 +680,7 @@ public class Java extends Task {
             exe.setJavaCommand(command.getJavaCommand());
             exe.setClasspath(command.getClasspath());
             exe.setSystemProperties(command.getSystemProperties());
+            exe.setPermissions(perm);
             exe.setTimeout(timeout);
             redirector.createStreams();
             exe.execute(getProject());
@@ -674,7 +693,7 @@ public class Java extends Task {
     /**
      * Executes the given classname with the given arguments in a separate VM.
      */
-    private int run(String[] command) throws BuildException {
+    private int fork(String[] command) throws BuildException {
 
             Execute exe
                 = new Execute(redirector.createHandler(), createWatchdog());

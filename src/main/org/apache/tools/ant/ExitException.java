@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,8 +57,10 @@ package org.apache.tools.ant;
  * Used to report exit status of classes which call System.exit().
  *
  * @see org.apache.tools.ant.util.optional.NoExitSecurityManager
+ * @see org.apache.tools.ant.types.Permissions
  *
  * @author Conor MacNeill
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public class ExitException extends SecurityException {
 
@@ -74,6 +76,16 @@ public class ExitException extends SecurityException {
         this.status = status;
     }
 
+    /**
+     * Constructs an exit exception.
+     * @param msg the messge to be displayed.
+     * @param status the status code returned via System.exit()
+     */
+    public ExitException(String msg, int status) {
+        super(msg);
+        this.status = status;
+    }
+    
     /**
      * The status code returned by System.exit()
      *

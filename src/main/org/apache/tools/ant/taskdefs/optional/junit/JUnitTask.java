@@ -76,6 +76,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
@@ -180,6 +181,7 @@ public class JUnitTask extends Task {
     private boolean showOutput = false;
     private File tmpDir;
     private AntClassLoader classLoader = null;
+    private Permissions perm = null;
 
     private static final int STRING_BUFFER_SIZE = 128;
     /**
@@ -571,6 +573,18 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Sets the permissions for the application run inside the same JVM.
+     * @since Ant 1.6
+     * @return .
+     */
+    public Permissions createPermissions() {
+        if (perm == null) {
+            perm = new Permissions();
+        }
+        return perm;
+    }
+
+    /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      *
      * @throws Exception under ??? circumstances
@@ -687,6 +701,10 @@ public class JUnitTask extends Task {
      */
     private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog)
         throws BuildException {
+
+        if(perm != null) {
+            log("Permissions ignored when running in forked mode!", Project.MSG_WARN);
+        }
 
         CommandlineJava cmd = (CommandlineJava) commandline.clone();
 
@@ -935,6 +953,8 @@ public class JUnitTask extends Task {
                 f.setOutput(getDefaultOutput());
                 runner.addFormatter(f);
             }
+            
+            runner.setPermissions(perm);
 
             final FormatterElement[] feArray = mergeFormatters(test);
             for (int i = 0; i < feArray.length; i++) {

@@ -75,6 +75,7 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
@@ -95,6 +96,7 @@ import org.apache.tools.ant.util.TeeOutputStream;
  *
  * @author Stefan Bodewig
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  *
  * @since Ant 1.2
  */
@@ -135,6 +137,11 @@ public class JUnitTestRunner implements TestListener {
      * Do we send output to System.out/.err in addition to the formatters?
      */
     private boolean showOutput = false;
+
+    /**
+     * The permissions set for the test to run.
+     */
+    private Permissions perm = null;
 
     private static final String[] DEFAULT_TRACE_FILTERS = new String[] {
                 "junit.framework.TestCase",
@@ -309,12 +316,20 @@ public class JUnitTestRunner implements TestListener {
                                       )
                                   );
                 }
+                perm = null;
+            } else {
+                if(perm != null) {
+                    perm.setSecurityManager();
+                }
             }
-
+            
 
             try {
                 suite.run(res);
             } finally {
+                if(perm != null) {
+                    perm.restoreSecurityManager();
+                }
                 if (savedOut != null) {
                     System.setOut(savedOut);
                 }
@@ -397,6 +412,15 @@ public class JUnitTestRunner implements TestListener {
         if (haltOnError) {
             res.stop();
         }
+    }
+    
+    /**
+     * Permissions for the test run.
+     * @since Ant 1.6
+     * @param permissions
+     */
+    public void setPermissions(Permissions permissions) {
+        perm = permissions;
     }
 
     protected void handleOutput(String output) {

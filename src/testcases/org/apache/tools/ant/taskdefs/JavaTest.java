@@ -64,6 +64,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author steve loughran
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  * */
 public class JavaTest extends BuildFileTest {
 
@@ -184,6 +185,16 @@ public class JavaTest extends BuildFileTest {
         executeTarget("testResultPropertyNonZero");
         assertEquals("2",project.getProperty("exitcode"));
     }
+
+    public void testResultPropertyZeroNoFork() {
+        executeTarget("testResultPropertyZeroNoFork");
+        assertEquals("0",project.getProperty("exitcode"));
+    }
+
+    public void testResultPropertyNonZeroNoFork() {
+        executeTarget("testResultPropertyNonZeroNoFork");
+         assertEquals("-1",project.getProperty("exitcode"));
+     }
 
     public void testSpawn() {
         FileUtils fileutils  = FileUtils.newFileUtils();

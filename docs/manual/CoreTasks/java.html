@@ -212,6 +212,18 @@ support it (i.e. Java 1.1).</p>
 forked VM via nested <i>env</i> elements. See the description in the
 section about <a href="exec.html#env">exec</a></p>
 <p>Settings will be ignored if fork is disabled.</p>
+
+<h4>permissions</h4>
+<p>Security permissions can be revoked and granted during the execution of the 
+class via a nested <i>permissions</i> element. For more information please
+see <a href="../CoreTypes/permissions.html">permissions</a></p>
+<p>When the permission RuntimePermission exitVM has not been granted (or has
+been revoked) the System.exit() call will be intercepted 
+and treated like indicated in <i>failonerror</i>.</p>
+
+<p>Settings will be ignored if fork is enabled.</p>
+
+<p><em>since Ant 1.6</em>.</p>
  
 <h3>Errors and return codes</h3>
 By default the return code of a &lt;java&gt; is ignored. Alternatively, you can set <code>resultproperty</code> to the name
