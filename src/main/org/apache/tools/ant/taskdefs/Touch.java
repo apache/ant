@@ -302,7 +302,7 @@ public class Touch extends Task {
      * does not interact with any nested mappers and remains for reasons of
      * backwards-compatibility only.
      * @param file file to touch
-     * @throws BuildException
+     * @throws BuildException on error
      * @deprecated
      */
     protected void touch(File file) {
