@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,6 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.BriefFormatter;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.KeepAliveOutputStream;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.XMLFormatter;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
