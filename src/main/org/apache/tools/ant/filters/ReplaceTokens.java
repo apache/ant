@@ -86,9 +86,18 @@ public final class ReplaceTokens
     /** Default "end token" character. */
     private static final char DEFAULT_END_TOKEN = '@';
 
-    /** Data that must be read from, if not null. */
+    /** Data to be used before reading from stream again */
     private String queuedData = null;
 
+    /** replacement test from a token */
+    private String replaceData = null;
+
+    /** Index into replacement data */
+    private int replaceIndex = -1;
+    
+    /** Index into queue data */
+    private int queueIndex = -1;
+    
     /** Hashtable to hold the replacee-replacer pairs (String to String). */
     private Hashtable hash = new Hashtable();
 
@@ -117,6 +126,18 @@ public final class ReplaceTokens
         super(in);
     }
 
+    private int getNextChar() throws IOException {
+        if (queueIndex != -1) {
+            final int ch = queuedData.charAt(queueIndex++);
+            if (queueIndex >= queuedData.length()) {
+                queueIndex = -1;
+            }
+            return ch;
+        }
+        
+        return in.read();
+    }
+    
     /**
      * Returns the next character in the filtered stream, replacing tokens
      * from the original stream.
@@ -133,21 +154,20 @@ public final class ReplaceTokens
             setInitialized(true);
         }
 
-        if (queuedData != null && queuedData.length() > 0) {
-            final int ch = queuedData.charAt(0);
-            if (queuedData.length() > 1) {
-                queuedData = queuedData.substring(1);
-            } else {
-                queuedData = null;
+        if (replaceIndex != -1) {
+            final int ch = replaceData.charAt(replaceIndex++);
+            if (replaceIndex >= replaceData.length()) {
+                replaceIndex = -1;
             }
             return ch;
         }
+        
+        int ch = getNextChar();
 
-        int ch = in.read();
         if (ch == beginToken) {
             final StringBuffer key = new StringBuffer("");
             do  {
-                ch = in.read();
+                ch = getNextChar();
                 if (ch != -1) {
                     key.append((char) ch);
                 } else {
@@ -156,17 +176,31 @@ public final class ReplaceTokens
             } while (ch != endToken);
 
             if (ch == -1) {
-                queuedData = beginToken + key.toString();
-                return read();
+                if (queuedData == null || queueIndex == -1) {
+                    queuedData = key.toString();
+                } else {
+                    queuedData 
+                        = key.toString() + queuedData.substring(queueIndex);
+                }
+                queueIndex = 0;
+                return beginToken;
             } else {
                 key.setLength(key.length() - 1);
+                
                 final String replaceWith = (String) hash.get(key.toString());
                 if (replaceWith != null) {
-                    queuedData = replaceWith;
+                    replaceData = replaceWith;
+                    replaceIndex = 0;
                     return read();
                 } else {
-                    queuedData = beginToken + key.toString() + endToken;
-                    return read();
+                    String newData = key.toString() + endToken;
+                    if (queuedData == null || queueIndex == -1) {
+                        queuedData = newData;
+                    } else {
+                        queuedData = newData + queuedData.substring(queueIndex);
+                    }
+                    queueIndex = 0;
+                    return beginToken;
                 }
             }
         }
