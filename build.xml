@@ -827,6 +827,7 @@
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
+        <include name="welcome.html"/>
       </fileset>
     </copy>
 
@@ -918,6 +919,7 @@
         <include name="bootstrap.bat"/>
         <include name="bootstrap.sh"/>
         <include name="build.xml"/>
+        <include name="welcome.html"/>
       </fileset>
     </copy>
 
