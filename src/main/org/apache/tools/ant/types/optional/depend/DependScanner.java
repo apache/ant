@@ -72,6 +72,8 @@ public class DependScanner extends DirectoryScanner {
     File baseClass;
     List included = new LinkedList();
 
+    private List rootClasses;
+    
     /**
      * Sets the basedir for scanning. This is the directory that is scanned
      * recursively. 
@@ -103,8 +105,8 @@ public class DependScanner extends DirectoryScanner {
      *
      * @param domain the domain
      */
-    public void setBaseClass(File baseClass) {
-        this.baseClass = baseClass;
+    public void setRootClasses(List rootClasses) {
+        this.rootClasses = rootClasses;
     }
 
     /**
@@ -129,52 +131,54 @@ public class DependScanner extends DirectoryScanner {
      */
     public void scan() {
         Dependencies visitor = new Dependencies();
+        
         Set set = new TreeSet();
-        Set newSet = new HashSet();
+
         final String base;
-        String start;
         try {
             base = basedir.getCanonicalPath() + File.separator;
-            start = baseClass.getCanonicalPath();
         }
         catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
 
-        start = start.substring(base.length(), start.length() - ".class".length()).replace(File.separatorChar, '/');
-        System.err.println("start: " + start);
+        for (Iterator rootClassIterator = rootClasses.iterator(); rootClassIterator.hasNext();) {
+            Set newSet = new HashSet();
+            String start = (String)rootClassIterator.next();
+            start = start.replace('.', '/');
 
-        newSet.add(start);
-        set.add(start);
-
-        do {
-            Iterator i = newSet.iterator();
-            while (i.hasNext()) {
-                String fileName = base + ((String)i.next()).replace('/', File.separatorChar) + ".class";
-
-                try {
-                    JavaClass javaClass = new ClassParser(fileName).parse();
-                    javaClass.accept(visitor);
+            newSet.add(start);
+            set.add(start);
+            
+            do {
+                Iterator i = newSet.iterator();
+                while (i.hasNext()) {
+                    String fileName = base + ((String)i.next()).replace('/', File.separatorChar) + ".class";
+                    
+                    try {
+                        JavaClass javaClass = new ClassParser(fileName).parse();
+                        javaClass.accept(visitor);
+                    }
+                    catch (IOException e) {
+                        System.err.println("exception: " +  e.getMessage());
+                    }
                 }
-                catch (IOException e) {
-                    System.err.println("exception: " +  e.getMessage());
-                }
-            }
-            newSet.clear();
-            newSet.addAll(visitor.getDependencies());
-            visitor.clearDependencies();
-
-            Dependencies.applyFilter(newSet, new Filter() {
+                newSet.clear();
+                newSet.addAll(visitor.getDependencies());
+                visitor.clearDependencies();
+                
+                Dependencies.applyFilter(newSet, new Filter() {
                     public boolean accept(Object object) {
                         String fileName = base + ((String)object).replace('/', File.separatorChar) + ".class";
                         return new File(fileName).exists();
                     }
                 });
-            newSet.removeAll(set);
-            set.addAll(newSet);
+                newSet.removeAll(set);
+                set.addAll(newSet);
+            }
+            while (newSet.size() > 0);
         }
-        while (newSet.size() > 0);
-
+        
         included.clear();
         included.addAll(set);
     }

@@ -55,6 +55,8 @@ package org.apache.tools.ant.types.optional.depend;
 
 import java.io.File;
 import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -72,16 +74,24 @@ import org.apache.tools.ant.util.depend.Dependencies;
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class ClassfileSet extends FileSet {
-    private File baseClass = null;
+    private List rootClasses = new ArrayList();
 
-    /**
-     * Set the directory for the fileset.  Prevents both "dir" and "src"
-     * from being specified.
-     */
-    public void setBaseClass(File baseClass)
+    static public class ClassRoot {
+        private String rootClass;
+        
+        public void setClassname(String name) {
+            this.rootClass = name;
+        }
+        
+        public String getClassname() {
+            return rootClass;
+        }
+    }
+    
+    public void setRootClass(String rootClass)
         throws BuildException
     {
-        this.baseClass = baseClass;
+        rootClasses.add(rootClass);
     }
 
     public void setDir(File dir) throws BuildException {
@@ -95,8 +105,12 @@ public class ClassfileSet extends FileSet {
     public DirectoryScanner getDirectoryScanner(Project p) {
         DependScanner scanner = new DependScanner();
         scanner.setBasedir(getDir(p));
-        scanner.setBaseClass(baseClass);
+        scanner.setRootClasses(rootClasses);
         scanner.scan();
         return scanner;
-    }    
+    } 
+    
+    public void addConfiguredRoot(ClassRoot root) {
+        rootClasses.add(root.getClassname());    
+    }
 }
