@@ -41,8 +41,8 @@ attribute is <code>warn</code> which behaves just like the gnu option except
 that it produces a warning for each file path encountered that does not match
 the limit.</p>
 
-<p>Note that this task does not perform compression. You might want to use the
-<a href="gzip.html">GZip</a> task to prepare a .tar.gz package.</p>
+<p>This task can perform compression by setting the compression attribute to "gzip"
+or "bzip2".</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -97,6 +97,13 @@ the limit.</p>
     <td valign="top">defaultexcludes</td>
     <td valign="top">indicates whether default excludes should be used or not
       (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compression</td>
+    <td valign="top">compression method.  Allowable values are 
+       &quot;none&quot;, &quot;gzip&quot; and &quot;bzip2&quot;.  Default is
+       &quot;none&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>

@@ -61,7 +61,13 @@ import org.apache.tools.tar.TarEntry;
 import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.io.IOException;
+import java.util.zip.GZIPInputStream;
+import org.apache.tools.bzip2.CBZip2InputStream;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+
 
 
 /**
@@ -75,13 +81,33 @@ import java.io.IOException;
  * @ant.task category="packaging"
  */
 public class Untar extends Expand {
+    /**
+     *   compression method
+     */
+    private UntarCompressionMethod compression = new UntarCompressionMethod();
+
+    /**
+     * Set compression method.
+     *
+     * Allowable values are
+     *   none - no compression
+     *   gzip - Gzip compression
+     *   bzip2 - Bzip2 compression
+     *
+     * @param method compression method
+     */
+    public void setCompression(UntarCompressionMethod method) {
+        compression = method;
+    }
 
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         TarInputStream tis = null;
         try {
             log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-
-            tis = new TarInputStream(new FileInputStream(srcF));
+            tis = new TarInputStream(
+                compression.decompress(srcF,
+                    new BufferedInputStream(
+                        new FileInputStream(srcF))));
             TarEntry te = null;
 
             while ((te = tis.getNextEntry()) != null) {
@@ -99,6 +125,78 @@ public class Untar extends Expand {
                     tis.close();
                 } catch (IOException e) {}
             }
+        }
+    }
+
+    /**
+     * Valid Modes for Compression attribute to Untar Task
+     *
+     */
+    public static final class UntarCompressionMethod
+        extends EnumeratedAttribute {
+
+        // permissable values for compression attribute
+        /**
+         *  No compression
+         */
+        private static final String NONE = "none";
+        /**
+         *  GZIP compression
+         */
+        private static final String GZIP = "gzip";
+        /**
+         *  BZIP2 compression
+         */
+        private static final String BZIP2 = "bzip2";
+
+
+        /**
+         *  Constructor
+         */
+        public UntarCompressionMethod() {
+            super();
+            setValue(NONE);
+        }
+
+        /**
+         * Get valid enumeration values
+         *
+         * @return valid values
+         */
+        public String[] getValues() {
+            return new String[] { NONE, GZIP, BZIP2 };
+        }
+
+        /**
+         *  This method wraps the input stream with the
+         *     corresponding decompression method
+         *
+         *  @param file provides location information for BuildException
+         *  @param istream input stream
+         *  @return input stream with on-the-fly decompression
+         *  @exception IOException thrown by GZIPInputStream constructor
+         *  @exception BuildException thrown if bzip stream does not
+         *     start with expected magic values
+         */
+        private InputStream decompress(final File file,
+                                       final InputStream istream)
+            throws IOException, BuildException {
+            final String value = getValue();
+            if (GZIP.equals(value)) {
+                return new GZIPInputStream(istream);
+            } else {
+                if (BZIP2.equals(value)) {
+                    final char[] magic = new char[] { 'B', 'Z' };
+                    for (int i = 0; i < magic.length; i++) {
+                        if (istream.read() != magic[i]) {
+                            throw new BuildException(
+                                "Invalid bz2 file." + file.toString());
+                        }
+                    }
+                    return new CBZip2InputStream(istream);
+                }
+            }
+            return istream;
         }
     }
 }

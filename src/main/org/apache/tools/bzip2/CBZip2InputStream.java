@@ -298,7 +298,15 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     }
 
     private void bsFinishedWithStream() {
-        bsStream = null;
+        try {
+            if (this.bsStream != null) {
+                if (this.bsStream != System.in) {
+                    this.bsStream.close();
+                    this.bsStream= null;
+                }
+            }
+        } catch (IOException ioe) {
+        }
     }
 
     private void bsSetStream(InputStream f) {

@@ -109,6 +109,11 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Gzip and Bzip2 files can now be constructed in the fly when using
+  the tar task without having to create the intermediate tar file on
+  disk.  The Untar task can also untar GZip and BZip2 files on the fly
+  without creating the intermediate tar file.
+
 * New optional type, <classfileset> added.
 
 * <ejbjar> now allows control over which additional classes and interfaces

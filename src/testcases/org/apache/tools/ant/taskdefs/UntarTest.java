@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,9 +82,37 @@ public class UntarTest extends BuildFileTest {
                                            project.resolveFile("asf-logo.gif")));
     }
 
+    public void testRealGzipTest() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("realGzipTest");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
+
+    public void testRealBzip2Test() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("realBzip2Test");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
+
     public void testTestTarTask() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testTarTask");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
+
+    public void testTestGzipTarTask() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("testGzipTarTask");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
+
+    public void testTestBzip2TarTask() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("testBzip2TarTask");
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }

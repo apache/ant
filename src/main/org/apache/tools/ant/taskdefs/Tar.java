@@ -57,7 +57,9 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.FileInputStream;
+import java.io.BufferedOutputStream;
 import java.util.Vector;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
@@ -70,11 +72,15 @@ import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.tar.TarOutputStream;
 import org.apache.tools.tar.TarConstants;
 import org.apache.tools.tar.TarEntry;
+import java.util.zip.GZIPOutputStream;
+import org.apache.tools.bzip2.CBZip2OutputStream;
+
+
 
 /**
  * Creates a TAR archive.
  *
- * @author Stefano Mazzocchi 
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
@@ -124,6 +130,8 @@ public class Tar extends MatchingTask {
      * Indicates whether the user has been warned about long files already.
      */
     private boolean longWarningGiven = false;
+
+    private TarCompressionMethod compression = new TarCompressionMethod();
 
     public TarFileSet createTarFileSet() {
         TarFileSet fileset = new TarFileSet();
@@ -191,6 +199,18 @@ public class Tar extends MatchingTask {
         this.longFileMode = mode;
     }
 
+    /**
+     * Set compression method.
+     *
+     * Allowable values are
+     *   none - no compression
+     *   gzip - Gzip compression
+     *   bzip2 - Bzip2 compression
+     */
+    public void setCompression(TarCompressionMethod mode) {
+        this.compression = mode;
+    }
+
     public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!",
@@ -211,7 +231,7 @@ public class Tar extends MatchingTask {
         try {
             if (baseDir != null) {
                 if (!baseDir.exists()) {
-                    throw new BuildException("basedir does not exist!", 
+                    throw new BuildException("basedir does not exist!",
                                              location);
                 }
 
@@ -226,7 +246,7 @@ public class Tar extends MatchingTask {
                                          + "attribute or some nested filesets.",
                                          location);
             }
-            
+
             // check if tar is out of date with respect to each
             // fileset
             boolean upToDate = true;
@@ -239,7 +259,7 @@ public class Tar extends MatchingTask {
                 }
 
                 for (int i = 0; i < files.length; ++i) {
-                    if (tarFile.equals(new File(fs.getDir(project), 
+                    if (tarFile.equals(new File(fs.getDir(project),
                                                 files[i]))) {
                         throw new BuildException("A tar file cannot include "
                                                  + "itself", location);
@@ -257,7 +277,10 @@ public class Tar extends MatchingTask {
 
             TarOutputStream tOut = null;
             try {
-                tOut = new TarOutputStream(new FileOutputStream(tarFile));
+                tOut = new TarOutputStream(
+                    compression.compress(
+                        new BufferedOutputStream(
+                            new FileOutputStream(tarFile))));
                 tOut.setDebug(true);
                 if (longFileMode.isTruncateMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
@@ -270,13 +293,13 @@ public class Tar extends MatchingTask {
                 }
 
                 longWarningGiven = false;
-                for (Enumeration e = filesets.elements(); 
+                for (Enumeration e = filesets.elements();
                      e.hasMoreElements();) {
                     TarFileSet fs = (TarFileSet) e.nextElement();
                     String[] files = fs.getFiles(project);
                     if (files.length > 1 && fs.getFullpath().length() > 0) {
                         throw new BuildException("fullpath attribute may only "
-                                                 + "be specified for " 
+                                                 + "be specified for "
                                                  + "filesets that specify a "
                                                  + "single file.");
                     }
@@ -315,11 +338,11 @@ public class Tar extends MatchingTask {
             if (vPath.length() <= 0) {
                 return;
             }
-        
+
             if (file.isDirectory() && !vPath.endsWith("/")) {
                 vPath += "/";
             }
-        
+
             String prefix = tarFileSet.getPrefix();
             // '/' is appended for compatibility with the zip task.
             if (prefix.length() > 0 && !prefix.endsWith("/")) {
@@ -333,7 +356,7 @@ public class Tar extends MatchingTask {
             if (l <= 1) {
                 // we would end up adding "" to the archive
                 return;
-            } 
+            }
             vPath = vPath.substring(1, l);
         }
 
@@ -344,11 +367,11 @@ public class Tar extends MatchingTask {
                     return;
                 } else if (longFileMode.isWarnMode()) {
                     log("Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + " characters.", 
+                        TarConstants.NAMELEN + " characters.",
                         Project.MSG_WARN);
                     if (!longWarningGiven) {
                         log("Resulting tar file can only be processed "
-                            + "successfully by GNU compatible tar commands", 
+                            + "successfully by GNU compatible tar commands",
                             Project.MSG_WARN);
                         longWarningGiven = true;
                     }
@@ -406,7 +429,7 @@ public class Tar extends MatchingTask {
         private String prefix = "";
         private String fullpath = "";
         private boolean preserveLeadingSlashes = false;
-        
+
         public TarFileSet(FileSet fileset) {
             super(fileset);
         }
@@ -526,6 +549,67 @@ public class Tar extends MatchingTask {
 
         public boolean isOmitMode() {
             return OMIT.equalsIgnoreCase(getValue());
+        }
+    }
+
+    /**
+     * Valid Modes for Compression attribute to Tar Task
+     *
+     */
+    public static final class TarCompressionMethod extends EnumeratedAttribute {
+
+        // permissable values for compression attribute
+        /**
+         *    No compression
+         */
+        private static final String NONE = "none";
+        /**
+         *    GZIP compression
+         */
+        private static final String GZIP = "gzip";
+        /**
+         *    BZIP2 compression
+         */
+        private static final String BZIP2 = "bzip2";
+
+
+        /**
+         * Default constructor
+         */
+        public TarCompressionMethod() {
+            super();
+            setValue(NONE);
+        }
+
+        /**
+         *  Get valid enumeration values.
+         *  @return valid enumeration values
+         */
+        public String[] getValues() {
+            return new String[] { NONE, GZIP, BZIP2 };
+        }
+
+        /**
+         *  This method wraps the output stream with the
+         *     corresponding compression method
+         *
+         *  @param ostream output stream
+         *  @return output stream with on-the-fly compression
+         *  @exception IOException thrown if file is not writable
+         */
+        private OutputStream compress(final OutputStream ostream)
+            throws IOException {
+            final String value = getValue();
+            if (GZIP.equals(value)) {
+                return new GZIPOutputStream(ostream);
+            } else {
+                if (BZIP2.equals(value)) {
+                    ostream.write('B');
+                    ostream.write('Z');
+                    return new CBZip2OutputStream(ostream);
+                }
+            }
+            return ostream;
         }
     }
 }

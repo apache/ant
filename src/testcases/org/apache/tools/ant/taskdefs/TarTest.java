@@ -124,6 +124,29 @@ public class TarTest extends BuildFileTest {
         }
     }
 
+    public void test9() {
+        expectBuildException("test9", "Invalid value specified for compression attribute.");
+    }
+
+    public void test10() {
+        executeTarget("test10");
+        java.io.File f1
+            = new java.io.File("src/etc/testcases/taskdefs/test10.xml");
+        if (! f1.exists()) {
+            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
+        }
+    }
+
+    public void test11() {
+        executeTarget("test11");
+        java.io.File f1
+            = new java.io.File("src/etc/testcases/taskdefs/test11.xml");
+        if (! f1.exists()) {
+            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
+        }
+    }
+
+
     public void tearDown() {
         executeTarget("cleanup");
     }
