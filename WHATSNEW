@@ -126,8 +126,11 @@ Other changes:
   unless attributes.
 
 * Ant now comes with a BuildLogger implementation that can send emails
-  containing a log of the build process.
+  containing a log of the build process (MailLogger).
 
+* A "package" mapper type has been added to allow package directory
+  names replaced with the dotted form.
+  
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
