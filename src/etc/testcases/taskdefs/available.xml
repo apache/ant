@@ -26,12 +26,12 @@
 
   <target name="test6">
     <available property="test" 
-               resource="/org/apache/tools/ant/taskdefs/this_resource_does_not_exist"/>
+               resource="org/apache/tools/ant/taskdefs/this_resource_does_not_exist"/>
   </target>
 
   <target name="test7">
     <available property="test" 
-               resource="/org/apache/tools/ant/taskdefs/defaults.properties"/>
+               resource="org/apache/tools/ant/taskdefs/defaults.properties"/>
   </target>
 
   <target name="test8">
@@ -47,14 +47,14 @@
   <target name="test10">
     <available property="test" 
                file="available.xml"
-               resource="/org/apache/tools/ant/taskdefs/defaults.properties"
+               resource="org/apache/tools/ant/taskdefs/defaults.properties"
                classname="org.apache.tools.ant.taskdefs.Ant"/>
   </target>
   
   <target name="test11">
     <available property="test" 
                file="src/etc/testcases/taskdefs/available.xml"
-               resource="/org/apache/tools/ant/taskdefs/defaults.properties"
+               resource="org/apache/tools/ant/taskdefs/defaults.properties"
                classname="org.apache.tools.ant.taskdefs.this_class_does_not_exist"/>
   </target>  
   

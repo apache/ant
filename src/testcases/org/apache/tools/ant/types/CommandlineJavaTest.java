@@ -64,7 +64,7 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.CommandlineJava
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public class CommandlineJavaTest extends TestCase {
 
@@ -77,6 +77,7 @@ public class CommandlineJavaTest extends TestCase {
     public void setUp() {
         project = new Project();
         project.setBasedir(".");
+        project.setProperty("build.sysclasspath", "ignore");
     }
 
     public void testGetCommandline() {
@@ -92,8 +93,8 @@ public class CommandlineJavaTest extends TestCase {
         assertEquals("no classpath", 
                      "org.apache.tools.ant.CommandlineJavaTest", s[3]);
 
-        c.createClasspath(project).setLocation(new File("junit.jar"));
-        c.createClasspath(project).setLocation(new File("ant.jar"));
+        c.createClasspath(project).setLocation(project.resolveFile("lib/core/junit.jar"));
+        c.createClasspath(project).setLocation(project.resolveFile("lib/ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
         assertEquals("with classpath", "java", s[0]);
