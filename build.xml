@@ -368,7 +368,7 @@
       <include name="ant" />
       <include name="antRun" />
     </fixcrlf>
-    <fixcrlf srcdir="${dist.bin}" includes="runant.pl" />
+    <fixcrlf srcdir="${dist.bin}" includes="*.pl" />
 
     <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" />
     <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" />
@@ -376,7 +376,7 @@
        <fileset dir="${dist.bin}">
          <include name="**/ant" />
          <include name="**/antRun" />
-         <include name="**/runant.pl" />
+         <include name="**/*.pl" />
        </fileset>
     </chmod>
   </target>
@@ -506,6 +506,7 @@
     <fixcrlf srcdir="${src.dist.dir}" eol="crlf" includes="*.bat" />
     <fixcrlf srcdir="${src.dist.dir}" eol="lf">
       <include name="**/*.sh" />
+      <include name="**/*.pl" />
       <include name="**/ant" />
       <include name="**/antRun" />
     </fixcrlf>
@@ -550,11 +551,13 @@
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
+        <include name="${dist.name}/bin/*.pl"/>
       </tarfileset> 
       <tarfileset dir="${dist.name}/.." username="ant" group="ant"> 
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
+        <include name="${dist.name}/bin/*.pl"/>
       </tarfileset> 
     </tar>
     <gzip zipfile="${dist.base}/bin/${dist.name}-bin.tar.gz" 
