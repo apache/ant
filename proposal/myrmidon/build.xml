@@ -457,9 +457,9 @@ Legal:
 
     <chmod dir="${dist.dir}" perm="go-rwx" />
     <chmod file="${dist.bin}/ant" perm="u+x"/>
-    <fixcrlf srcdir="${dist.bin}" cr="add" includes="**/*.bat" />
-    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="**/*.sh" />
-    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="ant" />
+    <fixcrlf srcdir="${dist.bin}" eol="crlf" includes="**/*.bat" />
+    <fixcrlf srcdir="${dist.bin}" eol="lf" includes="**/*.sh" />
+    <fixcrlf srcdir="${dist.bin}" eol="lf" includes="ant" />
 
   </target>
 
