@@ -66,9 +66,9 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * Sets Java's web proxy properties, so that tasks and code run in
  * the same JVM can have through-the-firewall access to remote web sites,
  * and remote ftp sites.
- * You can nominate an http and ftp proxy, or a socks server, reset the server 
+ * You can nominate an http and ftp proxy, or a socks server, reset the server
  * settings, or do nothing at all.
- * <p> 
+ * <p>
  * Examples
  * <pre>&lt;setproxy/&gt;</pre>
  * do nothing
@@ -82,14 +82,16 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * use socks via socksy:1080
  * <pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
  * stop using the socks server
- 
- 
- 
+ * You can set a username and password for http with the <tt>proxyHost</tt>
+ * and <tt>proxyPassword</tt> attributes. On Java1.4 and above these can also be
+ * used against SOCKS5 servers.
+
+
  * @see <a href="http://java.sun.com/j2se/1.4/docs/guide/net/properties.html">
  *  java 1.4 network property list</a>
  * @author Steve Loughran
   *@since       Ant 1.5
- * @ant.task
+ * @ant.task category="network"
  */
 public class SetProxy extends Task {
 
@@ -107,7 +109,7 @@ public class SetProxy extends Task {
      * socks host.
      */
     private String socksProxyHost = null;
-    
+
     /**
      * Socks proxy port. Default is 1080.
      */
@@ -116,8 +118,18 @@ public class SetProxy extends Task {
 
     /**
      * list of non proxy hosts
-     */ 
+     */
     private String nonProxyHosts = null;
+
+    /**
+     * user for http only
+     */
+    private String proxyUser=null;
+
+    /**
+     * password for http only
+     */
+    private String proxyPassword=null;
 
     /**
      * the HTTP/ftp proxy host. Set this to "" for the http proxy
@@ -159,15 +171,33 @@ public class SetProxy extends Task {
         this.socksProxyPort = port;
     }
 
+
     /**
      * A list of hosts to bypass the proxy on. These should be separated
      * with the vertical bar character '|'. Only in Java 1.4 does ftp use
      * this list.
      * e.g. fozbot.corp.sun.com|*.eng.sun.com
      * @param nonProxyHosts lists of hosts to talk direct to
-     */ 
+     */
     public void setNonProxyHosts(String nonProxyHosts) {
         this.nonProxyHosts = nonProxyHosts;
+    }
+
+    /**
+     * set the proxy user. Probably requires a password to accompany this
+     * setting. Default=""
+     * @param proxyUser
+     */
+    public void setProxyUser(String proxyUser) {
+        this.proxyUser = proxyUser;
+    }
+
+    /**
+     * set the password for the proxy. used only if the proxyUser is set
+     * @param proxyPassword
+     */
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
     }
 
     /**
@@ -175,7 +205,6 @@ public class SetProxy extends Task {
      * get applied these settings last beyond the life of the object and
      * apply to all network connections
      * Relevant docs: buglist #4183340
-     * @return true if the settings were applied
      */
 
     public void applyWebProxySettings() {
@@ -196,11 +225,19 @@ public class SetProxy extends Task {
                 sysprops.put("ftp.proxyPort", portString);
                 if (nonProxyHosts != null) {
                     sysprops.put("http.nonProxyHosts", nonProxyHosts);
+                    sysprops.put("https.nonProxyHosts", nonProxyHosts);
                     sysprops.put("ftp.nonProxyHosts", nonProxyHosts);
-                }                    
+                }
+                if(proxyUser!=null) {
+                    sysprops.put("http.proxyUser", proxyUser);
+                    sysprops.put("http.proxyPassword", proxyPassword);
+                }
             } else {
                 log("resetting http proxy", Project.MSG_VERBOSE);
+                sysprops.remove("http.proxyHost");
                 sysprops.remove("http.proxyPort");
+                sysprops.remove("http.proxyUser");
+                sysprops.remove("http.proxyPassword");
                 sysprops.remove("https.proxyHost");
                 sysprops.remove("https.proxyPort");
                 sysprops.remove("ftp.proxyHost");
@@ -215,13 +252,21 @@ public class SetProxy extends Task {
                 enablingProxy = true;
                 sysprops.put("socksProxyHost", socksProxyHost);
                 sysprops.put("socksProxyPort", Integer.toString(socksProxyPort));
+                if (proxyUser != null) {
+                    //this may be a java1.4 thingy only
+                    sysprops.put("java.net.socks.username", proxyUser);
+                    sysprops.put("java.net.socks.password", proxyPassword);
+                }
+
             } else {
                 log("resetting socks proxy", Project.MSG_VERBOSE);
                 sysprops.remove("socksProxyHost");
                 sysprops.remove("socksProxyPort");
+                sysprops.remove("java.net.socks.username");
+                sysprops.remove("java.net.socks.password");
             }
         }
-        
+
 
         //for Java1.1 we need to tell the system that the settings are new
         if (settingsChanged &&
@@ -232,10 +277,10 @@ public class SetProxy extends Task {
 
     /**
      * list out what is going on
-     */ 
+     */
     private void traceSettingInfo() {
-        log("Setting proxy to " 
-                + (proxyHost != null ? proxyHost : "''") 
+        log("Setting proxy to "
+                + (proxyHost != null ? proxyHost : "''")
                 + ":" + proxyPort,
                 Project.MSG_VERBOSE);
     }
