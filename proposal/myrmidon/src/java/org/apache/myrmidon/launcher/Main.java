@@ -11,6 +11,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -41,11 +42,13 @@ public final class Main
             final File libDir = new File( installDirectory, "lib" );
             final URL[] urls = buildURLList( libDir );
 
-            final LauncherClassLoader classLoader = new LauncherClassLoader( urls );
+            final URLClassLoader classLoader = new URLClassLoader( urls );
 
             //load class and retrieve appropriate main method.
             final Class clazz = classLoader.loadClass( "org.apache.myrmidon.Main" );
             final Method method = clazz.getMethod( "main", new Class[] { args.getClass() } );
+
+            Thread.currentThread().setContextClassLoader( classLoader );
 
             //kick the tires and light the fires....
             method.invoke( null, new Object[] { args } );
@@ -80,6 +83,14 @@ public final class Main
 
             if( !file.isFile() || !file.canRead() )
             {
+                //ignore non-files or unreadable files
+                continue;
+            }
+
+            final String name = file.getName();
+            if( !name.endsWith( ".jar" ) && !name.endsWith( ".zip" ) )
+            {
+                //Ifnore files in lib dir that are not jars or zips
                 continue;
             }
 
