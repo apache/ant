@@ -853,7 +853,7 @@ public class FixCRLF extends MatchingTask {
                     ++eolcount;
                     eolStr.append('\r');
                     reader.mark(2);
-                    switch ((char)(ch = reader.read())) {
+                    switch ((ch = reader.read())) {
                     case '\r':
                         if ((char)(ch = reader.read()) == '\n') {
                             eolcount += 2;
@@ -863,6 +863,10 @@ public class FixCRLF extends MatchingTask {
                     case '\n':
                         ++eolcount;
                         eolStr.append('\n');
+                        break;
+                    case -1:
+                        // don't reposition when we've reached the end
+                        // of the stream
                         break;
                     default:
                         reader.reset();
