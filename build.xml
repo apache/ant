@@ -1042,6 +1042,7 @@
              doctitle="${Name}">
       <tag name="todo" description="To do:" scope="all" />
       <tag name="ant.task" enabled="false" description="Task:" scope="types" />
+      <tag name="ant.datatype" enabled="false" description="Data type:" scope="types" />
       <group title="Apache Ant Core" packages="org.apache.tools.ant*" />
       <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
