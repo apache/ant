@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,22 +34,38 @@ public final class AntFilterReader
 
     private Path classpath;
 
-    public final void setClassName(final String className) {
+    /**
+     * Set the className attribute.
+     *
+     * @param className a <code>String</code> value
+     */
+    public void setClassName(final String className) {
         this.className = className;
     }
 
-    public final String getClassName() {
+    /**
+     * Get the className attribute.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getClassName() {
         return className;
     }
 
-    public final void addParam(final Parameter param) {
+    /**
+     * Add a Parameter.
+     *
+     * @param param a <code>Parameter</code> value
+     */
+    public void addParam(final Parameter param) {
         parameters.addElement(param);
     }
 
     /**
      * Set the classpath to load the FilterReader through (attribute).
+     * @param classpath a classpath
      */
-    public final void setClasspath(Path classpath) {
+    public void setClasspath(Path classpath) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -62,8 +78,9 @@ public final class AntFilterReader
 
     /**
      * Set the classpath to load the FilterReader through (nested element).
+     * @return a classpath to be configured
      */
-    public final Path createClasspath() {
+    public Path createClasspath() {
         if (isReference()) {
             throw noChildrenAllowed();
         }
@@ -74,15 +91,17 @@ public final class AntFilterReader
     }
 
     /**
-     * Get the classpath
+     * Get the classpath.
+     * @return the classpath
      */
-    public final Path getClasspath() {
+    public Path getClasspath() {
         return classpath;
     }
 
     /**
      * Set the classpath to load the FilterReader through via
      * reference (attribute).
+     * @param r a reference to a classpath
      */
     public void setClasspathRef(Reference r) {
         if (isReference()) {
@@ -91,7 +110,12 @@ public final class AntFilterReader
         createClasspath().setRefid(r);
     }
 
-    public final Parameter[] getParams() {
+    /**
+     * The parameters for this filter.
+     *
+     * @return a <code>Parameter[]</code> value
+     */
+    public Parameter[] getParams() {
         Parameter[] params = new Parameter[parameters.size()];
         parameters.copyInto(params);
         return params;
