@@ -74,6 +74,8 @@ Other changes:
 
 * <pathconvert> now accepts nested <mapper>s.  Bugzilla Report 26364.
 
+* Shipped XML parser is now Xerces-J 2.6.2.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
