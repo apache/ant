@@ -17,6 +17,10 @@ turned off, then files are only moved if the source file is newer than
 the destination file, or when the destination file does not exist.</p>
 <p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select sets of files
 to move to the <var>todir</var> directory.</p>
+<p><b>Since Ant 1.6.3</b>, the <i>file</i> attribute may be used to move
+(rename) an entire directory.  If <i>tofile</i> denotes an existing file, or
+there is a directory by the same name in <i>todir</i>, the action will fail.
+</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -26,7 +30,7 @@ to move to the <var>todir</var> directory.</p>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">the file to move</td>
+    <td valign="top">the file or directory to move</td>
     <td valign="top" align="center">One of <var>file</var> or
      at least one nested fileset element</td>
   </tr>
@@ -79,7 +83,7 @@ to move to the <var>todir</var> directory.</p>
   </tr>
   <tr>
     <td valign="top">failonerror</td>
-     <td valign="top">Log a warning message, but do not stop the
+     <td valign="top">If false, log a warning message, but do not stop the
        build, when the file to copy does not exist or one of the nested
        filesets points to a directory that doesn't exist or an error occurs
        while moving.
@@ -114,6 +118,16 @@ to move to the <var>todir</var> directory.</p>
       <em>since Ant 1.6</em>.</td>
     <td align="center">No - defaults to false.</td>
   </tr>
+  <tr>
+    <td valign="top">granularity</td>
+    <td valign="top">The number of milliseconds leeway to give before
+    deciding a file is out of date. This is needed because not every
+    file system supports tracking the last modified time to the
+    millisecond level. Default is 0 milliseconds, or 2 seconds on DOS
+    systems.  This can also be useful if source and target files live
+    on separate machines with clocks being out of sync.  <em>since Ant
+    1.6</em>.</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>mapper</h4>
@@ -145,6 +159,10 @@ followed by &lt;filterset&gt; elements.
   &lt;move todir=&quot;new/dir/to/move/to&quot;&gt;
     &lt;fileset dir=&quot;src/dir&quot;/&gt;
   &lt;/move&gt;
+</pre>
+  <i>or, since Ant 1.6.3:</i>
+<pre>
+  &lt;move file=&quot;src/dir&quot; tofile=&quot;new/dir/to/move/to&quot; /&gt;
 </pre>
 <p><b>Move a set of files to a new directory</b></p>
 <pre>

@@ -61,6 +61,58 @@ public class Move extends Copy {
         setOverwrite(true);
     }
 
+    /**
+     * Performs the move operation.
+     */
+    public void execute() throws BuildException {
+        if (file != null && file.isDirectory()) {
+            if (destFile != null && destDir != null) {
+                throw new BuildException("Only one of tofile and todir "
+                                         + "may be set.");
+            }
+
+            if (destFile == null && destDir == null) {
+                throw new BuildException("One of tofile or todir must be set.");
+            }
+
+            destFile = (destFile != null)
+                ? destFile : new File(destDir, file.getName());
+
+            try {
+                boolean renamed = false;
+                log("Moving directory " + file
+                    + " to " + destFile, Project.MSG_INFO);
+                try {
+                    renamed =
+                        renameFile(file, destFile, filtering, forceOverwrite);
+                } catch (IOException eyeOhEx) {
+                    throw new BuildException(eyeOhEx.getMessage());
+                }
+                if (!renamed) {
+                    StringBuffer buf = new StringBuffer(
+                        "Failed to move directory ").append(
+                        file.getAbsolutePath());
+
+                    if ((getFilterChains() != null && getFilterChains().size() > 0)
+                        || (getFilterSets() != null && getFilterSets().size() > 0)
+                        || filtering) {
+                        buf.append(
+                            "; use a fileset to move directories with filtering");
+                    }
+                    throw new BuildException(buf.append('.').toString());
+                }
+            } catch (BuildException e) {
+                if (!failonerror) {
+                    log("Warning: " + e.getMessage(), Project.MSG_ERR);
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            super.execute();
+        }
+    }
+
 //************************************************************************
 //  protected and private methods
 //************************************************************************
@@ -325,17 +377,19 @@ public class Move extends Copy {
         } else {
             if (!filtering) {
                 // ensure that parent dir of dest file exists!
-                // not using getParentFile method to stay 1.1 compatibility
-                String parentPath = destFile.getParent();
-                if (parentPath != null) {
-                    File parent = new File(parentPath);
-                    if (!parent.exists()) {
-                        parent.mkdirs();
-                    }
+                File parent = destFile.getParentFile();
+                if (parent != null && !parent.exists()) {
+                    parent.mkdirs();
                 }
 
-                if (destFile.exists() && destFile.isFile()) {
-                    if (!destFile.delete()) {
+                if (destFile.exists()) {
+                    if (sourceFile.isDirectory()) {
+                     throw new BuildException(
+                        new StringBuffer("Cannot replace ").append(
+                        ((destFile.isFile()) ? "file " : "directory ")).append(
+                        destFile).append(" with directory ").append(
+                        sourceFile).toString());
+                    } else if (destFile.isFile() && !destFile.delete()) {
                         throw new BuildException("Unable to remove existing "
                                                  + "file " + destFile);
                     }

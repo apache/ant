@@ -12,6 +12,9 @@ Other changes:
 * Javadoc fixes for Location, Project, and RuntimeConfigurable
   Bugzilla 30160.
 
+* Allow file attribute of <move> to rename a directory.
+  Bugzilla Report 22863.
+
 Fixed bugs:
 -----------
 
