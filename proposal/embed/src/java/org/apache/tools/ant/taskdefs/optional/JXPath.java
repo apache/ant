@@ -129,7 +129,7 @@ public class JXPath extends Task {
 
             Iterator iter = jxpathCtx.iterate(name);
 
-            if(iter==null){
+            if(iter==null||!iter.hasNext()){
                 return "null";
             }
 
