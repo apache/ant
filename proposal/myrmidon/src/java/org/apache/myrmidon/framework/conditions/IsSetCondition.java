@@ -26,8 +26,8 @@ import org.apache.myrmidon.api.TaskException;
 public class IsSetCondition
     implements Condition
 {
-    private final static Resources REZ
-        = ResourceManager.getPackageResources( IsSetCondition.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( IsSetCondition.class );
 
     private String m_property;
 

@@ -104,7 +104,7 @@ public class BzipTestCase
     private InputStream getInputStream( final String resource )
         throws Exception
     {
-        final String filename = "src" + File.separator + "testcases" + File.separator +
+        final String filename = "src" + File.separator + "test" + File.separator +
             getClass().getName().replace( '.', File.separatorChar );
         final String path = FileUtil.getPath( filename );
         final File input = new File( path, resource );

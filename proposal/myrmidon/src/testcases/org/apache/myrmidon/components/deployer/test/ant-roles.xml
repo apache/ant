@@ -1,4 +1,0 @@
-<roles version="1.0">
-    <!-- A custom role -->
-    <role shorthand="test-role1" name="org.apache.myrmidon.components.deployer.test.TestRole1"/>
-</roles>

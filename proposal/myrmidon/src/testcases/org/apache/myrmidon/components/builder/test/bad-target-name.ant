@@ -1,5 +1,0 @@
-<!-- Target with an invalid name -->
-<project version="2.0" name="ok name">
-    <target name="main"/>
-    <target name="bad ^ name"/>
-</project>

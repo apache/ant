@@ -64,7 +64,7 @@ Legal:
     <property name="gen.dir" value="${build.dir}/gen"/>
 
     <property name="test.dir" value="${build.dir}/test"/>
-    <property name="test.working.dir" value="${test.dir}/testcases"/>
+    <property name="test.working.dir" value="${test.dir}/test"/>
     <property name="test.classes" value="${test.dir}/classes"/>
 
     <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
@@ -516,7 +516,7 @@ Legal:
     <target name="run-tests" depends="dist-lite" if="junit.present">
         <!-- Compile the unit tests -->
         <mkdir dir="${test.classes}"/>
-        <javac srcdir="src/testcases"
+        <javac srcdir="src/test"
                destdir="${test.classes}"
                debug="${debug}"
                deprecation="${deprecation}">
@@ -535,7 +535,7 @@ Legal:
 
         <!-- Copy the resources from source tree into working test dir -->
         <copy todir="${test.working.dir}">
-            <fileset dir="src/testcases">
+            <fileset dir="src/test">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -571,7 +571,7 @@ Legal:
         <antlib-descriptor libName="unittests"
                            destdir="${gen.dir}"
                            classpathref="project.class.path">
-            <fileset dir="src/testcases">
+            <fileset dir="src/test">
                 <include name="org/apache/antlib/**"/>
                 <include name="org/apache/myrmidon/framework/**"/>
             </fileset>
