@@ -139,16 +139,16 @@ public class Javadoc extends Exec {
         overviewFile = project.resolveFile(src);
     }
     public void setPublic(String src) {
-        pub = new Boolean(src).booleanValue();
+        pub = Project.toBoolean(src);
     }
     public void setProtected(String src) {
-        prot = new Boolean(src).booleanValue();
+        prot = Project.toBoolean(src);
     }
     public void setPackage(String src) {
-        pack = new Boolean(src).booleanValue();
+        pack = Project.toBoolean(src);
     }
     public void setPrivate(String src) {
-        priv = new Boolean(src).booleanValue();
+        priv = Project.toBoolean(src);
     }
     public void setDoclet(String src) {
         doclet = src;
@@ -157,7 +157,7 @@ public class Javadoc extends Exec {
         docletpath = project.resolveFile(src);
     }
     public void setOld(String src) {
-        old = new Boolean(src).booleanValue();
+        old = Project.toBoolean(src);
     }
     public void setClasspath(String src) {
         classpath = Project.translatePath(src);
@@ -169,7 +169,7 @@ public class Javadoc extends Exec {
         extdirs = src;
     }
     public void setVerbose(String src) {
-        verbose = new Boolean(src).booleanValue();
+        verbose = Project.toBoolean(src);
     }
     public void setLocale(String src) {
         locale = src;
@@ -178,16 +178,16 @@ public class Javadoc extends Exec {
         encoding = src;
     }
     public void setVersion(String src) {
-        version = new Boolean(src).booleanValue();
+        version = Project.toBoolean(src);
     }
     public void setUse(String src) {
-        use = new Boolean(src).booleanValue();
+        use = Project.toBoolean(src);
     }
     public void setAuthor(String src) {
-        author = new Boolean(src).booleanValue();
+        author = Project.toBoolean(src);
     }
     public void setSplitindex(String src) {
-        splitindex = new Boolean(src).booleanValue();
+        splitindex = Project.toBoolean(src);
     }
     public void setWindowtitle(String src) {
         windowtitle = src;
@@ -214,22 +214,22 @@ public class Javadoc extends Exec {
         group = src;
     }
     public void setNodeprecated(String src) {
-        nodeprecated = new Boolean(src).booleanValue();
+        nodeprecated = Project.toBoolean(src);
     }
     public void setNodeprecatedlist(String src) {
-        nodeprecatedlist = new Boolean(src).booleanValue();
+        nodeprecatedlist = Project.toBoolean(src);
     }
     public void setNotree(String src) {
-        notree = new Boolean(src).booleanValue();
+        notree = Project.toBoolean(src);
     }
     public void setNoindex(String src) {
-        noindex = new Boolean(src).booleanValue();
+        noindex = Project.toBoolean(src);
     }
     public void setNohelp(String src) {
-        nohelp = new Boolean(src).booleanValue();
+        nohelp = Project.toBoolean(src);
     }
     public void setNonavbar(String src) {
-        nonavbar = new Boolean(src).booleanValue();
+        nonavbar = Project.toBoolean(src);
     }
     public void setStylesheetfile(String src) {
         stylesheetfile = project.resolveFile(src);
