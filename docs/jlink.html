@@ -98,7 +98,7 @@ The following will merge the entries in mergefoo.jar and mergebar.jar
 into out.jar.
 mac.jar and pc.jar will be added as single entries to out.jar.
 <pre>
-&lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;/&gt;
+&lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;&gt;
    &lt;mergefiles&gt;
      &lt;pathelement path=&quot;${build.dir}/mergefoo.jar&quot;/&gt;
      &lt;pathelement path=&quot;${build.dir}/mergebar.jar&quot;/&gt;
@@ -116,7 +116,7 @@ Suppose the path for file foo.jar is build/tempbuild/foo.jar. The
 following example
 will provide the entry tempbuild/foo.jar in the out.jar.
 <pre>
-&lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;/&gt;
+&lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;&gt;
    &lt;mergefiles&gt;
      &lt;pathelement path=&quot;build/tempbuild&quot;/&gt;
    &lt;/mergefiles&gt;
@@ -126,7 +126,7 @@ will provide the entry tempbuild/foo.jar in the out.jar.
 However, the next example would result in two top-level entries in out.jar,
 namely bar.class and barnone/myClass.zip
 <pre>
-&lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;/&gt;
+&lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;&gt;
    &lt;mergefiles&gt;
      &lt;pathelement path=&quot;build/tempbuild/foo.jar&quot;/&gt;
    &lt;/mergefiles&gt;
