@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.KeepAliveInputStream;
 
 /**
  * Launcher for Java applications. Allows use of
@@ -639,11 +640,8 @@ public class Java extends Task {
      */
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
-        if (redirector.getInputStream() != null) {
-            return redirector.handleInput(buffer, offset, length);
-        } else {
-            return super.handleInput(buffer, offset, length);
-        }
+        // Should work whether or not redirector.inputStream == null:
+        return redirector.handleInput(buffer, offset, length);
     }
 
     /**
@@ -701,6 +699,10 @@ public class Java extends Task {
         redirector.setError(error);
         if (redirectorElement != null) {
             redirectorElement.configure(redirector);
+        }
+        if (!spawn && input == null && inputString == null) {
+            // #24918: send standard input to the process by default.
+            redirector.setInputStream(new KeepAliveInputStream(getProject().getDefaultInputStream()));
         }
     }
 

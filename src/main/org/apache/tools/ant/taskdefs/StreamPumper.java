@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ public class StreamPumper implements Runnable {
     private OutputStream os;
     private boolean finished;
     private boolean closeWhenExhausted;
+    private boolean autoflush = false;
 
     /**
      * Create a new stream pumper.
@@ -62,6 +63,14 @@ public class StreamPumper implements Runnable {
         this(is, os, false);
     }
 
+    /**
+     * Set whether data should be flushed through to the output stream.
+     * @param autoflush if true, push through data; if false, let it be buffered
+     * @since Ant 1.7
+     */
+    /*public*/ void setAutoflush(boolean autoflush) {
+        this.autoflush = autoflush;
+    }
 
     /**
      * Copies data from the input stream to the output stream.
@@ -78,8 +87,11 @@ public class StreamPumper implements Runnable {
 
         int length;
         try {
-            while ((length = is.read(buf)) > 0) {
+            while ((length = is.read(buf)) > 0 && !finished) {
                 os.write(buf, 0, length);
+                if (autoflush) {
+                    os.flush();
+                }
             }
         } catch (Exception e) {
             // ignore errors
@@ -116,4 +128,17 @@ public class StreamPumper implements Runnable {
             wait();
         }
     }
+    
+    /**
+     * Stop the pumper as soon as possible.
+     * Note that it may continue to block on the input stream
+     * but it will really stop the thread as soon as it gets EOF
+     * or any byte, and it will be marked as finished.
+     * @since Ant 1.7
+     */
+    /*public*/ synchronized void stop() {
+        finished = true;
+        notifyAll();
+    }
+    
 }

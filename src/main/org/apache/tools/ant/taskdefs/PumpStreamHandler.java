@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     private Thread outputThread;
     private Thread errorThread;
-    private Thread inputThread;
+    private StreamPumper inputPump;
 
     private OutputStream out;
     private OutputStream err;
@@ -101,7 +101,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      */
     public void setProcessInputStream(OutputStream os) {
         if (input != null) {
-            inputThread = createPump(input, os, true);
+            inputPump = createInputPump(input, os, true);
         } else {
             try {
                 os.close();
@@ -117,7 +117,9 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     public void start() {
         outputThread.start();
         errorThread.start();
-        if (inputThread != null) {
+        if (inputPump != null) {
+            Thread inputThread = new Thread(inputPump);
+            inputThread.setDaemon(true);
             inputThread.start();
         }
     }
@@ -137,12 +139,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
             // ignore
         }
 
-        if (inputThread != null) {
-            try {
-                inputThread.join();
-            } catch (InterruptedException e) {
-                // ignore
-            }
+        if (inputPump != null) {
+            inputPump.stop();
         }
 
         try {
@@ -209,6 +207,18 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
             = new Thread(new StreamPumper(is, os, closeWhenExhausted));
         result.setDaemon(true);
         return result;
+    }
+    
+    /**
+     * Creates a stream pumper to copy the given input stream to the
+     * given output stream. Used for standard input.
+     * @since Ant 1.7
+     */
+    /*protected*/ StreamPumper createInputPump(InputStream is, OutputStream os,
+                                boolean closeWhenExhausted) {
+        StreamPumper pumper = new StreamPumper(is, os, closeWhenExhausted);
+        pumper.setAutoflush(true);
+        return pumper;
     }
 
 }

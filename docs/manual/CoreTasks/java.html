@@ -15,10 +15,9 @@ specified.</p>
 If odd things go wrong when you run this task, set fork="true" to use a new
 JVM.
 
-<p>Note that you cannot interact with a forked VM, the only way to
-send input to it is via the input and inputstring attributes. Also note that
-in Ant 1.6, any attempt to read input in the forked VM will receive an
-EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
+<p>As of Ant 1.7, you can interact with a forked VM, as well as
+sending input to it via the <code>input</code> and <code>inputstring</code>
+attributes.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -157,14 +156,16 @@ EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
     <td valign="top">A file from which the executed command's standard input
                      is taken. This attribute is mutually exclusive with the
                      inputstring attribute</td>
-    <td align="center" valign="top">No</td>
+    <td align="center" valign="top">No; default is to take standard input from console
+        (unless <code>spawn="true"</code>)</td>
   </tr>
   <tr>
     <td valign="top">inputstring</td>
     <td valign="top">A string which serves as the input stream for the
                      executed command. This attribute is mutually exclusive with the
                      input attribute.</td>
-    <td align="center" valign="top">No</td>
+    <td align="center" valign="top">No; default is to take standard input from console
+        (unless <code>spawn="true"</code>)</td>
   </tr>
   <tr>
     <td valign="top">newenvironment</td>
@@ -353,4 +354,3 @@ Reserved.</p>
 
 </body>
 </html>
-
