@@ -19,10 +19,6 @@ Fixed bugs:
 * I/O-intensive processes hung when executed via <exec spawn="true">.
   Bugzilla reports 23893/26852.
 
-* UNC pathnames did not work for ANT_HOME or -lib locations on Windows.
-  Bugzilla report 27922.
-
-
 Other changes:
 --------------
 
@@ -126,6 +122,9 @@ Fixed bugs:
   writes were performed.
 
 * fixed case handling of scriptdef attributes and elements.
+
+* UNC pathnames did not work for ANT_HOME or -lib locations on Windows.
+  Bugzilla report 27922.
 
 Other changes:
 --------------
