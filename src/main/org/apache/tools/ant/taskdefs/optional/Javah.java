@@ -325,7 +325,7 @@ public class Javah extends Task {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting javah: ", ex, location);
+                throw new BuildException("Error starting javah: " + ex, ex, location);
             }
         }
     }
