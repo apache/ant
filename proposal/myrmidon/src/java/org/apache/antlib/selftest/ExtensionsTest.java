@@ -7,9 +7,9 @@
  */
 package org.apache.antlib.selftest;
 
+import org.apache.antlib.selftest.extension1.ExtensionsLoadedClass;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.antlib.selftest.extension1.ExtensionsLoadedClass;
 
 /**
  * This is to test whether extension is loaded.

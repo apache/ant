@@ -10,7 +10,6 @@ package org.apache.antlib.selftest;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractContainerTask;
 
@@ -23,7 +22,7 @@ public class ConfigurationTest
     extends AbstractContainerTask
     implements Configurable
 {
-    private String              m_message;
+    private String m_message;
 
     public void configure( final Configuration configuration )
         throws ConfigurationException
