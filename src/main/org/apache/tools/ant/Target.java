@@ -144,7 +144,10 @@ public class Target {
 		}
                 catch(RuntimeException exc) {
                     if (exc instanceof BuildException) {
-                        ((BuildException)exc).setLocation(task.getLocation());
+                        BuildException be = (BuildException) exc;
+                        if (be.getLocation() == Location.UNKNOWN_LOCATION) {
+                            be.setLocation(task.getLocation());
+                        }
                     }
                     project.fireTaskFinished(task, exc);
                     throw exc;
