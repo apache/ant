@@ -4,6 +4,9 @@ Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* The import task used the canonical version of a file path. This
+  has been changed to use the absolute path. Bugzilla 28505.
+
 Fixed bugs:
 -----------
 
