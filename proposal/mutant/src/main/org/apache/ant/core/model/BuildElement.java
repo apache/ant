@@ -63,20 +63,13 @@ import org.apache.ant.core.support.*;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */ 
 public class BuildElement {
-    /**
-     * The aspects defined for this element.
-     */
-    private Map aspects;
+    /** The aspects defined for this element. */
+    private Map aspectMaps;
 
-    /**
-     * The location of this element
-     */
+    /** The location of this element */
     private Location location;
     
-    /**
-     * A comment associated with this element, if any
-     *
-     */
+    /** A comment associated with this element, if any */
     private String comment;
     
     /**
@@ -121,7 +114,44 @@ public class BuildElement {
      * @param aspects a Map of apects that relate to this build element.
      */
     public void setAspects(Map aspects) {
-        this.aspects = aspects;
+        aspectMaps = new HashMap();
+        for (Iterator i = aspects.keySet().iterator(); i.hasNext(); ) {
+            String aspectName = (String)i.next();
+            int separator = aspectName.indexOf(":");
+            if (separator != -1) {
+                String prefix = aspectName.substring(0, separator);
+                String name = aspectName.substring(separator + 1);
+                if (prefix.length() != 0 && name.length() != 0) {
+                    Map prefixMap = (Map)aspectMaps.get(prefix);
+                    if (prefixMap == null) {
+                        prefixMap = new HashMap();
+                        aspectMaps.put(prefix, prefixMap);
+                    }
+                    prefixMap.put(name, aspects.get(aspectName));
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get an iterator on the aspects which have been given values on this element
+     * 
+     * @return an iterator of Strings , being the aspects which have been given values on
+     * this element.
+     */
+    public Iterator getAspectNames() {
+        return aspectMaps.keySet().iterator();
+    }
+    
+    /**
+     * Get the set of attribute values related to the given aspect
+     *
+     * @param apsectPrefix the prefix used to identify the prefix.
+     *
+     * @return a map of the attribute values for the given aspect.
+     */
+    public Map getAspectAttributes(String aspectPrefix) {
+        return (Map)aspectMaps.get(aspectPrefix);
     }
 }
 

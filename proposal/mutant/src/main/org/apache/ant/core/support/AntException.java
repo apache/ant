@@ -110,7 +110,7 @@ public abstract class AntException extends Exception {
      * @param cause Exception that might have caused this one.
      */
     public AntException(Throwable cause) {
-        super(cause.toString());
+        super(cause.getMessage());
         this.cause = cause;
     }
 

@@ -131,13 +131,11 @@ public class DefaultLogger implements BuildLogger {
             if (location != null && location != Location.UNKNOWN_LOCATION) {
                 out.print(location);
             }
-            out.print(e.getMessage());
+            out.println(e.getMessage());
             
             if (cause != null) {
-                out.println();
-                out.print("Root cause: " + cause.getClass().getName() + ": " + cause.getMessage());
+                out.println("Root cause: " + cause.toString());
             }
-            out.println();
         }
         else {
             t.printStackTrace(err);
@@ -183,9 +181,9 @@ public class DefaultLogger implements BuildLogger {
         
                     // Print out the name of the task if we're in one
                     Object buildElement = event.getBuildElement();
-                    if (buildElement instanceof Task) {
-                        Task task = (Task)buildElement;
-                        String name = task.getType();
+                    if (buildElement instanceof TaskElement) {
+                        TaskElement taskElement = (TaskElement)buildElement;
+                        String name = taskElement.getType();
         
                         if (!emacsMode) {
                             String msg = "[" + name + "] ";

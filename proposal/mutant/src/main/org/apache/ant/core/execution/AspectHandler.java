@@ -60,91 +60,15 @@ import java.util.*;
 import java.net.URL;
 
 /**
- * An ExecutionTask is the execution time equivalent of the Task
- * object in the Ant project model. Subclasses of ExecutionTask are
- * created by Task writers to implement particular, desired 
- * functionality
- *
- * An ExecutionTask subclass is created for a particular task type. 
- * The data from the task model is introspected into the ExecutionTask
- * which is then executed.
+ * An AspectHandler is used to handle a set of aspects which may occur in a number
+ * of elements in the build model.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */ 
-public abstract class ExecutionTask {
-    private ExecutionFrame frame = null;
-    private Location location = Location.UNKNOWN_LOCATION;
-    private BuildEventSupport eventSupport;
-    private BuildElement buildElement;
-
-    void setExecutionFrame(ExecutionFrame frame) {
-        this.frame = frame;
-    }
-
-    /**
-     * Get the ExecutionFrame in which this ExecutionTask is being executed.
-     * to which this task belongs
-     *
-     * @return the execution task's ExecutionFrame.
-     */
-    public ExecutionFrame getExecutionFrame() {
-        return frame;
-    }
-
-    /**
-     * Configure the event support to be used to fire events
-     */
-    void setBuildEventSupport(BuildEventSupport eventSupport) {
-        this.eventSupport = eventSupport;
-    }
+public interface AspectHandler {
+   
+    void setAspectContext(ExecutionContext context);
     
-    /**
-     * Associate this ExecutionTask with a buildElement in the
-     * project model
-     */
-    void setBuildElement(BuildElement buildElement) {
-        this.buildElement = buildElement;
-    }
-    
-    /**
-     * Log a message with the default (INFO) priority.
-     *
-     * @param msg the message to be logged.
-     */
-    public void log(String msg) {
-        log(msg, BuildEvent.MSG_INFO);
-    }
-
-    /**
-     * Log a mesage with the give priority.
-     *
-     * @param the message to be logged.
-     * @param msgLevel the message priority at which this message is to be logged.
-     */
-    public void log(String msg, int msgLevel) {
-        eventSupport.fireMessageLogged(this, buildElement, msg, msgLevel);
-    }
-
-    /**
-     * Called by the project to let the task initialize properly. 
-     *
-     * @throws ExecutionException if someting goes wrong with the build
-     */
-    public void init() throws ExecutionException {}
-
-    /**
-     * Called by the frame to let the task do it's work. 
-     *
-     * @throws ExecutionException if someting goes wrong with the build
-     */
-    abstract public void execute() throws ExecutionException;
-
-    /**
-     * Returns the file location where this task was defined.
-     */
-    public Location getLocation() {
-        return buildElement.getLocation();
-    }
-    
+    void afterConfigElement(Object element) throws ExecutionException ;
 }
 

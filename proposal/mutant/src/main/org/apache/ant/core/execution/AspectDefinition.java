@@ -51,94 +51,74 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 package org.apache.ant.core.execution;
 
-
-import java.io.*;
+import java.util.*;
+import java.net.URL;
 
 /**
- *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- */
-public class ClassIntrospectionException extends Exception {
-    /** 
-     * Exception that might have caused this one. 
-     */
-    private Throwable cause = null;
+ */ 
+public class AspectDefinition {
+    /** The URL of the library which defines this aspect handler */
+    private URL aspectLibraryURL;
+     
+    /** The aspect's tag */
+    private String aspectPrefix;
+    
+    /** The aspect handler's classname */
+    private String aspectClassName;
+    
+    /** The aspect handler's class loader. */
+    private ClassLoader aspectClassLoader;
+    
+    /** The class to which this converter converts. */
+    private Class aspectHandlerClass = null;
 
-    /**
-     * Constructs an exception with the given descriptive message.
-     * @param msg Description of or information about the exception.
-     */
-    public ClassIntrospectionException(String msg) {
-        super(msg);
-    }
-
-    /**
-     * Constructs an exception with the given message and exception as
-     * a root cause.
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
-     */
-    public ClassIntrospectionException(String msg, Throwable cause) {
-        super(msg);
-        this.cause = cause;
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     * @param cause Exception that might have caused this one.
-     */
-    public ClassIntrospectionException(Throwable cause) {
-        super(cause.getMessage());
-        this.cause = cause;
-    }
-
-    /**
-     * Returns the nested exception.
-     *
-     * @return the underlying exception
-     */
-    public Throwable getCause() {
-        return cause;
-    }
-
-    /**
-     * Print the stack trace to System.err
-     */
-    public void printStackTrace() {
-        printStackTrace(System.err);
+    public AspectDefinition(URL aspectLibraryURL, String aspectPrefix, 
+                            String aspectClassName, ClassLoader aspectClassLoader) {
+        this.aspectLibraryURL = aspectLibraryURL;
+        this.aspectPrefix = aspectPrefix;
+        this.aspectClassName = aspectClassName;
+        this.aspectClassLoader = aspectClassLoader;
     }
     
     /**
-     * Print the stack trace to the given PrintStream
+     * Get the URL where this aspect handler was defined.
      *
-     * @param ps the PrintStream onto which the stack trace 
-     *           of this exception is to be printed
+     * @returns a URL of the lib defintion file
      */
-    public void printStackTrace(PrintStream ps) {
-        synchronized (ps) {
-            ps.println(this);
-            if (cause != null) {
-                ps.println("--- Nested Exception ---");
-                cause.printStackTrace(ps);
-            }
-        }
+    public URL getLibraryURL() {
+        return aspectLibraryURL;
     }
     
     /**
-     * Print the stack trace to the given PrintWriter
-     *
-     * @param pw the PrintWriter onto which the stack trace 
-     *           of this exception is to be printed
+     * Get the Aspect's Prefix
      */
-    public void printStackTrace(PrintWriter pw) {
-        synchronized (pw) {
-            pw.println(this);
-            if (cause != null) {
-                pw.println("--- Nested Exception ---");
-                cause.printStackTrace(pw);
-            }
-        }
+    public String getAspectPrefix() {
+        return aspectPrefix;
     }
+
+
+    /**
+     * Get the aspect handler class
+     *
+     * @return a class object for this aspect handler's class
+     */
+    public synchronized Class getAspectHandlerClass() throws ClassNotFoundException {
+        if (aspectHandlerClass == null) {
+            aspectHandlerClass = Class.forName(aspectClassName, true, aspectClassLoader);
+        }
+        return aspectHandlerClass;
+    }
+    
+    /**
+     * Get the classname of the aspect handler that is being defined.
+     */
+    public String getAspectHandlerClassName() {
+        return aspectClassName;
+    }
+    
 }
+

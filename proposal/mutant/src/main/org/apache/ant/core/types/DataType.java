@@ -51,25 +51,81 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.core.model;
+package org.apache.ant.core.types;
 
-import org.apache.ant.core.support.*;
-import java.util.*;
+import org.apache.ant.core.execution.*;
+import java.io.*;
 
 /**
- * A Task is a holder for Task information (attributes and elements)
+ * A DataType is an element which can register a named value in the
+ * ExecutionFrame's context. 
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- */ 
-public class Task extends TaskElement {
+ */
+public abstract class DataType extends AbstractTask {
+    private String reference = null;
+
+    final public void execute() throws ExecutionException {
+    }
+
+
     /**
-     * Create a Task of the given type
-     *
-     * @param location the location of the element
-     * @param type the task's type
+     * Creates an exception that indicates that refid has to be the
+     * only attribute if it is set.  
      */
-    public Task(Location location, String type) {
-        super(location, type);
+    protected ExecutionException tooManyAttributes() {
+        return new ExecutionException("You must not specify more than one attribute" +
+                                      " when using refid" );
+    }
+
+    /**
+     * Creates an exception that indicates that this XML element must
+     * not have child elements if the refid attribute is set.  
+     */
+    protected ExecutionException noChildrenAllowed() {
+        return new ExecutionException("You must not specify nested elements when using refid");
+    }
+
+    /**
+     * Creates an exception that indicates the user has generated a
+     * loop of data types referencing each other.  
+     */
+    protected ExecutionException circularReference() {
+        return new ExecutionException("This data type contains a circular reference.");
     }
     
+    /**
+     * Makes this instance in effect a reference to another DataType
+     * instance.
+     */
+    public void setRefid(String reference) throws ExecutionException {
+        this.reference = reference;
+        // check the reference now
+        getReferencedObject();
+    }
+
+    /**
+     * Has the refid attribute of this element been set?
+     */
+    public boolean isReference() {
+        return reference != null;
+    }
+
+    protected Object getReferencedObject() throws ExecutionException {
+        if (!isReference()) {
+            throw new ExecutionException("You cannot get a referenced value from a data type " + 
+                                         "which does not have the refid attribute");
+        }
+        
+        Object referencedObject = getTaskContext().getDataValue(reference);
+        if (referencedObject == null) {
+            throw new ExecutionException("Unable to locate the reference specified by refid '" +
+                                         getReference() + "'");
+        }
+        return referencedObject;                                         
+    }
+    
+    protected String getReference() {
+        return reference;
+    }
 }

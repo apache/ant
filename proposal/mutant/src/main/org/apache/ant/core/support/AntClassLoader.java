@@ -59,14 +59,17 @@ import java.net.*;
 import java.io.*;
 
 /**
- * A ReverseURLclassLoader is a type of URL classloader which reverse the standard
+ * The AntClassLoader is a type of URL classloader which reverse the standard
  * lookup order to load things from the URLs first and then to use the parent class
  * loader only if the class does not exist in the URLs.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */ 
 public class AntClassLoader extends URLClassLoader {
+    /** A Debug label to print when the Classloader finds or fails to find a class. */
     private String debugLabel = null;
+    
+    /** A flag whihc controls whether messages are logged by the loader */
     private boolean debug = false;
 
     private void dumpURLs() {

@@ -124,7 +124,7 @@ public class ConverterDefinition {
      */
     public synchronized Class getConverterClass() throws ClassNotFoundException {
         if (converterClass == null) {
-            converterClass = converterClassLoader.loadClass(converterClassName);
+            converterClass = Class.forName(converterClassName, true, converterClassLoader);
         }
         return converterClass;
     }
@@ -136,7 +136,7 @@ public class ConverterDefinition {
      */
     public synchronized Class getTargetClass() throws ClassNotFoundException {
         if (targetClass == null) {
-            targetClass = converterClassLoader.loadClass(targetClassName);
+            targetClass = Class.forName(targetClassName, true, converterClassLoader);
         }
         return targetClass;
     }

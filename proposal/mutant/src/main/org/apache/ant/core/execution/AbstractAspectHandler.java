@@ -51,94 +51,30 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 package org.apache.ant.core.execution;
 
-
-import java.io.*;
+import org.apache.ant.core.model.*;
+import org.apache.ant.core.support.*;
+import java.util.*;
+import java.net.URL;
 
 /**
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- */
-public class ClassIntrospectionException extends Exception {
-    /** 
-     * Exception that might have caused this one. 
-     */
-    private Throwable cause = null;
-
-    /**
-     * Constructs an exception with the given descriptive message.
-     * @param msg Description of or information about the exception.
-     */
-    public ClassIntrospectionException(String msg) {
-        super(msg);
+ */ 
+public abstract class AbstractAspectHandler implements AspectHandler {
+    private ExecutionContext aspectContext;
+    
+    public void setAspectContext(ExecutionContext context) {
+        this.aspectContext = context;
     }
 
-    /**
-     * Constructs an exception with the given message and exception as
-     * a root cause.
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
-     */
-    public ClassIntrospectionException(String msg, Throwable cause) {
-        super(msg);
-        this.cause = cause;
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     * @param cause Exception that might have caused this one.
-     */
-    public ClassIntrospectionException(Throwable cause) {
-        super(cause.getMessage());
-        this.cause = cause;
-    }
-
-    /**
-     * Returns the nested exception.
-     *
-     * @return the underlying exception
-     */
-    public Throwable getCause() {
-        return cause;
-    }
-
-    /**
-     * Print the stack trace to System.err
-     */
-    public void printStackTrace() {
-        printStackTrace(System.err);
+    protected ExecutionContext getAspectContext() {
+        return aspectContext;
     }
     
-    /**
-     * Print the stack trace to the given PrintStream
-     *
-     * @param ps the PrintStream onto which the stack trace 
-     *           of this exception is to be printed
-     */
-    public void printStackTrace(PrintStream ps) {
-        synchronized (ps) {
-            ps.println(this);
-            if (cause != null) {
-                ps.println("--- Nested Exception ---");
-                cause.printStackTrace(ps);
-            }
-        }
-    }
-    
-    /**
-     * Print the stack trace to the given PrintWriter
-     *
-     * @param pw the PrintWriter onto which the stack trace 
-     *           of this exception is to be printed
-     */
-    public void printStackTrace(PrintWriter pw) {
-        synchronized (pw) {
-            pw.println(this);
-            if (cause != null) {
-                pw.println("--- Nested Exception ---");
-                cause.printStackTrace(pw);
-            }
-        }
+    public void afterConfigElement(Object element) throws ExecutionException  {
     }
 }
+

@@ -111,7 +111,7 @@ public class Commandline {
     }
     
     public void runAnt(String[] args) {
-        ExecutionManager executionManager = null;
+        ExecutionFrame mainFrame = null;
         try {
             parseArguments(args);
             Project project = getProject();
@@ -121,10 +121,16 @@ public class Commandline {
 
             // Get the list of library components 
             AntLibrary[] libraries = ComponentManager.getComponents();
-            executionManager = new ExecutionManager();
-            executionManager.addLibraries(libraries);
-            executionManager.setProject(project);
-            addBuildListeners(executionManager);
+
+            mainFrame = new ExecutionFrame(project, libraries);
+            
+            // We iterate through all nodes of all projects and make sure every node is OK
+            Map state = new HashMap();
+            Stack visiting = new Stack();
+            List dependencyOrder = new ArrayList();
+    
+            mainFrame.checkTargets(dependencyOrder, state, visiting);
+            addBuildListeners(mainFrame);
         }
         catch (AntException e) {
             Location location = e.getLocation();
@@ -132,19 +138,17 @@ public class Commandline {
             if (location != null && location != Location.UNKNOWN_LOCATION) {
                 System.out.print(location);
             }
-            System.out.print(e.getMessage());
+            System.out.println(e.getMessage());
             
             if (cause != null) {
-                System.out.println();
-                System.out.print("Root cause: " + cause.getClass().getName() + ": " + cause.getMessage());
+                System.out.println("Root cause: " + cause.getClass().getName() + ": " + cause.getMessage());
             }
-            System.out.println();
             
             System.exit(1);
         }
         
         try {
-            executionManager.runBuild(targets);
+            mainFrame.runBuild(targets);
             System.exit(0);
         }
         catch (Exception e) {
@@ -152,18 +156,18 @@ public class Commandline {
         }
     }
     
-    protected void addBuildListeners(ExecutionManager executionManager) 
+    protected void addBuildListeners(ExecutionFrame frame) 
             throws ConfigException {
 
         // Add the default listener
-        executionManager.addBuildListener(createLogger());
+        frame.addBuildListener(createLogger());
 
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             String className = (String) i.next();
             try {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
-                executionManager.addBuildListener(listener);
+                frame.addBuildListener(listener);
             }
             catch(Exception exc) {
                 throw new ConfigException("Unable to instantiate listener " + className, exc);

@@ -67,6 +67,6 @@ public interface TaskContainer {
     /**
      * Add a task to the container.
      */
-    void addExecutionTask(ExecutionTask executionTask) throws ExecutionException;
+    void addTask(Task task) throws ExecutionException;
 }
 

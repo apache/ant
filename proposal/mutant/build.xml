@@ -55,6 +55,9 @@
         <antcall target="build-task">
             <param name="taskset" value="file"/>
         </antcall>
+        <antcall target="build-task">
+            <param name="taskset" value="thread"/>
+        </antcall>
         <copy todir="${build.lib}">
           <fileset dir="lib"/>
         </copy>

@@ -62,7 +62,7 @@ import java.net.*;
 /**
  * 
  */ 
-public class Property extends ExecutionTask {
+public class Property extends AbstractTask {
     private String name;
     private String value;
     private URL file;
@@ -144,9 +144,8 @@ public class Property extends ExecutionTask {
 //
 
     public void execute() throws ExecutionException {
-        ExecutionFrame frame = getExecutionFrame();
         if ((name != null) && (value != null)) {
-            frame.setDataValue(name, value);
+            getTaskContext().setDataValue(name, value);
         }
 
         if (file != null) {
@@ -199,11 +198,11 @@ public class Property extends ExecutionTask {
     }
 
     protected void addProperties(Properties properties) throws ExecutionException {
-        ExecutionFrame frame = getExecutionFrame();
         for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
             String propertyName = (String)i.next();
             String propertyValue = properties.getProperty(propertyName);
-            frame.setDataValue(propertyName, frame.replacePropertyRefs(propertyValue));
+            getTaskContext().setDataValue(propertyName, 
+                                          getTaskContext().replacePropertyRefs(propertyValue));
         }
     }
 

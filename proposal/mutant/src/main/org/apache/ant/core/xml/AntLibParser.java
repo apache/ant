@@ -72,6 +72,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class AntLibParser {
     public static final String TASK_ELEMENT = "taskdef";
     public static final String CONVERTER_ELEMENT = "converter";
+    public static final String ASPECT_ELEMENT = "aspect";
     
     /**
      * The factory used to create SAX parsers.
@@ -191,6 +192,9 @@ public class AntLibParser {
                     else if (qualifiedName.equals(CONVERTER_ELEMENT)) {
                         createConverterDef(attributes);
                     } 
+                    else if (qualifiedName.equals(ASPECT_ELEMENT)) {
+                        createAspectHandler(attributes);
+                    } 
                     else {
                         throw new SAXParseException("Unrecognized element <" + 
                                                      qualifiedName + "> in Ant library definition", getLocator());
@@ -219,7 +223,6 @@ public class AntLibParser {
                                             "<" + TASK_ELEMENT + "> element", getLocator());
             }
             
-            System.out.println("Adding taskdef for " + taskName);
             TaskDefinition taskdef = new TaskDefinition(getSourceURL(), taskName, className, componentLoader);
             library.addTaskDefinition(taskdef);
         }                        
@@ -229,7 +232,7 @@ public class AntLibParser {
             validAttributes.add("target");
             validAttributes.add("classname");
             Map attributeValues 
-                = AttributeValidator.validateAttributes("convert", attributes, 
+                = AttributeValidator.validateAttributes(CONVERTER_ELEMENT, attributes, 
                                                         validAttributes, getLocator());
             String targetClassName = (String)attributeValues.get("target");
             String className = (String)attributeValues.get("classname");
@@ -248,6 +251,30 @@ public class AntLibParser {
             library.addConverterDefinition(converterDef);
         }                        
 
+        public void createAspectHandler(Attributes attributes) throws SAXParseException {
+            Set validAttributes = new HashSet();
+            validAttributes.add("prefix");
+            validAttributes.add("classname");
+            Map attributeValues 
+                = AttributeValidator.validateAttributes(ASPECT_ELEMENT, attributes, 
+                                                        validAttributes, getLocator());
+            String aspectPrefix = (String)attributeValues.get("prefix");
+            String aspectClassname  = (String)attributeValues.get("classname");
+            if (aspectPrefix == null) {
+                throw new SAXParseException("'prefix' attribute is required in a <" 
+                                            + ASPECT_ELEMENT + "> element",
+                                            getLocator());
+            }
+            if (aspectClassname == null) {
+                throw new SAXParseException("'classname' attribute is required in a " + 
+                                            "<" + ASPECT_ELEMENT + "> element", getLocator());
+            }
+            
+            AspectDefinition aspectDef 
+                = new AspectDefinition(getSourceURL(), aspectPrefix, aspectClassname, componentLoader);
+            library.addAspectDefinition(aspectDef);
+        }
+                                
         public void endElement(String namespaceURI, String localName, String qName) {
             if (state == STATE_ROOT_SEEN && qName.equals("antlib")) {
                 state = STATE_FINISHED;

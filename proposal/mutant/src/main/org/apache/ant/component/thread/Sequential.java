@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
+ *    any, must include the following acknowlegement:  
+ *       "This product includes software developed by the 
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
+ *    from this software without prior written permission. For written 
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -52,37 +52,27 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.ant.component.core;
+package org.apache.ant.component.thread;
 
-import java.io.File;
-import java.net.*;
 import org.apache.ant.core.execution.*;
+import java.io.*;
+import java.util.*;
 
 /**
- * Convert between a string and a data type
+ * Sequential execution of contained tasks.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
-public class FileConverter implements AntConverter {
-    private ExecutionFrame frame;
+public class Sequential extends AbstractTask implements TaskContainer {
+    private List tasks = new ArrayList();
     
-    public void init(ExecutionFrame frame) {
-        this.frame = frame;
+    public void addTask(Task nestedTask) {
+        tasks.add(nestedTask);
     }
-    
-    public Object convert(String value, Class type) throws ConversionException {
-        // The string represents a value
-        // get the frame's URL
-        try {
-            URL url = new URL(frame.getBaseURL(), value);
-            if (url.getProtocol().equals("file")) {
-                return new File(url.getFile());
-            }
-            return new File(value);
-        }
-        catch (MalformedURLException e) {
-            throw new ConversionException("Unable to convert " + value 
-                                          + " into a File relative to the project's base");
+
+    public void execute() throws ExecutionException {
+        for (Iterator i = tasks.iterator(); i.hasNext(); ) {
+            Task nestedTask = (Task)i.next();
+            nestedTask.execute();
         }
     }
 }

@@ -63,7 +63,7 @@ import java.io.*;
  *
  * @author costin@dnt.ro
  */
-public class Echo extends ExecutionTask {
+public class Echo extends AbstractTask {
     protected String message = ""; // required
     protected File file = null;
     protected boolean append = false;

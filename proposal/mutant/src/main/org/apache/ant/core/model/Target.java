@@ -100,7 +100,7 @@ public class Target extends BuildElement {
      *
      * @param task the task to be added to the target.
      */
-    public void addTask(Task task) {
+    public void addTask(TaskElement task) {
         tasks.add(task);
     }
     

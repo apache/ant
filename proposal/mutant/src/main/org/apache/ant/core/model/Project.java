@@ -191,7 +191,7 @@ public class Project extends BuildElement {
      * @param task a task to be executed when an execution context
      * is associated with the Project (a non-target task)
      */
-    public void addTask(Task task) {
+    public void addTask(TaskElement task) {
         tasks.add(task);
     }
     

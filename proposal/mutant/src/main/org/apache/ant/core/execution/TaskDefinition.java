@@ -117,7 +117,7 @@ public class TaskDefinition {
      */
     public synchronized Class getExecutionTaskClass() throws ClassNotFoundException {
         if (taskClass == null) {
-            taskClass = taskClassLoader.loadClass(taskClassName);
+            taskClass = Class.forName(taskClassName, true, taskClassLoader);
         }
         return taskClass;
     }

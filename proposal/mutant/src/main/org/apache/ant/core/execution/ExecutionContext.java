@@ -51,94 +51,58 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 package org.apache.ant.core.execution;
 
-
-import java.io.*;
+import org.apache.ant.core.model.*;
+import org.apache.ant.core.support.*;
+import java.util.*;
+import java.net.URL;
 
 /**
+ * The ExecutionContext interface provides a task or apsect instance with access to the 
+ * container-provided services. This is the only way to access the container.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- */
-public class ClassIntrospectionException extends Exception {
-    /** 
-     * Exception that might have caused this one. 
-     */
-    private Throwable cause = null;
+ */ 
+public class ExecutionContext {
+    private ExecutionFrame frame = null;
+    private BuildEventSupport eventSupport;
+    private BuildElement buildElement;
 
-    /**
-     * Constructs an exception with the given descriptive message.
-     * @param msg Description of or information about the exception.
-     */
-    public ClassIntrospectionException(String msg) {
-        super(msg);
+    public ExecutionContext(ExecutionFrame frame, BuildEventSupport eventSupport, 
+                            BuildElement buildElement) {
+        this.frame = frame;
+        this.eventSupport = eventSupport;
+        this.buildElement = buildElement;
     }
 
     /**
-     * Constructs an exception with the given message and exception as
-     * a root cause.
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
-     */
-    public ClassIntrospectionException(String msg, Throwable cause) {
-        super(msg);
-        this.cause = cause;
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     * @param cause Exception that might have caused this one.
-     */
-    public ClassIntrospectionException(Throwable cause) {
-        super(cause.getMessage());
-        this.cause = cause;
-    }
-
-    /**
-     * Returns the nested exception.
+     * Log a mesage with the give priority.
      *
-     * @return the underlying exception
+     * @param the message to be logged.
+     * @param msgLevel the message priority at which this message is to be logged.
      */
-    public Throwable getCause() {
-        return cause;
+    public void log(String msg, int msgLevel) {
+        eventSupport.fireMessageLogged(this, buildElement, msg, msgLevel);
+    }
+
+    public void setDataValue(String name, Object value) throws ExecutionException {
+        frame.setDataValue(name, value);
+    }
+
+    public Object getDataValue(String name) throws ExecutionException {
+        return frame.getDataValue(name);
     }
 
     /**
-     * Print the stack trace to System.err
-     */
-    public void printStackTrace() {
-        printStackTrace(System.err);
-    }
-    
-    /**
-     * Print the stack trace to the given PrintStream
+     * Replace ${} style constructions in the given value with the string value of
+     * the corresponding data types.
      *
-     * @param ps the PrintStream onto which the stack trace 
-     *           of this exception is to be printed
+     * @param value the string to be scanned for property references.
      */
-    public void printStackTrace(PrintStream ps) {
-        synchronized (ps) {
-            ps.println(this);
-            if (cause != null) {
-                ps.println("--- Nested Exception ---");
-                cause.printStackTrace(ps);
-            }
-        }
-    }
-    
-    /**
-     * Print the stack trace to the given PrintWriter
-     *
-     * @param pw the PrintWriter onto which the stack trace 
-     *           of this exception is to be printed
-     */
-    public void printStackTrace(PrintWriter pw) {
-        synchronized (pw) {
-            pw.println(this);
-            if (cause != null) {
-                pw.println("--- Nested Exception ---");
-                cause.printStackTrace(pw);
-            }
-        }
+    public String replacePropertyRefs(String value) throws ExecutionException {
+        return frame.replacePropertyRefs(value);
     }
 }
+

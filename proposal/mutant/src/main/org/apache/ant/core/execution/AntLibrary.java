@@ -54,6 +54,7 @@
 
 package org.apache.ant.core.execution;
 
+import org.apache.ant.core.support.*;
 import java.util.*;
 import java.net.URL;
 
@@ -68,35 +69,51 @@ public class AntLibrary {
     /**
      * The task definitions contained by this library
      */
-    private List taskDefinitions = new ArrayList();
+    private Map taskDefinitions = new HashMap();
     
     /**
      * The converter definitions contained by this library
      */
-    private List converterDefinitions = new ArrayList();
+    private Map converterDefinitions = new HashMap();
+    
+    /**
+     * The aspect handler definitions contained by this library
+     */
+    private Map aspectDefinitions = new HashMap();
     
     /**
      * Add a task definition to this library
      */
     public void addTaskDefinition(TaskDefinition taskDefinition) {
-        taskDefinitions.add(taskDefinition);
+        String taskName = taskDefinition.getName();
+        taskDefinitions.put(taskName, taskDefinition);
     }
-   
+    
+    /**
+     * Add a converter definition to this library
+     */
+    public void addConverterDefinition(ConverterDefinition converterDef) {
+        String targetClassname = converterDef.getTargetClassName();
+        converterDefinitions.put(targetClassname, converterDef);
+    }
+
+    /**
+     * Add an aspect handler definition to this library
+     */
+    public void addAspectDefinition(AspectDefinition aspectDef) {
+        String aspectPrefix = aspectDef.getAspectPrefix();
+        aspectDefinitions.put(aspectPrefix, aspectDef);
+    }
+
     /**
      * Get the task definitions
      *
      * @return an iterator which returns TaskDefinition objects.
      */
     public Iterator getTaskDefinitions() {
-        return taskDefinitions.iterator();
+        return taskDefinitions.values().iterator();
     }
     
-    /**
-     * Add a converter definition to this library
-     */
-    public void addConverterDefinition(ConverterDefinition converterDefinition) {
-        converterDefinitions.add(converterDefinition);
-    }
    
     /**
      * Get the converter definitions
@@ -104,7 +121,17 @@ public class AntLibrary {
      * @return an iterator which returns ConverterDefinition objects.
      */
     public Iterator getConverterDefinitions() {
-        return converterDefinitions.iterator();
+        return converterDefinitions.values().iterator();
     }
+
+    /**
+     * Get the aspect handler definitions
+     *
+     * @return an iterator which returns AspectDefinition objects.
+     */
+    public Iterator getAspectDefinitions() {
+        return aspectDefinitions.values().iterator();
+    }
+    
 }
 

@@ -1,8 +1,17 @@
 <antlib>
+   <!-- Tasks -->
    <taskdef name="property" classname="org.apache.ant.component.core.Property"/>
    <taskdef name="echo" classname="org.apache.ant.component.core.Echo"/>
+   
+   <!-- Data Types -->
+   <taskdef name="patternset" classname="org.apache.ant.core.types.PatternSet"/>
+   
+   <!-- Converters -->
    <converter target="java.io.File" classname="org.apache.ant.component.core.FileConverter"/>
    <converter target="java.net.URL" classname="org.apache.ant.component.core.URLConverter"/>
    <converter target="org.apache.ant.core.types.EnumeratedAttribute" 
               classname="org.apache.ant.component.core.EnumeratedAttributeConverter"/>
+              
+   <!-- Aspect Handlers -->
+   <aspect prefix="ant" classname="org.apache.ant.component.core.AntAspectHandler"/>              
 </antlib>

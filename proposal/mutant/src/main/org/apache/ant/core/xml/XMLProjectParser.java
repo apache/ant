@@ -373,10 +373,10 @@ public class XMLProjectParser {
             }
             else {
                 // everything else is a task
-                TaskHandler taskHandler 
-                    = new TaskHandler(getXMLReader(), this, getLocator(), 
+                TaskElementHandler taskElementHandler 
+                    = new TaskElementHandler(getXMLReader(), this, getLocator(), 
                                       attributes, qualifiedName);
-                project.addTask(taskHandler.getTask());
+                project.addTask(taskElementHandler.getTaskElement());
             }
         }
     
@@ -730,10 +730,10 @@ public class XMLProjectParser {
         public void startElement(String uri, String localName, String qualifiedName,
                                  Attributes attributes) throws SAXParseException {
             // everything is a task
-            TaskHandler taskHandler 
-                = new TaskHandler(getXMLReader(), this, getLocator(), 
-                                  attributes, qualifiedName);
-            target.addTask(taskHandler.getTask());
+            TaskElementHandler taskHandler 
+                = new TaskElementHandler(getXMLReader(), this, getLocator(), 
+                                                 attributes, qualifiedName);
+            target.addTask(taskHandler.getTaskElement());
         }
         
         /**
@@ -747,80 +747,7 @@ public class XMLProjectParser {
     }
 
     /**
-     * A Task Handler is used to parse tasks.
-     */
-    private class TaskHandler extends ElementHandler  {
-        /**
-         * The task being parsed by this handler.
-         */
-        private Task task;
-        
-        /**
-         * Create a task handler to parse the Task element
-         *
-         * @param xmlReader the XML parser being used to parse the task element.
-         * @param parent the parent element handler.
-         * @param locator the SAX locator object used to associate elements with source
-         *        locations.
-         * @param attributes attributes of the task
-         * @param taskTagName the name of the task.
-         */
-        public TaskHandler(XMLReader xmlReader, ContentHandler parent, Locator locator, 
-                           Attributes attributes, String taskTagName) {
-            super(xmlReader, parent, locator);     
-            task = new Task(getLocation(locator), taskTagName);
-            
-            Map aspects = new HashMap();
-            for (int i = 0; i < attributes.getLength(); ++i) {
-                String attributeName = attributes.getQName(i);
-                String attributeValue = attributes.getValue(i);
-                if (attributeName.indexOf(":") != -1) {
-                    // potential aspect attribute
-                    aspects.put(attributeName, attributeValue);
-                }
-                else {
-                    task.addAttribute(attributeName, attributeValue);
-                }
-            }
-            task.setAspects(aspects);
-        }
-        
-        /*
-         * Process a nested element within this task. All nested elements within 
-         * the task are treated as taskelements.
-         *
-         * @param uri The Namespace URI.
-         * @param localName The local name (without prefix).
-         * @param qualifiedName The qualified name (with prefix)
-         * @param attributes The attributes attached to the element. 
-         *
-         * @throws SAXParseException if there is a parsing problem.
-         */
-        public void startElement(String uri, String localName, String qualifiedName,
-                                 Attributes attributes) throws SAXParseException {
-            // everything within a task is a task element
-            TaskElementHandler taskElementHandler 
-                = new TaskElementHandler(getXMLReader(), this, getLocator(), 
-                                         attributes, qualifiedName);
-            task.addTaskElement(taskElementHandler.getTaskElement());                                         
-        }
-        
-        public void characters(char[] buf, int start, int end) throws SAXParseException {
-            task.addText(new String(buf, start, end));
-        }
-
-        /**
-         * Get the task that is being parsed
-         *
-         * @return the task being parsed by this task handler.
-         */
-        public Task getTask() {
-            return task;
-        }
-    }
-    
-    /**
-     * A Task Element Handler parses the nested elements of tasks.
+     * A TaskElementHandler parses the task elements of a build
      */
     private class TaskElementHandler extends ElementHandler  {
         /**
@@ -839,7 +766,7 @@ public class XMLProjectParser {
          * @param elementTagName the name of the task element.
          */
         public TaskElementHandler(XMLReader xmlReader, ContentHandler parent, Locator locator, 
-                                  Attributes attributes, String elementTagName) {
+                                          Attributes attributes, String elementTagName) {
             super(xmlReader, parent, locator);     
             taskElement 
                 = new TaskElement(getLocation(locator), elementTagName);
@@ -873,10 +800,10 @@ public class XMLProjectParser {
         public void startElement(String uri, String localName, String qualifiedName,
                                  Attributes attributes) throws SAXParseException {
             // everything within a task element is also a task element
-            TaskElementHandler taskElementHandler 
+            TaskElementHandler nestedHandler 
                 = new TaskElementHandler(getXMLReader(), this, getLocator(), 
-                                         attributes, qualifiedName);
-            taskElement.addTaskElement(taskElementHandler.getTaskElement());                                         
+                                                 attributes, qualifiedName);
+            taskElement.addTaskElement(nestedHandler.getTaskElement());                                         
         }
         
         public void characters(char[] buf, int start, int end) throws SAXParseException {
