@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,7 +101,7 @@ public class LazyHashtable extends Hashtable {
 
     public boolean containsValue( Object value ) {
         initAll();
-        return super.containsValue( value );
+        return super.contains( value );
     }
 
     public Enumeration keys() {

@@ -76,6 +76,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -161,6 +162,9 @@ import org.xml.sax.XMLReader;
  */
 public class XMLCatalog extends DataType 
     implements Cloneable, EntityResolver, URIResolver {
+
+    /** helper for some File.toURL connversions */
+    private static FileUtils fileUtils = FileUtils.newFileUtils();
 
     //-- Fields ----------------------------------------------------------------
 
@@ -477,7 +481,7 @@ public class XMLCatalog extends DataType
             URL baseURL = null;
             try {
                 if (base == null) {
-                    baseURL = getProject().getBaseDir().toURL();
+                    baseURL = fileUtils.getFileURL(getProject().getBaseDir());
                 }
                 else {
                     baseURL = new URL(base);
@@ -646,7 +650,7 @@ public class XMLCatalog extends DataType
             baseURL = matchingEntry.getBase();
         } else {
             try {
-                baseURL = getProject().getBaseDir().toURL();                
+                baseURL = fileUtils.getFileURL(getProject().getBaseDir());
             }
             catch (MalformedURLException ex) {
                 throw new BuildException("Project basedir cannot be converted to a URL");
@@ -666,7 +670,7 @@ public class XMLCatalog extends DataType
         if (url != null) {
             String fileName = url.getFile();
             if (fileName != null) {
-                log("fileName"+fileName, Project.MSG_DEBUG);
+                log("fileName " + fileName, Project.MSG_DEBUG);
                 File resFile = new File(fileName);
                 if (resFile.exists() && resFile.canRead()) {
                     try {
@@ -743,7 +747,7 @@ public class XMLCatalog extends DataType
             baseURL = matchingEntry.getBase();
         } else {
             try {
-                baseURL = getProject().getBaseDir().toURL();
+                baseURL = fileUtils.getFileURL(getProject().getBaseDir());
             }
             catch (MalformedURLException ex) {
                 throw new BuildException("Project basedir cannot be converted to a URL");

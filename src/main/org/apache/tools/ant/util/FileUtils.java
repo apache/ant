@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -154,11 +154,7 @@ public class FileUtils {
      *      formed.
      */
     public URL getFileURL(File file) throws MalformedURLException {
-        String path = file.getAbsolutePath();
-        if (file.isDirectory()) {
-            path += "/";
-        }
-        return new URL(toURI(path));
+        return new URL(toURI(file.getAbsolutePath()));
     }
 
     /**
@@ -706,8 +702,7 @@ public class FileUtils {
         synchronized (rand) {
             do {
                 result = new File(parent,
-                                  prefix
-                                  + fmt.format(rand.nextInt(Integer.MAX_VALUE))
+                                  prefix + fmt.format(Math.abs(rand.nextInt()))
                                   + suffix);
             } while (result.exists());
         }
@@ -915,6 +910,8 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String toURI(String path) {
+        boolean isDir = (new File(path)).isDirectory();
+
         StringBuffer sb = new StringBuffer("file:");
 
         // catch exception if normalize thinks this is not an absolute path
@@ -931,6 +928,7 @@ public class FileUtils {
         }
 
         path = path.replace('\\', '/');
+        
         CharacterIterator iter = new StringCharacterIterator(path);
         for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
@@ -941,6 +939,9 @@ public class FileUtils {
             } else {
                 sb.append(c);
             }
+        }
+        if (isDir && !path.endsWith("/")) {
+            sb.append('/');
         }
         return sb.toString();
     }
