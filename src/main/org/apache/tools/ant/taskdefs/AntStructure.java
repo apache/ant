@@ -79,6 +79,8 @@ import java.io.IOException;
  *
  * @version $Revision$
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="xml"
  */
 

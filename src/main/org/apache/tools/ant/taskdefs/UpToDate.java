@@ -77,6 +77,8 @@ import java.util.Vector;
  * @author Hiroaki Nakamura <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
+ * @since Ant 1.2
+ *
  * @ant.task category="control"
  */
 
@@ -162,15 +164,19 @@ public class UpToDate extends Task implements Condition {
      */
     public boolean eval() {
         if (sourceFileSets.size() == 0 && _sourceFile == null) {
-            throw new BuildException("At least one srcfile or a nested <srcfiles> element must be set.");
+            throw new BuildException("At least one srcfile or a nested "
+                                     + "<srcfiles> element must be set.");
         }
 
         if (sourceFileSets.size() > 0 && _sourceFile != null) {
-            throw new BuildException("Cannot specify both the srcfile attribute and a nested <srcfiles> element.");
+            throw new BuildException("Cannot specify both the srcfile "
+                                     + "attribute and a nested <srcfiles> "
+                                     + "element.");
         }
 
         if (_targetFile == null && mapperElement == null) {
-            throw new BuildException("The targetfile attribute or a nested mapper element must be set.");
+            throw new BuildException("The targetfile attribute or a nested "
+                                     + "mapper element must be set.");
         }
 
         // if the target file is not there, then it can't be up-to-date
@@ -180,8 +186,9 @@ public class UpToDate extends Task implements Condition {
 
         // if the source file isn't there, throw an exception
         if (_sourceFile != null && !_sourceFile.exists()) {
-            throw new BuildException(_sourceFile.getAbsolutePath() + " not found.");
-        } 
+            throw new BuildException(_sourceFile.getAbsolutePath() 
+                                     + " not found.");
+        }
 
         Enumeration enum = sourceFileSets.elements();
         boolean upToDate = true;
@@ -216,10 +223,10 @@ public class UpToDate extends Task implements Condition {
     public void execute() throws BuildException {
         boolean upToDate = eval();
         if (upToDate) {
-            this.project.setProperty(_property, this.getValue());
+            this.project.setNewProperty(_property, getValue());
             if (mapperElement == null) {
-                log("File \"" + _targetFile.getAbsolutePath() + "\" is up-to-date.",
-                    Project.MSG_VERBOSE);
+                log("File \"" + _targetFile.getAbsolutePath() 
+                    + "\" is up-to-date.", Project.MSG_VERBOSE);
             } else {
                 log("All target files are up-to-date.",
                     Project.MSG_VERBOSE);

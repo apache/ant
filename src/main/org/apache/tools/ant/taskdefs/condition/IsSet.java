@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@ import org.apache.tools.ant.ProjectComponent;
  * Condition that tests whether a given property has been set.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @since Ant 1.5
  * @version $Revision$
  */
 public class IsSet extends ProjectComponent implements Condition {
@@ -70,7 +71,8 @@ public class IsSet extends ProjectComponent implements Condition {
 
     public boolean eval() throws BuildException {
         if (property == null) {
-            throw new BuildException("No property specified for isset condition");
+            throw new BuildException("No property specified for isset "
+                                     + "condition");
         }
         
         return getProject().getProperty(property) != null;

@@ -63,6 +63,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @since Ant 1.4
  * @version $Revision$
  */
 public class Os implements Condition {

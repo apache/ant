@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,9 +69,10 @@ import java.net.URL;
  *   url - the URL of the request.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
+ * @since Ant 1.5
  */
 public class Http extends ProjectComponent implements Condition {
-    String spec = null;
+    private String spec = null;
 
     public void setUrl(String url) {
         spec = url;
@@ -79,7 +80,7 @@ public class Http extends ProjectComponent implements Condition {
 
     public boolean eval() throws BuildException {
         if (spec == null) {
-            throw new BuildException("No url specified in HTTP task");
+            throw new BuildException("No url specified in http condition");
         }
         log("Checking for " + spec, Project.MSG_VERBOSE);
         try {
@@ -89,7 +90,8 @@ public class Http extends ProjectComponent implements Condition {
                 if (conn instanceof HttpURLConnection) {
                     HttpURLConnection http = (HttpURLConnection) conn;
                     int code = http.getResponseCode();
-                    log("Result code for " + spec + " was " + code, Project.MSG_VERBOSE);
+                    log("Result code for " + spec + " was " + code, 
+                        Project.MSG_VERBOSE);
                     if (code > 0 && code < 500) {
                         return true;
                     } else {

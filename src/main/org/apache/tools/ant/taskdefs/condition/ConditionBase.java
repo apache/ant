@@ -70,6 +70,7 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * and the "container" conditions are in sync.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @since Ant 1.4
  * @version $Revision$
  */
 public abstract class ConditionBase extends ProjectComponent {
@@ -88,7 +89,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     protected final Enumeration getConditions() {
-        return new ConditionEnumeration();
+        return conditions.elements();
     }
 
     /**
@@ -182,31 +183,4 @@ public abstract class ConditionBase extends ProjectComponent {
      */
     public void addContains(Contains test) {conditions.addElement(test);}
     
-    /**
-     * Inner class that configures those conditions with a project
-     * instance that need it.
-     *
-     * @since 1.1
-     */
-    private class ConditionEnumeration implements Enumeration {
-        private int currentElement = 0;
-
-        public boolean hasMoreElements() {
-            return countConditions() > currentElement;
-        }
-
-        public Object nextElement() throws NoSuchElementException {
-            Object o = null;
-            try {
-                o = conditions.elementAt(currentElement++);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                throw new NoSuchElementException();
-            }
-            
-            if (o instanceof ProjectComponent) {
-                ((ProjectComponent) o).setProject(getProject());
-            }
-            return o;
-        }
-    }
 }

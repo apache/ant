@@ -59,8 +59,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Compares two files for bitwise equality based on size and content. Timestamps
- * are not looked at at all.
+ * Compares two files for bitwise equality based on size and
+ * content. Timestamps are not looked at at all.
  *
  * @author Steve Loughran
  * @version $Revision$
@@ -109,7 +109,8 @@ public class FilesMatch implements Condition {
 
         //validate
         if (file1 == null || file2 == null) {
-            throw new BuildException("both file1 and file2 are required in filesmatch");
+            throw new BuildException("both file1 and file2 are required in "
+                                     + "filesmatch");
         }
 
         //#now match the files
@@ -117,7 +118,8 @@ public class FilesMatch implements Condition {
         try {
             matches=fu.contentEquals(file1, file2);
         } catch(IOException ioe) {
-            throw new BuildException("when comparing files", ioe);
+            throw new BuildException("when comparing files: "+ioe.getMessage(),
+                                     ioe);
         }
         return matches;
     }

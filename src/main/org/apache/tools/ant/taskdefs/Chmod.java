@@ -71,6 +71,8 @@ import org.apache.tools.ant.types.PatternSet;
  * @author Mariusz Nowostawski (Marni) <a href="mailto:mnowostawski@infoscience.otago.ac.nz">mnowostawski@infoscience.otago.ac.nz</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="filesystem"
  */
 public class Chmod extends ExecuteOn {

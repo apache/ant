@@ -75,7 +75,9 @@ import java.io.IOException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
  *
- * @ant.task name="execon"
+ * @since Ant 1.2
+ *
+ * @ant.task name="apply" category="control"
  */
 public class ExecuteOn extends ExecTask {
 

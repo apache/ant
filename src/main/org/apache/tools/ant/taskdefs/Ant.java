@@ -90,6 +90,8 @@ import java.util.Enumeration;
  *
  * @author costin@dnt.ro
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="control"
  */
 public class Ant extends Task {

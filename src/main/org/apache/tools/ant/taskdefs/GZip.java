@@ -68,6 +68,8 @@ import java.util.zip.GZIPOutputStream;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="packaging"
  */
 

@@ -69,6 +69,8 @@ import java.util.zip.GZIPInputStream;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="packaging"
  */
 

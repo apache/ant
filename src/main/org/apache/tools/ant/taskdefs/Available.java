@@ -73,6 +73,8 @@ import org.apache.tools.ant.util.StringUtils;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="control"
  */
 public class Available extends Task implements Condition {

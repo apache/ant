@@ -60,6 +60,7 @@ import org.apache.tools.ant.BuildException;
  * Simple String comparison condition.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @since Ant 1.4
  * @version $Revision$
  */
 public class Equals implements Condition {
@@ -96,7 +97,8 @@ public class Equals implements Condition {
 
     public boolean eval() throws BuildException {
         if (arg1 == null || arg2 == null) {
-            throw new BuildException("both arg1 and arg2 are required in equals");
+            throw new BuildException("both arg1 and arg2 are required in "
+                                     + "equals");
         }
 
         if (trim) {

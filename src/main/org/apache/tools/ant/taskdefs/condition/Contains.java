@@ -101,7 +101,8 @@ public class Contains implements Condition {
      */
     public boolean eval() throws BuildException {
         if (string == null || subString == null) {
-            throw new BuildException("both string and substring are required in contains");
+            throw new BuildException("both string and substring are required "
+                                     + "in contains");
         }
 
         return caseSensitive 

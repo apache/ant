@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,10 +66,11 @@ import java.io.IOException;
  *   port - the port number of the socket.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
+ * @since Ant 1.5
  */
 public class Socket extends ProjectComponent implements Condition {
-    String server = null;
-    int port = 0;
+    private String server = null;
+    private int port = 0;
 
     public void setServer(String server) {
         this.server = server;
@@ -81,12 +82,14 @@ public class Socket extends ProjectComponent implements Condition {
 
     public boolean eval() throws BuildException {
         if (server == null) {
-            throw new BuildException("No server specified in Socket task");
+            throw new BuildException("No server specified in socket "
+                                     + "condition");
         }
         if (port == 0) {
-            throw new BuildException("No port specified in Socket task");
+            throw new BuildException("No port specified in socket condition");
         }
-        log("Checking for listener at " + server + ":" + port, Project.MSG_VERBOSE);
+        log("Checking for listener at " + server + ":" + port, 
+            Project.MSG_VERBOSE);
         try {
             java.net.Socket socket = new java.net.Socket(server, port);
         } catch (IOException e) {
