@@ -160,4 +160,11 @@ public class CommandlineJava implements Cloneable {
         c.vmVersion = vmVersion;
         return c;
     }
+
+    /**
+     * Clear out the java arguments.
+     */
+    public void clearJavaArgs() {
+        javaCommand.clearArgs();
+    }
 }

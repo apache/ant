@@ -335,4 +335,11 @@ public class Commandline implements Cloneable {
         arguments.removeAllElements();
     }
 
+    /**
+     * Clear out the arguments but leave the executable in place for another operation.
+     */
+    public void clearArgs() {
+        arguments.removeAllElements();
+    }
+        
 }

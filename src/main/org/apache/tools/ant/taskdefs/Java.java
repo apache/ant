@@ -243,6 +243,8 @@ public class Java extends Task {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
                                   null);
+        
+        
         exe.setAntRun(project);
 
         if (dir == null) dir = project.getBaseDir();
@@ -269,4 +271,10 @@ public class Java extends Task {
         run(cmdj);
     }
 
+    /**
+     * Clear out the arguments to this java task.
+     */
+    public void clearArgs() {
+        cmdl.clearJavaArgs();
+    }
 }
