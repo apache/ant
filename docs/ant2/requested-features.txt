@@ -57,6 +57,9 @@ enhancements of existing tasks.
 
 * a reachable task that works much like available for network URLs.
 
+* make PATH handling consistent. Every task that has a PATH attribute
+  must also accept references to PATHs.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
