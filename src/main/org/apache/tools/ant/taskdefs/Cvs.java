@@ -97,9 +97,16 @@ public class Cvs extends Exec {
 	this.pack = p;
     }
 
-    public void setTag(String p) {
-	this.tag = p;
-    }
+    public void setTag(String p) { 
+        // Check if not real tag => set it to null 
+        if (p != null) { 
+            if (p.trim().equals("")) 
+                p = null; 
+        } 
+
+        this.tag = p; 
+    } 
+
 }
 
 
