@@ -29,22 +29,22 @@ public class CBZip2InputStream
     private final static int NO_RAND_PART_C_STATE = 7;
 
     private CRC m_crc = new CRC();
-    private boolean m_inUse[] = new boolean[ 256 ];
-    private char m_seqToUnseq[] = new char[ 256 ];
-    private char m_unseqToSeq[] = new char[ 256 ];
-    private char m_selector[] = new char[ MAX_SELECTORS ];
-    private char m_selectorMtf[] = new char[ MAX_SELECTORS ];
+    private boolean[] m_inUse = new boolean[ 256 ];
+    private char[] m_seqToUnseq = new char[ 256 ];
+    private char[] m_unseqToSeq = new char[ 256 ];
+    private char[] m_selector = new char[ MAX_SELECTORS ];
+    private char[] m_selectorMtf = new char[ MAX_SELECTORS ];
 
     /*
      * freq table collected to save a pass over the data
      * during decompression.
      */
-    private int m_unzftab[] = new int[ 256 ];
+    private int[] m_unzftab = new int[ 256 ];
 
-    private int m_limit[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-    private int m_base[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-    private int m_perm[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-    private int m_minLens[] = new int[ N_GROUPS ];
+    private int[][] m_limit = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+    private int[][] m_base = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+    private int[][] m_perm = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+    private int[] m_minLens = new int[ N_GROUPS ];
 
     private boolean m_streamEnd;
     private int m_currentChar = -1;
@@ -186,7 +186,7 @@ public class CBZip2InputStream
 
     private void setupBlock()
     {
-        int cftab[] = new int[ 257 ];
+        int[] cftab = new int[ 257 ];
         char ch;
 
         cftab[ 0 ] = 0;
@@ -201,7 +201,7 @@ public class CBZip2InputStream
 
         for( int i = 0; i <= m_last; i++ )
         {
-            ch = (char)m_ll8[ i ];
+            ch = m_ll8[ i ];
             m_tt[ cftab[ ch ] ] = i;
             cftab[ ch ]++;
         }
@@ -277,7 +277,7 @@ public class CBZip2InputStream
 
     private void setupNoRandPartC()
     {
-        if( j2 < (int)z )
+        if( j2 < z )
         {
             m_currentChar = ch2;
             m_crc.updateCRC( ch2 );
@@ -308,7 +308,7 @@ public class CBZip2InputStream
                 }
             }
             m_rNToGo--;
-            ch2 ^= (int)( ( m_rNToGo == 1 ) ? 1 : 0 );
+            ch2 ^= ( ( m_rNToGo == 1 ) ? 1 : 0 );
             i2++;
 
             m_currentChar = ch2;
@@ -362,7 +362,7 @@ public class CBZip2InputStream
 
     private void setupRandPartC()
     {
-        if( j2 < (int)z )
+        if( j2 < z )
         {
             m_currentChar = ch2;
             m_crc.updateCRC( ch2 );
@@ -400,7 +400,7 @@ public class CBZip2InputStream
             m_unzftab[ i ] = 0;
         }
 
-        final char yy[] = new char[ 256 ];
+        final char[] yy = new char[ 256 ];
         for( int i = 0; i <= 255; i++ )
         {
             yy[ i ] = (char)i;
@@ -615,7 +615,7 @@ public class CBZip2InputStream
 
     private int readVariableSizedInt( final int numBits )
     {
-        return (int)bsR( numBits );
+        return bsR( numBits );
     }
 
     private char readUnsignedChar()
@@ -847,7 +847,7 @@ public class CBZip2InputStream
         /*
          * Undo the MTF values for the selectors.
          */
-        final char pos[] = new char[ N_GROUPS ];
+        final char[] pos = new char[ N_GROUPS ];
         for( char v = 0; v < groupCount; v++ )
         {
             pos[ v ] = v;
@@ -866,7 +866,7 @@ public class CBZip2InputStream
             m_selector[ i ] = tmp;
         }
 
-        final char len[][] = new char[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+        final char[][] len = new char[ N_GROUPS ][ MAX_ALPHA_SIZE ];
         /*
          * Now the coding tables
          */
@@ -916,7 +916,7 @@ public class CBZip2InputStream
 
     private void buildInUseTable()
     {
-        final boolean inUse16[] = new boolean[ 16 ];
+        final boolean[] inUse16 = new boolean[ 16 ];
 
         /*
          * Receive the mapping table
