@@ -65,6 +65,7 @@ import java.util.List;
 import java.util.Locale;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.taskdefs.PreSetDef;
 
 /**
  * Helper class that collects the methods a task or nested element
@@ -286,9 +287,12 @@ public final class IntrospectionHelper implements BuildListener {
                 if (nestedCreators.get(propName) == null) {
                     nestedTypes.put(propName, returnType);
                     nestedCreators.put(propName, new NestedCreator() {
-
                         public boolean isPolyMorphic() {
                             return false;
+                        }
+
+                        public Object getRealObject() {
+                            return null;
                         }
 
                         public Class getElementClass() {
@@ -330,6 +334,10 @@ public final class IntrospectionHelper implements BuildListener {
 
                             public boolean isPolyMorphic() {
                                 return true;
+                            }
+
+                            public Object getRealObject() {
+                                return null;
                             }
 
                             public Class getElementClass() {
@@ -385,6 +393,10 @@ public final class IntrospectionHelper implements BuildListener {
 
                             public boolean isPolyMorphic() {
                                 return true;
+                            }
+
+                            public Object getRealObject() {
+                                return null;
                             }
 
                             public Class getElementClass() {
@@ -608,6 +620,10 @@ public final class IntrospectionHelper implements BuildListener {
                         return false;
                     }
                     public Class getElementClass() {
+                        return null;
+                    }
+
+                    public Object getRealObject() {
                         return null;
                     }
 
@@ -1113,6 +1129,14 @@ public final class IntrospectionHelper implements BuildListener {
         }
 
         /**
+         * @return the real object (used currently only
+         *         for preset def)
+         */
+        public Object getRealObject() {
+            return nestedCreator.getRealObject();
+        }
+
+        /**
          * Stores the nested element object using a storage method
          * determined by introspection.
          *
@@ -1147,6 +1171,7 @@ public final class IntrospectionHelper implements BuildListener {
     private interface NestedCreator {
         boolean isPolyMorphic();
         Class getElementClass();
+        Object getRealObject();
         Object create(Project project, Object parent, Object child)
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
         void store(Object parent, Object child)
@@ -1252,8 +1277,14 @@ public final class IntrospectionHelper implements BuildListener {
         if (addedObject == null) {
             return null;
         }
+        Object rObject = addedObject;
+        if (addedObject instanceof PreSetDef.PreSetDefinition) {
+            rObject = ((PreSetDef.PreSetDefinition) addedObject).createObject(
+                project);
+        }
         final Method method = addMethod;
         final Object nestedObject = addedObject;
+        final Object realObject = rObject;
 
         return new NestedCreator() {
             public boolean isPolyMorphic() {
@@ -1266,15 +1297,20 @@ public final class IntrospectionHelper implements BuildListener {
             public Object create(Project project, Object parent, Object ignore)
                 throws InvocationTargetException, IllegalAccessException {
                 if (!method.getName().endsWith("Configured")) {
-                    method.invoke(parent, new Object[]{nestedObject});
+                    method.invoke(parent, new Object[]{realObject});
                 }
                 return nestedObject;
             }
+
+            public Object getRealObject() {
+                return realObject;
+            }
+
             public void store(Object parent, Object child)
                 throws InvocationTargetException, IllegalAccessException,
                 InstantiationException {
                 if (method.getName().endsWith("Configured")) {
-                    method.invoke(parent, new Object[]{nestedObject});
+                    method.invoke(parent, new Object[]{realObject});
                 }
             }
         };

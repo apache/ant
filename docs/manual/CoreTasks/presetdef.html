@@ -3,10 +3,15 @@
   <head>
     <meta http-equiv="Content-Language" content="en-us"></meta>
     <title>PreSetDef Task</title>
+    <style type="text/css">
+      <!--
+           .code { background: #EFEFEF; margin-top: }
+           -->
+    </style>
   </head>
   
   <body>
-
+    
     <h2><a name="presetdef">PreSetDef</a></h2>
     <h3>Description</h3>
     <p>
@@ -43,35 +48,67 @@
       This nested element can be any other type or task. The attributes
       and elements that need to be preset are placed here.
     </p>
-
+    
     <h3>Examples</h3>
-    <p>
-      The following fragment defines a javac task with the debug and deprecation
+      The following fragment defines a javac task with the debug, deprecation
+      srcdir and destdir
       attributes set. It also has a src element to source files from a generated
       directory.
-    </p>
     <blockquote>
-      <pre>
+<pre class="code">
 &lt;presetdef name="my.javac"&gt;
-   &lt;javac debug="${debug}" deprecation="${deprecation}"&gt;
+   &lt;javac debug="${debug}" deprecation="${deprecation}"
+          srcdir="${src.dir}" destdir="${classes.dir}"&gt;
       &lt;src path="${gen.dir}"/&gt;
    &lt;/javac&gt;
 &lt;/presetdef&gt;
-      </pre>
+</pre>
     </blockquote>
-    <p>
       This can be used as a normal javac task - example:
-    </p>
     <blockquote>
-      <pre>
-&lt;my.javac src="${src.dir}" destdir="${classes.dir}"/&gt;
-      </pre>
+<pre class="code">
+&lt;my.javac/&gt;
+</pre>
     </blockquote>
-
-<hr>
-<p align="center">Copyright &copy; 2003 Apache Software
-Foundation. All rights Reserved.</p>
-
-</body>
+      The attributes specified in the preset task may be overridden - i.e.
+      they may be seen as optional attributes - example:
+    <blockquote>
+<pre class="code">
+&lt;my.javac srcdir="${test.src}" deprecation="no"/&gt;
+</pre>
+    </blockquote>
+      One may put a presetdef definition in an antlib.
+      For example suppose the jar file antgoodies.jar has
+      the antlib.xml as follows:
+    <blockquote>
+<pre class="code">
+&lt;antlib&gt;
+   &lt;taskdef resource="com/acme/antgoodies/tasks.properties"/&gt;
+   &lt;!-- Implement the common use of the javac command --&gt;
+   &lt;presetdef name="javac"&gt;
+      &lt;javac deprecation="${deprecation}" debug="${debug}"
+             srcdir="src" destdir="classes"/&gt;
+   &lt;/presetdef&gt;
+&lt;/antlib&gt;
+</pre>
+    </blockquote>
+      One may then use this in a build file as follows:
+    <blockquote>
+<pre class="code">
+&lt;project default="example" xmlns:antgoodies="antlib:com.acme.antgoodies"&gt;
+   &lt;target name="example"&gt;
+      &lt;!-- Compile source --&gt;
+      &lt;antgoodies:javac srcdir="src/main"/&gt;
+      &lt;!-- Compile test code --&gt;
+      &lt;antgoodies:javac srcdir="src/test"/&gt;
+   &lt;/target&gt;
+&lt;/project&gt;
+</pre>
+    </blockquote>
+    <hr></hr>
+    <p align="center">Copyright &copy; 2003 Apache Software
+      Foundation. All rights Reserved.</p>
+    
+  </body>
 </html>
 

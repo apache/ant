@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.io.IOException;
+import org.apache.tools.ant.taskdefs.PreSetDef;
 
 /**
  * Wrapper class that holds all the information necessary to create a task
@@ -94,6 +95,9 @@ public class UnknownElement extends Task {
      * List of child elements (UnknownElements).
      */
     private List/*<UnknownElement>*/ children = null;
+
+    /** Specifies if a predefined definition has been done */
+    private boolean presetDefed = false;
 
     /**
      * Creates an UnknownElement for the given element name.
@@ -372,6 +376,31 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * This is used then the realobject of the UE is a PreSetDefinition.
+     * This is also used when a presetdef is used on a presetdef
+     * The attributes, elements and text are applied to this
+     * UE.
+     *
+     * @param u an UnknownElement containing the attributes, elements and text
+     */
+    public void applyPreSet(UnknownElement u) {
+        if (presetDefed) {
+            return;
+        }
+        // Do the runtime
+        getWrapper().applyPreSet(u.getWrapper());
+        if (u.children != null) {
+            List newChildren = new ArrayList();
+            newChildren.addAll(u.children);
+            if (children != null) {
+                newChildren.addAll(children);
+            }
+            children = newChildren;
+        }
+        presetDefed = true;
+    }
+
+    /**
      * Creates a named task or data type. If the real object is a task,
      * it is configured up to the init() stage.
      *
@@ -386,9 +415,17 @@ public class UnknownElement extends Task {
             getProject());
         String name = ue.getComponentName();
         Object o = helper.createComponent(ue, ue.getNamespace(), name);
+
         if (o == null) {
             throw getNotFoundException("task or type", name);
         }
+
+        if (o instanceof PreSetDef.PreSetDefinition) {
+            PreSetDef.PreSetDefinition def = (PreSetDef.PreSetDefinition) o;
+            o = def.createObject(ue.getProject());
+            ue.applyPreSet(def.getPreSets());
+        }
+
         if (o instanceof Task) {
             Task task = (Task) o;
             task.setOwningTarget(getOwningTarget());
@@ -521,6 +558,12 @@ public class UnknownElement extends Task {
                 ih.getElementCreator(getProject(), parent, childName);
             creator.setPolyType(childWrapper.getPolyType());
             Object realChild = creator.create();
+            if (realChild instanceof PreSetDef.PreSetDefinition) {
+                PreSetDef.PreSetDefinition def =
+                    (PreSetDef.PreSetDefinition) realChild;
+                realChild = creator.getRealObject();
+                child.applyPreSet(def.getPreSets());
+            }
             childWrapper.setCreator(creator);
             childWrapper.setProxy(realChild);
             if (realChild instanceof Task) {
