@@ -18,6 +18,15 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     version="1.0">
+  <xsl:param name="title"/>
+  <xsl:param name="module"/>
+  <xsl:param name="cvsweb"/>
+
+  <xsl:output method="html" indent="yes"/>
+
+  <!-- Copy standard document elements.  Elements that
+       should be ignored must be filtered by apply-templates
+       tags. -->
   <xsl:template match="*">
     <xsl:copy>
       <xsl:copy-of select="attribute::*[. != '']"/>
