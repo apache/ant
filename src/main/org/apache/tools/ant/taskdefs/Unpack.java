@@ -70,17 +70,41 @@ public abstract class Unpack extends Task {
     protected File source;
     protected File dest;
 
+    /**
+     * @deprecated setSrc(String) is deprecated and is replaced with
+     *             setSrc(File) to make Ant's Introspection
+     *             mechanism do the work and also to encapsulate operations on
+     *             the type in its own class.
+     */
     public void setSrc(String src) {
-        source = project.resolveFile(src);
+        log("DEPRECATED - The setSrc(String) method has been deprecated."
+            + " Use setSrc(File) instead.");
+        setSrc(project.resolveFile(src));
     }
 
+    /**
+     * @deprecated setDest(String) is deprecated and is replaced with
+     *             setDest(File) to make Ant's Introspection
+     *             mechanism do the work and also to encapsulate operations on
+     *             the type in its own class.
+     */
     public void setDest(String dest) {
-        this.dest = project.resolveFile(dest);
+        log("DEPRECATED - The setDest(String) method has been deprecated."
+            + " Use setDest(File) instead.");
+        setDest(project.resolveFile(dest));
+    }
+
+    public void setSrc(File src) {
+        source = src;
+    }
+
+    public void setDest(File dest) {
+        this.dest = dest;
     }
 
     private void validate() throws BuildException {
         if (source == null) {
-            throw new BuildException("No Src for gunzip specified", location);
+            throw new BuildException("No Src specified", location);
         }
 
         if (!source.exists()) {
