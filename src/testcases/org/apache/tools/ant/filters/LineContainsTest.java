@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,8 @@ public class LineContainsTest extends BuildFileTest {
         executeTarget("testLineContains");
         File expected = getProject().resolveFile("expected/linecontains.test");
         File result = getProject().resolveFile("result/linecontains.test");
-        assertTrue(FileUtils.newFileUtils().contentEquals(expected, result));
+        FileUtils fu = FileUtils.newFileUtils();
+        assertTrue(fu.contentEquals(expected, result));
     }
     
 }
