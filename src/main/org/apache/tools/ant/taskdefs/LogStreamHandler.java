@@ -54,11 +54,13 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * Logs standard output and error of a subprocess to the log system of ant.
@@ -79,4 +81,14 @@ public class LogStreamHandler extends PumpStreamHandler {
               new LogOutputStream(task, errlevel));
     }
 
+    public void stop() {
+        super.stop();
+        try {
+            getErr().close();
+            getOut().close();
+        } catch (IOException e) {
+            // plain impossible
+            throw new BuildException(e);
+        }
+    }
 }

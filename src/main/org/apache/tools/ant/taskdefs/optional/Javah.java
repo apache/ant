@@ -311,14 +311,14 @@ public class Javah extends Task {
         PrintStream err = System.err;
         PrintStream out = System.out;
 
+        PrintStream logstr = 
+            new PrintStream(new LogOutputStream(this, Project.MSG_WARN));
         try {
             // Javac uses logstr to change the output stream and calls
             // the constructor's invoke method to create a compiler instance
             // dynamically. However, javah has a different interface and this
             // makes it harder, so here's a simple alternative.
             //------------------------------------------------------------------
-            PrintStream logstr = 
-                new PrintStream(new LogOutputStream(this, Project.MSG_WARN));
             System.setOut(logstr);
             System.setErr(logstr);
             com.sun.tools.javah.Main main = new com.sun.tools.javah.Main( cmd.getArguments() );
@@ -338,6 +338,7 @@ public class Javah extends Task {
         } finally {
             System.setErr(err);
             System.setOut(out);
+            logstr.close();
         }
     }
 

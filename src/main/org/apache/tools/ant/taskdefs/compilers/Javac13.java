@@ -86,10 +86,10 @@ public class Javac13 extends DefaultCompilerAdapter {
         PrintStream err = System.err;
         PrintStream out = System.out;
 
+        PrintStream logstr = 
+            new PrintStream(new LogOutputStream(attributes, Project.MSG_WARN));
         // Use reflection to be able to build on all JDKs >= 1.1:
         try {
-            PrintStream logstr = 
-                new PrintStream(new LogOutputStream(attributes, Project.MSG_WARN));
             System.setOut(logstr);
             System.setErr(logstr);
             Class c = Class.forName ("com.sun.tools.javac.Main");
@@ -108,6 +108,7 @@ public class Javac13 extends DefaultCompilerAdapter {
         } finally {
             System.setErr(err);
             System.setOut(out);
+            logstr.close();
         }
     }
 }

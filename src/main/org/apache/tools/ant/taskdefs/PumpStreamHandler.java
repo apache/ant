@@ -113,6 +113,20 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         try {
             errorThread.join();
         } catch(InterruptedException e) {}
+        try {
+            err.flush();
+        } catch (IOException e) {}
+        try {
+            out.flush();
+        } catch (IOException e) {}
+    }
+
+    protected OutputStream getErr() {
+        return err;
+    }
+
+    protected OutputStream getOut() {
+        return out;
     }
 
     protected void createProcessOutputPump(InputStream is, OutputStream os) {

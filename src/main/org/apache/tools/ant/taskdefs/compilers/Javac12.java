@@ -79,10 +79,10 @@ public class Javac12 extends DefaultCompilerAdapter {
         attributes.log("Using classic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJavacCommand();
 
+        OutputStream logstr = new LogOutputStream(attributes, Project.MSG_WARN);
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            OutputStream logstr = new LogOutputStream(attributes, Project.MSG_WARN);
             Class c = Class.forName("sun.tools.javac.Main");
             Constructor cons = c.getConstructor(new Class[] { OutputStream.class, String.class });
             Object compiler = cons.newInstance(new Object[] { logstr, "javac" });
@@ -102,6 +102,13 @@ public class Javac12 extends DefaultCompilerAdapter {
                 throw (BuildException) ex;
             } else {
                 throw new BuildException("Error starting classic compiler: ", ex, location);
+            }
+        } finally {
+            try {
+                logstr.close();
+            } catch (IOException e) {
+                // plain impossible
+                throw new BuildException(e);
             }
         }
     }
