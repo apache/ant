@@ -281,20 +281,23 @@ public class Javac extends MatchingTask {
      * Executes the task.
      */
     public void execute() throws BuildException {
-        // first off, make sure that we've got a srcdir and destdir
+        // first off, make sure that we've got a srcdir
 
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!", location);
         }
-        
         String [] list = src.list();
         if (list.length == 0) {
             throw new BuildException("srcdir attribute must be set!", location);
         }
         
+        
         if (destDir == null) {
-            throw new BuildException("destdir attribute must be set!", location);
+            destDir = project.resolveFile(list[0]);
+            log("destdir set to "+destDir.getPath()+" from srcdir attribute", 
+                Project.MSG_INFO);
         }
+
         if (!destDir.isDirectory()) {
             throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", location);
         }
