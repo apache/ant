@@ -192,7 +192,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
             Task task = event.getTask();
             Object real=task;
             if( task instanceof UnknownElement ) {
-                Object realObj=((UnknownElement)task).getObject();
+                Object realObj=((UnknownElement)task).getTask();
                 if( realObj!=null ) {
                     real=realObj;
                 }
@@ -213,7 +213,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
             Task task = event.getTask();
             Object real=task;
             if( task instanceof UnknownElement ) {
-                Object realObj=((UnknownElement)task).getObject();
+                Object realObj=((UnknownElement)task).getTask();
                 if( realObj!=null ) {
                     real=realObj;
                 }
