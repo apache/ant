@@ -95,7 +95,7 @@ public class Input extends Task {
 
     /**
      * Actual method executed by ant.
-     * @throws BuildException
+     * @throws BuildException on error
      */
     public void execute () throws BuildException {
         if (addproperty != null

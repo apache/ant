@@ -27,7 +27,7 @@ public interface Executor {
      * Execute the specified Targets for the specified Project.
      * @param project       the Ant Project.
      * @param targetNames   String[] of Target names.
-     * @throws BuildException.
+     * @throws BuildException on error
      */
     void executeTargets(Project project, String[] targetNames)
         throws BuildException;

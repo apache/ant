@@ -47,7 +47,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  */
 public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
-    private static final FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
 
     /**
      * An enumeration of all resources of a given name found within the
@@ -909,7 +909,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
                 if (resource.exists()) {
                     try {
-                        return fileUtils.getFileURL(resource);
+                        return FILE_UTILS.getFileURL(resource);
                     } catch (MalformedURLException ex) {
                         return null;
                     }
@@ -924,7 +924,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 ZipEntry entry = zipFile.getEntry(resourceName);
                 if (entry != null) {
                     try {
-                        return new URL("jar:" + fileUtils.getFileURL(file)
+                        return new URL("jar:" + FILE_UTILS.getFileURL(file)
                                        + "!/" + entry);
                     } catch (MalformedURLException ex) {
                         return null;
