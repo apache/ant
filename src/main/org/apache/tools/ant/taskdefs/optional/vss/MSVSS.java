@@ -134,7 +134,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @param  vssPath  The VSS project path.
      * @ant.attribute group="required"
      */
-    public final void setVsspath(String vssPath) {
+    public final void setVsspath(final String vssPath) {
         String projectPath;
         if (vssPath.startsWith("vss://")) { //$NON-NLS-1$
             projectPath = vssPath.substring(5);
@@ -143,9 +143,9 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         }
 
         if (projectPath.startsWith(PROJECT_PREFIX)) {
-            vssPath = projectPath;
+            this.vssPath = projectPath;
         } else {
-            vssPath = PROJECT_PREFIX + projectPath;
+            this.vssPath = PROJECT_PREFIX + projectPath;
         }
     }
 
