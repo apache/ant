@@ -806,15 +806,18 @@ public class FixCRLF extends MatchingTask {
         private BufferedReader reader;
         private StringBuffer line = new StringBuffer();
         private boolean reachedEof = false;
+        private File srcFile;
 
         public OneLiner(File srcFile)
             throws BuildException {
+            this.srcFile = srcFile;
             try {
                 reader = new BufferedReader
                         (getReader(srcFile), INBUFLEN);
                 nextLine();
             } catch (IOException e) {
-                throw new BuildException(e);
+                throw new BuildException(srcFile + ": "+ e.getMessage(),
+                                         e, getLocation());
             }
         }
 
@@ -898,7 +901,8 @@ public class FixCRLF extends MatchingTask {
                 } // end of if (eolcount == 0)
 
             } catch (IOException e) {
-                throw new BuildException(e);
+                throw new BuildException(srcFile + ": "+ e.getMessage(),
+                                         e, getLocation());
             }
         }
 
