@@ -597,9 +597,9 @@ public class Main implements AntMain {
             addBuildListeners(project);
             addInputHandler(project);
 
-            PrintStream err = System.err;
-            PrintStream out = System.out;
-            InputStream in = System.in;
+            PrintStream savedErr = System.err;
+            PrintStream savedOut = System.out;
+            InputStream savedIn = System.in;
 
             // use a system manager that prevents from System.exit()
             SecurityManager oldsm = null;
@@ -673,16 +673,16 @@ public class Main implements AntMain {
                     System.setSecurityManager(oldsm);
                 }
 
-                System.setOut(out);
-                System.setErr(err);
-                System.setIn(in);
+                System.setOut(savedOut);
+                System.setErr(savedErr);
+                System.setIn(savedIn);
             }
         } catch (RuntimeException exc) {
             error = exc;
             throw exc;
-        } catch (Error err) {
-            error = err;
-            throw err;
+        } catch (Error e) {
+            error = e;
+            throw e;
         } finally {
             if (!projectHelp) {
                 project.fireBuildFinished(error);
