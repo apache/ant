@@ -10,6 +10,12 @@
     
     <section name="Articles">
       <ul>
+        <li>Ant in Anger: Using Ant in a Production Development System
+          <a href="http://jakarta.apache.org/cvsweb/index.cgi/~checkout~/jakarta-ant/docs/ant_in_anger.html?content-type=text/html">http://jakarta.apache.org/cvsweb/index.cgi/~checkout~/jakarta-ant/docs/ant_in_anger.html?content-type=text/html</a>.</li>
+
+        <li>Ant Task Guidelines
+          <a href="http://jakarta.apache.org/cvsweb/index.cgi/~checkout~/jakarta-ant/docs/ant_task_guidelines.html?content-type=text/html">http://jakarta.apache.org/cvsweb/index.cgi/~checkout~/jakarta-ant/docs/ant_task_guidelines.html?content-type=text/html</a>.</li>
+
         <li>Incremental development with Ant and JUnit 
           <a href="http://www-106.ibm.com/developerworks/library/j-ant/?dwzone=java">http://www-106.ibm.com/developerworks/library/j-ant/?dwzone=java</a>.</li>
 
