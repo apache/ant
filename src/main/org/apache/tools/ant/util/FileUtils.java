@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1299,7 +1299,7 @@ public class FileUtils {
         CharacterIterator iter = new StringCharacterIterator(path);
         for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
-            if (isSpecial[c]) {
+            if (c < 256 && isSpecial[c]) {
                 sb.append('%');
                 sb.append(escapedChar1[c]);
                 sb.append(escapedChar2[c]);
