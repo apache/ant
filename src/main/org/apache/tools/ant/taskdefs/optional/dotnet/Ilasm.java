@@ -225,9 +225,7 @@ public class Ilasm
     public void setTargetType(String targetType)
              throws BuildException {
         this.targetType = targetType.toLowerCase();
-        if (targetType.equals("exe") || targetType.equals("library")) {
-            targetType = targetType;
-        } else {
+        if (!targetType.equals("exe") && !targetType.equals("library")) {
             throw new BuildException("targetType " + targetType + " is not a valid type");
         }
     }
@@ -519,8 +517,6 @@ public class Ilasm
              throws BuildException {
         NetCommand command = new NetCommand(this, exe_title, exe_name);
         command.setFailOnError(getFailFailOnError());
-        //DEBUG helper
-        command.setTraceCommandLine(true);
         //fill in args
         command.addArgument(getDebugParameter());
         command.addArgument(getTargetTypeParameter());
