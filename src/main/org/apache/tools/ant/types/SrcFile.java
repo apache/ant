@@ -64,20 +64,20 @@ import org.apache.tools.ant.BuildException;
  */
 public final class SrcFile extends ValidatedFileAttribute {
 
-    /** 
+    /**
      * empty constructor
      */
     public SrcFile() {}
-    
-    
-     /** 
-     * file constructor; performs validation 
+
+
+     /**
+     * file constructor; performs validation
      * @param file the file to use
      */
     public SrcFile(File file) throws BuildException {
-        setFile(file);    
+        setFile(file);
     }
-    
+
     private String message;
 
     protected final String getMessage() {
@@ -95,11 +95,11 @@ public final class SrcFile extends ValidatedFileAttribute {
             return false;
         }
         if (!f.exists()) {
-            message = "SrcFile " + f + " does not exist.";
+            message = f + " does not exist.";
             return false;
         }
         if (!f.isFile()) {
-            message = "SrcFile " + f + " is not a file.";
+            message = f + " is not a file.";
             return false;
         }
         return true;

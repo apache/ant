@@ -63,21 +63,21 @@ import org.apache.tools.ant.BuildException;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class SrcDir extends ValidatedFileAttribute {
-    
-    /** 
+
+    /**
      * empty constructor
      */
     public SrcDir() {}
-    
-    
-     /** 
-     * file constructor; performs validation 
+
+
+     /**
+     * file constructor; performs validation
      * @param file the file to use
      */
     public SrcDir(File file) throws BuildException {
-        setFile(file);    
+        setFile(file);
     }
-    
+
     private String message;
 
     protected final String getMessage() {
@@ -95,11 +95,11 @@ public final class SrcDir extends ValidatedFileAttribute {
             return false;
         }
         if (!f.exists()) {
-            message = "SrcDir " + f + " does not exist.";
+            message = f + " does not exist.";
             return false;
         }
         if (!f.isDirectory()) {
-            message = "SrcDir " + f + " is not a directory.";
+            message = f + " is not a directory.";
             return false;
         }
         return true;

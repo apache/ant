@@ -95,7 +95,7 @@ public final class DestDir extends ValidatedFileAttribute {
             return false;
         }
         if (f.exists() && !f.isDirectory()) {
-            message = "DestDir " + f + " is not a directory.";
+            message = f + " is not a directory.";
             return false;
         }
         //If DestDir does not exist, make sure it is well formed.
@@ -105,7 +105,7 @@ public final class DestDir extends ValidatedFileAttribute {
                 File parent = new File(tmp.getParent());
                 if (parent.exists()) {
                     if (!parent.isDirectory()) {
-                        message = "DestDir " + f + " contains the path "
+                        message = f + " contains the path "
                                   + parent + " that is not a directory.";
                         return false;
                     }
