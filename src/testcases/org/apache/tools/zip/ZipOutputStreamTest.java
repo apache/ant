@@ -21,6 +21,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class ZipOutputStreamTest extends TestCase {
@@ -37,22 +38,23 @@ public class ZipOutputStreamTest extends TestCase {
 	
     protected void setUp() throws Exception {
         time = new Date();
-        byte[] result = new byte[4];
-        int year = time.getYear() + 1900;
-        int month = time.getMonth() + 1;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(time);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
         long value =  ((year - 1980) << 25)
             |         (month << 21)
-            |         (time.getDate() << 16)
-            |         (time.getHours() << 11)
-            |         (time.getMinutes() << 5)
-            |         (time.getSeconds() >> 1);
+            |	      (cal.get(Calendar.DAY_OF_MONTH) << 16)
+            |         (cal.get(Calendar.HOUR_OF_DAY) << 11)
+            |         (cal.get(Calendar.MINUTE) << 5)
+            |         (cal.get(Calendar.SECOND) >> 1);
 
+        byte[] result = new byte[4];
         result[0] = (byte) ((value & 0xFF));
         result[1] = (byte) ((value & 0xFF00) >> 8);
         result[2] = (byte) ((value & 0xFF0000) >> 16);
         result[3] = (byte) ((value & 0xFF000000L) >> 24);
         zl = new ZipLong(result);
-        
     }
 
     protected void tearDown() throws Exception {

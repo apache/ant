@@ -126,7 +126,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     private int computedBlockCRC, computedCombinedCRC;
 
     int i2, count, chPrev, ch2;
-    int i, tPos;
+    int global_i, tPos;
     int rNToGo = 0;
     int rTPos  = 0;
     int j2;
@@ -668,14 +668,14 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         char ch;
 
         cftab[0] = 0;
-        for (i = 1; i <= 256; i++) {
+        for (int i = 1; i <= 256; i++) {
             cftab[i] = unzftab[i - 1];
         }
-        for (i = 1; i <= 256; i++) {
+        for (int i = 1; i <= 256; i++) {
             cftab[i] += cftab[i - 1];
         }
 
-        for (i = 0; i <= last; i++) {
+        for (int i = 0; i <= last; i++) {
             ch = (char) ll8[i];
             tt[cftab[ch]] = i;
             cftab[ch]++;

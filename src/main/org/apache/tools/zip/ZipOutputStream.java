@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -581,7 +580,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 2;
 
         // last mod. time and date
-        writeOut(toDosTime(new Date(ze.getTime())));
+        writeOut(toDosTime(ze.getTime()));
         written += 4;
 
         // CRC
@@ -669,7 +668,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 2;
 
         // last mod. time and date
-        writeOut(toDosTime(new Date(ze.getTime())));
+        writeOut(toDosTime(ze.getTime()));
         written += 4;
 
         // CRC
@@ -765,12 +764,10 @@ public class ZipOutputStream extends FilterOutputStream {
     /**
      * Convert a Date object to a DOS date/time field.
      *
-     * <p>Stolen from InfoZip's <code>fileio.c</code></p>
-     *
      * @since 1.1
      */
     protected static ZipLong toDosTime(Date time) {
-        return new ZipLong(toDosTime(time));
+        return new ZipLong(toDosTime(time.getTime()));
     }
 
     /**
@@ -780,21 +777,19 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.26
      */
-    protected static byte[] toDosTime(Date time) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(time);
-        int year = cal.get(Calendar.YEAR);
+    protected static byte[] toDosTime(long t) {
+        Date time = new Date(t);
+        int year = time.getYear() + 1900;
         if (year < 1980) {
             return DOS_TIME_MIN.getBytes();
         }
-        int month = cal.get(Calendar.MONTH) + 1;
+        int month = time.getMonth() + 1;
         long value =  ((year - 1980) << 25)
             |         (month << 21)
-            |	      (cal.get(Calendar.DAY_OF_MONTH) << 16)
-            |         (cal.get(Calendar.HOUR_OF_DAY) << 11)
-            |         (cal.get(Calendar.MINUTE) << 5)
-            |         (cal.get(Calendar.SECOND) >> 1);
-
+            |         (time.getDate() << 16)
+            |         (time.getHours() << 11)
+            |         (time.getMinutes() << 5)
+            |         (time.getSeconds() >> 1);
         byte[] result = new byte[4];
         result[0] = (byte) ((value & 0xFF));
         result[1] = (byte) ((value & 0xFF00) >> 8);
