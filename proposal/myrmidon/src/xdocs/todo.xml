@@ -22,7 +22,7 @@
 
             <subsection name="Integrate XDocs proposal">
                 <p>Integrate with the XDocs proposal that generates XML documentation for
-                tasks. Rework that proposal so that it knows about the myrmidon specific
+                tasks. Rework that proposal so that it knows about the Myrmidon specific
                 patterns and features. Also rework it so that it can support reading
                 documentation and examples from side-by-side the task.</p>
             </subsection>
@@ -211,7 +211,7 @@ File[] files = cm.getOutOfDate();
 
             <subsection name="Mail tasks">
 
-                <p>Convert the ant1.x Mail tasks to myrmidon.</p>
+                <p>Convert the Ant 1.x Mail tasks to Myrmidon.</p>
 
             </subsection>
 
@@ -281,25 +281,25 @@ public class MyrmidonSecurityManager
             </subsection>
 
             <subsection name="Ant 1.x Compatibility">
-                <p>The Ant1 Compatibility layer is still in early stages of development.
+                <p>The Ant 1 Compatibility layer is still in early stages of development.
                 </p>
                 <ul>
                     <li>Get a version of <code>&lt;antcall&gt;</code> working.</li>
                     <li>
-                    Provide hooks between Ant1 references and Myrmidon properties.
-                    May use converters for adapting Ant2 objects (like Ant2
+                    Provide hooks between Ant 1 references and Myrmidon properties.
+                    May use converters for adapting Ant 2 objects (like Ant 2
                     <code>&lt;path&gt;</code> or <code>&lt;fileset&gt;</code>)
-                    as Ant1 types.
+                    as Ant 1 types.
                     </li>
                     <li>
                     Missing tests:
                     <ul>
-                        <li>Make sure properties are shared between Ant1 and Myrmidon tasks.</li>
+                        <li>Make sure properties are shared between Ant 1 and Myrmidon tasks.</li>
                     </ul>
                     </li>
                     <li>Get GUMP runs going using Myrmidon.</li>
                     <li>Add protected accessors for get/set/list properties in
-                    Ant1 Project, to minimise the amount of code duplication in
+                    Ant 1 Project, to minimise the amount of code duplication in
                     Ant1CompatProject.</li>
                 </ul>
             </subsection>
@@ -524,9 +524,6 @@ public class MyrmidonSecurityManager
                         <code>&lt;socket&gt;</code>
                     conditions to an antlib.  Need to resolve how these will be passed a logger.
                     </li>
-                    <li>Allow the
-                        <code>&lt;if&gt;</code> task to take any condition implementation.
-                    </li>
                     <li>Add an else block to the
                         <code>&lt;if&gt;</code> task.
                     </li>
@@ -551,6 +548,9 @@ public class MyrmidonSecurityManager
                     <li>Split the <code>&lt;uptodate&gt;</code> condition into
                         a condition that checks against a single target file,
                         and one which checks using a destdir/mapper.</li>
+                    <li>Add condition implementations to: check JVM version,
+                        check Ant version, check whether a particular antlib or extension is
+                        available, match a string against a regular expression.</li>
                     <li>Add a task to unset a property.</li>
                     <li>Change the various def and import task to allow a classpath
                         to be provided.</li>

@@ -11,7 +11,7 @@
 
 <p>
 First, you will need to fetch the Myrmidon source from CVS.  The source
-can be source in the <code>proposal/myrmidon</code> directory of the
+can be found in the <code>proposal/myrmidon</code> directory of the
 Ant source tree.  You should check out the <code>jakarta-ant</code> CVS
 module, as described
 <a href="http://jakarta.apache.org/site/cvsindex.html">here</a>.
@@ -97,10 +97,10 @@ prompt> <i>java</i> -jar <i>ant-home</i>/bin/myrmidon-launcher.jar <i>options</i
 
 <p>When started, Myrmidon looks for a project file called <code>build.ant</code>
 in the current directory.  A different project file can be specified using the
-<code>-f</code> command-line option.  Myrmidon executes the targets given on
-the command-line, or the default target if none is given.  For example, the
-following executes the targets <code>clean</code> and <code>build</code> from
-the project file <code>my-project.xml</code>:</p>
+<code>-f</code> command-line option.  Myrmidon executes the targets that are
+listed on the command-line, or the default target if none is given.  For
+example, the following command executes targets <code>clean</code> and
+<code>build</code> from project file <code>my-project.xml</code>:</p>
 
 <pre>
 prompt> ant -f my-project.xml clean build

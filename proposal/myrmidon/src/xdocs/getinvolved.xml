@@ -8,10 +8,11 @@
     <body>
         <section name="Get Involved">
 
-            <p>There are plenty of things you can do to help out with Myrmidon.  The Todo
-            list below describes items which still need to be done.  Of course, since
-            this is an open-source project, there's plenty of scope for experimentation,
-            and you can pretty much make up your own items to work on.</p>
+            <p>There are plenty of things you can do to help out with Myrmidon.  The
+            <a href="todo.html">Todo list </a> describes items which still need to
+            be done.  Of course, since this is an open-source project, there's
+            plenty of scope for experimentation, and you can pretty much make up
+            your own items to work on.</p>
 
             <p>Some things that are worth reading if you do want to get involved:</p>
             <ul>

@@ -46,13 +46,13 @@
         </ul>
       <p><strong>User Guide</strong></p>
     <ul>
-          <li>      <a href="./buildfile.html">Build file</a>
+          <li>      <a href="./buildfile.html">Project File</a>
   </li>
           <li>      <a href="./vfs.html">Virtual File System</a>
   </li>
-          <li>      <a href="./ant1compat.html">Ant1 Compatibility Layer</a>
+          <li>      <a href="./ant1compat.html">Ant 1 Compatibility Layer</a>
   </li>
-          <li>      <a href="./differences.html">Differences to Ant1</a>
+          <li>      <a href="./differences.html">Differences to Ant 1</a>
   </li>
           <li>      <a href="./task.html">My First Task</a>
   </li>
@@ -78,15 +78,21 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Project File"><strong>Project File</strong></a>
+                    <a name="Project File"><strong>Project File</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
                         <p>
-The project file format is very similar to that of Ant 1.  The root element of
-the project file must be a <code>&lt;project&gt;</code> element.  It can
-take the following attributes:
+A project file is an XML file that describes which tasks to execute, and in
+which order to execute them in.  A project can be broken up into several steps,
+or <i>targets</i>.  A target is simply a list of the tasks that need to be
+executed to perform the step.  A target may also include some dependency
+information.  Myrmidon makes sure that targets are executed in the correct order,
+so that a target is executed before the targets that depend on it.</p>
+                                <p>The project file format is very similar to the format used in Ant 1.  The
+root element of a project file must be a <code>&lt;project&gt;</code> element.
+It can take the following attributes:
 </p>
                                   <table>
               <tr>
@@ -125,7 +131,7 @@ take the following attributes:
                       <td bgcolor="#a0ddf0" colspan="" rowspan="" 
       valign="top" align="left">
     <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          The base-name of the project file, with the extension removed.
+          The name of the project file, with the extension removed.
         </font>
   </td>
       </tr>
@@ -181,7 +187,7 @@ take the following attributes:
                       <td bgcolor="#a0ddf0" colspan="" rowspan="" 
       valign="top" align="left">
     <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          The project file version that the project is written for.
+          The project file format version that the project is written for.
         </font>
   </td>
                       <td bgcolor="#a0ddf0" colspan="" rowspan="" 
@@ -197,15 +203,15 @@ A <code>&lt;project&gt;</code> element can contain the following elements,
 in the order given below:
 </p>
                                 <ul>
-<li><a href="#Project References"><code>&lt;projectref&gt;</code></a></li>
-<li><a href="#Library Imports"><code>&lt;import&gt;</code></a></li>
-<li><a href="#Implicit Tasks">Implicit tasks</a></li>
-<li><a href="#Targets"><code>&lt;target&gt;</code></a></li>
+<li><a href="#project-refs">Project references</a></li>
+<li><a href="#antlib-imports">Library imports</a></li>
+<li><a href="#init-tasks">Initialization tasks</a></li>
+<li><a href="#targets">Targets</a></li>
 </ul>
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Project References"><strong>Project References</strong></a>
+                        <a name="project-refs"><strong>Project References</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -276,7 +282,7 @@ A <code>&lt;projectref&gt;</code> element takes the following attributes:</p>
         </table>
                                 <p>
 The targets of a referenced project can be used in the <code>depends</code> list
-of a target in the referencing project, using the following syntax:
+of a target in the referencing project, using the syntax
 <code><i>project-name</i>-&gt;<i>target-name</i></code>.  Here is a simple example:</p>
                                   <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
@@ -314,7 +320,7 @@ of a target in the referencing project, using the following syntax:
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Library Imports"><strong>Library Imports</strong></a>
+                        <a name="antlib-imports"><strong>Library Imports</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -447,14 +453,14 @@ the <code>my-tasks</code> antlib.</p>
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Implicit Tasks"><strong>Implicit Tasks</strong></a>
+                        <a name="init-tasks"><strong>Initialization Tasks</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>Implicit tasks are run before any of the project's targets are run.  Any task
-can be used, including <code>&lt;property&gt;</code> and data-type instances.
-Implicit tasks can be used to initialise the project.  For example:</p>
+                        <p>Initialisation tasks are run before any of the project's targets are run, and
+are used to initialise the project.  Any task can be used as an initialization
+task, including <code>&lt;property&gt;</code> and data-type instances.  An example:</p>
                                   <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
       <tr>
@@ -495,7 +501,7 @@ Implicit tasks can be used to initialise the project.  For example:</p>
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Targets"><strong>Targets</strong></a>
+                        <a name="targets"><strong>Targets</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -575,7 +581,7 @@ following attributes:</p>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Tasks"><strong>Tasks</strong></a>
+                    <a name="Tasks"><strong>Tasks</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -612,7 +618,7 @@ following attributes:</p>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Conditions"><strong>Conditions</strong></a>
+                    <a name="Conditions"><strong>Conditions</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -640,7 +646,7 @@ following attributes:</p>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="File Name Mappers"><strong>File Name Mappers</strong></a>
+                    <a name="File Name Mappers"><strong>File Name Mappers</strong></a>
       </font>
     </td></tr>
     <tr><td>

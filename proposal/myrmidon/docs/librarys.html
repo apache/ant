@@ -11,7 +11,7 @@
                       <meta name="author" value="Peter Donald">
   <meta name="email" value="peter@apache.org">
         
-      <title>Apache Myrmidon - On Librarys in Ant2</title>
+      <title>Apache Myrmidon - On Libraries in Ant 2</title>
     </head>
   
     <body bgcolor="#ffffff" text="#000000" link="#525D76">    
@@ -46,13 +46,13 @@
         </ul>
       <p><strong>User Guide</strong></p>
     <ul>
-          <li>      <a href="./buildfile.html">Build file</a>
+          <li>      <a href="./buildfile.html">Project File</a>
   </li>
           <li>      <a href="./vfs.html">Virtual File System</a>
   </li>
-          <li>      <a href="./ant1compat.html">Ant1 Compatibility Layer</a>
+          <li>      <a href="./ant1compat.html">Ant 1 Compatibility Layer</a>
   </li>
-          <li>      <a href="./differences.html">Differences to Ant1</a>
+          <li>      <a href="./differences.html">Differences to Ant 1</a>
   </li>
           <li>      <a href="./task.html">My First Task</a>
   </li>
@@ -78,17 +78,17 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Library Management"><strong>Library Management</strong></a>
+                    <a name="Library Management"><strong>Library Management</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>Long ago there was identified the need for librarys that contain
+                        <p>Long ago there was identified the need for libraries that contain
             tasks and other elements present in the build file. This document
             attempts to describe the mechanism via which these libraries will be
-            defined and used in Ant2. The librarys (also referred to as
+            defined and used in Ant 2. The libraries (also referred to as
             deployments) will be termed antlibs.</p>
-                                <p>Ant librarys can be packaged and signed into a ANt Type Library
+                                <p>Ant libraries can be packaged and signed into a ANt Type Library
             format (.atl) using the standard Java Archive tools. (For details on
             the .jar file format see the
 
@@ -103,7 +103,7 @@
             library defines. It may also contain additional resources that can
             be referenced in the build file (an example being DTDs).
             </p>
-                                <p>The library may also need access to other librarys or resources
+                                <p>The library may also need access to other libraries or resources
             to perform its job. For instance, if the task loaded an XML document
             and then processed said document using the
                 <em>Trax API</em> then
@@ -123,7 +123,7 @@
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Descriptors"><strong>Descriptors</strong></a>
+                        <a name="Descriptors"><strong>Descriptors</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -135,7 +135,7 @@
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Class and Resource Files"><strong>Class and Resource Files</strong></a>
+                        <a name="Class and Resource Files"><strong>Class and Resource Files</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -154,7 +154,7 @@
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Dependencies"><strong>Dependencies</strong></a>
+                        <a name="Dependencies"><strong>Dependencies</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -163,7 +163,7 @@
                 example given above described dependence on an external XML library. The
                 ant library thus needs a mechanism via which to declare dependencies on
                 external libraries.</p>
-                                <p>Ant2 uses the "Optional Package" mechanism. Prior to JDK1.3, an "Optional
+                                <p>Ant 2 uses the "Optional Package" mechanism. Prior to JDK1.3, an "Optional
                 Package" was known as an
                     <em>Extension</em>. The specification for this
                 mechanism is available in the JDK1.3 documentation in the directory
@@ -269,7 +269,7 @@ trax-Implementation-Vendor: Apache Software Foundation
       </tr>
     </table>
   </div>
-                                <p>To make other jars available to Ant librarys as "Optional Packages"
+                                <p>To make other jars available to Ant libraries as "Optional Packages"
                 or Extensions then you need to add a few lines to the manifest of the
                 other jar. The minimal manifest is the following;</p>
                                   <div align="left">
@@ -304,7 +304,7 @@ Specification-Version: 1.0
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Implementation Notes"><strong>Implementation Notes</strong></a>
+                        <a name="Implementation Notes"><strong>Implementation Notes</strong></a>
       </font>
     </td></tr>
     <tr><td>

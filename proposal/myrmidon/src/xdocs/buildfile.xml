@@ -10,9 +10,16 @@
 <section name="Project File">
 
 <p>
-The project file format is very similar to that of Ant 1.  The root element of
-the project file must be a <code>&lt;project&gt;</code> element.  It can
-take the following attributes:
+A project file is an XML file that describes which tasks to execute, and in
+which order to execute them in.  A project can be broken up into several steps,
+or <i>targets</i>.  A target is simply a list of the tasks that need to be
+executed to perform the step.  A target may also include some dependency
+information.  Myrmidon makes sure that targets are executed in the correct order,
+so that a target is executed before the targets that depend on it.</p>
+
+<p>The project file format is very similar to the format used in Ant 1.  The
+root element of a project file must be a <code>&lt;project&gt;</code> element.
+It can take the following attributes:
 </p>
 
 <table>
@@ -20,7 +27,7 @@ take the following attributes:
     <tr>
         <td>name</td>
         <td>The project name.</td>
-        <td>The base-name of the project file, with the extension removed.</td>
+        <td>The name of the project file, with the extension removed.</td>
     </tr>
     <tr>
         <td>basedir</td>
@@ -36,7 +43,7 @@ take the following attributes:
     </tr>
     <tr>
         <td>version</td>
-        <td>The project file version that the project is written for.</td>
+        <td>The project file format version that the project is written for.</td>
         <td>None, must be <code>2.0</code></td>
     </tr>
 </table>
@@ -47,13 +54,13 @@ in the order given below:
 </p>
 
 <ul>
-<li><a href="#Project References"><code>&lt;projectref&gt;</code></a></li>
-<li><a href="#Library Imports"><code>&lt;import&gt;</code></a></li>
-<li><a href="#Implicit Tasks">Implicit tasks</a></li>
-<li><a href="#Targets"><code>&lt;target&gt;</code></a></li>
+<li><a href="#project-refs">Project references</a></li>
+<li><a href="#antlib-imports">Library imports</a></li>
+<li><a href="#init-tasks">Initialization tasks</a></li>
+<li><a href="#targets">Targets</a></li>
 </ul>
 
-<subsection name="Project References">
+<subsection name="Project References" anchor="project-refs">
 
 <p>Project references allow the project to import, or reference, other projects.
 A <code>&lt;projectref&gt;</code> element takes the following attributes:</p>
@@ -74,7 +81,7 @@ A <code>&lt;projectref&gt;</code> element takes the following attributes:</p>
 
 <p>
 The targets of a referenced project can be used in the <code>depends</code> list
-of a target in the referencing project, using the following syntax:
+of a target in the referencing project, using the syntax
 <code><i>project-name</i>-><i>target-name</i></code>.  Here is a simple example:</p>
 
 <source><![CDATA[
@@ -92,7 +99,7 @@ of a target in the referencing project, using the following syntax:
 
 </subsection>
 
-<subsection name="Library Imports">
+<subsection name="Library Imports" anchor="antlib-imports">
 
 <p>Library imports allow the project to import the tasks and data-types from an
 antlib.  An <code>&lt;import&gt;</code> element takes the following attributes:</p>
@@ -141,11 +148,11 @@ the <code>my-tasks</code> antlib.</p>
 
 </subsection>
 
-<subsection name="Implicit Tasks">
+<subsection name="Initialization Tasks" anchor="init-tasks">
 
-<p>Implicit tasks are run before any of the project's targets are run.  Any task
-can be used, including <code>&lt;property&gt;</code> and data-type instances.
-Implicit tasks can be used to initialise the project.  For example:</p>
+<p>Initialisation tasks are run before any of the project's targets are run, and
+are used to initialise the project.  Any task can be used as an initialization
+task, including <code>&lt;property&gt;</code> and data-type instances.  An example:</p>
 
 <source><![CDATA[
 
@@ -166,7 +173,7 @@ Implicit tasks can be used to initialise the project.  For example:</p>
 
 </subsection>
 
-<subsection name="Targets">
+<subsection name="Targets" anchor="targets">
 
 <p>Targets have a similar format to targets in Ant 1.x, though some of the
 behaviour is different.  A <code>&lt;target&gt;</code> element takes the

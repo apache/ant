@@ -11,7 +11,7 @@
                       <meta name="author" value="Peter Donald">
   <meta name="email" value="peter@apache.org">
         
-      <title>Apache Myrmidon - On ClassLoaders in Ant2</title>
+      <title>Apache Myrmidon - On ClassLoaders in Ant 2</title>
     </head>
   
     <body bgcolor="#ffffff" text="#000000" link="#525D76">    
@@ -46,13 +46,13 @@
         </ul>
       <p><strong>User Guide</strong></p>
     <ul>
-          <li>      <a href="./buildfile.html">Build file</a>
+          <li>      <a href="./buildfile.html">Project File</a>
   </li>
           <li>      <a href="./vfs.html">Virtual File System</a>
   </li>
-          <li>      <a href="./ant1compat.html">Ant1 Compatibility Layer</a>
+          <li>      <a href="./ant1compat.html">Ant 1 Compatibility Layer</a>
   </li>
-          <li>      <a href="./differences.html">Differences to Ant1</a>
+          <li>      <a href="./differences.html">Differences to Ant 1</a>
   </li>
           <li>      <a href="./task.html">My First Task</a>
   </li>
@@ -78,14 +78,14 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="ClassLoader Management"><strong>ClassLoader Management</strong></a>
+                    <a name="ClassLoader Management"><strong>ClassLoader Management</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>In many ways Ant2 needs to follow rules similar to a number of
+                        <p>In many ways Ant 2 needs to follow rules similar to a number of
             different application servers with respect to ClassLoader management.
-            Ant2 will create a number of different ClassLoaders that have access
+            Ant 2 will create a number of different ClassLoaders that have access
             to different sets of resources (and thus Classes). The main reason
             for this arrangment is to partition different sections of the
             application such as the Container, the Task API, task/type libraries
@@ -97,7 +97,7 @@
             in it's own store. In practice this means that all the classes (and static
             variables defined by said classes) in a parent ClassLoader are shared with
             the child ClassLoaders.</p>
-                                <p>Using kooky ascii art, the specific ClassLoader structure for Ant2 is as
+                                <p>Using kooky ascii art, the specific ClassLoader structure for Ant 2 is as
             follows:</p>
                                   <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
@@ -146,7 +146,7 @@
                 <li>
                   The
                     <strong>Common</strong> ClassLoader contains the classes and resources
-                  that are made visible to both the Container and to all the ant type librarys. This
+                  that are made visible to both the Container and to all the ant type libraries. This
                   contains all the classes that the Container uses to communicate with tasks and other
                   supporting infrastructure. In particular it contains the following APIs;
 
@@ -172,7 +172,7 @@
                             <strong>NOTE</strong>: These interfaces
                           are not to be used by user tasks but are made available so that certain tasks (such
                           as &lt;antcall/&gt;) can be implemented. However they are subject to change without
-                          notice between between different ant2 versions.
+                          notice between between different Ant 2 versions.
 
                         </li>
                     </ul>
@@ -188,7 +188,7 @@
                     <strong>Container</strong> ClassLoader contains all the classes and resources
                   that are part of the actual implementation of the Container. These classes are not
                   directly accessible to any Ant library or task. Some of the classes are indirectly
-                  accessible to tasks and other elements defined in the ant librarys as they implement
+                  accessible to tasks and other elements defined in the ant libraries as they implement
                   interfaces defined in the
                     <strong>Common</strong> ClassLoader. The classes that are
                   stored in jars in the
@@ -198,7 +198,7 @@
                 <li>
                   The
                     <strong>Shared</strong> ClassLoader contains all the classes and resources
-                  that are shared across all of the ant librarys (unless they are als needed by the
+                  that are shared across all of the ant libraries (unless they are als needed by the
                   container in which case they should be placed int the
                     <strong>Container</strong>
                   ClassLoader). This ClassLoader is populated by all the jars that are contained in

@@ -2,7 +2,7 @@
 <document>
 
     <properties>
-        <title>On Librarys in Ant2</title>
+        <title>On Libraries in Ant 2</title>
         <author email="peter@apache.org">Peter Donald</author>
     </properties>
 
@@ -10,13 +10,13 @@
 
         <section name="Library Management">
 
-            <p>Long ago there was identified the need for librarys that contain
+            <p>Long ago there was identified the need for libraries that contain
             tasks and other elements present in the build file. This document
             attempts to describe the mechanism via which these libraries will be
-            defined and used in Ant2. The librarys (also referred to as
+            defined and used in Ant 2. The libraries (also referred to as
             deployments) will be termed antlibs.</p>
 
-            <p>Ant librarys can be packaged and signed into a ANt Type Library
+            <p>Ant libraries can be packaged and signed into a ANt Type Library
             format (.atl) using the standard Java Archive tools. (For details on
             the .jar file format see the
 
@@ -33,7 +33,7 @@
             be referenced in the build file (an example being DTDs).
             </p>
 
-            <p>The library may also need access to other librarys or resources
+            <p>The library may also need access to other libraries or resources
             to perform its job. For instance, if the task loaded an XML document
             and then processed said document using the
                 <em>Trax API</em> then
@@ -79,7 +79,7 @@
                 ant library thus needs a mechanism via which to declare dependencies on
                 external libraries.</p>
 
-                <p>Ant2 uses the "Optional Package" mechanism. Prior to JDK1.3, an "Optional
+                <p>Ant 2 uses the "Optional Package" mechanism. Prior to JDK1.3, an "Optional
                 Package" was known as an
                     <em>Extension</em>. The specification for this
                 mechanism is available in the JDK1.3 documentation in the directory
@@ -139,7 +139,7 @@ trax-Implementation-Version: 2.1.0
 trax-Implementation-Vendor: Apache Software Foundation
                 </source>
 
-                <p>To make other jars available to Ant librarys as "Optional Packages"
+                <p>To make other jars available to Ant libraries as "Optional Packages"
                 or Extensions then you need to add a few lines to the manifest of the
                 other jar. The minimal manifest is the following;</p>
 

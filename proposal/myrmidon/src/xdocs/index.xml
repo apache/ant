@@ -28,8 +28,8 @@
 
         <section name="What is Myrmidon?">
 
-            <p>Myrmidon is a proposal for Ant 2. Ant2 is the next evolution of the
-            Ant build tool aimed at removing many of the limitations of the Ant1.x
+            <p>Myrmidon is a proposal for Ant 2. Ant 2 is the next evolution of the
+            Ant build tool aimed at removing many of the limitations of the Ant 1.x
             product. In particular it aims to;</p>
 
             <ul>
@@ -40,7 +40,7 @@
                 <li>Simplify development of tasks by task-writers.</li>
                 <li>Enable ad-hoc &quot;tasks&quot; to be written inside build file,
                 probably using well known scripting languages such as python and
-                javascript. (Possible in ant1.x but prohibitively difficult).</li>
+                javascript. (Possible in Ant 1.x but prohibitively difficult).</li>
                 <li>Integrate templating technologies such as XSLT, velocity etc
                 to enable development of reusable build file elements.</li>
             </ul>
@@ -55,7 +55,7 @@
             is an example of such a tool, which could be assembled using the Myrmidon
             task container, and a library of build related tasks. In the future expect
             to see Testing frameworks, Job Schedulers (ie Cron managers), shells
-            and install tools based on the myrmidon base.</p>
+            and install tools based on the Myrmidon base.</p>
 
         </section>
 

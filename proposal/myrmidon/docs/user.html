@@ -46,13 +46,13 @@
         </ul>
       <p><strong>User Guide</strong></p>
     <ul>
-          <li>      <a href="./buildfile.html">Build file</a>
+          <li>      <a href="./buildfile.html">Project File</a>
   </li>
           <li>      <a href="./vfs.html">Virtual File System</a>
   </li>
-          <li>      <a href="./ant1compat.html">Ant1 Compatibility Layer</a>
+          <li>      <a href="./ant1compat.html">Ant 1 Compatibility Layer</a>
   </li>
-          <li>      <a href="./differences.html">Differences to Ant1</a>
+          <li>      <a href="./differences.html">Differences to Ant 1</a>
   </li>
           <li>      <a href="./task.html">My First Task</a>
   </li>
@@ -78,14 +78,14 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Building Myrmidon"><strong>Building Myrmidon</strong></a>
+                    <a name="Building Myrmidon"><strong>Building Myrmidon</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
                         <p>
 First, you will need to fetch the Myrmidon source from CVS.  The source
-can be source in the <code>proposal/myrmidon</code> directory of the
+can be found in the <code>proposal/myrmidon</code> directory of the
 Ant source tree.  You should check out the <code>jakarta-ant</code> CVS
 module, as described
 <a href="http://jakarta.apache.org/site/cvsindex.html">here</a>.
@@ -167,7 +167,7 @@ files are found in the <code>lib</code> directory:</p>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Running Myrmidon"><strong>Running Myrmidon</strong></a>
+                    <a name="Running Myrmidon"><strong>Running Myrmidon</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -178,7 +178,7 @@ To run Myrmidon, use one of the following methods:
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Launcher Script"><strong>Launcher Script</strong></a>
+                        <a name="Launcher Script"><strong>Launcher Script</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -258,7 +258,7 @@ variables can be used, but are not required (except on Windows 9x - see below).
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Executable Jar File"><strong>Executable Jar File</strong></a>
+                        <a name="Executable Jar File"><strong>Executable Jar File</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -275,10 +275,10 @@ prompt&gt; <i>java</i> -jar <i>ant-home</i>/bin/myrmidon-launcher.jar <i>options
   </table>
                                 <p>When started, Myrmidon looks for a project file called <code>build.ant</code>
 in the current directory.  A different project file can be specified using the
-<code>-f</code> command-line option.  Myrmidon executes the targets given on
-the command-line, or the default target if none is given.  For example, the
-following executes the targets <code>clean</code> and <code>build</code> from
-the project file <code>my-project.xml</code>:</p>
+<code>-f</code> command-line option.  Myrmidon executes the targets that are
+listed on the command-line, or the default target if none is given.  For
+example, the following command executes targets <code>clean</code> and
+<code>build</code> from project file <code>my-project.xml</code>:</p>
                                 <pre>
 prompt&gt; ant -f my-project.xml clean build
 </pre>

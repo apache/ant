@@ -11,10 +11,10 @@
         </menu>
 
         <menu name="User Guide">
-            <item name="Build file" href="/buildfile.html"/>
+            <item name="Project File" href="/buildfile.html"/>
             <item name="Virtual File System" href="/vfs.html"/>
-            <item name="Ant1 Compatibility Layer" href="/ant1compat.html"/>
-            <item name="Differences to Ant1" href="/differences.html"/>
+            <item name="Ant 1 Compatibility Layer" href="/ant1compat.html"/>
+            <item name="Differences to Ant 1" href="/differences.html"/>
             <item name="My First Task" href="/task.html"/>
         </menu>
 
