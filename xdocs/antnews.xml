@@ -28,7 +28,7 @@
 
   <section name="Ant 2.0 Requirements Collected - Next is Design">
       <p>A commented version of the collected user requirements is now
-      available <a href="/ant/ant2/features.html">here</a> - it is not
+      available <a href="ant2/features.html">here</a> - it is not
       complete as some details still have to be defined, but it should
       give you an idea of what Ant2 is going to look like.</p>
 
@@ -70,20 +70,20 @@
         To advance the definition of Ant, user requirements are now being accepted on the 
         Ant-Dev mailing list. Any requirement will be accepted for consideration. The 
         requirements are being collected into a document which is available 
-        <a href="/ant/ant2/requested-features.txt">on-line</a>. New features will be excepted 
+        <a href="ant2/requested-features.txt">on-line</a>. New features will be excepted 
         until March 21st, 2001. At that time, each requirement will be discussed 
         for inclusion in an Ant 2.0 requirement document.
       </p>
       
       <p>
         For your reference some of the goals which have shaped the development of Ant 1.x are
-        available <a href="/ant/ant2/original-specification.html">here</a>. These continue to be
+        available <a href="ant2/original-specification.html">here</a>. These continue to be
         relevant to Ant 2.0.
       </p>
       
       <p>
         If you want to shape the future of Ant, join the 
-        <a href="/site/mail.html">Ant-Dev mailing list</a> and contribute
+        <a href="http://jakarta.apache.org/site/mail.html">Ant-Dev mailing list</a> and contribute
         your ideas.
       </p>
   </section>

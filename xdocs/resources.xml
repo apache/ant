@@ -7,9 +7,13 @@
   </properties>
 
   <body>
-
     <section name="FAQs">
       <subsection name="At Ant's website">
+
+        <p>Starting with the release of Ant 1.4 the Ant's FAQ is
+        bundled with the distribution, the most recent version can
+        always be found at the website.</p>
+
         <table>
           <tr>
             <th>FAQ</th>
