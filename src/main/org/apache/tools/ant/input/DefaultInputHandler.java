@@ -63,7 +63,7 @@ import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Prompts on System.out, reads input from System.in
+ * Prompts on System.err, reads input from System.in
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
@@ -86,7 +86,7 @@ public class DefaultInputHandler implements InputHandler {
         BufferedReader in = 
             new BufferedReader(new InputStreamReader(getInputStream()));
         do {
-            System.out.println(prompt);
+            System.err.println(prompt);
             try {
                 String input = in.readLine();
                 request.setInput(input);
