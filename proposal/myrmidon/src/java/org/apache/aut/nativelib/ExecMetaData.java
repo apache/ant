@@ -32,14 +32,16 @@ public class ExecMetaData
     private String[] m_command;
 
     /**
-     * The array of strings that make up the command line for the command.
-     * Note that these variables are in the ugly format expected by the
-     * Runtime.exec() call. For most systems this means that each entry
-     * must be of the form <code>key=value</code>
+     * The array of strings that make up the native environment for the
+     * command.
+     *
+     * <p>Note that these variables are yet to be translated into the ugly
+     * format expected by the Runtime.exec() call. For most systems this means
+     * that each entry must be translated into the form <code>key=value</code>.</p>
      *
      * <p>This set of variables is combined with the environment of current
      * process if <code>isEnvironmentAdditive=true</code> else it specifies
-     * full environment.
+     * full environment.</p>
      */
     private Properties m_environment;
 

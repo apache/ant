@@ -5,10 +5,10 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.aut.nativelib.launchers;
+package org.apache.aut.nativelib.impl.launchers;
 
 import java.io.IOException;
-import org.apache.aut.nativelib.CommandLauncher;
+import org.apache.aut.nativelib.impl.CommandLauncher;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecMetaData;
 
