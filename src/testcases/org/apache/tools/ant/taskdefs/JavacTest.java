@@ -150,6 +150,7 @@ public class JavacTest extends TestCase {
                    || "javac1.2".equals(compiler)
                    || "javac1.3".equals(compiler)
                    || "javac1.4".equals(compiler)
+                   || "javac1.5".equals(compiler)
                    || "classic".equals(compiler));
 
         javac.setFork(true);
