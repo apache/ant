@@ -484,7 +484,11 @@ public class Javac extends MatchingTask {
             throw new BuildException("Cannot use classic compiler, as it is not available", location);
         }
         catch (Exception ex) {
-            throw new BuildException("Error starting classic compiler: ", ex, location);
+            if (ex instanceof BuildException) {
+                throw (BuildException) ex;
+            } else {
+                throw new BuildException("Error starting classic compiler: ", ex, location);
+            }
         }
     }
 
