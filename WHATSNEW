@@ -47,6 +47,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Added optional attributes - name, arch and version to <os>
+
 * Unjar, Untar, Unwar and Unzip now support patternsets to 
   select files from an archive for extraction.  Filesets may be 
   used to select archived files for unarchival.
