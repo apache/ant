@@ -110,6 +110,9 @@ Fixed bugs:
   the -C switch to gcj.  This means you can now compile to native code
   with gcj which has been impossible in Ant < 1.6.2.
 
+* <import optional="false"> and <import optional="true">
+  behaved identically.
+
 Other changes:
 --------------
 
