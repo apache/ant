@@ -108,6 +108,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     /**
      * Execute the Java class against the specified Ant Project.
      * @param project the Project to use.
+     * @throws BuildException on error.
      */
     public void execute(Project project) throws BuildException {
         final String classname = javaCommand.getExecutable();
@@ -248,6 +249,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * the full flexibility of the Java task, but may be enough for
      * simple needs.
      * @param pc the ProjectComponent to use for logging, etc.
+     * @return the exit status of the subprocess.
+     * @throws BuildException on error.
      * @since Ant 1.6.3
      */
     public int fork(ProjectComponent pc) throws BuildException {
@@ -266,8 +269,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         Redirector redirector = new Redirector(pc);
         Execute exe
             = new Execute(redirector.createHandler(),
-                          timeout == null 
-                          ? null 
+                          timeout == null
+                          ? null
                           : new ExecuteWatchdog(timeout.longValue()));
         exe.setAntRun(pc.getProject());
         if (Os.isFamily("openvms")) {
