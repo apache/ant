@@ -202,6 +202,7 @@ Other changes:
 * <fail> accepts a nested <condition>.
 
 * <loadproperties> supports loading from a resource.
+  Bugzilla Report 28340.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
