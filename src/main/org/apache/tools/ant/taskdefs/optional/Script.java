@@ -58,7 +58,7 @@ public class Script extends Task {
         runner.addBean("project", getProject());
         runner.addBean("self", this);
 
-        runner.executeScript("<ANT>");
+        runner.executeScript("ANT");
     }
 
     /**
