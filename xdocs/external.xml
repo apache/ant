@@ -416,6 +416,35 @@
     </section>
 
     <section name="Other">
+      <subsection name="AntHill">
+        <p>Anthill is a build tool that promotes a controlled build
+        process by ensuring that every build reflects the source
+        repository contents and tagging the repository with a unique
+        build number after every build. Anthill also encourages the
+        sharing of knowledge within an organization by automatically
+        updating a project intranet site with artifacts from the
+        latest build.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.urbancode.com/projects/anthill/">http://www.urbancode.com/projects/anthill/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='mailto:mbz@urbancode.com'>Maciej Zawadzki</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Mozilla-like license</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="CruiseControl">
         <p>CruiseControl is a tool for setting up a continuous build
         process.  CruiseControl provides an Ant wrapper and a set of
