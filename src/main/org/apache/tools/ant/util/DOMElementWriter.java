@@ -56,6 +56,9 @@ package org.apache.tools.ant.util;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Attr;
@@ -73,7 +76,7 @@ import org.w3c.dom.Text;
  *
  * @author The original author of XmlLogger
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</tt>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</tt>
  */
 public class DOMElementWriter {
 
@@ -85,15 +88,30 @@ public class DOMElementWriter {
      * entities.
      */
     protected String[] knownEntities = {"gt", "amp", "lt", "apos", "quot"};
-    
+
+
+    /**
+     * Writes a DOM tree to a stream in UTF8 encoding. Note that
+     * it appends the &lt;?xml version='1.0' encoding='UTF-8'?&gt;.
+     * The indent number is set to 0 and a 2-space indent.
+     * @param root the root element of the DOM tree.
+     * @param out the outputstream to write to.
+     * @throws IOException if an error happens while writing to the stream.
+     */
+    public void write(Element root, OutputStream out) throws IOException {
+        Writer wri = new OutputStreamWriter(out, "UTF8");
+        wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        write(root, wri, 0, "  ");
+        wri.flush();
+    }
+
     /**
      * Writes a DOM tree to a stream.
-     *
      * @param element the Root DOM element of the tree
      * @param out where to send the output
      * @param indent number of 
-     * @param indentWith strings, 
-     *       that should be used to indent the corresponding tag.
+     * @param indentWith string that should be used to indent the corresponding tag.
+     * @throws IOException if an error happens while writing to the stream.
      */
     public void write(Element element, Writer out, int indent, 
                       String indentWith)
