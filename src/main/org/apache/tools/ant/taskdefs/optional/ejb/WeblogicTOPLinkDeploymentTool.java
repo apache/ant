@@ -89,11 +89,11 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = super.getDescriptorHandler(srcDir);
         if (toplinkDTD != null) {
-            handler.registerResourceDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
-                                        toplinkDTD);
+            handler.registerDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
+                                toplinkDTD);
         } else {
-            handler.registerResourceDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
-                                        TL_DTD_LOC);
+            handler.registerDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
+                                TL_DTD_LOC);
         }
         return handler;                                    
     }
