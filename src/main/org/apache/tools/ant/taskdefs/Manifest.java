@@ -843,6 +843,9 @@ public class Manifest extends Task {
      */
     public void addConfiguredAttribute(Attribute attribute)
          throws ManifestException {
+        if (attribute.getKey() == null || attribute.getValue() == null) {
+            throw new BuildException("Attributes must have name and value");
+        }
         if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_MANIFEST_VERSION)) {
             manifestVersion = attribute.getValue();
         } else {
