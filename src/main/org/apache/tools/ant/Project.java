@@ -69,6 +69,7 @@ import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.WeakishReference;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -1172,7 +1173,7 @@ public class Project {
                 v = new Vector();
                 createdTasks.put(type, v);
             }
-            v.addElement(task);
+            v.addElement(WeakishReference.createReference(task));
         }
     }
 
@@ -1189,8 +1190,13 @@ public class Project {
             if (v != null) {
                 Enumeration enum = v.elements();
                 while (enum.hasMoreElements()) {
-                    Task t = (Task) enum.nextElement();
-                    t.markInvalid();
+                    WeakishReference ref=
+                            (WeakishReference) enum.nextElement();
+                    Task t = (Task) ref.get();
+                    //being a weak ref, it may be null by this point
+                    if(t!=null) {
+                        t.markInvalid();
+                    }
                 }
                 v.removeAllElements();
                 createdTasks.remove(type);
@@ -1802,10 +1808,10 @@ public class Project {
                 valueAsString = value.toString();
             } catch (Throwable t) {
                 log("Caught exception (" + t.getClass().getName() +")"
-                    + " while expanding " + name + ": " + t.getMessage(), 
+                    + " while expanding " + name + ": " + t.getMessage(),
                     MSG_WARN);
             }
-            log("Adding reference: " + name + " -> " + valueAsString, 
+            log("Adding reference: " + name + " -> " + valueAsString,
                 MSG_DEBUG);
             references.put(name, value);
         }
