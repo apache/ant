@@ -739,7 +739,7 @@ public class Project {
         
         if (overwrite ||
             destFile.lastModified() < sourceFile.lastModified()) {
-            log("Copy: " + sourceFile.getAbsolutePath() + " > "
+            log("Copy: " + sourceFile.getAbsolutePath() + " -> "
                     + destFile.getAbsolutePath(), MSG_VERBOSE);
 
             // ensure that parent dir of dest file exists!
