@@ -1,6 +1,170 @@
-<project default="jars">
-    
-    <target name="jars">
-      <echo message="Mutant is being retructured - returning shortly"/>
-    </target>
- </project>
+<project default="main" name="mutant">
+
+  <property name="src.dir" value="src"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="java.dir" value="${src.dir}/java"/>
+
+  <property name="bin.dir" value="bin"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="javadocs.dir" value="${dist.dir}/javadocs"/>
+  <property name="distlib.dir" value="${dist.dir}/lib"/>
+  
+  <property name="debug" value="true"/>
+
+  <path id="classpath.parser">
+    <fileset dir="${lib.dir}/parser" includes="*.jar"/>
+  </path>
+  
+  <path id="classpath.common">
+    <pathelement location="${distlib.dir}/init.jar"/>
+  </path>
+
+  <path id="classpath.antcore">
+    <path refid="classpath.common"/>
+    <pathelement location="${distlib.dir}/common/common.jar"/>
+    <path refid="classpath.parser"/>
+  </path>
+
+  <path id="classpath.cli">
+    <path refid="classpath.antcore"/>
+    <pathelement location="${distlib.dir}/antcore/antcore.jar"/>
+  </path>
+  
+  <path id="classpath.start">
+    <pathelement location="${distlib.dir}/init.jar"/>
+  </path>
+
+  <target name="buildsetup">
+    <available file="../checkstyle" property="checkstyle.available"/>
+    <mkdir dir="${bin.dir}"/>
+    <mkdir dir="${distlib.dir}"/>
+    <copy todir="${distlib.dir}">
+      <fileset dir="${lib.dir}"/>
+    </copy>
+  </target>
+
+  <target name="init" depends="buildsetup">
+    <mkdir dir="${bin.dir}/init"/>
+    <depend destdir="${bin.dir}/init" srcdir="${java.dir}/init"/>
+    <javac destdir="${bin.dir}/init" srcdir="${java.dir}/init" debug="${debug}"/>
+    <jar basedir="${bin.dir}/init" jarfile="${distlib.dir}/init.jar"/>
+  </target>
+
+  <target name="common" depends="init">
+    <mkdir dir="${bin.dir}/common"/>
+    <mkdir dir="${distlib.dir}/common"/>
+    <depend destdir="${bin.dir}/common" srcdir="${java.dir}/common">
+      <classpath refid="classpath.common"/>
+    </depend>
+    <javac destdir="${bin.dir}/common" srcdir="${java.dir}/common" debug="${debug}">
+      <classpath refid="classpath.common"/>
+    </javac>
+    <jar basedir="${bin.dir}/common" jarfile="${distlib.dir}/common/common.jar"/>
+  </target>
+
+  <target name="antcore" depends="common">
+    <mkdir dir="${bin.dir}/antcore"/>
+    <mkdir dir="${distlib.dir}/antcore"/>
+    <depend destdir="${bin.dir}/antcore" srcdir="${java.dir}/antcore">
+      <classpath refid="classpath.antcore"/>
+    </depend>
+    <javac destdir="${bin.dir}/antcore" srcdir="${java.dir}/antcore" debug="${debug}">
+      <classpath refid="classpath.antcore"/>
+    </javac>
+    <jar basedir="${bin.dir}/antcore" jarfile="${distlib.dir}/antcore/antcore.jar"/>
+  </target>
+
+  <target name="cli" depends="antcore, start">
+    <mkdir dir="${bin.dir}/cli"/>
+    <mkdir dir="${distlib.dir}/cli"/>
+    <depend destdir="${bin.dir}/cli" srcdir="${java.dir}/cli">
+      <classpath refid="classpath.cli"/>
+    </depend>
+    <javac destdir="${bin.dir}/cli" srcdir="${java.dir}/cli" debug="${debug}">
+      <classpath refid="classpath.cli"/>
+    </javac>
+    <jar basedir="${bin.dir}/cli" jarfile="${distlib.dir}/cli/cli.jar"/>
+  </target>
+
+  <target name="start" depends="init">
+    <mkdir dir="${bin.dir}/start"/>
+    <depend destdir="${bin.dir}/start" srcdir="${java.dir}/start">
+      <classpath refid="classpath.start"/>
+    </depend>
+    <javac destdir="${bin.dir}/start" srcdir="${java.dir}/start" debug="${debug}">
+      <classpath refid="classpath.start"/>
+    </javac>
+    <jar basedir="${bin.dir}/start" jarfile="${distlib.dir}/start.jar">
+      <manifest>
+        <attribute name="Main-Class" value="org.apache.ant.start.Main"/>
+        <attribute name="Class-Path" value="init.jar"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean">
+    <delete dir="${bin.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+  <target name="antlibs" depends="common">
+    <antcall target="build-lib" inheritall="false">
+      <param name="libset" value="io"/>
+    </antcall>
+  </target>
+  
+  <target name="build-lib">
+    <mkdir dir="${bin.dir}/antlibs/${libset}"/>
+    <mkdir dir="${distlib.dir}/antlibs"/>
+    <path id="classpath.antlibs">
+      <path refid="classpath.common"/>
+      <pathelement location="${distlib.dir}/common/common.jar"/>
+    </path>
+    <depend destdir="${bin.dir}/antlibs/${libset}" srcdir="${java.dir}/antlibs/${libset}/code">
+      <classpath refid="classpath.antlibs"/>
+    </depend>
+    <javac destdir="${bin.dir}/antlibs/${libset}" srcdir="${java.dir}/antlibs/${libset}/code" debug="${debug}">
+      <classpath refid="classpath.antlibs"/>
+    </javac>
+    <jar basedir="${bin.dir}/antlibs/${libset}" jarfile="${distlib.dir}/antlibs/${libset}.tsk">
+      <metainf dir="${java.dir}/antlibs/${libset}" 
+                includes="antlib.xml"/>
+    </jar>
+  </target>
+
+  <target name="main" depends="cli, antlibs, checkstyle"/> 
+  
+  <target name="checkstyle" if="checkstyle.available">
+    <property name="checkstyle.bin" value="../checkstyle"/>
+    <path id="checkstyle.path">
+      <fileset dir="${checkstyle.bin}"/>
+    </path>
+    <taskdef name="checkstyle" reverseloader="true"
+             classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
+        <classpath refid="checkstyle.path"/>
+    </taskdef>
+    <mkdir dir="${bin.dir}/checkstyle"/>
+    <checkstyle maxlinelen="80"
+                memberpattern="[a-z].*"
+                parampattern="[a-z].*"
+                staticpattern="[a-z].*"
+                ignoreCastWhitespace="true">
+      <fileset dir="${java.dir}" includes="**/*.java"/>
+    </checkstyle>
+  </target>
+  
+  <target name="javadocs">
+    <mkdir dir="${javadocs.dir}"/>
+    <javadoc packagenames="org.apache.*"
+             useexternalfile="yes"
+             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/cli:${java.dir}/start"
+             destdir="${javadocs.dir}"
+             author="true" private ="true"
+             version="true"
+             windowtitle="Mutant API"
+             doctitle="Mutant">
+      <group title="Apache Ant Core" packages="org.apache.ant.antcore*" />
+
+    </javadoc>
+  </target>
+</project>

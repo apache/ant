@@ -1,0 +1,8 @@
+<antlib libid="ant.io" 
+        home="http://jakarta.apache.org/ant"
+        isolated="true">
+  <typedef name="thread" classname="java.lang.Thread"/>
+  <taskdef name="echo" classname="org.apache.ant.taskdef.io.Echo"/>
+
+  <converter classname="org.apache.ant.taskdef.io.FileConverter"/>
+</antlib>

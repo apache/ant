@@ -1,0 +1,6 @@
+<antlib libid="ant.file" 
+        home="http://jakarta.apache.org/ant"
+        reqxml="true" reqtools="true" extends="ant.io"
+        isolated="true">
+  <taskdef name="copy" classname="org.apache.ant.file.copy"/>
+</antlib>
