@@ -572,7 +572,7 @@ public class Javadoc extends Task {
         if (classpath == null)
             classpath = Path.systemClasspath;
         else
-            classpath = classpath.concatSystemClasspath();
+            classpath = classpath.concatSystemClasspath("ignore");
 
         if (!javadoc1) {
             toExecute.createArgument().setValue("-classpath");

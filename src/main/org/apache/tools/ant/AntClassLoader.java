@@ -111,7 +111,7 @@ public class AntClassLoader  extends ClassLoader {
      */
     public AntClassLoader(Project project, Path classpath) {
         this.project = project;
-        this.classpath = classpath.concatSystemClasspath();
+        this.classpath = classpath.concatSystemClasspath("ignore");
 
         // JDK > 1.1 should add these by default, but some VMs don't
         addSystemPackageRoot("java");
