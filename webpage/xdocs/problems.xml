@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="conor@apache.org">Conor MacNeill</author>
+    <title>Having Problems?</title>
+  </properties>
+
+  <body>
+    <section name="Having Problems?">
+      <p>If you are having problems with Ant, this page details some steps you can take
+         to try and resolve the problem. If you can't resolve the problem then this page will help
+         you collect some of the relevant information to provide a bug report. This information will help 
+         the Ant developers understand and resolve the problem. Of course, not all of the steps here will 
+         make sense for every problem you encounter. These are just some suggestions to 
+         point you in the right direction.
+      </p>
+         
+      <subsection name="Read the Manual">
+        <p>The first step to take when you have a problem is to read the <a href="manual/">
+           manual</a> entry for the task or concept that is giving you trouble. Check particularly the meaning of
+           attributes and nested elements. Perhaps an attribute would provide the behavior you require. If you
+           have problems with the manual, then you can submit a documentation bug report (see below) to help us
+           improve the Ant documentation.
+        </p>        
+      </subsection>
+      <subsection name="Examine Debug Output">
+        <p>The first step when you have a problem is to see what Ant is doing. Try running Ant with
+           The verbose flag<br/><br/>
+           <code>ant -verbose</code><br/><br/>
+           or<br/><br/>
+           <code>ant -v</code><br/><br/>
+           
+           This will produce something which starts like the following:</p>
+           <source>
+Ant version 1.4alpha compiled on August 6 2001
+Buildfile: build.xml
+Detected Java version: 1.3 in: f:\jdk1.3\jre
+Detected OS: Windows NT
+parsing buildfile \jakarta-ant\build.xml with 
+URI = file:/jakarta-ant/build.xml
+Project base dir set to: \jakarta-ant
+ [property] Loading \jakarta-ant\.ant.properties
+ [property] Unable to find property file: \jakarta-ant\.ant.properties
+ [property] Loading \conor\.ant.properties
+ [property] Override ignored for debug
+
+prepare:
+
+check_for_optional_packages:
+...
+           </source>
+           <p>
+             You may be able to see in this trace what ant is doing and why it takes a particular 
+             course of action. If you need even more information you can use the <code>-debug</code> 
+             flag rather than <code>-verbose</code>. This will generally produce so much output that 
+             you may want to save the output and analyze it in an editor.
+           </p>
+           
+           <p>So, once you have all this debug information, how can you use it to solve your problem. 
+              That will depend on the task in question and the nature of your problem. Each task logs
+              different aspects of its operation, but it will give you an idea of what is going on. For
+              example, the &lt;javac&gt; task logs the reasons why it chooses to compile particular 
+              classes and the equivalent command it is using. The following trace (which has been edited
+              and reformatted for clarity) shows javac adding one class but skipping another. This is followed 
+              by the compiler arguments and a summary of all the classes to be compiled. 
+           </p>
+<source>
+ [javac] org\apache\tools\ant\listener\Log4jListener.java added as 
+         \build\classes\org\apache\tools\ant\listener\Log4jListener.class 
+             is outdated.
+ [javac] org\apache\tools\ant\Location.java omitted as 
+         \build\classes\org\apache\tools\ant\Location.class is up to date.
+  ...
+ [javac] Compiling 1 source file to \jakarta-ant\build\classes
+ [javac] Using modern compiler
+ [javac] Compilation args: -d \jakarta-ant\build\classes -classpath 
+         \jakarta-ant\build\classes;F:\jdk1.3\lib\tools.jar;
+         \Ant\lib\optional.jar;\Ant\lib\log4j.jar;
+         \Ant\lib\junit.jar;\Ant\lib\jaxp.jar;
+         \Ant\lib\crimson.jar;\Ant\lib\ant.jar 
+         -sourcepath \jakarta-ant\src\main -g:none -O
+    [javac] File to be compiled:
+    \src\main\org\apache\tools\ant\listener\Log4jListener.java  
+</source>
+
+            <p>
+              In many cases Ant tasks are wrappers around OS commands or other java classes. In debug mode, many
+              of these tasks will print out the equivalent command line, as the &lt;javac&gt; task above does. If 
+              you are having a problem, it is often useful to run the command directly in the same way Ant is doing 
+              and see if the problem persists. The problem may lie in the command being run by Ant, or in the way 
+              the Ant task is running the command. You can also see the effect of changing attribute values on the
+              generated command line. This can help you to understand whether you are using the correct attributes
+              and values.
+            </p>
+      </subsection>
+
+      <subsection name="Has it been fixed?">
+        <p>
+          After examining the debug output, you still believe that the problem you are having may be caused by Ant. 
+          Chances are that someone else may have already encountered this problem and perhaps it has been
+          fixed. The next step, therefore, may be to try a nightly build of Ant to see if the 
+          problem has been fixed. Nightly builds for Ant are available from the 
+          <a href="/builds/jakarta-ant/nightly/">Jakarta web site</a>. While Ant nightly
+          builds are typically quite stable and are used by <a href="/builds/gump/latest/">
+          Gump</a> to build many other Jakarta projects, these builds should be treated as experimental. You can 
+          install and verify whether your problem has been fixed. Note that nightly builds do not build many of the
+          optional tasks the come with Ant. A snapshot of these optional tasks is occasionally uploaded to the nightly 
+          download <a href="/builds/jakarta-ant/nightly/optional/">area</a>. Note that even 
+          this snapshot does not contain every optional task.
+        </p>
+      </subsection>
+      
+      <subsection name="Has it been reported?">
+        <p>
+          If the current nightly build doesn't resolve your problem, it is possible that someone else has reported
+          the issue. It is time to look at the <a href="http://nagoya.apache.org/bugzilla/">Apache Bug Database</a>.
+          This system is easy to use and it will let you search the currently open and resolved bugs to see if your
+          problem has already been reported. If it has, you can see whether any of the developers have commented, 
+          suggesting workarounds or the reason for the bug, etc. You may have more information to add (see about 
+          creating bug reports below), in which case, go right ahead and add it. If you can't add more information
+          you may just want to vote for this bug, and perhaps add yourself to the CC list to follow the progress of
+          this bug.
+        </p>
+      </subsection>
+      
+      <subsection name="Filing a Bug report">
+        <p>By this time you may have decided that there is a bug in Ant. You have a few choices at this 
+           point. You can send an email to the ant-user mailing list to see if others have encountered your issue
+           and how they may have worked around it. If after some discussion, you still feel you have a bug, it 
+           is time to create a bug report. This is a simple operation in the Bug Database. Please try to provide 
+           as much information as possible to assist the developers in resolving the bug. Please try to enter correct 
+           values for the various inputs when creating the bug. Once the bug is created you can add attachments to
+           the bug report. 
+        </p>
+        
+        <p>What information should you include in your bug report? The easiest bugs to fix are those which are most 
+           easily reproducible, so if you can, it is really helpful to produce a small test case that exhibits the
+           problem. In this case, you would attach the build file and other files necessary to reproduce the problem
+           probably packed together in an archive. If you can't produce a test case, you should try to include a 
+           snippet from your build file and the relevant sections from the debug out from Ant. Try to include the 
+           header information where Ant states the version, the OS and VM information etc. As the debug output is 
+           likely to be very large, you should try to remove the output which is not relevant. Once the bug is 
+           entered into the Bug Database, you will be kept informed about progress on the bug. If you receive email
+           asking for further information, please try to respond as it will aid in the resolution of your bug.
+        </p>
+      </subsection>
+      
+      <subsection name="Fixing the Bug">
+        <p>If you aren't satisfied just filing a bug report, you can try to find and fix the problem yourself. The 
+           best way to do that is by working against the latest code from CVS. Alternatively, you can work with the
+           source code from the source distributions available on the Jakarta website. If you are going to tackle the
+           issues at this level, you may want to discuss details on the ant-dev mailing list. Once you have a fix 
+           for the problem, you may either submit the patch to the ant-dev mailing list or enter into the Bug
+           Database as described above, attaching the patch. Using the Bug database has the advantage of tracking
+           the progress of your bug.
+        </p>
+      </subsection>
+      
+         
+    </section>
+    
+  </body>
+</document>
