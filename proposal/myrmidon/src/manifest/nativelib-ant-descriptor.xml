@@ -1,0 +1,7 @@
+<ant-lib>
+
+  <types>
+    <task name="load-environment" classname="org.apache.antlib.nativelib.LoadEnvironment" />
+  </types>
+
+</ant-lib>
