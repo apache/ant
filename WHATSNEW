@@ -29,6 +29,10 @@ Fixed bugs:
 
 * if the basedir contained .. or . dirs, and the build file name contained
   .. or ., the basedir was set incorrectly. Bugzilla Report 26765.
+
+* regression from ant 1.5, exec task outputted two redundant trailing newlines.
+  Bugzilla Report 27546.
+
 Other changes:
 --------------
 
