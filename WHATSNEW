@@ -1,4 +1,4 @@
-Changes from Ant 1.2 to Ant 1.3 Beta 2
+Changes from Ant 1.2 to Ant 1.3 Beta 3
 ===========================================
 
 Changes that could break older environments:
@@ -83,6 +83,9 @@ Fixed bugs:
 * <signjar> doesn't use deprectated methods anymore.
 
 * javadoc's failonerror attribute works again
+
+* javadoc's additionalparam attribute will now be split into separate
+  parameters (on spaces) to allow for more than one parameter.
 
 * Changed <sql> task so that printing result sets works on Oracle
 

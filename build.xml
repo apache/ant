@@ -605,6 +605,7 @@
     <delete dir="${tests.etc.dir}/taskdefs/taskdefs.tmp" />
     <delete dir="${tests.etc.dir}/taskdefs.tmp" />
     <delete file="${tests.etc.dir}/taskdefs/tmp.jar" />
+    <delete dir="${tests.etc.dir}/types/copytest" />
   </target>
 
   <target name="run-single-test" if="testcase" depends="compile-tests">
