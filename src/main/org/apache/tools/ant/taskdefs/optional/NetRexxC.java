@@ -564,9 +564,6 @@ public class NetRexxC extends MatchingTask {
         if ((p = getProject().getProperty("ant.netrexxc.format")) != null) {
             this.format = Project.toBoolean(p);
         }
-        if ((p = getProject().getProperty("ant.netrexxc.java")) != null) {
-            this.java = Project.toBoolean(p);
-        }
         if ((p = getProject().getProperty("ant.netrexxc.keep")) != null) {
             this.keep = Project.toBoolean(p);
         }
