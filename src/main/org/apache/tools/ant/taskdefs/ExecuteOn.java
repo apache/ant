@@ -69,7 +69,7 @@ import java.io.IOException;
  */
 public class ExecuteOn extends ExecTask {
 
-    private Vector filesets = new Vector();
+    protected Vector filesets = new Vector();
     private boolean parallel = false;
 
     /**

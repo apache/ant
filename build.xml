@@ -118,8 +118,14 @@
   <target name="main" depends="jar">
      <mkdir dir="${bin.dir}"/>
      <copydir src="${src.bin.dir}" dest="${bin.dir}"/>
-     <chmod perm="+x" file="${bin.dir}/ant"/>
-     <chmod perm="+x" file="${bin.dir}/antRun"/>
+     <chmod perm="+x">
+       <fileset dir="${bin.dir}">
+         <patternset id="chmod.patterns">
+           <include name="**/ant" />
+           <include name="**/antRun" />
+         </patternset>
+       </fileset>
+     </chmod>
      <fixcrlf srcdir="${bin.dir}" includes="ant,antRun" cr="remove"/>
      <fixcrlf srcdir="${bin.dir}" includes="*.bat" cr="add"/>
   </target>
@@ -159,8 +165,11 @@
      <copydir src="${docs.dir}" dest="${ant.dist.dir}/docs"/>
      <copydir src="${build.javadocs}" dest="${ant.dist.dir}/docs/api"/>
 
-     <chmod perm="+x" file="${ant.dist.dir}/bin/ant"/>
-     <chmod perm="+x" file="${ant.dist.dir}/bin/antRun"/>
+     <chmod perm="+x">
+       <fileset dir="${ant.dist.dir}/bin">
+         <patternsetref refid="chmod.patterns"/>
+       </fileset>
+     </chmod>
 
      <copyfile src="README" dest="${ant.dist.dir}/README"/>
      <copyfile src="TODO" dest="${ant.dist.dir}/TODO"/>
@@ -195,19 +204,25 @@
     <echo message="installing full copy of ant into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
     <copydir src="${ant.dist.dir}" dest="${ant.install}"/>
-    <chmod perm="+x" file="${ant.install}/bin/ant"/>
-    <chmod perm="+x" file="${ant.install}/bin/antRun"/>
+    <chmod perm="+x">
+      <fileset dir="${ant.install}/bin">
+        <patternsetref refid="chmod.patterns"/>
+      </fileset>
+    </chmod>
   </target>     
 
   <target name="fullinstall" depends="install"/>
   
   <target name="mininstall" depends="main" if="ant.install">
-    <echo message="copy minimal ant installtion into ${ant.install}"/>
+    <echo message="copy minimal ant installation into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
     <copydir src="${lib.dir}" dest="${ant.install}/lib"/>
     <copydir src="${bin.dir}" dest="${ant.install}/bin"/>
-    <chmod perm="+x" file="${ant.install}/bin/ant"/>
-    <chmod perm="+x" file="${ant.install}/bin/antRun"/>
+    <chmod perm="+x">
+      <fileset dir="${ant.install}/bin">
+        <patternsetref refid="chmod.patterns"/>
+      </fileset>
+    </chmod>
   </target>     
 
   <!-- =================================================================== -->

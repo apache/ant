@@ -164,7 +164,7 @@ public class ExecTask extends Task {
     /**
      * Is this the OS the user wanted?
      */
-    private boolean isValidOs() {
+    protected boolean isValidOs() {
         // test if os match
         String myos = System.getProperty("os.name");
         log("Myos = " + myos, Project.MSG_VERBOSE);

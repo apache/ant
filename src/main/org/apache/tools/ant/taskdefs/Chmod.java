@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 import java.io.*;
 import java.util.*;
@@ -64,20 +65,28 @@ import java.util.*;
  *
  * @author costin@eng.sun.com
  * @author Mariusz Nowostawski (Marni) <a href="mailto:mnowostawski@infoscience.otago.ac.nz">mnowostawski@infoscience.otago.ac.nz</a>
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
 
-public class Chmod extends MatchingTask {
+public class Chmod extends ExecuteOn {
 
-    private File srcFile; //if we want to chmod a single file or dir
-    private File srcDir;  //if we want to chmod a list of files
-    private String mod;
+    private FileSet defaultSet = new FileSet();
+    private boolean havePerm = false;
     
+    public Chmod() {
+        super.setExecutable("chmod");
+        super.setParallel(true);
+    }
+
     public void setFile(File src) {
-        srcFile = src;
+        FileSet fs = new FileSet();
+        fs.setDir(new File(src.getParent()));
+        fs.createInclude().setName(src.getName());
+        addFileset(fs);
     }
 
     public void setDir(File src) {
-        srcDir = src;
+        defaultSet.setDir(src);
     }
 
     public void setSrc(File src) {
@@ -88,38 +97,93 @@ public class Chmod extends MatchingTask {
     }
 
     public void setPerm(String perm) {
-        mod=perm;
+        createArg().setValue(perm);
+        havePerm = true;
     }
 
-    public void execute() throws BuildException {
-        try {
-            // XXX if OS=unix
-            if (System.getProperty("path.separator").equals(":") &&
-                !System.getProperty("os.name").startsWith("Mac")) {
-        
-                if (srcFile != null && srcDir == null) {
-                    chmod(srcFile.toString());
-                } else if(srcFile == null && srcDir == null) {
-                    log("The attribute 'file' or 'dir' needs to be set.", Project.MSG_WARN);
-                    throw new BuildException("Required attribute not set in Chmod", location);
-                } else if(srcFile == null && srcDir != null) {
-          
-                    DirectoryScanner ds = getDirectoryScanner(srcDir);
-                    String[] files = ds.getIncludedFiles();
-          
-                    for (int i = 0; i < files.length; i++) {
-                        chmod((new File(srcDir, files[i])).getAbsolutePath());
-                    }
-                }
-            }
-        } catch (IOException ioe) {
-            // ignore, but warn
-            log("Error in Chmod " + ioe.toString() , Project.MSG_WARN);
+    /**
+     * add a name entry on the include list
+     */
+    public PatternSet.NameEntry createInclude() {
+        return defaultSet.createInclude();
+    }
+    
+    /**
+     * add a name entry on the exclude list
+     */
+    public PatternSet.NameEntry createExclude() {
+        return defaultSet.createExclude();
+    }
+
+    /**
+     * add a set of patterns
+     */
+    public PatternSet createPatternSet() {
+        return defaultSet.createPatternSet();
+    }
+
+    /**
+     * add a reference to a set of patterns
+     */
+    public Reference createPatternSetRef() {
+        return defaultSet.createPatternSetRef();
+    }
+
+    /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        defaultSet.setIncludes(includes);
+    }
+
+    /**
+     * Sets the set of exclude patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param excludes the string containing the exclude patterns
+     */
+    public void setExcludes(String excludes) {
+        defaultSet.setExcludes(excludes);
+    }
+
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     *                           should be used, "false"|"off"|"no" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(boolean useDefaultExcludes) {
+        defaultSet.setDefaultexcludes(useDefaultExcludes);
+    }
+    
+    protected void checkConfiguration() {
+        if (!havePerm) {
+            throw new BuildException("Required attribute perm not set in chmod", 
+                                     location);
         }
+        
+        if (defaultSet.getDir() != null) {
+            addFileset(defaultSet);
+        }
+        super.checkConfiguration();
     }
 
+    public void setExecutable(String e) {
+        throw new BuildException(taskType+" doesn\'t support the executable attribute", location);
+    }
 
-    private void chmod(String file) throws BuildException, IOException {
-        Runtime.getRuntime().exec("chmod " + mod + " " + file);
+    public void setCommand(String e) {
+        throw new BuildException(taskType+" doesn\'t support the command attribute", location);
+    }
+
+    protected boolean isValidOs() {
+        // XXX if OS=unix
+        return System.getProperty("path.separator").equals(":") &&
+            !System.getProperty("os.name").startsWith("Mac") && 
+            super.isValidOs();
     }
 }

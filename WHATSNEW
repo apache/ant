@@ -43,6 +43,8 @@ specified on the command line.
 * Added a -emacs option to tell the logger to leave out taskname adornments
 on log output.
 
+* <chmod> works on all files in parallel and supports multiple filesets.
+
 Fixed bugs:
 -----------
 
