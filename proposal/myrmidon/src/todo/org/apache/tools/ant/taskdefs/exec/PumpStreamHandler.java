@@ -45,18 +45,18 @@ public class PumpStreamHandler
         this( System.out, System.err );
     }
 
-    public void setProcessErrorStream( InputStream is )
+    public void setProcessErrorStream( final InputStream error )
     {
-        createProcessErrorPump( is, m_error );
+        createProcessErrorPump( error, m_error );
     }
 
-    public void setProcessInputStream( OutputStream os )
+    public void setProcessInputStream( final OutputStream standardInput )
     {
     }
 
-    public void setProcessOutputStream( InputStream is )
+    public void setProcessOutputStream( final InputStream standardOutput )
     {
-        createProcessOutputPump( is, m_output );
+        createProcessOutputPump( standardOutput, m_output );
     }
 
     public void start()
