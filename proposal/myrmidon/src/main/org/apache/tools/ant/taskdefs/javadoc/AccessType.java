@@ -9,7 +9,8 @@ package org.apache.tools.ant.taskdefs.javadoc;
 
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
-public class AccessType extends EnumeratedAttribute
+public class AccessType
+    extends EnumeratedAttribute
 {
     public String[] getValues()
     {

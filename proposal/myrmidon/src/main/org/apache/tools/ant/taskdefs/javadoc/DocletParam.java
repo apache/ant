@@ -12,12 +12,12 @@ public class DocletParam
     private String m_name;
     private String m_value;
 
-    public void setName( String name )
+    public void setName( final String name )
     {
         this.m_name = name;
     }
 
-    public void setValue( String value )
+    public void setValue( final String value )
     {
         this.m_value = value;
     }

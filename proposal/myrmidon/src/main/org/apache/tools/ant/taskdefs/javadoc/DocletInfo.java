@@ -19,12 +19,12 @@ public class DocletInfo
     private String m_name;
     private Path m_path;
 
-    public void setName( String name )
+    public void setName( final String name )
     {
         m_name = name;
     }
 
-    public void setPath( Path path )
+    public void setPath( final Path path )
         throws TaskException
     {
         if( m_path == null )
@@ -42,10 +42,10 @@ public class DocletInfo
      *
      * @param r The new PathRef value
      */
-    public void setPathRef( Reference r )
+    public void setPathRef( final Reference reference )
         throws TaskException
     {
-        createPath().setRefid( r );
+        createPath().setRefid( reference );
     }
 
     public String getName()
@@ -65,9 +65,8 @@ public class DocletInfo
 
     public DocletParam createParam()
     {
-        DocletParam param = new DocletParam();
+        final DocletParam param = new DocletParam();
         m_params.add( param );
-
         return param;
     }
 

@@ -59,51 +59,48 @@ import org.apache.tools.ant.types.Reference;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public class Javadoc extends Task
+public class Javadoc
+    extends Task
 {
-    private static boolean javadoc1 =
-        ( Project.getJavaVersion() == Project.JAVA_1_1 );
+    private Commandline m_command = new Commandline();
 
-    private Commandline cmd = new Commandline();
-
-    private boolean foundJavaFile;
-    private Path sourcePath;
-    private File destDir;
-    private ArrayList sourceFiles = new ArrayList();
-    private ArrayList packageNames = new ArrayList( 5 );
-    private ArrayList excludePackageNames = new ArrayList( 1 );
-    private boolean author = true;
-    private boolean version = true;
-    private DocletInfo doclet;
-    private Path classpath;
-    private Path bootclasspath;
-    private String group;
-    private ArrayList compileList = new ArrayList( 10 );
-    private String packageList;
-    private ArrayList links = new ArrayList( 2 );
-    private ArrayList groups = new ArrayList( 2 );
-    private boolean useDefaultExcludes = true;
-    private Html doctitle;
-    private Html header;
-    private Html footer;
-    private Html bottom;
-    private boolean useExternalFile;
-    private File tmpList;
+    private Path m_sourcePath;
+    private File m_destDir;
+    private ArrayList m_sourceFiles = new ArrayList();
+    private ArrayList m_packageNames = new ArrayList( 5 );
+    private ArrayList m_excludePackageNames = new ArrayList( 1 );
+    private boolean m_author = true;
+    private boolean m_version = true;
+    private DocletInfo m_doclet;
+    private Path m_classpath;
+    private Path m_bootclasspath;
+    private String m_group;
+    private ArrayList m_compileList = new ArrayList( 10 );
+    private String m_packageList;
+    private ArrayList m_links = new ArrayList( 2 );
+    private ArrayList m_groups = new ArrayList( 2 );
+    private boolean m_useDefaultExcludes = true;
+    private Html m_doctitle;
+    private Html m_header;
+    private Html m_footer;
+    private Html m_bottom;
+    private boolean m_useExternalFile;
+    private File m_tmpList;
 
     public void setAccess( AccessType at )
     {
-        cmd.createArgument().setValue( "-" + at.getValue() );
+        m_command.createArgument().setValue( "-" + at.getValue() );
     }
 
     public void setAdditionalparam( String add )
         throws TaskException
     {
-        cmd.createArgument().setLine( add );
+        m_command.createArgument().setLine( add );
     }
 
     public void setAuthor( boolean src )
     {
-        author = src;
+        m_author = src;
     }
 
     /**
@@ -120,13 +117,13 @@ public class Javadoc extends Task
     public void setBootclasspath( Path src )
         throws TaskException
     {
-        if( bootclasspath == null )
+        if( m_bootclasspath == null )
         {
-            bootclasspath = src;
+            m_bootclasspath = src;
         }
         else
         {
-            bootclasspath.append( src );
+            m_bootclasspath.append( src );
         }
     }
 
@@ -145,13 +142,13 @@ public class Javadoc extends Task
     public void setClasspath( Path src )
         throws TaskException
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = src;
+            m_classpath = src;
         }
         else
         {
-            classpath.append( src );
+            m_classpath.append( src );
         }
     }
 
@@ -174,49 +171,49 @@ public class Javadoc extends Task
      */
     public void setDefaultexcludes( boolean useDefaultExcludes )
     {
-        this.useDefaultExcludes = useDefaultExcludes;
+        this.m_useDefaultExcludes = useDefaultExcludes;
     }
 
     public void setDestdir( File dir )
     {
-        destDir = dir;
-        cmd.createArgument().setValue( "-d" );
-        cmd.createArgument().setFile( destDir );
+        m_destDir = dir;
+        m_command.createArgument().setValue( "-d" );
+        m_command.createArgument().setFile( m_destDir );
     }
 
     public void setDocencoding( String enc )
     {
-        cmd.createArgument().setValue( "-docencoding" );
-        cmd.createArgument().setValue( enc );
+        m_command.createArgument().setValue( "-docencoding" );
+        m_command.createArgument().setValue( enc );
     }
 
     public void setDoclet( String src )
     {
-        if( doclet == null )
+        if( m_doclet == null )
         {
-            doclet = new DocletInfo();
+            m_doclet = new DocletInfo();
         }
-        doclet.setName( src );
+        m_doclet.setName( src );
     }
 
     public void setDocletPath( Path src )
         throws TaskException
     {
-        if( doclet == null )
+        if( m_doclet == null )
         {
-            doclet = new DocletInfo();
+            m_doclet = new DocletInfo();
         }
-        doclet.setPath( src );
+        m_doclet.setPath( src );
     }
 
     public void setDocletPathRef( Reference r )
         throws TaskException
     {
-        if( doclet == null )
+        if( m_doclet == null )
         {
-            doclet = new DocletInfo();
+            m_doclet = new DocletInfo();
         }
-        doclet.createPath().setRefid( r );
+        m_doclet.createPath().setRefid( r );
     }
 
     public void setDoctitle( String src )
@@ -228,8 +225,8 @@ public class Javadoc extends Task
 
     public void setEncoding( String enc )
     {
-        cmd.createArgument().setValue( "-encoding" );
-        cmd.createArgument().setValue( enc );
+        m_command.createArgument().setValue( "-encoding" );
+        m_command.createArgument().setValue( enc );
     }
 
     public void setExcludePackageNames( String src )
@@ -246,11 +243,8 @@ public class Javadoc extends Task
 
     public void setExtdirs( String src )
     {
-        if( !javadoc1 )
-        {
-            cmd.createArgument().setValue( "-extdirs" );
-            cmd.createArgument().setValue( src );
-        }
+        m_command.createArgument().setValue( "-extdirs" );
+        m_command.createArgument().setValue( src );
     }
 
     public void setFooter( String src )
@@ -262,7 +256,7 @@ public class Javadoc extends Task
 
     public void setGroup( String src )
     {
-        group = src;
+        m_group = src;
     }
 
     public void setHeader( String src )
@@ -274,64 +268,45 @@ public class Javadoc extends Task
 
     public void setHelpfile( File f )
     {
-        if( !javadoc1 )
-        {
-            cmd.createArgument().setValue( "-helpfile" );
-            cmd.createArgument().setFile( f );
-        }
+        m_command.createArgument().setValue( "-helpfile" );
+        m_command.createArgument().setFile( f );
     }
 
     public void setLink( String src )
     {
-        if( !javadoc1 )
-        {
-            createLink().setHref( src );
-        }
+        createLink().setHref( src );
     }
 
     public void setLinkoffline( String src )
         throws TaskException
     {
-        if( !javadoc1 )
+        LinkArgument le = createLink();
+        le.setOffline( true );
+        String linkOfflineError = "The linkoffline attribute must include a URL and " +
+            "a package-list file location separated by a space";
+        if( src.trim().length() == 0 )
         {
-            LinkArgument le = createLink();
-            le.setOffline( true );
-            String linkOfflineError = "The linkoffline attribute must include a URL and " +
-                "a package-list file location separated by a space";
-            if( src.trim().length() == 0 )
-            {
-                throw new TaskException( linkOfflineError );
-            }
-            StringTokenizer tok = new StringTokenizer( src, " ", false );
-            le.setHref( tok.nextToken() );
-
-            if( !tok.hasMoreTokens() )
-            {
-                throw new TaskException( linkOfflineError );
-            }
-            le.setPackagelistLoc( resolveFile( tok.nextToken() ) );
+            throw new TaskException( linkOfflineError );
         }
+        StringTokenizer tok = new StringTokenizer( src, " ", false );
+        le.setHref( tok.nextToken() );
+
+        if( !tok.hasMoreTokens() )
+        {
+            throw new TaskException( linkOfflineError );
+        }
+        le.setPackagelistLoc( resolveFile( tok.nextToken() ) );
     }
 
     public void setLocale( String src )
     {
-        if( !javadoc1 )
-        {
-            cmd.createArgument().setValue( "-locale" );
-            cmd.createArgument().setValue( src );
-        }
+        m_command.createArgument().setValue( "-locale" );
+        m_command.createArgument().setValue( src );
     }
 
-    public void setMaxmemory( String max )
+    public void setMaxmemory( final String max )
     {
-        if( javadoc1 )
-        {
-            cmd.createArgument().setValue( "-J-mx" + max );
-        }
-        else
-        {
-            cmd.createArgument().setValue( "-J-Xmx" + max );
-        }
+        m_command.createArgument().setValue( "-J-Xmx" + max );
     }
 
     public void setNodeprecated( boolean b )
@@ -341,12 +316,12 @@ public class Javadoc extends Task
 
     public void setNodeprecatedlist( boolean b )
     {
-        add12ArgIf( b, "-nodeprecatedlist" );
+        addArgIf( b, "-nodeprecatedlist" );
     }
 
     public void setNohelp( boolean b )
     {
-        add12ArgIf( b, "-nohelp" );
+        addArgIf( b, "-nohelp" );
     }
 
     public void setNoindex( boolean b )
@@ -356,7 +331,7 @@ public class Javadoc extends Task
 
     public void setNonavbar( boolean b )
     {
-        add12ArgIf( b, "-nonavbar" );
+        addArgIf( b, "-nonavbar" );
     }
 
     public void setNotree( boolean b )
@@ -366,16 +341,13 @@ public class Javadoc extends Task
 
     public void setOld( boolean b )
     {
-        add12ArgIf( b, "-1.1" );
+        addArgIf( b, "-1.1" );
     }
 
     public void setOverview( File f )
     {
-        if( !javadoc1 )
-        {
-            cmd.createArgument().setValue( "-overview" );
-            cmd.createArgument().setFile( f );
-        }
+        m_command.createArgument().setValue( "-overview" );
+        m_command.createArgument().setFile( f );
     }
 
     public void setPackage( boolean b )
@@ -385,7 +357,7 @@ public class Javadoc extends Task
 
     public void setPackageList( String src )
     {
-        packageList = src;
+        m_packageList = src;
     }
 
     public void setPackagenames( String src )
@@ -417,7 +389,7 @@ public class Javadoc extends Task
 
     public void setSerialwarn( boolean b )
     {
-        add12ArgIf( b, "-serialwarn" );
+        addArgIf( b, "-serialwarn" );
     }
 
     public void setSourcefiles( String src )
@@ -436,13 +408,13 @@ public class Javadoc extends Task
     public void setSourcepath( Path src )
         throws TaskException
     {
-        if( sourcePath == null )
+        if( m_sourcePath == null )
         {
-            sourcePath = src;
+            m_sourcePath = src;
         }
         else
         {
-            sourcePath.append( src );
+            m_sourcePath.append( src );
         }
     }
 
@@ -459,21 +431,18 @@ public class Javadoc extends Task
 
     public void setSplitindex( boolean b )
     {
-        add12ArgIf( b, "-splitindex" );
+        addArgIf( b, "-splitindex" );
     }
 
     public void setStylesheetfile( File f )
     {
-        if( !javadoc1 )
-        {
-            cmd.createArgument().setValue( "-stylesheetfile" );
-            cmd.createArgument().setFile( f );
-        }
+        m_command.createArgument().setValue( "-stylesheetfile" );
+        m_command.createArgument().setFile( f );
     }
 
     public void setUse( boolean b )
     {
-        add12ArgIf( b, "-use" );
+        addArgIf( b, "-use" );
     }
 
     /**
@@ -484,20 +453,17 @@ public class Javadoc extends Task
      */
     public void setUseExternalFile( boolean b )
     {
-        if( !javadoc1 )
-        {
-            useExternalFile = b;
-        }
+        m_useExternalFile = b;
     }
 
     public void setVerbose( boolean b )
     {
-        add12ArgIf( b, "-verbose" );
+        addArgIf( b, "-verbose" );
     }
 
     public void setVersion( boolean src )
     {
-        version = src;
+        m_version = src;
     }
 
     public void setWindowtitle( String src )
@@ -507,165 +473,143 @@ public class Javadoc extends Task
 
     public void addBottom( Html text )
     {
-        if( !javadoc1 )
-        {
-            bottom = text;
-        }
+        m_bottom = text;
     }
 
     public void addDoctitle( Html text )
     {
-        if( !javadoc1 )
-        {
-            doctitle = text;
-        }
+        m_doctitle = text;
     }
 
     public void addExcludePackage( PackageName pn )
     {
-        excludePackageNames.add( pn );
+        m_excludePackageNames.add( pn );
     }
 
     public void addFooter( Html text )
     {
-        if( !javadoc1 )
-        {
-            footer = text;
-        }
+        m_footer = text;
     }
 
     public void addHeader( Html text )
     {
-        if( !javadoc1 )
-        {
-            header = text;
-        }
+        m_header = text;
     }
 
     public void addPackage( PackageName pn )
     {
-        packageNames.add( pn );
+        m_packageNames.add( pn );
     }
 
     public void addSource( SourceFile sf )
         throws TaskException
     {
-        sourceFiles.add( sf );
+        m_sourceFiles.add( sf );
     }
 
     public Path createBootclasspath()
         throws TaskException
     {
-        if( bootclasspath == null )
+        if( m_bootclasspath == null )
         {
-            bootclasspath = new Path( getProject() );
+            m_bootclasspath = new Path( getProject() );
         }
-        return bootclasspath.createPath();
+        return m_bootclasspath.createPath();
     }
 
     public Path createClasspath()
         throws TaskException
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = new Path( getProject() );
+            m_classpath = new Path( getProject() );
         }
-        return classpath.createPath();
+        return m_classpath.createPath();
     }
 
     public DocletInfo createDoclet()
     {
-        doclet = new DocletInfo();
-        return doclet;
+        m_doclet = new DocletInfo();
+        return m_doclet;
     }
 
     public GroupArgument createGroup()
     {
         GroupArgument ga = new GroupArgument();
-        groups.add( ga );
+        m_groups.add( ga );
         return ga;
     }
 
     public LinkArgument createLink()
     {
         LinkArgument la = new LinkArgument();
-        links.add( la );
+        m_links.add( la );
         return la;
     }
 
     public Path createSourcepath()
         throws TaskException
     {
-        if( sourcePath == null )
+        if( m_sourcePath == null )
         {
-            sourcePath = new Path( getProject() );
+            m_sourcePath = new Path( getProject() );
         }
-        return sourcePath.createPath();
+        return m_sourcePath.createPath();
     }
 
     public void execute()
         throws TaskException
     {
-        if( sourcePath == null )
+        if( m_sourcePath == null )
         {
             String msg = "sourcePath attribute must be set!";
             throw new TaskException( msg );
         }
 
-        log( "Generating Javadoc", Project.MSG_INFO );
+        getLogger().info( "Generating Javadoc" );
 
-        if( doctitle != null )
+        if( m_doctitle != null )
         {
-            cmd.createArgument().setValue( "-doctitle" );
-            cmd.createArgument().setValue( expand( doctitle.getText() ) );
+            m_command.createArgument().setValue( "-doctitle" );
+            m_command.createArgument().setValue( expand( m_doctitle.getText() ) );
         }
-        if( header != null )
+        if( m_header != null )
         {
-            cmd.createArgument().setValue( "-header" );
-            cmd.createArgument().setValue( expand( header.getText() ) );
+            m_command.createArgument().setValue( "-header" );
+            m_command.createArgument().setValue( expand( m_header.getText() ) );
         }
-        if( footer != null )
+        if( m_footer != null )
         {
-            cmd.createArgument().setValue( "-footer" );
-            cmd.createArgument().setValue( expand( footer.getText() ) );
+            m_command.createArgument().setValue( "-footer" );
+            m_command.createArgument().setValue( expand( m_footer.getText() ) );
         }
-        if( bottom != null )
+        if( m_bottom != null )
         {
-            cmd.createArgument().setValue( "-bottom" );
-            cmd.createArgument().setValue( expand( bottom.getText() ) );
+            m_command.createArgument().setValue( "-bottom" );
+            m_command.createArgument().setValue( expand( m_bottom.getText() ) );
         }
 
-        Commandline toExecute = (Commandline)cmd.clone();
+        Commandline toExecute = (Commandline)m_command.clone();
         toExecute.setExecutable( getJavadocExecutableName() );
 
         // ------------------------------------------------ general javadoc arguments
-        if( classpath == null )
-            classpath = Path.systemClasspath;
+        if( m_classpath == null )
+            m_classpath = Path.systemClasspath;
         else
-            classpath = classpath.concatSystemClasspath( "ignore" );
+            m_classpath = m_classpath.concatSystemClasspath( "ignore" );
 
-        if( !javadoc1 )
-        {
-            toExecute.createArgument().setValue( "-classpath" );
-            toExecute.createArgument().setPath( classpath );
-            toExecute.createArgument().setValue( "-sourcepath" );
-            toExecute.createArgument().setPath( sourcePath );
-        }
-        else
-        {
-            toExecute.createArgument().setValue( "-classpath" );
-            toExecute.createArgument().setValue( sourcePath.toString() +
-                                                 System.getProperty( "path.separator" ) + classpath.toString() );
-        }
+        toExecute.createArgument().setValue( "-classpath" );
+        toExecute.createArgument().setValue( m_sourcePath.toString() +
+                                             System.getProperty( "path.separator" ) + m_classpath.toString() );
 
-        if( version && doclet == null )
+        if( m_version && m_doclet == null )
             toExecute.createArgument().setValue( "-version" );
-        if( author && doclet == null )
+        if( m_author && m_doclet == null )
             toExecute.createArgument().setValue( "-author" );
 
-        if( javadoc1 || doclet == null )
+        if( m_doclet == null )
         {
-            if( destDir == null )
+            if( m_destDir == null )
             {
                 String msg = "destDir attribute must be set!";
                 throw new TaskException( msg );
@@ -676,49 +620,47 @@ public class Javadoc extends Task
 
         // XXX: how do we handle a custom doclet?
 
-        if( !javadoc1 )
+        if( m_doclet != null )
         {
-            if( doclet != null )
+            if( m_doclet.getName() == null )
             {
-                if( doclet.getName() == null )
+                throw new TaskException( "The doclet name must be specified." );
+            }
+            else
+            {
+                toExecute.createArgument().setValue( "-doclet" );
+                toExecute.createArgument().setValue( m_doclet.getName() );
+                if( m_doclet.getPath() != null )
                 {
-                    throw new TaskException( "The doclet name must be specified." );
+                    toExecute.createArgument().setValue( "-docletpath" );
+                    toExecute.createArgument().setPath( m_doclet.getPath() );
                 }
-                else
+                for( Iterator e = m_doclet.getParams(); e.hasNext(); )
                 {
-                    toExecute.createArgument().setValue( "-doclet" );
-                    toExecute.createArgument().setValue( doclet.getName() );
-                    if( doclet.getPath() != null )
+                    DocletParam param = (DocletParam)e.next();
+                    if( param.getName() == null )
                     {
-                        toExecute.createArgument().setValue( "-docletpath" );
-                        toExecute.createArgument().setPath( doclet.getPath() );
+                        throw new TaskException( "Doclet parameters must have a name" );
                     }
-                    for( Iterator e = doclet.getParams(); e.hasNext(); )
-                    {
-                        DocletParam param = (DocletParam)e.next();
-                        if( param.getName() == null )
-                        {
-                            throw new TaskException( "Doclet parameters must have a name" );
-                        }
 
-                        toExecute.createArgument().setValue( param.getName() );
-                        if( param.getValue() != null )
-                        {
-                            toExecute.createArgument().setValue( param.getValue() );
-                        }
+                    toExecute.createArgument().setValue( param.getName() );
+                    if( param.getValue() != null )
+                    {
+                        toExecute.createArgument().setValue( param.getValue() );
                     }
                 }
             }
-            if( bootclasspath != null )
+
+            if( m_bootclasspath != null )
             {
                 toExecute.createArgument().setValue( "-bootclasspath" );
-                toExecute.createArgument().setPath( bootclasspath );
+                toExecute.createArgument().setPath( m_bootclasspath );
             }
 
             // add the links arguments
-            if( links.size() != 0 )
+            if( m_links.size() != 0 )
             {
-                for( Iterator e = links.iterator(); e.hasNext(); )
+                for( Iterator e = m_links.iterator(); e.hasNext(); )
                 {
                     LinkArgument la = (LinkArgument)e.next();
 
@@ -744,8 +686,7 @@ public class Javadoc extends Task
                         }
                         else
                         {
-                            log( "Warning: No package list was found at " + packageListLocation,
-                                 Project.MSG_VERBOSE );
+                            getLogger().debug( "Warning: No package list was found at " + packageListLocation );
                         }
                     }
                     else
@@ -767,9 +708,9 @@ public class Javadoc extends Task
             //   Args are comma-delimited.
             //   Each arg is 2 space-delimited strings.
             //   E.g., group="XSLT_Packages org.apache.xalan.xslt*,XPath_Packages org.apache.xalan.xpath*"
-            if( group != null )
+            if( m_group != null )
             {
-                StringTokenizer tok = new StringTokenizer( group, ",", false );
+                StringTokenizer tok = new StringTokenizer( m_group, ",", false );
                 while( tok.hasMoreTokens() )
                 {
                     String grp = tok.nextToken().trim();
@@ -786,9 +727,9 @@ public class Javadoc extends Task
             }
 
             // add the group arguments
-            if( groups.size() != 0 )
+            if( m_groups.size() != 0 )
             {
-                for( Iterator e = groups.iterator(); e.hasNext(); )
+                for( Iterator e = m_groups.iterator(); e.hasNext(); )
                 {
                     GroupArgument ga = (GroupArgument)e.next();
                     String title = ga.getTitle();
@@ -805,11 +746,11 @@ public class Javadoc extends Task
 
         }
 
-        tmpList = null;
-        if( packageNames.size() > 0 )
+        m_tmpList = null;
+        if( m_packageNames.size() > 0 )
         {
             ArrayList packages = new ArrayList();
-            Iterator enum = packageNames.iterator();
+            Iterator enum = m_packageNames.iterator();
             while( enum.hasNext() )
             {
                 PackageName pn = (PackageName)enum.next();
@@ -825,9 +766,9 @@ public class Javadoc extends Task
             }
 
             ArrayList excludePackages = new ArrayList();
-            if( excludePackageNames.size() > 0 )
+            if( m_excludePackageNames.size() > 0 )
             {
-                enum = excludePackageNames.iterator();
+                enum = m_excludePackageNames.iterator();
                 while( enum.hasNext() )
                 {
                     PackageName pn = (PackageName)enum.next();
@@ -836,11 +777,11 @@ public class Javadoc extends Task
             }
             if( packages.size() > 0 )
             {
-                evaluatePackages( toExecute, sourcePath, packages, excludePackages );
+                evaluatePackages( toExecute, m_sourcePath, packages, excludePackages );
             }
         }
 
-        if( sourceFiles.size() > 0 )
+        if( m_sourceFiles.size() > 0 )
         {
             PrintWriter srcListWriter = null;
             try
@@ -849,23 +790,23 @@ public class Javadoc extends Task
                 /**
                  * Write sourcefiles to a temporary file if requested.
                  */
-                if( useExternalFile )
+                if( m_useExternalFile )
                 {
-                    if( tmpList == null )
+                    if( m_tmpList == null )
                     {
-                        tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
-                        toExecute.createArgument().setValue( "@" + tmpList.getAbsolutePath() );
+                        m_tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
+                        toExecute.createArgument().setValue( "@" + m_tmpList.getAbsolutePath() );
                     }
-                    srcListWriter = new PrintWriter( new FileWriter( tmpList.getAbsolutePath(),
+                    srcListWriter = new PrintWriter( new FileWriter( m_tmpList.getAbsolutePath(),
                                                                      true ) );
                 }
 
-                Iterator enum = sourceFiles.iterator();
+                Iterator enum = m_sourceFiles.iterator();
                 while( enum.hasNext() )
                 {
                     SourceFile sf = (SourceFile)enum.next();
                     String sourceFileName = sf.getFile().getAbsolutePath();
-                    if( useExternalFile )
+                    if( m_useExternalFile )
                     {
                         srcListWriter.println( sourceFileName );
                     }
@@ -889,13 +830,13 @@ public class Javadoc extends Task
             }
         }
 
-        if( packageList != null )
+        if( m_packageList != null )
         {
-            toExecute.createArgument().setValue( "@" + packageList );
+            toExecute.createArgument().setValue( "@" + m_packageList );
         }
-        log( "Javadoc args: " + toExecute, Project.MSG_VERBOSE );
+        getLogger().debug( "Javadoc args: " + toExecute );
 
-        log( "Javadoc execution", Project.MSG_INFO );
+        getLogger().info( "Javadoc execution" );
 
         JavadocOutputStream out = new JavadocOutputStream( this, Project.MSG_INFO );
         JavadocOutputStream err = new JavadocOutputStream( this, Project.MSG_WARN );
@@ -926,10 +867,10 @@ public class Javadoc extends Task
         finally
         {
 
-            if( tmpList != null )
+            if( m_tmpList != null )
             {
-                tmpList.delete();
-                tmpList = null;
+                m_tmpList.delete();
+                m_tmpList = null;
             }
 
             try
@@ -978,42 +919,23 @@ public class Javadoc extends Task
         {
             if( !Os.isFamily( "netware" ) )
             {
-                log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
-                     ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
+                getLogger().debug( "Unable to locate " + jdocExecutable.getAbsolutePath() +
+                     ". Using \"javadoc\" instead." );
             }
             return "javadoc";
         }
     }
 
-    private void add11ArgIf( boolean b, String arg )
-    {
-        if( javadoc1 && b )
-        {
-            cmd.createArgument().setValue( arg );
-        }
-    }
-
-    private void add12ArgIf( boolean b, String arg )
-    {
-        if( !javadoc1 && b )
-        {
-            cmd.createArgument().setValue( arg );
-        }
-    }
-
     private void add12ArgIfNotEmpty( String key, String value )
     {
-        if( !javadoc1 )
+        if( value != null && value.length() != 0 )
         {
-            if( value != null && value.length() != 0 )
-            {
-                cmd.createArgument().setValue( key );
-                cmd.createArgument().setValue( value );
-            }
-            else
-            {
-                log( "Warning: Leaving out empty argument '" + key + "'", Project.MSG_WARN );
-            }
+            m_command.createArgument().setValue( key );
+            m_command.createArgument().setValue( value );
+        }
+        else
+        {
+            getLogger().warn( "Warning: Leaving out empty argument '" + key + "'" );
         }
     }
 
@@ -1021,7 +943,7 @@ public class Javadoc extends Task
     {
         if( b )
         {
-            cmd.createArgument().setValue( arg );
+            m_command.createArgument().setValue( arg );
         }
     }
 
@@ -1039,7 +961,7 @@ public class Javadoc extends Task
                                    ArrayList packages, ArrayList excludePackages )
         throws TaskException
     {
-        log( "Source path = " + sourcePath.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Source path = " + sourcePath.toString() );
         StringBuffer msg = new StringBuffer( "Packages = " );
         for( int i = 0; i < packages.size(); i++ )
         {
@@ -1049,7 +971,7 @@ public class Javadoc extends Task
             }
             msg.append( packages.get( i ) );
         }
-        log( msg.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( msg.toString() );
 
         msg.setLength( 0 );
         msg.append( "Exclude Packages = " );
@@ -1061,7 +983,7 @@ public class Javadoc extends Task
             }
             msg.append( excludePackages.get( i ) );
         }
-        log( msg.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( msg.toString() );
 
         ArrayList addedPackages = new ArrayList();
 
@@ -1070,7 +992,7 @@ public class Javadoc extends Task
             list = new String[ 0 ];
 
         FileSet fs = new FileSet();
-        fs.setDefaultexcludes( useDefaultExcludes );
+        fs.setDefaultexcludes( m_useDefaultExcludes );
 
         Iterator e = packages.iterator();
         while( e.hasNext() )
@@ -1101,20 +1023,20 @@ public class Javadoc extends Task
         PrintWriter packageListWriter = null;
         try
         {
-            if( useExternalFile )
+            if( m_useExternalFile )
             {
-                tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
-                toExecute.createArgument().setValue( "@" + tmpList.getAbsolutePath() );
-                packageListWriter = new PrintWriter( new FileWriter( tmpList ) );
+                m_tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
+                toExecute.createArgument().setValue( "@" + m_tmpList.getAbsolutePath() );
+                packageListWriter = new PrintWriter( new FileWriter( m_tmpList ) );
             }
 
             for( int j = 0; j < list.length; j++ )
             {
-                File source = resolveFile( list[ j ] );
+                final File source = resolveFile( list[ j ] );
                 fs.setDir( source );
 
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
-                String[] packageDirs = ds.getIncludedDirectories();
+                final DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                final String[] packageDirs = ds.getIncludedDirectories();
 
                 for( int i = 0; i < packageDirs.length; i++ )
                 {
@@ -1137,7 +1059,7 @@ public class Javadoc extends Task
                         String pkgDir = packageDirs[ i ].replace( '/', '.' ).replace( '\\', '.' );
                         if( !addedPackages.contains( pkgDir ) )
                         {
-                            if( useExternalFile )
+                            if( m_useExternalFile )
                             {
                                 packageListWriter.println( pkgDir );
                             }
@@ -1163,63 +1085,4 @@ public class Javadoc extends Task
             }
         }
     }
-
-    public class GroupArgument
-    {
-        private ArrayList packages = new ArrayList( 3 );
-        private Html title;
-
-        public GroupArgument()
-        {
-        }
-
-        public void setPackages( String src )
-        {
-            StringTokenizer tok = new StringTokenizer( src, "," );
-            while( tok.hasMoreTokens() )
-            {
-                String p = tok.nextToken();
-                PackageName pn = new PackageName();
-                pn.setName( p );
-                addPackage( pn );
-            }
-        }
-
-        public void setTitle( String src )
-        {
-            Html h = new Html();
-            h.addText( src );
-            addTitle( h );
-        }
-
-        public String getPackages()
-        {
-            StringBuffer p = new StringBuffer();
-            for( int i = 0; i < packages.size(); i++ )
-            {
-                if( i > 0 )
-                {
-                    p.append( ":" );
-                }
-                p.append( packages.get( i ).toString() );
-            }
-            return p.toString();
-        }
-
-        public String getTitle()
-        {
-            return title != null ? title.getText() : null;
-        }
-
-        public void addPackage( PackageName pn )
-        {
-            packages.add( pn );
-        }
-
-        public void addTitle( Html text )
-        {
-            title = text;
-        }
-    }
-
 }
