@@ -488,10 +488,20 @@ public abstract class Task extends ProjectComponent {
         }
     }
 
+    /**
+     * Return the type of task
+     *
+     * @return the type of task
+     */
     protected String getTaskType() {
         return taskType;
     }
 
+    /**
+     * Return the runtime configurable structure for this task
+     *
+     * @return the runtime structure for this task
+     */
     protected RuntimeConfigurable getWrapper() {
         return wrapper;
     }
