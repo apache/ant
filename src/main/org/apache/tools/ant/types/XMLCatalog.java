@@ -83,8 +83,8 @@ import org.apache.tools.ant.util.FileUtils;
  * <p>
  * The object implemention <code>sometask</code> must provide a method called
  * <code>createCatalog</code> which returns an instance of 
- * <code>XCatalog</code>. Nested dtd and entity definitions are handled by 
- * the XCatalog object and must be labeled <code>dtd</code> and 
+ * <code>XMLCatalog</code>. Nested DTD and entity definitions are handled by
+ * the XMLCatalog object and must be labeled <code>dtd</code> and
  * <code>entity</code> respectively.</p>
  *
  * <p>Possible future extension could allow a catalog file instead of nested
@@ -152,6 +152,24 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
      */
     public void addEntity(DTDLocation dtd) throws BuildException {
         addDTD(dtd);
+    }
+
+    /**
+     * Loads a nested XMLCatalog into our definition
+     *
+     * @param catalog Nested XMLCatalog
+     */
+    public void addConfiguredXMLCatalog(XMLCatalog catalog) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+
+        Vector newElements = catalog.getElements();
+        Vector ourElements = getElements();
+        Enumeration enum = newElements.elements();
+        while (enum.hasMoreElements()) {
+            ourElements.add(enum.nextElement());
+        }
     }
 
     /**
