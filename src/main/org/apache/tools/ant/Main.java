@@ -91,6 +91,18 @@ public class Main {
     private Vector listeners = new Vector(5);
 
     /**
+     * The Ant logger class. There may be only one logger. It will have the
+     * right to use the 'out' PrintStream. The class must implements the BuildLogger 
+     * interface
+     */
+    private String loggerClassname = null;
+
+    /**
+     * Indicates whether output to the log is to be unadorned.
+     */
+    private boolean emacsMode = false;
+
+    /**
      * Indicates if this ant should be run.
      */
     private boolean readyToRun = false;
@@ -190,6 +202,14 @@ public class Main {
                     value = args[++i];
 
                 definedProps.put(name, value);
+            } else if (arg.equals("-logger")) {
+                if (loggerClassname != null) {
+                    System.out.println("Only one logger class may be specified.");
+                    return;
+                }
+                loggerClassname = args[++i];
+            } else if (arg.equals("-emacs")) {
+                emacsMode = true;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown arg: " + arg;
@@ -224,7 +244,6 @@ public class Main {
     /**
      * Executes the build.
      */
-
     private void runBuild() throws BuildException {
 
         if (!readyToRun) {
@@ -294,7 +313,7 @@ public class Main {
     protected void addBuildListeners(Project project) {
 
         // Add the default listener
-        project.addBuildListener(createDefaultBuildListener());
+        project.addBuildListener(createLogger());
 
         for (int i = 0; i < listeners.size(); i++) {
             String className = (String) listeners.elementAt(i);
@@ -310,10 +329,34 @@ public class Main {
     }
 
     /**
-     *  Creates the default build listener for displaying output to the screen.
+     *  Creates the default build logger for sending build events to the ant log.
      */
-    private BuildListener createDefaultBuildListener() {
-        return new DefaultLogger(out, msgOutputLevel);
+    private BuildLogger createLogger() {
+        BuildLogger logger = null;
+        if (loggerClassname != null) {
+            try {
+                logger = (BuildLogger)(Class.forName(loggerClassname).newInstance());
+            }
+            catch (ClassCastException e) {
+                System.err.println("The specified logger class " + loggerClassname + 
+                                         " does not implement the BuildLogger interface");
+                throw new RuntimeException();
+            }
+            catch (Exception e) {
+                System.err.println("Unable to instantiate specified logger class " + 
+                                           loggerClassname + " : " + e.getClass().getName());
+                throw new RuntimeException();
+            }
+        }
+        else {
+            logger = new DefaultLogger();
+        }
+        
+        logger.setMessageOutputLevel(msgOutputLevel);
+        logger.setOutputPrintStream(out);
+        logger.setEmacsMode(emacsMode);
+        
+        return logger;
     }
 
     /**
@@ -328,7 +371,9 @@ public class Main {
         msg.append("  -version               print the version information and exit" + lSep);
         msg.append("  -quiet                 be extra quiet" + lSep);
         msg.append("  -verbose               be extra verbose" + lSep);
+        msg.append("  -emacs                 produce logging information without adornments" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
+        msg.append("  -logger <classname>    the class which is to perform logging" + lSep);
         msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);

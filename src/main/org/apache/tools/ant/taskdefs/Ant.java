@@ -120,7 +120,10 @@ public class Ant extends Task {
         if (output != null) {
             try {
                 PrintStream out = new PrintStream(new FileOutputStream(output));
-                p1.addBuildListener(new DefaultLogger(out, Project.MSG_INFO));
+                DefaultLogger logger = new DefaultLogger();
+                logger.setMessageOutputLevel(Project.MSG_INFO);
+                logger.setOutputPrintStream(out);
+                p1.addBuildListener(logger);
             }
             catch( IOException ex ) {
                 log( "Ant: Can't set output to " + output );

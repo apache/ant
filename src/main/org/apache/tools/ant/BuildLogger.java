@@ -57,19 +57,14 @@ package org.apache.tools.ant;
 import java.io.*;
 
 /**
- *  Writes build event to a PrintStream. Currently, it
- *  only writes which targets are being executed, and
- *  any messages that get logged.
+ * Interface used by Ant to log the build output. 
+ *
+ * A build logger is a build listener which has the 'right' to send output to the
+ * ant log, which is usually System.out unles redirected by the -logfile option.
+ *
+ * @author Conor MacNeill
  */
-public class DefaultLogger implements BuildLogger {
-    private static int LEFT_COLUMN_SIZE = 12;
-
-    private PrintStream out;
-    private int msgOutputLevel;
-    private long startTime = System.currentTimeMillis();
-
-    private boolean emacsMode = false;
-
+public interface BuildLogger extends BuildListener {
     /**
      * Set the msgOutputLevel this logger is to respond to.
      *
@@ -78,111 +73,20 @@ public class DefaultLogger implements BuildLogger {
      *
      * @param level the logging level for the logger.
      */
-    public void setMessageOutputLevel(int level) {
-        this.msgOutputLevel = level;
-    }
-
+    public void setMessageOutputLevel(int level);
     
     /**
      * Set the output stream to which this logger is to send its output.
      *
      * @param output the output stream for the logger.
      */
-    public void setOutputPrintStream(PrintStream output) {
-        this.out = output;
-    }
-
+    public void setOutputPrintStream(PrintStream output);
+    
     /**
      * Set this logger to produce emacs (and other editor) friendly output.
      *
      * @param emacsMode true if output is to be unadorned so that emacs and other
      * editors can parse files names, etc.
      */
-    public void setEmacsMode(boolean emacsMode) {
-        this.emacsMode = emacsMode;
-    }
-
-
-    public void buildStarted(BuildEvent event) {
-        startTime = System.currentTimeMillis();
-    }
-
-    /**
-     *  Prints whether the build succeeded or failed, and
-     *  any errors the occured during the build.
-     */
-    public void buildFinished(BuildEvent event) {
-        Throwable error = event.getException();
-
-        if (error == null) {
-            out.println("\nBUILD SUCCESSFUL");
-        }
-        else {
-            out.println("\nBUILD FAILED\n");
-
-            if (error instanceof BuildException) {
-                out.println(error.toString());
-
-                Throwable nested = ((BuildException)error).getException();
-                if (nested != null) {
-                    nested.printStackTrace(out);
-                }
-            }
-            else {
-                error.printStackTrace(out);
-            }
-        }
-
-        out.println("\nTotal time: " + formatTime(System.currentTimeMillis() - startTime));
-    }
-
-    public void targetStarted(BuildEvent event) {
-        if (msgOutputLevel <= Project.MSG_INFO) {
-            out.println("\n" + event.getTarget().getName() + ":");
-        }
-    }
-
-    public void targetFinished(BuildEvent event) {
-    }
-
-    public void taskStarted(BuildEvent event) {}
-    public void taskFinished(BuildEvent event) {}
-
-    public void messageLogged(BuildEvent event) {
-
-        // Filter out messages based on priority
-        if (event.getPriority() <= msgOutputLevel) {
-
-            // Print out the name of the task if we're in one
-            if (event.getTask() != null) {
-                String name = event.getTask().getTaskName();
-
-                if (!emacsMode) {
-                    String msg = "[" + name + "] ";
-                    for (int i = 0; i < (LEFT_COLUMN_SIZE - msg.length()); i++) {
-                        out.print(" ");
-                    }
-                    out.print(msg);
-                }
-            }
-
-            // Print the message
-            out.println(event.getMessage());
-        }
-    }
-
-    private static String formatTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
-
-
-        if (minutes > 0) {
-            return Long.toString(minutes) + " minutes " + Long.toString(seconds%60) + " seconds";
-        }
-        else {
-            return Long.toString(seconds) + " seconds";
-        }
-
-    }
-
+    public void setEmacsMode(boolean emacsMode);
 }
