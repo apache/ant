@@ -79,7 +79,7 @@ public class SoundTask extends Task
 
     }
 
-    public void init()
+    public void initialize()
     {
     }
 

@@ -395,7 +395,7 @@ public class JUnitTask extends Task
      * classpath - this should make the forked JVM work without having to
      * specify them directly.
      */
-    public void init()
+    public void initialize()
     {
         addClasspathEntry( "/junit/framework/TestCase.class" );
         addClasspathEntry( "/org/apache/tools/ant/Task.class" );

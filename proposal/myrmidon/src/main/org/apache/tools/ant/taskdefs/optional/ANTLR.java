@@ -146,7 +146,7 @@ public class ANTLR extends Task
      *
      * @exception TaskException Description of Exception
      */
-    public void init()
+    public void initialize()
         throws TaskException
     {
         addClasspathEntry( "/antlr/Tool.class" );

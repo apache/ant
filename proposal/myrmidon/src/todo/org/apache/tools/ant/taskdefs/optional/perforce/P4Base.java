@@ -93,7 +93,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
         this.P4View = P4View;
     }
 
-    public void init()
+    public void initialize()
     {
 
         util = new Perl5Util();

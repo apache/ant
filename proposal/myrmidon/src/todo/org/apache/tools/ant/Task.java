@@ -19,7 +19,7 @@ public abstract class Task
      * example, if target1 and target2 both depend on target3, then running "ant
      * target1 target2" will run all tasks in target3 twice.
      *
-     * @throws BuildException if someting goes wrong with the build
+     * @throws TaskException if someting goes wrong with the build
      */
     public void execute()
         throws TaskException
@@ -29,9 +29,9 @@ public abstract class Task
     /**
      * Called by the project to let the task initialize properly.
      *
-     * @throws BuildException if someting goes wrong with the build
+     * @throws TaskException if someting goes wrong with the build
      */
-    public void init()
+    public void initialize()
         throws TaskException
     {
     }
