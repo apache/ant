@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.project.LogTargetToListenerAdapter;
-import org.apache.ant.project.ProjectEngine;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
 import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
@@ -47,10 +45,12 @@ import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
 import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.components.manager.LogTargetToListenerAdapter;
+import org.apache.myrmidon.components.manager.ProjectManager;
 
 /**
  * The class to kick the tires and light the fires.
- * Starts ant, loads ProjectBuilder, builds project then uses ProjectEngine
+ * Starts ant, loads ProjectBuilder, builds project then uses ProjectManager
  * to run project.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
@@ -293,7 +293,7 @@ public class Main
         }
 
         //setup classloader so that it will correctly load
-        //the Project/ProjectBuilder/ProjectEngine and all dependencies
+        //the Project/ProjectBuilder/ProjectManager and all dependencies
         //FIXEME: Use separate classloader instead of injecting
         final ClassLoader classLoader = createClassLoader( libDir );
         Thread.currentThread().setContextClassLoader( classLoader );
@@ -318,8 +318,8 @@ public class Main
         //create the project
         final Project project = builder.build( buildFile );
 
-        final ProjectEngine engine = embeddor.getProjectEngine();
-        engine.addProjectListener( listener );
+        final ProjectManager manager = embeddor.getProjectManager();
+        manager.addProjectListener( listener );
 
         BufferedReader reader = null;
 
@@ -334,7 +334,7 @@ public class Main
             context.setProperty( Project.PROJECT_FILE, buildFile );
             //context.setProperty( Project.PROJECT, projectName );
 
-            doBuild( engine, project, context, targets );
+            doBuild( manager, project, context, targets );
 
             if( !incremental ) break;
 
@@ -358,11 +358,11 @@ public class Main
     /**
      * Actually do the build.
      *
-     * @param engine the engine
+     * @param manager the manager
      * @param project the project
      * @param targets the targets to build as passed by CLI
      */
-    protected void doBuild( final ProjectEngine engine,
+    protected void doBuild( final ProjectManager manager,
                             final Project project,
                             final TaskContext context,
                             final ArrayList targets )
@@ -374,13 +374,13 @@ public class Main
             //if we didn't specify a target on CLI then choose default
             if( 0 == targetCount )
             {
-                engine.executeTarget( project, project.getDefaultTargetName(), context );
+                manager.executeTarget( project, project.getDefaultTargetName(), context );
             }
             else
             {
                 for( int i = 0; i < targetCount; i++ )
                 {
-                    engine.executeTarget( project, (String)targets.get( i ), context );
+                    manager.executeTarget( project, (String)targets.get( i ), context );
                 }
             }
         }

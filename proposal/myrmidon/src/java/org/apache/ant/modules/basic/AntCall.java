@@ -10,7 +10,7 @@ package org.apache.ant.modules.basic;
 import java.util.ArrayList;
 import org.apache.ant.AntException;
 import org.apache.myrmidon.components.model.Project;
-import org.apache.ant.project.ProjectEngine;
+import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
@@ -28,12 +28,12 @@ public class AntCall
     extends AbstractTask
     implements Composable
 {
-    protected ProjectEngine         m_projectEngine;
-    protected Project               m_project;
-    protected String                m_target;
-    protected ArrayList             m_properties     = new ArrayList();
-    protected TaskContext           m_childContext;
-    protected ComponentManager      m_componentManager;
+    private ProjectManager        m_projectEngine;
+    private Project               m_project;
+    private String                m_target;
+    private ArrayList             m_properties     = new ArrayList();
+    private TaskContext           m_childContext;
+    private ComponentManager      m_componentManager;
 
     public void contextualize( final Context context )
     {
@@ -45,8 +45,8 @@ public class AntCall
         throws ComponentException
     {
         m_componentManager = componentManager;
-        m_projectEngine = (ProjectEngine)componentManager.
-            lookup( "org.apache.ant.project.ProjectEngine" );
+        m_projectEngine = (ProjectManager)componentManager.
+            lookup( "org.apache.myrmidon.components.manager.ProjectManager" );
         m_project = (Project)componentManager.lookup( "org.apache.ant.project.Project" );
     }
 
