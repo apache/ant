@@ -11,7 +11,7 @@
                       <meta name="author" value="Peter Donald">
   <meta name="email" value="peter@apache.org">
         
-      <title>Apache Myrmidon - Writing a task</title>
+      <title>Apache Myrmidon - My First Task</title>
     </head>
   
     <body bgcolor="#ffffff" text="#000000" link="#525D76">    
@@ -54,11 +54,11 @@
   </li>
           <li>      <a href="./differences.html">Differences to Ant1</a>
   </li>
+          <li>      <a href="./task.html">My First Task</a>
+  </li>
         </ul>
       <p><strong>Extending Ant</strong></p>
     <ul>
-          <li>      <a href="./task.html">Task Writers HOWTO</a>
-  </li>
           <li>      <a href="./classloader.html">ClassLoader HOWTO</a>
   </li>
           <li>      <a href="./librarys.html">Library HOWTO</a>
@@ -72,48 +72,48 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Writing a Task"><strong>Writing a Task</strong></a>
+        <a name="My First Task"><strong>My First Task</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>In ant1 it was very easy to write your own task. In Ant2 we plan 
+                        <p>In ant1 it was very easy to write your own task. In Ant2 we plan
 to make it even easier. To write a basic task simply follow the following
 formula.</p>
                                 <ol>
   <li>
-    Create a Java class that extends 
+    Create a Java class that extends
     <code>org.apache.myrmidon.api.AbstractTask</code>
   </li>
   <li>
-    For each attribute, write a setter method. The setter method 
-    must be a public void method that takes a single argument. The name 
-    of the method must begin with "set", followed by the attribute name, with 
-    the first character of the name in uppercase, and the rest in lowercase. 
+    For each attribute, write a setter method. The setter method
+    must be a public void method that takes a single argument. The name
+    of the method must begin with "set", followed by the attribute name, with
+    the first character of the name in uppercase, and the rest in lowercase.
     The type of the attribute can be:
     <ul>
       <li>String</li>
       <li>
-        Any primitive type - they are converted for you from their 
+        Any primitive type - they are converted for you from their
         String-representation in the buildfile
       </li>
       <li>
-        File - the string representation will be interpreted relative to 
+        File - the string representation will be interpreted relative to
         the project's basedir.
       </li>
     </ul>
   </li>
   <li>
-    For each nested element create a public void method that takes a single 
-    argument. The name of the method must begin with "add", followed by the 
-    attribute name, with the first character of the name in uppercase, and 
-    the rest in lowercase. The type of the parameter is an object with a 
-    no-arguement constructor. It is configured in exactly the same was a 
+    For each nested element create a public void method that takes a single
+    argument. The name of the method must begin with "add", followed by the
+    attribute name, with the first character of the name in uppercase, and
+    the rest in lowercase. The type of the parameter is an object with a
+    no-arguement constructor. It is configured in exactly the same was a
     task is configured (via setters and adders) and then added to the task.
   </li>
   <li>
-    Write a public void method named "execute" with no arguments that 
-    throws a TaskException. This is the method called to do the 
+    Write a public void method named "execute" with no arguments that
+    throws a TaskException. This is the method called to do the
     actual work of the task.
   </li>
 </ol>
@@ -125,7 +125,7 @@ formula.</p>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>So a basic task that has one attribute named "message" and just prints 
+                        <p>So a basic task that has one attribute named "message" and just prints
 out this message is as simple as;</p>
                                   <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
@@ -142,8 +142,8 @@ package org.realityforge.tasks;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 
-public class SystemOutPrinterTask 
-    extends Task 
+public class SystemOutPrinterTask
+    extends Task
 {
     private String m_message;
 
@@ -154,8 +154,8 @@ public class SystemOutPrinterTask
     }
 
     // The method executing the task
-    public void execute() 
-        throws TaskException 
+    public void execute()
+        throws TaskException
     {
         System.out.println( m_message );
     }
@@ -170,7 +170,7 @@ public class SystemOutPrinterTask
       </tr>
     </table>
   </div>
-                                <p>To use this task you <em>could</em> create a library but instead we will 
+                                <p>To use this task you <em>could</em> create a library but instead we will
 just use &lt;taskdef&gt; to define the task. An example usage would be;</p>
                                   <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
@@ -189,7 +189,7 @@ just use &lt;taskdef&gt; to define the task. An example usage would be;</p>
 &lt;project version=&quot;2.0&quot;&gt;
 
   &lt;target name=&quot;main&quot;&gt;
-    &lt;taskdef name=&quot;printer&quot; 
+    &lt;taskdef name=&quot;printer&quot;
              classname=&quot;org.realityforge.tasks.SystemOutPrinterTask&quot;
              classpath=&quot;build/classes&quot;/&gt;
 

@@ -15,10 +15,10 @@
             <item name="Virtual File System" href="/vfs.html"/>
             <item name="Ant1 Compatibility Layer" href="/ant1compat.html"/>
             <item name="Differences to Ant1" href="/differences.html"/>
+            <item name="My First Task" href="/task.html"/>
         </menu>
 
         <menu name="Extending Ant">
-            <item name="Task Writers HOWTO" href="/task.html"/>
             <item name="ClassLoader HOWTO" href="/classloader.html"/>
             <item name="Library HOWTO" href="/librarys.html"/>
         </menu>
