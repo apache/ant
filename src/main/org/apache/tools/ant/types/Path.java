@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -605,7 +605,17 @@ public class Path extends DataType implements Cloneable {
                                  + File.separator + "lib"
                                  + File.separator + "rt.jar"));
 
-            // IBM's 1.4 has rt.jar split into 5 smaller jars.
+            // Sun's 1.4 has JCE and JSSE in separate jars.
+            String[] secJars = { "jce", "jsse" };
+            for (int i = 0; i < secJars.length; i++) {
+                addExisting(new Path(null,
+                                     System.getProperty("java.home")
+                                     + File.separator + "lib"
+                                     + File.separator + secJars[i] + ".jar"));
+            }
+
+            // IBM's 1.4 has rt.jar split into 4 smaller jars and a combined
+            // JCE/JSSE in security.jar.
             String[] ibmJars =
                 { "core", "graphics", "security", "server", "xml" };
             for (int i = 0; i < ibmJars.length; i++) {
