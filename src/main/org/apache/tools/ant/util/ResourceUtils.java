@@ -18,7 +18,6 @@ package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
