@@ -9,14 +9,14 @@
 
 <h2><a name="script">Script</a></h2>
 <h3>Description</h3>
-<p>Execute a script in a 
+<p>Execute a script in a
   <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a> supported language.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 <p>All items (tasks, targets, etc) of the running project are
 accessible from the script, using either their <code>name</code> or
 <code>id</code> attributes (as long as their names are considered
-valid Java identifiers, that is). 
+valid Java identifiers, that is).
 The name "project" is a pre-defined reference to the Project, which can be
 used instead of the project name. The name "self" is a pre-defined reference to the actual
 &lt;script&gt;-Task instance.<br>From these objects you have access to the Ant Java API, see the
@@ -26,6 +26,15 @@ used instead of the project name. The name "self" is a pre-defined reference to 
 <p>If you are using JavaScript a good resource is <a target="_blank" href="http://www.mozilla.org/rhino/doc.html">
 http://www.mozilla.org/rhino/doc.html</a> as we are using their JavaScript interpreter.</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
+<p>Rhino provides a special construct - the <i>JavaAdapter</i>. Whith that you can
+create an object which implements several interfaces, extends classes and for which you
+can overwrite methods. Because this is an undocumented feature (yet), here is the link
+to an explanation: <a href="http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&oe=UTF-8&newwindow=1&frame=right&th=610d2db45c0756bd&seekm=391EEC3C.5236D929%40yahoo.com#link2">
+Groups@Google: "Rhino, enum.js, JavaAdapter?"</a> by Norris Boyd in the newsgroup
+<i>netscape.public.mozilla.jseng</i>.</p>
+
+
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -178,7 +187,12 @@ filesizes of all files a &lt;fileset/&gt; caught.</p>
 </pre></blockquote>
 <p>We want to use the Java API. Because we don´t want always typing the package signature
 we do an import. Rhino knows to different methods for import statements: one for packages
-and one for a single class. <br>
+and one for a single class. By default only the <i>java</i> packages are available, so
+<i>java.lang.System</i> can be directly imported with <code>importClass/importPackage</code>.
+For other packages you have to prefix the full classified name with <i>Package</i>.
+For example ant´s <i>FileUtil</i> class can be imported with
+<code>importClass(<b>Package</b>.org.apache.tools.ant.util.FileUtils)</code>
+<br>
 The &lt;script&gt; task populates the Project instance under
 the name <i>project</i>, so we can use that reference. Another way is to use its given name
 or getting its reference from the task itself.<br>
