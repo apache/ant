@@ -12,6 +12,7 @@
 <p>by</p>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
+  <li>Paul Austin (<a href="mailto:p_d_austin@yahoo.com">p_d_austin@yahoo.com</a>)</li>
   <li>Tim Fennell (<a href="mailto:tfenne@rcn.com">tfenne@rcn.com</a>)</li>
   <li>Martin Gee (<a href="mailto:martin.gee@icsynergy.com">martin.gee@icsynergy.com</a>)</li>
   <li>Conor MacNeill (<a href="mailto:conor@cortexebusiness.com.au">conor@cortexebusiness.com.au</a>)</li>
@@ -44,8 +45,9 @@ to support additional EJB Servers.
  <tr><td><a href="#ddcreator">ddcreator</a></td><td colspan="2">Weblogic 4.5.1</td></tr>
  <tr><td><a href="#ejbc">ejbc</a></td><td colspan="2">Weblogic 4.5.1</td></tr>
  <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td>iPlanet Application Server 6.0</td></tr>
- <tr><td rowspan="4"><a href="#ejbjar">ejbjar</a></td><td colspan="2" align="center">Nested Elements</td></tr>
+ <tr><td rowspan="5"><a href="#ejbjar">ejbjar</a></td><td colspan="2" align="center"><b>Nested Elements</b></td></tr>
  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5</td></tr>
+ <tr><td><a href="#ejbjar_jboss">jBoss</a></td><td>jBoss</td></tr>
  <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
  <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
  <tr><td><a href="#wlrun">wlrun</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
@@ -507,6 +509,7 @@ include: </p>
   <li>an element or building Weblogic 5.1/6.0 session/entity beans using the 
       weblogic.ejbc tool.</li>
   <li>an element for building TOPLink for WebLogic 2.5.1-enabled entity beans.</li>
+  <li>an element for adding Jboss deployment descriptors.</li>
 </ul>
 
 <p>This task supports two approaches to creating ejb jar files. The first 
@@ -692,8 +695,57 @@ Each vendor-specific nested element controls the generation of a deployable jar
 specific to that vendor's EJB container. The parameters for each supported 
 deployment element are detailed here.
 
-<a name="ejbjar_weblogic"></a>
+<a name="ejbjar_jboss">
+<h3>Jboss element</h3>
+</a>
+
+<p>The jboss element searches for the jboss specific deployment descriptors and adds them
+to the final ejb jar file. Jboss has two deployment descriptors jboss.xml and jaws.xml
+(for container manager persistance only). The Jboss server uses hot deployment and does
+not require compilation of additional stubs and skeletons.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">The base directory into which the generated weblogic ready
+                     jar files are deposited. Jar files are deposited in
+                     directories corresponding to their location within the
+                     descriptordir namespace. </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">genericjarsuffix</td>
+    <td valign="top">A generic jar is generated as an intermediate step in
+                     build the weblogic deployment jar. The suffix used to
+                     generate the generic jar file is not particularly
+                     important unless it is desired to keep the generic
+                     jar file. It should not, however, be the same
+                     as the suffix setting.</td>
+    <td valign="top" align="center">No, defaults to '-generic.jar'.</td>
+  </tr>
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">String value appended to the basename of the deployment
+                     descriptor to create the filename of the WebLogic EJB
+                     jar file.</td>
+    <td valign="top" align="center">No, defaults to '.jar'.</td>
+  </tr>
+  <tr>
+    <td valign="top">keepgeneric</td>
+    <td valign="top">This controls whether the generic file used as input to
+                     ejbc is retained.</td>
+    <td valign="top" align="center">No, defaults to false</td>
+  </tr>
+</table>
+
+<a name="ejbjar_weblogic">
 <h3>Weblogic element</h3>
+</a>
 
 <p>The weblogic element is used to control the weblogic.ejbc compiler for 
 generating weblogic EJB jars. Prior to Ant 1.3, the method of locating CMP 
@@ -994,9 +1046,10 @@ This will create only one TOPLink-enabled ejb jar file - 'Address.jar'.</p>
     &lt;/ejbjar&gt;
 </pre>
 
-<a name="ejbjar_iplanet"></a>
-<h3>
-iPlanet Application Server (iAS) element</h3>
+<a name="ejbjar_iplanet">
+<h3>iPlanet Application Server (iAS) element</h3>
+</a>
+
 The &lt;iplanet> nested element is used to build iAS-specific stubs and
 skeletons and construct a JAR file which may be deployed to the iPlanet
 Application Server 6.0.  The build process will always determine if
