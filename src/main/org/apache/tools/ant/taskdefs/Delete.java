@@ -557,7 +557,10 @@ public class Delete extends MatchingTask {
             if (!f.delete()) {
                 if (deleteOnExit) {
                     int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
-                    log("Failed to delete " + f + ", calling deleteOnExit" + f, level);
+                    log("Failed to delete " + f + ", calling deleteOnExit."
+                        + " This attempts to delete the file when the ant jvm"
+                        + " has exited and might not succeed."
+                        , level);
                     f.deleteOnExit();
                     return true;
                 }
