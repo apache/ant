@@ -290,9 +290,10 @@ public class FTP
                                         name + File.separator, fast);
                             }
                         } else {
-                            if (isFunctioningAsFile(ftp, dir, file)) {
-                                String name = vpath + file.getName();
-
+                            String name = vpath + file.getName();
+                            if (!isFollowSymlinks() && file.isSymbolicLink()) {
+                                dirsExcluded.addElement(name);
+                            } else if (isFunctioningAsFile(ftp, dir, file)) {
                                 if (isIncluded(name)) {
                                     if (!isExcluded(name)) {
                                         filesIncluded.addElement(name);
