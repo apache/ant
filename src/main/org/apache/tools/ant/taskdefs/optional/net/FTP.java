@@ -88,6 +88,7 @@ public class FTP
     private String password;
     private File listing;
     private boolean binary = true;
+    private boolean passive = false;
     private boolean verbose = false;
     private boolean newerOnly = false;
     private int action = SEND_FILES;
@@ -248,6 +249,16 @@ public class FTP
     public void setBinary(boolean binary)
     {
         this.binary = binary;
+    }
+
+    /**
+     * Specifies whether to use passive mode.  Set to true if you
+     * are behind a firewall and cannot connect without it.  Passive mode
+     * is disabled by default.
+     */
+    public void setPassive(boolean passive)
+    {
+        this.passive = passive;
     }
 
     /**
@@ -743,6 +754,18 @@ public class FTP
                 {
                     throw new BuildException(
                         "could not set transfer type: " +
+                        ftp.getReplyString());
+                }
+            }
+            
+            if (passive)
+            {
+                log("entering passive mode", Project.MSG_VERBOSE);
+                ftp.enterLocalPassiveMode();
+                if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
+                {
+                    throw new BuildException(
+                        "could not enter into passive mode: " +
                         ftp.getReplyString());
                 }
             }

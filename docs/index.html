@@ -106,7 +106,7 @@ build Ant from the source code.</p>
   Once installed make sure the &quot;jaxp.jar&quot; and &quot;parser.jar&quot; files are in your classpath.
   <p>
   You will also need the JDK installed on your system, version 1.1 or later. 
-
+  </p>
 <hr>  
 <h2><a name="buildingant">Building Ant</a></h2>
 <p>Go to the directory <code>jakarta-ant</code>.</p>
@@ -736,7 +736,7 @@ They are:
         &quot;**/.cvsignore&quot;
 </pre>
 If you do not want these default excludes applied, you may disable them with the 
-<code>defaultexcludes=&quot;no&quot;</code> attribute.</p>
+<code>defaultexcludes=&quot;no&quot;</code> attribute.
 <h3><a name="patternset">PatternSets</a></h3>
 <p>Patterns can be grouped to sets and later be referenced by their id
 attribute. They are defined via a <code>patternset</code> element -
@@ -1890,7 +1890,7 @@ BUILD FAILED
 
 build.xml:4: No message
 </pre>
-</p>
+
 <pre>  &lt;fail message=&quot;Something wrong here.&quot;/&gt;</pre>
 <p>will exit the current build and print something like the following to whereever
 your output goes:
@@ -1899,7 +1899,7 @@ BUILD FAILED
 
 build.xml:4: Something wrong here.
 </pre>
-</p>
+
 <hr>
 <h2><a name="filter">Filter</a></h2>
 <h3>Description</h3>
@@ -2351,6 +2351,7 @@ You should not include <samp>META-INF/MANIFEST.MF</samp> in your set of files.
 If <code>create</code> (the default), the JAR is created anyway with only a manifest.
 If <code>skip</code>, the JAR is not created and a warning is issued.
 If <code>fail</code>, the JAR is not created and the build is halted with an error.
+</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3384,7 +3385,7 @@ to move to the <var>todir</var> directory.</p>
 <hr>
 <h2><a name="patch">Patch</a></h2>
 <h3>Description</h3>
-<p>Applies a diff file to originals.
+<p>Applies a diff file to originals.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3524,7 +3525,7 @@ builds using the following:
 to be your home directory.  This technique is more appropriate for Unix than 
 Windows since the notion of a home directory doesn't exist on Windows.  On the
 JVM that I tested, the home directory on Windows is &quot;C:\&quot;.  Different JVM
-implementations may use other values for the home directory on Windows.
+implementations may use other values for the home directory on Windows.</p>
 <hr>
 <h2><a name="rename">Rename</a></h2>
 <h3><i>Deprecated</i></h3>
@@ -3945,7 +3946,7 @@ class path</td>
   <p><pre>
 &lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
        extension=&quot;html&quot; style=&quot;style/apache.xml&quot;/&gt;
-</pre></p>
+</pre>
 </blockquote>
 <hr>
 <h2><a name="tar">Tar</a></h2>
@@ -4413,7 +4414,7 @@ images/large/logo.gif
 </pre>
 using Ant's default manifest file. The content of
 <code>WEB-INF/web.xml</code> is identical to
-<code>src/metadata/myapp.xml</code>.</p>
+<code>src/metadata/myapp.xml</code>.
 <hr>
 <h2><a name="zip">Zip</a></h2>
 <h3>Description</h3>
@@ -4730,6 +4731,12 @@ write patterns.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">passive</td>
+    <td valign="top">selects passive-mode (&quot;yes&quot;) transfers.  
+                     Defaults to &quot;no&quot;</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">verbose</td>
     <td valign="top">displays information on each file transferred if set 
                      to &quot;yes&quot;. Defaults to &quot;no&quot;.</td>
@@ -4798,20 +4805,19 @@ for <code>anonymous</code>.</p>
 <p>Logs in to <code>ftp.apache.org</code> at port <code>2121</code> as 
 <code>coder</code> with password <code>java1</code> and uploads all new or 
 changed HTML files in the <code>htdocs/manual</code> directory to the 
-<code>/pub/incoming</code> directory.  The files are transferred in text
-mode.</p>
+<code>/pub/incoming</code> directory. The files are transferred in text mode. Passive mode has been switched on to send files from behind a firewall.</p>
 <pre>  &lt;ftp server=&quot;ftp.nt.org&quot;
        remotedir=&quot;c:\uploads&quot;
        userid=&quot;coder&quot;
        password=&quot;java1&quot;
        separator=&quot;\&quot;
-       verbose=&quot;yes&quot;
+       verbose=&quot;yes&quot;</pre>
+<PRE>
   &gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
       &lt;include name=&quot;**/*.html&quot; /&gt;
     &lt;/fileset&gt;
-  &lt;/ftp&gt;</pre>
-<p>Logs in to the Windows-based <code>ftp.nt.org</code> as 
+  &lt;/ftp&gt;</PRE><p>Logs in to the Windows-based <code>ftp.nt.org</code> as 
 <code>coder</code> with password <code>java1</code> and uploads all 
 HTML files in the <code>htdocs/manual</code> directory to the 
 <code>c:\uploads</code> directory.  Progress messages are displayed as each
