@@ -101,7 +101,7 @@ public class Jar extends Zip {
      *  whether to merge fileset manifests;
      *  value is true if filesetmanifest is 'merge' or 'mergewithoutmain'
      */
-    private boolean mergeManifests = false;
+    private FilesetManifestConfig filesetManifestConfig;
 
     /**
      *  Whether to create manifest file on finalizeOutputStream?
@@ -215,9 +215,8 @@ public class Jar extends Zip {
     }
 
     public void setFilesetmanifest(FilesetManifestConfig config) {
-        String filesetManifestConfig = config.getValue();
-        mergeManifests = !("skip".equals(filesetManifestConfig));
-        mergeManifestsMain = "merge".equals(filesetManifestConfig);
+        filesetManifestConfig = config;
+        mergeManifestsMain = "merge".equals(config.getValue());
     }
 
     public void addMetainf(ZipFileSet fs) {
@@ -228,7 +227,8 @@ public class Jar extends Zip {
 
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
-        if (! (mergeManifests || mergeManifestsMain)) {
+        if (filesetManifestConfig == null
+            || filesetManifestConfig.getValue().equals("skip")) {
             manifestOnFinalize = false;
             createManifest(zOut);
         }
@@ -394,7 +394,8 @@ public class Jar extends Zip {
             } else {
                 manifest = getManifest(file);
             }
-        } else if (mergeManifests) {
+        } else if (filesetManifestConfig != null && 
+                   !filesetManifestConfig.getValue().equals("skip")) {
             // we add this to our group of fileset manifests
             log("Found manifest to merge in file " + file,
                 Project.MSG_VERBOSE);
@@ -413,10 +414,14 @@ public class Jar extends Zip {
             }
         } else {
             // assuming 'skip' otherwise
+            // don't warn if skip has been requested explicitly, warn if user
+            // didn't set the attribute
+            int logLevel = filesetManifestConfig == null ?
+                Project.MSG_WARN : Project.MSG_VERBOSE;
             log("File " + file
                 + " includes a META-INF/MANIFEST.MF which will be ignored. "
                 + "To include this file, set filesetManifest to a value other "
-                + "than 'skip'.", Project.MSG_WARN);
+                + "than 'skip'.", logLevel);
         }
     }
 
@@ -503,7 +508,7 @@ public class Jar extends Zip {
     public void reset() {
         super.reset();
         configuredManifest = null;
-        mergeManifests = false;
+        filesetManifestConfig = null;
         mergeManifestsMain = false;
         manifestFile = null;
         index = false;
