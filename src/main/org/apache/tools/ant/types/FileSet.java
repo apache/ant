@@ -76,6 +76,10 @@ public class FileSet {
     private File dir;
     private boolean useDefaultExcludes = true;
 
+    public FileSet() {
+        super();
+    }
+
     public void setDir(File dir) throws BuildException {
         if (!dir.exists()) {
             throw new BuildException(dir.getAbsolutePath()+" not found.");
@@ -84,6 +88,10 @@ public class FileSet {
             throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
         }
         this.dir = dir;
+    }
+
+    public File getDir() {
+        return dir;
     }
 
     public PatternSet createPatternSet() {
