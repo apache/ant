@@ -601,6 +601,9 @@ public class ProjectHelper2 extends ProjectHelper {
             boolean nameAttributeSet = false;
 
             Project project = context.getProject();
+            // Set the location of the implicit target associated with the project tag
+            context.getImplicitTarget().setLocation(
+                new Location(context.getLocator()));
 
             /** XXX I really don't like this - the XML processor is still
              * too 'involved' in the processing. A better solution (IMO)
