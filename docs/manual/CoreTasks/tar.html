@@ -11,22 +11,31 @@
 <h3>Description</h3>
 <p>Creates a tar archive.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to tar.</p>
-<p>It is possible to refine the set of files that are being tarred. This can be
-done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
-the files you want to have excluded. This is also done with patterns. And
-finally with the <i>defaultexcludes</i> attribute, you can specify whether you
-want to use default exclusions or not. See the section on <a
-href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns.</p>
-<p>This task forms an implicit <a href="../CoreTypes/fileset.html">FileSet</a> and
-supports all attributes of <code>&lt;fileset&gt;</code>
-(<code>dir</code> becomes <code>basedir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
-<code>&lt;patternset&gt;</code> elements.</p>
-<p>Note that this task does not perform compression. You might want to use the <a href="gzip.html">GZip</a>
-task to come up with a .tar.gz package.</p>
+<p>This task is a <a href="../dirtasks.html#directorybasedtasks">directory based task</a>
+and, as such, forms an implict <a href="../CoreTypes/fileset.html">Fileset</a>. This 
+defines which files, relative to the <i>basedir</i>, will be included in the
+archive. The tar task supports all the attributes of Fileset to refine the
+set of files to be included in the implicit fileset.</p>
+
+<p>In addition to the implicit fileset, the tar task supports nested filesets. These
+filesets are extended to allow control over the access mode, username and groupname 
+to be applied to the tar entries. This is useful, for example, when preparing archives for 
+Unix systems where some files need to have execute permission.</p>
+
+<p>The POSIX tar standard does not support path lengths greater than 100 characters. The
+behaviour of the tar task when it encounters such paths is controlled by the <i>longfile</i>
+attribute. If this attribute is not present, the tar task will throw an exception upon encountering 
+a long path. If the longfile attribute is set to <code>truncate</code>, any long paths will be 
+truncated to the 100 character maximum length prior to adding to the archive. This ensures that 
+the file will be in the archive and that the archive can be untarred by any compliant version of 
+tar. If the loss of path information is not acceptable, and it rarely is, longfile may be set to 
+the value <code>gnu</code>. The tar task will then produce a GNU tar file which can have 
+arbitrary length paths. Note however, that the resulting archive will only be able to be untarred 
+with GNU tar.
+
+<p>Note that this task does not perform compression. You might want to use the 
+<a href="gzip.html">GZip</a> task to prepare a .tar.gz package.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -42,7 +51,13 @@ task to come up with a .tar.gz package.</p>
   <tr>
     <td valign="top">basedir</td>
     <td valign="top">the directory from which to zip the files.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">longfile</td>
+    <td valign="top">Controls how long paths are handled. Allowable 
+                     values are &quot;gnu&quot; and &quot;truncate&quot;</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
@@ -75,6 +90,38 @@ task to come up with a .tar.gz package.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+
+<h3>Nested Elements</h3>
+The tar task supports nested <a href="../CoreTypes/fileset.html">Fileset</a> elements. These are
+extended Filesets which, in addition to the standard fileset elements, support three additional
+attributes
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">mode</td>
+    <td valign="top">An 3 digit octal string, specify the user, group and other modes in 
+                     the standard Unix fashion</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The username for the tar entry. This is not the same as the UID, which is 
+                     not currently set by the tar task.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">groupname</td>
+    <td valign="top">The username for the tar entry. This is not the same as the GID, which is 
+                     not currently set by the tar task.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
   &lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
@@ -88,6 +135,30 @@ it.</p>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
+
+<pre>&lt;tar longfile=&quot;gnu&quot;
+     tarfile=&quot;${dist.base}/${dist.name}-src.tar&quot; &gt;
+  &lt;fileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
+    &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
+    &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
+  &lt;/fileset&gt; 
+  &lt;fileset dir=&quot;${dist.name}/..&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt; 
+    &lt;include name=&quot;${dist.name}/**&quot;/&gt;
+    &lt;exclude name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
+    &lt;exclude name=&quot;${dist.name}/build.sh&quot;/&gt;
+  &lt;/fileset&gt;
+&lt;/tar&gt; </pre>
+
+<p>This example shows building a tar which uses ther GNU extensions for long paths and
+where some files need to be marked as executable (mode 755)
+and the rest are use the default mode (read-write by owner). The first
+fileset selects just the executable files. The second fileset must exclude
+the executable files and include all others. </p>
+
+<p><strong>Note: </strong> The tar task does not ensure that a file is only selected
+once by one fileset. If the same file is selected by more than one fileset, it will be included in the 
+tar file twice, with the same path.
+
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
