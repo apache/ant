@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference;
 /**
  * This is a reference that really is is Weak, as it uses the
  * appropriate java.lang.ref class.
- *
+ * @deprecated Just use {@link WeakReference} directly.
  */
 public class WeakishReference12 extends WeakishReference  {
 

@@ -23,6 +23,7 @@ import org.apache.tools.ant.util.optional.WeakishReference12;
  * This is a weak reference on java1.2 and up, that is all
  * platforms Ant1.6 supports.
  * @since ant1.6
+ * @deprecated Just use {@link java.lang.ref.WeakReference} directly.
  */
 public abstract class WeakishReference  {
 
@@ -46,7 +47,7 @@ public abstract class WeakishReference  {
 
     /**
      * A hard reference for Java 1.1.
-     * Hopefully nobody is using this.
+     * @deprecated Hopefully nobody is using this.
      */
     public static class HardReference extends WeakishReference {
         private Object object;
