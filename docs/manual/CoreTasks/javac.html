@@ -11,56 +11,84 @@
 <h3>Description</h3>
 <p>Compiles a Java source tree.</p>
 <p>The source and destination directory will be recursively scanned for Java
-source files to compile. Only Java files that have no corresponding class file
-or where the class file is older than the java file will be compiled.</p>
+source files to compile. Only Java files that have no corresponding
+<code>.class</code> file
+or where the class file is older than the
+<code>.java</code> file will be compiled.</p>
 <p>Note: Ant uses only the names of the source and class files to find
-the classes that need a rebuild. It will not scan the source and therefor
+the classes that need a rebuild. It will not scan the source and therefore
 will have no knowledge about nested classes, classes that are named different
-from the source file and so on.</p>
-<p>The directory structure of the source tree should follow the package
+from the source file, and so on. See the
+<a href="../OptionalTasks/depend.html"><code>&lt;depend&gt;</code></a> task
+for dependency checking based on other than just
+existence/modification times.
+<p>When the source files are part of a package, the directory structure of
+the source tree should follow the package
 hierarchy.</p>
-<p>It is possible to refine the set of files that are being compiled/copied.
-This can be done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
-the files you want to have excluded. This is also done with patterns. And
-finally with the <i>defaultexcludes</i> attribute, you can specify whether you
-want to use default exclusions or not. See the section on <a
-href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns.</p>
-<p>It is possible to use different compilers. This can be selected with the
-&quot;build.compiler&quot; property or the compiler attribute. Here are the choices:-</p>
+<p>It is possible to refine the set of files that are being compiled.
+This can be done with the <code>includes</code>, <code>includesfile</code>,
+<code>excludes</code>, <code>excludesfile</code>,
+and <code>defaultexcludes</code>
+attributes. With the <code>includes</code> or
+<code>includesfile</code> attribute, you specify the files you want to
+have included.
+The <code>exclude</code> or <code>excludesfile</code> attribute is used
+to specify
+the files you want to have excluded. In both cases, the list of files 
+can be specified by either the filename, relative to the directory(s) specified
+in the <code>srcdir</code> attribute or nested <src> element, or by using
+wildcard patterns. See the section on
+<a href="../dirtasks.html#directorybasedtasks">directory-based tasks</a>,
+for information on how the
+inclusion/exclusion of files works, and how to write wildcard patterns.</p>
+<p>It is possible to use different compilers. This can be specified by
+either setting the global <code>build.compiler</code> property, which will
+affect all <code>&lt;javac&gt;</code> tasks throughout the build, or by
+setting the <code>compiler</code> attribute, specific to the current
+<code>&lt;javac&gt;</code> task.
+<a name="compilervalues">Valid values for either the
+<code>build.compiler</code> property or the <code>compiler</code>
+attribute are:</p>
 <ul>
-  <li>classic (the standard compiler of JDK 1.1/1.2) - javac1.1 and
-     javac1.2 can be used as aliases</li>
-  <li>modern (the standard compiler of JDK 1.3/1.4) - javac1.3 and
-     javac1.4 can be used as aliases</li>
-  <li>jikes (the <a
+  <li><code>classic</code> (the standard compiler of JDK 1.1/1.2) &ndash;
+      <code>javac1.1</code> and
+      <code>javac1.2</code> can be used as aliases.</li>
+  <li><code>modern</code> (the standard compiler of JDK 1.3/1.4) &ndash;
+      <code>javac1.3</code> and
+      <code>javac1.4</code> can be used as aliases.</li>
+  <li><code>jikes</code> (the <a
     href="http://oss.software.ibm.com/developerworks/opensource/jikes/project" target="_top">Jikes</a>
-    compiler)</li>
-  <li>jvc (the Command-Line Compiler from Microsoft's SDK for Java /
-    Visual J++) - microsoft can be used as an alias</li>
-  <li>kjc (the <a href="http://www.dms.at/kopi/" target="_top">kopi</a>
-    compiler)</li>
-  <li>gcj (the gcj compiler from gcc)</li>
-  <li>sj (Symantec java compiler) - symantec can be used as an alias</li>
-  <li>extJavac (run either modern or classic in a JVM of its own)</li>
+    compiler).</li>
+  <li><code>jvc</code> (the Command-Line Compiler from Microsoft's SDK
+      for Java / Visual J++) &ndash; <code>microsoft</code> can be used
+      as an alias.</li>
+  <li><code>kjc</code> (the <a href="http://www.dms.at/kopi/" target="_top">kopi</a>
+    compiler).</li>
+  <li><code>gcj</code> (the gcj compiler from gcc).</li>
+  <li><code>sj</code> (Symantec java compiler) &ndash;
+      <code>symantec</code> can be used as an alias.</li>
+  <li><code>extJavac</code> (run either modern or classic in a JVM of
+      its own).</li>
 </ul>
-<p>For JDK 1.1/1.2, classic is the default. For JDK 1.3/1.4, modern is the default.
+</a>
+<p>For JDK 1.1/1.2, <code>classic</code> is the default.
+For JDK 1.3/1.4, <code>modern</code> is the default.
 If you wish to use a different compiler interface than those
-supplied, write a class that implements the CompilerAdapter interface
-(package org.apache.tools.ant.taskdefs.compilers). Supply the full
-classname in the &quot;build.compiler&quot; property.
+supplied, you can write a class that implements the CompilerAdapter interface
+(<code>package org.apache.tools.ant.taskdefs.compilers</code>). Supply the full
+classname in the <code>build.compiler</code> property or the
+<code>compiler</code> attribute.
 </p>
-<p>The fork attribute overrides the build.compiler setting and expects
-a JDK1.1 or higher to be set in java.home.
+<p>The fork attribute overrides the <code>build.compiler</code> property
+or <code>compiler</code> attribute setting and
+expects a JDK1.1 or higher to be set in <code>JAVA_HOME</code>.
 </p>
 <p>This task will drop all entries that point to non-existent
-files/directories from the CLASSPATH it passes to the compiler.</p>
+files/directories from the classpath it passes to the compiler.</p>
 <p><strong>Windows Note:</strong>When the modern compiler is used
 in unforked mode on Windows, it locks up the files present in the
-classpath of the &lt;javac&gt; task, and does not release them.  The side
-effect of this is that you will not be able to delete or move
+classpath of the <code>&lt;javac&gt;</code> task, and does not release them.
+The side effect of this is that you will not be able to delete or move
 those files later on in the build.  The workaround is to fork when
 invoking the compiler.</p>
 </p>
@@ -73,196 +101,211 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">srcdir</td>
-    <td valign="top">location of the java files. (See Notes at the end)</td>
+    <td valign="top">Location of the java files. (See the
+     <a href="#srcdirnote">Note</a> below.)</td>
     <td align="center" valign="top">Yes, unless nested <code>&lt;src&gt;</code> elements are present.</td>
   </tr>
   <tr>
     <td valign="top">destdir</td>
-    <td valign="top">location to store the class files.</td>
+    <td valign="top">Location to store the class files.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">comma-separated list of patterns of files that must be
-      included; all files are included when omitted.</td>
+    <td valign="top">Comma-separated list of files (may be specified using
+      wildcard patterns) that must be
+      included; all <code>.java</code> files are included when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includesfile</td>
-    <td valign="top">the name of a file that contains
-      include patterns.</td>
+    <td valign="top">The name of a file that contains a list of files to
+      include (may be specified using wildcard patterns).</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">comma-separated list of patterns of files that must be
-      excluded; no files (except default excludes) are excluded when omitted.</td>
+    <td valign="top">Comma-separated list of files (may be specified using
+      wildcard patterns) that must be excluded; no files (except default
+      excludes) are excluded when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">excludesfile</td>
-    <td valign="top">the name of a file that contains
-      exclude patterns.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">defaultexcludes</td>
-    <td valign="top">indicates whether default excludes should be used
-      (<code>yes</code> | <code>no</code>); default excludes are used when omitted.</td>
+    <td valign="top">The name of a file that contains a list of files to
+      exclude (may be specified using wildcard patterns).</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">classpath</td>
-    <td valign="top">the classpath to use.</td>
+    <td valign="top">The classpath to use.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">sourcepath</td>
-    <td valign="top">the sourcepath to use; defaults to the value of the srcdir attribute (or <code>&lt;src&gt;</code> elements).
+    <td valign="top">The sourcepath to use; defaults to the value of the srcdir attribute (or nested <code>&lt;src&gt;</code> elements).
         To suppress the sourcepath switch, use <code>sourcepath=&quot;&quot;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">bootclasspath</td>
-    <td valign="top">location of bootstrap class files.</td>
+    <td valign="top">Location of bootstrap class files.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">classpathref</td>
-    <td valign="top">the classpath to use, given as a
-      <a href="../using.html#references">reference</a> to a PATH defined elsewhere.</td>
+    <td valign="top">The classpath to use, given as a
+      <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">sourcepathref</td>
-    <td valign="top">the sourcepath to use, given as a
-      <a href="../using.html#references">reference</a> to a PATH defined elsewhere.</td>
+    <td valign="top">The sourcepath to use, given as a
+      <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">bootclasspathref</td>
-    <td valign="top">location of bootstrap class files, given as a
-      <a href="../using.html#references">reference</a> to a PATH defined elsewhere.</td>
+    <td valign="top">Location of bootstrap class files, given as a
+      <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">extdirs</td>
-    <td valign="top">location of installed extensions.</td>
+    <td valign="top">Location of installed extensions.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">encoding</td>
-    <td valign="top">encoding of source files. (gcj doesn't support
-      this option yet)</td>
+    <td valign="top">Encoding of source files. (Note: gcj doesn't support
+      this option yet.)</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">nowarn</td>
-    <td valign="top">indicates whether -nowarn switch should be passed
-      to the compiler; defaults to <code>off</code>.</td>
+    <td valign="top">Indicates whether the <code>-nowarn</code> switch
+      should be passed to the compiler; defaults to <code>off</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">debug</td>
-    <td valign="top">indicates whether source should be compiled with debug
+    <td valign="top">Indicates whether source should be compiled with debug
       information; defaults to <code>off</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">debuglevel</td>
+    <td valign="top">Keyword list to be appended to the <code>-g</code>
+      command-line switch.  This will be ignored by all implementations except
+      <code>modern</code> and <code>classic(ver &gt;= 1.2)</code>.
+      Legal values are <code>none</code> or a comma-separated list of the
+      following keywords:
+      <code>lines</code>, <code>vars</code>, and <code>source</code>.
+      If <code>debuglevel</code> is not specified, by default,
+      <code>:none</code> will be
+      appended to <code>-g</code>.  If <code>debug</code> is not turned on,
+      this attribute will be ignored.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">optimize</td>
-    <td valign="top">indicates whether source should be compiled with
+    <td valign="top">Indicates whether source should be compiled with
       optimization; defaults to <code>off</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">deprecation</td>
-    <td valign="top">indicates whether source should be compiled with
+    <td valign="top">Indicates whether source should be compiled with
       deprecation information; defaults to <code>off</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">target</td>
-    <td valign="top">generate class files for specific VM version (e.g.,
+    <td valign="top">Generate class files for specific VM version (e.g.,
 	 <code>1.1</code> or <code>1.2</code>).</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">verbose</td>
-    <td valign="top">asks the compiler for verbose output.</td>
+    <td valign="top">Asks the compiler for verbose output.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">depend</td> <td valign="top">enables dependency-tracking
-      for compilers that support this (jikes and classic)</td>
+    <td valign="top">depend</td> <td valign="top">Enables dependency-tracking
+      for compilers that support this (<code>jikes</code> and
+      <code>classic</code>).</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">includeAntRuntime</td>
-    <td valign="top">whether to include the Ant run-time libraries;
-      defaults to <code>yes</code>.</td>
+    <td valign="top">Whether to include the Ant run-time libraries in the
+      classpath; defaults to <code>yes</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">includeJavaRuntime</td>
-    <td valign="top">whether to include the default run-time
-      libraries from the executing VM; defaults to <code>no</code>.</td>
+    <td valign="top">Whether to include the default run-time
+      libraries from the executing VM in the classpath;
+      defaults to <code>yes</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">fork</td>
-    <td valign="top">whether to execute Javac using the JDK compiler
-      externally; defaults to <code>no</code>.  You can also give a
-      complete path to the javac executable to use instead of
-      <code>yes</code>, which would run the compiler of the Java
-      vesrion that is currently running Ant.</td>
+    <td valign="top">Whether to execute <code>javac</code> using the
+      JDK compiler externally; defaults to <code>no</code>.  You can also
+      give a complete path to the <code>javac</code> executable to use
+      instead of <code>yes</code>, which would run the compiler of the Java
+      version that is currently running Ant.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">memoryInitialSize</td>
-    <td valign="top">the initial size of the memory for the underlying VM, if javac is run
-    externally, ignored otherwise; defaults to the standard VM memory setting.
-    (examples: <code>83886080</code>, <code>81920k</code>, or <code>80m</code>)</td>
+    <td valign="top">The initial size of the memory for the underlying VM,
+      if <code>javac</code> is run externally; ignored otherwise. Defaults
+      to the standard VM memory setting.
+      (Examples: <code>83886080</code>, <code>81920k</code>, or
+      <code>80m</code>)</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">memoryMaximumSize</td>
-    <td valign="top">the maximum size of the memory for the underlying VM, if javac is run
-    externally, ignored otherwise; defaults to the standard VM memory setting.
-    (examples: <code>83886080</code>, <code>81920k</code>, or <code>80m</code>)</td>
+    <td valign="top">The maximum size of the memory for the underlying VM,
+      if <code>javac</code> is run externally; ignored otherwise. Defaults
+      to the standard VM memory setting.
+      (Examples: <code>83886080</code>, <code>81920k</code>, or
+      <code>80m</code>)</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">failonerror</td> <td valign="top">
-        indicates whether the build will continue even if there are compilation errors; defaults to <code>true</code>.
+        Indicates whether the build will continue even if there are compilation errors; defaults to <code>true</code>.
     </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">source</td>
-    <td valign="top">Value of the <code>-source</code> command line
-    switch, will be ignored by all implementations except
-    <code>modern</code>, legal values are &quot;1.3&quot; and
-    &quot;1.4&quot; - by default, no <code>-source</code> argument
+    <td valign="top">Value of the <code>-source</code> command-line
+    switch; will be ignored by all implementations except
+    <code>modern</code>. Legal values are <code>1.3</code> and
+    <code>1.4</code> &ndash; by default, no <code>-source</code> argument
     will be used at all.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">debuglevel</td>
-    <td valign="top">Keyword list to be appended to the <code>-g</code> command line
-    switch.  This will be ignored by all implementations except
-    <code>modern</code> and <code>classic(ver >= 1.2)</code>, legal values are
-    &quot;none&quot; or a comma separated list of the following keywords.
-    Valid keywords are &quot;lines&quot;, &quot;vars&quot; and &quot;source&quot;
-    - if debuglevel is not specified, by default, nothing will be
-    appended to <code>-g</code>.  If debug is not turned on, this attribute will be
-    ignored.
-    </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">compiler</td>
     <td valign="top">The compiler implementation to use.
-      Defaults to the value of the <code>build.compiler</code> property.</td>
+      If this attribute is not set, the value of the
+      <code>build.compiler</code> property, if set, will be used.
+      Otherwise, the default compiler for the current VM will be used.
+      (See the above <a href="#compilervalues">list</a> of valid
+      compilers.)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">listfiles</td>
+    <td valign="top">Indicates whether the source files to be compiled will
+      be listed; defaults to <code>no</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -275,9 +318,11 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;patternset&gt;</code> elements.</p>
 <h4><code>src</code>, <code>classpath</code>, <code>sourcepath</code>, 
 <code>bootclasspath</code> and <code>extdirs</code></h4>
-<p><code>Javac</code>'s <i>srcdir</i>, <i>classpath</i>,
-<i>sourcepath</i>, <i>bootclasspath</i> and <i>extdirs</i> attributes are <a
-href="../using.html#path">path-like structures</a> and can also be set via nested
+<p><code>&lt;javac&gt;</code>'s <code>srcdir</code>, <code>classpath</code>,
+<code>sourcepath</code>, <code>bootclasspath</code>, and
+<code>extdirs</code> attributes are
+<a href="../using.html#path">path-like structures</a>
+and can also be set via nested
 <code>&lt;src&gt;</code>,
 <code>&lt;classpath&gt;</code>,
 <code>&lt;sourcepath&gt;</code>,
@@ -300,7 +345,8 @@ used.</p>
 </tr>
   <tr>
     <td valign="top">value</td>
-    <td align="center" rowspan="4">See <a href="../using.html#arg">here</a></td>
+    <td align="center" rowspan="4">See
+    <a href="../using.html#arg">Command-line Arguments</a>.</td>
     <td align="center" rowspan="4">Exactly one of these.</td>
   </tr>
   <tr>
@@ -314,10 +360,12 @@ used.</p>
   </tr>
   <tr>
     <td valign="top">implementation</td>
-    <td align="center">Only use this argument if the chosen
-      implementation matches this attribute.  Possible choices are the
-      same as those of the build.compiler property.</td>
-    <td align="center">No.</td>
+    <td>Only pass the specified argument if the chosen
+      implementation matches the value of this attribute.
+      Legal values are the
+      same as those in the above <a href="#compilervalues">list</a> of valid
+      compilers.)</td>
+    <td align="center">No</td>
   </tr>
 </table>
 
@@ -330,7 +378,8 @@ used.</p>
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores
 the <code>.class</code> files in the <code>${build}</code> directory.
-The classpath used contains <code>xyz.jar</code>, and debug information is on.</p>
+The classpath used includes <code>xyz.jar</code>, and compiling with
+debug information is on.</p>
 
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;
@@ -339,7 +388,7 @@ The classpath used contains <code>xyz.jar</code>, and debug information is on.</
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores the <code>.class</code> files in the
 <code>${build}</code> directory.  This will fork off the javac
-compiler using the default javac executable.</p>
+compiler using the default <code>javac</code> executable.</p>
 
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;
@@ -348,7 +397,7 @@ compiler using the default javac executable.</p>
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores the <code>.class</code> files in the
 <code>${build}</code> directory.  This will fork off the javac
-compiler using the executable named <code>java$javac.exe</code>.  Note
+compiler, using the executable named <code>java$javac.exe</code>.  Note
 that the <code>$</code> sign needs to be escaped by a second one.</p>
 
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -361,10 +410,10 @@ that the <code>$</code> sign needs to be escaped by a second one.</p>
 <p>compiles <code>.java</code> files under the <code>${src}</code>
 directory, and stores the
 <code>.class</code> files in the <code>${build}</code> directory.
-The classpath used contains <code>xyz.jar</code>, and debug information is on.
+The classpath used includes <code>xyz.jar</code>, and debug information is on.
 Only files under <code>mypackage/p1</code> and <code>mypackage/p2</code> are
-used. Files in the <code>mypackage/p1/testpackage</code> directory are excluded
-from compilation.</p>
+used. All files in and below the <code>mypackage/p1/testpackage</code>
+directory are excluded from compilation.</p>
 
 <pre>  &lt;javac srcdir=&quot;${src}:${src2}&quot;
          destdir=&quot;${build}&quot;
@@ -389,64 +438,95 @@ the property <code>src2</code>. This can also be represented using nested
     &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
   &lt;/javac&gt;</pre>
 
-<p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
-for every use of an external compiler, this may be a problem of the JDK you are using.
-This problem may occur with all JDKs &lt; 1.2.</p>
+<p><a name="srcdirnote"><b>Note:</b></a>
+If you wish to compile only source files located in certain packages below a
+common root, use the <code>include</code>/<code>exclude</code> attributes
+or <code>&lt;include&gt;</code>/<code>&lt;exclude&gt;</code> nested elements
+to filter for these packages. Do not include part of your package structure
+in the <code>srcdir</code> attribute
+(or nested <code>&lt;src&gt;</code> elements), or Ant will recompile your
+source files every time you run your compile target. See the
+<a href="http://jakarta.apache.org/ant/faq.html#always-recompiles">Ant FAQ</a>
+for additional information.</p>
 
-<p><b>Note:</b> If you wish to compile only source-files located in some packages below a
-common root you should not include these packages in the srcdir-attribute. Use include/exclude-attributes
-or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute
-(or nested src-elements) Ant will start to recompile your sources every time you call it.</p>
+<p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
+for every use of an external compiler, this may be a problem of the JDK you are
+using.  This problem may occur with all JDKs &lt; 1.2.</p>
 
 <h3>Jikes Notes</h3>
 
 Jikes supports some extra options, which can be set be defining
-properties prior to invoking the task. The ant developers are aware that
-this is ugly and inflexible -expect a better solution in the future. All
-the options are boolean, and must be set to &quot;true&quot; or &quot;yes&quot; to be
-interpreted as anything other than false; by default
-build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quot;</p>
+the properties shown below prior to invoking the task. The setting
+for each property will be in affect for all <code>&lt;javac&gt;</code>
+tasks throughout the build.
+The Ant developers are aware that
+this is ugly and inflexible &ndash; expect a better solution in the future.
+All the options are boolean, and must be set to <code>true</code> or
+<code>yes</code> to be
+interpreted as anything other than false. By default,
+<code>build.compiler.warnings</code> is <code>true</code>,
+while all others are <code>false</code>.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Property</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Default</b></td>
+  </tr>
   <tr>
     <td valign="top">
 	build.compiler.emacs
 	</td>
 	<td valign="top">
-	Enable emacs compatible error messages
+	Enable emacs-compatible error messages.
     </td>
-  </tr>
-  <tr>
     <td valign="top">
-	build.compiler.warnings<br>
-        <b>This property has been deprecated, use the nowarn attribute
-          instead</b>
+	<code>false</code>
 	</td>
-	<td valign="top">
-	don't disable warning messages
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">
-	build.compiler.pedantic
-	</td>
-	<td valign="top">
-	enable pedantic warnings
-    </td>
   </tr>
   <tr>
     <td valign="top">
 	build.compiler.fulldepend
 	</td>
 	<td valign="top">
-	enable full dependency checking,<br>
-	&quot;+F&quot; in the jikes manual.
+	Enable full dependency checking; see<br>
+	the <code>+F</code> switch in the Jikes manual.
     </td>
+    <td valign="top">
+	<code>false</code>
+	</td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.pedantic
+	</td>
+	<td valign="top">
+	Enable pedantic warnings.
+    </td>
+    <td valign="top">
+	<code>false</code>
+	</td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.warnings<br>
+        <strong>Deprecated</strong>. Use
+  <code>&lt;javac&gt;</code>'s <code>nowarn</code>
+  attribute instead.
+	</td>
+	<td valign="top">
+	Don't disable warning messages.
+    </td>
+    <td valign="top">
+	<code>true</code>
+	</td>
   </tr>
 </table>
+</p>
+
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
-Reserved.</p>
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation.
+All rights Reserved.</p>
 
 </body>
 </html>
