@@ -2257,6 +2257,32 @@
         </table>
       </subsection>
 
+      <subsection name="SQLC">
+
+        <p>SQLC generates Java classes from SQL statements. Introduction
+        to SQLC: <a href="http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html">
+        http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html</a></p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.2 and Java 1.4. Shall work on Java 1.3+</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/Products/Common/doc/AntDoc/com/pavelvlasov/sql/java/ant/StatementCompilerTask.html">http://www.pavelvlasov.com/pv/content/Products/Common/doc/AntDoc/com/pavelvlasov/sql/java/ant/StatementCompilerTask.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
