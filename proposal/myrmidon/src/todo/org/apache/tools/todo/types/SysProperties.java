@@ -10,74 +10,74 @@ package org.apache.tools.todo.types;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import org.apache.aut.nativelib.ExecException;
+import java.util.Map;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.EnvironmentData;
-import org.apache.tools.todo.types.EnvironmentVariable;
 
 /**
- * Specialized EnvironmentData class for System properties
+ * A utility class for handling System properties
+ *
+ * @todo move this to AUT
  */
-public class SysProperties
-    extends EnvironmentData
-    implements Cloneable
+final public class SysProperties
 {
-    private Properties m_system;
+    private static Properties m_system;
 
-    public void setSystem()
-        throws TaskException
+    private SysProperties()
     {
-        try
-        {
-            Properties p = new Properties( m_system = System.getProperties() );
-
-            for( Iterator e = m_variables.iterator(); e.hasNext(); )
-            {
-                EnvironmentVariable v = (EnvironmentVariable)e.next();
-                p.put( v.getKey(), v.getValue() );
-            }
-            System.setProperties( p );
-        }
-        catch( SecurityException e )
-        {
-            throw new TaskException( "Cannot modify system properties", e );
-        }
     }
 
     /**
-     * @todo move this to AUT
+     * Sets system properties.  The current set of system properties can be
+     * restored using {@link #restoreSystem}.
      */
-    public String[] getJavaVariables()
+    public static void setSystem( final EnvironmentData properties )
         throws TaskException
     {
-        String props[] = toNativeFormat( super.getVariables() );
-        for( int i = 0; i < props.length; i++ )
-        {
-            props[ i ] = "-D" + props[ i ];
-        }
-        return props;
+        setSystem( properties.getVariables() );
     }
 
-    public Object clone()
+    /**
+     * Sets system properties.  The current set of system properties can be
+     * restored using {@link #restoreSystem}.
+     */
+    public synchronized static void setSystem( final Map properties )
+        throws TaskException
     {
+        if( properties.size() == 0 )
+        {
+            return;
+        }
+        if( m_system != null )
+        {
+            throw new TaskException( "System properties have not been restored." );
+        }
+
+        final Properties sysProps;
         try
         {
-            SysProperties c = (SysProperties)super.clone();
-            c.m_variables.addAll( (ArrayList)m_variables.clone() );
-            return c;
+            sysProps = System.getProperties();
+            Properties allProps = new Properties( sysProps );
+            allProps.putAll( properties );
+            System.setProperties( allProps );
         }
-        catch( CloneNotSupportedException e )
+        catch( final SecurityException e )
         {
-            return null;
+            throw new TaskException( "Cannot modify system properties.", e );
         }
+
+        m_system = sysProps;
     }
 
-    public void restoreSystem()
+    /**
+     * Restores the system properties to what they were before the last
+     * call to {@link #setSystem}.
+     */
+    public static synchronized void restoreSystem()
         throws TaskException
     {
         if( m_system == null )
         {
-            throw new TaskException( "Unbalanced nesting of SysProperties" );
+            return;
         }
 
         try
@@ -85,29 +85,35 @@ public class SysProperties
             System.setProperties( m_system );
             m_system = null;
         }
-        catch( SecurityException e )
+        catch( final SecurityException e )
         {
-            throw new TaskException( "Cannot modify system properties", e );
+            throw new TaskException( "Cannot modify system properties.", e );
         }
     }
 
-    public int size()
+    /**
+     * Converts a set of properties to their -D command-line equivalent.
+     */
+    public static String[] getJavaVariables( final EnvironmentData environment )
     {
-        return m_variables.size();
+        return getJavaVariables( environment.getVariables() );
     }
 
-    private String[] toNativeFormat( final Properties environment )
+    /**
+     * Converts a set of properties to their -D command-line equivalent.
+     */
+    public static String[] getJavaVariables( final Map environment )
     {
-        final ArrayList newEnvironment = new ArrayList();
+        final ArrayList vars = new ArrayList();
 
         final Iterator keys = environment.keySet().iterator();
         while( keys.hasNext() )
         {
             final String key = (String)keys.next();
-            final String value = environment.getProperty( key );
-            newEnvironment.add( key + '=' + value );
+            final Object value = environment.get( key );
+            vars.add( "-D" + key + '=' + value );
         }
 
-        return (String[])newEnvironment.toArray( new String[ newEnvironment.size() ] );
+        return (String[])vars.toArray( new String[ vars.size() ] );
     }
 }

@@ -13,10 +13,7 @@ import java.io.FileReader;
 import java.net.URL;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.Path;
 
 /**
@@ -25,88 +22,63 @@ import org.apache.tools.todo.types.Path;
  * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
  * @author <a href="mailto:sbailliez@apache.org>Stephane Bailliez</a>
  */
-public class ANTLR extends AbstractTask
+public class ANTLR
+    extends AbstractTask
 {
-
-    private CommandlineJava commandline = new CommandlineJava();
-
-    /**
-     * should fork ?
-     */
-    private boolean fork = false;
-
-    /**
-     * working directory
-     */
-    private File workingdir = null;
+    private final ExecuteJava m_exe = new ExecuteJava();
 
     /**
      * where to output the result
      */
-    private File outputDirectory;
+    private File m_outputDirectory;
 
     /**
      * the file to process
      */
-    private File target;
-
-    public ANTLR()
-    {
-        commandline.setVm( "java" );
-        commandline.setClassname( "antlr.Tool" );
-    }
+    private File m_target;
 
     /**
      * The working directory of the process
      *
-     * @param d The new Dir value
+     * @param dir The new Dir value
      */
-    public void setDir( File d )
+    public void setDir( final File dir )
     {
-        this.workingdir = d;
+        m_exe.setWorkingDirectory( dir );
     }
 
-    public void setFork( boolean s )
+    public void setFork( final boolean fork )
     {
-        this.fork = s;
+        m_exe.setFork( fork );
     }
 
-    public void setOutputdirectory( File outputDirectory )
+    public void setOutputdirectory( final File outputDirectory )
     {
-        getContext().debug( "Setting output directory to: " + outputDirectory.toString() );
-        this.outputDirectory = outputDirectory;
+        m_outputDirectory = outputDirectory;
     }
 
-    public void setTarget( File target )
+    public void setTarget( final File target )
     {
-        getContext().debug( "Setting target to: " + target.toString() );
-        this.target = target;
+        m_target = target;
     }
 
     /**
      * <code>&lt;classpath&gt;</code> allows classpath to be set because a
      * directory might be given for Antlr debug...
-     *
-     * @return Description of the Returned Value
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
     {
-        Path path1 = commandline.createClasspath();
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        m_exe.getClassPath().addPath( path );
     }
 
     /**
      * Create a new JVM argument. Ignored if no JVM is forked.
      *
-     * @return create a new JVM argument so that any argument can be passed to
-     *      the JVM.
      * @see #setFork(boolean)
      */
     public void addJvmarg( final Argument argument )
     {
-        commandline.addVmArgument( argument );
+        m_exe.getVmArguments().addArgument( argument );
     }
 
     public void execute()
@@ -119,24 +91,18 @@ public class ANTLR extends AbstractTask
         validateAttributes();
 
         //TODO: use ANTLR to parse the grammer file to do this.
-        if( target.lastModified() > getGeneratedFile().lastModified() )
+        if( m_target.lastModified() <= getGeneratedFile().lastModified() )
         {
-            commandline.addArgument( "-o" );
-            commandline.addArgument( outputDirectory.toString() );
-            commandline.addArgument( target.toString() );
-
-            if( fork )
-            {
-                run( commandline );
-            }
-            else
-            {
-                ExecuteJava exe = new ExecuteJava();
-                exe.setJavaCommand( commandline.getJavaCommand() );
-                exe.setClasspath( commandline.getClasspath() );
-                exe.execute();
-            }
+            return;
         }
+
+        m_exe.setClassName( "antlr.Tool" );
+
+        m_exe.getArguments().addArgument( "-o" );
+        m_exe.getArguments().addArgument( m_outputDirectory );
+        m_exe.getArguments().addArgument( m_target );
+
+        m_exe.execute( getContext() );
     }
 
     /**
@@ -148,7 +114,7 @@ public class ANTLR extends AbstractTask
      *
      * @param resource The feature to be added to the ClasspathEntry attribute
      */
-    protected void addClasspathEntry( String resource )
+    protected void addClasspathEntry( final String resource )
     {
         URL url = getClass().getResource( resource );
         if( url != null )
@@ -159,14 +125,14 @@ public class ANTLR extends AbstractTask
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
                 getContext().debug( "Implicitly adding " + jarName + " to classpath" );
-                createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
+                m_exe.getClassPath().addLocation( new File( jarName ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
                 getContext().debug( "Implicitly adding " + dirName + " to classpath" );
-                createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
+                m_exe.getClassPath().addLocation( new File( dirName ) );
             }
             else
             {
@@ -185,7 +151,7 @@ public class ANTLR extends AbstractTask
         String generatedFileName = null;
         try
         {
-            BufferedReader in = new BufferedReader( new FileReader( target ) );
+            BufferedReader in = new BufferedReader( new FileReader( m_target ) );
             String line;
             while( ( line = in.readLine() ) != null )
             {
@@ -206,40 +172,25 @@ public class ANTLR extends AbstractTask
         {
             throw new TaskException( "Unable to determine generated class" );
         }
-        return new File( outputDirectory, generatedFileName + ".java" );
-    }
-
-    /**
-     * execute in a forked VM
-     *
-     * @param command Description of Parameter
-     * @exception org.apache.myrmidon.api.TaskException Description of Exception
-     */
-    private void run( final Commandline command )
-        throws TaskException
-    {
-        final Execute exe = new Execute();
-        exe.setWorkingDirectory( workingdir );
-        exe.setCommandline( command );
-        exe.execute( getContext() );
+        return new File( m_outputDirectory, generatedFileName + ".java" );
     }
 
     private void validateAttributes()
         throws TaskException
     {
-        if( target == null || !target.isFile() )
+        if( m_target == null || !m_target.isFile() )
         {
-            throw new TaskException( "Invalid target: " + target );
+            throw new TaskException( "Invalid target: " + m_target );
         }
 
         // if no output directory is specified, used the target's directory
-        if( outputDirectory == null )
+        if( m_outputDirectory == null )
         {
-            setOutputdirectory( new File( target.getParent() ) );
+            m_outputDirectory = m_target.getParentFile();
         }
-        if( !outputDirectory.isDirectory() )
+        if( !m_outputDirectory.isDirectory() )
         {
-            throw new TaskException( "Invalid output directory: " + outputDirectory );
+            throw new TaskException( "Invalid output directory: " + m_outputDirectory );
         }
     }
 }

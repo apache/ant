@@ -218,11 +218,10 @@ public class WLJspc extends MatchingTask
             args[ j + 2 ] = sourceDirectory + File.separator + (String)filesToDo.get( i );
 
             ExecuteJava helperTask = new ExecuteJava();
-            helperTask.setFork( true );
             helperTask.setClassName( "weblogic.jspc" );
             helperTask.getArguments().addArguments( args );
             helperTask.getClassPath().addPath( compileClasspath );
-            helperTask.execute( getContext() );
+            helperTask.executeForked( getContext() );
         }
     }
 

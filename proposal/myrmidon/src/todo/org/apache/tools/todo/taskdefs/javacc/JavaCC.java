@@ -10,13 +10,9 @@ package org.apache.tools.todo.taskdefs.javacc;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
 
@@ -60,14 +56,6 @@ public class JavaCC
     private File outputDirectory = null;
     private File target = null;
     private File javaccHome = null;
-
-    private CommandlineJava cmdl = new CommandlineJava();
-
-    public JavaCC()
-    {
-        cmdl.setVm( "java" );
-        cmdl.setClassname( "COM.sun.labs.javacc.Main" );
-    }
 
     public void setBuildparser( boolean buildParser )
     {
@@ -187,16 +175,6 @@ public class JavaCC
     public void execute()
         throws TaskException
     {
-
-        // load command line with optional attributes
-        Enumeration iter = optionalAttrs.keys();
-        while( iter.hasMoreElements() )
-        {
-            String name = (String)iter.nextElement();
-            Object value = optionalAttrs.get( name );
-            cmdl.addArgument( "-" + name + ":" + value.toString() );
-        }
-
         // check the target is a file
         if( target == null || !target.isFile() )
         {
@@ -206,13 +184,17 @@ public class JavaCC
         // use the directory containing the target as the output directory
         if( outputDirectory == null )
         {
-            outputDirectory = new File( target.getParent() );
+            outputDirectory = target.getParentFile();
         }
-        else if( !outputDirectory.isDirectory() )
+        if( !outputDirectory.isDirectory() )
         {
             throw new TaskException( "Outputdir not a directory." );
         }
-        cmdl.addArgument( "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath() );
+
+        if( javaccHome == null || !javaccHome.isDirectory() )
+        {
+            throw new TaskException( "Javacchome not set." );
+        }
 
         // determine if the generated java file is up-to-date
         final File javaFile = getOutputJavaFile( outputDirectory, target );
@@ -221,30 +203,31 @@ public class JavaCC
             getContext().debug( "Target is already built - skipping (" + target + ")" );
             return;
         }
-        cmdl.addArgument( target.getAbsolutePath() );
 
-        if( javaccHome == null || !javaccHome.isDirectory() )
+        ExecuteJava exe = new ExecuteJava();
+        exe.setClassName( "COM.sun.labs.javacc.Main" );
+
+        // load command line with optional attributes
+        Enumeration iter = optionalAttrs.keys();
+        while( iter.hasMoreElements() )
         {
-            throw new TaskException( "Javacchome not set." );
+            String name = (String)iter.nextElement();
+            Object value = optionalAttrs.get( name );
+            exe.getArguments().addArgument( "-" + name + ":" + value.toString() );
         }
-        final Path classpath = cmdl.createClasspath();
+
+        exe.getArguments().addArgument( "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath() );
+
+        exe.getArguments().addArgument( target );
+
+        final Path classpath = exe.getClassPath();
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
         PathUtil.addJavaRuntime( classpath );
 
-        cmdl.addVmArgument( "-mx140M" );
-        cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
+        exe.setMaxMemory( "140M" );
+        exe.getSysProperties().addVariable( "install.root", javaccHome.getAbsolutePath() );
 
-        runCommand( cmdl );
-    }
-
-    private void runCommand( final CommandlineJava cmdline )
-        throws TaskException
-    {
-        getContext().debug( cmdline.toString() );
-        final Execute exe = new Execute();
-        final String[] commandline = cmdline.getCommandline();
-        exe.setCommandline( new Commandline( commandline ) );
-        exe.execute( getContext() );
+        exe.executeForked( getContext() );
     }
 
     /**

@@ -124,12 +124,7 @@ public class MAudit
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
-        final Path sourcePath = getSourcePath();
-        if( sourcePath != null )
-        {
-            classpath.addPath( sourcePath );
-            setSourcePath( null );// prevent from using -sourcepath
-        }
+        classpath.addPath( getSourcePath() );
 
         // don't forget to modify the pattern if you change the options reporting
         classpath.addPath( getClassPath() );
@@ -157,11 +152,12 @@ public class MAudit
         {
             options.add( "-list" );
         }
-        if( getSourcePath() != null )
-        {
-            options.add( "-sourcepath" );
-            options.add( PathUtil.formatPath( getSourcePath() ) );
-        }
+
+        //if( getSourcePath() != null )
+        //{
+        //    options.add( "-sourcepath" );
+        //    options.add( PathUtil.formatPath( getSourcePath() ) );
+        //}
 
         if( m_unused )
         {

@@ -21,7 +21,6 @@ public class EnvironmentData
     protected final ArrayList m_variables = new ArrayList();
 
     public Properties getVariables()
-        throws TaskException
     {
         final Properties environment = new Properties();
         final int size = m_variables.size();
@@ -36,5 +35,23 @@ public class EnvironmentData
     public void addVariable( EnvironmentVariable var )
     {
         m_variables.add( var );
+    }
+
+    public void addVariable( String key, String value )
+    {
+        final EnvironmentVariable var = new EnvironmentVariable();
+        var.setKey( key );
+        var.setValue( value );
+        addVariable( var );
+    }
+
+    public void addVariables( EnvironmentData properties )
+    {
+        m_variables.addAll( properties.m_variables );
+    }
+
+    public int size()
+    {
+        return m_variables.size();
     }
 }

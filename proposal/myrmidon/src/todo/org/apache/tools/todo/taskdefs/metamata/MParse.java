@@ -16,10 +16,8 @@ import java.util.Random;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
 
@@ -34,22 +32,16 @@ import org.apache.tools.todo.types.PathUtil;
 public class MParse
     extends AbstractTask
 {
-    private Path m_classpath;
-    private Path m_sourcepath;
+    private Path m_classpath = new Path();
+    private Path m_sourcepath = new Path();
     private File m_metahome;
     private File m_target;
     private boolean m_verbose;
     private boolean m_debugparser;
     private boolean m_debugscanner;
     private boolean m_cleanup;
-    private CommandlineJava m_cmdl = new CommandlineJava();
+    private ExecuteJava m_exe = new ExecuteJava();
     private File m_optionsFile;
-
-    public MParse()
-    {
-        m_cmdl.setVm( "java" );
-        m_cmdl.setClassname( "com.metamata.jj.MParse" );
-    }
 
     /**
      * create a temporary file in the current directory
@@ -101,7 +93,7 @@ public class MParse
      */
     public void setMaxmemory( String max )
     {
-        m_cmdl.addVmArgument( "-Xmx" + max );
+        m_exe.setMaxMemory( max );
     }
 
     /**
@@ -111,7 +103,7 @@ public class MParse
      */
     public void setMetamatahome( File metamatahome )
     {
-        this.m_metahome = metamatahome;
+        m_metahome = metamatahome;
     }
 
     /**
@@ -121,7 +113,7 @@ public class MParse
      */
     public void setTarget( File target )
     {
-        this.m_target = target;
+        m_target = target;
     }
 
     /**
@@ -137,15 +129,10 @@ public class MParse
     /**
      * create a classpath entry
      *
-     * @return Description of the Returned Value
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
     {
-        if( m_classpath == null )
-        {
-            m_classpath = new Path();
-        }
-        return m_classpath;
+        m_classpath.addPath( path );
     }
 
     /**
@@ -153,21 +140,15 @@ public class MParse
      */
     public void addJvmarg( final Argument argument )
     {
-        m_cmdl.addVmArgument( argument );
+        m_exe.getVmArguments().addArgument( argument );
     }
 
     /**
      * creates a sourcepath entry
-     *
-     * @return Description of the Returned Value
      */
-    public Path createSourcepath()
+    public void addSourcepath( final Path path )
     {
-        if( m_sourcepath == null )
-        {
-            m_sourcepath = new Path();
-        }
-        return m_sourcepath;
+        m_sourcepath.addPath( path );
     }
 
     /**
@@ -201,21 +182,21 @@ public class MParse
 
         // set the classpath as the jar files
         File[] jars = getMetamataLibs();
-        final Path classPath = m_cmdl.createClasspath();
+        final Path classPath = m_exe.getClassPath();
         for( int i = 0; i < jars.length; i++ )
         {
             classPath.addLocation( jars[ i ] );
         }
 
         // set the metamata.home property
-        m_cmdl.addVmArgument( "-Dmetamata.home=" + m_metahome.getAbsolutePath() );
+        m_exe.getSysProperties().addVariable( "metamata.home",  m_metahome.getAbsolutePath() );
 
         // write all the options to a temp file and use it ro run the process
         String[] options = getOptions();
         m_optionsFile = createTmpFile();
         generateOptionsFile( m_optionsFile, options );
-        m_cmdl.addArgument( "-arguments" );
-        m_cmdl.addArgument( m_optionsFile.getAbsolutePath() );
+        m_exe.getArguments().addArgument( "-arguments" );
+        m_exe.getArguments().addArgument( m_optionsFile );
     }
 
     /**
@@ -254,12 +235,12 @@ public class MParse
         {
             options.add( "-dp" );
         }
-        if( m_classpath != null )
+        if( ! m_classpath.isEmpty() )
         {
             options.add( "-classpath" );
             options.add( PathUtil.formatPath( m_classpath ) );
         }
-        if( m_sourcepath != null )
+        if( ! m_sourcepath.isEmpty() )
         {
             options.add( "-sourcepath" );
             options.add( PathUtil.formatPath( m_sourcepath ) );
@@ -287,11 +268,8 @@ public class MParse
             return;
         }
 
-        final Execute exe = new Execute();
-        getContext().debug( m_cmdl.toString() );
-        final String[] commandline = m_cmdl.getCommandline();
-        exe.setCommandline( new Commandline( commandline ) );
-        exe.execute( getContext() );
+        m_exe.setClassName( "com.metamata.jj.MParse" );
+        m_exe.executeForked( getContext() );
     }
 
     /**

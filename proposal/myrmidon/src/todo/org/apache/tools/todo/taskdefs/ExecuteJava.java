@@ -18,6 +18,7 @@ import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
+import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.SysProperties;
 import org.apache.tools.todo.util.FileUtils;
 import org.apache.aut.nativelib.Os;
@@ -32,7 +33,7 @@ import org.apache.aut.nativelib.Os;
 public class ExecuteJava
 {
     private final Path m_classPath = new Path();
-    private final SysProperties m_sysProperties = new SysProperties();
+    private final EnvironmentData m_sysProperties = new EnvironmentData();
     private final Commandline m_args = new Commandline();
     private final Commandline m_vmArgs = new Commandline();
     private boolean m_fork;
@@ -41,6 +42,7 @@ public class ExecuteJava
     private String m_jvm;
     private String m_className;
     private String m_maxMemory;
+    private boolean m_ignoreReturnCode;
 
     public void setClassName( final String className )
     {
@@ -57,6 +59,11 @@ public class ExecuteJava
         m_fork = fork;
     }
 
+    /**
+     * Sets the max memory to use when running the application in a forked JVM.
+     *
+     * @param maxMemory the maximum memory, or null for the default.
+     */
     public void setMaxMemory( final String maxMemory )
     {
         m_maxMemory = maxMemory;
@@ -67,6 +74,17 @@ public class ExecuteJava
         m_workingDirectory = workingDirectory;
     }
 
+    public void setIgnoreReturnCode( boolean ignore )
+    {
+        m_ignoreReturnCode = ignore;
+    }
+
+    /**
+     * Sets the JVM executable to use to run the application in a forked JVM.
+     *
+     * @param jvm the path to the JVM executable, or null to use the default
+     *            JVM executable.
+     */
     public void setJvm( final String jvm )
     {
         m_jvm = jvm;
@@ -77,7 +95,7 @@ public class ExecuteJava
         return m_classPath;
     }
 
-    public SysProperties getSysProperties()
+    public EnvironmentData getSysProperties()
     {
         return m_sysProperties;
     }
@@ -92,54 +110,49 @@ public class ExecuteJava
         return m_vmArgs;
     }
 
+    /**
+     * Executes the application.
+     */
     public void execute( final TaskContext context )
         throws TaskException
     {
-        // Validate
-        if( m_className != null && m_jar != null )
-        {
-            throw new TaskException( "Only one of Classname and Jar can be set." );
-        }
-        else if( m_className == null && m_jar == null )
-        {
-            throw new TaskException( "Classname must not be null." );
-        }
-        if( ! m_fork )
-        {
-            if( m_jar != null )
-            {
-                throw new TaskException( "Cannot execute a jar in non-forked mode." );
-            }
-            if( m_vmArgs.size() > 0 )
-            {
-                context.warn( "JVM args ignored when same JVM is used." );
-            }
-            if( m_workingDirectory != null )
-            {
-                context.warn( "Working directory ignored when same JVM is used." );
-            }
-            if( m_sysProperties.size() > 0 )
-            {
-                context.warn( "System properties ignored when same JVM is used." );
-            }
-        }
-
         if( m_fork )
         {
-            execForked( context );
+            executeForked( context );
         }
         else
         {
-            execNonForked( context );
+            executeNonForked( context );
         }
     }
 
     /**
-     * Executes the app in this JVM.
+     * Executes the application in this JVM.
      */
-    private void execNonForked( final TaskContext context )
+    public void executeNonForked( final TaskContext context )
         throws TaskException
     {
+        if( m_className == null )
+        {
+            throw new TaskException( "Classname must not be null." );
+        }
+        if( m_jar != null )
+        {
+            throw new TaskException( "Cannot execute a jar in non-forked mode." );
+        }
+        if( m_vmArgs.size() > 0 )
+        {
+            context.warn( "JVM args ignored when same JVM is used." );
+        }
+        if( m_workingDirectory != null )
+        {
+            context.warn( "Working directory ignored when same JVM is used." );
+        }
+        if( m_sysProperties.size() > 0 )
+        {
+            context.warn( "System properties ignored when same JVM is used." );
+        }
+
         final String[] args = m_args.getArguments();
         context.debug( "Running in same VM: " + m_className + " " + FileUtils.formatCommandLine( args ) );
 
@@ -182,13 +195,24 @@ public class ExecuteJava
     }
 
     /**
-     * Executes the given classname with the given arguments in a separate VM.
+     * Executes the application in a separate JVM.
      */
-    private void execForked( final TaskContext context )
+    public int executeForked( final TaskContext context )
         throws TaskException
     {
+        // Validate
+        if( m_className != null && m_jar != null )
+        {
+            throw new TaskException( "Only one of Classname and Jar can be set." );
+        }
+        else if( m_className == null && m_jar == null )
+        {
+            throw new TaskException( "Classname must not be null." );
+        }
+
         final Execute exe = new Execute();
         exe.setWorkingDirectory( m_workingDirectory );
+        exe.setIgnoreReturnCode( m_ignoreReturnCode );
 
         // Setup the command line
         final Commandline command = exe.getCommandline();
@@ -204,8 +228,7 @@ public class ExecuteJava
         }
 
         // JVM arguments
-        final String[] vmArgs = m_vmArgs.getArguments();
-        command.addArguments( vmArgs );
+        command.addArguments( m_vmArgs );
 
         // Max memory size
         if( m_maxMemory != null )
@@ -214,7 +237,7 @@ public class ExecuteJava
         }
 
         // System properties
-        final String[] props = m_sysProperties.getJavaVariables();
+        final String[] props = SysProperties.getJavaVariables( m_sysProperties );
         command.addArguments( props );
 
         // Classpath
@@ -236,11 +259,10 @@ public class ExecuteJava
         }
 
         // Java app arguments
-        final String[] args = m_args.getArguments();
-        command.addArguments( args );
+        command.addArguments( m_args );
 
         // Execute
-        exe.execute( context );
+        return exe.execute( context );
     }
 
     /**

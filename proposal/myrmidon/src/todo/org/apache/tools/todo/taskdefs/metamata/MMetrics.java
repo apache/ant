@@ -127,11 +127,7 @@ public class MMetrics extends AbstractMetamataTask
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
-        if( getSourcePath() != null )
-        {
-            classpath.addPath( getSourcePath() );
-            setSourcePath( null );// prevent from using -sourcepath
-        }
+        classpath.addPath( getSourcePath() );
 
         // don't forget to modify the pattern if you change the options reporting
         classpath.addPath( getClassPath() );

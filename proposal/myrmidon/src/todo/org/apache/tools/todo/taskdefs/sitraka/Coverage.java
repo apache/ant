@@ -18,7 +18,6 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
@@ -37,9 +36,6 @@ import org.apache.tools.todo.types.PathUtil;
 public class Coverage
     extends AbstractTask
 {
-    protected Commandline cmdl = new Commandline();
-    protected CommandlineJava cmdlJava = new CommandlineJava();
-
     /**
      * this is a somewhat annoying thing, set it to never
      */
@@ -60,6 +56,10 @@ public class Coverage
     private Triggers m_triggers;
     private String m_vm;
     private File m_workingDir;
+    private String m_className;
+    private Commandline m_args = new Commandline();
+    private Path m_classpath = new Path();
+    private Commandline m_vmArgs = new Commandline();
 
     /**
      * classname to run as standalone or runner for filesets
@@ -68,7 +68,7 @@ public class Coverage
      */
     public void setClassname( String value )
     {
-        cmdlJava.setClassname( value );
+        m_className = value;
     }
 
     /**
@@ -176,20 +176,15 @@ public class Coverage
      */
     public void addArg( final Argument argument )
     {
-        cmdlJava.addArgument( argument );
+        m_args.addArgument( argument );
     }
 
     /**
      * classpath to run the files
-     *
-     * @return Description of the Returned Value
      */
-    public Path createClasspath()
+    public void setClasspath( final Path path )
     {
-        Path path1 = cmdlJava.createClasspath();
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        m_classpath.addPath( path );
     }
 
     public Filters createFilters()
@@ -202,7 +197,7 @@ public class Coverage
      */
     public void addJvmarg( final Argument argument )
     {
-        cmdlJava.addVmArgument( argument );
+        m_vmArgs.addArgument( argument );
     }
 
     public Socket createSocket()
@@ -245,11 +240,12 @@ public class Coverage
         try
         {
             // we need to run Coverage from his directory due to dll/jar issues
+            final Execute exe = new Execute();
+            final Commandline cmdl = exe.getCommandline();
             cmdl.setExecutable( new File( m_home, "jplauncher" ).getAbsolutePath() );
             cmdl.addArgument( "-jp_input=" + paramfile.getAbsolutePath() );
 
             // use the custom handler for stdin issues
-            final Execute exe = new Execute();
             exe.setCommandline( cmdl );
             exe.execute( getContext() );
         }
@@ -273,62 +269,55 @@ public class Coverage
     protected String[] getParameters()
         throws TaskException
     {
-        ArrayList params = new ArrayList();
-        params.add( "-jp_function=coverage" );
+        Commandline params = new Commandline();
+        params.addArgument( "-jp_function=coverage" );
         if( m_vm != null )
         {
-            params.add( "-jp_vm=" + m_vm );
+            params.addArgument( "-jp_vm=" + m_vm );
         }
         if( m_javaExe != null )
         {
-            params.add( "-jp_java_exe=" + getContext().resolveFile( m_javaExe.getPath() ) );
+            params.addArgument( "-jp_java_exe=" + m_javaExe.getPath() );
         }
-        params.add( "-jp_working_dir=" + m_workingDir.getPath() );
-        params.add( "-jp_snapshot_dir=" + m_snapshotDir.getPath() );
-        params.add( "-jp_record_from_start=" + m_recordFromStart );
-        params.add( "-jp_warn=" + m_warnLevel );
+        params.addArgument( "-jp_working_dir=" + m_workingDir.getPath() );
+        params.addArgument( "-jp_snapshot_dir=" + m_snapshotDir.getPath() );
+        params.addArgument( "-jp_record_from_start=" + m_recordFromStart );
+        params.addArgument( "-jp_warn=" + m_warnLevel );
         if( m_seedName != null )
         {
-            params.add( "-jp_output_file=" + m_seedName );
+            params.addArgument( "-jp_output_file=" + m_seedName );
         }
-        params.add( "-jp_filter=" + m_filters.toString() );
+        params.addArgument( "-jp_filter=" + m_filters.toString() );
         if( m_triggers != null )
         {
-            params.add( "-jp_trigger=" + m_triggers.toString() );
+            params.addArgument( "-jp_trigger=" + m_triggers.toString() );
         }
         if( m_finalSnapshot != null )
         {
-            params.add( "-jp_final_snapshot=" + m_finalSnapshot );
+            params.addArgument( "-jp_final_snapshot=" + m_finalSnapshot );
         }
-        params.add( "-jp_exit_prompt=" + m_exitPrompt );
+        params.addArgument( "-jp_exit_prompt=" + m_exitPrompt );
         //params.add("-jp_append=" + append);
-        params.add( "-jp_track_natives=" + m_trackNatives );
+        params.addArgument( "-jp_track_natives=" + m_trackNatives );
         //.... now the jvm
         // arguments
-        String[] vmargs = cmdlJava.getVmCommand().getArguments();
-        for( int i = 0; i < vmargs.length; i++ )
-        {
-            params.add( vmargs[ i ] );
-        }
+        params.addArguments( m_vmArgs );
+
         // classpath
-        Path classpath = cmdlJava.getClasspath();
-        if( classpath != null && ! classpath.isEmpty() )
+        if( ! m_classpath.isEmpty() )
         {
-            params.add( "-classpath " + PathUtil.formatPath( classpath ) );
+            params.addArgument( "-classpath" );
+            params.addArgument( PathUtil.formatPath( m_classpath ) );
         }
         // classname (runner or standalone)
-        if( cmdlJava.getClassname() != null )
+        if( m_className != null )
         {
-            params.add( cmdlJava.getClassname() );
+            params.addArgument( m_className );
         }
         // arguments for classname
-        String[] args = cmdlJava.getJavaCommand().getArguments();
-        for( int i = 0; i < args.length; i++ )
-        {
-            params.add( args[ i ] );
-        }
+        params.addArguments( m_args );
 
-        return (String[])params.toArray( new String[ params.size() ] );
+        return params.getArguments();
     }
 
     /**

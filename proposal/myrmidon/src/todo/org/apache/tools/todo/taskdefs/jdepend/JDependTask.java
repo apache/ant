@@ -13,12 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Path;
-import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.util.FileUtils;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -38,7 +34,7 @@ public class JDependTask
     private boolean m_fork;
     private String m_jvm;
     private String m_format = "text";
-    private Path m_compileClasspath;
+    private Path m_compileClasspath = new Path();
     private File m_dir;
     private File m_outputFile;
     private Path m_sourcesPath;
@@ -49,14 +45,7 @@ public class JDependTask
     public void setClasspath( final Path classpath )
         throws TaskException
     {
-        if( m_compileClasspath == null )
-        {
-            m_compileClasspath = classpath;
-        }
-        else
-        {
-            m_compileClasspath.addPath( classpath );
-        }
+        addClasspath( classpath );
     }
 
     /**
@@ -112,20 +101,11 @@ public class JDependTask
     }
 
     /**
-     * Maybe creates a nested classpath element.
-     *
-     * @return Description of the Returned Value
+     * Adds a nested classpath element.
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
     {
-        if( m_compileClasspath == null )
-        {
-            m_compileClasspath = new Path();
-        }
-        Path path1 = m_compileClasspath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        m_compileClasspath.addPath( path );
     }
 
     /**
@@ -146,22 +126,6 @@ public class JDependTask
     public void execute()
         throws TaskException
     {
-        final CommandlineJava commandline = new CommandlineJava();
-
-        if( "text".equals( m_format ) )
-        {
-            commandline.setClassname( "jdepend.textui.JDepend" );
-        }
-        else if( "xml".equals( m_format ) )
-        {
-            commandline.setClassname( "jdepend.xmlui.JDepend" );
-        }
-
-        if( m_jvm != null )
-        {
-            commandline.setVm( m_jvm );
-        }
-
         if( m_sourcesPath == null )
         {
             throw new TaskException( "Missing Sourcepath required argument" );
@@ -170,11 +134,11 @@ public class JDependTask
         // execute the test and get the return code
         if( !m_fork )
         {
-            executeInVM( commandline );
+            executeInVM();
         }
         else
         {
-            executeAsForked( commandline );
+            executeAsForked();
         }
     }
 
@@ -185,28 +149,35 @@ public class JDependTask
      * killedProcess()</tt> method of the watchdog class.
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
-    private void executeAsForked( final CommandlineJava commandline )
+    private void executeAsForked()
         throws TaskException
     {
-        // if not set, auto-create the ClassPath from the project
-        createClasspath();
+        final ExecuteJava exe = new ExecuteJava();
+        exe.setWorkingDirectory( m_dir );
 
-        // not sure whether this test is needed but cost nothing to put.
-        // hope it will be reviewed by anybody competent
-        final String compileClasspath = PathUtil.formatPath( m_compileClasspath );
-        if( compileClasspath.length() > 0 )
+        if( "text".equals( m_format ) )
         {
-            commandline.addVmArgument( "-classpath" );
-            commandline.addVmArgument( compileClasspath );
+            exe.setClassName( "jdepend.textui.JDepend" );
         }
+        else
+        {
+            exe.setClassName( "jdepend.xmlui.JDepend" );
+        }
+
+        if( m_jvm != null )
+        {
+            exe.setJvm( m_jvm );
+        }
+
+        exe.getClassPath().addPath( m_compileClasspath );
 
         if( m_outputFile != null )
         {
             // having a space between the file and its path causes commandline to add quotes "
             // around the argument thus making JDepend not taking it into account. Thus we split it in two
-            commandline.addArgument( "-file" );
-            commandline.addArgument( m_outputFile.getPath() );
-            // we have to find a cleaner way to put this output
+            exe.getArguments().addArgument( "-file" );
+            exe.getArguments().addArgument( m_outputFile );
+            getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
         final String[] elements = m_sourcesPath.list();
@@ -219,20 +190,10 @@ public class JDependTask
             {
                 throw new TaskException( "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail." );
             }
-            commandline.addArgument( f.getPath() );
+            exe.getArguments().addArgument( f );
         }
 
-        final Execute exe = new Execute();
-
-        final String[] commandline1 = commandline.getCommandline();
-        exe.setCommandline( new Commandline( commandline1 ) );
-        exe.setWorkingDirectory( m_dir );
-
-        if( m_outputFile != null )
-        {
-            getContext().info( "Output to be stored in " + m_outputFile.getPath() );
-        }
-        exe.execute( getContext() );
+        exe.executeForked( getContext() );
     }
 
 
@@ -243,11 +204,8 @@ public class JDependTask
 
     /**
      * Execute inside VM.
-     *
-     * @param commandline Description of Parameter
-     * @exception TaskException Description of Exception
      */
-    private void executeInVM( final CommandlineJava commandline )
+    private void executeInVM()
         throws TaskException
     {
         jdepend.textui.JDepend jdepend;

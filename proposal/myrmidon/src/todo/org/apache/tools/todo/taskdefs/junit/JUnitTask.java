@@ -14,22 +14,20 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.EnvironmentVariable;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SysProperties;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.EnvironmentData;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -102,28 +100,20 @@ import org.apache.tools.todo.types.SysProperties;
  */
 public class JUnitTask extends AbstractTask
 {
-
-    private CommandlineJava commandline = new CommandlineJava();
     private ArrayList tests = new ArrayList();
     private ArrayList batchTests = new ArrayList();
     private ArrayList formatters = new ArrayList();
-    private File dir = null;
 
     private Integer timeout = null;
     private boolean summary = false;
     private String summaryValue = "";
     private JUnitTestRunner runner = null;
-
-    /**
-     * Creates a new JUnitRunner and enables fork of a new Java VM.
-     *
-     * @exception Exception Description of Exception
-     */
-    public JUnitTask()
-        throws Exception
-    {
-        commandline.setClassname( "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" );
-    }
+    private File dir;
+    private String jvm;
+    private String maxMem;
+    private EnvironmentData sysProperties = new EnvironmentData();
+    private Path classPath = new Path();
+    private Commandline vmArgs = new Commandline();
 
     /**
      * The directory to invoke the VM in. Ignored if no JVM is forked.
@@ -131,7 +121,7 @@ public class JUnitTask extends AbstractTask
      * @param dir the directory to invoke the JVM from.
      * @see #setFork(boolean)
      */
-    public void setDir( File dir )
+    public void setDir( final File dir )
     {
         this.dir = dir;
     }
@@ -252,9 +242,9 @@ public class JUnitTask extends AbstractTask
      * @param value the new VM to use instead of <tt>java</tt>
      * @see #setFork(boolean)
      */
-    public void setJvm( String value )
+    public void setJvm( final String value )
     {
-        commandline.setVm( value );
+        jvm = value;
     }
 
     /**
@@ -263,9 +253,9 @@ public class JUnitTask extends AbstractTask
      * @param max the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt> in the
      *      java command line options.
      */
-    public void setMaxmemory( String max )
+    public void setMaxmemory( final String max )
     {
-        commandline.addVmArgument( "-Xmx" + max );
+        maxMem = max;
     }
 
     /**
@@ -313,7 +303,7 @@ public class JUnitTask extends AbstractTask
      */
     public void addSysproperty( EnvironmentVariable sysp )
     {
-        commandline.addSysproperty( sysp );
+        sysProperties.addVariable( sysp );
     }
 
     /**
@@ -330,28 +320,18 @@ public class JUnitTask extends AbstractTask
     /**
      * Create a new set of testcases (also called ..batchtest) and add it to the
      * list.
-     *
-     * @return a new instance of a batch test.
-     * @see BatchTest
      */
-    public BatchTest createBatchTest()
+    public void addBatchTest( final BatchTest test )
     {
-        BatchTest test = new BatchTest();
         batchTests.add( test );
-        return test;
     }
 
     /**
      * <code>&lt;classpath&gt;</code> allows classpath to be set for tests.
-     *
-     * @return Description of the Returned Value
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
     {
-        Path path1 = commandline.createClasspath();
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        classPath.addPath( path );
     }
 
     /**
@@ -361,7 +341,7 @@ public class JUnitTask extends AbstractTask
      */
     public void addJvmarg( final Argument argument )
     {
-        commandline.addVmArgument( argument );
+        vmArgs.addArgument( argument );
     }
 
     /**
@@ -372,6 +352,7 @@ public class JUnitTask extends AbstractTask
     public void execute()
         throws TaskException
     {
+
         /*
          * Adds the jars or directories containing Ant, this task and JUnit to the
          * classpath - this should make the forked JVM work without having to
@@ -452,14 +433,14 @@ public class JUnitTask extends AbstractTask
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
                 getContext().debug( "Implicitly adding " + jarName + " to classpath" );
-                createClasspath().addLocation( new File( jarName ) );
+                classPath.addLocation( new File( jarName ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
                 getContext().debug( "Implicitly adding " + dirName + " to classpath" );
-                createClasspath().addLocation( new File( dirName ) );
+                classPath.addLocation( new File( dirName ) );
             }
             else
             {
@@ -484,7 +465,7 @@ public class JUnitTask extends AbstractTask
      * @param test Description of Parameter
      * @exception TaskException Description of Exception
      */
-    protected void execute( JUnitTest test )
+    protected void execute( final JUnitTest test )
         throws TaskException
     {
         // set the default values if not specified
@@ -581,17 +562,24 @@ public class JUnitTask extends AbstractTask
     private int executeAsForked( JUnitTest test )
         throws TaskException
     {
-        CommandlineJava cmd = commandline;//(CommandlineJava)commandline.clone();
+        ExecuteJava cmd = new ExecuteJava();
+        cmd.setJvm( jvm );
+        cmd.setIgnoreReturnCode( true );
+        cmd.setWorkingDirectory( dir );
+        cmd.setMaxMemory( maxMem );
+        cmd.getClassPath().addPath( classPath );
+        cmd.getVmArguments().addArguments( vmArgs );
+        cmd.getSysProperties().addVariables( sysProperties );
 
-        cmd.setClassname( "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" );
-        cmd.addArgument( test.getName() );
-        cmd.addArgument( "filtertrace=" + test.getFiltertrace() );
-        cmd.addArgument( "haltOnError=" + test.getHaltonerror() );
-        cmd.addArgument( "haltOnFailure=" + test.getHaltonfailure() );
+        cmd.setClassName( "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" );
+        cmd.getArguments().addArgument( test.getName() );
+        cmd.getArguments().addArgument( "filtertrace=" + test.getFiltertrace() );
+        cmd.getArguments().addArgument( "haltOnError=" + test.getHaltonerror() );
+        cmd.getArguments().addArgument( "haltOnFailure=" + test.getHaltonfailure() );
         if( summary )
         {
             getContext().info( "Running " + test.getName() );
-            cmd.addArgument( "formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter" );
+            cmd.getArguments().addArgument( "formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter" );
         }
 
         StringBuffer formatterArg = new StringBuffer( 128 );
@@ -607,20 +595,15 @@ public class JUnitTask extends AbstractTask
                 formatterArg.append( "," );
                 formatterArg.append( outFile );
             }
-            cmd.addArgument( formatterArg.toString() );
+            cmd.getArguments().addArgument( formatterArg.toString() );
             formatterArg.setLength( 0 );
         }
 
         // Create a temporary file to pass the Ant properties to the forked test
         File propsFile = new File( "junit" + ( new Random( System.currentTimeMillis() ) ).nextLong() + ".properties" );
-        cmd.addArgument( "propsfile=" + propsFile.getAbsolutePath() );
-        Map p = getContext().getProperties();
+        cmd.getArguments().addArgument( "propsfile=" + propsFile.getAbsolutePath() );
         Properties props = new Properties();
-        for( Iterator enum = p.keySet().iterator(); enum.hasNext(); )
-        {
-            final Object key = enum.next();
-            props.put( key, p.get( key ) );
-        }
+        props.putAll( getContext().getProperties() );
         try
         {
             final FileOutputStream outstream = new FileOutputStream( propsFile );
@@ -632,14 +615,9 @@ public class JUnitTask extends AbstractTask
             throw new TaskException( "Error creating temporary properties file.", ioe );
         }
 
-        final Execute exe = new Execute();
-        exe.setIgnoreReturnCode( true );
-        exe.setCommandline( new Commandline( cmd.getCommandline() ) );
-        exe.setWorkingDirectory( dir );
-
         try
         {
-            return exe.execute( getContext() );
+            return cmd.executeForked( getContext() );
         }
         finally
         {
@@ -657,25 +635,16 @@ public class JUnitTask extends AbstractTask
         throws TaskException
     {
         test.setProperties( getContext().getProperties() );
-        if( dir != null )
-        {
-            getContext().warn( "dir attribute ignored if running in the same VM" );
-        }
 
-        SysProperties sysProperties = commandline.getSystemProperties();
-        if( sysProperties != null )
-        {
-            sysProperties.setSystem();
-        }
+        SysProperties.setSystem( sysProperties );
+
         try
         {
             getContext().debug( "Using System properties " + System.getProperties() );
             ClassLoader classLoader = null;
-            Path classpath = commandline.getClasspath();
-            if( classpath != null )
+            final URL[] urls = PathUtil.toURLs( classPath );
+            if( urls.length > 0 )
             {
-                getContext().debug( "Using CLASSPATH " + classpath );
-                final URL[] urls = PathUtil.toURLs( classpath );
                 classLoader = new URLClassLoader( urls );
             }
             runner = new JUnitTestRunner( test,
@@ -715,10 +684,7 @@ public class JUnitTask extends AbstractTask
         }
         finally
         {
-            if( sysProperties != null )
-            {
-                sysProperties.restoreSystem();
-            }
+            SysProperties.restoreSystem();
         }
     }
 

@@ -509,7 +509,7 @@ Legal:
     </target>
 
     <!-- Compiles and runs the unit tests -->
-    <target name="run-tests" depends="dist-lite" if="junit.present" description="Runs the unit tests">
+    <target name="run-tests" depends="dist-lite" if="junit.present">
         <!-- Compile the unit tests -->
         <mkdir dir="${test.classes}"/>
         <javac srcdir="src/testcases"

@@ -123,6 +123,11 @@ public class Commandline
         }
     }
 
+    public void addArguments( final Commandline cmdline )
+    {
+        addArguments( cmdline.getArguments() );
+    }
+
     public void addArgument( final File argument )
     {
         addArgument( new Argument( argument ) );

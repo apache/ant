@@ -10,13 +10,9 @@ package org.apache.tools.todo.taskdefs.javacc;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
 
@@ -50,14 +46,6 @@ public class JJTree
     private File outputDirectory = null;
     private File target = null;
     private File javaccHome = null;
-
-    private CommandlineJava cmdl = new CommandlineJava();
-
-    public JJTree()
-    {
-        cmdl.setVm( "java" );
-        cmdl.setClassname( "COM.sun.labs.jjtree.Main" );
-    }
 
     public void setBuildnodefiles( boolean buildNodeFiles )
     {
@@ -132,6 +120,8 @@ public class JJTree
     public void execute()
         throws TaskException
     {
+        final ExecuteJava exe = new ExecuteJava();
+        exe.setClassName( "COM.sun.labs.jjtree.Main" );
 
         // load command line with optional attributes
         Enumeration iter = optionalAttrs.keys();
@@ -139,7 +129,7 @@ public class JJTree
         {
             String name = (String)iter.nextElement();
             Object value = optionalAttrs.get( name );
-            cmdl.addArgument( "-" + name + ":" + value.toString() );
+            exe.getArguments().addArgument( "-" + name + ":" + value.toString() );
         }
 
         if( target == null || !target.isFile() )
@@ -150,15 +140,16 @@ public class JJTree
         // use the directory containing the target as the output directory
         if( outputDirectory == null )
         {
-            outputDirectory = new File( target.getParent() );
+            outputDirectory = target.getParentFile();
         }
         if( !outputDirectory.isDirectory() )
         {
             throw new TaskException( "'outputdirectory' " + outputDirectory + " is not a directory." );
         }
+
         // convert backslashes to slashes, otherwise jjtree will put this as
         // comments and this seems to confuse javacc
-        cmdl.addArgument( "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath().replace( '\\', '/' ) );
+        exe.getArguments().addArgument( "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath().replace( '\\', '/' ) );
 
         String targetName = target.getName();
         final File javaFile = new File( outputDirectory,
@@ -168,22 +159,19 @@ public class JJTree
             getContext().info( "Target is already built - skipping (" + target + ")" );
             return;
         }
-        cmdl.addArgument( target.getAbsolutePath() );
+        exe.getArguments().addArgument( target );
 
         if( javaccHome == null || !javaccHome.isDirectory() )
         {
             throw new TaskException( "Javacchome not set." );
         }
-        final Path classpath = cmdl.createClasspath();
+        final Path classpath = exe.getClassPath();
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
         PathUtil.addJavaRuntime( classpath );
 
-        cmdl.addVmArgument( "-mx140M" );
-        cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
+        exe.setMaxMemory( "140M" );
+        exe.getSysProperties().addVariable( "install.root", javaccHome.getAbsolutePath() );
 
-        final Execute exe = new Execute();
-        getContext().debug( cmdl.toString() );
-        exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
-        exe.execute( getContext() );
+        exe.executeForked( getContext() );
     }
 }

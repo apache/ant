@@ -17,10 +17,8 @@ import java.util.Iterator;
 import java.util.Random;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.Path;
@@ -37,16 +35,9 @@ public abstract class AbstractMetamataTask
     extends AbstractTask
 {
     /**
-     * The user classpath to be provided. It matches the -classpath of the
-     * command line. The classpath must includes both the <tt>.class</tt> and
-     * the <tt>.java</tt> files for accurate audit.
-     */
-    private Path m_classPath = new Path();
-
-    /**
      * the path to the source file
      */
-    private Path m_sourcePath;
+    private Path m_sourcePath = new Path();
 
     /**
      * Metamata home directory. It will be passed as a <tt>metamata.home</tt>
@@ -58,7 +49,7 @@ public abstract class AbstractMetamataTask
     /**
      * the command line used to run MAudit
      */
-    private CommandlineJava m_cmdl = new CommandlineJava();
+    private ExecuteJava m_exe = new ExecuteJava();
 
     /**
      * the set of files to be audited
@@ -74,19 +65,14 @@ public abstract class AbstractMetamataTask
     // be set when calling scanFileSets();
     private Hashtable m_includedFiles;
 
-    public AbstractMetamataTask()
-    {
-    }
-
     /**
      * initialize the task with the classname of the task to run
      *
      * @param className Description of Parameter
      */
-    protected AbstractMetamataTask( String className )
+    protected AbstractMetamataTask( final String className )
     {
-        m_cmdl.setVm( "java" );
-        m_cmdl.setClassname( className );
+        m_exe.setClassName( className );
     }
 
     /**
@@ -116,9 +102,9 @@ public abstract class AbstractMetamataTask
      *
      * @param max The new Maxmemory value
      */
-    public void setMaxmemory( String max )
+    public void setMaxmemory( final String max )
     {
-        m_cmdl.addVmArgument( "-Xmx" + max );
+        m_exe.setMaxMemory( max );
     }
 
     /**
@@ -126,7 +112,7 @@ public abstract class AbstractMetamataTask
      */
     public void setMetamatahome( final File metamataHome )
     {
-        this.m_metamataHome = metamataHome;
+        m_metamataHome = metamataHome;
     }
 
     /**
@@ -142,7 +128,7 @@ public abstract class AbstractMetamataTask
      */
     public void addClasspath( final Path path )
     {
-        m_classPath.addPath( path );
+        m_exe.getClassPath().addPath( path );
     }
 
     /**
@@ -150,19 +136,15 @@ public abstract class AbstractMetamataTask
      */
     public void addJvmarg( final Argument argument )
     {
-        m_cmdl.addVmArgument( argument );
+        m_exe.getVmArguments().addArgument( argument );
     }
 
     /**
      * create the source path for this task
      */
-    public Path createSourcepath()
+    public void addSourcepath( final Path path )
     {
-        if( m_sourcePath == null )
-        {
-            m_sourcePath = new Path();
-        }
-        return m_sourcePath;
+        m_sourcePath.addPath( path );
     }
 
     /**
@@ -194,11 +176,11 @@ public abstract class AbstractMetamataTask
 
         // set the classpath as the jar file
         File jar = getMetamataJar( m_metamataHome );
-        final Path classPath = m_cmdl.createClasspath();
+        final Path classPath = m_exe.getClassPath();
         classPath.addLocation( jar );
 
         // set the metamata.home property
-        m_cmdl.addVmArgument( "-Dmetamata.home=" + m_metamataHome.getAbsolutePath() );
+        m_exe.getSysProperties().addVariable( "metamata.home",  m_metamataHome.getAbsolutePath() );
 
         // retrieve all the files we want to scan
         m_includedFiles = scanFileSets();
@@ -208,8 +190,8 @@ public abstract class AbstractMetamataTask
         ArrayList options = getOptions();
         m_optionsFile = createTmpFile();
         generateOptionsFile( m_optionsFile, options );
-        m_cmdl.addArgument( "-arguments " );
-        m_cmdl.addArgument( m_optionsFile.getAbsolutePath() );
+        m_exe.getArguments().addArgument( "-arguments" );
+        m_exe.getArguments().addArgument( m_optionsFile );
     }
 
     /**
@@ -271,11 +253,7 @@ public abstract class AbstractMetamataTask
     protected void execute0()
         throws TaskException
     {
-        final Execute exe = new Execute();
-        getContext().debug( m_cmdl.toString() );
-        final String[] commandline = m_cmdl.getCommandline();
-        exe.setCommandline( new Commandline( commandline ) );
-        exe.execute( getContext() );
+        m_exe.executeForked( getContext() );
     }
 
     protected void generateOptionsFile( File tofile, ArrayList options )
@@ -355,17 +333,11 @@ public abstract class AbstractMetamataTask
 
     protected Path getClassPath()
     {
-        return m_classPath;
+        return m_exe.getClassPath();
     }
 
     protected Path getSourcePath()
     {
         return m_sourcePath;
     }
-
-    protected void setSourcePath( Path sourcePath )
-    {
-        m_sourcePath = sourcePath;
-    }
-
 }
