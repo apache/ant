@@ -54,24 +54,25 @@
 
 package org.apache.tools.ant;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.LoaderUtils;
 
 /**
  * Used to load classes within ant with a different claspath from

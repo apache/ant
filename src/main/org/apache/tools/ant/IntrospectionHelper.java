@@ -55,13 +55,13 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.DynamicConfigurator;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Path;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Constructor;
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -890,16 +890,44 @@ public class IntrospectionHelper implements BuildListener {
         helpers.clear();
     }
 
-    /** Empty implementation to satisfy the BuildListener interface. */
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     * @param event Ignored in this implementation.
+     */
     public void buildStarted(BuildEvent event) {}
-    /** Empty implementation to satisfy the BuildListener interface. */
+    
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event Ignored in this implementation.
+     */
     public void targetStarted(BuildEvent event) {}
-    /** Empty implementation to satisfy the BuildListener interface. */
+    
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event Ignored in this implementation.
+     */
     public void targetFinished(BuildEvent event) {}
-    /** Empty implementation to satisfy the BuildListener interface. */
+    
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event Ignored in this implementation.
+     */
     public void taskStarted(BuildEvent event) {}
-    /** Empty implementation to satisfy the BuildListener interface. */
+    
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event Ignored in this implementation.
+     */
     public void taskFinished(BuildEvent event) {}
-    /** Empty implementation to satisfy the BuildListener interface. */
+    
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event Ignored in this implementation.
+     */
     public void messageLogged(BuildEvent event) {}
 }
