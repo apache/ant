@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  * An object configurer which uses reflection to determine the properties
@@ -28,7 +29,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public class DefaultObjectConfigurer
+class DefaultObjectConfigurer
     implements ObjectConfigurer
 {
     private final static Resources REZ =
@@ -154,10 +155,22 @@ public class DefaultObjectConfigurer
         {
             final Method method = (Method)iterator.next();
             final String methodName = method.getName();
-            if( method.getReturnType() != Void.TYPE
-                || method.getParameterTypes().length != 1 )
+            if( Void.TYPE != method.getReturnType() ||
+                1 != method.getParameterTypes().length )
             {
                 continue;
+            }
+
+            final boolean isTypedAdder = methodName.equals( "add" );
+
+            final Class paramType = method.getParameterTypes()[ 0 ];
+            if( isTypedAdder && !paramType.isInterface() )
+            {
+                final String message =
+                    REZ.getString( "typed-adder-non-interface.error",
+                                   m_class.getName(),
+                                   paramType.getName() );
+                throw new ConfigurationException( message );
             }
 
             // TODO - un-hard-code this
@@ -169,12 +182,13 @@ public class DefaultObjectConfigurer
             // Extract property name
             final String propName = extractName( 3, methodName );
 
-            final Class type = method.getParameterTypes()[ 0 ];
+            final Class type = paramType;
 
             // Add to the adders map
             if( adders.containsKey( propName ) )
             {
-                final Class currentType = ( (Method)adders.get( propName ) ).getParameterTypes()[ 0 ];
+                final Method candidate = (Method)adders.get( propName );
+                final Class currentType = candidate.getParameterTypes()[ 0 ];
 
                 // Ditch the string version, if any
                 if( currentType != String.class && type == String.class )
@@ -183,13 +197,23 @@ public class DefaultObjectConfigurer
                     // the new method
                     continue;
                 }
-                if( currentType != String.class || type == String.class )
+                else if( currentType != String.class || type == String.class )
                 {
                     // Both are string, or both are not string
                     final String message =
                         REZ.getString( "multiple-adder-methods-for-element.error",
                                        m_class.getName(),
                                        propName );
+                    throw new ConfigurationException( message );
+                }
+                else if( isTypedAdder )
+                {
+                    // Both are string, or both are not string
+                    final String message =
+                        REZ.getString( "multiple-typed-adder-methods-for-element.error",
+                                       m_class.getName(),
+                                       type.getName(),
+                                       currentType.getName() );
                     throw new ConfigurationException( message );
                 }
 
@@ -312,7 +336,7 @@ public class DefaultObjectConfigurer
         final int size = m_allProps.size();
         for( int i = 0; i < size; i++ )
         {
-            if( defState.getCreatedObject( i ) != null )
+            if( null != defState.getCreatedObject( i ) )
             {
                 final String message = REZ.getString( "pending-property-value.error" );
                 throw new ConfigurationException( message );
@@ -325,32 +349,38 @@ public class DefaultObjectConfigurer
     /**
      * Returns a configurer for an element of this class.
      */
-    public PropertyConfigurer getProperty( final String name ) throws NoSuchPropertyException
+    public PropertyConfigurer getProperty( final String name )
+        throws NoSuchPropertyException
     {
-        final PropertyConfigurer prop = (PropertyConfigurer)m_props.get( name );
-        if( prop != null )
+        final PropertyConfigurer configurer = (PropertyConfigurer)m_props.get( name );
+        if( null != configurer )
         {
-            return prop;
+            return configurer;
         }
-
-        // Unknown property
-        final String message = REZ.getString( "unknown-property.error", m_class.getName(), name );
-        throw new NoSuchPropertyException( message );
+        else
+        {
+            // Unknown property
+            final String message = REZ.getString( "unknown-property.error", m_class.getName(), name );
+            throw new NoSuchPropertyException( message );
+        }
     }
 
     /**
      * Returns a configurer for the content of this class.
      */
-    public PropertyConfigurer getContentConfigurer() throws NoSuchPropertyException
+    public PropertyConfigurer getContentConfigurer()
+        throws NoSuchPropertyException
     {
-        if( m_contentConfigurer != null )
+        if( null != m_contentConfigurer )
         {
             return m_contentConfigurer;
         }
-
-        // Does not handle content
-        final String message = REZ.getString( "content-unsupported.error", m_class.getName() );
-        throw new NoSuchPropertyException( message );
+        else
+        {
+            // Does not handle content
+            final String message = REZ.getString( "content-unsupported.error", m_class.getName() );
+            throw new NoSuchPropertyException( message );
+        }
     }
 
     /**
@@ -399,7 +429,7 @@ public class DefaultObjectConfigurer
             final Method method = methods[ i ];
             final String methodName = method.getName();
             if( Modifier.isStatic( method.getModifiers() ) ||
-                methodName.length() <= prefixLen ||
+                methodName.length() < prefixLen ||
                 !methodName.startsWith( prefix ) )
             {
                 continue;
