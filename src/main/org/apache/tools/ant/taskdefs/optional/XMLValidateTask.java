@@ -56,6 +56,8 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -346,7 +348,14 @@ public class XMLValidateTask extends Task {
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
-            xmlReader.parse(new InputSource(new FileReader(afile)));
+            InputSource is = new InputSource(new FileReader(afile));
+            String uri = "file:" + afile.getAbsolutePath().replace('\\', '/');
+            for (int index = uri.indexOf('#'); index != -1;
+                 index = uri.indexOf('#')) {
+                uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
+            }
+            is.setSystemId(uri);
+            xmlReader.parse(is);
         } catch (SAXException ex) {
             if (failOnError)
                 throw new BuildException("Could'nt validate document " + afile);
@@ -411,8 +420,19 @@ public class XMLValidateTask extends Task {
         }
 
         private String getMessage(SAXParseException e) {
-
-            return currentFile + ":" + e.getLineNumber() + ": " + e.getMessage();
+            String sysID = e.getSystemId();
+            if (sysID != null) {
+                try {
+                    int line = e.getLineNumber();
+                    int col = e.getColumnNumber();
+                    return new URL(sysID).getFile() +
+                        (line == -1 ? "" : (":" + line +
+                                            (col == -1 ? "" : (":" + col)))) +
+                        ": " + e.getMessage();
+                } catch (MalformedURLException mfue) {
+                }
+            }
+            return e.getMessage();
         }
     }
 }
