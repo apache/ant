@@ -58,6 +58,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -93,7 +95,7 @@ public class ZipScanner extends DirectoryScanner {
     /**
      * record list of all zip entries
      */
-    private Vector myentries;
+    private Hashtable myentries;
 
     /**
      * Sets the srcFile for scanning. This is the jar or zip file that
@@ -128,8 +130,8 @@ public class ZipScanner extends DirectoryScanner {
         Vector myvector = new Vector();
         // first check if the archive needs to be scanned again
         scanme();
-        for (int counter = 0; counter < myentries.size(); counter++) {
-            Resource myresource= (Resource) myentries.elementAt(counter);
+        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
+            Resource myresource= (Resource) e.nextElement();
             if (!myresource.isDirectory() && match(myresource.getName())) {
                 myvector.addElement(myresource.getName());
             }
@@ -151,8 +153,8 @@ public class ZipScanner extends DirectoryScanner {
         Vector myvector=new Vector();
         // first check if the archive needs to be scanned again
         scanme();
-        for (int counter = 0; counter < myentries.size(); counter++) {
-            Resource myresource = (Resource) myentries.elementAt(counter);
+        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
+            Resource myresource= (Resource) e.nextElement();
             if (myresource.isDirectory() && match(myresource.getName())) {
                 myvector.addElement(myresource.getName());
             }
@@ -206,15 +208,15 @@ public class ZipScanner extends DirectoryScanner {
         Vector myvector = new Vector();
         // first check if the archive needs to be scanned again
         scanme();
-        for (int counter = 0; counter < myentries.size(); counter++) {
-             Resource myresource = (Resource) myentries.elementAt(counter);
-             if (!myresource.isDirectory() && match(myresource.getName())) {
-                 myvector.addElement(myresource.clone());
-             }
-         }
-         Resource[] resources = new Resource[myvector.size()];
-         myvector.copyInto(resources);
-         return resources;
+        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
+            Resource myresource= (Resource) e.nextElement();
+            if (!myresource.isDirectory() && match(myresource.getName())) {
+                myvector.addElement(myresource.clone());
+            }
+        }
+        Resource[] resources = new Resource[myvector.size()];
+        myvector.copyInto(resources);
+        return resources;
     }
 
     /**
@@ -230,17 +232,17 @@ public class ZipScanner extends DirectoryScanner {
      */
     public Resource[] getIncludedDirectoryResources() {
         Vector myvector = new Vector();
-         // first check if the archive needs to be scanned again
-         scanme();
-         for (int counter = 0; counter < myentries.size(); counter++) {
-             Resource myresource = (Resource) myentries.elementAt(counter);
-             if (myresource.isDirectory() && match(myresource.getName())) {
-                 myvector.addElement(myresource.clone());
-             }
-         }
-         Resource[] resources = new Resource[myvector.size()];
-         myvector.copyInto(resources);
-         return resources;
+        // first check if the archive needs to be scanned again
+        scanme();
+        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
+            Resource myresource= (Resource) e.nextElement();
+            if (myresource.isDirectory() && match(myresource.getName())) {
+                myvector.addElement(myresource.clone());
+            }
+        }
+        Resource[] resources = new Resource[myvector.size()];
+        myvector.copyInto(resources);
+        return resources;
     }
 
     /**
@@ -255,17 +257,16 @@ public class ZipScanner extends DirectoryScanner {
             // special case in ZIPs, we do not want this thing included
             return new Resource("", true, Long.MAX_VALUE, true);
         }
-        
+
         // first check if the archive needs to be scanned again
         scanme();
-        for (int counter = 0; counter < myentries.size(); counter++) {
-            Resource myresource=(Resource)myentries.elementAt(counter);
-            if (myresource.getName().equals(name)
-                || myresource.getName().equals(name + "/")) {
-                return myresource;
-            }
+        if (myentries.containsKey(name)) {
+            return (Resource) myentries.get(name);
+        } else if (myentries.containsKey(name + "/")) {
+            return (Resource) myentries.get(name + "/");
+        } else {
+            return new Resource(name);
         }
-        return new Resource(name);
     }
 
     /**
@@ -281,26 +282,25 @@ public class ZipScanner extends DirectoryScanner {
                                              srcFile.lastModified());
 
         // spare scanning again and again
-        if (lastScannedResource != null 
+        if (lastScannedResource != null
             && lastScannedResource.getName().equals(thisresource.getName())
-            && lastScannedResource.getLastModified() 
-               == thisresource.getLastModified()) {
+            && lastScannedResource.getLastModified()
+            == thisresource.getLastModified()) {
             return;
         }
 
-        Vector vResult = new Vector();
         if (task != null) {
             task.log("checking zip entries: " + srcFile, Project.MSG_VERBOSE);
         }
 
         ZipEntry entry = null;
         ZipInputStream in = null;
-        myentries = new Vector();
+        myentries = new Hashtable();
         try {
             try {
                 in = new ZipInputStream(new FileInputStream(srcFile));
                 if (task != null) {
-                    task.log("opening input stream from " + srcFile, 
+                    task.log("opening input stream from " + srcFile,
                              Project.MSG_DEBUG);
                 }
             } catch (IOException ex) {
@@ -309,22 +309,22 @@ public class ZipScanner extends DirectoryScanner {
                     task.log("problem opening "+srcFile,Project.MSG_ERR);
                 }
             }
-            
+
             while (true) {
                 try {
                     entry = in.getNextEntry();
                     if (entry == null) {
                         break;
                     }
-                    myentries.addElement(new Resource(entry.getName(),
-                                               true,
-                                               entry.getTime(),
+                    myentries.put(new String(entry.getName()),
+                                  new Resource(entry.getName(), true,
+                                               entry.getTime(), 
                                                entry.isDirectory()));
                     if (task != null) {
                         task.log("adding entry " + entry.getName() + " from "
                                  + srcFile, Project.MSG_DEBUG);
                     }
-                    
+
                 } catch (ZipException ex) {
                     // XXX - throw a BuildException instead ??
                     if (task != null ) {
