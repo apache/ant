@@ -64,6 +64,7 @@ import java.io.PrintWriter;
 
 import java.util.Properties;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -107,11 +108,11 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     /**
      * Element for the current test.
      */
-    private Element currentTest;
+    private Hashtable testElements = new Hashtable();
     /**
      * Timing helper.
      */
-    private long lastTestStart = 0;
+    private Hashtable testStarts = new Hashtable();
     /**
      * Where to write the log to.
      */
@@ -167,7 +168,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
             Writer wri = null;
             try {
                 wri = new OutputStreamWriter(out, "UTF8");
-                wri.write("<?xml version=\"1.0\"?>\n");
+                wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
                 (new DOMElementWriter()).write(rootElement, wri, 0, "  ");
                 wri.flush();
             } catch(IOException exc) {
@@ -190,11 +191,13 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A new Test is started.
      */
     public void startTest(Test t) {
-        lastTestStart = System.currentTimeMillis();
-        currentTest = doc.createElement(TESTCASE);
+        testStarts.put(t, new Long(System.currentTimeMillis()));
+
+        Element currentTest = doc.createElement(TESTCASE);
         currentTest.setAttribute(ATTR_NAME, 
                                  JUnitVersionHelper.getTestCaseName((TestCase) t));
         rootElement.appendChild(currentTest);
+        testElements.put(t, currentTest);
     }
 
     /**
@@ -203,8 +206,10 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A Test is finished.
      */
     public void endTest(Test test) {
+        Element currentTest = (Element) testElements.get(test);
+        Long l = (Long) testStarts.get(test);
         currentTest.setAttribute(ATTR_TIME,
-                                 ""+((System.currentTimeMillis()-lastTestStart)
+                                 ""+((System.currentTimeMillis()-l.longValue())
                                            / 1000.0));
     }
 
@@ -241,11 +246,14 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         }
 
         Element nested = doc.createElement(type);
+        Element currentTest = null;
         if (test != null) {
-            currentTest.appendChild(nested);
+            currentTest = (Element) testElements.get(test);
         } else {
-            rootElement.appendChild(nested);
+            currentTest = rootElement;
         }
+
+        currentTest.appendChild(nested);
 
         String message = t.getMessage();
         if (message != null && message.length() > 0) {

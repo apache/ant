@@ -242,7 +242,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Format an error and print it.
      */
-    protected void formatError(String type, Test test, Throwable error) {
+    protected synchronized void formatError(String type, Test test, 
+                                            Throwable error) {
         if (test != null) {
             endTest(test);
         }

@@ -61,6 +61,7 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Hashtable;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -81,7 +82,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Timing helper.
      */
-    private long lastTestStart = 0;
+    private Hashtable testStarts = new Hashtable();
     /**
      * Where to write the log to.
      */
@@ -97,7 +98,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Suppress endTest if testcase failed.
      */
-    private boolean failed = true;
+    private Hashtable failed = new Hashtable();
 
     private String systemOutput = null;
     private String systemError = null;
@@ -187,10 +188,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * <p>A new Test is started.
      */
     public void startTest(Test t) {
-        lastTestStart = System.currentTimeMillis();
-        wri.print("Testcase: " 
-                  + JUnitVersionHelper.getTestCaseName((TestCase) t));
-        failed = false;
+        testStarts.put(t, new Long(System.currentTimeMillis()));
+        failed.put(t, Boolean.FALSE);
     }
 
     /**
@@ -199,11 +198,18 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * <p>A Test is finished.
      */
     public void endTest(Test test) {
-        if (failed) return;
-        wri.println(" took " 
-                    + nf.format((System.currentTimeMillis()-lastTestStart)
-                                / 1000.0)
-                    + " sec");
+        synchronized (wri) {
+            wri.print("Testcase: " 
+                      + JUnitVersionHelper.getTestCaseName((TestCase) test));
+            if (Boolean.TRUE.equals(failed.get(test))) {
+                return;
+            }
+            Long l = (Long) testStarts.get(test);
+            wri.println(" took " 
+                        + nf.format((System.currentTimeMillis()-l.longValue())
+                                    / 1000.0)
+                        + " sec");
+        }
     }
 
     /**
@@ -234,15 +240,17 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     }
 
     private void formatError(String type, Test test, Throwable t) {
-        if (test != null) {
-            endTest(test);
-        }
-        failed = true;
+        synchronized (wri) {
+            if (test != null) {
+                endTest(test);
+                failed.put(test, Boolean.TRUE);
+            }
 
-        wri.println(type);
-        wri.println(t.getMessage());
-        t.printStackTrace(wri);
-        wri.println("");
+            wri.println(type);
+            wri.println(t.getMessage());
+            t.printStackTrace(wri);
+            wri.println("");
+        }
     }
     
 } // PlainJUnitResultFormatter

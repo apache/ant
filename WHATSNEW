@@ -20,6 +20,10 @@ Fixed bugs:
 
 * <ant> will no longer override a subbuilds basedir with inheritall="true". 
 
+* Fixed problem with the built-in <junit> formatters which assumed
+  that only one test could be running at the same time - this is not
+  necessarily true, see junit.extensions.ActiveTestSuite.
+
 Other changes:
 --------------
 
