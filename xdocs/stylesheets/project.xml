@@ -26,8 +26,8 @@
     </menu>
 
     <menu name="Download">
-        <item name="Binaries"              href="/site/binindex.html"/>
-        <item name="Source Code"           href="/site/sourceindex.html"/>
+        <item name="Binary Distributions" href="/bindownload.cgi"/>
+        <item name="Source Distributions" href="/srcdownload.cgi"/>
     </menu>
 
     <menu name="Jakarta">

@@ -9,12 +9,8 @@
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
   
-                      <meta name="author" value="Conor MacNeill">
-  <meta name="email" value="">
-                <meta name="author" value="Stefan Bodewig">
-  <meta name="email" value="stefan.bodewig@epost.de">
-        
-      <title>Apache Ant - Ant</title>
+              
+      <title>Apache Ant - Downloading Ant - Source Distribution</title>
     </head>
   
     <body bgcolor="#ffffff" text="#000000" link="#525D76">    
@@ -96,83 +92,81 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Ant 1.5.1"><strong>Ant 1.5.1</strong></a>
+        <a name="Downloading Ant"><strong>Downloading Ant</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <h3>Apache Ant 1.5.1 Released!</h3>
-                                <p>Version 1.5.1 of Ant has been released. It is available for download 
-      <a href="http://www.apache.org/dist/ant/">here</a>.
-    </p>
+                        <p>Use the links below to download a source distribution of Ant from
+one of our mirrors.  You <strong>must</strong> <a href="#Verify Releases">verify the integrity</a> of the downloaded files using
+signatures downloaded from our main distribution directory.</p>
+                                <p>Ant is distributed as <code>zip</code>, <code>tar.gz</code> and
+<code>tar.bz2</code> archives - the contents are the same.  Please
+note that the <code>tar.*</code> archives contain file names longer
+than 100 characters and have been created using GNU tar extensions.
+Thus they must be untarred with a GNU compatible version of
+<code>tar</code>.</p>
+                                <p>If you do not see the file you need in the links below, please see
+the <a href="http://www.apache.org/dist/ant/">master distribution
+directory</a> or, preferably, its <a href="[preferred]/ant/">mirror</a>.</p>
                     </blockquote>
     </td></tr>
   </table>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Apache Ant"><strong>Apache Ant</strong></a>
+        <a name="Mirror"><strong>Mirror</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>
-Apache Ant is a Java-based build tool. In theory, it is kind of like
-Make, but without Make's wrinkles.
-</p>
-                                <p>
-Why another build tool when there is already <em>make</em>, <em>gnumake</em>,
-<em>nmake</em>, <em>jam</em>, and
-others? Because all those tools have limitations that Ant's original author
-couldn't live with when developing software across multiple platforms. Make-like
-tools are inherently shell-based -- they evaluate a set of dependencies, then
-execute commands not unlike what you would issue in a shell. This means that you
-can easily extend these tools by using or writing any program for the OS that
-you are working on. However, this also means that you limit yourself to the OS,
-or at least the OS type such as Unix, that you are working on.
-</p>
-                                <p>
-Makefiles are inherently evil as well. Anybody who has worked on them for any
-time has run into the dreaded tab problem. "Is my command not executing
-because I have a space in front of my tab!!!" said the original author of
-Ant way too many times. Tools like Jam took care of this to a great degree, but
-still have yet another format to use and remember.
-</p>
-                                <p>
-Ant is different. Instead of a model where it is extended with shell-based
-commands, Ant is extended using Java classes. Instead of writing shell commands,
-the configuration files are XML-based, calling out a target tree where various
-tasks get executed. Each task is run by an object that implements a particular
-Task interface.
-</p>
-                                <p>
-Granted, this removes some of the expressive power that is inherent by being
-able to construct a shell command such as
-<code>`find . -name foo -exec rm {}`</code>, but it
-gives you the ability to be cross platform -- to work anywhere and everywhere.
-And hey, if you really need to execute a shell command, Ant has an
-<code>&lt;exec&gt;</code> task that
-allows different commands to be executed based on the OS that it is executing
-on.
-</p>
+                        <p>You are currently using <b>[preferred]</b>.  If you encounter a
+problem with this mirror, please select another mirror.  If all
+mirrors are failing, there are <i>backup</i> mirrors (at the end of
+the mirrors list) that should be available.</p>
+                                <form action="[location]" method="get" id="SelectMirror">
+Other mirrors: <select name="Preferred">
+[if-any http]
+  [for http]<option value="[http]">[http]</option>[end]
+[end]  
+[if-any ftp]
+  [for ftp]<option value="[ftp]">[ftp]</option>[end]
+[end]
+[if-any backup]
+  [for backup]<option value="[backup]">[backup] (backup)</option>[end]
+[end]
+</select>
+<input type="submit" value="Change" />     
+</form>
                     </blockquote>
     </td></tr>
   </table>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Documentation"><strong>Documentation</strong></a>
+        <a name="Current Release of Ant"><strong>Current Release of Ant</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>
-You can view the documentation for the current release (Apache Ant 1.5.1)
-<a href="manual/index.html">online</a>
-</p>
-                                <p>
-Comprehensive documentation is included in the source and binary distributions. 
-</p>
+                        <p>Currently, Apache Ant 1.5.1 is the best available version, see the
+<a href="[preferred]/ant/README.html">release notes</a>.</p>
+                                <ul>
+<li><code>.zip</code> archive: 
+<a href="[preferred]/ant/source/jakarta-ant-1.5.1-src.zip">jakarta-ant-1.5.1-src.zip</a> 
+[<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.zip.md5">MD5</a>]</li>
+
+<li><code>.tar.gz</code> archive: 
+<a href="[preferred]/ant/source/jakarta-ant-1.5.1-src.tar.gz">jakarta-ant-1.5.1-src.tar.gz</a> 
+[<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.tar.gz.md5">MD5</a>]</li>
+
+<li><code>.tar.bz2</code> archive: 
+<a href="[preferred]/ant/source/jakarta-ant-1.5.1-src.tar.bz2">jakarta-ant-1.5.1-src.tar.bz2</a> 
+[<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.tar.bz2.md5">MD5</a>]</li>
+</ul>
                     </blockquote>
     </td></tr>
   </table>
@@ -184,44 +178,64 @@ Comprehensive documentation is included in the source and binary distributions.
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>
-    If you wish to use the latest Ant features, you can try downloading a nightly 
-    build from <a href="http://cvs.apache.org/builds/jakarta-ant/nightly/">here</a>
-    </p>
+                        <p>If you wish to use the latest Ant features, you can try downloading a
+<a href="http://cvs.apache.org/builds/jakarta-ant/nightly/">nightly build</a>.
+</p>
                     </blockquote>
     </td></tr>
   </table>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Towards Ant2"><strong>Towards Ant2</strong></a>
+        <a name="Old Ant Releases"><strong>Old Ant Releases</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>
-    We are currently hashing out design details for Ant2. Please
-    read the latest <a href="antnews.html">Ant news</a> for more details.
-    </p>
+                        <p>Older releases of Ant can be found <a href="http://jakarta.apache.org/builds/ant/release/">here</a>.  Those
+releases are only provided as <code>zip</code> archives that can be
+extracted by <code>jar xf </code><em>archive.zip</em> - we highly
+recommend to not use those releases but upgrade to Ant's <a href="#Current Release of Ant">latest</a> release.</p>
                     </blockquote>
     </td></tr>
   </table>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Get Involved"><strong>Get Involved</strong></a>
+        <a name="Verify Releases"><strong>Verify Releases</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <ul>
-<li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>
-<li><a href="http://jakarta.apache.org/getinvolved/mail.html">Join Mailing Lists</a></li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
-</li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>
-</li>
-</ul>
+                        <p>It is essential that you verify the integrity of the downloaded
+files using the PGP or MD5 signatures.</p>
+                                <p>The PGP signatures can be verified using PGP or GPG.  First
+download the <a href="http://www.apache.org/dist/ant/KEYS">KEYS</a>
+as well as the <code>asc</code> signature file for the particular
+distribution.  Make sure you get these files from the <a href="http://www.apache.org/dist/ant/">main distribution
+directory</a>, rather than from a mirror. Then verify the signatures
+using</p>
+                                <p><code>
+% pgpk -a KEYS<br />
+% pgpv jakarta-ant-src-1.5.1.tar.gz.asc<br />
+</code>
+<em>or</em><br />
+<code>
+% pgp -ka KEYS<br />
+% pgp jakarta-ant-src-1.5.1.tar.gz.asc<br />
+</code>
+<em>or</em><br />
+<code>
+% gpg -import KEYS<br />
+% gpg -verify jakarta-ant-src-1.5.1.tar.gz.asc
+</code></p>
+                                <p>Alternatively, you can verify the MD5 signature on the files.  A
+unix program called <code>md5</code> or <code>md5sum</code> is
+included in many unix distributions.  It is also available as part of
+<a href="http://www.gnu.org/software/textutils/textutils.html">GNU
+Textutils</a>.  Windows users can get binary md5 programs from <a href="http://www.fourmilab.ch/md5/">here</a>, <a href="http://www.pc-tools.net/win32/freeware/console/">here</a>, or
+<a href="http://www.slavasoft.com/fsum/">here</a>.</p>
+                                <p>We highly recommend to verify the PGP signature, though.</p>
                     </blockquote>
     </td></tr>
   </table>
