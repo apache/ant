@@ -73,6 +73,21 @@ import java.sql.*;
 public class SQLExec extends Task {
 
     /**
+     * Database connection
+     */
+    private Connection conn = null;
+    
+    /**
+     * Autocommit flag. Default value is false
+     */
+    private boolean autocommit=false;
+    
+    /**
+     * SQL statement
+     */
+    private Statement statement = null;
+
+    /**
      * DB driver.
      */
     private String driver = null;
@@ -95,25 +110,25 @@ public class SQLExec extends Task {
     /**
      * SQL input file
      */
-    private File inputFile = null;
+    private File srcFile = null;
 
     /**
      * SQL input command
      */
-    private String sqlCommand = null;
+    private String sqlCommand = "";
     
     /**
      * Set the name of the sql file to be run.
      */
-    public void setInputfile(File inputFile) {
-        this.inputFile = inputFile;
+    public void setSrc(File srcFile) {
+        this.srcFile = srcFile;
     }
     
     /**
      * Set the name of the sql file to be run.
      */
-    public void setSQL(String sql) {
-        this.sqlCommand = sql;
+    public void addText(String sql) {
+        this.sqlCommand += sql;
     }
     
     /**
@@ -145,71 +160,78 @@ public class SQLExec extends Task {
     }
     
     /**
+     * Set the autocommit flag for the DB connection.
+     */
+    public void setAutocommit(boolean autocommit) {
+        this.autocommit = autocommit;
+    }
+     
+    /**
      * Load the sql file and then execute it
      */
     public void execute() throws BuildException {
         Connection conn = null;
 
-        if (inputFile == null && sqlCommand == null) {
-            throw new BuildException("Input file or sql attribute must be set!");
+        sqlCommand = sqlCommand.trim();
+
+        if (srcFile == null && sqlCommand.length() == 0) {
+            throw new BuildException("Source file or sql statement must be set!", location);
         }
         if (driver == null) {
-            throw new BuildException("Driver attribute must be set!");
+            throw new BuildException("Driver attribute must be set!", location);
         }
         if (userId == null) {
-            throw new BuildException("User Id attribute must be set!");
+            throw new BuildException("User Id attribute must be set!", location);
         }
         if (password == null) {
-            throw new BuildException("Password attribute must be set!");
+            throw new BuildException("Password attribute must be set!", location);
         }
         if (url == null) {
-            throw new BuildException("Url attribute must be set!");
+            throw new BuildException("Url attribute must be set!", location);
         }
-        if (inputFile != null && !inputFile.exists()) {
-            throw new BuildException("Input file does not exist!");
+        if (srcFile != null && !srcFile.exists()) {
+            throw new BuildException("Source file does not exist!", location);
         }
 
         try{
             Class.forName(driver);
         }catch(ClassNotFoundException e){
-            throw new BuildException("JDBC driver " + driver + " could not be loaded");
+            throw new BuildException("JDBC driver " + driver + " could not be loaded", location);
         }
 
-        String line = "";
-        String sql = "";
-        Statement statement = null;
-
         try{
+            conn.setAutoCommit(autocommit);
+
             log("connecting to " + url, Project.MSG_VERBOSE );
             conn = DriverManager.getConnection(url, userId, password);
             statement = conn.createStatement();
 
-            if (sqlCommand != null) {
-                execSQL(statement, sqlCommand);
+            if (sqlCommand.length() != 0) {
+                runStatements(new StringReader(sqlCommand));
             }
             
-            if (inputFile != null) {
-                BufferedReader in = new BufferedReader(new FileReader(inputFile));
-  
-                while ((line=in.readLine()) != null){
-                    if (line.trim().startsWith("//")) continue;
-                    if (line.trim().startsWith("--")) continue;
- 
-                    sql += " " + line;
-                    if (sql.trim().endsWith(";")){
-                        log("SQL: " + sql, Project.MSG_VERBOSE);
-                        execSQL(statement, sql.substring(0, sql.length()-1));
-                        sql = "";
-                    }
-                }
+            if (srcFile != null) {
+                runStatements(new FileReader(srcFile));
+            }
+
+            if (!autocommit) {
+                conn.commit();
             }
             
-            conn.commit();
         } catch(IOException e){
-            throw new BuildException(e);
+            if (!autocommit) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {}
+            }
+            throw new BuildException(e, location);
         } catch(SQLException e){
-            log("Failed to execute: " + sql, Project.MSG_ERR);
-            throw new BuildException(e);
+            if (!autocommit) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {}
+            }
+            throw new BuildException(e, location);
         }
         finally {
             try {
@@ -226,14 +248,51 @@ public class SQLExec extends Task {
         log("SQL statements executed successfully", Project.MSG_VERBOSE);
     }
 
+    private void runStatements(Reader reader) throws SQLException, IOException {
+        String sql = "";
+        String line = "";
+ 
+ 	BufferedReader in = new BufferedReader(reader);
+ 
+ 	try{
+            while ((line=in.readLine()) != null){
+                if (line.trim().startsWith("//")) continue;
+                if (line.trim().startsWith("--")) continue;
+      
+                sql += " " + line;
+                if (sql.trim().endsWith(";")){
+                    log("SQL: " + sql, Project.MSG_VERBOSE);
+                    execSQL(sql.substring(0, sql.length()-1));
+                    sql = "";
+                }
+            }
+ 
+ 	    // Catch any statements not followed by ;
+ 	    if(!sql.trim().equals("")){
+ 	    	execSQL(sql);
+ 	    }
+ 	}catch(SQLException e){
+            log("Failed to execute: " + sql, Project.MSG_ERR);
+ 	    throw e;
+ 	}
+     }
+ 
+
     /**
      * Exec the sql statement.
      */
-    private void execSQL(Statement statement, String sql) throws SQLException{
+    private void execSQL(String sql) throws SQLException{
         if (!statement.execute(sql)) {
-            log(statement.getUpdateCount()+" row affected", 
+            log(statement.getUpdateCount()+" rows affected", 
                 Project.MSG_VERBOSE);
         }
+
+        SQLWarning warning = conn.getWarnings();
+        while(warning!=null){
+            log(warning + " sql warnging", Project.MSG_VERBOSE);
+            warning=warning.getNextWarning();
+        }
+        conn.clearWarnings();
     }
 
 }
