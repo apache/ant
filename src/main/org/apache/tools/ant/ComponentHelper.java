@@ -809,9 +809,7 @@ public class ComponentHelper  {
             try {
                 clazz = def.innerGetTypeClass();
             } catch (ClassNotFoundException e) {
-                out.println("Cause: the class " +
-                        classname
-                        + " was not found");
+                out.println("Cause: the class " + classname + " was not found.");
                 jars = true;
                 if (optional) {
                     out.println("        This looks like one of Ant's optional components");
@@ -830,8 +828,8 @@ public class ComponentHelper  {
                         +  ncdfe.getMessage());
                 if(optional) {
                     out.println("       It is not enough to have Ant's optional JAR, you need the JAR");
-                    out.println("       files that it depends upon");
-                    out.println("Ant's optional task dependencies are listed in the manual");
+                    out.println("       files that it depends upon.");
+                    out.println("Ant's optional task dependencies are listed in the manual.");
                 } else {
                     out.println("       This class may be in a separate JAR, that is not installed.");
                 }
@@ -845,26 +843,24 @@ public class ComponentHelper  {
                 try {
                     def.innerCreateAndSet(clazz,project);
                     //hey, there is nothing wrong with us
-                    out.println("The component could be instantiated");
+                    out.println("The component could not be instantiated.");
                 } catch (NoSuchMethodException e) {
                     lowlevel = true;
                     out.println("Cause: The class " + classname
-                            + " has no compatible constructor");
+                            + " has no compatible constructor.");
 
                 } catch (InstantiationException e) {
                     lowlevel = true;
-                    out.println("Cause: The class " +
-                            classname
-                            + " is abstract and cannot be instantiated");
+                    out.println("Cause: The class " + classname
+                            + " is abstract and cannot be instantiated.");
                 } catch (IllegalAccessException e) {
                     lowlevel = true;
-                    out.println("Cause: The constructor for " +
-                            classname
-                            + " is private and cannot be invoked");
+                    out.println("Cause: The constructor for " + classname
+                            + " is private and cannot be invoked.");
                 } catch (InvocationTargetException ex) {
                     lowlevel = true;
                     Throwable t = ex.getTargetException();
-                    out.println("Cause: The constructor threw the exception ");
+                    out.println("Cause: The constructor threw the exception");
                     out.println(t.toString());
                     t.printStackTrace(out);
                 }  catch (NoClassDefFoundError ncdfe) {
@@ -881,28 +877,27 @@ public class ComponentHelper  {
             out.println("Do not panic, this is a common problem.");
             if(definitions) {
                 out.println("It may just be a typing error in the build file " +
-                        "or the task/type declaration");
+                        "or the task/type declaration.");
             }
             if (jars) {
-                out.println("The commonest cause is a missing JAR. ");
+                out.println("The commonest cause is a missing JAR.");
             }
             if (lowlevel) {
-                out.println("This is quite a low level problem, which may need" +
-                        "consultation with the author of the task");
+                out.println("This is quite a low level problem, which may need " +
+                        "consultation with the author of the task.");
                 if(antTask) {
                     out.println("This may be the Ant team. Please file a " +
-                            "defect or contact the developer team");
+                            "defect or contact the developer team.");
                 } else {
-                    out.println("This does not appear to be a task bundled with Ant");
-                    out.println("Please take it up with the supplier of the third-party "+type);
-                    out.println("If you have written it yourself, you probably have a bug to fix");
+                    out.println("This does not appear to be a task bundled with Ant.");
+                    out.println("Please take it up with the supplier of the third-party " + type + ".");
+                    out.println("If you have written it yourself, you probably have a bug to fix.");
                 }
             } else {
                 out.println();
                 out.println("It is not an Ant bug; there is no need to file a bug" +
-                        " report or contact the developers");
+                        " report or contact the developers.");
             }
-
         }
         out.flush();
         out.close();
