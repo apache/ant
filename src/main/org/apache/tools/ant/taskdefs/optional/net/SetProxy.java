@@ -186,7 +186,8 @@ public class SetProxy extends Task {
     /**
      * set the proxy user. Probably requires a password to accompany this
      * setting. Default=""
-     * @param proxyUser
+     * @param proxyUser username
+     * @since Ant1.6
      */
     public void setProxyUser(String proxyUser) {
         this.proxyUser = proxyUser;
@@ -194,7 +195,8 @@ public class SetProxy extends Task {
 
     /**
      * set the password for the proxy. used only if the proxyUser is set
-     * @param proxyPassword
+     * @param proxyPassword password to go with the username
+     * @since Ant1.6
      */
     public void setProxyPassword(String proxyPassword) {
         this.proxyPassword = proxyPassword;
