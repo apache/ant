@@ -276,7 +276,7 @@ public class ReplaceRegExp extends Task {
                 (byline ? " by line" : "") +
                 (flags.length() > 0 ? " with flags: '" + flags + "'" : "") +
                 ".",
-                Project.MSG_WARN);
+                Project.MSG_VERBOSE);
 
             if (byline) {
                 LineNumberReader lnr = new LineNumberReader(br);
