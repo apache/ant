@@ -151,7 +151,7 @@ public class Project {
     /** Description for this project (if any). */
     private String description;
 
-    /** Project properties map (String to String). */
+    /** Project properties map (usually String to String). */
     private Hashtable properties = new Hashtable();
     /**
      * Map of "user" properties (as created in the Ant task, for example).

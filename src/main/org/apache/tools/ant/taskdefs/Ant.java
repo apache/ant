@@ -255,31 +255,37 @@ public class Ant extends Task {
             newProject.addDataTypeDefinition(typeName, typeClass);
         }
 
-        // set user-defined or all properties from calling project
-        Hashtable prop1;
-        if (inheritAll) {
-           prop1 = project.getProperties();
-        } else {
-           prop1 = project.getUserProperties();
+        // set user-defined
+        Hashtable props = getProject().getUserProperties();
+        e = props.keys();
+        while (e.hasMoreElements()) {
+            String arg = e.nextElement().toString();
+            String value = props.get(arg).toString();
+            newProject.setUserProperty(arg, value);
+        }
 
+        if (!inheritAll) {
            // set Java built-in properties separately,
            // b/c we won't inherit them.
            newProject.setSystemProperties();
-        }
 
-        e = prop1.keys();
-        while (e.hasMoreElements()) {
-            String arg = (String) e.nextElement();
-            if ("basedir".equals(arg) || "ant.file".equals(arg)) {
-                // basedir and ant.file get special treatment in execute()
-                continue;
-            }
+        } else {
+            // set all properties from calling project
 
-            String value = (String) prop1.get(arg);
-            if (inheritAll){
-               newProject.setProperty(arg, value);
-            } else {
-               newProject.setUserProperty(arg, value);
+            props = getProject().getProperties();
+            e = props.keys();
+            while (e.hasMoreElements()) {
+                String arg = e.nextElement().toString();
+                if ("basedir".equals(arg) || "ant.file".equals(arg)) {
+                    // basedir and ant.file get special treatment in execute()
+                    continue;
+                }
+
+                String value = props.get(arg).toString();
+                if (newProject.getProperty(arg) == null){
+                    // no user property
+                    newProject.setProperty(arg, value);
+                }
             }
         }
     }
