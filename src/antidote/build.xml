@@ -31,7 +31,7 @@
   <!-- =================================================================== -->
   <!-- Set some the defaults the user can override in .ant.properties      -->
   <!-- =================================================================== -->
-  <property name="build.compiler" value="jikes"/>
+  <property name="build.compiler" value="modern"/>
   <property name="build.compiler.emacs" value="on"/>
 
   <!-- =================================================================== -->

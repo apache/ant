@@ -19,15 +19,15 @@ rem find ANT_HOME
 if not "%ANT_HOME%"=="" goto checkJava
 
 rem check for ant in Program Files on system drive
-if not exist "%SystemDrive%\Program Files\ant" goto checkSystemDrive
-set ANT_HOME=%SystemDrive%\Program Files\ant
-goto checkJava
+rem if not exist "%SystemDrive%\Program Files\ant" goto checkSystemDrive
+rem set ANT_HOME=%SystemDrive%\Program Files\ant
+rem goto checkJava
 
-:checkSystemDrive
+rem :checkSystemDrive
 rem check for ant in root directory of system drive
-if not exist "%SystemDrive%\ant" goto noAntHome
-set ANT_HOME=%SystemDrive%\ant
-goto checkJava
+rem if not exist "%SystemDrive%\ant" goto noAntHome
+rem set ANT_HOME=%SystemDrive%\ant
+rem goto checkJava
 
 :noAntHome
 echo ANT_HOME is not set and ant could not be located. Please set ANT_HOME.
