@@ -205,6 +205,9 @@ public class Project {
     /** Records the latest task to be executed on a thread (Thread to Task). */
     private Hashtable threadTasks = new Hashtable();
 
+    /** Records the latest task to be executed on a thread Group. */
+    private Hashtable threadGroupTasks = new Hashtable();
+
     /**
      * Called to handle any input requests.
      */
@@ -1271,7 +1274,7 @@ public class Project {
      *        or information (<code>false</code>).
      */
     public void demuxOutput(String line, boolean isError) {
-        Task task = (Task) threadTasks.get(Thread.currentThread());
+        Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
         } else {
@@ -1319,7 +1322,7 @@ public class Project {
      */     
     public int demuxInput(byte[] buffer, int offset, int length) 
         throws IOException {
-        Task task = (Task) threadTasks.get(Thread.currentThread());
+        Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             return defaultInput(buffer, offset, length);
         } else {
@@ -1339,7 +1342,7 @@ public class Project {
      *        or information (<code>false</code>).
      */
     public void demuxFlush(String line, boolean isError) {
-        Task task = (Task) threadTasks.get(Thread.currentThread());
+        Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
         } else {
@@ -2113,8 +2116,10 @@ public class Project {
     public synchronized void registerThreadTask(Thread thread, Task task) {
         if (task != null) {
             threadTasks.put(thread, task);
+            threadGroupTasks.put(thread.getThreadGroup(), task);
         } else {
             threadTasks.remove(thread);
+            threadGroupTasks.remove(thread.getThreadGroup());
         }
     }
 
@@ -2126,10 +2131,18 @@ public class Project {
      *         null if no task is registered.
      */
     public Task getThreadTask(Thread thread) {
-        return (Task) threadTasks.get(thread);
+        Task task = (Task) threadTasks.get(thread);
+        if (task == null) {
+            ThreadGroup group = thread.getThreadGroup();
+            while (task == null && group != null) {
+                task = (Task) threadGroupTasks.get(group);
+                group = group.getParent();
+            }
+        }
+        return task;
     }
 
-
+    
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {

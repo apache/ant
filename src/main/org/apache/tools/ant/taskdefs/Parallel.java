@@ -94,12 +94,17 @@ public class Parallel extends Task
      * execute the wait status.
      */
     public void execute() throws BuildException {
-        TaskThread[] threads = new TaskThread[nestedTasks.size()];
+        int numTasks = nestedTasks.size();
+        Thread[] threads = new Thread[numTasks];
+        TaskThread[] taskThreads = new TaskThread[numTasks];
         int threadNumber = 0;
         for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); 
              threadNumber++) {
             Task nestedTask = (Task) e.nextElement();
-            threads[threadNumber] = new TaskThread(threadNumber, nestedTask);
+            ThreadGroup group = new ThreadGroup("parallel");
+            TaskThread taskThread = new TaskThread(threadNumber, nestedTask);
+            taskThreads[threadNumber] = taskThread;
+            threads[threadNumber] = new Thread(group, taskThread);
         }
 
         // now start all threads        
@@ -122,7 +127,7 @@ public class Parallel extends Task
         Throwable firstException = null;
         Location firstLocation = Location.UNKNOWN_LOCATION;;
         for (int i = 0; i < threads.length; ++i) {
-            Throwable t = threads[i].getException();
+            Throwable t = taskThreads[i].getException();
             if (t != null) {
                 numExceptions++;
                 if (firstException == null) {
@@ -152,7 +157,7 @@ public class Parallel extends Task
     /**
      * thread that execs a task
      */
-    class TaskThread extends Thread {
+    private static class TaskThread implements Runnable {
         private Throwable exception;
         private Task task;
         private int taskNumber;
