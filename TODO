@@ -1,0 +1,38 @@
+Things that are scheduled for Ant 1.6.2.  Once this list is empty, we
+can roll the first beta.
+
+Please go ahead and assign things that are not already assigned to
+anybody else (assignments look like [Stefan]) to yourself - and please
+remove items from this list once they are complete.
+
+* merge nested and container <mapper>s from HEAD
+
+* merge <redirector>s from HEAD
+
+* merge "<loadproperties> from resource" from HEAD
+
+* merge "<fail> nested <condition> instead of if/unless" from HEAD
+
+* merge cygwin changes for ant script from HEAD
+
+* merge Target.set/getLocation() from HEAD
+
+* merge "<apply> differentiates between empty & up-to-date" from HEAD
+
+* Fix the Xml validation with scheam
+
+* Fix or at least document support for tomcat 5.0 jsp
+
+* resolve the "convert RuntimeExceptions to BuildExceptions"
+  discussion and act on it [Stefan will kick of new thread and see
+  that we end up with a result, if necessary by voting]
+
+* gcj support in Path.addJavaRuntime [Stefan]
+
+* toFile attribute in scp [Stefan]
+
+* review claimed AntClassLoader memory leak [Stefan]
+
+* <junitreport> and JDK 1.5 [Stefan hopes that Stephane solves it for
+  him, otherwise he'll do it himself]
+
