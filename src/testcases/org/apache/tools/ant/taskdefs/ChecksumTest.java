@@ -82,7 +82,7 @@ public class ChecksumTest extends BuildFileTest {
     public void testCreateMd5() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("createMd5");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.MD5"),
+        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.md5"),
                                            project.resolveFile("../asf-logo.gif.MD5")));
     }
 
