@@ -62,7 +62,7 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that only the given message has been logged with a
-     * priority &gt;= INFO when running the given target.
+     * priority &lt;= INFO when running the given target.
      */
     protected void expectLog(String target, String log) {
         executeTarget(target);
@@ -83,7 +83,7 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given message has been logged with a priority
-     * &gt;= INFO when running the given target.
+     * &lt;= INFO when running the given target.
      */
     protected void expectLogContaining(String target, String log) {
         executeTarget(target);
@@ -103,7 +103,7 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given message has been logged with a priority
-     * &gt;= DEBUG when running the given target.
+     * &gt;= VERBOSE when running the given target.
      */
     protected void expectDebuglog(String target, String log) {
         executeTarget(target);
