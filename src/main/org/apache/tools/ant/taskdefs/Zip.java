@@ -336,7 +336,11 @@ public class Zip extends MatchingTask {
     protected static String[][] grabFileNames(FileScanner[] scanners) {
         String[][] result = new String[scanners.length][];
         for (int i=0; i<scanners.length; i++) {
-            result[i] = scanners[i].getIncludedFiles();
+            String[] files = scanners[i].getIncludedFiles();
+            String[] dirs = scanners[i].getIncludedDirectories();
+            result[i] = new String[files.length + dirs.length];
+            System.arraycopy(files, 0, result[i], 0, files.length);
+            System.arraycopy(dirs, 0, result[i], files.length, dirs.length);
         }
         return result;
     }
