@@ -1558,7 +1558,8 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
     <td valign="top">flatten</td>
     <td valign="top">Ignore directory structure of source directory,
       copy all files into a single directory, specified by the <var>todir</var>
-      attribute. Defaults to &quot;no&quot;.</td>
+      attribute. Defaults to &quot;no&quot;. Note that you can achieve the 
+      same effect by using a <a href="#flatten-mapper">flatten mapper</a></td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1568,6 +1569,12 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
 	 <td valign="top" align="center">No</td>
   </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>mapper</h4>
+<p>You can define file name transformations by using a nested <a
+href="#mapper">mapper</a> element. The default mapper used by
+<code>&lt;copy&gt;</code> is the <a
+href="#identity-mapper">identity</a>.</p>
 <h3>Examples</h3>
 <p><b>Copy a single file</b></p>
 <pre>
@@ -1593,6 +1600,14 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
 
   &lt;copy todir=&quot;../dest/dir&quot; &gt;
     &lt;fileset dir=&quot;src_dir&quot excludes=&quot;**/*.java&quot; /&gt;
+  &lt;/copy&gt;
+</pre>
+<p><b>Copy a set of files to a directory appending
+&quot;<code>.bak</code>&quot; to the file name on the fly</b></p>
+<pre>
+  &lt;copy todir=&quot;../backup/dir&quot; &gt;
+    &lt;fileset dir=&quot;src_dir&quot /&gt;
+    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot; /&gt;
   &lt;/copy&gt;
 </pre>
 <hr>
@@ -3662,7 +3677,8 @@ to move to the <var>todir</var> directory.</p>
     <td valign="top">flatten</td>
     <td valign="top">ignore directory structure of source directory,
       copy all files into a single directory, specified by the <var>todir</var>
-      attribute (default is &quot;false&quot;).</td>
+      attribute (default is &quot;false&quot;).Note that you can achieve the 
+      same effect by using a <a href="#flatten-mapper">flatten mapper</a></td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -3672,6 +3688,12 @@ to move to the <var>todir</var> directory.</p>
 	 <td valign="top" align="center">No</td>
   </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>mapper</h4>
+<p>You can define file name transformations by using a nested <a
+href="#mapper">mapper</a> element. The default mapper used by
+<code>&lt;copy&gt;</code> is the <a
+href="#identity-mapper">identity</a>.</p>
 <h3>Examples</h3>
 <p><b>Move a single file (rename a file)</b></p>
 <pre>
@@ -3694,6 +3716,16 @@ to move to the <var>todir</var> directory.</p>
       &lt;include name=&quot;**/*.jar&quot; /&gt;
       &lt;exclude name=&quot;**/ant.jar&quot; /&gt;
     &lt;/fileset&gt;
+  &lt;/move&gt;
+</pre>
+<p><b>Append <code>&quot;.bak&quot;</code> to the names of all files
+in a directory.</b></p>
+<pre>
+  &lt;move todir=&quot;my/src/dir&quot; &gt;
+    &lt;fileset dir=&quot;my/src/dir&quot; &gt;
+      &lt;exclude name=&quot;**/*.bak&quot; /&gt;
+    &lt;/fileset&gt;
+    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot; /&gt;
   &lt;/move&gt;
 </pre>
 <hr>
@@ -4470,11 +4502,17 @@ initialization target.</p>
 <hr>
 <h2><a name="uptodate">Uptodate</a></h2>
 <h3>Description</h3>
-<p>Sets a property if a Target file is more up to date than a set of
+<p>Sets a property if a target files are more up to date than a set of
 Source files. Source files are specified by nested &lt;srcfiles&gt;
-elements, these are <a href="#fileset">FileSet</a>s.</p>
-<p>The value part of the property being set is <i>true</i> if the timestamp of the 
-Target file is more recent than the timestamp of every Source file.</p>
+elements, these are <a href="#fileset">FileSet</a>s, while target
+files are specified using a nested <a href="#mapper">mapper</a>
+element.</p>
+<p>The value part of the property being set is <i>true</i> if the
+timestamp of the target files is more recent than the timestamp of
+every corresponding source file.</p>
+<p>The default behavior is to use a <a href="merge-mapper">merge
+mapper</a> whith the <code>to</code> attribute set to the value of the
+targetfile attribute.</p>
 <p>Normally, this task is used to set properties that are useful to avoid target
 execution depending on the relative age of the specified files.</p>
 <h3>Parameters</h3>
@@ -4492,7 +4530,8 @@ execution depending on the relative age of the specified files.</p>
   <tr>
     <td valign="top">targetfile</td>
     <td valign="top">the file for which we want to determine the status.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes, unless a nested mapper element is 
+      present.</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -4501,6 +4540,12 @@ execution depending on the relative age of the specified files.</p>
   &lt;/uptodate&gt;</pre>
 <p>sets the property <code><i>xmlBuild.notRequired</i></code> to the value &quot;true&quot;
 if the <i>${deploy}/xmlClasses.jar</i> is more up to date than any of the DTD files in the <i>${src}/xml</i> directory.</p>
+<p>This can be written as
+<pre>  &lt;uptodate property=&quot;xmlBuild.notRequired&quot;  &gt;
+    &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot; /&gt;
+    &lt;mapper type=&quot;merge&quot; to=&quot;${deploy}\xmlClasses.jar&quot; /&gt;
+  &lt;/uptodate&gt;</pre>
+<p>as well.</p>
 <hr>
 <h2><a name="unzip">Unjar/Unwar/Unzip</a></h2>
 <h3>Description</h3>
