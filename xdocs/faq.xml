@@ -1072,6 +1072,23 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
       </answer>
     </faq>
+
+    <faq id="1.5-cygwin-sh">
+      <question>The <code>ant</code> wrapper script of Ant 1.5 fails
+      for Cygwin if <code>ANT_HOME</code> is set to a Windows style
+      path.</question>
+      <answer>
+
+        <p>This problem has been reported only hours after Ant 1.5 has
+        been released, see <a
+        href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
+        10664</a> and all it's duplicates.</p>
+
+        <p>A fixed version of the wrapper script can be found <a
+        href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5/errata/">here</a>.
+        Simply replace your script with this version.</p>
+      </answer>
+    </faq>
   </faqsection>
 
 </document>
