@@ -55,11 +55,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Conor MacNeill
  */
-public class PropertyTest extends TaskdefsTest { 
+public class PropertyTest extends BuildFileTest { 
     
     public PropertyTest(String name) { 
         super(name);

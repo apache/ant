@@ -54,14 +54,14 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * Test the build file inclusion using XML entities.
  *
  * @author Conor MacNeill
  */
-public class IncludeTest extends TaskdefsTest { 
+public class IncludeTest extends BuildFileTest { 
     
     public IncludeTest(String name) { 
         super(name);

@@ -54,10 +54,12 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildFileTest;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class DeltreeTest extends TaskdefsTest { 
+public class DeltreeTest extends BuildFileTest { 
     
     public DeltreeTest(String name) { 
         super(name);

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 
 import java.util.Properties;
 import java.io.FileOutputStream;
@@ -70,7 +70,7 @@ import java.io.File;
  *@created    October 2, 2001
  */
 
-public class PropertyFileTest extends TaskdefsTest {
+public class PropertyFileTest extends BuildFileTest {
 
     public PropertyFileTest(String name) {
         super(name);

@@ -53,11 +53,12 @@
  */
 
 package org.apache.tools.ant.taskdefs;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class UnzipTest extends TaskdefsTest { 
+public class UnzipTest extends BuildFileTest { 
     
     public UnzipTest(String name) { 
         super(name);

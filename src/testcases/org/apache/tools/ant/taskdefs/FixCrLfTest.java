@@ -57,12 +57,13 @@ package org.apache.tools.ant.taskdefs;
 import java.io.*;
 
 import junit.framework.AssertionFailedError;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class FixCrLfTest extends TaskdefsTest {
+public class FixCrLfTest extends BuildFileTest {
 
     public FixCrLfTest(String name) {
         super(name);

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 
 import java.util.Properties;
 import java.io.FileInputStream;
@@ -65,7 +65,7 @@ import java.io.IOException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @version $Revision$
  */
-public class ReplaceRegExpTest extends TaskdefsTest {
+public class ReplaceRegExpTest extends BuildFileTest {
 
     public ReplaceRegExpTest(String name) {
         super(name);

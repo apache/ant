@@ -57,7 +57,7 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.*;
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -182,7 +182,7 @@ public class MapperTest extends TestCase {
         t.test1();
     }
 
-    private class TaskdefForCopyTest extends TaskdefsTest {
+    private class TaskdefForCopyTest extends BuildFileTest {
         TaskdefForCopyTest(String name) {
             super(name);
         }

@@ -56,13 +56,14 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.*;
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * Tests CVSLogin task.
  *
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  */
-public class CVSPassTest extends TaskdefsTest { 
+public class CVSPassTest extends BuildFileTest { 
     private final String EOL = System.getProperty("line.separator");
     private final String JAKARTA_URL =
         ":pserver:anoncvs@jakarta.apache.org:/home/cvspublic Ay=0=h<Z";

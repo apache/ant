@@ -55,11 +55,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class CopyfileTest extends TaskdefsTest { 
+public class CopyfileTest extends BuildFileTest { 
     
     public void test6() { 
         expectBuildException("test6", "target is directory");

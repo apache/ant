@@ -55,11 +55,11 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.*;
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Erik Meade <emeade@geekfarm.org>
  */
-public class ANTLRTest extends TaskdefsTest {
+public class ANTLRTest extends BuildFileTest {
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/antlr/";
 

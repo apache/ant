@@ -55,12 +55,12 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.*;
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Thomas Christensen <tchristensen@nordija.com>
  */
-public class PvcsTest extends TaskdefsTest { 
+public class PvcsTest extends BuildFileTest { 
     
     public PvcsTest(String name) { 
         super(name);

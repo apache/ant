@@ -54,10 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class AntStructureTest extends TaskdefsTest { 
+public class AntStructureTest extends BuildFileTest { 
     
     public AntStructureTest(String name) { 
         super(name);

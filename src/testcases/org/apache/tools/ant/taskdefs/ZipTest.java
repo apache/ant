@@ -53,11 +53,12 @@
  */
 
 package org.apache.tools.ant.taskdefs;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class ZipTest extends TaskdefsTest { 
+public class ZipTest extends BuildFileTest { 
     
     public ZipTest(String name) { 
         super(name);

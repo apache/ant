@@ -55,11 +55,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class CopydirTest extends TaskdefsTest { 
+public class CopydirTest extends BuildFileTest { 
     
     public CopydirTest(String name) { 
         super(name);

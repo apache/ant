@@ -54,12 +54,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildFileTest;
+
 /**
  * Tests FileSet using the Copy task.
  *
  * @author David Rees <dave@ubiqsoft.com> 
  */
-public class CopyTest extends TaskdefsTest { 
+public class CopyTest extends BuildFileTest { 
     
     public CopyTest(String name) { 
         super(name);

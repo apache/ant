@@ -54,10 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class AvailableTest extends TaskdefsTest { 
+public class AvailableTest extends BuildFileTest { 
 
     public AvailableTest(String name) { 
         super(name);

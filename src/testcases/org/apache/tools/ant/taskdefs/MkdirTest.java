@@ -1,5 +1,3 @@
-package org.apache.tools.ant.taskdefs;
-
 /*
  * The Apache Software License, Version 1.1
  *
@@ -53,11 +51,14 @@ package org.apache.tools.ant.taskdefs;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.taskdefs;
+
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class MkdirTest extends TaskdefsTest { 
+public class MkdirTest extends BuildFileTest { 
     
     public MkdirTest(String name) { 
         super(name);

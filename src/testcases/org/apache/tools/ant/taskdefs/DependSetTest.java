@@ -54,12 +54,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildFileTest;
+
 /**
  * Tests DependSet.
  *
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
-public class DependSetTest extends TaskdefsTest { 
+public class DependSetTest extends BuildFileTest { 
     
     public DependSetTest(String name) { 
         super(name);

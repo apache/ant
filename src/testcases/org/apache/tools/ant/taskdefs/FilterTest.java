@@ -59,11 +59,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class FilterTest extends TaskdefsTest { 
+public class FilterTest extends BuildFileTest { 
       
     public FilterTest(String name) { 
         super(name);

@@ -56,11 +56,12 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.Date;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Erik Meade <emeade@geekfarm.org>
  */
-public class JarTest extends TaskdefsTest {
+public class JarTest extends BuildFileTest {
 
     private static long jarModifiedDate;
     private static String tempJar = "tmp.jar";

@@ -55,12 +55,13 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class TypedefTest extends TaskdefsTest { 
+public class TypedefTest extends BuildFileTest { 
     
     public TypedefTest(String name) { 
         super(name);

@@ -61,12 +61,13 @@ import junit.framework.AssertionFailedError;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 
+import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Nico Seessle <nico@seessle.de> 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @version $Revision$
  */
-public class AntTest extends TaskdefsTest { 
+public class AntTest extends BuildFileTest { 
     
     public AntTest(String name) { 
         super(name);

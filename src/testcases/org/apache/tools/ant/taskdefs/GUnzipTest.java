@@ -51,15 +51,15 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
- package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs;
  
- import java.io.File;
+import java.io.File;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class GUnzipTest extends TaskdefsTest { 
+public class GUnzipTest extends BuildFileTest { 
     
     public GUnzipTest(String name) { 
         super(name);
