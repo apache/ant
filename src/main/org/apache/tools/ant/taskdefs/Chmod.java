@@ -72,15 +72,15 @@ public class Chmod extends MatchingTask {
     private File srcDir;  //if we want to chmod a list of files
     private String mod;
     
-    public void setFile(String src) {
-        srcFile = project.resolveFile(src);
+    public void setFile(File src) {
+        srcFile = src;
     }
 
-    public void setDir(String src) {
-        srcDir = project.resolveFile(src);
+    public void setDir(File src) {
+        srcDir = src;
     }
 
-    public void setSrc(String src) {
+    public void setSrc(File src) {
         log("The src attribute is deprecated. " +
             "Please use the file attribute.",
             Project.MSG_WARN);
@@ -108,7 +108,7 @@ public class Chmod extends MatchingTask {
                     String[] files = ds.getIncludedFiles();
           
                     for (int i = 0; i < files.length; i++) {
-                        chmod(files[i]);
+                        chmod((new File(srcDir, files[i])).getAbsolutePath());
                     }
                 }
             }
