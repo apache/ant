@@ -62,12 +62,13 @@ import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Stack;
-
 import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
@@ -76,6 +77,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.MergingMapper;
@@ -135,9 +137,21 @@ public class Zip extends MatchingTask {
      * @deprecated Use setDestFile(File) instead
      */
     public void setFile(File file) {
-        log("DEPRECATED - The file attribute has been renamed destfile."
-            +" This attribute will be unsupported before Ant1.5 is released",
+        log("DEPRECATED - The file attribute has been renamed destfile.",
             Project.MSG_ERR);
+        log("This attribute will be unsupported before Ant1.5 is released.",
+            Project.MSG_ERR);
+
+        log("Be aware that the effect of using the file attribute depends on",
+            Project.MSG_ERR);
+        log("the phase of the moon.", Project.MSG_WARN);
+        int phase = DateUtils.getPhaseOfMoon(Calendar.getInstance());
+        if (phase == 4) {
+            log("You are lucky!  Full moon tonight.");
+        } else if (phase == 0) {
+            log("Be careful!  New moon tonight.", Project.MSG_WARN);
+        }
+        
         setDestFile(file);
     }
 

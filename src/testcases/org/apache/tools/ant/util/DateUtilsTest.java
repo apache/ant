@@ -63,6 +63,7 @@ import junit.framework.TestCase;
  * TestCase for DateUtils.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class DateUtilsTest extends TestCase {
     public DateUtilsTest(String s) {
@@ -114,5 +115,16 @@ public class DateUtilsTest extends TestCase {
         String text = DateUtils.format(ms,
                 DateUtils.ISO8601_TIME_PATTERN);
         assertEquals("20:11:12", text);
+    }
+
+    public void testPhaseOfMoon() {
+        TimeZone timeZone = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance(timeZone);
+        // should be full moon
+        cal.set(2002, 2, 27);
+        assertEquals(4, DateUtils.getPhaseOfMoon(cal));
+        // should be new moon
+        cal.set(2002, 2, 12);
+        assertEquals(0, DateUtils.getPhaseOfMoon(cal));
     }
 }
