@@ -123,7 +123,7 @@ import junit.framework.TestResult;
  */
 public class JUnitTask extends Task {
 
-    private CommandlineJava commandline = new CommandlineJava();
+    private CommandlineJava commandline;
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
     private Vector formatters = new Vector();
@@ -338,7 +338,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setMaxmemory(String max) {
-        commandline.setMaxmemory(max);
+        getCommandline().setMaxmemory(max);
     }
 
     /**
@@ -352,7 +352,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setJvm(String value) {
-        commandline.setVm(value);
+        getCommandline().setVm(value);
     }
 
     /**
@@ -365,7 +365,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public Commandline.Argument createJvmarg() {
-        return commandline.createVmArgument();
+        return getCommandline().createVmArgument();
     }
 
     /**
@@ -390,7 +390,7 @@ public class JUnitTask extends Task {
      */
     public void addSysproperty(Environment.Variable sysp) {
 
-        commandline.addSysproperty(sysp);
+        getCommandline().addSysproperty(sysp);
     }
 
     /**
@@ -405,7 +405,7 @@ public class JUnitTask extends Task {
         // see bugzilla report 21684
         String testString = sysp.getContent();
         getProject().log("sysproperty added : " + testString, Project.MSG_DEBUG);
-        commandline.addSysproperty(sysp);
+        getCommandline().addSysproperty(sysp);
     }
 
     /**
@@ -419,7 +419,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public void addSyspropertyset(PropertySet sysp) {
-        commandline.addSyspropertyset(sysp);
+        getCommandline().addSyspropertyset(sysp);
     }
 
     /**
@@ -429,7 +429,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public Path createClasspath() {
-        return commandline.createClasspath(getProject()).createPath();
+        return getCommandline().createClasspath(getProject()).createPath();
     }
 
     /**
@@ -438,7 +438,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public Path createBootclasspath() {
-        return commandline.createBootclasspath(getProject()).createPath();
+        return getCommandline().createBootclasspath(getProject()).createPath();
     }
 
     /**
@@ -532,10 +532,10 @@ public class JUnitTask extends Task {
      * @param asserts assertion set
      */
     public void addAssertions(Assertions asserts) {
-        if (commandline.getAssertions() != null) {
+        if (getCommandline().getAssertions() != null) {
             throw new BuildException("Only one assertion declaration is allowed");
         }
-        commandline.setAssertions(asserts);
+        getCommandline().setAssertions(asserts);
     }
 
     /**
@@ -560,7 +560,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.7
      */
     public void setCloneVm(boolean cloneVm) {
-        commandline.setCloneVm(cloneVm);
+        getCommandline().setCloneVm(cloneVm);
     }
 
     /**
@@ -570,7 +570,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public JUnitTask() throws Exception {
-        commandline
+        getCommandline()
             .setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
     }
 
@@ -688,7 +688,7 @@ public class JUnitTask extends Task {
             log("Permissions ignored when running in forked mode!", Project.MSG_WARN);
         }
 
-        CommandlineJava cmd = (CommandlineJava) commandline.clone();
+        CommandlineJava cmd = (CommandlineJava) getCommandline().clone();
 
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         cmd.createArgument().setValue(test.getName());
@@ -916,13 +916,13 @@ public class JUnitTask extends Task {
                 + "the same VM.", Project.MSG_WARN);
         }
 
-        if (commandline.getBootclasspath() != null) {
+        if (getCommandline().getBootclasspath() != null) {
             log("bootclasspath is ignored if running in the same VM.",
                 Project.MSG_WARN);
         }
 
         CommandlineJava.SysProperties sysProperties =
-            commandline.getSystemProperties();
+                getCommandline().getSystemProperties();
         if (sysProperties != null) {
             sysProperties.setSystem();
         }
@@ -1154,7 +1154,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     private void createClassLoader() {
-        Path userClasspath = commandline.getClasspath();
+        Path userClasspath = getCommandline().getClasspath();
         if (userClasspath != null) {
             if (reloading || classLoader == null) {
                 Path classpath = (Path) userClasspath.clone();
@@ -1175,5 +1175,15 @@ public class JUnitTask extends Task {
                 classLoader.addSystemPackageRoot("org.apache.tools.ant");
             }
         }
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    protected CommandlineJava getCommandline() {
+        if (commandline == null) {
+            commandline = new CommandlineJava();
+        }
+        return commandline;
     }
 }

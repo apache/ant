@@ -463,7 +463,7 @@ public class CommandlineJava implements Cloneable {
      * Get the VM command parameters, including memory settings
      * @return
      */
-    private Commandline getActualVMCommand() {
+    protected Commandline getActualVMCommand() {
         Commandline actualVMCommand = (Commandline) vmCommand.clone();
         if (maxMemory != null) {
             if (vmVersion.startsWith("1.1")) {
@@ -604,7 +604,7 @@ public class CommandlineJava implements Cloneable {
      *
      * @since Ant 1.6
      */
-    private boolean haveClasspath() {
+    protected boolean haveClasspath() {
         Path fullClasspath = classpath != null
             ? classpath.concatSystemClasspath("ignore") : null;
         return fullClasspath != null
@@ -621,7 +621,7 @@ public class CommandlineJava implements Cloneable {
      *
      * @since Ant 1.6
      */
-    private boolean haveBootclasspath(boolean log) {
+    protected boolean haveBootclasspath(boolean log) {
         if (bootclasspath != null
             && bootclasspath.toString().trim().length() > 0) {
 
