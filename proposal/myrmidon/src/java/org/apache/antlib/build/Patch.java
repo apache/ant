@@ -44,8 +44,6 @@ public class Patch
 
     /**
      * Ignore whitespace differences.
-     *
-     * @param ignore The new Ignorewhitespace value
      */
     public void setIgnorewhitespace( final boolean ignorewhitespace )
     {
@@ -54,8 +52,6 @@ public class Patch
 
     /**
      * The file to patch.
-     *
-     * @param file The new Originalfile value
      */
     public void setOriginalfile( final File originalFile )
     {
@@ -64,8 +60,6 @@ public class Patch
 
     /**
      * The file containing the diff output.
-     *
-     * @param file The new Patchfile value
      */
     public void setPatchfile( final File patchFile )
     {
@@ -74,8 +68,6 @@ public class Patch
 
     /**
      * Work silently unless an error occurs.
-     *
-     * @param q The new Quiet value
      */
     public void setQuiet( final boolean quiet )
     {
@@ -84,8 +76,6 @@ public class Patch
 
     /**
      * Assume patch was created with old and new files swapped.
-     *
-     * @param r The new Reverse value
      */
     public void setReverse( final boolean reverse )
     {
@@ -112,10 +102,8 @@ public class Patch
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
-        setupLogger( exe );
 
-        final Commandline cmd = buildCommand();
-        exe.setCommandline( cmd );
+        buildCommand( exe.getCommandline() );
 
         try
         {
@@ -148,11 +136,9 @@ public class Patch
         }
     }
 
-    private Commandline buildCommand()
+    private void buildCommand( final Commandline cmd )
     {
-        final Commandline cmd = new Commandline();
         cmd.setExecutable( "patch" );
-
         if( m_backups )
         {
             cmd.addArgument( "-b" );
@@ -185,6 +171,5 @@ public class Patch
         {
             cmd.addArgument( m_originalFile );
         }
-        return cmd;
     }
 }
