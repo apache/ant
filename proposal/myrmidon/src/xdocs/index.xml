@@ -53,8 +53,9 @@
             an API library that can be reused in other products. It contains the
             basic building blocks for assembling any sort of task-based tool. Ant 2
             is an example of such a tool, which could be assembled using the Myrmidon
-            task container, and a library of build related tasks.
-            </p>
+            task container, and a library of build related tasks. In the future expect
+            to see Testing frameworks, Job Schedulers (ie Cron managers), shells
+            and install tools based on the myrmidon base.</p>
 
         </section>
 
