@@ -190,7 +190,7 @@ public class PathConvert extends Task {
     /**
      * Set targetos to a platform to one of
      * "windows", "unix", "netware", or "os/2";
-     * defaults to the current platform.
+     * current platform settings are used by default.
      * @deprecated use the method taking a TargetOs argument instead.
      * @see #setTargetos(PathConvert.TargetOs)
      */
@@ -203,7 +203,7 @@ public class PathConvert extends Task {
     /**
      * Set targetos to a platform to one of
      * "windows", "unix", "netware", or "os/2";
-     * defaults to the current platform.
+     * current platform settings are used by default.
      * @param target the target os
      *
      * @since Ant 1.5
@@ -436,12 +436,6 @@ public class PathConvert extends Task {
         }
         if (property == null) {
             throw new BuildException("You must specify a property");
-        }
-        // Must either have a target OS or both a dirSep and pathSep
-
-        if (targetOS == null && pathSep == null && dirSep == null) {
-            throw new BuildException("You must specify at least one of "
-                 + "targetOS, dirSep, or pathSep");
         }
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.
