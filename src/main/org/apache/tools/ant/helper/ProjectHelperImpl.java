@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import org.xml.sax.Locator;
 import org.xml.sax.InputSource;
@@ -187,8 +188,12 @@ public class ProjectHelperImpl extends ProjectHelper {
             throw new BuildException(exc.getMessage(), t);
         } catch (FileNotFoundException exc) {
             throw new BuildException(exc);
+        } catch (UnsupportedEncodingException exc) {
+            throw new BuildException("Encoding of project file is invalid.", 
+                                     exc);
         } catch (IOException exc) {
-            throw new BuildException("Error reading project file", exc);
+            throw new BuildException("Error reading project file: "
+                                     +exc.getMessage(), exc);
         } finally {
             if (inputStream != null) {
                 try {
