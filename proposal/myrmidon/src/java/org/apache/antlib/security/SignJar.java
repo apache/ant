@@ -150,7 +150,8 @@ public class SignJar
             //Assume null != filesets
 
             // deal with the filesets
-            for( int i = 0; i < m_filesets.size(); i++ )
+            final int size = m_filesets.size();
+            for( int i = 0; i < size; i++ )
             {
                 final FileSet fileSet = (FileSet)m_filesets.get( i );
                 final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
@@ -288,14 +289,13 @@ public class SignJar
             return;
         }
 
-        final StringBuffer sb = new StringBuffer();
-
         final String message = "Signing Jar : " + jarSource.getAbsolutePath();
         getLogger().info( message );
 
         final Commandline cmd = buildCommand( jarTarget, jarSource );
         final Execute2 exe = new Execute2();
         setupLogger( exe );
+        exe.setCommandline( cmd.getCommandline() );
         try
         {
             exe.execute();
