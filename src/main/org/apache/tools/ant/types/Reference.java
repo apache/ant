@@ -30,18 +30,21 @@ public class Reference {
     private Project project;
 
     /**
+     * Create a reference.
      * @deprecated Please use {@link Reference#Reference(Project,String)} instead.
      */
     public Reference() {
     }
 
     /**
+     * Create a reference to a named ID.
+     * @param id the name of this reference
      * @deprecated Please use {@link Reference#Reference(Project,String)} instead.
      */
     public Reference(String id) {
         setRefId(id);
     }
-    
+
     /**
      * Create a reference to a named ID in a particular project.
      * @param p the project this reference is associated with
@@ -53,14 +56,23 @@ public class Reference {
         setProject(p);
     }
 
+    /**
+     * Set the reference id. Should not normally be necessary;
+     * use {@link Reference#Reference(Project, String)}.
+     * @param id the reference id to use
+     */
     public void setRefId(String id) {
         refid = id;
     }
 
+    /**
+     * Get the reference id of this reference.
+     * @return the reference id
+     */
     public String getRefId() {
         return refid;
     }
-    
+
     /**
      * Set the associated project. Should not normally be necessary;
      * use {@link Reference#Reference(Project,String)}.
@@ -70,7 +82,7 @@ public class Reference {
     public void setProject(Project p) {
         this.project = p;
     }
-    
+
     /**
      * Get the associated project, if any; may be null.
      * @return the associated project
@@ -93,14 +105,13 @@ public class Reference {
             throw new BuildException("No reference specified");
         }
 
-        
         Object o = project == null ? fallback.getReference(refid) : project.getReference(refid);
         if (o == null) {
             throw new BuildException("Reference " + refid + " not found.");
         }
         return o;
     }
-    
+
     /**
      * Resolve the reference, looking in the associated project.
      * @see Project#getReference
