@@ -24,7 +24,7 @@ Fixed bugs:
 
 * <linecontains> filterreader could swallow lines.
 
-* <sequential> will used to configure the tasks (set their attributes)
+* <sequential> used to configure the tasks (set their attributes)
 before the first task has been executed.  This means that properties
 that have been set by nested task seemed to be unset for the other
 tasks in the same <sequential> element.
