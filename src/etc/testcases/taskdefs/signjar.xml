@@ -28,7 +28,7 @@
   <target name="urlKeystoreHTTP">
     <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
     <signjar jar="signtest.jar" alias="testonly"
-             keystore="http://cvs.apache.org/viewcvs.cgi/*checkout*/jakarta-ant/src/etc/testcases/testkeystore?rev=HEAD"
+             keystore="http://cvs.apache.org/viewcvs.cgi/*checkout*/ant/src/etc/testcases/testkeystore?rev=HEAD"
              storepass="apacheant" maxmemory="128m"/>
   </target>
 
