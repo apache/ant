@@ -140,7 +140,17 @@ public class Javac extends MatchingTask {
      * @param srcDirName the name of the directory to add to the list of source directories.
      */
     private void addSrcDir(String srcDirName) {
-        srcDirs.addElement(project.resolveFile(srcDirName));
+        addSrcDir(project.resolveFile(srcDirName));
+    }
+
+    /**
+     * Add a single directory to the collection of directories that
+     * make up the source path.
+     *
+     * @param srcDir the directory to add to the list of source directories.
+     */
+    private void addSrcDir(File srcDir) {
+        srcDirs.addElement(srcDir);
     }
 
     /**
@@ -170,8 +180,8 @@ public class Javac extends MatchingTask {
      * Set the destination directory into which the Java source
      * files should be compiled.
      */
-    public void setDestdir(String destDirName) {
-        destDir = project.resolveFile(destDirName);
+    public void setDestdir(File destDir) {
+        this.destDir = destDir;
     }
 
     /**
@@ -200,22 +210,22 @@ public class Javac extends MatchingTask {
     /**
      * Set the deprecation flag.
      */
-    public void setDeprecation(String deprecationString) {
-        this.deprecation = Project.toBoolean(deprecationString);
+    public void setDeprecation(boolean deprecation) {
+        this.deprecation = deprecation;
     }
 
     /**
      * Set the debug flag.
      */
-    public void setDebug(String debugString) {
-        this.debug = Project.toBoolean(debugString);
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**
      * Set the optimize flag.
      */
-     public void setOptimize(String optimizeString) {
-        this.optimize = Project.toBoolean(optimizeString);
+     public void setOptimize(boolean optimize) {
+         this.optimize = optimize;
      }
 
     /**
@@ -229,8 +239,8 @@ public class Javac extends MatchingTask {
     /**
      * Set the filtering flag.
      */
-    public void setFiltering(String filter) {
-        filtering = Project.toBoolean(filter);
+    public void setFiltering(boolean filter) {
+        filtering = filter;
     }
 
     /**
@@ -402,6 +412,13 @@ public class Javac extends MatchingTask {
                                        + File.separator + "lib"
                                        + File.separator + "classes.zip");
             } else {
+                // JDK > 1.1 seems to set java.home to the JRE directory.
+                addExistingToClasspath(classpath,
+                                       System.getProperty("java.home")
+                                       + File.separator + "lib"
+                                       + File.separator + "rt.jar");
+                // Just keep the old version as well and let addExistingToPath
+                // sort it out.
                 addExistingToClasspath(classpath,
                                        System.getProperty("java.home")
                                        + File.separator +"jre"
