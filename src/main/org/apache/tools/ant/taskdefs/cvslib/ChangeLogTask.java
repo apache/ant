@@ -113,7 +113,7 @@ public class ChangeLogTask
     private Vector m_cvsUsers = new Vector();
 
     /** Input dir */
-    private File m_basedir;
+    private File m_dir;
 
     /** Output file */
     private File m_destfile;
@@ -138,9 +138,9 @@ public class ChangeLogTask
     /**
      * Set the base dir for cvs.
      */
-    public void setBasedir( final File basedir )
+    public void setDir( final File dir )
     {
-        m_basedir = basedir;
+        m_dir = dir;
     }
 
     /**
@@ -261,7 +261,7 @@ public class ChangeLogTask
         final RedirectingStreamHandler handler =
             new RedirectingStreamHandler( parser );
         final Execute exe = new Execute( handler );
-        exe.setWorkingDirectory( m_basedir );
+        exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command.getCommandline() );
         exe.setAntRun( getProject() );
         try
@@ -290,19 +290,18 @@ public class ChangeLogTask
     private void validate()
         throws BuildException
     {
-        if( null == m_basedir )
+        if( null == m_dir )
         {
-            final String message = "Basedir must be set.";
-            throw new BuildException( message );
+            m_dir = getProject().getBaseDir();
         }
         if( null == m_destfile )
         {
             final String message = "Destfile must be set.";
             throw new BuildException( message );
         }
-        if( !m_basedir.exists() )
+        if( !m_dir.exists() )
         {
-            final String message = "Cannot find base dir " + m_basedir.getAbsolutePath();
+            final String message = "Cannot find base dir " + m_dir.getAbsolutePath();
             throw new BuildException( message );
         }
         if( null != m_usersFile && !m_usersFile.exists() )
