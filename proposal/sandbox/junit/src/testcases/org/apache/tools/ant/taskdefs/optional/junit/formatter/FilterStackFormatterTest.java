@@ -65,15 +65,15 @@ import junit.framework.TestCase;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class FilterStackFormatterTest extends TestCase {
+public class FilterStackFormatterTest extends TestCase
+        implements Formatter {
 
     public FilterStackFormatterTest(String s) {
         super(s);
     }
 
-    protected String trace = "";
-    protected String expected = "";
-    protected NullFormatter wrapped;
+    protected String trace;
+    protected String expected;
 
     protected void setUp() {
         StringWriter sw = new StringWriter();
@@ -105,54 +105,52 @@ public class FilterStackFormatterTest extends TestCase {
         pw.println("\tat org.apache.test.C5.m1(C5.java:125)");
         pw.println("\tat org.apache.test.C6.m1(C6.java:125)");
         expected = sw.toString();
-
-        wrapped = new NullFormatter();
     }
 
     public void testFiltering() {
-        FilterStackFormatter wrapper = new FilterStackFormatter(wrapped);
+        FilterStackFormatter wrapper = new FilterStackFormatter(this);
         wrapper.onTestFailed(0, "", trace);
-        assertEquals(expected, wrapped.trace);
+        assertEquals(expected, filteredTrace);
     }
 
-    public class NullFormatter implements Formatter {
-        protected String trace;
 
-        public void setOutput(OutputStream out) {
-        }
+// --- formatter implementation
+    protected String filteredTrace;
 
-        public void onTestStarted(String testname) {
-        }
+    public void setOutput(OutputStream out) {
+    }
 
-        public void setSystemOutput(String out) {
-        }
+    public void onTestStarted(String testname) {
+    }
 
-        public void onTestEnded(String testname) {
-        }
+    public void setSystemOutput(String out) {
+    }
 
-        public void setSystemError(String err) {
-        }
+    public void onTestEnded(String testname) {
+    }
 
-        public void onTestFailed(int status, String testname, String trace) {
-            this.trace = trace;
-        }
+    public void setSystemError(String err) {
+    }
 
-        public void onTestStdOutLine(String testname, String line) {
-        }
+    public void onTestFailed(int status, String testname, String trace) {
+        filteredTrace = trace;
+    }
 
-        public void onTestStdErrLine(String testname, String line) {
-        }
+    public void onTestStdOutLine(String testname, String line) {
+    }
 
-        public void onTestRunSystemProperties(Properties props) {
-        }
+    public void onTestStdErrLine(String testname, String line) {
+    }
 
-        public void onTestRunStarted(int testcount) {
-        }
+    public void onTestRunSystemProperties(Properties props) {
+    }
 
-        public void onTestRunEnded(long elapsedtime) {
-        }
+    public void onTestRunStarted(int testcount) {
+    }
 
-        public void onTestRunStopped(long elapsedtime) {
-        }
+    public void onTestRunEnded(long elapsedtime) {
+    }
+
+    public void onTestRunStopped(long elapsedtime) {
     }
 }
