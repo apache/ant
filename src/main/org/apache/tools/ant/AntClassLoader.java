@@ -171,7 +171,7 @@ public class AntClassLoader  extends ClassLoader {
         try {
             theClass.newInstance();
         }
-        catch (Exception e) {
+        catch (Throwable t) {
             //ignore - our work is done
         }
     }
