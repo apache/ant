@@ -8,8 +8,6 @@
 package org.apache.myrmidon.components.type;
 
 import java.util.HashMap;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
@@ -22,9 +20,6 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public class DefaultTypeManager
     implements TypeManager
 {
-    private final static Resources REZ =
-        ResourceManager.getPackageResources( DefaultTypeManager.class );
-
     ///Parent type manager to inherit values from.
     private final DefaultTypeManager m_parent;
 
