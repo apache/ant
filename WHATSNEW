@@ -87,6 +87,8 @@ Other changes:
 
 * <touch> has filelist support.
 
+* <pathconvert> now accepts nested <mapper>s.  Bugzilla Report 26364.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 

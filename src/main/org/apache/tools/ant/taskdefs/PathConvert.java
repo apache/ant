@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -29,6 +31,8 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.util.FileNameMapper;
 
 /**
  * Converts path and classpath information to a specific target OS
@@ -80,6 +84,9 @@ public class PathConvert extends Task {
      * User override on directory sep char
      */
     private String dirSep = null;
+
+    /** Filename mapper */
+    private Mapper mapper = null;
 
     /**
      * constructor
@@ -350,6 +357,18 @@ public class PathConvert extends Task {
             // Get the list of path components in canonical form
             String[] elems = path.list();
 
+            if (mapper != null) {
+                FileNameMapper impl = mapper.getImplementation();
+                List ret = new ArrayList();
+                for (int i = 0; i < elems.length; ++i) {
+                    String[] mapped = impl.mapFileName(elems[i]);
+                    for (int m = 0; mapped != null && m < mapped.length; ++m) {
+                        ret.add(mapped[m]);
+                    }
+                }
+                elems = (String[]) ret.toArray(new String[] {});
+            }
+
             for (int i = 0; i < elems.length; i++) {
                 String elem = elems[i];
 
@@ -433,6 +452,18 @@ public class PathConvert extends Task {
         return elem;
     }
 
+    /**
+     * Add a mapper to convert the file names.
+     *
+     * @param mapper a <code>Mapper</code> value
+     */
+    public void addMapper(Mapper mapper) {
+        if (this.mapper != null) {
+            throw new BuildException(
+                "Cannot define more than one mapper");
+        }
+        this.mapper = mapper;
+    }
 
     /**
      * Validate that all our parameters have been properly initialized.
