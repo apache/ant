@@ -397,6 +397,45 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
+     * Set an attribute on an object.
+     *
+     * This method is useful for manipulating components without assuming
+     * anything about the component's type. The context classloader should be
+     * set to the component's loaded when calling this method.
+     *
+     * @param component the component on which to set the attribute
+     * @param attributeName the attribute name
+     * @param attributeValue the required value
+     *
+     * @exception AntException if the attribute cannot be set.
+     */
+    public void setAttribute(Object component, String attributeName,
+                             String attributeValue) throws AntException {
+
+        Setter setter = getSetter(component.getClass());
+        setter.setAttribute(component, attributeName,
+            frame.replacePropertyRefs(attributeValue));
+    }
+
+    /**
+     * Add a nested element to a component.
+     *
+     * This method is useful for manipulating components without assuming
+     * anything about the component's type. The context classloader should be
+     * set to the component's loaded when calling this method.
+     *
+     * @param component the component to which the nested element will be added.
+     * @param nestedElementName the name of the nested element.
+     * @param nestedElement the actual object to be added.
+     *
+     * @exception AntException if the nested element cannot be added.
+     */
+    public void addNestedElement(Object component, String nestedElementName,
+                                 Object nestedElement) throws AntException {
+        Setter setter = getSetter(component.getClass());
+        setter.addElement(component, nestedElementName, nestedElement);
+    }
+    /**
      * Get an imported definition from the component manager
      *
      * @param name the name under which the component has been imported
@@ -416,7 +455,7 @@ public class ComponentManager implements ComponentService {
      * @exception AntException if there is a problem creating or
      *      configuring the component
      */
-    protected Object createComponent(BuildElement model)
+    public Object createComponent(BuildElement model)
          throws AntException {
         String componentName = model.getType();
         return createComponent(componentName, model);
@@ -473,7 +512,6 @@ public class ComponentManager implements ComponentService {
         try {
             boolean isTask
                  = libDefinition.getDefinitionType() == AntLibrary.TASKDEF;
-
 
             Object component = null;
             if (model != null) {
@@ -678,15 +716,15 @@ public class ComponentManager implements ComponentService {
      *      the attribute is to be added.
      * @exception AntException if the nested element cannot be created
      */
-    private void addNestedElement(AntLibFactory factory, Setter setter,
-                                  Object element, BuildElement model)
+    private void addNested(AntLibFactory factory, Setter setter,
+                           Object element, BuildElement model)
          throws AntException {
         String nestedElementName = model.getType();
         Class nestedType = setter.getType(nestedElementName);
 
         // is there a polymorph indicator - look in Ant aspects
         String typeName
-            = model.getNamespaceAttributeValue(Namespace.ANT_META_URI, "type");
+            = model.getNamespaceAttributeValue(Namespace.XSI_URI, "type");
 
         Object typeInstance = null;
         if (typeName != null) {
@@ -706,9 +744,8 @@ public class ComponentManager implements ComponentService {
         } else {
             throw new ExecutionException("The type of the <"
                  + nestedElementName + "> nested element is not known. "
-                 + "Please specify by the type using the \"ant:type\" "
-                 + "attribute or provide a reference to an instance with "
-                 + "the \"ant:id\" attribute");
+                 + "Please specify by the type using the \"xsi:type\" "
+                 + "attribute or provide a reference to another instance");
         }
 
         // is the typeInstance compatible with the type expected
@@ -732,8 +769,8 @@ public class ComponentManager implements ComponentService {
      *      the nested element
      * @exception AntException if the nested element cannot be created.
      */
-    private void createNestedElement(AntLibFactory factory, Setter setter,
-                                     Object element, BuildElement model)
+    private void createNested(AntLibFactory factory, Setter setter,
+                              Object element, BuildElement model)
          throws AntException {
         String nestedElementName = model.getType();
         try {
@@ -819,11 +856,9 @@ public class ComponentManager implements ComponentService {
                 container.addNestedTask(nestedTask);
             } else {
                 if (setter.supportsNestedAdder(nestedElementName)) {
-                    addNestedElement(factory, setter, element,
-                        nestedElementModel);
+                    addNested(factory, setter, element, nestedElementModel);
                 } else if (setter.supportsNestedCreator(nestedElementName)) {
-                    createNestedElement(factory, setter, element,
-                        nestedElementModel);
+                    createNested(factory, setter, element, nestedElementModel);
                 } else {
                     throw new ExecutionException("<" + model.getType() + ">"
                          + " does not support the \"" + nestedElementName

@@ -216,6 +216,22 @@ public abstract class ElementHandler extends DefaultHandler {
 
 
     /**
+     * Process an element. This resolves any namespaces against
+     * prefixes declared in the ParseContext.
+     *
+     * @param uri The Namespace URI.
+     * @param localName The local name (without prefix).
+     * @param qualifiedName The qualified name (with prefix)
+     * @param attributes The attributes attached to the element.
+     * @throws SAXParseException if there is a problem parsng the subelement
+     */
+    final public void startElement(String uri, String localName,
+                                   String qualifiedName, Attributes attributes)
+         throws SAXParseException {
+        addNestedElement(uri, localName, qualifiedName, attributes);
+    }
+
+    /**
      * By default an element handler does not support nested elements. This
      * method will always throw an exception. Subclasses should override
      * this method to support their own nested elements
@@ -226,10 +242,10 @@ public abstract class ElementHandler extends DefaultHandler {
      * @param attributes The attributes attached to the element.
      * @throws SAXParseException if there is a problem parsng the subelement
      */
-    public void startElement(String uri, String localName, String qualifiedName,
-                             Attributes attributes)
+    protected void addNestedElement(String uri, String localName,
+                                    String qualifiedName,
+                                    Attributes attributes)
          throws SAXParseException {
-        // everything is a task
         throw new SAXParseException("<" + elementName + "> does not support a <"
              + qualifiedName + "> nested element", getLocator());
     }
@@ -320,7 +336,6 @@ public abstract class ElementHandler extends DefaultHandler {
     protected abstract void processElement(String elementName)
          throws SAXParseException;
 
-
     /**
      * Process all of the attributes of the element into maps, one for
      * aspects and one for other attributes
@@ -335,13 +350,14 @@ public abstract class ElementHandler extends DefaultHandler {
         elementAttributes = new AttributeCollection();
         int length = attributes.getLength();
         for (int i = 0; i < length; ++i) {
+            String localName = attributes.getLocalName(i);
+            String qName = attributes.getQName(i);
             String uri = attributes.getURI(i);
             if (uri != null && uri.trim().length() == 0) {
                 uri = null;
             }
-            String localName = attributes.getLocalName(i);
-            String qName = attributes.getQName(i);
-            
+
+
             if (uri == null) {
                 if (qName.indexOf(":") != -1) {
                     // try to resolve through known namespaces

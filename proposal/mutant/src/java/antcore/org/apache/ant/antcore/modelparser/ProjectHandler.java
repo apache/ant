@@ -154,8 +154,8 @@ public class ProjectHandler extends ModelElementHandler {
      * @param attributes The attributes attached to the element.
      * @throws SAXParseException if there is a parsing problem.
      */
-    public void startElement(String uri, String localName, String qualifiedName,
-                             Attributes attributes)
+    protected void addNestedElement(String uri, String localName,
+                                    String qualifiedName, Attributes attributes)
          throws SAXParseException {
 
         if (qualifiedName.equals(INCLUDE_ELEMENT)) {

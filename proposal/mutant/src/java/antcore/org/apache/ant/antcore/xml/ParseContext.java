@@ -95,6 +95,7 @@ public class ParseContext {
             ClassLoader thisLoader = this.getClass().getClassLoader();
             thread.setContextClassLoader(thisLoader);
             parserFactory = SAXParserFactory.newInstance();
+            parserFactory.setNamespaceAware(true);
         } finally {
             thread.setContextClassLoader(currentContextLoader);
         }
@@ -131,7 +132,7 @@ public class ParseContext {
 
             // create a parser for this source
             SAXParser saxParser = null;
-            
+
             Thread thread = Thread.currentThread();
             ClassLoader currentContextLoader = thread.getContextClassLoader();
             try {
@@ -141,7 +142,7 @@ public class ParseContext {
             } finally {
                 thread.setContextClassLoader(currentContextLoader);
             }
-            
+
             XMLReader xmlReader = saxParser.getXMLReader();
 
             // create a root handler for this

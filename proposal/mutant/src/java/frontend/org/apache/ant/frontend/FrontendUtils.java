@@ -62,6 +62,7 @@ import org.apache.ant.antcore.config.AntConfigHandler;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.init.InitUtils;
+import org.apache.ant.common.constants.Namespace;
 
 /**
  * Frontend Utilities methods and constants.
@@ -113,6 +114,11 @@ public class FrontendUtils {
             URL configFileURL = InitUtils.getFileURL(configFile);
 
             ParseContext context = new ParseContext();
+            context.declareNamespace(Namespace.ANT_META_PREFIX,
+                Namespace.ANT_META_URI);
+            context.declareNamespace(Namespace.XSI_PREFIX,
+                Namespace.XSI_URI);
+
             AntConfigHandler configHandler = new AntConfigHandler();
 
             context.parse(configFileURL, "antconfig", configHandler);

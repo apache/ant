@@ -58,6 +58,7 @@ import org.apache.ant.common.util.Location;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
+import org.apache.ant.common.constants.Namespace;
 
 /**
  * Parses an Ant project model from an XML source using a SAX Parser.
@@ -78,7 +79,11 @@ public class XMLProjectParser {
          throws XMLParseException {
         try {
             ParseContext context = new ParseContext();
-            context.declareNamespace("ant", "http://jakarta.apache.org/ant");
+            context.declareNamespace(Namespace.ANT_META_PREFIX,
+                Namespace.ANT_META_URI);
+            context.declareNamespace(Namespace.XSI_PREFIX,
+                Namespace.XSI_URI);
+
             ProjectHandler projectHandler = new ProjectHandler();
 
             context.parse(buildSource, "project", projectHandler);

@@ -145,8 +145,6 @@ public class CoreExecService implements ExecService {
         frame.executeTask(task, aspectValues);
     }
 
-
-
     /**
      * Get the base directory for this execution of this frame
      *

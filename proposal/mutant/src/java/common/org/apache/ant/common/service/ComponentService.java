@@ -54,6 +54,7 @@
 package org.apache.ant.common.service;
 import java.net.URL;
 import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.AttributeCollection;
 
@@ -186,6 +187,49 @@ public interface ComponentService {
      */
     Object createComponent(String libraryId, String localName)
         throws AntException;
+
+    /**
+     * Create a component from a build model. The returned object will be
+     * configured according to the model.
+     *
+     * @param model the build element to use to create and configure the
+     *        component
+     * @return the created component.
+     * @exception AntException if the component cannot be created
+     */
+    Object createComponent(BuildElement model) throws AntException;
+
+    /**
+     * Set an attribute on an object.
+     *
+     * This method is useful for manipulating components without assuming
+     * anything about the component's type. The context classloader should be
+     * set to the component's loaded when calling this method.
+     *
+     * @param component the component on which to set the attribute
+     * @param attributeName the attribute name
+     * @param attributeValue the required value
+     *
+     * @exception AntException if the attribute cannot be set.
+     */
+    void setAttribute(Object component, String attributeName,
+                      String attributeValue) throws AntException;
+
+    /**
+     * Add a nested element to a component.
+     *
+     * This method is useful for manipulating components without assuming
+     * anything about the component's type. The context classloader should be
+     * set to the component's loaded when calling this method.
+     *
+     * @param component the component to which the nested element will be added.
+     * @param nestedElementName the name of the nested element.
+     * @param nestedElement the actual object to be added.
+     *
+     * @exception AntException if the nested element cannot be added.
+     */
+    void addNestedElement(Object component, String nestedElementName,
+                          Object nestedElement) throws AntException;
 
     /**
      * configure an object with attribtes from the given map
