@@ -65,6 +65,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
  
+/**
+ * creates a splash screen. The splash screen is displayed
+ * for the duration of the build and includes a handy progress bar as
+ * well. Use in conjunction with the sound task to provide interest
+ * whilst waiting for your builds to complete...
+ * @since Ant1.5 
+ * @author Les Hughes (leslie.hughes@rubus.com)
+ */
 public class SplashTask extends Task {
 
     private String imgurl = null;
@@ -77,24 +85,55 @@ public class SplashTask extends Task {
 
     private static SplashScreen splash = null;
 
+    /**
+     * A URL pointing to an image to display; optional, default antlogo.gif
+     * from the classpath.
+     */
     public void setImageURL(String imgurl) {
         this.imgurl = imgurl;
     }
+    
+    /**
+     * flag to enable proxy settings; optional, deprecated : consider
+     * using &lt;setproxy&gt; instead 
+     * @deprecated use org.apache.tools.ant.taskdefs.optional.SetProxy
+     */
     public void setUseproxy(boolean useProxy) {
         this.useProxy = useProxy;
     }
+
+    /**
+     * name of proxy; optional.
+     */
     public void setProxy(String proxy){
         this.proxy = proxy;
     }
+    
+    /**
+     * Proxy port; optional, default 80. 
+     */
     public void setPort(String port){
         this.port = port;
     }
+
+    /**
+     * Proxy user; optional, default =none. 
+     */
     public void setUser(String user){
         this.user = user;
     }
-    public void setPassword(String password){
+    
+    /**
+     * Proxy password; required if <tt>user</tt> is set.
+     */
+     public void setPassword(String password){
         this.password = password;
     }
+    
+    /**
+     * how long to show the splash screen in milliseconds,
+     * optional; default 5000 ms.
+     */
     public void setShowduration(int duration) {
         this.showDuration = duration;
     }
