@@ -11,10 +11,10 @@
 <h3>Description</h3>
 <p>Process a set of documents via XSLT.</p>
 <p>This is useful for building views of XML based documentation,
-or in generating code.</p>
+or for generating code.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
-<p>It is possible to refine the set of files that are being copied. This can be
+<p>It is possible to refine the set of files that are being processed. This can be
 done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
 attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
 have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
@@ -52,7 +52,7 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   <tr>
     <td valign="top">extension</td>
     <td valign="top">desired file extension to be used for the targets. If not 
-      specified, the default is &quot;html&quot;.</td>
+      specified, the default is &quot;.html&quot;.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -171,15 +171,18 @@ nested <code>&lt;classpath&gt;</code>, as well - that is, a
 <blockquote>
   <pre>
 &lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
-       extension=&quot;html&quot; style=&quot;style/apache.xsl&quot;/&gt;</pre>
+       extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;/&gt;</pre>
   <h4>Using XSL parameters</h4>
   <pre>&lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
-		extension=&quot;html&quot; style=&quot;style/apache.xsl&quot;&gt;
-	&lt;param name=&quot;date&quot; expression=&quot;'07-01-2000'&quot;/&gt;
-&lt;/style&gt;</pre>
-  <p>This will replace an xsl:param definition&lt;xsl:param name=&quot;date&quot;&gt;&lt;/xsl:param&gt; 
-    with the text value 07-01-2000 </p>
-  </blockquote>
+		extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
+	&lt;param name=&quot;date&quot; expression=&quot;07-01-2000&quot;/&gt;
+  &lt;/style&gt;</pre>
+
+  <p>Then if you declare a global parameter &quot;date&quot; with the top-level
+  element &lt;xsl:param name=&quot;date&quot;/&gt;, the variable
+  <code>$date</code> will subsequently have the value 07-01-2000.
+  </p>
+ </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
