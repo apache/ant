@@ -83,11 +83,16 @@ public abstract class Pack extends Task {
     }
 
     private void validate() {
-        if (zipFile == null || zipFile.getName().equals("")) {
+        if (zipFile == null) {
             throw new BuildException("zipfile attribute is required", location);
         }
 
-        if (source == null || source.getName().equals("")) {
+        if (zipFile.isDirectory()) {
+            throw new BuildException("zipfile attribute must not " +
+                                     "represent a directory!", location);
+        }
+
+        if (source == null) {
             throw new BuildException("src attribute is required", location);
         }
 

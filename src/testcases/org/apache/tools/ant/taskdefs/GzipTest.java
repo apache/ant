@@ -82,11 +82,9 @@ public class GzipTest extends BuildFileTest {
         expectBuildException("test3", "required argument missing");
     }
 
-    /** Disable - how could that ever work?
     public void test4() { 
-        expectBuildException("test4", "attribute zipfile invalid");
+        expectBuildException("test4", "zipfile must not point to a directory");
     }
-    */
 
     public void testGZip(){
         executeTarget("realTest");
