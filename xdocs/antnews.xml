@@ -8,11 +8,10 @@
   </properties>
 
 <body>
-  <section name="Logo Submission Deadline is Approaching!">
-    <h3>Hurry - submit your logo entries</h3>
+  <section name="Vote for a Logo">
+    <h3>Polls close 1 February 2002</h3>
     <p>
-      E-mail your logo entries to <a href="mailto:ant-dev@jakarta.apache.org">
-      ant-dev@jakarta.apache.org</a>. The deadline for submissions is 25 January 2002.
+      <a href="logovote.html">Vote Now!!!</a>
     </p>
   </section>
   
