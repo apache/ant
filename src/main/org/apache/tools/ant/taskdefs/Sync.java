@@ -56,6 +56,9 @@ public class Sync extends Task {
     private MyCopy myCopy;
 
     // Override Task#init
+    /**
+     * @see Task#init()
+     */
     public void init()
         throws BuildException {
         // Instantiate it
@@ -76,6 +79,9 @@ public class Sync extends Task {
     }
 
     // Override Task#execute
+    /**
+     * @see Task#execute()
+     */
     public void execute()
         throws BuildException {
         // The destination of the files to copy
@@ -224,6 +230,7 @@ public class Sync extends Task {
 
     /**
      * Sets the destination directory.
+     * @param destDir the destination directory
      */
     public void setTodir(File destDir) {
         myCopy.setTodir(destDir);
@@ -231,6 +238,7 @@ public class Sync extends Task {
 
     /**
      * Used to force listing of all names of copied files.
+     * @param verbose if true force listing of all names of copied files.
      */
     public void setVerbose(boolean verbose) {
         myCopy.setVerbose(verbose);
@@ -238,6 +246,7 @@ public class Sync extends Task {
 
     /**
      * Overwrite any existing destination file(s).
+     * @param overwrite if true overwrite any existing destination file(s).
      */
     public void setOverwrite(boolean overwrite) {
         myCopy.setOverwrite(overwrite);
@@ -245,6 +254,7 @@ public class Sync extends Task {
 
     /**
      * Used to copy empty directories.
+     * @param includeEmpty If true copy empty directories.
      */
     public void setIncludeEmptyDirs(boolean includeEmpty) {
         myCopy.setIncludeEmptyDirs(includeEmpty);
@@ -260,6 +270,7 @@ public class Sync extends Task {
 
     /**
      * Adds a set of files to copy.
+     * @param set a fileset
      */
     public void addFileset(FileSet set) {
         myCopy.addFileset(set);
@@ -270,7 +281,7 @@ public class Sync extends Task {
      * target is out of date.
      *
      * <p>Default is 0 milliseconds, or 2 seconds on DOS systems.</p>
-     *
+     * @param granularity a <code>long</code> value
      * @since Ant 1.6.2
      */
     public void setGranularity(long granularity) {
@@ -286,9 +297,13 @@ public class Sync extends Task {
         // fact that they are newer or not than the destination.
         private Set nonOrphans = new HashSet();
 
+        /** Constructor for MyCopy. */
         public MyCopy() {
         }
 
+        /**
+         * @see Copy#scan(File, File, String[], String[])
+         */
         protected void scan(File fromDir, File toDir, String[] files,
                             String[] dirs) {
             assertTrue("No mapper", mapperElement == null);
@@ -303,10 +318,18 @@ public class Sync extends Task {
             }
         }
 
+        /**
+         * Get the destination directory.
+         * @return the destination directory
+         */
         public File getToDir() {
             return destDir;
         }
 
+        /**
+         * Get the includeEmptyDirs attribute.
+         * @return true if emptyDirs are to be included
+         */
         public boolean getIncludeEmptyDirs() {
             return includeEmpty;
         }
