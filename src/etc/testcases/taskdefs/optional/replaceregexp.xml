@@ -10,7 +10,7 @@
 
   <target name="testReplace" depends="setup">
     <replaceregexp file="test.properties" byline="true">
-      <regularexpression pattern="Old(.*)=(.*)" />
+      <regexp pattern="Old(.*)=(.*)" />
       <substitution expression="NewProp=\1\2" />
     </replaceregexp>
   </target>

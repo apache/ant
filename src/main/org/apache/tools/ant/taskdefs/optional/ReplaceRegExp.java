@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,7 +107,7 @@ import java.util.Vector;
  *                    replace="pattern" 
  *                    flags="options"?
  *                    byline="true|false"? &gt;
- *       regularexpression?
+ *       regexp?
  *       substitution?
  *       fileset*
  *     &lt;/replaceregexp&gt;
@@ -217,7 +217,7 @@ public class ReplaceRegExp extends Task
         filesets.addElement(set);
     }
 
-    public RegularExpression createRegularExpression()
+    public RegularExpression createRegexp()
     {
         if (regex != null) {
             throw new BuildException("Only one regular expression is allowed.");

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,7 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * </pre>
  *
  * <pre>
- *   &lt;regularexpression [ [id="id"] pattern="expression" | refid="id" ] 
+ *   &lt;regexp [ [id="id"] pattern="expression" | refid="id" ] 
  *   /&gt;
  * </pre>
  *
@@ -96,7 +96,7 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  */
 public class RegularExpression extends DataType
 {
-    public final static String DATA_TYPE_NAME = "regularexpression";
+    public final static String DATA_TYPE_NAME = "regexp";
 
     // The regular expression factory
     private final static RegexpFactory factory = new RegexpFactory();
@@ -151,7 +151,7 @@ public class RegularExpression extends DataType
         Object o = ref.getReferencedObject(p);
         if (!(o instanceof RegularExpression))
         {
-            String msg = ref.getRefId() + " doesn\'t denote a regularexpression";
+            String msg = ref.getRefId() + " doesn\'t denote a "+DATA_TYPE_NAME;
             throw new BuildException(msg);
         } 
         else 

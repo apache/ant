@@ -54,7 +54,7 @@ It is <b>strongly</b> recommended to use Jakarta Oro.
   <tr>
     <td valign="top">match</td>
     <td valign="top">The regular expression pattern to match in the file(s)</td>
-    <td align="center">Yes, if no nested &lt;regularexpression&gt; is used</td>
+    <td align="center">Yes, if no nested &lt;regexp&gt; is used</td>
   </tr>
   <tr>
     <td valign="top">replace</td>
@@ -94,12 +94,12 @@ value, in the file <code>${src}/build.properties</code></p>
 <h3>Parameters specified as nested elements</h3>
 <p>This task supports a nested <a href="../CoreTypes/fileset.html">FileSet</a>
    element.</p>
-<p>This task supports a nested <i>RegularExpression</i> element to specify
+<p>This task supports a nested <i>Regexp</i> element to specify
    the regular expression.  You can use this element to refer to a previously
    defined regular expression datatype instance.</p>
 <blockquote>
-     &lt;regularexpression id="id" pattern="expression" /&gt;<br />
-     &lt;regularexpression refid="id" /&gt;
+     &lt;regexp id="id" pattern="expression" /&gt;<br />
+     &lt;regexp refid="id" /&gt;
 </blockquote>
 <p>This task supports a nested <i>Substitution</i> element to specify
    the substitution pattern.  You can use this element to refer to a previously
@@ -112,7 +112,7 @@ value, in the file <code>${src}/build.properties</code></p>
 <blockquote>
   <pre>
 &lt;replaceregexp byline=&quot;true&quot;&gt;
-  &lt;regularexpression expression=&quot;OldProperty=(.*)&quot; /&gt;
+  &lt;regexp expression=&quot;OldProperty=(.*)&quot; /&gt;
   &lt;substitution expression=&quot;NewProperty=\1&quot; /&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
    &lt;includes=&quot;*.properties&quot; /&gt;
