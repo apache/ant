@@ -10,7 +10,7 @@ case "`uname`" in
   CYGWIN*) cygwin=true ;;
   Darwin*) darwin=true
            if [ -z "$JAVA_HOME" ] ; then
-             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home   
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
            fi
            ;;
 esac
@@ -21,14 +21,14 @@ export ANT_HOME
 
 if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
   /bin/sh ./bootstrap.sh
-fi    
+fi
 
 if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
   echo Bootstrap FAILED
   exit
 fi
 
-LOCALCLASSPATH=lib/xercesImpl.jar:lib/xml-apis.jar
+LOCALCLASSPATH=
 # add in the dependency .jar files
 DIRLIBS=lib/optional/*.jar
 for i in ${DIRLIBS}
@@ -40,14 +40,14 @@ done
 
 # make sure the classpath is in unix format
 if $cygwin ; then
-    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`    
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
 CLASSPATH=$LOCALCLASSPATH:$CLASSPATH
 
 # switch back to Windows format
 if $cygwin ; then
-    CLASSPATH=`cygpath --path --windows "$CLASSPATH"`    
+    CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
 export CLASSPATH
@@ -62,5 +62,5 @@ else
   ANT_INSTALL="-emacs"
 fi
 
-bootstrap/bin/ant -emacs "$ANT_INSTALL" $*
+bootstrap/bin/ant "$ANT_INSTALL" $*
 

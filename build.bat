@@ -13,7 +13,7 @@ echo Bootstrap FAILED
 goto cleanup
 
 :runAnt
-set LOCALCLASSPATH=lib/xercesImpl.jar;lib/xml-apis.jar
+set LOCALCLASSPATH=
 for %%i in (lib\optional\*.jar) do call bootstrap\bin\lcp.bat %%i
 set CLASSPATH=lib\optional\xalanj1compat.jar;%LOCALCLASSPATH%;%CLASSPATH%
 set LOCALCLASSPATH=

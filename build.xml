@@ -1009,6 +1009,13 @@
       </fileset>
     </copy>
 
+    <copy todir="${dist.lib}">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+        <include name="*.zip"/>
+      </fileset>
+    </copy>
+
     <copy todir="${dist.bin}">
       <fileset dir="${script.dir}/"/>
     </copy>
@@ -1057,13 +1064,6 @@
   <target name="internal_dist" depends="dist-lite,dist_javadocs">
     <mkdir dir="${dist.docs}"/>
     <mkdir dir="${dist.etc}"/>
-
-    <copy todir="${dist.lib}">
-      <fileset dir="${lib.dir}">
-        <include name="*.jar"/>
-        <include name="*.zip"/>
-      </fileset>
-    </copy>
 
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
 
