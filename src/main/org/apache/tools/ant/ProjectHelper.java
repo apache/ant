@@ -61,6 +61,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import org.xml.sax.SAXException;
 import org.w3c.dom.*;
+import org.apache.tools.ant.taskdefs.*;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
@@ -129,15 +130,33 @@ public class ProjectHelper {
 
         //      configureTaskDefs(project, root);
 
-        // set up the targets into the project
-        configureTargets(project, root);
+        // set up the taskdefs, properties, and targets into the project
+        configureProject(project, root);
     }
 
-    private static void configureTargets(Project project, Element root)
+    private static void configureProject(Project project, Element root)
         throws BuildException
     {
+        // configure taskdefs
+        NodeList list = root.getElementsByTagName("taskdef");
+        for (int i = 0; i < list.getLength(); i++) {
+            Taskdef taskdef = new Taskdef();
+            configure(project, taskdef, (Element)list.item(i));
+            taskdef.setProject(project);
+            taskdef.init();
+        }
+
+        // configure properties
+        list = root.getElementsByTagName("property");
+        for (int i = 0; i < list.getLength(); i++) {
+            Property property = new Property();
+            configure(project, property, (Element)list.item(i));
+            property.setProject(project);
+            property.init();
+        }
+
         // configure targets
-        NodeList list = root.getElementsByTagName("target");
+        list = root.getElementsByTagName("target");
         for (int i = 0; i < list.getLength(); i++) {
             Element element = (Element)list.item(i);
             String targetName = element.getAttribute("name");
@@ -199,8 +218,7 @@ public class ProjectHelper {
                 // get the attributes of this element and reflect them
                 // into the task
 
-                NamedNodeMap nodeMap = element.getAttributes();
-                configure(project, task, nodeMap);
+                configure(project, task, element);
                 task.init();
                 task.setTarget(target);
                 target.addTask(task);
@@ -253,8 +271,7 @@ public class ProjectHelper {
                         targetClass.getMethod(methodName, new Class[]{});
                     Object child = addProp.invoke(target, new Object[] {});
 
-                    NamedNodeMap nodeMap = element.getAttributes();
-                    configure(project, child, nodeMap);
+                    configure(project, child, element);
 
                     processNestedProperties(project, child, element);
                 } catch (NoSuchMethodException nsme) {
@@ -272,9 +289,11 @@ public class ProjectHelper {
 
     private static void configure(Project project,
                                   Object target,
-                                  NamedNodeMap nodeMap)
+                                  Element element)
         throws BuildException
     {
+        NamedNodeMap nodeMap = element.getAttributes();
+
         if( target instanceof TaskAdapter )
             target=((TaskAdapter)target).getProxy();
 

@@ -6,47 +6,50 @@
 
 <project name="Ant" default="main" basedir=".">
 
-  <target name="init">
-    <property name="Name" value="Ant"/>
-    <property name="name" value="ant"/>
-    <property name="version" value="1.0-rc1"/>
+  <property name="Name" value="Ant"/>
+  <property name="name" value="ant"/>
+  <property name="version" value="1.0-rc1"/>
 
-    <property name="ant.home" value="."/>
-    <property name="bin.dir" value="bin"/>
-    <property name="src.bin.dir" value="src/bin"/>
-    <property name="src.dir" value="${basedir}/src/main"/>
-    <property name="lib.dir" value="lib"/>
-    <property name="docs.dir" value="docs"/>
-    <property name="build.dir" value="build"/>
-    <property name="build.classes" value="build/classes"/>
-    <property name="build.javadocs" value="build/javadocs"/>
-    <property name="ant.dist.dir" value="dist"/>
+  <property name="ant.home" value="."/>
+  <property name="bin.dir" value="bin"/>
+  <property name="src.bin.dir" value="src/bin"/>
+  <property name="src.dir" value="${basedir}/src/main"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="docs.dir" value="docs"/>
+  <property name="build.dir" value="build"/>
+  <property name="build.classes" value="build/classes"/>
+  <property name="build.javadocs" value="build/javadocs"/>
+  <property name="ant.dist.dir" value="dist"/>
 
-    <property name="classpath" value="lib/xml.jar"/>
-    <property name="packages" value="org.apache.tools.*"/>
-    <property name="manifest" value="src/etc/manifest"/>
+  <property name="classpath" value="lib/xml.jar"/>
+  <property name="packages" value="org.apache.tools.*"/>
+  <property name="manifest" value="src/etc/manifest"/>
 
-    <property name="build.compiler" value="classic"/>
+  <property name="build.compiler" value="classic"/>
 
+  <!-- Give user a chance to override without editing this file 
+       (and without typing -D each time it compiles it -->
+  <property file="${user.home}/.ant.properties" />
+
+  <!-- =================================================================== -->
+  <!-- Check to see what optional dependencies are available               -->
+  <!-- =================================================================== -->
+  <target name="check_for_optional_packages">
     <available property="bsf.present" classname="com.ibm.bsf.BSFManager" />
     <available property="netrexx.present" classname="netrexx.lang.Rexx" />
-
-    <!-- Give user a chance to override without editing this file 
-         (and without typing -D each time it compiles it -->
-    <property file="${user.home}/.ant.properties" />
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare" depends="init">
+  <target name="prepare">
     <mkdir dir="${build.dir}"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare">
+  <target name="compile" depends="prepare,check_for_optional_packages">
     <mkdir dir="${build.classes}"/>
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
@@ -143,7 +146,7 @@
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init">
+  <target name="clean">
     <deltree dir="${build.dir}"/>
     <deltree dir="${ant.dist.dir}"/>
   </target>
@@ -161,7 +164,7 @@
 
   <!-- in progress ! (may not work) -->
 
-  <target name="get.snapshot" depends="init">
+  <target name="get.snapshot">
     <get src="http://jakarta.apache.org/build/tmp/ant/ant.src.zip" dest="ant-src.zip" />
     <expand src="ant-src.zip" dest="." />
   </target>
