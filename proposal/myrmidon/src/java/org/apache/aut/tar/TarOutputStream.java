@@ -17,43 +17,48 @@ import java.io.OutputStream;
  * stream using write().
  *
  * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class TarOutputStream extends FilterOutputStream
+public class TarOutputStream
+    extends FilterOutputStream
 {
     public final static int LONGFILE_ERROR = 0;
     public final static int LONGFILE_TRUNCATE = 1;
     public final static int LONGFILE_GNU = 2;
-    protected int longFileMode = LONGFILE_ERROR;
-    protected byte[] assemBuf;
-    protected int assemLen;
-    protected TarBuffer buffer;
-    protected int currBytes;
-    protected int currSize;
 
-    protected boolean debug;
-    protected byte[] oneBuf;
-    protected byte[] recordBuf;
+    private int m_longFileMode = LONGFILE_ERROR;
+    private byte[] m_assemBuf;
+    private int m_assemLen;
+    private TarBuffer m_buffer;
+    private int m_currBytes;
+    private int m_currSize;
 
-    public TarOutputStream( OutputStream os )
+    private boolean m_debug;
+    private byte[] m_oneBuf;
+    private byte[] m_recordBuf;
+
+    public TarOutputStream( final OutputStream output )
     {
-        this( os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE );
+        this( output, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE );
     }
 
-    public TarOutputStream( OutputStream os, int blockSize )
+    public TarOutputStream( final OutputStream output, final int blockSize )
     {
-        this( os, blockSize, TarBuffer.DEFAULT_RCDSIZE );
+        this( output, blockSize, TarBuffer.DEFAULT_RCDSIZE );
     }
 
-    public TarOutputStream( OutputStream os, int blockSize, int recordSize )
+    public TarOutputStream( final OutputStream output,
+                            final int blockSize,
+                            final int recordSize )
     {
-        super( os );
+        super( output );
 
-        this.buffer = new TarBuffer( os, blockSize, recordSize );
-        this.debug = false;
-        this.assemLen = 0;
-        this.assemBuf = new byte[ recordSize ];
-        this.recordBuf = new byte[ recordSize ];
-        this.oneBuf = new byte[ 1 ];
+        m_buffer = new TarBuffer( output, blockSize, recordSize );
+        m_debug = false;
+        m_assemLen = 0;
+        m_assemBuf = new byte[ recordSize ];
+        m_recordBuf = new byte[ recordSize ];
+        m_oneBuf = new byte[ 1 ];
     }
 
     /**
@@ -63,7 +68,7 @@ public class TarOutputStream extends FilterOutputStream
      */
     public void setBufferDebug( boolean debug )
     {
-        this.buffer.setDebug( debug );
+        m_buffer.setDebug( debug );
     }
 
     /**
@@ -71,14 +76,14 @@ public class TarOutputStream extends FilterOutputStream
      *
      * @param debugF True to turn on debugging.
      */
-    public void setDebug( boolean debugF )
+    public void setDebug( boolean debug )
     {
-        this.debug = debugF;
+        m_debug = debug;
     }
 
-    public void setLongFileMode( int longFileMode )
+    public void setLongFileMode( final int longFileMode )
     {
-        this.longFileMode = longFileMode;
+        m_longFileMode = longFileMode;
     }
 
     /**
@@ -88,7 +93,7 @@ public class TarOutputStream extends FilterOutputStream
      */
     public int getRecordSize()
     {
-        return this.buffer.getRecordSize();
+        return m_buffer.getRecordSize();
     }
 
     /**
@@ -100,8 +105,8 @@ public class TarOutputStream extends FilterOutputStream
     public void close()
         throws IOException
     {
-        this.finish();
-        this.buffer.close();
+        finish();
+        m_buffer.close();
     }
 
     /**
@@ -116,24 +121,25 @@ public class TarOutputStream extends FilterOutputStream
     public void closeEntry()
         throws IOException
     {
-        if( this.assemLen > 0 )
+        if( m_assemLen > 0 )
         {
-            for( int i = this.assemLen; i < this.assemBuf.length; ++i )
+            for( int i = m_assemLen; i < m_assemBuf.length; ++i )
             {
-                this.assemBuf[ i ] = 0;
+                m_assemBuf[ i ] = 0;
             }
 
-            this.buffer.writeRecord( this.assemBuf );
+            m_buffer.writeRecord( m_assemBuf );
 
-            this.currBytes += this.assemLen;
-            this.assemLen = 0;
+            m_currBytes += m_assemLen;
+            m_assemLen = 0;
         }
 
-        if( this.currBytes < this.currSize )
+        if( m_currBytes < m_currSize )
         {
-            throw new IOException( "entry closed at '" + this.currBytes
-                                   + "' before the '" + this.currSize
-                                   + "' bytes specified in the header were written" );
+            final String message = "entry closed at '" + m_currBytes +
+                "' before the '" + m_currSize +
+                "' bytes specified in the header were written";
+            throw new IOException( message );
         }
     }
 
@@ -146,7 +152,7 @@ public class TarOutputStream extends FilterOutputStream
     public void finish()
         throws IOException
     {
-        this.writeEOFRecord();
+        writeEOFRecord();
     }
 
     /**
@@ -160,18 +166,19 @@ public class TarOutputStream extends FilterOutputStream
      * @param entry The TarEntry to be written to the archive.
      * @exception IOException Description of Exception
      */
-    public void putNextEntry( TarEntry entry )
+    public void putNextEntry( final TarEntry entry )
         throws IOException
     {
-        if( entry.getName().length() >= TarConstants.NAMELEN )
+        if( entry.getName().length() >= TarEntry.NAMELEN )
         {
 
-            if( longFileMode == LONGFILE_GNU )
+            if( m_longFileMode == LONGFILE_GNU )
             {
                 // create a TarEntry for the LongLink, the contents
                 // of which are the entry's name
-                TarEntry longLinkEntry = new TarEntry( TarConstants.GNU_LONGLINK,
-                                                       TarConstants.LF_GNUTYPE_LONGNAME );
+                final TarEntry longLinkEntry =
+                    new TarEntry( TarConstants.GNU_LONGLINK,
+                                  TarConstants.LF_GNUTYPE_LONGNAME );
 
                 longLinkEntry.setSize( entry.getName().length() + 1 );
                 putNextEntry( longLinkEntry );
@@ -179,26 +186,26 @@ public class TarOutputStream extends FilterOutputStream
                 write( 0 );
                 closeEntry();
             }
-            else if( longFileMode != LONGFILE_TRUNCATE )
+            else if( m_longFileMode != LONGFILE_TRUNCATE )
             {
-                throw new RuntimeException( "file name '" + entry.getName()
-                                            + "' is too long ( > "
-                                            + TarConstants.NAMELEN + " bytes)" );
+                final String message = "file name '" + entry.getName() +
+                    "' is too long ( > " + TarEntry.NAMELEN + " bytes)";
+                throw new IOException( message );
             }
         }
 
-        entry.writeEntryHeader( this.recordBuf );
-        this.buffer.writeRecord( this.recordBuf );
+        entry.writeEntryHeader( m_recordBuf );
+        m_buffer.writeRecord( m_recordBuf );
 
-        this.currBytes = 0;
+        m_currBytes = 0;
 
         if( entry.isDirectory() )
         {
-            this.currSize = 0;
+            m_currSize = 0;
         }
         else
         {
-            this.currSize = (int)entry.getSize();
+            m_currSize = (int)entry.getSize();
         }
     }
 
@@ -206,15 +213,15 @@ public class TarOutputStream extends FilterOutputStream
      * Writes a byte to the current tar archive entry. This method simply calls
      * read( byte[], int, int ).
      *
-     * @param b The byte written.
+     * @param data The byte written.
      * @exception IOException Description of Exception
      */
-    public void write( int b )
+    public void write( final int data )
         throws IOException
     {
-        this.oneBuf[ 0 ] = (byte)b;
+        m_oneBuf[ 0 ] = (byte)data;
 
-        this.write( this.oneBuf, 0, 1 );
+        write( m_oneBuf, 0, 1 );
     }
 
     /**
@@ -222,12 +229,11 @@ public class TarOutputStream extends FilterOutputStream
      * write( byte[], int, int ).
      *
      * @param wBuf The buffer to write to the archive.
-     * @exception IOException Description of Exception
      */
-    public void write( byte[] wBuf )
+    public void write( final byte[] buffer )
         throws IOException
     {
-        this.write( wBuf, 0, wBuf.length );
+        write( buffer, 0, buffer.length );
     }
 
     /**
@@ -238,19 +244,22 @@ public class TarOutputStream extends FilterOutputStream
      * manages buffers that are not a multiple of recordsize in length,
      * including assembling records from small buffers.
      *
-     * @param wBuf The buffer to write to the archive.
-     * @param wOffset The offset in the buffer from which to get bytes.
-     * @param numToWrite The number of bytes to write.
-     * @exception IOException Description of Exception
+     * @param buffer The buffer to write to the archive.
+     * @param offset The offset in the buffer from which to get bytes.
+     * @param count The number of bytes to write.
      */
-    public void write( byte[] wBuf, int wOffset, int numToWrite )
+    public void write( final byte[] buffer,
+                       final int offset,
+                       final int count )
         throws IOException
     {
-        if( ( this.currBytes + numToWrite ) > this.currSize )
+        int position = offset;
+        int numToWrite = count;
+        if( ( m_currBytes + numToWrite ) > m_currSize )
         {
-            throw new IOException( "request to write '" + numToWrite
-                                   + "' bytes exceeds size in header of '"
-                                   + this.currSize + "' bytes" );
+            final String message = "request to write '" + numToWrite +
+                "' bytes exceeds size in header of '" + m_currSize + "' bytes";
+            throw new IOException( message );
             //
             // We have to deal with assembly!!!
             // The programmer can be writing little 32 byte chunks for all
@@ -260,30 +269,30 @@ public class TarOutputStream extends FilterOutputStream
             //
         }
 
-        if( this.assemLen > 0 )
+        if( m_assemLen > 0 )
         {
-            if( ( this.assemLen + numToWrite ) >= this.recordBuf.length )
+            if( ( m_assemLen + numToWrite ) >= m_recordBuf.length )
             {
-                int aLen = this.recordBuf.length - this.assemLen;
+                final int length = m_recordBuf.length - m_assemLen;
 
-                System.arraycopy( this.assemBuf, 0, this.recordBuf, 0,
-                                  this.assemLen );
-                System.arraycopy( wBuf, wOffset, this.recordBuf,
-                                  this.assemLen, aLen );
-                this.buffer.writeRecord( this.recordBuf );
+                System.arraycopy( m_assemBuf, 0, m_recordBuf, 0,
+                                  m_assemLen );
+                System.arraycopy( buffer, position, m_recordBuf,
+                                  m_assemLen, length );
+                m_buffer.writeRecord( m_recordBuf );
 
-                this.currBytes += this.recordBuf.length;
-                wOffset += aLen;
-                numToWrite -= aLen;
-                this.assemLen = 0;
+                m_currBytes += m_recordBuf.length;
+                position += length;
+                numToWrite -= length;
+                m_assemLen = 0;
             }
             else
             {
-                System.arraycopy( wBuf, wOffset, this.assemBuf, this.assemLen,
+                System.arraycopy( buffer, position, m_assemBuf, m_assemLen,
                                   numToWrite );
 
-                wOffset += numToWrite;
-                this.assemLen += numToWrite;
+                position += numToWrite;
+                m_assemLen += numToWrite;
                 numToWrite -= numToWrite;
             }
         }
@@ -295,41 +304,38 @@ public class TarOutputStream extends FilterOutputStream
         //
         while( numToWrite > 0 )
         {
-            if( numToWrite < this.recordBuf.length )
+            if( numToWrite < m_recordBuf.length )
             {
-                System.arraycopy( wBuf, wOffset, this.assemBuf, this.assemLen,
+                System.arraycopy( buffer, position, m_assemBuf, m_assemLen,
                                   numToWrite );
 
-                this.assemLen += numToWrite;
+                m_assemLen += numToWrite;
 
                 break;
             }
 
-            this.buffer.writeRecord( wBuf, wOffset );
+            m_buffer.writeRecord( buffer, position );
 
-            int num = this.recordBuf.length;
+            int num = m_recordBuf.length;
 
-            this.currBytes += num;
+            m_currBytes += num;
             numToWrite -= num;
-            wOffset += num;
+            position += num;
         }
     }
 
     /**
      * Write an EOF (end of archive) record to the tar archive. An EOF record
      * consists of a record of all zeros.
-     *
-     * @exception IOException Description of Exception
      */
     private void writeEOFRecord()
         throws IOException
     {
-        for( int i = 0; i < this.recordBuf.length; ++i )
+        for( int i = 0; i < m_recordBuf.length; ++i )
         {
-            this.recordBuf[ i ] = 0;
+            m_recordBuf[ i ] = 0;
         }
 
-        this.buffer.writeRecord( this.recordBuf );
+        m_buffer.writeRecord( m_recordBuf );
     }
 }
-

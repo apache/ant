@@ -17,41 +17,40 @@ import java.io.OutputStream;
  * provided to position at each successive entry in the archive, and the read
  * each entry as a normal input stream using read().
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">
- *      stefano@apache.org</a>
+ * @author <a href="mailto:time@ice.com">Timothy Gerard Endres</a>
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class TarInputStream extends FilterInputStream
+public class TarInputStream
+    extends FilterInputStream
 {
-    protected TarBuffer buffer;
-    protected TarEntry currEntry;
+    private TarBuffer m_buffer;
+    private TarEntry m_currEntry;
+    private boolean m_debug;
+    private int m_entryOffset;
+    private int m_entrySize;
+    private boolean m_hasHitEOF;
+    private byte[] m_oneBuf;
+    private byte[] m_readBuf;
 
-    protected boolean debug;
-    protected int entryOffset;
-    protected int entrySize;
-    protected boolean hasHitEOF;
-    protected byte[] oneBuf;
-    protected byte[] readBuf;
-
-    public TarInputStream( InputStream is )
+    public TarInputStream( final InputStream input )
     {
-        this( is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE );
+        this( input, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE );
     }
 
-    public TarInputStream( InputStream is, int blockSize )
+    public TarInputStream( final InputStream input, final int blockSize )
     {
-        this( is, blockSize, TarBuffer.DEFAULT_RCDSIZE );
+        this( input, blockSize, TarBuffer.DEFAULT_RCDSIZE );
     }
 
-    public TarInputStream( InputStream is, int blockSize, int recordSize )
+    public TarInputStream( final InputStream input,
+                           final int blockSize,
+                           final int recordSize )
     {
-        super( is );
+        super( input );
 
-        this.buffer = new TarBuffer( is, blockSize, recordSize );
-        this.readBuf = null;
-        this.oneBuf = new byte[ 1 ];
-        this.debug = false;
-        this.hasHitEOF = false;
+        m_buffer = new TarBuffer( input, blockSize, recordSize );
+        m_oneBuf = new byte[ 1 ];
     }
 
     /**
@@ -59,10 +58,10 @@ public class TarInputStream extends FilterInputStream
      *
      * @param debug The new Debug value
      */
-    public void setDebug( boolean debug )
+    public void setDebug( final boolean debug )
     {
-        this.debug = debug;
-        this.buffer.setDebug( debug );
+        m_debug = debug;
+        m_buffer.setDebug( debug );
     }
 
     /**
@@ -79,119 +78,113 @@ public class TarInputStream extends FilterInputStream
     public TarEntry getNextEntry()
         throws IOException
     {
-        if( this.hasHitEOF )
+        if( m_hasHitEOF )
         {
             return null;
         }
 
-        if( this.currEntry != null )
+        if( m_currEntry != null )
         {
-            int numToSkip = this.entrySize - this.entryOffset;
+            final int numToSkip = m_entrySize - m_entryOffset;
 
-            if( this.debug )
+            if( m_debug )
             {
-                System.err.println( "TarInputStream: SKIP currENTRY '"
-                                    + this.currEntry.getName() + "' SZ "
-                                    + this.entrySize + " OFF "
-                                    + this.entryOffset + "  skipping "
-                                    + numToSkip + " bytes" );
+                final String message = "TarInputStream: SKIP currENTRY '" +
+                    m_currEntry.getName() + "' SZ " + m_entrySize +
+                    " OFF " + m_entryOffset + "  skipping " + numToSkip + " bytes";
+                debug( message );
             }
 
             if( numToSkip > 0 )
             {
-                this.skip( numToSkip );
+                skip( numToSkip );
             }
 
-            this.readBuf = null;
+            m_readBuf = null;
         }
 
-        byte[] headerBuf = this.buffer.readRecord();
-
+        final byte[] headerBuf = m_buffer.readRecord();
         if( headerBuf == null )
         {
-            if( this.debug )
+            if( m_debug )
             {
-                System.err.println( "READ NULL RECORD" );
+                debug( "READ NULL RECORD" );
             }
-            this.hasHitEOF = true;
+            m_hasHitEOF = true;
         }
-        else if( this.buffer.isEOFRecord( headerBuf ) )
+        else if( m_buffer.isEOFRecord( headerBuf ) )
         {
-            if( this.debug )
+            if( m_debug )
             {
-                System.err.println( "READ EOF RECORD" );
+                debug( "READ EOF RECORD" );
             }
-            this.hasHitEOF = true;
+            m_hasHitEOF = true;
         }
 
-        if( this.hasHitEOF )
+        if( m_hasHitEOF )
         {
-            this.currEntry = null;
+            m_currEntry = null;
         }
         else
         {
-            this.currEntry = new TarEntry( headerBuf );
+            m_currEntry = new TarEntry( headerBuf );
 
-            if( !( headerBuf[ 257 ] == 'u' && headerBuf[ 258 ] == 's'
-                && headerBuf[ 259 ] == 't' && headerBuf[ 260 ] == 'a'
-                && headerBuf[ 261 ] == 'r' ) )
+            if( !( headerBuf[ 257 ] == 'u' && headerBuf[ 258 ] == 's' &&
+                headerBuf[ 259 ] == 't' && headerBuf[ 260 ] == 'a' &&
+                headerBuf[ 261 ] == 'r' ) )
             {
-                this.entrySize = 0;
-                this.entryOffset = 0;
-                this.currEntry = null;
+                m_entrySize = 0;
+                m_entryOffset = 0;
+                m_currEntry = null;
 
-                throw new IOException( "bad header in block "
-                                       + this.buffer.getCurrentBlockNum()
-                                       + " record "
-                                       + this.buffer.getCurrentRecordNum()
-                                       + ", " +
-                                       "header magic is not 'ustar', but '"
-                                       + headerBuf[ 257 ]
-                                       + headerBuf[ 258 ]
-                                       + headerBuf[ 259 ]
-                                       + headerBuf[ 260 ]
-                                       + headerBuf[ 261 ]
-                                       + "', or (dec) "
-                                       + ( (int)headerBuf[ 257 ] )
-                                       + ", "
-                                       + ( (int)headerBuf[ 258 ] )
-                                       + ", "
-                                       + ( (int)headerBuf[ 259 ] )
-                                       + ", "
-                                       + ( (int)headerBuf[ 260 ] )
-                                       + ", "
-                                       + ( (int)headerBuf[ 261 ] ) );
+                final String message = "bad header in block " +
+                    m_buffer.getCurrentBlockNum() +
+                    " record " + m_buffer.getCurrentRecordNum() + ", " +
+                    "header magic is not 'ustar', but '" +
+                    headerBuf[ 257 ] +
+                    headerBuf[ 258 ] +
+                    headerBuf[ 259 ] +
+                    headerBuf[ 260 ] +
+                    headerBuf[ 261 ] +
+                    "', or (dec) " +
+                    ( (int)headerBuf[ 257 ] ) + ", " +
+                    ( (int)headerBuf[ 258 ] ) + ", " +
+                    ( (int)headerBuf[ 259 ] ) + ", " +
+                    ( (int)headerBuf[ 260 ] ) + ", " +
+                    ( (int)headerBuf[ 261 ] );
+
+                throw new IOException( message );
             }
 
-            if( this.debug )
+            if( m_debug )
             {
-                System.err.println( "TarInputStream: SET CURRENTRY '"
-                                    + this.currEntry.getName()
-                                    + "' size = "
-                                    + this.currEntry.getSize() );
+                final String message = "TarInputStream: SET CURRENTRY '" +
+                    m_currEntry.getName() + "' size = " + m_currEntry.getSize();
+                debug( message );
             }
 
-            this.entryOffset = 0;
+            m_entryOffset = 0;
 
             // REVIEW How do we resolve this discrepancy?!
-            this.entrySize = (int)this.currEntry.getSize();
+            m_entrySize = (int)m_currEntry.getSize();
         }
 
-        if( this.currEntry != null && this.currEntry.isGNULongNameEntry() )
+        if( null != m_currEntry && m_currEntry.isGNULongNameEntry() )
         {
             // read in the name
-            StringBuffer longName = new StringBuffer();
-            byte[] buffer = new byte[ 256 ];
+            final StringBuffer longName = new StringBuffer();
+            final byte[] buffer = new byte[ 256 ];
             int length = 0;
             while( ( length = read( buffer ) ) >= 0 )
             {
-                longName.append( new String( buffer, 0, length ) );
+                final String str = new String( buffer, 0, length );
+                longName.append( str );
             }
             getNextEntry();
-            this.currEntry.setName( longName.toString() );
+            m_currEntry.setName( longName.toString() );
         }
 
-        return this.currEntry;
+        return m_currEntry;
     }
 
     /**
@@ -201,7 +194,7 @@ public class TarInputStream extends FilterInputStream
      */
     public int getRecordSize()
     {
-        return this.buffer.getRecordSize();
+        return m_buffer.getRecordSize();
     }
 
     /**
@@ -217,18 +210,16 @@ public class TarInputStream extends FilterInputStream
     public int available()
         throws IOException
     {
-        return this.entrySize - this.entryOffset;
+        return m_entrySize - m_entryOffset;
     }
 
     /**
      * Closes this stream. Calls the TarBuffer's close() method.
-     *
-     * @exception IOException Description of Exception
      */
     public void close()
         throws IOException
     {
-        this.buffer.close();
+        m_buffer.close();
     }
 
     /**
@@ -238,21 +229,19 @@ public class TarInputStream extends FilterInputStream
      * @param out The OutputStream into which to write the entry's data.
      * @exception IOException Description of Exception
      */
-    public void copyEntryContents( OutputStream out )
+    public void copyEntryContents( final OutputStream output )
         throws IOException
     {
-        byte[] buf = new byte[ 32 * 1024 ];
-
+        final byte[] buffer = new byte[ 32 * 1024 ];
         while( true )
         {
-            int numRead = this.read( buf, 0, buf.length );
-
+            final int numRead = read( buffer, 0, buffer.length );
             if( numRead == -1 )
             {
                 break;
             }
 
-            out.write( buf, 0, numRead );
+            output.write( buffer, 0, numRead );
         }
     }
 
@@ -285,15 +274,14 @@ public class TarInputStream extends FilterInputStream
     public int read()
         throws IOException
     {
-        int num = this.read( this.oneBuf, 0, 1 );
-
+        final int num = read( m_oneBuf, 0, 1 );
         if( num == -1 )
         {
             return num;
         }
         else
         {
-            return (int)this.oneBuf[ 0 ];
+            return (int)m_oneBuf[ 0 ];
         }
     }
 
@@ -305,10 +293,10 @@ public class TarInputStream extends FilterInputStream
      * @return The number of bytes read, or -1 at EOF.
      * @exception IOException Description of Exception
      */
-    public int read( byte[] buf )
+    public int read( final byte[] buffer )
         throws IOException
     {
-        return this.read( buf, 0, buf.length );
+        return read( buffer, 0, buffer.length );
     }
 
     /**
@@ -318,86 +306,89 @@ public class TarInputStream extends FilterInputStream
      *
      * @param buf The buffer into which to place bytes read.
      * @param offset The offset at which to place bytes read.
-     * @param numToRead The number of bytes to read.
+     * @param count The number of bytes to read.
      * @return The number of bytes read, or -1 at EOF.
-     * @exception IOException Description of Exception
      */
-    public int read( byte[] buf, int offset, int numToRead )
+    public int read( final byte[] buffer,
+                     final int offset,
+                     final int count )
         throws IOException
     {
+        int position = offset;
+        int numToRead = count;
         int totalRead = 0;
 
-        if( this.entryOffset >= this.entrySize )
+        if( m_entryOffset >= m_entrySize )
         {
             return -1;
         }
 
-        if( ( numToRead + this.entryOffset ) > this.entrySize )
+        if( ( numToRead + m_entryOffset ) > m_entrySize )
         {
-            numToRead = ( this.entrySize - this.entryOffset );
+            numToRead = ( m_entrySize - m_entryOffset );
         }
 
-        if( this.readBuf != null )
+        if( null != m_readBuf )
         {
-            int sz = ( numToRead > this.readBuf.length ) ? this.readBuf.length
-                : numToRead;
+            final int size =
+                ( numToRead > m_readBuf.length ) ? m_readBuf.length : numToRead;
 
-            System.arraycopy( this.readBuf, 0, buf, offset, sz );
+            System.arraycopy( m_readBuf, 0, buffer, position, size );
 
-            if( sz >= this.readBuf.length )
+            if( size >= m_readBuf.length )
             {
-                this.readBuf = null;
+                m_readBuf = null;
             }
             else
             {
-                int newLen = this.readBuf.length - sz;
-                byte[] newBuf = new byte[ newLen ];
+                final int newLength = m_readBuf.length - size;
+                final byte[] newBuffer = new byte[ newLength ];
 
-                System.arraycopy( this.readBuf, sz, newBuf, 0, newLen );
+                System.arraycopy( m_readBuf, size, newBuffer, 0, newLength );
 
-                this.readBuf = newBuf;
+                m_readBuf = newBuffer;
             }
 
-            totalRead += sz;
-            numToRead -= sz;
-            offset += sz;
+            totalRead += size;
+            numToRead -= size;
+            position += size;
         }
 
         while( numToRead > 0 )
         {
-            byte[] rec = this.buffer.readRecord();
-
-            if( rec == null )
+            final byte[] rec = m_buffer.readRecord();
+            if( null == rec )
             {
                 // Unexpected EOF!
-                throw new IOException( "unexpected EOF with " + numToRead
-                                       + " bytes unread" );
+                final String message =
+                    "unexpected EOF with " + numToRead + " bytes unread";
+                throw new IOException( message );
             }
 
-            int sz = numToRead;
-            int recLen = rec.length;
+            int size = numToRead;
+            final int recordLength = rec.length;
 
-            if( recLen > sz )
+            if( recordLength > size )
             {
-                System.arraycopy( rec, 0, buf, offset, sz );
+                System.arraycopy( rec, 0, buffer, position, size );
 
-                this.readBuf = new byte[ recLen - sz ];
+                m_readBuf = new byte[ recordLength - size ];
 
-                System.arraycopy( rec, sz, this.readBuf, 0, recLen - sz );
+                System.arraycopy( rec, size, m_readBuf, 0, recordLength - size );
             }
             else
             {
-                sz = recLen;
+                size = recordLength;
 
-                System.arraycopy( rec, 0, buf, offset, recLen );
+                System.arraycopy( rec, 0, buffer, position, recordLength );
             }
 
-            totalRead += sz;
-            numToRead -= sz;
-            offset += sz;
+            totalRead += size;
+            numToRead -= size;
+            position += size;
         }
 
-        this.entryOffset += totalRead;
+        m_entryOffset += totalRead;
 
         return totalRead;
     }
@@ -415,30 +406,33 @@ public class TarInputStream extends FilterInputStream
      * entry's data if the number to skip extends beyond that point.
      *
      * @param numToSkip The number of bytes to skip.
-     * @exception IOException Description of Exception
      */
-    public void skip( int numToSkip )
+    public void skip( final int numToSkip )
         throws IOException
     {
-
         // REVIEW
         // This is horribly inefficient, but it ensures that we
         // properly skip over bytes via the TarBuffer...
         //
-        byte[] skipBuf = new byte[ 8 * 1024 ];
-
+        final byte[] skipBuf = new byte[ 8 * 1024 ];
         for( int num = numToSkip; num > 0; )
         {
-            int numRead = this.read( skipBuf, 0,
-                                     ( num > skipBuf.length ? skipBuf.length
-                                       : num ) );
-
+            final int count = ( num > skipBuf.length ) ? skipBuf.length : num;
+            final int numRead = read( skipBuf, 0, count );
             if( numRead == -1 )
             {
                 break;
             }
 
             num -= numRead;
+        }
+    }
+
+    protected void debug( final String message )
+    {
+        if( m_debug )
+        {
+            System.err.println( message );
         }
     }
 }
