@@ -1,12 +1,24 @@
 Changes from Ant 1.5 to current CVS 1.5 Branch
 ==============================================
+
 Changes that could break older environments:
 --------------------------------------------
-* Project.getBuildListeners now returns a clone of the listener list. Changes to 
-  the returned list will not affect the listeners currently attached to the 
-  Project. It also means that it is safe to iterate over the returned list
-  if listeners are added or removed during the traversal.
 
+* Project.getBuildListeners now returns a clone of the listener
+  list. Changes to the returned list will not affect the listeners
+  currently attached to the Project. It also means that it is safe to
+  iterate over the returned list if listeners are added or removed
+  during the traversal.
+
+Fixed bugs:
+-----------
+
+* <available> could fail to find files or directories that happen to
+  start with the name of the project's basedir but are not children of
+  the basedir.
+
+* Nested <property>'s inside <ant> can now be overriden by subsequent
+  <ant> and <antcall> tasks.
 
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================

@@ -373,7 +373,7 @@ public class Property extends Task {
     protected void addProperty(String n, String v) {
         if (userProperty) {
             if (project.getUserProperty(n) == null) {
-                project.setUserProperty(n, v);
+                project.setInheritedProperty(n, v);
             } else {
                 log("Override ignored for " + n, Project.MSG_VERBOSE);
             }

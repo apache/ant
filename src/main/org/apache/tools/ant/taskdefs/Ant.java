@@ -255,14 +255,8 @@ public class Ant extends Task {
             newProject.addDataTypeDefinition(typeName, typeClass);
         }
 
-        // set user-defined
-        Hashtable props = getProject().getUserProperties();
-        e = props.keys();
-        while (e.hasMoreElements()) {
-            String arg = e.nextElement().toString();
-            String value = props.get(arg).toString();
-            newProject.setUserProperty(arg, value);
-        }
+        // set user-defined properties
+        getProject().copyUserProperties(newProject);
 
         if (!inheritAll) {
            // set Java built-in properties separately,
@@ -272,7 +266,7 @@ public class Ant extends Task {
         } else {
             // set all properties from calling project
 
-            props = getProject().getProperties();
+            Hashtable props = getProject().getProperties();
             e = props.keys();
             while (e.hasMoreElements()) {
                 String arg = e.nextElement().toString();
@@ -282,9 +276,10 @@ public class Ant extends Task {
                 }
 
                 String value = props.get(arg).toString();
+                // don't re-set user properties, avoid the warning message
                 if (newProject.getProperty(arg) == null){
                     // no user property
-                    newProject.setProperty(arg, value);
+                    newProject.setNewProperty(arg, value);
                 }
             }
         }
@@ -400,6 +395,7 @@ public class Ant extends Task {
             p.setProject(newProject);
             p.execute();
         }
+        getProject().copyInheritedProperties(newProject);
     }
 
     /**

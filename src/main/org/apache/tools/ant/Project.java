@@ -160,6 +160,13 @@ public class Project {
      * Mapping is String to String.
      */
     private Hashtable userProperties = new Hashtable();
+    /**
+     * Map of inherited "user" properties - that are those "user"
+     * properties that have been created by tasks and not been set
+     * from the command line or a GUI tool.
+     * Mapping is String to String.
+     */
+    private Hashtable inheritedProperties = new Hashtable();
     /** Map of references within the project (paths etc) (String to Object). */
     private Hashtable references = new Hashtable();
 
@@ -470,6 +477,23 @@ public class Project {
     }
 
     /**
+     * Sets a user property, which cannot be overwritten by set/unset
+     * property calls. Any previous value is overwritten. Also marks
+     * these properties as properties that have not come from the
+     * command line.
+     *
+     * @param name The name of property to set.
+     *             Must not be <code>null</code>.
+     * @param value The new value of the property.
+     *              Must not be <code>null</code>.
+     * @see #setProperty(String,String)
+     */
+    public synchronized void setInheritedProperty(String name, String value) {
+        inheritedProperties.put(name, value);
+        setUserProperty(name, value);
+    }
+
+    /**
      * Sets a property unless it is already defined as a user property
      * (in which case the method returns silently).
      *
@@ -531,7 +555,7 @@ public class Project {
      */
      public String getUserProperty(String name) {
         if (name == null) {
-          return null;
+            return null;
         }
         String property = (String) userProperties.get(name);
         return property;
@@ -570,6 +594,54 @@ public class Project {
         }
 
         return propertiesCopy;
+    }
+
+    /**
+     * Copies all user properties that have been set on the command
+     * line or a GUI tool from this instance to the Project instance
+     * given as the argument.
+     *
+     * <p>To copy all "user" properties, you will also have to call
+     * {@link #copyInheritedProperties copyInheritedProperties}.</p>
+     *
+     * @param other the project to copy the properties to.  Must not be null.
+     *
+     * @since Ant 1.5
+     */
+    public void copyUserProperties(Project other) {
+        Enumeration e = userProperties.keys();
+        while (e.hasMoreElements()) {
+            Object arg = e.nextElement();
+            if (inheritedProperties.containsKey(arg)) {
+                continue;
+            }
+            Object value = userProperties.get(arg);
+            other.setUserProperty(arg.toString(), value.toString());
+        }
+    }
+
+    /**
+     * Copies all user properties that have not been set on the
+     * command line or a GUI tool from this instance to the Project
+     * instance given as the argument.
+     *
+     * <p>To copy all "user" properties, you will also have to call
+     * {@link #copyUserProperties copyUserProperties}.</p>
+     *
+     * @param other the project to copy the properties to.  Must not be null.
+     *
+     * @since Ant 1.5
+     */
+    public void copyInheritedProperties(Project other) {
+        Enumeration e = inheritedProperties.keys();
+        while (e.hasMoreElements()) {
+            String arg = e.nextElement().toString();
+            if (other.getUserProperty(arg) != null) {
+                continue;
+            }
+            Object value = inheritedProperties.get(arg);
+            other.setInheritedProperty(arg, value.toString());
+        }
     }
 
     /**

@@ -269,6 +269,28 @@ public class AntTest extends BuildFileTest {
         project.removeBuildListener(pc);
     }
 
+    public void testUserPropertyWinsInheritAll() {
+        getProject().setUserProperty("test", "7");
+        expectLogContaining("test-property-override-inheritall-start",
+                            "The value of test is 7");
+    }
+
+    public void testUserPropertyWinsNoInheritAll() {
+        getProject().setUserProperty("test", "7");
+        expectLogContaining("test-property-override-no-inheritall-start",
+                            "The value of test is 7");
+    }
+
+    public void testOverrideWinsInheritAll() {
+        expectLogContaining("test-property-override-inheritall-start",
+                            "The value of test is 4");
+    }
+
+    public void testOverrideWinsNoInheritAll() {
+        expectLogContaining("test-property-override-no-inheritall-start",
+                            "The value of test is 4");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
