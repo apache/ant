@@ -51,7 +51,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     private static final String DATE = "00-00-00";
     private static final String DATE2 = "01-01-01";
     private static final String OUTPUT = "output.log";
-    private static final String SS_DIR = "c:/winnt";
+    private static final String SS_DIR = "c:\\winnt";
 
     /**
      *  Constructor for the MSVSSTest object
