@@ -67,6 +67,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -101,6 +102,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">
  *      glennm@ca.ibm.com</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author <a href="mailto:kadams@gfs.com">Kyle Adams</a>
  * @since Ant 1.3
  */
 public class FTP
@@ -938,22 +940,40 @@ public class FTP
      */
     protected void makeRemoteDir(FTPClient ftp, String dir)
          throws IOException, BuildException {
+        String workingDirectory = ftp.printWorkingDirectory();
         if (verbose) {
-            log("creating directory: " + dir);
+            log("Creating directory: " + dir);
         }
-
-        if (!ftp.makeDirectory(dir)) {
-            // codes 521, 550 and 553 can be produced by FTP Servers
-            //  to indicate that an attempt to create a directory has
-            //  failed because the directory already exists.
-            handleMkDirFailure(ftp);
-            if (verbose) {
-                log("directory already exists");
+        if (dir.indexOf("/") == 0) {
+            ftp.changeWorkingDirectory("/");
+        }
+        String subdir = new String();
+        StringTokenizer st = new StringTokenizer(dir, "/");
+        while (st.hasMoreTokens()) {
+            subdir = st.nextToken();
+            log("Checking " + subdir, Project.MSG_DEBUG);
+            if (!ftp.changeWorkingDirectory(subdir)) {
+                if(!ftp.makeDirectory(subdir)) {
+                    // codes 521, 550 and 553 can be produced by FTP Servers
+                    //  to indicate that an attempt to create a directory has
+                    //  failed because the directory already exists.
+                    int rc = ftp.getReplyCode();
+                    if (!(ignoreNoncriticalErrors && (rc == 550 || rc == 553 || rc==521))) {
+                        throw new BuildException("could not create directory: " + ftp.getReplyString());
+                    }
+                    if (verbose) {
+                        log("Directory already exists");
+                    }
+                } else {
+                    if (verbose) {
+                        log("Directory created OK");
+                    }
+                    ftp.changeWorkingDirectory(subdir);
+                }
             }
-        } else {
-            if (verbose) {
-                log("directory created OK");
-            }
+        }
+        if (workingDirectory != null) {
+            ftp.changeWorkingDirectory(workingDirectory);
         }
     }
 
