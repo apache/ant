@@ -32,6 +32,8 @@ Fixed bugs:
 * <replaceregexp> could append a newline character at the end of the
   file.
 
+* <tstamp>'s prefix attribute failed to apply to nested <format> elements.
+
 Other changes:
 --------------
 
