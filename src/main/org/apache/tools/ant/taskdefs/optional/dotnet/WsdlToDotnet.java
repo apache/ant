@@ -58,11 +58,6 @@ public class WsdlToDotnet extends Task  {
     private File destFile = null;
 
     /**
-     * name of source file
-     */
-    private String srcFileName = null;
-
-    /**
      * language; defaults to C#
      */
     private String language = "CS";
@@ -154,18 +149,10 @@ public class WsdlToDotnet extends Task  {
 
     /**
      * The local WSDL file to parse; either url or srcFile is required.
-     * @param srcFileName name of WSDL file
+     * @param srcFile WSDL file
      */
-    public void setSrcFile(String srcFileName) {
-        if (new File(srcFileName).isAbsolute()) {
-            srcFileName = FileUtils.newFileUtils()
-                .removeLeadingPath(getProject().getBaseDir(), 
-                                   new File(srcFileName));;
-        }
-        //save the string name of the file
-        this.srcFileName = srcFileName;
-        //and save the file
-        wsdl.setFile(getProject().resolveFile(srcFileName));
+    public void setSrcFile(File srcFile) {
+        wsdl.setFile(srcFile);
     }
 
     /**
@@ -325,10 +312,12 @@ public class WsdlToDotnet extends Task  {
         }
         String path;
         //mark for a rebuild if the dest file is newer
-        path=wsdl.evaluate();
-        if ( !compiler.supportsAbsoluteFiles() ) {
+        path = wsdl.evaluate();
+        if (!compiler.supportsAbsoluteFiles() && wsdl.getFile() != null) {
             // Mono 1.0's wsdl doesn't deal with absolute paths
-            path = srcFileName;
+            File f = wsdl.getFile();
+            command.setDirectory(f.getParentFile());
+            path = f.getName();
         }
         command.addArgument(path);
         //add in any extra files.
