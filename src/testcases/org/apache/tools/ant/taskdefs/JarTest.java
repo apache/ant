@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -244,10 +244,10 @@ public class JarTest extends BuildFileTest {
         try {
             executeTarget("testIndexTests");
             archive = new ZipFile(getProject().resolveFile(tempJar));
-            Enumeration enum = archive.entries();
+            Enumeration e = archive.entries();
             int numberOfIndexLists = 0;
-            while (enum.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) enum.nextElement();
+            while (e.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) e.nextElement();
                 if (ze.getName().equals("META-INF/INDEX.LIST")) {
                     numberOfIndexLists++;
                 }
