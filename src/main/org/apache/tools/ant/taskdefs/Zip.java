@@ -268,7 +268,7 @@ public class Zip extends MatchingTask {
         boolean success = false;
         try {
             ZipOutputStream zOut =
-              new ZipOutputStream(new FileOutputStream(zipFile));
+                new ZipOutputStream(new FileOutputStream(zipFile));
             zOut.setEncoding(encoding);
             try {
                 if (doCompress) {
@@ -367,7 +367,7 @@ public class Zip extends MatchingTask {
     protected void addFiles(FileScanner scanner, ZipOutputStream zOut,
                             String prefix, String fullpath) throws IOException {
         if (prefix.length() > 0 && fullpath.length() > 0)
-             throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
+            throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
 
         File thisBaseDir = scanner.getBasedir();
 
@@ -388,7 +388,7 @@ public class Zip extends MatchingTask {
 
         // files that matched include patterns
         String[] files = scanner.getIncludedFiles();
-         if (files.length > 1 && fullpath.length() > 0)
+        if (files.length > 1 && fullpath.length() > 0)
             throw new BuildException("fullpath attribute may only be specified for filesets that specify a single file.");
         for (int i = 0; i < files.length; i++) {
             File f = new File(thisBaseDir, files[i]);
@@ -409,9 +409,12 @@ public class Zip extends MatchingTask {
     }
 
     protected void addZipEntries(ZipFileSet fs, DirectoryScanner ds,
-      ZipOutputStream zOut, String prefix)
+                                 ZipOutputStream zOut, String prefix, String fullpath)
         throws IOException
     {
+        if (prefix.length() > 0 && fullpath.length() > 0)
+            throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
+
         ZipScanner zipScanner = (ZipScanner) ds;
         File zipSrc = fs.getSrc();
 
@@ -425,9 +428,14 @@ public class Zip extends MatchingTask {
                 entry = new ZipEntry(origEntry);
                 String vPath = entry.getName();
                 if (zipScanner.match(vPath)) {
-                    addParentDirs(null, vPath, zOut, prefix);
-                    if (! entry.isDirectory()) {
-                        zipFile(in, zOut, prefix+vPath, entry.getTime());
+                    if (prefix.length() > 0) {
+                        addParentDirs(null, vPath, zOut, prefix);
+                        if (! entry.isDirectory()) {
+                            zipFile(in, zOut, prefix+vPath, entry.getTime());
+                        }
+                    }
+                    else if (fullpath.length() > 0) {
+                        zipFile(in, zOut, fullpath, entry.getTime());
                     }
                 }
             }
@@ -691,7 +699,8 @@ public class Zip extends MatchingTask {
 
     /**
      * Iterate over the given Vector of (zip)filesets and add
-     * all files to the ZipOutputStream using the given prefix.
+     * all files to the ZipOutputStream using the given prefix
+     * or fullpath.
      */
     protected void addFiles(Vector filesets, ZipOutputStream zOut)
         throws IOException {
@@ -725,7 +734,7 @@ public class Zip extends MatchingTask {
 
             if (fs instanceof ZipFileSet
                 && ((ZipFileSet) fs).getSrc() != null) {
-                addZipEntries((ZipFileSet) fs, ds, zOut, prefix);
+                addZipEntries((ZipFileSet) fs, ds, zOut, prefix, fullpath);
             } else {
                 // Add the fileset.
                 addFiles(ds, zOut, prefix, fullpath);
