@@ -76,6 +76,8 @@ import org.apache.tools.ant.types.Mapper;
  * @author dIon Gillard <a href="mailto:dion@multitask.com.au">dion@multitask.com.au</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version 1.2
+ *
+ * @deprecated Use &lt;move&gt; instead
  */
 public class RenameExtensions extends MatchingTask {
 
