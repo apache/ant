@@ -329,6 +329,7 @@ public class Copy extends Task {
                     }
 
                     if (forceOverwrite ||
+                        !destFile.exists() ||
                         (file.lastModified() > destFile.lastModified())) {
                         fileCopyMap.put(file.getAbsolutePath(),
                                         destFile.getAbsolutePath());
