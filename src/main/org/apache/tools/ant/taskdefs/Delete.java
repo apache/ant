@@ -124,6 +124,9 @@ public class Delete extends MatchingTask {
         else {
           project.log("Deleting: " + f.getAbsolutePath());
           f.delete();
+	  if (f.exists()) {
+	      throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+          }
         }
       }
     }
@@ -146,6 +149,9 @@ public class Delete extends MatchingTask {
         if (f.exists()) {
           project.log("Deleting: " + f.getAbsolutePath(), verbosity);
           f.delete();
+	  if (f.exists()) {
+	      throw new BuildException("Unable to delete " + f.getAbsolutePath());
+          }
         }
       }
     }
