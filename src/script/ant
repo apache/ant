@@ -1,6 +1,6 @@
 #! /bin/sh
 
-#   Copyright 2001-2004 The Apache Software Foundation
+#   Copyright 2001-2005 The Apache Software Foundation
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -214,6 +214,10 @@ if $usejikes; then
 fi
 
 # For Cygwin, switch paths to appropriate format before running java
+# For PATHs convert to unix format first, then to windows format to ensure
+# both formats are supported. Probably this will fail on directories with ;
+# in the name in the path. Let's assume that paths containing ; are more
+# rare than windows style paths on cygwin.
 if $cygwin; then
   if [ "$OS" = "Windows_NT" ] && cygpath -m .>/dev/null 2>/dev/null ; then
     format=mixed
@@ -223,9 +227,11 @@ if $cygwin; then
   ANT_HOME=`cygpath --$format "$ANT_HOME"`
   ANT_LIB=`cygpath --$format "$ANT_LIB"`
   JAVA_HOME=`cygpath --$format "$JAVA_HOME"`
-  LOCALCLASSPATH=`cygpath --path --$format "$LOCALCLASSPATH"`
+  LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`
+  LOCALCLASSPATH=`cygpath --path --$format "$LCP_TEMP"`
   if [ -n "$CLASSPATH" ] ; then
-    CLASSPATH=`cygpath --path --$format "$CLASSPATH"`
+    CP_TEMP=`cygpath --path --unix "$CLASSPATH"`
+    CLASSPATH=`cygpath --path --$format "$CP_TEMP"`
   fi
   CYGHOME=`cygpath --$format "$HOME"`
 fi
