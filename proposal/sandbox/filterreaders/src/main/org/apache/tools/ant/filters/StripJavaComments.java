@@ -56,6 +56,7 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * This is a java comment and string stripper reader that filters
@@ -64,7 +65,25 @@ import java.io.Reader;
  * Since this class heavily relies on the single char read function,
  * you are reccomended to make it work on top of a buffered reader.
  */
-public final class StripJavaComments extends FilterReader {
+public final class StripJavaComments
+    extends FilterReader
+    implements CloneableReader
+{
+    /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public StripJavaComments() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
+    }
 
     /**
      * Create a new filtered reader.
@@ -146,5 +165,10 @@ public final class StripJavaComments extends FilterReader {
             if (in.read() == -1) return i;
         }
         return n;
+    }
+
+    public final Reader clone(final Reader rdr) {
+        StripJavaComments newFilter = new StripJavaComments(rdr);
+        return newFilter;
     }
 }

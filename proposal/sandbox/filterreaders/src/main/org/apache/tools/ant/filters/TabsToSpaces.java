@@ -56,7 +56,7 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Hashtable;
+import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -66,15 +66,20 @@ import org.apache.tools.ant.types.Parameterizable;
  *
  * Example Usage:
  * =============
- * <filterreader classname="org.apache.tools.ant.filters.TabsToSpaces">
- *    <param name="tablength" value="8"/>
+ *
+ * &lt;tabtospaces tablength=&quot;8&quot;/&gt;
+ *
+ * Or:
+ *
+ * <filterreader classname=&quot;org.apache.tools.ant.filters.TabsToSpaces&quot;>
+ *    <param name=&quot;tablength&quot; value=&quot;8&quot;/>
  * </filterreader>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class TabsToSpaces
     extends FilterReader
-    implements Parameterizable
+    implements Parameterizable, CloneableReader
 {
     private static final int DEFAULT_TAB_LENGTH = 8;
 
@@ -89,6 +94,22 @@ public final class TabsToSpaces
     private int spacesRemaining = 0;
 
     /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public TabsToSpaces() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
+    }
+
+    /**
      * Create a new filtered reader.
      *
      * @param in  a Reader object providing the underlying stream.
@@ -101,9 +122,9 @@ public final class TabsToSpaces
      * Convert tabs with spaces
      */
     public final int read() throws IOException {
-        if (!initialized) {
+        if (!getInitialized()) {
             initialize();
-            initialized = true;
+            setInitialized(true);
         }
 
         int ch = -1;
@@ -146,16 +167,39 @@ public final class TabsToSpaces
         return n;
     }
 
+    public final void setTablength(final int tabLength) {
+        this.tabLength = tabLength;
+    }
+
+    private final int getTablength() {
+        return tabLength;
+    }
+
+    private final void setInitialized(final boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    private final boolean getInitialized() {
+        return initialized;
+    }
+
+    public final Reader clone(final Reader rdr) {
+        TabsToSpaces newFilter = new TabsToSpaces(rdr);
+        newFilter.setTablength(getTablength());
+        newFilter.setInitialized(true);
+        return newFilter;
+    }
+
     /**
      * Set Parameters
      */
     public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
-        initialized = false;
+        setInitialized(false);
     }
 
     /**
-     * Initialize tokens and load the replacee-replacer hashtable.
+     * Initialize tokens
      */
     private final void initialize() {
         if (parameters != null) {

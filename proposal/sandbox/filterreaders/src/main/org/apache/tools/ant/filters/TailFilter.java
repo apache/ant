@@ -56,6 +56,7 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -66,15 +67,19 @@ import org.apache.tools.ant.types.Parameterizable;
  * Example:
  * =======
  *
- * &lt;filterreader classname="org.apache.tools.ant.filters.TailFilter"&gt;
- *    &lt;param name="lines" value="3"/&gt;
+ * &lt;tailfilter lines=&quot;3&quot;/&gt;
+ *
+ * Or:
+ *
+ * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.TailFilter&quot;&gt;
+ *    &lt;param name=&quot;lines&quot; value=&quot;3&quot;/&gt;
  * &lt;/filterreader&gt;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class TailFilter
     extends FilterReader
-    implements Parameterizable
+    implements Parameterizable, CloneableReader
 {
     private static final String LINES_KEY = "lines";
 
@@ -97,6 +102,22 @@ public final class TailFilter
     private int bufferPos = 0;
 
     /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public TailFilter() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
+    }
+
+    /**
      * Create a new filtered reader.
      *
      * @param in  a Reader object providing the underlying stream.
@@ -110,9 +131,9 @@ public final class TailFilter
      * point.  Grow buffer as needed.
      */
     public final int read() throws IOException {
-        if (!initialized) {
+        if (!getInitialized()) {
             initialize();
-            initialized = true;
+            setInitialized(true);
         }
 
         if (!completedReadAhead) {
@@ -200,19 +221,42 @@ public final class TailFilter
         return n;
     }
 
+    public final void setLines(final long lines) {
+        this.lines = lines;
+    }
+
+    private final long getLines() {
+        return lines;
+    }
+
+    private final void setInitialized(final boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    private final boolean getInitialized() {
+        return initialized;
+    }
+
+    public final Reader clone(final Reader rdr) {
+        TailFilter newFilter = new TailFilter(rdr);
+        newFilter.setLines(getLines());
+        newFilter.setInitialized(true);
+        return newFilter;
+    }
+
     /**
      * Set Parameters
      */
     public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
-        initialized = false;
+        setInitialized(false);
     }
 
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 if (LINES_KEY.equals(parameters[i].getName())) {
-                    lines = new Long(parameters[i].getValue()).longValue();
+                    setLines(new Long(parameters[i].getValue()).longValue());
                     break;
                 }
             }

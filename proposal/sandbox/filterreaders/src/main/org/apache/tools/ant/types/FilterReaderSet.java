@@ -56,6 +56,14 @@ package org.apache.tools.ant.types;
 import java.util.Vector;
 
 import org.apache.tools.ant.filters.HeadFilter;
+import org.apache.tools.ant.filters.LineContains;
+import org.apache.tools.ant.filters.PrefixLines;
+import org.apache.tools.ant.filters.ReplaceTokens;
+import org.apache.tools.ant.filters.StripJavaComments;
+import org.apache.tools.ant.filters.StripLineBreaks;
+import org.apache.tools.ant.filters.StripLineComments;
+import org.apache.tools.ant.filters.TabsToSpaces;
+import org.apache.tools.ant.filters.TailFilter;
 
 /**
  * Set of FilterReaders
@@ -76,5 +84,40 @@ public final class FilterReaderSet {
 
     public final void addHeadFilter(final HeadFilter headFilter) {
         filterReaders.addElement(headFilter);
+    }
+
+    public final void addLineContains(final LineContains lineContains) {
+        filterReaders.addElement(lineContains);
+    }
+
+    public final void addPrefixLines(final PrefixLines prefixLines) {
+        filterReaders.addElement(prefixLines);
+    }
+
+    public final void addReplaceTokens(final ReplaceTokens replaceTokens) {
+        filterReaders.addElement(replaceTokens);
+    }
+
+    public final void addStripJavaComments(final StripJavaComments
+                                                stripJavaComments) {
+        filterReaders.addElement(stripJavaComments);
+    }
+
+    public final void addStripLineBreaks(final StripLineBreaks
+                                                stripLineBreaks) {
+        filterReaders.addElement(stripLineBreaks);
+    }
+
+    public final void addStripLineComments(final StripLineComments
+                                                stripLineComments) {
+        filterReaders.addElement(stripLineComments);
+    }
+
+    public final void addTabsToSpaces(final TabsToSpaces tabsToSpaces) {
+        filterReaders.addElement(tabsToSpaces);
+    }
+
+    public final void addTailFilter(final TailFilter tailFilter) {
+        filterReaders.addElement(tailFilter);
     }
 }

@@ -67,12 +67,12 @@ import org.apache.tools.ant.types.Parameterizable;
  * Example:
  * =======
  *
- * &lt;headfilter lines="3"/&gt;
+ * &lt;headfilter lines=&quot;3&quot;/&gt;
  *
  * Or:
  *
- * &lt;filterreader classname="org.apache.tools.ant.filters.HeadFilter"&gt;
- *    &lt;param name="lines" value="3"/&gt;
+ * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
+ *    &lt;param name=&quot;lines&quot; value=&quot;3&quot;/&gt;
  * &lt;/filterreader&gt;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
@@ -180,15 +180,15 @@ public final class HeadFilter
         this.lines = lines;
     }
 
-    public final long getLines() {
+    private final long getLines() {
         return lines;
     }
 
-    public final void setInitialized(final boolean initialized) {
+    private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
-    public final boolean getInitialized() {
+    private final boolean getInitialized() {
         return initialized;
     }
 

@@ -3,6 +3,7 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Parameter;
@@ -15,6 +16,13 @@ import org.apache.tools.ant.types.Parameterizable;
  * Example:
  * =======
  *
+ * &lt;linecontains&gt;
+ *   &lt;contains value=&quot;foo&quot;&gt;
+ *   &lt;contains value=&quot;bar&quot;&gt;
+ * &lt;/linecontains&gt;
+ *
+ * Or:
+ *
  * &lt;filterreader classname="org.apache.tools.ant.filters.LineContains"&gt;
  *    &lt;param type="contains" value="foo"/&gt;
  *    &lt;param type="contains" value="bar"/&gt;
@@ -26,7 +34,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class LineContains
     extends FilterReader
-    implements Parameterizable
+    implements Parameterizable, CloneableReader
 {
     private static final String CONTAINS_KEY = "contains";
 
@@ -34,11 +42,25 @@ public final class LineContains
 
     private boolean initialized = false;
 
-    private final Vector contains = new Vector();
-
-    private int containsSize = 0;
+    private Vector contains = new Vector();
 
     private String line = null;
+
+    /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public LineContains() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
+    }
 
     /**
      * Create a new filtered reader.
@@ -78,9 +100,11 @@ public final class LineContains
             }
 
             if (line != null) {
+                int containsSize = contains.size();
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
                     if (line.indexOf(containsStr) == -1) {
+                        System.out.println("Hello");
                         line = null;
                         break;
                     }
@@ -116,6 +140,33 @@ public final class LineContains
         return n;
     }
 
+    public final void addConfiguredContains(final Contains contains) {
+        this.contains.addElement(contains.getValue());
+    }
+
+    private void setContains(final Vector contains) {
+        this.contains = contains;
+    }
+
+    private final Vector getContains() {
+        return contains;
+    }
+
+    private final void setInitialized(final boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    private final boolean getInitialized() {
+        return initialized;
+    }
+
+    public final Reader clone(final Reader rdr) {
+        LineContains newFilter = new LineContains(rdr);
+        newFilter.setContains(getContains());
+        newFilter.setInitialized(true);
+        return newFilter;
+    }
+
     /**
      * Set Parameters
      */
@@ -131,7 +182,18 @@ public final class LineContains
                     contains.addElement(parameters[i].getValue());
                 }
             }
-            containsSize = contains.size();
+        }
+    }
+
+    public static class Contains {
+        private String value;
+
+        public final void setValue(String contains) {
+            value = contains;
+        }
+
+        public final String getValue() {
+            return value;
         }
     }
 }

@@ -3,6 +3,7 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -10,11 +11,22 @@ import org.apache.tools.ant.types.Parameterizable;
 /**
  * Attach a prefix to every line
  *
+ * Example:
+ * =======
+ *
+ * &lt;prefixlines prefix=&quot;Foo&quot;/&gt;
+ *
+ * Or:
+ *
+ * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
+ *    &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
+ * &lt;/filterreader&gt;
+ *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class PrefixLines
     extends FilterReader
-    implements Parameterizable
+    implements Parameterizable, CloneableReader
 {
     /**
      * prefix key
@@ -30,6 +42,22 @@ public final class PrefixLines
     private String queuedData = null;
 
     /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public PrefixLines() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
+    }
+
+    /**
      * Create a new filtered reader.
      *
      * @param in  a Reader object providing the underlying stream.
@@ -39,9 +67,9 @@ public final class PrefixLines
     }
 
     public final int read() throws IOException {
-        if (!initialized) {
+        if (!getInitialized()) {
             initialize();
-            initialized = true;
+            setInitialized(true);
         }
 
         int ch = -1;
@@ -101,12 +129,35 @@ public final class PrefixLines
         return n;
     }
 
+    public final void setPrefix(final String prefix) {
+        this.prefix = prefix;
+    }
+
+    private final String getPrefix() {
+        return prefix;
+    }
+
+    private final void setInitialized(final boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    private final boolean getInitialized() {
+        return initialized;
+    }
+
+    public final Reader clone(final Reader rdr) {
+        PrefixLines newFilter = new PrefixLines(rdr);
+        newFilter.setPrefix(getPrefix());
+        newFilter.setInitialized(true);
+        return newFilter;
+    }
+
     /**
      * Set Parameters
      */
     public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
-        initialized = false;
+        setInitialized(false);
     }
 
     private final void initialize() {
