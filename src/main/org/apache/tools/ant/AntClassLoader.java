@@ -537,7 +537,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * @param theClass The class to initialize.
      *                 Must not be <code>null</code>.
      *
-     * @deprecated use Class.forName instead.
+     * @deprecated use Class.forName with initialize=true instead.
      */
     public static void initializeClass(Class theClass) {
         // ***HACK*** We ask the VM to create an instance
