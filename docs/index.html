@@ -493,6 +493,7 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#tar">Tar</a></li>
   <li><a href="#taskdef">Taskdef</a></li>
   <li><a href="#tstamp">Tstamp</a></li>
+  <li><a href="#style">Style</a></li>
   <li><a href="#untar">Untar</a></li>
   <li><a href="#zip">Zip</a></li>
 </ul>
@@ -2286,6 +2287,67 @@ initialization target.</p>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;tstamp/&gt;</pre>
+<hr>
+<h2><a name="style">Style</a></h2>
+<h3>Description</h3>
+<p>Process a set of documents via XSLT.</p>
+<p>This is useful for building views of XML based documentation,
+or in generating code.</p>
+<p>It is possible to refine the set of files that are being copied. This can be
+done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns. The patterns are
+relative to the <i>basedir</i> directory.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">where to find the source xml file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">directory where to store the results.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">extention</td>
+    <td valign="top">desired file extension to be used for the targets.
+        If not specified, the default is "html".</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">style</td>
+    <td valign="top">name of the stylesheet to use.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">processor</td>
+    <td valign="top">name of the XSLT processor to use.  Permissable
+values are "xslp" for the XSL:P processor, "xalan" for the Apache XML Xalan
+processor, or the name of an arbitrary XSLTLiaison class.
+Defaults to xslp or xalan (in that order), if one is found in your
+class path</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><pre>
+&lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
+       extension=&quot;html&quot; style=&quot;style/apache.xml&quot;/&gt;
+</pre></p>
+</blockquote>
 <hr>
 <h2><a name="untar">Untar</a></h2>
 <h3>Description</h3>

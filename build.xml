@@ -37,6 +37,10 @@
   <target name="check_for_optional_packages">
     <available property="bsf.present" classname="com.ibm.bsf.BSFManager" />
     <available property="netrexx.present" classname="netrexx.lang.Rexx" />
+    <available property="xslp.present" 
+               classname="com.kvisco.xsl.XSLProcessor" />
+    <available property="xalan.present" 
+               classname="org.apache.xalan.xslt.XSLTProcessorFactory" />
   </target>
 
   <!-- =================================================================== -->
@@ -60,6 +64,8 @@
            optimize="on" >
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
+      <exclude name="**/XslpLiaison.java" unless="xslp.present" />
+      <exclude name="**/XalanLiaison.java" unless="xalan.present" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
