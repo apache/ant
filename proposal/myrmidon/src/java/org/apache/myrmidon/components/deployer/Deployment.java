@@ -27,7 +27,7 @@ import org.xml.sax.XMLReader;
  */
 public class Deployment
 {
-    private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
+    public final static String   DESCRIPTOR_NAME     = "META-INF/ant-types.xml";
 
     private File            m_file;
 
@@ -62,7 +62,7 @@ public class Deployment
     private Configuration buildDescriptor()
         throws DeploymentException
     {
-        final String systemID = "jar:" + getURL() + "!/" + TSKDEF_FILE;
+        final String systemID = "jar:" + getURL() + "!/" + DESCRIPTOR_NAME;
 
         try
         {
