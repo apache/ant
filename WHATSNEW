@@ -139,6 +139,10 @@ Other changes:
   
 * you can now specify environment variables in the <java> and <junit> tasks 
   if the fork attribute has been set to true.
+  
+* -propertyfile command-line option has been added to load an entire
+  property file just as -D properties are declared (as user properties).
+  -D properties take precedence over -propertyfile specified ones.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================

@@ -62,19 +62,22 @@ if one was specified, followed by a list of those targets without one.</p>
 <h3><a name="options">Command-line Options Summary</a></h3>
 <pre>ant [options] [target [target2 [target3] ...]]
 Options:
--help                  print this message
--projecthelp           print project help information
--version               print the version information and exit
--quiet                 be extra quiet
--verbose               be extra verbose
--debug                 print debugging information
--emacs                 produce logging information without adornments
--logfile <i>file</i>          use given file for log output
--logger <i>classname</i>      the class that is to perform logging
--listener <i>classname</i>    add an instance of class as a project listener
--buildfile <i>file</i>        use specified buildfile
--find <i>file</i>             search for buildfile towards the root of the filesystem and use the first one found
--D<i>property</i>=<i>value</i>       set <i>property</i> to <i>value</i>
+  -help                  print this message
+  -projecthelp           print project help information
+  -version               print the version information and exit
+  -quiet                 be extra quiet
+  -verbose               be extra verbose
+  -debug                 print debugging information
+  -emacs                 produce logging information without adornments
+  -logfile &lt;file&gt;        use given file for log
+  -logger &lt;classname&gt;    the class which is to perform logging
+  -listener &lt;classname&gt;  add an instance of class as a project listener
+  -buildfile &lt;file&gt;      use given buildfile
+  -D&lt;property&gt;=&lt;value&gt;   use value for given property
+  -propertyfile &lt;name&gt;   load all properties from file with -D
+                         properties taking precedence
+  -find &lt;file&gt;           search for buildfile towards the root of the
+                         filesystem and use it
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see the section <a

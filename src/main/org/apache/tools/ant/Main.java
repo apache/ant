@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -100,6 +101,9 @@ public class Main {
 
     /** Names of classes to add as listeners to project */
     private Vector listeners = new Vector(5);
+    
+    /** File names of property files to load on startup */
+    private Vector propertyFiles = new Vector(5);
 
     /**
      * The Ant logger class. There may be only one logger. It will have the
@@ -294,6 +298,16 @@ public class Main {
                 } else {
                     searchForThis = DEFAULT_BUILD_FILENAME;
                 }
+            } else if (arg.startsWith("-propertyfile")) {
+                try {
+                    propertyFiles.addElement(args[i+1]);
+                    i++;
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    String msg = "You must specify a property filename when " +
+                        "using the -propertyfile argument";
+                    System.out.println(msg);
+                    return;
+                }
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
@@ -304,9 +318,8 @@ public class Main {
                 // if it's no other arg, it may be the target
                 targets.addElement(arg);
             }
-
         }
-
+        
         // if buildFile was not specified on the command line,
         if (buildFile == null) {
             // but -find then search for it
@@ -330,6 +343,31 @@ public class Main {
         if (buildFile.isDirectory()) {
             System.out.println("What? Buildfile: " + buildFile + " is a dir!");
             throw new BuildException("Build failed");
+        }
+
+        // Load the property files specified by -propertyfile
+        for (int propertyFileIndex=0;
+             propertyFileIndex < propertyFiles.size();
+             propertyFileIndex++) {
+            String filename = (String) propertyFiles.elementAt(propertyFileIndex);
+            Properties props = new Properties();
+            try {
+                FileInputStream fis = new FileInputStream(filename);
+                props.load(fis);
+            }
+            catch (IOException e) {
+                System.out.println("Could not load property file "
+                   + filename + ": " + e.getMessage());
+            }
+            
+            // ensure that -D properties take precedence
+            Enumeration propertyNames = props.propertyNames();
+            while (propertyNames.hasMoreElements()) {
+                String name = (String) propertyNames.nextElement();
+                if (definedProps.getProperty(name) == null) {
+                    definedProps.put(name, props.getProperty(name));
+                }
+            }
         }
 
         readyToRun = true;
@@ -576,6 +614,8 @@ public class Main {
         msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
+        msg.append("  -propertyfile <name>   load all properties from file with -D" + lSep);
+        msg.append("                         properties taking precedence" + lSep);
         msg.append("  -find <file>           search for buildfile towards the root of the" + lSep);
         msg.append("                         filesystem and use it" + lSep);
         System.out.println(msg.toString());
