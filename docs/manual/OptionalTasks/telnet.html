@@ -2,16 +2,19 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>Telnet</title>
 </head>
 
 <body>
 
 <h2><a name="telnet">Telnet</a></h2>
 <h3>Description</h3>
-Task to automate a remote telnet session. The task uses nested &lt;read&gt; to indicate strings to wait for, and  &lt;write&gt; tags to specify text to send.  
+Task to automate a remote telnet session. The task uses 
+nested &lt;read&gt; to indicate strings to wait for, and
+&lt;write&gt; tags to specify text to send.  
 
-<p>If you do specify a userid and password, the system will assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
+<p>If you do specify a userid and password, the system will 
+assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -22,12 +25,12 @@ Task to automate a remote telnet session. The task uses nested &lt;read&gt; to i
   <tr>
      <td>userid</td>
      <td>the login id to use on the telnet server.</td>
-     <td>No</td>
+     <td>Only if password is specified</td>
   </tr>
   <tr>
      <td>password</td>
      <td>the login password to use on the telnet server.</td>
-     <td>No</td>
+     <td>Only if userid is specified</td>
   </tr>
   <tr>
      <td>server</td>
@@ -50,8 +53,34 @@ Task to automate a remote telnet session. The task uses nested &lt;read&gt; to i
      <td>No</td>
   </tr>
 </table>
+<h3><a name="nested">Nested Elements</a></h3>
+The commands to send to the server, and responses to wait for, are
+described as nested elements.  
+
+<h4>read</h4>
+
+<p>declare (as a text child of this element) a string to wait for.
+The element supports the timeout attribute, which overrides any
+timeout specified for the task as a whole. It also has a <tt>string<tt>
+attribute, which is an alternative to specifying the string as 
+a text element.
+</p>
+<i>Always declare an opening and closing
+&lt;read&gt; element to ensure that statements are not sent before
+the connection is ready, and that the connection is not broken before
+the final command has completed.
+</i>
+<h4>write</h4>
+
+<p>describes the text to send to the server. The <tt>echo</tt> boolean
+attribute controls whether the string is echoed to the local log; 
+this is "true" by default
+</p>
 <h3>Examples</h3>
-A simple example of connecting to a server and running a command.  This assumes a prompt of &quot;ogin:&quot; for the userid, and a prompt of &quot;assword:&quot; for the password.
+A simple example of connecting to a server and running a command.  This assumes
+ a prompt of &quot;ogin:&quot; for the userid, and a prompt of &quot;assword:&quot;
+ for the password.
+
 <blockquote><pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot;&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
