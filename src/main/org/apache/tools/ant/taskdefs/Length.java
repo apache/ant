@@ -155,8 +155,7 @@ public class Length extends Task {
             String[] f = ds.getIncludedFiles();
             for (int j = 0; j < f.length; j++) {
                 File file = FileUtils.getFileUtils().resolveFile(basedir, f[j]);
-                if (!(included.contains(file))) {
-                    included.add(file);
+                if (included.add(file)) {
                     h.handle(file);
                 }
             }
