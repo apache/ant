@@ -63,10 +63,10 @@ if [ -z "$ANT_HOME" ] ; then
   
   ANT_HOME=`dirname "$PRG"`/..
 
+  cd "$saveddir"
+
   # make it fully qualified
   ANT_HOME=`cd "$ANT_HOME" && pwd`
-
-  cd "$saveddir"
 fi
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
