@@ -597,6 +597,36 @@
         </table>
       </subsection>
 
+      <subsection name="JRun Ant Tasks">
+
+        <p>JRun 4 SP1 ships with lib/jrun-ant-tasks.jar, which defines
+        three Ant tasks: jrun, jrunapp, and jrunjmx.  Documentation
+        for the tasks can be found in JRun under
+        docs/ant/jrun.html.</p> 
+
+        <p>Note that the service pack must be installed on top of an
+        existing JRun 4 installation.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://dynamic.macromedia.com/bin/MM/software/trial/hwswrec.jsp?product=jrun_sp">http://dynamic.macromedia.com/bin/MM/software/trial/hwswrec.jsp?product=jrun_sp</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:bdeitte@macromedia.com">Brian Deitte</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+      
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
