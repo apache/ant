@@ -29,6 +29,11 @@
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
+    <td valign="top">daysinpast</td>
+    <td valign="top">sets the start the number of days into the past specified.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">start</td>
     <td valign="top">the earliest date of changes that are to be included in report.</td>
     <td align="center" valign="top">No</td>
@@ -72,6 +77,14 @@ the supplied displayname rather than the userid..</p>
 
 <p>Generates a changelog for the dve/network directory including all changes that
 ever occured on repository. It writes these changes into the file &quot;changelog.xml&quot;.</p>
+
+<pre>  &lt;changelog basedir=&quot;dve/network&quot;
+             destfile=&quot;changelog.xml&quot;
+             days=&quot;10&quot;
+  /&gt;</pre>
+
+<p>Generates a changelog for the dve/network directory for the last 10 days. It writes
+these changes into the file &quot;changelog.xml&quot;.</p>
 
 <pre>  &lt;changelog basedir=&quot;dve/network&quot;
              destfile=&quot;changelog.xml&quot;
