@@ -58,22 +58,40 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
+
 /**
- * @author Erik Meade, emeade@geekfarm.org
+ * ANTLR task.
+ *
+ * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
+ * @author <a href="mailto:sbailliez@apache.org>Stephane Bailliez</a>
  */
 public class ANTLR extends Task {
 
     private CommandlineJava commandline = new CommandlineJava();
+
+    /** the file to process */
     private File target;
+
+    /** where to output the result */
     private File outputDirectory;
+
+    /** should fork ? */
     private boolean fork = false;
-    private File dir;
+
+    /** working directory */
+    private File workingdir = null;
 
     public ANTLR() {
         commandline.setVm("java");
@@ -98,9 +116,66 @@ public class ANTLR extends Task {
      * The working directory of the process
      */
     public void setDir(File d) {
-        this.dir = d;
+        this.workingdir = d;
     }
 
+    /**
+     * <code>&lt;classpath&gt;</code> allows classpath to be set
+     * because a directory might be given for Antlr debug...
+     */
+    public Path createClasspath() {
+        return commandline.createClasspath(project).createPath();
+    }
+
+    /**
+     * Create a new JVM argument. Ignored if no JVM is forked.
+     * @return  create a new JVM argument so that any argument can be passed to the JVM.
+     * @see #setFork(boolean)
+     */
+    public Commandline.Argument createJvmarg() {
+        return commandline.createVmArgument();
+    }
+
+    /**
+     * Adds the jars or directories containing Antlr
+     * this should make the forked JVM work without having to
+     * specify it directly.
+     */
+    public void init() throws BuildException {
+        addClasspathEntry("/antlr/Tool.class");
+    }
+
+    /**
+     * Search for the given resource and add the directory or archive
+     * that contains it to the classpath.
+     *
+     * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
+     * getResource doesn't contain the name of the archive.</p>
+     */
+    protected void addClasspathEntry(String resource) {
+        URL url = getClass().getResource(resource);
+        if (url != null) {
+            String u = url.toString();
+            if (u.startsWith("jar:file:")) {
+                int pling = u.indexOf("!");
+                String jarName = u.substring(9, pling);
+                log("Implicitly adding "+jarName+" to classpath",
+                    Project.MSG_DEBUG);
+                createClasspath().setLocation(new File((new File(jarName)).getAbsolutePath()));
+            } else if (u.startsWith("file:")) {
+                int tail = u.indexOf(resource);
+                String dirName = u.substring(5, tail);
+                log("Implicitly adding "+dirName+" to classpath",
+                    Project.MSG_DEBUG);
+                createClasspath().setLocation(new File((new File(dirName)).getAbsolutePath()));
+            } else {
+                log("Don\'t know how to handle resource URL "+u,
+                    Project.MSG_DEBUG);
+            }
+        } else {
+            log("Couldn\'t find "+resource, Project.MSG_DEBUG);
+        }
+    }
 
     public void execute() throws BuildException {
         validateAttributes();
@@ -117,9 +192,11 @@ public class ANTLR extends Task {
                 if (err == 1) {
                     throw new BuildException("ANTLR returned: "+err, location);
                 }
-            }
-            else {
-                Execute.runCommand(this, commandline.getCommandline());
+            } else {
+                ExecuteJava exe = new ExecuteJava();
+                exe.setJavaCommand(commandline.getJavaCommand());
+                exe.setClasspath(commandline.getClasspath());
+                exe.execute(project);
             }
         }
     }
@@ -137,9 +214,6 @@ public class ANTLR extends Task {
         if (!outputDirectory.isDirectory()) {
             throw new BuildException("Invalid output directory: " + outputDirectory);
         }
-        if (fork && (dir == null || !dir.isDirectory())) {
-            throw new BuildException("Invalid working directory: " + dir);
-        }
     }
 
     private File getGeneratedFile() throws BuildException {
@@ -156,7 +230,7 @@ public class ANTLR extends Task {
             }
             in.close();
         } catch (Exception e) {
-            throw new BuildException("Unable to determine generated class");
+            throw new BuildException("Unable to determine generated class", e);
         }
         if (generatedFileName == null) {
             throw new BuildException("Unable to determine generated class");
@@ -164,11 +238,14 @@ public class ANTLR extends Task {
         return new File(outputDirectory, generatedFileName + ".java");
     }
 
+    /** execute in a forked VM */
     private int run(String[] command) throws BuildException {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), null);
         exe.setAntRun(project);
-        exe.setWorkingDirectory(dir);
+        if (workingdir != null){
+            exe.setWorkingDirectory(workingdir);
+        }
         exe.setCommandline(command);
         try {
             return exe.execute();

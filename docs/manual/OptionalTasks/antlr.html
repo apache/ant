@@ -57,6 +57,32 @@
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h3><a name="nested">Nested Elements</a></h3>
+
+<p><code>ANTLR</code> supports a nested <code>&lt;classpath&gt;</code>
+element, that represents a <a href="../using.html#path">PATH like
+structure</a>. It is given as a convenience if you have to specify
+the original ANTLR directory. In most cases, dropping the appropriate
+ANTLR jar in the normal Ant lib repository will be enough.</p>
+
+<h4>jvmarg</h4>
+
+<p>If fork is enabled, additional parameters may be passed to the new
+VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:</p>
+
+<pre>
+&lt;antlr fork=&quot;yes&quot; target=...&gt;
+  &lt;jvmarg value=&quot;-Djava.compiler=NONE&quot;/&gt;
+  ...
+&lt;/antlr&gt;
+</pre>
+
+<p>would run ANTLR in a VM without JIT.</p>
+
+<p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
+href="../using.html#arg">Command line arguments</a>.</p>
+
 <h3>Example</h3>
 <blockquote><pre>
 &lt;antlr
