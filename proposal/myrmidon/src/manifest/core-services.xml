@@ -1,0 +1,4 @@
+<services>
+  <service role="org.apache.aut.nativelib.ExecManager"
+           factory="org.apache.myrmidon.framework.factorys.ExecManagerFactory"/>
+</services>
