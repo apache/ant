@@ -56,6 +56,8 @@ public class SchemaValidate extends XMLValidateTask {
     /** full checking of a schema */
     private boolean fullChecking=true;
 
+    private boolean disableDTD=false;
+
     /**
      * default URL for nonamespace schemas
      */
@@ -179,6 +181,14 @@ public class SchemaValidate extends XMLValidateTask {
     }
 
     /**
+     * flag to disable DTD support.
+     * @param disableDTD
+     */
+    public void setDisableDTD(boolean disableDTD) {
+        this.disableDTD = disableDTD;
+    }
+
+    /**
      * init the parser : load the parser class, and set features if necessary It
      * is only after this that the reader is valid
      *
@@ -186,7 +196,6 @@ public class SchemaValidate extends XMLValidateTask {
      */
     protected void initValidator() {
         super.initValidator();
-        XMLReader xmlReader = getXmlReader();
         //validate the parser type
         if(isSax1Parser()) {
             throw new BuildException(ERROR_SAX_1);
@@ -204,8 +213,8 @@ public class SchemaValidate extends XMLValidateTask {
         //enable schema checking
         setFeature(XmlConstants.FEATURE_XSD_FULL_VALIDATION,fullChecking);
 
-        //turn off DTDs
-        setFeatureIfSupported(XmlConstants.FEATURE_DISALLOW_DTD,true);
+        //turn off DTDs if desired
+        setFeatureIfSupported(XmlConstants.FEATURE_DISALLOW_DTD,disableDTD);
         //schema declarations go in next
         addSchemaLocations();
     }
