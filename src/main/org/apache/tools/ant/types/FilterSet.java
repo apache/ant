@@ -245,6 +245,9 @@ public class FilterSet extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
+        if (startOfToken == null || "".equals(startOfToken)) {
+            throw new BuildException("beginToken must not be empty");
+        }
         this.startOfToken = startOfToken;
     }
 
@@ -264,6 +267,9 @@ public class FilterSet extends DataType {
     public void setEndToken( String endOfToken ) {
         if (isReference()) {
             throw tooManyAttributes();
+        }
+        if (endOfToken == null || "".equals(endOfToken)) {
+            throw new BuildException("endToken must not be empty");
         }
         this.endOfToken = endOfToken;
     }
