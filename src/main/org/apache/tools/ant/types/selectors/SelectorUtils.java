@@ -58,6 +58,8 @@ import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.apache.tools.ant.types.Resource;
+
 /**
  * <p>This is a utility class used by selectors and DirectoryScanner. The
  * functionality more properly belongs just to selectors, but unfortunately
@@ -550,6 +552,34 @@ strLoop:
             return true;
         }
         if ((src.lastModified() - granularity) > target.lastModified()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns dependency information on these two resources. If src has been
+     * modified later than target, it returns true. If target doesn't exist,
+     * it likewise returns true. Otherwise, target is newer than src and
+     * is not out of date, thus the method returns false. It also returns
+     * false if the src file doesn't even exist, since how could the
+     * target then be out of date.
+     *
+     * @param src the original resource
+     * @param target the resource being compared against
+     * @param granularity the amount in seconds of slack we will give in
+     *        determining out of dateness
+     * @return whether the target is out of date
+     */
+    public static boolean isOutOfDate(Resource src, Resource target, 
+                                      int granularity) {
+        if (!src.isExists()) {
+            return false;
+        }
+        if (!target.isExists()) {
+            return true;
+        }
+        if ((src.getLastModified() - granularity) > target.getLastModified()) {
             return true;
         }
         return false;
