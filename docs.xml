@@ -8,6 +8,7 @@
     <property name="site.dir"     location="../jakarta-site2" />
     <property name="templ.path"   location="xdocs/stylesheets" />
     <property name="velocity.props"   location="${docs.src}/velocity.properties" />
+    <property name="include.xml"  value="**/*.xml" />
 
     <path id="anakia.classpath">
         <fileset dir="${site.dir}/lib">
@@ -38,7 +39,7 @@
              extension=".html" style="./site.vsl"
              projectFile="${project.file}"
              excludes="**/stylesheets/**"
-             includes="**/*.xml"
+             includes="${include.xml}"
              lastModifiedCheck="true"
              templatePath="${templ.path}"
              velocityPropertiesFile="${velocity.props}">
