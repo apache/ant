@@ -106,9 +106,13 @@ public class SystemPath extends Task {
     public SystemPath() {
     }
 
+    public void setPathRef( Reference pathRef ) throws BuildException {
+        setClasspathRef( pathRef );
+    }
+
     /** Specify which path will be used.
      */
-    public void setPathRef( Reference pathRef ) throws BuildException {
+    public void setClasspathRef( Reference pathRef ) throws BuildException {
         Path path=(Path)pathRef.getReferencedObject(project);
 
         initSystemLoader(path);
