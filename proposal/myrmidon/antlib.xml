@@ -56,24 +56,21 @@ Legal:
       <fileset dir="${java.dir}">
         <include name="${antlib.include}/*.java" />
       </fileset>
-      <template templateFile="${manifest.dir}/core-ant-descriptor.template"
+      <template templateFile="${manifest.dir}/ant-descriptor.template"
                 destinationfile="${antlib.descriptor}"/>
-      <template templateFile="${manifest.dir}/builtin-ant-roles.template"
+      <template templateFile="${manifest.dir}/ant-roles.template"
                 destinationfile="${antlib.role.descriptor}"/>
     </xdoclet>
   </target>
 
   <!-- Creates the jars file -->
   <target name="jar" depends="xdoclet">
-    <jar jarfile="${build.lib}/${antlib.name}.atl" basedir="${build.classes}">
+    <antlib-jar jarfile="${build.lib}/${antlib.name}.atl"
+                basedir="${build.classes}"
+                descriptor="${gen.dir}/${antlib.descriptor}"
+                rolesDescriptor="${gen.dir}/${antlib.role.descriptor}">
       <include name="${antlib.include}" />
-      <zipfileset dir="${gen.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="${antlib.descriptor}"/>
-      </zipfileset>
-      <zipfileset dir="${gen.dir}" fullpath="META-INF/ant-roles.xml">
-        <include name="${antlib.role.descriptor}"/>
-      </zipfileset>
-    </jar>
+    </antlib-jar>
   </target>
 
 </project>

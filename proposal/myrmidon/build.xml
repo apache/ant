@@ -182,6 +182,16 @@ Legal:
 
   </target>
 
+  <!-- Compiles and installs the custom build tasks -->
+  <target name="custom-tasks">
+      <property name="custom-tasks-dir" value="${build.dir}/tasks"/>
+      <mkdir dir="${custom-tasks-dir}"/>
+      <javac srcdir="src/make" destdir="${custom-tasks-dir}">
+      </javac>
+      <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
+          <classpath location="${custom-tasks-dir}"/>
+      </taskdef>
+  </target>
 
   <!-- Compiles the source code -->
   <target name="compile" depends="check_for_optional_packages">
@@ -292,7 +302,7 @@ Legal:
   </target>
 
   <!-- Creates the jars file -->
-  <target name="jars" depends="compile">
+  <target name="jars" depends="custom-tasks, compile">
 
     <mkdir dir="${build.lib}"/>
 
@@ -302,9 +312,12 @@ Legal:
       <include name="org/apache/myrmidon/launcher/*" />
     </jar>
 
-    <jar jarfile="${build.lib}/myrmidon-api.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.dir}/myrmidon-api.mf">
+    <antlib-jar jarfile="${build.lib}/myrmidon-api.jar"
+                basedir="${build.classes}"
+                manifest="${manifest.dir}/myrmidon-api.mf"
+                rolesDescriptor="${manifest.dir}/builtin-ant-roles.xml"
+                descriptor="${manifest.dir}/builtin-ant-descriptor.xml"
+                servicesDescriptor="${manifest.dir}/core-services.xml" >
       <include name="org/apache/myrmidon/api/*" />
       <include name="org/apache/myrmidon/aspects/*" />
       <include name="org/apache/myrmidon/converter/*" />
@@ -316,19 +329,7 @@ Legal:
 <!--      <include name="org/apache/myrmidon/*" />
       <include name="org/apache/myrmidon/components/**"/>
       <include name="org/apache/myrmidon/frontends/*" /> -->
-
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
-        <include name="builtin-ant-roles.xml"/>
-      </zipfileset>
-
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="builtin-ant-descriptor.xml"/>
-      </zipfileset>
-
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-services.xml">
-        <include name="core-services.xml"/>
-      </zipfileset>
-    </jar>
+    </antlib-jar>
 
 <!--
     <jar jarfile="${build.lib}/myrmidon-framework.jar"
@@ -391,18 +392,14 @@ Legal:
     </ant>
     -->
 
-    <jar jarfile="${build.lib}/selftest.atl"
+    <antlib-jar jarfile="${build.lib}/selftest.atl"
          basedir="${build.classes}"
-         manifest="${manifest.dir}/selftest.mf">
+         manifest="${manifest.dir}/selftest.mf"
+         descriptor="${manifest.dir}/selftest-ant-descriptor.xml"
+         rolesDescriptor="${manifest.dir}/empty-roles.xml">
       <include name="org/apache/antlib/selftest/**" />
       <exclude name="org/apache/antlib/selftest/extension1/**" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="selftest-ant-descriptor.xml"/>
-      </zipfileset>
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
-        <include name="empty-roles.xml"/>
-      </zipfileset>
-    </jar>
+    </antlib-jar>
 
     <jar jarfile="${build.lib}/selftest-extension1.jar"
          basedir="${build.classes}"
