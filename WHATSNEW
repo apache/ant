@@ -102,6 +102,9 @@ Other changes:
 
 * regexp mapper now supports the java.util.regex package of JDK 1.4.
 
+* New filesonly attribute for <zip> and friends to suppress directory
+  entries.
+
 Fixed bugs:
 -----------
 

@@ -78,6 +78,7 @@ public class Zip extends MatchingTask {
     private File zipFile;
     private File baseDir;
     private boolean doCompress = true;
+    private boolean doFilesonly = false;
     protected String archiveType = "zip";
     // For directories:
     private static long emptyCrc = new CRC32 ().getValue ();
@@ -112,6 +113,13 @@ public class Zip extends MatchingTask {
      */
     public void setCompress(boolean c) {
         doCompress = c;
+    }
+
+    /**
+     * Emulate Sun's jar utility by not adding parent dirs
+     */
+    public void setFilesonly(boolean f) {
+        doFilesonly = f;
     }
 
     /**
@@ -529,27 +537,28 @@ public class Zip extends MatchingTask {
     protected void addParentDirs(File baseDir, String entry,
                                  ZipOutputStream zOut, String prefix)
         throws IOException {
-
-        Stack directories = new Stack();
-        int slashPos = entry.length();
-
-        while ((slashPos = entry.lastIndexOf((int)'/', slashPos-1)) != -1) {
-            String dir = entry.substring(0, slashPos+1);
-            if (addedDirs.get(prefix+dir) != null) {
-                break;
+        if( !doFilesonly ) {
+            Stack directories = new Stack();
+            int slashPos = entry.length();
+            
+            while ((slashPos = entry.lastIndexOf((int)'/', slashPos-1)) != -1) {
+                String dir = entry.substring(0, slashPos+1);
+                if (addedDirs.get(prefix+dir) != null) {
+                    break;
+                }
+                directories.push(dir);
             }
-            directories.push(dir);
-        }
-
-        while (!directories.isEmpty()) {
-            String dir = (String) directories.pop();
-            File f = null;
-            if (baseDir != null) {
-                f = new File(baseDir, dir);
-            } else {
-                f = new File(dir);
+            
+            while (!directories.isEmpty()) {
+                String dir = (String) directories.pop();
+                File f = null;
+                if (baseDir != null) {
+                    f = new File(baseDir, dir);
+                } else {
+                    f = new File(dir);
+                }
+                zipDir(f, zOut, prefix+dir);
             }
-            zipDir(f, zOut, prefix+dir);
         }
     }
 
