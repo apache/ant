@@ -108,7 +108,6 @@ public class Commandline {
     public class Argument {
 
         private String[] parts;
-        private Reference pathRef;
 
         /**
          * Sets a single commandline argument.

@@ -100,11 +100,13 @@ public class Javac extends MatchingTask {
     private Path src;
     private File destDir;
     private Path compileClasspath;
+    private Vector classpathReferences = new Vector();
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
     private String target;
     private Path bootclasspath;
+    private Vector bootClasspathReferences = new Vector();
     private Path extdirs;
     private static String lSep = System.getProperty("line.separator");
 
@@ -164,6 +166,22 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void addClasspathRef(Reference r) {
+        classpathReferences.addElement(r);
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void setClasspathRef(Reference r) {
+        classpathReferences.addElement(r);
+    }
+
+    /**
      * Sets the bootclasspath that will be used to compile the classes
      * against.
      */
@@ -183,6 +201,22 @@ public class Javac extends MatchingTask {
             bootclasspath = new Path(project);
         }
         return bootclasspath;
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void addBootClasspathRef(Reference r) {
+        bootClasspathReferences.addElement(r);
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void setBootClasspathRef(Reference r) {
+        bootClasspathReferences.addElement(r);
     }
 
     /**
@@ -355,6 +389,7 @@ public class Javac extends MatchingTask {
         if (compileClasspath != null) {
             addExistingToClasspath(classpath,compileClasspath);
         }
+        addReferencesToPath(classpathReferences, classpath);
 
         // add the system classpath
 
@@ -505,7 +540,8 @@ public class Javac extends MatchingTask {
         if (optimize) {
             cmd.createArgument().setValue("-O");
         }
-        if (bootclasspath != null) {
+        if (bootclasspath != null || bootClasspathReferences.size() > 0) {
+            addReferencesToPath(bootClasspathReferences, createBootclasspath());
             cmd.createArgument().setValue("-bootclasspath");
             cmd.createArgument().setPath(bootclasspath);
         }
@@ -559,7 +595,8 @@ public class Javac extends MatchingTask {
 
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null) {
+        if (bootclasspath != null || bootClasspathReferences.size() > 0) {
+            addReferencesToPath(bootClasspathReferences, createBootclasspath());
             classpath.append(bootclasspath);
         }
 
@@ -713,7 +750,7 @@ public class Javac extends MatchingTask {
 
     /**
      * Emulation of extdirs feature in java >= 1.2.
-     * This method adds all file in the given
+     * This method adds all files in the given
      * directories (but not in sub-directories!) to the classpath,
      * so that you don't have to specify them all one by one.
      * @param classpath - Path to append files to
@@ -740,5 +777,25 @@ public class Javac extends MatchingTask {
             classpath.addFileset(fs);
         }
     }
+
+    /**
+     * Appends the referenced Path instances to the other path.
+     *
+     * @param v Vector of Reference objects referring to Path objects.
+     * @param p Path to append to.
+     */
+    private void addReferencesToPath(Vector v, Path p) {
+        for (int i=0; i<v.size(); i++) {
+            Reference r = (Reference) v.elementAt(i);
+            Object o = r.getReferencedObject(project);
+            if (o instanceof Path) {
+                p.append((Path) o);
+            } else {
+                String msg = r.getRefId()+" doesn\'t denote a classpath";
+                throw new BuildException(msg, location);
+            }
+        }
+    }
+        
 }
 

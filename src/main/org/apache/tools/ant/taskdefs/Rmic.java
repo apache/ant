@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 import java.io.*;
 import java.util.StringTokenizer;
@@ -96,6 +97,7 @@ public class Rmic extends MatchingTask {
     private boolean filtering = false;
 
     private Vector compileList = new Vector();
+    private Vector classpathReferences = new Vector();
 
     public void setBase(String base) {
         this.base = base;
@@ -136,7 +138,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Maybe creates a nesetd classpath element.
+     * Maybe creates a nested classpath element.
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
@@ -146,10 +148,25 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void addClasspathRef(Reference r) {
+        classpathReferences.addElement(r);
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void setClasspathRef(Reference r) {
+        classpathReferences.addElement(r);
+    }
+
+    /**
      * Indicates that the classes found by the directory match should be
      * checked to see if they implement java.rmi.Remote.
-     * This defaults to false if not set.
-     */
+     * This defaults to false if not set.  */
     public void setVerify(String verify) {
         this.verify = Project.toBoolean(verify);
     }
@@ -170,7 +187,19 @@ public class Rmic extends MatchingTask {
         if (null != sourceBase) {
             sourceBaseFile = project.resolveFile(sourceBase);
         }
-        String classpath = getCompileClasspath(baseDir);
+        Path classpath = getCompileClasspath(baseDir);
+
+        for (int i=0; i<classpathReferences.size(); i++) {
+            Reference r = (Reference) classpathReferences.elementAt(i);
+            Object o = r.getReferencedObject(project);
+            if (o instanceof Path) {
+                classpath.append((Path) o);
+            } else {
+                String msg = r.getRefId()+" doesn\'t denote a classpath";
+                throw new BuildException(msg, location);
+            }
+        }
+        
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given
@@ -193,7 +222,7 @@ public class Rmic extends MatchingTask {
         args[i++] = "-d";
         args[i++] = baseDir.getAbsolutePath();
         args[i++] = "-classpath";
-        args[i++] = classpath;
+        args[i++] = classpath.toString();
         if (null != stubVersion) {
             if ("1.1".equals(stubVersion))
                 args[i++] = "-v1.1";
@@ -369,7 +398,7 @@ public class Rmic extends MatchingTask {
     // XXX
     // we need a way to not use the current classpath.
 
-    private String getCompileClasspath(File baseFile) {
+    private Path getCompileClasspath(File baseFile) {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
         Path classpath = new Path(project, baseFile.getAbsolutePath());
@@ -390,7 +419,7 @@ public class Rmic extends MatchingTask {
                 addExistingToClasspath(classpath, new Path(project, bootcp));
             }
         }
-        return classpath.toString();
+        return classpath;
     }
 
      /**

@@ -61,6 +61,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +80,7 @@ public class Java extends Task {
     private boolean fork = false;
     private File dir = null;
     private boolean failOnError = false;
+    private Vector classpathReferences = new Vector();
     
     /**
      * Do the execution.
@@ -135,6 +137,22 @@ public class Java extends Task {
      */
     public Path createClasspath() {
         return cmdl.createClasspath(project);
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void addClasspathRef(Reference r) {
+        classpathReferences.addElement(r);
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere - nested
+     * <classpathref> element.
+     */
+    public void setClasspathRef(Reference r) {
+        classpathReferences.addElement(r);
     }
 
     /**
@@ -218,7 +236,10 @@ public class Java extends Task {
     private void run(CommandlineJava command) throws BuildException {
         ExecuteJava exe = new ExecuteJava();
         exe.setJavaCommand(command.getJavaCommand());
-        exe.setClasspath(command.getClasspath());
+        Path p = new Path(project);
+        p.append(command.getClasspath());
+        addReferencesToPath(classpathReferences, p);
+        exe.setClasspath(p);
         exe.execute(project);
     }
 
@@ -252,10 +273,33 @@ public class Java extends Task {
         for (int i=0; i<args.size(); i++) {
             cmdj.createArgument().setValue((String) args.elementAt(i));
         }
-        if (cmdl.getClasspath() != null) {
-            cmdj.createClasspath(project).append(cmdl.getClasspath());
+        if (cmdl.getClasspath() != null || classpathReferences.size() > 0) {
+            Path p = cmdj.createClasspath(project);
+            if (cmdl.getClasspath() != null) {
+                p.append(cmdl.getClasspath());
+            }
+            addReferencesToPath(classpathReferences, p);
         }
         run(cmdj);
     }
 
+    /**
+     * Appends the referenced Path instances to the other path.
+     *
+     * @param v Vector of Reference objects referring to Path objects.
+     * @param p Path to append to.
+     */
+    private void addReferencesToPath(Vector v, Path p) {
+        for (int i=0; i<v.size(); i++) {
+            Reference r = (Reference) v.elementAt(i);
+            Object o = r.getReferencedObject(project);
+            if (o instanceof Path) {
+                p.append((Path) o);
+            } else {
+                String msg = r.getRefId()+" doesn\'t denote a classpath";
+                throw new BuildException(msg, location);
+            }
+        }
+    }
+        
 }
