@@ -71,6 +71,14 @@
       </or>
     </condition>
    <echo> dotnetapps.found=${dotnetapps.found}</echo>
+
+   <condition property="mono.executable" value="mono">
+      <or>
+        <available file="mono"     filepath="${env.PATH}" />
+        <available file="mono.exe" filepath="${env.PATH}" />
+      </or>
+   </condition>
+   <property name="mono.executable" value="mint"/>
   </target>
     
   <target name="validate" depends="probe_for_apps">
@@ -115,7 +123,7 @@
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
-    <exec executable="mono" failonerror="true">
+    <exec executable="${mono.executable}" failonerror="true">
       <arg value="${testCSC.exe}"/>
     </exec> 
     <delete file="${testCSC.exe}"/>
@@ -153,7 +161,7 @@
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
-    <exec executable="mono" failonerror="true">
+    <exec executable="${mono.execuatble}" failonerror="true">
       <arg value="${testCSC.exe}"/>
     </exec> 
     <delete file="${testCSC.exe}"/>
@@ -232,7 +240,7 @@
     </csc>
     <available property="refapp.created" file="${testCscReferences.exe}"/>
     <fail unless="refapp.created">No app ${testCscReferences.exe} created</fail>
-    <exec executable="mono" failonerror="true">
+    <exec executable="${mono.executable}" failonerror="true">
       <arg value="${testCscReferences.exe}"/>
     </exec> 
   </target>
