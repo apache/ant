@@ -21,6 +21,7 @@
   <li>Conor MacNeill (<a href="mailto:conor@cortexebusiness.com.au">conor@cortexebusiness.com.au</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:stefano@apache.org">stefano@apache.org</a>)</li>
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
+  <li>Nico Seessle (<a href="mailto:nico@seessle.de">nico@seessle.de</a>)</li>
   <li>Roger Vaughn (<a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>)</li>
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
@@ -751,7 +752,7 @@ directory based task that constitutes an implicit FileSet. In addition
       taken to be an exclude pattern</td>
   </tr>
 </table>
-<h4>Examples:</h4>
+<h4>Examples</h4>
 <blockquote><pre>
 &lt;patternset id=&quot;non.test.sources&quot; &gt;
   &lt;include name=&quot;**/*.java&quot; /&gt;
@@ -818,7 +819,7 @@ as PatternSet's attributes.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
-<h4>Examples:</h4>
+<h4>Examples</h4>
 <blockquote><pre>
 &lt;fileset dir=&quot;${server.src}&quot; &gt;
   &lt;patternset id=&quot;non.test.sources&quot; &gt;
@@ -841,6 +842,7 @@ same patterns as the example before.</p>
 <h2><a name="tasks">Built in tasks</a></h2>
 <ul>
   <li><a href="#ant">Ant</a></li>
+  <li><a href="#antcall">AntCall</a></li>
   <li><a href="#antstructure">AntStructure</a></li>
   <li><a href="#available">Available</a></li>
   <li><a href="#chmod">Chmod</a></li>
@@ -863,6 +865,7 @@ same patterns as the example before.</p>
   <li><a href="#java">Java</a></li>
   <li><a href="#javac">Javac</a></li>
   <li><a href="#javadoc">Javadoc/Javadoc2</a></li>
+  <li><a href="#mail">Mail</a></li>
   <li><a href="#mkdir">Mkdir</a></li>
   <li><a href="#patch">Patch</a></li>
   <li><a href="#property">Property</a></li>
@@ -876,17 +879,17 @@ same patterns as the example before.</p>
   <li><a href="#taskdef">Taskdef</a></li>
   <li><a href="#touch">Touch</a></li>
   <li><a href="#tstamp">Tstamp</a></li>
-  <li><a href="#uptodate">Uptodate</a></li>
   <li><a href="#unzip">Unjar</a></li>
   <li><a href="#untar">Untar</a></li>
   <li><a href="#unzip">Unwar</a></li>
   <li><a href="#unzip">Unzip</a></li>
+  <li><a href="#uptodate">Uptodate</a></li>
   <li><a href="#war">War</a></li>
   <li><a href="#zip">Zip</a></li>
 </ul>
 <hr>
 <h2><a name="ant">Ant</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 <p>Runs Ant on a supplied buildfile. This can be used to build subprojects.</p>
 <p>When the <i>antfile</i> attribute is omitted, the file &quot;build.xml&quot;
 in the supplied directory (<i>dir</i> attribute) is used.</p>
@@ -897,7 +900,7 @@ These properties will override the properties that are set in the new project.
 (See also the <a href="#property">properties task</a>). You can set properties
 in the new project from the old project by using nested property tags. This
 allows you to parameterize your subprojects.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -913,7 +916,7 @@ allows you to parameterize your subprojects.</p>
     <td valign="top">dir</td>
  	<td valign="top">the directory to use as a basedir for the new Ant project. 
 					 Defaults to the current directory.</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">target</td>
@@ -929,18 +932,55 @@ allows you to parameterize your subprojects.</p>
 </table>
 <h3>Examples</h3>
 <pre>
-  &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot; /&gt;
+  &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot; /&gt;
 
-  &lt;ant dir=&quot;subproject&quot; /&gt;
+  &lt;ant dir=&quot;subproject&quot; /&gt;
 
-  &lt;ant antfile=&quot;subproject/property_based_subbuild.xml&quot;&gt;
-    &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot; /&gt;
-    &lt;property file=&quot;config/subproject/default.properties&quot; /&gt;
-  &lt;/ant&gt;
+  &lt;ant antfile=&quot;subproject/property_based_subbuild.xml&quot;&gt;
+    &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot; /&gt;
+    &lt;property file=&quot;config/subproject/default.properties&quot; /&gt;
+  &lt;/ant&gt;
 </pre>
 <hr>
+<h2><a name="antcall">AntCall</a></h2>
+<h3>Description</h3>
+<p>Call another target within the same build-file optionally specifying some
+properties (param's in this context)</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">The target to execute.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>param</h4>
+<p>Specifies the properties to set before running the specified target. See <a
+href="#property">property</a> for usage guidelines.</p>
+<p>This will only set the specified properties if the property is not already
+set in the current project!</p>
+<h3>Examples</h3>
+<pre>
+  &lt;target name=&quot;default&quot;&gt;
+    &lt;calltarget target=&quot;doSomethingElse&quot;&gt;
+      &lt;param name=&quot;param1&quot; value=&quot;value&quot;/&gt;
+    &lt;/calltarget&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;doSomethingElse&quot;&gt;
+    &lt;echo message=&quot;param1=${param1}&quot;/&gt;
+  &lt;/target&gt;
+</pre>
+<p>Will run the target 'doSomethingElse' and echo 'param1=value'.</p>
+<hr>
 <h2><a name="antstructure">AntStructure</a></h2>
-<h3><b>Description:</b></h3> 
+<h3>Description</h3> 
 <p>Generates a DTD for Ant build files which contains information
 about all tasks currently known to Ant.</p> 
 <p>Note that the DTD generated by this task is incomplete, you can
@@ -950,7 +990,7 @@ href="http://www.sdv.fr/pages/casa/html/ant-dtd.en.html">here</a> for
 a way to get around this problem.</p>
 <p>This task doesn't know about required attributes, all will be
 listed as <code>#IMPLIED</code>.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -973,7 +1013,7 @@ listed as <code>#IMPLIED</code>.</p>
 <p>Sets a property if a resource is available at runtime. This resource can be a
 file resource, a class in classpath or a JVM system resource.</p>
 <p>If the resource is present, the property value is set to true by
-default, otherwise the property is not set.  You can set the value to
+default, otherwise the property is not set. You can set the value to
 something specific by using the value attribute.</p>
 <p>Normally, this task is used to set properties that are useful to avoid target
 execution depending on system parameters.</p>
@@ -989,11 +1029,11 @@ execution depending on system parameters.</p>
     <td valign="top">the name of the property to set.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
-  <tr>
-    <td valign="top">value</td>
-    <td valign="top">the value to set the property to. Defaults to &quot;true&quot;.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the value to set the property to. Defaults to &quot;true&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the class to look for in classpath.</td>
@@ -3002,6 +3042,56 @@ respectively.</p>
   &lt/javadoc&gt;</pre>
   
 <hr>
+<h2><a name="mail">Mail</a></h2>
+<h3>Description</h3>
+<p>A task to send SMTP email.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">from</td>
+    <td valign="top">Email address of sender.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">tolist</td>
+    <td valign="top">Comma-separated list of recipients.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">message</td>
+    <td valign="top">Message to send in the body of the email.</td>
+    <td align="center" valign="middle" rowspan="2">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">files</td>
+    <td valign="top">Filename(s) of text to send in the body of the email. 
+	Multiple files are comma-separated.</td>
+  </tr>
+  <tr>
+    <td valign="top">mailhost</td>
+    <td valign="top">Host name of the mail server.</td>
+    <td align="center" valign="top">No, default to &quot;localhost&quot;</td>
+  </tr>
+  <tr>
+    <td valign="top">subject</td>
+    <td valign="top">Email subject line.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>
+  &lt;mail from=&quot;me&quot; tolist=&quot;you&quot; subject=&quot;Results of nightly build&quot;
+        files=&quot;build.log&quot;/&gt;</pre>
+<p>Sends an eMail from <i>me</i> to <i>you</i> with a subject of 
+<i>Results of nightly build</i> and includes the contents of <i>build.log</i>
+in the body of the message.</p>
+<hr>
+
 <h2><a name="mkdir">Mkdir</a></h2>
 <h3>Description</h3>
 <p>Creates a directory. Also non-existent parent directories are created, when
@@ -4113,7 +4203,7 @@ it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
 </ul>
 <hr>
 <h2><a name="cab">Cab</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 <p>The cab task creates Microsoft cab archive files.  It is invoked
 similar to the <a href="#jar">jar</a> or <a href="#zip">zip</a> tasks.
 This task will only work on Windows, and will be silently ignored on
@@ -4127,7 +4217,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -4226,7 +4316,7 @@ excluded. Output from the cabarc tool is displayed in the build
 output.</p>
 <hr>
 <h2><a name="ftp">FTP</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 <p>The ftp task implements a basic FTP client that can send, receive,
 list, and delete files.  See below for descriptions and examples of how
 to perform each task.</p>
@@ -4239,7 +4329,7 @@ instead.</p>
 <p>See the section on <a href="#directorybasedtasks">directory based
 tasks</a>, on how the inclusion/exclusion of files works, and how to
 write patterns.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -4413,7 +4503,7 @@ tries to delete all *.tmp files from the default directory for that user.
 If you don't have permission to delete a file, a BuildException is thrown.</p>
 <h3>Listing Files</h3>
 <pre>
-  &lt;ftp action="list"
+  &lt;ftp action=&quot;list&quot;
        server=&quot;ftp.apache.org&quot;
        userid=quot;anonymous&quot;
        password=&quot;me@myorg.com&quot; 
@@ -4425,10 +4515,10 @@ If you don't have permission to delete a file, a BuildException is thrown.</p>
 </pre>
 <p>This provides a file listing in <code>data/ftp.listing</code> of all the files on
 the FTP server relative to the default directory of the <code>anonymous</code>
-user.  The listing is in whatever format the FTP server normally lists files.</p>
+user. The listing is in whatever format the FTP server normally lists files.</p>
 <hr>
 <h2><a name="netrexxc">NetRexxC</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 <p>Compiles a <a href="http://www2.hursley.ibm.com/netrexx">NetRexx</a>
 source tree within the running (Ant) VM.</p>
 <p>The source and destination directory will be recursively scanned for
@@ -4456,7 +4546,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -4690,7 +4780,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 </blockquote>
 <hr>
 <h2><a name="renameexts">RenameExtensions</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 <p>Renames files in the <code>srcDir</code> directory ending with the
 <code>fromExtension</code> string so that they end with the 
 <code>toExtension</code> string. Files are only replaced if 
@@ -4704,7 +4794,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>srcDir</code>) as well as the nested
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -4780,14 +4870,14 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 
 <hr>
 <h2><a name="script">Script</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 <p>Execute a script in a 
   <a href="http://oss.software.ibm.com/developerworks/opensource/bsf/">BSF</a> supported language.
 <p>All items (tasks, targets, etc) of the running project are
 accessible from the script, using either their <code>name</code> or
 <code>id</code> attributes.</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -4885,11 +4975,11 @@ BUILD SUCCESSFUL
 </pre></blockquote>
 <hr>
 <h2><a name="vssget">VssGet</a></h2>
-<h3><b>Description:</b></h3>
+<h3>Description</h3>
 Task to perform GET commands to Microsoft Visual Source Safe.
 <p>If you specify two or more attributes from version, date and 
 label only one will be used in the order version, date, label.</p>
-<h3>Parameters:</h3>
+<h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <th>Attribute</th>
@@ -4954,11 +5044,11 @@ label only one will be used in the order version, date, label.</p>
         vsspath=&quot;/source/aProject&quot;
         writable=&quot;true&quot;/&gt;
 </pre>
-Does a get on the VSS-Project <i>$/source/aproject</i> using the username
+</blockquote>
+<p>Does a get on the VSS-Project <i>$/source/aproject</i> using the username
 <i>me</i> and the password <i>mypassword</i>. It will recursively get the files 
 which are labeled <i>Release1</i> and write them to the local directory
-<i>C:\mysrc\myproject</i>. The local files will be writable.
-</blockquote>
+<i>C:\mysrc\myproject</i>. The local files will be writable.</p>
 <hr>
 <h2><a name="buildevents">Build Events</a></h2>
 Ant is capable of generating build events as it performs the tasks necessary to build a project. 
@@ -5126,7 +5216,7 @@ href="mailto:ant-dev-subscribe@jakarta.apache.org">ant-dev-subscribe@jakarta.apa
 href="http://archive.covalent.net/">http://archive.covalent.net/</a>. Many
 thanks to Covalent Technologies.</p>
 <hr>
-<p align="center">Copyright © 2000 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
