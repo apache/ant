@@ -64,6 +64,16 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
         <td><a href="#p4counter">P4Counter</a></td>
         <td>Obtain or set the value of a counter</td>
     </tr>
+	    <tr>
+        <td><a href="#p4reopen">P4Reopen</a></td>
+        <td>Move files between changelists</td>
+    </tr>
+
+	    <tr>
+        <td><a href="#p4revert">P4Revert</a></td>
+        <td>Revert files</td>
+    </tr>
+
 </table>
 
 <h3>General P4 Properties</h3>
@@ -148,6 +158,8 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
     &lt;taskdef name=&quot;p4have&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Have&quot; /&gt;
     &lt;taskdef name=&quot;p4label&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Label&quot; /&gt;
     &lt;taskdef name=&quot;p4counter&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Counter&quot; /&gt;
+	&lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot; /&gt;
+	&lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot; /&gt;
 </pre>
 
 <hr>
@@ -398,6 +410,79 @@ value of the &quot;last-clean-build&quot; counter:
 &lt;p4counter name=&quot;last-clean-build&quot; property=&quot;${p4.last.clean.build}&quot; /&gt;
 </pre>
 <hr>
+
+
+
+
+<h2><a name="p4reopen">P4Reopen</a></h2>
+<h3>Description:</h3>
+<p>
+Move (or reopen in Perforce speak) checkout files between changelists.
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">tochange</td>
+    <td valign="top">The changelist to move files to.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+Move all open files to the default changelist
+<pre>
+&lt;p4reopen view=&quot;//...&quot; tochange=&quot;default&quot; /&gt;
+</PRE>
+Create a new changelist then reopen into it, any files from the view //projects/foo/main/...
+<PRE>
+&lt;p4change description="Move files out of the way" /&gt;
+&lt;p4reopen view=&quot;//projects/foo/main/...&quot; tochange=&quot;${p4.change}&quot; /&gt;
+</pre>
+<hr>
+
+
+
+<h2><a name="p4revert">P4Revert</a></h2>
+<h3>Description:</h3>
+<p>
+Reverts files.
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">change</td>
+    <td valign="top">The changelist to revert.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">revertOnlyUnchanged</td>
+    <td valign="top">Revert only unchanged files (p4 revert -a)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  
+</table>
+
+<h3>Examples</h3>
+Revert everything!
+<pre>
+&lt;p4revert view=&quot;//...&quot; /&gt;
+</PRE>
+Revert any unchanged files in the default change
+<PRE>
+&lt;p4revert change="default" revertonlyunchanged=&quot;true&quot; /&gt;
+</pre>
+<hr>
+
 
 
 <h2><a name="changes">Change History</a></h2>
