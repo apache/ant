@@ -48,7 +48,8 @@
   <property name="chmod.maxparallel" value="250"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
-  <property name="javac.target" value="1.1"/>
+  <property name="javac.target" value="1.2"/>
+  <property name="javac.source" value="1.2"/>
   <property name="junit.fork" value="false"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
@@ -604,6 +605,7 @@
            debug="${debug}"
            deprecation="${deprecation}"
            target="${javac.target}"
+           source="${javac.source}"
            optimize="${optimize}" >
       <classpath refid="classpath"/>
 
@@ -1354,6 +1356,7 @@
            destdir="${build.tests}"
            debug="${debug}"
            target="${javac.target}"
+           source="${javac.source}"
            deprecation="${deprecation}" >
       <classpath refid="tests-classpath"/>
 
