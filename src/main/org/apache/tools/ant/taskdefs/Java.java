@@ -72,10 +72,11 @@ public class Java extends Task {
 
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
+
     /**
      * Do the execution.
      * @throws BuildException if failOnError is set to true and the application
-     * returns a non 0 result code
+     * returns a nonzero result code.
      */
     public void execute() throws BuildException {
         File savedDir = dir;
@@ -104,14 +105,13 @@ public class Java extends Task {
      * @return the return code from the execute java class if it was
      * executed in a separate VM (fork = "yes").
      *
-     * @throws BuildException if required parameters are missing
+     * @throws BuildException if required parameters are missing.
      */
     public int executeJava() throws BuildException {
         String classname = cmdl.getClassname();
         if (classname == null && cmdl.getJar() == null) {
             throw new BuildException("Classname must not be null.");
         }
-
         if (!fork && cmdl.getJar() != null) {
             throw new BuildException("Cannot execute a jar in non-forked mode."
                                      + " Please set fork='true'. ");
@@ -132,7 +132,6 @@ public class Java extends Task {
         if (cmdl.getAssertions() != null && !fork) {
             log("Assertion statements are currently ignored in non-forked mode");
         }
-
         if (fork) {
             if (perm != null) {
                 log("Permissions can not be set this way in forked mode.", Project.MSG_WARN);
@@ -147,12 +146,10 @@ public class Java extends Task {
                 log("Working directory ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
-
             if (newEnvironment || null != env.getVariables()) {
                 log("Changes to environment variables are ignored when same "
                     + "JVM is used.", Project.MSG_WARN);
             }
-
             if (cmdl.getBootclasspath() != null) {
                 log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
@@ -165,7 +162,6 @@ public class Java extends Task {
             log("Running in same VM " + cmdl.describeJavaCommand(),
                 Project.MSG_VERBOSE);
         }
-
         setupRedirector();
         try {
             if (fork) {
@@ -201,17 +197,17 @@ public class Java extends Task {
     }
 
     /**
-     * set whether or not you want the process to be spawned
-     * default is not spawned
-     * @param spawn if true you do not want ant to wait for the end of the process
-     * @since ant 1.6
+     * Set whether or not you want the process to be spawned;
+     * default is not spawned.
+     * @param spawn if true you do not want Ant to wait for the end of the process.
+     * @since Ant 1.6
      */
     public void setSpawn(boolean spawn) {
         this.spawn = spawn;
     }
 
     /**
-     * Set the classpath to be used when running the Java class
+     * Set the classpath to be used when running the Java class.
      *
      * @param s an Ant Path object containing the classpath.
      */
@@ -220,51 +216,49 @@ public class Java extends Task {
     }
 
     /**
-     * Adds a path to the classpath.
+     * Add a path to the classpath.
      *
-     * @return created classpath
+     * @return created classpath.
      */
     public Path createClasspath() {
         return cmdl.createClasspath(getProject()).createPath();
     }
 
     /**
-     * Adds a path to the bootclasspath.
+     * Add a path to the bootclasspath.
      * @since Ant 1.6
      *
-     * @return created bootclasspath
+     * @return created bootclasspath.
      */
     public Path createBootclasspath() {
         return cmdl.createBootclasspath(getProject()).createPath();
     }
 
     /**
-     * Sets the permissions for the application run inside the same JVM.
+     * Set the permissions for the application run inside the same JVM.
      * @since Ant 1.6
-     * @return .
+     * @return Permissions.
      */
     public Permissions createPermissions() {
-        if (perm == null) {
-            perm = new Permissions();
-        }
+        perm = (perm == null) ? new Permissions() : perm;
         return perm;
     }
 
     /**
-     * Classpath to use, by reference.
+     * Set the classpath to use by reference.
      *
-     * @param r a reference to an existing classpath
+     * @param r a reference to an existing classpath.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
     /**
-     * The location of the JAR file to execute.
+     * Set the location of the JAR file to execute.
      *
-     * @param jarfile the jarfile that one wants to execute
+     * @param jarfile the jarfile to execute.
      *
-     * @throws BuildException if there is also a main class specified
+     * @throws BuildException if there is also a main class specified.
      */
     public void setJar(File jarfile) throws BuildException {
         if (cmdl.getClassname() != null) {
@@ -275,11 +269,11 @@ public class Java extends Task {
     }
 
     /**
-     * Sets the Java class to execute.
+     * Set the Java class to execute.
      *
-     * @param s the name of the main class
+     * @param s the name of the main class.
      *
-     * @throws BuildException if the jar attribute has been set
+     * @throws BuildException if the jar attribute has been set.
      */
     public void setClassname(String s) throws BuildException {
         if (cmdl.getJar() != null) {
@@ -293,7 +287,7 @@ public class Java extends Task {
      * Deprecated: use nested arg instead.
      * Set the command line arguments for the class.
      *
-     * @param s arguments
+     * @param s arguments.
      *
      * @ant.attribute ignore="true"
      */
@@ -304,7 +298,7 @@ public class Java extends Task {
     }
 
     /**
-     * If set, system properties will be copied to the cloned VM - as
+     * If set, system properties will be copied to the cloned VM--as
      * well as the bootclasspath unless you have explicitly specified
      * a bootclaspath.
      *
@@ -317,19 +311,19 @@ public class Java extends Task {
     }
 
     /**
-     * Adds a command-line argument.
+     * Add a command-line argument.
      *
-     * @return created argument
+     * @return created argument.
      */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
     }
 
     /**
-     * The name of a property in which the return code of the
+     * Set the name of the property in which the return code of the
      * command should be stored. Only of interest if failonerror=false.
      *
-     * @param resultProperty name of property
+     * @param resultProperty name of property.
      *
      * @since Ant 1.6
      */
@@ -339,8 +333,8 @@ public class Java extends Task {
     }
 
     /**
-     * helper method to set result property to the
-     * passed in value if appropriate
+     * Helper method to set result property to the
+     * passed in value if appropriate.
      *
      * @param result the exit code
      */
@@ -363,7 +357,7 @@ public class Java extends Task {
     /**
      * Set the command line arguments for the JVM.
      *
-     * @param s jvmargs
+     * @param s jvmargs.
      */
     public void setJvmargs(String s) {
         log("The jvmargs attribute is deprecated. "
@@ -374,7 +368,7 @@ public class Java extends Task {
     /**
      * Adds a JVM argument.
      *
-     * @return JVM argument created
+     * @return JVM argument created.
      */
     public Commandline.Argument createJvmarg() {
         return cmdl.createVmArgument();
@@ -383,25 +377,25 @@ public class Java extends Task {
     /**
      * Set the command used to start the VM (only if forking).
      *
-     * @param s command to start the VM
+     * @param s command to start the VM.
      */
     public void setJvm(String s) {
         cmdl.setVm(s);
     }
 
     /**
-     * Adds a system property.
+     * Add a system property.
      *
-     * @param sysp system property
+     * @param sysp system property.
      */
     public void addSysproperty(Environment.Variable sysp) {
         cmdl.addSysproperty(sysp);
     }
 
     /**
-     * Adds a set of properties as system properties.
+     * Add a set of properties as system properties.
      *
-     * @param sysp set of properties to add
+     * @param sysp set of properties to add.
      *
      * @since Ant 1.6
      */
@@ -411,10 +405,10 @@ public class Java extends Task {
 
     /**
      * If true, then fail if the command exits with a
-     * returncode other than 0
+     * returncode other than zero.
      *
-     * @param fail if true fail the build when the command exits with a non
-     * zero returncode
+     * @param fail if true fail the build when the command exits with a
+     * nonzero returncode.
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
@@ -422,9 +416,9 @@ public class Java extends Task {
     }
 
     /**
-     * The working directory of the process
+     * Set the working directory of the process.
      *
-     * @param d working directory
+     * @param d working directory.
      *
      */
     public void setDir(File d) {
@@ -432,9 +426,9 @@ public class Java extends Task {
     }
 
     /**
-     * File the output of the process is redirected to.
+     * Set the File to which the output of the process is redirected.
      *
-     * @param out name of the output file
+     * @param out the output File.
      */
     public void setOutput(File out) {
         this.output = out;
@@ -442,9 +436,9 @@ public class Java extends Task {
     }
 
     /**
-     * Set the input to use for the task
+     * Set the input to use for the task.
      *
-     * @param input name of the input file
+     * @param input name of the input file.
      */
     public void setInput(File input) {
         if (inputString != null) {
@@ -456,9 +450,9 @@ public class Java extends Task {
     }
 
     /**
-     * Set the string to use as input
+     * Set the string to use as input.
      *
-     * @param inputString the string which is used as the input source
+     * @param inputString the string which is used as the input source.
      */
     public void setInputString(String inputString) {
         if (input != null) {
@@ -470,12 +464,12 @@ public class Java extends Task {
     }
 
     /**
-     * Controls whether error output of exec is logged. This is only useful
+     * Set whether error output of exec is logged. This is only useful
      * when output is being redirected and error output is desired in the
-     * Ant log
+     * Ant log.
      *
      * @param logError get in the ant log the messages coming from stderr
-     * in the case that fork = true
+     * in the case that fork = true.
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
@@ -483,11 +477,11 @@ public class Java extends Task {
     }
 
     /**
-     * File the error stream of the process is redirected to.
+     * Set the File to which the error stream of the process is redirected.
      *
-     * @param error file getting the error stream
+     * @param error file getting the error stream.
      *
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     public void setError(File error) {
         this.error = error;
@@ -495,10 +489,10 @@ public class Java extends Task {
     }
 
     /**
-     * Property name whose value should be set to the output of
+     * Set the property name whose value should be set to the output of
      * the process.
      *
-     * @param outputProp property name
+     * @param outputProp property name.
      *
      */
     public void setOutputproperty(String outputProp) {
@@ -507,12 +501,12 @@ public class Java extends Task {
     }
 
     /**
-     * Property name whose value should be set to the error of
+     * Set the property name whose value should be set to the error of
      * the process.
      *
-     * @param errorProperty property name
+     * @param errorProperty property name.
      *
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     public void setErrorProperty(String errorProperty) {
         redirector.setErrorProperty(errorProperty);
@@ -522,26 +516,26 @@ public class Java extends Task {
     /**
      * Corresponds to -mx or -Xmx depending on VM version.
      *
-     * @param max max memory parameter
+     * @param max max memory parameter.
      */
     public void setMaxmemory(String max) {
         cmdl.setMaxmemory(max);
     }
 
     /**
-     * Sets the JVM version.
-     * @param value JVM version
+     * Set the JVM version.
+     * @param value JVM version.
      */
     public void setJVMVersion(String value) {
         cmdl.setVmversion(value);
     }
 
     /**
-     * Adds an environment variable.
+     * Add an environment variable.
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
-     * @param var new environment variable
+     * @param var new environment variable.
      *
      * @since Ant 1.5
      */
@@ -565,7 +559,7 @@ public class Java extends Task {
     /**
      * If true, append output to existing file.
      *
-     * @param append if true, append output to existing file
+     * @param append if true, append output to existing file.
      *
      * @since Ant 1.5
      */
@@ -575,9 +569,9 @@ public class Java extends Task {
     }
 
     /**
-     * Timeout in milliseconds after which the process will be killed.
+     * Set the timeout in milliseconds after which the process will be killed.
      *
-     * @param value time out in milliseconds
+     * @param value timeout in milliseconds.
      *
      * @since Ant 1.5
      */
@@ -587,9 +581,9 @@ public class Java extends Task {
     }
 
     /**
-     *  assertions to enable in this program (if fork=true)
+     * Add assertions to enable in this program (if fork=true).
+     * @param asserts assertion set.
      * @since Ant 1.6
-     * @param asserts assertion set
      */
     public void addAssertions(Assertions asserts) {
         if (cmdl.getAssertions() != null) {
@@ -599,22 +593,21 @@ public class Java extends Task {
     }
 
     /**
-     * Add a <CODE>RedirectorElement</CODE> to this task.
-     * @param redirectorElement   <CODE>RedirectorElement</CODE>.
+     * Add a <code>RedirectorElement</code> to this task.
+     * @param redirectorElement   <code>RedirectorElement</code>.
      */
     public void addConfiguredRedirector(RedirectorElement redirectorElement) {
         if (this.redirectorElement != null) {
-            throw new BuildException("cannot have > 1 nested <redirector>s");
-        } else {
-            this.redirectorElement = redirectorElement;
-            incompatibleWithSpawn = true;
+            throw new BuildException("cannot have > 1 nested redirectors");
         }
+        this.redirectorElement = redirectorElement;
+        incompatibleWithSpawn = true;
     }
 
     /**
      * Pass output sent to System.out to specified output file.
      *
-     * @param output a string of output on its way to the handlers
+     * @param output a string of output on its way to the handlers.
      *
      * @since Ant 1.5
      */
@@ -627,15 +620,15 @@ public class Java extends Task {
     }
 
     /**
-     * Handle an input request by this task
+     * Handle an input request by this task.
      *
      * @param buffer the buffer into which data is to be read.
      * @param offset the offset into the buffer at which data is stored.
-     * @param length the amount of data to read
+     * @param length the amount of data to read.
      *
-     * @return the number of bytes read
+     * @return the number of bytes read.
      *
-     * @exception IOException if the data cannot be read
+     * @exception IOException if the data cannot be read.
      * @since Ant 1.6
      */
     public int handleInput(byte[] buffer, int offset, int length)
@@ -647,7 +640,7 @@ public class Java extends Task {
     /**
      * Pass output sent to System.out to specified output file.
      *
-     * @param output string of output on its way to its handlers
+     * @param output string of output on its way to its handlers.
      *
      * @since Ant 1.5.2
      */
@@ -660,9 +653,9 @@ public class Java extends Task {
     }
 
     /**
-     * Handle output sent to System.err
+     * Handle output sent to System.err.
      *
-     * @param output string of stderr
+     * @param output string of stderr.
      *
      * @since Ant 1.5
      */
@@ -677,7 +670,7 @@ public class Java extends Task {
     /**
      * Handle output sent to System.err and flush the stream.
      *
-     * @param output string of stderr
+     * @param output string of stderr.
      *
      * @since Ant 1.5.2
      */
@@ -709,7 +702,8 @@ public class Java extends Task {
 
     /**
      * Executes the given classname with the given arguments as it
-     * was a command line application.
+     * were a command line application.
+     * @param command CommandlineJava.
      */
     private void run(CommandlineJava command) throws BuildException {
         try {
@@ -732,9 +726,9 @@ public class Java extends Task {
 
     /**
      * Executes the given classname with the given arguments in a separate VM.
+     * @param command String[] of command-line arguments.
      */
     private int fork(String[] command) throws BuildException {
-
         Execute exe
             = new Execute(redirector.createHandler(), createWatchdog());
         setupExecutable(exe, command);
@@ -751,15 +745,12 @@ public class Java extends Task {
         }
     }
 
-
-
     /**
      * Executes the given classname with the given arguments in a separate VM.
+     * @param command String[] of command-line arguments.
      */
     private void spawn(String[] command) throws BuildException {
-
-        Execute exe
-            = new Execute();
+        Execute exe = new Execute();
         setupExecutable(exe, command);
         try {
             exe.spawn();
@@ -771,9 +762,9 @@ public class Java extends Task {
     /**
      * Do all configuration for an executable that
      * is common across the {@link #fork(String[])} and
-     * {@link #spawn(String[])} methods
-     * @param exe executable
-     * @param command command to execute
+     * {@link #spawn(String[])} methods.
+     * @param exe executable.
+     * @param command command to execute.
      */
     private void setupExecutable(Execute exe, String[] command) {
         exe.setAntRun(getProject());
@@ -783,8 +774,8 @@ public class Java extends Task {
     }
 
     /**
-     * set up our environment variables
-     * @param exe
+     * Set up our environment variables.
+     * @param exe executable.
      */
     private void setupEnvironment(Execute exe) {
         String[] environment = env.getVariables();
@@ -799,8 +790,8 @@ public class Java extends Task {
     }
 
     /**
-     * set the working dir of the new process
-     * @param exe
+     * Set the working dir of the new process.
+     * @param exe executable.
      * @throws BuildException if the dir doesn't exist.
      */
     private void setupWorkingDir(Execute exe) {
@@ -815,10 +806,10 @@ public class Java extends Task {
     }
 
     /**
-     * set the command line for the exe.
-     * On VMS, hands off to {@link #setupCommandLineForVMS(Execute, String[])}
-     * @param exe
-     * @param command
+     * Set the command line for the exe.
+     * On VMS, hands off to {@link #setupCommandLineForVMS(Execute, String[])}.
+     * @param exe executable.
+     * @param command command to execute.
      */
     private void setupCommandLine(Execute exe, String[] command) {
         //On VMS platform, we need to create a special java options file
@@ -836,20 +827,20 @@ public class Java extends Task {
      * containing the arguments and classpath for the java command.
      * The special file is supported by the "-V" switch on the VMS JVM.
      *
-     * @param exe
-     * @param command
+     * @param exe executable.
+     * @param command command to execute.
      */
     private void setupCommandLineForVMS(Execute exe, String[] command) {
         ExecuteJava.setupCommandLineForVMS(exe, command);
     }
 
     /**
-     * Executes the given classname with the given arguments as it
-     * was a command line application.
+     * Executes the given classname with the given arguments as if it
+     * were a command line application.
      *
-     * @param classname the name of the class to run
-     * @param args  arguments for the class
-     * @throws BuildException in case of IO Exception in the execution
+     * @param classname the name of the class to run.
+     * @param args  arguments for the class.
+     * @throws BuildException in case of IOException in the execution.
      */
     protected void run(String classname, Vector args) throws BuildException {
         CommandlineJava cmdj = new CommandlineJava();
@@ -870,9 +861,9 @@ public class Java extends Task {
     /**
      * Create the Watchdog to kill a runaway process.
      *
-     * @return new watchdog
+     * @return new watchdog.
      *
-     * @throws BuildException under unknown circumstances
+     * @throws BuildException under unknown circumstances.
      *
      * @since Ant 1.5
      */
@@ -884,6 +875,8 @@ public class Java extends Task {
     }
 
     /**
+     * Log the specified Throwable.
+     * @param t the Throwable to log.
      * @since 1.6.2
      */
     private void log(Throwable t) {
@@ -895,9 +888,9 @@ public class Java extends Task {
     }
 
     /**
-     * accessor to the command line
+     * Accessor to the command line.
      *
-     * @return the current command line
+     * @return the current command line.
      * @since 1.7
      */
     public CommandlineJava getCommandLine() {
@@ -905,9 +898,9 @@ public class Java extends Task {
     }
 
     /**
-     * get the system properties of the command line
+     * Get the system properties of the command line.
      *
-     * @return the current properties of this java invocation
+     * @return the current properties of this java invocation.
      * @since 1.7
      */
     public CommandlineJava.SysProperties getSysProperties() {
