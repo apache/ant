@@ -170,13 +170,16 @@ public class Ant extends Task {
             Enumeration e = properties.elements();
             while (e.hasMoreElements()) {
                 Property p=(Property) e.nextElement();
-                p.init();
+                p.execute();
             }
             
             if (antFile == null) 
                 antFile = "build.xml";
 
-            antFile = (new File(dir, antFile)).getAbsolutePath();
+            File file = new File(antFile);
+            if (!file.isAbsolute()) {
+                antFile = (new File(dir, antFile)).getAbsolutePath();
+            }
 
             p1.setUserProperty( "ant.file" , antFile );
             ProjectHelper.configureProject(p1, new File(antFile));

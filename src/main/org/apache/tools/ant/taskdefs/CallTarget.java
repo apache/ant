@@ -80,15 +80,15 @@ import org.apache.tools.ant.*;
  */
 public class CallTarget extends Task {
 
-    private Ant delegate;
+    private Ant callee;
     private String subTarget;
 
     public void init() {
-        delegate = (Ant) project.createTask("ant");
-        delegate.setOwningTarget(target);
-        delegate.setTaskName(getTaskName());
-        delegate.setLocation(location);
-        delegate.init();
+        callee = (Ant) project.createTask("ant");
+        callee.setOwningTarget(target);
+        callee.setTaskName(getTaskName());
+        callee.setLocation(location);
+        callee.init();
     }
 
     public void execute() {
@@ -97,14 +97,14 @@ public class CallTarget extends Task {
                                      location);
         }
         
-        delegate.setDir(project.getBaseDir());
-        delegate.setAntfile(project.getProperty("ant.file"));
-        delegate.setTarget(subTarget);
-        delegate.execute();
+        callee.setDir(project.getBaseDir());
+        callee.setAntfile(project.getProperty("ant.file"));
+        callee.setTarget(subTarget);
+        callee.execute();
     }
 
     public Property createParam() {
-        return delegate.createProperty();
+        return callee.createProperty();
     }
 
     public void setTarget(String target) {
