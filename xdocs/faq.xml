@@ -601,7 +601,7 @@ shell-prompt> m4 foo.m4 > foo
 
         <p>If your file names contain national characters you should
         know that Sun&apos;s <code>jar</code> utility like Ant&apos;s
-        <code>&lt;jar&gt;</code> uses UFT8 to encode their names while
+        <code>&lt;jar&gt;</code> uses UTF-8 to encode their names while
         <code>&lt;zip&gt;</code> uses your platforms default encoding.
         Use the encoding attribute of <code>&lt;zip&gt;</code> if
         necessary.</p>
