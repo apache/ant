@@ -311,9 +311,8 @@ public class Target implements TaskContainer {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            Iterator it = children.iterator();
-            while (it.hasNext()) {
-                Object o = it.next();
+            for (int i = 0; i < children.size(); ++i) {
+                Object o = children.get(i);
                 if (o instanceof Task) {
                     Task task = (Task) o;
                     task.perform();
