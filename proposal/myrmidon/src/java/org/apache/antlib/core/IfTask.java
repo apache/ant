@@ -74,9 +74,16 @@ public class IfTask
             throw new TaskException( message );
         }
 
+        // Evaluate the condition
+        if( ! m_condition.evaluate( getContext() ) )
+        {
+            return;
+        }
+
         final Configuration[] tasks =
             (Configuration[])m_tasks.toArray( new Configuration[ m_tasks.size() ] );
 
+        // TODO - don't use getService()
         final ExecutionFrame frame = (ExecutionFrame)getService( ExecutionFrame.class );
         final Executor executor = (Executor)getService( Executor.class );
 
