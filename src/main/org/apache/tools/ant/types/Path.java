@@ -221,7 +221,7 @@ public class Path implements Cloneable {
             throw noChildrenAllowed();
         }
         Path p = new Path(project);
-        elements.add(p);
+        elements.addElement(p);
         checked = false;
         return p;
     }
