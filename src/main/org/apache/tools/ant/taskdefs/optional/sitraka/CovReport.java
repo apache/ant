@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -81,7 +80,7 @@ import org.w3c.dom.Document;
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  * @ant.task name="jpcovreport" category="metrics"
  */
-public class CovReport extends Task {
+public class CovReport extends CovBase {
     /*
       jpcoverport [options] -output=file -snapshot=snapshot.jpc
       jpcovreport [options] [-paramfile=file] -output=<fileName> -snapshot=<fileName>
@@ -130,9 +129,6 @@ public class CovReport extends Task {
 
       /*
 
-      /** coverage home,  mandatory */
-    private File home = null;
-
     /** format of generated report, optional */
     private String format = null;
 
@@ -162,13 +158,6 @@ public class CovReport extends Task {
     /** */
     private Reference reference = null;
 
-
-    /**
-     * The directory where JProbe is installed.
-     */
-    public void setHome(File value) {
-        this.home = value;
-    }
 
     public static class ReportFormat extends EnumeratedAttribute {
         public String[] getValues() {
@@ -279,13 +268,12 @@ public class CovReport extends Task {
         if (snapshot == null) {
             throw new BuildException("'snapshot' attribute must be set.");
         }
-        if (home == null) {
+        if (getHome() == null) {
             throw new BuildException("'home' attribute must be set to JProbe home directory");
         }
-        home = new File(home, "coverage");
-        File jar = new File(home, "coverage.jar");
+        File jar = findJar("coverage/coverage.jar");
         if (!jar.exists()) {
-            throw new BuildException("Cannot find Coverage directory: " + home);
+            throw new BuildException("Cannot find Coverage directory: " + getHome());
         }
         if (reference != null && !"xml".equals(format)) {
             log("Ignored reference. It cannot be used in non XML report.");
@@ -299,7 +287,7 @@ public class CovReport extends Task {
         try {
             Commandline cmdl = new Commandline();
             // we need to run Coverage from his directory due to dll/jar issues
-            cmdl.setExecutable(new File(home, "jpcovreport").getAbsolutePath());
+            cmdl.setExecutable(findExecutable("jpcovreport"));
             String[] params = getParameters();
             for (int i = 0; i < params.length; i++) {
                 cmdl.createArgument().setValue(params[i]);
@@ -398,7 +386,7 @@ public class CovReport extends Task {
                 log("Creating enhanced XML report", Project.MSG_VERBOSE);
                 XMLReport report = new XMLReport(CovReport.this, tofile);
                 report.setReportFilters(filters);
-                report.setJProbehome(new File(home.getParent()));
+                report.setJProbehome(new File(getHome().getParent()));
                 Document doc = report.createDocument(paths);
                 TransformerFactory tfactory = TransformerFactory.newInstance();
                 Transformer transformer = tfactory.newTransformer();

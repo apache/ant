@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Runs Sitraka JProbe Coverage.
@@ -86,9 +87,7 @@ import org.apache.tools.ant.types.Path;
  *
  * @ant.task name="jpcoverage" category="metrics"
  */
-public class Coverage extends Task {
-
-    protected File home;
+public class Coverage extends CovBase {
 
     protected Commandline cmdl = new Commandline();
 
@@ -130,13 +129,6 @@ public class Coverage extends Task {
     protected Vector filesets = new Vector();
 
     //--------- setters used via reflection --
-
-    /**
-     * The directory where JProbe is installed.
-     */
-    public void setHome(File value) {
-        home = value;
-    }
 
     /** seed name for snapshot file. Can be null, default to snap */
     public void setSeedname(String value) {
@@ -331,7 +323,7 @@ public class Coverage extends Task {
         }
         try {
             // we need to run Coverage from his directory due to dll/jar issues
-            cmdl.setExecutable(new File(home, "jplauncher").getAbsolutePath());
+            cmdl.setExecutable(findExecutable("jplauncher"));
             cmdl.createArgument().setValue("-jp_input=" + paramfile.getAbsolutePath());
 
             // use the custom handler for stdin issues
@@ -356,13 +348,12 @@ public class Coverage extends Task {
     /** wheck what is necessary to check, Coverage will do the job for us */
     protected void checkOptions() throws BuildException {
         // check coverage home
-        if (home == null || !home.isDirectory()) {
+        if (getHome() == null || !getHome().isDirectory()) {
             throw new BuildException("Invalid home directory. Must point to JProbe home directory");
         }
-        home = new File(home, "coverage");
-        File jar = new File(home, "coverage.jar");
+        File jar = findJar("coverage/coverage.jar");
         if (!jar.exists()) {
-            throw new BuildException("Cannot find Coverage directory: " + home);
+            throw new BuildException("Cannot find Coverage directory: " + getHome());
         }
 
         // make sure snapshot dir exists and is resolved
@@ -381,17 +372,11 @@ public class Coverage extends Task {
         // check for info, do your best to select the java executable.
         // JProbe 3.0 fails if there is no javaexe option. So
         if (javaExe == null && (vm == null || "java2".equals(vm))) {
-            String version = System.getProperty("java.version");
-            // make we are using 1.2+, if it is, then do your best to
-            // get a javaexe
-            if (!version.startsWith("1.1")) {
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
                 if (vm == null) {
                     vm = "java2";
                 }
-                // if we are here obviously it is java2
-                String home = System.getProperty("java.home");
-                boolean isUnix = File.separatorChar == '/';
-                javaExe = isUnix ? new File(home, "bin/java") : new File(home, "/bin/java.exe");
+                javaExe = new File(JavaEnvUtils.getJreExecutable("java"));
             }
         }
     }
@@ -464,7 +449,7 @@ public class Coverage extends Task {
      */
     protected File createParamFile() throws BuildException {
         //@todo change this when switching to JDK 1.2 and use File.createTmpFile()
-        File file = createTmpFile();
+        File file = createTempFile("jpcov");
         log("Creating parameter file: " + file, Project.MSG_VERBOSE);
 
         // options need to be one per line in the parameter file
@@ -494,13 +479,6 @@ public class Coverage extends Task {
                 }
             }
         }
-        return file;
-    }
-
-    /** create a temporary file in the current dir (For JDK1.1 support) */
-    protected File createTmpFile() {
-        final long rand = (new Random(System.currentTimeMillis())).nextLong();
-        File file = new File("jpcoverage" + rand + ".tmp");
         return file;
     }
 

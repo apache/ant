@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,7 +63,6 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -75,10 +74,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  * @ant.task name="jpcovmerge" category="metrics"
  */
-public class CovMerge extends Task {
-
-    /** coverage home, it is mandatory */
-    private File home = null;
+public class CovMerge extends CovBase {
 
     /** the name of the output snapshot */
     private File tofile = null;
@@ -87,13 +83,6 @@ public class CovMerge extends Task {
     private Vector filesets = new Vector();
 
     private boolean verbose;
-
-    /**
-     * The directory where JProbe is installed.
-     */
-    public void setHome(File value) {
-        this.home = value;
-    }
 
     /**
      * Set the output snapshot file.
@@ -129,11 +118,12 @@ public class CovMerge extends Task {
         File paramfile = createParamFile();
         try {
             Commandline cmdl = new Commandline();
-            cmdl.setExecutable(new File(home, "jpcovmerge").getAbsolutePath());
+            cmdl.setExecutable(findExecutable("jpcovmerge"));
             if (verbose) {
                 cmdl.createArgument().setValue("-v");
             }
-            cmdl.createArgument().setValue("-jp_paramfile=" + paramfile.getAbsolutePath());
+            cmdl.createArgument().setValue(getParamFileArgument() 
+                                           + paramfile.getAbsolutePath());
 
             LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
@@ -161,13 +151,12 @@ public class CovMerge extends Task {
         }
 
         // check coverage home
-        if (home == null || !home.isDirectory()) {
+        if (getHome() == null || !getHome().isDirectory()) {
             throw new BuildException("Invalid home directory. Must point to JProbe home directory");
         }
-        home = new File(home, "coverage");
-        File jar = new File(home, "coverage.jar");
+        File jar = findJar("coverage/coverage.jar");
         if (!jar.exists()) {
-            throw new BuildException("Cannot find Coverage directory: " + home);
+            throw new BuildException("Cannot find Coverage directory: " + getHome());
         }
     }
 
@@ -200,7 +189,7 @@ public class CovMerge extends Task {
      */
     protected File createParamFile() throws BuildException {
         File[] snapshots = getSnapshots();
-        File file = createTmpFile();
+        File file = createTempFile("jpcovm");
         FileWriter fw = null;
         try {
             fw = new FileWriter(file);
@@ -224,10 +213,4 @@ public class CovMerge extends Task {
         return file;
     }
 
-    /** create a temporary file in the current dir (For JDK1.1 support) */
-    protected File createTmpFile() {
-        final long rand = (new Random(System.currentTimeMillis())).nextLong();
-        File file = new File("jpcovmerge" + rand + ".tmp");
-        return file;
-    }
 }
