@@ -34,7 +34,7 @@ fi
 
 if [ "$REALANTHOME" != "" ] ; then
   if $cygwin; then
-     REALANTHOME=`cygpath --path --windows "$REALANTHOME"`
+     REALANTHOME=`cygpath --windows "$REALANTHOME"`
   fi
   ANT_INSTALL="-Dant.install=$REALANTHOME"
 else
