@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="antlr-test" basedir=".">
+<project name="antlr-test" basedir="." default="test1">
 
   <property name="tmp.dir" value="antlr.tmp"/>
 
