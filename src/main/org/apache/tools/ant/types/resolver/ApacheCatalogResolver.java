@@ -96,6 +96,7 @@ import org.apache.xml.resolver.tools.CatalogResolver;
  * @see org.apache.xml.resolver.CatalogManager
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
+ * @since Ant 1.6
  */
 
 public class ApacheCatalogResolver extends CatalogResolver {

@@ -57,18 +57,20 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JAXPUtils;
 
 import junit.framework.TestCase;
 
 import java.io.File;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.TransformerException;
 
 /**
@@ -81,7 +83,6 @@ public class XMLCatalogTest extends TestCase {
 
     private Project project;
     private XMLCatalog catalog;
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     private XMLCatalog newCatalog() {
         XMLCatalog cat = new XMLCatalog();
@@ -90,7 +91,7 @@ public class XMLCatalogTest extends TestCase {
     }
 
     private String toURLString(File file) throws MalformedURLException {
-		  return fileUtils.getFileURL(file).toString();
+        return JAXPUtils.getSystemId(file);
     }
 
     public XMLCatalogTest(String name) {
@@ -129,7 +130,16 @@ public class XMLCatalogTest extends TestCase {
 
        try {
            Source result = catalog.resolve("i/dont/exist.dtd", null);
-           assertNull("Empty catalog should return null", result);
+           String expected = toURLString(new File(project.getBaseDir() +
+                                                  "/i/dont/exist.dtd"));
+           //
+           // These shenanigans are necessary b/c Norm Walsh's resolver
+           // has a different idea of how file URLs are created on windoze
+           // ie file://c:/foo instead of file:///c:/foo
+           // 
+           String resultStr = new URL(((SAXSource)result).getInputSource().getSystemId()).getFile();
+           assertTrue("Empty catalog should return input", 
+                      expected.endsWith(resultStr));
        } catch (Exception e) {
            fail("resolve() failed!" + e.toString());
        }
@@ -137,7 +147,7 @@ public class XMLCatalogTest extends TestCase {
 
     public void testNonExistentEntry() {
 
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("PUBLIC ID ONE");
         dtd.setLocation("i/dont/exist.dtd");
 
@@ -151,7 +161,11 @@ public class XMLCatalogTest extends TestCase {
 
         try {
             Source result = catalog.resolve("i/dont/exist.dtd", null);
-            assertNull("Nonexistent Catalog entry should not be returned", result);
+            String expected = toURLString(new File(project.getBaseDir().toURL() +
+                                                   "/i/dont/exist.dtd"));
+            String resultStr = new URL(((SAXSource)result).getInputSource().getSystemId()).getFile();
+            assertTrue("Nonexistent Catalog entry return input",
+                       expected.endsWith(resultStr));
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
         }
@@ -166,7 +180,7 @@ public class XMLCatalogTest extends TestCase {
                          be.getMessage());
         }
 
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("PUBLIC ID ONE");
         dtd.setLocation("i/dont/exist.dtd");
         catalog.addDTD(dtd);
@@ -235,7 +249,7 @@ public class XMLCatalogTest extends TestCase {
 
     public void testSimpleEntry() {
 
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("-//stevo//DTD doc 1.0//EN");
         String sysid = "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
         dtd.setLocation(sysid);
@@ -259,7 +273,7 @@ public class XMLCatalogTest extends TestCase {
         String sysid = "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
 
         // catalog2 --> catalog1 --> catalog
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId(publicId);
         dtd.setLocation(sysid);
         catalog.addDTD(dtd);
@@ -268,7 +282,7 @@ public class XMLCatalogTest extends TestCase {
         String uri = "http://foo.com/bar/blah.xml";
         String uriLoc = "src/etc/testcases/taskdefs/optional/xml/about.xml";
 
-        DTDLocation entity = new DTDLocation();
+        ResourceLocation entity = new ResourceLocation();
         entity.setPublicId(uri);
         entity.setLocation(uriLoc);
         catalog.addEntity(entity);
@@ -310,7 +324,7 @@ public class XMLCatalogTest extends TestCase {
         String publicId = "-//stevo//DTD doc 1.0//EN";
         String dtdLoc = "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
 
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId(publicId);
         dtd.setLocation(dtdLoc);
         catalog.addDTD(dtd);
@@ -319,7 +333,7 @@ public class XMLCatalogTest extends TestCase {
         String uri = "http://foo.com/bar/blah.xml";
         String uriLoc = "src/etc/testcases/taskdefs/optional/xml/about.xml";
 
-        DTDLocation entity = new DTDLocation();
+        ResourceLocation entity = new ResourceLocation();
         entity.setPublicId(uri);
         entity.setLocation(uriLoc);
         catalog.addEntity(entity);
@@ -355,12 +369,12 @@ public class XMLCatalogTest extends TestCase {
         String uriLoc = "etc/testcases/taskdefs/optional/xml/about.xml";
         String base = null;
         try {
-            base = toURLString(project.getBaseDir()) + "src/";
+            base = toURLString(project.getBaseDir()) + "/src/";
         } catch (MalformedURLException ex) {
             fail (ex.toString());
         }
 
-        DTDLocation entity = new DTDLocation();
+        ResourceLocation entity = new ResourceLocation();
         entity.setPublicId(uri);
         entity.setLocation(uriLoc);
         catalog.addEntity(entity);
@@ -383,7 +397,7 @@ public class XMLCatalogTest extends TestCase {
         String dtdLoc = "testcases/taskdefs/optional/xml/doc.dtd";
         String path1 = project.getBaseDir().toString() + "/src/etc";
 
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId(publicId);
         dtd.setLocation(dtdLoc);
         catalog.addDTD(dtd);
@@ -393,7 +407,7 @@ public class XMLCatalogTest extends TestCase {
         String uriLoc = "etc/testcases/taskdefs/optional/xml/about.xml";
         String path2 = project.getBaseDir().toString() + "/src";
 
-        DTDLocation entity = new DTDLocation();
+        ResourceLocation entity = new ResourceLocation();
         entity.setPublicId(uri);
         entity.setLocation(uriLoc);
         catalog.addEntity(entity);
@@ -407,8 +421,8 @@ public class XMLCatalogTest extends TestCase {
             InputSource result = catalog.resolveEntity(publicId,
                                                        "nap:chemical+brothers");
             assertNotNull(result);
-            assertEquals(toURLString(dtdFile),
-                         result.getSystemId());
+            String resultStr = new URL(result.getSystemId()).getFile();
+            assertTrue(toURLString(dtdFile).endsWith(resultStr));
         } catch (Exception e) {
             fail("resolveEntity() failed!" + e.toString());
         }
@@ -416,8 +430,8 @@ public class XMLCatalogTest extends TestCase {
         try {
             Source result = catalog.resolve(uri, null);
             assertNotNull(result);
-            assertEquals(toURLString(xmlFile),
-                         result.getSystemId());
+            String resultStr = new URL(result.getSystemId()).getFile();
+            assertTrue(toURLString(xmlFile).endsWith(resultStr));
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
         }

@@ -75,6 +75,7 @@ import org.apache.xml.resolver.helpers.PublicId;
  * @see org.apache.tools.ant.types.XMLCatalog.CatalogResolver
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
+ * @since Ant 1.6
  */
 public class ApacheCatalog extends Catalog {
 

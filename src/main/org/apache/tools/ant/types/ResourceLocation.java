@@ -75,6 +75,7 @@ import java.net.URL;
  * @author dIon Gillard
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
+ * @since Ant 1.6
  */
 
 import java.net.URL;

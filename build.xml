@@ -292,7 +292,6 @@
     <exclude name="**/GetTest.java" if="offline"/>
   </patternset>
   <patternset id="teststhatfail">
-    <exclude name="${ant.package}/types/XMLCatalogTest.java"/>
   </patternset>
 
   <!--
