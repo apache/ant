@@ -343,29 +343,31 @@ public final class Specification {
         }
 
         // Available specification version must be >= required
-        final DeweyDecimal specificationVersion
+        final DeweyDecimal otherSpecificationVersion
             = other.getSpecificationVersion();
         if (null != specificationVersion) {
-            if (null == specificationVersion
-                || !isCompatible(specificationVersion, specificationVersion)) {
+            if (null == otherSpecificationVersion
+                || !isCompatible(specificationVersion, otherSpecificationVersion)) {
                 return REQUIRE_SPECIFICATION_UPGRADE;
             }
         }
 
         // Implementation Vendor ID must match
-        final String implementationVendor = other.getImplementationVendor();
+        final String otherImplementationVendor 
+            = other.getImplementationVendor();
         if (null != implementationVendor) {
-            if (null == implementationVendor
-                || !implementationVendor.equals(implementationVendor)) {
+            if (null == otherImplementationVendor
+                || !implementationVendor.equals(otherImplementationVendor)) {
                 return REQUIRE_VENDOR_SWITCH;
             }
         }
 
         // Implementation version must be >= required
-        final String implementationVersion = other.getImplementationVersion();
+        final String otherImplementationVersion 
+            = other.getImplementationVersion();
         if (null != implementationVersion) {
-            if (null == implementationVersion
-                || !implementationVersion.equals(implementationVersion)) {
+            if (null == otherImplementationVersion
+                || !implementationVersion.equals(otherImplementationVersion)) {
                 return REQUIRE_IMPLEMENTATION_CHANGE;
             }
         }
