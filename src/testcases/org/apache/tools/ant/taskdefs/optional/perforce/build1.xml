@@ -1,0 +1,33 @@
+<!-- author Antoine Levy-Lambert levylambert@tiscali-dsl.de -->
+<!-- this file demonstrates that p4.change will be modified by p4submit -->
+<!-- if the change number is modified by the Perforce daemon during the submission -->
+<project name="build1" default="runtest">
+  <target name="runtest">
+    <p4change/>
+    <property name="change1" value="${p4.change}" />
+    <echo>
+doing a first change ${change1}
+</echo>
+    <p4change/>
+    <property name="change2" value="${p4.change}" />
+    <echo>
+doing a second change ${change2}
+</echo>
+    <p4edit view="//depot/foobar" change="${change1}" />
+    <p4edit view="//depot/hello" change="${change2}" />
+    <echo>
+before submitting of hello change ${change2} p4.change is now ${p4.change}
+</echo>
+    <p4submit change="${change2}"/>
+    <echo>
+after submitting of hello p4.change is now ${p4.change}
+</echo>
+    <echo>
+before submitting of foobar change ${change1}
+</echo>
+    <p4submit change="${change1}"/>
+    <echo>
+after submitting of foobar p4.change is now ${p4.change}
+</echo>
+  </target>
+</project>

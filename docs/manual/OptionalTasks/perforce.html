@@ -79,7 +79,18 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
         <td><a href="#p4add">P4Add</a></td>
         <td>Add files</td>
     </tr>
-
+    <tr>
+      <td><a href="#p4delete">P4Delete</a></td>
+      <td>Delete files</td>
+    </tr>
+    <tr>
+      <td><a href="#p4integrate">P4Integrate</a></td>
+      <td>Integrate files</td>
+    </tr>
+    <tr>
+      <td><a href="#p4resolve">P4Resolve</a></td>
+      <td>Resolve files</td>
+    </tr>
     <tr>
         <td><a href="#p4fstat">P4Fstat</a></td>
         <td>Show differences between local repository and p4 repository</td>
@@ -204,6 +215,9 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
     &lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot;/&gt;
     &lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot;/&gt;
     &lt;taskdef name=&quot;p4add&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Add&quot;/&gt;
+    &lt;taskdef name=&quot;p4delete&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Delete&quot;/&gt;
+    &lt;taskdef name=&quot;p4integrate&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Integrate&quot;/&gt;
+    &lt;taskdef name=&quot;p4resolve&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Resolve&quot;/&gt;
 </pre>
 
 <hr>
@@ -245,7 +259,8 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 <h3>Description:</h3>
 <p>Request a new changelist from the Perforce server. 
 This task sets the ${p4.change} property which can then be passed to <A HREF="#p4submit">P4Submit</A>,
-<A HREF="#p4edit">P4Edit</A>, or <a HREF="#p4add">P4Add</A>.
+<A HREF="#p4edit">P4Edit</A>, or <a HREF="#p4add">P4Add</A>, or <a HREF="#p4delete">P4Delete</A>,
+then to <A HREF="#p4submit">P4Submit</A>.
 </p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -309,6 +324,11 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 <h2><a name="p4submit">P4Submit</a></h2>
 <h3>Description:</h3>
 <p>Submit a changelist, usually obtained from P4Change.
+<p>P4Submit will also change the value of the property p4.change if the change list is renamed by the Perforce server.
+<p>P4Submit will set a property p4.needsresolve to 1 if the change could not be submitted due to files needing resolving.
+<p>Files will need resolve if at the time of checking in, the revision that was checked out to do the current edit
+is not the latest any more.
+<p>If no files need resolve, the p4.needsresolve will be set to 0.
 </p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -617,6 +637,214 @@ will list all the files under C:\dev\gnu\depot, sorted by under Perforce or not 
 
 
 
+
+<h2><a name="p4delete">P4Delete</a></h2>
+<h3>Description:</h3>
+<p>Open file(s) for delete. P4Change should be used to obtain a new changelist for P4Delete as,
+although P4Delete can open files to the default change,  P4Submit cannot yet submit it.
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">view</td>
+    <td valign="top">The filespec to request to delete</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">change</td>
+    <td valign="top">An existing changelist number to assign files to.</td>
+    <td valign="top" align="center">No, but see above.</td>
+  </tr>
+
+</table>
+
+<h3>Examples</h3>
+<pre>
+&lt;p4delete
+    view=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
+    change=&quot;${p4.change}&quot;/&gt;
+</pre>
+<hr>
+<h2><a name="p4integrate">P4Integrate</a></h2>
+<h3>Description:</h3>
+<p>Open file(s) for integrate. P4Change should be used to obtain a new changelist for P4Integrate as,
+although P4Integrate can open files to the default change,  P4Submit cannot yet submit it.
+</p>
+<h3>Parameters</h3>
+<p>If this task is used without using a branch definition, both fromfile and tofile must be supplied.
+If a branch definition is supplied, at least one of fromfile or tofile should be supplied.
+Both fromfile and tofile can be supplied together with a branch definition.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+    <td align="center" valign="top"><b>Perforce command line flag</b></td>
+  </tr>
+  <tr>
+    <td valign="top">fromfile</td>
+    <td valign="top">Original file or view</td>
+    <td valign="top" align="center">required if a branch is not specified</td>
+    <td valign="top" align="center"></td>
+  </tr>
+  <tr>
+    <td valign="top">tofile</td>
+    <td valign="top">Target file or view.</td>
+    <td valign="top" align="center">required if a branch is not specified</td>
+    <td valign="top" align="center"></td>
+  </tr>
+  <tr>
+    <td valign="top">branch</td>
+    <td valign="top">Name of branch specification</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-b</td>
+  </tr>
+  <tr>
+    <td valign="top">change</td>
+    <td valign="top">An existing changelist number to assign files to.</td>
+    <td valign="top" align="center">No, but see above.</td>
+    <td valign="top" align="center">-c</td>
+  </tr>
+  <tr>
+    <td valign="top">forceintegrate</td>
+    <td valign="top">Forces integration regardless of previous integration history (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-f</td>
+  </tr>
+  <tr>
+    <td valign="top">restoredeletedrevisions</td>
+    <td valign="top">Enables integration around deleted revisions (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-d</td>
+  </tr>
+  <tr>
+    <td valign="top">leavetargetrevision</td>
+    <td valign="top">Prevents target files from being synced to head revision before integration (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-h</td>
+  </tr>
+  <tr>
+    <td valign="top">enablebaselessmerges</td>
+    <td valign="top">Forces integration to existing target files which have no integration history relative to the source files (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-i</td>
+  </tr>
+  <tr>
+    <td valign="top">simulationmode</td>
+    <td valign="top">Displays which integrations are necessary but do not actually schedule them (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-n</td>
+  </tr>
+  <tr>
+    <td valign="top">reversebranchmappings</td>
+    <td valign="top">Reverses mappings in the branch view, with source and target files exchanging place (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-r</td>
+  </tr>
+  <tr>
+    <td valign="top">propagatesourcefiletype</td>
+    <td valign="top">Makes source file type propagate to existing target files (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-t</td>
+  </tr>
+  <tr>
+    <td valign="top">nocopytargetfiles</td>
+    <td valign="top">Prevents the physical delivery on disk of new target files (*)</td>
+    <td valign="center">No</td>
+    <td valign="top" align="center">-v</td>
+  </tr>
+</table>
+<br>
+(*) The following applies for a number of flags. The default is false. To set the flag, use  &quot;true&quot;
+
+<h3>Examples</h3>
+<pre>
+&lt;p4integrate
+    fromfile=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
+    tofile=&quot;//depot/projects/projectfoo/release/src/Blah.java...&quot;
+    change=&quot;${p4.change}&quot;/&gt;
+</pre>
+<hr>
+<h2><a name="p4resolve">P4Resolve</a></h2>
+<h3>Description:</h3>
+<p>Resolves files. You want to do this if :
+<ul>
+<li>
+there have been or there may be concurrent edits of the same file. For instance, you have begun to edit a file, and while you were working on it, somebody has submitted a new version  of the same file. When you first attempt to submit your file(s), you will get a message (property p4.needsresolve set).
+</li>
+<li>
+you have just been doing an integration to existing target files
+</li>
+</ul>
+P4Resolve does not use a change list number (it takes it from the files it is working on).
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+    <td align="center" valign="top"><b>Perforce command line flag</b></td>
+  </tr>
+  <tr>
+    <td valign="top">view</td>
+    <td valign="top">The filespec to request to delete</td>
+    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center"></td>
+   </tr>
+  <tr>
+    <td valign="top">resolvemode</td>
+    <td valign="top">Should have one of these values :
+      <ul>
+        <li>&quot;automatic&quot;</li>
+        <li>&quot;force&quot;</li>
+        <li>&quot;safe&quot;</li>
+        <li>&quot;theirs&quot;</li>
+        <li>&quot;yours&quot;</li>
+      </ul></td>
+    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">corresponds to one of -am -af -as -at -ay </td>
+  </tr>
+  <tr>
+    <td valign="top">redoall</td>
+    <td valign="top">allows previously resolved files to be resolved again (*)</td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">-f</td>
+  </tr>
+  <tr>
+    <td valign="top">simulationmode</td>
+    <td valign="top">Lists the integrations which would be performed, without actually doing them. (*)</td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">-n</td>
+  </tr>
+  <tr>
+    <td valign="top">forcetextmode</td>
+    <td valign="top">Attempts a textual merge, even for binary files (*)</td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">-t</td>
+  </tr>
+  <tr>
+    <td valign="top">markersforall</td>
+    <td valign="top">Puts in markers for all changes, conflicting or not (*)</td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">-v</td>
+  </tr>
+</table>
+<br>
+(*) The following applies for a number of flags. The default is false. To set the flag, use  &quot;true&quot;
+
+<h3>Examples</h3>
+<pre>
+&lt;p4resolve
+    view=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
+    change=&quot;${p4.change}&quot;
+    resolvemode=&quot;automatic&quot;/&gt;
+</pre>
 
 <h2><a name="changes">Change History</a></h2>
 <table border="1" cellpadding="2" cellspacing="0">

@@ -61,6 +61,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import java.util.Vector;
 
 /** Submits a numbered changelist to Perforce.
  *
@@ -80,7 +81,7 @@ public class P4Submit extends P4Base {
     public String change;
 
     /**
-     * The changelist number to submit; required.
+     * @param change The changelist number to submit; required.
      */
     public void setChange(String change) {
         this.change = change;
@@ -88,16 +89,48 @@ public class P4Submit extends P4Base {
 
     public void execute() throws BuildException {
         if (change != null) {
-            execP4Command("submit -c " + change,
-                    new P4HandlerAdapter() {
-                        public void process(String line) {
-                            log(line, Project.MSG_VERBOSE);
-                        }
-                    });
+            execP4Command("submit -c " + change, (P4HandlerAdapter) new P4SubmitAdapter());
         } else {
             //here we'd parse the output from change -o into submit -i
             //in order to support default change.
             throw new BuildException("No change specified (no support for default change yet....");
+        }
+    }
+
+    public class P4SubmitAdapter extends P4HandlerAdapter {
+        public void process(String line) {
+            log(line, Project.MSG_VERBOSE);
+            getProject().setProperty("p4.needsresolve","0");
+            // this type of output might happen
+            // Change 18 renamed change 20 and submitted.
+            if (util.match("/renamed/", line)) {
+                try {
+                    Vector myarray = new Vector();
+                    util.split(myarray, line);
+                    boolean found = false;
+                    for (int counter = 0; counter < myarray.size(); counter++) {
+                        if (found == true) {
+                            int changenumber = Integer.parseInt((String) myarray.elementAt(counter + 1));
+                            log("Perforce change renamed " + changenumber, Project.MSG_INFO);
+                            getProject().setProperty("p4.change", "" + changenumber);
+                            found = false;
+                        }
+                        if (((String) (myarray.elementAt(counter))).equals("renamed")) {
+                            found = true;
+                        }
+                    }
+                }
+                        // NumberFormatException or ArrayOutOfBondsException could happen here
+                catch (Exception e) {
+                    String msg = "Failed to parse " + line  + "\n"
+                            + " due to " + e.getMessage();
+                    throw new BuildException(msg, e, getLocation());
+                }
+            }
+            if (util.match("/p4 submit -c/",line)) {
+                getProject().setProperty("p4.needsresolve","1");
+            }
+
         }
     }
 
