@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,5 +22,9 @@ package org.apache.tools.ant.dispatch;
  * of the task's method to execute.
  */
 public interface Dispatchable {
-    public String getActionParameterName();
+    /**
+     * Get the name of the parameter.
+     * @return the name of the parameter that contains the name of the method.
+     */
+    String getActionParameterName();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,11 +24,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Determines and Executes the action method for the task
+ * Determines and Executes the action method for the task.
  */
 public class DispatchUtils {
     /**
-     * Determines and Executes the action method for the task
+     * Determines and Executes the action method for the task.
+     * @param task the task to execute.
+     * @throws BuildException on error.
      */
     public static final void execute(Object task) throws BuildException {
         String methodName = "execute";
@@ -39,7 +41,9 @@ public class DispatchUtils {
             } else if (task instanceof UnknownElement) {
                 UnknownElement ue = (UnknownElement) task;
                 Object realThing = ue.getRealThing();
-                if (realThing != null && realThing instanceof Dispatchable && realThing instanceof Task) {
+                if (realThing != null
+                    && realThing instanceof Dispatchable
+                    && realThing instanceof Task) {
                     dispatchable = (Dispatchable) realThing;
                 }
             }
@@ -61,9 +65,11 @@ public class DispatchUtils {
                                 if (s != null && s.trim().length() > 0) {
                                     methodName = s.trim();
                                     Method executeM = null;
-                                    executeM = dispatchable.getClass().getMethod(methodName, new Class[0]);
+                                    executeM = dispatchable.getClass().getMethod(
+                                        methodName, new Class[0]);
                                     if (executeM == null) {
-                                        throw new BuildException("No public " + methodName + "() in "
+                                        throw new BuildException(
+                                            "No public " + methodName + "() in "
                                             + dispatchable.getClass());
                                     }
                                     executeM.invoke(dispatchable, (Object[]) null);
@@ -71,16 +77,19 @@ public class DispatchUtils {
                                         ((UnknownElement) task).setRealThing(null);
                                     }
                                 } else {
-                                    throw new BuildException("Dispatchable Task attribute '" + name.trim()
-                                            + "' not set or value is empty.");
+                                    throw new BuildException(
+                                        "Dispatchable Task attribute '" + name.trim()
+                                        + "' not set or value is empty.");
                                 }
                             } else {
-                                    throw new BuildException("Dispatchable Task attribute '" + name.trim()
-                                            + "' not set or value is empty.");
+                                    throw new BuildException(
+                                        "Dispatchable Task attribute '" + name.trim()
+                                        + "' not set or value is empty.");
                             }
                         }
                     } else {
-                        throw new BuildException("Action Parameter Name must not be empty for Dispatchable Task.");
+                        throw new BuildException(
+                            "Action Parameter Name must not be empty for Dispatchable Task.");
                     }
                 } catch (NoSuchMethodException nsme) {
                     throw new BuildException("No public " + mName + "() in " + task.getClass());
