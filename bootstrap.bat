@@ -2,7 +2,7 @@
 
 REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-REM   Copyright 2000-2004 The Apache Software Foundation
+REM   Copyright 2000-2005 The Apache Software Foundation
 REM
 REM   Licensed under the Apache License, Version 2.0 (the "License");
 REM   you may not use this file except in compliance with the License.
