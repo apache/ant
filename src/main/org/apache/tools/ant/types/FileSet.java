@@ -74,7 +74,7 @@ import java.util.Vector;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class FileSet extends DataType {
+public class FileSet extends DataType implements Cloneable {
     
     private PatternSet defaultPatterns = new PatternSet();
     private Vector additionalPatterns = new Vector();
@@ -93,6 +93,7 @@ public class FileSet extends DataType {
         this.additionalPatterns = fileset.additionalPatterns;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.isCaseSensitive = fileset.isCaseSensitive;
+        setProject(getProject());
     }
     
     
@@ -320,6 +321,18 @@ public class FileSet extends DataType {
             throw new BuildException(msg);
         } else {
             return (FileSet) o;
+        }
+    }
+
+    /**
+     * Return a FileSet that has the same basedir and same patternsets
+     * as this one.
+     */
+    public Object clone() {
+        if (isReference()) {
+            return new FileSet(getRef(getProject()));
+        } else {
+            return new FileSet(this);
         }
     }
 

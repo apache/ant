@@ -86,6 +86,7 @@ public class FileList extends DataType {
     protected FileList(FileList filelist) {
         this.dir       = filelist.dir;
         this.filenames = filelist.filenames;
+        setProject(filelist.getProject());
     }
 
     /**

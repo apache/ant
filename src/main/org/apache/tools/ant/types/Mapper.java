@@ -67,14 +67,12 @@ import java.util.Stack;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public class Mapper extends DataType {
-
-    protected Project p;
+public class Mapper extends DataType implements Cloneable {
 
     protected MapperType type = null;
 
     public Mapper(Project p) {
-        this.p = p;
+        setProject(p);
     }
 
     /**
@@ -123,7 +121,7 @@ public class Mapper extends DataType {
             throw noChildrenAllowed();
         }
         if (this.classpath == null) {
-            this.classpath = new Path(p);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -201,7 +199,8 @@ public class Mapper extends DataType {
             if (classpath == null) {
                 c = Class.forName(classname);
             } else {
-                AntClassLoader al = new AntClassLoader(p, classpath);
+                AntClassLoader al = new AntClassLoader(getProject(), 
+                                                       classpath);
                 c = al.loadClass(classname);
                 AntClassLoader.initializeClass(c);
             }
@@ -229,10 +228,10 @@ public class Mapper extends DataType {
         if (!checked) {
             Stack stk = new Stack();
             stk.push(this);
-            dieOnCircularReference(stk, p);
+            dieOnCircularReference(stk, getProject());
         }
         
-        Object o = ref.getReferencedObject(p);
+        Object o = ref.getReferencedObject(getProject());
         if (!(o instanceof Mapper)) {
             String msg = ref.getRefId()+" doesn\'t denote a mapper";
             throw new BuildException(msg);
@@ -269,4 +268,5 @@ public class Mapper extends DataType {
             return implementations.getProperty(getValue());
         }
     }
+
 }

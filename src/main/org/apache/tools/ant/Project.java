@@ -1185,6 +1185,13 @@ public class Project {
     }
 
     /**
+     * @return The object with the "id" key.
+     */
+    public Object getReference(String key) {
+        return references.get(key);
+    }
+
+    /**
      * send build started event to the listeners
      */
     protected void fireBuildStarted() {

@@ -77,7 +77,7 @@ import org.apache.tools.ant.Project;
  * @author     <A href="mailto:gholam@xtra.co.nz">  Michael McCallum  </A>
  * @created   14 March 2001
  */
-public class FilterSet extends DataType {
+public class FilterSet extends DataType implements Cloneable {
     
     /**
      * Individual filter component of filterset
@@ -439,6 +439,15 @@ public class FilterSet extends DataType {
     public boolean hasFilters() {
         return getFilters().size() > 0;
     }
+
+    public Object clone() throws BuildException {
+        if (isReference()) {
+            return new FilterSet(getRef());
+        } else {
+            return new FilterSet(this);
+        }
+    }
+
 }
  
 

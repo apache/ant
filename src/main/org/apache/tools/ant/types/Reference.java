@@ -88,7 +88,7 @@ public class Reference {
             throw new BuildException("No reference specified");
         }
         
-        Object o = project.getReferences().get(refid);
+        Object o = project.getReference(refid);
         if (o == null) {
             throw new BuildException("Reference "+refid+" not found.");
         }

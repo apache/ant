@@ -99,7 +99,6 @@ import java.util.Vector;
 public class Path extends DataType implements Cloneable {
 
     private Vector elements;
-    private Project project;
 
     public static Path systemClasspath = 
         new Path(null, System.getProperty("java.class.path"));
@@ -116,7 +115,7 @@ public class Path extends DataType implements Cloneable {
         }
 
         public void setPath(String path) {
-            parts = Path.translatePath(project, path);
+            parts = Path.translatePath(getProject(), path);
         }
 
         public String[] getParts() {
@@ -134,14 +133,9 @@ public class Path extends DataType implements Cloneable {
     }
 
     public Path(Project project) {
-        this.project = project;
+        setProject(project);
         elements = new Vector();
     }
-
-    public void setProject(Project p) {
-        this.project = p;
-    }
-    public Project getProject() {return project;}
 
     /**
      * Adds a element definition to the path.
@@ -211,7 +205,7 @@ public class Path extends DataType implements Cloneable {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        Path p = new Path(project);
+        Path p = new Path(getProject());
         elements.addElement(p);
         checked = false;
         return p;
@@ -240,8 +234,8 @@ public class Path extends DataType implements Cloneable {
         String[] list = source.list();
         for (int i=0; i<list.length; i++) {
             File f = null;
-            if (project != null) {
-                f = project.resolveFile(list[i]);
+            if (getProject() != null) {
+                f = getProject().resolveFile(list[i]);
             }
             else {
                 f = new File(list[i]);
@@ -262,7 +256,7 @@ public class Path extends DataType implements Cloneable {
             // make sure we don't have a circular reference here
             Stack stk = new Stack();
             stk.push(this);
-            dieOnCircularReference(stk, project);
+            dieOnCircularReference(stk, getProject());
         }
 
         Vector result = new Vector(2*elements.size());
@@ -270,7 +264,7 @@ public class Path extends DataType implements Cloneable {
             Object o = elements.elementAt(i);
             if (o instanceof Reference) {
                 Reference r = (Reference) o;
-                o = r.getReferencedObject(project);
+                o = r.getReferencedObject(getProject());
                 // we only support references to paths right now
                 if (!(o instanceof Path)) {
                     String msg = r.getRefId()+" doesn\'t denote a path";
@@ -292,7 +286,7 @@ public class Path extends DataType implements Cloneable {
             } else if (o instanceof Path) {
                 Path p = (Path) o;
                 if (p.getProject() == null) {
-                    p.setProject(project);
+                    p.setProject(getProject());
                 }
                 String[] parts = p.list();
                 for (int j=0; j<parts.length; j++) {
@@ -300,9 +294,9 @@ public class Path extends DataType implements Cloneable {
                 }
             } else if (o instanceof FileSet) {
                 FileSet fs = (FileSet) o;
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 String[] s = ds.getIncludedFiles();
-                File dir = fs.getDir(project);
+                File dir = fs.getDir(getProject());
                 for (int j=0; j<s.length; j++) {
                     File f = new File(dir, s[j]);
                     String absolutePath = f.getAbsolutePath();
@@ -405,7 +399,7 @@ public class Path extends DataType implements Cloneable {
      * Return a Path that holds the same elements as this instance.
      */
     public Object clone() {
-        Path p = new Path(project);
+        Path p = new Path(getProject());
         p.append(this);
         return p;
     }
@@ -479,11 +473,11 @@ public class Path extends DataType implements Cloneable {
      */
     public Path concatSystemClasspath(String defValue) {
 
-        Path result = new Path(project);
+        Path result = new Path(getProject());
 
         String order = defValue;
-        if (project != null) {
-            String o = project.getProperty("build.sysclasspath");
+        if (getProject() != null) {
+            String o = getProject().getProperty("build.sysclasspath");
             if (o != null) {
                 order = o;
             }
@@ -505,8 +499,8 @@ public class Path extends DataType implements Cloneable {
         } else {
             // last: don't trust the developer
             if (!order.equals("last")) {
-                project.log("invalid value for build.sysclasspath: " + order, 
-                            Project.MSG_WARN);
+                log("invalid value for build.sysclasspath: " + order, 
+                    Project.MSG_WARN);
             }
 
             result.addExisting(this);
@@ -582,7 +576,7 @@ public class Path extends DataType implements Cloneable {
         if (extdirs == null) {
             String extProp = System.getProperty("java.ext.dirs");
             if (extProp != null) {
-                extdirs = new Path(project, extProp);
+                extdirs = new Path(getProject(), extProp);
             } else {
                 return;
             }
@@ -590,7 +584,7 @@ public class Path extends DataType implements Cloneable {
 
         String[] dirs = extdirs.list();
         for (int i=0; i<dirs.length; i++) {
-            File dir = project.resolveFile(dirs[i]);
+            File dir = getProject().resolveFile(dirs[i]);
             if (dir.exists() && dir.isDirectory()) {
                 FileSet fs = new FileSet();
                 fs.setDir(dir);
@@ -599,5 +593,4 @@ public class Path extends DataType implements Cloneable {
             }
         }
     }
-
 }

@@ -88,16 +88,16 @@ public class ClassfileSet extends FileSet {
         }
     }
     
+    protected ClassfileSet(ClassfileSet s) {
+        super(s);
+        rootClasses = s.rootClasses;
+    }
+
     public void setRootClass(String rootClass)
         throws BuildException
     {
         rootClasses.add(rootClass);
     }
-
-    public void setDir(File dir) throws BuildException {
-        super.setDir(dir);
-    }
-
 
     /**
      * Return the DirectoryScanner associated with this FileSet.
@@ -112,5 +112,13 @@ public class ClassfileSet extends FileSet {
     
     public void addConfiguredRoot(ClassRoot root) {
         rootClasses.add(root.getClassname());    
+    }
+
+    public Object clone() {
+        if (isReference()) {
+            return new ClassfileSet((ClassfileSet) getRef(getProject()));
+        } else {
+            return new ClassfileSet(this);
+        }
     }
 }
