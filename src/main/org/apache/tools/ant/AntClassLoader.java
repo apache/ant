@@ -319,13 +319,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             this.parent = parent;
         }
         this.parentFirst = parentFirst;
-        //TODO: turn on
-        //addJavaLibraries();        
-        addSystemPackageRoot("java");
-        addSystemPackageRoot("javax");
-        addSystemPackageRoot("org.xml.sax");
-        addSystemPackageRoot("org.w3c.dom");
-        addSystemPackageRoot("sun.reflect");
+        addJavaLibraries();
     }
 
 
