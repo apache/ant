@@ -7,6 +7,9 @@ Fixed bugs:
 * <ant>'s antfile attribute will now also be considered an absolute path on
   Windows systems, if it starts with a \ and no drive specifier.
 
+* The fullpath attribute of <zipfileset> has been ignored if you used
+  the src attribute at the same time.
+
 Other changes:
 --------------
 
