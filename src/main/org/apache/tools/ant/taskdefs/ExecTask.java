@@ -323,7 +323,7 @@ public class ExecTask extends Task {
             runExecute(exe);
         } catch (IOException e) {
             if (failIfExecFails) {
-                throw new BuildException("Execute failed: ",e, location);
+                throw new BuildException("Execute failed: "+e.toString(),e, location);
             } else {
                 log("Execute failed: "+e.toString(), Project.MSG_ERR);
             }
