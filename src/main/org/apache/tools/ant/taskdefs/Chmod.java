@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class Chmod extends ExecuteOn {
 
     /**
      * The file or single directory of which the permissions must be changed.
-     * @param src
+     * @param src the source file or directory.
      */
     public void setFile(File src) {
         FileSet fs = new FileSet();
@@ -70,15 +70,15 @@ public class Chmod extends ExecuteOn {
 
     /**
      * The directory which holds the files whose permissions must be changed.
-     * @param src
+     * @param src the directory.
      */
     public void setDir(File src) {
         defaultSet.setDir(src);
     }
 
     /**
-     * The new permissions.
-     * @param perm
+     * Set the new permissions.
+     * @param perm the new permissions.
      */
     public void setPerm(String perm) {
         createArg().setValue(perm);
@@ -87,6 +87,7 @@ public class Chmod extends ExecuteOn {
 
     /**
      * Add a name entry on the include list.
+     * @return a NameEntry to be configured.
      */
     public PatternSet.NameEntry createInclude() {
         defaultSetDefined = true;
@@ -95,6 +96,7 @@ public class Chmod extends ExecuteOn {
 
     /**
      * Add a name entry on the exclude list.
+     * @return a nameentry to be configured.
      */
     public PatternSet.NameEntry createExclude() {
         defaultSetDefined = true;
@@ -103,6 +105,7 @@ public class Chmod extends ExecuteOn {
 
     /**
      * Add a set of patterns.
+     * @return a patternset to be configured.
      */
     public PatternSet createPatternSet() {
         defaultSetDefined = true;
@@ -113,7 +116,7 @@ public class Chmod extends ExecuteOn {
      * Sets the set of include patterns. Patterns may be separated by a comma
      * or a space.
      *
-     * @param includes the string containing the include patterns
+     * @param includes the string containing the include patterns.
      */
     public void setIncludes(String includes) {
         defaultSetDefined = true;
@@ -124,7 +127,7 @@ public class Chmod extends ExecuteOn {
      * Sets the set of exclude patterns. Patterns may be separated by a comma
      * or a space.
      *
-     * @param excludes the string containing the exclude patterns
+     * @param excludes the string containing the exclude patterns.
      */
     public void setExcludes(String excludes) {
         defaultSetDefined = true;
@@ -143,6 +146,9 @@ public class Chmod extends ExecuteOn {
         defaultSet.setDefaultexcludes(useDefaultExcludes);
     }
 
+    /**
+     * Check the attributes and nested elements.
+     */
     protected void checkConfiguration() {
         if (!havePerm) {
             throw new BuildException("Required attribute perm not set in chmod",
@@ -155,6 +161,10 @@ public class Chmod extends ExecuteOn {
         super.checkConfiguration();
     }
 
+    /**
+     * Carry out the chmoding.
+     * @throws BuildException on error.
+     */
     public void execute() throws BuildException {
         /*
          * In Ant 1.1, <chmod dir="foo" /> means, change the permissions
@@ -189,6 +199,10 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
+     * Set the executable.
+     * This is not allowed for Chmod.
+     * @param e ignored.
+     * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
     public void setExecutable(String e) {
@@ -197,6 +211,10 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
+     * Set the command.
+     * This is not allowed for Chmod.
+     * @param cmdl ignored.
+     * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
@@ -205,6 +223,9 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
+     * This is not allowed for Chmod.
+     * @param skip ignored.
+     * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
     public void setSkipEmptyFilesets(boolean skip) {
@@ -213,6 +234,9 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
+     * This is not allowed for Chmod.
+     * @param b ignored.
+     * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
     public void setAddsourcefile(boolean b) {
@@ -220,6 +244,11 @@ public class Chmod extends ExecuteOn {
             + " doesn\'t support the addsourcefile attribute", getLocation());
     }
 
+    /**
+     * Check if the os is valid.
+     * Always include unix.
+     * @return true if the os is valid.
+     */
     protected boolean isValidOs() {
         return Os.isFamily("unix") && super.isValidOs();
     }
