@@ -1,7 +1,8 @@
 <html>
   <head>
     <meta http-equiv="Content-Language" content="en-us">
-    <title>Programming Selectors in Ant</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css"/>
+<title>Programming Selectors in Ant</title>
   </head>
 
   <body>
@@ -121,7 +122,7 @@
 
     <h3>Testing Selectors</h3>
 
-    <p>For a robust component (and selectors are (Project)Component´s) tests are
+    <p>For a robust component (and selectors are (Project)Components) tests are
     necessary. For testing Tasks we use JUnit TestCases - more specific
     <tt>org.apache.tools.ant.BuildFileTest extends junit.framework.TestCase</tt>.
     Some of its features like configure the (test) project by reading its buildfile and
@@ -131,10 +132,10 @@
     extend <tt>BaseExtendSelector</tt> its features have to be tested also (e.g. setError()).
     </p>
 
-    <p>That´s why we have a base class for doing our selector tests:
+    <p>That's why we have a base class for doing our selector tests:
     <tt>org.apache.tools.ant.types.selectors.BaseSelectorTest</tt>.</p>
 
-    <p>This class extends TestCase and therefore can included in the set of Ant´s
+    <p>This class extends TestCase and therefore can included in the set of Ant's
     unit tests. It holds an instance of preconfigured BuildFileTest. Configuration
     is done by parsing the src/etc/testcases/types/selectors.xml. BaseSelectorTest
     then gives us helper methods for handling multiple selections. </p>
@@ -209,7 +210,7 @@ public class MySelectorTest extends BaseSelectorTest {
     </pre></p>
 
     <p>Described above the test class should provide a <tt>getInstance()</tt>
-    method. But that isn´t used here. The used <tt>getSelector()</tt> method is
+    method. But that isn't used here. The used <tt>getSelector()</tt> method is
     implemented in the base class and gives an instance of an Ant Project to
     the selector. This is usually done inside normal build file runs, but not
     inside this special environment, so this method gives the selector the
@@ -242,7 +243,7 @@ public class MySelectorTest extends BaseSelectorTest {
     </p>
 
     <hr>
-    <p align="center">Copyright &copy; 2002-2003 Apache Software
+    <p align="center">Copyright &copy; 2002-2003,2005 Apache Software
     Foundation. All rights Reserved.</p>
   </body>
 
