@@ -1,0 +1,77 @@
+<html>
+  
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>PreSetDef Task</title>
+  </head>
+  
+  <body>
+
+    <h2><a name="presetdef">PreSetDef</a></h2>
+    <h3>Description</h3>
+    <p>
+      The preset definition generates a new definition
+      based on a current definition with some attributes
+      or elements preset.
+    </p>
+    <p>
+      Introduced in ant1.6 <font color="red">Experimental</font>.
+    </p>
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">name</td>
+        <td valign="top">the name of the new definition</td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">uri</td>
+        <td valign="top">
+          The uri that this definition should live in.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+    <h3>Parameters specified as nested elements</h3>
+    <h4>another type with attributes or elements set</h4>
+    <p>The &lt;presetdef&gt; task takes one nested element as a parameter.
+      This nested element can be any other type or task. The attributes
+      and elements that need to be preset are placed here.
+    </p>
+
+    <h3>Examples</h3>
+    <p>
+      The following fragment defines a javac task with the debug and deprecation
+      attributes set. It also has a src element to source files from a generated
+      directory.
+    </p>
+    <blockquote>
+      <pre>
+&lt;presetdef name="my.javac"&gt;
+   &lt;javac debug="${debug}" deprecation="${deprecation}"&gt;
+      &lt;src path="${gen.dir}"/&gt;
+   &lt;/javac&gt;
+&lt;/presetdef&gt;
+      </pre>
+    </blockquote>
+    <p>
+      This can be used as a normal javac task - example:
+    </p>
+    <blockquote>
+      <pre>
+&lt;my.javac src="${src.dir}" destdir="${classes.dir}"/&gt;
+      </pre>
+    </blockquote>
+
+<hr>
+<p align="center">Copyright &copy; 2003 Apache Software
+Foundation. All rights Reserved.</p>
+
+</body>
+</html>
+

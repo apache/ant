@@ -1,0 +1,176 @@
+<html>
+  
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>MacroDef Task</title>
+  </head>
+    
+  <body>
+      
+    <h2><a name="macrodef">MacroDef</a></h2>
+    <h3>Description</h3>
+    <p>
+      This defines a new task using a &lt;sequential&gt; or &lt;parallel&gt;
+      nested task as a template. Nested elements &lt;param&gt; and
+      &lt;element&gt; are used to specify attributes and elements of
+      the new task. These get substituted into the  &lt;sequential&gt;
+      or &lt;parallel&gt; task when the new task is run.
+    </p>
+    <p>
+      Introduced in ant1.6 <font color="red">Experimental</font>.
+    </p>
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">name</td>
+        <td valign="top">the name of the new definition</td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">uri</td>
+        <td valign="top">
+          The uri that this definition should live in.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+      <h3>Parameters specified as nested elements</h3>
+    <h4>param</h4>
+    <p>
+      This is used to specify attributes of the new task. The values
+      of the attributes get substituted into the templated task.
+      The attributes will be required attributes unless a default
+      value has been set.
+    </p>
+    <p>
+      This attribute is placed in the body of the templated
+      task using the ant property notation - ${attribute name}.
+      Note that is not an actual ant property.
+    </p>
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">name</td>
+        <td valign="top">the name of the new attribute</td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">default</td>
+        <td valign="top">
+          the default value of the attribute.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+    <h4>element</h4>
+    <p>
+      This is used to specify nested elements of the new task.
+      The contents of the nested elements of the task instance
+      are placed in the templated task at the tag name.
+    </p>
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">name</td>
+        <td valign="top">the name of the new attribute</td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">optional</td>
+        <td valign="top">
+          if true this nested element is optional. Default is
+          false - i.e the nested element is required in
+          the new task.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+    
+    <h3>Examples</h3>
+    <p>
+      The following example defined a task called testing and
+      runs it.
+    </p>
+    <blockquote>
+      <pre>
+&lt;macrodef name="testing"&gt;
+   &lt;param name="v" default="NOT SET"/&gt;
+   &lt;element name="some-tasks" optional="yes"/&gt;
+   &lt;sequential&gt;
+      &lt;echo&gt;v is ${v}&lt;/echo&gt;
+      &lt;some-tasks/&gt;
+   &lt;/sequential&gt;
+&lt;/macrodef&gt;
+
+&lt;testing v="This is v"&gt;
+   &lt;some-tasks&gt;
+      &lt;echo&gt;this is a test&lt;/echo&gt;
+   &lt;/some-tasks&gt;
+&lt;/testing&gt;
+      </pre>
+    </blockquote>
+    <p>
+      The following fragment defines a task called &lt;call-cc&gt; which
+      take the attributes "target", "link" and "target.dir" and the
+      nested element "cc-elements". The body of the task
+      uses the &lt;cc&gt; task from the
+      <a href="http://ant-contrib.sourceforge.net/">ant-contrib</a> project.
+    </p>
+    <blockquote>
+      <pre>
+&lt;macrodef name="call-cc"&gt;
+   &lt;param name="target"/&gt;
+   &lt;param name="link"/&gt;
+   &lt;param name="target.dir"/&gt;
+   &lt;element name="cc-elements"/&gt;
+   &lt;sequential&gt;
+      &lt;mkdir dir="${obj.dir}/${target}"/&gt;
+      &lt;mkdir dir="${target.dir}"/&gt;
+         &lt;cc link="${link}" objdir="${obj.dir}/${target}"
+             outfile="${target.dir}/${target}"&gt;
+            &lt;compiler refid="compiler.options"/&gt;
+            &lt;cc-elements/&gt;
+         &lt;/cc&gt;
+      &lt;/sequential&gt;
+&lt;/macrodef&gt;
+      </pre>
+    </blockquote>
+    <p>
+      This then can be used as follows:
+    </p>
+    <blockquote>
+      <pre>
+&lt;call-cc target="unittests" link="executable"
+         target.dir="${build.bin.dir}"&gt;
+   &lt;cc-elements&gt;
+      &lt;includepath location="${gen.dir}"/&gt;
+      &lt;includepath location="test"/&gt;
+      &lt;fileset dir="test/unittest" includes = "**/*.cpp"/&gt;
+      &lt;fileset dir="${gen.dir}" includes = "*.cpp"/&gt;
+      &lt;linker refid="linker-libs"/&gt;
+   &lt;/cc-elements&gt;
+&lt;/call-cc&gt;
+      </pre>
+    </blockquote>
+<hr>
+<p align="center">Copyright &copy; 2003 Apache Software
+Foundation. All rights Reserved.</p>
+
+</body>
+</html>
+
