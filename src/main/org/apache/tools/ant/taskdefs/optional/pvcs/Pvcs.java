@@ -622,8 +622,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * User ID; unused.
-     * @ant.attribute ignore="true"
+     * User ID
      */
 
     public void setUserId(String u) {
