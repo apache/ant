@@ -8,12 +8,14 @@
 package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
@@ -224,7 +226,7 @@ public class JavaCC extends Task
         {
             throw new TaskException( "Javacchome not set." );
         }
-        final Path classpath = cmdl.createClasspath( getProject() );
+        final Path classpath = cmdl.createClasspath();
         classpath.createPathElement().setPath( javaccHome.getAbsolutePath() +
                                                "/JavaCC.zip" );
         classpath.addJavaRuntime();
@@ -233,7 +235,28 @@ public class JavaCC extends Task
         arg.setValue( "-mx140M" );
         arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
-        Execute.runCommand( this, cmdl.getCommandline() );
+        runCommand( cmdl.getCommandline() );
+    }
+
+    private void runCommand( final String[] cmdline )
+        throws TaskException
+    {
+        try
+        {
+            getLogger().debug( Commandline.toString( cmdline ) );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
+            exe.setCommandline( cmdline );
+            int retval = exe.execute();
+            if( retval != 0 )
+            {
+                throw new TaskException( cmdline[ 0 ] + " failed with return code " + retval );
+            }
+        }
+        catch( final IOException ioe )
+        {
+            throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + ioe );
+        }
     }
 
     /**
