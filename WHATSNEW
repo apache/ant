@@ -9,17 +9,18 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* Testcases have been made independant of current working directory.
+* Testcases have been made independent of current working directory.
 
 * Input ZIP-Files will be closed when using a <zipfileset>.
 
-* p4 tasks now don't fail if user, port or client have been ommitted
+* p4 tasks now don't fail if user, port or client have been omitted
   (and this is acceptable for the context of the command).
 
 * <javah>'s outputfile attribute will be resolved as relative to the
   projects basedir.
 
-* <antstructure> should create a valid DTD for propertyfile.operation.entry
+* <antstructure> should create a valid DTD for propertyfile.operation.entry 
+  and omit tasks it fails to load.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
