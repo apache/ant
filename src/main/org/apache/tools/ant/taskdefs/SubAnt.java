@@ -187,6 +187,14 @@ public class SubAnt
             log("Failure for target '" + target
                + "' of: " +  antfilename + "\n"
                + e.getMessage(), Project.MSG_WARN);
+        } catch (Throwable e) {
+            if (failOnError) {
+                throw new BuildException(e);
+            }
+            log("Failure for target '" + target
+                + "' of: " + antfilename + "\n"
+                + e.toString(),
+                Project.MSG_WARN);
         }
     }
 
