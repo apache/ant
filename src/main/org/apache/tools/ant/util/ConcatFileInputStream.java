@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.apache.tools.ant.Project;
 public class ConcatFileInputStream extends InputStream {
 
     private static final int EOF = -1;
-    private int currentIndex = 0;
+    private int currentIndex = -1;
     private boolean eof = false;
     private File[] file;
     private InputStream currentStream;
@@ -43,11 +43,10 @@ public class ConcatFileInputStream extends InputStream {
    * Construct a new <CODE>ConcatFileInputStream</CODE>
    * with the specified <CODE>File[]</CODE>.
    * @param file   <CODE>File[]</CODE>.
-   * @throws <CODE>IOException</CODE> if I/O errors occur.
+   * @throws IOException if I/O errors occur.
    */
     public ConcatFileInputStream(File[] file) throws IOException {
         this.file = file;
-        openFile(currentIndex);
     }
 
     // inherit doc
@@ -100,21 +99,20 @@ public class ConcatFileInputStream extends InputStream {
         closeCurrent();
         if (file != null && index < file.length) {
             log("Opening " + file[index], Project.MSG_VERBOSE);
-            currentStream = new BufferedInputStream(
-                new FileInputStream(file[index]));
+            try {
+                currentStream = new BufferedInputStream(
+                    new FileInputStream(file[index]));
+            } catch (IOException eyeOhEx) {
+                log("Failed to open " + file[index], Project.MSG_ERR);
+                throw eyeOhEx;
+            }
         } else {
             eof = true;
         }
     }
 
     private void closeCurrent() {
-        if (currentStream != null) {
-            try {
-                currentStream.close();
-            } catch (IOException eyeOhEx) {
-            }
-            currentStream = null;
-        }
+        FileUtils.close(currentStream);
+        currentStream = null;
     }
 }
-

@@ -154,6 +154,10 @@ Fixed bugs:
   passed in with the current basedir leading twice:
   e.g. ${basedir}${file.separator}${basedir}${file.separator}foo .
 
+* The first file open that took place when using input files with the
+  <exec>, <apply>, or <java> tasks was always logged to System.out
+  instead of to the managing Task.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
