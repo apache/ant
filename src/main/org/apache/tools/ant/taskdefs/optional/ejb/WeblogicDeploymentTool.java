@@ -378,17 +378,6 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         String ejbcClassName = ejbcClass;
         
         try {
-            String args = additionalArgs;
-            if (keepgenerated) {
-                args += " -keepgenerated";
-            }
-            
-            if (compiler != null) {
-                args += " -compiler " + compiler;
-            }
-            
-            args += " " + sourceJar.getPath() + " " + destJar.getPath();
-            
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("ejbc");
             if (ejbcClassName == null) {
@@ -406,8 +395,17 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
                  
             javaTask.setClassname(ejbcClassName);
-            Commandline.Argument arguments = javaTask.createArg();
-            arguments.setLine(args);
+            javaTask.createArg().setLine(additionalArgs);
+            if (keepgenerated) {
+                javaTask.createArg().setValue("-keepgenerated");
+            }
+            if (compiler != null) {
+                javaTask.createArg().setValue("-compiler");
+                javaTask.createArg().setValue(compiler);
+            }
+            javaTask.createArg().setValue(sourceJar.getPath());
+            javaTask.createArg().setValue(destJar.getPath());
+            
             Path classpath = wlClasspath;
             if (classpath == null) {
                 classpath = getCombinedClasspath();
