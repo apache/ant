@@ -12,6 +12,18 @@ writing tasks for personal use as the issues it addresses are still
 there in such a case.
 
 
+<h2>Don't break existing builds</h2>
+
+Even if you find some really hideous problem with ant, one that is easy
+to fix, if your fix breaks an existing build file then we have problems.
+Making sure that every build file out there still works, is one of the
+goals of all changes. As an example of this, Ant1.5 passes the single
+dollar sign "$" through in strings; Ant1.4 and before would strip it. To
+get this fix in we first had to write the test suite to expose current
+behaviour, then change something so that singe $ was passed through, but
+double "$$" got mapped to "$" for backwards compatibility.
+
+
 <h2>Use built in helper classes</h2>
 
 Ant includes helper tasks to simplify mauch of your work. Be warned that
@@ -33,9 +45,10 @@ When deriving tasks from this, it often benefits users to permit the
 classpath to be specified, and for forking to be an optional attribute.
 
 
-<h4>Project</h4>
+<h4>Project and related classes</h4>
 
-Project has some helper functions to touch a file, to
+Project, FileUtils, JavaEnvUtils all have helper functions
+to do things like touch a file, to
 copy a file and the like. Use these instead of trying to code them
 yourself -or trying to use tasks which may be less stable and fiddlier
 to use.
@@ -95,9 +108,40 @@ names.
     destination directory for output
 </td>
 </tr>
+<td>
+    destfile
+</td>
+<td>
+    destination file for output
+</td>
+</tr>
+<tr>
+<td>
+    srcdir
+</td>
+<td>
+    source directory
+</td>
+</tr>
+<tr>
+<td>
+    srcfile
+</td>
+<td>
+    source file
+</td>
+</tr>
 </table>
 Yes, this is a very short list. Try and be vaguely consistent with the core
 tasks, at the very least.
+
+<h2>Support classpaths</h2>
+
+Try and make it possible for people to supply a classpath to your task,
+if you need external libraries, rather than make them add everything to
+the ANT_HOME\lib directory. This lets people keep the external libraries
+in their ant-based project, rather than force all users to make changes
+to their ant system configuration.
 
 <h2>Design for controlled re-use</h2>
 
@@ -188,23 +232,30 @@ and to fix it.
 <p>
 
 The test cases are a great way of testing your task during development.
-A simple call to 'ant run-test' in the ant source tree will run all ant
+A simple call to 'build run-test' in the ant source tree will run all ant
 tests, to verify that your changes don't break anything.
 To test a single task, use the one shot <code>ant run-single-test
--Dtestcase=${testname}</code> where ${testname} is the name of your test class.
+-Dtestcase=${testname}</code> where <code>${testname}</code> is the name of your test class.
 
 
 <p>
 
 The test cases are also used by the committers to verify that changes
 and patches do what they say. If you've got test cases it increases your
-credibility significantly. 
+credibility significantly. To be precise, we hate submissions without
+test cases, as it means we have to write them ourselves. This is
+something that only gets done if we need the task or it is perceived as
+utterly essential to many users. 
 
 <p>
 
 Remember also that Ant 1.x is designed to compile and run on Java1.1, so
 you should test on Java 1.1 as well as any later version which you use.
 You can download an old SDK from Sun for this purpose.
+<p>
+Finally, run a full <code>build test</code> before and after you start
+developing your project, to make sure you havent broken anything else by
+accident.
 
 <h2>Document</h2>
 
@@ -214,6 +265,11 @@ style to that of existing tasks. It should include a list of attributes
 and elements, and at least one working example of the task. Many users
 cut and paste the examples into their build files as a starting point,
 so make the examples practical and test them too.
+<p>
+You can use the xdocs stuff in proposal/xdocs to autogenerate your
+documentation page from the javadocs of the source; this makes life
+easier and will make the transition to a full xdoclet generated
+documentation build process trivial.
 
 <h2>Licensing and Copyright</h2>
 
@@ -229,11 +285,9 @@ This is important.
 
 The fairly laissez-faire license of Apache is not compabitible with
 either the GPL or the Lesser GPL of the Free Software Foundation -the
-Gnu project. Their license requires all changes to the source to be made
-public, and give the licensee of any software the right to distribute
-copies. It also requires derivative works to be made available under the
-same license terms. None of these requirements are in the Apache Software
-Foundation license, which permits people and organisations to build
+Gnu project. These licenses have stricter terms, "copyleft", which are
+not in the Apache Software Foundation license.
+This permits people and organisations to build
 commercial and closed source applications atop the Apache libraries and
 source -but not use the Apache, Ant or Jakarta Project names without
 permission.
@@ -249,9 +303,24 @@ will be politely and firmly rejected.
 <p>
 
 Once ant-2 adds better dynamic task incorporation, it may be possible to
-provide a framework for supporting [L]GPL code, but still no tasks
-direcely subject to the Gnu licenses will ever be included in the Ant
+provide a framework for indirectly supporting [L]GPL code, but still no tasks
+directly subject to the Gnu licenses can be included in the Ant
 CVS tree.
+
+<p>
+If you link to a GPL or LGPL library, by <code>import</code> or
+reflection, your task must be licensed under the same terms. So tasks
+linking to (L)GPL code can't go into the Apache managed codebase.
+Tasks calling such code can use the 'exec' or 'java' tasks to run the
+programs, as you are just executing them at this point, not linking to
+them.
+<p>
+Even if we cannot include your task into the Apache codebase, we can 
+still point to where you host it -just submit a diff to
+xdocs/external.html pointing to your task.
+
+If your task links directly to proprietary code, we have a differnt
+problem: it is really hard to build the tasks. Please use reflection.
 
 <h3>Dont re-invent the wheel</h3>
 
@@ -302,6 +371,13 @@ zipped up. If your submission is bigger than that, why not break it up
 into separate tasks. 
 <p>
 
+We also like submissions to be added to 
+<a href="http://nagoya.apache.org/bugzilla/">bugzilla</a>, so that they
+dont get lost. Please submit them by first filing the report with a
+meaningful name, then adding files as attachments. Use CVS diff files
+please!
+<p>
+
 If you hear nothing after a couple of weeks, remind the mailing list. 
 Sometimes really good submissions get lost in the noise of other issues.
 This is particularly the case just prior to a new point release of 
@@ -333,7 +409,7 @@ cases, while documentation helps sell the reason for a task.
 <li>Message to ant-dev contains [PATCH], task name and patch reason in
 subject.
 <li>Message body contains a rationale for the patch.
-<li>Message attachment contains the patch file(s).
+<li>Message attachment contains the patch file(s). 
 </ul>
 
 <h3>Checklist before submitting a new task</h3>
@@ -356,7 +432,7 @@ optionaltasklist.html to link to the new task page
 <li>Message to ant-dev contains [SUBMIT] and task name in subject
 <li>Message body contains a rationale for the task
 <li>Message attachments contain the required files -source, documentation,
-test and patches
+test and patches zipped up to escape the HTML filter.
 </ul>
 <hr>
 <p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
