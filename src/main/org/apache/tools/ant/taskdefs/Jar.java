@@ -599,8 +599,8 @@ public class Jar extends Zip {
             initZipOutputStream(zOut);
             finalizeZipOutputStream(zOut);
         } catch (IOException ioe) {
-            throw new BuildException("Could not create almost empty JAR archive "
-                                     + "(" + ioe.getMessage() + ")", ioe,
+            throw new BuildException("Could not create almost empty JAR archive"
+                                     + " (" + ioe.getMessage() + ")", ioe,
                                      getLocation());
         } finally {
             // Close the output stream.
