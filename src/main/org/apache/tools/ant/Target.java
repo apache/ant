@@ -184,6 +184,7 @@ public class Target implements TaskContainer {
         }
         catch(RuntimeException exc) {
             project.fireTargetFinished(this, exc);
+            System.out.println("Caught exception = " + exc.getMessage());
             throw exc;
         }
     }

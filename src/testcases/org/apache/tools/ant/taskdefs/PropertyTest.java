@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.*;
+
 /**
  * @author Conor MacNeill
  */
@@ -71,4 +73,21 @@ public class PropertyTest extends TaskdefsTest {
         // should get no output at all
         expectOutputAndError("test1", "", "");
     }
+
+    public void test2() { 
+        expectLog("test2", "testprop1=aa, testprop3=xxyy, testprop4=aazz");
+    }
+    
+    public void test3() {
+        try {
+            executeTarget("test3");
+        }
+        catch (BuildException e) {
+            assertEquals("Circular definition not detected - ", true,
+                     e.getMessage().indexOf("was circularly defined") != -1);
+            return;                     
+        }
+        fail("Did not throw exception on circular exception");                     
+    }
+
 }

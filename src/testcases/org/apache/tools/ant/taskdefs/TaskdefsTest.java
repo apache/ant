@@ -170,7 +170,7 @@ public abstract class TaskdefsTest extends TestCase {
     }
 
     protected void expectSpecificBuildException(String taskname, String cause, String msg) { 
-        try { 
+        try {
             executeTarget(taskname);
         } catch (org.apache.tools.ant.BuildException ex) {
             if ((null != msg) && (ex.getMessage() != msg)) {
