@@ -70,6 +70,8 @@ Fixed bugs:
   StringIndexOutOfBoundsException on all OSes where os.name is shorter
   than seven characters.  Bugzilla Report 18105.
 
+* starteam checkout can now handle deleted labels.  Bugzilla Report 17646.
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.
