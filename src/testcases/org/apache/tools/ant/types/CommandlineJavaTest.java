@@ -87,7 +87,14 @@ public class CommandlineJavaTest extends TestCase {
         c.createVmArgument().setValue("-Djava.compiler=NONE");
         String[] s = c.getCommandline();
         assertEquals("no classpath", 4, s.length);
-        assertEquals("no classpath", "java", s[0]);
+        /*
+         * After changing CommandlineJava to search for the java
+         * executable, I don't know, how to tests the value returned
+         * here without using the same logic as applied in the class
+         * itself.
+         *
+         * assert("no classpath", "java", s[0]);
+         */
         assertEquals("no classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("no classpath", "junit.textui.TestRunner", s[2]);
         assertEquals("no classpath", 
@@ -102,7 +109,7 @@ public class CommandlineJavaTest extends TestCase {
         c.createClasspath(project).setLocation(project.resolveFile("bootstrap/lib/ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
-        assertEquals("with classpath", "java", s[0]);
+        //        assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
         assert("junit.jar contained", 
