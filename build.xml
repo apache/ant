@@ -655,7 +655,7 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
-        <section name="${ant.package}">
+        <section name="${ant.package}/">
           <attribute name="Extension-name"
                      value="org.apache.tools.ant" />
           <attribute name="Specification-Title"
@@ -695,7 +695,7 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
-        <section name="${optional.package}">
+        <section name="${optional.package}/">
           <attribute name="Extension-name"
                      value="org.apache.tools.ant.taskdefs.optional" />
           <attribute name="Specification-Title"
