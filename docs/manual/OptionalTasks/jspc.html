@@ -1,0 +1,109 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="jspc">jspc</a></h2>
+<h3>Description</h3>
+
+<p> Ant task to run the jsp compiler.
+
+<p> This task takes the given jsp files and compiles them into java files. It
+is then up to the user to compile the java files into classes.
+
+<p><h3>Parameters</h3>
+The Task has the following attributes:
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">Where to place the generated files. They are located
+    under here according to the given package name.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">srcdir</td>
+    <td valign="top">Where to look for source jsp files.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">The verbose flag to pass to the compiler.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">package</td>
+    <td valign="top">Name of the destination package for generated java
+    classes.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">ieplugin</td>
+    <td valign="top">Java Plugin classid for Internet Explorer.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">mapped</td>
+    <td valign="top">(boolean) Generate separate write() calls for each HTML
+    line in the JSP.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to use to run the jsp compiler, if the
+    compiler is not already in the ant classpath. This can also be specified
+    by the nested element <code>classpath</code> (a
+    <a href="../using.html#path">Path</a>).</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">A <a href="../using.html#references">Reference</a>. As
+    per <code>classpath</code></td>
+    <td valign="top" align="center">No</td>
+  </tr>
+ * classes and classpath (the classpath to use when running the jsp
+ * compiler).
+ * <p> This task supports the nested elements classpath (A Path) and
+ * classpathref (A Reference) which can be used in preference to the
+ * attribute classpath, if the jsp compiler is not already in the ant
+ * classpath.
+</table>
+<p> This task is a <a href="../dirtasks.html">directory based task</a>, like
+<strong>javac</strong>, so the jsp files to be compiled are located as java
+files are by <strong>javac</strong>.
+
+<p><h3>Example</h3>
+<pre>
+&lt;jspc srcdir="${basedir}/src/war"
+      destdir="${basedir}/gensrc"
+      package="com.i3sp.jsp"
+      verbose="9"&gt;
+  &lt;include name="**\/*.jsp" /&gt;
+&lt;/jspc&gt;
+
+</pre>
+
+<p><h4>Notes</h4>
+<p> At present, this task only supports the jasper compiler. In future,
+other compilers will be supported by setting the jsp.compiler property.
+<p> The jasper compiler option <code>-webapp</code> is not supported. Using
+the <code>package</code> attribute it is possible to identify the resulting
+java files and thus do full dependency checking - this task only rebuilds
+java files if their jsp file has been modified.
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
