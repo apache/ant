@@ -106,6 +106,7 @@ public class ExecTaskTest extends BuildFileTest {
         myBuild.addBuildListener(new MonitoredBuildListener());
         myBuild.start();
         GregorianCalendar startwait = new GregorianCalendar();
+        // this loop runs parallel to the build
         while (!buildFinished) {
             try {
                 Thread.sleep(10);
@@ -115,9 +116,11 @@ public class ExecTaskTest extends BuildFileTest {
             GregorianCalendar now = new GregorianCalendar();
             // security
             if (now.getTimeInMillis() - startwait.getTimeInMillis() > MAX_BUILD_TIME) {
+                System.out.println("aborting wait, too long " + (now.getTimeInMillis() - startwait.getTimeInMillis()) + "milliseconds");
                 break;
             }
         }
+        // now wait until the spawned process is finished
         try {
             Thread.sleep((TIME_TO_WAIT) * 1000 + SECURITY_MARGIN);
         } catch (InterruptedException e) {
@@ -199,13 +202,15 @@ public class ExecTaskTest extends BuildFileTest {
         }
 
         public void buildFinished(BuildEvent event) {
-            buildFinished = true;
         }
 
         public void targetStarted(BuildEvent event) {
         }
 
         public void targetFinished(BuildEvent event) {
+            if (event.getTarget().getName().equals("spawn")) {
+                buildFinished = true;
+            }
         }
 
         public void taskStarted(BuildEvent event) {
