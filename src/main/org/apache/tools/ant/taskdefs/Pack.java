@@ -124,7 +124,10 @@ public abstract class Pack extends Task {
     public void execute() throws BuildException {
         validate();
 
-        if (zipFile.lastModified() < source.lastModified()) {
+        if (!source.exists()) {
+            log("Nothing to do: " + source.getAbsolutePath() +
+                " doesn't exist.");
+        } else if (zipFile.lastModified() < source.lastModified()) {
             log("Building: " + zipFile.getAbsolutePath());
             pack();
         } else {
