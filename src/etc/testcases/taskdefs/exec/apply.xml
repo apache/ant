@@ -1,0 +1,354 @@
+<project name="apply-test" basedir=".">
+    <target name="init">
+        <property environment="env"/>
+        <!-- UNIX -->
+        <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
+        <!-- CYGWIN -->
+        <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
+        <condition property="test.can.run">
+            <or>
+                <isset property="sh.executable"/>
+                <isset property="sh.exe.executable"/>
+            </or>
+        </condition>
+        <!-- UNIX -->
+        <available file="sed" filepath="${env.PATH}" property="sed.executable"/>
+        <!-- CYGWIN -->
+        <available file="sed.exe" filepath="${env.PATH}" property="sed.exe.executable"/>
+        <condition property="sed.can.run">
+            <or>
+                <isset property="sed.executable"/>
+                <isset property="sed.exe.executable"/>
+            </or>
+        </condition>
+    </target>
+
+    <target name="xyz">
+        <echo file="x">s/x/blah/g${line.separator}</echo>
+        <echo file="y">s/y/blah/g${line.separator}</echo>
+        <echo file="z">s/z/blah/g${line.separator}</echo>
+        <fileset id="xyz" dir="${basedir}" includes="x,y,z" />
+        <filelist id="xyzlist" dir="${basedir}" files="x,y,z" />
+    </target>
+
+    <target name="no-redirect" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect1" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" output="redirect.out" append="true">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect2" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" output="redirect.out"
+               error="redirect.err" append="true">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect3" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" logerror="true" append="true"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect4" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" append="true"
+              error="redirect.err" errorproperty="redirect.err"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect5" depends="init,xyz" if="sed.can.run">
+        <apply executable="sed" inputstring="x y z${line.separator}" append="true"
+              error="redirect.err" errorproperty="redirect.err"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="-f" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect6" depends="init,xyz" if="sed.can.run">
+        <echo file="redirect.in">x y z${line.separator}</echo>
+        <apply executable="sed" input="redirect.in" append="true"
+              error="redirect.err" errorproperty="redirect.err"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="-f" />
+            <filelist refid="xyzlist" />
+        </apply>
+    </target>
+
+    <target name="redirect7" depends="init,xyz" if="sed.can.run">
+        <apply executable="sed" inputstring="x y z${line.separator}"
+               error="redirect.err" output="redirect.out"
+               outputproperty="redirect.out">
+            <arg value="-f" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+    
+    <target name="redirector1" description="fail"
+            depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+            <redirector output="redirector.out" />
+            <redirector output="whocares" />
+        </apply>
+    </target>
+
+    <target name="redirector2" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+            <redirector output="redirector.out" append="true" />
+        </apply>
+    </target>
+
+    <target name="redirector3" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+            <redirector append="true"
+                        output="redirector.out" error="redirector.err" />
+        </apply>
+    </target>
+
+    <target name="redirector4" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+            <redirector output="redirector.out" logerror="true"
+                        append="true" outputproperty="redirector.out" />
+        </apply>
+    </target>
+
+    <target name="redirector5" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <redirector error="redirector.err" errorproperty="redirector.err"
+              output="redirector.out" outputproperty="redirector.out"
+              append="true" />
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector6" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <redirector append="true" outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <outputmapper type="merge" to="redirector.out" />
+                <errormapper type="merge" to="redirector.err" />
+            </redirector>
+            <arg value="parrot.sh" />
+            <filelist refid="xyzlist" />
+        </apply>
+    </target>
+
+    <target name="redirector7" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <redirector append="true" outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <outputmapper type="merge" to="redirector.out" />
+                <errormapper type="merge" to="redirector.err" />
+                <errorfilterchain>
+                    <replacestring from="err" to="ERROR!!!" />
+                </errorfilterchain>
+            </redirector>
+            <arg value="parrot.sh" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector8" depends="init,xyz" if="sed.can.run">
+        <echo file="redirector.in">x y z${line.separator}</echo>
+        <apply executable="sed">
+            <redirector append="true" outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <inputmapper type="merge" to="redirector.in" />
+                <outputmapper type="merge" to="redirector.out" />
+                <errormapper type="merge" to="redirector.err" />
+            </redirector>
+            <arg value="-f" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector9" depends="init,xyz" if="sed.can.run">
+        <echo file="redirector.in">x before y before z${line.separator}</echo>
+        <apply executable="sed">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err" append="true">
+                <inputfilterchain>
+                    <replacestring from="before" to="after" />
+                </inputfilterchain>
+                <inputmapper type="merge" to="redirector.in" />
+                <outputmapper type="merge" to="redirector.out" />
+                <errormapper type="merge" to="redirector.err" />
+            </redirector>
+            <arg value="-f" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector10" depends="init,xyz" if="sed.can.run">
+        <echo file="redirector.in">x before y before z${line.separator}</echo>
+        <apply executable="sed">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err" append="true">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <outputmapper type="merge" to="redirector.out" />
+                <errormapper type="merge" to="redirector.err" />
+            </redirector>
+            <arg value="-f" />
+            <srcfile />
+            <arg value="redirector.in"/>
+            <filelist refid="xyzlist" />
+        </apply>
+    </target>
+
+    <target name="redirector11" depends="init,xyz" if="sed.can.run">
+        <apply executable="sed">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err"
+                        inputstring="x before y before z${line.separator}"
+                        append="true">
+                <inputfilterchain>
+                    <replacestring from="before" to="after" />
+                </inputfilterchain>
+                <outputmapper type="merge" to="redirector.out" />
+                <errormapper type="merge" to="redirector.err" />
+            </redirector>
+            <arg value="-f" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector12" depends="init,xyz" if="sed.can.run">
+        <echo file="redirector.in">x before y before z${line.separator}</echo>
+        <apply executable="sed" output="redirector.out" error="redirector.err">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err" append="true">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <outputmapper type="glob" from="nomatch" to="nomatchout" />
+                <errormapper type="glob" from="nomatch" to="nomatcherr" />
+            </redirector>
+            <arg value="-f" />
+            <srcfile />
+            <arg value="redirector.in"/>
+            <filelist refid="xyzlist" />
+        </apply>
+    </target>
+
+    <target name="redirector13" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <redirector>
+                <outputfilterchain>
+                    <replacestring from="out" to="OUTPUT???" />
+                </outputfilterchain>
+                <errorfilterchain>
+                    <replacestring from="err" to="ERROR!!!" />
+                </errorfilterchain>
+            </redirector>
+            <arg value="parrot.sh" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector14" depends="init,xyz" if="sed.can.run">
+        <echo file="redirector.in">z before y before x${line.separator}</echo>
+        <apply executable="sed">
+            <redirector append="true"
+                        inputstring="x before y before z${line.separator}">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <inputmapper type="glob" from="x" to="redirector.in" />
+                <outputmapper type="glob" from="y" to="redirector.out" />
+                <errormapper type="glob" from="z" to="redirector.err" />
+            </redirector>
+            <arg value="-f" />
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirector14b" depends="init,xyz" if="sed.can.run">
+        <apply executable="sed">
+            <redirector append="true"
+                        inputstring="x before y before z${line.separator}">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <inputmapper type="glob" from="x" to="redirector.in" />
+                <outputmapper type="glob" from="y" to="redirector.out" />
+                <errormapper type="glob" from="z" to="redirector.err" />
+            </redirector>
+            <arg value="-f" />
+            <fileset file="y" />
+        </apply>
+    </target>
+
+    <target name="ignoremissing">
+        <filelist id="xylist" dir="${basedir}" files="x,y" />
+        <filelist id="xyzlist" dir="${basedir}" files="x,y,z" />
+
+        <touch file="x" />
+        <touch file="y" />
+
+        <pathconvert property="xy" pathsep="${line.separator}">
+            <path>
+                <filelist refid="xylist" />
+            </path>
+        </pathconvert>
+
+        <pathconvert property="xyz" pathsep="${line.separator}">
+            <path>
+                <filelist refid="xyzlist" />
+            </path>
+        </pathconvert>
+
+        <apply executable="echo" ignoremissing="true"
+               outputproperty="ignoretrue" append="true">
+            <filelist refid="xyzlist" />
+        </apply>
+
+        <apply executable="echo" ignoremissing="false"
+               outputproperty="ignorefalse" append="true">
+            <filelist refid="xyzlist" />
+        </apply>
+
+        <fail>
+            <condition>
+                <not>
+                    <and>
+                        <equals arg1="${xy}" arg2="${ignoretrue}" />
+                        <equals arg1="${xyz}" arg2="${ignorefalse}" />
+                    </and>
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="cleanup">
+        <delete>
+            <fileset refid="xyz" />
+            <fileset dir="${basedir}" includes="redirect.*" />
+            <fileset dir="${basedir}" includes="redirector.*" />
+        </delete>
+    </target>
+</project>
