@@ -32,6 +32,7 @@
         <replace file="${patch.file}.tmp" token="? " value=""/>
         <fileset dir="${basedir}"
             includesfile="${patch.file}.tmp"
+            excludes="${patch.file}.tmp,${patch.file}"
             id="no.copyright.set">
             <not>
                 <and>
