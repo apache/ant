@@ -93,10 +93,12 @@ public class AntAnalyzer extends AbstractAnalyzer {
             toAnalyze.put(classname, classname);
         }
 
+        System.out.println("Analyze size = " + toAnalyze.size());
         int count = 0;
-        int maxCount = isClosureRequired() ? MAX_LOOPS : 2;
+        int maxCount = isClosureRequired() ? MAX_LOOPS : 1;
+        Hashtable analyzedDeps = null;
         while (toAnalyze.size() != 0 && count++ < maxCount) {
-            Hashtable analyzedDeps = new Hashtable();
+            analyzedDeps = new Hashtable();
             for (Enumeration e = toAnalyze.keys(); e.hasMoreElements();) {
                 String classname = (String) e.nextElement();
                 dependencies.put(classname, classname);
@@ -153,6 +155,13 @@ public class AntAnalyzer extends AbstractAnalyzer {
             }
         }
 
+        // pick up the last round of dependencies that were determined
+        Enumeration depsEnum = analyzedDeps.elements();
+        while (depsEnum.hasMoreElements()) {
+            String className = (String) depsEnum.nextElement();
+            dependencies.put(className, className);
+        }
+        
         files.removeAllElements();
         for (Enumeration e = containers.keys(); e.hasMoreElements();) {
             files.addElement((File) e.nextElement());
