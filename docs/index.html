@@ -2800,7 +2800,7 @@ displays a '.' for every 100 Kb retrieved.</p>
 doing automated builds. CVS is significantly slower than loading a compressed
 archive with http/ftp.</p>
 
-The <i>usetimestamps</i> option enables you to control downloads so that the remote file is
+The <i>usetimestamp</i> option enables you to control downloads so that the remote file is
 only fetched if newer than the local copy. If there is no local copy, the download always takes 
 place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp,
 if  the JVM is Java1.2 or later. 
@@ -2833,7 +2833,7 @@ NB: This timestamp facility only works on downloads using the HTTP protocol.
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">usetimestamps</td>
+    <td valign="top">usetimestamp</td>
     <td valign="top">conditionally download a file based on the timestamp of the local copy.
 	HTTP only</td>
     <td align="center" valign="top">No</td>
