@@ -81,8 +81,7 @@
     <filter token="TIME" value="${TSTAMP}" />
     <copydir src="${src.dir}" 
              dest="${build.classes}" 
-             filtering="on"
-             forceoverwrite="true">
+             filtering="on">
       <include name="**/version.txt" />
     </copydir>
   </target>
