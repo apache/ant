@@ -240,6 +240,10 @@
   How do I use <code>jar</code>'s <code>M</code> switch?
       I don't want a MANIFEST.
       </a></li>
+                <li><a href="#propertyvalue-as-name-for-property">
+  How can I do something like <code>&lt;property name="prop"
+      value="${${anotherprop}}"/&gt;</code> (double expanding the property)?
+      </a></li>
             </ul>
                 <h4 class="toc">It doesn't work (as expected)</h4>
         <ul>
@@ -254,8 +258,8 @@
       </a></li>
                 <li><a href="#stop-dependency">
   I have a target I want to skip if a property is set,
-      so I have <code>unless="property"</code> as an attribute 
-      of the target, but all the targets this target 
+      so I have <code>unless="property"</code> as an attribute
+      of the target, but all the targets this target
       depends on are still executed. Why?
       </a></li>
                 <li><a href="#include-order">
@@ -340,13 +344,13 @@
       Where do I find the latest version of this
         document?
     </p>
-                  <p>The latest version can always be found at Ant's homepage 
+                  <p>The latest version can always be found at Ant's homepage
           <a href="http://ant.apache.org/faq.html">http://ant.apache.org/faq.html</a>.</p>
                     <p class="faq">
       <a name="adding-faqs"></a>
       How can I contribute to this FAQ?
     </p>
-                  <p>The page you are looking it is generated from 
+                  <p>The page you are looking it is generated from
           <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/faq.xml">this</a>
           document.  If you want to add a new question, please submit
           a patch against this document to one of Ant's mailing lists;
@@ -359,7 +363,7 @@
       How do you create the HTML version of this
         FAQ?
     </p>
-                  <p>We use 
+                  <p>We use
         <a href="http://jakarta.apache.org/velocity/anakia.html">Anakia</a>
         to render the HTML version from the original XML file.</p>
                         <p>The Velocity stylesheets used to process the XML files can
@@ -386,7 +390,7 @@
                   <p>According to Ant's original author, James Duncan
         Davidson, the name is an acronym for "Another Neat
         Tool".</p>
-                        <p>Later explanations go along the lines of "ants 
+                        <p>Later explanations go along the lines of "ants
         do an extremely good job at building things", or
         "ants are very small and can carry a weight dozens of times
         their own" - describing what Ant is intended to
@@ -747,7 +751,7 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         to determine the specific state you want to test for.</p>
                         <p>To see how this works, assume you have three properties:
         <code>prop1</code>, <code>prop2</code>, and <code>prop3</code>.
-        You want to test that <code>prop1</code> and <code>prop2</code> 
+        You want to test that <code>prop1</code> and <code>prop2</code>
         are set, and that <code>prop3</code> is not. If the condition
         holds true you want to echo "yes".</p>
                         <p>Here is the implementation in Ant 1.3 and earlier:</p>
@@ -811,8 +815,8 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         </ul>
                         <p>Because testing for a literal <code>${property}</code> string
         isn't all that readable or easy to understand,
-        post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element 
-	to the <code>&lt;condition&gt;</code> task.</p>
+        post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element
+        to the <code>&lt;condition&gt;</code> task.</p>
                         <p>Here is the previous example done using
         <code>&lt;isset&gt;</code>:</p>
                         <pre class="code">
@@ -866,6 +870,21 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         <code>&lt;zip&gt;</code> uses your platforms default encoding.
         Use the encoding attribute of <code>&lt;zip&gt;</code> if
         necessary.</p>
+                    <p class="faq">
+      <a name="propertyvalue-as-name-for-property"></a>
+      How can I do something like <code>&lt;property name="prop"
+      value="${${anotherprop}}"/&gt;</code> (double expanding the property)?
+    </p>
+                  <p>Without any external help you can not.</p>
+                        <p>With &lt;script/&gt;, which needs external libraries, you can do</p>
+                        <pre class="code">
+&lt;script language=&quot;javascript&quot;&gt;
+    propname = project.getProperty(&quot;anotherprop&quot;);
+    project.setNewProperty(&quot;prop&quot;, propname);
+&lt;/script&gt;
+</pre>
+                        <p>With AntContrib (external task library) you can do <code>
+         &lt;propertycopy name="prop" from="${anotherprop}"/&gt;</code>.</p>
                                 <p class="faq">
       <a name="always-recompiles"></a>
       Why does Ant always recompile all my Java files?
@@ -924,23 +943,23 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
                     <p class="faq">
       <a name="stop-dependency"></a>
       I have a target I want to skip if a property is set,
-      so I have <code>unless="property"</code> as an attribute 
-      of the target, but all the targets this target 
+      so I have <code>unless="property"</code> as an attribute
+      of the target, but all the targets this target
       depends on are still executed. Why?
     </p>
                   <p>The list of dependencies is generated by Ant before any of the
-        targets are run. This allows dependent targets, such as an 
-        <code>init</code> target, to set properties that can control the 
-       	execution of the targets higher in the dependency graph. This 
-      	is a good thing.</p>
+        targets are run. This allows dependent targets, such as an
+        <code>init</code> target, to set properties that can control the
+               execution of the targets higher in the dependency graph. This
+              is a good thing.</p>
                         <p>However, when your dependencies break down the
         higher-level task
-        into several smaller steps, this behaviour becomes 
+        into several smaller steps, this behaviour becomes
         counter-intuitive. There are a couple of solutions available:
         </p>
                         <ol>
           <li>Put the same condition on each of the dependent targets.</li>
-	  
+
           <li>Execute the steps using <code>&lt;antcall&gt;</code>,
           instead of specifying them inside the <code>depends</code>
           attribute.</li>
@@ -962,10 +981,10 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         elements only apply to the file list produced by the
         <code>&lt;include&gt;</code> elements.</p>
                         <p>To get the files you want, focus on just the
-	<code>&lt;include&gt;</code> patterns that would be necessary
-	to get them. If you find you need to trim the list that the
-	<code>&lt;include&gt;</code> elements produce, then use
-	<code>&lt;exclude&gt;</code> elements.</p>
+        <code>&lt;include&gt;</code> patterns that would be necessary
+        to get them. If you find you need to trim the list that the
+        <code>&lt;include&gt;</code> elements produce, then use
+        <code>&lt;exclude&gt;</code> elements.</p>
                     <p class="faq">
       <a name="properties-not-trimmed"></a>
       <code>ant</code> failed to build my program via javac
@@ -1002,7 +1021,7 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
       <a name="integration"></a>
       Is Ant supported by my IDE/Editor?
     </p>
-                  <p>See the <a href="external.html#IDE and Editor Integration">section 
+                  <p>See the <a href="external.html#IDE and Editor Integration">section
         on IDE integration</a> on our External Tools and Tasks page.</p>
                     <p class="faq">
       <a name="emacs-mode"></a>
@@ -1019,10 +1038,10 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         <code>.antrc</code> (contributed by Ville Skyttä).</p>
                         <pre class="code">
 # Detect (X)Emacs compile mode
-if [ &quot;$EMACS&quot; = &quot;t&quot; ] ; then 
-  ANT_ARGS=&quot;$ANT_ARGS -emacs&quot; 
-  ANT_OPTS=&quot;$ANT_OPTS -Dbuild.compiler.emacs=true&quot; 
-fi 
+if [ &quot;$EMACS&quot; = &quot;t&quot; ] ; then
+  ANT_ARGS=&quot;$ANT_ARGS -emacs&quot;
+  ANT_OPTS=&quot;$ANT_OPTS -Dbuild.compiler.emacs=true&quot;
+fi
 </pre>
                         <p>Alternatively, you can add the following snippet to your
         <code>.emacs</code> to make Emacs understand Ant's
@@ -1030,10 +1049,10 @@ fi
                         <pre class="code">
 (require 'compile)
 (setq compilation-error-regexp-alist
-  (append (list 
+  (append (list
      ;; works for jikes
      '(&quot;^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):\\([0-9]+\\):[0-9]+:[0-9]+:&quot; 1 2 3)
-     ;; works for javac 
+     ;; works for javac
      '(&quot;^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):&quot; 1 2))
   compilation-error-regexp-alist))
 </pre>
@@ -1049,16 +1068,16 @@ fi
 #
 $|=1;
 while(&lt;STDIN&gt;) {
-	if (s/^(\s+)\[(\w+)\]//) {
-		if ($2 ne $last) {
-			print &quot;$1\[$2\]&quot;;
-			$s = ' ' x length($2);
-		} else {
-			print &quot;$1 $s &quot;;
-		};
-		$last = $2;
-	};
-	print;
+        if (s/^(\s+)\[(\w+)\]//) {
+                if ($2 ne $last) {
+                        print &quot;$1\[$2\]&quot;;
+                        $s = ' ' x length($2);
+                } else {
+                        print &quot;$1 $s &quot;;
+                };
+                $last = $2;
+        };
+        print;
 };
 </pre>
                                 <p class="faq">
@@ -1072,7 +1091,7 @@ while(&lt;STDIN&gt;) {
                         <ul>
             <li>It doesn't know about required attributes.  Only
             manual tweaking of this file can help here.</li>
-          
+
             <li>It is not complete - if you add new tasks via
             <code>&lt;taskdef&gt;</code> it won't know about it.  See
             <a href="http://www.sdv.fr/pages/casa/html/ant-dtd.en.html">this
@@ -1162,7 +1181,7 @@ while(&lt;STDIN&gt;) {
         BuildListener that sends out an email
         in the buildFinished() method.  Will Glozer
         &lt;will.glozer@jda.com&gt; has written such a listener based
-        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>. 
+        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>.
         The source is:</p>
                         <pre class="code">
 import java.io.*;
@@ -1204,13 +1223,13 @@ public class BuildMonitor implements BuildListener {
     public void buildFinished(BuildEvent e) {
         Throwable th = e.getException();
         String status = (th != null) ? &quot;failed&quot; : &quot;succeeded&quot;;
-        
+
         try {
             String key = &quot;build.&quot; + status;
             if (props.getProperty(key + &quot;.notify&quot;).equalsIgnoreCase(&quot;false&quot;)) {
                     return;
             }
-            
+
             Session session = Session.getDefaultInstance(props, null);
 
             MimeMessage message = new MimeMessage(session);
@@ -1221,7 +1240,7 @@ public class BuildMonitor implements BuildListener {
             BufferedReader br = new BufferedReader(new FileReader(
                 props.getProperty(&quot;build.log&quot;)));
             StringWriter sw = new StringWriter();
-            
+
             String line = br.readLine();
             while (line != null) {
                 sw.write(line);
@@ -1229,10 +1248,10 @@ public class BuildMonitor implements BuildListener {
                 line = br.readLine();
             }
             br.close();
-            
+
             message.setText(sw.toString(), &quot;UTF-8&quot;);
             sw.close();
-            
+
             Transport transport = session.getTransport();
             transport.connect();
             transport.send(message);
@@ -1268,7 +1287,7 @@ public class BuildMonitor implements BuildListener {
     public void targetFinished(BuildEvent e) {
     }
 
-    public void taskStarted(BuildEvent e) {        
+    public void taskStarted(BuildEvent e) {
     }
 
     public void taskFinished(BuildEvent e) {
@@ -1300,7 +1319,7 @@ build.succeeded.email.subject=Nightly build succeeded!
 ant -listener BuildMonitor -logfile build.log
 </pre>
                         <p>Make sure that <code>mail.jar</code> from JavaMail and
-        <code>activation.jar</code> from the 
+        <code>activation.jar</code> from the
         <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
         Beans Activation Framework</a> are in your <code>CLASSPATH</code>.</p>
                     <p class="faq">
