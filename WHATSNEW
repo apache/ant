@@ -151,6 +151,10 @@ Other changes:
   property file just as -D properties are declared (as user properties).
   -D properties take precedence over -propertyfile specified ones.
 
+* You can now set an ANT_ARGS environment variable to hold arguments you
+  always want passed to the 'ant' command -- for example, if you always
+  want to use a different logger or the -find flag.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
