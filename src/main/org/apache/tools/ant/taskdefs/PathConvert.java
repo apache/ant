@@ -192,7 +192,7 @@ public class PathConvert extends Task {
      * Set the value of the targetos attribute
      *
      * @deprecated use the method taking a TargetOs argument instead
-     * @see #setTargetos(TargetOs)
+     * @see setTargetos(TargetOs)
      */
     public void setTargetos(String target) {
         TargetOs to = new TargetOs();
