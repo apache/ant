@@ -73,6 +73,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  *  Invokes the ANTLR Translator generator on a grammar file.
@@ -92,7 +93,7 @@ public class ANTLR extends Task {
     private File outputDirectory;
 
     /** an optional super grammar file */
-    private String superGrammar;
+    private File superGrammar;
 
     /** optional flag to enable html output */
     private boolean html;
@@ -121,9 +122,14 @@ public class ANTLR extends Task {
     /** The debug attribute */
     private boolean debug;
 
+
+    /** Instance of a utility class to use for file operations. */
+    private FileUtils fileUtils;
+
     public ANTLR() {
         commandline.setVm(JavaEnvUtils.getJreExecutable("java"));
         commandline.setClassname("antlr.Tool");
+        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -144,7 +150,8 @@ public class ANTLR extends Task {
 
     /**
      * Sets an optional super grammar file.
-     * @TODO change the semantic from String to File
+     * Use setGlib(File superGrammar) instead.
+     * @deprecated  since ant 1.6
      */
     public void setGlib(String superGrammar) {
         String sg = null;
@@ -155,9 +162,15 @@ public class ANTLR extends Task {
         {
             sg = superGrammar;
         }
-        this.superGrammar = sg;
+        setGlib(fileUtils.resolveFile(getProject().getBaseDir(), sg));
     }
-
+    /**
+     * Sets an optional super grammar file
+     * @since ant 1.6
+     */
+    public void setGlib(File superGrammar) {
+        this.superGrammar = superGrammar;
+    }
     /**
      * Sets a flag to enable ParseView debugging
      */
@@ -287,12 +300,12 @@ public class ANTLR extends Task {
 
     public void execute() throws BuildException {
         validateAttributes();
-        //TODO: use ANTLR to parse the grammer file to do this.
+        //TODO: use ANTLR to parse the grammar file to do this.
         File generatedFile = getGeneratedFile();
         boolean targetIsOutOfDate = 
             target.lastModified() > generatedFile.lastModified();
         boolean superGrammarIsOutOfDate = superGrammar != null &&
-            (new File(superGrammar).lastModified() > generatedFile.lastModified());
+            (superGrammar.lastModified() > generatedFile.lastModified());
         if (targetIsOutOfDate || superGrammarIsOutOfDate) {
             if (targetIsOutOfDate) {
                 log("Compiling " + target + " as it is newer than " 
@@ -330,7 +343,7 @@ public class ANTLR extends Task {
         commandline.createArgument().setValue(outputDirectory.toString());
         if (superGrammar != null) {
             commandline.createArgument().setValue("-glib");
-            commandline.createArgument().setValue(superGrammar);
+            commandline.createArgument().setValue(superGrammar.toString());
         }
         if (html) {
             commandline.createArgument().setValue("-html");
