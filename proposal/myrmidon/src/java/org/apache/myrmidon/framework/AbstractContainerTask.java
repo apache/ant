@@ -18,9 +18,9 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.converter.MasterConverter;
-import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.converter.ConverterException;
 

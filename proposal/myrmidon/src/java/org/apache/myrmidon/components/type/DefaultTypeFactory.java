@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.net.URLClassLoader;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeException;
 
 /**
  * Create a type instance based on name.

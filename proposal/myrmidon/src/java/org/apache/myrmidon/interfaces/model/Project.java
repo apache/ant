@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.model;
+package org.apache.myrmidon.interfaces.model;
 
 import java.io.File;
 import org.apache.avalon.framework.component.Component;
@@ -22,7 +22,7 @@ import org.apache.avalon.framework.component.Component;
 public interface Project
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.model.Project";
+    String ROLE = "org.apache.myrmidon.interfaces.model.Project";
 
     // the name of currently executing project
     String PROJECT          = "myrmidon.project.name";

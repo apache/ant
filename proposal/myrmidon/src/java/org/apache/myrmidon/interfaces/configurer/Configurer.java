@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.configurer;
+package org.apache.myrmidon.interfaces.configurer;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -20,7 +20,7 @@ import org.apache.avalon.framework.context.Context;
 public interface Configurer
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.configurer.Configurer";
+    String ROLE = "org.apache.myrmidon.interfaces.configurer.Configurer";
 
     /**
      * Configure an object based on a configuration in a particular context.

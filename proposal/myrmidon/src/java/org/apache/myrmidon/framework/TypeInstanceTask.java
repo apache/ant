@@ -18,9 +18,9 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.type.TypeException;
-import org.apache.myrmidon.components.type.TypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.

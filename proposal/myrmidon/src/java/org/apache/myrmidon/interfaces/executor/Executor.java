@@ -5,22 +5,22 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.executor;
+package org.apache.myrmidon.interfaces.executor;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
- 
+
 /**
  * Engine inteface that should be implemented by all tasklet engines.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Executor
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.executor.Executor";
+    String ROLE = "org.apache.myrmidon.interfaces.executor.Executor";
 
     /**
      * execute a task.

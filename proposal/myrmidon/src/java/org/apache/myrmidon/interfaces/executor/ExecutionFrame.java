@@ -5,12 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.executor;
+package org.apache.myrmidon.interfaces.executor;
 
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.log.Logger;
-import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * Frames in which tasks are executed.

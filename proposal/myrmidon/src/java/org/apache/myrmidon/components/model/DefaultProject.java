@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.interfaces.model.Project;
+import org.apache.myrmidon.interfaces.model.Target;
+import org.apache.myrmidon.interfaces.model.TypeLib;
 
 /**
  * Default project implementation.

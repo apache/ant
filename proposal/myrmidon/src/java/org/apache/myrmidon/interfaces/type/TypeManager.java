@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.type;
+package org.apache.myrmidon.interfaces.type;
 
 import org.apache.avalon.framework.component.Component;
 
@@ -17,7 +17,7 @@ import org.apache.avalon.framework.component.Component;
 public interface TypeManager
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.type.TypeManager";
+    String ROLE = "org.apache.myrmidon.interfaces.type.TypeManager";
 
     void registerType( String role, String shorthandName, TypeFactory factory )
         throws TypeException;

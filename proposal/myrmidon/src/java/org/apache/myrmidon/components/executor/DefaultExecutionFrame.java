@@ -16,15 +16,16 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.components.aspect.AspectManager;
-import org.apache.myrmidon.components.builder.ProjectBuilder;
-import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.converter.ConverterRegistry;
-import org.apache.myrmidon.components.converter.MasterConverter;
-import org.apache.myrmidon.components.deployer.Deployer;
-import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.role.RoleManager;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.aspect.AspectManager;
+import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
+import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
+import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * Frames in which tasks are executed.

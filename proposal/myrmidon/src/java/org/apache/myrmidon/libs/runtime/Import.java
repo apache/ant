@@ -17,8 +17,8 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.deployer.Deployer;
-import org.apache.myrmidon.components.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 
 /**
  * Task to import a tasklib.

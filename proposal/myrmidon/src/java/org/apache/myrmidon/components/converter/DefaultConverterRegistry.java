@@ -8,6 +8,7 @@
 package org.apache.myrmidon.components.converter;
 
 import java.util.HashMap;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 
 /**
  * Default implementation of Converter registry.

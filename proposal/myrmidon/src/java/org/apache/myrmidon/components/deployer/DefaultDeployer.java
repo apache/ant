@@ -14,6 +14,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -23,15 +25,15 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.api.Task;
-import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.type.DefaultTypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
-import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -107,7 +109,7 @@ public class DefaultDeployer
         final Deployment deployment = new Deployment( file );
         final Configuration descriptor = deployment.getDescriptor();
         final URL[] urls = new URL[] { deployment.getURL() };
-        final URLClassLoader classLoader = 
+        final URLClassLoader classLoader =
             new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
 
         try
@@ -235,8 +237,8 @@ public class DefaultDeployer
         }
     }
 
-    private DefaultTypeFactory getFactory( final String role, 
-                                           final ClassLoader classLoader, 
+    private DefaultTypeFactory getFactory( final String role,
+                                           final ClassLoader classLoader,
                                            final HashMap factorys )
     {
         DefaultTypeFactory factory = (DefaultTypeFactory)factorys.get( role );
@@ -309,7 +311,7 @@ public class DefaultDeployer
 
         if( getLogger().isDebugEnabled() )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "register-converter.notice", name, source, destination );
             getLogger().debug( message );
         }
@@ -328,7 +330,7 @@ public class DefaultDeployer
 
         if( getLogger().isDebugEnabled() )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "register-role.notice", role, name, className );
             getLogger().debug( message );
         }

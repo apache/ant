@@ -33,7 +33,6 @@ Legal:
     developers this part makes no difference.
   -->
   <property name="build.compiler.emacs" value="on"/>
-  <property name="build.compiler.warnings" value="true"/>
   <property name="build.compiler.pedantic" value="true"/>
   <property name="build.compiler.depend" value="true"/>
   <property name="build.compiler.fulldepend" value="true"/>

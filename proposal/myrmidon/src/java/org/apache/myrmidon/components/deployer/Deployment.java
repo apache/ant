@@ -21,6 +21,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 
 /**
  * This class deploys a .tsk file into a registry.

@@ -9,7 +9,7 @@ package org.apache.myrmidon.libs.ant1;
 
 import java.net.URL;
 import org.apache.myrmidon.components.type.DefaultTypeFactory;
-import org.apache.myrmidon.components.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.tools.ant.Task;
 
 /**

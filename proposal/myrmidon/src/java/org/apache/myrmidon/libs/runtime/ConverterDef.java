@@ -17,9 +17,9 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.components.type.DefaultTypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
 
 /**

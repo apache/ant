@@ -21,10 +21,10 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
-import org.apache.myrmidon.components.aspect.AspectManager;
-import org.apache.myrmidon.components.type.TypeException;
-import org.apache.myrmidon.components.type.TypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.aspect.AspectManager;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.framework.AbstractContainerTask;
 
 /**

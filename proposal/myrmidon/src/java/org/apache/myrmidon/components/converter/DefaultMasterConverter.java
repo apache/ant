@@ -14,10 +14,11 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.logger.AbstractLoggable;
-import org.apache.myrmidon.components.converter.MasterConverter;
-import org.apache.myrmidon.components.type.TypeException;
-import org.apache.myrmidon.components.type.TypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.converter.ConverterException;
 

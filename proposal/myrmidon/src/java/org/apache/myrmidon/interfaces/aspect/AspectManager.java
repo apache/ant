@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.aspect;
+package org.apache.myrmidon.interfaces.aspect;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -21,7 +21,7 @@ import org.apache.myrmidon.aspects.AspectHandler;
 public interface AspectManager
     extends Component, AspectHandler
 {
-    String ROLE = "org.apache.myrmidon.components.aspect.AspectManager";
+    String ROLE = "org.apache.myrmidon.interfaces.aspect.AspectManager";
 
     String[] getNames();
 

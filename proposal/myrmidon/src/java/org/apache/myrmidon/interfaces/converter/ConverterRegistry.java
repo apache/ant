@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.converter;
+package org.apache.myrmidon.interfaces.converter;
 
 import org.apache.avalon.framework.component.Component;
 
@@ -17,7 +17,7 @@ import org.apache.avalon.framework.component.Component;
 public interface ConverterRegistry
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.converter.ConverterRegistry";
+    String ROLE = "org.apache.myrmidon.interfaces.converter.ConverterRegistry";
 
     /**
      * Retrieve name of ConverterInfo that describes converter that converts

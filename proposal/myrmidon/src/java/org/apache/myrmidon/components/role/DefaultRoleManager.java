@@ -18,6 +18,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.deployer;
+package org.apache.myrmidon.interfaces.deployer;
 
 import java.io.File;
 import org.apache.avalon.framework.component.Component;
@@ -18,7 +18,7 @@ import org.apache.avalon.framework.component.Component;
 public interface Deployer
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.deployer.Deployer";
+    String ROLE = "org.apache.myrmidon.interfaces.deployer.Deployer";
 
     /**
      * Deploy a library.

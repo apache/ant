@@ -22,19 +22,20 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
-import org.apache.myrmidon.components.aspect.AspectManager;
-import org.apache.myrmidon.components.builder.ProjectBuilder;
-import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.converter.ConverterRegistry;
-import org.apache.myrmidon.components.converter.MasterConverter;
-import org.apache.myrmidon.components.deployer.Deployer;
-import org.apache.myrmidon.components.deployer.DeploymentException;
-import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.model.Project;
-import org.apache.myrmidon.components.role.RoleManager;
-import org.apache.myrmidon.components.type.TypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
-import org.apache.myrmidon.components.workspace.Workspace;
+import org.apache.myrmidon.interfaces.aspect.AspectManager;
+import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
+import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.embeddor.Embeddor;
+import org.apache.myrmidon.interfaces.model.Project;
+import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.workspace.Workspace;
 
 /**
  * Default implementation of Embeddor.

@@ -5,12 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.workspace;
+package org.apache.myrmidon.interfaces.workspace;
 
 import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -21,7 +21,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public interface Workspace
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.workspace.Workspace";
+    String ROLE = "org.apache.myrmidon.interfaces.workspace.Workspace";
 
     /**
      * Add a listener to project events.

@@ -17,9 +17,9 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.type.TypeException;
-import org.apache.myrmidon.components.type.TypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.framework.DataType;
 

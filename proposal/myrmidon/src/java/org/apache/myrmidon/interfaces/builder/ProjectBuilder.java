@@ -5,12 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.builder;
+package org.apache.myrmidon.interfaces.builder;
 
 import java.io.File;
 import java.io.IOException;
 import org.apache.avalon.framework.component.Component;
-import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.interfaces.model.Project;
 
 /**
  * Interface implemented by components that build projects from sources.
@@ -20,7 +20,7 @@ import org.apache.myrmidon.components.model.Project;
 public interface ProjectBuilder
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.builder.ProjectBuilder";
+    String ROLE = "org.apache.myrmidon.interfaces.builder.ProjectBuilder";
 
     /**
      * build a project from source.

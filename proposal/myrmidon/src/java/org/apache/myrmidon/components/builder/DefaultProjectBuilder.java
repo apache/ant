@@ -25,10 +25,11 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.DefaultProject;
-import org.apache.myrmidon.components.model.Project;
-import org.apache.myrmidon.components.model.Target;
-import org.apache.myrmidon.components.model.TypeLib;
 import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
+import org.apache.myrmidon.interfaces.model.Project;
+import org.apache.myrmidon.interfaces.model.Target;
+import org.apache.myrmidon.interfaces.model.TypeLib;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 

@@ -27,10 +27,12 @@ import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.type.TypeException;
-import org.apache.myrmidon.components.type.TypeFactory;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 public class DefaultExecutor
     extends AbstractLoggable

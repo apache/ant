@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.Task;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * Method to register a tasklib.

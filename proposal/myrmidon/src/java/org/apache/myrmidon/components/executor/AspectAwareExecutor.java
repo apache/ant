@@ -21,7 +21,8 @@ import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
-import org.apache.myrmidon.components.aspect.AspectManager;
+import org.apache.myrmidon.interfaces.aspect.AspectManager;
+import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 
 public class AspectAwareExecutor
     extends DefaultExecutor

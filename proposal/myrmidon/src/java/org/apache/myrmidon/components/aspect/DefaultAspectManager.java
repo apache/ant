@@ -18,6 +18,7 @@ import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
 import org.apache.myrmidon.aspects.NoopAspectHandler;
+import org.apache.myrmidon.interfaces.aspect.AspectManager;
 
 /**
  * Manage and propogate Aspects.

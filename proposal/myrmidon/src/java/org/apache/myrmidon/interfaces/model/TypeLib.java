@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.model;
+package org.apache.myrmidon.interfaces.model;
 
 /**
  * Imports in a build file.
@@ -36,7 +36,7 @@ public class TypeLib
         m_library = library;
         m_role = role;
         m_name = name;
-       
+
         //If only one of name or type is null, throw an exception
         if( null == m_role || null == m_name )
         {
@@ -59,7 +59,7 @@ public class TypeLib
     }
 
     /**
-     * Get name of imported 
+     * Get name of imported
      *
      * @return the name
      */
@@ -69,7 +69,7 @@ public class TypeLib
     }
 
     /**
-     * Get name of library 
+     * Get name of library
      *
      * @return the library name
      */

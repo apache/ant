@@ -8,8 +8,8 @@
 package org.apache.myrmidon.components.workspace;
 
 import java.util.ArrayList;
-import org.apache.myrmidon.components.executor.ExecutionFrame;
-import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
+import org.apache.myrmidon.interfaces.model.Project;
 
 /**
  * This contains detaisl for each project that is managed by ProjectManager.
