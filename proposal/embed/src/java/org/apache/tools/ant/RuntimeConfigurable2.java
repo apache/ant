@@ -286,7 +286,8 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         if (attributes != null) {
             ph.configure(wrappedObject, attributes, p);
             id = attributes.getValue("id");
-            attributes = null;
+            // No way - this will be used on future calls ( if the task is used
+            // multiple times: attributes = null;
         }
         if (characters.length() != 0) {
             ProjectHelper.addText(p, wrappedObject, characters.toString());
