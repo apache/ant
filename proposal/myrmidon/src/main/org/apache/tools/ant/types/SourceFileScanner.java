@@ -9,6 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -38,14 +39,13 @@ public class SourceFileScanner
      *      mapper are assumed to be absolute.
      * @param mapper knows how to construct a target file names from source file
      *      names.
-     * @return Description of the Returned Value
      */
     public String[] restrict( String[] files, File srcDir, File destDir,
                               FileNameMapper mapper )
         throws TaskException
     {
 
-        long now = ( new java.util.Date() ).getTime();
+        long now = ( new Date() ).getTime();
         StringBuffer targetList = new StringBuffer();
 
         /*
@@ -61,19 +61,18 @@ public class SourceFileScanner
             now += 2000;
         }
 
-        ArrayList v = new ArrayList();
+        final ArrayList v = new ArrayList();
         for( int i = 0; i < files.length; i++ )
         {
-
-            String[] targets = mapper.mapFileName( files[ i ] );
+            final String[] targets = mapper.mapFileName( files[ i ] );
             if( targets == null || targets.length == 0 )
             {
-                getLogger().debug( files[ i ] + " skipped - don\'t know how to handle it" );
+                final String message = files[ i ] + " skipped - don\'t know how to handle it";
+                getLogger().debug( message );
                 continue;
             }
 
-            File src = FileUtil.resolveFile( srcDir, files[ i ] );
-
+            final File src = FileUtil.resolveFile( srcDir, files[ i ] );
             if( src.lastModified() > now )
             {
                 final String message = "Warning: " + files[ i ] + " modified in the future.";
@@ -88,13 +87,17 @@ public class SourceFileScanner
 
                 if( !dest.exists() )
                 {
-                    getLogger().debug( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist." );
+                    final String message =
+                        files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.";
+                    getLogger().debug( message );
                     v.add( files[ i ] );
                     added = true;
                 }
                 else if( src.lastModified() > dest.lastModified() )
                 {
-                    getLogger().debug( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated." );
+                    final String message =
+                        files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.";
+                    getLogger().debug( message );
                     v.add( files[ i ] );
                     added = true;
                 }
@@ -110,7 +113,9 @@ public class SourceFileScanner
 
             if( !added )
             {
-                getLogger().debug( files[ i ] + " omitted as " + targetList.toString() + ( targets.length == 1 ? " is" : " are " ) + " up to date." );
+                final String message = files[ i ] + " omitted as " + targetList.toString() +
+                    ( targets.length == 1 ? " is" : " are " ) + " up to date.";
+                getLogger().debug( message );
             }
 
         }
@@ -121,19 +126,15 @@ public class SourceFileScanner
     /**
      * Convinience layer on top of restrict that returns the source files as
      * File objects (containing absolute paths if srcDir is absolute).
-     *
-     * @param files Description of Parameter
-     * @param srcDir Description of Parameter
-     * @param destDir Description of Parameter
-     * @param mapper Description of Parameter
-     * @return Description of the Returned Value
      */
-    public File[] restrictAsFiles( String[] files, File srcDir, File destDir,
-                                   FileNameMapper mapper )
+    public File[] restrictAsFiles( final String[] files,
+                                   final File srcDir,
+                                   final File destDir,
+                                   final FileNameMapper mapper )
         throws TaskException
     {
-        String[] res = restrict( files, srcDir, destDir, mapper );
-        File[] result = new File[ res.length ];
+        final String[] res = restrict( files, srcDir, destDir, mapper );
+        final File[] result = new File[ res.length ];
         for( int i = 0; i < res.length; i++ )
         {
             result[ i ] = new File( srcDir, res[ i ] );
