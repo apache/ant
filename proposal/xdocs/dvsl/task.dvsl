@@ -54,7 +54,7 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
   #set( $project = $node.selectSingleNode("document('xdocs/stylesheets/project.xml')/project" ) )
   #if ($node.name().equals("task"))
     #set( $title = "#capitalize($attrib.name) Task" )
-    #set( $summary = $node.short-description )
+    #set( $summary = $node.short-description )   
   #end
 
 <html>
@@ -105,7 +105,7 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
           <!-- Applying task/long-description -->
 #*        *#$context.applyTemplates("long-description")
 #*      *##end
-#*     *#$context.applyTemplates("structure/attributes")
+#*     *#$context.applyTemplates("structure/attribute-groups")
 #*     *#$context.applyTemplates("structure/elements")
 #*     *#$context.applyTemplates("external/section")
 #*    *##end
@@ -152,6 +152,16 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">$text</font>
         </td>
 #end
+
+#*
+    Macro to format a table body cell that spans multiple rows
+*#
+#macro( tdmr $text $rows  )
+        <td bgcolor="$table-td-bg" valign="top" align="left" rowspan="$rows">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">$text</font>
+        </td>
+#end
+
 
 #*
     Macro to format a section banner
@@ -215,19 +225,18 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
 #*
     Process top level attributes
 *#
-#match( "structure/attributes" )
+#match( "structure/attribute-groups" )
     <!-- Start Attributes -->
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
-
-#*      *##section("attributes" "Parameters")
-
+#*      *##section("attributes" "Parameters") 
       <tr><td><blockquote>
         <table>
           <tr>
 #*          *##th("Attribute")
 #*          *##th("Description")
 #*          *##th("Type")
+#*          *##th("Requirement")
           </tr>
 #*        *#$context.applyTemplates("*")
         </table>
@@ -238,14 +247,29 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
 #end
 
 #*
+    Process attribute group
+*#
+#match( "structure/attribute-groups/attribute-group" )
+    <!-- Attribute Group -->    
+    #set ($attributeGroup = $attrib.description)
+    #set ($numGroups = $node.selectNodes("attribute").size())
+    #set ($inGroup = true)
+#*        *#$context.applyTemplates("*")
+#end
+
+#*
     Process a single attribute
 *#
-#match( "attribute" )
+#match( "structure/attribute-groups/attribute-group/attribute" )    
     <!-- Attribute -->
     <tr>
 #*    *##td($attrib.name)
 #*    *##td($node.description)
 #*    *##td($attrib.briefType)
+#if ($inGroup)
+#*    *##tdmr($attributeGroup $numGroups)
+#set ($inGroup = false)
+#end
     </tr>
 #end
 
@@ -383,6 +407,15 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
         $context.applyTemplates("*")
       </td></tr>
     </table>
+#end
+
+#*
+ *  process a the requirement groups
+ *#
+#match( "requirement-group" )
+    #if ($regGroup == $attrib.name)
+#*      *#$attrib.description
+    #end
 #end
 
 #match( "source" )
