@@ -5,10 +5,6 @@ Please go ahead and assign things that are not already assigned to
 anybody else (assignments look like [Stefan]) to yourself - and please
 remove items from this list once they are complete.
 
-* merge <redirector>s from HEAD [Matt]
-
-* merge "<apply> differentiates between empty & up-to-date" from HEAD [Matt]
-
 * Fix or at least document support for tomcat 5.0 jsp
 
 * review claimed AntClassLoader memory leak [Stefan]

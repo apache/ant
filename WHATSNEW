@@ -211,6 +211,13 @@ Other changes:
   nested FileNameMapper implementations directly, allowing a usage
   comparable to those of <condition>, <filter>, and <selector>.
 
+* New <redirector> type introduced to provide extreme I/O flexibility.
+  Initial support for <exec>, <apply>, and <java> tasks.
+
+* <apply> has a new ignoremissing attribute (default true for BC)
+  which will allow nonexistent files specified via <filelist>s to
+  be passed to the executable.  Bugzilla Report 29585.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 

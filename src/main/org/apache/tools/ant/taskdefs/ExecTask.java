@@ -27,6 +27,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -53,7 +54,14 @@ public class ExecTask extends Task {
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
 
-    private Redirector redirector = new Redirector(this);
+    //include locally for screening purposes
+    private String inputString;
+    private File input;
+    private File output;
+    private File error;
+
+    protected Redirector redirector = new Redirector(this);
+    protected RedirectorElement redirectorElement;
 
     /**
      * Controls whether the VM (1.3 and above) is used to execute the
@@ -141,7 +149,7 @@ public class ExecTask extends Task {
      * @param out name of a file to which send output to
      */
     public void setOutput(File out) {
-        redirector.setOutput(out);
+        this.output = out;
         incompatibleWithSpawn = true;
     }
 
@@ -151,7 +159,11 @@ public class ExecTask extends Task {
      * @param input name of a file to get input from
      */
     public void setInput(File input) {
-        redirector.setInput(input);
+        if (inputString != null) {
+            throw new BuildException("The \"input\" and \"inputstring\" "
+                + "attributes cannot both be specified");
+        }
+        this.input = input;
         incompatibleWithSpawn = true;
     }
 
@@ -161,7 +173,11 @@ public class ExecTask extends Task {
      * @param inputString the string which is used as the input source
      */
     public void setInputString(String inputString) {
-        redirector.setInputString(inputString);
+        if (input != null) {
+            throw new BuildException("The \"input\" and \"inputstring\" "
+                + "attributes cannot both be specified");
+        }
+        this.inputString = inputString;
         incompatibleWithSpawn = true;
     }
 
@@ -185,7 +201,7 @@ public class ExecTask extends Task {
      * @since ant 1.6
      */
     public void setError(File error) {
-        redirector.setError(error);
+        this.error = error;
         incompatibleWithSpawn = true;
     }
 
@@ -325,6 +341,20 @@ public class ExecTask extends Task {
     }
 
 
+    /**
+     * Add a <CODE>RedirectorElement</CODE> to this task.
+     *
+     * @param redirectorElement   <CODE>RedirectorElement</CODE>.
+     */
+    public void addConfiguredRedirector(RedirectorElement redirectorElement) {
+        if (this.redirectorElement != null) {
+            throw new BuildException("cannot have > 1 nested <redirector>s");
+        } else {
+            this.redirectorElement = redirectorElement;
+            incompatibleWithSpawn = true;
+        }
+    }
+
 
     /**
      * The method attempts to figure out where the executable is so that we can feed
@@ -431,10 +461,23 @@ public class ExecTask extends Task {
         if (spawn && incompatibleWithSpawn) {
             getProject().log("spawn does not allow attributes related to input, "
             + "output, error, result", Project.MSG_ERR);
-            getProject().log("spawn does not also not allow timeout", Project.MSG_ERR);
-            throw new BuildException("You have used an attribute which is "
-            + "not compatible with spawn");
+            getProject().log("spawn also does not allow timeout", Project.MSG_ERR);
+            getProject().log( "finally, spawn is not compatible "
+                + "with a nested I/O <redirector>", Project.MSG_ERR);
+            throw new BuildException("You have used an attribute "
+                + "or nested element which is not compatible with spawn");
         }
+        setupRedirector();
+    }
+
+    /**
+     * Set up properties on the redirector that we needed to store locally.
+     */
+    protected void setupRedirector() {
+        redirector.setInput(input);
+        redirector.setInputString(inputString);
+        redirector.setOutput(output);
+        redirector.setError(error);
     }
 
     /**
@@ -485,6 +528,9 @@ public class ExecTask extends Task {
         if (dir == null) {
             dir = getProject().getBaseDir();
         }
+        if (redirectorElement != null) {
+            redirectorElement.configure(redirector);
+        }
         Execute exe = new Execute(createHandler(), createWatchdog());
         exe.setAntRun(getProject());
         exe.setWorkingDirectory(dir);
@@ -527,6 +573,7 @@ public class ExecTask extends Task {
                 }
             }
             maybeSetResultPropertyValue(returnCode);
+            redirector.complete();
             if (Execute.isFailure(returnCode)) {
                 if (failOnError) {
                     throw new BuildException(getTaskType() + " returned: "
@@ -535,7 +582,6 @@ public class ExecTask extends Task {
                     log("Result: " + returnCode, Project.MSG_ERR);
                 }
             }
-            redirector.complete();
         } else {
             exe.spawn();
         }

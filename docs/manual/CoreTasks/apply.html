@@ -249,6 +249,12 @@ to send input to it is via the input and inputstring attributes.</p>
       Defaults to <code>false</code>.  <em>Since Ant 1.6.</em></td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">ignoremissing</td>
+    <td valign="top">Whether to ignore nonexistent files specified
+      via filelists.  <em>Since Ant 1.6.2.</em></td>
+    <td align="center" valign="top">No, default is <i>true</i></td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>fileset</h4>
@@ -291,6 +297,16 @@ attribute.</p>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
+<h4>redirector</h4>
+<i><b>Since Ant 1.6.2</b></i>
+<p>A nested <a href="../CoreTypes/redirector.html">I/O Redirector</a>
+can be specified.  &lt;apply&gt;'s behavior is like that of
+<a href="exec.html#redirector">exec</a> with regard to
+redirectors, with the exception that, in non-<i>parallel</i> mode,
+file mapping will take place with each iteration.  This grants the
+user the capacity to receive input from, and send output to, different
+files for each sourcefile.
+</p>
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;apply executable=&quot;ls&quot;&gt;
@@ -335,6 +351,29 @@ of all files separated by spaces.</p>
 <code>.o</code>, replacing TARGETFILE with the absolute filename of
 the <code>.o</code> and SOURCEFILE with the absolute name of the
 <code>.c</code> file.</p>
+<blockquote><pre>
+&lt;mapper id=&quot;out&quot; type=&quot;glob&quot;
+           from=&quot;src${file.separator}*.file&quot;
+           to=&quot;dest${file.separator}*.out&quot; /&gt;
+
+&lt;apply executable=&quot;processfile&quot; dest=&quot;dest&quot;&gt;
+  &lt;fileset dir=&quot;src&quot; includes=&quot;*.file&quot;/&gt;
+  &lt;mapper refid=&quot;out&quot; /&gt;
+  &lt;redirector&gt;
+    &lt;outputmapper refid=&quot;out&quot; /&gt;
+  &lt;/redirector&gt;
+&lt;/apply&gt;
+</pre></blockquote>
+Applies the fictitious &quot;processfile&quot; executable to all
+files matching <code>*.file</code> in the <CODE>src</CODE> directory.
+The <CODE>out</CODE> &lt;mapper&gt; has been set up to map
+<CODE>*.file</CODE> to <CODE>*.out</CODE>, then this &lt;mapper&gt;
+is used to specify <CODE>targetfile</CODE>s for this &lt;apply&gt;
+task.  A reference to <CODE>out</CODE> is then used as an
+&lt;outputmapper&gt; nested in a &lt;redirector&gt;, which in turn is
+nested beneath this &lt;apply&gt; instance.  This allows us to perform
+dependency checking against output files--the target files in this case.
+
 <hr><p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights
 Reserved.</p>
 

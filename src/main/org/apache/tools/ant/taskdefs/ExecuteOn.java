@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2004 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,6 +43,18 @@ import org.apache.tools.ant.util.SourceFileScanner;
  */
 public class ExecuteOn extends ExecTask {
 
+    private class ExtendedDirectoryScanner extends DirectoryScanner {
+        public int getIncludedFilesCount() {
+            if (filesIncluded == null) throw new IllegalStateException();
+            return filesIncluded.size();
+        }
+
+        public int getIncludedDirsCount() {
+            if (dirsIncluded == null) throw new IllegalStateException();
+            return dirsIncluded.size();
+        }
+    }
+
     protected Vector filesets = new Vector(); // contains AbstractFileSet
                                               // (both DirSet and FileSet)
     private Vector filelists = new Vector();
@@ -59,6 +71,7 @@ public class ExecuteOn extends ExecTask {
     private int maxParallel = -1;
     private boolean addSourceFile = true;
     private boolean verbose = false;
+    private boolean ignoreMissing = true;
 
     /**
      * Has &lt;srcfile&gt; been specified before &lt;targetfile&gt;
@@ -171,6 +184,15 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
+     * Whether to ignore nonexistent files from filelists.
+     *
+     * @since Ant 1.6.2
+     */
+    public void setIgnoremissing(boolean b) {
+        ignoreMissing = b;
+    }
+
+    /**
      * Marker that indicates where the name of the source file should
      * be put on the command line.
      */
@@ -238,6 +260,17 @@ public class ExecuteOn extends ExecTask {
         }
     }
 
+    protected ExecuteStreamHandler createHandler() throws BuildException {
+        //if we have a RedirectorElement, return a decoy
+        return (redirectorElement == null)
+            ? super.createHandler() : new PumpStreamHandler();
+    }
+
+    protected void setupRedirector() {
+        super.setupRedirector();
+        redirector.setAppendProperties(true);
+    }
+
     protected void runExec(Execute exe) throws BuildException {
         int totalFiles = 0;
         int totalDirs = 0;
@@ -259,7 +292,11 @@ public class ExecuteOn extends ExecTask {
                     }
                 }
                 File base = fs.getDir(getProject());
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+
+                ExtendedDirectoryScanner ds = new ExtendedDirectoryScanner();
+                fs.setupDirectoryScanner(ds, getProject());
+                ds.setFollowSymlinks(fs.isFollowSymlinks());
+                ds.scan();
 
                 if (!"dir".equals(currentType)) {
                     String[] s = getFiles(base, ds);
@@ -280,8 +317,15 @@ public class ExecuteOn extends ExecTask {
                 }
 
                 if (fileNames.size() == 0 && skipEmpty) {
-                    log("Skipping fileset for directory "
-                        + base + ". It is empty.", Project.MSG_INFO);
+                    int includedCount
+                        = ((!"dir".equals(currentType))
+                        ? ds.getIncludedFilesCount() : 0)
+                        + ((!"file".equals(currentType))
+                        ? ds.getIncludedDirsCount() : 0);
+
+                    log("Skipping fileset for directory " + base + ". It is "
+                        + ((includedCount > 0) ? "up to date." : "empty."),
+                        Project.MSG_INFO);
                     continue;
                 }
 
@@ -293,10 +337,17 @@ public class ExecuteOn extends ExecTask {
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
-                        if (haveExecuted) {
+
+                        if (redirectorElement != null) {
+                            setupRedirector();
+                            redirectorElement.configure(redirector, s[j]);
+                        }
+
+                        if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
-                            // reading of pipes
-                            exe.setStreamHandler(createHandler());
+                            // reading of pipes;
+                            // go ahead and do it always w/ nested redirectors
+                            exe.setStreamHandler(redirector.createHandler());
                         }
                         runExecute(exe);
                         haveExecuted = true;
@@ -313,10 +364,10 @@ public class ExecuteOn extends ExecTask {
 
                 for (int j = 0; j < names.length; j++) {
                     File f = new File(base, names[j]);
-                    if ((f.isFile() && !"dir".equals(type))
+                    if ((!ignoreMissing) || (f.isFile() && !"dir".equals(type))
                         || (f.isDirectory() && !"file".equals(type))) {
 
-                        if (f.isFile()) {
+                        if (ignoreMissing || f.isFile()) {
                             totalFiles++;
                         } else {
                             totalDirs++;
@@ -328,8 +379,16 @@ public class ExecuteOn extends ExecTask {
                 }
 
                 if (fileNames.size() == 0 && skipEmpty) {
-                    log("Skipping filelist for directory "
-                        + base + ". It is empty.", Project.MSG_INFO);
+                    ExtendedDirectoryScanner ds = new ExtendedDirectoryScanner();
+                    ds.setBasedir(base);
+                    ds.setIncludes(list.getFiles(getProject()));
+                    ds.scan();
+                    int includedCount
+                        = ds.getIncludedFilesCount() + ds.getIncludedDirsCount();
+
+                    log("Skipping filelist for directory " + base + ". It is "
+                        + ((includedCount > 0) ? "up to date." : "empty."),
+                        Project.MSG_INFO);
                     continue;
                 }
 
@@ -341,10 +400,17 @@ public class ExecuteOn extends ExecTask {
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
-                        if (haveExecuted) {
+
+                        if (redirectorElement != null) {
+                            setupRedirector();
+                            redirectorElement.configure(redirector, s[j]);
+                        }
+
+                        if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
-                            // reading of pipes
-                            exe.setStreamHandler(createHandler());
+                            // reading of pipes;
+                            // go ahead and do it always w/ nested redirectors
+                            exe.setStreamHandler(redirector.createHandler());
                         }
                         runExecute(exe);
                         haveExecuted = true;
@@ -373,6 +439,8 @@ public class ExecuteOn extends ExecTask {
         } finally {
             // close the output file if required
             logFlush();
+            redirector.setAppendProperties(false);
+            redirector.setProperties();
         }
     }
 
@@ -582,10 +650,16 @@ public class ExecuteOn extends ExecTask {
                 String[] command = getCommandline(cs, cb);
                 log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
                 exe.setCommandline(command);
-                if (currentOffset > 0) {
+                if (redirectorElement != null) {
+                    setupRedirector();
+                    redirectorElement.configure(redirector, null);
+                }
+
+                if (redirectorElement != null || currentOffset > 0) {
                     // need to reset the stream handler to restart
-                    // reading of pipes
-                    exe.setStreamHandler(createHandler());
+                    // reading of pipes;
+                    // go ahead and do it always w/ nested redirectors
+                    exe.setStreamHandler(redirector.createHandler());
                 }
                 runExecute(exe);
 
