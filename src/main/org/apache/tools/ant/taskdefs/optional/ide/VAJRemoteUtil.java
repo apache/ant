@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,28 +54,27 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.util.Enumeration;
 import java.net.URL;
-
+import java.net.URLEncoder;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.File;
 
 /**
  * Helper class for VAJ tasks. Holds Workspace singleton and
  * wraps IvjExceptions into BuildExceptions
  *
  * @author Wolf Siberski, TUI Infotec GmbH
+ * @author Martin Landers, Beck et al. projects
  */
-class VAJRemoteUtil implements VAJUtil{
+class VAJRemoteUtil implements VAJUtil {
     // calling task
     Task caller;
 
@@ -92,8 +91,9 @@ class VAJRemoteUtil implements VAJUtil{
      */
     public void exportPackages(File destDir,
                                String[] includePatterns, String[] excludePatterns,
-                               boolean exportClasses, boolean exportDebugInfo, boolean exportResources,
-                               boolean exportSources, boolean useDefaultExcludes, boolean overwrite) {
+                               boolean exportClasses, boolean exportDebugInfo,
+                               boolean exportResources, boolean exportSources,
+                               boolean useDefaultExcludes, boolean overwrite) {
         try {
             String request = "http://" + remoteServer + "/servlet/vajexport?"
                 + VAJExportServlet.WITH_DEBUG_INFO + "=" + exportDebugInfo + "&"
@@ -142,22 +142,22 @@ class VAJRemoteUtil implements VAJUtil{
                                               boolean includeSources, boolean useDefaultExcludes) {
         String result =
             VAJToolsServlet.DIR_PARAM + "="
-            + dir.getAbsolutePath().replace('\\', '/') + "&"
+            + URLEncoder.encode(dir.getPath()) + "&"
             + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
             + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
             + VAJToolsServlet.SOURCES_PARAM + "=" + includeSources + "&"
             + VAJToolsServlet.DEFAULT_EXCLUDES_PARAM + "=" + useDefaultExcludes;
 
         if (includePatterns != null) {
-            for (int i = 0; i < includePatterns.length; i++){
+            for (int i = 0; i < includePatterns.length; i++) {
                 result = result + "&" + VAJExportServlet.INCLUDE_PARAM + "="
-                    + includePatterns[i].replace(' ', '+').replace('\\', '/');
+                    + URLEncoder.encode(includePatterns[i]);
             }
         }
         if (excludePatterns != null) {
-            for (int i = 0; i < excludePatterns.length; i++){
+            for (int i = 0; i < excludePatterns.length; i++) {
                 result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "="
-                    + excludePatterns[i].replace(' ', '+').replace('\\', '/');
+                    + URLEncoder.encode(excludePatterns[i]);
             }
         }
 
@@ -214,6 +214,7 @@ class VAJRemoteUtil implements VAJUtil{
                     is = connection.getInputStream();
                     break;
                 } catch (IOException ex) {
+                    // ignore
                 }
             }
             if (is == null) {

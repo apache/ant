@@ -10,12 +10,14 @@
 <H1>Visual Age for Java Tasks and Plugin User Manual</H1>
  <a name="authors"></A>by<UL>
   <LI>Wolf Siberski
-      (<A href="mailto:siberski@kbs.uni-hannover.de">
-  siberski@kbs.uni-hannover.de</A> )
+      (siberski at kbs.uni-hannover.de)
   <LI>Christoph Wilhelms
-      (<A href="mailto:christoph.wilhelms@impress.com">
-  christoph.wilhelms@impress.com</A>)</LI></UL>
-Version 1.2 - 2001/06/14<br>
+      (christoph.wilhelms at tui.de)</LI>
+  <LI>Martin Landers
+      (martin.landers at bea.de)</LI>
+  <LI>François Rey
+      (francois dot rey at capco dot com)</LI></UL>
+Version 1.2.1 - 2003/01/16<br>
 <hr>
 <h2>Table of Contents</H2>
 <ul>
@@ -49,6 +51,14 @@ viewed in a logging window. Concluding: This tool provides decent deployment
 support VAJ has not (out of the box).</P>
 <H3>What's new</H3>
 <table cellpadding="2" cellspacing="2" border="0" width="500">
+     <tr valign="top">
+       <td valign="top">2003/01/16</TD>
+       <td valign="top">
+      <UL>
+        <LI>Now works outside of VAJ.
+		<LI>Added attribute haltonerror, "*" and "**" version qualifiers.
+		<LI>Amended documentation (this file) accordingly.
+        </LI></UL></TD></TR>
      <tr valign="top">
        <td valign="top">2001/06/14</TD>
        <td valign="top">
@@ -106,7 +116,13 @@ workspace.</P>
       &lt;servername&gt;:&lt;port no&gt;).<BR>If this
       attribute is set, the tasks will&nbsp;be executed on the specified tool
       server.&nbsp;</P></TD>
-       <td valign="top" align="middle">no</TD></TR></TABLE>
+       <td valign="top" align="middle">no</TD></TR>
+     <tr>
+       <td valign="top">haltonerror</B></TD>
+       <td valign="top">
+      <P>Stop the build process if an error occurs,
+         (default: "yes")</P></TD>
+       <td align="middle" valign="top">no</TD></TR></TABLE>
 
 <h3>Parameters specified as nested elements</H3>
 <h4>vajproject</H4>
@@ -123,13 +139,17 @@ workspace.</P>
        <td valign="top" align="middle">yes</TD></TR>
      <tr>
        <td valign="top">version</TD>
-       <td valign="top">name of the requested version</TD>
+       <td valign="top"><P>name of the requested version,
+       or one of the special qualifiers "*" or "**"<BR>
+       "*" loads the latest <b>versioned</b> edition of the project<BR>
+       "**" will load the latest version (including open editions)</P></TD>
        <td valign="top" align="middle">yes</TD></TR>
      </TABLE>
 
 <h3>Example</H3>
 <pre>&lt;vajload remote="localhost:32767"&gt;
-    &lt;vajproject name="My Testcases" version="1.7beta"/&gt;
+    &lt;vajproject name="My App" version="*"/&gt;
+    &lt;vajproject name="My Testcases" version="**"/&gt;
     &lt;vajproject name="JUnit" version="3.2"/&gt;
 &lt;/vajload&gt;
 </PRE>
@@ -193,7 +213,13 @@ files</TD>
       &lt;servername&gt;:&lt;port no&gt;).<BR>If this
       attribute is set, the tasks will&nbsp;be executed on the specified tool
       server.&nbsp;</P></TD>
-       <td valign="top" align="middle">no</TD></TR></TABLE>
+       <td valign="top" align="middle">no</TD></TR>
+     <tr>
+       <td valign="top">haltonerror</B></TD>
+       <td valign="top">
+      <P>Stop the build process if an error occurs,
+         (default: "yes")</P></TD>
+       <td align="middle" valign="top">no</TD></TR></TABLE>
 
 <h3>Parameters specified as nested elements</H3>
 
@@ -260,7 +286,7 @@ from the file system into VAJ. These imports can be specified with a fileset.
        <td valign="top"><b>Description</B></TD>
        <td align="middle" valign="top"><b>Required</B></TD></TR>
      <tr>
-       <td valign="top">vajProject</TD>
+       <td valign="top">project</TD>
        <td valign="top">imported files are added to this VAJ
       project</TD>
        <td valign="top" align="middle">yes</TD></TR>
@@ -285,7 +311,13 @@ from the file system into VAJ. These imports can be specified with a fileset.
       &lt;servername&gt;:&lt;port no&gt;).<BR>If this
       attribute is set, the tasks will&nbsp;be executed on the specified tool
       server.&nbsp;</P></TD>
-       <td valign="top" align="middle">no</TD></TR></TABLE>
+       <td valign="top" align="middle">no</TD></TR>
+     <tr>
+       <td valign="top">haltonerror</B></TD>
+       <td valign="top">
+      <P>Stop the build process if an error occurs,
+         (default: "yes")</P></TD>
+       <td align="middle" valign="top">no</TD></TR></TABLE>
 
 <h3>Parameters specified as nested elements</H3>
 
@@ -315,34 +347,16 @@ from the VAJ Tools menu (see <A href="#usage">Usage</A>).
 
 <hr>
 <h2><a name="installation"></A>Installation</H2>
-<p>At the moment the installation has it's rough edges. If something
-described below doesn't work for You, it's probably not Your fault
-but incomplete/wrong instructions. In this case, please contact one
-of the <A href="#authors">authors</A>.</P>
 <p>We assume <CODE>C:\IBMVJava</CODE> as VAJ
 install directory. If You have installed it elsewhere, adapt the pathes below.
 <h3>Plugin</H3>
 <ul>
-  <li>install the Visual Age IDE Tools (via File-&gt;Quick
-  Start-&gt; Add feature-&gt;'IBM IDE Utility class libraries'
-  <li>import an appropriate XML parser to VAJ (we use Xerces
-  1.2.0 and are happy with it). Unfortunately the XML parser delivered with VAJ
-  (in the project 'IBM XML Parser for Java') doesn't work with Ant. You have to
-  remove that project (temporarily) from the workspace before importing another
-  XML implementation.
-
-  <li>import the Ant sources <STRONG>and </STRONG>   resources into VAJ.
   <li>Create the directory <CODE>
       C:\IBMVJava\ide\tools\org-apache-tools-ant</CODE>.
-  <li>export the Ant and XML parser class and resource files
-  into this directory. Be sure to select class files <STRONG>and</STRONG>
-          resources. Sources don't have to
-  be exported. Some optional tasks have errors and can't be exported when You
-  don't have the necessary packages in Your workspace (e.g. junit task, ejbc
-  task). If You need this tasks either import these packages into VAJ, too, or
-  copy the .class files directly from the binary distribution.
+  <li>Expand in that directory all the jars contained in the <code>lib</CODE>
+      directory of your Ant  installation.
   <li>copy <CODE>default.ini</CODE> (in <CODE>
-      ant\src\...\taskdefs\optional\ide</CODE>)     to <CODE>
+      org\apache\tools\ant\taskdefs\optional\ide</CODE>)     to <CODE>
       C:\IBMVJava\ide\tools\org-apache-tools-ant\default.ini</CODE>.
 
   <li>if you want to access this help from the Workbench, create the
@@ -353,9 +367,7 @@ install directory. If You have installed it elsewhere, adapt the pathes below.
   <li>VAJ has to be restarted to recognize the new tool.
   <li>Now if You open the context menu of a project, You should see the entry
      'Ant Build' in the Tools submenu (see <A href="#usage">Usage</A>).
-  <li>Make sure the tool works as expected. Now You can
-  remove Ant and the imported XML parser from Your workspace (and optionally add
-  the IBM parser again). </LI></UL>
+  <li>Make sure the tool works as expected. </LI></UL>
   <h3>Servlets for Remote Tool Access</H3>
 <UL>
   <LI>
@@ -374,25 +386,11 @@ install directory. If You have installed it elsewhere, adapt the pathes below.
        <td valign="top">
 <PRE>servlet.vajload.code=org.apache.tools.ant.taskdefs.optional.ide.VAJLoadServlet
 servlet.vajexport.code=org.apache.tools.ant.taskdefs.optional.ide.VAJExportServlet
-servlet.vajimport.code=org.apache.tools.ant.taskdefs.optional.ide.VAJImportServletName<PRE>  </PRE></PRE></TD></TR></TABLE>
-  <LI>export the following classes from the package
-  <CODE>org.apache.tools.ant</CODE>
-  to <CODE>C:\IBMVJava\ide\tools\com-ibm-ivj-toolserver\servlets\</CODE>:<BR>
-  <CODE>BuildException<BR>
-  DirectoryScanner<BR>
-  FileScanner<BR>
-  Location</CODE>
-  <LI>export the following classes from the package
-  <CODE>org.apache.tools.ant.taksdefs.optional.ide</CODE>
-  to <CODE>C:\IBMVJava\ide\tools\com-ibm-ivj-toolserver\servlets\</CODE>:<BR>
-  <CODE>VAJUtil<BR>
-  VAJExportServlet<BR>
-  VAJImportServlet<BR>
-  VAJLoadServlet<BR>
-  VAJLocalUtil<BR>
-  VAJProjectDescription<BR>
-  VAJToolsServlet<BR>
-  VAJWorkspaceScanner</CODE>
+servlet.vajimport.code=org.apache.tools.ant.taskdefs.optional.ide.VAJImportServletName<PRE>
+</TD></TR></TABLE>
+  <LI>Expand the Ant libraries (<code>ant.jar</CODE> and <code>optional.jar</CODE>
+  contained in the <code>lib</CODE> directory of your Ant installation) to the directory
+  <code>C:\IBMVJava\ide\tools\com-ibm-ivj-toolserver\servlets\</CODE>.
   <LI>configure the Remote Access (via
   Window-&gt;Options..., then choose 'Remote Access To Tool API') as shown in
   the following picture:</LI></UL>
@@ -462,6 +460,10 @@ files. This messsage appears if the file
 <BR>.../org/apache/tools/ant/taskdefs/defaults.properties is
 missing. Make sure that you import/export not only java/class files, but also
 all resource files when importing/exporting Ant.</P>
+<P><STRONG>Q: If I try to re-load a build
+file, I get the error "XML parser factory has not been configured correctly". Why?</STRONG><br>
+A: Make sure the META-INF/services directory of the <code>xercesImpl.jar</CODE> has also been expanded
+into the <CODE>C:\IBMVJava\ide\tools\org-apache-tools-ant</CODE> directory.</P>
 <P><STRONG>Q: I want to load, export
 and build more then one Visual Age project to one jar! How to?</STRONG><br>
 A: The VA tasks are able to load and export several
@@ -553,9 +555,14 @@ JDK independent by now.
        <td valign="top">1.2</TD>
        <td valign="top">2001/07/02</TD>
        <td valign="top">
-      <P>Added documentation of new remote feature.<BR>Minor corrections.</P></TD></TR></TABLE>
+       <P>Added documentation of new remote feature.<BR>Minor corrections.</P></TD></TR>
+     <tr valign="top">
+       <td valign="top">1.2.1</TD>
+       <td valign="top">2003/01/16</TD>
+       <td valign="top">
+       <P>Added documentation for haltonerror, "*" and "**" version qualifiers.</P></TD></TR></TABLE>
 <hr>
-<center>Copyright &amp;#copy 2001-2003 Apache Software
+<center>Copyright &copy 2001-2003 Apache Software
 Foundation. All rights Reserved.</CENTER>
 </body>
 </html>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,17 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-
-
+import com.ibm.ivj.toolserver.servletclasses.servlet.ServletException;
+import com.ibm.ivj.toolserver.servletclasses.servlet.http.HttpServlet;
+import com.ibm.ivj.toolserver.servletclasses.servlet.http.HttpServletRequest;
+import com.ibm.ivj.toolserver.servletclasses.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.StringUtils;
 

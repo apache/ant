@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,20 +54,19 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
-import java.util.Enumeration;
-import java.io.File;
-
-import com.ibm.ivj.util.base.Package;
-import com.ibm.ivj.util.base.IvjException;
-import com.ibm.ivj.util.base.Workspace;
-import com.ibm.ivj.util.base.ToolEnv;
 import com.ibm.ivj.util.base.ExportCodeSpec;
-import com.ibm.ivj.util.base.ProjectEdition;
 import com.ibm.ivj.util.base.ImportCodeSpec;
-import com.ibm.ivj.util.base.Type;
+import com.ibm.ivj.util.base.IvjException;
+import com.ibm.ivj.util.base.Package;
 import com.ibm.ivj.util.base.Project;
-
+import com.ibm.ivj.util.base.ProjectEdition;
+import com.ibm.ivj.util.base.ToolEnv;
+import com.ibm.ivj.util.base.Type;
+import com.ibm.ivj.util.base.Workspace;
+import java.io.File;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 
@@ -77,8 +76,9 @@ import org.apache.tools.ant.DirectoryScanner;
  * wraps IvjExceptions into BuildExceptions
  *
  * @author Wolf Siberski, TUI Infotec GmbH
+ * @author Martin Landers, Beck et al. projects
  */
-abstract class VAJLocalUtil implements VAJUtil{
+abstract class VAJLocalUtil implements VAJUtil {
     // singleton containing the VAJ workspace
     private static Workspace workspace;
 
@@ -126,12 +126,11 @@ abstract class VAJLocalUtil implements VAJUtil{
     /**
      * export packages
      */
-    public void exportPackages(
-                               File dest,
+    public void exportPackages(File dest,
                                String[] includePatterns, String[] excludePatterns,
                                boolean exportClasses, boolean exportDebugInfo,
                                boolean exportResources, boolean exportSources,
-                               boolean useDefaultExcludes,    boolean overwrite) {
+                               boolean useDefaultExcludes, boolean overwrite) {
         if (includePatterns == null || includePatterns.length == 0) {
             log("You must specify at least one include attribute. "
                 + "Not exporting", MSG_ERR);
@@ -196,10 +195,19 @@ abstract class VAJLocalUtil implements VAJUtil{
              e.hasMoreElements();) {
             VAJProjectDescription d = (VAJProjectDescription) e.nextElement();
 
-            ProjectEdition pe = findProjectEdition(d.getName(), d.getVersion());
+            ProjectEdition pe;
+            if (d.getVersion().equals("*")) {
+                pe = findLatestProjectEdition(d.getName(), false);
+            } else if (d.getVersion().equals("**")) {
+                pe = findLatestProjectEdition(d.getName(), true);
+            } else {
+                pe = findProjectEdition(d.getName(), d.getVersion());
+            }
             try {
-                log("Loading '" + d.getName() + "', Version '" + d.getVersion()
-                    + "', into Workspace", MSG_VERBOSE);
+                log("Loading '" + pe.getName() + "', Version '"
+                    + ((pe.getVersionName() != null) ? pe.getVersionName()
+                        : "(" + pe.getVersionStamp() + ")")
+                    + "' into Workspace", MSG_VERBOSE);
                 pe.loadIntoWorkspace();
             } catch (IvjException ex) {
                 throw createBuildException("Project '" + d.getName()
@@ -207,28 +215,6 @@ abstract class VAJLocalUtil implements VAJUtil{
             }
         }
     }
-
-    /**
-     * returns a list of project names matching the given pattern
-     */
-    private Vector findMatchingProjects(String pattern) {
-        String[] projectNames;
-        try {
-            projectNames = getWorkspace().getRepository().getProjectNames();
-        } catch (IvjException e) {
-            throw createBuildException("VA Exception occured: ", e);
-        }
-
-        Vector matchingProjects = new Vector();
-        for (int i = 0; i < projectNames.length; i++) {
-            if (VAJWorkspaceScanner.match(pattern, projectNames[i])) {
-                matchingProjects.addElement(projectNames[i]);
-            }
-        }
-
-        return matchingProjects;
-    }
-
 
     /**
      * return project descriptions containing full project names instead
@@ -246,8 +232,8 @@ abstract class VAJLocalUtil implements VAJUtil{
                     String pattern = d.getName();
                     if (VAJWorkspaceScanner.match(pattern, projectNames[i])) {
                         d.setProjectFound();
-                        expandedDescs.addElement(new VAJProjectDescription(
-                                                                           projectNames[i], d.getVersion()));
+                        expandedDescs.addElement(new VAJProjectDescription(projectNames[i],
+                            d.getVersion()));
                         break;
                     }
                 }
@@ -288,6 +274,50 @@ abstract class VAJLocalUtil implements VAJUtil{
             }
             return pe;
 
+        } catch (IvjException e) {
+            throw createBuildException("VA Exception occured: ", e);
+        }
+
+    }
+
+    /**
+     * Finds the latest project edition in the repository.
+     *
+     * @param name project name
+     * @param includeOpenEditions include open/scratch editions in the search?
+     * @return com.ibm.ivj.util.base.ProjectEdition the specified edition
+     */
+    private ProjectEdition findLatestProjectEdition(
+                                              String name,
+                                              boolean includeOpenEditions) {
+        try {
+            ProjectEdition[] editions = null;
+            editions = getWorkspace().getRepository().getProjectEditions(name);
+            if (editions == null) {
+                throw new BuildException("Project " + name + " doesn't exist");
+            }
+
+            // find latest (versioned) project edition by date
+            ProjectEdition pe = null;
+            // Let's hope there are no projects older than the epoch ;-)
+            Date latestStamp = new Date(0);
+            for (int i = 0; i < editions.length; i++) {
+                if (!includeOpenEditions && !editions[i].isVersion()) {
+                    continue;
+                }
+                if (latestStamp.before(editions[i].getVersionStamp())) {
+                    latestStamp = editions[i].getVersionStamp();
+                    pe = editions[i];
+                }
+            }
+
+            if (pe == null) {
+                throw new BuildException("Can't determine latest edition for project " + name);
+            }
+            log("Using version " + ((pe.getVersionName() != null) ? pe.getVersionName()
+                    : "(" + pe.getVersionStamp() + ")")
+                + " of " + pe.getName(), MSG_INFO);
+            return pe;
         } catch (IvjException e) {
             throw createBuildException("VA Exception occured: ", e);
         }

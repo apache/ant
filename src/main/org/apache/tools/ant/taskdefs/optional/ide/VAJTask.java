@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,7 @@ package org.apache.tools.ant.taskdefs.optional.ide;
  * attributes (remoteServer) and util methods
  *
  * @author: Wolf Siberski
+ * @author: Martin Landers, Beck et al. projects
  */
 import org.apache.tools.ant.Task;
 
@@ -79,6 +80,8 @@ public class VAJTask extends Task {
     // holds the appropriate VAJUtil implementation
     private VAJUtil util = null;
 
+    // checks if this task throws BuildException on error
+    protected boolean haltOnError = true;
 
     /**
      * returns the VAJUtil implementation
@@ -102,5 +105,16 @@ public class VAJTask extends Task {
      */
     public void setRemote(String remoteServer) {
         this.remoteServer = remoteServer;
+    }
+
+    /**
+    * Flag to control behaviour in case of VAJ errors.
+    * If this attribute is set errors will be ignored
+    * (no BuildException will be thrown) otherwise
+    * VAJ errors will be wrapped into a BuildException and
+    * stop the build.
+    */
+    public void setHaltonerror(boolean newHaltOnError) {
+        haltOnError = newHaltOnError;
     }
 }

@@ -1,3 +1,39 @@
+Changes from Ant 1.5.3 to Ant 1.5.4
+===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* If the Visual Age tasks used to work for you, they may stop doing so
+  now - and we'd like to know about it.  The current set of tasks is
+  supposed to work with any version of VAJ starting with 3.0.
+
+Fixed bugs:
+-----------
+
+* The Visual Age for Java tasks didn't work (at least for versions 3.0
+  and higher).  Bugzilla Report 10016.
+
+* URL-encoding in <vaj*port> didn't work properly.
+
+* VAJRemoteUtil called getAbsolutePath instead of getPath
+  causing problems when using a Windows VAJ server from a UNIX server.
+  Bugzilla Report 20457.
+
+Other changes:
+--------------
+
+* Shipped XML parser is now Xerces 2.4.0
+
+* <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
+
+* The VAJ tasks now support a haltonfailure attribute to conditionally
+  keep building even if they fail.
+
+* It is now possible to use the latest (versioned or unversioned) edition
+  in <vajload> by using special wildcard characters.  Also fixes
+  Bugzilla Report 2236.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,8 +61,6 @@ import org.apache.tools.ant.DirectoryScanner;
 
 import org.apache.tools.ant.types.FileSet;
 
-import java.lang.reflect.Field;
-
 /**
  * Import source, class files, and resources to the Visual Age for Java
  * workspace.
@@ -84,7 +82,7 @@ import java.lang.reflect.Field;
  * created in the repository and automatically loaded into the Workspace.
  * There has to be at least one nested FileSet element.
  * </p>
- * <p>There are attributes to choose which items to export:
+ * <p>Parameters:
  * <table border="1" cellpadding="2" cellspacing="0">
  * <tr>
  *   <td valign="top"><b>Attribute</b></td>
@@ -112,9 +110,22 @@ import java.lang.reflect.Field;
  *   <td valign="top">import class files, defaults to "no"</td>
  *   <td align="center" valign="top">No</td>
  * </tr>
+ * <tr>
+ *   <td valign="top">remote</td>
+ *   <td valign="top">remote tool server to run this command against
+ *                    (format: &lt;servername&gt; : &lt;port no&gt;)</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">haltonerror</td>
+ *   <td valign="top">stop the build process if an error occurs,
+ *                    defaults to "yes"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
  * </table>
  *
  * @author Glenn McAllister, inspired by a similar task written by Peter Kelley
+ * @author Martin Landers, Beck et al. projects
  */
 public class VAJImport extends VAJTask {
     protected Vector filesets = new Vector();
@@ -124,6 +135,25 @@ public class VAJImport extends VAJTask {
     protected String importProject = null;
     protected boolean useDefaultExcludes = true;
 
+
+    /**
+     * Extended DirectoryScanner that has accessors for the
+     * includes and excludes fields.
+     *
+     * This is kindof a hack to get includes and excludes
+     * from the directory scanner. In order to keep
+     * the URLs short we only want to send the patterns to the
+     * remote tool server and let him figure out the files.
+     *
+     * This replaces the former reflection hack that
+     * didn't compile for old JDKs.
+     *
+     * @see VAJImport#importFileSet(FileSet)
+     */
+    private static class LocalDirectoryScanner extends DirectoryScanner {
+        public String[] getIncludes() { return includes; }
+        public String[] getExcludes() { return excludes; }
+    }
 
     /**
      * The VisualAge for Java Project name to import into.
@@ -184,8 +214,16 @@ public class VAJImport extends VAJTask {
             throw new BuildException("The VisualAge for Java Project name is required!");
         }
 
-        for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
-            importFileset((FileSet) e.nextElement());
+        try {
+            for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
+                importFileset((FileSet) e.nextElement());
+            }
+        } catch (BuildException ex) {
+            if (haltOnError) {
+                throw ex;
+            } else {
+                log(ex.toString());
+            }
         }
     }
 
@@ -194,35 +232,14 @@ public class VAJImport extends VAJTask {
      * Workspace.
      */
     protected void importFileset(FileSet fileset) {
-        DirectoryScanner ds = fileset.getDirectoryScanner(this.project);
+        LocalDirectoryScanner ds = new LocalDirectoryScanner();
+        fileset.setupDirectoryScanner(ds, this.getProject());
         if (ds.getIncludedFiles().length == 0) {
             return;
         }
 
-        String[] includes = null;
-        String[] excludes = null;
-
-        // Hack to get includes and excludes. We could also use getIncludedFiles,
-        // but that would result in very long HTTP-requests.
-        // Therefore we want to send the patterns only to the remote tool server
-        // and let him figure out the files.
-        try {
-            Class directoryScanner = ds.getClass();
-
-            Field includesField = directoryScanner.getDeclaredField("includes");
-            includesField.setAccessible(true);
-            includes = (String[]) includesField.get(ds);
-
-            Field excludesField = directoryScanner.getDeclaredField("excludes");
-            excludesField.setAccessible(true);
-            excludes = (String[]) excludesField.get(ds);
-        } catch (NoSuchFieldException nsfe) {
-            throw new BuildException(
-                "DirectoryScanner.includes or .excludes missing" + nsfe.getMessage());
-        } catch (IllegalAccessException iae) {
-            throw new BuildException(
-                "Access to DirectoryScanner.includes or .excludes not allowed");
-        }
+        String[] includes = ds.getIncludes();
+        String[] excludes = ds.getExcludes();
 
         getUtil().importFiles(importProject, ds.getBasedir(),
                 includes, excludes,
