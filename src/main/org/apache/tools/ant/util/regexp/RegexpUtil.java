@@ -21,6 +21,9 @@ package org.apache.tools.ant.util.regexp;
  *
  */
 public class RegexpUtil {
+    private RegexpUtil() {
+    }
+
     public static final boolean hasFlag(int options, int flag) {
         return ((options & flag) > 0);
     }
