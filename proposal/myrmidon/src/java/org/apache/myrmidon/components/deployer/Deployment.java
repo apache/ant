@@ -8,12 +8,14 @@
 package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
@@ -27,6 +29,9 @@ import org.xml.sax.XMLReader;
  */
 public class Deployment
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Deployment.class );
+
     public final static String   DESCRIPTOR_NAME     = "META-INF/ant-descriptor.xml";
 
     private File            m_file;
@@ -55,7 +60,8 @@ public class Deployment
         try { return m_file.getCanonicalFile().toURL(); }
         catch( final IOException ioe )
         {
-            throw new DeploymentException( "Unable to form url", ioe );
+            final String message = REZ.getString( "bad-url.error", m_file );
+            throw new DeploymentException( message, ioe );
         }
     }
 
@@ -80,16 +86,18 @@ public class Deployment
         }
         catch( final SAXException se )
         {
-            throw new DeploymentException( "Malformed configuration data", se );
+            final String message = REZ.getString( "bad-descriptor.error" );
+            throw new DeploymentException( message, se );
         }
         catch( final ParserConfigurationException pce )
         {
-            throw new DeploymentException( "Error configuring parser", pce );
+            final String message = REZ.getString( "bad-parser.error" );
+            throw new DeploymentException( message, pce );
         }
         catch( final IOException ioe )
         {
-            throw new DeploymentException( "Error reading configuration", ioe );
+            final String message = REZ.getString( "bad-read.error" );
+            throw new DeploymentException( message, ioe );
         }
     }
 }
-
