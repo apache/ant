@@ -771,6 +771,9 @@
   </td>
       </tr>
         </table>
+                                        <p>With Ant &gt;= 1.5, you can also use nested
+          <code>&lt;compilerarg&gt;</code> elements with the
+          <code>&lt;javac&gt;</code> task.</p>
                         </blockquote>
     </td></tr>
   </table>
@@ -1290,8 +1293,8 @@ shell-prompt&gt; cat &lt; foo
         your build file uses, this is done inside the <a href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-prolog-dtd">XML
         declaration</a>.</p>
                                         <p>By default the parser assumes you are using the UTF-8
-        encoding instead of your platform's default.  For most western
-        european contries you should set the encoding to
+        encoding instead of your platform's default.  For most Western
+        European countries you should set the encoding to
         <code>ISO-8859-1</code>.  To do so, make the very first line
         of you build file read like</p>
                                           <div align="left">
@@ -1666,7 +1669,7 @@ public class BuildMonitor implements BuildListener {
      * Determine the status of the build and the actions to follow, now that
      * the build has completed.
      *
-     * @param       e       Event describing the build tatus.
+     * @param       e       Event describing the build status.
      */
     public void buildFinished(BuildEvent e) {
         Throwable th = e.getException();
@@ -1994,7 +1997,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         is in <code>CLASSPATH</code> as well.</p>
                                         <p>To solve this, you have two major options:</p>
                                         <ol>
-          <li>put all external libaries you need in
+          <li>put all external libraries you need in
           <code>CLASSPATH</code> as well this is not what you want,
           otherwise you wouldn't have found this FAQ entry.</li>
 

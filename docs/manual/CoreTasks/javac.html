@@ -1,4 +1,4 @@
-<html>
+<html lang="en-us">
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
@@ -21,7 +21,7 @@ will have no knowledge about nested classes, classes that are named different
 from the source file, and so on. See the
 <a href="../OptionalTasks/depend.html"><code>&lt;depend&gt;</code></a> task
 for dependency checking based on other than just
-existence/modification times.
+existence/modification times.</p>
 <p>When the source files are part of a package, the directory structure of
 the source tree should follow the package
 hierarchy.</p>
@@ -47,7 +47,7 @@ setting the <code>compiler</code> attribute, specific to the current
 <code>&lt;javac&gt;</code> task.
 <a name="compilervalues">Valid values for either the
 <code>build.compiler</code> property or the <code>compiler</code>
-attribute are:</p>
+attribute are:</a></p>
 <ul>
   <li><code>classic</code> (the standard compiler of JDK 1.1/1.2) &ndash;
       <code>javac1.1</code> and
@@ -56,7 +56,7 @@ attribute are:</p>
       <code>javac1.3</code> and
       <code>javac1.4</code> can be used as aliases.</li>
   <li><code>jikes</code> (the <a
-    href="http://oss.software.ibm.com/developerworks/opensource/jikes/project" target="_top">Jikes</a>
+    href="http://oss.software.ibm.com/developerworks/opensource/jikes/" target="_top">Jikes</a>
     compiler).</li>
   <li><code>jvc</code> (the Command-Line Compiler from Microsoft's SDK
       for Java / Visual J++) &ndash; <code>microsoft</code> can be used
@@ -69,7 +69,6 @@ attribute are:</p>
   <li><code>extJavac</code> (run either modern or classic in a JVM of
       its own).</li>
 </ul>
-</a>
 <p>The default is <code>javac1.x</code> with <code>x</code> depending
 on the JDK version you use while you are running Ant.
 If you wish to use a different compiler interface than those
@@ -98,7 +97,6 @@ classpath of the <code>&lt;javac&gt;</code> task, and does not release them.
 The side effect of this is that you will not be able to delete or move
 those files later on in the build.  The workaround is to fork when
 invoking the compiler.</p>
-</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -109,7 +107,7 @@ invoking the compiler.</p>
   <tr>
     <td valign="top">srcdir</td>
     <td valign="top">Location of the java files. (See the
-     <a href="#srcdirnote">Note</a> below.)</td>
+     <a href="#srcdirnote">note</a> below.)</td>
     <td align="center" valign="top">Yes, unless nested <code>&lt;src&gt;</code> elements are present.</td>
   </tr>
   <tr>
@@ -492,7 +490,7 @@ using.  This problem may occur with all JDKs &lt; 1.2.</p>
 
 <h3>Jikes Notes</h3>
 
-Jikes supports some extra options, which can be set be defining
+<p>Jikes supports some extra options, which can be set be defining
 the properties shown below prior to invoking the task. The setting
 for each property will be in affect for all <code>&lt;javac&gt;</code>
 tasks throughout the build.
@@ -559,7 +557,6 @@ while all others are <code>false</code>.</p>
 	</td>
   </tr>
 </table>
-</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2002 Apache Software Foundation.
