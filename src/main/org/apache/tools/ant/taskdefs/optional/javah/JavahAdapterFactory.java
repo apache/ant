@@ -69,7 +69,7 @@ public class JavahAdapterFactory {
     }
 
     /**
-     * Tries to resolve the given classname into a native2ascii adapter.
+     * Tries to resolve the given classname into a javah adapter.
      * Throws a fit if it can't.
      *
      * @param className The fully qualified classname to be created.
