@@ -18,7 +18,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.components.type.DefaultTypeFactory;
+import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
