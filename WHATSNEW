@@ -4,6 +4,13 @@ Changes from Ant 1.5 to 1.5.1Beta1
 
 Fixed bugs:
 -----------
+* Date/time in CvsChangeLog was in local timezone and 12 hour format leading
+  to a problem when sorting by time. It is now UTC (GMT) and in 24-hour
+  format as per cvs 'specifications'.
+
+* CvsTagDiff now supports ampersand modules or modules that have a different
+  root directory than their name.
+  
 * EjbJar threw NPEs for the Websphere element. The property 'websphere.home'
   was not documented.
 
