@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -302,19 +302,26 @@ public class jlink extends Object {
 
         if (!name.endsWith(".class")) {
             // see if the file is in fact a .class file, and determine its actual name.
+            InputStream input = null;
             try {
-                InputStream input = new FileInputStream(file);
+                input = new FileInputStream(file);
                 String className = ClassNameReader.getClassName(input);
 
-                input.close();
                 if (className != null) {
                     return className.replace('.', '/') + ".class";
                 }
             } catch (IOException ioe) {
+            } finally {
+                if (input != null) {
+                    try {
+                        input.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
         }
         System.out.println("From " + file.getPath() + " and prefix " + prefix
-            + ", creating entry " + prefix + name);
+                           + ", creating entry " + prefix + name);
         return (prefix + name);
     }
 
