@@ -196,11 +196,7 @@ public final class ChainReaderHelper {
                                 final Reader[] rdr = {instream};
                                 instream =
                                     (Reader) constructors[j].newInstance(rdr);
-                                if (project != null &&
-                                        instream instanceof BaseFilterReader) {
-                                    ((BaseFilterReader)
-                                        instream).setProject(project);
-                                }
+                                setProjectOnObject(instream);
                                 if (Parameterizable.class.isAssignableFrom(clazz)) {
                                     final Parameter[] params = filter.getParams();
                                     ((Parameterizable)
@@ -217,18 +213,31 @@ public final class ChainReaderHelper {
                             throw new BuildException(ite);
                         }
                     }
-                } else if (o instanceof ChainableReader &&
-                           o instanceof Reader) {
-                    if (project != null && o instanceof BaseFilterReader) {
-                        ((BaseFilterReader) o).setProject(project);
-                    }
+                } else if (o instanceof ChainableReader) {
+                    setProjectOnObject(o);
                     instream = ((ChainableReader) o).chain(instream);
+                    setProjectOnObject(instream);
                 }
             }
         }
         return instream;
     }
 
+    /**
+     * helper method to set the project on an object.
+     * the reflection setProject does not work for anonymous/protected/private
+     * classes, even if they have public methods.
+     */
+    private void setProjectOnObject(Object obj) {
+        if (project == null)
+            return;
+        if (obj instanceof BaseFilterReader) {
+            ((BaseFilterReader) obj).setProject(project);
+            return;
+        }
+        Project.setProjectOnObject(project, obj);
+    }
+    
     /**
      * Read data from the reader and return the
      * contents as a string.

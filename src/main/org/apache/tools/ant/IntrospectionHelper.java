@@ -538,9 +538,7 @@ public class IntrospectionHelper implements BuildListener {
             DynamicConfigurator dc = (DynamicConfigurator) parent;
             Object nestedElement = dc.createDynamicElement(elementName);
             if (nestedElement != null) {
-                if (nestedElement instanceof ProjectComponent) {
-                    ((ProjectComponent) nestedElement).setProject(project);
-                }
+                Project.setProjectOnObject(project, nestedElement);
                 return nestedElement;
             }
         }
@@ -549,9 +547,7 @@ public class IntrospectionHelper implements BuildListener {
         }
         try {
             Object nestedElement = nc.create(parent);
-            if (nestedElement instanceof ProjectComponent) {
-                ((ProjectComponent) nestedElement).setProject(project);
-            }
+            Project.setProjectOnObject(project, nestedElement);
             return nestedElement;
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
@@ -842,9 +838,7 @@ public class IntrospectionHelper implements BuildListener {
                             throws InvocationTargetException, IllegalAccessException, BuildException {
                             try {
                                 Object attribute = c.newInstance(new String[] {value});
-                                if (attribute instanceof ProjectComponent) {
-                                    ((ProjectComponent) attribute).setProject(p);
-                                }
+                                Project.setProjectOnObject(p, attribute);
                                 m.invoke(parent, new Object[] {attribute});
                             } catch (InstantiationException ie) {
                                 throw new BuildException(ie);

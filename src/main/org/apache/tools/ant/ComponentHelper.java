@@ -407,6 +407,7 @@ public class ComponentHelper  {
 
         try {
             Object o = c.newInstance();
+            Project.setProjectOnObject(project, o);
             Task task = null;
             if (o instanceof Task) {
                 task = (Task) o;
@@ -415,9 +416,9 @@ public class ComponentHelper  {
                 // and an Adapter
                 TaskAdapter taskA = new TaskAdapter();
                 taskA.setProxy(o);
+                Project.setProjectOnObject(project, taskA);
                 task = taskA;
             }
-            task.setProject(project);
             task.setTaskType(taskType);
 
             // set default value, can be changed by the user
@@ -520,9 +521,7 @@ public class ComponentHelper  {
             } else {
                 o = ctor.newInstance(new Object[] {this});
             }
-            if (o instanceof ProjectComponent) {
-                ((ProjectComponent) o).setProject(project);
-            }
+            Project.setProjectOnObject(project, o);
             String msg = "   +DataType: " + typeName;
             project.log(msg, Project.MSG_DEBUG);
             return o;

@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.EOFException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -1133,6 +1134,7 @@ public class Project {
 
         try {
             Object o = c.newInstance();
+            setProjectOnObject(this, o);
             Task task = null;
             if (o instanceof Task) {
                task = (Task) o;
@@ -1245,9 +1247,7 @@ public class Project {
             } else {
                  o = ctor.newInstance(new Object[] {this});
             }
-            if (o instanceof ProjectComponent) {
-                ((ProjectComponent) o).setProject(this);
-            }
+            setProjectOnObject(this, o);
             String msg = "   +DataType: " + typeName;
             log (msg, MSG_DEBUG);
             return o;
@@ -2305,4 +2305,33 @@ public class Project {
             return get(key) != null;
         }
     }
+    
+    /**
+     * set the project on a created object using object.setProject(project).
+     * Need to set the project before other set/add elements
+     * are called
+     * @param project the project object
+     * @param obj the object to invoke setProject(project) on
+     */
+    public static void setProjectOnObject(Project project, Object obj) {
+        if (project == null)
+            return;
+        if (obj instanceof ProjectComponent) {
+            ((ProjectComponent) obj).setProject(project);
+            return;
+        }
+        try {
+            Method method = 
+                obj.getClass().getMethod(
+                    "setProject", new Class[] {Project.class});
+            if (method != null) {
+                method.invoke(obj, new Object[] {project});
+            }
+        } catch (Throwable e) {
+            // ignore this if the object does not have
+            // a set project method or the method
+            // is private/protected.
+        }
+    }
+
 }

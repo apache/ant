@@ -649,6 +649,7 @@ public class Main {
             try {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
+                Project.setProjectOnObject(project, listener);
                 project.addBuildListener(listener);
             } catch (Throwable exc) {
                 throw new BuildException("Unable to instantiate listener "
@@ -671,6 +672,7 @@ public class Main {
             try {
                 handler = (InputHandler)
                     (Class.forName(inputHandlerClassname).newInstance());
+                Project.setProjectOnObject(project, handler);
             } catch (ClassCastException e) {
                 String msg = "The specified input handler class "
                     + inputHandlerClassname

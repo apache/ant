@@ -56,6 +56,7 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.Vector;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
@@ -106,6 +107,7 @@ public class ExtendSelector extends BaseSelector {
                     AntClassLoader.initializeClass(c);
                 }
                 dynselector = (FileSelector) c.newInstance();
+                Project.setProjectOnObject(getProject(), dynselector);
             }
             catch (ClassNotFoundException cnfexcept) {
                 setError("Selector " + classname +
