@@ -185,21 +185,6 @@ public class CommandlineJava implements Cloneable
         javaCommand.clearArgs();
     }
 
-    public Object clone()
-    {
-        CommandlineJava c = new CommandlineJava();
-        c.vmCommand = (Commandline)vmCommand.clone();
-        c.javaCommand = (Commandline)javaCommand.clone();
-        c.sysProperties = (SysProperties)sysProperties.clone();
-        c.maxMemory = maxMemory;
-        if( classpath != null )
-        {
-            c.classpath = (Path)classpath.clone();
-        }
-        c.executeJar = executeJar;
-        return c;
-    }
-
     public Argument createArgument()
     {
         return javaCommand.createArgument();
