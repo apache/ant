@@ -71,6 +71,7 @@ Legal:
 
     <path id="project.class.path">
         <pathelement path="${java.class.path}" />
+        <pathelement location="../../lib/optional/junit.jar" />
         <fileset dir="${lib.dir}">
             <include name="*.jar" />
         </fileset>
@@ -239,6 +240,16 @@ Legal:
             <patternset refid="selftest.include"/>
             <patternset refid="selftest-extension1.include"/>
             <include name="org/apache/antlib/**"/>
+        </javac>
+
+        <mkdir dir="${test.classes}"/>
+        <javac srcdir="src/test"
+            destdir="${test.classes}"
+            debug="${debug}"
+            deprecation="${deprecation}">
+            <classpath refid="project.class.path"/>
+            <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
+            <exclude name="**/FtpFileSystemTestCase.java" unless="netcomp.present"/>
         </javac>
 
         <copy todir="${build.classes}">
