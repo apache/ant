@@ -145,6 +145,9 @@ public class Project {
         try {
             Properties props = new Properties();
             InputStream in = this.getClass().getResourceAsStream(defs);
+            if (in == null) { 
+                throw new BuildException("Can't load default task list");
+            }
             props.load(in);
             in.close();
 
@@ -170,6 +173,9 @@ public class Project {
         try{
             Properties props = new Properties();
             InputStream in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) { 
+                throw new BuildException("Can't load default datatype list");
+            }
             props.load(in);
             in.close();
 
