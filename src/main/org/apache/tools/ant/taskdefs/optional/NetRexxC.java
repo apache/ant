@@ -720,7 +720,7 @@ public class NetRexxC extends MatchingTask {
     }
 
 
-    /** Peforms a copmile using the NetRexx 1.1.x compiler  */
+    /** Performs a compile using the NetRexx 1.1.x compiler  */
     private void doNetRexxCompile() throws BuildException {
         log("Using NetRexx compiler", Project.MSG_VERBOSE);
 

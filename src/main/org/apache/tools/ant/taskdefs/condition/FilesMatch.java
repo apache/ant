@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Compares two files for bitwise equality based on size and
- * content. Timestamps are not looked at at all.
+ * content. Timestamps are not at all looked at.
  *
  * @author Steve Loughran
  * @version $Revision$
@@ -99,7 +99,7 @@ public class FilesMatch implements Condition {
     }
 
     /**
-     * comparision method of the interface
+     * comparison method of the interface
      *
      * @return true if the files are equal
      * @exception BuildException if it all went pear-shaped

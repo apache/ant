@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -252,7 +252,7 @@ public class IContract extends MatchingTask {
     private File targets = null;
 
     /**
-     * will be set to true if any of the sourca files are newer than the
+     * will be set to true if any of the source files are newer than the
      * instrumented files
      */
     private boolean dirty = false;

@@ -294,7 +294,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     public static final String FLAG_SUBSYSTEM = "/subsystem";
 
     /**
-     *  -task flag -- associate checckout task with task
+     *  -task flag -- associate checkout task with task
      */
     public static final String FLAG_TASK = "/task";
 

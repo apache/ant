@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -240,7 +240,7 @@ public class Native2Ascii extends MatchingTask {
         }
 
         // Make intermediate directories if needed
-        // XXX JDK 1.1 dosen't have File.getParentFile,
+        // XXX JDK 1.1 doesn't have File.getParentFile,
         String parentName = destFile.getParent();
         if (parentName != null) {
             File parentFile = new File(parentName);

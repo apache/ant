@@ -511,7 +511,7 @@ public class PropertyFile extends Task {
         private void checkParameters() throws BuildException {
             if (type == Type.STRING_TYPE
                 && operation == Operation.DECREMENT_OPER) {
-                throw new BuildException("- is not suported for string "
+                throw new BuildException("- is not supported for string "
                     + "properties (key:" + key + ")");
             }
             if (value == null && defaultValue == null) {
@@ -522,7 +522,7 @@ public class PropertyFile extends Task {
                 throw new BuildException("key is mandatory");
             }
             if (type == Type.STRING_TYPE && pattern != null) {
-                throw new BuildException("pattern is not suported for string "
+                throw new BuildException("pattern is not supported for string "
                     + "properties (key:" + key + ")");
             }
         }

@@ -117,14 +117,14 @@ public class ChangeLogTask extends Task {
     /** Output file */
     private File m_destfile;
 
-    /** The earliest date at which to start processing entrys.  */
+    /** The earliest date at which to start processing entries.  */
     private Date m_start;
 
-    /** The latest date at which to stop processing entrys.  */
+    /** The latest date at which to stop processing entries.  */
     private Date m_stop;
 
     /**
-     * Filesets containting list of files against which the cvs log will be
+     * Filesets containing list of files against which the cvs log will be
      * performed. If empty then all files will in the working directory will
      * be checked.
      */
@@ -359,7 +359,7 @@ public class ChangeLogTask extends Task {
     }
 
     /**
-     * Filter the specified entrys accoridn to an appropriate rule.
+     * Filter the specified entries according to an appropriate rule.
      *
      * @param entrySet the entry set to filter
      * @return the filtered entry set
@@ -406,7 +406,7 @@ public class ChangeLogTask extends Task {
      * Print changelog to file specified in task.
      *
      * @param entrySet the entry set to write.
-     * @throws BuildException if theres an error writing changelog.
+     * @throws BuildException if there is an error writing changelog.
      */
     private void writeChangeLog(final CVSEntry[] entrySet)
          throws BuildException {

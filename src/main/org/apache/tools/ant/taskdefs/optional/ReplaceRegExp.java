@@ -79,7 +79,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
  * file.  The input file(s) must be able to be properly processed by
  * a Reader instance.  That is, they must be text only, no binary.
  *
- * The syntax of the regular expression depends on the implemtation that
+ * The syntax of the regular expression depends on the implementation that
  * you choose to use. The system property <code>ant.regexp.regexpimpl</code>
  * will be the classname of the implementation that will be used (the default
  * is <code>org.apache.tools.ant.util.regexp.JakartaOroRegexp</code> and
@@ -218,7 +218,7 @@ public class ReplaceRegExp extends Task {
      * The flags to use when matching the regular expression.  For more
      * information, consult the Perl5 syntax.
      * <ul>
-     *  <li>g : Global replacement.  Replace all occurences found
+     *  <li>g : Global replacement.  Replace all occurrences found
      *  <li>i : Case Insensitive.  Do not consider case in the match
      *  <li>m : Multiline.  Treat the string as multiple lines of input,
      *         using "^" and "$" as the start or end of any line, respectively,
@@ -236,7 +236,7 @@ public class ReplaceRegExp extends Task {
     /**
      * Process the file(s) one line at a time, executing the replacement
      * on one line at a time.  This is useful if you
-     * want to only replace the first occurence of a regular expression on
+     * want to only replace the first occurrence of a regular expression on
      * each line, which is not easy to do when processing the file as a whole.
      * Defaults to <i>false</i>.</td>
      */

@@ -230,7 +230,7 @@ public class CCMCheck extends Continuus {
     public static final String FLAG_COMMENT = "/comment";
 
     /**
-     *  -task flag -- associate checckout task with task
+     *  -task flag -- associate checkout task with task
      */
     public static final String FLAG_TASK = "/task";
 }

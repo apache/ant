@@ -71,7 +71,7 @@ public class Script extends Task {
     /**
      * Do the work.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
         runner.addBeans(getProject().getProperties());

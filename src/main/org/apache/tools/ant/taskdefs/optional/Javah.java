@@ -326,7 +326,7 @@ public class Javah extends Task {
     // we need a way to not use the current classpath.
 
     /**
-     * Peforms a compile using the classic compiler that shipped with
+     * Performs a compile using the classic compiler that shipped with
      * JDK 1.1 and 1.2.
      */
 
@@ -431,7 +431,7 @@ public class Javah extends Task {
 
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
-     * &qout;niceSourceList&quot;
+     * &quot;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         int n = 0;

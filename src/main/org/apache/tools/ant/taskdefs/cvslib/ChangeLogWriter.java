@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,10 +65,10 @@ import java.util.TimeZone;
  * @version $Revision$ $Date$
  */
 class ChangeLogWriter {
-    /** output format for dates writtn to xml file */
+    /** output format for dates written to xml file */
     private static final SimpleDateFormat c_outputDate
         = new SimpleDateFormat("yyyy-MM-dd");
-    /** output format for times writtn to xml file */
+    /** output format for times written to xml file */
     private static final SimpleDateFormat c_outputTime
         = new SimpleDateFormat("HH:mm");
 
@@ -79,7 +79,7 @@ class ChangeLogWriter {
     }
 
     /**
-     * Print out the specifed entrys.
+     * Print out the specified entries.
      *
      * @param output writer to which to send output.
      * @param entries the entries to be written.

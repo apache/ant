@@ -130,7 +130,7 @@ public class Depend extends MatchingTask {
     /**
      * indicates that the dependency relationships should be extended beyond
      * direct dependencies to include all classes. So if A directly affects
-     * B abd B directly affects C, then A indirectly affects C.
+     * B and B directly affects C, then A indirectly affects C.
      */
     private boolean closure = false;
 
@@ -197,7 +197,7 @@ public class Depend extends MatchingTask {
      * Read the dependencies from cache file
      *
      * @return a collection of class dependencies
-     * @exception IOException if the dependnecy file cannot be read
+     * @exception IOException if the dependency file cannot be read
      */
     private Hashtable readCachedDependencies(File depFile) throws IOException {
         Hashtable dependencyMap = new Hashtable();
@@ -472,7 +472,7 @@ public class Depend extends MatchingTask {
     /**
      * Delete all the class files of classes which depend on the given class
      *
-     * @param className the name of the class whose dependent classes willbe
+     * @param className the name of the class whose dependent classes will be
      *      deleted
      * @return the number of class files removed
      */
@@ -761,11 +761,11 @@ public class Depend extends MatchingTask {
      * file vector, including any subdirectories.
      *
      * @param classFileList a list of ClassFileInfo objects for all the
-     *      files in the diretcort tree
-     * @param dir tyhe directory tree to be searched, recursivley, for class
+     *      files in the directory tree
+     * @param dir the directory tree to be searched, recursively, for class
      *      files
      * @param root the root of the source tree. This is used to determine
-     *      the absoluate class name from the relative position in the
+     *      the absolute class name from the relative position in the
      *      source tree
      */
     private void addClassFiles(Vector classFileList, File dir, File root) {

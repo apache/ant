@@ -223,7 +223,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
     }
 
     /**
-     * Read in templates from the stylsheet
+     * Read in templates from the stylesheet
      */
     private void readTemplates()
         throws IOException, TransformerConfigurationException {

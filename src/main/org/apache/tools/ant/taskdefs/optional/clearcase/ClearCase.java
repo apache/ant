@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,7 +76,7 @@ import org.apache.tools.ant.types.Commandline;
  * cleartool.
  * </p>
  *
- * @author Curtis White (Exteneded by Sean P. Kane)
+ * @author Curtis White (Extended by Sean P. Kane)
  */
 public abstract class ClearCase extends Task {
     private String m_ClearToolDir = "";

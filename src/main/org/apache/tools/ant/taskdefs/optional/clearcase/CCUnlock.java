@@ -69,7 +69,7 @@ import org.apache.tools.ant.types.Commandline;
  * Performs a ClearCase Unlock command.
  *
  * <p>
- * The following attributes are interpretted:
+ * The following attributes are interpreted:
  * <table border="1">
  *   <tr>
  *     <th>Attribute</th>

@@ -98,7 +98,7 @@ public class MimeMailer extends Mailer {
     private static final String DEFAULT_CHARSET
         = System.getProperty("file.encoding");
 
-    // To work poperly with national charsets we have to use
+    // To work properly with national charsets we have to use
     // implementation of interface javax.activation.DataSource
     /**
      * @since Ant 1.6
@@ -160,8 +160,8 @@ public class MimeMailer extends Mailer {
             props.put("mail.smtp.host", host);
             props.put("mail.smtp.port", String.valueOf(port));
 
-            // Aside, the JDK is clearly unaware of the scottish
-            // 'session', which //involves excessive quantities of
+            // Aside, the JDK is clearly unaware of the Scottish
+            // 'session', which involves excessive quantities of
             // alcohol :-)
             Session sesh;
             Authenticator auth;
@@ -214,7 +214,7 @@ public class MimeMailer extends Mailer {
                 // Assign/reassign message charset from MimeType
                 message.setCharset(charset);
             } else {
-                // Next: looking if charset having explict definition
+                // Next: looking if charset having explicit definition
                 charset = message.getCharset();
                 if (charset == null) {
                     // Using default

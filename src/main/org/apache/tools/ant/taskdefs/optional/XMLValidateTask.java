@@ -435,7 +435,7 @@ public class XMLValidateTask extends Task {
      * ValidatorErrorHandler role :
      * <ul>
      * <li> log SAX parse exceptions,
-     * <li> remember if an error occured
+     * <li> remember if an error occurred
      * </ul>
      */
     protected class ValidatorErrorHandler implements ErrorHandler {
@@ -467,7 +467,7 @@ public class XMLValidateTask extends Task {
 
         public void warning(SAXParseException exception) {
             // depending on implementation, XMLReader can yield hips of warning,
-            // only output then if user explicitely asked for it
+            // only output then if user explicitly asked for it
             if (warn) {
                 doLog(exception, Project.MSG_WARN);
             }
@@ -538,7 +538,7 @@ public class XMLValidateTask extends Task {
 
         /**
          * Gets the attribute value.
-         * @return the featuree value
+         * @return the feature value
          */
         public boolean getValue() {
             return attributeValue;

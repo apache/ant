@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -102,7 +102,7 @@ public class CvsUser {
     /**
      * Get the user's full name
      *
-     * @return the usre's full name
+     * @return the user's full name
      */
     String getDisplayname() {
         return m_displayName;
@@ -110,7 +110,7 @@ public class CvsUser {
 
 
     /**
-     * validate that this objetc is configured.
+     * validate that this object is configured.
      *
      * @exception BuildException if the instance has not be correctly
      *            configured.

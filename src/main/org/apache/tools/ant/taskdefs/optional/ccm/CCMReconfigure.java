@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * Task allows to reconfigure a project, recurcively or not
+ * Task allows to reconfigure a project, recursively or not
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMReconfigure extends Continuus {

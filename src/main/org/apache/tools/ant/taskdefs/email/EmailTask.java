@@ -254,7 +254,7 @@ public class EmailTask
 
 
     /**
-     * Add a message elemnt
+     * Add a message element
      *
      * @param message The message object
      * @throws BuildException if a message has already been added

@@ -269,7 +269,7 @@ public class Rpm extends Task {
     /**
      * Flag (optional, default=false)
      * to remove the sources after the build.
-     * See the the <tt>--rmsource</tt>  option of rpmbuild.
+     * See the <tt>--rmsource</tt>  option of rpmbuild.
      */
     public void setRemoveSource(boolean rs) {
         removeSource = rs;

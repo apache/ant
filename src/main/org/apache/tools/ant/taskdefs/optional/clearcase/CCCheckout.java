@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ import org.apache.tools.ant.types.Commandline;
  * Performs ClearCase checkout.
  *
  * <p>
- * The following attributes are interpretted:
+ * The following attributes are interpreted:
  * <table border="1">
  *   <tr>
  *     <th>Attribute</th>

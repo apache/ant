@@ -97,9 +97,9 @@ class ChangeLogParser {
     private final Hashtable m_entries = new Hashtable();
 
     /**
-     * Get a list of rcs entrys as an array.
+     * Get a list of rcs entries as an array.
      *
-     * @return a list of rcs entrys as an array
+     * @return a list of rcs entries as an array
      */
     CVSEntry[] getEntrySetAsArray() {
         final CVSEntry[] array = new CVSEntry[ m_entries.size() ];
