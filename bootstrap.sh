@@ -41,7 +41,17 @@ if [ -d "bootstrap" ] ; then
   rm -r bootstrap
 fi
 
-CLASSPATH=lib/crimson.jar:lib/jaxp.jar:lib/optional/junit.jar:${CLASSPATH}
+CLASSPATH=lib/crimson.jar:lib/jaxp.jar:${CLASSPATH}
+
+DIRLIBS=lib/optional/*.jar
+for i in ${DIRLIBS}
+do
+    # if the directory is empty, then it will return the input string
+    # this is stupid, so case for it
+    if [ "$i" != "${DIRLIBS}" ] ; then
+        CLASSPATH=$CLASSPATH:"$i"
+    fi
+done
 
 TOOLS=src/main/org/apache/tools
 CLASSDIR=classes
