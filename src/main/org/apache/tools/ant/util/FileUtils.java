@@ -545,7 +545,7 @@ public class FileUtils {
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
             File parent = getParentFile(destFile);
-            if (!parent.exists()) {
+            if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
 
@@ -1383,7 +1383,7 @@ public class FileUtils {
         }
 
         File parent = getParentFile(to);
-        if (!parent.exists() && !parent.mkdirs()) {
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IOException("Failed to create directory " + parent
                                   + " while trying to rename " + from);
         }
