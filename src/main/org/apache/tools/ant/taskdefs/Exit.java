@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,8 @@ import org.apache.tools.ant.BuildException;
  * if available.
  *
  * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
+ *
+ * @ant:task name="fail" category="control"
  */
 public class Exit extends Task { 
     private String message;
