@@ -8,6 +8,20 @@
   </properties>
 
 <body>
+  <section name="Ant nominated for another award">
+    <h3>Apr 2, 2002: Ant nominated by <em>Software Development</em>
+    magazine for <strong>Jolt Product Excellence and Productivity
+    Awards</strong></h3>
+
+    <p> Ant has been chosen by
+    <a href="http://www.sdmagazine.com/"><em>Software Development</em></a>
+    magazine as a finalist for this year's <strong>Jolt Product Excellence
+    Awards</strong>.  Winners will be announced at their
+    &quot;Software Development West&quot; conference in San Jose
+    on April 24th. 
+    </p>
+  </section>
+
   <section name="Ant has won!">
     <h3>Mar 26, 2002: Ant wins the JavaWorld Editors&apos; Choice
     Award</h3>
