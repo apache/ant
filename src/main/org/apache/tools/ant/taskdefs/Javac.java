@@ -118,7 +118,7 @@ public class Javac extends MatchingTask {
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(String classpath) {
-        compileClasspath = Project.translatePath(classpath);
+        compileClasspath = project.translatePath(classpath);
     }
 
     /**
@@ -126,7 +126,7 @@ public class Javac extends MatchingTask {
      * against.
      */
     public void setBootclasspath(String bootclasspath) {
-        this.bootclasspath = Project.translatePath(bootclasspath);
+        this.bootclasspath = project.translatePath(bootclasspath);
     }
 
     /**
@@ -134,7 +134,7 @@ public class Javac extends MatchingTask {
      * compilation.
      */
     public void setExtdirs(String extdirs) {
-        this.extdirs = Project.translatePath(extdirs);
+        this.extdirs = project.translatePath(extdirs);
     }
 
     /**
@@ -228,7 +228,7 @@ public class Javac extends MatchingTask {
                 String fromFile = (String)enum.nextElement();
                 String toFile = (String)filecopyList.get(fromFile);
                 try {
-                    copyFile(fromFile, toFile);
+                    project.copyFile(fromFile, toFile);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

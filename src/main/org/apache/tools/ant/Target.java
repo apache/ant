@@ -88,12 +88,6 @@ public class Target {
         }
     }
 
-    public void setAttribute(String name, Object value) {
-        if (value instanceof Task) {
-            addTask((Task) value);
-        }
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -115,11 +109,11 @@ public class Target {
     }
 
     public void setCondition(String property) {
-        this.condition = property;
+        this.condition = (property == null) ? "" : property;
     }
 
     public void execute() throws BuildException {
-        if ((this.condition != null) || (this.condition.equals("")) || (project.getProperty(this.condition) != null)) {
+        if (("".equals(this.condition)) || (project.getProperty(this.condition) != null)) {
             Enumeration enum = tasks.elements();
             while (enum.hasMoreElements()) {
                 Task task = (Task) enum.nextElement();

@@ -76,6 +76,7 @@ public class KeySubst extends Task {
         Do the execution.
     */
     public void execute() throws BuildException {
+        project.log("!! KeySubst is deprecated. Use Filter + CopyDir instead. !!");
         project.log("Performing Substitions");
         if ( source == null || dest == null ) {
             project.log("Source and destinations must not be null");

@@ -52,51 +52,30 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
+
+import org.apache.tools.ant.*;
 
 /**
- * Base class for all tasks.
+ * This task set a token filter that is used by the file copy methods
+ * of the project to do token substitution.
+ *
+ * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
- 
-public abstract class Task {
+public class Filter extends Task {
 
-    protected Project project = null;
-    protected Target target = null;
+    private String token;
+    private String value;
 
-    /**
-     * Sets the project object of this task. This method is used by
-     * project when a task is added to it so that the task has
-     * access to the functions of the project. It should not be used
-     * for any other purpose.
-     *
-     * @param project Project in whose scope this task belongs.
-     */
-    void setProject(Project project) {
-        this.project = project;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    /**
-     * Sets the target object of this task.
-     *
-     * @param target Target in whose scope this task belongs.
-     */
-    public void setTarget(Target target) {
-        this.target = target;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    /**
-     * Called by the project to let the task initialize properly. Normally it does nothing.
-     *
-     * @throws BuildException if someting goes wrong with the build
-     */
-    public void init() throws BuildException {}
-
-    /**
-     * Called by the project to let the task do it's work. Normally it does nothing.
-     *
-     * @throws BuildException if someting goes wrong with the build
-     */
-    public void execute() throws BuildException {};
-
+    public void init() throws BuildException {
+        project.addFilter(token, value);
+    }
 }
-

@@ -60,8 +60,8 @@ import java.util.*;
 import java.text.*;
 
 /**
- * Task to convert text source files to local OS formatting conventions, as 
- * well as repair text files damaged by misconfigured or misguided editors or 
+ * Task to convert text source files to local OS formatting conventions, as
+ * well as repair text files damaged by misconfigured or misguided editors or
  * file transfer programs.
  * <p>
  * This task can take the following arguments:
@@ -210,16 +210,16 @@ public class FixCRLF extends MatchingTask {
         if (!srcDir.exists()) {
             throw new BuildException("srcdir does not exist!");
         }
-	if (!srcDir.isDirectory()) {
+        if (!srcDir.isDirectory()) {
             throw new BuildException("srcdir is not a directory!");
         }
         if (destDir != null) {
             if (!destDir.exists()) {
-		throw new BuildException("destdir does not exist!");
+                throw new BuildException("destdir does not exist!");
             }
-	    if (!destDir.isDirectory()) {
-		throw new BuildException("destdir is not a directory!");
-	    }
+            if (!destDir.isDirectory()) {
+                throw new BuildException("destdir is not a directory!");
+            }
         }
 
         // log options used
@@ -231,134 +231,137 @@ public class FixCRLF extends MatchingTask {
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
         String[] files = ds.getIncludedFiles();
-try {
 
-        for (int i = 0; i < files.length; i++) {
-            File srcFile = new File(srcDir, files[i]);
+        try {
+            for (int i = 0; i < files.length; i++) {
+                File srcFile = new File(srcDir, files[i]);
 
-            // read the contents of the file
-            int count = (int)srcFile.length();
-            byte indata[] = new byte[count];
-            try {
-                FileInputStream inStream = new FileInputStream(srcFile);
-                inStream.read(indata);
-                inStream.close();
-            } catch (IOException e) {
-                throw new BuildException(e);
-            }
-
-            // count the number of cr, lf,  and tab characters
-            int cr = 0;
-            int lf = 0;
-            int tab = 0;
-
-            for (int k=0; k<count; k++) {
-                byte c = indata[k];
-                if (c == '\r') cr++;
-                if (c == '\n') lf++;
-                if (c == '\t') tab++;
-            }
-
-            // check for trailing eof
-            boolean eof = ((count>0) && (indata[count-1] == 0x1A));
-
-            // log stats (before fixes)
-            project.log(srcFile + ": size=" + count + " cr=" + cr +
-                        " lf=" + lf + " tab=" + tab + " eof=" + eof,
-                        "fixcrlf", project.MSG_VERBOSE);
-
-            // determine the output buffer size (slightly pessimisticly)
-            int outsize = count;
-            if (addcr  !=  0) outsize-=cr;
-            if (addcr  == +1) outsize+=lf;
-            if (addtab == -1) outsize+=tab*7;
-            if (ctrlz  == +1) outsize+=1;
-
-            // copy the data
-            byte outdata[] = new byte[outsize];
-            int o = 0;    // output offset
-            int line = o; // beginning of line
-            int col = 0;  // desired column
-
-            for (int k=0; k<count; k++) {
-                switch (indata[k]) {
-                    case ' ':
-                        // advance column
-                        if (addtab == 0) outdata[o++]=(byte)' ';
-                        col++;
-                        break;
-
-                    case '\t':
-                        if (addtab == 0) {
-                            // treat like any other character
-                            outdata[o++]=(byte)'\t';
-                            col++;
-                        } else {
-                            // advance column to next tab stop
-                            col = (col|7)+1;
-                        }
-                        break;
-
-                    case '\r':
-                        if (addcr == 0) {
-                            // treat like any other character
-                            outdata[o++]=(byte)'\r';
-                            col++;
-                        }
-                        break;
-
-                    case '\n':
-                        // start a new line (optional CR followed by LF)
-                        if (addcr == +1) outdata[o++]=(byte)'\r';
-                        outdata[o++]=(byte)'\n';
-                        line=o;
-                        col=0;
-                        break;
-
-                    default:
-                        // add tabs if two or more spaces are required
-                        if (addtab>0 && o+1<line+col) {
-                            // determine logical column
-                            int diff=o-line;
-
-                            // add tabs until this column would be passed
-                            // note: the start of line is adjusted to match
-                            while ((diff|7)<col) {
-                                outdata[o++]=(byte)'\t';
-                                line-=7-(diff&7);
-                                diff=o-line;
-                            };
-                        };
-
-                        // space out to desired column
-                        while (o<line+col) outdata[o++]=(byte)' ';
-
-                        // append desired character
-                        outdata[o++]=indata[k];
-                        col++;
+                // read the contents of the file
+                int count = (int)srcFile.length();
+                byte indata[] = new byte[count];
+                try {
+                    FileInputStream inStream = new FileInputStream(srcFile);
+                    inStream.read(indata);
+                    inStream.close();
+                } catch (IOException e) {
+                    throw new BuildException(e);
                 }
-            }
 
-            // add or remove an eof character as required
-            if (ctrlz == +1) {
-                if (outdata[o-1]!=0x1A) outdata[o++]=0x1A;
-            } else if (ctrlz == -1) {
-                if (o>2 && outdata[o-1]==0x0A && outdata[o-2]==0x1A) o--;
-                if (o>1 && outdata[o-1]==0x1A) o--;
-            }
+                // count the number of cr, lf,  and tab characters
+                int cr = 0;
+                int lf = 0;
+                int tab = 0;
 
-            // output the data
-            try {
-                File destFile = srcFile;
-                if (destDir != null) destFile = new File(destDir, files[i]);
-                FileOutputStream outStream = new FileOutputStream(destFile);
-                outStream.write(outdata,0,o);
-                outStream.close();
-            } catch (IOException e) {
-                throw new BuildException(e);
-            }
+                for (int k=0; k<count; k++) {
+                    byte c = indata[k];
+                    if (c == '\r') cr++;
+                    if (c == '\n') lf++;
+                    if (c == '\t') tab++;
+                }
 
-        } /* end for */
-} catch (Exception e) {e.printStackTrace(); throw new BuildException(e); }
+                // check for trailing eof
+                boolean eof = ((count>0) && (indata[count-1] == 0x1A));
+
+                // log stats (before fixes)
+                project.log(srcFile + ": size=" + count + " cr=" + cr +
+                            " lf=" + lf + " tab=" + tab + " eof=" + eof,
+                            "fixcrlf", project.MSG_VERBOSE);
+
+                // determine the output buffer size (slightly pessimisticly)
+                int outsize = count;
+                if (addcr  !=  0) outsize-=cr;
+                if (addcr  == +1) outsize+=lf;
+                if (addtab == -1) outsize+=tab*7;
+                if (ctrlz  == +1) outsize+=1;
+
+                // copy the data
+                byte outdata[] = new byte[outsize];
+                int o = 0;    // output offset
+                int line = o; // beginning of line
+                int col = 0;  // desired column
+
+                for (int k=0; k<count; k++) {
+                    switch (indata[k]) {
+                        case ' ':
+                            // advance column
+                            if (addtab == 0) outdata[o++]=(byte)' ';
+                            col++;
+                            break;
+
+                        case '\t':
+                            if (addtab == 0) {
+                                // treat like any other character
+                                outdata[o++]=(byte)'\t';
+                                col++;
+                            } else {
+                                // advance column to next tab stop
+                                col = (col|7)+1;
+                            }
+                            break;
+
+                        case '\r':
+                            if (addcr == 0) {
+                                // treat like any other character
+                                outdata[o++]=(byte)'\r';
+                                col++;
+                            }
+                            break;
+
+                        case '\n':
+                            // start a new line (optional CR followed by LF)
+                            if (addcr == +1) outdata[o++]=(byte)'\r';
+                            outdata[o++]=(byte)'\n';
+                            line=o;
+                            col=0;
+                            break;
+
+                        default:
+                            // add tabs if two or more spaces are required
+                            if (addtab>0 && o+1<line+col) {
+                                // determine logical column
+                                int diff=o-line;
+
+                                // add tabs until this column would be passed
+                                // note: the start of line is adjusted to match
+                                while ((diff|7)<col) {
+                                    outdata[o++]=(byte)'\t';
+                                    line-=7-(diff&7);
+                                    diff=o-line;
+                                };
+                            };
+
+                            // space out to desired column
+                            while (o<line+col) outdata[o++]=(byte)' ';
+
+                            // append desired character
+                            outdata[o++]=indata[k];
+                            col++;
+                    }
+                }
+
+                // add or remove an eof character as required
+                if (ctrlz == +1) {
+                    if (outdata[o-1]!=0x1A) outdata[o++]=0x1A;
+                } else if (ctrlz == -1) {
+                    if (o>2 && outdata[o-1]==0x0A && outdata[o-2]==0x1A) o--;
+                    if (o>1 && outdata[o-1]==0x1A) o--;
+                }
+
+                // output the data
+                try {
+                    File destFile = srcFile;
+                    if (destDir != null) destFile = new File(destDir, files[i]);
+                    FileOutputStream outStream = new FileOutputStream(destFile);
+                    outStream.write(outdata,0,o);
+                    outStream.close();
+                } catch (IOException e) {
+                    throw new BuildException(e);
+                }
+
+            } /* end for */
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BuildException(e);
+        }
     }
 }

@@ -62,7 +62,7 @@ import java.util.*;
  * This task acts as a loader for java applications but allows to use the same JVM 
  * for the called application thus resulting in much faster operation.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@pache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 public class Java extends Exec {
 
@@ -87,7 +87,7 @@ public class Java extends Exec {
             StringBuffer b = new StringBuffer();
             b.append("java ");
             if (classpath != null) {
-                b.append("-cp ");
+                b.append("-classpath ");
                 b.append(classpath);
                 b.append(" ");
             }
@@ -114,7 +114,7 @@ public class Java extends Exec {
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(String s) {
-        this.classpath = Project.translatePath(s);
+        this.classpath = project.translatePath(s);
     }
     
     /**

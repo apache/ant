@@ -89,6 +89,9 @@ public class Project {
     public static final String JAVA_1_2 = "1.2";
     public static final String JAVA_1_3 = "1.3";
 
+    public static final String TOKEN_START = "@";
+    public static final String TOKEN_END = "@";
+
     private String name;
     private PrintStream out;
     private int msgOutputLevel = MSG_INFO;
@@ -98,6 +101,8 @@ public class Project {
     private String defaultTarget;
     private Hashtable taskClassDefinitions = new Hashtable();
     private Hashtable targets = new Hashtable();
+    private Hashtable filters = new Hashtable();
+    private boolean filtering = false;
     private File baseDir;
 
     public Project(PrintStream out, int msgOutputLevel) {
@@ -114,9 +119,10 @@ public class Project {
             InputStream in = this.getClass().getResourceAsStream(defs);
             props.load(in);
             in.close();
+
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
-                String key = (String)enum.nextElement();
+                String key = (String) enum.nextElement();
                 String value = props.getProperty(key);
                 try {
                     Class taskClass = Class.forName(value);
@@ -127,10 +133,11 @@ public class Project {
             }
 
             Properties systemP = System.getProperties();
-            Enumeration e=systemP.keys();
+            Enumeration e = systemP.keys();
             while (e.hasMoreElements()) {
-                String n=(String) e.nextElement();
-                properties.put(n, systemP.get(n));
+                String name = (String) e.nextElement();
+                String value = (String) systemP.get(name);
+                this.setProperty(name, value);
             }
         } catch (IOException ioe) {
             String msg = "Can't load default task list";
@@ -142,11 +149,11 @@ public class Project {
     public PrintStream getOutput() {
         return this.out;
     }
-    
+
     public int getOutputLevel() {
         return this.msgOutputLevel;
     }
-    
+
     public void log(String msg) {
         log(msg, MSG_INFO);
     }
@@ -167,13 +174,13 @@ public class Project {
         // command line properties take precedence
         if (null != userProperties.get(name))
             return;
-        log("Setting project property: " + name + " to " +
+        log("Setting project property: " + name + " -> " +
             value, MSG_VERBOSE);
         properties.put(name, value);
     }
 
     public void setUserProperty(String name, String value) {
-        log("Setting project property: " + name + " to " +
+        log("Setting project property: " + name + " -> " +
             value, MSG_VERBOSE);
         userProperties.put(name, value);
         properties.put(name, value);
@@ -209,6 +216,18 @@ public class Project {
 
     public String getName() {
         return name;
+    }
+
+    public void addFilter(String token, String value) {
+        if (token == null) return;
+        log("Setting token to filter: " + token + " -> "
+            + value, MSG_VERBOSE);
+        this.filters.put(token, value);
+        this.filtering = true;
+    }
+
+    public Hashtable getFilters() {
+        return filters;
     }
 
     // match basedir attribute in xml
@@ -330,28 +349,29 @@ public class Project {
     public void addOrReplaceTarget(String targetName, Target target) {
         String msg = " +Target: " + targetName;
         log(msg, MSG_VERBOSE);
+        target.setProject(this);
         targets.put(targetName, target);
     }
 
     public Task createTask(String taskType) throws BuildException {
         Class c = (Class)taskClassDefinitions.get(taskType);
-	
+
         // XXX
         // check for nulls, other sanity
 
         try {
             Object o=c.newInstance();
-	    Task task = null;
-	    if( o instanceof Task ) {
-	       task=(Task)o;
-	    } else {
-		// "Generic" Bean - use the setter pattern
-		// and an Adapter
-		TaskAdapter taskA=new TaskAdapter();
-		taskA.setProxy( o );
-		task=taskA;
-	    }
-	    task.setProject(this);
+            Task task = null;
+            if( o instanceof Task ) {
+               task=(Task)o;
+            } else {
+                // "Generic" Bean - use the setter pattern
+                // and an Adapter
+                TaskAdapter taskA=new TaskAdapter();
+                taskA.setProxy( o );
+                task=taskA;
+            }
+            task.setProject(this);
             String msg = "   +Task: " + taskType;
             log (msg, MSG_VERBOSE);
             return task;
@@ -359,7 +379,7 @@ public class Project {
             String msg = "Could not create task of type: "
                  + taskType + " due to " + e;
             throw new BuildException(msg);
-    }
+        }
     }
 
     public void executeTarget(String targetName) throws BuildException {
@@ -455,9 +475,8 @@ public class Project {
         @returns translated string or empty string if to_process is null or empty
         @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
     */
-    public static String translatePath(String to_process) {
-        if ( to_process == null || to_process.length() == 0 )
-            return "";
+    public String translatePath(String to_process) {
+        if ( to_process == null || to_process.length() == 0 ) return "";
 
         StringBuffer bs = new StringBuffer(to_process.length() + 50);
         StringCharacterIterator sci = new StringCharacterIterator(to_process);
@@ -485,14 +504,126 @@ public class Project {
         return(bs.toString());
     }
 
-    // returns the boolean equivalent of a string, which is considered true
-    // if either "on", "true", or "yes" is found, case insensitiveness.
+    /**
+     * Convienence method to copy a file from a source to a destination
+     * using token filtering.
+     *
+     * @throws IOException
+     */
+    public void copyFile(String sourceFile, String destFile)
+        throws IOException
+    {
+        copyFile(new File(sourceFile), new File(destFile));
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a destination
+     * specifying if token filtering must be used.
+     *
+     * @throws IOException
+     */
+    public void copyFile(File sourceFile, File destFile)
+        throws IOException
+    {
+
+        if (destFile.lastModified() < sourceFile.lastModified()) {
+            log("Copy: " + sourceFile.getAbsolutePath() + " > "
+                    + destFile.getAbsolutePath(), MSG_VERBOSE);
+
+            // ensure that parent dir of dest file exists!
+            // not using getParentFile method to stay 1.1 compat
+            File parent = new File(destFile.getParent());
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+
+            if (filtering) {
+                BufferedReader in = new BufferedReader(new FileReader(sourceFile));
+                BufferedWriter out = new BufferedWriter(new FileWriter(destFile));
+
+                int length;
+                String newline = null;
+                String line = in.readLine();
+                while (line != null) {
+                    if (line.length() == 0) {
+                        out.newLine();
+                    } else {
+                        newline = replace(line, filters);
+                        out.write(newline);
+                        out.newLine();
+                    }
+                    line = in.readLine();
+                }
+
+                out.close();
+                in.close();
+            } else {
+                FileInputStream in = new FileInputStream(sourceFile);
+                FileOutputStream out = new FileOutputStream(destFile);
+
+                byte[] buffer = new byte[8 * 1024];
+                int count = 0;
+                do {
+                    out.write(buffer, 0, count);
+                    count = in.read(buffer, 0, buffer.length);
+                } while (count != -1);
+
+                in.close();
+                out.close();
+            }
+        }
+    }
+
+    /**
+     * Does replacement on the given string using the given token table.
+     *
+     * @returns the string with the token replaced.
+     */
+    private String replace(String s, Hashtable tokens) {
+        int index = s.indexOf(TOKEN_START);
+
+        if (index > -1) {
+            try {
+                StringBuffer b = new StringBuffer();
+                int i = 0;
+                String token = null;
+                String value = null;
+
+                do {
+                    token = s.substring(index + TOKEN_START.length(), s.indexOf(TOKEN_END, index + TOKEN_START.length() + 1));
+                    b.append(s.substring(i, index));
+                    if (tokens.containsKey(token)) {
+                        value = (String) tokens.get(token);
+                        log("Replacing: " + TOKEN_START + token + TOKEN_END + " -> " + value, MSG_VERBOSE);
+                        b.append(value);
+                    } else {
+                        b.append(TOKEN_START);
+                        b.append(token);
+                        b.append(TOKEN_END);
+                    }
+                    i = index + TOKEN_START.length() + token.length() + TOKEN_END.length();
+                } while ((index = s.indexOf(TOKEN_START, i)) > -1);
+
+                b.append(s.substring(i));
+                return b.toString();
+            } catch (StringIndexOutOfBoundsException e) {
+                return s;
+            }
+        } else {
+            return s;
+        }
+    }
+
+    /**
+     * returns the boolean equivalent of a string, which is considered true
+     * if either "on", "true", or "yes" is found, ignoring case.
+     */
     public static boolean toBoolean(String s) {
-        return (s.equalsIgnoreCase("on") || 
-                s.equalsIgnoreCase("true") || 
+        return (s.equalsIgnoreCase("on") ||
+                s.equalsIgnoreCase("true") ||
                 s.equalsIgnoreCase("yes"));
     }
-    
+
     // Given a string defining a target name, and a Hashtable
     // containing the "name to Target" mapping, pick out the
     // Target and execute it.
@@ -506,7 +637,6 @@ public class Project {
         log("Executing Target: "+target, MSG_INFO);
         t.execute();
     }
-
 
     /**
      * Topologically sort a set of Targets.

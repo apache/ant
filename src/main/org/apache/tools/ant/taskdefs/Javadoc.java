@@ -160,10 +160,10 @@ public class Javadoc extends Exec {
         old = Project.toBoolean(src);
     }
     public void setClasspath(String src) {
-        classpath = Project.translatePath(src);
+        classpath = project.translatePath(src);
     }
     public void setBootclasspath(String src) {
-        bootclasspath = Project.translatePath(src);
+        bootclasspath = project.translatePath(src);
     }
     public void setExtdirs(String src) {
         extdirs = src;

@@ -97,10 +97,10 @@ public class Copydir extends MatchingTask {
                         + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
             while (enum.hasMoreElements()) {
-                String fromFile = (String)enum.nextElement();
-                String toFile = (String)filecopyList.get(fromFile);
+                String fromFile = (String) enum.nextElement();
+                String toFile = (String) filecopyList.get(fromFile);
                 try {
-                    copyFile(fromFile, toFile);
+                    project.copyFile(fromFile, toFile);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

@@ -103,7 +103,7 @@ public class Rmic extends Task {
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(String classpath) {
-        compileClasspath = Project.translatePath(classpath);
+        compileClasspath = project.translatePath(classpath);
     }
 
     public void execute() throws BuildException {
@@ -144,7 +144,7 @@ public class Rmic extends Task {
             File oldStubFile = new File(baseFile, stubFileName);
             File newStubFile = new File(sourceBaseFile, stubFileName);
             try {
-                copyFile(oldStubFile, newStubFile);
+                project.copyFile(oldStubFile, newStubFile);
                 oldStubFile.delete();
             } catch (IOException ioe) {
                 String msg = "Failed to copy " + oldStubFile + " to " + 
@@ -156,7 +156,7 @@ public class Rmic extends Task {
                 File oldSkelFile = new File(baseFile, skelFileName);
                 File newSkelFile = new File(sourceBaseFile, skelFileName);
                 try {
-            	    copyFile(oldSkelFile, newSkelFile);
+            	    project.copyFile(oldSkelFile, newSkelFile);
             	    oldSkelFile.delete();
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + oldSkelFile + " to " + 

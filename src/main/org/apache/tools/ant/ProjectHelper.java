@@ -227,6 +227,7 @@ public class ProjectHelper {
                     NamedNodeMap nodeMap = element.getAttributes();
                     configureTask(project, task, nodeMap);
                     task.init();
+                    task.setTarget(target);
                     target.addTask(task);
                 }
             }

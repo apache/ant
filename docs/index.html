@@ -11,12 +11,14 @@
 <p>by</p>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
-  <li>James Duncan Davison (<a href="mailto:(duncan@x180.com">duncan@x180.com</a>)</li>
-  <li>Arnout J. Kuiper (<a href="mailto:(ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
-  <li>Stefano Mazzocchi (<a href="mailto:(stefano@apache.org">stefano@apache.org</a>)</li>
-  <li>Sam Ruby (<a href="mailto:(rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
+  <li>James Duncan Davison (<a href="mailto:duncan@x180.com">duncan@x180.com</a>)</li>
+  <li>Arnout J. Kuiper (<a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
+  <li>Stefano Mazzocchi (<a href="mailto:stefano@apache.org">stefano@apache.org</a>)</li>
+  <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
 </ul>
-<p>Version 1.0.5 - 2000/02/12</p>
+
+<p>Version 1.0.6 - 2000/02/13</p>
+
 <hr>
 <h2>Table of Contents</h2>
 <ul>
@@ -296,6 +298,22 @@ task attributes. This is done by placing the property name between
 <p>If there is a property called &quot;builddir&quot; with the value
 &quot;build&quot;, then this could be used in an attribute like this: &quot;${builddir}/classes&quot;.
 This is resolved as &quot;build/classes&quot;.</p>
+<h3>Token Filters</h3>
+<p>A project can have a set of tokens that will be automatically expanded if
+found when a file is copied. These might be set in the buildfile
+by the <a href="#filter">filter task</a>. If no filter task is specified, all
+file copying works normally and the files are not modified during the copy in
+any way. Otherwise, if a filter is set, the files will be <i>filtered</i> and
+each occurrency of the specified token will be replaced.</p>
+<p>Since this can be a very harmful behavior, the tokens in the files <b>must</b>
+be of the form<i> @token@</i> where <i>token</i> is the token name that is set
+in the filter task. This token syntax matches the syntax of other build systems
+that perform such filtering and remains sufficiently orthogonal to most
+programming and scripting languages, as well with documentation systems.</p>
+<p>Note: in case a token with the format @token@ if found in a file but no
+filter is associated with that token, no changes take place. So, no escaping
+method is present, but as long as you choose appropriate names for your tokens,
+this should not cause problems.</p>
 <h3>Examples</h3>
 <blockquote>
   <pre>&lt;project name=&quot;foo&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
@@ -303,6 +321,8 @@ This is resolved as &quot;build/classes&quot;.</p>
     &lt;tstamp/&gt;
     &lt;property name=&quot;build&quot; value=&quot;build&quot; /&gt;
     &lt;property name=&quot;dist&quot;  value=&quot;dist&quot; /&gt;
+    &lt;filter token=&quot;version&quot; value=&quot;1.0.3&quot; /&gt;
+    &lt;filter token=&quot;year&quot; value=&quot;2000&quot; /&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;prepare&quot; depends=&quot;init&quot;&gt;
@@ -429,6 +449,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
   <li><a href="#echo">Echo</a></li>
   <li><a href="#exec">Exec</a></li>
   <li><a href="#expand">Expand</a></li>
+  <li><a href="#filter">Filter</a></li>
   <li><a href="#get">Get</a></li>
   <li><a href="#gzip">GZip</a></li>
   <li><a href="#fixcrlf">FixCRLF</a></li>
@@ -842,6 +863,37 @@ systems.</p>
   /&gt;</code></p>
 </blockquote>
 <hr>
+<h2><a name="filter">Filter</a></h2>
+<h3>Description</h3>
+<p>Sets a token filter for this project. Token filters are used by all tasks
+that perform file copying operations through the Project commodity methods.</p>
+<p>Note: the token string must not contain the separators chars (@).</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">token</td>
+    <td valign="top">the token string without @</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the string that should be put to replace the token when the
+      file is copied</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot; /&gt;
+  &lt;copydir src=&quot;${src.dir}&quot; dest=&quot;${dest.dir}&quot;/&gt;</pre>
+<p>will copy recursively all the files from the <i>src.dir</i> directory into
+the <i>dest.dir</i> directory replacing all the occurencies of the string <i>@year@</i>
+with <i>2000.</i></p>
+<hr>
 <h2><a name="get">Get</a></h2>
 <h3>Description</h3>
 <p>Gets a file from an URL. When the verbose option is &quot;on&quot;, this task
@@ -957,7 +1009,7 @@ archive with http/ftp.</p>
   </tr>
   <tr>
     <td valign="top">tab</td>
-    <td valign="top">Specifies how tab characters are to be handled.  Valid 
+    <td valign="top">Specifies how tab characters are to be handled.  Valid
       values for this property are:
       <ul>
       <li>add: convert sequences of spaces which span a tab stop to tabs
@@ -973,10 +1025,10 @@ archive with http/ftp.</p>
   </tr>
   <tr>
     <td valign="top">eof</td>
-    <td valign="top">Specifies how DOS end of file (control-Z) characters are 
+    <td valign="top">Specifies how DOS end of file (control-Z) characters are
       to be handled.  Valid values for this property are:
       <ul>
-      <li>add: ensure that there is an EOF character at the end of the file 
+      <li>add: ensure that there is an EOF character at the end of the file
       <li>asis: leave EOF characters alone
       <li>remove: remove any EOF character found at the end
       </ul>
@@ -993,13 +1045,13 @@ archive with http/ftp.</p>
        includes=&quot;**/*.sh&quot;
   /&gt;</pre>
 <p>Removes carriage return and eof characters from the shell scripts.  Tabs and
-spaces are left as is. 
+spaces are left as is.
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
        cr="add"
        includes=&quot;**/*.bat&quot;
   /&gt;</pre>
 <p>Ensures that there are carriage return characters prior to evey line feed.
-Tabs and spaces are left as is.  
+Tabs and spaces are left as is.
 EOF characters are left alone if run on
 DOS systems, and are removed if run on Unix systems.</p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
@@ -1007,7 +1059,7 @@ DOS systems, and are removed if run on Unix systems.</p>
        includes=&quot;**/Makefile&quot;
   /&gt;</pre>
 <p>Adds or removes CR characters to match local OS conventions, and
-converts spaces to tabs when appropriate.  EOF characters are left alone if 
+converts spaces to tabs when appropriate.  EOF characters are left alone if
 run on DOS systems, and are removed if run on Unix systems.
 Many versions of make require tabs prior to commands.</p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
