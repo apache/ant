@@ -351,13 +351,21 @@ public class Main {
              propertyFileIndex++) {
             String filename = (String) propertyFiles.elementAt(propertyFileIndex);
             Properties props = new Properties();
+            FileInputStream fis = null;
             try {
-                FileInputStream fis = new FileInputStream(filename);
+                fis = new FileInputStream(filename);
                 props.load(fis);
             }
             catch (IOException e) {
                 System.out.println("Could not load property file "
                    + filename + ": " + e.getMessage());
+            } finally {
+                if (fis != null){
+                    try {
+                        fis.close();
+                    } catch (IOException e){
+                }
+              }
             }
             
             // ensure that -D properties take precedence
