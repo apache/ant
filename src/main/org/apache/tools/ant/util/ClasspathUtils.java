@@ -156,13 +156,13 @@ public class ClasspathUtils {
      * 'ant.reuse.loader' this will try to reuse the perviously
      * created loader with that id, and of course store it there upon
      * creation.</p>
-     * @param path Path object to be used as classpath for this classloader
-     * @param loaderId identification for this Loader,
+     * @param path          Path object to be used as classpath for this classloader
+     * @param loaderId      identification for this Loader,
      * @param reverseLoader if set to true this new loader will take
-     * precedence over it's parent (which is contra the regular
-     * @param p Ant Project where the handled components are living in.
-     * classloader behaviour)
-     * @return ClassLoader that uses the Path as its classpath.
+     *                      precedence over it's parent (which is contra the regular
+     *                      classloader behaviour)
+     * @param p             Ant Project where the handled components are living in.
+     * @return              ClassLoader that uses the Path as its classpath.
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Path path, String loaderId, boolean reverseLoader,
@@ -205,9 +205,7 @@ public class ClasspathUtils {
         Project p,
         Path path,
         boolean reverseLoader) {
-
-        AntClassLoader acl = p.createClassLoader(path != null
-                                                 ? path : Path.systemClasspath);
+        AntClassLoader acl = p.createClassLoader(path);
         if (reverseLoader) {
             acl.setParentFirst(false);
             acl.addJavaLibraries();
