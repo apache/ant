@@ -42,6 +42,8 @@ Other changes:
 --------------
 * Shipped XML parser is now Xerces-J 2.6.1
 
+* License is now Apache Software License 2.0
+
 * Translate task logs a debug message specifying the number of files
   that it processed.  Bugzilla Report 13938.
 
