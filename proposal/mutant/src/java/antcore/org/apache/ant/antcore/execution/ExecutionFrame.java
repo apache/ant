@@ -240,14 +240,12 @@ public class ExecutionFrame {
      */
     protected void setInitialProperties(Map properties)
          throws ExecutionException {
-        if (properties == null) {
-            return;
+        if (properties != null) {
+            addProperties(properties);
         }
-        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
-            String name = (String)i.next();
-            Object value = properties.get(name);
-            setDataValue(name, value, false);
-        }
+
+        // add in system properties
+        addProperties(System.getProperties());
     }
 
     /**
@@ -414,6 +412,21 @@ public class ExecutionFrame {
     }
 
     /**
+     * Add a collection of properties to this frame
+     *
+     * @param properties the collection of property values, indexed by their
+     *      names
+     * @exception ExecutionException if the frame cannot be created.
+     */
+    protected void addProperties(Map properties) throws ExecutionException {
+        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+            String name = (String)i.next();
+            Object value = properties.get(name);
+            setDataValue(name, value, false);
+        }
+    }
+
+    /**
      * Create a new frame for a given project
      *
      * @param project the project model the frame will deal with
@@ -567,8 +580,11 @@ public class ExecutionFrame {
                 failureCause = e;
                 throw e;
             } catch (RuntimeException e) {
-                failureCause = e;
-                throw e;
+                ExecutionException ee =
+                    new ExecutionException(e.getClass().getName() + ": "
+                     + e.getMessage(), e, model.getLocation());
+                failureCause = ee;
+                throw ee;
             } finally {
                 eventSupport.fireTaskFinished(model, failureCause);
             }
@@ -597,8 +613,11 @@ public class ExecutionFrame {
             failureCause = e;
             throw e;
         } catch (RuntimeException e) {
-            failureCause = e;
-            throw e;
+            ExecutionException ee =
+                new ExecutionException(e.getClass().getName() + ": "
+                 + e.getMessage(), e, target.getLocation());
+            failureCause = ee;
+            throw ee;
         } finally {
             eventSupport.fireTargetFinished(target, failureCause);
         }
@@ -722,9 +741,12 @@ public class ExecutionFrame {
      *
      * @param element the object to be configured
      * @param model the BuildElement describing the object in the build file
+     * @param factory Ant Library factory associated with the element being
+     *      configured
      * @exception ExecutionException if the element cannot be configured
      */
-    private void configureElement(Object element, BuildElement model)
+    private void configureElement(AntLibFactory factory, Object element,
+                                  BuildElement model)
          throws ExecutionException {
 
         Reflector reflector = getReflector(element.getClass());
@@ -770,9 +792,11 @@ public class ExecutionFrame {
                 container.addTask(nestedContext.getTask());
             } else {
                 if (reflector.supportsNestedAdder(nestedElementName)) {
-                    addNestedElement(reflector, element, nestedElementModel);
+                    addNestedElement(factory, reflector, element,
+                        nestedElementModel);
                 } else if (reflector.supportsNestedCreator(nestedElementName)) {
-                    createNestedElement(reflector, element, nestedElementModel);
+                    createNestedElement(factory, reflector, element,
+                        nestedElementModel);
                 } else {
                     throw new ExecutionException(model.getType()
                          + " does not support the \"" + nestedElementName
@@ -791,34 +815,41 @@ public class ExecutionFrame {
      * @param element the container object for which a nested element is
      *      required.
      * @param model the build model for the nestd element
+     * @param factory Ant Library factory associated with the element
+     *      creating the nested element
      * @exception ExecutionException if the nested element cannot be
      *      created.
      */
-    private void createNestedElement(Reflector reflector, Object element,
-                                     BuildElement model)
+    private void createNestedElement(AntLibFactory factory, Reflector reflector,
+                                     Object element, BuildElement model)
          throws ExecutionException {
         log("The use of create methods is deprecated - class: "
              + element.getClass().getName(), MessageLevel.MSG_INFO);
 
         String nestedElementName = model.getType();
-        Object nestedElement
-             = reflector.createElement(element, nestedElementName);
         try {
+            Object nestedElement
+                 = reflector.createElement(element, nestedElementName);
+            factory.registerCreatedElement(nestedElement);
             if (nestedElement instanceof ExecutionComponent) {
+                System.out.println("element is an execution component");
                 ExecutionComponent component
                      = (ExecutionComponent)nestedElement;
                 ExecutionContext context
                      = new ExecutionContext(this);
                 context.setModelElement(model);
                 component.init(context);
-                configureElement(nestedElement, model);
+                configureElement(factory, nestedElement, model);
                 component.validateComponent();
             } else {
-                configureElement(nestedElement, model);
+                configureElement(factory, nestedElement, model);
             }
         } catch (ExecutionException e) {
             e.setLocation(model.getLocation(), false);
             throw e;
+        } catch (RuntimeException e) {
+            throw new ExecutionException(e.getClass().getName() + ": "
+                 + e.getMessage(), e, model.getLocation());
         }
     }
 
@@ -830,10 +861,12 @@ public class ExecutionFrame {
      * @param element the container element in which the nested element will
      *      be created
      * @param model the model of the nested element
+     * @param factory Ant Library factory associated with the element to
+     *      which the attribute is to be added.
      * @exception ExecutionException if the nested element cannot be created
      */
-    private void addNestedElement(Reflector reflector, Object element,
-                                  BuildElement model)
+    private void addNestedElement(AntLibFactory factory, Reflector reflector,
+                                  Object element, BuildElement model)
          throws ExecutionException {
 
         String nestedElementName = model.getType();
@@ -880,7 +913,7 @@ public class ExecutionFrame {
                     model.getLocation());
             }
 
-            typeInstance = createTypeInstance(nestedType, null, model);
+            typeInstance = createTypeInstance(nestedType, factory, model);
         }
 
         // is the typeInstance compatible with the type expected
@@ -944,7 +977,7 @@ public class ExecutionFrame {
             ClassLoader currentLoader = setContextLoader(taskClassLoader);
             TaskContext taskContext = new TaskContext(this);
             taskContext.init(taskClassLoader, task, model);
-            configureElement(element, model);
+            configureElement(libFactory, element, model);
             task.validateComponent();
             setContextLoader(currentLoader);
             return taskContext;
@@ -967,6 +1000,9 @@ public class ExecutionFrame {
         } catch (ExecutionException e) {
             e.setLocation(model.getLocation(), false);
             throw e;
+        } catch (RuntimeException e) {
+            throw new ExecutionException(e.getClass().getName() + ": "
+                 + e.getMessage(), e, model.getLocation());
         }
     }
 
@@ -1031,12 +1067,7 @@ public class ExecutionFrame {
                                       BuildElement model)
          throws ExecutionException {
         try {
-            Object typeInstance = null;
-            if (libFactory == null) {
-                typeInstance = typeClass.newInstance();
-            } else {
-                typeInstance = libFactory.createTypeInstance(typeClass);
-            }
+            Object typeInstance = libFactory.createTypeInstance(typeClass);
 
             if (typeInstance instanceof ExecutionComponent) {
                 ExecutionComponent component = (ExecutionComponent)typeInstance;
@@ -1044,10 +1075,10 @@ public class ExecutionFrame {
                      = new ExecutionContext(this);
                 context.setModelElement(model);
                 component.init(context);
-                configureElement(typeInstance, model);
+                configureElement(libFactory, typeInstance, model);
                 component.validateComponent();
             } else {
-                configureElement(typeInstance, model);
+                configureElement(libFactory, typeInstance, model);
             }
             return typeInstance;
         } catch (InstantiationException e) {
@@ -1061,6 +1092,9 @@ public class ExecutionFrame {
         } catch (ExecutionException e) {
             e.setLocation(model.getLocation(), false);
             throw e;
+        } catch (RuntimeException e) {
+            throw new ExecutionException(e.getClass().getName() + ": "
+                 + e.getMessage(), e, model.getLocation());
         }
     }
 }

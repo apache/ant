@@ -112,5 +112,18 @@ public interface AntLibFactory {
     Converter createConverter(Class converterClass)
          throws InstantiationException, IllegalAccessException,
         ExecutionException;
+
+
+    /**
+     * Register an element which has been created as the result of calling a
+     * create method.
+     *
+     * @param createdElement the element that the component created
+     * @exception ExecutionException if there is a problem registering the
+     *      element
+     */
+    void registerCreatedElement(Object createdElement)
+         throws ExecutionException;
+
 }
 

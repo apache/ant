@@ -145,8 +145,14 @@
   <taskdef name="xmlvalidate" classname="org.apache.tools.ant.taskdefs.optional.XMLValidateTask"/>
   <taskdef name="zip" classname="org.apache.tools.ant.taskdefs.Zip"/>
 
-  <typedef name="patternset" classname="org.apache.tools.ant.types.PatternSet"/>
-  <typedef name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
   <typedef name="path" classname="org.apache.tools.ant.types.Path"/>
-
+  <typedef name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
+  <typedef name="filelist" classname="org.apache.tools.ant.types.FileList"/>
+  <typedef name="patternset" classname="org.apache.tools.ant.types.PatternSet"/>
+  <typedef name="mapper" classname="org.apache.tools.ant.types.Mapper"/>
+  <typedef name="filterset" classname="org.apache.tools.ant.types.FilterSet"/>
+  <typedef name="description" classname="org.apache.tools.ant.types.Description"/>
+  <typedef name="classfileset" classname="org.apache.tools.ant.types.optional.depend.ClassfileSet"/>
+  <typedef name="substitution" classname="org.apache.tools.ant.types.Substitution"/>
+  <typedef name="regularexpression" classname="org.apache.tools.ant.types.RegularExpression"/>
 </antlib>

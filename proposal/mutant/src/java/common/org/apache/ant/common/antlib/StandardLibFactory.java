@@ -118,5 +118,19 @@ public class StandardLibFactory implements AntLibFactory {
         ExecutionException {
         return (Converter)converterClass.newInstance();
     }
+
+    /**
+     * Register an element which has been created as the result of calling a
+     * create method.
+     *
+     * @param createdElement the element that the component created
+     * @exception ExecutionException if there is a problem registering the
+     *      element
+     */
+    public void registerCreatedElement(Object createdElement)
+         throws ExecutionException {
+        // do nothing
+    }
+
 }
 

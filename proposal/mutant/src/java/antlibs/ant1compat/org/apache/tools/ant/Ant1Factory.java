@@ -185,5 +185,21 @@ public class Ant1Factory extends StandardLibFactory {
                  + "constructor for converter " + converterClass.getName(), e);
         }
     }
+
+    /**
+     * Register an element which has been created as the result of calling a
+     * create method.
+     *
+     * @param createdElement the element that the component created
+     * @exception ExecutionException if there is a problem registering the
+     *      element
+     */
+    public void registerCreatedElement(Object createdElement)
+         throws ExecutionException {
+        if (createdElement instanceof ProjectComponent) {
+            ProjectComponent component = (ProjectComponent)createdElement;
+            component.setProject(project);
+        }
+    }
 }
 
