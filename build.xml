@@ -841,7 +841,8 @@
   <target name="run-tests" depends="dump-info,compile-tests" if="junit.present">
 
 
-    <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
+    <junit printsummary="no" haltonfailure="yes" 
+           fork="${junit.fork}">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
 

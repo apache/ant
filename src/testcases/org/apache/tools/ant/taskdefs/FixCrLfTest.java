@@ -58,6 +58,7 @@ import java.io.*;
 
 import junit.framework.AssertionFailedError;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
 
 /**
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
@@ -161,6 +162,10 @@ public class FixCrLfTest extends BuildFileTest {
     }
 
     public void testEncoding() throws IOException { 
+        if (project.getJavaVersion() == Project.JAVA_1_1) {
+            // UTF16 is not supported in JDK 1.1
+            return;
+        }
         executeTarget("testEncoding");
         assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/input.lf.utf16"),
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/input.crlf.utf16"));
