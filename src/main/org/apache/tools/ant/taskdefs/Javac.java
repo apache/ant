@@ -291,14 +291,7 @@ public class Javac extends MatchingTask {
             throw new BuildException("srcdir attribute must be set!", location);
         }
         
-        
-        if (destDir == null) {
-            destDir = project.resolveFile(list[0]);
-            log("destdir set to "+destDir.getPath()+" from srcdir attribute", 
-                Project.MSG_INFO);
-        }
-
-        if (!destDir.isDirectory()) {
+        if (destDir != null && !destDir.isDirectory()) {
             throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", location);
         }
 
@@ -315,7 +308,7 @@ public class Javac extends MatchingTask {
 
             String[] files = ds.getIncludedFiles();
 
-            scanDir(srcDir, destDir, files);
+            scanDir(srcDir, destDir != null ? destDir : srcDir, files);
         }
         
         // compile the source files
@@ -333,7 +326,7 @@ public class Javac extends MatchingTask {
             log("Compiling " + compileList.size() + 
                 " source file"
                 + (compileList.size() == 1 ? "" : "s")
-                + " to " + destDir);
+                + (destDir != null ? " to " + destDir : ""));
 
             if (compiler.equalsIgnoreCase("classic")) {
                 doClassicCompile();
@@ -407,7 +400,9 @@ public class Javac extends MatchingTask {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
-        classpath.setLocation(destDir);
+        if (destDir != null) {
+            classpath.setLocation(destDir);
+        }
 
         // add our classpath to the mix
 
@@ -542,8 +537,11 @@ public class Javac extends MatchingTask {
             cmd.createArgument().setValue("-deprecation");
         }
 
-        cmd.createArgument().setValue("-d");
-        cmd.createArgument().setFile(destDir);
+        if (destDir != null) {
+            cmd.createArgument().setValue("-d");
+            cmd.createArgument().setFile(destDir);
+        }
+        
         cmd.createArgument().setValue("-classpath");
         // Just add "sourcepath" to classpath ( for JDK1.1 )
         if (Project.getJavaVersion().startsWith("1.1")) {
@@ -669,8 +667,11 @@ public class Javac extends MatchingTask {
         if (deprecation == true)
             cmd.createArgument().setValue("-deprecation");
 
-        cmd.createArgument().setValue("-d");
-        cmd.createArgument().setFile(destDir);
+        if (destDir != null) {
+            cmd.createArgument().setValue("-d");
+            cmd.createArgument().setFile(destDir);
+        }
+        
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 
@@ -853,8 +854,11 @@ public class Javac extends MatchingTask {
         Commandline cmd = new Commandline();
         cmd.setExecutable("jvc");
 
-        cmd.createArgument().setValue("/d");
-        cmd.createArgument().setFile(destDir);
+        if (destDir != null) {
+            cmd.createArgument().setValue("/d");
+            cmd.createArgument().setFile(destDir);
+        }
+        
         // Add the Classpath before the "internal" one.
         cmd.createArgument().setValue("/cp:p");
         cmd.createArgument().setPath(classpath);
