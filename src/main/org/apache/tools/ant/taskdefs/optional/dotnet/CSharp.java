@@ -156,6 +156,7 @@ import org.apache.tools.ant.types.Path;
  *@author      Steve Loughran steve_l@iseran.com
  *@version     0.5
  *@ant.task    name="csc" category="dotnet"
+ * @since Ant 1.3
  */
 
 public class CSharp
@@ -854,7 +855,7 @@ public class CSharp
      *
      *@param  enabled  The new noConfig value
      */
-    protected void setNoConfig(boolean enabled) {
+    public void setNoConfig(boolean enabled) {
         noconfig = enabled;
     }
 
