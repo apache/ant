@@ -218,13 +218,13 @@ public class Library implements EnabledLibraryElement {
      */
     public void validate() {
         faultIfEmpty(project, ERROR_NO_PROJECT);
-        if(archive==null) {
+        if (archive == null) {
             //adopt the name of the project if no archive is specced
-            archive=project;
+            archive = project;
         }
         faultIfEmpty(version, ERROR_NO_VERSION);
-        if(suffix==null) {
-            suffix="";
+        if (suffix == null) {
+            suffix = "";
         }
     }
 
@@ -250,7 +250,7 @@ public class Library implements EnabledLibraryElement {
     public void bind(File baseDir, boolean flatten) {
         validate();
         if (destinationName == null) {
-            if(flatten) {
+            if (flatten) {
                 destinationName = getNormalFilename();
             } else {
                 destinationName = getMavenPath('/');
