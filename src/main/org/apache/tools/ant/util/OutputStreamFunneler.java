@@ -31,7 +31,7 @@ public class OutputStreamFunneler {
 
     /**
      * Default timeout.
-     * @see #setTimeout()
+     * @see #setTimeout(long)
      */
     public static final long DEFAULT_TIMEOUT_MILLIS = 1000;
 
@@ -97,7 +97,7 @@ public class OutputStreamFunneler {
      * specified timeout value.
      * @param out             <CODE>OutputStream</CODE>.
      * @param timeoutMillis   <CODE>long</CODE>.
-     * @see #setTimeout()
+     * @see #setTimeout(long)
      */
     public OutputStreamFunneler(OutputStream out, long timeoutMillis) {
         if (out == null) {

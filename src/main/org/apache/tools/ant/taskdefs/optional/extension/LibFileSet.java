@@ -63,7 +63,6 @@ public class LibFileSet
      * Defaults to false.
      *
      * @param includeURL the flag
-     * @see #includeURL
      */
     public void setIncludeUrl(boolean includeURL) {
         this.includeURL = includeURL;
@@ -75,7 +74,6 @@ public class LibFileSet
      * Defaults to false.
      *
      * @param includeImpl the flag
-     * @see #includeImpl
      */
     public void setIncludeImpl(boolean includeImpl) {
         this.includeImpl = includeImpl;
@@ -85,7 +83,6 @@ public class LibFileSet
      * Set the url base for fileset.
      *
      * @param urlBase the base url
-     * @see #urlBase
      */
     public void setUrlBase(String urlBase) {
         this.urlBase = urlBase;

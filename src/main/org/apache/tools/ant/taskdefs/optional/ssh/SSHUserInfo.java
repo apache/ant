@@ -42,35 +42,42 @@ public class SSHUserInfo implements UserInfo {
     }
 
     /**
-     * @see com.jcraft.jsch.UserInfo#getName()
+     * Gets the user name.
+     * @return the user name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @see com.jcraft.jsch.UserInfo#getPassphrase(String)
+     * Gets the pass phrase of the user.
+     * @param message a message
+     * @return the passphrase
      */
     public String getPassphrase(String message) {
         return passphrase;
     }
 
     /**
-     * @see com.jcraft.jsch.UserInfo#getPassword()
+     * Gets the user's password.
+     * @return the user's password
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * @see com.jcraft.jsch.UserInfo#prompt(String)
+     * Prompts a string.
+     * @param str the string
+     * @return whether the string was prompted
      */
     public boolean prompt(String str) {
         return false;
     }
 
     /**
-     * @see com.jcraft.jsch.UserInfo#retry()
+     * Indicates whether a retry was done.
+     * @return whether a retry was done
      */
     public boolean retry() {
         return false;
@@ -139,16 +146,10 @@ public class SSHUserInfo implements UserInfo {
         this.keyfile = keyfile;
     }
 
-    /**
-     * @see com.jcraft.jsch.UserInfo#promptPassphrase(String)
-     */
     public boolean promptPassphrase(String message) {
         return true;
     }
 
-    /**
-     * @see com.jcraft.jsch.UserInfo#promptPassword(String)
-     */
     public boolean promptPassword(String passwordPrompt) {
         //log(passwordPrompt, Project.MSG_DEBUG);
         if (firstTime) {
@@ -158,17 +159,11 @@ public class SSHUserInfo implements UserInfo {
         return firstTime;
     }
 
-    /**
-     * @see com.jcraft.jsch.UserInfo#promptYesNo(String)
-     */
     public boolean promptYesNo(String message) {
         //log(prompt, Project.MSG_DEBUG);
         return trustAllCertificates;
     }
 
-    /**
-     * @see com.jcraft.jsch.UserInfo#showMessage(String)
-     */
     public void showMessage(String message) {
         //log(message, Project.MSG_DEBUG);
     }

@@ -24,8 +24,8 @@ import java.lang.reflect.Constructor;
 
 
 /**
- * this is a weak reference on java1.2 and up, i.e. all
- * platforms Ant1.7 supports
+ * This is a weak reference on java1.2 and up, that is all
+ * platforms Ant1.6 supports.
  * @since ant1.6
  */
 public abstract class WeakishReference  {

@@ -334,7 +334,7 @@ public class Ant extends Task {
             // the build file if this is a top level task)?
             if (thisAntFile != null
                 && newProject.resolveFile(newProject.getProperty("ant.file"))
-                .equals(getProject().resolveFile(thisAntFile)) 
+                .equals(getProject().resolveFile(thisAntFile))
                 && getOwningTarget() != null) {
 
                 if (getOwningTarget().getName().equals("")) {
@@ -660,7 +660,7 @@ public class Ant extends Task {
 
     /**
      * Add a target to this Ant invocation.
-     * @param target   the <CODE>TargetElement</CODE> to add.
+     * @param t the <CODE>TargetElement</CODE> to add.
      * @since Ant 1.7
      */
     public void addConfiguredTarget(TargetElement t) {

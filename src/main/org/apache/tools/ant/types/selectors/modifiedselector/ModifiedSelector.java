@@ -677,7 +677,6 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
      * the caller. Therefore you will get a ClassCastException if you get the
      * implementations from the selector and cast them.
      * @param loader the ClassLoader to use
-     * @see ModifiedSelectorTest#doDelayUpdateTest(int key)
      */
     public void setClassLoader(ClassLoader loader) {
         myClassLoader = loader;
@@ -710,7 +709,7 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
      * Defined in org.apache.tools.ant.types.Parameterizable.
      * Overwrite implementation in superclass because only special
      * parameters are valid.
-     * @see #addParam(String,String).
+     * @see #addParam(String,Object).
      */
     public void setParameters(Parameter[] parameters) {
         if (parameters != null) {
