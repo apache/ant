@@ -89,6 +89,8 @@ public class ExecTask extends Task {
     private String os;
     private File out;
     private File error;
+
+    private boolean logError = false;
     
     private File dir;
     protected boolean failOnError = false;
@@ -173,6 +175,15 @@ public class ExecTask extends Task {
         this.out = out;
     }
 
+    /**
+     * Controls whether error output of exec is logged. This is only useful
+     * when output is being redirected and error output is desired in the
+     * Ant log
+     */
+    public void setLogError(boolean logError) {
+        this.logError = logError;
+    }
+    
     /**
      * File the error stream of the process is redirected to.
      *
@@ -485,7 +496,8 @@ public class ExecTask extends Task {
         
             if (outputprop != null) {
                 baos = new ByteArrayOutputStream();
-                log("Output redirected to ByteArray", Project.MSG_VERBOSE);
+                log("Output redirected to property: " + outputprop, 
+                     Project.MSG_VERBOSE);
                 if (out == null) {
                     outputStream = baos;
                 } else {
@@ -498,11 +510,15 @@ public class ExecTask extends Task {
             errorStream = outputStream;
         } 
 
+        if (logError) {
+            errorStream = new LogOutputStream(this, Project.MSG_WARN);
+        }
+        
         if (error != null)  {
             try {
                 errorStream 
                     = new FileOutputStream(error.getAbsolutePath(), append);
-                log("Error redirected to " + out, Project.MSG_VERBOSE);
+                log("Error redirected to " + error, Project.MSG_VERBOSE);
             } catch (FileNotFoundException fne) {
                 throw new BuildException("Cannot write to " + error, fne,
                                          getLocation());
@@ -514,7 +530,8 @@ public class ExecTask extends Task {
     
         if (errorProperty != null) {
             errorBaos = new ByteArrayOutputStream();
-            log("Error redirected to ByteArray", Project.MSG_VERBOSE);
+            log("Error redirected to property: " + errorProperty, 
+                Project.MSG_VERBOSE);
             if (error == null) {
                 errorStream = errorBaos;
             } else {
