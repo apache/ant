@@ -174,23 +174,6 @@ class VAJWorkspaceScanner extends DirectoryScanner {
     }
 
     /**
-     * Matches a string against a pattern. The pattern contains two special
-     * characters:
-     * '*' which means zero or more characters,
-     * '?' which means one and only one character.
-     *
-     * @param pattern the (non-null) pattern to match against
-     * @param str     the (non-null) string that must be matched against the
-     *                pattern
-     *
-     * @return <code>true</code> when the string matches against the pattern,
-     *         <code>false</code> otherwise.
-     */
-    protected static boolean match(String pattern, String str) {
-        return DirectoryScanner.match(pattern, str);
-    }
-
-    /**
      * Scans the workspace for packages that match at least one include
      * pattern, and don't match any exclude patterns.
      *
