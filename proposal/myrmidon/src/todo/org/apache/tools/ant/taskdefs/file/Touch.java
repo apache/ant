@@ -14,9 +14,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -30,53 +30,45 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
  * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
  */
-public class Touch extends Task
-{// required
-    private long millis = -1;
-    private ArrayList filesets = new ArrayList();
-    private String dateTime;
-
-    private File file;
+public class Touch
+    extends AbstractTask
+{
+    private long m_millis = -1;
+    private String m_dateTime;
+    private ArrayList m_filesets = new ArrayList();
+    private File m_file;
 
     /**
      * Date in the format MM/DD/YYYY HH:MM AM_PM.
-     *
-     * @param dateTime The new Datetime value
      */
     public void setDatetime( String dateTime )
     {
-        this.dateTime = dateTime;
+        m_dateTime = dateTime;
     }
 
     /**
      * Sets a single source file to touch. If the file does not exist an empty
      * file will be created.
-     *
-     * @param file The new File value
      */
-    public void setFile( File file )
+    public void setFile( final File file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     /**
      * Milliseconds since 01/01/1970 00:00 am.
-     *
-     * @param millis The new Millis value
      */
-    public void setMillis( long millis )
+    public void setMillis( final long millis )
     {
-        this.millis = millis;
+        m_millis = millis;
     }
 
     /**
      * Adds a set of files (nested fileset attribute).
-     *
-     * @param set The feature to be added to the Fileset attribute
      */
-    public void addFileset( FileSet set )
+    public void addFileset( final FileSet set )
     {
-        filesets.add( set );
+        m_filesets.add( set );
     }
 
     /**
@@ -87,32 +79,26 @@ public class Touch extends Task
     public void execute()
         throws TaskException
     {
-        if( file == null && filesets.size() == 0 )
-        {
-            throw
-                new TaskException( "Specify at least one source - a file or a fileset." );
-        }
+        validate();
 
-        if( file != null && file.exists() && file.isDirectory() )
+        if( m_dateTime != null )
         {
-            throw new TaskException( "Use a fileset to touch directories." );
-        }
-
-        if( dateTime != null )
-        {
-            DateFormat df = DateFormat.getDateTimeInstance( DateFormat.SHORT,
-                                                            DateFormat.SHORT,
-                                                            Locale.US );
+            final DateFormat format =
+                DateFormat.getDateTimeInstance( DateFormat.SHORT,
+                                                DateFormat.SHORT,
+                                                Locale.US );
             try
             {
-                setMillis( df.parse( dateTime ).getTime() );
-                if( millis < 0 )
+                final long millis = format.parse( m_dateTime ).getTime();
+                if( 0 > millis )
                 {
-                    throw new TaskException( "Date of " + dateTime
-                                             + " results in negative milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT)." );
+                    final String message = "Date of " + m_dateTime + " results in negative " +
+                        "milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT).";
+                    throw new TaskException( message );
                 }
+                setMillis( millis );
             }
-            catch( ParseException pe )
+            catch( final ParseException pe )
             {
                 throw new TaskException( pe.getMessage(), pe );
             }
@@ -121,53 +107,61 @@ public class Touch extends Task
         touch();
     }
 
-    /**
-     * Does the actual work. Entry point for Untar and Expand as well.
-     *
-     * @exception TaskException Description of Exception
-     */
-    public void touch()
+    private void validate()
         throws TaskException
     {
-        if( file != null )
+        if( null == m_file && 0 == m_filesets.size() )
         {
-            if( !file.exists() )
+            final String message = "Specify at least one source - a file or a fileset.";
+            throw new TaskException( message );
+        }
+
+        if( null != m_file && m_file.exists() && m_file.isDirectory() )
+        {
+            final String message = "Use a fileset to touch directories.";
+            throw new TaskException( message );
+        }
+    }
+
+    private void touch()
+        throws TaskException
+    {
+        if( m_millis < 0 )
+        {
+            m_millis = System.currentTimeMillis();
+        }
+
+        if( m_file != null )
+        {
+            if( !m_file.exists() )
             {
-                getLogger().info( "Creating " + file );
+                getLogger().info( "Creating " + m_file );
                 try
                 {
-                    FileOutputStream fos = new FileOutputStream( file );
+                    FileOutputStream fos = new FileOutputStream( m_file );
                     fos.write( new byte[ 0 ] );
                     fos.close();
                 }
-                catch( IOException ioe )
+                catch( final IOException ioe )
                 {
-                    throw new TaskException( "Could not create " + file, ioe );
+                    final String message = "Could not create " + m_file;
+                    throw new TaskException( message, ioe );
                 }
             }
-        }
 
-        boolean resetMillis = false;
-        if( millis < 0 )
-        {
-            resetMillis = true;
-            millis = System.currentTimeMillis();
-        }
-
-        if( file != null )
-        {
-            touch( file );
+            touch( m_file );
         }
 
         // deal with the filesets
-        for( int i = 0; i < filesets.size(); i++ )
+        final int size = m_filesets.size();
+        for( int i = 0; i < size; i++ )
         {
-            FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
-            File fromDir = fs.getDir( getProject() );
+            final FileSet fs = (FileSet)m_filesets.get( i );
+            final DirectoryScanner ds = fs.getDirectoryScanner( null );
+            final File fromDir = fs.getDir( null );
 
-            String[] srcFiles = ds.getIncludedFiles();
-            String[] srcDirs = ds.getIncludedDirectories();
+            final String[] srcFiles = ds.getIncludedFiles();
+            final String[] srcDirs = ds.getIncludedDirectories();
 
             for( int j = 0; j < srcFiles.length; j++ )
             {
@@ -179,14 +173,9 @@ public class Touch extends Task
                 touch( new File( fromDir, srcDirs[ j ] ) );
             }
         }
-
-        if( resetMillis )
-        {
-            millis = -1;
-        }
     }
 
-    protected void touch( File file )
+    private void touch( final File file )
         throws TaskException
     {
         if( !file.canWrite() )
@@ -194,7 +183,7 @@ public class Touch extends Task
             throw new TaskException( "Can not change modification date of read-only file " + file );
         }
 
-        final long time = ( millis < 0 ) ? System.currentTimeMillis() : millis;
+        final long time = ( m_millis < 0 ) ? System.currentTimeMillis() : m_millis;
         file.setLastModified( time );
     }
 }
