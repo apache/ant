@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.ExecException;
+import org.apache.aut.nativelib.ExecException;
 
 /**
  * Specialized EnvironmentData class for System properties

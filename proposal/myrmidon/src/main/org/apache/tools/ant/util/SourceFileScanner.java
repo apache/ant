@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Os;
+import org.apache.aut.nativelib.Os;
 import org.apache.tools.ant.Task;
 
 /**

@@ -34,14 +34,14 @@ public class JasperC
         {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            Java java = (Java)( getJspc().getProject() ).createTask( "java" );
+            //FIXME
+            Java java = null;//(Java)( getJspc().getProject() ).createTask( "java" );
             if( getJspc().getClasspath() != null )
                 java.setClasspath( getJspc().getClasspath() );
             java.setClassname( "org.apache.jasper.JspC" );
             String args[] = cmd.getArguments();
             for( int i = 0; i < args.length; i++ )
                 java.createArg().setValue( args[ i ] );
-            java.setFailonerror( true );
             java.execute();
             return true;
         }

@@ -8,7 +8,8 @@
 package org.apache.tools.ant.types;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Os;
+import org.apache.aut.nativelib.Os;
+import java.io.File;
 
 /**
  * A representation of a Java command line that is nothing more than a composite
@@ -18,7 +19,8 @@ import org.apache.myrmidon.framework.Os;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class CommandlineJava implements Cloneable
+public class CommandlineJava
+    implements Cloneable
 {
     private Commandline vmCommand = new Commandline();
     private Commandline javaCommand = new Commandline();
@@ -265,8 +267,8 @@ public class CommandlineJava implements Cloneable
         // on Windows java.home doesn't always refer to the correct location,
         // so we need to fall back to assuming java is somewhere on the
         // PATH.
-        java.io.File jExecutable =
-            new java.io.File( System.getProperty( "java.home" ) +
+        File jExecutable =
+            new File( System.getProperty( "java.home" ) +
                               "/../bin/java" + extension );
 
         if( jExecutable.exists() && !Os.isFamily( "netware" ) )

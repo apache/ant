@@ -170,7 +170,7 @@ public class WLJspc extends MatchingTask
         // Therefore, takes loads of time
         // Can pass directories at a time (*.jsp) but easily runs out of memory on hefty dirs
         // (even on  a Sun)
-        Java helperTask = (Java)getProject().createTask( "java" );
+        Java helperTask = null;//(Java)getProject().createTask( "java" );
         helperTask.setFork( true );
         helperTask.setClassname( "weblogic.jspc" );
         String[] args = new String[ 12 ];
@@ -227,7 +227,7 @@ public class WLJspc extends MatchingTask
 
             System.out.println( "arg = " + arg );
 
-            helperTask.clearArgs();
+            //helperTask.clearArgs();
             helperTask.createArg().setValue( arg );
             helperTask.setClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )

@@ -198,7 +198,7 @@ public class BorlandGenerateClient extends Task
             getLogger().info( "mode : java" );
 
             org.apache.tools.ant.taskdefs.Java execTask = null;
-            execTask = (Java)getProject().createTask( "java" );
+            execTask = null;//(Java)getProject().createTask( "java" );
 
             execTask.setDir( new File( "." ) );
             execTask.setClassname( "com.inprise.server.commandline.EJBUtilities" );
