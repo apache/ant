@@ -88,6 +88,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     private Map      nsElements = null;
     private Map      presentElements = new HashMap();
     private Hashtable localProperties = new Hashtable();
+    private String    text = "";
 
     /**
      * Called from MacroDef.MyAntTypeDefinition#create()
@@ -246,6 +247,14 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         return ret.toString();
     }
 
+    /**
+     * Set the text contents for the macro.
+     * @param text the text to be added to the macro.
+     */
+    public void addText(String text) {
+        this.text = text;
+    }
+
     private UnknownElement copy(UnknownElement ue) {
         UnknownElement ret = new UnknownElement(ue.getTag());
         ret.setNamespace(ue.getNamespace());
@@ -331,6 +340,10 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         if (copyKeys.contains("id")) {
             copyKeys.remove("id");
         }
+        if (macroDef.getTextName() != null) {
+            localProperties.put(macroDef.getTextName(), text);
+        }
+
         if (copyKeys.size() != 0) {
             throw new BuildException(
                 "Unknown attribute" + (copyKeys.size() > 1 ? "s " : " ")
