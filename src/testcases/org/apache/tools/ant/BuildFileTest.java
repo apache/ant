@@ -57,6 +57,7 @@ package org.apache.tools.ant;
 import junit.framework.*;
 import org.apache.tools.ant.*;
 import java.io.*;
+import java.net.URL;
 
 /**
  * A BuildFileTest is a TestCase which executes targets from an Ant buildfile 
@@ -256,9 +257,20 @@ public abstract class BuildFileTest extends TestCase {
         expectPropertySet(target, property, null);
     }
 
-    
+    /**
+     * Retrieve a resource from the caller classloader to avoid
+     * assuming a vm working directory. The resource path must be
+     * relative to the package name or absolute from the root path.
+     * @param resource the resource to retrieve its url.
+     * @throws AssertionFailureException if resource is not found.
+     */
+    protected URL getResource(String resource){
+        URL url = getClass().getResource(resource);
+        assertNotNull("Could not find resource :" + resource, url);
+        return url;
+    }
 
-    private class AntOutputStream extends java.io.OutputStream { 
+    private class AntOutputStream extends java.io.OutputStream {
         public void write(int b) { 
             outBuffer.append((char)b);
         }
