@@ -728,7 +728,7 @@ public class Concat extends Task {
                         new InputStreamReader(new FileInputStream(file),
                                               this.encoding));
                 }
-                value = fileUtils.readFully(reader);
+                value = FileUtils.readFully(reader);
             } catch (IOException ex) {
                 throw new BuildException(ex);
             } finally {
