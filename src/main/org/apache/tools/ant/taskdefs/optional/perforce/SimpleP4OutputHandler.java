@@ -90,7 +90,7 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter {
 
         }
 
-        parent.log(parent.util.substitute("s/^.*: //", line), Project.MSG_INFO);
+        parent.log(parent.util.substitute("s/^[^:]*: //", line), Project.MSG_INFO);
 
     }
 }

@@ -94,6 +94,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * constructing the filenames of various parts of the ejb jar.
      */
     private static final String EJB_REF               = "ejb-ref";
+    private static final String EJB_LOCAL_REF         = "ejb-local-ref";
     private static final String HOME_INTERFACE        = "home";
     private static final String REMOTE_INTERFACE      = "remote";
     private static final String LOCAL_HOME_INTERFACE  = "local-home";
@@ -275,7 +276,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         throws SAXException {
         this.currentElement = name;
         currentText = "";
-        if (name.equals(EJB_REF)) {
+        if (name.equals(EJB_REF) || name.equals(EJB_LOCAL_REF)) {
             inEJBRef = true;
         } else if (parseState == STATE_LOOKING_EJBJAR && name.equals(EJB_JAR)) {
             parseState = STATE_IN_EJBJAR;
@@ -304,7 +305,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         processElement();
         currentText = "";
         this.currentElement = "";
-        if (name.equals(EJB_REF)) {
+        if (name.equals(EJB_REF) || name.equals(EJB_LOCAL_REF)) {
             inEJBRef = false;
         } else if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN)) {
             parseState = STATE_IN_BEANS;
