@@ -9,7 +9,7 @@
 
 <h2><a name="javac">Javac</a></h2>
 <h3>Description</h3>
-<p>Compiles a source tree within the running (Ant) VM.</p>
+<p>Compiles a Java source tree.</p>
 <p>The source and destination directory will be recursively scanned for Java
 source files to compile. Only Java files that have no corresponding class file
 or where the class file is older than the java file will be compiled.</p>
@@ -29,7 +29,7 @@ want to use default exclusions or not. See the section on <a
 href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns.</p>
 <p>It is possible to use different compilers. This can be selected with the
-&quot;build.compiler&quot; property. There are four choices:</p>
+&quot;build.compiler&quot; property. Here are the choices:-</p>
 <ul>
   <li>classic (the standard compiler of JDK 1.1/1.2) - javac1.1 and
      javac1.2 can be used as aliases</li>
@@ -47,7 +47,7 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   <li>extJavac (run either modern or classic in a JVM of its own)</li>
 </ul>
 <p>For JDK 1.1/1.2, classic is the default. For JDK 1.3/1.4, modern is the default.
-If you wish to use a different compiler interface than one of the four
+If you wish to use a different compiler interface than those
 supplied, write a class that implements the CompilerAdapter interface
 (package org.apache.tools.ant.taskdefs.compilers). Supply the full
 classname in the &quot;build.compiler&quot; property.
@@ -275,6 +275,58 @@ common root you should not include these packages in the srcdir-attribute. Use i
 or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute 
 (or nested src-elements) Ant will start to recompile your sources everytime you call it.</p>
 
+<h3>Jikes Notes</h3>
+
+If the environment variable <tt>JIKES_HOME</tt> is set to the location
+of the jikes compiler, then the standard Ant invocation scripts
+automatically set build.compiler to "jikes". This enables one to use
+jikes when available, without having to commit the build file to a
+single choice of compiler. 
+
+<p>
+
+Jikes also supports some extra options, which can be set be defining
+properties prior to invoking the task. The ant developers are aware that
+this is ugly and inflexible -expect a better solution in the future. All
+the options are boolean, and must be set to "true" or "yes" to be
+interpreted as anything other than false; by default they are all
+'false.
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top">
+	build.compiler.emacs
+	</td> 
+	<td valign="top">
+	Enable emacs compatible error messages
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.warnings
+	</td> 
+	<td valign="top">
+	disable warning messages
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.pedantic
+	</td> 
+	<td valign="top">
+	enable pedantic warnings
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.fulldepend
+	</td> 
+	<td valign="top">
+	enable full dependency checking,<br> 
+	"+F" in the jikes manual.
+    </td>
+  </tr>
+</table>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
