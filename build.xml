@@ -345,6 +345,7 @@
         <include name="build.sh"/>
         <include name="bootstrap.bat"/>
         <include name="bootstrap.sh"/>
+        <include name="build.xml"/>
       </fileset>
     </copy>
 

@@ -5,11 +5,11 @@ ANT_HOME=.
 export ANT_HOME
 
 if test ! -f lib/ant.jar -o  ! -x bin/ant -o ! -x bin/antRun ; then
-  ./bootstrap.sh
+  /bin/sh ./bootstrap.sh
 fi    
 
 if [ "$REALANTHOME" != "" ] ; then
-  ANT_INSTALL="-Dant.install $REALANTHOME"
+  ANT_INSTALL="-Dant.install=$REALANTHOME"
 fi
 
 bin/ant $ANT_INSTALL $*

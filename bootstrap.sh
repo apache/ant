@@ -2,6 +2,8 @@
 
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
+unset CLASSPATH
+
 if [ "$JAVA_HOME" != "" ] ; then
   if [ -f $JAVA_HOME/lib/tools.jar ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
@@ -59,6 +61,7 @@ fi
 export CLASSPATH
 
 mkdir -p ${CLASSDIR}
+mkdir -p build
 
 echo ... Compiling Ant Classes
 
@@ -77,8 +80,10 @@ cp src/main/org/apache/tools/ant/types/defaults.properties \
 
 echo ... Building Ant Distribution
 
+cp -r ${CLASSDIR} build
+
 ${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
-                      -buildfile build.xml clean main bootstrap
+                      -buildfile build.xml bootstrap
 
 echo ... Cleaning Up Build Directories
 
