@@ -11,7 +11,7 @@ goto cleanup
 
 :runAnt
 set LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;bootstrap\lib\ant.jar
-for %%i in (lib\optional\*.jar) do call bootstrap\bin\lcp.bat "%%i"
+for %%i in (lib\optional\*.jar) do call bootstrap\bin\lcp.bat %%i
 set CLASSPATH=%LOCALCLASSPATH%;%CLASSPATH%
 set LOCALCLASSPATH=
 

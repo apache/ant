@@ -481,6 +481,7 @@
   -->
   <target name="distribution" 
           description="--> creates a binary distribution">
+    <delete dir="${dist.base}"/>
     <mkdir dir="${dist.base}"/>
 
     <antcall inheritAll="false" target="internal_dist">
