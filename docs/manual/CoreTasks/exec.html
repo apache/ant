@@ -13,6 +13,9 @@
 the command is only executed when Ant is run on one of the specified operating
 systems.</p>
 
+<p>Note that you cannot interact with the forked program, the only way
+to send input to it is via the input and inputstring attributes.</p>
+
 <h4>Cygwin Users</h4>
 <p>In general the &lt;exec&gt; task will not understand paths such as /bin/sh for 
 the executable parameter. This is because the Java VM in which Ant is running is a 
