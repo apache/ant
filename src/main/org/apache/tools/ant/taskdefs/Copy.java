@@ -204,7 +204,10 @@ public class Copy extends Task {
                         Project.MSG_VERBOSE);
                 }
             } else {
-                log("Could not find file " + file.getAbsolutePath() + " to copy.");
+                String message = "Could not find file " 
+                                 + file.getAbsolutePath() + " to copy.";
+                log(message);
+                throw new BuildException(message);
             }
         }
 
