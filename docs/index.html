@@ -1189,39 +1189,45 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">the file to copy</td>
+    <td valign="top">The file to copy.</td>
     <td valign="top" align="center">One of either <var>file</var> or 
     at least one nested fileset element.</td>
   </tr>
   <tr>
     <td valign="top">tofile</td>
-    <td valign="top">the file to copy to</td>
+    <td valign="top">The file to copy to.</td>
     <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute, 
     either <var>tofile</var> or <var>todir</var> can be used.  With nested filesets, 
     only <var>todir</var> is allowed.</td>
   </tr>
   <tr>
     <td valign="top">todir</td>
-    <td valign="top">the directory to copy to</td>
+    <td valign="top">The directory to copy to.</td>
   </tr>
   <tr>
     <td valign="top">overwrite</td>
-    <td valign="top">overwrite existing files even if the destination
-      files are newer (default is no)</td>
+    <td valign="top">Overwrite existing files even if the destination
+      files are newer. Defaults to &quot;no&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">filtering</td>
-    <td valign="top">indicates whether token filtering should take place during
-      the copy (default is no)</td>
+    <td valign="top">Indicates whether token filtering should take place during
+      the copy. Defaults to &quot;no&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">flatten</td>
-    <td valign="top">ignore directory structure of source directory,
+    <td valign="top">Ignore directory structure of source directory,
       copy all files into a single directory, specified by the <var>todir</var>
-      attribute (default is false)</td>
+      attribute. Defaults to &quot;no&quot;.</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includeEmptyDirs</td>
+	 <td valign="top">Copy empty directories included with the nested FileSet(s).
+	   Defaults to &quot;yes&quot;.</td>
+	 <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -3211,7 +3217,7 @@ necessary.</p>
 <hr>
 <h2><a name="move">Move</a></h2>
 <h3>Description</h3>
-<p>Moves a file or directory to a new file or directory, or sets of files to
+<p>Moves a file to a new file or directory, or sets of files to
 a new directory.  By default, the
 destination file is overwritten if it already exists.  When <var>overwrite</var> is
 turned off, then files are only moved if the source file is newer than
@@ -3228,19 +3234,15 @@ to move to the <var>todir</var> directory.</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the file to move</td>
-    <td valign="top" align="center" rowspan="2">One of <var>file</var> or 
-    <var>dir</var> are required, or at least one nested fileset element</td>
-  </tr>
-  <tr>
-    <td valign="top">dir</td>
-    <td valign="top">the directory to move</td>
+    <td valign="top" align="center">One of <var>file</var> or 
+     at least one nested fileset element</td>
   </tr>
   <tr>
     <td valign="top">tofile</td>
     <td valign="top">the file to move to</td>
     <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute, 
-    either <var>tofile</var> or <var>todir</var> can be used.  With the <var>dir</var>
-    attribute or a nested fileset, only <var>todir</var> is allowed.</td>
+    either <var>tofile</var> or <var>todir</var> can be used.  With a nested fileset, 
+	 only <var>todir</var> is allowed.</td>
   </tr>
   <tr>
     <td valign="top">todir</td>
@@ -3266,6 +3268,12 @@ to move to the <var>todir</var> directory.</p>
       attribute (default is &quot;false&quot;).</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">includeEmptyDirs</td>
+	 <td valign="top">Copy empty directories included with the nested FileSet(s).
+	   Defaults to &quot;yes&quot;.</td>
+	 <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <p><b>Move a single file (rename a file)</b></p>
@@ -3278,9 +3286,10 @@ to move to the <var>todir</var> directory.</p>
 </pre>
 <p><b>Move a directory to a new directory</b></p>
 <pre>
-  &lt;move dir=&quot;src/dir&quot; todir=&quot;new/dir/to/move/to&quot; /&gt;
+  &lt;move todir=&quot;new/dir/to/move/to&quot;&gt;
+    &lt;fileset dir=&quot;src/dir&quot;/&gt;
+  &lt;/move&gt;
 </pre>
-<p>Note that the directory src/dir will be removed.</p>
 <p><b>Move a set of files to a new directory</b></p>
 <pre>
   &lt;move todir=&quot;some/new/dir&quot; &gt;
