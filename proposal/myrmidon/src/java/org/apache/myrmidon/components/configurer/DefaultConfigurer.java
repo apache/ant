@@ -287,13 +287,18 @@ public class DefaultConfigurer
                 getLogger().debug( message, ce );
             }
 
-            return false;
+            throw new ConfigurationException( ce.getMessage(), ce );
         }
         catch( final Exception e )
         {
             final String message =
                 REZ.getString( "bad-convert-for-attribute.error", method.getName() );
             throw new ConfigurationException( message, e );
+        }
+
+        if( null == value )
+        {
+            return false;
         }
 
         try
