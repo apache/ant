@@ -222,13 +222,19 @@ if $usejikes; then
   ANT_OPTS="$ANT_OPTS -Dbuild.compiler=jikes"
 fi
 
-# For Cygwin, switch paths to Windows format before running java
+# For Cygwin, switch paths to appropriate format before running java
 if $cygwin; then
-  ANT_HOME=`cygpath --windows "$ANT_HOME"`
-  ANT_LIB=`cygpath --windows "$ANT_LIB"`
-  JAVA_HOME=`cygpath --windows "$JAVA_HOME"`
-  LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
-  CYGHOME=`cygpath --windows "$HOME"`
+  if [ "$OS" = "Windows_NT" ] ; then
+    format=mixed
+  else
+    format=windows
+  fi
+  ANT_HOME=`cygpath --$format "$ANT_HOME"`
+  ANT_LIB=`cygpath --$format "$ANT_LIB"`
+  JAVA_HOME=`cygpath --$format "$JAVA_HOME"`
+  LOCALCLASSPATH=`cygpath --path --$format "$LOCALCLASSPATH"`
+  CLASSPATH=`cygpath --path --$format "$OCALCLASSPATH"`
+  CYGHOME=`cygpath --$format "$HOME"`
 fi
 
 # Show script help if requested
@@ -247,6 +253,11 @@ if $show_help ; then
 fi
 # add a second backslash to variables terminated by a backslash under cygwin
 if $cygwin; then
+  case "$ANT_HOME" in
+    *\\ )
+    ANT_HOME="$ANT_HOME\\"
+    ;;
+  esac
   case "$CYGHOME" in
     *\\ )
     CYGHOME="$CYGHOME\\"
