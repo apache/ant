@@ -190,7 +190,7 @@ required for all actions.
     It is in the form <code>&lt;component&gt;:&lt;target1&gt;,&lt;target2&gt;...</code>
     Where component is the archive name (minus the .jar, .ear, .war
     extension).  Targets are the servers where the components will be deployed</td>
-    <td>Yes</td>
+    <td>no</td>
   </tr>
   <tr>
     <td valign="top">debug</td>
@@ -222,7 +222,7 @@ WebLogic server:</p>
 
 <pre>
     &lt;serverdeploy action=&quot;delete&quot; source=&quot;${lib.dir}/ejb_myApp.jar&quot;/&gt
-        &lt;weblogic application=&quot;myapp&quot
+        &lt;weblogic application=&quot;myapp&quot;
             server=&quot;t3://myserver:7001&quot;
             classpath=&quot;${weblogic.home}/lib/weblogic.jar&quot;
             username=&quot;${user.name}&quot;
