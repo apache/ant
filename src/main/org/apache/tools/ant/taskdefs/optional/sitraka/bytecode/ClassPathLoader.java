@@ -199,16 +199,16 @@ public class ClassPathLoader {
      * brings time from 50s to 7s.
      */
     public static InputStream getCachedStream(InputStream is) throws IOException {
-        is = new BufferedInputStream(is);
-        byte[] buffer = new byte[8192];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
+        final InputStream bis = new BufferedInputStream(is);
+        final byte[] buffer = new byte[8192];
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream(2048);
         int n;
-        baos.reset();
-        while ((n = is.read(buffer, 0, buffer.length)) != -1) {
-            baos.write(buffer, 0, n);
+        bos.reset();
+        while ((n = bis.read(buffer, 0, buffer.length)) != -1) {
+            bos.write(buffer, 0, n);
         }
         is.close();
-        return new ByteArrayInputStream(baos.toByteArray());
+        return new ByteArrayInputStream(bos.toByteArray());
     }
 }
 
@@ -288,7 +288,7 @@ final class DirectoryLoader implements ClassPathLoader.FileLoader {
 
     public ClassFile[] getClasses() throws IOException {
         Vector v = new Vector(127);
-        Vector files = listFiles(directory, new ClassFilter(), true);
+        Vector files = listFiles(directory, CLASS_FILTER, true);
         final int filesCount = files.size();
         for (int i = 0; i < filesCount; i++) {
             File file = (File) files.elementAt(i);
@@ -347,7 +347,7 @@ final class DirectoryLoader implements ClassPathLoader.FileLoader {
         }
         files = null;   // we don't need it anymore
         if (recurse) {
-            String[] subdirs = directory.list(new DirectoryFilter());
+            String[] subdirs = directory.list(DIRECTORY_FILTER);
             for (int i = 0; i < subdirs.length; i++) {
                 listFilesTo(list, new File(directory, subdirs[i]), filter, recurse);
             }
