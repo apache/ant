@@ -141,12 +141,12 @@ import org.apache.tools.ant.taskdefs.Execute;
  * absolute paths. On non-unix systems this may cause false positives. 
  * Furthermore, any operating system on which the command 
  * <code>ln -s link resource</code> is not a valid command on the comandline 
- * will not be able to use action="single" or action="multi" action="record"
- * should still work. Finally, the lack of support for symlinks in Java
- * means that all links are recorded as links to the 
- * <strong>canonical</strong> resource name. Therefore the link:
- * <code>link --> subdir/dir/../foo.bar</code> will be recorded as
- * <code>link=subdir/foo.bar</code> and restored as 
+ * will not be able to use action= "delete", action="single" or 
+ * action="recreate", but action="record" should still work. Finally, the 
+ * lack of support for symlinks in Java means that all links are recorded 
+ * as links to the <strong>canonical</strong> resource name. Therefore 
+ * the link: <code>link --> subdir/dir/../foo.bar</code> will be recorded 
+ * as <code>link=subdir/foo.bar</code> and restored as 
  * <code>link --> subdir/foo.bar</code>
  *
  * @version $Revision$
