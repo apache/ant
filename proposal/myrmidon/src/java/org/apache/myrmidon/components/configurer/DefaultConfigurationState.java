@@ -19,19 +19,17 @@ package org.apache.myrmidon.components.configurer;
 class DefaultConfigurationState
     implements ConfigurationState
 {
-    private final int[] m_propCount;
-    private final Object[] m_createdObjects;
+    private final int[] m_propertyCount;
     private final ObjectConfigurer m_configurer;
     private final Object m_object;
 
     public DefaultConfigurationState( final ObjectConfigurer configurer,
                                       final Object object,
-                                      final int numProps )
+                                      final int propertyCount )
     {
         m_configurer = configurer;
         m_object = object;
-        m_propCount = new int[ numProps ];
-        m_createdObjects = new Object[ numProps ];
+        m_propertyCount = new int[ propertyCount ];
     }
 
     /**
@@ -49,26 +47,14 @@ class DefaultConfigurationState
     }
 
     /** Returns a property count. */
-    public int getPropCount( final int propIndex )
+    public int getPropertyCount( final int index )
     {
-        return m_propCount[ propIndex ];
+        return m_propertyCount[ index ];
     }
 
     /** Increments a property count. */
-    public void incPropCount( final int propIndex )
+    public void incPropertyCount( final int index )
     {
-        m_propCount[ propIndex ]++;
-    }
-
-    /** Returns a property's pending objects. */
-    public Object getCreatedObject( final int propIndex )
-    {
-        return m_createdObjects[ propIndex ];
-    }
-
-    /** Sets a property's pending objects. */
-    public void setCreatedObject( final int propIndex, final Object object )
-    {
-        m_createdObjects[ propIndex ] = object;
+        m_propertyCount[ index ]++;
     }
 }

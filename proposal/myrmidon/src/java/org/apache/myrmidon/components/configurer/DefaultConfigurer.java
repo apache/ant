@@ -298,8 +298,8 @@ public class DefaultConfigurer
         final String name = element.getName();
 
         // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer
-            = getConfigurerFromName( state.getConfigurer(), name, true );
+        final PropertyConfigurer childConfigurer =
+            getConfigurerFromName( state.getConfigurer(), name, true );
 
         // Create & configure the child element
         final Object child =

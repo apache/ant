@@ -65,21 +65,13 @@ class DefaultPropertyConfigurer
     {
         final DefaultConfigurationState defState = (DefaultConfigurationState)state;
 
-        // Make sure the supplied object is the pending object
-        final Object pending = defState.getCreatedObject( m_propIndex );
-        if( pending != null && pending != value )
-        {
-        }
-
-        defState.setCreatedObject( m_propIndex, null );
-
         // Check the property count
-        if( defState.getPropCount( m_propIndex ) >= m_maxCount )
+        if( defState.getPropertyCount( m_propIndex ) >= m_maxCount )
         {
             final String message = REZ.getString( "too-many-values.error" );
             throw new ConfigurationException( message );
         }
-        defState.incPropCount( m_propIndex );
+        defState.incPropertyCount( m_propIndex );
 
         try
         {

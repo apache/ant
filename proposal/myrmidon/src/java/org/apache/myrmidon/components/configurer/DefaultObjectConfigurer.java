@@ -263,16 +263,6 @@ class DefaultObjectConfigurer
     {
         // Make sure there are no pending created objects
         final DefaultConfigurationState defState = (DefaultConfigurationState)state;
-        final int size = m_allProps.size();
-        for( int i = 0; i < size; i++ )
-        {
-            if( null != defState.getCreatedObject( i ) )
-            {
-                final String message = REZ.getString( "pending-property-value.error" );
-                throw new ConfigurationException( message );
-            }
-        }
-
         return defState.getObject();
     }
 
