@@ -152,36 +152,50 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;isset&gt; condition.
      *
-     * @since 1.2, Ant 1.5
+     * @since Ant 1.5
      */
     public void addIsSet(IsSet i) {conditions.addElement(i);}
 
     /**
      * Add an &lt;http&gt; condition.
      *
-     * @since 1.7, Ant 1.5
+     * @since Ant 1.5
      */
     public void addHttp(Http h) {conditions.addElement(h);}
 
     /**
      * Add a &lt;socket&gt; condition.
      *
-     * @since 1.7, Ant 1.5
+     * @since Ant 1.5
      */
     public void addSocket(Socket s) {conditions.addElement(s);}
 
     /**
      * Add a &lt;filesmatch&gt; condition.
      *
-     * @since 1.8, Ant 1.5
+     * @since Ant 1.5
      */
     public void addFilesMatch(FilesMatch test) {conditions.addElement(test);}
     
     /**
-     * Add a &lt;filesmatch&gt; condition.
+     * Add a &lt;contains&gt; condition.
      *
-     * @since 1.10, Ant 1.5
+     * @since Ant 1.5
      */
     public void addContains(Contains test) {conditions.addElement(test);}
-    
+
+    /**
+     * Add a &lt;istrue&gt; condition.
+     *
+     * @since Ant 1.5
+     */
+    public void addIsTrue(IsTrue test) {conditions.addElement(test);}
+
+    /**
+     * Add a &lt;isfalse&gt; condition.
+     *
+     * @since Ant 1.5
+     */
+    public void addIsFalse(IsFalse test) {conditions.addElement(test);}
+      
 }
