@@ -26,7 +26,6 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.DataType;
-import org.apache.myrmidon.components.converter.ConverterInfo;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.type.ComponentFactory;
@@ -46,8 +45,8 @@ public class DefaultTskDeployer
 {
     private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
-    private DefaultConfigurationBuilder  m_configurationBuilder;
-    private ConverterRegistry            m_converterInfoRegistry;
+    private DefaultConfigurationBuilder  m_configurationBuilder = new DefaultConfigurationBuilder();
+    private ConverterRegistry            m_converterRegistry;
     private TypeManager                  m_typeManager;
 
     /**
@@ -68,7 +67,7 @@ public class DefaultTskDeployer
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_converterInfoRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
+        m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
@@ -245,16 +244,6 @@ public class DefaultTskDeployer
         }
     }
 
-    private DefaultConfigurationBuilder getBuilder()
-    {
-        if( null == m_configurationBuilder )
-        {
-            m_configurationBuilder = new DefaultConfigurationBuilder();
-        }
-
-        return m_configurationBuilder;
-    }
-
     /**
      * Retrieve zip file for file.
      *
@@ -298,7 +287,7 @@ public class DefaultTskDeployer
     private Configuration buildConfiguration( final InputStream input )
         throws DeploymentException
     {
-        try { return getBuilder().build( input ); }
+        try { return m_configurationBuilder.build( input ); }
         catch( final SAXException se )
         {
             throw new DeploymentException( "Malformed configuration data", se );
@@ -354,8 +343,7 @@ public class DefaultTskDeployer
         final String source = converter.getAttribute( "source" );
         final String destination = converter.getAttribute( "destination" );
 
-        final ConverterInfo info = new ConverterInfo( source, destination );
-        m_converterInfoRegistry.registerConverterInfo( name, info );
+        m_converterRegistry.registerConverter( name, source, destination );
 
         factory.addNameClassMapping( name, name );
         m_typeManager.registerType( Converter.ROLE, name, factory );

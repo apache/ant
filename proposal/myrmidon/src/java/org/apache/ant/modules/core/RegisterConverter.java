@@ -15,7 +15,6 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.converter.ConverterInfo;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.deployer.TskDeployer;
@@ -110,13 +109,11 @@ public class RegisterConverter
         }
         else
         {
-            final ConverterInfo info = new ConverterInfo( m_sourceType, m_destinationType );
-            m_converterRegistry.registerConverterInfo( m_classname, info );
+            m_converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
 
-            final DefaultComponentFactory factory =
-                new DefaultComponentFactory( new URL[] { url } );
-
+            final DefaultComponentFactory factory = new DefaultComponentFactory( new URL[] { url } );
             factory.addNameClassMapping( m_classname, m_classname );
+
             try { m_typeManager.registerType( Converter.ROLE, m_classname, factory ); }
             catch( final Exception e )
             {

@@ -29,7 +29,7 @@ public class DefaultMasterConverter
 {
     private final static boolean DEBUG                = false;
 
-    private ConverterRegistry    m_infoRegistry;
+    private ConverterRegistry    m_registry;
     private ComponentSelector    m_selector;
 
     /**
@@ -41,7 +41,7 @@ public class DefaultMasterConverter
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_infoRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
+        m_registry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
 
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_selector = (ComponentSelector)typeManager.lookup( Converter.ROLE + "Selector" );
@@ -73,9 +73,8 @@ public class DefaultMasterConverter
         }
 
         //TODO: Start searching inheritance hierarchy for converter
-        final String name =
-            m_infoRegistry.getConverterInfoName( originalClass.getName(),
-                                                 destination.getName() );
+        final String name = m_registry.getConverterName( originalClass.getName(),
+                                                         destination.getName() );
 
         if( null == name )
         {

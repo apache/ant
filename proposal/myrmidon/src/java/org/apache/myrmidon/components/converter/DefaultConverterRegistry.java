@@ -10,7 +10,7 @@ package org.apache.myrmidon.components.converter;
 import java.util.HashMap;
 
 /**
- * Default implementation of ConverterInfo registry.
+ * Default implementation of Converter registry.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -19,18 +19,17 @@ public class DefaultConverterRegistry
 {
     private final HashMap      m_mapping   = new HashMap();
 
-    public String getConverterInfoName( final String source, final String destination )
+    public String getConverterName( final String source, final String destination )
     {
         final HashMap map = (HashMap)m_mapping.get( source );
         if( null == map ) return null;
         return (String)map.get( destination );
     }
 
-    public void registerConverterInfo( final String className, final ConverterInfo info )
+    public void registerConverter( final String className, 
+                                   final String source, 
+                                   final String destination )
     {
-        final String source = info.getSource();
-        final String destination = info.getDestination();
-
         HashMap map = (HashMap)m_mapping.get( source );
         if( null == map )
         {

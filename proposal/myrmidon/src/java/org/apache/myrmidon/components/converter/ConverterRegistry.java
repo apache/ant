@@ -27,13 +27,14 @@ public interface ConverterRegistry
      * @param destination the destination classname
      * @return the className of converter or null if none available
      */
-    String getConverterInfoName( String source, String destination );
+    String getConverterName( String source, String destination );
 
     /**
-     * Register a converter-info
+     * Register a converter
      *
      * @param className the className of converter
-     * @param info the ConverterInfo
+     * @param source the source classname
+     * @param destination the destination classname
      */
-    void registerConverterInfo( String className, ConverterInfo info );
+    void registerConverter( String className, String source, String destination );
 }
