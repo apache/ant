@@ -8,10 +8,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
-import org.apache.tools.ant.Project;
 import org.apache.myrmidon.api.TaskContext;
 
 /**
@@ -95,7 +94,7 @@ public class JUnitTest extends BaseTest
         m_outfile = value;
     }
 
-    public void setProperties( final Hashtable properties )
+    public void setProperties( final Map properties )
     {
         m_props = new Properties();
         final Iterator enum = properties.keySet().iterator();

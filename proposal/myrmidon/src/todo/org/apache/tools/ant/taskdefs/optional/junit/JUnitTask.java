@@ -13,17 +13,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -102,7 +100,7 @@ import org.apache.tools.ant.types.SysProperties;
  * @see JUnitTest
  * @see BatchTest
  */
-public class JUnitTask extends Task
+public class JUnitTask extends AbstractTask
 {
 
     private CommandlineJava commandline = new CommandlineJava();
@@ -555,7 +553,7 @@ public class JUnitTask extends Task
         }
         else
         {
-            super.handleErrorOutput( line );
+            //super.handleErrorOutput( line );
         }
     }
 
@@ -572,7 +570,7 @@ public class JUnitTask extends Task
         }
         else
         {
-            super.handleOutput( line );
+            //super.handleOutput( line );
         }
     }
 
@@ -582,9 +580,6 @@ public class JUnitTask extends Task
      * killedProcess()</tt> method of the watchdog class.
      *
      * @param test the testcase to execute.
-     * @param watchdog the watchdog in charge of cancelling the test if it
-     *      exceeds a certain amount of time. Can be <tt>null</tt> , in this
-     *      case the test could probably hang forever.
      */
     private int executeAsForked( JUnitTest test )
         throws TaskException
@@ -622,11 +617,11 @@ public class JUnitTask extends Task
         // Create a temporary file to pass the Ant properties to the forked test
         File propsFile = new File( "junit" + ( new Random( System.currentTimeMillis() ) ).nextLong() + ".properties" );
         cmd.addArgument( "propsfile=" + propsFile.getAbsolutePath() );
-        Hashtable p = getProject().getProperties();
+        Map p = getContext().getPropertys();
         Properties props = new Properties();
-        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
+        for( Iterator enum = p.keySet().iterator(); enum.hasNext(); )
         {
-            final Object key = enum.nextElement();
+            final Object key = enum.next();
             props.put( key, p.get( key ) );
         }
         try
@@ -668,7 +663,7 @@ public class JUnitTask extends Task
     private int executeInVM( JUnitTest test )
         throws TaskException
     {
-        test.setProperties( getProject().getProperties() );
+        test.setProperties( getContext().getPropertys() );
         if( dir != null )
         {
             getLogger().warn( "dir attribute ignored if running in the same VM" );
