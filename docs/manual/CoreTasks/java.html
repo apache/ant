@@ -302,7 +302,8 @@ to the JAR file.
 </pre>
 Run a class in this JVM with a new jar on the classpath
 
-<pre>        &lt;java jar=&quot;dist/test.jar&quot;
+<pre>
+       &lt;java jar=&quot;dist/test.jar&quot;
            fork="true"
            failonerror="true"
            maxmemory="128m"
@@ -318,7 +319,8 @@ Run the JAR test.jar in this project's dist/lib directory.
 using the manifest supplied entry point, forking (as required),
 and with a maximum memory of 128MB. Any non zero return code breaks the build.
 
-<pre>        &lt;java
+<pre>
+       &lt;java
            dir="${exec.dir}"
            jar=&quot;${exec.dir}/dist/test.jar&quot;
            fork="true"
@@ -339,7 +341,8 @@ is to start up.
 
 
 <pre>  &lt;java classname=&quot;test.Main&quot;/&gt;</pre>
-<pre>  &lt;java classname=&quot;test.Main&quot;
+<pre>
+  &lt;java classname=&quot;test.Main&quot;
         fork=&quot;yes&quot; &gt;
     &lt;sysproperty key=&quot;DEBUG&quot; value=&quot;true&quot;/&gt;
     &lt;arg value=&quot;-h&quot;/&gt;

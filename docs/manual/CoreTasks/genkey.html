@@ -86,20 +86,21 @@ with &quot;<code>\,</code>&quot;.</p>
 <p>The following two examples are identical: </p>
 
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot; 
-  dname=&quot;CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US&quot;/&gt;</code></p>
-</blockquote>
+<blockquote><pre>
+&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot; 
+  dname=&quot;CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US&quot;/&gt;
+</pre></blockquote>
 
 <blockquote>
-  <pre><code>&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot; &gt;
+  <pre>
+&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot; &gt;
   &lt;dname&gt;
     &lt;param name=&quot;CN&quot; value=&quot;Ant Group&quot;/&gt;
     &lt;param name=&quot;OU&quot; value=&quot;Jakarta Division&quot;/&gt;
     &lt;param name=&quot;O&quot;  value=&quot;Apache.Org&quot;/&gt;
     &lt;param name=&quot;C&quot;  value=&quot;US&quot;/&gt;
   &lt;/dname&gt;
-&lt;/genkey&gt;</code></pre>
+&lt;/genkey&gt;</pre>
 </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2000-2001,2003,2005 Apache Software Foundation. All rights
