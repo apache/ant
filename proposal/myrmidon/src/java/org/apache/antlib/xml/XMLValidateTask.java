@@ -243,7 +243,8 @@ public class XMLValidateTask
         final LocalResolver resolver = new LocalResolver();
         setupLogger( resolver );
 
-        for( int i = 0; i < m_dtdLocations.size(); i++ )
+        final int size = m_dtdLocations.size();
+        for( int i = 0; i < size; i++ )
         {
             final DTDLocation location = (DTDLocation)m_dtdLocations.get( i );
             resolver.registerDTD( location );
