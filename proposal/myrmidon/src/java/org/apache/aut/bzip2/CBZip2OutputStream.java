@@ -291,7 +291,8 @@ public class CBZip2OutputStream
                     heap[ zz ] = tmp;
                 }
                 nNodes++;
-                parent[ n1 ] = parent[ n2 ] = nNodes;
+                parent[ n1 ] = nNodes;
+                parent[ n2 ] = nNodes;
 
                 final int v1 = weights[ n1 ];
                 final int v2 = weights[ n2 ];
@@ -550,7 +551,8 @@ public class CBZip2OutputStream
         if( m_workDone > m_workLimit && m_firstAttempt )
         {
             randomiseBlock();
-            m_workLimit = m_workDone = 0;
+            m_workLimit = 0;
+            m_workDone = 0;
             m_blockRandomised = true;
             m_firstAttempt = false;
             mainSort();
@@ -1000,7 +1002,7 @@ public class CBZip2OutputStream
             m_quadrant[ i ] = 0;
         }
 
-        m_block[ 0 ] = (char)( m_block[ m_last + 1 ] );
+        m_block[ 0 ] = m_block[ m_last + 1 ];
 
         if( m_last < 4000 )
         {
@@ -1013,7 +1015,8 @@ public class CBZip2OutputStream
                 m_zptr[ i ] = i;
             }
             m_firstAttempt = false;
-            m_workDone = m_workLimit = 0;
+            m_workDone = 0;
+            m_workLimit = 0;
             simpleSort( 0, m_last, 0 );
         }
         else
@@ -1296,8 +1299,10 @@ public class CBZip2OutputStream
                         m_block[ m_zptr[ hi ] + d + 1 ],
                         m_block[ m_zptr[ ( lo + hi ) >> 1 ] + d + 1 ] );
 
-            unLo = ltLo = lo;
-            unHi = gtHi = hi;
+            unLo = lo;
+            ltLo = lo;
+            unHi = hi;
+            gtHi = hi;
 
             while( true )
             {
@@ -1307,7 +1312,7 @@ public class CBZip2OutputStream
                     {
                         break;
                     }
-                    n = ( (int)m_block[ m_zptr[ unLo ] + d + 1 ] ) - med;
+                    n = m_block[ m_zptr[ unLo ] + d + 1 ] - med;
                     if( n == 0 )
                     {
                         int temp = 0;
@@ -1331,7 +1336,7 @@ public class CBZip2OutputStream
                     {
                         break;
                     }
-                    n = ( (int)m_block[ m_zptr[ unHi ] + d + 1 ] ) - med;
+                    n = m_block[ m_zptr[ unHi ] + d + 1 ] - med;
                     if( n == 0 )
                     {
                         int temp = 0;
@@ -1593,13 +1598,13 @@ public class CBZip2OutputStream
 
                 if( nGroups == 6 )
                 {
-                    short cost0;
-                    short cost1;
-                    short cost2;
-                    short cost3;
-                    short cost4;
-                    short cost5;
-                    cost0 = cost1 = cost2 = cost3 = cost4 = cost5 = 0;
+                    short cost0 = 0;
+                    short cost1 = 0;
+                    short cost2 = 0;
+                    short cost3 = 0;
+                    short cost4 = 0;
+                    short cost5 = 0;
+
                     for( i = gs; i <= ge; i++ )
                     {
                         short icv = m_szptr[ i ];
