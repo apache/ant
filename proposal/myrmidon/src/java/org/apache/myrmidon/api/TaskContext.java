@@ -14,7 +14,6 @@ import java.util.Map;
  * This interface represents the <em>Context</em> in which Task is executed.
  * Like other Component APIs the TaskContext represents the communication
  * path between the container and the Task.
- * Unlike other APIs the Logging is provided through another interface (LogEnabled).
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$

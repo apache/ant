@@ -26,6 +26,11 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * A utility class, that takes care of launching Myrmidon, and building and
  * executing a project.
  *
+ * <p>To use this class, create an instance and configure.  To execute
+ * targets in a project, use the {@link #executeTargets} method.  This can
+ * be done one or more times.  Finally, call the {@link #stop} method to
+ * clean-up.
+ *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
