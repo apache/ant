@@ -90,18 +90,18 @@ public class JDependTask extends Task {
     //private CommandlineJava commandline = new CommandlineJava();
 
     // required attributes
-    private Path _sourcesPath; // Deprecated!
-    private Path _classesPath; // Use this going forward
+    private Path sourcesPath; // Deprecated!
+    private Path classesPath; // Use this going forward
 
     // optional attributes
-    private File _outputFile;
-    private File _dir;
-    private Path _compileClasspath;
-    private boolean _haltonerror = false;
-    private boolean _fork = false;
+    private File outputFile;
+    private File dir;
+    private Path compileClasspath;
+    private boolean haltonerror = false;
+    private boolean fork = false;
     //private Integer _timeout = null;
 
-    private String _jvm = null;
+    private String jvm = null;
     private String format = "text";
     private PatternSet defaultPatterns = new PatternSet();
 
@@ -124,9 +124,6 @@ public class JDependTask extends Task {
         }
     }
 
-    public JDependTask() {
-    }
-
     /*
       public void setTimeout(Integer value) {
       _timeout = value;
@@ -140,38 +137,49 @@ public class JDependTask extends Task {
     /**
      * The output file name.
      *
-     * @param outputFile
+     * @param outputFile the output file name
      */
     public void setOutputFile(File outputFile) {
-        _outputFile = outputFile;
+        this.outputFile = outputFile;
     }
 
+    /**
+     * @return the output file name
+     */
     public File getOutputFile() {
-        return _outputFile;
+        return outputFile;
     }
 
     /**
      * Whether or not to halt on failure. Default: false.
+     * @param haltonerror the value to set
      */
-    public void setHaltonerror(boolean value) {
-        _haltonerror = value;
+    public void setHaltonerror(boolean haltonerror) {
+        this.haltonerror = haltonerror;
     }
 
+    /**
+     * @return the value of the haltonerror attribute
+     */
     public boolean getHaltonerror() {
-        return _haltonerror;
+        return haltonerror;
     }
 
     /**
      * If true, forks into a new JVM. Default: false.
      *
-     * @param   value   <tt>true</tt> if a JVM should be forked, otherwise <tt>false<tt>
+     * @param   value   <tt>true</tt> if a JVM should be forked,
+     *                  otherwise <tt>false<tt>
      */
     public void setFork(boolean value) {
-        _fork = value;
+        fork = value;
     }
 
+    /**
+     * @return the value of the fork attribute
+     */
     public boolean getFork() {
-        return _fork;
+        return fork;
     }
 
     /**
@@ -182,47 +190,49 @@ public class JDependTask extends Task {
      * @see #setFork(boolean)
      */
     public void setJvm(String value) {
-        _jvm = value;
+        jvm = value;
 
     }
 
     /**
      * Adds a path to source code to analyze.
+     * @return a source path
      * @deprecated
      */
     public Path createSourcespath() {
-        if (_sourcesPath == null) {
-            _sourcesPath = new Path(getProject());
+        if (sourcesPath == null) {
+            sourcesPath = new Path(getProject());
         }
-        return _sourcesPath.createPath();
+        return sourcesPath.createPath();
     }
 
     /**
      * Gets the sourcepath.
-     *
+     * @return the sources path
      * @deprecated
      *
      */
     public Path getSourcespath() {
-        return _sourcesPath;
+        return sourcesPath;
     }
 
     /**
      * Adds a path to class code to analyze.
+     * @return a classes path
      */
     public Path createClassespath() {
-        if (_classesPath == null) {
-            _classesPath = new Path(getProject());
+        if (classesPath == null) {
+            classesPath = new Path(getProject());
         }
-        return _classesPath.createPath();
+        return classesPath.createPath();
     }
 
     /**
      * Gets the classespath.
-     *
+     * @return the classes path
      */
     public Path getClassespath() {
-        return _classesPath;
+        return classesPath;
     }
 
     /**
@@ -231,42 +241,52 @@ public class JDependTask extends Task {
      * @see #setFork(boolean)
      */
     public void setDir(File dir) {
-        _dir = dir;
+        this.dir = dir;
     }
 
+    /**
+     * @return the dir attribute
+     */
     public File getDir() {
-        return _dir;
+        return dir;
     }
 
     /**
      * Set the classpath to be used for this compilation.
+     * @param classpath a class path to be used
      */
     public void setClasspath(Path classpath) {
-        if (_compileClasspath == null) {
-            _compileClasspath = classpath;
+        if (compileClasspath == null) {
+            compileClasspath = classpath;
         } else {
-            _compileClasspath.append(classpath);
+            compileClasspath.append(classpath);
         }
     }
 
-    /** Gets the classpath to be used for this compilation. */
+    /**
+     * Gets the classpath to be used for this compilation.
+     * @return the class path used for compilation
+     */
     public Path getClasspath() {
-        return _compileClasspath;
+        return compileClasspath;
     }
 
     /**
      * Adds a path to the classpath.
+     * @return a classpath
      */
     public Path createClasspath() {
-        if (_compileClasspath == null) {
-            _compileClasspath = new Path(getProject());
+        if (compileClasspath == null) {
+            compileClasspath = new Path(getProject());
         }
-        return _compileClasspath.createPath();
+        return compileClasspath.createPath();
     }
 
     /**
      * Create a new JVM argument. Ignored if no JVM is forked.
-     * @return  create a new JVM argument so that any argument can be passed to the JVM.
+     * @param commandline the commandline to create the argument on
+     * @return  create a new JVM argument so that any argument can
+     *          be passed to the JVM.
      * @see #setFork(boolean)
      */
     public Commandline.Argument createJvmarg(CommandlineJava commandline) {
@@ -275,6 +295,7 @@ public class JDependTask extends Task {
 
     /**
      * Adds a reference to a classpath defined elsewhere.
+     * @param r a classpath reference
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -282,11 +303,15 @@ public class JDependTask extends Task {
 
     /**
      * add a name entry on the exclude list
+     * @return a pattern for the excludes
      */
     public PatternSet.NameEntry createExclude() {
         return defaultPatterns.createExclude();
     }
 
+    /**
+     * @return the excludes patterns
+     */
     public PatternSet getExcludes() {
         return defaultPatterns;
     }
@@ -294,15 +319,23 @@ public class JDependTask extends Task {
     /**
      * The format to write the output in, "xml" or "text".
      *
-     * @param ea
+     * @param ea xml or text
      */
     public void setFormat(FormatAttribute ea) {
         format = ea.getValue();
     }
 
+    /**
+     * A class for the enumerated attribute format,
+     * values are xml and text.
+     * @see EnumeratedAttribute
+     */
     public static class FormatAttribute extends EnumeratedAttribute {
         private String [] formats = new String[]{"xml", "text"};
 
+        /**
+         * @return the enumerated values
+         */
         public String[] getValues() {
             return formats;
         }
@@ -317,6 +350,11 @@ public class JDependTask extends Task {
      */
     private static final int ERRORS = 1;
 
+    /**
+     * execute the task
+     *
+     * @exception BuildException if an error occurs
+     */
     public void execute() throws BuildException {
 
         CommandlineJava commandline = new CommandlineJava();
@@ -328,8 +366,8 @@ public class JDependTask extends Task {
                 commandline.setClassname("jdepend.xmlui.JDepend");
             }
 
-        if (_jvm != null) {
-            commandline.setVm(_jvm);
+        if (jvm != null) {
+            commandline.setVm(jvm);
         }
         if (getSourcespath() == null && getClassespath() == null) {
             throw new BuildException("Missing classespath required argument");
@@ -376,6 +414,10 @@ public class JDependTask extends Task {
 
     /**
      * Execute inside VM.
+     *
+     * @param commandline the command line
+     * @return the return value of the mvm
+     * @exception BuildException if an error occurs
      */
     public int executeInVM(CommandlineJava commandline) throws BuildException {
         jdepend.textui.JDepend jdepend;
@@ -489,9 +531,11 @@ public class JDependTask extends Task {
      * Execute the task by forking a new JVM. The command will block until
      * it finishes. To know if the process was destroyed or not, use the
      * <tt>killedProcess()</tt> method of the watchdog class.
+     * @param commandline the commandline for forked jvm
      * @param  watchdog   the watchdog in charge of cancelling the test if it
-     * exceeds a certain amount of time. Can be <tt>null</tt>, in this case
-     * the test could probably hang forever.
+     * exceeds a certain amount of time. Can be <tt>null</tt>.
+     * @return the result of running the jdepend
+     * @throws BuildException in case of error
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
     public int executeAsForked(CommandlineJava commandline,
@@ -511,7 +555,7 @@ public class JDependTask extends Task {
             // to add quotes around the argument thus making JDepend not taking
             // it into account. Thus we split it in two
             commandline.createArgument().setValue("-file");
-            commandline.createArgument().setValue(_outputFile.getPath());
+            commandline.createArgument().setValue(outputFile.getPath());
             // we have to find a cleaner way to put this output
         }
 
@@ -562,6 +606,7 @@ public class JDependTask extends Task {
     /**
      * @return <tt>null</tt> if there is a timeout value, otherwise the
      * watchdog instance.
+     * @throws BuildException in case of error
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
 
