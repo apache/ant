@@ -1,9 +1,11 @@
 <roles version="1.0">
-  <role shorthand="task"             name="org.apache.myrmidon.api.Task"/>
-  <role shorthand="data-type"        name="org.apache.myrmidon.framework.DataType"/>
-  <role shorthand="listener"         name="org.apache.myrmidon.listeners.ProjectListener"/>
-  <role shorthand="aspect"           name="org.apache.myrmidon.aspects.AspectHandler"/>
-  <role shorthand="project-builder"  name="org.apache.myrmidon.interfaces.builder.ProjectBuilder"/>
-  <role shorthand="converter"        name="org.apache.myrmidon.converter.Converter"/>
-  <role shorthand="configurer"       name="org.apache.myrmidon.interfaces.configurer.Configurer"/>
+    <role shorthand="task" name="org.apache.myrmidon.api.Task"/>
+    <role shorthand="data-type" name="org.apache.myrmidon.framework.DataType"/>
+    <role shorthand="listener" name="org.apache.myrmidon.listeners.ProjectListener"/>
+    <role shorthand="aspect" name="org.apache.myrmidon.aspects.AspectHandler"/>
+    <role shorthand="project-builder" name="org.apache.myrmidon.interfaces.builder.ProjectBuilder"/>
+    <role shorthand="converter" name="org.apache.myrmidon.converter.Converter"/>
+    <role shorthand="configurer" name="org.apache.myrmidon.interfaces.configurer.Configurer"/>
+    <role shorthand="exec-manager" name="org.apache.aut.nativelib.ExecManager"/>
+    <role shorthand="file-system-manager" name="org.apache.aut.vfs.FileSystemManager"/>
 </roles>
