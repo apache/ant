@@ -64,49 +64,35 @@ public class IsSigned extends DataType implements Condition {
      * specified, if the file contains a signature.
      * @return true if the file is signed.
      */
-    public boolean eval() {
-        if (file == null) {
-            throw new BuildException("The file attribute must be set.");
-        }
-        if (file != null && !file.exists()) {
-            log("The file \"" + file.getAbsolutePath()
-                    + "\" does not exist.", Project.MSG_VERBOSE);
-            return false;
-        }
-
+    public static boolean isSigned(File zipFile, String name)
+        throws IOException {
         ZipFile jarFile = null;
         try {
-            jarFile = new ZipFile(file);
+            jarFile = new ZipFile(zipFile);
             if (null == name) {
                 Enumeration entries = jarFile.entries();
                 while (entries.hasMoreElements()) {
-                    String name = ((ZipEntry) entries.nextElement()).getName();
-                    if (name.startsWith(SIG_START) && name.endsWith(SIG_END)) {
-                        log("File \"" + file.getAbsolutePath()
-                            + "\" is signed.", Project.MSG_VERBOSE);
+                    String eName = ((ZipEntry) entries.nextElement()).getName();
+                    if (eName.startsWith(SIG_START)
+                        && eName.endsWith(SIG_END)) {
                         return true;
                     }
                 }
                 return false;
             } else {
                 boolean shortSig = jarFile.getEntry(SIG_START
-                                    + name.toUpperCase()
-                                    + SIG_END) != null;
-                boolean longSig  = jarFile.getEntry(SIG_START
-                                    + name.substring(0, 8).toUpperCase()
-                                    + SIG_END) != null;
-                if (shortSig || longSig) {
-                    log("File \"" + file.getAbsolutePath()
-                        + "\" is signed.", Project.MSG_VERBOSE);
-                    return true;
-                } else {
-                    return false;
+                                                    + name.toUpperCase()
+                                                    + SIG_END) != null;
+                boolean longSig = false;
+                if (name.length() > 8) {
+                    longSig = 
+                        jarFile.getEntry(SIG_START
+                                         + name.substring(0, 8).toUpperCase()
+                                         + SIG_END) != null;
                 }
+
+                return shortSig || longSig;
             }
-        } catch (IOException e) {
-            log("Got IOException reading file \"" + file.getAbsolutePath()
-                + "\"" + e, Project.MSG_VERBOSE);
-            return false;
         } finally {
             if (jarFile != null) {
                 try {
@@ -116,5 +102,36 @@ public class IsSigned extends DataType implements Condition {
                 }
             }
         }
+    }
+
+    /**
+     * Returns <CODE>true</code> if the file exists and is signed with
+     * the signature specified, or, if <CODE>name</code> wasn't
+     * specified, if the file contains a signature.
+     * @return true if the file is signed.
+     */
+    public boolean eval() {
+        if (file == null) {
+            throw new BuildException("The file attribute must be set.");
+        }
+        if (file != null && !file.exists()) {
+            log("The file \"" + file.getAbsolutePath()
+                + "\" does not exist.", Project.MSG_VERBOSE);
+            return false;
+        }
+
+        boolean r = false;
+        try {
+            r = isSigned(file, name);
+        } catch (IOException e) {
+            log("Got IOException reading file \"" + file.getAbsolutePath()
+                + "\"" + e, Project.MSG_WARN);
+        }
+
+        if (r) {
+            log("File \"" + file.getAbsolutePath() + "\" is signed.",
+                Project.MSG_VERBOSE);
+        }
+        return r;
     }
 }

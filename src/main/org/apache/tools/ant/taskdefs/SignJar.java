@@ -26,6 +26,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.IsSigned;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -338,37 +339,10 @@ public class SignJar extends Task {
      * @return true if the file is signed
      */
     protected boolean isSigned(File file) {
-        final String SIG_START = "META-INF/";
-        final String SIG_END = ".SF";
-
-        if (!file.exists()) {
-            return false;
-        }
-        ZipFile jarFile = null;
         try {
-            jarFile = new ZipFile(file);
-            if (null == alias) {
-                Enumeration entries = jarFile.entries();
-                while (entries.hasMoreElements()) {
-                    String name = ((ZipEntry) entries.nextElement()).getName();
-                    if (name.startsWith(SIG_START) && name.endsWith(SIG_END)) {
-                        return true;
-                    }
-                }
-                return false;
-            } else {
-                return jarFile.getEntry(SIG_START + alias.toUpperCase()
-                                        + SIG_END) != null;
-            }
+            return IsSigned.isSigned(file, alias);
         } catch (IOException e) {
             return false;
-        } finally {
-            if (jarFile != null) {
-                try {
-                    jarFile.close();
-                } catch (IOException e) {
-                }
-            }
         }
     }
 }
