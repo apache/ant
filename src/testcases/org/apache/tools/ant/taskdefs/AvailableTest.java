@@ -91,7 +91,7 @@ public class AvailableTest extends TaskdefsTest {
     // file does exist -> property 'test' == 'true'
     public void test5() { 
         executeTarget("test5");
-        assertEquals(project.getProperty("test"), "true");
+        assertEquals("true", project.getProperty("test"));
     }
     
     // resource doesn't exist -> property 'test' == null
@@ -103,7 +103,7 @@ public class AvailableTest extends TaskdefsTest {
     // resource does exist -> property 'test' == 'true'
     public void test7() { 
         executeTarget("test7");
-        assertEquals(project.getProperty("test"), "true");
+        assertEquals("true", project.getProperty("test"));
     }
 
     // class doesn't exist -> property 'test' == null
@@ -115,32 +115,32 @@ public class AvailableTest extends TaskdefsTest {
     // class does exist -> property 'test' == 'true'
     public void test9() { 
         executeTarget("test9");
-        assertEquals(project.getProperty("test"), "true");
+        assertEquals("true", project.getProperty("test"));
     }
     
     // All three specified and all three exist -> true
     public void test10() { 
         executeTarget("test10");
-        assertEquals(project.getProperty("test"), "true");
+        assertEquals("true", project.getProperty("test"));
     }
 
     // All three specified but class missing -> null
     public void test11() { 
         executeTarget("test11");
-        assertEquals(project.getProperty("test"), null);
+        assertEquals(null, project.getProperty("test"));
     }
 
     // Specified property-name is "" -> true
     public void test12() { 
         executeTarget("test12");
-        assertEquals(project.getProperty("test"), null);
-        assertEquals(project.getProperty(""), "true");
+        assertEquals(null, project.getProperty("test"));
+        assertEquals("true", project.getProperty(""));
     }
 
-    // Specified file is "" -> current directory should always exis :-)
+    // Specified file is "" -> invalid files do not exist
     public void test13() { 
         executeTarget("test13");
-        assertEquals(project.getProperty("test"), "true");
+        assertEquals(null, project.getProperty("test"));
     }
 
     // Specified resource is "" -> can such a thing exist?
@@ -155,6 +155,26 @@ public class AvailableTest extends TaskdefsTest {
     // Specified class is "" -> can not exist
     public void test15() { 
         executeTarget("test15");
-        assertEquals(project.getProperty("test"), null);
+        assertEquals(null, project.getProperty("test"));
+    }
+
+    // Specified dir is "" -> this is the current directory and should
+    // always exist
+    public void test16() { 
+        executeTarget("test16");
+        assertEquals("true", project.getProperty("test"));
+    }
+
+    // Specified dir is "../taskdefs" -> should exist since it's the 
+    // location of the buildfile used...
+    public void test17() { 
+        executeTarget("test17");
+        assertEquals("true", project.getProperty("test"));
+    }
+
+    // Specified dir is "../this_dir_should_never_exist" -> null
+    public void test18() { 
+        executeTarget("test18");
+        assertEquals(null, project.getProperty("test"));
     }
 }

@@ -78,4 +78,19 @@
                classname="org.apache.tools.ant.taskdefs.this_class_does_not_exist"/>
   </target>
 
+  <target name="test16">
+    <available property="test" 
+               dir=""/>
+  </target>
+
+  <target name="test17">
+    <available property="test" 
+               dir="../taskdefs"/>
+  </target>
+
+  <target name="test18">
+    <available property="test" 
+               dir="../this_dir_should_never_exist"/>
+  </target>
+
 </project>
