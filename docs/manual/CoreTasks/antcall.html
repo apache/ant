@@ -31,8 +31,9 @@ can not be overridden by nested &lt;param&gt; elements.</p>
 <p>Nested <a href="#reference"><i>&lt;reference&gt;</i></a> elements can
 be used to copy references from the calling project to the new
 project, optionally under a different id.  References taken from
-nested elements will override existing references in the new
-project.</p>
+nested elements will override existing references that have been
+defined outside of targets in the new project - but not those defined
+inside of targets.</p>
 
 <p>
 When a target is invoked by antcall, all of its dependent targets will

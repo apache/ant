@@ -43,8 +43,9 @@ references defined in the new project.</p>
 <p>Nested <a href="#reference"><i>&lt;reference&gt;</i></a> elements
 can also be used to copy references from the calling project to the
 new project, optionally under a different id.  References taken from
-nested elements will override existing references in the new
-project.</p>
+nested elements will override existing references that have been
+defined outside of targets in the new project - but not those defined
+inside of targets.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
