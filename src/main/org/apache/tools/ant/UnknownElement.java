@@ -101,7 +101,13 @@ public class UnknownElement extends Task {
             throw new BuildException("Could not create task of type: "
                                      + elementName, location);
         }
-        realTask.execute();
+
+        try {
+            project.fireTaskStarted(realTask);
+            realTask.execute();
+        } finally {
+            project.fireTaskFinished(realTask, null);
+        }
     }
 
     public void addChild(UnknownElement child) {
