@@ -1874,4 +1874,18 @@ public class Project {
         BuildEvent event = new BuildEvent(task);
         fireMessageLoggedEvent(event, message, priority);
     }
+
+    /**
+     * Treat messages generated in the given thread as messages that
+     * come from the same task that is performed on the current
+     * thread.
+     *
+     * @since 1.102, Ant 1.5
+     */
+    public void registerThreadLikeCurrent(Thread thread) {
+        Task task = (Task) threadTasks.get(Thread.currentThread());
+        if (task != null) {
+            threadTasks.put(thread, task);
+        }
+    }
 }
