@@ -25,7 +25,7 @@ import org.apache.avalon.excalibur.extension.Specification;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-class LibraryDisplay
+class LibraryDisplayer
 {
     /**
      * Display the extensions and specifications contained
@@ -104,7 +104,7 @@ class LibraryDisplay
      *
      * @param manifest the manifest
      * @return the specifications or null if none
-     * @throws org.apache.myrmidon.api.TaskException if malformed specification sections
+     * @throws TaskException if malformed specification sections
      */
     private Specification[] getSpecifications( final Manifest manifest )
         throws TaskException

@@ -324,13 +324,13 @@ Legal:
     </target>
 
     <target name="extension-test">
-        <extension-display file="../../src/ant1compat/jar/ant.jar"/>
-        <extension-display>
+        <jarlib-display file="../../src/ant1compat/jar/ant.jar"/>
+        <jarlib-display>
             <fileset dir="../../">
                 <include name="src/ant1compat/jar/*.jar"/>
                 <include name="lib/*.jar"/>
             </fileset>
-        </extension-display>
+        </jarlib-display>
     </target>
 
 </project>

@@ -30,13 +30,13 @@ import org.apache.tools.todo.types.ScannerUtil;
  * http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant.task name="extension-display"
+ * @ant.task name="jarlib-display"
  */
-public class ExtensionDisplayTask
+public class JarLibDisplayTask
     extends AbstractTask
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( ExtensionDisplayTask.class );
+        ResourceManager.getPackageResources( JarLibDisplayTask.class );
 
     /**
      * The library to display information about.
@@ -74,7 +74,7 @@ public class ExtensionDisplayTask
     {
         validate();
 
-        final LibraryDisplay displayer = new LibraryDisplay();
+        final LibraryDisplayer displayer = new LibraryDisplayer();
         // Check if list of files to check has been specified
         if( !m_filesets.isEmpty() )
         {
