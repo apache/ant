@@ -92,8 +92,6 @@ public class Zip extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        project.log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
-
         if (baseDir == null) {
             throw new BuildException("basedir attribute must be set!");
         }
@@ -105,6 +103,16 @@ public class Zip extends MatchingTask {
 
         String[] files = ds.getIncludedFiles();
         String[] dirs  = ds.getIncludedDirectories();
+
+        // quick exit if the target is up to date
+        boolean upToDate = true;
+        for (int i=0; i<files.length && upToDate; i++)
+            if (new File(baseDir,files[i]).lastModified() > 
+                zipFile.lastModified())
+                upToDate = false;
+        if (upToDate) return;
+
+        project.log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
         try {
             ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
