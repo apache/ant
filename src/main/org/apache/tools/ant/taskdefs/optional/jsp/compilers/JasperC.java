@@ -154,6 +154,8 @@ public class JasperC extends DefaultJspCompilerAdapter {
         addArg(cmd, "-uriroot", jspc.getUriroot());
         addArg(cmd, "-uribase", jspc.getUribase());
         addArg(cmd, "-ieplugin", jspc.getIeplugin());
+        addArg(cmd, "-webinc", jspc.getWebinc());
+        addArg(cmd, "-webxml", jspc.getWebxml());        
         addArg(cmd, "-die9");
 
         if (jspc.isMapped()){
