@@ -91,18 +91,15 @@ public class XmlLogger implements BuildListener {
     private static final String ERROR_ATTR = "error";
 
     private Document doc;
-    private Element buildElement;
-    private Element targetElement;
-    private Element taskElement;
+    private Hashtable tasks = new Hashtable();
+    private Hashtable targets = new Hashtable();
+    private Hashtable threadStacks = new Hashtable();
+    private TimedElement buildElement = null;
 
-    private long buildStartTime;
-    private long targetStartTime;
-    private long taskStartTime;
-
-    private Stack targetTimeStack = new Stack();
-    private Stack targetStack = new Stack();
-    private Stack taskTimeStack = new Stack();
-    private Stack taskStack = new Stack();
+    static private class TimedElement {
+        long startTime;
+        Element element;
+    }
 
     /**
      *  Constructs a new BuildListener that logs build events to an XML file.
@@ -111,18 +108,19 @@ public class XmlLogger implements BuildListener {
     }
 
     public void buildStarted(BuildEvent event) {
-        buildStartTime = System.currentTimeMillis();
+        buildElement = new TimedElement();
+        buildElement.startTime = System.currentTimeMillis();
 
         doc = builder.newDocument();
-        buildElement = doc.createElement(BUILD_TAG);
+        buildElement.element = doc.createElement(BUILD_TAG);
     }
 
     public void buildFinished(BuildEvent event) {
-        long totalTime = System.currentTimeMillis() - buildStartTime;
-        buildElement.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
+        long totalTime = System.currentTimeMillis() - buildElement.startTime;
+        buildElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
 
         if (event.getException() != null) {
-            buildElement.setAttribute(ERROR_ATTR, event.getException().toString());
+            buildElement.element.setAttribute(ERROR_ATTR, event.getException().toString());
         }
 
         try {
@@ -139,7 +137,7 @@ public class XmlLogger implements BuildListener {
                 new OutputStreamWriter(new FileOutputStream(outFilename),
                                        "UTF8");
             out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
-            (new DOMElementWriter()).write(buildElement, out, 0, "\t");
+                      (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
             out.close();
             
@@ -149,61 +147,92 @@ public class XmlLogger implements BuildListener {
         buildElement = null;
     }
 
-    public void targetStarted(BuildEvent event) {
-        if (targetElement != null) {
-            targetTimeStack.push(new Long(targetStartTime));
-            targetStack.push(targetElement);
+    private Stack getStack() {    
+        Stack threadStack = (Stack)threadStacks.get(Thread.currentThread());
+        if (threadStack == null) {
+            threadStack = new Stack();
+            threadStacks.put(Thread.currentThread(), threadStack);
         }
-        targetStartTime = System.currentTimeMillis();
-        targetElement = doc.createElement(TARGET_TAG);
-        targetElement.setAttribute(NAME_ATTR, event.getTarget().getName());
+        return threadStack;
+    }
+    
+    public void targetStarted(BuildEvent event) {
+        Target target = event.getTarget();
+        TimedElement targetElement = new TimedElement();
+        targetElement.startTime = System.currentTimeMillis();
+        targetElement.element = doc.createElement(TARGET_TAG);
+        targetElement.element.setAttribute(NAME_ATTR, target.getName());
+        targets.put(target, targetElement);
+        getStack().push(targetElement);
     }
 
     public void targetFinished(BuildEvent event) {
-        long totalTime = System.currentTimeMillis() - targetStartTime;
-        targetElement.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
-        if (taskElement == null) {
-            buildElement.appendChild(targetElement);
-        } else {
-            taskElement.appendChild(targetElement);
-        }
+        Target target = event.getTarget();
+        TimedElement targetElement = (TimedElement)targets.get(target);
+        if (targetElement != null) {
+            long totalTime = System.currentTimeMillis() - targetElement.startTime;
+            targetElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
 
-        targetElement = null;
-
-        if (!targetStack.isEmpty()) {
-            targetStartTime = ((Long) targetTimeStack.pop()).longValue();
-            targetElement = (Element) targetStack.pop();
+            TimedElement parentElement = null;            
+            Stack threadStack = getStack();
+            if (!threadStack.empty()) {
+                TimedElement poppedStack = (TimedElement)threadStack.pop();
+                if (poppedStack != targetElement) {
+                    throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
+                    " finished task element = " + targetElement.element);
+                }                                           
+                if (!threadStack.empty()) {
+                    parentElement = (TimedElement)threadStack.peek();
+                }
+            }
+            if (parentElement == null) {
+                buildElement.element.appendChild(targetElement.element);
+            }
+            else {                
+                parentElement.element.appendChild(targetElement.element);
+            }
         }
     }
 
     public void taskStarted(BuildEvent event) {
-        if (taskElement != null) {
-            taskTimeStack.push(new Long(taskStartTime));
-            taskStack.push(taskElement);
-        }
-
-        taskStartTime = System.currentTimeMillis();
-        taskElement = doc.createElement(TASK_TAG);
-
-        String name = event.getTask().getClass().getName();
+        Task task = event.getTask();
+        TimedElement taskElement = new TimedElement();
+        taskElement.startTime = System.currentTimeMillis();
+        taskElement.element = doc.createElement(TASK_TAG);
+        
+        String name = task.getClass().getName();
         int pos = name.lastIndexOf(".");
         if (pos != -1) {
             name = name.substring(pos + 1);
         }
-        taskElement.setAttribute(NAME_ATTR, name);
-
-        taskElement.setAttribute(LOCATION_ATTR, event.getTask().getLocation().toString());
+        taskElement.element.setAttribute(NAME_ATTR, name);
+        taskElement.element.setAttribute(LOCATION_ATTR, event.getTask().getLocation().toString());
+        tasks.put(task, taskElement);
+        getStack().push(taskElement);
     }
 
     public void taskFinished(BuildEvent event) {
-        long totalTime = System.currentTimeMillis() - taskStartTime;
-        taskElement.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
-        targetElement.appendChild(taskElement);
-
-        taskElement = null;
-        if (!taskStack.isEmpty()) {
-            taskStartTime = ((Long) taskTimeStack.pop()).longValue();
-            taskElement = (Element) taskStack.pop();
+        Task task = event.getTask();
+        TimedElement taskElement = (TimedElement)tasks.get(task);
+        if (taskElement != null) {
+            long totalTime = System.currentTimeMillis() - taskElement.startTime;
+            taskElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
+            Target target = task.getOwningTarget();
+            TimedElement targetElement = (TimedElement)targets.get(target);
+            if (targetElement == null) {
+                buildElement.element.appendChild(taskElement.element);
+            }
+            else {
+                targetElement.element.appendChild(taskElement.element);
+            }
+            Stack threadStack = getStack();
+            if (!threadStack.empty()) {
+                TimedElement poppedStack = (TimedElement)threadStack.pop();
+                if (poppedStack != taskElement) {
+                    throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
+                    " finished task element = " + taskElement.element);
+                }                                           
+            }
         }
     }
 
@@ -222,14 +251,31 @@ public class XmlLogger implements BuildListener {
         Text messageText = doc.createTextNode(event.getMessage());
         messageElement.appendChild(messageText);
 
-        if (taskElement != null) {
-            taskElement.appendChild(messageElement);
+        TimedElement parentElement = null;
+        
+        Task task = event.getTask();
+        Target target = event.getTarget();
+        if (task != null) {
+            parentElement = (TimedElement)tasks.get(task);
         }
-        else if (targetElement != null) {
-            targetElement.appendChild(messageElement);
+        if (parentElement == null && target != null) {
+            parentElement = (TimedElement)targets.get(target);
+        }
+         
+        if (parentElement == null) {
+            Stack threadStack = (Stack)threadStacks.get(Thread.currentThread());
+            if (threadStack != null) {
+                if (!threadStack.empty()) {
+                    parentElement = (TimedElement)threadStack.peek();
+                }
+            }
+        }
+        
+        if (parentElement != null) {
+            parentElement.element.appendChild(messageElement);
         }
         else {
-            buildElement.appendChild(messageElement);
+            buildElement.element.appendChild(messageElement);
         }
     }
 
