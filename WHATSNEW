@@ -6,7 +6,7 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
-* Translate task does not remove tokens when a key is not found.  
+* Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
 * Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
@@ -30,13 +30,15 @@ Other changes:
 
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
-  
-* <nice> task lets you set the priority of the current thread; non-forking 
-  <java> code will inherit this priority in their main thread. 
 
-* <touch> has filelist support. 
+* <nice> task lets you set the priority of the current thread; non-forking
+  <java> code will inherit this priority in their main thread.
+
+* <touch> has filelist support.
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
+
+* proposal/xdocs updated with xdoclet-1.2 final
 
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
@@ -309,7 +311,7 @@ Fixed bugs:
 
 * <xmlcatalog>s only worked when defined inside of tasks.  Bugzilla
   Report 20965.
-  
+
 * <csc> and siblings (<vbc> <jsharpc>) handle large filesets by
 automatic use of response files.  Bugzilla report #19630
 
