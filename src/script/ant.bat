@@ -10,7 +10,7 @@ rem %~dp0 is name of current script under NT
 set DEFAULT_ANT_HOME=%~dp0
 
 rem : operator works similar to make : operator
-set DEFAULT_ANT_HOME=%DEFAULT_ANT_HOME:\bin\=%
+set DEFAULT_ANT_HOME=%DEFAULT_ANT_HOME%\..
 
 if "%ANT_HOME%"=="" set ANT_HOME=%DEFAULT_ANT_HOME%
 set DEFAULT_ANT_HOME=
