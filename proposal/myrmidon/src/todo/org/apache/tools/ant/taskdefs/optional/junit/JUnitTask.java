@@ -761,10 +761,11 @@ public class JUnitTask extends Task
 
         public boolean asBoolean()
         {
-            return "true".equals( value )
-                || "on".equals( value )
-                || "yes".equals( value )
-                || "withOutAndErr".equals( value );
+            final String value = getValue();
+            return "true".equals( value ) ||
+                "on".equals( value ) ||
+                "yes".equals( value ) ||
+                "withOutAndErr".equals( value );
         }
     }
 
