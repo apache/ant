@@ -58,29 +58,15 @@
     <fail unless="c#.found">Needed C# compiler is missing</fail>
   </target>
 
-  <target name="testCSC" depends="testCSC-Mono,testCSC-MS">
+  <target name="testCSC" depends="validate_csc">
+    <csc
+      destFile="${testCSC.exe}"
+      targetType="exe"
+      />
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
     <dn:dotnetexec executable="${testCSC.exe}" failonerror="true" />
     <delete file="${testCSC.exe}"/>
-  </target>
-
-  <target name="testCSC-MS" depends="validate_csc" if="csc.found">
-    <csc
-      destFile="${testCSC.exe}"
-      targetType="exe"
-      >
-    </csc>
-  </target>
-
-  <target name="testCSC-Mono" depends="validate_csc" if="mcs.found">
-    <csc
-      destFile="${testCSC.exe}"
-      targetType="exe"
-      executable="mcs"
-      includedefaultreferences="true"
-      >
-    </csc>
   </target>
 
 </project>
