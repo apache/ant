@@ -28,7 +28,7 @@ if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/
   exit
 fi
 
-LOCALCLASSPATH=lib/xercesImpl.jar:lib/xml-apis.jar:bootstrap/lib/ant.jar
+LOCALCLASSPATH=
 # add in the dependency .jar files
 DIRLIBS=lib/optional/*.jar
 for i in ${DIRLIBS}

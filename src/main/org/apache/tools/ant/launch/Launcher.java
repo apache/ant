@@ -149,11 +149,11 @@ public class Launcher {
 
         for (int i = 0; i < jars.length; ++i) {
             baseClassPath.append(File.pathSeparatorChar);
-            baseClassPath.append(jars[i].getFile());
+            baseClassPath.append(Locator.fromURI(jars[i].toString()));
         }
 
         System.setProperty("java.class.path", baseClassPath.toString());
-
+        
         URLClassLoader loader = new URLClassLoader(jars);
         try {
             Class mainClass = loader.loadClass(MAIN_CLASS);
