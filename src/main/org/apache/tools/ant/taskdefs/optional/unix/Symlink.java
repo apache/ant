@@ -551,7 +551,8 @@ public class Symlink extends DispatchTask {
         // loop through the supplied file sets:
         for (int i = 0; i < v.size(); i++) {
             FileSet fs = (FileSet) v.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(this.getProject());
+            DirectoryScanner ds = new DirectoryScanner();
+            fs.setupDirectoryScanner(ds, getProject());
             ds.setFollowSymlinks(false);
             ds.scan();
             String[] incs = ds.getIncludedFiles();
