@@ -43,7 +43,7 @@ public class Project {
     /**
      * Front end that this project communicates to.
      */
-    private FrontEnd frontEnd;
+    private AntFrontEnd frontEnd;
 
     /**
      * Properties of this project.
@@ -80,7 +80,7 @@ public class Project {
     /**
      * Creates a new Project object with the given FrontEnd and TaskManager
      */
-    public Project(FrontEnd frontEnd, TaskManager taskManager) {
+    public Project(AntFrontEnd frontEnd, TaskManager taskManager) {
         this.frontEnd = frontEnd;
         this.taskManager = taskManager;
     }
@@ -123,7 +123,7 @@ public class Project {
     /**
      * Gets the front end that is running this project.
      */
-    public FrontEnd getFrontEnd() {
+    public AntFrontEnd getFrontEnd() {
         return frontEnd;
     }
 
@@ -198,7 +198,7 @@ public class Project {
     /**
      * Sets the front end for this project.
      */
-    public void setFrontEnd(FrontEnd frontEnd) {
+    public void setFrontEnd(AntFrontEnd frontEnd) {
         this.frontEnd = frontEnd;
     }
     
@@ -233,7 +233,7 @@ public class Project {
      */
     public void startBuild(String targetName) throws AntException {
         
-        // notify FrontEnd that we are starting a build on a project
+        // notify AntFrontEnd that we are starting a build on a project
         
         frontEnd.notifyProjectStart(this);
         

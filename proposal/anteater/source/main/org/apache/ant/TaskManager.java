@@ -26,7 +26,7 @@ public class TaskManager {
     /**
      * FrontEnd that this TaskManager can communicate through.
      */
-    private FrontEnd frontEnd;
+    private AntFrontEnd frontEnd;
     
     /**
      * Data structure where all the Class definition for all known tasks are
@@ -46,7 +46,7 @@ public class TaskManager {
     /**
      * Creates a new TaskManager.
      */
-    TaskManager(FrontEnd frontEnd) {
+    TaskManager(AntFrontEnd frontEnd) {
         this.frontEnd = frontEnd;
     }
     
@@ -104,7 +104,7 @@ public class TaskManager {
      */
     private void processDir(File dir) {
         frontEnd.writeMessage("Scanning " + dir + " for tasks", 
-                                       FrontEnd.MSG_LEVEL_LOW);
+                                       AntFrontEnd.MSG_LEVEL_LOW);
         File file = new File(dir, "taskdef.properties");
         if (file.exists()) {
             try {
@@ -121,7 +121,7 @@ public class TaskManager {
                     try {
                         Class clazz = loader.loadClass(taskClass);
                         frontEnd.writeMessage("Got Task: " + taskName +
-                                                       clazz, FrontEnd.MSG_LEVEL_LOW);
+                                                       clazz, AntFrontEnd.MSG_LEVEL_LOW);
                         taskClasses.put(taskName, clazz);
                     } catch (ClassNotFoundException cnfe) {
                         System.out.println("Couldn't load task: " + taskName);
@@ -142,7 +142,7 @@ public class TaskManager {
      */
     private void processJar(File file) throws AntException {
         frontEnd.writeMessage("Scanning " + file + " for tasks", 
-                                       FrontEnd.MSG_LEVEL_LOW);
+                                       AntFrontEnd.MSG_LEVEL_LOW);
         try {
             ZipFile zipFile = new ZipFile(file);
             ZipEntry zipEntry = zipFile.getEntry("taskdef.properties");
@@ -166,7 +166,7 @@ public class TaskManager {
                     try {
                         Class clazz = loader.loadClass(taskClass);
                        	frontEnd.writeMessage("Got Task: " + taskName +
-                                                       clazz, FrontEnd.MSG_LEVEL_LOW);
+                                                       clazz, AntFrontEnd.MSG_LEVEL_LOW);
                         taskClasses.put(taskName, clazz);
                     } catch (ClassNotFoundException cnfe) {
                         System.out.println("Couldn't load task: " + taskName);

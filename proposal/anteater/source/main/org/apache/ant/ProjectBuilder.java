@@ -26,7 +26,7 @@ public class ProjectBuilder {
     /**
      *
      */
-    private FrontEnd frontEnd;
+    private AntFrontEnd frontEnd;
     
     /**
      *
@@ -47,7 +47,7 @@ public class ProjectBuilder {
      * Creates a new project builder that will build projects for the given
      * Ant.
      */
-    public ProjectBuilder(FrontEnd frontEnd) {
+    public ProjectBuilder(AntFrontEnd frontEnd) {
         this.frontEnd = frontEnd;
         taskManager = new TaskManager(frontEnd);
         parserFactory = SAXParserFactory.newInstance();

@@ -14,7 +14,7 @@ import org.apache.ant.*;
  *
  * @author James Duncan Davidson (duncan@apache.org)
  */
-public class CLIFrontEnd extends FrontEnd {
+public class CLIFrontEnd extends AntFrontEnd {
 
     // -----------------------------------------------------------------
     // PRIVATE MEMBERS
