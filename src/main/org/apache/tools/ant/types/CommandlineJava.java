@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -625,20 +625,16 @@ public class CommandlineJava implements Cloneable {
         if (bootclasspath != null
             && bootclasspath.toString().trim().length() > 0) {
 
-            /*
-             * XXX - need to log something, but there is no ProjectComponent
-             *       around to log to.
-             */
             if (!bootclasspath.toString()
                 .equals(bootclasspath.concatSystemClasspath("ignore")
                         .toString())) {
                 if (log) {
-                    System.out.println("Ignoring bootclasspath as "
+                    bootclasspath.log("Ignoring bootclasspath as "
                                        + "build.sysclasspath has been set.");
                 }
             } else if (vmVersion.startsWith("1.1")) {
                 if (log) {
-                    System.out.println("Ignoring bootclasspath as "
+                    bootclasspath.log("Ignoring bootclasspath as "
                                        + "the target VM doesn't support it.");
                 }
             } else {
