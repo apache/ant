@@ -7,7 +7,7 @@
 <project name="Ant" default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file 
-       (and without typing -D each time it compiles it -->
+       (and without typing -D each time it compiles it) -->
   <property file="${user.home}/.ant.properties" />
 
   <property name="Name" value="Ant"/>
