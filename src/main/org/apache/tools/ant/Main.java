@@ -838,7 +838,7 @@ public class Main implements AntMain {
         msg.append("  -nice  number          A niceness value for the main thread:" + lSep
                    + "                         1 (lowest) to 10 (highest); 5 is the default"
                    + lSep);
-        msg.append("  -nouserlib             Run ant within using the jar files from ${user.home}/"
+        msg.append("  -nouserlib             Run ant without using the jar files from ${user.home}/"
                    + ".ant/lib");
         System.out.println(msg.toString());
     }
