@@ -66,8 +66,8 @@ Note: This document was created in the context of releasing Ant 1.5.
     Also make sure you have sent the key that you use to a public 
     keyserver.
 
-8.  The beta distribution is now ready to go. Bundle it up into a tar.gz file and 
-    scp to your apache account.
+8.  The beta distribution is now ready to go. Bundle it up into a tar.gz file 
+    and scp to your apache account.
     
 9.  Meanwhile, convert the WHATSNEW file into HTML for the README file on the 
     website. See the previous release directories for examples of these files. 
@@ -92,24 +92,29 @@ Note: This document was created in the context of releasing Ant 1.5.
       text/plain.  Fix it by using some .htaccess magic (AddEncoding stuff)
     * Your gz.asc files are not being displayed properly (RemoveEncoing stuff)
     
-    If it looks OK, announce it on ant-dev and ant-user. After a few days pass 
-    and there are no major problems, a wider announcement is made (main jakarta 
-    website, announcements@jakarta.apache.org, etc).
+    If it looks OK, announce it on ant-dev and ant-user. After a few
+    days pass and there are no major problems, a wider announcement is
+    made (main jakarta website, announcements@jakarta.apache.org,
+    etc).
     
     Also ensure you:
     * Update antnews.xml (Announcement)
-    * Update faq.xml (Ant's history details)
+    * Update faq.xml (Ant's history details - not for betas)
     * Update index.xml (Announcement, latest release details)
-    * Update problems.xml (Debug Output details)
-    Generate the html files by invoking ant on docs.xml - you need jakarta-site2
-    checked out for this.
-    Commit the modified/generated files and also perform a 
-    cvs update on files in daedalus' www/jakarta.apache.org/ant.
+    * Update problems.xml (Debug Output details - not for betas IMHO -SB)
 
-13. As problems in the beta are discovered, there may be a need for one or more 
-    subsequent betas. The release manager makes this call. Each time, the 
-    versions are updated and the above process is repeated. Try not to have 
-    too many betas.
+    Generate the html files by invoking ant on docs.xml - you need
+    jakarta-site2 checked out for this.  Commit the modified/generated
+    files and also perform a cvs update on files in daedalus'
+    www/jakarta.apache.org/ant.
+
+    Announce beta releases at freshmeat.net (Stefan Bodewig is the
+    owner of Ant's project entry - bug him ;-).
+
+13. As problems in the beta are discovered, there may be a need for
+    one or more subsequent betas. The release manager makes this
+    call. Each time, the versions are updated and the above process is
+    repeated. Try not to have too many betas.
 
 14. Try to advertise the need for testing of the betas as much as possible.
     This would eliminate the need to release minor patch versions like
@@ -130,6 +135,17 @@ Note: This document was created in the context of releasing Ant 1.5.
 
     [[TODO: Identify the mailing lists where announcements are to be made.
       Also identify the webpages to which the announcements must go. ]]
+
+    Apache mailing lists that should get the announcements:
+    announce@jakarta.apache.org, announce@xml.apache.org,
+    announce@apache.org, ant-dev and ant-user.
+
+    Announce release at freshmeat.net and opensourcedirectory.org
+    (Stefan Bodewig is the owner of Ant's project entries - bug him
+    ;-).
+
+    Announce release in the usenet groups comp.lang.java.softwaretools
+    and comp.lang.java.announce.
 
 18. You can now reacquaint yourself with your family and friends.
 
