@@ -19,11 +19,11 @@ or simply to syntax check the pages without deploying them.
 In most cases, a javac task is usually the next stage in the build process.
 The task does basic dependency checking to prevent unnecessary recompilation -this
 checking compares source and destination timestamps, and does not factor
-in class or taglib dependencies.  
+in class or taglib dependencies, or &lt;jsp:include&gt; references.
 
 <p>
-
-The task needs jasper.jar and jasper-runtime.jar, which come with 
+By default the task uses the Jasper JSP compiler. This 
+means the task needs jasper.jar and jasper-runtime.jar, which come with 
 builds of Tomcat 4/Catalina from the 
 <a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>
 
@@ -57,6 +57,11 @@ The Task has the following attributes:<p>
     <td valign="top">package</td>
     <td valign="top">Name of the destination package for generated java
     classes.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compiler</td>
+    <td valign="top">class name of a JSP compiler adapter</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -155,6 +160,22 @@ classpath.
 <h4>classpathref</h4>
 a reference to an existing classpath
 
+<h4>webapp</h4>
+Instructions to jasper to build an entire web application. 
+The base directory must have a WEB-INF subdirectory beneath it.
+When used, the task hands off all dependency checking to the compiler.
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the base directory of the web application</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
 <h3>Example</h3>
 <pre>
 &lt;jspc srcdir="${basedir}/src/war"
@@ -192,10 +213,7 @@ bytecodes. Include lib/taglib jar in the java compilation.
 java files if class dependencies indicate it is needed. 
 
 <p><h4>Notes</h4>
-<p> At present, this task only supports the jasper compiler. In future,
-other compilers will be supported by setting the <tt>jsp.compiler</tt> property.
-<p> The jasper compiler option <code>-webapp</code> is not supported. Using
-the <code>package</code> attribute it is possible to identify the resulting
+Using the <code>package</code> attribute it is possible to identify the resulting
 java files and thus do full dependency checking - this task only rebuilds
 java files if their jsp file has been modified.
 <p>
