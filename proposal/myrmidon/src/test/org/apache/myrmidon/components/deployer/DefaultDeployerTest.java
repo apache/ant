@@ -47,13 +47,16 @@ public class DefaultDeployerTest
      */
     public void testSingleType() throws Exception
     {
+        final String roleName = "data-type";
+        final String typeName = "test-type1";
+        final String classname = TestType1.class.getName();
+
         // Determine the shorthand for the DataType role
         final RoleManager roleManager = (RoleManager)getComponentManager().lookup( RoleManager.ROLE );
-        roleManager.addNameRoleMapping( "data-type", DataType.ROLE );
+        roleManager.addNameRoleMapping( roleName, DataType.ROLE );
 
         // Create the type definition
-        final String destType = TestType1.class.getName();
-        final TypeDefinition typeDef =  new TypeDefinition( "data-type", "test-type1", destType );
+        final TypeDefinition typeDef =  new TypeDefinition( typeName, roleName, classname );
 
         // Deploy the type
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -62,7 +65,7 @@ public class DefaultDeployerTest
 
         // Create an instance
         final TypeFactory typeFactory = getTypeManager().getFactory( DataType.class );
-        final Object result = typeFactory.create( "test-type1" );
+        final Object result = typeFactory.create( typeName );
 
         // Check the type
         assertTrue( result instanceof TestType1 );
@@ -77,6 +80,7 @@ public class DefaultDeployerTest
         final String classname = TestConverter1.class.getName();
         final String source = "java.lang.String";
         final String destClass = TestType1.class.getName();
+
         final ConverterDefinition typeDef =
             new ConverterDefinition( classname, source, destClass );
 
