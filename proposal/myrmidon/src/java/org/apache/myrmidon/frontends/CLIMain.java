@@ -32,6 +32,7 @@ import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
 import org.apache.log.Logger;
 import org.apache.log.Priority;
+import org.apache.log.output.DefaultOutputLogTarget;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
@@ -40,7 +41,6 @@ import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
-import org.apache.myrmidon.components.workspace.LogTargetToListenerAdapter;
 import org.apache.myrmidon.components.workspace.Workspace;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -321,9 +321,6 @@ public class CLIMain
         final String listenerName = m_parameters.getParameter( "listener", null );
         final ProjectListener listener = createListener( listenerName );
 
-        final LogTarget target = new LogTargetToListenerAdapter( listener );
-        getLogger().setLogTargets( new LogTarget[] { target } );
-
         getLogger().warn( "Ant Build File: " + buildFile );
         getLogger().info( "Ant Home Directory: " + homeDir );
         //getLogger().info( "Ant Bin Directory: " + m_binDir );
@@ -431,6 +428,10 @@ public class CLIMain
         }
 
         final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
+
+        final DefaultOutputLogTarget target = new DefaultOutputLogTarget();
+        target.setFormat( "[%8.8{category}] %{message}\\n%{throwable}" );
+        logger.setLogTargets( new LogTarget[] { target } );
 
         logger.setPriority( priority );
 

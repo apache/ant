@@ -23,7 +23,9 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.log.Hierarchy;
 import org.apache.log.Logger;
+import org.apache.log.LogTarget;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -56,6 +58,8 @@ public class DefaultWorkspace
     private TaskContext              m_baseContext;
     private HashMap                  m_entrys            = new HashMap();
     private TypeManager              m_typeManager;
+    private Hierarchy                m_hierarchy;
+    private int                      m_projectID;
 
     /**
      * Add a listener to project events.
@@ -101,6 +105,11 @@ public class DefaultWorkspace
         throws Exception
     {
         m_baseContext = createBaseContext();
+
+        m_hierarchy = new Hierarchy();
+
+        final LogTarget target = new LogTargetToListenerAdapter( m_listenerSupport );
+        m_hierarchy.setDefaultLogTarget( target );
     }
 
     /**
@@ -253,8 +262,10 @@ public class DefaultWorkspace
 
         try
         {
+            final Logger logger = m_hierarchy.getLoggerFor( "project" + m_projectID );
+            m_projectID++;
 
-            frame.setLogger( getLogger() );
+            frame.setLogger( logger );
             frame.contextualize( context );
             frame.compose( componentManager );
         }
