@@ -49,7 +49,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  * using the include/exclude syntax.  The deltree task would delete a
  * directory tree.  This task combines the functionality of these two
  * originally distinct tasks.
- * <p>Currently Delete extends MatchingTask.  This is intend <i>only</i>
+ * <p>Currently Delete extends MatchingTask.  This is intended <i>only</i>
  * to provide backwards compatibility for a release.  The future position
  * is to use nested filesets exclusively.</p>
  *
@@ -642,13 +642,13 @@ public class Delete extends MatchingTask {
         if (dirs.length > 0 && includeEmpty) {
             int dirCount = 0;
             for (int j = dirs.length - 1; j >= 0; j--) {
-                File dir = new File(d, dirs[j]);
-                String[] dirFiles = dir.list();
+                File currDir = new File(d, dirs[j]);
+                String[] dirFiles = currDir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
-                    log("Deleting " + dir.getAbsolutePath(), verbosity);
-                    if (!delete(dir)) {
+                    log("Deleting " + currDir.getAbsolutePath(), verbosity);
+                    if (!delete(currDir)) {
                         String message = "Unable to delete directory "
-                                + dir.getAbsolutePath();
+                                + currDir.getAbsolutePath();
                         if (failonerror) {
                             throw new BuildException(message);
                         } else {
