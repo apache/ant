@@ -7,11 +7,9 @@
  */
 package org.apache.myrmidon.components.embeddor;
 
-import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import java.io.File;
 import java.io.FilenameFilter;
-import org.apache.myrmidon.components.converter.MasterConverter;
-import org.apache.myrmidon.components.converter.ConverterRegistry;
+import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -21,11 +19,14 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
+import org.apache.myrmidon.components.aspect.AspectManager;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
+import org.apache.myrmidon.components.converter.ConverterRegistry;
+import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.deployer.Deployer;
-import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.deployer.DeploymentException;
+import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.type.TypeManager;
@@ -36,7 +37,7 @@ import org.apache.myrmidon.components.type.TypeManager;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class MyrmidonEmbeddor
+public class DefaultEmbeddor
     extends AbstractLoggable
     implements Embeddor
 {
@@ -45,6 +46,7 @@ public class MyrmidonEmbeddor
     private Deployer                 m_deployer;
     private RoleManager              m_roleManager;
 
+    private AspectManager            m_aspectManager;
     private TypeManager              m_typeManager;
     private MasterConverter          m_converter;
     private ConverterRegistry        m_converterRegistry;
@@ -136,6 +138,7 @@ public class MyrmidonEmbeddor
      */
     public void dispose()
     {
+        m_aspectManager = null;
         m_roleManager = null;
         m_converterRegistry = null;
         m_converter = null;
@@ -168,6 +171,8 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
         //create all the default properties for components
+        defaults.setParameter( AspectManager.ROLE,
+                               "org.apache.myrmidon.components.aspect.DefaultAspectManager" );
         defaults.setParameter( RoleManager.ROLE,
                                "org.apache.myrmidon.components.deployer.DefaultRoleManager" );
         defaults.setParameter( MasterConverter.ROLE,
@@ -213,6 +218,8 @@ public class MyrmidonEmbeddor
         componentManager.put( TypeManager.ROLE, m_typeManager );
         componentManager.put( ConverterRegistry.ROLE, m_converterRegistry );
 
+        componentManager.put( AspectManager.ROLE, m_aspectManager );
+
         //Following components required when allowing Container tasks
         componentManager.put( Configurer.ROLE, m_configurer );
         componentManager.put( Executor.ROLE, m_executor );
@@ -245,6 +252,9 @@ public class MyrmidonEmbeddor
         component = getParameter( RoleManager.ROLE );
         m_roleManager = (RoleManager)createComponent( component, RoleManager.class );
 
+        component = getParameter( AspectManager.ROLE );
+        m_aspectManager = (AspectManager)createComponent( component, AspectManager.class );
+
         component = getParameter( Deployer.ROLE );
         m_deployer = (Deployer)createComponent( component, Deployer.class );
 
@@ -267,6 +277,7 @@ public class MyrmidonEmbeddor
         throws Exception
     {
         setupComponent( m_roleManager );
+        setupComponent( m_aspectManager );
         setupComponent( m_converterRegistry );
         setupComponent( m_converter );
         setupComponent( m_executor );
@@ -433,10 +444,10 @@ public class MyrmidonEmbeddor
     }
 
 
-    private void deployFromDirectory( final Deployer deployer, 
+    private void deployFromDirectory( final Deployer deployer,
                                       final File directory,
                                       final FilenameFilter filter )
-        throws DeploymentException                                         
+        throws DeploymentException
     {
         final File[] files = directory.listFiles( filter );
 
@@ -469,7 +480,7 @@ public class MyrmidonEmbeddor
             }
             catch( final Exception e )
             {
-                throw new DeploymentException( "Unable to retrieve filename for file " + 
+                throw new DeploymentException( "Unable to retrieve filename for file " +
                                                files[ i ], e );
             }
         }
