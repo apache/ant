@@ -69,7 +69,6 @@ import java.io.StringReader;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -146,7 +145,7 @@ public class Execute {
                 shellLauncher = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
             }
         }
-        else if ( (new Os("netware")).eval() ) {
+        else if ( Os.isFamily("netware") ) {
             // NetWare.  Need to determine which JDK we're running in
             CommandLauncher baseLauncher;
             if ( System.getProperty("java.version").startsWith("1.1") ) {
@@ -234,7 +233,7 @@ public class Execute {
                 return cmd;
             }
             else {
-                // Windows 98/95 - need to use an auxiliary script
+                // Windows 98/95
                 String[] cmd = {"command.com", "/c", "set" };
                 return cmd;
             }
@@ -652,7 +651,7 @@ public class Execute {
     }
 
     /**
-     * A command launcher for Windows 2000/NT that uses 'cmd.exe' when
+     * A command launcher for Windows XP/2000/NT that uses 'cmd.exe' when
      * launching commands in directories other than the current working
      * directory.
      */
