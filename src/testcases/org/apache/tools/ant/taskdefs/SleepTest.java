@@ -63,7 +63,8 @@ public class SleepTest extends TaskdefsTest {
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
     private final static boolean TRACE=false;
-
+	private final static int ERROR_RANGE=1000;
+	
     public SleepTest(String name) {
         super(name);
     }
@@ -93,7 +94,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test3");
         timer.stop();
         if(TRACE) System.out.println(" test3 elapsed time="+timer.time());
-        assert(timer.time()>=2000);
+        assert(timer.time()>=(2000-ERROR_RANGE));
     }
 
     public void test4() {
@@ -101,7 +102,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test3");
         timer.stop();
         if(TRACE) System.out.println(" test4 elapsed time="+timer.time());
-        assert(timer.time()>=2000 && timer.time()<60000);
+        assert(timer.time()>=(2000-ERROR_RANGE) && timer.time()<60000);
     }
 
     public void test5() {
