@@ -129,6 +129,9 @@ class EventResponder {
             else if(command.equals(AboutCmd.ACTION_NAME)) {
                 new AboutCmd(_context).execute();
             }
+            else if(command.equals(ChangeLookAndFeelCmd.ACTION_NAME)) {
+                new ChangeLookAndFeelCmd(_context).execute();
+            }
             else {
 				// XXX log me.
                 System.err.println("Unhandled action: " + command);
