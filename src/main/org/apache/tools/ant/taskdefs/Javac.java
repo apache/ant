@@ -102,6 +102,8 @@ import java.util.Vector;
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ *
+ * @version $Revision$
  */
 
 public class Javac extends MatchingTask {
@@ -715,7 +717,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Chose the implementation for this particular task.
+     * Choose the implementation for this particular task.
      *
      * @since 1.84, Ant 1.5
      */
@@ -727,7 +729,7 @@ public class Javac extends MatchingTask {
      * The implementation for this particular task.
      *
      * <p>Defaults to the build.compiler property but can be overriden
-     * via the compiler and for attributes.</p>
+     * via the compiler and fork attributes.</p>
      *
      * @since 1.84, Ant 1.5
      */
@@ -739,12 +741,13 @@ public class Javac extends MatchingTask {
         if (!"false".equals(fork)) {
             if (compilerImpl != null) {
                 if (isJdkCompiler(compilerImpl)) {
-                    log("Since fork is true, ignoring build.compiler setting.",
+                    log("Since fork is true, ignoring compiler setting.",
                         Project.MSG_WARN);
                     compilerImpl = "extJavac";
                 }
                 else {
-                    log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
+                    log("Since compiler setting isn't classic or modern,"
+                        + "ignoring fork setting.", Project.MSG_WARN);
                 }
             }
             else {
