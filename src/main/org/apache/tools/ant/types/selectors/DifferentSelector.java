@@ -81,7 +81,7 @@ public class DifferentSelector extends MappingSelector {
 
     private FileUtils fileUtils= FileUtils.newFileUtils();
 
-    private boolean ignoreFileTimes=false;
+    private boolean ignoreFileTimes=true;
 
 
     /**

@@ -271,8 +271,8 @@
     <ol>
     <li> If there is no 'other' file, it's different.
     <li> Files with different lengths are different.
-    <li> Files with the same timestamp are the same, unless <tt>ignoreFileTimes</tt>
-         is set. This feature is useful to keep the selection fast.
+    <li> If <tt>ignoreFileTimes</tt> is turned off, then differing file
+    timestamps will cause files to be regarded as different.
     <li> Finally a byte-for-byte check is run against the two files
     </ol>
 
@@ -309,18 +309,18 @@
         <td valign="top" align="center">Yes</td>
       </tr>
       <tr>
+        <td valign="top">ignoreFileTimes</td>
+        <td valign="top">Whether to use file times in the comparison or not.
+          Default is true (time differences are ignored).
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
         <td valign="top">granularity</td>
         <td valign="top">The number of milliseconds leeway to give before
           deciding a file is out of date. This is needed because not every
           file system supports tracking the last modified time to the
           millisecond level. Default is 0 milliseconds, or 2 seconds on DOS systems.
-        </td>
-        <td valign="top" align="center">No</td>
-      </tr>
-      <tr>
-        <td valign="top">ignoreFileTimes</td>
-        <td valign="top">Whether to use file times in the comparison or not.
-        Default is false (time differences are significant).
         </td>
         <td valign="top" align="center">No</td>
       </tr>
