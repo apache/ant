@@ -57,10 +57,8 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.DestDir;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
-import org.apache.tools.ant.types.SrcFile;
 import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -106,10 +104,19 @@ public class Expand extends MatchingTask {
                 "Dest attribute must be specified");
         }
 
+        if (dest.exists() && !dest.isDirectory()) {
+            throw new BuildException("Dest must be a directory.", location);
+        }
+
         FileUtils fileUtils = FileUtils.newFileUtils();
 
         if (source != null) {
-            expandFile(fileUtils, source, dest);
+            if (source.isDirectory()) {
+                throw new BuildException("Src must not be a directory." +
+                    " Use nested filesets instead.", location);
+            } else {
+                expandFile(fileUtils, source, dest);
+            }
         }
         if (filesets.size() > 0) {
             for (int j=0; j < filesets.size(); j++) {
@@ -246,49 +253,18 @@ public class Expand extends MatchingTask {
      * destination directory.
      *
      * @param d Path to the directory.
-     * @deprecated setDest(File) is deprecated and is replaced with
-     *             setDest(DestDir) to let Ant's core perform validation
      */
     public void setDest(File d) {
-        log("DEPRECATED - The setDest(File) method has been deprecated."
-            + " Use setDest(DestDir) instead.");
-        DestDir dd = new DestDir();
-        dd.setFile(d);
-        setDest(dd);
-    }
-
-    /**
-     * Set the destination directory. File will be unzipped into the
-     * destination directory.
-     *
-     * @param d Path to the directory.
-     */
-    public void setDest(DestDir d) {
-        this.dest=d.getFile();
+        this.dest=d;
     }
 
     /**
      * Set the path to zip-file.
      *
      * @param s Path to zip-file.
-     * @deprecated setSrc(File) is deprecated and is replaced with
-     *             setSrc(SrcFile) to let Ant's core perform validation
      */
     public void setSrc(File s) {
-        log("DEPRECATED - The setSrc(File) method has been deprecated."
-            + " Use setSrc(SrcFile) instead.");
-        SrcFile sf = new SrcFile();
-        sf.setFile(s);
-        setSrc(sf);
-    }
-
-    /**
-     * Set the path to zip-file.
-     *
-     * @param s Path to zip-file.
-     */
-    public void setSrc(SrcFile s) {
-        this.source = s.getFile();
+        this.source = s;
     }
 
     /**

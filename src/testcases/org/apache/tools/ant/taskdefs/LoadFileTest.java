@@ -116,32 +116,25 @@ public class LoadFileTest extends BuildFileTest {
     public void testNoSourcefilefound() {
         expectBuildExceptionContaining("testNoSourcefilefound",
                 "File not found",
-                "does not exist");
+                "Unable to load file");
     }
 
     /**
      * A unit test for JUnit
      */
-     /* turned off as the move to SrcFile changed where the check
-      * for existence went. 
-      * we need to think of an alternate way to generate a file which
-      * cant be opened for reading
-      */
-      /*
-    public void testFailOnError() 
+    public void testFailOnError()
             throws BuildException {
         executeTarget("testFailOnError");
         if(project.getProperty("testFailOnError")!=null) {
-            fail("property should not have been defined");        
+            fail("property should not have been defined");
         }
     }
-    */
-    
+
 
     /**
      * A unit test for JUnit
      */
-    public void testLoadAFile() 
+    public void testLoadAFile()
             throws BuildException {
         executeTarget("testLoadAFile");
         if(project.getProperty("testLoadAFile").indexOf("eh?")<0) {
@@ -153,7 +146,7 @@ public class LoadFileTest extends BuildFileTest {
     /**
      * A unit test for JUnit
      */
-    public void testLoadAFileEnc() 
+    public void testLoadAFileEnc()
             throws BuildException {
         executeTarget("testLoadAFileEnc");
         if(project.getProperty("testLoadAFileEnc")==null) {
@@ -163,4 +156,5 @@ public class LoadFileTest extends BuildFileTest {
     }
 
 }
+
 

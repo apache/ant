@@ -59,7 +59,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.types.DestFile;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import java.io.File;
@@ -118,20 +117,8 @@ public class Property extends Task {
         return value;
     }
 
-    /**
-     * @deprecated setFile(File) is deprecated and is replaced with
-     *             setFile(DestFile) to let Ant's core perform validation
-     */
     public void setFile(File file) {
-        log("DEPRECATED - The setFile(File) method has been deprecated."
-            + " Use setFile(DestFile) instead.");
-        DestFile destFile = new DestFile();
-        destFile.setFile(file);
-        setFile(destFile);
-    }
-
-    public void setFile(DestFile file) {
-        this.file = file.getFile();
+        this.file = file;
     }
 
     public File getFile() {

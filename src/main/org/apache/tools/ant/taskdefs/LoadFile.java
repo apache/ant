@@ -58,7 +58,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.SrcFile;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -67,7 +67,7 @@ import java.io.BufferedInputStream;
 
 /**
  * Load a file into a property
- * @since 1.5
+ *
  * @author Steve Loughran
  * @created 10 December 2001
  */
@@ -126,8 +126,8 @@ public class LoadFile extends Task {
      *
      * @param srcFile The new SrcFile value
      */
-    public void setSrcFile(SrcFile srcFile) {
-        this.srcFile = srcFile.getFile();
+    public void setSrcFile(File srcFile) {
+        this.srcFile = srcFile;
     }
 
 
@@ -182,7 +182,7 @@ public class LoadFile extends Task {
             project.setNewProperty(property, text);
             log("loaded "+buffer.length+" characters",Project.MSG_VERBOSE);
             log(property+" := "+text,Project.MSG_DEBUG);
-            
+
         } catch (IOException ioe) {
             String message = "Unable to load file: " + ioe.toString();
             if (failOnError) {
@@ -203,4 +203,3 @@ public class LoadFile extends Task {
 
 //end class
 }
-
