@@ -69,7 +69,7 @@ public class BUnzip2Test extends BuildFileTest {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/bunzip2.xml");
     }
 
@@ -80,7 +80,7 @@ public class BUnzip2Test extends BuildFileTest {
     public void testRealTest() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
+                                           project.resolveFile("asf-logo-huge.tar")));
     }
 }

@@ -268,7 +268,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             crcError();
 
         computedCombinedCRC = (computedCombinedCRC << 1)
-            | (computedCombinedCRC >> 31);
+            | (computedCombinedCRC >>> 31);
         computedCombinedCRC ^= computedBlockCRC;
     }
 

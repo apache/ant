@@ -69,7 +69,7 @@ public class BZip2Test extends BuildFileTest {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/bzip2.xml");
     }
 
@@ -80,7 +80,7 @@ public class BZip2Test extends BuildFileTest {
     public void testRealTest() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.bz2"),
-                                           project.resolveFile("asf-logo.gif.bz2")));
+        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar.bz2"),
+                                           project.resolveFile("asf-logo-huge.tar.bz2")));
     }
 }

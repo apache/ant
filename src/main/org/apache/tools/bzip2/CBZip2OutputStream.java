@@ -454,7 +454,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
     private void endBlock() throws IOException {
         blockCRC = mCrc.getFinalCRC();
-        combinedCRC = (combinedCRC << 1) | (combinedCRC >> 31);
+        combinedCRC = (combinedCRC << 1)|(combinedCRC >>> 31);
         combinedCRC ^= blockCRC;
 
         /* sort the block and establish posn of original string */

@@ -3,11 +3,11 @@
 <project basedir="." default="cleanup">
 
   <target name="realTest">
-    <bzip2 src="../asf-logo.gif" zipfile="asf-logo.gif.bz2" />
+    <bzip2 src="expected/asf-logo-huge.tar" zipfile="asf-logo-huge.tar.bz2" />
   </target>
 
   <target name="cleanup">
-    <delete file="asf-logo.gif.bz2" />
+    <delete file="asf-logo-huge.tar.bz2" />
   </target>
 
 </project>
