@@ -56,6 +56,8 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.types.*;
 
+import java.io.File;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -87,5 +89,64 @@ public class ProjectTest extends TestCase {
         assert("PatternSet", 
                p.createDataType("patternset") instanceof PatternSet);
         assert("Path", p.createDataType("path") instanceof Path);
+    }
+
+    public void testResolveFile() {
+        /*
+         * Start with simple absolute file names.
+         */
+        assertEquals(File.separator, 
+                     p.resolveFile("/", null).getPath());
+        assertEquals(File.separator, 
+                     p.resolveFile("\\", null).getPath());
+
+        /*
+         * throw in drive letters
+         */
+        String driveSpec = "C:";
+        assertEquals(driveSpec + "\\", 
+                     p.resolveFile(driveSpec + "/", null).getPath());
+        assertEquals(driveSpec + "\\", 
+                     p.resolveFile(driveSpec + "\\", null).getPath());
+        String driveSpecLower = "c:";
+        assertEquals(driveSpec + "\\", 
+                     p.resolveFile(driveSpecLower + "/", null).getPath());
+        assertEquals(driveSpec + "\\", 
+                     p.resolveFile(driveSpecLower + "\\", null).getPath());
+        /*
+         * promised to eliminate consecutive slashes after drive letter.
+         */
+        assertEquals(driveSpec + "\\", 
+                     p.resolveFile(driveSpec + "/////", null).getPath());
+        assertEquals(driveSpec + "\\", 
+                     p.resolveFile(driveSpec + "\\\\\\\\\\\\", null).getPath());
+
+        /*
+         * Now test some relative file name magic.
+         */
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("./4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile(".\\4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("./.\\4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("../3/4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("..\\3\\4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("../../5/.././2/./3/6/../4", new File(localize("/1/2/3"))).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     p.resolveFile("..\\../5/..\\./2/./3/6\\../4", new File(localize("/1/2/3"))).getPath());
+
+    }
+
+    /**
+     * adapt file separators to local conventions
+     */
+    private String localize(String path) {
+        return path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
     }
 }
