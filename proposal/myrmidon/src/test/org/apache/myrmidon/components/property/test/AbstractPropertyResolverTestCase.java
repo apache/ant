@@ -11,8 +11,11 @@ import java.io.File;
 import java.util.Date;
 import org.apache.aut.converter.lib.ObjectToStringConverter;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
+import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.components.property.DefaultPropertyResolver;
 import org.apache.myrmidon.components.store.DefaultPropertyStore;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
@@ -28,7 +31,7 @@ public abstract class AbstractPropertyResolverTestCase
     extends AbstractComponentTest
 {
     protected PropertyResolver m_resolver;
-    protected PropertyStore m_store;
+    protected TaskContext m_context;
 
     public AbstractPropertyResolverTestCase( final String name )
     {
@@ -39,9 +42,12 @@ public abstract class AbstractPropertyResolverTestCase
     {
         m_resolver = (PropertyResolver)getServiceManager().lookup( PropertyResolver.ROLE );
 
-        m_store = new DefaultPropertyStore();
-        m_store.setProperty( "intProp", new Integer( 333 ) );
-        m_store.setProperty( "stringProp", "String property" );
+        final PropertyStore store = new DefaultPropertyStore();
+        m_context =
+            new DefaultTaskContext( new DefaultServiceManager(), getLogger(), store );
+
+        m_context.setProperty( "intProp", new Integer( 333 ) );
+        m_context.setProperty( "stringProp", "String property" );
 
         registerConverter( ObjectToStringConverter.class, Object.class, String.class );
     }
@@ -87,14 +93,14 @@ public abstract class AbstractPropertyResolverTestCase
     private void testPropertyValue( final Object propObject )
         throws Exception
     {
-        m_store.setProperty( "typedProp", propObject );
+        m_context.setProperty( "typedProp", propObject );
         final String propString = propObject.toString();
 
-        doTestResolution( "${typedProp}", propObject, m_store );
+        doTestResolution( "${typedProp}", propObject, m_context );
         doTestResolution( "${typedProp} with following text",
-                          propString + " with following text", m_store );
+                          propString + " with following text", m_context );
         doTestResolution( "Preceding text with ${typedProp}",
-                          "Preceding text with " + propString, m_store );
+                          "Preceding text with " + propString, m_context );
     }
 
     /**
@@ -102,15 +108,15 @@ public abstract class AbstractPropertyResolverTestCase
      */
     public void testMultipleProperties() throws Exception
     {
-        m_store.setProperty( "prop1", "value1" );
-        m_store.setProperty( "prop2", "value2" );
-        m_store.setProperty( "int1", new Integer( 123 ) );
+        m_context.setProperty( "prop1", "value1" );
+        m_context.setProperty( "prop2", "value2" );
+        m_context.setProperty( "int1", new Integer( 123 ) );
 
-        doTestResolution( "${prop1}${prop2}", "value1value2", m_store );
-        doTestResolution( "${prop1}${prop1}${prop1}", "value1value1value1", m_store );
+        doTestResolution( "${prop1}${prop2}", "value1value2", m_context );
+        doTestResolution( "${prop1}${prop1}${prop1}", "value1value1value1", m_context );
         doTestResolution( "before ${prop2} between ${prop1} after",
-                          "before value2 between value1 after", m_store );
-        doTestResolution( "${prop1}-${int1}-${prop2}", "value1-123-value2", m_store );
+                          "before value2 between value1 after", m_context );
+        doTestResolution( "${prop1}-${int1}-${prop2}", "value1-123-value2", m_context );
     }
 
     /**
@@ -121,10 +127,10 @@ public abstract class AbstractPropertyResolverTestCase
         final Resources rez = getResourcesForTested( DefaultPropertyResolver.class );
         doTestFailure( "${unclosed",
                        rez.getString( "prop.mismatched-braces.error" ),
-                       m_store );
+                       m_context );
         doTestFailure( "${",
                        rez.getString( "prop.mismatched-braces.error" ),
-                       m_store );
+                       m_context );
 
         /* TODO - need to handle these cases. */
         //        testFailure( "${bad${}", "", m_context );
@@ -136,10 +142,10 @@ public abstract class AbstractPropertyResolverTestCase
      */
     protected void doTestResolution( final String value,
                                      final Object expected,
-                                     final PropertyStore properties )
+                                     final TaskContext context )
         throws Exception
     {
-        final Object resolved = m_resolver.resolveProperties( value, properties );
+        final Object resolved = m_resolver.resolveProperties( value, context );
 
         assertEquals( expected, resolved );
     }
@@ -150,11 +156,11 @@ public abstract class AbstractPropertyResolverTestCase
      */
     protected void doTestFailure( final String value,
                                   final String expectedErrorMessage,
-                                  final PropertyStore properties )
+                                  final TaskContext context )
     {
         try
         {
-            m_resolver.resolveProperties( value, properties );
+            m_resolver.resolveProperties( value, context );
             fail( "Unexpected sucess - test should have failed." );
         }
         catch( TaskException e )

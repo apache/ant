@@ -8,9 +8,9 @@
 package org.apache.myrmidon.components.workspace;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.myrmidon.api.TaskContext;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
-import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 
 /**
  * Frames in which tasks are executed.
@@ -18,34 +18,44 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-class DefaultExecutionFrame
+public class DefaultExecutionFrame
     implements ExecutionFrame
 {
     private final Logger m_logger;
-    private final TaskContext m_context;
-    private final TypeManager m_typeManager;
+    private final PropertyStore m_propertyStore;
+    private final ServiceManager m_serviceManager;
 
     public DefaultExecutionFrame( final Logger logger,
-                                  final TaskContext context,
-                                  final TypeManager typeManager )
+                                  final PropertyStore propertyStore,
+                                  final ServiceManager serviceManager )
     {
         m_logger = logger;
-        m_context = context;
-        m_typeManager = typeManager;
+        m_propertyStore = propertyStore;
+        m_serviceManager = serviceManager;
     }
 
-    public TypeManager getTypeManager()
-    {
-        return m_typeManager;
-    }
-
+    /**
+     * Returns the logger which is to be supplied to tasks.
+     */
     public Logger getLogger()
     {
         return m_logger;
     }
 
-    public TaskContext getContext()
+    /**
+     * Returns the set of services to use to create, configure, and execute
+     * tasks.
+     */
+    public ServiceManager getServiceManager()
     {
-        return m_context;
+        return m_serviceManager;
+    }
+
+    /**
+     * Returns the set of properties to be supplied to tasks.
+     */
+    public PropertyStore getProperties()
+    {
+        return m_propertyStore;
     }
 }

@@ -9,6 +9,8 @@ package org.apache.myrmidon.frontends;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -50,9 +52,9 @@ public class EmbeddedAnt
     private Project m_project;
     private String m_listenerName = "default";
     private ArrayList m_listeners = new ArrayList();
-    private Parameters m_workspaceProps = new Parameters();
     private Parameters m_builderProps = new Parameters();
     private Parameters m_embeddorParameters = new Parameters();
+    private Map m_workspaceProperties = new HashMap();
     private ClassLoader m_sharedClassLoader;
     private Embeddor m_embeddor;
     private File m_homeDir;
@@ -122,8 +124,7 @@ public class EmbeddedAnt
      */
     public void setWorkspaceProperty( final String name, final Object value )
     {
-        // TODO - Make properties Objects, not Strings
-        m_workspaceProps.setParameter( name, value.toString() );
+        m_workspaceProperties.put( name, value );
     }
 
     /**
@@ -174,7 +175,7 @@ public class EmbeddedAnt
         final Project project = prepareProjectModel( embeddor );
 
         // Create a new workspace
-        final Workspace workspace = embeddor.createWorkspace( m_workspaceProps );
+        final Workspace workspace = embeddor.createWorkspace( m_workspaceProperties );
         prepareListeners( embeddor, workspace );
 
         //execute the project

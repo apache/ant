@@ -9,11 +9,8 @@ package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
@@ -21,25 +18,23 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.DefaultServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
+import org.apache.myrmidon.interfaces.executor.ExecutionContainer;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Dependency;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.myrmidon.interfaces.property.PropertyStore;
 import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.components.store.DefaultPropertyStore;
 
 /**
  * This is the default implementation of Workspace.
@@ -49,7 +44,7 @@ import org.apache.myrmidon.components.store.DefaultPropertyStore;
  */
 public class DefaultWorkspace
     extends AbstractLogEnabled
-    implements Workspace, Serviceable, Parameterizable, Initializable
+    implements Workspace, ExecutionContainer, Parameterizable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultWorkspace.class );
@@ -59,9 +54,11 @@ public class DefaultWorkspace
     private ServiceManager m_serviceManager;
     private Parameters m_parameters;
     private PropertyStore m_baseStore;
-    private HashMap m_entries = new HashMap();
     private TypeManager m_typeManager;
     private Deployer m_deployer;
+
+    /** A map from Project object -> ProjectEntry for that project. */
+    private HashMap m_entries = new HashMap();
 
     /**
      * Add a listener to project events.
@@ -84,30 +81,21 @@ public class DefaultWorkspace
     }
 
     /**
-     * Retrieve relevent services needed for engine.
-     *
-     * @param serviceManager the ServiceManager
-     * @exception ServiceException if an error occurs
+     * Sets the root execution frame.
      */
-    public void service( final ServiceManager serviceManager )
-        throws ServiceException
+    public void setRootExecutionFrame( final ExecutionFrame frame ) throws Exception
     {
-        m_serviceManager = serviceManager;
-        m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
-        m_executor = (Executor)serviceManager.lookup( Executor.ROLE );
-        m_deployer = (Deployer)serviceManager.lookup( Deployer.ROLE );
+        m_baseStore = frame.getProperties();
+        m_serviceManager = frame.getServiceManager();
+        m_typeManager = (TypeManager)m_serviceManager.lookup( TypeManager.ROLE );
+        m_executor = (Executor)m_serviceManager.lookup( Executor.ROLE );
+        m_deployer = (Deployer)m_serviceManager.lookup( Deployer.ROLE );
     }
 
     public void parameterize( final Parameters parameters )
         throws ParameterException
     {
         m_parameters = parameters;
-    }
-
-    public void initialize()
-        throws Exception
-    {
-        m_baseStore = createBaseStore();
     }
 
     /**
@@ -128,24 +116,6 @@ public class DefaultWorkspace
         executeTarget( entry, target );
 
         m_listenerSupport.projectFinished( project.getProjectName() );
-    }
-
-    private PropertyStore createBaseStore()
-        throws Exception
-    {
-        final DefaultPropertyStore store = new DefaultPropertyStore();
-
-        final String[] names = m_parameters.getNames();
-        for( int i = 0; i < names.length; i++ )
-        {
-            final String value = m_parameters.getParameter( names[ i ], null );
-            store.setProperty( names[ i ], value );
-        }
-
-        //Add system properties so that they overide user-defined properties
-        addToStore( store, System.getProperties() );
-
-        return store;
     }
 
     private File findTypeLib( final String libraryName )
@@ -227,7 +197,7 @@ public class DefaultWorkspace
         final TypeManager typeManager = m_typeManager.createChildTypeManager();
         serviceManager.put( TypeManager.ROLE, typeManager );
 
-        // TODO - Add child role manager
+        // TODO - Add child role manager and configurer
 
         //We need to create a new deployer so that it deploys
         //to project specific TypeManager
@@ -239,31 +209,20 @@ public class DefaultWorkspace
 
         //We need to place projects and ProjectManager
         //in ComponentManager so as to support project-local call()
+        // TODO - add project to properties, not services
         serviceManager.put( Workspace.ROLE, this );
         serviceManager.put( Project.ROLE, project );
-
-        final String[] names = project.getProjectNames();
-        for( int i = 0; i < names.length; i++ )
-        {
-            final String name = names[ i ];
-            final Project other = project.getProject( name );
-            serviceManager.put( Project.ROLE + "/" + name, other );
-        }
 
         // Create a logger
         final Logger logger =
             new RoutingLogger( getLogger(), m_listenerSupport );
 
-        //TODO: Put this in Execution Frame
+        // Properties
         final PropertyStore store = m_baseStore.createChildStore("");
-
-       // Create and configure the context
-        final DefaultTaskContext context =
-            new DefaultTaskContext( serviceManager, logger, store );
-        context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
+        store.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
         final DefaultExecutionFrame frame =
-            new DefaultExecutionFrame( logger, context, typeManager );
+            new DefaultExecutionFrame( logger, store, serviceManager );
 
         /**
          *  @todo Should no occur but done for the time being to simplify evolution.
@@ -462,7 +421,7 @@ public class DefaultWorkspace
         }
 
         //is setting name even necessary ???
-        frame.getContext().setProperty( TaskContext.NAME, name );
+        frame.getProperties().setProperty( TaskContext.NAME, name );
 
         //notify listeners
         m_listenerSupport.taskStarted( name );
@@ -474,22 +433,4 @@ public class DefaultWorkspace
         m_listenerSupport.taskFinished();
     }
 
-    /**
-     * Helper method to add values to a store.
-     *
-     * @param store the store
-     * @param map the map of names->values
-     */
-    private void addToStore( final PropertyStore store, final Map map )
-        throws Exception
-    {
-        final Iterator keys = map.keySet().iterator();
-
-        while( keys.hasNext() )
-        {
-            final String key = (String)keys.next();
-            final Object value = map.get( key );
-            store.setProperty( key, value );
-        }
-    }
 }

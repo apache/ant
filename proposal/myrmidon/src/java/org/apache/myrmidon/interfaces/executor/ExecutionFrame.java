@@ -8,11 +8,17 @@
 package org.apache.myrmidon.interfaces.executor;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 
 /**
- * Frames in which tasks are executed.
+ * An Execution Frame represents the scope in which tasks are executed.
+ * The scope may include an entire workspace, a project, target, or
+ * individual task.
+ *
+ * <p>An Execution Frame bundles together all of the context required to
+ * execute tasks - that is, a set of properties, a set of services, and
+ * a logger.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
@@ -23,17 +29,18 @@ public interface ExecutionFrame
     String ROLE = ExecutionFrame.class.getName();
 
     /**
-     * @return The TypeManager to use for creating Tasks.
+     * Returns the set of services to use to create, configure, and execute
+     * tasks.
      */
-    TypeManager getTypeManager();
+    ServiceManager getServiceManager();
 
     /**
-     * @return The logger which is used for execution messages.
+     * Returns the logger which is to be supplied to tasks.
      */
     Logger getLogger();
 
     /**
-     * @return The TaskContext in which the task is executed.
+     * Returns the set of properties to be supplied to tasks.
      */
-    TaskContext getContext();
+    PropertyStore getProperties();
 }

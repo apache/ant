@@ -10,6 +10,7 @@ package org.apache.myrmidon.components.property;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.property.PropertyStore;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * A {@link PropertyResolver} implementation which resolves properties
@@ -29,16 +30,20 @@ public class ClassicPropertyResolver
      * If there is no such value, returns the original property reference.
      *
      * @param propertyName the name of the property to retrieve
-     * @param properties the set of known properties
+     * @param context the set of known properties
      */
     protected Object getPropertyValue( final String propertyName,
-                                       final PropertyStore properties )
+                                       final TaskContext context )
         throws TaskException
     {
-        if( ! properties.isPropertySet( propertyName ) )
+        final Object value = context.getProperty( propertyName );
+        if( value != null )
+        {
+            return value;
+        }
+        else
         {
             return "${" + propertyName + "}";
         }
-        return properties.getProperty( propertyName );
     }
 }

@@ -149,7 +149,7 @@ public class DefaultTaskContext
                 m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
             }
             final Object object =
-                m_propertyResolver.resolveProperties( value, m_store );
+                m_propertyResolver.resolveProperties( value, this );
             if( null == object )
             {
                 final String message = REZ.getString( "null-resolved-value.error", value );

@@ -18,8 +18,10 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 
@@ -32,6 +34,7 @@ import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
  */
 public class AspectAwareExecutor
     extends DefaultExecutor
+    implements Serviceable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( AspectAwareExecutor.class );
@@ -49,8 +52,6 @@ public class AspectAwareExecutor
     public void service( final ServiceManager serviceManager )
         throws ServiceException
     {
-        super.service( serviceManager );
-
         m_aspectManager = (AspectManager)serviceManager.lookup( AspectManager.ROLE );
     }
 
@@ -90,11 +91,12 @@ public class AspectAwareExecutor
             getAspectManager().preLogEnabled( logger );
 
             debug( "contextualizing.notice", taskName );
-            doContextualize( task, taskModel, frame.getContext() );
+            final TaskContext context = doCreateContext( frame );
+            doContextualize( task, taskModel, context, frame );
 
             debug( "configuring.notice", taskName );
             getAspectManager().preConfigure( taskModel );
-            doConfigure( task, taskModel, frame.getContext() );
+            doConfigure( task, taskModel, context, frame );
 
             debug( "executing.notice", taskName );
             getAspectManager().preExecute();

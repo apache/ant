@@ -13,14 +13,14 @@
         </list-path>
     </target>
 
-    <!-- Test setting the path attribute -->
+    <!-- Test setting the path attribute with ; delims -->
     <target name="set-multi-path">
         <list-path>
             <path path="file1;file2;.."/>
         </list-path>
     </target>
 
-    <!-- Test setting the path attribute -->
+    <!-- Test setting the path attribute with : delims -->
     <target name="set-multi-path2">
         <list-path>
             <path path="file1:file2:.."/>
@@ -62,6 +62,19 @@
                 <test-file-list name="file1"/>
             </path>
         </list-path>
+    </target>
+
+    <!-- Test converting a string to a path -->
+    <target name="convert-string-to-path">
+        <list-path>
+            <test-file-list path="file1;file2"/>
+        </list-path>
+    </target>
+
+    <!-- Test converting a path to a string -->
+    <target name="convert-path-to-string">
+        <path id="test-path" path="file1:file2"/>
+        <log>test-path = ${test-path}</log>
     </target>
 
 </project>

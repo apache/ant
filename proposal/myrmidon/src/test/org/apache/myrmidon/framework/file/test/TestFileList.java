@@ -7,10 +7,12 @@
  */
 package org.apache.myrmidon.framework.file.test;
 
-import org.apache.myrmidon.framework.file.FileList;
+import java.io.File;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import java.io.File;
+import org.apache.myrmidon.framework.file.FileList;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * A test FileList implementation.
@@ -24,10 +26,16 @@ public class TestFileList
     implements FileList
 {
     private String m_name;
+    private Path m_path;
 
     public void setName( final String name )
     {
         m_name = name;
+    }
+
+    public void setPath( final Path path )
+    {
+        m_path = path;
     }
 
     /**
@@ -36,7 +44,20 @@ public class TestFileList
     public String[] listFiles( final TaskContext context )
         throws TaskException
     {
-        final File file = context.resolveFile( m_name );
-        return new String[] { file.getAbsolutePath() };
+        final ArrayList files = new ArrayList();
+        if( m_name != null )
+        {
+            final File file = context.resolveFile( m_name );
+            files.add( file.getAbsolutePath() );
+        }
+        if( m_path != null )
+        {
+            final String[] fileNames = m_path.listFiles( context );
+            for( int i = 0; i < fileNames.length; i++ )
+            {
+                files.add( fileNames[ i ] );
+            }
+        }
+        return (String[])files.toArray( new String[ files.size() ] );
     }
 }

@@ -8,6 +8,7 @@
 package org.apache.myrmidon.framework.file.test;
 
 import java.io.File;
+import org.apache.aut.nativelib.PathUtil;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.LogMessageTracker;
@@ -31,7 +32,7 @@ public class PathTestCase
      */
     public void testLocationAttribute() throws Exception
     {
-        testPathContent( "set-location", new String[] { "location" } );
+        testPathContent( "set-location", new String[]{"location"} );
     }
 
     /**
@@ -40,13 +41,13 @@ public class PathTestCase
     public void testPathAttribute() throws Exception
     {
         // Test a path with a single file
-        testPathContent( "set-path", new String[] { "single-file" } );
+        testPathContent( "set-path", new String[]{"single-file"} );
 
         // Test a path with several files, using ; separator
-        testPathContent( "set-multi-path", new String[] { "file1", "file2", ".." } );
+        testPathContent( "set-multi-path", new String[]{"file1", "file2", ".."} );
 
         // Test a path with several files, using : separator
-        testPathContent( "set-multi-path2", new String[] { "file1", "file2", ".." } );
+        testPathContent( "set-multi-path2", new String[]{"file1", "file2", ".."} );
     }
 
     /**
@@ -54,8 +55,8 @@ public class PathTestCase
      */
     public void testPathElement() throws Exception
     {
-        testPathContent( "nested-path", new String[] { "some-file" } );
-        testPathContent( "mixed-path", new String[] { "file1", "file2", "file3", "file4", "file5" } );
+        testPathContent( "nested-path", new String[]{"some-file"} );
+        testPathContent( "mixed-path", new String[]{"file1", "file2", "file3", "file4", "file5"} );
     }
 
     /**
@@ -63,7 +64,7 @@ public class PathTestCase
      */
     public void testFilesetElement() throws Exception
     {
-        testPathContent( "set-fileset", new String[] { "path.ant" } );
+        testPathContent( "set-fileset", new String[]{"path.ant"} );
     }
 
     /**
@@ -71,7 +72,27 @@ public class PathTestCase
      */
     public void testCustomFileList() throws Exception
     {
-        testPathContent( "test-custom-file-list", new String[] { "file1" } );
+        testPathContent( "test-custom-file-list", new String[]{"file1"} );
+    }
+
+    /**
+     * Test converting between string and path.
+     */
+    public void testConvert() throws Exception
+    {
+        testPathContent( "convert-string-to-path", new String[]{"file1", "file2"} );
+
+        // Test conversion from path -> string
+        final File[] files = {
+            getTestResource( "file1", false ),
+            getTestResource( "file2", false )
+        };
+        final String path = PathUtil.formatPath( files );
+        final LogMessageTracker listener = new LogMessageTracker();
+        listener.addExpectedMessage( "convert-path-to-string", "test-path = " + path );
+
+        final File projectFile = getTestResource( "path.ant" );
+        executeTarget( projectFile, "convert-path-to-string", listener );
     }
 
     /**

@@ -8,6 +8,7 @@
 package org.apache.myrmidon.components.embeddor.test;
 
 import java.io.File;
+import java.util.HashMap;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.AbstractProjectTest;
@@ -118,7 +119,7 @@ public class DefaultEmbeddorTest
         final Project project = embeddor.createProject( projectFile.getAbsolutePath(), null, null );
 
         // Build the workspace
-        final Workspace workspace = embeddor.createWorkspace( new Parameters() );
+        final Workspace workspace = embeddor.createWorkspace( new HashMap() );
 
         // Install a listener
         final LogMessageTracker listener = new LogMessageTracker();

@@ -12,6 +12,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.aut.converter.Converter;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -37,15 +38,20 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
+import org.apache.myrmidon.interfaces.executor.ExecutionContainer;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
+import org.apache.myrmidon.components.workspace.DefaultExecutionFrame;
+import org.apache.myrmidon.components.store.DefaultPropertyStore;
 
 /**
  * Default implementation of Embeddor.
@@ -71,8 +77,6 @@ public class DefaultEmbeddor
     private List m_components = new ArrayList();
     private DefaultServiceManager m_serviceManager = new DefaultServiceManager();
     private Parameters m_parameters;
-
-    private static final String MYRMIDON_HOME = "myrmidon.home";
 
     /**
      * Setup basic properties of engine.
@@ -121,22 +125,29 @@ public class DefaultEmbeddor
     {
         final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.ROLE );
         final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
-        setupObject( builder, m_workspaceServiceManager, parameters );
+        setupObject( builder, m_serviceManager, parameters );
         return builder;
     }
 
     /**
      * Creates a workspace.
      */
-    public Workspace createWorkspace( final Parameters parameters )
+    public Workspace createWorkspace( final Map properties )
         throws Exception
     {
         final Workspace workspace =
             (Workspace)createService( Workspace.class, PREFIX + "workspace.DefaultWorkspace" );
-        // TODO - don't do this; need some way to pass separate sets of defines and config
-        // to the workspace
-        parameters.setParameter( MYRMIDON_HOME, m_parameters.getParameter( MYRMIDON_HOME ) );
-        setupObject( workspace, m_workspaceServiceManager, parameters );
+        setupObject( workspace, m_workspaceServiceManager, m_parameters );
+
+        // Create the property store
+        final PropertyStore propStore = createBaseStore( properties );
+
+        // Create an execution frame, and attach it to the workspace
+        final ExecutionFrame frame =
+            new DefaultExecutionFrame( getLogger(),
+                                       propStore,
+                                       m_workspaceServiceManager);
+        ( (ExecutionContainer)workspace ).setRootExecutionFrame( frame );
 
         // TODO - should keep track of workspaces, to dispose them later
         return workspace;
@@ -393,6 +404,41 @@ public class DefaultEmbeddor
                 final String message = REZ.getString( "bad-filename.error", files[ i ] );
                 throw new DeploymentException( message, e );
             }
+        }
+    }
+
+    /**
+     * Creates the root property store for a workspace
+     */
+    private PropertyStore createBaseStore( final Map properties )
+        throws Exception
+    {
+        final DefaultPropertyStore store = new DefaultPropertyStore();
+
+        addToStore( store, properties );
+
+        //Add system properties so that they overide user-defined properties
+        addToStore( store, System.getProperties() );
+
+        return store;
+    }
+
+    /**
+     * Helper method to add values to a store.
+     *
+     * @param store the store
+     * @param map the map of names->values
+     */
+    private void addToStore( final PropertyStore store, final Map map )
+        throws Exception
+    {
+        final Iterator keys = map.keySet().iterator();
+
+        while( keys.hasNext() )
+        {
+            final String key = (String)keys.next();
+            final Object value = map.get( key );
+            store.setProperty( key, value );
         }
     }
 }

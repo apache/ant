@@ -20,7 +20,8 @@ import org.apache.myrmidon.interfaces.model.Project;
  * @version $Revision$ $Date$
  * @ant.task name="ant-call"
  */
-public class AntCallTask extends AbstractAntTask
+public class AntCallTask
+    extends AbstractAntTask
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( AntCallTask.class );

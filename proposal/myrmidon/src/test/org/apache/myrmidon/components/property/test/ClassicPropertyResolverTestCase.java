@@ -37,6 +37,6 @@ public class ClassicPropertyResolverTestCase
     {
         final String undefinedProp = "undefinedProperty";
         final String propRef = "${" + undefinedProp + "}";
-        doTestResolution( propRef, propRef, m_store );
+        doTestResolution( propRef, propRef, m_context );
     }
 }

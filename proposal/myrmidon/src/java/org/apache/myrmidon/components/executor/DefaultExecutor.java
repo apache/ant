@@ -10,19 +10,16 @@ package org.apache.myrmidon.components.executor;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
-import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * The basic executor that just executes the tasks.
@@ -32,24 +29,10 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
  */
 public class DefaultExecutor
     extends AbstractLogEnabled
-    implements Executor, Serviceable
+    implements Executor
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
-
-    private Configurer m_configurer;
-
-    /**
-     * Retrieve relevent services needed to deploy.
-     *
-     * @param serviceManager the ServiceManager
-     * @exception ServiceException if an error occurs
-     */
-    public void service( final ServiceManager serviceManager )
-        throws ServiceException
-    {
-        m_configurer = (Configurer)serviceManager.lookup( Configurer.ROLE );
-    }
 
     /**
      * Executes a task.
@@ -64,10 +47,11 @@ public class DefaultExecutor
             final Task task = doCreateTask( taskName, frame );
 
             debug( "contextualizing.notice", taskName );
-            doContextualize( task, taskModel, frame.getContext() );
+            final TaskContext context = doCreateContext( frame );
+            doContextualize( task, taskModel, context, frame );
 
             debug( "configuring.notice", taskName );
-            doConfigure( task, taskModel, frame.getContext() );
+            doConfigure( task, taskModel, context, frame );
 
             debug( "executing.notice", taskName );
             task.execute();
@@ -91,6 +75,18 @@ public class DefaultExecutor
     }
 
     /**
+     * Creates a context for the task.
+     */
+    protected TaskContext doCreateContext( final ExecutionFrame frame )
+    {
+        // TODO - need to deactivate the context once the task has finished
+        // executing
+        return new DefaultTaskContext( frame.getServiceManager(),
+                                       frame.getLogger(),
+                                       frame.getProperties() );
+    }
+
+    /**
      * Creates a task instance.
      */
     protected final Task doCreateTask( final String name, final ExecutionFrame frame )
@@ -98,10 +94,11 @@ public class DefaultExecutor
     {
         try
         {
-            final TypeFactory factory = frame.getTypeManager().getFactory( Task.ROLE );
+            final TypeManager typeManager = (TypeManager)frame.getServiceManager().lookup( TypeManager.ROLE );
+            final TypeFactory factory = typeManager.getFactory( Task.ROLE );
             return (Task)factory.create( name );
         }
-        catch( final TypeException te )
+        catch( final Exception te )
         {
             final String message = REZ.getString( "create.error", name );
             throw new TaskException( message, te );
@@ -113,10 +110,12 @@ public class DefaultExecutor
      */
     protected final void doConfigure( final Task task,
                                       final Configuration taskModel,
-                                      final TaskContext taskContext )
-        throws ConfigurationException
+                                      final TaskContext taskContext,
+                                      final ExecutionFrame frame )
+        throws Exception
     {
-        m_configurer.configureElement( task, taskModel, taskContext );
+        final Configurer configurer = (Configurer)frame.getServiceManager().lookup( Configurer.ROLE );
+        configurer.configureElement( task, taskModel, taskContext );
     }
 
     /**
@@ -124,12 +123,13 @@ public class DefaultExecutor
      */
     protected final void doContextualize( final Task task,
                                           final Configuration taskModel,
-                                          final TaskContext context )
+                                          final TaskContext taskContext,
+                                          final ExecutionFrame frame )
         throws TaskException
     {
         try
         {
-            task.contextualize( context );
+            task.contextualize( taskContext );
         }
         catch( final Throwable throwable )
         {

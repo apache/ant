@@ -11,6 +11,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
+import java.util.Map;
 
 /**
  * Interface through which you embed Myrmidon into applications.
@@ -53,10 +54,12 @@ public interface Embeddor
     /**
      * Creates a {@link Workspace} that can be used to execute projects.
      *
-     * @param parameters The properties to define in the workspace
+     * @param properties The properties to define in the workspace.  These
+     *                   are added to the properties in the embeddor's
+     *                   root execution frame.
      * @return the Workspace
      * @throws Exception If the workspace could not be created.
      */
-    Workspace createWorkspace( Parameters parameters )
+    Workspace createWorkspace( Map properties )
         throws Exception;
 }

@@ -7,15 +7,14 @@
  */
 package org.apache.antlib.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.myrmidon.interfaces.embeddor.Embeddor;
-import org.apache.avalon.framework.parameters.Parameters;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 /**
  * Abstract base class for Tasks which execute targets.
@@ -24,7 +23,8 @@ import java.util.ArrayList;
  * @author <a href="mailto:darrell@apache.org">Darrell DeBoer</a>
  * @version $Revision$ $Date$
  */
-public abstract class AbstractAntTask extends AbstractTask
+public abstract class AbstractAntTask
+    extends AbstractTask
 {
     /**
      * If true, inherit all properties from parent Project
@@ -32,6 +32,7 @@ public abstract class AbstractAntTask extends AbstractTask
      * inside the ant call itself
      */
     private boolean m_inheritAll;
+
     /**
      * The target to process in build file. If not specified
      * will use default in specified build file.
@@ -90,6 +91,7 @@ public abstract class AbstractAntTask extends AbstractTask
             final Workspace workspace =
                 embeddor.createWorkspace( buildParameters() );
 
+            // TODO - inherit listeners, and services (TypeManager specifically)
             workspace.addProjectListener( embeddor.createListener("default"));
 
             if( null == m_target )
@@ -134,21 +136,14 @@ public abstract class AbstractAntTask extends AbstractTask
      *
      * @return the created parameters
      */
-    private Parameters buildParameters()
+    private Map buildParameters()
         throws TaskException
     {
-        final Parameters parameters = new Parameters();
+        final Map parameters = new HashMap();
 
         if( m_inheritAll )
         {
-            final Map properties = getContext().getProperties();
-            final Iterator keys = properties.keySet().iterator();
-            while( keys.hasNext() )
-            {
-                final String key = (String)keys.next();
-                final Object value = properties.get( key );
-                setProperty( parameters, key, value );
-            }
+            parameters.putAll( getContext().getProperties() );
         }
 
         final int size = m_parameters.size();
@@ -157,28 +152,10 @@ public abstract class AbstractAntTask extends AbstractTask
             final AntParam param = (AntParam)m_parameters.get( i );
             param.validate();
             final String name = param.getName();
-            final String value = param.getValue().toString();
-            setProperty( parameters, name, value );
+            final Object value = param.getValue();
+            parameters.put( name, value );
         }
 
         return parameters;
-    }
-
-    /**
-     * Utility method to add the property into parameters object.
-     *
-     * @param parameters where to put property
-     * @param name the property
-     * @param value the value of property
-     * @todo allow non-string params to be passed down
-     */
-    private void setProperty( final Parameters parameters,
-                              final String name,
-                              final Object value )
-    {
-        if( !name.startsWith( "myrmidon." ) )
-        {
-            parameters.setParameter( name, value.toString() );
-        }
     }
 }

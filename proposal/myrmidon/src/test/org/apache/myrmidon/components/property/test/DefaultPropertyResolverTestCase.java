@@ -41,11 +41,11 @@ public class DefaultPropertyResolverTestCase
         final String undefinedProp = "undefinedProperty";
         doTestFailure( "${" + undefinedProp + "}",
                        rez.getString( "unknown-prop.error", undefinedProp ),
-                       m_store );
+                       m_context );
 
         //TODO - "" should be disallowed as a property name
         doTestFailure( "${}",
                        rez.getString( "unknown-prop.error", "" ),
-                       m_store );
+                       m_context );
     }
 }
