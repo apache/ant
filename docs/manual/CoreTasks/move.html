@@ -158,7 +158,7 @@ followed by &lt;filterset&gt; elements.
 <p><b>Append <code>&quot;.bak&quot;</code> to the names of all files
 in a directory.</b></p>
 <pre>
-  &lt;move todir=&quot;my/src/dir&quot;&gt;
+  &lt;move todir=&quot;my/src/dir&quot; includeemptydirs=&quot;false&quot;&gt;
     &lt;fileset dir=&quot;my/src/dir&quot;&gt;
       &lt;exclude name=&quot;**/*.bak&quot;/&gt;
     &lt;/fileset&gt;
