@@ -518,7 +518,10 @@ public class UnknownElement extends Task {
         // backwards compatibility - element names of nested
         // elements have been all lower-case in Ant, except for
         // TaskContainers
-        String childName = child.getTag().toLowerCase(Locale.US);
+        // This does not work too good for typedefed elements...
+        String childName =
+            ProjectHelper.genComponentName(
+                child.getNamespace(), child.getTag().toLowerCase(Locale.US));
         if (ih.supportsNestedElement(childName)) {
             IntrospectionHelper.Creator creator =
                 ih.getElementCreator(getProject(), parent, childName);
