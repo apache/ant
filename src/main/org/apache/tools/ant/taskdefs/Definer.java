@@ -89,6 +89,10 @@ public abstract class Definer extends Task {
     
     private static final String REUSE_LOADER_REF = "ant.reuse.loader";
     
+    /**
+     * @deprecated stop using this attribute
+     * @ant.attribute ignore="true"
+     */
     public void setReverseLoader(boolean reverseLoader) {
         this.reverseLoader = reverseLoader;
         log("The reverseloader attribute is DEPRECATED. It will be removed", 
@@ -108,6 +112,9 @@ public abstract class Definer extends Task {
         }
     }
 
+    /**
+     * Create the classpath to be used when searching for component being defined
+     */ 
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(project);
@@ -115,6 +122,10 @@ public abstract class Definer extends Task {
         return this.classpath.createPath();
     }
 
+    /**
+     * reference to a classpath to use when loading the files.
+     * To actually share the same loader, set loaderref as well
+     */
     public void setClasspathRef(Reference r) {
         classpathId=r.getRefId();
         createClasspath().setRefid(r);
@@ -209,6 +220,10 @@ public abstract class Definer extends Task {
         }
     }
     
+    /**
+     * create the classloader then hand the definition off to the subclass;
+     * @throws BuildException when the class wont load for any reason
+     */
     private void addDefinition(ClassLoader al, String name, String value)
         throws BuildException {
         try {
@@ -226,6 +241,9 @@ public abstract class Definer extends Task {
         }
     }
 
+    /**
+     * create a classloader for this definition
+     */
     private AntClassLoader createLoader() {
         // magic property 
         if (project.getProperty(REUSE_LOADER_REF) != null) {
@@ -276,25 +294,49 @@ public abstract class Definer extends Task {
         return al;
     }
 
+    /**
+     * Name of the property file  to load
+     * ant name/classname pairs from.
+     */
     public void setFile(File file) {
         this.file = file;
     }
 
+    /**
+     * Name of the property resource to load
+     * ant name/classname pairs from.
+     */
     public void setResource(String res) {
         this.resource = res;
     }
 
+    /**
+     * Name of the property resource to load
+     * ant name/classname pairs from.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * what is the classname we are definining? Can be null
+     */
     public String getClassname() {
         return value;
     }
 
+    /**
+     * the full class name of the object being defined.
+     * Required, unless file or resource have
+     * been specified.
+     */
     public void setClassname(String v) {
         value = v;
     }
 
+    /**
+     * this must be implemented by subclasses; it is the callback
+     * they will get to add a new definition of their type
+     */
     protected abstract void addDefinition(String name, Class c);
 }
