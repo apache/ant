@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,24 +40,29 @@ import java.io.IOException;
 public class IsPingable extends ProjectComponent implements Condition  {
 
     private String host;
+    /** The default timeout. */
     public static final int DEFAULT_TIMEOUT = 30;
     private int timeout = DEFAULT_TIMEOUT;
+    /** Error when no hostname is defined */
     public static final String ERROR_NO_HOSTNAME = "No hostname defined";
+    /** Error when invalid timeout value is defined */
     public static final String ERROR_BAD_TIMEOUT = "Invalid timeout value";
+    /** Unknown host message is seen. */
     public static final String ERROR_UNKNOWN_HOST = "Unknown host:";
+    /** Network error message is seen. */
     public static final String ERROR_ON_NETWORK = "network error to ";
 
     /**
-     * the host to ping
-     * @param host
+     * The host to ping.
+     * @param host the host to ping.
      */
     public void setHost(String host) {
         this.host = host;
     }
 
     /**
-     * timeout for the reachability test -in seconds
-     * @param timeout
+     * Timeout for the reachability test -in seconds.
+     * @param timeout the timeout in seconds.
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
@@ -66,7 +71,7 @@ public class IsPingable extends ProjectComponent implements Condition  {
     /**
      * Is this condition true?
      *
-     * @return true if the condition is true
+     * @return true if the condition is true.
      * @throws org.apache.tools.ant.BuildException
      *          if an error occurs
      */
