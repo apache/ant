@@ -104,7 +104,7 @@ public class About extends JDialog {
         while(tok.hasMoreTokens()) {
             String name = tok.nextToken();
             buf.append(name);
-            buf.append("<BR>\n");
+            buf.append("<P>\n");
         }
 
 		String message = context.getResources().getMessage(
