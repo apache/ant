@@ -27,6 +27,9 @@ Fixed bugs:
   attribute of <ear> or the webxml attribute of <war>, it would be
   ignored.  Bugzilla Report 17871.
 
+* Ant will no longer implicitly add Sun's rt.jar in <javac> when you
+  use jvc and don't specify a bootclasspath.  Bugzilla Report 18055.
+
 Changes from Ant 1.5.1 to Ant 1.5.2
 ===================================
 
