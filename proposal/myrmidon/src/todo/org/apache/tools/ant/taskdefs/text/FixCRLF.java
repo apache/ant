@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs.text;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,17 +15,16 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Task to convert text source files to local OS formatting conventions, as well
@@ -69,7 +67,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
  * @version $Revision$ $Name$
  */
-
 public class FixCRLF
     extends MatchingTask
 {
@@ -759,7 +756,8 @@ public class FixCRLF
             {
                 // Compare the destination with the temp file
                 getLogger().debug( "destFile exists" );
-                if( !contentEquals( destFile, tmpFile ) )
+                boolean result = FileUtil.contentEquals( destFile, tmpFile );
+                if( !result )
                 {
                     getLogger().debug( destFile + " is being written" );
                     if( !destFile.delete() )
@@ -827,99 +825,6 @@ public class FixCRLF
                 tmpFile.delete();
             }
         }// end of finally
-    }
-
-    private boolean contentEquals( File f1, File f2 )
-        throws IOException
-    {
-        if( f1.exists() != f2.exists() )
-        {
-            return false;
-        }
-
-        if( !f1.exists() )
-        {
-            // two not existing files are equal
-            return true;
-        }
-
-        if( f1.isDirectory() || f2.isDirectory() )
-        {
-            // don't want to compare directory contents for now
-            return false;
-        }
-
-        InputStream in1 = null;
-        InputStream in2 = null;
-        try
-        {
-            in1 = new BufferedInputStream( new FileInputStream( f1 ) );
-            in2 = new BufferedInputStream( new FileInputStream( f2 ) );
-
-            int expectedByte = in1.read();
-            while( expectedByte != -1 )
-            {
-                if( expectedByte != in2.read() )
-                {
-                    return false;
-                }
-                expectedByte = in1.read();
-            }
-            if( in2.read() != -1 )
-            {
-                return false;
-            }
-            return true;
-        }
-        finally
-        {
-            if( in1 != null )
-            {
-                try
-                {
-                    in1.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-            if( in2 != null )
-            {
-                try
-                {
-                    in2.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-        }
-    }
-
-    /**
-     * Enumerated attribute with the values "asis", "add" and "remove".
-     *
-     * @author RT
-     */
-    public static class AddAsisRemove extends EnumeratedAttribute
-    {
-        public String[] getValues()
-        {
-            return new String[]{"add", "asis", "remove"};
-        }
-    }
-
-    /**
-     * Enumerated attribute with the values "asis", "cr", "lf" and "crlf".
-     *
-     * @author RT
-     */
-    public static class CrLf extends EnumeratedAttribute
-    {
-        public String[] getValues()
-        {
-            return new String[]{"asis", "cr", "lf", "crlf"};
-        }
     }
 
     class OneLiner
@@ -1200,5 +1105,4 @@ public class FixCRLF
             }
         }
     }
-
 }
