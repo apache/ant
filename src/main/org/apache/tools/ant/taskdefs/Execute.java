@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -118,8 +118,8 @@ public class Execute {
             // Mac
             shellLauncher = new MacCommandLauncher(new CommandLauncher());
         } else if (Os.isFamily("os/2")) {
-            // OS/2 - use same mechanism as Windows 2000
-            shellLauncher = new WinNTCommandLauncher(new CommandLauncher());
+            // OS/2
+            shellLauncher = new OS2CommandLauncher(new CommandLauncher());
         } else if (Os.isFamily("windows")) {
             // Windows.  Need to determine which JDK we're running in
 
@@ -688,6 +688,52 @@ public class Execute {
         }
 
         private CommandLauncher _launcher;
+    }
+
+    /**
+     * A command launcher for OS/2 that uses 'cmd.exe' when launching
+     * commands in directories other than the current working
+     * directory.
+     *
+     * <p>Unlike Windows NT and friends, OS/2's cd doesn't support the
+     * /d switch to change drives and directories in one go.</p>
+     */
+    private static class OS2CommandLauncher extends CommandLauncherProxy {
+        OS2CommandLauncher(CommandLauncher launcher) {
+            super(launcher);
+        }
+
+        /**
+         * Launches the given command in a new process, in the given working
+         * directory.
+         */
+        public Process exec(Project project, String[] cmd, String[] env,
+                            File workingDir) throws IOException {
+            File commandDir = workingDir;
+            if (workingDir == null) {
+                if (project != null) {
+                    commandDir = project.getBaseDir();
+                } else {
+                    return exec(project, cmd, env);
+                }
+            }
+
+            // Use cmd.exe to change to the specified drive and
+            // directory before running the command
+            final int preCmdLength = 7;
+            final String cmdDir = commandDir.getAbsolutePath();
+            String[] newcmd = new String[cmd.length + preCmdLength];
+            newcmd[0] = "cmd";
+            newcmd[1] = "/c";
+            newcmd[2] = cmdDir.substring(0, 2);
+            newcmd[3] = "&&";
+            newcmd[4] = "cd";
+            newcmd[5] = cmdDir.substring(2);
+            newcmd[6] = "&&";
+            System.arraycopy(cmd, 0, newcmd, preCmdLength, cmd.length);
+
+            return exec(project, newcmd, env);
+        }
     }
 
     /**
