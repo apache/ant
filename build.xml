@@ -397,7 +397,7 @@
       </fileset>
     </copy>
 
-    <copy todir="${dist.lib}" file="${lib.dir}/optional/README"/>
+    <copy todir="${dist.lib}" file="${lib.dir}/README"/>
 
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}">
@@ -461,7 +461,7 @@
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
         <include name="*.zip" />
-        <include name="optional/README"/>
+        <include name="README"/>
       </fileset>
     </copy>
 
