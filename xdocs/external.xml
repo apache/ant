@@ -1403,6 +1403,37 @@
         </table>
       </subsection>
 
+      <subsection name="JReleaseInfo">
+
+        <p>Sometimes you are interested at runtime to have information
+        from build time. This may be the build date, a build number or
+        the version.  The JReleaseInfo Ant Task generates a java
+        source file with getter methods for any desired and provided
+        properties.  Furthermore, it can automatically generate a
+        viewer (which can e.g.  be used as main-class in a library jar
+        file) that shows the included release information.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jreleaseinfo.sourceforge.net/">HomePage on SourceForge</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a
+                href="http://sourceforge.net/projects/jreleaseinfo/">Forums/Tracker on SourceForge</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="JRun Ant Tasks">
 
         <p>JRun 4 SP1 ships with lib/jrun-ant-tasks.jar, which defines
