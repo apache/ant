@@ -16,6 +16,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.Version;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -310,19 +311,19 @@ public class DefaultProjectBuilder
             throw new Exception( message );
         }
 
+        // Build the URL of the referenced projects
         final File baseDirectory = project.getBaseDirectory();
-
-        //TODO: standardize and migrate to Avalon-Excalibur.io
-        final File file = new File( baseDirectory, location );
-
+        final File file = FileUtil.resolveFile( baseDirectory, location );
         final String systemID = file.toURL().toString();
-        Project other = (Project)projects.get( systemID );
 
+        // Locate the referenced project, building it if necessary
+        Project other = (Project)projects.get( systemID );
         if( null == other )
         {
             other = build( file, projects );
         }
 
+        // Add the reference
         project.addProject( name, other );
     }
 
@@ -358,7 +359,7 @@ public class DefaultProjectBuilder
      * Build a target from configuration.
      *
      * @param project the project
-     * @param task the Configuration
+     * @param target the Configuration
      */
     private void buildTarget( final DefaultProject project, final Configuration target )
         throws Exception
