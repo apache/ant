@@ -17,6 +17,7 @@ import org.apache.aut.bzip2.CBZip2InputStream;
  * used to compress non-compressed archives such as TAR files.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @ant:task name="bunzip2"
  */
 public class BUnzip2
     extends Unpack
