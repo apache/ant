@@ -80,5 +80,4 @@ public class ConfigTest3
     {
         m_prop3.add( value );
     }
-
 }

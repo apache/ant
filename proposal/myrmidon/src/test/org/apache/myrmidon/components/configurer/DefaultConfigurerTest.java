@@ -362,6 +362,57 @@ public class DefaultConfigurerTest
     }
 
     /**
+     * Tests reference resolution via a nested element.
+     */
+    public void testNonInterfaceTypedAdder()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+
+        final ConfigTest4 test = new ConfigTest4();
+
+        try
+        {
+            // Configure the object
+            m_configurer.configure( test, config, m_context );
+        }
+        catch( final ConfigurationException ce )
+        {
+            final String message = REZ.getString( "typed-adder-non-interface.error",
+                                                  ConfigTest4.class.getName(),
+                                                  Integer.class.getName() );
+            assertSameMessage( message, ce );
+        }
+    }
+
+    /**
+     * Tests whether a object with multiple typed adders causes an exception.
+     */
+    public void testMultipleTypedAdder()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+
+        final ConfigTest5 test = new ConfigTest5();
+
+        try
+        {
+            // Configure the object
+            m_configurer.configure( test, config, m_context );
+        }
+        catch( final ConfigurationException ce )
+        {
+            final String message = REZ.getString( "multiple-typed-adder-methods-for-element.error",
+                                                  ConfigTest5.class.getName(),
+                                                  MyRole1.class.getName(),
+                                                  MyRole2.class.getName() );
+            assertSameMessage( message, ce );
+        }
+    }
+
+    /**
      * Test resolving properties in an id.
      */
     public void testIdResolve()
@@ -473,7 +524,8 @@ public class DefaultConfigurerTest
      * Tests that string setter/adder/creators are ignored when there
      * are multiple.
      */
-    public void testIgnoreStringMethods() throws Exception
+    public void testIgnoreStringMethods()
+        throws Exception
     {
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
