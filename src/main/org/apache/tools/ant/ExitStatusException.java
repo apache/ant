@@ -36,7 +36,7 @@ public class ExitStatusException extends BuildException {
     }
 
     /**
-     * Constructs an exit exception.
+     * Constructs an <CODE>ExitStatusException</CODE>.
      * @param msg the associated message
      * @param status the associated status code
      */
@@ -46,8 +46,7 @@ public class ExitStatusException extends BuildException {
     }
 
     /**
-     * Get the status code
-     *
+     * Get the status code.
      * @return <CODE>int</CODE>
      */
     public int getStatus() {
