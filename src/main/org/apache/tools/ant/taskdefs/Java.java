@@ -103,13 +103,14 @@ public class Java extends Task {
      */
     public int executeJava() throws BuildException {
         String classname = cmdl.getClassname();
-        log("Calling " + classname, Project.MSG_VERBOSE);
 
         if (classname == null) {
             throw new BuildException("Classname must not be null.");
         }
 
         if (fork) {
+            log("Forking " + cmdl.toString(), Project.MSG_VERBOSE);
+        
             return run(cmdl.getCommandline());
         } else {
             if (cmdl.getVmCommand().size() > 1) {
@@ -118,7 +119,9 @@ public class Java extends Task {
             if (dir != null) {
                 log("Working directory ignored when same JVM is used.", Project.MSG_WARN);
             }
-            
+
+            log("Running in same VM " + cmdl.getJavaCommand().toString(), 
+                Project.MSG_VERBOSE);
             run(cmdl);
             return 0;
         }
@@ -247,7 +250,13 @@ public class Java extends Task {
         
         exe.setAntRun(project);
 
-        if (dir == null) dir = project.getBaseDir();
+        if (dir == null) {
+            dir = project.getBaseDir();
+        } else if (!dir.exists() || !dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()+" is not a valid directory",
+                                     location);
+        }
+
         exe.setWorkingDirectory(dir);
 
         exe.setCommandline(command);
