@@ -45,8 +45,6 @@ remove items from this list once they are complete.
 
 * AntClassLoader parent loader [Start thread, Peter]
 
-* delete - delete on exit on error [Peter]
-
 * delete - do not follow symlinks [Peter, may be dropped for 1.6.2]
 
 
