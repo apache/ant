@@ -126,7 +126,7 @@ public final class JarLibManifestTask
      *
      * @param extensionSet a set of extensions that this library optionally requires.
      */
-    public void addOption( final ExtensionSet extensionSet )
+    public void addOptions( final ExtensionSet extensionSet )
     {
         m_optionals.add( extensionSet );
     }

@@ -339,9 +339,9 @@ Legal:
     <target name="manifest-test">
 
         <extension-set id="my-dependencies">
-            <dependsfileset dir="../../">
+            <libfileset dir="../../">
                 <include name="src/ant1compat/jar/*.jar"/>
-            </dependsfileset>
+            </libfileset>
             <extension
                 extension-name="MrMadeUpExtension"
                 specification-version="1.0"
@@ -349,9 +349,9 @@ Legal:
         </extension-set>
 
         <extension-set id="my-options">
-            <dependsfileset dir="../../">
+            <libfileset dir="../../">
                 <include name="lib/*.jar"/>
-            </dependsfileset>
+            </libfileset>
         </extension-set>
 
         <extension id="my-extension"
