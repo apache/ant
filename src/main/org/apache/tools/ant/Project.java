@@ -1777,7 +1777,17 @@ public class Project {
                 log("Overriding previous definition of reference to " + name,
                     MSG_WARN);
             }
-            log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
+
+            String valueAsString = "";
+            try {
+                valueAsString = value.toString();
+            } catch (Throwable t) {
+                log("Caught exception (" + t.getClass().getName() +")"
+                    + " while expanding " + name + ": " + t.getMessage(), 
+                    MSG_WARN);
+            }
+            log("Adding reference: " + name + " -> " + valueAsString, 
+                MSG_DEBUG);
             references.put(name, value);
         }
     }
