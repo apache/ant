@@ -200,7 +200,8 @@ Legal:
             <classpath location="${custom-tasks-dir}"/>
         </taskdef>
 
-        <taskdef name="antlib-descriptor" classname="org.apache.myrmidon.build.AntlibDescriptorTask">
+        <taskdef name="antlib-descriptor" 
+                 classname="org.apache.myrmidon.build.AntlibDescriptorTask">
             <classpath>
                 <pathelement location="${custom-tasks-dir}"/>
                 <path refid="project.class.path"/>
