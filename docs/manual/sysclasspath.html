@@ -51,8 +51,14 @@ the other form of compromise where the build runner has priority.
 </tr>
 </table>
 
+<p><em>Since Ant 1.7</em> the value of this property also affects the
+bootclasspath settings - it combines the bootclasspath that has been
+specified for a task with the bootclasspath of the Java VM running
+Ant.  If the property has not been set, it defaults to "ignore" in
+this case.</p>
+
 <hr>
-<p align="center">Copyright &copy; 2001-2002,2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002,2004-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

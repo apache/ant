@@ -18,16 +18,19 @@ href="OptionalTasks/junit.html">junit</a> tasks support clonevm
 attributes to control the VMs on a task-by-task basis while the system
 property applies to all forked Java VMs.</p>
 
-<p>If the value of the property is true, then all system properties
-and the bootclasspath of the forked Java Virtual Machine will be the
-same as those of the Java VM running Ant.</p>
+<p>If the value of the property is true, then all system properties of
+the forked Java Virtual Machine will be the same as those of the Java
+VM running Ant.  In addition, if you set build.clonevm to true and <a
+href="sysclasspath.html">build.sysclasspath</a> has not been set, the
+bootclasspath of forked Java VMs gets constructed as if
+build.sysclasspath had the value "last".</p>
 
 <p>Note that this has to be a system property, so it cannot be
 specified on the Ant command line.  Use the ANT_OPTS environment
 variable instead.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2004-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

@@ -1669,9 +1669,14 @@ public class Javadoc extends Task {
                     }
                 }
             }
-            if (bootclasspath != null && bootclasspath.size() > 0) {
+            Path bcp = new Path(getProject());
+            if (bootclasspath != null) {
+                bcp.append(bootclasspath);
+            }
+            bcp = bcp.concatSystemBootClasspath("ignore");
+            if (bcp.size() > 0) {
                 toExecute.createArgument().setValue("-bootclasspath");
-                toExecute.createArgument().setPath(bootclasspath);
+                toExecute.createArgument().setPath(bcp);
             }
 
             // add the links arguments
