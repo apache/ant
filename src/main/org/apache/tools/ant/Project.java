@@ -659,9 +659,17 @@ public class Project {
      * @param typeClass full datatype classname     
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        if (null != dataClassDefinitions.get(typeName)) {
-            log("Trying to override old definition of datatype "+typeName, 
-                MSG_WARN);
+        Class old = (Class)dataClassDefinitions.get(typeName);
+        if (null != old) {
+            if (old.equals(typeClass)) {
+                log("Ignoring override for datatype " + typeName 
+                    + ", it is already defined by the same class.", 
+                    MSG_VERBOSE);
+                return;
+            } else {
+                log("Trying to override old definition of datatype "+typeName, 
+                    MSG_WARN);
+            }
         }
 
         String msg = " +User datatype: " + typeName + "     " + typeClass.getName();
