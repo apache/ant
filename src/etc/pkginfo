@@ -1,9 +1,0 @@
-PKG="ASFant"
-NAME="Apache Ant build tool"
-VERSION="1.0"
-ARCH="sparc i386"
-CLASSES="none"
-CATEGORY="utility"
-VENDOR="Apache"
-EMAIL="costin@eng.sun.com"
-BASEDIR=/
