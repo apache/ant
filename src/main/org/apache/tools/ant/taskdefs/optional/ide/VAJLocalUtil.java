@@ -61,6 +61,14 @@ import java.io.File;
 
 
 import com.ibm.ivj.util.base.Package;
+import com.ibm.ivj.util.base.IvjException;
+import com.ibm.ivj.util.base.Workspace;
+import com.ibm.ivj.util.base.ToolEnv;
+import com.ibm.ivj.util.base.ExportCodeSpec;
+import com.ibm.ivj.util.base.ProjectEdition;
+import com.ibm.ivj.util.base.ImportCodeSpec;
+import com.ibm.ivj.util.base.Type;
+import com.ibm.ivj.util.base.Project;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
