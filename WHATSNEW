@@ -46,6 +46,8 @@ Fixed bugs:
 
 * macrodef @@ escaping was broken.  Bugzilla Report 27069.
 
+* SQL task did not work with Informix IDS 9.2. Bugzilla Report 27162.
+
 Other changes:
 --------------
 
