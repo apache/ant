@@ -138,9 +138,7 @@ public class UnzipTest extends BuildFileTest {
      * PR 16213
      */
     public void testSelfExtractingArchive() {
-        expectLogContaining("selfExtractingArchive",
-                            "found a preamble of 38439 bytes, "
-                            + "probably a self-extracting archive");
+        executeTarget("selfExtractingArchive");
     }
 
 

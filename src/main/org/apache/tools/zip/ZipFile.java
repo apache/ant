@@ -63,6 +63,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipException;
 
 /**
@@ -202,7 +204,22 @@ public class ZipFile {
      */
     public InputStream getInputStream(ZipEntry ze)
         throws IOException, ZipException {
-        return null;
+        Long start = (Long) dataOffsets.get(ze);
+        if (start == null) {
+            return null;
+        }
+        BoundedInputStream bis = 
+            new BoundedInputStream(start.longValue(), ze.getCompressedSize());
+        switch (ze.getMethod()) {
+            case ZipEntry.STORED:
+                return bis;
+            case ZipEntry.DEFLATED:
+                bis.addDummy();
+                return new InflaterInputStream(bis, new Inflater(true));
+            default:
+                throw new ZipException("Found unsupported compression method "
+                                       + ze.getMethod());
+        }
     }
 
     private static final int CFH_LEN =
@@ -411,6 +428,74 @@ public class ZipFile {
             } catch (UnsupportedEncodingException uee) {
                 throw new ZipException(uee.getMessage());
             }
+        }
+    }
+
+    /**
+     * InputStream that delegates requests to the underlying
+     * RandomAccessFile, making sure that only bytes from a certain
+     * range can be read.
+     */
+    private class BoundedInputStream extends InputStream {
+        private long start, remaining;
+        private long loc;
+        private boolean addDummyByte = false;
+
+        BoundedInputStream(long start, long remaining) {
+            this.start = start;
+            this.remaining = remaining;
+            loc = start;
+        }
+
+        public int read() throws IOException {
+            if (remaining-- <= 0) {
+                if (addDummyByte) {
+                    addDummyByte = false;
+                    return 0;
+                }
+                return -1;
+            }
+            synchronized (archive) {
+                archive.seek(loc++);
+                return archive.read();
+            }
+        }
+
+        public int read(byte[] b, int off, int len) throws IOException {
+            if (remaining <= 0) {
+                if (addDummyByte) {
+                    addDummyByte = false;
+                    b[off] = 0;
+                    return 1;
+                }
+                return -1;
+            }
+
+            if (len <= 0) {
+                return 0;
+            }
+            
+            if (len > remaining) {
+                len = (int) remaining;
+            }
+            int ret = -1;
+            synchronized (archive) {
+                archive.seek(loc);
+                ret = archive.read(b, off, len);
+            }
+            if (ret > 0) {
+                loc += ret;
+                remaining -= ret;
+            }
+            return ret;
+        }
+
+        /**
+         * Inflater needs an extra dummy byte for nowrap - see
+         * Inflater's javadocs.
+         */
+        void addDummy() {
+            addDummyByte = true; 
         }
     }
 

@@ -56,16 +56,13 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.RandomAccessFile;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Vector;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -74,6 +71,8 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 
 /**
  * Unzip a file.
@@ -154,37 +153,13 @@ public class Expand extends Task {
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-        ZipInputStream zis = null;
-        FileInputStream fis = null;
-        RandomAccessFile raf = null;
-        byte[] buff = new byte[MARKER_SIZE];
+        ZipFile zf = null;
         try {
-            raf = new RandomAccessFile(srcF, "r");
-            long offset = 0;
-            int more = raf.read(buff);
-            boolean foundMarker = false;
-            while (more != -1 || offset < MAX_LOOKAHEAD) {
-                if (Arrays.equals(buff, ZIPMARKER)) {
-                    foundMarker = true;
-                    break;
-                }
-                raf.seek(++offset);
-                more = raf.read(buff);
-            }
-            raf.close();
-            raf = null;
-
-            fis = new FileInputStream(srcF);
-            if (foundMarker && offset > 0) {
-                log("found a preamble of " + offset 
-                    + " bytes, probably a self-extracting archive");
-                fis.skip(offset);
-            }
-            
-            zis = new ZipInputStream(fis);
-            ZipEntry ze = null;
-            while ((ze = zis.getNextEntry()) != null) {
-                extractFile(fileUtils, srcF, dir, zis,
+            zf = new ZipFile(srcF, "UTF8");
+            Enumeration enum = zf.getEntries();
+            while (enum.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) enum.nextElement();
+                extractFile(fileUtils, srcF, dir, zf.getInputStream(ze),
                             ze.getName(), new Date(ze.getTime()),
                             ze.isDirectory());
             }
@@ -194,14 +169,9 @@ public class Expand extends Task {
             throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe);
         } finally {
-            if (raf != null) {
+            if (zf != null) {
                 try {
-                    raf.close();
-                } catch (IOException e) {}
-            }
-            if (zis != null) {
-                try {
-                    zis.close();
+                    zf.close();
                 } catch (IOException e) {}
             }
         }
