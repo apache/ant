@@ -73,6 +73,7 @@
     </style>
   </target>
 
+  <target name="dumphtml" depends="checkstyle, htmlreport" description="--> runs the checkstyle and generates a html report"/>
   <target name="dumptext" depends="checkstyle, textreport" description="--> runs the checkstyle and displays result as text">
     <concat>
       <filelist dir="${checkstyle.reportdir}" files="report.txt"/>
