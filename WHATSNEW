@@ -54,6 +54,9 @@ Fixed bugs:
 * Execution of top level tasks in imported files get delayed by targets.
   Bugzilla report 31487.
 
+* ExecTask executes checkConfiguration() even though os does not match.
+  Bugzilla report 31805.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
