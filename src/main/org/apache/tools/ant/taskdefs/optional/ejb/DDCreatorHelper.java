@@ -54,6 +54,10 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+
+import javax.ejb.deployment.DeploymentDescriptor;
 
 /**
  * A helper class which performs the actual work of the ddcreator task.
@@ -128,7 +132,8 @@ public class DDCreatorHelper {
             File serFile = new File(generatedFilesDirectory, serName);
                 
             // do we need to regenerate the file
-            if (!serFile.exists() || serFile.lastModified() < descriptorFile.lastModified()) {
+            if (!serFile.exists() || serFile.lastModified() < descriptorFile.lastModified()
+                || regenerateSerializedFile(serFile)) {
                 
                 String[] args = {"-noexit", 
                                  "-d", serFile.getParent(),
@@ -145,6 +150,32 @@ public class DDCreatorHelper {
                     weblogic.ejb.utils.DDCreator.main(newArgs);
                 }
             }
+        }
+    }
+
+    /**
+     * EJBC will fail if the serialized descriptor file does not match the bean classes.
+     * You can test for this by trying to load the deployment descriptor.  If it fails,
+     * the serialized file needs to be regenerated because the associated class files
+     * don't match.
+     */
+    private boolean regenerateSerializedFile(File serFile) {
+        try {
+
+            FileInputStream fis = new FileInputStream(serFile);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            DeploymentDescriptor dd = (DeploymentDescriptor) ois.readObject();
+            fis.close();
+
+            // Since the descriptor read properly, everything should be o.k.
+            return false;
+
+        } catch (Exception e) {
+            
+            // Weblogic will throw an error if the deployment descriptor does 
+            // not match the class files.
+            return true;
+
         }
     }
 }
