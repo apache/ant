@@ -25,6 +25,9 @@ Other changes:
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
+* <p4submit> has 2 new attributes, needsresolveproperty and changeproperty.
+  Bugzilla Report 25711.
+
 
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================

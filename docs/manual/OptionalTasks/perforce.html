@@ -10,9 +10,8 @@
     <li>Les Hughes (<a href="mailto:leslie.hughes@rubus.com">leslie.hughes@rubus.com</a>)</li>
     <li>Kirk Wylie (<a href="mailto:kirk@radik.com">kirk@radik.com</a>)</li>
     <li>Matt Bishop (<a href="mailto:matt@thebishops.org">matt@thebishops.org</a>)</li>
-    <li>Antoine Levy-Lambert (<a href="mailto:levylambert@tiscali-dsl.de">levylambert@tiscali-dsl.de</a>)</li>
+    <li>Antoine Levy-Lambert</li>
 </ul>
-<p>Version $Revision$ - $Date$</p>
 <hr>
 <h2>Contents</h2>
 <ul>
@@ -330,6 +329,20 @@ is not the latest any more.
     <td valign="top">change</td>
     <td valign="top">The changelist number to submit</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">changeproperty</td>
+    <td valign="top">Name of a property to which the new change number
+    will be assigned if the Perforce server renumbers the change<br>
+    Since ant 1.6.1</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">needsresolveproperty</td>
+    <td valign="top">Name of property which will be set to <code>true</code>
+    if the submit requires a resolve<br>
+    Since ant 1.6.1</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 
@@ -960,9 +973,15 @@ P4Resolve does not use a change list number (it takes it from the files it is wo
                      Changed p4submit (detection of changes of change numbers,
                      and of failed submits due to resolution needed)</td>
 </tr>
+<tr>
+    <td valign="top">Jan 2004</td>
+    <td valign="top">ant 1.6.1</td>
+    <td valign="top">
+Changed p4submit, needsresolveproperty and changeproperty added</td>
+</tr>
 </table>
 <hr>
-<p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2004 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>
