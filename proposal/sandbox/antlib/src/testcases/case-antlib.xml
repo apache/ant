@@ -1,0 +1,5 @@
+<?xml version="1.0"  ?>
+
+<antlib version="1.0" >
+  <task name="case" class="org.apache.ant.contrib.Case" />
+</antlib>

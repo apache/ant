@@ -165,4 +165,5 @@ public class TaskAdapter extends Task implements RoleAdapter {
         return this.proxy ;
     }
 
+    public void setId(String id) {}
 }

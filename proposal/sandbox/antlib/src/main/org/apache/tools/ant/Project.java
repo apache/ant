@@ -63,12 +63,15 @@ import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Stack;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 
 import org.apache.tools.ant.types.DataTypeAdapterTask; 
 import org.apache.tools.ant.types.FilterSet; 
 import org.apache.tools.ant.types.FilterSetCollection; 
 import org.apache.tools.ant.util.FileUtils; 
+import org.apache.tools.ant.types.Path;
 
 /**
  * Central representation of an Ant project. This class defines a
@@ -89,6 +92,9 @@ public class Project {
     public final static int MSG_INFO = 2;
     public final static int MSG_VERBOSE = 3;
     public final static int MSG_DEBUG = 4;
+
+    public final static String TASK_ROLE = "task";
+    public final static String DATATYPE_ROLE = "datatype";
 
     // private set of constants to represent the state
     // of a DFS of the Target dependencies
@@ -165,30 +171,26 @@ public class Project {
         fileUtils = FileUtils.newFileUtils();
 	symbols = new SymbolTable();
 	symbols.setProject(this);
+	loadDefinitions();
     }
     
     /**
      * create a new ant project that inherits from caler project
      * @param p the calling project
      */
-    public Project(Project p) {
+    private Project(Project p) {
         fileUtils = FileUtils.newFileUtils();
-	symbols = new SymbolTable(p);
+	symbols = new SymbolTable(p.getSymbols());
 	symbols.setProject(this);
     }
     
     /**
-     * Initialise the project.
-     *
-     * This involves setting the default task definitions and loading the
-     * system properties.
+     * Loads the core definitions into the Root project.
      */
-    public void init() throws BuildException {
-        setJavaVersionProperty();
-        
-	// Initialize simbol table just in case
-	symbols.addRole("task", TaskContainer.class, TaskAdapter.class);
-	symbols.addRole("datatype", TaskContainer.class, 
+    private void loadDefinitions() {
+	// Initialize symbol table just in case
+	symbols.addRole(TASK_ROLE, TaskContainer.class, TaskAdapter.class);
+	symbols.addRole(DATATYPE_ROLE, TaskContainer.class, 
 			DataTypeAdapterTask.class);
 
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
@@ -248,7 +250,23 @@ public class Project {
         } catch (IOException ioe) {
             throw new BuildException("Can't load default datatype list");
         }
+    }
 
+    /**
+     * Creates a subproject of the current project.
+     */
+    public Project createSubProject() {
+	return new Project(this);
+    }
+
+    /**
+     * Initialise the project.
+     *
+     * This involves setting the default task definitions and loading the
+     * system properties.
+     */
+    public void init() throws BuildException {
+        setJavaVersionProperty();
         setSystemProperties();
     }
 
@@ -275,7 +293,7 @@ public class Project {
     /**
      * Get the symbols associated with this project.
      */
-    public SymbolTable getSymbols() {
+    private SymbolTable getSymbols() { // Package protected on purpose
 	return symbols;
     }
 
@@ -618,6 +636,46 @@ public class Project {
         }
     }
 
+    public ClassLoader addToLoader(String loader, Path path) {
+	return symbols.addToLoader(loader, path);
+    }
+
+    public boolean addRoleDefinition(String role, 
+				     Class roleClass, Class adapter)
+    {
+	return symbols.addRole(role, roleClass, adapter);
+    }
+
+    /**
+     * test for a role name being in use already
+     *
+     * @param name the name to test
+     * @return true if it is a task or a datatype
+     */
+    public boolean isRoleDefined(String name) {
+	return (symbols.getRole(name) != null);
+    }
+
+    public void addDefinitionOnRole(String role,
+				    String type, Class clz)
+    {
+	Class old = symbols.add(role, type, clz);
+	// Special management for Tasks
+        if (TASK_ROLE.equals(role) && null != old && !old.equals(clz)) {
+	    invalidateCreatedTasks(type);
+        }
+    }
+
+    /**
+     * test for a name being in use already on this role
+     *
+     * @param name the name to test
+     * @return true if it is a task or a datatype
+     */
+    public boolean isDefinedOnRole(String role, String name) {
+	return (symbols.get(role, name) != null);
+    }
+    
     /**
      * add a new task definition, complain if there is an overwrite attempt
      * @param taskName name of the task
@@ -627,21 +685,14 @@ public class Project {
      */
     public void addTaskDefinition(String taskName, Class taskClass) 
 	throws BuildException {
-	Class old = symbols.add("task", taskName, taskClass);
-        if (null != old && !old.equals(taskClass)) {
-	    invalidateCreatedTasks(taskName);
-        }
-
-        String msg = 
-	    " +User task: " + taskName + "     " + taskClass.getName();
-        log(msg, MSG_DEBUG);
-        checkTaskClass(taskClass); 
+	addDefinitionOnRole(TASK_ROLE, taskName, taskClass);
     }
 
     /**
      * Checks a class, whether it is suitable for serving as ant task.
      * @throws BuildException and logs as Project.MSG_ERR for
      * conditions, that will cause the task execution to fail.
+     * @deprecated this is done now when added to SymbolTable
      */
     public void checkTaskClass(final Class taskClass) throws BuildException {
         if( !Task.class.isAssignableFrom(taskClass) ) {
@@ -653,7 +704,7 @@ public class Project {
      * get the current task definition hashtable
      */
     public Hashtable getTaskDefinitions() {
-        return symbols.getTaskDefinitions();
+        return symbols.getDefinitions(TASK_ROLE);
     }
 
     /**
@@ -662,18 +713,14 @@ public class Project {
      * @param typeClass full datatype classname     
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-	symbols.add("datatype", typeName, typeClass);
-
-        String msg = 
-	    " +User datatype: " + typeName + "     " + typeClass.getName();
-        log(msg, MSG_DEBUG);
+	addDefinitionOnRole(DATATYPE_ROLE, typeName, typeClass);
     }
 
     /**
      * get the current task definition hashtable
      */
     public Hashtable getDataTypeDefinitions() {
-        return symbols.getDataTypeDefinitions();
+        return symbols.getDefinitions(DATATYPE_ROLE);
     }
 
     /**
@@ -701,7 +748,7 @@ public class Project {
      * in the project.
      * @see Project#addOrReplaceTarget to replace existing Targets.
      */
-     public void addTarget(String targetName, Target target)
+    public void addTarget(String targetName, Target target)
          throws BuildException {
          if (targets.get(targetName) != null) {
              throw new BuildException("Duplicate target: `"+targetName+"'");
@@ -738,45 +785,95 @@ public class Project {
     }
 
     /**
+     * Create a new element instance on a Role
+     * @param role name of the role to use
+     * @param type name of the element to create
+     * @return null if element unknown on this role
+     */
+    public Object createForRole(String role, String type) {
+	SymbolTable.Factory f = symbols.get(role, type);
+	if (f == null) return null;
+
+	try {
+	    Object o = f.create(this);
+	    // Do special book keeping for ProjectComponents
+	    if ( o instanceof ProjectComponent ) {
+		((ProjectComponent)o).setProject(this);
+		if (o instanceof Task) {
+		    Task task = (Task) o;
+		    task.setTaskType(type);
+		    
+		    // set default value, can be changed by the user
+		    task.setTaskName(type);
+		    addCreatedTask(type, task);
+		}
+	    }
+            String msg = "   +" + role + ": " + type;
+            log (msg, MSG_DEBUG);
+	    return o;
+	}
+	catch (Throwable t) {
+            String msg = "Could not create " + role + " of type: "
+                 + type + " due to " + t;
+            throw new BuildException(msg, t);
+	}
+    }
+
+    /**
+     *
+     */
+    public Object createInRole(Object container, String type) {
+	Class clz = container.getClass();
+	String roles[] = symbols.findRoles(clz);
+	Object theOne = null;
+	Method add = null;
+
+	for(int i = 0; i < roles.length; i++) {
+	    Object o = createForRole(roles[i], type);
+	    if (o != null) {
+		if (theOne != null) {
+		    String msg = "Element " + type +
+			" is ambiguous for container " + clz.getName();
+		    if (theOne instanceof RoleAdapter) 
+			theOne = ((RoleAdapter)theOne).getProxy();
+		    if (o instanceof RoleAdapter) 
+			o = ((RoleAdapter)o).getProxy();
+		    
+		    log(msg, MSG_ERR);
+		    log("cannot distinguish between " + 
+			theOne.getClass().getName() + 
+			" and " + o.getClass().getName(), MSG_ERR);
+		    throw new BuildException(msg);
+		}
+		theOne = o;
+		add = symbols.getRole(roles[i]).getInterfaceMethod();
+	    }
+	}
+	if (theOne != null) {
+	    try {
+		add.invoke(container, new Object[]{theOne});
+	    }
+	    catch(InvocationTargetException ite) {
+		if (ite.getTargetException() instanceof BuildException) {
+		    throw (BuildException)ite.getTargetException();
+		}
+		throw new BuildException(ite.getTargetException());
+	    }
+	    catch(Exception e) {
+		throw new BuildException(e);
+	    }
+	}
+	return theOne;
+    }
+
+    /**
      * create a new task instance
      * @param taskType name of the task
      * @throws BuildException when task creation goes bad
      * @return null if the task name is unknown
      */
     public Task createTask(String taskType) throws BuildException {
-        Class c = symbols.get("task", taskType);
-
-        if (c == null) {
-            return null;
-        }
-        
-        try {
-            Object o = c.newInstance();
-            Task task = null;
-            if( o instanceof Task ) {
-               task=(Task)o;
-            } else {
-                // "Generic" Bean - use the setter pattern
-                // and an Adapter
-                TaskAdapter taskA=new TaskAdapter();
-                taskA.setProxy( o );
-                task=taskA;
-            }
-            task.setProject(this);
-            task.setTaskType(taskType);
-
-            // set default value, can be changed by the user
-            task.setTaskName(taskType);
-
-            String msg = "   +Task: " + taskType;
-            log (msg, MSG_DEBUG);
-            addCreatedTask(taskType, task);
-            return task;
-        } catch (Throwable t) {
-            String msg = "Could not create task of type: "
-                 + taskType + " due to " + t;
-            throw new BuildException(msg, t);
-        }
+	return (Task) createForRole(TASK_ROLE, taskType);
     }
 
     /**
@@ -820,47 +917,11 @@ public class Project {
      * @return null if the datatype name is unknown
      */
     public Object createDataType(String typeName) throws BuildException {
-        Class c = symbols.get("datatype", typeName);
-
-        if (c == null) {
-            return null;
-        }
-
-        try {
-            java.lang.reflect.Constructor ctor = null;
-            boolean noArg = false;
-            // DataType can have a "no arg" constructor or take a single 
-            // Project argument.
-            try {
-                ctor = c.getConstructor(new Class[0]);
-                noArg = true;
-            } catch (NoSuchMethodException nse) {
-                ctor = c.getConstructor(new Class[] {Project.class});
-                noArg = false;
-            }
-
-            Object o = null;
-            if (noArg) {
-                 o = ctor.newInstance(new Object[0]);
-            } else {
-                 o = ctor.newInstance(new Object[] {this});
-            }
-            if (o instanceof ProjectComponent) {
-                ((ProjectComponent)o).setProject(this);
-            }
-            String msg = "   +DataType: " + typeName;
-            log (msg, MSG_DEBUG);
-            return o;
-        } catch (java.lang.reflect.InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            String msg = "Could not create datatype of type: "
-                 + typeName + " due to " + t;
-            throw new BuildException(msg, t);
-        } catch (Throwable t) {
-            String msg = "Could not create datatype of type: "
-                 + typeName + " due to " + t;
-            throw new BuildException(msg, t);
-        }
+	// This is to make the function backward compatible
+	// Since we know if it returning an adapter for it
+        DataTypeAdapterTask dt = 
+	    (DataTypeAdapterTask) createForRole(DATATYPE_ROLE, typeName);
+	return (dt != null? dt.getProxy() : null);
     }
 
     /**
@@ -1227,7 +1288,10 @@ public class Project {
     }
 
     public void addReference(String name, Object value) {
-        if (null != references.get(name)) {
+	Object o = references.get(name);
+        if (null != o && o != value 
+	    && (!(o instanceof RoleAdapter) 
+		|| ((RoleAdapter)o).getProxy() != value)) {
             log("Overriding previous definition of reference to " + name, 
                 MSG_WARN);
         }

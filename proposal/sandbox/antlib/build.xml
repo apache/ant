@@ -6,6 +6,7 @@
   <property name='build' location='build' />
   <property name='dist' location='dist' />
   <property name='classes' location='${build}/classes' />
+  <property name='testcases' location='src/testcases' />
 
   <property name="debug" value="true" />
   <property name="deprecation" value="false" />
@@ -19,6 +20,8 @@
       <fileset dir='${orig-classes}'>
         <include name='**' />
 	<exclude name='org/apache/tools/ant/Project.class' />
+	<exclude name='org/apache/tools/ant/ProjectHelper.class' />
+	<exclude name='org/apache/tools/ant/IntrospectionHelper.class' />
 	<exclude name='org/apache/tools/ant/TaskAdapter.class' />
 	<exclude name='org/apache/tools/ant/taskdefs/Ant.class' />
       </fileset>
@@ -52,6 +55,12 @@
 
   <target name='clean'>
     <delete dir='${build}' />
+  </target>
+
+  <target name='test'>
+    <ant dir='${testcases}' inheritAll='false'/>
+    <ant dir='${testcases}' 
+         antfile='${testcases}/case.xml' inheritAll='false'/>
   </target>
 
   <target name='cleanall' depends='clean'>

@@ -418,7 +418,7 @@ public class Antlib extends Task {
         if (classpath != null) {
             clspath.append(classpath);
         }
-	return project.getSymbols().addToLoader(loaderId, clspath);
+	return project.addToLoader(loaderId, clspath);
     }
 
 
@@ -505,8 +505,6 @@ public class Antlib extends Task {
 
 	private int level = 0;
 
-	private SymbolTable symbols = null;
-
 	private String name = null;
 	private String className = null;
 	private String adapter = null;
@@ -520,7 +518,6 @@ public class Antlib extends Task {
         AntLibraryHandler(ClassLoader classloader, Properties als) {
             this.classloader = classloader;
             this.aliasMap = als;
-	    this.symbols = project.getSymbols();
         }
 
         /**
@@ -591,15 +588,15 @@ public class Antlib extends Task {
 
 	    try {
 		if ("role".equals(tag)) {
-		    if (isRoleInUse(name)) {
+		    if (project.isRoleDefined(name)) {
 			String msg = "Cannot override role: " + name;
 			log(msg, Project.MSG_WARN);
 			return;			
 		    }
 		    // Defining a new role
-		    symbols.addRole(name, loadClass(className),
-				    (adapter == null? 
-				     null : loadClass(adapter))); 
+		    project.addRoleDefinition(name, loadClass(className),
+					      (adapter == null? 
+					       null : loadClass(adapter))); 
 		    return;
 		}
 
@@ -610,12 +607,12 @@ public class Antlib extends Task {
 		    name = alias;
 		}
 		//catch an attempted override of an existing name
-		if (!override && isInUse(tag, name)) {
+		if (!override && project.isDefinedOnRole(tag, name)) {
 		    String msg = "Cannot override " + tag + ": " + name;
 		    log(msg, Project.MSG_WARN);
 		    return;
 		}
-		symbols.add(tag, name, loadClass(className));
+		project.addDefinitionOnRole(tag, name, loadClass(className));
 	    }
 	    catch(BuildException be) {
 		throw new SAXParseException(be.getMessage(), locator, be);
@@ -650,26 +647,6 @@ public class Antlib extends Task {
 		throw new SAXParseException(msg, locator);
 	    }
 	}
-
-        /**
-         * test for a name being in use already on this role
-         *
-         * @param name the name to test
-         * @return true if it is a task or a datatype
-         */
-        private boolean isInUse(String role, String name) {
-            return (symbols.get(role, name) != null);
-        }
-
-        /**
-         * test for a role name being in use already
-         *
-         * @param name the name to test
-         * @return true if it is a task or a datatype
-         */
-        private boolean isRoleInUse(String name) {
-            return (symbols.getRole(name) != null);
-        }
 
     //end inner class AntLibraryHandler
     }

@@ -54,6 +54,7 @@
 package org.apache.tools.ant;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -96,8 +97,8 @@ public class SymbolTable {
      * from that defined in the calling Project.
      * @param p the calling project
      */
-    public SymbolTable(Project p) {
-	parentTable = p.getSymbols();
+    public SymbolTable(SymbolTable st) {
+	parentTable = st;
     }
 
     /**
@@ -106,127 +107,6 @@ public class SymbolTable {
      */
     public void setProject(Project p) {
 	this.project = p;
-    }
-
-    /**
-     * Find all the roles supported by a Class
-     * on this symbol table.
-     * @param clz the class to analyze
-     * @return an array of roles supported by the class
-     */
-    public String[] findRoles(final Class clz) {
-	Vector list = new Vector();
-	findRoles(clz, list);
-	return (String[])list.toArray(new String[list.size()]);
-    }
-
-    /**
-     * Collect the roles for the class
-     * @param clz the class being inspected
-     * @param list the roles collected up to this point
-     */
-    private void findRoles(final Class clz, Vector list) {
-	for (Enumeration e = roles.keys(); e.hasMoreElements();) {
-	    String role = (String) e.nextElement();
-
-	    if (((Role) roles.get(role)).isImplementedBy(clz)) {
-		list.addElement(role);
-	    }
-	}
-	if (parentTable != null) findRoles(clz, list);
-    }
-    
-    /**
-     * Get the Role definition
-     * @param role the name of the role
-     * @return the method used to support objects on this role
-     */
-    public Role getRole(String role) {
-	Role r = (Role) roles.get(role);
-	if (r == null && parentTable != null) {
-	    return parentTable.getRole(role);
-	}
-	return r;
-    }
-
-    /**
-     * Add a new role definition to this project.
-     * @param role the name of the role
-     * @param rclz the interface used to specify support for the role.
-     * @param aclz the optional adapter class
-     * @return whether the role replaced a different definition
-     */
-    public boolean addRole(String role, Class rclz, Class aclz) {
-	// Check if role already declared
-	Role old = getRole(role);
-	if (old != null && old.isSameAsFor(rclz, aclz)
-	    ) {
-	    project.log("Ignoring override for role " + role 
-			+ ", it is already defined by the same definition.", 
-			project.MSG_VERBOSE);
-	    return false;
-	}
-	// Role interfaces should only contain one method
-	roles.put(role, new Role(rclz, aclz));
-	return (old != null);
-    }
-
-    /** 
-     * Verify if the interface is valid.
-     * @param clz the interface to validate
-     * @return the method defined by the interface
-     */
-    private Method validInterface(Class clz) {
-	Method m[] = clz.getDeclaredMethods();
-	if (m.length == 1
-	    && java.lang.Void.TYPE.equals(m[0].getReturnType())) {
-	    Class args[] = m[0].getParameterTypes();
-	    if (args.length == 1
-		&& !java.lang.String.class.equals(args[0])
-		&& !args[0].isArray()
-		&& !args[0].isPrimitive()) {
-		return m[0];
-	    }
-	    else {
-		throw new BuildException("Invalid role interface method in: "
-					 + clz.getName());
-	    }
-	}
-	else {
-	    throw new BuildException("More than one method on role interface");
-	}
-    }
-
-    /** 
-     * Verify if the adapter is valid with respect to the interface.
-     * @param clz the class adapter to validate
-     * @param mtd the method whose only argument must match
-     * @return the static method to use for validating adaptees
-     */
-    private Method validAdapter(Class clz, Method mtd) {
-	if (clz == null) return null;
-	
-	checkClass(clz);
-	if (!mtd.getParameterTypes()[0].isAssignableFrom(clz)) {
-	    String msg = "Adapter " + clz.getName() + 
-		" is incompatible with role interface " + 
-		mtd.getDeclaringClass().getName();
-	    throw new BuildException(msg);
-	}
-	String msg = "Class " + clz.getName() + " is not an adapter: ";
-	if (!RoleAdapter.class.isAssignableFrom(clz)) {
-	    throw new BuildException(msg + "does not implement RoleAdapter");
-	}
-	try {
-	    Method chk = clz.getMethod("checkClass", CHECK_ADAPTER_PARAMS);
-	    if (!Modifier.isStatic(chk.getModifiers())) {
-		throw new BuildException(msg + "checkClass() is not static");
-	    }
-	    return chk;
-	}
-	catch(NoSuchMethodException nme){
-	    throw new BuildException(msg + "checkClass() not found", nme);
-	}
     }
 
     /**
@@ -278,6 +158,69 @@ public class SymbolTable {
     }
     
     /**
+     * Find all the roles supported by a Class
+     * on this symbol table.
+     * @param clz the class to analyze
+     * @return an array of roles supported by the class
+     */
+    public String[] findRoles(final Class clz) {
+	Vector list = new Vector();
+	findRoles(clz, list);
+	return (String[])list.toArray(new String[list.size()]);
+    }
+
+    /**
+     * Collect the roles for the class
+     * @param clz the class being inspected
+     * @param list the roles collected up to this point
+     */
+    private void findRoles(final Class clz, Vector list) {
+	for (Enumeration e = roles.keys(); e.hasMoreElements();) {
+	    String role = (String) e.nextElement();
+
+	    if (((Role) roles.get(role)).isImplementedBy(clz)) {
+		list.addElement(role);
+	    }
+	}
+	if (parentTable != null) parentTable.findRoles(clz, list);
+    }
+    
+    /**
+     * Get the Role definition
+     * @param role the name of the role
+     * @return the Role description
+     */
+    public Role getRole(String role) {
+	Role r = (Role) roles.get(role);
+	if (r == null && parentTable != null) {
+	    return parentTable.getRole(role);
+	}
+	return r;
+    }
+
+    /**
+     * Add a new role definition to this project.
+     * @param role the name of the role
+     * @param rclz the interface used to specify support for the role.
+     * @param aclz the optional adapter class
+     * @return whether the role replaced a different definition
+     */
+    public boolean addRole(String role, Class rclz, Class aclz) {
+	// Check if role already declared
+	Role old = getRole(role);
+	if (old != null && old.isSameAsFor(rclz, aclz)
+	    ) {
+	    project.log("Ignoring override for role " + role 
+			+ ", it is already defined by the same definition.", 
+			project.MSG_VERBOSE);
+	    return false;
+	}
+	// Role interfaces should only contain one method
+	roles.put(role, new Role(rclz, aclz));
+	return (old != null);
+    }
+
+    /**
      * Add a new type of element to a role.
      * @param role the role for this Class.
      * @param name the name of the element for this Class
@@ -291,13 +234,13 @@ public class SymbolTable {
 	    throw new BuildException("Unknown role: " + role);
 	}
 	// Check if it is already defined
-	Class old = get(role, name);
+	Factory old = get(role, name);
 	if (old != null) {
-	    if (old.equals(clz)) {
+	    if (old.getOriginalClass().equals(clz)) {
 		project.log("Ignoring override for "+ role + " " + name 
 			    + ", it is already defined by the same class.", 
 			    project.MSG_VERBOSE);
-		return old;
+		return old.getOriginalClass();
 	    }
 	    else {
                 project.log("Trying to override old definition of " +
@@ -305,26 +248,33 @@ public class SymbolTable {
 			    project.MSG_WARN);
 	    }
 	}
-	checkClass(clz);
+	Factory f = checkClass(clz);
 	// Check that the Class is compatible with the role definition
-	r.verifyAdaptability(role, clz);
+	f = r.verifyAdaptability(role, f);
 	// Record the new type
 	Hashtable defTable = (Hashtable)defs.get(role);
 	if (defTable == null) {
 	    defTable = new Hashtable();
 	    defs.put(role, defTable);
 	}
-	defTable.put(name, clz);
-	return old;
+	defTable.put(name, f);
+
+        String msg = 
+	    " +User " + role + ": " + name + "     " + clz.getName();
+        project.log(msg, project.MSG_DEBUG);
+	return (old != null ? old.getOriginalClass() : null);
     }
 
     /**
      * Checks a class, whether it is suitable for serving in ANT.
+     * @return the factory to use when instantiating the class
      * @throws BuildException and logs as Project.MSG_ERR for
      * conditions, that will cause execution to fail.
      */
-    void checkClass(final Class clz) 
+    Factory checkClass(final Class clz) // Package on purpose
 	throws BuildException {
+	if (clz == null) return null;
+
         if(!Modifier.isPublic(clz.getModifiers())) {
             final String message = clz + " is not public";
             project.log(message, Project.MSG_ERR);
@@ -342,8 +292,37 @@ public class SymbolTable {
             // getConstructor finds public constructors only.
             try {
                 clz.getConstructor(new Class[0]);
+		return new Factory(){
+			public Object create(Project p) {
+			    try {
+				return clz.newInstance();
+			    }
+			    catch(Exception e) {
+				throw new BuildException(e);
+			    }
+			}
+
+			public Class getOriginalClass() {
+			    return clz;
+			}
+		    };
             } catch (NoSuchMethodException nse) {
-                clz.getConstructor(new Class[] {Project.class});
+                final Constructor c = 
+		    clz.getConstructor(new Class[] {Project.class});
+		return new Factory(){
+			public Object create(Project p) {
+			    try {
+				return c.newInstance(new Object[]{p});
+			    }
+			    catch(Exception e) {
+				throw new BuildException(e);
+			    }
+			}
+
+			public Class getOriginalClass() {
+			    return clz;
+			}
+		    };
             }
         } catch(NoSuchMethodException e) {
             final String message = 
@@ -359,11 +338,11 @@ public class SymbolTable {
      * @param name the name of the element to sea
      * @return the Class implementation
      */
-    public Class get(String role, String name) {
+    public Factory get(String role, String name) {
 	Hashtable defTable = (Hashtable)defs.get(role);
 	if (defTable != null) {
-	    Class clz = (Class)defTable.get(name);
-	    if (clz != null) return clz;
+	    Factory f = (Factory)defTable.get(name);
+	    if (f != null) return f;
 	}
 	if (parentTable != null) {
 	    return parentTable.get(role, name);
@@ -372,19 +351,12 @@ public class SymbolTable {
     }
 
     /**
-     * Get a Hashtable that is usable for manipulating Tasks,
+     * Get a Hashtable that is usable for manipulating elements on Role.
+     * @param role the role of the elements in the table
      * @return a Hashtable that delegates to the Symbol table.
      */ 
-    public Hashtable getTaskDefinitions() {
-	return new SymbolHashtable("task");
-    }
-
-    /**
-     * Get a Hashtable that is usable for manipulating Datatypes,
-     * @return a Hashtable that delegates to the Symbol table.
-     */
-    public Hashtable getDataTypeDefinitions() {
-	return new SymbolHashtable("datatype");
+    Hashtable getDefinitions(String role) { // package scope on purpose
+	return new SymbolHashtable(role);
     }
 
     /**
@@ -402,8 +374,34 @@ public class SymbolTable {
 	}
 
 	public synchronized Object get(Object key) {
-	    return SymbolTable.this.get(role, (String)key);
+	    Factory f = SymbolTable.this.get(role, (String)key);
+	    return (f == null? null : f.getOriginalClass());
 	}
+    }
+
+    /**
+     * Factory for creating ANT objects.
+     * Class objects are not instanciated directly but through a Factory
+     * which is able to resolve issues such as proxys and such.
+     */
+    public static interface Factory {
+	/**
+	 * Creates an object for the Role
+	 * @param the project in which it is created
+	 * @return the instantiated object with a proxy if necessary
+	 */
+	public Object create(Project p);
+
+	/**
+	 * Creates an object for the Role, adapted if necessary
+	 * for a particular interface.
+	 */
+//  	public Object adaptFor(Class clz, Project p, Object o);
+
+	/**
+	 * The original class of the object without proxy.
+	 */
+	public Class getOriginalClass();
     }
 
     /**
@@ -412,6 +410,7 @@ public class SymbolTable {
     public class Role {
 	private Method interfaceMethod;
 	private Method adapterVerifier;
+	private Factory adapterFactory;
 	
 	/**
 	 * Creates a new Role object
@@ -420,6 +419,7 @@ public class SymbolTable {
 	 */
 	Role(Class roleClz, Class adapterClz) {
 	    interfaceMethod = validInterface(roleClz);
+	    adapterFactory = checkClass(adapterClz);
 	    adapterVerifier = validAdapter(adapterClz, interfaceMethod);
 	}
 
@@ -433,12 +433,11 @@ public class SymbolTable {
 	/**
 	 * Instantiate a new adapter for this role.
 	 */
-	public RoleAdapter createAdapter() {
-	    if (adapterVerifier == null) return null;
+	public RoleAdapter createAdapter(Project p) {
+	    if (adapterFactory == null) return null;
 	    
 	    try {
-		return (RoleAdapter) 
-		    adapterVerifier.getDeclaringClass().newInstance();
+		return (RoleAdapter) adapterFactory.create(p);
 	    }
 	    catch(BuildException be) {
 		throw be;
@@ -451,11 +450,12 @@ public class SymbolTable {
 	/**
 	 * Verify if the class can be adapted to use by the role
 	 * @param role the name of the role to verify
-	 * @param clz the class to verify
+	 * @param f the factory for the class to verify
 	 */
-	public void verifyAdaptability(String role, Class clz) {
+	public Factory verifyAdaptability(String role, final Factory f) {
+	    final Class clz = f.getOriginalClass();
 	    if (interfaceMethod.getParameterTypes()[0].isAssignableFrom(clz)) {
-		return;
+		return f;
 	    }
 	    if (adapterVerifier == null) {
 		String msg = "Class " + clz.getName() + 
@@ -464,8 +464,18 @@ public class SymbolTable {
 	    }
 	    try {
 		try {
-		    adapterVerifier.invoke(null, 
-					   new Object[]{clz, project});
+		    adapterVerifier.invoke(null, new Object[]{clz, project});
+		    return new Factory(){
+			    public Object create(Project p) {
+				RoleAdapter ra = createAdapter(p);
+				ra.setProxy(f.create(p));
+				return ra;
+			    }
+
+			    public Class getOriginalClass() {
+				return clz;
+			    }
+			};
 		}
 		catch (InvocationTargetException ite) {
 		    throw ite.getTargetException();
@@ -487,5 +497,63 @@ public class SymbolTable {
 	public boolean isImplementedBy(Class clz) {
 	    return interfaceMethod.getDeclaringClass().isAssignableFrom(clz);
 	}
+
+	/** 
+	 * Verify if the interface is valid.
+	 * @param clz the interface to validate
+	 * @return the method defined by the interface
+	 */
+	private Method validInterface(Class clz) {
+	    Method m[] = clz.getDeclaredMethods();
+	    if (m.length == 1
+		&& java.lang.Void.TYPE.equals(m[0].getReturnType())) {
+		Class args[] = m[0].getParameterTypes();
+		if (args.length == 1
+		    && !java.lang.String.class.equals(args[0])
+		    && !args[0].isArray()
+		    && !args[0].isPrimitive()) {
+		    return m[0];
+		}
+		else {
+		    throw new BuildException("Invalid role interface method in: "
+					     + clz.getName());
+		}
+	    }
+	    else {
+		throw new BuildException("More than one method on role interface");
+	    }
+	}
+	
+	/** 
+	 * Verify if the adapter is valid with respect to the interface.
+	 * @param clz the class adapter to validate
+	 * @param mtd the method whose only argument must match
+	 * @return the static method to use for validating adaptees
+	 */
+	private Method validAdapter(Class clz, Method mtd) {
+	    if (clz == null) return null;
+	    
+	    if (!mtd.getParameterTypes()[0].isAssignableFrom(clz)) {
+		String msg = "Adapter " + clz.getName() + 
+		    " is incompatible with role interface " + 
+		    mtd.getDeclaringClass().getName();
+		throw new BuildException(msg);
+	    }
+	    String msg = "Class " + clz.getName() + " is not an adapter: ";
+	    if (!RoleAdapter.class.isAssignableFrom(clz)) {
+		throw new BuildException(msg + "does not implement RoleAdapter");
+	    }
+	    try {
+		Method chk = clz.getMethod("checkClass", CHECK_ADAPTER_PARAMS);
+		if (!Modifier.isStatic(chk.getModifiers())) {
+		    throw new BuildException(msg + "checkClass() is not static");
+		}
+		return chk;
+	    }
+	    catch(NoSuchMethodException nme){
+		throw new BuildException(msg + "checkClass() not found", nme);
+	    }
+	}
+	
     }
 }
