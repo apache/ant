@@ -768,7 +768,7 @@ public class SQLExec extends Task {
         }
     }
 
-    protected Hashtable getLoaderMap(){
+    protected static Hashtable getLoaderMap(){
         return loaderMap;
     }
 
