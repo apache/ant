@@ -99,7 +99,7 @@ public abstract class VAJToolsServlet extends HttpServlet {
             initRequest();
             executeRequest();
         } catch (BuildException e) {
-            util.log("Error occured: " + e.getMessage(), VAJUtil.MSG_ERR);
+            util.log("Error occurred: " + e.getMessage(), VAJUtil.MSG_ERR);
         } catch (Exception e) {
             try {
                 if (!(e instanceof BuildException)) {

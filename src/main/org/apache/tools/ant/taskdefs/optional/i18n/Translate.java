@@ -508,7 +508,7 @@ public class Translate extends MatchingTask {
                             destDir.mkdirs();
                         }
                     } catch (Exception e) {
-                        log("Exception occured while trying to check/create "
+                        log("Exception occurred while trying to check/create "
                             + " parent directory.  " + e.getMessage(),
                             Project.MSG_DEBUG);
                     }

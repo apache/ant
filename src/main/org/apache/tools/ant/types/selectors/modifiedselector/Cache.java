@@ -25,7 +25,7 @@ import java.util.Iterator;
  * A Cache let the user store key-value-pairs in a permanent manner and access
  * them.
  * It is possible that a client uses get() before load() therefore the
- * implementation must ensure that no error occured because of the wrong
+ * implementation must ensure that no error occurred because of the wrong
  * <i>order</i>.
  * The implementing class should implement a useful toString() method.
  *

@@ -169,7 +169,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                       + JUnitVersionHelper.getTestCaseName(test));
             Long l = (Long) testStarts.get(test);
             double seconds = 0;
-            // can be null if an error occured in setUp
+            // can be null if an error occurred in setUp
             if (l != null) {
                 seconds =
                     (System.currentTimeMillis() - l.longValue()) / 1000.0;
@@ -200,7 +200,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Interface TestListener.
      *
-     * <p>An error occured while running the test.
+     * <p>An error occurred while running the test.
      */
     public void addError(Test test, Throwable t) {
         formatError("\tCaused an ERROR", test, t);

@@ -335,7 +335,7 @@ public class JDependTask extends Task {
      */
     private static final int SUCCESS = 0;
     /**
-     * An error occured.
+     * An error occurred.
      */
     private static final int ERRORS = 1;
 
