@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,8 +115,8 @@ public class ExecTaskTest extends BuildFileTest {
             }
             GregorianCalendar now = new GregorianCalendar();
             // security
-            if (now.getTimeInMillis() - startwait.getTimeInMillis() > MAX_BUILD_TIME) {
-                System.out.println("aborting wait, too long " + (now.getTimeInMillis() - startwait.getTimeInMillis()) + "milliseconds");
+            if (now.getTime().getTime() - startwait.getTime().getTime() > MAX_BUILD_TIME) {
+                System.out.println("aborting wait, too long " + (now.getTime().getTime() - startwait.getTime().getTime()) + "milliseconds");
                 break;
             }
         }
@@ -173,7 +173,7 @@ public class ExecTaskTest extends BuildFileTest {
          * @return time in millis of the build
          */
         public long getTimeElapsed() {
-            return timeFinished.getTimeInMillis() - timeStarted.getTimeInMillis();
+            return timeFinished.getTime().getTime() - timeStarted.getTime().getTime();
         }
         public void start() {
             worker = new Thread(this, myBuildFile.toString() + "/" + target);
