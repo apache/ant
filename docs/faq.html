@@ -1377,7 +1377,34 @@ while(&lt;STDIN&gt;) {
     </td></tr>
     <tr><td>
       <blockquote>
-                              <p>You can use a custom BuildListener, that sends out an email
+                              <p>If you are using a nightly-build of Ant 1.5 after
+        2001-12-14, you can use the built-in MailLogger.</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+         ant -logger org.apache.tools.ant.listener.MailLogger
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>See the <a href="http://cvs.apache.org/viewcvs/~checkout~/jakarta-ant/docs/manual/listeners.html?content-type=text/html">Listener
+        &amp; Logger documentation</a> for details on the properties
+        required.</p>
+                                        <p>For older versions of Ant you can use a custom
+        BuildListener, that sends out an email
         in the buildFinished() method.  Will Glozer
         &lt;will.glozer@jda.com&gt; has written such a listener based
         on <a href="http://java.sun.com/products/javamail/">JavaMail</a>, 
