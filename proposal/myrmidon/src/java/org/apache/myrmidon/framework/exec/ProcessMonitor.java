@@ -102,6 +102,15 @@ public class ProcessMonitor
     }
 
     /**
+     * Utility method to check if process timed out.
+     * Only valid after run() has exited.
+     */
+    public boolean didProcessTimeout()
+    {
+        return ( m_state == STATE_TERMINATED );
+    }
+
+    /**
      * Thread method to monitor the state of the process.
      */
     public void run()
