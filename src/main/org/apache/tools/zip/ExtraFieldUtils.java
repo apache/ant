@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ public class ExtraFieldUtils {
      *
      * <p>The given class must have a no-arg constructor and implement
      * the {@link ZipExtraField ZipExtraField interface}.</p>
+     * @param c the class to register
      *
      * @since 1.1
      */
@@ -64,7 +65,10 @@ public class ExtraFieldUtils {
     /**
      * Create an instance of the approriate ExtraField, falls back to
      * {@link UnrecognizedExtraField UnrecognizedExtraField}.
-     *
+     * @param headerId the header identifier
+     * @return an instance of the appropiate ExtraField
+     * @exception InstantiationException if unable to instantiate the class
+     * @exception IllegalAccessException if not allowed to instatiate the class
      * @since 1.1
      */
     public static ZipExtraField createExtraField(ZipShort headerId)
@@ -81,8 +85,10 @@ public class ExtraFieldUtils {
     /**
      * Split the array into ExtraFields and populate them with the
      * give data.
-     *
+     * @param byte an array of bytes
+     * @return an array of ExtraFields
      * @since 1.1
+     * @throws ZipException on error
      */
     public static ZipExtraField[] parse(byte[] data) throws ZipException {
         Vector v = new Vector();
@@ -117,7 +123,8 @@ public class ExtraFieldUtils {
 
     /**
      * Merges the local file data fields of the given ZipExtraFields.
-     *
+     * @param data an array of ExtraFiles
+     * @return an array of bytes
      * @since 1.1
      */
     public static byte[] mergeLocalFileDataData(ZipExtraField[] data) {
@@ -141,7 +148,8 @@ public class ExtraFieldUtils {
 
     /**
      * Merges the central directory fields of the given ZipExtraFields.
-     *
+     * @param data an array of ExtraFields
+     * @return an array of bytes
      * @since 1.1
      */
     public static byte[] mergeCentralDirectoryData(ZipExtraField[] data) {
