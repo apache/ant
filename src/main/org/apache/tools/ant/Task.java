@@ -62,12 +62,11 @@ package org.apache.tools.ant;
  * 
  * @see Project#createTask
  */
-
 public abstract class Task extends ProjectComponent {
     /** Target this task belongs to, if any. */
     protected Target target = null;
     /** Description of this task, if any. */
-    protected String description=null;
+    protected String description = null;
     /** Location within the build file of this task definition. */
     protected Location location = Location.UNKNOWN_LOCATION;
     /** 
@@ -153,7 +152,7 @@ public abstract class Task extends ProjectComponent {
      *             
      */
     public void setDescription( String desc ) {
-        description=desc;
+        description = desc;
     }
 
     /**
@@ -176,7 +175,8 @@ public abstract class Task extends ProjectComponent {
 
     /**
      * Called by the project to let the task do its work. This method may be 
-     * called more than once, if the task is invoked more than once. For example, 
+     * called more than once, if the task is invoked more than once. 
+     * For example, 
      * if target1 and target2 both depend on target3, then running 
      * "ant target1 target2" will run all tasks in target3 twice.
      *
@@ -244,6 +244,8 @@ public abstract class Task extends ProjectComponent {
      * Configures this task - if it hasn't been done already.
      * If the task has been invalidated, it is replaced with an 
      * UnknownElement task which uses the new definition in the project.
+     *
+     * @exception BuildException if the task cannot be configured.
      */
     public void maybeConfigure() throws BuildException {
         if (!invalid) {
@@ -311,7 +313,7 @@ public abstract class Task extends ProjectComponent {
                 execute();
                 project.fireTaskFinished(this, null);
             }
-            catch(RuntimeException exc) {
+            catch (RuntimeException exc) {
                 if (exc instanceof BuildException) {
                     BuildException be = (BuildException) exc;
                     if (be.getLocation() == Location.UNKNOWN_LOCATION) {
@@ -345,6 +347,8 @@ public abstract class Task extends ProjectComponent {
      * Creates an UnknownElement that can be used to replace this task.
      * Once this has been created once, it is cached and returned by
      * future calls.
+     *
+     * @return the UnknownElement instance for the new definition of this task.
      */
     private UnknownElement getReplacement() {
         if (replacement == null) {
