@@ -227,6 +227,11 @@ public abstract class MSVSS extends Task {
      * The 'History' command
      */
     public final static String COMMAND_HISTORY = "History";
+    /** 
+     * The 'Create' command 
+     */
+    public static final String COMMAND_CREATE = "Create";
+
 
     /** */
     public final static String FLAG_LOGIN = "-Y";

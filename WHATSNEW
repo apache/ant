@@ -147,7 +147,7 @@ Other changes:
 
 * New tasks bzip2 and bunzip2 to pack and unpack files using the 
   BZip2 alogrithm, replaceregexp, checksum, translate, waitfor, input,
-  manifest
+  manifest, vsscp, vssadd, vsscreate
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
   Jar, War and Ear tasks) have been deprecated and superseded by a 
