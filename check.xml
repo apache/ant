@@ -18,13 +18,13 @@
   </description>
 
   <import file="build.xml"/>
-  <property name="config.dir" value="${etc.dir}/checkstyle"/>
+  <property name="config.dir" location="${etc.dir}/checkstyle"/>
 
-  <property name="checkstyle.reportdir" value="${build.dir}/reports/checkstyle"/>
-  <property name="checkstyle.raw" value="${checkstyle.reportdir}/raw.xml"/>
-  <property name="stylesheet.html" value="${config.dir}/checkstyle-frames.xsl"/>
-  <property name="stylesheet.text" value="${config.dir}/checkstyle-text.xsl"/>
-  <property name="stylesheet.xdoc" value="${config.dir}/checkstyle-xdoc.xsl"/>
+  <property name="checkstyle.reportdir" location="${build.dir}/reports/checkstyle"/>
+  <property name="checkstyle.raw" location="${checkstyle.reportdir}/raw.xml"/>
+  <property name="stylesheet.html" location="${config.dir}/checkstyle-frames.xsl"/>
+  <property name="stylesheet.text" location="${config.dir}/checkstyle-text.xsl"/>
+  <property name="stylesheet.xdoc" location="${config.dir}/checkstyle-xdoc.xsl"/>
 
   <property name="checkstyle.basedir" location="${java.dir}"/>
 
@@ -35,7 +35,7 @@
   <taskdef resource="simiantask.properties"/>
   <taskdef resource="checkstyletask.properties"/>
 
-  <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/chestyle-config">
+  <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config">
     <mkdir dir="${checkstyle.reportdir}"/>
     <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
       <formatter type="xml" toFile="${checkstyle.raw}"/>
@@ -59,6 +59,11 @@
     <style in="${checkstyle.raw}" style="${stylesheet.text}"
            out="${checkstyle.reportdir}/report.txt">
     </style>
+  </target>
+  
+  <target name="textreport-display" depends="textreport" description="--> generates a text checkstyle report and displays it immediately">
+      <loadfile property="report" srcfile="${checkstyle.reportdir}/report.txt"/>
+      <echo>${report}</echo>
   </target>
 
   <target name="xdocreport" description="--> generates a xdoc checkstyle report">
