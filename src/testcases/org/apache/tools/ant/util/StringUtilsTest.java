@@ -53,81 +53,44 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.StringWriter;
-import java.io.PrintWriter;
 import java.util.Vector;
 
+import junit.framework.TestCase;
+
 /**
- * A set of helper methods related to string manipulation.
- *
+ * Test for StringUtils
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public final class StringUtils {
-
-    /** the line separator for this OS */
-    public final static String LINE_SEP = System.getProperty("line.separator");
-
-    /**
-     * Splits up a string into a list of lines. It is equivalent
-     * to <tt>split(data, '\n')</tt>.
-     * @param data the string to split up into lines.
-     * @return the list of lines available in the string.
-     */
-    public static Vector lineSplit(String data){
-        return split(data, '\n');
+public class StringUtilsTest extends TestCase {
+    public StringUtilsTest(String s) {
+        super(s);
     }
 
-    /**
-     * Splits up a string where elements are separated by a specific
-     * character and return all elements.
-     * @param data the string to split up.
-     * @param ch the separator character.
-     * @return the list of elements.
-     */
-    public static Vector split(String data, int ch){
-        Vector elems = new Vector();
-        int pos = -1;
-        int i = 0;
-        while ( (pos = data.indexOf(ch, i) ) != -1 ){
-            String elem = data.substring(i, pos);
-            elems.addElement(elem);
-            i = pos + 1;
-        }
-        elems.addElement( data.substring(i) );
-        return elems;
+    public void testSplit(){
+        final String data = "a,b,,";
+        Vector res = StringUtils.split(data, ',');
+        assertEquals(4, res.size());
+        assertEquals("a", res.elementAt(0));
+        assertEquals("b", res.elementAt(1));
+        assertEquals("", res.elementAt(2));
+        assertEquals("", res.elementAt(3));
     }
 
-    /**
-     * Replace occurrences into a string.
-     * @param data the string to replace occurrences into
-     * @param from the occurrence to replace.
-     * @param to the occurrence to be used as a replacement.
-     * @return the new string with replaced occurrences.
-     */
-    public static String replace(String data, String from, String to){
-        StringBuffer buf = new StringBuffer(data.length());
-        int pos = -1;
-        int i = 0;
-        while ( (pos = data.indexOf(from, i)) != -1 ){
-            buf.append( data.substring(i, pos) ).append(to);
-            i = pos + from.length();
-        }
-        buf.append( data.substring(i) );
-        return buf.toString();
+    public void testSplitLines(){
+        final String data = "a\r\nb\nc\nd\ne";
+        Vector res = StringUtils.lineSplit(data);
+        assertEquals(5, res.size());
+        assertEquals("a\r", res.elementAt(0));
+        assertEquals("b", res.elementAt(1));
+        assertEquals("c", res.elementAt(2));
+        assertEquals("d", res.elementAt(3));
+        assertEquals("e", res.elementAt(4));
     }
 
-    /**
-     * Convenient method to retrieve the full stacktrace from a given exception.
-     * @param t the exception to get the stacktrace from.
-     * @return the stacktrace from the given exception.
-     */
-    public static String getStackTrace(Throwable t){
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw,true);
-        t.printStackTrace(pw);
-        pw.flush();
-        pw.close();
-        return sw.toString();
+    public void testReplace() {
+        final String data = "abcabcabca";
+        String res = StringUtils.replace(data, "a", "");
+        assertEquals("bcbcbc", res);
     }
 
 }
