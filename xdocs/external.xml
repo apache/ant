@@ -452,7 +452,7 @@
 
       <subsection name="J2ME Ant Tasks">
 
-        <p>There are three different sets of tasks to help build <a
+        <p>There are four different sets of tasks to help build <a
         href="http://java.sun.com/j2me/">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
         
@@ -524,6 +524,34 @@
             <td>GNU Lesser General Public License</td>
           </tr>
         </table>
+
+	<p>Antic is a freely available task for packaging J2ME
+	applications. It produces both the Jar and Jad files in a
+	single step. This allows *all* entries to be correclty set in
+	the jad file, including the size of the jar file that is
+	produced. This task has been used and tested extensively with
+	Sun's Wireless Toolkit and also the Nokia SDK and
+	emulators.</p>
+
+	<table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.smartkey.co.uk/antic.html">www.smartkey.co.uk</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@smartkey.co.uk">smartkey.co.uk</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+	</table>
 
       </subsection>
 
@@ -626,6 +654,32 @@
           <tr>
             <th>License:</th>
             <td>BSD-like License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Java2Html">
+
+        <p>Uses the Java2Html library for converting java source files
+        or snipplets to syntax highlighted html, rtf, tex and
+        others.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.java2html.de">http://www.java2html.de</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:java2html@jave.de">java2html@jave.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
           </tr>
         </table>
       </subsection>
