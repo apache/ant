@@ -18,7 +18,7 @@
       </XDtClass:ifHasClassTag>
     </XDtClass:forAllClasses>
 
-    <XDtClass:forAllClasses type="org.apache.myrmidon.converter.Converter">
+    <XDtClass:forAllClasses type="org.apache.aut.converter.Converter">
       <XDtClass:ifHasClassTag tagName="ant:converter">
         <converter classname="<XDtClass:fullClassName/>"
                    source="<XDtClass:classTagValue tagName="ant:converter" paramName="source"/>"
