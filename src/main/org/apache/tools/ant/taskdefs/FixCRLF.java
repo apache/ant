@@ -92,20 +92,12 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     private File destDir = null;
     private File file;
     private FixCrLfFilter filter = new FixCrLfFilter();
+    private Vector fcv = null;
 
     /**
      * Encoding to assume for the files
      */
     private String encoding = null;
-
-    /**
-     * Defaults the properties based on the system type.
-     * <ul><li>Unix: eol="LF" tab="asis" eof="remove"
-     *     <li>Mac: eol="CR" tab="asis" eof="remove"
-     *     <li>DOS: eol="CRLF" tab="asis" eof="asis"</ul>
-     */
-    public FixCRLF () {
-    }
 
     /**
      * Chain this task as a reader.
@@ -317,11 +309,12 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         long lastModified = srcFile.lastModified();
         File destD = destDir == null ? srcDir : destDir;
 
-        FilterChain fc = new FilterChain();
-        fc.add(filter);
-        Vector fcv = new Vector(1);
-        fcv.add(fc);
-
+        if (fcv == null) {
+            FilterChain fc = new FilterChain();
+            fc.add(filter);
+            fcv = new Vector(1);
+            fcv.add(fc);
+        }
         File tmpFile = FILE_UTILS.createTempFile("fixcrlf", "", null);
         tmpFile.deleteOnExit();
         try {
