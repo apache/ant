@@ -456,7 +456,7 @@ public class Rmic extends MatchingTask {
         String[] newFiles = sfs.restrict(files, baseDir, baseDir, mapper);
         for (int i = 0; i < newFiles.length; i++) {
             String classname = newFiles[i].replace(File.separatorChar, '.');
-            classname = classname.substring(0, classname.indexOf(".class"));
+            classname = classname.substring(0, classname.lastIndexOf(".class"));
             compileList.addElement(classname);
         }
     }
