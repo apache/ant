@@ -59,42 +59,10 @@ package org.apache.ant.common.antlib;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 16 January 2002
  */
-public abstract class AbstractTask implements Task {
-    /** The task's context */
-    private AntContext context;
-
-    /**
-     * Initialise the task. The task may use the AntContext to request
-     * services from the Ant core.
-     *
-     * @param context the Task's context
-     */
-    public void init(AntContext context) {
-        this.context = context;
-    }
-
+public abstract class AbstractTask extends AbstractComponent implements Task {
     /** Task is about to be cleaned up */
     public void destroy() {
         // do nothing here
-    }
-
-    /**
-     * Get this task's context
-     *
-     * @return the task context
-     */
-    protected AntContext getContext() {
-        return context;
-    }
-
-    /**
-     * Log a message as a build event
-     *
-     * @param message the message to be logged
-     * @param level the priority level of the message
-     */
-    protected void log(String message, int level) {
-        context.log(message, level);
     }
 }
 

@@ -51,83 +51,84 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.util;
-import java.util.Stack;
+package org.apache.ant.common.util;
 
 /**
- * Checks for circular dependencies when visiting nodes of an object
- * hierarchy
+ * A CircularDependencyException indicates that a circular dependency has
+ * been detected
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 14 January 2002
+ * @created 9 January 2002
  */
-public class CircularDependencyChecker {
+public class CircularDependencyException extends AntException {
     /**
-     * The activity being undertaken which checking for circular
-     * redundancies. This is used for reporting exceptions
-     */
-    private String activity;
-
-    /** The nodes which we are currently visiting */
-    private Stack nodes = new Stack();
-
-    /**
-     * Constructor for the CircularDependencyChecker object
+     * Constructs an exception with the given descriptive message.
      *
-     * @param activity the activity being undertaken
+     * @param msg Description of or information about the exception.
      */
-    public CircularDependencyChecker(String activity) {
-        this.activity = activity;
+    public CircularDependencyException(String msg) {
+        super(msg);
     }
 
-    /**
-     * Visit a Node to check its relationships to other nodes
-     *
-     * @param node an object which is being visited and analyzed
-     * @exception CircularDependencyException if this node is alreay being
-     *      visited.
-     */
-    public void visitNode(Object node) throws CircularDependencyException {
-        if (nodes.contains(node)) {
-            throw new CircularDependencyException(getDescription(node));
-        }
-        nodes.push(node);
-    }
 
     /**
-     * Complete the examination of the node and leave.
+     * Constructs an exception with the given descriptive message and a
+     * location in a file.
      *
-     * @param node an object for which the examination of relationships has
-     *      been completed
-     * @exception CircularDependencyException if the given node was not
-     *      expected.
+     * @param msg Description of or information about the exception.
+     * @param location Location in the project file where the error occured.
      */
-    public void leaveNode(Object node) throws CircularDependencyException {
-        if (!nodes.pop().equals(node)) {
-            throw new CircularDependencyException("Internal error: popped " +
-                "element was unexpected");
-        }
+    public CircularDependencyException(String msg, Location location) {
+        super(msg, location);
     }
+
 
     /**
-     * Gets the description of the circular dependency
+     * Constructs an exception with the given message and exception as a
+     * root cause.
      *
-     * @param endNode the node which was revisited and where the circular
-     *      dependency was detected
-     * @return the description of the circular dependency
+     * @param msg Description of or information about the exception.
+     * @param cause Throwable that might have cause this one.
      */
-    private String getDescription(Object endNode) {
-        StringBuffer sb = new StringBuffer("Circular dependency while "
-             + activity + ": ");
-        sb.append(endNode);
-        Object o = null;
-        do {
-            o = nodes.pop();
-            sb.append(" <- ");
-            sb.append(o.toString());
-        } while (!(o.equals(endNode)));
-
-        return new String(sb);
+    public CircularDependencyException(String msg, Throwable cause) {
+        super(msg, cause);
     }
+
+
+    /**
+     * Constructs an exception with the given message and exception as a
+     * root cause and a location in a file.
+     *
+     * @param msg Description of or information about the exception.
+     * @param cause Exception that might have cause this one.
+     * @param location Location in the project file where the error occured.
+     */
+    public CircularDependencyException(String msg, Throwable cause,
+                                       Location location) {
+        super(msg, cause, location);
+    }
+
+
+    /**
+     * Constructs an exception with the given exception as a root cause.
+     *
+     * @param cause Exception that might have caused this one.
+     */
+    public CircularDependencyException(Throwable cause) {
+        super(cause);
+    }
+
+
+    /**
+     * Constructs an exception with the given exception as a root cause and
+     * a location in a file.
+     *
+     * @param cause Exception that might have cause this one.
+     * @param location Location in the project file where the error occured.
+     */
+    public CircularDependencyException(Throwable cause, Location location) {
+        super(cause, location);
+    }
+
 }
 

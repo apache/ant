@@ -51,86 +51,72 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.util;
+package org.apache.ant.common.antlib;
 
-import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.util.Location;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * A ConfigException indicates a problem with Ant's configuration or the
- * commandline used to start Ant.
+ * Abstract implementation of the ExecutionComponent
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 9 January 2002
+ * @created 5 February 2002
  */
-public class ConfigException extends AntException {
-    /**
-     * Constructs an exception with the given descriptive message.
-     *
-     * @param msg Description of or information about the exception.
-     */
-    public ConfigException(String msg) {
-        super(msg);
-    }
-
+public abstract class AbstractComponent implements ExecutionComponent {
+    /** The components's context */
+    private AntContext context;
 
     /**
-     * Constructs an exception with the given descriptive message and a
-     * location in a file.
+     * Initialise the component. The component may use the AntContext to
+     * request services from the Ant core.
      *
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
+     * @param context the component's context
+     * @exception ExecutionException if initialisation fails
      */
-    public ConfigException(String msg, Location location) {
-        super(msg, location);
+    public void init(AntContext context) throws ExecutionException {
+        this.context = context;
     }
-
 
     /**
-     * Constructs an exception with the given message and exception as a
-     * root cause.
-     *
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
-     */
-    public ConfigException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+     * Validate the component. This is called after the element has been
+     * configured from its build model. The element may perform validation
+     * of its configuration
 
+     *
+     * @exception ExecutionException if validation fails
+     */
+    public void validateComponent() throws ExecutionException {
+        // no validation by default
+    }
 
     /**
-     * Constructs an exception with the given message and exception as a
-     * root cause and a location in a file.
+     * Get this component's context
      *
-     * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
+     * @return the component context
      */
-    public ConfigException(String msg, Throwable cause, Location location) {
-        super(msg, cause, location);
+    protected AntContext getContext() {
+        return context;
     }
-
 
     /**
-     * Constructs an exception with the given exception as a root cause.
+     * Short cut to get a core service instance
      *
-     * @param cause Exception that might have caused this one.
+     * @param serviceClass the required interface of which an instance is required
+     * @return the core's instance of the requested service
+     * @exception ExecutionException if the core does not support the requested service
      */
-    public ConfigException(Throwable cause) {
-        super(cause);
+    protected Object getCoreService(Class serviceClass)
+         throws ExecutionException {
+        return context.getCoreService(serviceClass);
     }
-
 
     /**
-     * Constructs an exception with the given exception as a root cause and
-     * a location in a file.
+     * Log a message as a build event
      *
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
+     * @param message the message to be logged
+     * @param level the priority level of the message
      */
-    public ConfigException(Throwable cause, Location location) {
-        super(cause, location);
+    protected void log(String message, int level) {
+        context.log(message, level);
     }
-
 }
 

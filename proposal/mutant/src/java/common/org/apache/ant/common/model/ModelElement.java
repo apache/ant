@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model;
+package org.apache.ant.common.model;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

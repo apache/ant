@@ -132,6 +132,12 @@ public abstract class DataType extends ProjectComponent
         return ref != null;
     }
 
+    /** Validate this component */
+    public void validateComponent() {
+        // no default validation for Ant1 types
+    }
+
+
     /**
      * Performs the check for circular references and returns the referenced
      * object.

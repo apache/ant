@@ -53,11 +53,10 @@
  */
 package org.apache.ant.antcore.execution;
 import java.io.File;
-import org.apache.ant.antcore.model.ModelElement;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.model.ModelElement;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
-import org.apache.ant.common.util.Location;
 
 /**
  * This is the core's implementation of the AntContext for all core objects.
@@ -83,13 +82,10 @@ public class ExecutionContext implements AntContext {
      * Initilaise this context's environment
      *
      * @param frame the frame containing this context
-     * @param eventSupport the event support instance used to send build
-     *      events
      */
-    public ExecutionContext(ExecutionFrame frame,
-                            BuildEventSupport eventSupport) {
+    public ExecutionContext(ExecutionFrame frame) {
         this.frame = frame;
-        this.eventSupport = eventSupport;
+        this.eventSupport = frame.getEventSupport();
     }
 
     /**
@@ -116,15 +112,17 @@ public class ExecutionContext implements AntContext {
     }
 
     /**
-     * Get the build fiel location with which this context is associated
+     * Get the model element associated with this context. If the context is
+     * not associated with any particular model element, the project model
+     * is returned.
      *
-     * @return the associated location object.
+     * @return the model element.
      */
-    public Location getLocation() {
-        if (modelElement != null) {
-            return modelElement.getLocation();
+    public ModelElement getModelElement() {
+        if (modelElement == null) {
+            return frame.getProject();
         }
-        return Location.UNKNOWN_LOCATION;
+        return modelElement;
     }
 
     /**

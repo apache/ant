@@ -51,72 +51,117 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.execution;
-import java.net.MalformedURLException;
-import java.util.HashMap;
+package org.apache.ant.common.model;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
-import org.apache.ant.antcore.antlib.AntLibManager;
-import org.apache.ant.antcore.util.ConfigException;
-import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import java.util.List;
+
+import org.apache.ant.common.util.Location;
 
 /**
- * The instance of the ComponentServices made available by the core to the
- * ant libraries.
+ * A Target is a collection of tasks. It may have dependencies on other
+ * targets
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 27 January 2002
+ * @created 12 January 2002
  */
-public class ExecutionComponentService implements ComponentService {
-    /** The ExecutionFrame this service instance is working for */
-    private ExecutionFrame frame;
+public class Target extends ModelElement {
+    /** This target's dependencies on other targets, if any */
+    private List dependencies = new ArrayList();
 
-    /** The library manager instance used to configure libraries. */
-    private AntLibManager libManager;
+    /** This target's list of tasks */
+    private List tasks = new ArrayList();
+
+    /** The target's name. */
+    private String name;
+
+    /** The Target's description */
+    private String description;
 
     /**
-     * Constructor
+     * Construct the target, given its name
      *
-     * @param executionFrame the frame containing this context
-     * @param allowRemoteLibs true if remote libraries can be loaded though
-     *      this service.
+     * @param location the location of the element
+     * @param name the target's name.
      */
-    public ExecutionComponentService(ExecutionFrame executionFrame,
-                                     boolean allowRemoteLibs) {
-        this.frame = executionFrame;
-        libManager = new AntLibManager(allowRemoteLibs);
+    public Target(Location location, String name) {
+        super(location);
+        this.name = name;
     }
 
     /**
-     * Load a library or set of libraries from a location making them
-     * available for use
+     * Sets the Target's description
      *
-     * @param libLocation the file or URL of the library location
-     * @param importAll if true all tasks are imported as the library is
-     *      loaded
-     * @exception ExecutionException if the library cannot be loaded
+     * @param description The new description value
      */
-    public void loadLib(String libLocation, boolean importAll)
-         throws ExecutionException {
-        try {
-            Map librarySpecs = new HashMap();
-            libManager.loadLib(librarySpecs, libLocation);
-            libManager.configLibraries(frame.getInitConfig(), librarySpecs,
-                frame.getAntLibraries());
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-            if (importAll) {
-                Iterator i = librarySpecs.keySet().iterator();
-                while (i.hasNext()) {
-                    String libraryId = (String)i.next();
-                    frame.importLibrary(libraryId);
-                }
-            }
-        } catch (MalformedURLException e) {
-            throw new ExecutionException("Unable to load libraries from "
-                 + libLocation, e);
-        } catch (ConfigException e) {
-            throw new ExecutionException(e);
+    /**
+     * Get this target's name.
+     *
+     * @return the target's name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the Target's description
+     *
+     * @return The description value
+     */
+    public String getDescription() {
+        return description;
+    }
+
+
+    /**
+     * Get this target's dependencies.
+     *
+     * @return an iterator over the target's dependencies.
+     */
+    public Iterator getDependencies() {
+        return dependencies.iterator();
+    }
+
+    /**
+     * Get the tasks for this target
+     *
+     * @return an iterator over the set of tasks for this target.
+     */
+    public Iterator getTasks() {
+        return tasks.iterator();
+    }
+
+    /**
+     * Add a task to this target
+     *
+     * @param task the task to be added to the target.
+     */
+    public void addTask(BuildElement task) {
+        tasks.add(task);
+    }
+
+    /**
+     * Add a dependency to this target
+     *
+     * @param dependency the name of a target upon which this target depends
+     */
+    public void addDependency(String dependency) {
+        dependencies.add(dependency);
+    }
+
+    /**
+     * Validate that this build element is configured correctly
+     *
+     * @exception ModelException if the element is invalid
+     */
+    public void validate() throws ModelException {
+        if (name == null) {
+            throw new ModelException("Target must have a name",
+                getLocation());
         }
     }
 }

@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import java.util.List;
-import org.apache.ant.antcore.model.ModelElement;
+import org.apache.ant.common.model.ModelElement;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.BuildEvent;
 
@@ -102,26 +102,16 @@ public class BuildEventSupport {
     }
 
     /**
-     * Forward the given event to the subscibed listeners
-     *
-     * @param event the event to be forwarded to the listeners
-     */
-    public void forwardEvent(BuildEvent event) {
-        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
-            BuildListener listener = (BuildListener)i.next();
-
-            listener.processBuildEvent(event);
-        }
-    }
-
-    /**
      * Fire a build started event
      *
      * @param element the build element with which the event is associated
      */
     public void fireBuildStarted(ModelElement element) {
         BuildEvent event = new BuildEvent(element, BuildEvent.BUILD_STARTED);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.buildStarted(event);
+        }
     }
 
     /**
@@ -134,7 +124,10 @@ public class BuildEventSupport {
                                   Throwable cause) {
         BuildEvent event = new BuildEvent(element, BuildEvent.BUILD_FINISHED,
             cause);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.buildFinished(event);
+        }
     }
 
     /**
@@ -144,7 +137,10 @@ public class BuildEventSupport {
      */
     public void fireTargetStarted(ModelElement element) {
         BuildEvent event = new BuildEvent(element, BuildEvent.TARGET_STARTED);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.targetStarted(event);
+        }
     }
 
     /**
@@ -157,7 +153,10 @@ public class BuildEventSupport {
                                    Throwable cause) {
         BuildEvent event = new BuildEvent(element, BuildEvent.TARGET_FINISHED,
             cause);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.targetFinished(event);
+        }
     }
 
     /**
@@ -167,7 +166,10 @@ public class BuildEventSupport {
      */
     public void fireTaskStarted(ModelElement element) {
         BuildEvent event = new BuildEvent(element, BuildEvent.TASK_STARTED);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.taskStarted(event);
+        }
     }
 
     /**
@@ -180,7 +182,10 @@ public class BuildEventSupport {
                                  Throwable cause) {
         BuildEvent event = new BuildEvent(element, BuildEvent.TASK_FINISHED,
             cause);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.taskFinished(event);
+        }
     }
 
     /**
@@ -193,7 +198,10 @@ public class BuildEventSupport {
     public void fireMessageLogged(ModelElement element,
                                   String message, int priority) {
         BuildEvent event = new BuildEvent(element, message, priority);
-        forwardEvent(event);
+        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+            BuildListener listener = (BuildListener)i.next();
+            listener.messageLogged(event);
+        }
     }
 }
 

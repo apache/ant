@@ -132,6 +132,18 @@ public class ExecutionDataService implements DataService {
     }
 
     /**
+     * Get all the properties from the frame and any references frames. This
+     * is an expensive operation since it must clone all of the property
+     * stores in all frames
+     *
+     * @return a Map containing the frames properties indexed by their full
+     *      name.
+     */
+    public Map getAllProperties() {
+        return frame.getAllProperties();
+    }
+
+    /**
      * Replace ${} style constructions in the given value with the string
      * value of the corresponding data values in the frame
      *
@@ -157,8 +169,8 @@ public class ExecutionDataService implements DataService {
             if (fragment == null) {
                 String propertyName = (String)j.next();
                 if (!isDataValueSet(propertyName)) {
-                    throw new ExecutionException("Property " + propertyName
-                         + " has not been set");
+                    throw new ExecutionException("Property \"" + propertyName
+                         + "\" has not been set");
                 }
                 fragment = getDataValue(propertyName).toString();
             }
@@ -207,16 +219,5 @@ public class ExecutionDataService implements DataService {
 
         return sb.toString();
     }
-
-    /**
-     * Get all the properties from the frame and any references frames. This
-     * is an expensive operation since it must clone all of the property
-     * stores in all frames
-     *
-     * @return a Map containing the frames properties indexed by their full name.
-     */
-    public Map getAllProperties() {
-        return frame.getAllProperties();
-    }         
 }
 

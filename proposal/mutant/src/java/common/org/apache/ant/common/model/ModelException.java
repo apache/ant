@@ -51,36 +51,37 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.util;
+package org.apache.ant.common.model;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.Location;
 
 /**
- * An AntException indicates some exceptional case has been encountered in
- * the processing of Ant. AntExceptions may accept a Throwable as a cause
- * allowing exceptions to be nested
+ * A model exception is thrown when an operation is attempted which would
+ * violate the integrity of the Project/Target/Task object model
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 15 January 2002
+ * @created 16 January 2002
  */
-public abstract class AntException extends Exception {
-    /** Exception that might have caused this one. */
-    private Throwable cause = null;
-
-    /**
-     * The location of the element which is associated with this exception
-     * if known.
-     */
-    private Location location = Location.UNKNOWN_LOCATION;
-
+public class ModelException extends AntException {
     /**
      * Constructs an exception with the given descriptive message.
      *
      * @param msg Description of or information about the exception.
      */
-    public AntException(String msg) {
+    public ModelException(String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs an exception with the given descriptive message and a
+     * location in a file.
+     *
+     * @param msg Description of or information about the exception.
+     * @param location Location in the project file where the error occured.
+     */
+    public ModelException(String msg, Location location) {
+        super(msg, location);
     }
 
     /**
@@ -90,9 +91,8 @@ public abstract class AntException extends Exception {
      * @param msg Description of or information about the exception.
      * @param cause Throwable that might have cause this one.
      */
-    public AntException(String msg, Throwable cause) {
-        super(msg);
-        this.cause = cause;
+    public ModelException(String msg, Throwable cause) {
+        super(msg, cause);
     }
 
     /**
@@ -103,9 +103,9 @@ public abstract class AntException extends Exception {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-    public AntException(String msg, Throwable cause, Location location) {
-        this(msg, cause);
-        setLocation(location, true);
+    public ModelException(String msg, Throwable cause,
+                          Location location) {
+        super(msg, cause, location);
     }
 
     /**
@@ -113,21 +113,8 @@ public abstract class AntException extends Exception {
      *
      * @param cause Exception that might have caused this one.
      */
-    public AntException(Throwable cause) {
-        super(cause.getMessage());
-        this.cause = cause;
-    }
-
-    /**
-     * Constructs an exception with the given descriptive message and a
-     * location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
-     */
-    public AntException(String msg, Location location) {
-        super(msg);
-        setLocation(location, true);
+    public ModelException(Throwable cause) {
+        super(cause);
     }
 
     /**
@@ -137,80 +124,8 @@ public abstract class AntException extends Exception {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-    public AntException(Throwable cause, Location location) {
-        this(cause);
-        setLocation(location, true);
-    }
-
-    /**
-     * Sets the file location where the error occured.
-     *
-     * @param newLocation the new location value
-     * @param override true if the location should override any currently set location
-     */
-    public void setLocation(Location newLocation, boolean override) {
-        if (override || location == Location.UNKNOWN_LOCATION) {
-            if (newLocation == null) {
-                this.location = Location.UNKNOWN_LOCATION;
-            } else {
-                this.location = newLocation;
-            }
-        }
-    }
-
-    /**
-     * Returns the nested exception.
-     *
-     * @return the underlying exception
-     */
-    public Throwable getCause() {
-        return cause;
-    }
-
-    /**
-     * Returns the file location where the error occured.
-     *
-     * @return the location value
-     */
-    public Location getLocation() {
-        return location;
-    }
-
-    /** Print the stack trace to System.err */
-    public void printStackTrace() {
-        printStackTrace(System.err);
-    }
-
-    /**
-     * Print the stack trace to the given PrintStream
-     *
-     * @param ps the PrintStream onto which the stack trace of this
-     *      exception is to be printed
-     */
-    public void printStackTrace(PrintStream ps) {
-        synchronized (ps) {
-            super.printStackTrace(ps);
-            if (cause != null) {
-                ps.println("--- Nested Exception ---");
-                cause.printStackTrace(ps);
-            }
-        }
-    }
-
-    /**
-     * Print the stack trace to the given PrintWriter
-     *
-     * @param pw the PrintWriter onto which the stack trace of this
-     *      exception is to be printed
-     */
-    public void printStackTrace(PrintWriter pw) {
-        synchronized (pw) {
-            super.printStackTrace(pw);
-            if (cause != null) {
-                pw.println("--- Nested Exception ---");
-                cause.printStackTrace(pw);
-            }
-        }
+    public ModelException(Throwable cause, Location location) {
+        super(cause, location);
     }
 }
 

@@ -51,93 +51,91 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model.xmlparser;
+package org.apache.ant.antcore.modelparser;
+import java.util.StringTokenizer;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import org.apache.ant.antcore.model.Project;
+import org.apache.ant.common.model.Target;
 import org.apache.ant.antcore.xml.ElementHandler;
-import org.apache.ant.antcore.xml.XMLParseException;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
 /**
- * The Ref handler handles the reference of one project to another. The
- * project to be references is parsed with a new parser and then added to
- * the current project under the given alias
+ * Element handler for the target element
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 10 January 2002
+ * @created 9 January 2002
  */
-public class RefHandler extends ElementHandler {
-    /** The attribute used to name the ref. */
+public class TargetHandler extends ElementHandler {
+    /** The name attribute */
     public final static String NAME_ATTR = "name";
 
-    /** The attribute name used to locate the project to be referenced. */
-    public final static String SYSTEMID_ATTR = "project";
+    /** The depends attribute name */
+    public final static String DEPENDS_ATTR = "depends";
 
-    /** The project that has been referenced. */
-    private Project referencedProject;
+    /** The depends attribute name */
+    public final static String DESC_ATTR = "description";
+
+    /** The if attribute name */
+    public final static String IF_ATTR = "if";
+    
+    /** The unless attribute name */
+    public final static String UNLESS_ATTR = "unless";
+
+    /** The target being configured. */
+    private Target target;
 
     /**
-     * Get the project referenced.
+     * Get the target parsed by this handler.
      *
-     * @return an referenced Project.
+     * @return the Target model object parsed by this handler.
      */
-    public Project getReferencedProject() {
-        return referencedProject;
+    public Target getTarget() {
+        return target;
     }
 
 
     /**
-     * Get the name under which the project is referenced.
+     * Process the target element.
      *
-     * @return the ref name of the project
-     */
-    public String getRefName() {
-        return getAttribute(NAME_ATTR);
-    }
-
-
-    /**
-     * Create an ref handler to reference a project.
-     *
-     * @param elementName the name of the ref element
-     * @exception SAXParseException if the ref element could not be parsed
+     * @param elementName the name of the element
+     * @exception SAXParseException if there is a problem parsing the
+     *      element
      */
     public void processElement(String elementName)
          throws SAXParseException {
-        String refName = getAttribute(NAME_ATTR);
-        if (refName == null) {
-            throw new SAXParseException("Attribute " + NAME_ATTR +
-                " is required in a <ref> element", getLocator());
-        }
+        target = new Target(getLocation(), getAttribute(NAME_ATTR));
+        target.setDescription(getAttribute(DESC_ATTR));
+        target.setAspects(getAspects());
 
-        String projectSystemId = getAttribute(SYSTEMID_ATTR);
-        if (projectSystemId == null) {
-            throw new SAXParseException("Attribute " + SYSTEMID_ATTR +
-                " is required in a <ref> element", getLocator());
+        String depends = getAttribute(DEPENDS_ATTR);
+        if (depends != null) {
+            StringTokenizer tokenizer = new StringTokenizer(depends, ",");
+            while (tokenizer.hasMoreTokens()) {
+                String dependency = tokenizer.nextToken().trim();
+                target.addDependency(dependency);
+            }
         }
+    }
 
-        // create a new parser to read this project relative to the
-        // project's URI
-        try {
-            URL refURL = new URL(getElementSource(), projectSystemId);
-            ProjectHandler referencedProjectHandler = new ProjectHandler();
-            getParseContext().parse(refURL, "project",
-                referencedProjectHandler);
 
-            referencedProject = referencedProjectHandler.getProject();
-        } catch (XMLParseException e) {
-            throw new SAXParseException("Error parsing referenced project "
-                 + projectSystemId + ": " + e.getMessage(), getLocator());
-        } catch (NoProjectReadException e) {
-            throw new SAXParseException("No project found in the reference: "
-                 + projectSystemId, getLocator());
-        } catch (MalformedURLException e) {
-            throw new SAXParseException("Unable to reference project "
-                 + projectSystemId + ": " + e.getMessage(),
-                getLocator());
-        }
+    /**
+     * Process an element within this target. All elements within the target
+     * are treated as tasks.
+     *
+     * @param uri The Namespace URI.
+     * @param localName The local name (without prefix).
+     * @param qualifiedName The qualified name (with prefix)
+     * @param attributes The attributes attached to the element.
+     * @throws SAXParseException if there is a parsing problem.
+     */
+    public void startElement(String uri, String localName, String qualifiedName,
+                             Attributes attributes)
+         throws SAXParseException {
+        // everything is a task
+        BuildElementHandler taskHandler = new BuildElementHandler();
+        taskHandler.start(getParseContext(), getXMLReader(), this, getLocator(),
+            attributes, getElementSource(), qualifiedName);
+        target.addTask(taskHandler.getBuildElement());
     }
 
     /**
@@ -151,8 +149,11 @@ public class RefHandler extends ElementHandler {
     protected void validateAttribute(String attributeName,
                                      String attributeValue)
          throws SAXParseException {
-        if (!attributeName.equals(SYSTEMID_ATTR) &&
-            !attributeName.equals(NAME_ATTR)) {
+        if (!attributeName.equals(NAME_ATTR) 
+            && !attributeName.equals(DEPENDS_ATTR) 
+            && !attributeName.equals(DESC_ATTR) 
+            && !attributeName.equals(IF_ATTR)
+            && !attributeName.equals(UNLESS_ATTR)) {
             throwInvalidAttribute(attributeName);
         }
     }

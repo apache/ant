@@ -51,45 +51,66 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model.xmlparser;
-import java.util.StringTokenizer;
-
-import org.apache.ant.antcore.model.Target;
+package org.apache.ant.antcore.modelparser;
+import org.apache.ant.common.model.ModelException;
+import org.apache.ant.common.model.Project;
 import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
 /**
- * Element handler for the target element
+ * Element to parse the project element. The project handler creates a
+ * number of different handlers to which it delegates processing of child
+ * elements.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 9 January 2002
  */
-public class TargetHandler extends ElementHandler {
+public class ProjectHandler extends ElementHandler {
+    /** The basedir attribute tag */
+    public final static String BASEDIR_ATTR = "basedir";
+
     /** The name attribute */
     public final static String NAME_ATTR = "name";
 
-    /** The depends attribute name */
-    public final static String DEPENDS_ATTR = "depends";
+    /** The default attribute name */
+    public final static String DEFAULT_ATTR = "default";
 
-    /** The depends attribute name */
-    public final static String DESC_ATTR = "description";
+    /** The project being parsed. */
+    private Project project;
 
-    /** The target being configured. */
-    private Target target;
+    /** Constructor parsing a new project */
+    public ProjectHandler() {
+        project = null;
+    }
 
     /**
-     * Get the target parsed by this handler.
+     * Constructor for including a project or fragment into an existing
+     * project
      *
-     * @return the Target model object parsed by this handler.
+     * @param project The project to be configured by the handler
      */
-    public Target getTarget() {
-        return target;
+    public ProjectHandler(Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Get the project that has been parsed from the element
+     *
+     * @return the project that has been parsed from the build source
+     * @throws NoProjectReadException thrown if no project was read in.
+     */
+    public Project getProject()
+         throws NoProjectReadException {
+        if (project == null) {
+            throw new NoProjectReadException();
+        }
+        return project;
     }
 
 
     /**
-     * Process the target element.
+     * Process the project element
      *
      * @param elementName the name of the element
      * @exception SAXParseException if there is a problem parsing the
@@ -97,24 +118,26 @@ public class TargetHandler extends ElementHandler {
      */
     public void processElement(String elementName)
          throws SAXParseException {
-        target = new Target(getLocation(), getAttribute(NAME_ATTR));
-        target.setDescription(getAttribute(DESC_ATTR));
-        target.setAspects(getAspects());
+        if (project == null) {
+            project = new Project(getElementSource(), getLocation());
 
-        String depends = getAttribute(DEPENDS_ATTR);
-        if (depends != null) {
-            StringTokenizer tokenizer = new StringTokenizer(depends, ",");
-            while (tokenizer.hasMoreTokens()) {
-                String dependency = tokenizer.nextToken();
-                target.addDependency(dependency);
-            }
+            project.setDefaultTarget(getAttribute(DEFAULT_ATTR));
+            project.setBase(getAttribute(BASEDIR_ATTR));
+            project.setName(getAttribute(NAME_ATTR));
+            project.setAspects(getAspects());
         }
     }
 
 
     /**
-     * Process an element within this target. All elements within the target
-     * are treated as tasks.
+     * Start a new element in the project. Project currently handles the
+     * following elements
+     * <ul>
+     *   <li> ref</li>
+     *   <li> include</li>
+     *   <li> target</li>
+     * </ul>
+     * Everything else is treated as a task.
      *
      * @param uri The Namespace URI.
      * @param localName The local name (without prefix).
@@ -125,11 +148,41 @@ public class TargetHandler extends ElementHandler {
     public void startElement(String uri, String localName, String qualifiedName,
                              Attributes attributes)
          throws SAXParseException {
-        // everything is a task
-        BuildElementHandler taskHandler = new BuildElementHandler();
-        taskHandler.start(getParseContext(), getXMLReader(), this, getLocator(),
-            attributes, getElementSource(), qualifiedName);
-        target.addTask(taskHandler.getBuildElement());
+             
+        if (qualifiedName.equals("ref")) {
+            RefHandler refHandler = new RefHandler();
+            refHandler.start(getParseContext(), getXMLReader(), this,
+                getLocator(), attributes, getElementSource(),
+                qualifiedName);
+            try {
+                project.referenceProject(refHandler.getRefName(),
+                    refHandler.getReferencedProject());
+            } catch (ModelException e) {
+                throw new SAXParseException(e.getMessage(), getLocator(), e);
+            }
+        } else if (qualifiedName.equals("include")) {
+            IncludeHandler includeHandler = new IncludeHandler(project);
+            includeHandler.start(getParseContext(), getXMLReader(),
+                this, getLocator(), attributes, getElementSource(),
+                qualifiedName);
+        } else if (qualifiedName.equals("target")) {
+            TargetHandler targetHandler = new TargetHandler();
+            targetHandler.start(getParseContext(), getXMLReader(),
+                this, getLocator(), attributes,
+                getElementSource(), qualifiedName);
+            try {
+                project.addTarget(targetHandler.getTarget());
+            } catch (ModelException e) {
+                throw new SAXParseException(e.getMessage(), getLocator(), e);
+            }
+        } else {
+            // everything else is a task
+            BuildElementHandler buildElementHandler = new BuildElementHandler();
+            buildElementHandler.start(getParseContext(), getXMLReader(),
+                this, getLocator(), attributes, getElementSource(),
+                qualifiedName);
+            project.addTask(buildElementHandler.getBuildElement());
+        }
     }
 
     /**
@@ -143,9 +196,9 @@ public class TargetHandler extends ElementHandler {
     protected void validateAttribute(String attributeName,
                                      String attributeValue)
          throws SAXParseException {
-        if (!attributeName.equals(NAME_ATTR) &&
-            !attributeName.equals(DEPENDS_ATTR) &&
-            !attributeName.equals(DESC_ATTR)) {
+        if (!attributeName.equals(BASEDIR_ATTR) &&
+            !attributeName.equals(NAME_ATTR) &&
+            !attributeName.equals(DEFAULT_ATTR)) {
             throwInvalidAttribute(attributeName);
         }
     }

@@ -52,8 +52,8 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import org.apache.ant.antcore.model.ModelElement;
 import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.model.ModelElement;
 import org.apache.ant.common.util.ExecutionException;
 /**
  * This is the core's implementation of the AntContext for Tasks.
@@ -77,12 +77,9 @@ public class TaskContext extends ExecutionContext {
      * Initilaise this context's environment
      *
      * @param frame the frame containing this context
-     * @param eventSupport the event support instance used to send build
-     *      events
      */
-    public TaskContext(ExecutionFrame frame,
-                       BuildEventSupport eventSupport) {
-        super(frame, eventSupport);
+    public TaskContext(ExecutionFrame frame) {
+        super(frame);
     }
 
     /**
@@ -109,7 +106,7 @@ public class TaskContext extends ExecutionContext {
      * @param task the task to be manager
      * @param loader the classloader
      * @param modelElement the model element associated with this context
-     * @exception ExecutionException if the task cannot be initialized 
+     * @exception ExecutionException if the task cannot be initialized
      */
     public void init(ClassLoader loader, Task task, ModelElement modelElement)
          throws ExecutionException {
@@ -122,7 +119,8 @@ public class TaskContext extends ExecutionContext {
     /**
      * execute this context's task
      *
-     * @exception ExecutionException if there is a problem executing the task
+     * @exception ExecutionException if there is a problem executing the
+     *      task
      */
     public void execute() throws ExecutionException {
         task.execute();

@@ -121,10 +121,16 @@ public abstract class Task extends ProjectComponent
     /**
      * Gets the description of the Task
      *
-     * @return the task's description 
+     * @return the task's description
      */
     public String getDescription() {
         return description;
+    }
+
+
+    /** Validate this component */
+    public void validateComponent() {
+        // no default validation for Ant1 tasks
     }
 
     /**
@@ -153,6 +159,5 @@ public abstract class Task extends ProjectComponent
     void setTaskType(String type) {
         this.taskType = type;
     }
-
 }
 

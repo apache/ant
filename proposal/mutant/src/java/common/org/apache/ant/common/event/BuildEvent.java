@@ -54,6 +54,7 @@
 package org.apache.ant.common.event;
 
 import java.util.EventObject;
+import org.apache.ant.common.model.ModelElement;
 
 /**
  * A BuildEvent indicates the occurence of a significant event in the build.
@@ -96,7 +97,7 @@ public class BuildEvent extends EventObject {
      * @param eventType the type of the buildEvent.
      * @param source the element with which this event is associated
      */
-    public BuildEvent(Object source, int eventType) {
+    public BuildEvent(ModelElement source, int eventType) {
         super(source);
         this.eventType = eventType;
     }
@@ -108,7 +109,7 @@ public class BuildEvent extends EventObject {
      * @param cause An exception if associated with the event
      * @param source the object with which this event is associated
      */
-    public BuildEvent(Object source, int eventType,
+    public BuildEvent(ModelElement source, int eventType,
                       Throwable cause) {
         this(source, eventType);
         this.cause = cause;
@@ -117,12 +118,11 @@ public class BuildEvent extends EventObject {
     /**
      * Create a build event for a message
      *
-     * @param source the object with which the event is
-     *      associated.
+     * @param source the object with which the event is associated.
      * @param message the message associated with this event
      * @param priority the message priority
      */
-    public BuildEvent(Object source, String message,
+    public BuildEvent(ModelElement source, String message,
                       int priority) {
         this(source, MESSAGE);
         this.message = message;
@@ -167,6 +167,15 @@ public class BuildEvent extends EventObject {
      */
     public Throwable getCause() {
         return cause;
+    }
+
+    /**
+     * Gets the modelElement of the BuildEvent
+     *
+     * @return the model element this event is associated with
+     */
+    public ModelElement getModelElement() {
+        return (ModelElement)getSource();
     }
 }
 

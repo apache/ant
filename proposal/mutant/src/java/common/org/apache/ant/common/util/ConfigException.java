@@ -51,25 +51,22 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.util;
-
-import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.util.Location;
+package org.apache.ant.common.util;
 
 /**
- * A CircularDependencyException indicates that a circular dependency has
- * been detected
+ * A ConfigException indicates a problem with Ant's configuration or the
+ * commandline used to start Ant.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 9 January 2002
  */
-public class CircularDependencyException extends AntException {
+public class ConfigException extends AntException {
     /**
      * Constructs an exception with the given descriptive message.
      *
      * @param msg Description of or information about the exception.
      */
-    public CircularDependencyException(String msg) {
+    public ConfigException(String msg) {
         super(msg);
     }
 
@@ -81,7 +78,7 @@ public class CircularDependencyException extends AntException {
      * @param msg Description of or information about the exception.
      * @param location Location in the project file where the error occured.
      */
-    public CircularDependencyException(String msg, Location location) {
+    public ConfigException(String msg, Location location) {
         super(msg, location);
     }
 
@@ -93,7 +90,7 @@ public class CircularDependencyException extends AntException {
      * @param msg Description of or information about the exception.
      * @param cause Throwable that might have cause this one.
      */
-    public CircularDependencyException(String msg, Throwable cause) {
+    public ConfigException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
@@ -106,8 +103,7 @@ public class CircularDependencyException extends AntException {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-    public CircularDependencyException(String msg, Throwable cause,
-                                       Location location) {
+    public ConfigException(String msg, Throwable cause, Location location) {
         super(msg, cause, location);
     }
 
@@ -117,7 +113,7 @@ public class CircularDependencyException extends AntException {
      *
      * @param cause Exception that might have caused this one.
      */
-    public CircularDependencyException(Throwable cause) {
+    public ConfigException(Throwable cause) {
         super(cause);
     }
 
@@ -129,7 +125,7 @@ public class CircularDependencyException extends AntException {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-    public CircularDependencyException(Throwable cause, Location location) {
+    public ConfigException(Throwable cause, Location location) {
         super(cause, location);
     }
 

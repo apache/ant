@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.antcore.util.ConfigException;
+import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.PathTokenizer;
 import org.apache.ant.init.InitUtils;
 

@@ -51,118 +51,60 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+package org.apache.ant.antcore.execution;
 
-import org.apache.ant.common.util.Location;
+import org.apache.ant.antcore.antlib.AntLibDefinition;
+import org.apache.ant.antcore.antlib.AntLibrary;
 
 /**
- * A Target is a collection of tasks. It may have dependencies on other
- * targets
+ * This class is used to maintain information about imports
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 12 January 2002
+ * @created 16 January 2002
  */
-public class Target extends ModelElement {
-    /** This target's dependencies on other targets, if any */
-    private List dependencies = new ArrayList();
-
-    /** This target's list of tasks */
-    private List tasks = new ArrayList();
-
-    /** The target's name. */
-    private String name;
-
-    /** The Target's description */
-    private String description;
+public class ImportInfo {
+    /** the ant library from which the import is made */
+    private AntLibrary library;
+    /** the library definition information */
+    private AntLibDefinition libDefinition;
 
     /**
-     * Construct the target, given its name
+     * ImportInfo records what has been imported from an Ant Library
      *
-     * @param location the location of the element
-     * @param name the target's name.
+     * @param library The library from which the import was made
+     * @param libDefinition the library definition information
      */
-    public Target(Location location, String name) {
-        super(location);
-        this.name = name;
+    public ImportInfo(AntLibrary library, AntLibDefinition libDefinition) {
+        this.library = library;
+        this.libDefinition = libDefinition;
     }
 
     /**
-     * Sets the Target's description
+     * Get the classname that has been imported
      *
-     * @param description The new description value
+     * @return the classname that was imported.
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public String getClassName() {
+        return libDefinition.getClassName();
     }
 
     /**
-     * Get this target's name.
+     * Get the library from which the import was made
      *
-     * @return the target's name.
+     * @return the library from which the import was made
      */
-    public String getName() {
-        return name;
+    public AntLibrary getAntLibrary() {
+        return library;
     }
 
     /**
-     * Gets the Target's description
+     * Get the type of the definition that was imported
      *
-     * @return The description value
+     * @return the type of definition
      */
-    public String getDescription() {
-        return description;
+    public int getDefinitionType() {
+        return libDefinition.getDefinitionType();
     }
 
-
-    /**
-     * Get this target's dependencies.
-     *
-     * @return an iterator over the target's dependencies.
-     */
-    public Iterator getDependencies() {
-        return dependencies.iterator();
-    }
-
-    /**
-     * Get the tasks for this target
-     *
-     * @return an iterator over the set of tasks for this target.
-     */
-    public Iterator getTasks() {
-        return tasks.iterator();
-    }
-
-    /**
-     * Add a task to this target
-     *
-     * @param task the task to be added to the target.
-     */
-    public void addTask(BuildElement task) {
-        tasks.add(task);
-    }
-
-    /**
-     * Add a dependency to this target
-     *
-     * @param dependency the name of a target upon which this target depends
-     */
-    public void addDependency(String dependency) {
-        dependencies.add(dependency);
-    }
-
-    /**
-     * Validate that this build element is configured correctly
-     *
-     * @exception ModelException if the element is invalid
-     */
-    public void validate() throws ModelException {
-        if (name == null) {
-            throw new ModelException("Target must have a name",
-                getLocation());
-        }
-    }
 }
 

@@ -117,7 +117,7 @@ public abstract class ProjectComponent {
     public void init(AntContext context) throws ExecutionException {
         this.context = context;
         org.apache.ant.common.util.Location contextLocation
-             = context.getLocation();
+             = context.getModelElement().getLocation();
 
         if (contextLocation
              == org.apache.ant.common.util.Location.UNKNOWN_LOCATION) {
@@ -153,5 +153,14 @@ public abstract class ProjectComponent {
         context.log(message, Project.MSG_INFO);
     }
 
+
+    /**
+     * Get the context associated with this component
+     *
+     * @return the AntContext 
+     */
+    protected AntContext getContext() {
+        return context;
+    }
 }
 

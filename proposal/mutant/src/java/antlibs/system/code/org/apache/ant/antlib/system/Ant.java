@@ -51,89 +51,69 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model.xmlparser;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.xml.ElementHandler;
-import org.apache.ant.antcore.xml.XMLParseException;
-import org.xml.sax.SAXParseException;
+package org.apache.ant.antlib.system;
+import java.io.File;
+import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * The include handler is used to read in included projects or fragments
- * into a project.
+ * The Ant task - used to execute a different build file
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 11 January 2002
+ * @created 4 February 2002
  */
-public class IncludeHandler extends ElementHandler {
-    /** The attribute name which identifies the fragment to be included */
-    public final static String SYSTEMID_ATTR = "fragment";
-
-    /** The including project */
-    private Project project;
-
-
-    /**
-     * Create an IncludeHandler.
-     *
-     * @param project the project into which the include fragment is to be
-     *      placed
-     */
-    public IncludeHandler(Project project) {
-        this.project = project;
-    }
-
+public class Ant extends AntBase {
+    /** The ant file to be run */
+    private File antFile;
+    /** the base directory to use for the run */
+    private File baseDir;
+    /** File to capture any output */
+    private File outputFile;
 
     /**
-     * Process the element.
+     * sets the file containing the XML representation model to build
      *
-     * @param elementName the name of the element
-     * @exception SAXParseException if there is a problem parsing the
-     *      element
+     * @param antFile the file to build
      */
-    public void processElement(String elementName)
-         throws SAXParseException {
-
-        String includeSystemId = getAttribute(SYSTEMID_ATTR);
-        if (includeSystemId == null) {
-            throw new SAXParseException("Attribute " + SYSTEMID_ATTR +
-                " is required in an <include> element", getLocator());
-        }
-
-        // create a new parser to read this project relative to the
-        // project's URI
-        try {
-            URL includeURL = new URL(getElementSource(), includeSystemId);
-            ProjectHandler includedProjectHandler = new ProjectHandler(project);
-            getParseContext().parse(includeURL,
-                new String[]{"project", "fragment"},
-                includedProjectHandler);
-        } catch (MalformedURLException e) {
-            throw new SAXParseException("Unable to include " + includeSystemId
-                 + ": " + e.getMessage(), getLocator());
-        } catch (XMLParseException e) {
-            throw new SAXParseException("Error parsing included project "
-                 + includeSystemId + ": " + e.getMessage(), getLocator());
-        }
+    public void setAntFile(File antFile) {
+        this.antFile = antFile;
     }
 
     /**
-     * Validate that the given attribute and value are valid.
+     * Set the base directory for the execution of the build
      *
-     * @param attributeName The name of the attributes
-     * @param attributeValue The value of the attributes
-     * @exception SAXParseException if the attribute is not allowed on the
-     *      element.
+     * @param baseDir the base directory for the build
      */
-    protected void validateAttribute(String attributeName,
-                                     String attributeValue)
-         throws SAXParseException {
-        if (!attributeName.equals(SYSTEMID_ATTR)) {
-            throwInvalidAttribute(attributeName);
+    public void setBaseDir(File baseDir) {
+        this.baseDir = baseDir;
+    }
+
+    /**
+     * The output file for capturing the build output
+     *
+     * @param outputFile the output file for capturing the build output
+     */
+    public void setOutput(File outputFile) {
+        this.outputFile = outputFile;
+    }
+
+    /**
+     * Run the sub-build
+     *
+     * @exception ExecutionException if the build can't be run
+     */
+    public void execute() throws ExecutionException {
+        if (baseDir == null) {
+            baseDir = getContext().getBaseDir();
         }
+        if (antFile == null) {
+            antFile = new File(baseDir, "build.ant");
+        }
+
+        ComponentService componentService
+             = (ComponentService)getCoreService(ComponentService.class);
+
+        componentService.runBuild(antFile, getProperties(), getTargets());
     }
 }
-
 

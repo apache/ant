@@ -7,6 +7,9 @@
   <taskdef name="typedef" classname="org.apache.ant.antlib.system.TypeDef"/>
   <taskdef name="loadlib" classname="org.apache.ant.antlib.system.LoadLib"/>
 
+  <taskdef name="ant" classname="org.apache.ant.antlib.system.Ant"/>
+  <taskdef name="antcall" classname="org.apache.ant.antlib.system.AntCall"/>
+  
   <converter classname="org.apache.ant.antlib.system.FileConverter"/>          
   <converter classname="org.apache.ant.antlib.system.URLConverter"/>          
   <converter classname="org.apache.ant.antlib.system.PrimitiveConverter"/>          

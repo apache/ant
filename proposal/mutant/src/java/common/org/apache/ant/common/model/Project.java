@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model;
+package org.apache.ant.common.model;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,10 +61,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import org.apache.ant.common.util.CircularDependencyChecker;
+import org.apache.ant.common.util.CircularDependencyException;
+import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.Location;
-import org.apache.ant.antcore.util.CircularDependencyChecker;
-import org.apache.ant.antcore.util.CircularDependencyException;
-import org.apache.ant.antcore.util.ConfigException;
 
 /**
  * A project is a collection of targets and global tasks. A project may
@@ -366,42 +366,12 @@ public class Project extends ModelElement {
     }
 
     /**
-     * Validate that this build element is configured correctly
+     * Validate this project
      *
-     * @param globalName The name of this project in the reference name
-     *      space
-     * @exception ModelException if the element is invalid
+     * @exception ModelException if the project is not valid
      */
-    public void validate(String globalName) throws ModelException {
-        Set keys = referencedProjects.keySet();
-        for (Iterator i = keys.iterator(); i.hasNext(); ) {
-            String refName = (String)i.next();
-            Project referencedProject
-                 = (Project)referencedProjects.get(refName);
-            String refGlobalName = refName;
-            if (globalName != null) {
-                refGlobalName = globalName + REF_DELIMITER + refName;
-            }
-            referencedProject.validate(refGlobalName);
-        }
-
-        // we now check whether all of dependencies for our targets
-        // exist in the model
-
-        // visited contains the targets we have already visited and verified
-        Set visited = new HashSet();
-        // checker records the targets we are currently visiting
-        CircularDependencyChecker checker
-             = new CircularDependencyChecker("checking target dependencies");
-        // dependency order is purely recorded for debug purposes
-        List dependencyOrder = new ArrayList();
-
-        for (Iterator i = getTargets(); i.hasNext(); ) {
-            Target target = (Target)i.next();
-            target.validate();
-            fillinDependencyOrder(globalName, target, dependencyOrder,
-                visited, checker);
-        }
+    public void validate() throws ModelException {
+        validate(null);
     }
 
     /**
@@ -466,8 +436,47 @@ public class Project extends ModelElement {
     }
 
     /**
-     * Given a fully qualified target name, this method simply returns the
-     * fully qualified name of the project
+     * Validate that this build element is configured correctly
+     *
+     * @param globalName The name of this project in the reference name
+     *      space
+     * @exception ModelException if the element is invalid
+     */
+    protected void validate(String globalName) throws ModelException {
+        Set keys = referencedProjects.keySet();
+        for (Iterator i = keys.iterator(); i.hasNext(); ) {
+            String refName = (String)i.next();
+            Project referencedProject
+                 = (Project)referencedProjects.get(refName);
+            String refGlobalName = refName;
+            if (globalName != null) {
+                refGlobalName = globalName + REF_DELIMITER + refName;
+            }
+            referencedProject.validate(refGlobalName);
+        }
+
+        // we now check whether all of dependencies for our targets
+        // exist in the model
+
+        // visited contains the targets we have already visited and verified
+        Set visited = new HashSet();
+        // checker records the targets we are currently visiting
+        CircularDependencyChecker checker
+             = new CircularDependencyChecker("checking target dependencies");
+        // dependency order is purely recorded for debug purposes
+        List dependencyOrder = new ArrayList();
+
+        for (Iterator i = getTargets(); i.hasNext(); ) {
+            Target target = (Target)i.next();
+            target.validate();
+            fillinDependencyOrder(globalName, target, dependencyOrder,
+                visited, checker);
+        }
+    }
+
+    /**
+     * Given a fully qualified target name, this method returns the fully
+     * qualified name of the project
      *
      * @param fullTargetName the full qualified target name
      * @return the full name of the containing project

@@ -51,120 +51,83 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ant.common.util.Location;
+package org.apache.ant.common.util;
+import java.util.Stack;
 
 /**
- * A BuildElement is a holder configuration information for an element of
- * the build. BuildElements may be grouped into a hierarchy to capture any
- * level of element nesting.
+ * Checks for circular dependencies when visiting nodes of an object
+ * hierarchy
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 20 January 2002
+ * @created 14 January 2002
  */
-public class BuildElement extends ModelElement {
-    /** The attributes of this build element */
-    private Map attributes = new HashMap();
+public class CircularDependencyChecker {
+    /**
+     * The activity being undertaken which checking for circular
+     * redundancies. This is used for reporting exceptions
+     */
+    private String activity;
 
-    /** The element's name or type  */
-    private String type;
-
-    /** The nested task elements that make up this task element.  */
-    private List nestedElements = new ArrayList();
-
-    /** The content (text) of this element */
-    private String text = "";
+    /** The nodes which we are currently visiting */
+    private Stack nodes = new Stack();
 
     /**
-     * Create a Build Element of the given type
+     * Constructor for the CircularDependencyChecker object
      *
-     * @param location the location of the element
-     * @param type the element's type
+     * @param activity the activity being undertaken
      */
-    public BuildElement(Location location, String type) {
-        super(location);
-        this.type = type;
+    public CircularDependencyChecker(String activity) {
+        this.activity = activity;
     }
 
     /**
-     * Get the text of this element
+     * Visit a Node to check its relationships to other nodes
      *
-     * @return the elements's text.
+     * @param node an object which is being visited and analyzed
+     * @exception CircularDependencyException if this node is alreay being
+     *      visited.
      */
-    public String getText() {
-        return text;
+    public void visitNode(Object node) throws CircularDependencyException {
+        if (nodes.contains(node)) {
+            throw new CircularDependencyException(getDescription(node));
+        }
+        nodes.push(node);
     }
 
     /**
-     * Get an iterator over this element's nested elements
+     * Complete the examination of the node and leave.
      *
-     * @return an iterator which provides BuildElement instances
+     * @param node an object for which the examination of relationships has
+     *      been completed
+     * @exception CircularDependencyException if the given node was not
+     *      expected.
      */
-    public Iterator getNestedElements() {
-        return nestedElements.iterator();
+    public void leaveNode(Object node) throws CircularDependencyException {
+        if (!nodes.pop().equals(node)) {
+            throw new CircularDependencyException("Internal error: popped " +
+                "element was unexpected");
+        }
     }
 
     /**
-     * Get the type of this element
+     * Gets the description of the circular dependency
      *
-     * @return the element's type
+     * @param endNode the node which was revisited and where the circular
+     *      dependency was detected
+     * @return the description of the circular dependency
      */
-    public String getType() {
-        return type;
-    }
+    private String getDescription(Object endNode) {
+        StringBuffer sb = new StringBuffer("Circular dependency while "
+             + activity + ": ");
+        sb.append(endNode);
+        Object o = null;
+        do {
+            o = nodes.pop();
+            sb.append(" <- ");
+            sb.append(o.toString());
+        } while (!(o.equals(endNode)));
 
-    /**
-     * Get an iterator over the elements's attributes
-     *
-     * @return an iterator which provide's attribute names
-     */
-    public Iterator getAttributeNames() {
-        return attributes.keySet().iterator();
-    }
-
-    /**
-     * Get the value of an attribute.
-     *
-     * @param attributeName the name of the attribute
-     * @return the value of the attribute or null if there is no such
-     *      attribute.
-     */
-    public String getAttributeValue(String attributeName) {
-        return (String)attributes.get(attributeName);
-    }
-
-    /**
-     * Add text to this element.
-     *
-     * @param text the element text to add.
-     */
-    public void addText(String text) {
-        this.text += text;
-    }
-
-    /**
-     * Add a nested element to this element
-     *
-     * @param nestedElement the build element to be added.
-     */
-    public void addNestedElement(BuildElement nestedElement) {
-        nestedElements.add(nestedElement);
-    }
-
-    /**
-     * Add an attribute to this element
-     *
-     * @param attributeName the name of the attribute
-     * @param attributeValue the attribute's value.
-     */
-    public void addAttribute(String attributeName, String attributeValue) {
-        attributes.put(attributeName, attributeValue);
+        return new String(sb);
     }
 }
 

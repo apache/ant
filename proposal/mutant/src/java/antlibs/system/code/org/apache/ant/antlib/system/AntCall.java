@@ -51,15 +51,37 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model.xmlparser;
+package org.apache.ant.antlib.system;
+import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * A NoProjectReadException is used to indicate that a project was not read
- * from the particular source. This will happen if the source is empty.
+ * The Ant task - used to execute a different build file
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 15 January 2002
+ * @created 4 February 2002
  */
-public class NoProjectReadException extends Exception {
+public class AntCall extends AntBase {
+    /**
+     * Execute the sub-build
+     *
+     * @exception ExecutionException if the build fails
+     */
+    public void execute() throws ExecutionException {
+        ComponentService componentService
+             = (ComponentService)getCoreService(ComponentService.class);
+             
+        componentService.callTarget(getProperties(), getTargets());
+    }
+
+    /**
+     * Alias to add a property to the sub-build
+     *
+     * @param param descriptor for the property to be passed
+     */
+    public void addParam(Property param) {
+        super.addProperty(param);
+    }
+
 }
 

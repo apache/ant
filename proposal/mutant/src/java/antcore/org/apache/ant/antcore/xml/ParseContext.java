@@ -59,8 +59,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.ant.common.util.Location;
-import org.apache.ant.antcore.util.CircularDependencyChecker;
-import org.apache.ant.antcore.util.CircularDependencyException;
+import org.apache.ant.common.util.CircularDependencyChecker;
+import org.apache.ant.common.util.CircularDependencyException;
+import org.apache.ant.common.util.AntException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -128,7 +129,11 @@ public class ParseContext {
             Location location = new Location(e.getSystemId(),
                 e.getLineNumber(), e.getColumnNumber());
             if (e.getException() != null) {
-                throw new XMLParseException(e.getException(), location);
+                Throwable nestedException = e.getException();
+                if (nestedException instanceof AntException) {
+                    location = ((AntException)nestedException).getLocation();
+                }
+                throw new XMLParseException(nestedException, location);
             } else {
                 throw new XMLParseException(e, location);
             }

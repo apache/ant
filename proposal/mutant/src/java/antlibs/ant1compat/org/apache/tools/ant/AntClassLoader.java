@@ -136,7 +136,7 @@ public class AntClassLoader extends URLClassLoader
     /**
      * Initialize the given class
      *
-     * @param theClass XXX Description of Parameter
+     * @param theClass the class to be initialised
      */
     public static void initializeClass(Class theClass) {
         // do nothing in Ant2
@@ -189,14 +189,6 @@ public class AntClassLoader extends URLClassLoader
     }
 
     /**
-     * New build listener interface
-     *
-     * @param be the build event to be processed
-     */
-    public void processBuildEvent(BuildEvent be) {
-    }
-
-    /**
      * Force a class to be loaded by this loader
      *
      * @param classname the name of the class to be loaded
@@ -219,7 +211,64 @@ public class AntClassLoader extends URLClassLoader
     }
 
     /**
-     * Add a path tot his loader
+     * build started event
+     *
+     * @param event build started event
+     */
+    public void buildStarted(BuildEvent event) {
+    }
+
+    /**
+     * build finished event
+     *
+     * @param event build finished event
+     */
+    public void buildFinished(BuildEvent event) {
+        cleanup();
+    }
+
+    /**
+     * target started event.
+     *
+     * @param event target started event.
+     */
+    public void targetStarted(BuildEvent event) {
+    }
+
+    /**
+     * target finished event
+     *
+     * @param event  target finished event
+     */
+    public void targetFinished(BuildEvent event) {
+    }
+
+    /**
+     * task started event
+     *
+     * @param event task started event
+     */
+    public void taskStarted(BuildEvent event) {
+    }
+
+    /**
+     * task finished event
+     *
+     * @param event task finished event
+     */
+    public void taskFinished(BuildEvent event) {
+    }
+
+    /**
+     * message logged event
+     *
+     * @param event message logged event
+     */
+    public void messageLogged(BuildEvent event) {
+    }
+
+    /**
+     * Add a path to this loader
      *
      * @param path the path to be added to this loader
      */

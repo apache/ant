@@ -66,7 +66,7 @@ public class BuildEvent extends org.apache.ant.common.event.BuildEvent {
      * @param task the task that emitted the event.
      */
     public BuildEvent(Task task) {
-        super(task, MESSAGE);
+        super(task.getContext().getModelElement(), MESSAGE);
     }
 }
 

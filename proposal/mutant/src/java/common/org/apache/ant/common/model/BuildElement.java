@@ -51,70 +51,120 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.service;
-import java.io.File;
+package org.apache.ant.common.model;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.common.model.Project;
-import org.apache.ant.common.util.ExecutionException;
+
+import org.apache.ant.common.util.Location;
 
 /**
- * The Component Service is used to manage the definitions that Ant uses at
- * runtime. It supports the following operations
- * <ul>
- *   <li> Definition of library search paths
- *   <li> Importing tasks from a library
- *   <li> taskdefs
- *   <li> typedefs
- * </ul>
- *
+ * A BuildElement is a holder configuration information for an element of
+ * the build. BuildElements may be grouped into a hierarchy to capture any
+ * level of element nesting.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 27 January 2002
+ * @created 20 January 2002
  */
-public interface ComponentService {
-    /**
-     * Load a single or multiple Ant libraries
-     *
-     * @param libLocation the location of the library or the libraries
-     * @param importAll true if all components of the loaded libraries
-     *      should be imported
-     * @exception ExecutionException if the library or libraries cannot be
-     *      imported.
-     */
-    void loadLib(String libLocation, boolean importAll)
-         throws ExecutionException;
+public class BuildElement extends ModelElement {
+    /** The attributes of this build element */
+    private Map attributes = new HashMap();
+
+    /** The element's name or type  */
+    private String type;
+
+    /** The nested task elements that make up this task element.  */
+    private List nestedElements = new ArrayList();
+
+    /** The content (text) of this element */
+    private String text = "";
 
     /**
-     * Run a sub-build.
+     * Create a Build Element of the given type
      *
-     * @param antFile the file containing the XML description of the model
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
+     * @param location the location of the element
+     * @param type the element's type
      */
-    void runBuild(File antFile, Map properties, List targets)
-         throws ExecutionException;
+    public BuildElement(Location location, String type) {
+        super(location);
+        this.type = type;
+    }
 
     /**
-     * Run a sub-build.
+     * Get the text of this element
      *
-     * @param model the project model to be used for the build
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
+     * @return the elements's text.
      */
-    void runBuild(Project model, Map properties, List targets)
-         throws ExecutionException;
+    public String getText() {
+        return text;
+    }
 
     /**
-     * Run a sub-build using the current frame's project model
+     * Get an iterator over this element's nested elements
      *
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
+     * @return an iterator which provides BuildElement instances
      */
-    void callTarget(Map properties, List targets)
-         throws ExecutionException;
+    public Iterator getNestedElements() {
+        return nestedElements.iterator();
+    }
+
+    /**
+     * Get the type of this element
+     *
+     * @return the element's type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Get an iterator over the elements's attributes
+     *
+     * @return an iterator which provide's attribute names
+     */
+    public Iterator getAttributeNames() {
+        return attributes.keySet().iterator();
+    }
+
+    /**
+     * Get the value of an attribute.
+     *
+     * @param attributeName the name of the attribute
+     * @return the value of the attribute or null if there is no such
+     *      attribute.
+     */
+    public String getAttributeValue(String attributeName) {
+        return (String)attributes.get(attributeName);
+    }
+
+    /**
+     * Add text to this element.
+     *
+     * @param text the element text to add.
+     */
+    public void addText(String text) {
+        this.text += text;
+    }
+
+    /**
+     * Add a nested element to this element
+     *
+     * @param nestedElement the build element to be added.
+     */
+    public void addNestedElement(BuildElement nestedElement) {
+        nestedElements.add(nestedElement);
+    }
+
+    /**
+     * Add an attribute to this element
+     *
+     * @param attributeName the name of the attribute
+     * @param attributeValue the attribute's value.
+     */
+    public void addAttribute(String attributeName, String attributeValue) {
+        attributes.put(attributeName, attributeValue);
+    }
 }
 

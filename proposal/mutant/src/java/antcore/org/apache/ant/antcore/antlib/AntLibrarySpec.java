@@ -57,7 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.antcore.util.ConfigException;
+import org.apache.ant.common.util.ConfigException;
 
 /**
  * This class represents the specification of an Ant library. It is merely

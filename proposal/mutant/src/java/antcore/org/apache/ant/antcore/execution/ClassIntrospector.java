@@ -95,7 +95,16 @@ public class ClassIntrospector {
                  && !args[0].isArray()) {
                 reflector.addAttributeMethod(m, getPropertyName(name, "set"),
                     converters);
-            } else if (name.startsWith("add")
+            } else if (name.startsWith("addConfigured")
+                 && name.length() > 13
+                 && returnType.equals(Void.TYPE)
+                 && args.length == 1
+                 && !args[0].equals(String.class)
+                 && !args[0].isArray()
+                 && !args[0].isPrimitive()) {
+                reflector.addElementMethod(m, 
+                    getPropertyName(name, "addConfigured"));
+             } else if (name.startsWith("add")
                  && name.length() > 3
                  && returnType.equals(Void.TYPE)
                  && args.length == 1
@@ -103,7 +112,7 @@ public class ClassIntrospector {
                  && !args[0].isArray()
                  && !args[0].isPrimitive()) {
                 reflector.addElementMethod(m, getPropertyName(name, "add"));
-            } else if (name.startsWith("create")
+           } else if (name.startsWith("create")
                  && name.length() > 6
                  && !returnType.isArray()
                  && !returnType.isPrimitive()

@@ -133,9 +133,10 @@ public interface DataService {
      * is an expensive operation since it must clone all of the property
      * stores in all frames
      *
-     * @return a Map containing the frames properties indexed by their full name.
+     * @return a Map containing the frames properties indexed by their full
+     *      name.
      */
-    Map getAllProperties();         
-         
+    Map getAllProperties();
+
 }
 

@@ -52,8 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.antlib;
-import org.apache.ant.antcore.util.ConfigException;
-
+import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;

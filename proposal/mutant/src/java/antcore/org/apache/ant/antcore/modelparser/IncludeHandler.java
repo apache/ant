@@ -51,83 +51,71 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model.xmlparser;
-import java.util.Iterator;
+package org.apache.ant.antcore.modelparser;
 
-import org.apache.ant.antcore.model.BuildElement;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.apache.ant.common.model.Project;
 import org.apache.ant.antcore.xml.ElementHandler;
-import org.xml.sax.Attributes;
+import org.apache.ant.antcore.xml.XMLParseException;
 import org.xml.sax.SAXParseException;
 
 /**
- * A BuildElementHandler parses the task elements of a build. Task elements
- * include tasks themselves plus all their nested elements to any depth.
+ * The include handler is used to read in included projects or fragments
+ * into a project.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 9 January 2002
+ * @created 11 January 2002
  */
-public class BuildElementHandler extends ElementHandler {
-    /** The task element being parsed by this handler. */
-    private BuildElement buildElement;
+public class IncludeHandler extends ElementHandler {
+    /** The attribute name which identifies the fragment to be included */
+    public final static String SYSTEMID_ATTR = "fragment";
+
+    /** The including project */
+    private Project project;
+
 
     /**
-     * Get the task element being parsed by this handler.
+     * Create an IncludeHandler.
      *
-     * @return the BuildElement being parsed.
+     * @param project the project into which the include fragment is to be
+     *      placed
      */
-    public BuildElement getBuildElement() {
-        return buildElement;
-    }
-
-    /**
-     * Create a task element handler to parse a task element
-     *
-     * @param elementName the name of the element - always target
-     */
-    public void processElement(String elementName) {
-        buildElement
-             = new BuildElement(getLocation(), elementName);
-
-        for (Iterator i = getAttributes(); i.hasNext(); ) {
-            String attributeName = (String)i.next();
-            buildElement.addAttribute(attributeName,
-                getAttribute(attributeName));
-        }
-        buildElement.setAspects(getAspects());
+    public IncludeHandler(Project project) {
+        this.project = project;
     }
 
 
     /**
-     * Process a nested element of this task element. All nested elements of
-     * a buildElement are themselves buildElements.
+     * Process the element.
      *
-     * @param uri The Namespace URI.
-     * @param localName The local name (without prefix).
-     * @param qualifiedName The qualified name (with prefix)
-     * @param attributes The attributes attached to the element.
-     * @throws SAXParseException if there is a parsing problem.
+     * @param elementName the name of the element
+     * @exception SAXParseException if there is a problem parsing the
+     *      element
      */
-    public void startElement(String uri, String localName, String qualifiedName,
-                             Attributes attributes)
+    public void processElement(String elementName)
          throws SAXParseException {
-        // everything within a task element is also a task element
-        BuildElementHandler nestedHandler
-             = new BuildElementHandler();
-        nestedHandler.start(getParseContext(), getXMLReader(),
-            this, getLocator(), attributes, getElementSource(), qualifiedName);
-        buildElement.addNestedElement(nestedHandler.getBuildElement());
-    }
 
+        String includeSystemId = getAttribute(SYSTEMID_ATTR);
+        if (includeSystemId == null) {
+            throw new SAXParseException("Attribute " + SYSTEMID_ATTR +
+                " is required in an <include> element", getLocator());
+        }
 
-    /**
-     * This method is called when this element is finished being processed.
-     * This is a template method allowing subclasses to complete any
-     * necessary processing.
-     */
-    protected void finish() {
-        String content = getContent();
-        if (content != null && content.trim().length() != 0) {
-            buildElement.addText(getContent());
+        // create a new parser to read this project relative to the
+        // project's URI
+        try {
+            URL includeURL = new URL(getElementSource(), includeSystemId);
+            ProjectHandler includedProjectHandler = new ProjectHandler(project);
+            getParseContext().parse(includeURL,
+                new String[]{"project", "fragment"},
+                includedProjectHandler);
+        } catch (MalformedURLException e) {
+            throw new SAXParseException("Unable to include " + includeSystemId
+                 + ": " + e.getMessage(), getLocator());
+        } catch (XMLParseException e) {
+            throw new SAXParseException("Error parsing included project "
+                 + includeSystemId + ": " + e.getMessage(), getLocator());
         }
     }
 
@@ -136,10 +124,16 @@ public class BuildElementHandler extends ElementHandler {
      *
      * @param attributeName The name of the attributes
      * @param attributeValue The value of the attributes
+     * @exception SAXParseException if the attribute is not allowed on the
+     *      element.
      */
     protected void validateAttribute(String attributeName,
-                                     String attributeValue) {
-        // do nothing - all attributes are OK by default.
+                                     String attributeValue)
+         throws SAXParseException {
+        if (!attributeName.equals(SYSTEMID_ATTR)) {
+            throwInvalidAttribute(attributeName);
+        }
     }
 }
+
 

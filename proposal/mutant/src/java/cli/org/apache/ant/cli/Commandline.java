@@ -60,18 +60,20 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.antcore.config.AntConfigHandler;
 import org.apache.ant.antcore.execution.ExecutionManager;
-import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.model.xmlparser.XMLProjectParser;
-import org.apache.ant.antcore.util.ConfigException;
+import org.apache.ant.antcore.modelparser.XMLProjectParser;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.MessageLevel;
 import org.apache.ant.init.InitConfig;
@@ -87,6 +89,9 @@ public class Commandline {
     /** The default build file name */
     public final static String DEFAULT_BUILD_FILENAME = "build.ant";
 
+    /** The default build file name */
+    public final static String DEFAULT_ANT1_FILENAME = "build.xml";
+
     /** The initialisation configuration for Ant */
     private InitConfig config;
 
@@ -101,6 +106,9 @@ public class Commandline {
 
     /** The list of targets to be evaluated in this invocation */
     private List targets = new ArrayList(4);
+
+    /** The command line properties */
+    private Map definedProperties = new HashMap();
 
     /**
      * This is the build file to run. By default it is a file: type URL but
@@ -237,7 +245,7 @@ public class Commandline {
             ExecutionManager executionManager
                  = new ExecutionManager(initConfig, config);
             addBuildListeners(executionManager);
-            executionManager.runBuild(project, targets);
+            executionManager.runBuild(project, targets, definedProperties);
         } catch (Throwable t) {
             if (t instanceof AntException) {
                 AntException e = (AntException)t;
@@ -329,6 +337,9 @@ public class Commandline {
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
                 // printVersion();
                 messageOutputLevel = MessageLevel.MSG_VERBOSE;
+            } else if (arg.equals("-debug")) {
+                // printVersion();
+                messageOutputLevel = MessageLevel.MSG_DEBUG;
             } else if (arg.equals("-listener")) {
                 try {
                     listeners.add(args[i++]);
@@ -350,6 +361,17 @@ public class Commandline {
                         "using the -logger argument");
                     return;
                 }
+            } else if (arg.startsWith("-D")) {
+                String name = arg.substring(2, arg.length());
+                String value = null;
+                int posEq = name.indexOf("=");
+                if (posEq > 0) {
+                    value = name.substring(posEq + 1);
+                    name = name.substring(0, posEq);
+                } else if (i < args.length - 1) {
+                    value = args[++i];
+                }
+                definedProperties.put(name, value);
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 System.out.println("Unknown option: " + arg);
@@ -362,6 +384,12 @@ public class Commandline {
 
         if (buildFileURL == null) {
             File defaultBuildFile = new File(DEFAULT_BUILD_FILENAME);
+            if (!defaultBuildFile.exists()) {
+                File ant1BuildFile =  new File(DEFAULT_ANT1_FILENAME);
+                if (ant1BuildFile.exists()) {
+                    defaultBuildFile = ant1BuildFile;
+                }
+            }
             try {
                 buildFileURL = InitUtils.getFileURL(defaultBuildFile);
             } catch (MalformedURLException e) {

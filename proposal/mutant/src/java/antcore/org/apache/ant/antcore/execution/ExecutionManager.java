@@ -61,10 +61,10 @@ import java.util.Map;
 import org.apache.ant.antcore.antlib.AntLibManager;
 import org.apache.ant.antcore.antlib.AntLibrary;
 import org.apache.ant.antcore.config.AntConfig;
-import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.util.ConfigException;
 import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.init.InitConfig;
 
 /**
@@ -105,11 +105,11 @@ public class ExecutionManager {
      *
      * @param initConfig Ant's configuration - classloaders etc
      * @param config The user config to use - may be null
-     * @exception ConfigException if there is a problem with one of Ant's
+     * @exception ExecutionException if there is a problem with one of Ant's
      *      tasks
      */
     public ExecutionManager(InitConfig initConfig, AntConfig config)
-         throws ConfigException {
+         throws ExecutionException {
         this.config = config;
         this.initConfig = initConfig;
 
@@ -140,7 +140,7 @@ public class ExecutionManager {
 
             mainFrame = new ExecutionFrame(antLibraries, initConfig, config);
         } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to load Ant libraries", e);
+            throw new ExecutionException("Unable to load Ant libraries", e);
         }
     }
 
@@ -149,13 +149,17 @@ public class ExecutionManager {
      *
      * @param project the project model to be used for the build
      * @param targets a list of target names to be executed.
+     * @param commandProperties the properties defined by the front end to
+     *      control the build
      */
-    public void runBuild(Project project, List targets) {
+    public void runBuild(Project project, List targets, Map commandProperties) {
         Throwable buildFailureCause = null;
         try {
             // start by validating the project we have been given.
-            project.validate(null);
+            project.validate();
+
             mainFrame.setProject(project);
+            mainFrame.setInitialProperties(commandProperties);
 
             eventSupport.fireBuildStarted(project);
             mainFrame.runBuild(targets);
@@ -193,10 +197,10 @@ public class ExecutionManager {
      * Add the library paths from the AntConfig instance to the Ant
      * Libraries.
      *
-     * @exception ConfigException if remote libraries are not allowed.
+     * @exception ExecutionException if remote libraries are not allowed.
      */
     private void addConfigLibPaths()
-         throws ConfigException {
+         throws ExecutionException {
         if (config == null) {
             return;
         }
@@ -212,7 +216,7 @@ public class ExecutionManager {
                     URL pathElementURL = (URL)j.next();
                     if (!pathElementURL.getProtocol().equals("file")
                          && !config.isRemoteLibAllowed()) {
-                        throw new ConfigException("Remote libpaths are not"
+                        throw new ExecutionException("Remote libpaths are not"
                              + " allowed: " + pathElementURL);
                     }
                     antLib.addLibraryURL(pathElementURL);

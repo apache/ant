@@ -51,48 +51,55 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.config;
-import org.apache.ant.common.util.ConfigException;
+package org.apache.ant.antcore.modelparser;
+import java.util.Iterator;
+
+import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
 /**
- * XML Element Handler for Ant config files
+ * A BuildElementHandler parses the task elements of a build. Task elements
+ * include tasks themselves plus all their nested elements to any depth.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 20 January 2002
+ * @created 9 January 2002
  */
-public class AntConfigHandler extends ElementHandler {
-    /**
-     * The config object which is contructed from the XML representation of
-     * the config
-     */
-    private AntConfig config;
+public class BuildElementHandler extends ElementHandler {
+    /** The task element being parsed by this handler. */
+    private BuildElement buildElement;
 
     /**
-     * Get the Ant Config read in by this handler
+     * Get the task element being parsed by this handler.
      *
-     * @return the AntConfig instance
+     * @return the BuildElement being parsed.
      */
-    public AntConfig getAntConfig() {
-        return config;
+    public BuildElement getBuildElement() {
+        return buildElement;
     }
 
     /**
-     * Process the antlib element
+     * Create a task element handler to parse a task element
      *
-     * @param elementName the name of the element
-     * @exception SAXParseException if there is a problem parsing the
-     *      element
+     * @param elementName the name of the element - always target
      */
-    public void processElement(String elementName)
-         throws SAXParseException {
-        config = new AntConfig();
+    public void processElement(String elementName) {
+        buildElement
+             = new BuildElement(getLocation(), elementName);
+
+        for (Iterator i = getAttributes(); i.hasNext(); ) {
+            String attributeName = (String)i.next();
+            buildElement.addAttribute(attributeName,
+                getAttribute(attributeName));
+        }
+        buildElement.setAspects(getAspects());
     }
 
+
     /**
-     * Start a new element in the ant config.
+     * Process a nested element of this task element. All nested elements of
+     * a buildElement are themselves buildElements.
      *
      * @param uri The Namespace URI.
      * @param localName The local name (without prefix).
@@ -103,39 +110,36 @@ public class AntConfigHandler extends ElementHandler {
     public void startElement(String uri, String localName, String qualifiedName,
                              Attributes attributes)
          throws SAXParseException {
+        // everything within a task element is also a task element
+        BuildElementHandler nestedHandler
+             = new BuildElementHandler();
+        nestedHandler.start(getParseContext(), getXMLReader(),
+            this, getLocator(), attributes, getElementSource(), qualifiedName);
+        buildElement.addNestedElement(nestedHandler.getBuildElement());
+    }
 
-        try {
-            if (qualifiedName.equals("loadlib")) {
-                LoadLibHandler loadlibHandler
-                     = new LoadLibHandler();
-                loadlibHandler.start(getParseContext(), getXMLReader(),
-                    this, getLocator(), attributes, getElementSource(),
-                    qualifiedName);
-                config.addAntLibraryLocation(loadlibHandler.getLibLocation());
-            } else if (qualifiedName.equals("libpath")) {
-                LibPathHandler libPathHandler
-                     = new LibPathHandler();
-                libPathHandler.start(getParseContext(), getXMLReader(),
-                    this, getLocator(), attributes, getElementSource(),
-                    qualifiedName);
 
-                if (libPathHandler.getLibraryPath() != null) {
-                    config.addLibPath(libPathHandler.getLibraryId(),
-                        libPathHandler.getLibraryPath());
-                } else {
-                    config.addLibURL(libPathHandler.getLibraryId(),
-                        libPathHandler.getLibraryURL());
-                }
-
-            } else {
-                super.startElement(uri, localName, qualifiedName, attributes);
-            }
-        } catch (ConfigException e) {
-            throw new SAXParseException("Unable to process config",
-                getLocator(), e);
+    /**
+     * This method is called when this element is finished being processed.
+     * This is a template method allowing subclasses to complete any
+     * necessary processing.
+     */
+    protected void finish() {
+        String content = getContent();
+        if (content != null && content.trim().length() != 0) {
+            buildElement.addText(getContent());
         }
     }
 
+    /**
+     * Validate that the given attribute and value are valid.
+     *
+     * @param attributeName The name of the attributes
+     * @param attributeValue The value of the attributes
+     */
+    protected void validateAttribute(String attributeName,
+                                     String attributeValue) {
+        // do nothing - all attributes are OK by default.
+    }
 }
-
 

@@ -55,8 +55,8 @@ package org.apache.ant.common.antlib;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
- * An execution component is a component from an AntLibrary which is used in the
- * execution of an Ant build. A component can have a context. 
+ * An execution component is a component from an AntLibrary which is used in
+ * the execution of an Ant build. A component can have a context.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 1 February 2002
@@ -70,5 +70,14 @@ public interface ExecutionComponent {
      * @exception ExecutionException if the component cannot be initialised
      */
     void init(AntContext context) throws ExecutionException;
+
+    /**
+     * Validate the component. This is called after the element has been
+     * configured from its build model. The element may perform validation
+     * of its configuration
+     *
+     * @exception ExecutionException if the component is not validly configured
+     */
+    void validateComponent() throws ExecutionException;
 }
 

@@ -60,11 +60,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.antcore.util.CircularDependencyChecker;
-import org.apache.ant.antcore.util.CircularDependencyException;
-import org.apache.ant.antcore.util.ConfigException;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
+import org.apache.ant.common.util.CircularDependencyChecker;
+import org.apache.ant.common.util.CircularDependencyException;
+import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
 import org.apache.ant.init.LoaderUtils;
@@ -102,10 +102,10 @@ public class AntLibManager {
      * @param libURL the URL from which Ant libraries are to be loaded
      * @exception MalformedURLException if the URL for the individual
      *      library components cannot be formed
-     * @exception ConfigException if the library specs cannot be parsed
+     * @exception ExecutionException if the library specs cannot be parsed
      */
     public void addAntLibraries(Map librarySpecs, URL libURL)
-         throws MalformedURLException, ConfigException {
+         throws MalformedURLException, ExecutionException {
         URL[] libURLs = LoaderUtils.getLocationURLs(libURL, libURL.toString(),
             ANTLIB_EXTENSIONS);
 
@@ -122,7 +122,7 @@ public class AntLibManager {
                 if (antLibrarySpec != null) {
                     String libraryId = antLibrarySpec.getLibraryId();
                     if (librarySpecs.containsKey(libraryId)) {
-                        throw new ConfigException("Found more than one "
+                        throw new ExecutionException("Found more than one "
                              + "copy of library with id = " + libraryId +
                             " (" + libURLs[i] + ")");
                     }
@@ -134,7 +134,7 @@ public class AntLibManager {
                 // ignore file not found exceptions - means the
                 // jar does not provide META-INF/antlib.xml
                 if (!(t instanceof FileNotFoundException)) {
-                    throw new ConfigException("Unable to parse Ant library "
+                    throw new ExecutionException("Unable to parse Ant library "
                          + libURLs[i], e);
                 }
             }
@@ -149,12 +149,12 @@ public class AntLibManager {
      * @param librarySpecs the loaded specifications of the Ant libraries
      * @param initConfig the Ant initialization configuration
      * @param libraries the collection of libraries already configured
-     * @exception ConfigException if a library cannot be configured from the
-     *      given specification
+     * @exception ExecutionException if a library cannot be configured from
+     *      the given specification
      */
     public void configLibraries(InitConfig initConfig, Map librarySpecs,
                                 Map libraries)
-         throws ConfigException {
+         throws ExecutionException {
 
         // check if any already defined
         for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext(); ) {
@@ -162,7 +162,7 @@ public class AntLibManager {
             if (libraries.containsKey(libraryId)) {
                 AntLibrary currentVersion
                      = (AntLibrary)libraries.get(libraryId);
-                throw new ConfigException("Ant Library \"" + libraryId
+                throw new ExecutionException("Ant Library \"" + libraryId
                      + "\" is already loaded from "
                      + currentVersion.getDefinitionURL());
             }
@@ -185,12 +185,12 @@ public class AntLibManager {
      * @param libLocationString URL or file where libraries can be found
      * @param librarySpecs A collection of library specs which will be
      *      populated with the libraries found
-     * @exception ConfigException if the libraries cannot be loaded
+     * @exception ExecutionException if the libraries cannot be loaded
      * @exception MalformedURLException if the library's location cannot be
      *      formed
      */
     public void loadLib(Map librarySpecs, String libLocationString)
-         throws ConfigException, MalformedURLException {
+         throws ExecutionException, MalformedURLException {
 
         File libLocation = new File(libLocationString);
         if (!libLocation.exists()) {
@@ -198,7 +198,7 @@ public class AntLibManager {
                 URL libLocationURL = new URL(libLocationString);
                 if (!libLocationURL.getProtocol().equals("file")
                      && !remoteAllowed) {
-                    throw new ConfigException("The config library "
+                    throw new ExecutionException("The config library "
                          + "location \"" + libLocationString
                          + "\" cannot be used because config does "
                          + "not allow remote libraries");
@@ -223,13 +223,13 @@ public class AntLibManager {
      *      dependencies.
      * @param libraries the collection of libraries which have already been
      *      configured
-     * @exception ConfigException if the library cannot be configured.
+     * @exception ExecutionException if the library cannot be configured.
      */
     private void configLibrary(InitConfig initConfig, Map librarySpecs,
                                String libraryId,
                                CircularDependencyChecker configuring,
                                Map libraries)
-         throws ConfigException {
+         throws ExecutionException {
 
         try {
             configuring.visitNode(libraryId);
@@ -240,7 +240,7 @@ public class AntLibManager {
             if (extendsId != null) {
                 if (!libraries.containsKey(extendsId)) {
                     if (!librarySpecs.containsKey(extendsId)) {
-                        throw new ConfigException("Could not find library, "
+                        throw new ExecutionException("Could not find library, "
                              + extendsId + ", upon which library "
                              + libraryId + " depends");
                     }
@@ -284,7 +284,7 @@ public class AntLibManager {
             libraries.put(libraryId, antLibrary);
             configuring.leaveNode(libraryId);
         } catch (CircularDependencyException e) {
-            throw new ConfigException(e);
+            throw new ExecutionException(e);
         }
     }
 

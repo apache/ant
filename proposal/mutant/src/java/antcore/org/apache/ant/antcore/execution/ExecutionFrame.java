@@ -59,25 +59,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.apache.ant.antcore.antlib.AntLibDefinition;
 import org.apache.ant.antcore.antlib.AntLibrary;
 import org.apache.ant.antcore.config.AntConfig;
-import org.apache.ant.antcore.model.BuildElement;
-import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.model.Target;
-import org.apache.ant.antcore.util.ConfigException;
 import org.apache.ant.common.antlib.AntLibFactory;
-import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.ExecutionComponent;
-import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.antlib.TaskContainer;
 import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.model.BuildElement;
+import org.apache.ant.common.model.Project;
+import org.apache.ant.common.model.Target;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.FileUtils;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.MessageLevel;
 import org.apache.ant.init.InitConfig;
@@ -91,73 +89,17 @@ import org.apache.ant.init.InitConfig;
  * @created 14 January 2002
  */
 public class ExecutionFrame {
-
-    /**
-     * This class is used to maintain information about imports
-     *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
-     * @created 16 January 2002
-     */
-    private static class ImportInfo {
-        /** the ant library from which the import is made */
-        private AntLibrary library;
-        /** the library definition information */
-        private AntLibDefinition libDefinition;
-
-        /**
-         * ImportInfo records what has been imported from an Ant Library
-         *
-         * @param library The library from which the import was made
-         * @param libDefinition the library definition information
-         */
-        public ImportInfo(AntLibrary library, AntLibDefinition libDefinition) {
-            this.library = library;
-            this.libDefinition = libDefinition;
-        }
-
-        /**
-         * Get the classname that has been imported
-         *
-         * @return the classname that was imported.
-         */
-        public String getClassName() {
-            return libDefinition.getClassName();
-        }
-
-        /**
-         * Get the library from which the import was made
-         *
-         * @return the library from which the import was made
-         */
-        public AntLibrary getAntLibrary() {
-            return library;
-        }
-
-        /**
-         * Get the type of the definition that was imported
-         *
-         * @return the type of definition
-         */
-        public int getDefinitionType() {
-            return libDefinition.getDefinitionType();
-        }
-
-    }
+    /** A magic property which sets the execution base directory */
+    public final static String BASEDIR_PROP = "basedir";
 
     /** The Ant aspect used to identify Ant metadata */
     public final static String ANT_ASPECT = "ant";
-
-    /** The prefix for library ids that are automatically imported */
-    public final static String ANT_LIB_PREFIX = "ant.";
 
     /** the base dir of the project */
     private File baseDir;
 
     /** The Project that this execution frame is processing */
     private Project project = null;
-
-    /** The factory objects for each library, indexed by the library Id */
-    private Map libFactories = new HashMap();
 
     /** The referenced frames corresponding to the referenced projects */
     private Map referencedFrames = new HashMap();
@@ -183,23 +125,8 @@ public class ExecutionFrame {
      */
     private Map standardLibs;
 
-    /**
-     * These are AntLibraries which have been loaded in this
-     * ExecutionFrame's build file.
-     */
-    private Map antLibraries;
-
-    /** The definitions which have been imported into this frame. */
-    private Map definitions = new HashMap();
-
     /** BuildEvent support used to fire events and manage listeners */
     private BuildEventSupport eventSupport = new BuildEventSupport();
-
-    /**
-     * Type converters for this executionFrame. Converters are used when
-     * configuring Tasks to handle special type conversions.
-     */
-    private Map converters = new HashMap();
 
     /**
      * The services map is a map of service interface classes to instances
@@ -218,6 +145,15 @@ public class ExecutionFrame {
      */
     private DataService dataService;
 
+    /** The execution file service instance */
+    private FileService fileService;
+
+    /**
+     * the Component Manager used to manage the importing of library
+     * components from the Ant libraries
+     */
+    private ComponentManager componentManager;
+
     /**
      * Create an Execution Frame for the given project
      *
@@ -225,32 +161,17 @@ public class ExecutionFrame {
      *      this frame
      * @param config the user config to use for this execution of Ant
      * @param initConfig Ant's initialisation config
-     * @exception ConfigException if a component of the library cannot be
+     * @exception ExecutionException if a component of the library cannot be
      *      imported
      */
     protected ExecutionFrame(Map standardLibs, InitConfig initConfig,
-                             AntConfig config) throws ConfigException {
+                             AntConfig config) throws ExecutionException {
         this.standardLibs = standardLibs;
         this.config = config;
         this.initConfig = initConfig;
 
         configureServices();
-
-        antLibraries = new HashMap(standardLibs);
-
-        try {
-            // go through the libraries and import all standard ant libraries
-            for (Iterator i = antLibraries.keySet().iterator(); i.hasNext(); ) {
-                String libraryId = (String)i.next();
-                if (libraryId.startsWith(ANT_LIB_PREFIX)) {
-                    // standard library - import whole library
-                    importLibrary(libraryId);
-                }
-            }
-        } catch (ExecutionException e) {
-            throw new ConfigException(e);
-        }
-
+        componentManager.setStandardLibraries(standardLibs);
     }
 
     /**
@@ -268,87 +189,23 @@ public class ExecutionFrame {
     }
 
     /**
-     * Gets the project model this frame is working with
-     *
-     * @return the project model
-     */
-    public Project getProject() {
-        return project;
-    }
-
-
-    /**
-     * Get all the properties from the frame and any references frames. This
-     * is an expensive operation since it must clone all of the property
-     * stores in all frames
-     *
-     * @return a Map containing the frames properties indexed by their full name.
-     */
-    public Map getAllProperties() {
-        Map allProperties = new HashMap(dataValues);
-        Iterator i = referencedFrames.keySet().iterator(); 
-        while (i.hasNext()) {
-            String refName = (String)i.next();
-            ExecutionFrame refFrame = getReferencedFrame(refName);
-            Map refProperties = refFrame.getAllProperties();
-            Iterator j = refProperties.keySet().iterator();
-            while (j.hasNext()) {
-                String name = (String)j.next();
-                Object value = refProperties.get(name);
-                allProperties.put(refName + Project.REF_DELIMITER + name,
-                    value);
-            }
-        }
-        
-        return allProperties;
-    }
-
-    /**
-     * Log a message as a build event
-     *
-     * @param message the message to be logged
-     * @param level the priority level of the message
-     */
-    public void log(String message, int level) {
-        eventSupport.fireMessageLogged(project, message, level);
-    }
-
-    /**
      * Sets the Project of the ExecutionFrame
      *
      * @param project The new Project value
-     * @exception ConfigException if any required sub-frames cannot be
+     * @exception ExecutionException if any required sub-frames cannot be
      *      created and configured
      */
-    protected void setProject(Project project) throws ConfigException {
+    protected void setProject(Project project) throws ExecutionException {
         this.project = project;
-        URL projectURL = project.getSourceURL();
-        if (projectURL.getProtocol().equals("file")) {
-            File projectFile = new File(projectURL.getFile());
-            String base = project.getBase();
-            if (base == null) {
-                base = ".";
-            }
-            baseDir = new File(projectFile.getParentFile(), base);
-        } else {
-            baseDir = new File(".");
-        }
-
         referencedFrames = new HashMap();
 
         for (Iterator i = project.getReferencedProjectNames(); i.hasNext(); ) {
             String referenceName = (String)i.next();
             Project referencedProject
                  = project.getReferencedProject(referenceName);
-            ExecutionFrame referencedFrame
-                 = new ExecutionFrame(standardLibs, initConfig, config);
-            referencedFrame.setProject(referencedProject);
+            ExecutionFrame referencedFrame = createFrame(referencedProject);
             referencedFrames.put(referenceName, referencedFrame);
 
-            for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
-                BuildListener listener = (BuildListener)j.next();
-                referencedFrame.addBuildListener(listener);
-            }
         }
     }
 
@@ -376,12 +233,59 @@ public class ExecutionFrame {
     }
 
     /**
-     * Get the collection of Ant Libraries defined for this frame
+     * Set the initial properties to be used when the frame starts execution
      *
-     * @return a map of Ant Libraries indexed by thier library Id
+     * @param properties a Map of named properties which may in fact be any
+     *      object
+     * @exception ExecutionException if the properties cannot be set
      */
-    protected Map getAntLibraries() {
-        return antLibraries;
+    protected void setInitialProperties(Map properties)
+         throws ExecutionException {
+        if (properties == null) {
+            return;
+        }
+        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+            String name = (String)i.next();
+            Object value = properties.get(name);
+            setDataValue(name, value, false);
+        }
+    }
+
+    /**
+     * Gets the project model this frame is working with
+     *
+     * @return the project model
+     */
+    protected Project getProject() {
+        return project;
+    }
+
+
+    /**
+     * Get all the properties from the frame and any references frames. This
+     * is an expensive operation since it must clone all of the property
+     * stores in all frames
+     *
+     * @return a Map containing the frames properties indexed by their full
+     *      name.
+     */
+    protected Map getAllProperties() {
+        Map allProperties = new HashMap(dataValues);
+        Iterator i = referencedFrames.keySet().iterator();
+        while (i.hasNext()) {
+            String refName = (String)i.next();
+            ExecutionFrame refFrame = getReferencedFrame(refName);
+            Map refProperties = refFrame.getAllProperties();
+            Iterator j = refProperties.keySet().iterator();
+            while (j.hasNext()) {
+                String name = (String)j.next();
+                Object value = refProperties.get(name);
+                allProperties.put(refName + Project.REF_DELIMITER + name,
+                    value);
+            }
+        }
+
+        return allProperties;
     }
 
     /**
@@ -420,6 +324,16 @@ public class ExecutionFrame {
                  + serviceInterfaceClass);
         }
         return service;
+    }
+
+    /**
+     * Get the EventSupport instance for this frame. This tracks the build
+     * listeners on this frame
+     *
+     * @return the EventSupport instance
+     */
+    protected BuildEventSupport getEventSupport() {
+        return eventSupport;
     }
 
     /**
@@ -501,6 +415,35 @@ public class ExecutionFrame {
     }
 
     /**
+     * Create a new frame for a given project
+     *
+     * @param project the project model the frame will deal with
+     * @return an ExecutionFrame ready to build the project
+     * @exception ExecutionException if the frame cannot be created.
+     */
+    protected ExecutionFrame createFrame(Project project)
+         throws ExecutionException {
+        ExecutionFrame newFrame
+             = new ExecutionFrame(standardLibs, initConfig, config);
+        newFrame.setProject(project);
+        for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
+            BuildListener listener = (BuildListener)j.next();
+            newFrame.addBuildListener(listener);
+        }
+        return newFrame;
+    }
+
+    /**
+     * Log a message as a build event
+     *
+     * @param message the message to be logged
+     * @param level the priority level of the message
+     */
+    protected void log(String message, int level) {
+        eventSupport.fireMessageLogged(project, message, level);
+    }
+
+    /**
      * Add a build listener to this execution frame
      *
      * @param listener the listener to be added to the frame
@@ -533,9 +476,9 @@ public class ExecutionFrame {
      * @exception ExecutionException if there is a problem in the build
      */
     protected void runBuild(List targets) throws ExecutionException {
-        System.out.println("Initilizing frame");
+        determineBaseDirs();
+
         initialize();
-        log("Initialized", MessageLevel.MSG_DEBUG);
         if (targets.isEmpty()) {
             // we just execute the default target if any
             String defaultTarget = project.getDefaultTarget();
@@ -565,8 +508,8 @@ public class ExecutionFrame {
         // to execute a target we must determine its dependencies and
         // execute them in order.
 
-        // firstly build a list of fully qualified target names to execute.
         try {
+            // firstly build a list of fully qualified target names to execute.
             List dependencyOrder = project.getTargetDependencies(targetName);
             for (Iterator i = dependencyOrder.iterator(); i.hasNext(); ) {
                 String fullTargetName = (String)i.next();
@@ -577,6 +520,7 @@ public class ExecutionFrame {
         } catch (ConfigException e) {
             throw new ExecutionException(e);
         }
+
     }
 
     /**
@@ -593,7 +537,7 @@ public class ExecutionFrame {
             BuildElement model = (BuildElement)taskIterator.next();
             // what sort of element is this.
             ImportInfo importInfo
-                 = (ImportInfo)definitions.get(model.getType());
+                 = componentManager.getDefinition(model.getType());
             if (importInfo == null) {
                 throw new ExecutionException("There is no definition for the <"
                      + model.getType() + "> element", model.getLocation());
@@ -620,10 +564,7 @@ public class ExecutionFrame {
             } catch (AntException te) {
                 ExecutionException e
                      = new ExecutionException(te, te.getLocation());
-                if (e.getLocation() == null
-                     || e.getLocation() == Location.UNKNOWN_LOCATION) {
-                    e.setLocation(model.getLocation());
-                }
+                e.setLocation(model.getLocation(), false);
                 failureCause = e;
                 throw e;
             } catch (RuntimeException e) {
@@ -653,12 +594,7 @@ public class ExecutionFrame {
             eventSupport.fireTargetStarted(target);
             executeTasks(taskIterator);
         } catch (ExecutionException e) {
-            System.out.println("Exception location is " + e.getLocation());
-            if (e.getLocation() == null
-                 || e.getLocation() == Location.UNKNOWN_LOCATION) {
-                e.setLocation(target.getLocation());
-            }
-            System.out.println("Exception location is now " + e.getLocation());
+            e.setLocation(target.getLocation(), false);
             failureCause = e;
             throw e;
         } catch (RuntimeException e) {
@@ -687,28 +623,6 @@ public class ExecutionFrame {
 
 
     /**
-     * Import a complete library into this frame
-     *
-     * @param libraryId The id of the library to be imported
-     * @exception ExecutionException if the library cannot be imported
-     */
-    protected void importLibrary(String libraryId) throws ExecutionException {
-        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
-        if (library == null) {
-            throw new ExecutionException("Unable to import library " + libraryId
-                 + " as it has not been loaded");
-        }
-        Map libDefs = library.getDefinitions();
-        for (Iterator i = libDefs.keySet().iterator(); i.hasNext(); ) {
-            String defName = (String)i.next();
-            AntLibDefinition libdef
-                 = (AntLibDefinition)libDefs.get(defName);
-            definitions.put(defName, new ImportInfo(library, libdef));
-        }
-        addLibraryConverters(library);
-    }
-
-    /**
      * Gets the reflector for the given class
      *
      * @param c the class for which the reflector is desired
@@ -718,7 +632,8 @@ public class ExecutionFrame {
         if (reflectors.containsKey(c)) {
             return (Reflector)reflectors.get(c);
         }
-        ClassIntrospector introspector = new ClassIntrospector(c, converters);
+        ClassIntrospector introspector
+             = new ClassIntrospector(c, componentManager.getConverters());
         Reflector reflector = introspector.getReflector();
         reflectors.put(c, reflector);
         return reflector;
@@ -755,27 +670,36 @@ public class ExecutionFrame {
     }
 
     /**
-     * Gets the factory object for the given library
+     * Determine the base directory for each frame in the frame hierarchy
      *
-     * @param antLibrary the library for which the factory instance is
-     *      required.
-     * @return the library;s factory object
-     * @exception ExecutionException the factory object for the library
-     *      cannot be created.
+     * @exception ExecutionException if the base directories cannot be
+     *      determined
      */
-    private AntLibFactory getLibFactory(AntLibrary antLibrary)
-         throws ExecutionException {
-        String libraryId = antLibrary.getLibraryId();
-        if (libFactories.containsKey(libraryId)) {
-            return (AntLibFactory)libFactories.get(libraryId);
+    private void determineBaseDirs() throws ExecutionException {
+        if (isDataValueSet(BASEDIR_PROP)) {
+            baseDir = new File(getDataValue(BASEDIR_PROP).toString());
+        } else {
+            URL projectURL = project.getSourceURL();
+            if (projectURL.getProtocol().equals("file")) {
+                File projectFile = new File(projectURL.getFile());
+                File projectFileParent = projectFile.getParentFile();
+                String base = project.getBase();
+                if (base == null) {
+                    baseDir = projectFileParent;
+                } else {
+                    FileUtils fileUtils = new FileUtils();
+                    baseDir = fileUtils.resolveFile(projectFileParent, base);
+                }
+            } else {
+                baseDir = new File(".");
+            }
+            setDataValue(BASEDIR_PROP, baseDir.getPath(), true);
         }
-        AntLibFactory libFactory = antLibrary.getFactory();
-        if (libFactory == null) {
-            libFactory = new StandardLibFactory();
+
+        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
+            ExecutionFrame refFrame = (ExecutionFrame)i.next();
+            refFrame.determineBaseDirs();
         }
-        libFactories.put(libraryId, libFactory);
-        libFactory.init(new ExecutionContext(this, eventSupport));
-        return libFactory;
     }
 
     /**
@@ -784,71 +708,14 @@ public class ExecutionFrame {
      */
     private void configureServices() {
         // create services and make them available in our services map
-        services.put(FileService.class, new ExecutionFileService(this));
-        services.put(ComponentService.class,
-            new ExecutionComponentService(this, config.isRemoteLibAllowed()));
+        fileService = new ExecutionFileService(this);
+        componentManager
+             = new ComponentManager(this, config.isRemoteLibAllowed());
         dataService = new ExecutionDataService(this);
+
+        services.put(FileService.class, fileService);
+        services.put(ComponentService.class, componentManager);
         services.put(DataService.class, dataService);
-    }
-
-    /**
-     * Add the converters from the given library to those managed by this
-     * frame.
-     *
-     * @param library the library from which the converters are required
-     * @exception ExecutionException if a converter defined in the library
-     *      cannot be instantiated
-     */
-    private void addLibraryConverters(AntLibrary library)
-         throws ExecutionException {
-        if (!library.hasConverters()) {
-            return;
-        }
-
-        String className = null;
-        try {
-            AntLibFactory libFactory = getLibFactory(library);
-            ClassLoader converterLoader = library.getClassLoader();
-            for (Iterator i = library.getConverterClassNames(); i.hasNext(); ) {
-                className = (String)i.next();
-                Class converterClass
-                     = Class.forName(className, true, converterLoader);
-                if (!Converter.class.isAssignableFrom(converterClass)) {
-                    throw new ExecutionException("In Ant library \""
-                         + library.getLibraryId() + "\" the converter class "
-                         + converterClass.getName()
-                         + " does not implement the Converter interface");
-                }
-                Converter converter
-                     = libFactory.createConverter(converterClass);
-                ExecutionContext context
-                     = new ExecutionContext(this, eventSupport);
-                converter.init(context);
-                Class[] converterTypes = converter.getTypes();
-                for (int j = 0; j < converterTypes.length; ++j) {
-                    converters.put(converterTypes[j], converter);
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            throw new ExecutionException("In Ant library \""
-                 + library.getLibraryId() + "\" converter class "
-                 + className + " was not found", e);
-        } catch (NoClassDefFoundError e) {
-            throw new ExecutionException("In Ant library \""
-                 + library.getLibraryId()
-                 + "\" could not load a dependent class ("
-                 + e.getMessage() + ") for converter " + className);
-        } catch (InstantiationException e) {
-            throw new ExecutionException("In Ant library \""
-                 + library.getLibraryId()
-                 + "\" unable to instantiate converter class "
-                 + className, e);
-        } catch (IllegalAccessException e) {
-            throw new ExecutionException("In Ant library \""
-                 + library.getLibraryId()
-                 + "\" unable to access converter class "
-                 + className, e);
-        }
     }
 
     /**
@@ -890,7 +757,7 @@ public class ExecutionFrame {
             BuildElement nestedElementModel = (BuildElement)i.next();
             String nestedElementName = nestedElementModel.getType();
 
-            ImportInfo info = (ImportInfo)definitions.get(nestedElementName);
+            ImportInfo info = componentManager.getDefinition(nestedElementName);
             if (element instanceof TaskContainer
                  && info != null
                  && info.getDefinitionType() == AntLibrary.TASKDEF
@@ -937,18 +804,21 @@ public class ExecutionFrame {
         String nestedElementName = model.getType();
         Object nestedElement
              = reflector.createElement(element, nestedElementName);
-        if (nestedElement instanceof ExecutionComponent) {
-            ExecutionComponent component = (ExecutionComponent)nestedElement;
-            ExecutionContext context
-                 = new ExecutionContext(this, eventSupport);
-            context.setModelElement(model);
-            component.init(context);
-        }
-
         try {
-            configureElement(nestedElement, model);
+            if (nestedElement instanceof ExecutionComponent) {
+                ExecutionComponent component
+                     = (ExecutionComponent)nestedElement;
+                ExecutionContext context
+                     = new ExecutionContext(this);
+                context.setModelElement(model);
+                component.init(context);
+                configureElement(nestedElement, model);
+                component.validateComponent();
+            } else {
+                configureElement(nestedElement, model);
+            }
         } catch (ExecutionException e) {
-            e.setLocation(model.getLocation());
+            e.setLocation(model.getLocation(), false);
             throw e;
         }
     }
@@ -1045,7 +915,7 @@ public class ExecutionFrame {
          throws ExecutionException {
 
         String taskType = model.getType();
-        ImportInfo taskDefInfo = (ImportInfo)definitions.get(taskType);
+        ImportInfo taskDefInfo = componentManager.getDefinition(taskType);
         if (taskDefInfo == null
              || taskDefInfo.getDefinitionType() != AntLibrary.TASKDEF) {
             throw new ExecutionException("There is no defintion for a "
@@ -1059,7 +929,8 @@ public class ExecutionFrame {
             ClassLoader taskClassLoader = antLibrary.getClassLoader();
             Class elementClass
                  = Class.forName(className, true, taskClassLoader);
-            AntLibFactory libFactory = getLibFactory(antLibrary);
+            AntLibFactory libFactory
+                 = componentManager.getLibFactory(antLibrary);
             Object element = libFactory.createTaskInstance(elementClass);
 
             Task task = null;
@@ -1072,9 +943,10 @@ public class ExecutionFrame {
 
             // set the context loader while configuring the element
             ClassLoader currentLoader = setContextLoader(taskClassLoader);
-            TaskContext taskContext = new TaskContext(this, eventSupport);
+            TaskContext taskContext = new TaskContext(this);
             taskContext.init(taskClassLoader, task, model);
             configureElement(element, model);
+            task.validateComponent();
             setContextLoader(currentLoader);
             return taskContext;
         } catch (ClassNotFoundException e) {
@@ -1094,7 +966,7 @@ public class ExecutionFrame {
                  + className + " for task <" + taskType + ">",
                 e, model.getLocation());
         } catch (ExecutionException e) {
-            e.setLocation(model.getLocation());
+            e.setLocation(model.getLocation(), false);
             throw e;
         }
     }
@@ -1112,7 +984,7 @@ public class ExecutionFrame {
      */
     private Object configureType(String typeName, BuildElement model)
          throws ExecutionException {
-        ImportInfo typeDefInfo = (ImportInfo)definitions.get(typeName);
+        ImportInfo typeDefInfo = componentManager.getDefinition(typeName);
         if (typeDefInfo == null
              || typeDefInfo.getDefinitionType() != AntLibrary.TYPEDEF) {
             throw new ExecutionException("There is no defintion for a "
@@ -1128,7 +1000,8 @@ public class ExecutionFrame {
                  = Class.forName(className, true, typeClassLoader);
 
             ClassLoader currentLoader = setContextLoader(typeClassLoader);
-            AntLibFactory libFactory = getLibFactory(antLibrary);
+            AntLibFactory libFactory
+                 = componentManager.getLibFactory(antLibrary);
             Object typeInstance
                  = createTypeInstance(typeClass, libFactory, model);
             setContextLoader(currentLoader);
@@ -1169,12 +1042,14 @@ public class ExecutionFrame {
             if (typeInstance instanceof ExecutionComponent) {
                 ExecutionComponent component = (ExecutionComponent)typeInstance;
                 ExecutionContext context
-                     = new ExecutionContext(this, eventSupport);
+                     = new ExecutionContext(this);
                 context.setModelElement(model);
                 component.init(context);
+                configureElement(typeInstance, model);
+                component.validateComponent();
+            } else {
+                configureElement(typeInstance, model);
             }
-
-            configureElement(typeInstance, model);
             return typeInstance;
         } catch (InstantiationException e) {
             throw new ExecutionException("Unable to instantiate type class "
@@ -1185,10 +1060,9 @@ public class ExecutionFrame {
                  + typeClass.getName() + " for type <" + model.getType() + ">",
                 e, model.getLocation());
         } catch (ExecutionException e) {
-            e.setLocation(model.getLocation());
+            e.setLocation(model.getLocation(), false);
             throw e;
         }
     }
-
 }
 

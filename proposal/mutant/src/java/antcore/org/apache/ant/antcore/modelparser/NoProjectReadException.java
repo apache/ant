@@ -51,42 +51,15 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model.xmlparser;
-import java.net.URL;
-
-import org.apache.ant.common.util.Location;
-import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.xml.ParseContext;
-import org.apache.ant.antcore.xml.XMLParseException;
+package org.apache.ant.antcore.modelparser;
 
 /**
- * Parses an Ant project model from an XML source using a SAX Parser.
+ * A NoProjectReadException is used to indicate that a project was not read
+ * from the particular source. This will happen if the source is empty.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 9 January 2002
+ * @created 15 January 2002
  */
-public class XMLProjectParser {
-    /**
-     * Parse a build file from the given URL.
-     *
-     * @param buildSource the URL from where the build source may be read.
-     * @return a project model representing the project
-     * @exception XMLParseException if there is an problem parsing the XML
-     *      representation
-     */
-    public Project parseBuildFile(URL buildSource)
-         throws XMLParseException {
-        try {
-            ParseContext context = new ParseContext();
-            ProjectHandler projectHandler = new ProjectHandler();
-
-            context.parse(buildSource, "project", projectHandler);
-
-            return projectHandler.getProject();
-        } catch (NoProjectReadException e) {
-            throw new XMLParseException("No project defined in build source ",
-                e, new Location(buildSource.toString()));
-        }
-    }
+public class NoProjectReadException extends Exception {
 }
 

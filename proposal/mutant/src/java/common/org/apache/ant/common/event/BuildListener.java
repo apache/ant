@@ -65,10 +65,55 @@ import java.util.EventListener;
  */
 public interface BuildListener extends EventListener {
     /**
-     * Process an incoming build event
+     * Fired before any targets are started.
      *
-     * @param event the event to be processed.
+     * @param event the build event for this notification
      */
-    void processBuildEvent(BuildEvent event);
+    void buildStarted(BuildEvent event);
+
+    /**
+     * Fired after the last target has finished. This event will still be
+     * thrown if an error occured during the build.
+     *
+     * @param event the build event for this notification
+     */
+    void buildFinished(BuildEvent event);
+
+    /**
+     * Fired when a target is started.
+     *
+     * @param event the build event for this notification
+     */
+    void targetStarted(BuildEvent event);
+
+    /**
+     * Fired when a target has finished. This event will still be thrown if
+     * an error occured during the build.
+     *
+     * @param event the build event for this notification
+     */
+    void targetFinished(BuildEvent event);
+
+    /**
+     * Fired when a task is started.
+     *
+     * @param event the build event for this notification
+     */
+    void taskStarted(BuildEvent event);
+
+    /**
+     * Fired when a task has finished. This event will still be throw if an
+     * error occured during the build.
+     *
+     * @param event the build event for this notification
+     */
+    void taskFinished(BuildEvent event);
+
+    /**
+     * Fired whenever a message is logged.
+     *
+     * @param event the build event for this notification
+     */
+    void messageLogged(BuildEvent event);
 }
 

@@ -51,81 +51,42 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.model;
+package org.apache.ant.antcore.modelparser;
+import java.net.URL;
 
-import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
+import org.apache.ant.common.model.Project;
+import org.apache.ant.antcore.xml.ParseContext;
+import org.apache.ant.antcore.xml.XMLParseException;
 
 /**
- * A model exception is thrown when an operation is attempted which would
- * violate the integrity of the Project/Target/Task object model
+ * Parses an Ant project model from an XML source using a SAX Parser.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 16 January 2002
+ * @created 9 January 2002
  */
-public class ModelException extends AntException {
+public class XMLProjectParser {
     /**
-     * Constructs an exception with the given descriptive message.
+     * Parse a build file from the given URL.
      *
-     * @param msg Description of or information about the exception.
+     * @param buildSource the URL from where the build source may be read.
+     * @return a project model representing the project
+     * @exception XMLParseException if there is an problem parsing the XML
+     *      representation
      */
-    public ModelException(String msg) {
-        super(msg);
-    }
+    public Project parseBuildFile(URL buildSource)
+         throws XMLParseException {
+        try {
+            ParseContext context = new ParseContext();
+            ProjectHandler projectHandler = new ProjectHandler();
 
-    /**
-     * Constructs an exception with the given descriptive message and a
-     * location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
-     */
-    public ModelException(String msg, Location location) {
-        super(msg, location);
-    }
+            context.parse(buildSource, "project", projectHandler);
 
-    /**
-     * Constructs an exception with the given message and exception as a
-     * root cause.
-     *
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
-     */
-    public ModelException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
-    /**
-     * Constructs an exception with the given message and exception as a
-     * root cause and a location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
-     */
-    public ModelException(String msg, Throwable cause,
-                          Location location) {
-        super(msg, cause, location);
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     *
-     * @param cause Exception that might have caused this one.
-     */
-    public ModelException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause and
-     * a location in a file.
-     *
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
-     */
-    public ModelException(Throwable cause, Location location) {
-        super(cause, location);
+            return projectHandler.getProject();
+        } catch (NoProjectReadException e) {
+            throw new XMLParseException("No project defined in build source ",
+                e, new Location(buildSource.toString()));
+        }
     }
 }
 
