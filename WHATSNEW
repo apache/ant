@@ -1,6 +1,13 @@
 Changes from Ant 1.5beta1 to current CVS version
 ================================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* Properties will now be expanded in mail message bodies.  This means
+that one $ sign will be stripped if you mail message contains the text
+$$.
+
 Fixed bugs:
 -----------
 
