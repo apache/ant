@@ -14,6 +14,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -48,12 +49,12 @@ public class AspectAwareExecutor
         m_aspectManager = (AspectManager)componentManager.lookup( AspectManager.ROLE );
     }
 
-    public void execute( final Configuration taskModel, final TaskContext context )
+    public void execute( final Configuration taskModel, final ExecutionFrame frame )
         throws TaskException
     {
         try
         {
-            executeTask( taskModel, context );
+            executeTask( taskModel, frame );
         }
         catch( final TaskException te )
         {
@@ -64,29 +65,30 @@ public class AspectAwareExecutor
         }
     }
 
-    private void executeTask( Configuration taskModel, final TaskContext context )
+    private void executeTask( Configuration taskModel, final ExecutionFrame frame )
         throws TaskException
     {
         taskModel = getAspectManager().preCreate( taskModel );
         taskModel = prepareAspects( taskModel );
 
         getLogger().debug( "Pre-Create" );
-        final Task task = createTask( taskModel.getName() );
+        final Task task = createTask( taskModel.getName(), frame );
         getAspectManager().postCreate( task );
 
         getLogger().debug( "Pre-Loggable" );
-        getAspectManager().preLoggable( getLogger() );
-        setupLogger( task );
+        final Logger logger = frame.getLogger();
+        getAspectManager().preLoggable( logger );
+        doLoggable( task, taskModel, logger );
 
         getLogger().debug( "Contextualizing" );
-        doContextualize( task, taskModel, context );
+        doContextualize( task, taskModel, frame.getContext() );
 
         getLogger().debug( "Composing" );
-        doCompose( task, taskModel );
+        doCompose( task, taskModel, frame.getComponentManager() );
 
         getLogger().debug( "Configuring" );
         getAspectManager().preConfigure( taskModel );
-        doConfigure( task, taskModel, context );
+        doConfigure( task, taskModel, frame.getContext() );
 
         getLogger().debug( "Initializing" );
         doInitialize( task, taskModel );

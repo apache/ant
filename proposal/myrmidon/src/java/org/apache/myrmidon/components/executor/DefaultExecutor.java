@@ -35,9 +35,6 @@ public class DefaultExecutor
     implements Executor, Composable
 {
     private Configurer           m_configurer;
-    private TypeFactory          m_factory;
-
-    private ComponentManager     m_componentManager;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -48,34 +45,24 @@ public class DefaultExecutor
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        //cache CM so it can be used while executing tasks
-        m_componentManager = componentManager;
-
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
-
-        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        try { m_factory = typeManager.getFactory( Task.ROLE ); }
-        catch( final TypeException te )
-        {
-            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
-        }
     }
 
-    public void execute( final Configuration taskModel, final TaskContext context )
+    public void execute( final Configuration taskModel, final ExecutionFrame frame )
         throws TaskException
     {
         getLogger().debug( "Creating" );
-        final Task task = createTask( taskModel.getName() );
-        setupLogger( task );
+        final Task task = createTask( taskModel.getName(), frame );
+        doLoggable( task, taskModel, frame.getLogger() );
 
         getLogger().debug( "Contextualizing" );
-        doContextualize( task, taskModel, context );
+        doContextualize( task, taskModel, frame.getContext() );
 
         getLogger().debug( "Composing" );
-        doCompose( task, taskModel );
+        doCompose( task, taskModel, frame.getComponentManager() );
 
         getLogger().debug( "Configuring" );
-        doConfigure( task, taskModel, context );
+        doConfigure( task, taskModel, frame.getContext() );
 
         getLogger().debug( "Initializing" );
         doInitialize( task, taskModel );
@@ -88,12 +75,13 @@ public class DefaultExecutor
         doDispose( task, taskModel );
     }
 
-    protected final Task createTask( final String name )
+    protected final Task createTask( final String name, final ExecutionFrame frame )
         throws TaskException
     {
         try
         {
-            return (Task)m_factory.create( name );
+            final TypeFactory factory = frame.getTypeManager().getFactory( Task.ROLE );
+            return (Task)factory.create( name );
         }
         catch( final TypeException te )
         {
@@ -111,16 +99,18 @@ public class DefaultExecutor
         {
             throw new TaskException( "Error configuring task " +  taskModel.getName() + " at " +
                                      taskModel.getLocation() + "(Reason: " +
-                                     throwable.getMessage() + ")" );
+                                     throwable.getMessage() + ")", throwable );
         }
     }
 
-    protected final void doCompose( final Task task, final Configuration taskModel )
+    protected final void doCompose( final Task task, 
+                                    final Configuration taskModel,
+                                    final ComponentManager componentManager )
         throws TaskException
     {
         if( task instanceof Composable )
         {
-            try { ((Composable)task).compose( m_componentManager ); }
+            try { ((Composable)task).compose( componentManager ); }
             catch( final Throwable throwable )
             {
                 throw new TaskException( "Error composing task " +  taskModel.getName() + " at " +
@@ -131,8 +121,8 @@ public class DefaultExecutor
     }
 
     protected final void doContextualize( final Task task,
-                                  final Configuration taskModel,
-                                  final TaskContext context )
+                                          final Configuration taskModel,
+                                          final TaskContext context )
         throws TaskException
     {
         try
@@ -160,6 +150,23 @@ public class DefaultExecutor
             {
                 throw new TaskException( "Error disposing task " +  taskModel.getName() + " at " +
                                          taskModel.getLocation() + "(Reason: " +
+                                         throwable.getMessage() + ")", throwable );
+            }
+        }
+    }
+
+    protected final void doLoggable( final Task task, 
+                                     final Configuration taskModel, 
+                                     final Logger logger )
+        throws TaskException
+    {
+        if( task instanceof Loggable )
+        {
+            try { ((Loggable)task).setLogger( logger ); }
+            catch( final Throwable throwable )
+            {
+                throw new TaskException( "Error setting logger for task " +  taskModel.getName() + 
+                                         " at " + taskModel.getLocation() + "(Reason: " +
                                          throwable.getMessage() + ")", throwable );
             }
         }
