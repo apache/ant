@@ -79,7 +79,7 @@ public class War extends Jar {
 
     public void setWarfile(File warFile) {
         log("DEPRECATED - The warfile attribute is deprecated. Use file attribute instead.");
-        super.setFile(warFile);
+        setFile(warFile);
     }
     
     public void setWebxml(File descr) {
