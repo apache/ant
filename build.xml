@@ -364,12 +364,35 @@
 
   <!--
        ===================================================================
+         Set up a preset def for javac depending on
+         the java version
+       ===================================================================
+  -->
+  
+  <target name="javac.preset" depends="javac.preset.1.5+,javac.preset.1.5-"/>
+  <target name="javac.preset.1.5+" depends="check_for_optional_packages"
+          if="jdk1.5+">
+    <presetdef name="javac.preset">
+      <javac source="${javac.source}"/>
+    </presetdef>
+  </target>
+  <target name="javac.preset.1.5-" depends="check_for_optional_packages"
+          unless="jdk1.5+">
+    <presetdef name="javac.preset">
+      <javac/>
+    </presetdef>
+  </target>
+
+
+  <!--
+       ===================================================================
          Check to see what optional dependencies are available
        ===================================================================
   -->
   <target name="check_for_optional_packages">
     <available property="jdk1.3+" classname="java.lang.StrictMath"/>
     <available property="jdk1.4+" classname="java.lang.CharSequence"/>
+    <available property="jdk1.5+" classname="java.util.concurrent.Callable"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
                classname="org.apache.bsf.BSFManager"
@@ -594,18 +617,17 @@
        ===================================================================
   -->
   <target name="build"
-          depends="prepare, check_for_optional_packages"
+          depends="prepare, check_for_optional_packages, javac.preset"
           description="--> compiles the source code">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.lib}"/>
 
-    <javac srcdir="${java.dir}"
+    <javac.preset srcdir="${java.dir}"
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
            target="${javac.target}"
-           source="${javac.source}"
            optimize="${optimize}" >
       <classpath refid="classpath"/>
 
@@ -652,7 +674,7 @@
           </or>
         </not>
       </selector>
-    </javac>
+    </javac.preset>
 
     <copy todir="${build.classes}">
       <fileset dir="${java.dir}">
@@ -1352,16 +1374,15 @@
   <target name="compile-tests" depends="build" if="junit.present">
     <mkdir dir="${build.tests}"/>
 
-    <javac srcdir="${tests.dir}"
+    <javac.preset srcdir="${tests.dir}"
            destdir="${build.tests}"
            debug="${debug}"
            target="${javac.target}"
-           source="${javac.source}"
            deprecation="${deprecation}" >
       <classpath refid="tests-classpath"/>
 
       <selector refid="conditional-patterns"/>
-    </javac>
+    </javac.preset>
 
     <!-- Used by AntlibTest.testAntlibResource: -->
     <jar jarfile="${build.tests}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
