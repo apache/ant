@@ -39,14 +39,14 @@ public class ChainedMapper extends ContainerMapper {
         FileNameMapper mapper = null;
 
         for (Iterator mIter = getMappers().iterator(); mIter.hasNext();) {
-            mapper = (FileNameMapper)(mIter.next());
+            mapper = (FileNameMapper) (mIter.next());
             if (mapper != null) {
                 inputs.clear();
                 inputs.addAll(results);
                 results.clear();
 
                 for (Iterator it = inputs.iterator(); it.hasNext();) {
-                    String[] mapped = mapper.mapFileName((String)(it.next()));
+                    String[] mapped = mapper.mapFileName((String) (it.next()));
                     if (mapped != null) {
                         results.addAll(Arrays.asList(mapped));
                     }

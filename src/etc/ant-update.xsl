@@ -21,7 +21,7 @@
   The purpose have this XSL is to provide a fast way to update a buildfile
   from deprecated tasks.
   
-  It should particulary be useful when there is a lot of build files to migrate.
+  It should particularly be useful when there is a lot of build files to migrate.
   If you do not want to migrate to a particular task and want to keep it for
   various reason, just comment the appropriate template.
   

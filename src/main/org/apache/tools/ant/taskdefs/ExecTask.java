@@ -408,7 +408,7 @@ public class ExecTask extends Task {
             if (environment != null) {
                 for (int i = 0; i < environment.length; i++) {
                     if (isPath(environment[i])) {
-                        p = new Path(getProject(), 
+                        p = new Path(getProject(),
                                      environment[i].substring(5));
                         break;
                     }
@@ -489,7 +489,7 @@ public class ExecTask extends Task {
             getProject().log("spawn does not allow attributes related to input, "
             + "output, error, result", Project.MSG_ERR);
             getProject().log("spawn also does not allow timeout", Project.MSG_ERR);
-            getProject().log( "finally, spawn is not compatible "
+            getProject().log("finally, spawn is not compatible "
                 + "with a nested I/O <redirector>", Project.MSG_ERR);
             throw new BuildException("You have used an attribute "
                 + "or nested element which is not compatible with spawn");

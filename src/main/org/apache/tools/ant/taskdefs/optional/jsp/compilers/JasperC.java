@@ -59,7 +59,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
             Java java = (Java) (getProject().createTask("java"));
             Path p = getClasspath();
             if (getJspc().getClasspath() != null) {
-                getProject().log("using user supplied classpath: " + p, 
+                getProject().log("using user supplied classpath: " + p,
                                  Project.MSG_DEBUG);
             } else {
                 getProject().log("using system classpath: " + p,
@@ -111,7 +111,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
                              + "please use the Tomcat provided jspc task "
                              + "instead");
         }
-        
+
         addArg(cmd, "-uriroot", jspc.getUriroot());
         addArg(cmd, "-uribase", jspc.getUribase());
         addArg(cmd, "-ieplugin", jspc.getIeplugin());

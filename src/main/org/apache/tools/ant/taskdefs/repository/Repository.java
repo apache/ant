@@ -53,7 +53,7 @@ public abstract class Repository extends DataType {
         if (getRefid() == null) {
             return this;
         } else {
-            Repository repository = (Repository) getCheckedRef(Repository.class, 
+            Repository repository = (Repository) getCheckedRef(Repository.class,
                     "Repository");
             return repository;
         }
@@ -109,7 +109,7 @@ public abstract class Repository extends DataType {
 
     /**
      * this is a string that uniquely describes the repository
-     * and can be used for equality tests <i>across</i> instances. 
+     * and can be used for equality tests <i>across</i> instances.
      * @return
      */
     public abstract String getRepositoryURI();

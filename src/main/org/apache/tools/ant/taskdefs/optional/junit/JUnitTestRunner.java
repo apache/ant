@@ -244,7 +244,7 @@ public class JUnitTestRunner implements TestListener {
                 if (loader == null) {
                     testClass = Class.forName(junitTest.getName());
                 } else {
-                    testClass = Class.forName(junitTest.getName(), true, 
+                    testClass = Class.forName(junitTest.getName(), true,
                                               loader);
                 }
 
@@ -524,7 +524,7 @@ public class JUnitTestRunner implements TestListener {
         int returnCode = SUCCESS;
         if (multipleTests) {
             try {
-                java.io.BufferedReader reader = 
+                java.io.BufferedReader reader =
                     new java.io.BufferedReader(new java.io.FileReader(args[0]));
                 String testCaseName;
                 int code = 0;
@@ -537,12 +537,12 @@ public class JUnitTestRunner implements TestListener {
                     JUnitTest t = new JUnitTest(testCaseName);
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
-                    code = launch(t, haltError, stackfilter, haltFail, 
+                    code = launch(t, haltError, stackfilter, haltFail,
                                   showOut, props);
                     errorOccured = (code == ERRORS);
                     failureOccured = (code != SUCCESS);
-                    if (errorOccured || failureOccured ) {
-                        if ((errorOccured && haltError) 
+                    if (errorOccured || failureOccured) {
+                        if ((errorOccured && haltError)
                             || (failureOccured && haltFail)) {
                             registerNonCrash(noCrashFile);
                             System.exit(code);
@@ -550,12 +550,12 @@ public class JUnitTestRunner implements TestListener {
                             if (code > returnCode) {
                                 returnCode = code;
                             }
-                            System.out.println("TEST " + t.getName() 
+                            System.out.println("TEST " + t.getName()
                                                + " FAILED");
                         }
                     }
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
@@ -574,8 +574,8 @@ public class JUnitTestRunner implements TestListener {
         for (int i = 0; i < fromCmdLine.size(); i++) {
             FormatterElement fe = (FormatterElement) fromCmdLine.elementAt(i);
             if (multipleTests && fe.getUseFile()) {
-                File destFile = 
-                    new File(test.getTodir(), 
+                File destFile =
+                    new File(test.getTodir(),
                              test.getOutfile() + fe.getExtension());
                 fe.setOutfile(destFile);
             }
@@ -650,10 +650,10 @@ public class JUnitTestRunner implements TestListener {
      * @since Ant 1.6.2
      */
     private static int launch(JUnitTest t, boolean haltError,
-                              boolean stackfilter, boolean haltFail, 
+                              boolean stackfilter, boolean haltFail,
                               boolean showOut, Properties props) {
         t.setProperties(props);
-        JUnitTestRunner runner = 
+        JUnitTestRunner runner =
             new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut);
         runner.forked = true;
         transferFormatters(runner, t);
@@ -665,7 +665,7 @@ public class JUnitTestRunner implements TestListener {
     /**
      * @since Ant 1.7
      */
-    private static void registerNonCrash(String noCrashFile) 
+    private static void registerNonCrash(String noCrashFile)
         throws IOException {
         if (noCrashFile != null) {
             FileOutputStream out = null;

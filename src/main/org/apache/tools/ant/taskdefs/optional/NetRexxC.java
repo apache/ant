@@ -92,7 +92,7 @@ public class NetRexxC extends MatchingTask {
     private boolean binary;
     private String classpath;
     private boolean comments;
-    private boolean compact = true;// should be the default, as it integrates better in ant.
+    private boolean compact = true; // should be the default, as it integrates better in ant.
     private boolean compile = true;
     private boolean console;
     private boolean crossref;
@@ -106,7 +106,7 @@ public class NetRexxC extends MatchingTask {
     private boolean replace;
     private boolean savelog;
     private File srcDir;
-    private boolean sourcedir = true;// ?? Should this be the default for ant?
+    private boolean sourcedir = true; // ?? Should this be the default for ant?
     private boolean strictargs;
     private boolean strictassign;
     private boolean strictcase;

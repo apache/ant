@@ -22,7 +22,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
  * withOutAndErr is requested.
  */
 
-public class OutErrSummaryJUnitResultFormatter 
+public class OutErrSummaryJUnitResultFormatter
     extends SummaryJUnitResultFormatter {
 
     /**

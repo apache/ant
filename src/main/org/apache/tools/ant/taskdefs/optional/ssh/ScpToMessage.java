@@ -197,8 +197,8 @@ public class ScpToMessage extends AbstractSshMessage {
                 totalLength += len;
 
                 if (trackProgress) {
-                    percentTransmitted = trackProgress(initFilesize, 
-                                                       totalLength, 
+                    percentTransmitted = trackProgress(initFilesize,
+                                                       totalLength,
                                                        percentTransmitted);
                 }
             }

@@ -67,7 +67,7 @@ public class Move extends Copy {
     protected void validateAttributes() throws BuildException {
         if (file != null && file.isDirectory()) {
             if ((destFile != null && destDir != null)
-                || (destFile == null && destDir == null)){
+                || (destFile == null && destDir == null)) {
                 throw new BuildException("One and only one of tofile and todir "
                                          + "must be set.");
             }

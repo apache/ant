@@ -339,7 +339,7 @@ public class JavaEnvUtils {
         }
         return jrePackages;
     }
-    
+
     /**
      *
      * Writes the command into a temporary DCL script and returns the

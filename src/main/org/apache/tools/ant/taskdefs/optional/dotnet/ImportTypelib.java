@@ -77,7 +77,7 @@ public class ImportTypelib extends Task {
 
     /**
      * This method names the output file.
-     * 
+     *
      * This is an operation which is required to have been performed.
      * @param destFile
      */
@@ -95,7 +95,7 @@ public class ImportTypelib extends Task {
     }
 
     /**
-     * This method sets which is the source .tlb file. 
+     * This method sets which is the source .tlb file.
      * This is an operation which is required to have been performed.
      * @param srcFile
      */
@@ -188,7 +188,7 @@ public class ImportTypelib extends Task {
             + " to assembly " + destFile
             + " in namespace " + namespace, Project.MSG_VERBOSE);
         //rebuild unless the dest file is newer than the source file
-        if(!isExecuteNeeded()) {
+        if (!isExecuteNeeded()) {
             return;
         }
 

@@ -111,33 +111,33 @@ public class MavenRepository extends HttpRepository {
      *
      */
     public boolean fetch(Library library, boolean useTimestamp) throws IOException {
-        boolean  fetched=super.fetch(library, useTimestamp);
-        if(fetched && checkMD5) {
+        boolean  fetched = super.fetch(library, useTimestamp);
+        if (fetched && checkMD5) {
             //we got here if there was a fetch. so we now get the MD5 info from the file,
-            boolean successful=false;
+            boolean successful = false;
             String md5path = getRemoteLibraryURL(library) + ".md5";
-            File md5file = File.createTempFile(library.getArchive(),".md5");
+            File md5file = File.createTempFile(library.getArchive(), ".md5");
             Reader in = null;
             try {
-                URL md5url=new URL(md5path);
-                logVerbose("getting md5 file from " + md5path +" to "+md5file.getAbsolutePath());
-                get(md5url,md5file, false,getUsername(), getPassword());
-                in = new InputStreamReader(new FileInputStream(md5file),MAVEN_MD5_FILE_TYPE);
-                char md5data[] =new char[32];
+                URL md5url = new URL(md5path);
+                logVerbose("getting md5 file from " + md5path + " to " + md5file.getAbsolutePath());
+                get(md5url, md5file, false, getUsername(), getPassword());
+                in = new InputStreamReader(new FileInputStream(md5file), MAVEN_MD5_FILE_TYPE);
+                char md5data[] = new char[32];
                 in.read(md5data);
-                logDebug("md5 data "+md5data);
+                logDebug("md5 data " + md5data);
                 //TODO: verify this against a <checksum> generated signature.
 
-                successful=true;
+                successful = true;
             } catch (IOException e) {
-                logVerbose("IO failure on MD5 fetch "+e.getMessage());
+                logVerbose("IO failure on MD5 fetch " + e.getMessage());
                 throw e;
             } finally {
                 FileUtils.close(in);
-                if(md5file.exists()) {
+                if (md5file.exists()) {
                     md5file.delete();
                 }
-                if(!successful) {
+                if (!successful) {
                     //if security checks failed for any reason,
                     //delete the library file
                     //brute force paranoia

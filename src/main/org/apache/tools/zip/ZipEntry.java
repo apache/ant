@@ -423,7 +423,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     private static void performSetCompressedSize(ZipEntry ze, long size) {
         Long[] s = {new Long(size)};
         try {
-            setCompressedSizeMethod.invoke(ze, (Object[])s);
+            setCompressedSizeMethod.invoke(ze, (Object[]) s);
         } catch (InvocationTargetException ite) {
             Throwable nested = ite.getTargetException();
             String msg = getDisplayableMessage(nested);

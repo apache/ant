@@ -328,7 +328,7 @@ public class Ildasm extends Task {
         }
         long sourceTime = sourceFile.lastModified();
         long destTime = destFile.lastModified();
-        if(sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity())) {
+        if (sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity())) {
             log("Source file is newer than the dest file: a rebuild is required",
                     Project.MSG_VERBOSE);
             return true;
@@ -344,7 +344,7 @@ public class Ildasm extends Task {
      */
     public void execute() throws BuildException {
         validate();
-        if(!isDisassemblyNeeded()) {
+        if (!isDisassemblyNeeded()) {
             return;
         }
         NetCommand command = new NetCommand(this, "ildasm", executable);

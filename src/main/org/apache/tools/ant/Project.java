@@ -888,7 +888,7 @@ public class Project {
             throw new BuildException(message);
         }
         try {
-            taskClass.getConstructor((Class[])null);
+            taskClass.getConstructor((Class[]) null);
             // don't have to check for public, since
             // getConstructor finds public constructors only.
         } catch (NoSuchMethodException e) {
@@ -1089,9 +1089,9 @@ public class Project {
         if (o == null) {
             throw new BuildException("Unable to obtain a Target Executor instance.");
         } else {
-            String[] targetNameArray = (String[])(targetNames.toArray(
+            String[] targetNameArray = (String[]) (targetNames.toArray(
                 new String[targetNames.size()]));
-            ((Executor)o).executeTargets(this, targetNameArray);
+            ((Executor) o).executeTargets(this, targetNameArray);
         }
     }
 
@@ -1651,7 +1651,7 @@ public class Project {
         // build Target.
 
         for (int i = 0; i < root.length; i++) {
-            String st = (String)(state.get(root[i]));
+            String st = (String) (state.get(root[i]));
             if (st == null) {
                 tsort(root[i], targets, state, visiting, ret);
             } else if (st == VISITING) {

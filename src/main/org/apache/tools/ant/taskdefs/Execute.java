@@ -1152,7 +1152,7 @@ public class Execute {
          */
         private File createCommandFile(String[] cmd, String[] env)
             throws IOException {
-            File script = FileUtils.newFileUtils().createTempFile("ANT", ".COM",null);
+            File script = FileUtils.newFileUtils().createTempFile("ANT", ".COM", null);
             //TODO: bind the longevity of the file to the exe
             script.deleteOnExit();
             PrintWriter out = null;
@@ -1162,7 +1162,7 @@ public class Execute {
                 // add the environment as logicals to the DCL script
                 if (env != null) {
                     int eqIndex;
-                    for (int i = 1; i < env.length ; i++) {
+                    for (int i = 1; i < env.length; i++) {
                         eqIndex = env[i].indexOf('=');
                         if (eqIndex != -1) {
                             out.print("$ DEFINE/NOLOG ");
@@ -1175,7 +1175,7 @@ public class Execute {
                 }
 
                 out.print("$ " + cmd[0]);
-                for (int i = 1; i < cmd.length ; i++) {
+                for (int i = 1; i < cmd.length; i++) {
                     out.println(" -");
                     out.print(cmd[i]);
                 }

@@ -1050,7 +1050,7 @@ public final class IntrospectionHelper implements BuildListener {
             return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, (Object[])(new String[] {value}));
+                        m.invoke(parent, (Object[]) (new String[] {value}));
                     }
                 };
 
@@ -1075,7 +1075,7 @@ public final class IntrospectionHelper implements BuildListener {
             return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent,(Object[])(
+                        m.invoke(parent, (Object[]) (
                                  new Boolean[] {Project.toBoolean(value)
                                                 ? Boolean.TRUE : Boolean.FALSE}));
                     }

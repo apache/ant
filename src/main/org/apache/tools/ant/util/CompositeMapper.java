@@ -32,7 +32,7 @@ public class CompositeMapper extends ContainerMapper {
 
         FileNameMapper mapper = null;
         for (Iterator mIter = getMappers().iterator(); mIter.hasNext();) {
-            mapper = (FileNameMapper)(mIter.next());
+            mapper = (FileNameMapper) (mIter.next());
             if (mapper != null) {
                 String[] mapped = mapper.mapFileName(sourceFileName);
                 if (mapped != null) {

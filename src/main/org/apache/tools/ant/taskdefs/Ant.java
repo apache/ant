@@ -375,8 +375,8 @@ public class Ant extends Task {
                 } else {
                     boolean circular = false;
                     for (Iterator it = locals.iterator(); !circular && it.hasNext();) {
-                        Target other = (Target)(getProject().getTargets().get(
-                            (String)(it.next())));
+                        Target other = (Target) (getProject().getTargets().get(
+                            (String) (it.next())));
                         circular |= (other != null
                             && other.dependsOn(owningTargetName));
                     }
@@ -399,7 +399,7 @@ public class Ant extends Task {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.fireSubBuildStarted();
                     executor.executeTargets(newProject,
-                        (String[])(locals.toArray(new String[locals.size()])));
+                        (String[]) (locals.toArray(new String[locals.size()])));
 
                 } catch (BuildException ex) {
                     t = ProjectHelper
@@ -738,7 +738,8 @@ public class Ant extends Task {
         /**
          * Default constructor.
          */
-        public TargetElement() {}
+        public TargetElement() {
+        }
 
         /**
          * Set the name of this TargetElement.

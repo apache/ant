@@ -78,9 +78,9 @@ public class Library implements EnabledLibraryElement {
      * we fetch every library by default; note the enabled/disabled
      * flag has precedence, and this flag is not visible in the XML
      */
-    private boolean toFetch=true;
+    private boolean toFetch = true;
 
-    private boolean fetched=false;
+    private boolean fetched = false;
 
     public static final String ERROR_NO_ARCHIVE = "No archive defined";
     public static final String ERROR_NO_PROJECT = "No project defined";
@@ -239,15 +239,15 @@ public class Library implements EnabledLibraryElement {
      */
     public void bind(File baseDir) {
         validate();
-        FileUtils fileUtils=FileUtils.newFileUtils();
+        FileUtils fileUtils = FileUtils.newFileUtils();
 
         if (destinationName == null) {
             destinationName = getMavenPath('/');
         }
         libraryFile = fileUtils.resolveFile(baseDir, destinationName);
-        if(libraryFile.isDirectory()) {
+        if (libraryFile.isDirectory()) {
             throw new BuildException(ERROR_FILE_IS_A_DIR
-                +libraryFile);
+                + libraryFile);
         }
     }
 

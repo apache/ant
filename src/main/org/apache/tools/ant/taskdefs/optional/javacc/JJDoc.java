@@ -136,7 +136,7 @@ public class JJDoc extends Task {
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
         classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
         classpath.addJavaRuntime();
-        
+
         cmdl.setClassname(JavaCC.getMainClass(classpath,
                                               JavaCC.TASKDEF_TYPE_JJDOC));
 

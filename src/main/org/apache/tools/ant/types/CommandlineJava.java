@@ -389,8 +389,8 @@ public class CommandlineJava implements Cloneable {
         if (haveBootclasspath(true)) {
             listIterator.add("-Xbootclasspath:" + bootclasspath.toString());
         } else if (cloneBootclasspath()) {
-            listIterator.add("-Xbootclasspath:" +
-                             Path.systemBootClasspath.toString());
+            listIterator.add("-Xbootclasspath:"
+                             + Path.systemBootClasspath.toString());
         }
 
         //main classpath

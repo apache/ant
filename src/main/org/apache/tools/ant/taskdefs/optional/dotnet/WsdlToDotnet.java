@@ -106,13 +106,13 @@ public class WsdlToDotnet extends Task  {
      * our WSDL file.
      * @since ant1.7
      */
-    private Schema wsdl=new Schema();
+    private Schema wsdl = new Schema();
 
     /**
      * compiler
      * @since ant1.7
      */
-    private Compiler compiler=null;
+    private Compiler compiler = null;
 
     /**
      * error message: dest file is a directory
@@ -127,7 +127,7 @@ public class WsdlToDotnet extends Task  {
     /**
      * used for timestamp checking
      */
-    private FileUtils fileutils= FileUtils.newFileUtils();
+    private FileUtils fileutils = FileUtils.newFileUtils();
 
     /**
      * Name of the file to generate. Required
@@ -276,8 +276,8 @@ public class WsdlToDotnet extends Task  {
      */
     public void execute()
              throws BuildException {
-        if(compiler==null) {
-            compiler=Compiler.createDefaultCompiler();
+        if (compiler == null) {
+            compiler = Compiler.createDefaultCompiler();
         }
         validate();
         NetCommand command = new NetCommand(this,
@@ -293,10 +293,10 @@ public class WsdlToDotnet extends Task  {
             command.addArgument("/server");
         }
         command.addArgument("/namespace:", namespace);
-        if(protocol!=null) {
-            command.addArgument("/protocol:"+protocol);
+        if (protocol != null) {
+            command.addArgument("/protocol:" + protocol);
         }
-        if(ideErrors) {
+        if (ideErrors) {
             command.addArgument("/parsableErrors");
         }
         command.addArgument(extraOptions);
@@ -306,7 +306,7 @@ public class WsdlToDotnet extends Task  {
         long destLastModified = -1;
 
         //rebuild unless the dest file is newer than the source file
-        if ( destFile.exists() ) {
+        if (destFile.exists()) {
             destLastModified = destFile.lastModified();
             rebuild = isRebuildNeeded(wsdl, destLastModified);
         }
@@ -323,8 +323,8 @@ public class WsdlToDotnet extends Task  {
         //add in any extra files.
         //this is an error in mono, but we do not warn on it as they may fix that outside
         //the ant build cycle.
-        Iterator it=schemas.iterator();
-        while ( it.hasNext() ) {
+        Iterator it = schemas.iterator();
+        while (it.hasNext()) {
             Schema schema = (Schema) it.next();
             //mark for a rebuild if we are newer
             rebuild |= isRebuildNeeded(schema, destLastModified);
@@ -343,7 +343,7 @@ public class WsdlToDotnet extends Task  {
      * @return true if a rebuild is needed.
      */
     private boolean isRebuildNeeded(Schema schema, long destLastModified) {
-        if(destLastModified==-1) {
+        if (destLastModified == -1) {
             return true;
         }
         return !fileutils.isUpToDate(schema.getTimestamp(), destLastModified);
@@ -357,7 +357,7 @@ public class WsdlToDotnet extends Task  {
     public static class Schema {
         private File file;
         private String url;
-        private boolean makeURL=false;
+        private boolean makeURL = false;
 
         public static final String ERROR_NONE_DECLARED = "One of file and url must be set";
         public static final String ERROR_BOTH_DECLARED = "Only one of file or url can be set";
@@ -370,18 +370,18 @@ public class WsdlToDotnet extends Task  {
          */
         public  void validate() {
 
-            if(file!=null) {
+            if (file != null) {
                 if (!file.exists()) {
-                    throw new BuildException(ERROR_FILE_NOT_FOUND+file.toString());
+                    throw new BuildException(ERROR_FILE_NOT_FOUND + file.toString());
                 }
-                if ( file.isDirectory() ) {
-                    throw new BuildException(ERROR_FILE_IS_DIR+file.toString());
+                if (file.isDirectory()) {
+                    throw new BuildException(ERROR_FILE_IS_DIR + file.toString());
                 }
             }
-            if(file!=null && url!=null) {
+            if (file != null && url != null) {
                 throw new BuildException(ERROR_BOTH_DECLARED);
             }
-            if(file==null && url==null) {
+            if (file == null && url == null) {
                 throw new BuildException(ERROR_NONE_DECLARED);
             }
         }
@@ -392,14 +392,14 @@ public class WsdlToDotnet extends Task  {
          */
         public String evaluate() {
             validate();
-            if(url!=null) {
+            if (url != null) {
                 return getUrl();
             }
-            if(makeURL) {
+            if (makeURL) {
                 try {
                     return file.toURL().toExternalForm();
                 } catch (MalformedURLException e) {
-                    throw new BuildException(ERROR_NO_URL_CONVERT+file);
+                    throw new BuildException(ERROR_NO_URL_CONVERT + file);
                 }
             }
             return file.toString();
@@ -448,10 +448,11 @@ public class WsdlToDotnet extends Task  {
          * @return
          */
         public long getTimestamp() {
-            if(file!=null) {
+            if (file != null) {
                 return file.lastModified();
-            } else
+            } else {
                 return -1;
+            }
         }
     }
 
@@ -463,7 +464,7 @@ public class WsdlToDotnet extends Task  {
         public static final String COMPILER_MS = "microsoft";
         public static final String COMPILER_MONO = "mono";
         public static final String COMPILER_MS_ON_MONO = "microsoft-on-mono";
-        String[] compilers={
+        String[] compilers = {
             COMPILER_MS,
             COMPILER_MONO,
             COMPILER_MS_ON_MONO
@@ -487,7 +488,7 @@ public class WsdlToDotnet extends Task  {
         String[][] extraCompilerArgs = {
             {},
             {},
-            {EXE_WSDL+".exe"}
+            {EXE_WSDL + ".exe"}
         };
 
         boolean[] absoluteFiles = {
@@ -512,9 +513,9 @@ public class WsdlToDotnet extends Task  {
          * @return
          */
         public static Compiler createDefaultCompiler() {
-            Compiler c=new Compiler();
+            Compiler c = new Compiler();
             String compilerName;
-            compilerName= Os.isFamily("windows")?COMPILER_MS:COMPILER_MONO;
+            compilerName = Os.isFamily("windows") ? COMPILER_MS : COMPILER_MONO;
             c.setValue(compilerName);
             return c;
         }
@@ -544,8 +545,8 @@ public class WsdlToDotnet extends Task  {
          * @param command
          */
         public void applyExtraArgs(NetCommand command) {
-            String[] args=getExtraArgs();
-            for(int i=0;i<args.length;i++) {
+            String[] args = getExtraArgs();
+            for (int i = 0; i < args.length; i++) {
                command.addArgument(args[i]);
             }
         }

@@ -29,7 +29,7 @@ import java.io.IOException;
  * @since Ant1.7
  */
 public final class RepositoryRef extends Repository {
-    /** this constant name is only funny to COM developers  
+    /** this constant name is only funny to COM developers
      */
     public static final String E_NOTIMPL = "Not Implemented";
 
@@ -84,6 +84,6 @@ public final class RepositoryRef extends Repository {
      * @return
      */
     public String getRepositoryURI() {
-        return "ref://"+getRefid();
+        return "ref://" + getRefid();
     }
 }

@@ -227,7 +227,7 @@ public class Expand extends Task {
         }
         String[] mappedNames = mapper.mapFileName(entryName);
         if (mappedNames == null || mappedNames.length == 0) {
-            mappedNames = new String[] { entryName };
+            mappedNames = new String[] {entryName};
         }
         File f = fileUtils.resolveFile(dir, mappedNames[0]);
         try {

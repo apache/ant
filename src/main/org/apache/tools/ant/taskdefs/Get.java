@@ -62,7 +62,7 @@ public class Get extends Task {
 
         //set up logging
         int logLevel = Project.MSG_INFO;
-        DownloadProgress progress=null;
+        DownloadProgress progress = null;
         if (verbose) {
             progress = new VerboseProgress(System.out);
         }
@@ -86,7 +86,7 @@ public class Get extends Task {
      * @param progress progress callback; null for no-callbacks
      * @return true for a successful download, false otherwise.
      * The return value is only relevant when {@link #ignoreErrors} is true, as
-     * when false all failures raise BuildExceptions. 
+     * when false all failures raise BuildExceptions.
      * @throws IOException for network trouble
      * @throws BuildException for argument errors, or other trouble when ignoreErrors
      * is false.
@@ -111,7 +111,7 @@ public class Get extends Task {
                     getLocation());
         }
         //dont do any progress, unless asked
-        if(progress==null) {
+        if (progress == null) {
             progress = new NullProgress();
         }
         log("Getting: " + source, logLevel);
@@ -194,11 +194,11 @@ public class Get extends Task {
                 is = connection.getInputStream();
                 break;
             } catch (IOException ex) {
-                log("Error opening connection " + ex,logLevel);
+                log("Error opening connection " + ex, logLevel);
             }
         }
         if (is == null) {
-            log("Can't get " + source + " to " + dest,logLevel);
+            log("Can't get " + source + " to " + dest, logLevel);
             if (ignoreErrors) {
                 return false;
             }
@@ -240,7 +240,7 @@ public class Get extends Task {
                 log("last modified = " + t.toString()
                         + ((remoteTimestamp == 0)
                         ? " - using current time instead"
-                        : ""),logLevel);
+                        : ""), logLevel);
             }
             if (remoteTimestamp != 0) {
                 FileUtils.newFileUtils()
@@ -469,7 +469,7 @@ public class Get extends Task {
          * begin a download
          */
         public void beginDownload() {
-            dots=0;
+            dots = 0;
         }
 
         /**

@@ -66,15 +66,15 @@ public class JspC extends MatchingTask {
     private Path compilerClasspath;
     private Path src;
     private File destDir;
-    private String packageName ;
+    private String packageName;
     /** name of the compiler to use */
     private String compilerName = "jasper";
 
     /**
      *  -ieplugin &lt;clsid&gt; Java Plugin classid for Internet Explorer
      */
-    private String iepluginid ;
-    private boolean mapped ;
+    private String iepluginid;
+    private boolean mapped;
     private int verbose = 0;
     protected Vector compileList = new Vector();
     Vector javaFiles = new Vector();

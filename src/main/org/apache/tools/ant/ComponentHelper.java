@@ -295,7 +295,7 @@ public class ComponentHelper  {
             throw new BuildException(message);
         }
         try {
-            taskClass.getConstructor((Class[])null);
+            taskClass.getConstructor((Class[]) null);
             // don't have to check for public, since
             // getConstructor finds public constructors only.
         } catch (NoSuchMethodException e) {
@@ -798,7 +798,7 @@ public class ComponentHelper  {
         }
 
         public AntTypeDefinition getDefinition(String key) {
-            return (AntTypeDefinition)(super.get(key));
+            return (AntTypeDefinition) (super.get(key));
         }
 
         /** Equivalent to getTypeType */
@@ -825,7 +825,7 @@ public class ComponentHelper  {
             boolean found = false;
             if (clazz instanceof Class) {
                 for (Iterator i = values().iterator(); i.hasNext() && !found;) {
-                    found |= (((AntTypeDefinition)(i.next())).getExposedClass(
+                    found |= (((AntTypeDefinition) (i.next())).getExposedClass(
                         project) == clazz);
                 }
             }

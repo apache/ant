@@ -429,7 +429,7 @@ public class Jar extends Zip {
         // header newline
         writer.println(zipFile.getName());
 
-        writeIndexLikeList(new ArrayList(addedDirs.keySet()), 
+        writeIndexLikeList(new ArrayList(addedDirs.keySet()),
                            rootEntries, writer);
         writer.println();
 
@@ -766,7 +766,7 @@ public class Jar extends Zip {
      *
      * @since Ant 1.6.2
      */
-    protected static final String findJarName(String fileName, 
+    protected static final String findJarName(String fileName,
                                               String[] classpath) {
         if (classpath == null) {
             return (new File(fileName)).getName();
@@ -799,8 +799,8 @@ public class Jar extends Zip {
                 }
             }
         }
-                        
-        return matches.size() == 0 
+
+        return matches.size() == 0
             ? null : (String) matches.get(matches.firstKey());
     }
 
@@ -810,7 +810,7 @@ public class Jar extends Zip {
      *
      * @since Ant 1.7
      */
-    protected static final void grabFilesAndDirs(String file, List dirs, 
+    protected static final void grabFilesAndDirs(String file, List dirs,
                                                  List files)
         throws IOException {
         org.apache.tools.zip.ZipFile zf = null;
@@ -819,7 +819,7 @@ public class Jar extends Zip {
             Enumeration entries = zf.getEntries();
             HashSet dirSet = new HashSet();
             while (entries.hasMoreElements()) {
-                org.apache.tools.zip.ZipEntry ze = 
+                org.apache.tools.zip.ZipEntry ze =
                     (org.apache.tools.zip.ZipEntry) entries.nextElement();
                 String name = ze.getName();
                 // META-INF would be skipped anyway, avoid index for
@@ -834,7 +834,7 @@ public class Jar extends Zip {
                         // since the jar may be one without directory
                         // entries, add the parent dir of this file as
                         // well.
-                        dirSet.add(name.substring(0, 
+                        dirSet.add(name.substring(0,
                                                   name.lastIndexOf("/") + 1));
                     }
                 }

@@ -91,7 +91,9 @@ public class DependScanner extends DirectoryScanner {
 
     //inherit doc
     public int getIncludedFilesCount() {
-        if (included == null) throw new IllegalStateException();
+        if (included == null) {
+            throw new IllegalStateException();
+        }
         return included.size();
     }
 

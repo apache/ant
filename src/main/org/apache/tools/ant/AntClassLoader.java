@@ -518,7 +518,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             if (cons.length > 0 && cons[0] != null) {
                 final String[] strs = new String[NUMBER_OF_STRINGS];
                 try {
-                    cons[0].newInstance((Object[])strs);
+                    cons[0].newInstance((Object[]) strs);
                     // Expecting an exception to be thrown by this call:
                     // IllegalArgumentException: wrong number of Arguments
                 } catch (Throwable t) {
@@ -873,7 +873,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             base = parent.getResources(name);
             // Note: could cause overlaps in case ClassLoader.this.parent has matches.
         } else {
-            // ClassLoader.this.parent is already delegated to from ClassLoader.getResources, no need:
+            // ClassLoader.this.parent is already delegated to from
+            // ClassLoader.getResources, no need:
             base = new CollectionUtils.EmptyEnumeration();
         }
         if (isParentFirst(name)) {

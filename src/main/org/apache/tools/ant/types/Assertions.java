@@ -160,7 +160,7 @@ public class Assertions extends DataType implements Cloneable {
      * @param commandList
      */
     public void applyAssertions(List commandList) {
-        getProject().log("Applying assertions",Project.MSG_DEBUG);
+        getProject().log("Applying assertions", Project.MSG_DEBUG);
         Assertions clause = getFinalReference();
         //do the system assertions
         if (Boolean.TRUE.equals(clause.enableSystemAssertions)) {
@@ -176,7 +176,7 @@ public class Assertions extends DataType implements Cloneable {
         while (it.hasNext()) {
             BaseAssertion assertion = (BaseAssertion) it.next();
             String arg = assertion.toCommand();
-            getProject().log("adding assertion "+arg, Project.MSG_DEBUG);
+            getProject().log("adding assertion " + arg, Project.MSG_DEBUG);
             commandList.add(arg);
         }
     }
@@ -225,7 +225,7 @@ public class Assertions extends DataType implements Cloneable {
         while (it.hasNext()) {
             BaseAssertion assertion = (BaseAssertion) it.next();
             String arg = assertion.toCommand();
-            getProject().log("adding assertion "+arg, Project.MSG_DEBUG);
+            getProject().log("adding assertion " + arg, Project.MSG_DEBUG);
             commandIterator.add(arg);
         }
     }

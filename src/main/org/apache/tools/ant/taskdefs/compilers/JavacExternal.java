@@ -64,13 +64,13 @@ public class JavacExternal extends DefaultCompilerAdapter {
      * @return
      */
     private boolean execOnVMS(Commandline cmd, int firstFileName) {
-        File vmsFile=null;
+        File vmsFile = null;
         try {
             vmsFile = JavaEnvUtils.createVmsJavaOptionFile(cmd.getArguments());
             String[] commandLine = {cmd.getExecutable(),
                                     "-V",
                                     vmsFile.getPath()};
-            return 0==executeExternalCompile(commandLine,
+            return 0 == executeExternalCompile(commandLine,
                             firstFileName,
                             true);
 

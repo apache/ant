@@ -116,7 +116,7 @@ public class ReplaceRegExp extends Task {
     private File file;
     private String flags;
     private boolean byline;
-    private Vector filesets;// Keep jdk 1.1 compliant so others can use this
+    private Vector filesets; // Keep jdk 1.1 compliant so others can use this
     private RegularExpression regex;
     private Substitution subs;
 

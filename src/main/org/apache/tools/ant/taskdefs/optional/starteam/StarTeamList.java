@@ -98,9 +98,8 @@ public class StarTeamList extends TreeBasedTask {
         View view = getViewConfiguredByDate(raw);
         if (view != null) {
             return view;
-        }
-        // otherwise, use this view configured as the tip.
-        else {
+	// otherwise, use this view configured as the tip.
+        } else {
             return new View(raw, ViewConfiguration.createTip());
         }
     }

@@ -1059,7 +1059,9 @@ public class DirectoryScanner
      * @since Ant 1.6.3
      */
     public int getIncludedFilesCount() {
-        if (filesIncluded == null) throw new IllegalStateException();
+        if (filesIncluded == null) {
+            throw new IllegalStateException();
+        }
         return filesIncluded.size();
     }
 
@@ -1137,7 +1139,9 @@ public class DirectoryScanner
      * @since Ant 1.6.3
      */
     public int getIncludedDirsCount() {
-        if (dirsIncluded == null) throw new IllegalStateException();
+        if (dirsIncluded == null) {
+            throw new IllegalStateException();
+        }
         return dirsIncluded.size();
     }
 

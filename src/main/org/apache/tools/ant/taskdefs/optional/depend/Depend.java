@@ -100,7 +100,7 @@ public class Depend extends MatchingTask {
     /**
      * flag to enable warning if we encounter RMI stubs
      */
-    private boolean warnOnRmiStubs=true;
+    private boolean warnOnRmiStubs = true;
 
     /**
      * Flag which controls whether the reversed dependencies should be
@@ -526,12 +526,12 @@ public class Depend extends MatchingTask {
             return;
         }
         int level = Project.MSG_WARN;
-        if(!warnOnRmiStubs) {
+        if (!warnOnRmiStubs) {
             //downgrade warnings on RMI stublike classes, as they are generated
             //by rmic, so there is no need to tell the user that their source is
             //missing.
-            if(isRmiStub(affectedClass, className)) {
-                level=Project.MSG_VERBOSE;
+            if (isRmiStub(affectedClass, className)) {
+                level = Project.MSG_VERBOSE;
             }
         }
         log("The class " + affectedClass + " in file "
@@ -549,14 +549,14 @@ public class Depend extends MatchingTask {
      * @return
      */
     private boolean isRmiStub(String affectedClass, String className) {
-        return isStub(affectedClass,className, DefaultRmicAdapter.RMI_STUB_SUFFIX)
+        return isStub(affectedClass, className, DefaultRmicAdapter.RMI_STUB_SUFFIX)
                 || isStub(affectedClass, className, DefaultRmicAdapter.RMI_SKEL_SUFFIX)
                 || isStub(affectedClass, className, WLRmic.RMI_STUB_SUFFIX)
                 || isStub(affectedClass, className, WLRmic.RMI_SKEL_SUFFIX);
     }
 
-    private boolean isStub(String affectedClass,String baseClass,String suffix) {
-        return (baseClass+suffix).equals(affectedClass);
+    private boolean isStub(String affectedClass, String baseClass, String suffix) {
+        return (baseClass + suffix).equals(affectedClass);
     }
 
     /**
@@ -686,14 +686,14 @@ public class Depend extends MatchingTask {
             int count = deleteAllAffectedFiles();
 
             long duration = (System.currentTimeMillis() - start) / 1000;
-            
+
             final int summaryLogLevel;
-            if(count>0) {
+            if (count > 0) {
                 summaryLogLevel = Project.MSG_INFO;
             }  else {
                 summaryLogLevel = Project.MSG_DEBUG;
             }
-            
+
             log("Deleted " + count + " out of date files in "
                 + duration + " seconds", summaryLogLevel);
         } catch (Exception e) {

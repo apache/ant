@@ -349,7 +349,7 @@ public class EchoProperties extends Task {
     /**
      * a tuple for the sort list.
      */
-    private static class Tuple implements Comparable{
+    private static class Tuple implements Comparable {
         public String key;
         public String value;
 
@@ -367,7 +367,7 @@ public class EchoProperties extends Task {
          *                            from being compared to this Object.
          */
         public int compareTo(Object o) {
-            Tuple that=(Tuple) o;
+            Tuple that = (Tuple) o;
             return key.compareTo(that.key);
         }
     }
@@ -390,7 +390,7 @@ public class EchoProperties extends Task {
         Document doc = getDocumentBuilder().newDocument();
         Element rootElement = doc.createElement(PROPERTIES);
 
-        List sorted=sortProperties(props);
+        List sorted = sortProperties(props);
 
 
         // output properties

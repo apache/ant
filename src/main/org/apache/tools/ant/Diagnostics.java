@@ -131,11 +131,11 @@ public final class Diagnostics {
         try {
           // Package pkg = clazz.getPackage();
           Method method = Class.class.getMethod("getPackage", new Class[0]);
-          Object pkg = method.invoke(clazz, (Object[])null);
+          Object pkg = method.invoke(clazz, (Object[]) null);
           if (pkg != null) {
               // pkg.getImplementationVersion();
               method = pkg.getClass().getMethod("getImplementationVersion", new Class[0]);
-              Object version = method.invoke(pkg, (Object[])null);
+              Object version = method.invoke(pkg, (Object[]) null);
               return (String) version;
           }
         } catch (Exception e) {

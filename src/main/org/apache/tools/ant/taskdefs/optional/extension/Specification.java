@@ -353,7 +353,7 @@ public final class Specification {
         }
 
         // Implementation Vendor ID must match
-        final String otherImplementationVendor 
+        final String otherImplementationVendor
             = other.getImplementationVendor();
         if (null != implementationVendor) {
             if (null == otherImplementationVendor
@@ -363,7 +363,7 @@ public final class Specification {
         }
 
         // Implementation version must be >= required
-        final String otherImplementationVersion 
+        final String otherImplementationVersion
             = other.getImplementationVersion();
         if (null != implementationVersion) {
             if (null == otherImplementationVersion

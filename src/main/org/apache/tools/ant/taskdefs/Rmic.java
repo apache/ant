@@ -397,7 +397,7 @@ public class Rmic extends MatchingTask {
      * @since Ant 1.5
      */
     public void setCompiler(String compiler) {
-        if(compiler.length()>0) {
+        if (compiler.length() > 0) {
             facade.setImplementation(compiler);
         }
     }
@@ -441,10 +441,10 @@ public class Rmic extends MatchingTask {
             throw new BuildException(ERROR_BASE_NOT_SET, getLocation());
         }
         if (!baseDir.exists()) {
-            throw new BuildException(ERROR_NO_BASE_EXISTS+baseDir, getLocation());
+            throw new BuildException(ERROR_NO_BASE_EXISTS + baseDir, getLocation());
         }
-        if ( !baseDir.isDirectory() ) {
-            throw new BuildException(ERROR_NOT_A_DIR+baseDir, getLocation());
+        if (!baseDir.isDirectory()) {
+            throw new BuildException(ERROR_NOT_A_DIR + baseDir, getLocation());
         }
         if (verify) {
             log("Verify has been turned on.", Project.MSG_VERBOSE);

@@ -73,7 +73,7 @@ public class Mapper extends DataType implements Cloneable {
             } else {
                 FileNameMapper m = getImplementation();
                 if (m instanceof ContainerMapper) {
-                    container = (ContainerMapper)m;
+                    container = (ContainerMapper) m;
                 } else {
                     throw new BuildException(String.valueOf(m)
                         + " mapper implementation does not support nested mappers!");
@@ -197,7 +197,7 @@ public class Mapper extends DataType implements Cloneable {
 
         try {
             FileNameMapper m
-                = (FileNameMapper)(getImplementationClass().newInstance());
+                = (FileNameMapper) (getImplementationClass().newInstance());
             final Project p = getProject();
             if (p != null) {
                 p.setProjectReference(m);

@@ -44,30 +44,30 @@ public class Xalan2Executor extends XalanExecutor {
         return tfactory.getClass().getName();
     }
 
-    protected String getProcVersion(String classNameImpl) 
+    protected String getProcVersion(String classNameImpl)
         throws BuildException {
         try {
             // xalan 2
-            if (classNameImpl.equals(aPack + "processor.TransformerFactoryImpl") 
+            if (classNameImpl.equals(aPack + "processor.TransformerFactoryImpl")
                 ||
                 classNameImpl.equals(aPack + "xslt.XSLTProcessorFactory")) {
                 return getXalanVersion(aPack + "processor.XSLProcessorVersion");
             }
             // xalan xsltc
-            if (classNameImpl.equals(aPack 
-                                     + "xsltc.trax.TransformerFactoryImpl")){
-                return getXSLTCVersion(aPack +"xsltc.ProcessorVersion");
+            if (classNameImpl.equals(aPack
+                                     + "xsltc.trax.TransformerFactoryImpl")) {
+                return getXSLTCVersion(aPack + "xsltc.ProcessorVersion");
             }
             // jdk 1.5 xsltc
             if (classNameImpl
-                .equals(sPack + "internal.xsltc.trax.TransformerFactoryImpl")){
-                return getXSLTCVersion(sPack 
+                .equals(sPack + "internal.xsltc.trax.TransformerFactoryImpl")) {
+                return getXSLTCVersion(sPack
                                        + "internal.xsltc.ProcessorVersion");
             }
             throw new BuildException("Could not find a valid processor version"
-                                     + " implementation from " 
+                                     + " implementation from "
                                      + classNameImpl);
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             throw new BuildException("Could not find processor version "
                                      + "implementation", e);
         }

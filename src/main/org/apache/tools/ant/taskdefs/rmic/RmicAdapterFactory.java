@@ -58,11 +58,11 @@ public class RmicAdapterFactory {
         throws BuildException {
 
         //handle default specially.
-        if(DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.length()==0) {
-            String adapter = KaffeRmic.isAvailable() ?
-                    KaffeRmic.COMPILER_NAME
-                    :SunRmic.COMPILER_NAME;
-            return getRmic(adapter,task);
+        if (DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.length() == 0) {
+            String adapter = KaffeRmic.isAvailable()
+                ? KaffeRmic.COMPILER_NAME
+                : SunRmic.COMPILER_NAME;
+            return getRmic(adapter, task);
         }
 
         if (SunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
@@ -92,10 +92,10 @@ public class RmicAdapterFactory {
             Object o = c.newInstance();
             return (RmicAdapter) o;
         } catch (ClassNotFoundException cnfe) {
-            throw new BuildException(ERROR_UNKNOWN_COMPILER+className,
+            throw new BuildException(ERROR_UNKNOWN_COMPILER + className,
                     cnfe);
         } catch (ClassCastException cce) {
-            throw new BuildException(ERROR_NOT_RMIC_ADAPTER+className,
+            throw new BuildException(ERROR_NOT_RMIC_ADAPTER + className,
                     cce);
         } catch (Throwable t) {
             // for all other possibilities

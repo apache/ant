@@ -45,21 +45,21 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
      * the name of this adapter for users to select
      */
     public static final String COMPILER_NAME = "forking";
-    
+
     /**
      * exec by creating a new command
      * @return
      * @throws BuildException
      */
     public boolean execute() throws BuildException {
-        Rmic owner=getRmic();
+        Rmic owner = getRmic();
         Commandline cmd = setupRmicCommand();
-        Project project=owner.getProject();
+        Project project = owner.getProject();
         //rely on RMIC being on the path
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable(SunRmic.RMIC_EXECUTABLE));
 
         //set up the args
-        String[] args=cmd.getCommandline();
+        String[] args = cmd.getCommandline();
 
         try {
             Execute exe = new Execute(new LogStreamHandler(owner,
@@ -70,11 +70,10 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
             exe.setCommandline(args);
 
             exe.execute();
-            return exe.getExitValue()==0;
+            return exe.getExitValue() == 0;
         } catch (IOException exception) {
-            throw new BuildException("Error running "+ SunRmic.RMIC_EXECUTABLE
-                    +" -maybe it is not on the path" ,
-                    exception);
+            throw new BuildException("Error running " + SunRmic.RMIC_EXECUTABLE
+                    + " -maybe it is not on the path", exception);
         }
     }
 }

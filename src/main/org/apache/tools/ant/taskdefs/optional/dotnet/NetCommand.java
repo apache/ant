@@ -100,7 +100,7 @@ public class NetCommand {
     /**
      * flag to set to to use @file based command cache
      */
-    private boolean useResponseFile=false;
+    private boolean useResponseFile = false;
 
     /**
      * name of a temp file; may be null
@@ -206,7 +206,7 @@ public class NetCommand {
      *
      *@param  argument1  The first argument
      *@param  argument2  The second argument
-     */   
+     */
     public void addArgument(String argument1, String argument2) {
         if (argument2 != null && argument2.length() != 0) {
             commandLine.createArgument().setValue(argument1 + argument2);
@@ -314,8 +314,8 @@ public class NetCommand {
 
         String[] commands = commandLine.getCommandline();
         //always trigger file mode if commands are big enough
-        if (automaticResponseFileThreshold>0 &&
-                commands.length > automaticResponseFileThreshold) {
+        if (automaticResponseFileThreshold > 0
+            && commands.length > automaticResponseFileThreshold) {
             useResponseFile = true;
         }
         if (!useResponseFile || commands.length <= 1) {
@@ -329,7 +329,7 @@ public class NetCommand {
             FileUtils fileUtils = FileUtils.newFileUtils();
 
             temporaryCommandFile = fileUtils.createTempFile("cmd", ".txt", null);
-            owner.log("Using response file"+temporaryCommandFile,Project.MSG_VERBOSE);
+            owner.log("Using response file" + temporaryCommandFile, Project.MSG_VERBOSE);
 
             try {
                 fos = new FileOutputStream(temporaryCommandFile);

@@ -967,8 +967,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.6.2
      */
     private class StyleMapper implements FileNameMapper {
-        public void setFrom(String from) {}
-        public void setTo(String to) {}
+        public void setFrom(String from) {
+        }
+        public void setTo(String to) {
+        }
         public String[] mapFileName(String xmlFile) {
             int dotPos = xmlFile.lastIndexOf('.');
             if (dotPos > 0) {

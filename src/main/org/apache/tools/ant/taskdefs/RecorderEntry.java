@@ -200,7 +200,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             out.println(mesg);
         }
     }
-    
+
     private void flush() {
         if (record && out != null) {
             out.flush();
@@ -272,7 +272,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         }
         project = null;
     }
-    
+
     /**
      * Initially opens the file associated with this recorder.
      * Used by Recorder.
@@ -296,7 +296,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             out = null;
         }
     }
-    
+
     /**
      * Re-opens the file associated with this recorder.
      * Used by Recorder.
@@ -312,10 +312,10 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             try {
                 out = new PrintStream(new FileOutputStream(filename, append));
             } catch (IOException ioe) {
-                throw new BuildException("Problems opening file using a " +
-                        "recorder entry", ioe);
+                throw new BuildException("Problems opening file using a "
+                                         + "recorder entry", ioe);
             }
-        }        
+        }
     }
 
 }

@@ -52,7 +52,7 @@ public class AptExternalCompilerAdapter extends DefaultCompilerAdapter {
         logAndAddFilesToCompile(cmd);
 
         //run
-        return 0==executeExternalCompile(cmd.getCommandline(),
+        return 0 == executeExternalCompile(cmd.getCommandline(),
                 cmd.size(),
                 true);
 

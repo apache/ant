@@ -190,8 +190,8 @@ public class ScpFromMessage extends AbstractSshMessage {
                 }
 
                 if (trackProgress) {
-                    percentTransmitted = trackProgress(initFilesize, 
-                                                       totalLength, 
+                    percentTransmitted = trackProgress(initFilesize,
+                                                       totalLength,
                                                        percentTransmitted);
                 }
             }

@@ -319,7 +319,7 @@ public class SignJar extends Task {
             if (jarFile.equals(signedjarFile)) {
               return false;
             }
-            if (FileUtils.newFileUtils().isUpToDate(jarFile,signedjarFile)) {
+            if (FileUtils.newFileUtils().isUpToDate(jarFile, signedjarFile)) {
                 return true;
             }
         } else {

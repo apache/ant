@@ -90,7 +90,7 @@ public class ReaderInputStream extends InputStream {
         }
 
         if (result < -1) {
-            result+= 256;
+            result += 256;
         }
 
         return result;

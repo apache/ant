@@ -391,7 +391,7 @@ public class XMLValidateTask extends Task {
      */
     private void setFeature(String feature, boolean value)
         throws BuildException {
-        log("Setting feature "+feature+"="+value,Project.MSG_DEBUG);
+        log("Setting feature " + feature + "=" + value, Project.MSG_DEBUG);
         try {
             xmlReader.setFeature(feature, value);
         } catch (SAXNotRecognizedException e) {
@@ -459,7 +459,7 @@ public class XMLValidateTask extends Task {
             is.setSystemId(uri);
             xmlReader.parse(is);
         } catch (SAXException ex) {
-            log("Caught when validating: "+ex.toString(),Project.MSG_DEBUG);
+            log("Caught when validating: " + ex.toString(), Project.MSG_DEBUG);
             if (failOnError) {
                 throw new BuildException(
                     "Could not validate document " + afile);

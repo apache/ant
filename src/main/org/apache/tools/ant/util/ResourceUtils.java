@@ -108,8 +108,8 @@ public class ResourceUtils {
                                   + " doesn\'t exist.", Project.MSG_VERBOSE);
                         vresult.addElement(source[counter]);
                         added = true;
-                    } else if (!atarget.isDirectory() &&
-                               SelectorUtils.isOutOfDate(source[counter],
+                    } else if (!atarget.isDirectory()
+                               && SelectorUtils.isOutOfDate(source[counter],
                                                          atarget,
                                                          (int) granularity)) {
                         logTo.log(source[counter].getName() + " added as "

@@ -135,11 +135,11 @@ public abstract class AbstractSshMessage {
      * Track progress every 10% if 100kb < filesize < 1mb. For larger
      * files track progress for every percent transmitted.
      */
-    protected final int trackProgress(int filesize, int totalLength, 
+    protected final int trackProgress(int filesize, int totalLength,
                                       int percentTransmitted) {
 
-        int percent = (int) Math.round(Math.floor((totalLength /
-                                                   (double)filesize) * 100));
+        int percent = (int) Math.round(Math.floor((totalLength
+                                                   / (double) filesize) * 100));
 
         if (percent > percentTransmitted) {
             if (filesize < 1048576) {

@@ -47,17 +47,17 @@ public class Xalan1Executor extends XalanExecutor {
         return processor.getClass().getName();
     }
 
-    protected String getProcVersion(String classNameImpl) 
+    protected String getProcVersion(String classNameImpl)
         throws BuildException {
         try {
             // xalan 1
-            if (classNameImpl.equals(xsltP)){
+            if (classNameImpl.equals(xsltP)) {
                 return getXalanVersion(xsltP + "Version");
             }
             throw new BuildException("Could not find a valid processor version"
-                                     + " implementation from " 
+                                     + " implementation from "
                                      + classNameImpl);
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             throw new BuildException("Could not find processor version "
                                      + "implementation", e);
         }
@@ -65,7 +65,7 @@ public class Xalan1Executor extends XalanExecutor {
 
     void execute() throws Exception {
         // need to quote otherwise it breaks because of "extra illegal tokens"
-        processor.setStylesheetParam("output.dir", "'" 
+        processor.setStylesheetParam("output.dir", "'"
                                      + caller.toDir.getAbsolutePath() + "'");
         XSLTInputSource xml_src = new XSLTInputSource(caller.document);
         String system_id = caller.getStylesheetSystemId();

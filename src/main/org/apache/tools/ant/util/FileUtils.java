@@ -62,7 +62,7 @@ import org.apache.tools.ant.launch.Locator;
 public class FileUtils {
     //get some non-crypto-grade randomness from various places.
     private static Random rand = new Random(System.currentTimeMillis()
-            +Runtime.getRuntime().freeMemory());
+            + Runtime.getRuntime().freeMemory());
 
     private boolean onNetWare = Os.isFamily("netware");
 
@@ -670,7 +670,7 @@ public class FileUtils {
     public void setFileLastModified(File file, long time)
         throws BuildException {
         if (time < 0) {
-            time=System.currentTimeMillis();
+            time = System.currentTimeMillis();
         }
         file.setLastModified(time);
     }
@@ -882,8 +882,8 @@ public class FileUtils {
         String name = f.getName();
         boolean isAbsolute = path.charAt(0) == File.separatorChar;
         // treat directories specified using .DIR syntax as files
-        boolean isDirectory = f.isDirectory() &&
-            !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4);
+        boolean isDirectory = f.isDirectory()
+            && !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4);
 
         String device = null;
         StringBuffer directory = null;
@@ -919,9 +919,9 @@ public class FileUtils {
         if (!isAbsolute && directory != null) {
             directory.insert(0, '.');
         }
-        osPath = ((device != null) ? device + ":" : "") +
-            ((directory != null) ? "[" + directory + "]" : "") +
-            ((file != null) ? file : "");
+        osPath = ((device != null) ? device + ":" : "")
+            + ((directory != null) ? "[" + directory + "]" : "")
+            + ((file != null) ? file : "");
         return osPath;
     }
 
@@ -1314,7 +1314,7 @@ public class FileUtils {
      * by filesystem. We do not have an easy way to probe for file systems,
      * however.
      * @return the difference, in milliseconds, which two file timestamps must have
-     * in order for the two files to be given a creation order. 
+     * in order for the two files to be given a creation order.
      */
     public long getFileTimestampGranularity() {
         if (Os.isFamily("dos")) {
@@ -1335,14 +1335,14 @@ public class FileUtils {
      *  granularity into account
      * @since Ant1.7
      */
-    public boolean isUpToDate(File source,File dest,long granularity) {
+    public boolean isUpToDate(File source, File dest, long granularity) {
         //do a check for the destination file existing
-        if(!dest.exists()) {
+        if (!dest.exists()) {
             //if it does not, then the file is not up to date.
             return false;
         }
-        long sourceTime=source.lastModified();
-        long destTime=dest.lastModified();
+        long sourceTime = source.lastModified();
+        long destTime = dest.lastModified();
         return isUpToDate(sourceTime, destTime, granularity);
     }
 
@@ -1366,8 +1366,8 @@ public class FileUtils {
      * @param granularity os/filesys granularity
      * @return true if the dest file is considered up to date
      */
-    public boolean isUpToDate(long sourceTime,long destTime, long granularity) {
-        if(destTime==-1) {
+    public boolean isUpToDate(long sourceTime, long destTime, long granularity) {
+        if (destTime == -1) {
             return false;
         }
         return destTime >= sourceTime + granularity;
@@ -1382,7 +1382,7 @@ public class FileUtils {
      * @return true if the dest file is considered up to date
      */
     public boolean isUpToDate(long sourceTime, long destTime) {
-        return isUpToDate(sourceTime, destTime,getFileTimestampGranularity());
+        return isUpToDate(sourceTime, destTime, getFileTimestampGranularity());
     }
 
 
@@ -1408,7 +1408,7 @@ public class FileUtils {
      * @param device stream, can be null
      */
     public static void close(Reader device) {
-        if ( device != null ) {
+        if (device != null) {
             try {
                 device.close();
             } catch (IOException ioex) {
@@ -1424,7 +1424,7 @@ public class FileUtils {
      * @param device stream, can be null
      */
     public static void close(OutputStream device) {
-        if ( device != null ) {
+        if (device != null) {
             try {
                 device.close();
             } catch (IOException ioex) {
@@ -1440,7 +1440,7 @@ public class FileUtils {
      * @param device stream, can be null
      */
     public static void close(InputStream device) {
-        if ( device != null ) {
+        if (device != null) {
             try {
                 device.close();
             } catch (IOException ioex) {
@@ -1455,7 +1455,7 @@ public class FileUtils {
      * @param file file to delete
      */
     public static void delete(File file) {
-        if(file!=null) {
+        if (file != null) {
             file.delete();
         }
     }

@@ -54,7 +54,7 @@ public class AssertDownloaded extends BaseLibraryPolicy {
      *          if needed
      */
     public boolean beforeConnect(Libraries owner, ListIterator libraries) {
-        if(count==null) {
+        if (count == null) {
             throw new BuildException(ERROR_NO_COUNT);
         }
         return true;
@@ -70,11 +70,11 @@ public class AssertDownloaded extends BaseLibraryPolicy {
      *
      */
     public void afterFetched(Libraries owner, ListIterator libraries) {
-        int fetched=owner.calculateDownloadedCount();
-        if(fetched!=count.intValue()) {
+        int fetched = owner.calculateDownloadedCount();
+        if (fetched != count.intValue()) {
             throw new BuildException(ERROR_DOWNLOAD_FAILURE
-                    +count
-                    +" but fetched "+fetched);
+                    + count
+                    + " but fetched " + fetched);
         }
     }
 

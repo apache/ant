@@ -750,7 +750,7 @@ public class Zip extends MatchingTask {
      * @param needsUpdate whether we already know that the archive is
      * out-of-date.  Subclasses overriding this method are supposed to
      * set this value correctly in their call to
-     * super.getResourcesToAdd.
+     * <code>super.getResourcesToAdd</code>.
      * @return an array of resources to add for each fileset passed in as well
      *         as a flag that indicates whether the archive is uptodate.
      *
@@ -1064,7 +1064,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Method that gets called when adding from java.io.File instances.
+     * Method that gets called when adding from <code>java.io.File</code> instances.
      *
      * <p>This implementation delegates to the six-arg version.</p>
      *
@@ -1086,7 +1086,7 @@ public class Zip extends MatchingTask {
         FileInputStream fIn = new FileInputStream(file);
         try {
             // ZIPs store time with a granularity of 2 seconds, round up
-            zipFile(fIn, zOut, vPath, 
+            zipFile(fIn, zOut, vPath,
                     file.lastModified() + (roundUp ? 1999 : 0),
                     null, mode);
         } finally {

@@ -43,7 +43,7 @@ public abstract class ContainerMapper implements FileNameMapper {
     /**
      * Add a <code>FileNameMapper</code>.
      * @param fileNameMapper a <CODE>FileNameMapper</CODE>.
-     * @throws <CODE>IllegalArgumentException</CODE> if attempting to add this
+     * @throws IllegalArgumentException if attempting to add this
      *         <CODE>ContainerMapper</CODE> to itself, or if the specified
      *         <CODE>FileNameMapper</CODE> is itself a <CODE>ContainerMapper</CODE>
      *         that contains this <CODE>ContainerMapper</CODE>.
@@ -51,7 +51,7 @@ public abstract class ContainerMapper implements FileNameMapper {
     public synchronized void add(FileNameMapper fileNameMapper) {
         if (this == fileNameMapper
             || (fileNameMapper instanceof ContainerMapper
-            && ((ContainerMapper)fileNameMapper).contains(this))) {
+            && ((ContainerMapper) fileNameMapper).contains(this))) {
             throw new IllegalArgumentException(
                 "Circular mapper containment condition detected");
         } else {
@@ -68,10 +68,10 @@ public abstract class ContainerMapper implements FileNameMapper {
     protected synchronized boolean contains(FileNameMapper fileNameMapper) {
         boolean foundit = false;
         for (Iterator iter = mappers.iterator(); iter.hasNext() && !foundit;) {
-            FileNameMapper next = (FileNameMapper)(iter.next());
-            foundit|= (next == fileNameMapper
+            FileNameMapper next = (FileNameMapper) (iter.next());
+            foundit |= (next == fileNameMapper
                 || (next instanceof ContainerMapper
-                && ((ContainerMapper)next).contains(fileNameMapper)));
+                && ((ContainerMapper) next).contains(fileNameMapper)));
         }
         return foundit;
     }

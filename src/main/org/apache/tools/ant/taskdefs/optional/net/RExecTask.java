@@ -346,7 +346,7 @@ public class RExecTask extends Task {
                try {
                    rexec.disconnect();
                } catch (IOException e) {
-                   throw new BuildException("Error disconnecting from " 
+                   throw new BuildException("Error disconnecting from "
                                             + server);
                }
            }

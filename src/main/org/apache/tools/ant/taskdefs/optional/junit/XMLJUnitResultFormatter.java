@@ -108,9 +108,9 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         //add the timestamp
         final String timestamp = DateUtils.format(new Date(),
                 DateUtils.ISO8601_DATETIME_PATTERN);
-        rootElement.setAttribute(TIMESTAMP,timestamp);
+        rootElement.setAttribute(TIMESTAMP, timestamp);
         //and the hostname.
-        rootElement.setAttribute(HOSTNAME,getHostname());
+        rootElement.setAttribute(HOSTNAME, getHostname());
 
         // Output properties
         Element propsElement = doc.createElement(PROPERTIES);

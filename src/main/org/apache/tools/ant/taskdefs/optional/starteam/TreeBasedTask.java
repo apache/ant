@@ -369,9 +369,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
             fmt = new SimpleDateFormat(this.asOfDateFormat);
             try {
                 asOfDate = fmt.parse(this.asOfDate);
-            }
-            catch (ParseException px)
-            {
+            } catch (ParseException px) {
                 throw new BuildException("AsOfDate "
                                          + this.asOfDate
                                          + " not parsable by supplied format "

@@ -25,7 +25,7 @@ public abstract class BaseLibraryPolicy implements LibraryPolicy {
     /**
      * enabled flag
      */
-    private boolean enabled=true;
+    private boolean enabled = true;
 
     /**
      * turn policy on/off

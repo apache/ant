@@ -60,7 +60,7 @@ public final class Libraries extends Task {
     /**
      * helper list
      */
-    private EnabledLibraryElementList policies=new EnabledLibraryElementList();
+    private EnabledLibraryElementList policies = new EnabledLibraryElementList();
 
     /**
      * repository for retrieval
@@ -366,38 +366,38 @@ public final class Libraries extends Task {
         Iterator policyIterator = policies.enabledIterator();
         while (retrieve && policyIterator.hasNext()) {
             LibraryPolicy libraryPolicy = (LibraryPolicy) policyIterator.next();
-            retrieve=libraryPolicy.beforeConnect(this, libraryIterator());
-            if(retrieve) {
+            retrieve = libraryPolicy.beforeConnect(this, libraryIterator());
+            if (retrieve) {
                 //add all processed properties to the list, 'cept for anything that
                 //broke the chain
                 processedPolicies.add(libraryPolicy);
             } else {
-                log("Policy "+libraryPolicy.getClass().getName()
+                log("Policy " + libraryPolicy.getClass().getName()
                         + " disabled retrieval",
                         Project.MSG_VERBOSE);
             }
         }
 
         //see if we need to do a download
-        if(!retrieve) {
+        if (!retrieve) {
             //if not, log it
             log(MSG_NO_RETRIEVE);
         } else {
             int downloads = calculateFetchCount();
-            if(downloads>0) {
+            if (downloads > 0) {
                 //get the files
                 connectAndRetrieve(repo, useTimestamp);
             } else {
                 //nothing to fetch
-                log(MSG_NO_LIBRARIES_TO_FETCH,Project.MSG_VERBOSE);
+                log(MSG_NO_LIBRARIES_TO_FETCH, Project.MSG_VERBOSE);
             }
         }
 
         //now reverse iterate through all processed properties.
-        for(int i=processedPolicies.size()-1;i>=0;i--) {
-            LibraryPolicy libraryPolicy = (LibraryPolicy)processedPolicies.get(i);
+        for (int i = processedPolicies.size() - 1; i >= 0; i--) {
+            LibraryPolicy libraryPolicy = (LibraryPolicy) processedPolicies.get(i);
             //and call their post-processor
-            libraryPolicy.afterFetched(this,libraryIterator() );
+            libraryPolicy.afterFetched(this, libraryIterator());
         }
     }
 
@@ -425,7 +425,7 @@ public final class Libraries extends Task {
                         Project.MSG_VERBOSE);
                 reachable = false;
             }
-            if(!reachable) {
+            if (!reachable) {
                 log("repository is not reachable", Project.MSG_INFO);
                 return 0;
             }
@@ -435,11 +435,11 @@ public final class Libraries extends Task {
             while (it.hasNext()) {
                 Library library = (Library) it.next();
                 //check to see if it is for fetching
-                if(library.isToFetch()) {
-                    log("Fetching "+library.getNormalFilename(), Project.MSG_VERBOSE);
+                if (library.isToFetch()) {
+                    log("Fetching " + library.getNormalFilename(), Project.MSG_VERBOSE);
                     try {
                         //fetch it
-                        boolean fetched=repo.fetch(library, useTimestamp) ;
+                        boolean fetched = repo.fetch(library, useTimestamp);
                         //record the fact in the library
                         log("success; marking as fetched",
                                 Project.MSG_DEBUG);
@@ -457,7 +457,7 @@ public final class Libraries extends Task {
             }
         } finally {
 
-            log("disconnecting",Project.MSG_VERBOSE);
+            log("disconnecting", Project.MSG_VERBOSE);
             repo.disconnect();
         }
         return failures;
@@ -504,11 +504,11 @@ public final class Libraries extends Task {
      * @return count of enabled libraries with the to fetch bit set
      */
     public  int calculateFetchCount() {
-        int count=0;
+        int count = 0;
         Iterator it = enabledLibrariesIterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
-            if(library.isToFetch()) {
+            if (library.isToFetch()) {
                 count++;
             };
         }
@@ -540,21 +540,21 @@ public final class Libraries extends Task {
     protected void verifyAllLibrariesPresent() {
         //iterate through the libs we have
         boolean missing = false;
-        StringBuffer buffer=new StringBuffer();
+        StringBuffer buffer = new StringBuffer();
         Iterator it = enabledLibrariesIterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
             //check for the library existing
             if (!library.exists()) {
                 //and log if one is missing
-                buffer.append(library.toString()+"; ");
+                buffer.append(library.toString() + "; ");
                 log("Missing: " + library.toString(),
                         Project.MSG_ERR);
                 missing = true;
             }
         }
         if (missing) {
-            throw new BuildException(ERROR_INCOMPLETE_RETRIEVAL+buffer);
+            throw new BuildException(ERROR_INCOMPLETE_RETRIEVAL + buffer);
         }
     }
 

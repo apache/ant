@@ -40,9 +40,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  *  Compiles C# source into executables or modules.
  *
- * csc.exe on Windows or mcs on other platforms must be on the execute path, unless another executable
- * or the full path to that executable is specified in the <tt>executable</tt>
- * parameter
+ * csc.exe on Windows or mcs on other platforms must be on the execute
+ * path, unless another executable or the full path to that executable
+ * is specified in the <tt>executable</tt> parameter
  * <p>
  * All parameters are optional: &lt;csc/&gt; should suffice to produce a debug
  * build of all *.cs files. However, naming an <tt>destFile</tt>stops the
@@ -71,17 +71,17 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * Example
  *
  * <pre>&lt;csc
- * 	optimize=&quot;true&quot;
- * 	debug=&quot;false&quot;
- * 	docFile=&quot;documentation.xml&quot;
- * 	warnLevel=&quot;4&quot;
- * 	unsafe=&quot;false&quot;
- * 	targetType=&quot;exe&quot;
- * 	incremental=&quot;false&quot;
- * 	mainClass = &quot;MainApp&quot;
- * 	destFile=&quot;NetApp.exe&quot;
- * 	&gt;
- * 	     &lt;src dir="src" includes="*.cs" /&gt;
+ *       optimize=&quot;true&quot;
+ *       debug=&quot;false&quot;
+ *       docFile=&quot;documentation.xml&quot;
+ *       warnLevel=&quot;4&quot;
+ *       unsafe=&quot;false&quot;
+ *       targetType=&quot;exe&quot;
+ *       incremental=&quot;false&quot;
+ *       mainClass = &quot;MainApp&quot;
+ *       destFile=&quot;NetApp.exe&quot;
+ *       &gt;
+ *           &lt;src dir="src" includes="*.cs" /&gt;
  *       &lt;reference file="${testCSC.dll}" /&gt;
  *       &lt;define name="RELEASE" /&gt;
  *       &lt;define name="DEBUG" if="debug.property"/&gt;

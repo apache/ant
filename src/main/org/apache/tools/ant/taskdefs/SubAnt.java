@@ -280,12 +280,12 @@ public class SubAnt
                 Project.MSG_WARN);
         } finally {
             ant = null;
-        }        
+        }
     }
 
     /**
      * This method builds the file name to use in conjunction with directories.
-     * 
+     *
      * <p>Defaults to "build.xml".
      * If <code>genericantfile</code> is set, this attribute is ignored.</p>
      *
@@ -297,7 +297,7 @@ public class SubAnt
 
     /**
      * This method builds a file path to use in conjunction with directories.
-     * 
+     *
      * <p>Use <code>genericantfile</code>, in order to run the same build file
      * with different basedirs.</p>
      * If this attribute is set, <code>antfile</code> is ignored.

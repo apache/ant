@@ -221,19 +221,17 @@ public class StarTeamCheckout extends TreeBasedTask {
         // to configure the view
         if (this.isUsingViewLabel()) {
             return new View(raw, ViewConfiguration.createFromLabel(labelID));
-        }
         // if a label has been supplied and it is a revision label, use the raw
         // the view as the snapshot
-        else if (this.isUsingRevisionLabel()) {
+        } else if (this.isUsingRevisionLabel()) {
             return raw;
         }
         // if a date has been supplied use a view configured to the date.
         View view = getViewConfiguredByDate(raw);
         if (view != null) {
             return view;
-        }
         // otherwise, use this view configured as the tip.
-        else {
+        } else {
             return new View(raw, ViewConfiguration.createTip());
         }
     }
@@ -581,7 +579,7 @@ public class StarTeamCheckout extends TreeBasedTask {
 
             String[] localFiles = localFolder.list();
             // PR 31965 says that it can return null
-            if (localFiles == null){
+            if (localFiles == null) {
                 return this;
             }
             for (int i = 0; i < localFiles.length; i++) {

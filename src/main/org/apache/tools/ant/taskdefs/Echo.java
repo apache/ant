@@ -111,7 +111,7 @@ public class Echo extends Task {
      * @param echoLevel the logging level
      */
     public void setLevel(EchoLevel echoLevel) {
-        logLevel=echoLevel.getLevel();
+        logLevel = echoLevel.getLevel();
     }
 
     /**
@@ -134,7 +134,7 @@ public class Echo extends Task {
         /**
          * mapping of enumerated values to log levels
          */
-        private static int levels[]={
+        private static int levels[] = {
             Project.MSG_ERR,
             Project.MSG_WARN,
             Project.MSG_INFO,

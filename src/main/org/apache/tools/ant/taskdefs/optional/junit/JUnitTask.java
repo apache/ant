@@ -608,10 +608,10 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public void setTempdir(File tmpDir) {
-        if (tmpDir!=null) {
+        if (tmpDir != null) {
             if (!tmpDir.exists() || !tmpDir.isDirectory()) {
                 throw new BuildException(tmpDir.toString()
-                                         +" is not a valid temp directory");
+                                         + " is not a valid temp directory");
             }
         }
         this.tmpDir = tmpDir;
@@ -662,7 +662,7 @@ public class JUnitTask extends Task {
                     execute((JUnitTest) l.get(0));
                 } else {
                     execute(l);
-                }            
+                }
             }
         } finally {
             if (classLoader != null && reloading) {
@@ -706,17 +706,17 @@ public class JUnitTask extends Task {
      */
     protected void execute(List tests) throws BuildException {
         JUnitTest test = null;
-        // Create a temporary file to pass the test cases to run to 
+        // Create a temporary file to pass the test cases to run to
         // the runner (one test case per line)
         File casesFile = createTempPropertiesFile("junittestcases");
         PrintWriter writer = null;
         try {
-            writer = 
+            writer =
                 new PrintWriter(new BufferedWriter(new FileWriter(casesFile)));
             Iterator iter = tests.iterator();
             while (iter.hasNext()) {
                 test = (JUnitTest) iter.next();
-                writer.print(test.getName()); 
+                writer.print(test.getName());
                 if (test.getTodir() == null) {
                     writer.print("," + getProject().resolveFile("."));
                 } else {
@@ -735,17 +735,17 @@ public class JUnitTask extends Task {
 
             // execute the test and get the return code
             ExecuteWatchdog watchdog = createWatchdog();
-            TestResultHolder result = 
+            TestResultHolder result =
                 executeAsForked(test, watchdog, casesFile);
             actOnTestResult(result, test, "Tests");
-        } catch(IOException e) {
+        } catch (IOException e) {
             log(e.toString(), Project.MSG_ERR);
             throw new BuildException(e);
         } finally {
             if (writer != null) {
                 writer.close();
             }
-            
+
             try {
                 casesFile.delete();
             } catch (Exception e) {
@@ -768,8 +768,8 @@ public class JUnitTask extends Task {
      * @throws BuildException in case of error creating a temporary property file,
      * or if the junit process can not be forked
      */
-    private TestResultHolder executeAsForked(JUnitTest test, 
-                                             ExecuteWatchdog watchdog, 
+    private TestResultHolder executeAsForked(JUnitTest test,
+                                             ExecuteWatchdog watchdog,
                                              File casesFile)
         throws BuildException {
 
@@ -780,7 +780,7 @@ public class JUnitTask extends Task {
 
         CommandlineJava cmd = null;
         try {
-            cmd = (CommandlineJava)(getCommandline().clone());
+            cmd = (CommandlineJava) (getCommandline().clone());
         } catch (CloneNotSupportedException e) {
             throw new BuildException("This shouldn't happen", e, getLocation());
         }
@@ -791,7 +791,7 @@ public class JUnitTask extends Task {
             log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
             cmd.createArgument().setValue("testsfile=" + casesFile);
         }
-        
+
         cmd.createArgument().setValue("filtertrace=" + test.getFiltertrace());
         cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
         cmd.createArgument().setValue("haltOnFailure="
@@ -1292,7 +1292,7 @@ public class JUnitTask extends Task {
 
         //the trick to integrating test output to the formatter, is to
         //create a special test class that asserts an error
-        //and tell the formatter that it raised.  
+        //and tell the formatter that it raised.
         Test t = new Test() {
             public int countTestCases() { return 1; }
             public void run(TestResult r) {
@@ -1323,7 +1323,7 @@ public class JUnitTask extends Task {
                 classLoader = getProject().createClassLoader(classpath);
                 classLoader.setParentFirst(false);
                 classLoader.addJavaLibraries();
-                log("Using CLASSPATH " + classLoader.getClasspath(), 
+                log("Using CLASSPATH " + classLoader.getClasspath(),
                     Project.MSG_VERBOSE);
                 // make sure the test will be accepted as a TestCase
                 classLoader.addSystemPackageRoot("junit");
@@ -1390,21 +1390,21 @@ public class JUnitTask extends Task {
          * @return true if everything is equal
          */
         public boolean equals(Object other) {
-            if (other == null 
+            if (other == null
                 || other.getClass() != ForkedTestConfiguration.class) {
                 return false;
             }
             ForkedTestConfiguration o = (ForkedTestConfiguration) other;
-            return filterTrace == o.filterTrace 
+            return filterTrace == o.filterTrace
                 && haltOnError == o.haltOnError
                 && haltOnFailure == o.haltOnFailure
                 && ((errorProperty == null && o.errorProperty == null)
-                    || 
-                    (errorProperty != null 
+                    ||
+                    (errorProperty != null
                      && errorProperty.equals(o.errorProperty)))
                 && ((failureProperty == null && o.failureProperty == null)
-                    || 
-                    (failureProperty != null 
+                    ||
+                    (failureProperty != null
                      && failureProperty.equals(o.failureProperty)));
         }
 
@@ -1414,7 +1414,7 @@ public class JUnitTask extends Task {
          * @return
          */
         public int hashCode() {
-            return (filterTrace ? 1 : 0) 
+            return (filterTrace ? 1 : 0)
                 + (haltOnError ? 2 : 0)
                 + (haltOnFailure ? 4 : 0);
         }
@@ -1506,7 +1506,7 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.7
      */
-    protected void actOnTestResult(TestResultHolder result, JUnitTest test, 
+    protected void actOnTestResult(TestResultHolder result, JUnitTest test,
                                    String name) {
         // if there is an error/failure and that it should halt, stop
         // everything otherwise just log a statement

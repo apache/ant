@@ -411,17 +411,17 @@ public class JavaCC extends Task {
                 switch (type) {
                 case TASKDEF_TYPE_JAVACC:
                     mainClass = ORG_JAVACC_CLASS;
-                    
+
                 break;
-                
+
                 case TASKDEF_TYPE_JJTREE:
                     mainClass = ORG_JJTREE_CLASS;
-                    
+
                     break;
 
                 case TASKDEF_TYPE_JJDOC:
                     mainClass = ORG_JJDOC_CLASS;
-                    
+
                     break;
                 }
             }

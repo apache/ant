@@ -87,7 +87,7 @@ public class Permissions {
      * prevent your part from starting, as for instance changing classloaders may be prohibited.
      * The classloader for the new situation is supposed to be present.
      */
-    public void setSecurityManager() throws BuildException{
+    public void setSecurityManager() throws BuildException {
         origSm = System.getSecurityManager();
         init();
         System.setSecurityManager(new MySM());
@@ -110,7 +110,7 @@ public class Permissions {
             if (p.getClassName() == null) {
                 throw new BuildException("Granted permission " + p + " does not contain a class.");
             } else {
-                java.security.Permission perm =  new UnresolvedPermission(p.getClassName(),p.getName(),p.getActions(),null);
+                java.security.Permission perm =  new UnresolvedPermission(p.getClassName(), p.getName(), p.getActions(), null);
                 granted.add(perm);
             }
         }
@@ -160,7 +160,7 @@ public class Permissions {
          * @param status The exit status requested.
          */
         public void checkExit(int status) {
-            java.security.Permission perm = new java.lang.RuntimePermission("exitVM",null);
+            java.security.Permission perm = new java.lang.RuntimePermission("exitVM", null);
             try {
                 checkPermission(perm);
             } catch (SecurityException e) {
@@ -203,7 +203,7 @@ public class Permissions {
          */
         private void checkRevoked(java.security.Permission perm) {
             for (Iterator i = revokedPermissions.listIterator(); i.hasNext();) {
-                if (((Permissions.Permission)i.next()).matches(perm)) {
+                if (((Permissions.Permission) i.next()).matches(perm)) {
                     throw new SecurityException("Permission " + perm + " was revoked.");
                 }
             }

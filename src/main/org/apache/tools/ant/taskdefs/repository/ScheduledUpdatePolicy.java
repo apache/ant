@@ -45,8 +45,8 @@ import java.util.Properties;
  */
 public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
     private File markerFile;
-    private int hours=17;
-    private int days=0;
+    private int hours = 17;
+    private int days = 0;
 
     /**
      * if not null, this means that we have a marker file to save
@@ -100,7 +100,7 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      * @return
      */
     public long getInterval() {
-        return ((days*24)+hours)*60*60000;
+        return ((days * 24) + hours) * 60 * 60000;
     }
 
 
@@ -117,19 +117,19 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      */
     public boolean beforeConnect(Libraries owner, ListIterator libraries) {
 
-        Repository repository=owner.getRepository();
-        if(markerFile==null) {
+        Repository repository = owner.getRepository();
+        if (markerFile == null) {
             throw new BuildException(ERROR_NO_MARKER_FILE);
         }
         Properties now = makeProperties(owner.enabledLibrariesIterator(), repository);
         try {
-            if(markerFile.exists()) {
-                long timestamp=markerFile.lastModified();
-                Properties then=loadMarkerFile();
-                long currentTime=System.currentTimeMillis();
-                long diff=currentTime-timestamp;
-                if(now.equals(then)) {
-                    if(diff<getInterval()) {
+            if (markerFile.exists()) {
+                long timestamp = markerFile.lastModified();
+                Properties then = loadMarkerFile();
+                long currentTime = System.currentTimeMillis();
+                long diff = currentTime - timestamp;
+                if (now.equals(then)) {
+                    if (diff < getInterval()) {
                         owner.log(INTERVAL_SHORT_NO_UPDATE,
                                 Project.MSG_VERBOSE);
                         return false;
@@ -148,7 +148,7 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
             markerFileToSave = now;
             return true;
         } catch (IOException e) {
-            throw new BuildException("Marker file "+markerFile.getAbsolutePath()+" access failed",e);
+            throw new BuildException("Marker file " + markerFile.getAbsolutePath() + " access failed", e);
         }
     }
 
@@ -160,13 +160,13 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      */
     public void afterFetched(Libraries owner, ListIterator libraries) {
 
-        if(markerFileToSave!=null) {
+        if (markerFileToSave != null) {
             //if we get here, we need to save the file
             try {
                 saveMarkerFile(markerFileToSave);
             } catch (IOException e) {
                 throw new BuildException("Failed to save marker file "
-                        +markerFile,
+                        + markerFile,
                         e);
             }
         } else {
@@ -182,14 +182,14 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      * @return a new properties file
      */
     protected Properties makeProperties(Iterator libraries, Repository repository) {
-        Properties props=new Properties();
-        int counter=1;
+        Properties props = new Properties();
+        int counter = 1;
         while (libraries.hasNext()) {
             Library library = (Library) libraries.next();
-            String name=makeEntry(library);
-            props.put(Integer.toString(counter),name);
+            String name = makeEntry(library);
+            props.put(Integer.toString(counter), name);
         }
-        props.put("repository",repository.getRepositoryURI());
+        props.put("repository", repository.getRepositoryURI());
         return props;
     }
 
@@ -201,9 +201,9 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
     protected void saveMarkerFile(Properties props)
             throws IOException {
         markerFile.getParentFile().mkdirs();
-        OutputStream out= new BufferedOutputStream(new FileOutputStream(markerFile));
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(markerFile));
         try {
-            props.store(out,null);
+            props.store(out, null);
         } finally {
             FileUtils.close(out);
         }
@@ -215,8 +215,8 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      * @throws IOException
      */
     protected Properties loadMarkerFile() throws IOException {
-        Properties props=new Properties();
-        InputStream in=new BufferedInputStream(new FileInputStream(markerFile));
+        Properties props = new Properties();
+        InputStream in = new BufferedInputStream(new FileInputStream(markerFile));
         try {
             props.load(in);
             return props;
@@ -234,6 +234,6 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      * @return
      */
     protected String makeEntry(Library lib) {
-        return lib.getMavenPath('/')+"//"+lib.getNormalFilename();
+        return lib.getMavenPath('/') + "//" + lib.getNormalFilename();
     }
 }

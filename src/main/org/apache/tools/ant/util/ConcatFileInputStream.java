@@ -43,7 +43,7 @@ public class ConcatFileInputStream extends InputStream {
    * Construct a new <CODE>ConcatFileInputStream</CODE>
    * with the specified <CODE>File[]</CODE>.
    * @param file   <CODE>File[]</CODE>.
-   * @throws <CODE>IOException</CODE> if I/O errors occur.
+   * @throws IOException if I/O errors occur.
    */
     public ConcatFileInputStream(File[] file) throws IOException {
         this.file = file;

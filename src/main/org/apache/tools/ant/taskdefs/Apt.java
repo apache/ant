@@ -38,7 +38,7 @@ import java.io.File;
 
 public class Apt
         extends Javac {
-    private boolean compile=true;
+    private boolean compile = true;
     private String factory;
     private Path factoryPath;
     private Vector options;

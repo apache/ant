@@ -93,6 +93,6 @@ public interface XMLConstants {
 
     /**
      * name of host running the tests
-     */ 
+     */
     String HOSTNAME = "hostname";
 }

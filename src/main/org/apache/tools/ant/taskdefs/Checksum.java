@@ -479,7 +479,7 @@ public class Checksum extends MatchingTask implements Condition {
                         File existingFile = (File) destination;
                         if (existingFile.exists()) {
                             try {
-                                String suppliedChecksum = 
+                                String suppliedChecksum =
                                     readChecksum(existingFile);
                                 checksumMatches = checksumMatches
                                     && checksum.equals(suppliedChecksum);
@@ -629,7 +629,7 @@ public class Checksum extends MatchingTask implements Condition {
 
         static {
             formatMap.put(CHECKSUM, new MessageFormat("{0}"));
-            formatMap.put(MD5SUM, new MessageFormat("{0} *{1}")); 
+            formatMap.put(MD5SUM, new MessageFormat("{0} *{1}"));
             formatMap.put(SVF, new MessageFormat("MD5 ({1}) = {0}"));
         }
 
@@ -642,7 +642,7 @@ public class Checksum extends MatchingTask implements Condition {
             e.setValue(CHECKSUM);
             return e;
         }
-        
+
         public MessageFormat getFormat() {
             return (MessageFormat) formatMap.get(getValue());
         }

@@ -46,7 +46,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
             Constructor cons = c.getConstructor(new Class[] {String[].class});
             Object rmic = cons.newInstance(new Object[] {cmd.getArguments()});
             Method doRmic = c.getMethod("run", (Class[]) null);
-            Boolean ok = (Boolean) doRmic.invoke(rmic, (Object[])null);
+            Boolean ok = (Boolean) doRmic.invoke(rmic, (Object[]) null);
 
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {

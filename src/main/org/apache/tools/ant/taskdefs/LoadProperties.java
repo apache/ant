@@ -152,7 +152,7 @@ public final class LoadProperties extends Task {
 
         BufferedInputStream bis = null;
 
-        if (srcFile != null ) {
+        if (srcFile != null) {
             if (!srcFile.exists()) {
                 throw new BuildException("Source file does not exist.");
             }

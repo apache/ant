@@ -71,7 +71,7 @@ public class PathConvert extends Task {
     /**
      * The property to receive the conversion
      */
-    private String property = null;//
+    private String property = null;
     /**
      * Path prefix map
      */

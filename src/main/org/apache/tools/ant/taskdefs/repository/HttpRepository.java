@@ -220,11 +220,11 @@ public abstract class HttpRepository extends Repository {
     public boolean fetch(Library library, boolean useTimestamp) throws IOException {
 
         String path = getRemoteLibraryURL(library);
-        log("Downloading "+path +" to "+ library.getAbsolutePath());
-        URL remoteURL=new URL(path);
+        log("Downloading " + path + " to " + library.getAbsolutePath());
+        URL remoteURL = new URL(path);
         long start, finish;
         start = System.currentTimeMillis();
-        boolean success=get(remoteURL, library.getLibraryFile(),useTimestamp,
+        boolean success = get(remoteURL, library.getLibraryFile(), useTimestamp,
                 username, password);
         finish = System.currentTimeMillis();
         long diff = finish - start;
@@ -240,7 +240,7 @@ public abstract class HttpRepository extends Repository {
      * @param useTimestamp
      * @return
      */
-    public boolean get(URL url,File destFile,boolean useTimestamp,String user,String passwd)
+    public boolean get(URL url, File destFile, boolean useTimestamp, String user, String passwd)
             throws IOException {
         //create the destination dir
         destFile.getParentFile().mkdirs();
@@ -253,7 +253,7 @@ public abstract class HttpRepository extends Repository {
         getTask.setUseTimestamp(useTimestamp);
         getTask.setSrc(url);
         getTask.setIgnoreErrors(true);
-        return getTask.doGet(Project.MSG_VERBOSE,null);
+        return getTask.doGet(Project.MSG_VERBOSE, null);
     }
 
     /**
@@ -300,6 +300,6 @@ public abstract class HttpRepository extends Repository {
      * @return
      */
     public String getRepositoryURI() {
-        return "HttpRepository://"+getUrl();
+        return "HttpRepository://" + getUrl();
     }
 }

@@ -184,7 +184,7 @@ public class Image extends MatchingTask {
                 destDir = srcDir;
             }
 
-            File new_file = new File(destDir.getAbsolutePath() 
+            File new_file = new File(destDir.getAbsolutePath()
                                      + File.separator + file.getName());
 
             if ((overwrite && new_file.exists()) && (!new_file.equals(file))) {
@@ -193,7 +193,7 @@ public class Image extends MatchingTask {
 
             FileOutputStream stream = new FileOutputStream(new_file);
 
-            JAI.create("encode", image, stream, str_encoding.toUpperCase(), 
+            JAI.create("encode", image, stream, str_encoding.toUpperCase(),
                        null);
             stream.flush();
             stream.close();
@@ -234,7 +234,7 @@ public class Image extends MatchingTask {
 
                 files = ds.getIncludedFiles();
                 for (int i = 0; i < files.length; i++) {
-                    filesList.add(new File(srcDir.getAbsolutePath() 
+                    filesList.add(new File(srcDir.getAbsolutePath()
                                            + File.separator + files[i]));
                 }
             }
@@ -245,7 +245,7 @@ public class Image extends MatchingTask {
                 files = ds.getIncludedFiles();
                 File fromDir = fs.getDir(getProject());
                 for (int j = 0; j < files.length; j++) {
-                    filesList.add(new File(fromDir.getAbsolutePath() 
+                    filesList.add(new File(fromDir.getAbsolutePath()
                                            + File.separator + files[j]));
                 }
             }

@@ -494,7 +494,7 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
             } else {
                 clazz = Class.forName(classname);
             }
-            
+
             Object rv = clazz.newInstance();
 
             if (!type.isInstance(rv)) {

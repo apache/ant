@@ -175,7 +175,7 @@ public final class ChainReaderHelper {
                                 }
                                 final Reader[] rdr = {instream};
                                 instream =
-                                    (Reader) constructors[j].newInstance((Object[])rdr);
+                                    (Reader) constructors[j].newInstance((Object[]) rdr);
                                 setProjectOnObject(instream);
                                 if (Parameterizable.class.isAssignableFrom(clazz)) {
                                     final Parameter[] params = filter.getParams();

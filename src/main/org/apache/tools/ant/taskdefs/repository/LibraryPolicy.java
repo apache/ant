@@ -22,7 +22,7 @@ import java.util.ListIterator;
 /**
  * An interface that things can support to change the library behaviour.
  * Example uses could be: extra validation (signatures, etc), filename remapping
- * 
+ *
  *
  * Here is the use
  * <ol>
@@ -45,7 +45,7 @@ public interface LibraryPolicy extends EnabledLibraryElement {
 
     /**
      * Method called before we connect. Caller can manipulate the list,
-     * 
+     *
      *
      * @param owner
      *
@@ -63,7 +63,7 @@ public interface LibraryPolicy extends EnabledLibraryElement {
      * @param libraries
      * @throws org.apache.tools.ant.BuildException
      */
-    public void afterFetched(Libraries owner,ListIterator libraries);
+    public void afterFetched(Libraries owner, ListIterator libraries);
 
 
 }

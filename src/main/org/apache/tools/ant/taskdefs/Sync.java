@@ -152,7 +152,7 @@ public class Sync extends Task {
         int[] removedCount = new int[] {0, 0};
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(toDir);
-        String[] excls = 
+        String[] excls =
             (String[]) nonOrphans.toArray(new String[nonOrphans.size() + 1]);
         // want to keep toDir itself
         excls[nonOrphans.size()] = "";
@@ -171,7 +171,7 @@ public class Sync extends Task {
         // leaves before their parent nodes - thus making sure (well,
         // more likely) that the directories are empty when we try to
         // delete them.
-        for (int i = dirs.length - 1 ; i >= 0 ; --i) {
+        for (int i = dirs.length - 1; i >= 0; --i) {
             File f = new File(toDir, dirs[i]);
             log("Removing orphan directory: " + f, Project.MSG_DEBUG);
             f.delete();

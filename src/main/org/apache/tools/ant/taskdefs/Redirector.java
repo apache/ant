@@ -494,7 +494,7 @@ public class Redirector {
             try {
                 LeadPipeInputStream snk = new LeadPipeInputStream();
                 snk.setManagingTask(managingTask);
-    
+
                 InputStream outPumpIn = snk;
 
                 Reader reader = new InputStreamReader(outPumpIn, inputEncoding);
@@ -523,7 +523,7 @@ public class Redirector {
             try {
                 LeadPipeInputStream snk = new LeadPipeInputStream();
                 snk.setManagingTask(managingTask);
-    
+
                 InputStream errPumpIn = snk;
 
                 Reader reader = new InputStreamReader(errPumpIn, inputEncoding);
@@ -558,7 +558,7 @@ public class Redirector {
             } catch (IOException eyeOhEx) {
                 throw new BuildException(eyeOhEx);
             }
-            ((ConcatFileInputStream)inputStream).setManagingTask(managingTask);
+            ((ConcatFileInputStream) inputStream).setManagingTask(managingTask);
         } else if (inputString != null) {
             managingTask.log("Using input \"" + inputString + "\"",
                 Project.MSG_VERBOSE);
@@ -770,7 +770,7 @@ public class Redirector {
         Arrays.fill(c, ' ');
         String indent = new String(c);
 
-        for (int i = 1; i < file.length ; i++) {
+        for (int i = 1; i < file.length; i++) {
             outputStream = new TeeOutputStream(outputStream,
                 new LazyFileOutputStream(file[i], append, createEmptyFiles));
             managingTask.log(indent + file[i], loglevel);

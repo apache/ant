@@ -36,7 +36,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * for Xalan2/XSLTC, then for Xalan1.
  */
 abstract class XalanExecutor {
-    private static final String pack = 
+    private static final String pack =
         "org.apache.tools.ant.taskdefs.optional.junit.";
 
     /** the transformer caller */
@@ -69,18 +69,18 @@ abstract class XalanExecutor {
      * @throws BuildException thrown if it could not find a valid xalan
      * executor.
      */
-    static XalanExecutor newInstance(AggregateTransformer caller) 
+    static XalanExecutor newInstance(AggregateTransformer caller)
         throws BuildException {
         XalanExecutor executor = null;
         try {
             Class clazz = Class.forName(pack + "Xalan2Executor");
-            executor = (XalanExecutor)clazz.newInstance();
-        } catch (Exception xsltcApacheMissing){
+            executor = (XalanExecutor) clazz.newInstance();
+        } catch (Exception xsltcApacheMissing) {
             caller.task.log(xsltcApacheMissing.toString());
             try {
                 Class clazz = Class.forName(pack + "Xalan1Executor");
                 executor = (XalanExecutor) clazz.newInstance();
-            } catch (Exception xalan1Missing){
+            } catch (Exception xalan1Missing) {
                 caller.task.log(xalan1Missing.toString());
                 throw new BuildException("Could not find xstlc nor xalan2 nor "
                                          + "xalan1 in the classpath. Check "
@@ -112,22 +112,22 @@ abstract class XalanExecutor {
      * @return a string representing the implementation version.
      * @throws BuildException
      */
-    protected abstract String getProcVersion(String classNameImpl) 
+    protected abstract String getProcVersion(String classNameImpl)
         throws BuildException;
 
     /** a bit simplistic but xsltc data are conveniently private non final */
-    protected final String getXSLTCVersion(String procVersionClassName) 
+    protected final String getXSLTCVersion(String procVersionClassName)
         throws ClassNotFoundException {
         // there's a convenient xsltc class version but data are
         // private so use package information
         Class procVersion = Class.forName(procVersionClassName);
         Package pkg = procVersion.getPackage();
-        return pkg.getName() + " " + pkg.getImplementationTitle() 
+        return pkg.getName() + " " + pkg.getImplementationTitle()
             + " " + pkg.getImplementationVersion();
     }
 
     /** pretty useful data (Xalan version information) to display. */
-    protected final String getXalanVersion(String procVersionClassName) 
+    protected final String getXalanVersion(String procVersionClassName)
         throws ClassNotFoundException {
         Class procVersion = Class.forName(procVersionClassName);
         String pkg = procVersion.getPackage().getName();

@@ -62,10 +62,10 @@ public class Java extends Task {
     private File input;
     private File output;
     private File error;
-    
+
     protected Redirector redirector = new Redirector(this);
     protected RedirectorElement redirectorElement;
-    
+
     private String resultProperty;
     private Permissions perm = null;
 
@@ -123,7 +123,7 @@ public class Java extends Task {
             getProject().log("spawn does not allow attributes related to input, "
             + "output, error, result", Project.MSG_ERR);
             getProject().log("spawn also does not allow timeout", Project.MSG_ERR);
-            getProject().log( "finally, spawn is not compatible "
+            getProject().log("finally, spawn is not compatible "
                 + "with a nested I/O <redirector>", Project.MSG_ERR);
             throw new BuildException("You have used an attribute "
                 + "or nested element which is not compatible with spawn");
@@ -591,7 +591,7 @@ public class Java extends Task {
      * @param asserts assertion set
      */
     public void addAssertions(Assertions asserts) {
-        if(cmdl.getAssertions() != null) {
+        if (cmdl.getAssertions() != null) {
             throw new BuildException("Only one assertion declaration is allowed");
         }
         cmdl.setAssertions(asserts);
@@ -839,10 +839,10 @@ public class Java extends Task {
     private void setupCommandLineForVMS(Execute exe, String[] command) {
         //Use the VM launcher instead of shell launcher on VMS
         exe.setVMLauncher(true);
-        File vmsJavaOptionFile=null;
+        File vmsJavaOptionFile = null;
         try {
-            String [] args = new String[command.length-1];
-            System.arraycopy(command, 1, args, 0, command.length-1);
+            String [] args = new String[command.length - 1];
+            System.arraycopy(command, 1, args, 0, command.length - 1);
             vmsJavaOptionFile = JavaEnvUtils.createVmsJavaOptionFile(args);
             //we mark the file to be deleted on exit.
             //the alternative would be to cache the filename and delete

@@ -41,7 +41,7 @@ public class IsPingable extends ProjectComponent implements Condition  {
 
     private String host;
     public static final int DEFAULT_TIMEOUT = 30;
-    private int timeout=DEFAULT_TIMEOUT;
+    private int timeout = DEFAULT_TIMEOUT;
     public static final String ERROR_NO_HOSTNAME = "No hostname defined";
     public static final String ERROR_BAD_TIMEOUT = "Invalid timeout value";
     public static final String ERROR_UNKNOWN_HOST = "Unknown host:";
@@ -71,20 +71,20 @@ public class IsPingable extends ProjectComponent implements Condition  {
      *          if an error occurs
      */
     public boolean eval() throws BuildException {
-        if(host==null || host.length()==0) {
+        if (host == null || host.length() == 0) {
             throw new BuildException(ERROR_NO_HOSTNAME);
         }
-        if(timeout<0) {
+        if (timeout < 0) {
             throw new BuildException(ERROR_BAD_TIMEOUT);
         }
         try {
-            InetAddress address=InetAddress.getByName(host);
-            return address.isReachable(timeout*1000);
+            InetAddress address = InetAddress.getByName(host);
+            return address.isReachable(timeout * 1000);
         } catch (UnknownHostException e) {
-            log(ERROR_UNKNOWN_HOST+host,Project.MSG_VERBOSE);
+            log(ERROR_UNKNOWN_HOST + host, Project.MSG_VERBOSE);
             return false;
         } catch (IOException e) {
-            log(ERROR_ON_NETWORK + host +": "+e.toString(),
+            log(ERROR_ON_NETWORK + host + ": " + e.toString(),
                     Project.MSG_VERBOSE);
             return false;
         }

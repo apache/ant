@@ -56,7 +56,7 @@ class CvsTagEntry {
         buffer.append(m_filename);
         if ((m_revision == null)) {
             buffer.append(" was removed");
-            if(m_prevRevision != null) {
+            if (m_prevRevision != null) {
                 buffer.append("; previous revision was ").append(m_prevRevision);
             }
         } else if (m_revision != null && m_prevRevision == null) {

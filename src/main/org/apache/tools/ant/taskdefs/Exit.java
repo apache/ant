@@ -53,7 +53,7 @@ public class Exit extends Task {
                 throw new BuildException(
                     "A single nested condition is required.");
             }
-            return ((Condition)(getConditions().nextElement())).eval();
+            return ((Condition) (getConditions().nextElement())).eval();
         }
     }
 
