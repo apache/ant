@@ -262,7 +262,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             cmd.createArgument().setValue(encoding);
         }
         if (debug) {
-            if (useDebugLevel) {
+            if (useDebugLevel
+                && Project.getJavaVersion() != Project.JAVA_1_0
+                && Project.getJavaVersion() != Project.JAVA_1_1) {
+
                 String debugLevel = attributes.getDebugLevel();
                 if (debugLevel != null) {
                     cmd.createArgument().setValue("-g:" + debugLevel);
@@ -325,13 +328,17 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         return cmd;
     }
 
+    protected Commandline setupJavacCommand() {
+        return setupJavacCommand(false);
+    }
+
     /**
      * Does the command line argument processing for classic and adds
      * the files to compile as well.
      */
-    protected Commandline setupJavacCommand() {
+    protected Commandline setupJavacCommand(boolean debugLevelCheck) {
         Commandline cmd = new Commandline();
-        setupJavacCommandlineSwitches(cmd);
+        setupJavacCommandlineSwitches(cmd, debugLevelCheck);
         logAndAddFilesToCompile(cmd);
         return cmd;
     }

@@ -49,8 +49,10 @@ Other changes:
   select files from an archive for extraction.  Filesets may be 
   used to select archived files for unarchival.
 
-* Javac task allows debug levels to be spcified.  Debug levels
-  will have an effect only when the modern compiler is used.
+* Javac task allows debug levels to be specified.  Debug levels
+  will have an effect only when the modern compiler or the 
+  classic compiler (version 1.2 and higher) is used and debugging
+  is enabled.
 
 * Mail task allows specification of port number.
 

@@ -71,14 +71,14 @@ import java.lang.reflect.Method;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
 public class Javac12 extends DefaultCompilerAdapter {
 
     public boolean execute() throws BuildException {
         attributes.log("Using classic compiler", Project.MSG_VERBOSE);
-        Commandline cmd = setupJavacCommand();
+        Commandline cmd = setupJavacCommand(true);
 
         OutputStream logstr = new LogOutputStream(attributes, Project.MSG_WARN);
         try {

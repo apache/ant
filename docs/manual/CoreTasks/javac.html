@@ -231,10 +231,12 @@ files/directories from the CLASSPATH it passes to the compiler.</p>
     <td valign="top">debuglevel</td>
     <td valign="top">Keyword list to be appended to the <code>-g</code> command line
     switch.  This will be ignored by all implementations except
-    <code>modern</code>, legal values are &quot;none&quot; or a comma separated list of
-    the following keywords.  Valid keywords are &quot;lines&quot;, &quot;vars&quot; and
-    &quot;source&quot; - if debuglevel is not specified, by default, nothing will be
-    appended to <code>-g</code>
+    <code>modern</code> and <code>classic(ver >= 1.2)</code>, legal values are
+    &quot;none&quot; or a comma separated list of the following keywords.
+    Valid keywords are &quot;lines&quot;, &quot;vars&quot; and &quot;source&quot;
+    - if debuglevel is not specified, by default, nothing will be
+    appended to <code>-g</code>.  If debug is not turned on, this attribute will be
+    ignored.
     </td>
     <td align="center" valign="top">No</td>
   </tr>
