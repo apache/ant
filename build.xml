@@ -1640,6 +1640,9 @@
           <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
                    unless="have.cvs"/>
 
+          <!-- needs a local ftp server and the entry of a user/password combination -->
+          <exclude name="${optional.package}/net/FTPTest.java"/>
+
           <!-- test needs special setup -->
           <exclude name="${optional.package}/ssh/ScpTest.java"/>
         </fileset>
