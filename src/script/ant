@@ -44,20 +44,18 @@ if [ -z "$ANT_HOME" ] ; then
   fi
 
   ## resolve links - $0 may be a link to ant's home
-  PRG=$0
-  progname=`basename $0`
+  PRG="$0"
+  progname=`basename "$0"`
   saveddir=`pwd`
 
   # need this for relative symlinks
-  cd `dirname $PRG`
-  
   while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '.*/.*' > /dev/null; then
 	PRG="$link"
     else
-	PRG="`dirname $PRG`/$link"
+	PRG=`dirname "$PRG"`"/$link"
     fi
   done
   
@@ -80,7 +78,7 @@ if $cygwin ; then
 fi
 
 # set ANT_LIB location
-ANT_LIB=${ANT_HOME}/lib
+ANT_LIB="${ANT_HOME}/lib"
 
 if [ -z "$JAVACMD" ] ; then 
   if [ -n "$JAVA_HOME"  ] ; then
@@ -107,18 +105,18 @@ fi
 
 # in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR 
 if $rpm_mode; then
-  JAVALIBDIR=/usr/share/java
+  JAVALIBDIR="/usr/share/java"
   for i in ant ant-optional jaxp_parser xml_apis 
   do
     if [ -z "$LOCALCLASSPATH" ] ; then
-      LOCALCLASSPATH=$JAVALIBDIR/$i.jar
+      LOCALCLASSPATH="$JAVALIBDIR/$i.jar"
     else
-      LOCALCLASSPATH="$JAVALIBDIR/$i.jar":"$LOCALCLASSPATH"
+      LOCALCLASSPATH="$JAVALIBDIR/$i.jar:$LOCALCLASSPATH"
     fi
   done
 
 # in rpm mode ant/lib is in /usr/share/java/ant
-ANT_LIB=${JAVALIBDIR}/ant
+ANT_LIB="${JAVALIBDIR}/ant"
 
 fi
 
@@ -127,11 +125,11 @@ for i in "${ANT_LIB}"/*.jar
 do
   # if the directory is empty, then it will return the input string
   # this is stupid, so case for it
-  if [ "$i" != "${ANT_LIB}/*.jar" ] ; then
+  if [ -f "$i" ] ; then
     if [ -z "$LOCALCLASSPATH" ] ; then
-      LOCALCLASSPATH=$i
+      LOCALCLASSPATH="$i"
     else
-      LOCALCLASSPATH="$i":"$LOCALCLASSPATH"
+      LOCALCLASSPATH="$i:$LOCALCLASSPATH"
     fi
   fi
 done
@@ -148,10 +146,10 @@ if [ -n "$JAVA_HOME" ] ; then
   # OSX hack to make Ant work with jikes
   if $darwin ; then
     OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
-    if [ -d ${OSXHACK} ] ; then
-      for i in ${OSXHACK}/*.jar
+    if [ -d "${OSXHACK}" ] ; then
+      for i in "${OSXHACK}"/*.jar
       do
-        JIKESPATH=$JIKESPATH:$i
+        JIKESPATH="$JIKESPATH:$i"
       done
     fi
   fi
@@ -167,7 +165,6 @@ if [ -n "$JIKESPATH" ] ; then
   if $cygwin ; then
     JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
   fi
-  ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
 fi
 
 # Allow Jikes support (off by default)
@@ -184,4 +181,4 @@ if $cygwin; then
   ANT_OPTS="$ANT_OPTS -Dcygwin.user.home="`cygpath --path --windows "$HOME"`
 fi
 
-"$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"

@@ -9,4 +9,4 @@ CMD="$2"
 shift
 shift
 
-exec $CMD "$@"
+exec "$CMD" "$@"
