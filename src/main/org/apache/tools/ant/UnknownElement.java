@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -235,13 +235,13 @@ public class UnknownElement extends Task {
             + "   libraries, or download a release version from apache.org" +lSep
             + " - The build file was written for a later version of Ant" +lSep
             + "   Fix: upgrade to at least the latest release version of Ant" +lSep
-            + lSep 
-            + "Remember that for JAR files to be visible to ant tasks implemented" +lSep
-            + "in ANT_HOME/lib, the files must be in the same directory or on the" +lSep 
-            + "classpath"+ lSep 
-            + lSep 
-            + "Please do not file bug reports on this problem, nor email the" +lSep
-            + "ant mailing lists, until all of these causes have been explored," +lSep
+            + lSep
+            + "Remember that for JAR files to be visible to Ant tasks implemented" +lSep
+            + "in ANT_HOME/lib, the files must be in the same directory or on the" +lSep
+            + "classpath"+ lSep
+            + lSep
+            + "Please neither file bug reports on this problem, nor email the" +lSep
+            + "Ant mailing lists, until all of these causes have been explored," +lSep
             + "as this is not an Ant bug.";
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.CommandlineJava
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class CommandlineJavaTest extends TestCase {
 
@@ -97,7 +97,7 @@ public class CommandlineJavaTest extends TestCase {
          */
         assertEquals("no classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("no classpath", "junit.textui.TestRunner", s[2]);
-        assertEquals("no classpath", 
+        assertEquals("no classpath",
                      "org.apache.tools.ant.CommandlineJavaTest", s[3]);
         try {
             CommandlineJava c2 = (CommandlineJava) c.clone();
@@ -112,11 +112,11 @@ public class CommandlineJavaTest extends TestCase {
         //        assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
-        assertTrue("junit.jar contained", 
+        assertTrue("junit.jar contained",
                s[3].indexOf("junit.jar"+java.io.File.pathSeparator) >= 0);
         assertTrue("ant.jar contained", s[3].endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
-        assertEquals("with classpath", 
+        assertEquals("with classpath",
                      "org.apache.tools.ant.CommandlineJavaTest", s[5]);
     }
 
