@@ -787,6 +787,34 @@ shell-prompt> m4 foo.m4 > foo
         WEB-INF will look correct.</p>
       </answer>
     </faq>
+
+    <faq id="NoClassDefFoundError">
+      <question>I installed Ant 1.6.x and now get
+        <code>Exception in thread "main" java.lang.NoClassDefFoundError:
+ org/apache/tools/ant/launch/Launcher</code>
+      </question>
+      <answer>
+        <p>
+          The cause of this is that there is an old version of ant somewhere in the
+          class path or configuration.
+        </p>
+        <p>
+          A version of this problem may be seen on some linux systems.
+          Some linux systems (Fedora Core 2 for example), comes with a version
+          of ant pre-installed. There is a configuration file called
+          <code>/etc/ant.conf</code> which if present, the ant shell
+          script will 'dot' include. On Fedora Core 2, the /etc/ant.conf
+          file resets the <code>ANT_HOME</code> environment variable to
+          <code>/usr/share/ant</code>. This causes the problem that
+          an old version of ant (1.5.x in this cause) will be used
+          with a new version of the ant script file.
+        </p>
+        <p>
+          One can check if this is the case by doing
+          <code>ant --noconfig -version</code>.
+        </p>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">
