@@ -56,7 +56,7 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.2 and 1.3</td>
+            <td>Ant 1.2 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
