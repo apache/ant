@@ -17,7 +17,6 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
@@ -220,10 +219,6 @@ public class ExecTask extends Task
         final int err = exe.execute();
 
         //test for and handle a forced process death
-        if( exe.killedProcess() )
-        {
-            getLogger().warn( "Timeout: killed the sub-process" );
-        }
         maybeSetResultPropertyValue( err );
         if( 0 != err )
         {
@@ -283,7 +278,7 @@ public class ExecTask extends Task
      * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    protected PumpStreamHandler createHandler()
+    private void setupOutput( final Execute exe )
         throws TaskException
     {
         if( m_outputFile != null )
@@ -292,7 +287,8 @@ public class ExecTask extends Task
             {
                 m_ouput = new FileOutputStream( m_outputFile );
                 getLogger().debug( "Output redirected to " + m_outputFile );
-                return new PumpStreamHandler( m_ouput );
+                exe.setOutput( m_ouput );
+                exe.setError( m_ouput );
             }
             catch( FileNotFoundException fne )
             {
@@ -307,27 +303,14 @@ public class ExecTask extends Task
         {
             m_byteArrayOutput = new ByteArrayOutputStream();
             getLogger().debug( "Output redirected to ByteArray" );
-            return new PumpStreamHandler( m_byteArrayOutput );
+            exe.setOutput( m_byteArrayOutput );
+            exe.setError( m_byteArrayOutput );
         }
         else
         {
-            return new LogStreamHandler( this,
-                                         Project.MSG_INFO, Project.MSG_WARN );
+            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
         }
-    }
-
-    /**
-     * Create the Watchdog to kill a runaway process.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
-     */
-    protected ExecuteWatchdog createWatchdog()
-        throws TaskException
-    {
-        if( m_timeout == null )
-            return null;
-        return new ExecuteWatchdog( m_timeout.intValue() );
     }
 
     /**
@@ -372,7 +355,12 @@ public class ExecTask extends Task
         // show the command
         getLogger().debug( m_command.toString() );
 
-        final Execute exe = new Execute( createHandler(), createWatchdog() );
+        final Execute exe = new Execute();
+        setupOutput( exe );
+        if( null != m_timeout )
+        {
+            exe.setTimeout( m_timeout.intValue() );
+        }
         exe.setWorkingDirectory( m_workingDirectory );
         exe.setVMLauncher( m_useVMLauncher );
         exe.setNewenvironment( m_newEnvironment );
