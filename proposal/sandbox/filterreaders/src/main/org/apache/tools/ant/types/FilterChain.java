@@ -58,6 +58,7 @@ import java.util.Vector;
 import org.apache.tools.ant.filters.ExpandProperties;
 import org.apache.tools.ant.filters.HeadFilter;
 import org.apache.tools.ant.filters.LineContains;
+import org.apache.tools.ant.filters.LineContainsRegExp;
 import org.apache.tools.ant.filters.PrefixLines;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.StripJavaComments;
@@ -93,6 +94,11 @@ public final class FilterChain {
 
     public final void addLineContains(final LineContains lineContains) {
         filterReaders.addElement(lineContains);
+    }
+
+    public final void addLineContainsRegExp(final LineContainsRegExp
+                                                lineContainsRegExp) {
+        filterReaders.addElement(lineContainsRegExp);
     }
 
     public final void addPrefixLines(final PrefixLines prefixLines) {
