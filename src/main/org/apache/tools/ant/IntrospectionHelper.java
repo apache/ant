@@ -177,7 +177,7 @@ public final class IntrospectionHelper implements BuildListener {
             // check of add[Configured](Class) pattern
             if (args.length == 1
                 && java.lang.Void.TYPE.equals(returnType)
-                && (name.equals("add") || name.equals("addConfigured"))) {
+                && ("add".equals(name) || "addConfigured".equals(name))) {
                 insertAddTypeMethod(m);
                 continue;
             }
@@ -746,7 +746,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         return (
             nestedCreators.containsKey(name.toLowerCase(Locale.US))
-            && (uri.equals(parentUri) || uri.equals("")))
+            && (uri.equals(parentUri) || "".equals(uri)))
             || isDynamic()
             || addTypeMethods.size() != 0;
     }
@@ -1327,8 +1327,9 @@ public final class IntrospectionHelper implements BuildListener {
      * Internal interface used to create nested elements. Not documented
      * in detail for reasons of source code readability.
      */
-    private abstract class NestedCreator {
+    private abstract static class NestedCreator {
         Method method; // the method called to add/create the nested element
+
         NestedCreator(Method m) {
             this.method = m;
         }
@@ -1357,7 +1358,7 @@ public final class IntrospectionHelper implements BuildListener {
      * Internal interface used to setting element attributes. Not documented
      * in detail for reasons of source code readability.
      */
-    private abstract class AttributeSetter {
+    private abstract static class AttributeSetter {
         Method method; // the method called to set the attribute
         AttributeSetter(Method m) {
             this.method = m;
