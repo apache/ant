@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildLogger;
+import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.util.StringUtils;
@@ -67,7 +68,7 @@ import java.io.PrintStream;
  * to the build process.
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @version 0.5
- *
+ * @since Ant 1.4
  */
 public class RecorderEntry implements BuildLogger  {
 
@@ -94,6 +95,10 @@ public class RecorderEntry implements BuildLogger  {
      * The start time of the last know target.
      */
     private long targetStartTime = 0l;
+    /**
+     * Strip task banners if true.
+     */
+    private boolean emacsMode = false;
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS
@@ -137,7 +142,8 @@ public class RecorderEntry implements BuildLogger  {
         if (error == null) {
             out.println(StringUtils.LINE_SEP + "BUILD SUCCESSFUL");
         } else {
-            out.println(StringUtils.LINE_SEP + "BUILD FAILED" + StringUtils.LINE_SEP);
+            out.println(StringUtils.LINE_SEP + "BUILD FAILED" 
+                        + StringUtils.LINE_SEP);
             error.printStackTrace(out);
         }
         out.flush();
@@ -146,13 +152,14 @@ public class RecorderEntry implements BuildLogger  {
 
     public void targetStarted(BuildEvent event) {
         log( ">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG );
-        log( StringUtils.LINE_SEP + event.getTarget().getName() + ":", Project.MSG_INFO );
+        log( StringUtils.LINE_SEP + event.getTarget().getName() + ":", 
+             Project.MSG_INFO );
         targetStartTime = System.currentTimeMillis();
     }
 
     public void targetFinished(BuildEvent event) {
         log( "<< TARGET FINISHED -- " + event.getTarget(), Project.MSG_DEBUG );
-        String time = formatTime( System.currentTimeMillis() - targetStartTime );
+        String time = formatTime(System.currentTimeMillis() - targetStartTime);
         log( event.getTarget() + ":  duration " + time, Project.MSG_VERBOSE );
         out.flush();
     }
@@ -171,12 +178,16 @@ public class RecorderEntry implements BuildLogger  {
 
         StringBuffer buf = new StringBuffer();
         if ( event.getTask() != null ) {
-            String name = "[" + event.getTask().getTaskName() + "]";
-            /** @todo replace 12 with DefaultLogger.LEFT_COLUMN_SIZE */
-            for ( int i = 0; i < (12 - name.length()); i++ ) {
-                buf.append( " " );
-            } // for
-            buf.append( name );
+            String name = event.getTask().getTaskName();
+            
+            if (!emacsMode) {
+                String label = "[" + name + "] ";
+                int size = DefaultLogger.LEFT_COLUMN_SIZE - label.length();
+                for (int i = 0; i < size; i++) {
+                    buf.append(" ");
+                } // for
+                buf.append(label);
+            } // if
         } // if
         buf.append( event.getMessage() );
 
@@ -190,7 +201,7 @@ public class RecorderEntry implements BuildLogger  {
      */
     private void log( String mesg, int level ) {
         if ( record && (level <= loglevel) ) {
-                out.println(mesg);
+            out.println(mesg);
         }
     }
 
@@ -205,7 +216,7 @@ public class RecorderEntry implements BuildLogger  {
     }
 
     public void setEmacsMode(boolean emacsMode) {
-        throw new java.lang.RuntimeException("Method setEmacsMode() not yet implemented.");
+        this.emacsMode = emacsMode;
     }
 
     public void setErrorPrintStream(PrintStream err) {

@@ -54,6 +54,13 @@ a buildFinished event.</p>
     <td align="center" valign="middle">no</td>
   </tr>
   <tr>
+    <td valign="top">emacsmode</td>
+    <td valign="top">Removes <code>[task]</code> banners like Ant's
+    <code>-emacs</code> command line switch if set to
+    <em>true</em>.</td>
+    <td align="center" valign="middle">no, default is <em>false</em></td>
+  </tr>
+  <tr>
     <td valign="top">loglevel</td>
     <td valign="top">At what logging level should this recorder instance
     record to?  This is not a once only parameter (like <code>append</code>
@@ -96,14 +103,6 @@ future.  They include things like the following:</p>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">messageprefix</td>
-    <td valign="top">Whether or not to include the message prefixes (things
-    like the name of the tasks or targets, etc). This has the same effect as
-    the <code>-emacs</code> command line parameter does to the screen output.
-    [yes|no]</td>
-    <td align="center" valign="middle">no</td>
   </tr>
   <tr>
     <td valign="top">listener</td>
@@ -150,9 +149,8 @@ future.  They include things like the following:</p>
 
 
 
-<hr><p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
-Reserved.</p>
+<hr><p align="center">Copyright &copy; 2001-2002 Apache Software
+Foundation. All rights Reserved.</p>
 
 </body>
 </html>
-

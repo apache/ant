@@ -71,7 +71,7 @@ public class DefaultLogger implements BuildLogger {
      * Size of left-hand column for right-justified task name.
      * @see #messageLogged(BuildEvent)
      */
-    private static final int LEFT_COLUMN_SIZE = 12;
+    public static final int LEFT_COLUMN_SIZE = 12;
 
     /** PrintStream to write non-error messages to */
     protected PrintStream out;

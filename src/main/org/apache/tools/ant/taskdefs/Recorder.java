@@ -75,7 +75,7 @@ import java.util.Hashtable;
  * @see RecorderEntry
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @version 0.5
- *
+ * @since Ant 1.4
  * @ant.task name="record" category="utility"
  */
 public class Recorder extends Task {
@@ -95,6 +95,10 @@ public class Recorder extends Task {
     private Boolean start = null;
     /** The level to log at. A level of -1 means not initialized yet. */
     private int loglevel = -1;
+    /**
+     * Strip task banners if true.
+     */
+    private boolean emacsMode = false;
     /** The list of recorder entries. */
     private static Hashtable recorderEntries = new Hashtable();
 
@@ -131,6 +135,10 @@ public class Recorder extends Task {
         this.append = new Boolean(append);
     }
 
+    public void setEmacsMode(boolean emacsMode) {
+        this.emacsMode = emacsMode;
+    }
+
     /**
      * Sets the level to which this recorder entry should log to.
      * @see VerbosityLevelChoices
@@ -163,13 +171,14 @@ public class Recorder extends Task {
         }
 
         getProject().log( "setting a recorder for name " + filename,
-            Project.MSG_DEBUG );
+                          Project.MSG_DEBUG );
 
         // get the recorder entry
         RecorderEntry recorder = getRecorder( filename, getProject() );
         // set the values on the recorder
         recorder.setMessageOutputLevel( loglevel );
         recorder.setRecordState( start );
+        recorder.setEmacsMode( emacsMode );
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -202,7 +211,8 @@ public class Recorder extends Task {
      * Gets the recorder that's associated with the passed in name.
      * If the recorder doesn't exist, then a new one is created.
      */
-    protected RecorderEntry getRecorder( String name, Project proj ) throws BuildException {
+    protected RecorderEntry getRecorder( String name, Project proj ) 
+        throws BuildException {
         Object o = recorderEntries.get(name);
         RecorderEntry entry;
         if ( o == null ) {
