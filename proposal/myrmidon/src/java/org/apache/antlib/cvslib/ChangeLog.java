@@ -185,9 +185,11 @@ public class ChangeLog
             userList.put( user.getUserID(), user.getDisplayname() );
         }
 
-        final Commandline command = new Commandline();
-        command.setExecutable( "cvs" );
-        command.addArgument( "log" );
+        final Execute exe = new Execute();
+        exe.setWorkingDirectory( m_dir );
+        exe.setExecutable( "cvs" );
+
+        exe.addArgument( "log" );
 
         if( null != m_start )
         {
@@ -196,7 +198,7 @@ public class ChangeLog
 
             // We want something of the form: -d ">=YYYY-MM-dd"
             final String dateRange = "-d >=" + outputDate.format( m_start );
-            command.addArgument( dateRange );
+            exe.addArgument( dateRange );
         }
 
         // Check if list of files to check has been specified
@@ -220,9 +222,6 @@ public class ChangeLog
         */
 
         final ChangeLogParser parser = new ChangeLogParser( userList, getContext() );
-        final Execute exe = new Execute();
-        exe.setWorkingDirectory( m_dir );
-        exe.setCommandline( command );
         exe.setExecOutputHandler( parser );
         exe.execute( getContext() );
 

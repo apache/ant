@@ -9,6 +9,7 @@ package org.apache.tools.todo.taskdefs.ccm;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task allows to reconfigure a project, recurcively or not
@@ -91,7 +92,7 @@ public class CCMReconfigure
     /**
      * Build the command line options.
      */
-    private void checkOptions( final Commandline cmd )
+    private void checkOptions( final ArgumentList cmd )
     {
         if( m_recurse == true )
         {

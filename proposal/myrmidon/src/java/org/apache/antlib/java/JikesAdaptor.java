@@ -13,7 +13,6 @@ import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.java.JavaRuntimeClassPath;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
-import org.apache.tools.todo.types.Commandline;
 
 /**
  * An adaptor for the jikes compiler.
@@ -38,7 +37,7 @@ public class JikesAdaptor
     protected void buildCommandLine( final Execute exe, final File tempFile )
         throws TaskException
     {
-        Path classpath = new Path();
+        final Path classpath = new Path();
 
         // Add the destination directory
         classpath.addLocation( getDestDir() );
@@ -57,28 +56,27 @@ public class JikesAdaptor
         classpath.add( new JavaRuntimeClassPath() );
 
         // Build the command line
-        final Commandline cmd = exe.getCommandline();
-        cmd.setExecutable( "jikes" );
+        exe.setExecutable( "jikes" );
 
         if( isDeprecation() )
         {
-            cmd.addArgument( "-deprecation" );
+            exe.addArgument( "-deprecation" );
         }
 
         if( isDebug() )
         {
-            cmd.addArgument( "-g" );
+            exe.addArgument( "-g" );
         }
 
-        cmd.addArgument( "-d" );
-        cmd.addArgument( getDestDir() );
+        exe.addArgument( "-d" );
+        exe.addArgument( getDestDir() );
 
-        cmd.addArgument( "-classpath" );
-        cmd.addArgument( FileListUtil.formatPath( classpath, getContext() ) );
+        exe.addArgument( "-classpath" );
+        exe.addArgument( FileListUtil.formatPath( classpath, getContext() ) );
 
         // TODO - make this configurable
-        cmd.addArgument( "+E" );
+        exe.addArgument( "+E" );
 
-        cmd.addArgument( "@" + tempFile.getAbsolutePath() );
+        exe.addArgument( "@" + tempFile.getAbsolutePath() );
     }
 }

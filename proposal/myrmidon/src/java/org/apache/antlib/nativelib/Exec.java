@@ -14,7 +14,6 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.EnvironmentVariable;
 
@@ -32,11 +31,8 @@ import org.apache.tools.todo.types.EnvironmentVariable;
 public class Exec
     extends AbstractTask
 {
-    private long m_timeout;
-    private EnvironmentData m_env = new EnvironmentData();
-    private Commandline m_command = new Commandline();
-    private boolean m_newEnvironment;
-    private File m_dir;
+    private final Execute m_exe = new Execute();
+    private final EnvironmentData m_env = new EnvironmentData();
     private String m_os;
 
     /**
@@ -45,7 +41,7 @@ public class Exec
     public void setDir( final File dir )
         throws TaskException
     {
-        m_dir = dir;
+        m_exe.setWorkingDirectory( dir );
     }
 
     /**
@@ -54,7 +50,7 @@ public class Exec
     public void setExecutable( final String value )
         throws TaskException
     {
-        m_command.setExecutable( value );
+        m_exe.setExecutable( value );
     }
 
     /**
@@ -62,7 +58,7 @@ public class Exec
      */
     public void setNewenvironment( final boolean newEnvironment )
     {
-        m_newEnvironment = newEnvironment;
+        m_exe.setNewenvironment( newEnvironment );
     }
 
     /**
@@ -78,7 +74,7 @@ public class Exec
      */
     public void setTimeout( final long timeout )
     {
-        m_timeout = timeout;
+        m_exe.setTimeout( timeout );
     }
 
     /**
@@ -94,7 +90,7 @@ public class Exec
      */
     public void addArg( final Argument argument )
     {
-        m_command.addArgument( argument );
+        m_exe.addArgument( argument );
     }
 
     public void execute()
@@ -105,22 +101,12 @@ public class Exec
             return;
         }
 
-        // execute the command
-        final Execute exe = createExecute();
-        exe.execute( getContext() );
-    }
-
-    private Execute createExecute()
-        throws TaskException
-    {
+        // Setup environment vars
         final Properties environment = m_env.getVariables();
+        m_exe.setEnvironment( environment );
 
-        final Execute exe = new Execute();
-        exe.setTimeout( m_timeout );
-        exe.setWorkingDirectory( m_dir );
-        exe.setNewenvironment( m_newEnvironment );
-        exe.setEnvironment( environment );
-        exe.setCommandline( m_command );
-        return exe;
+        // execute the command
+        m_exe.execute( getContext() );
     }
+
 }

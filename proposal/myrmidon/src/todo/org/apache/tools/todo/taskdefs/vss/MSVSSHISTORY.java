@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform HISTORY commands to Microsoft Visual Source Safe.
@@ -277,7 +278,7 @@ public class MSVSSHISTORY extends MSVSS
      *
      * @param cmd the commandline the command is to be added to
      */
-    private void getOutputCommand( Commandline cmd )
+    private void getOutputCommand( ArgumentList cmd )
     {
         if( m_OutputFileName != null )
         {
@@ -288,7 +289,7 @@ public class MSVSSHISTORY extends MSVSS
     /**
      * @param cmd Description of Parameter
      */
-    private void getRecursiveCommand( Commandline cmd )
+    private void getRecursiveCommand( ArgumentList cmd )
     {
         if( !m_Recursive )
         {
@@ -305,7 +306,7 @@ public class MSVSSHISTORY extends MSVSS
      *
      * @param cmd the commandline the command is to be added to
      */
-    private void getUserCommand( Commandline cmd )
+    private void getUserCommand( ArgumentList cmd )
     {
         if( m_User != null )
         {
@@ -319,7 +320,7 @@ public class MSVSSHISTORY extends MSVSS
      * @param cmd the commandline the command is to be added to
      * @exception TaskException Description of Exception
      */
-    private void getVersionDateCommand( Commandline cmd )
+    private void getVersionDateCommand( ArgumentList cmd )
         throws TaskException
     {
         if( m_FromDate == null && m_ToDate == null && m_NumDays == Integer.MIN_VALUE )
@@ -378,7 +379,7 @@ public class MSVSSHISTORY extends MSVSS
      * @param cmd the commandline the command is to be added to
      * @exception TaskException Description of Exception
      */
-    private void getVersionLabelCommand( Commandline cmd )
+    private void getVersionLabelCommand( ArgumentList cmd )
         throws TaskException
     {
         if( m_FromLabel == null && m_ToLabel == null )

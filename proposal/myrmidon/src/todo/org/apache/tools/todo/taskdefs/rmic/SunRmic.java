@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.taskdefs.rmic.DefaultRmicAdapter;
 
 /**
@@ -28,7 +29,7 @@ public class SunRmic extends DefaultRmicAdapter
         throws TaskException
     {
         getTaskContext().debug( "Using SUN rmic compiler" );
-        Commandline cmd = setupRmicCommand();
+        ArgumentList cmd = setupRmicCommand();
 
         // Create an instance of the rmic, redirecting output to
         // the project log

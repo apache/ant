@@ -10,6 +10,7 @@ package org.apache.tools.todo.taskdefs.vss;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform CheckIn commands to Microsoft Visual Source Safe.
@@ -83,7 +84,7 @@ public class MSVSSCHECKIN
      * Checks the value set for the autoResponse. if it equals "Y" then we
      * return -I-Y if it equals "N" then we return -I-N otherwise we return -I
      */
-    public void getAutoresponse( final Commandline cmd )
+    public void getAutoresponse( final ArgumentList cmd )
     {
         if( null == m_autoResponse )
         {
@@ -109,7 +110,7 @@ public class MSVSSCHECKIN
      *
      * The localpath is created if it didn't exist
      */
-    private void getLocalpathCommand( final Commandline cmd )
+    private void getLocalpathCommand( final ArgumentList cmd )
         throws TaskException
     {
         if( m_localPath == null )
@@ -134,7 +135,7 @@ public class MSVSSCHECKIN
         cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_localPath );
     }
 
-    private void getRecursiveCommand( final Commandline cmd )
+    private void getRecursiveCommand( final ArgumentList cmd )
     {
         if( !m_recursive )
         {
@@ -146,7 +147,7 @@ public class MSVSSCHECKIN
         }
     }
 
-    private void getWritableCommand( final Commandline cmd )
+    private void getWritableCommand( final ArgumentList cmd )
     {
         if( !m_writable )
         {

@@ -14,10 +14,10 @@ import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
+import org.apache.myrmidon.framework.file.Path;
+import org.apache.tools.todo.types.ArgumentList;
+import org.apache.tools.todo.util.FileUtils;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -207,7 +207,7 @@ public class Javah
      * Logs the compilation parameters, adds the files to compile and logs the
      * &qout;niceSourceList&quot;
      */
-    private void logAndAddFilesToCompile( final Commandline cmd )
+    private void logAndAddFilesToCompile( final ArgumentList cmd )
         throws TaskException
     {
         final String[] args = cmd.getArguments();
@@ -251,10 +251,10 @@ public class Javah
     /**
      * Does the command line argument processing common to classic and modern.
      */
-    private Commandline setupJavahCommand()
+    private ArgumentList setupJavahCommand()
         throws TaskException
     {
-        final Commandline cmd = new Commandline();
+        final ArgumentList cmd = new ArgumentList();
 
         if( m_destDir != null )
         {
@@ -316,7 +316,7 @@ public class Javah
     private void doClassicCompile()
         throws TaskException
     {
-        Commandline cmd = setupJavahCommand();
+        ArgumentList cmd = setupJavahCommand();
 
         // Use reflection to be able to build on all JDKs
         /*

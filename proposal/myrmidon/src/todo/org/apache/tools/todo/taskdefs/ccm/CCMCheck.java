@@ -10,6 +10,7 @@ package org.apache.tools.todo.taskdefs.ccm;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);
@@ -127,7 +128,7 @@ public class CCMCheck extends Continuus
      *
      * @param cmd Description of Parameter
      */
-    private void checkOptions( Commandline cmd )
+    private void checkOptions( ArgumentList cmd )
     {
         if( getComment() != null )
         {
@@ -143,7 +144,7 @@ public class CCMCheck extends Continuus
 
         if( getFile() != null )
         {
-            cmd.addArgument( _file.getAbsolutePath() );
+            cmd.addArgument( _file );
         }// end of if ()
     }
 }

@@ -17,7 +17,6 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.FileSet;
-import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.ScannerUtil;
 
@@ -293,21 +292,20 @@ public class SignJar
         final String message = "Signing Jar : " + jarSource.getAbsolutePath();
         getContext().info( message );
 
-        final Commandline cmd = buildCommand( jarTarget, jarSource );
-        final Execute exe = new Execute();
-        exe.setCommandline( cmd );
+        final Execute exe = buildCommand( jarTarget, jarSource );
         exe.execute( getContext() );
     }
 
-    private Commandline buildCommand( final File jarTarget, final File jarSource )
+    private Execute buildCommand( final File jarTarget,
+                                  final File jarSource )
     {
-        final Commandline cmd = new Commandline();
+        final Execute cmd = new Execute();
         cmd.setExecutable( "jarsigner" );
 
         if( null != m_keystore )
         {
             cmd.addArgument( "-keystore" );
-            cmd.addArgument( m_keystore.toString() );
+            cmd.addArgument( m_keystore );
         }
 
         if( null != m_storepass )
@@ -331,13 +329,13 @@ public class SignJar
         if( null != m_sigfile )
         {
             cmd.addArgument( "-sigfile" );
-            cmd.addArgument( m_sigfile.toString() );
+            cmd.addArgument( m_sigfile );
         }
 
         if( null != jarTarget )
         {
             cmd.addArgument( "-signedjar" );
-            cmd.addArgument( jarTarget.toString() );
+            cmd.addArgument( jarTarget );
         }
 
         if( m_verbose )
@@ -355,9 +353,10 @@ public class SignJar
             cmd.addArgument( "-sectionsonly" );
         }
 
-        cmd.addArgument( jarSource.toString() );
+        cmd.addArgument( jarSource );
 
         cmd.addArgument( m_alias );
+
         return cmd;
     }
 }

@@ -10,6 +10,7 @@ package org.apache.tools.todo.taskdefs.javac;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
 
@@ -26,7 +27,7 @@ public class Kjc extends DefaultCompilerAdapter
         throws TaskException
     {
         getTaskContext().debug( "Using kjc compiler" );
-        Commandline cmd = setupKjcCommand();
+        ArgumentList cmd = setupKjcCommand();
 
         try
         {
@@ -63,10 +64,10 @@ public class Kjc extends DefaultCompilerAdapter
      *
      * @return Description of the Returned Value
      */
-    protected Commandline setupKjcCommand()
+    protected ArgumentList setupKjcCommand()
         throws TaskException
     {
-        Commandline cmd = new Commandline();
+        ArgumentList cmd = new Commandline();
 
         // generate classpath, because kjc does't support sourcepath.
         Path classpath = new Path();

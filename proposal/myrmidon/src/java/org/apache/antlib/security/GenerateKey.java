@@ -118,15 +118,13 @@ public class GenerateKey
         final String message = "Generating Key for " + m_alias;
         getContext().info( message );
 
-        final Commandline cmd = createCommand();
-        final Execute exe = new Execute();
-        exe.setCommandline( cmd );
+        final Execute exe = createCommand();
         exe.execute( getContext() );
     }
 
-    private Commandline createCommand()
+    private Execute createCommand()
     {
-        final Commandline cmd = new Commandline();
+        final Execute cmd = new Execute();
         cmd.setExecutable( "keytool" );
 
         cmd.addArgument( "-genkey " );
@@ -202,6 +200,7 @@ public class GenerateKey
             cmd.addArgument( "-validity" );
             cmd.addArgument( "" + m_validity );
         }
+
         return cmd;
     }
 

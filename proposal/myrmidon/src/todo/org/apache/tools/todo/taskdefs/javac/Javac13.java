@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
 /**
@@ -35,7 +36,7 @@ public class Javac13 extends DefaultCompilerAdapter
         throws TaskException
     {
         getTaskContext().debug( "Using modern compiler" );
-        Commandline cmd = setupModernJavacCommand();
+        ArgumentList cmd = setupModernJavacCommand();
 
         // Use reflection to be able to build on all JDKs >= 1.1:
         try

@@ -9,6 +9,7 @@ package org.apache.tools.todo.taskdefs.clearcase;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform Checkin command to ClearCase. <p>
@@ -347,7 +348,7 @@ public class CCCheckin extends ClearCase
      *
      * @param cmd Description of Parameter
      */
-    private void getCommentCommand( Commandline cmd )
+    private void getCommentCommand( ArgumentList cmd )
     {
         if( getComment() != null )
         {
@@ -367,7 +368,7 @@ public class CCCheckin extends ClearCase
      *
      * @param cmd Description of Parameter
      */
-    private void getCommentFileCommand( Commandline cmd )
+    private void getCommentFileCommand( ArgumentList cmd )
     {
         if( getCommentFile() != null )
         {
@@ -387,7 +388,7 @@ public class CCCheckin extends ClearCase
      *
      * @param cmd Description of Parameter
      */
-    private void checkOptions( Commandline cmd )
+    private void checkOptions( ArgumentList cmd )
     {
         if( getComment() != null )
         {

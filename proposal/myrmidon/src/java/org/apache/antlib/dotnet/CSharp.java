@@ -11,8 +11,8 @@ import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.myrmidon.framework.file.Path;
 
 /**
@@ -504,29 +504,28 @@ public class CSharp
         }
 
         final Execute exe = new Execute();
-        final Commandline cmd = exe.getCommandline();
-        cmd.setExecutable( EXE_NAME );
+        exe.setExecutable( EXE_NAME );
 
-        addArgument( cmd, "/nologo" );
-        addArgument( cmd, getAdditionalModulesParameter() );
-        addArgument( cmd, getDefinitionsParameter() );
-        addArgument( cmd, getDebugParameter() );
-        addArgument( cmd, getDocFileParameter() );
-        addArgument( cmd, getIncrementalParameter() );
-        addArgument( cmd, getMainClassParameter() );
-        addArgument( cmd, getOptimizeParameter() );
-        addArgument( cmd, getReferencesParameter() );
-        addArgument( cmd, getTargetTypeParameter() );
-        addArgument( cmd, getUnsafeParameter() );
-        addArgument( cmd, getWarnLevelParameter() );
-        addArgument( cmd, getWin32IconParameter() );
-        addArgument( cmd, getOutputFileParameter() );
-        addArgument( cmd, getIncludeDefaultReferencesParameter() );
-        addArgument( cmd, getDefaultReferenceParameter() );
-        addArgument( cmd, getWin32ResParameter() );
-        addArgument( cmd, getUtf8OutpuParameter() );
-        addArgument( cmd, getFullPathsParameter() );
-        addArgument( cmd, getExtraOptionsParameter() );
+        addArgument( exe, "/nologo" );
+        addArgument( exe, getAdditionalModulesParameter() );
+        addArgument( exe, getDefinitionsParameter() );
+        addArgument( exe, getDebugParameter() );
+        addArgument( exe, getDocFileParameter() );
+        addArgument( exe, getIncrementalParameter() );
+        addArgument( exe, getMainClassParameter() );
+        addArgument( exe, getOptimizeParameter() );
+        addArgument( exe, getReferencesParameter() );
+        addArgument( exe, getTargetTypeParameter() );
+        addArgument( exe, getUnsafeParameter() );
+        addArgument( exe, getWarnLevelParameter() );
+        addArgument( exe, getWin32IconParameter() );
+        addArgument( exe, getOutputFileParameter() );
+        addArgument( exe, getIncludeDefaultReferencesParameter() );
+        addArgument( exe, getDefaultReferenceParameter() );
+        addArgument( exe, getWin32ResParameter() );
+        addArgument( exe, getUtf8OutpuParameter() );
+        addArgument( exe, getFullPathsParameter() );
+        addArgument( exe, getExtraOptionsParameter() );
 
         //get dependencies list.
         final DirectoryScanner scanner = super.getDirectoryScanner( m_srcDir );
@@ -539,14 +538,14 @@ public class CSharp
         for( int i = 0; i < dependencies.length; i++ )
         {
             final String targetFile = baseDir + File.separator + dependencies[ i ];
-            addArgument( cmd, targetFile );
+            addArgument( exe, targetFile );
         }
 
         //now run the command of exe + settings + files
         exe.execute( getContext() );
     }
 
-    private void addArgument( final Commandline cmd, final String argument )
+    private void addArgument( final ArgumentList cmd, final String argument )
     {
         if( null != argument && 0 != argument.length() )
         {

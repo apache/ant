@@ -27,6 +27,7 @@ import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.EnvironmentVariable;
 import org.apache.tools.todo.types.SysProperties;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -112,7 +113,7 @@ public class JUnitTask extends AbstractTask
     private String maxMem;
     private EnvironmentData sysProperties = new EnvironmentData();
     private Path classPath = new Path();
-    private Commandline vmArgs = new Commandline();
+    private ArgumentList vmArgs = new Commandline();
 
     /**
      * The directory to invoke the VM in. Ignored if no JVM is forked.

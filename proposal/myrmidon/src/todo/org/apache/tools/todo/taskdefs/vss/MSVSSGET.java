@@ -10,6 +10,7 @@ package org.apache.tools.todo.taskdefs.vss;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.myrmidon.framework.file.Path;
 
 /**
@@ -339,7 +340,7 @@ public class MSVSSGET extends MSVSS
      *
      * @param cmd Description of Parameter
      */
-    public void getAutoresponse( Commandline cmd )
+    public void getAutoresponse( ArgumentList cmd )
     {
 
         if( m_AutoResponse == null )
@@ -369,7 +370,7 @@ public class MSVSSGET extends MSVSS
      *
      * @param cmd Description of Parameter
      */
-    public void getLocalpathCommand( Commandline cmd )
+    public void getLocalpathCommand( ArgumentList cmd )
         throws TaskException
     {
         if( m_LocalPath == null )
@@ -395,7 +396,7 @@ public class MSVSSGET extends MSVSS
         }
     }
 
-    public void getQuietCommand( Commandline cmd )
+    public void getQuietCommand( ArgumentList cmd )
     {
         if( m_Quiet )
         {
@@ -406,7 +407,7 @@ public class MSVSSGET extends MSVSS
     /**
      * @param cmd Description of Parameter
      */
-    public void getRecursiveCommand( Commandline cmd )
+    public void getRecursiveCommand( ArgumentList cmd )
     {
         if( !m_Recursive )
         {
@@ -424,7 +425,7 @@ public class MSVSSGET extends MSVSS
      *
      * @param cmd Description of Parameter
      */
-    public void getVersionCommand( Commandline cmd )
+    public void getVersionCommand( ArgumentList cmd )
     {
 
         if( m_Version != null )
@@ -444,7 +445,7 @@ public class MSVSSGET extends MSVSS
     /**
      * @param cmd Description of Parameter
      */
-    public void getWritableCommand( Commandline cmd )
+    public void getWritableCommand( ArgumentList cmd )
     {
         if( !m_Writable )
         {

@@ -8,10 +8,8 @@
 package org.apache.tools.todo.taskdefs;
 
 import java.io.File;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 
@@ -89,20 +87,18 @@ public class Rpm
     public void execute()
         throws TaskException
     {
-        final Commandline cmd = createCommand();
-        final Execute exe = new Execute();
+        final Execute exe = createCommand();
         exe.setWorkingDirectory( m_topDir );
-        exe.setCommandline( cmd );
 
         final String message = "Building the RPM based on the " + m_specFile + " file";
         getContext().info( message );
         exe.execute( getContext() );
     }
 
-    private Commandline createCommand()
+    private Execute createCommand()
         throws TaskException
     {
-        final Commandline cmd = new Commandline();
+        final Execute cmd = new Execute();
         cmd.setExecutable( "rpm" );
         if( m_topDir != null )
         {
@@ -126,6 +122,7 @@ public class Rpm
         }
 
         cmd.addArgument( "SPECS/" + m_specFile );
+
         return cmd;
     }
 }

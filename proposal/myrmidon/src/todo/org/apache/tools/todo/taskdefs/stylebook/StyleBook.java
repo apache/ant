@@ -59,8 +59,8 @@ public class StyleBook
         validate();
 
         addArg( new Argument( "targetDirectory=" + m_targetDirectory ) );
-        addArg( new Argument( m_book.toString() ) );
-        addArg( new Argument( m_skinDirectory.toString() ) );
+        addArg( new Argument( m_book ) );
+        addArg( new Argument( m_skinDirectory ) );
         if( null != m_loaderConfig )
         {
             addArg( new Argument( "loaderConfig=" + m_loaderConfig ) );

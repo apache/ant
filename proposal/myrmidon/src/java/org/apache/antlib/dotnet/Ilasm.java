@@ -11,7 +11,7 @@ import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.types.DirectoryScanner;
 
 /**
@@ -248,21 +248,20 @@ public class Ilasm
         throws TaskException
     {
         final Execute exe = new Execute();
-        final Commandline cmd = exe.getCommandline();
-        cmd.setExecutable( EXE_NAME );
-        addArgument( cmd, getDebugParameter() );
-        addArgument( cmd, getTargetTypeParameter() );
-        addArgument( cmd, getListingParameter() );
-        addArgument( cmd, getOutputFileParameter() );
-        addArgument( cmd, getResourceFileParameter() );
-        addArgument( cmd, getVerboseParameter() );
-        addArgument( cmd, getKeyfileParameter() );
-        addArgument( cmd, getExtraOptionsParameter() );
-        addArgument( cmd, targetFile );
+        exe.setExecutable( EXE_NAME );
+        addArgument( exe, getDebugParameter() );
+        addArgument( exe, getTargetTypeParameter() );
+        addArgument( exe, getListingParameter() );
+        addArgument( exe, getOutputFileParameter() );
+        addArgument( exe, getResourceFileParameter() );
+        addArgument( exe, getVerboseParameter() );
+        addArgument( exe, getKeyfileParameter() );
+        addArgument( exe, getExtraOptionsParameter() );
+        addArgument( exe, targetFile );
         exe.execute( getContext() );
     }
 
-    private void addArgument( final Commandline cmd, final String argument )
+    private void addArgument( final ArgumentList cmd, final String argument )
     {
         if( null != argument && 0 != argument.length() )
         {

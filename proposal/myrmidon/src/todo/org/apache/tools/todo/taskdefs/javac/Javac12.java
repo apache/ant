@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
 /**
@@ -32,7 +33,7 @@ public class Javac12 extends DefaultCompilerAdapter
         throws TaskException
     {
         getTaskContext().debug( "Using classic compiler" );
-        Commandline cmd = setupJavacCommand( true );
+        ArgumentList cmd = setupJavacCommand( true );
 
         try
         {

@@ -143,13 +143,11 @@ public class Cvs
     public void execute()
         throws TaskException
     {
-        final Commandline command = buildCommandline();
+        final Execute exe = new Execute();
+        buildCommandline( exe );
         final Properties env = buildEnvironment();
 
-        final Execute exe = new Execute();
         exe.setWorkingDirectory( m_dest );
-
-        exe.setCommandline( command );
         exe.setEnvironment( env );
         exe.execute( getContext() );
     }
@@ -174,10 +172,8 @@ public class Cvs
         return env;
     }
 
-    private Commandline buildCommandline() throws TaskException
+    private void buildCommandline( final Commandline command ) throws TaskException
     {
-        final Commandline command = new Commandline();
-
         command.setExecutable( "cvs" );
         if( m_cvsRoot != null )
         {
@@ -213,7 +209,6 @@ public class Cvs
         {
             command.addArguments( FileUtils.translateCommandline( m_module ) );
         }
-        return command;
     }
 
     private String getNonEmptyString( final String value )

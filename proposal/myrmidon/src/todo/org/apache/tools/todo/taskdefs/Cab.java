@@ -135,8 +135,7 @@ public class Cab
                 File listFile = createListFile( files );
                 Execute exe = new Execute();
                 exe.setWorkingDirectory( m_baseDir );
-                final Commandline cmd = createCommand( listFile );
-                exe.setCommandline( cmd );
+                createCommand( exe, listFile );
                 exe.execute( getContext() );
 
                 listFile.delete();
@@ -243,10 +242,9 @@ public class Cab
     /**
      * Create the cabarc command line to use.
      */
-    protected Commandline createCommand( final File listFile )
+    protected void createCommand( final Commandline cmd, final File listFile )
         throws TaskException
     {
-        final Commandline cmd = new Commandline();
         cmd.setExecutable( "cabarc" );
         cmd.addArgument( "-r" );
         cmd.addArgument( "-p" );
@@ -265,8 +263,6 @@ public class Cab
         cmd.addArgument( "n" );
         cmd.addArgument( m_cabFile );
         cmd.addArgument( "@" + listFile.getAbsolutePath() );
-
-        return cmd;
     }
 
     /**

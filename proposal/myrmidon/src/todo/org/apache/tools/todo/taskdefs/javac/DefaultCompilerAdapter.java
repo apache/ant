@@ -18,6 +18,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.tools.todo.util.FileUtils;
@@ -99,7 +100,7 @@ public abstract class DefaultCompilerAdapter
         return m_attributes;
     }
 
-    protected Commandline setupJavacCommand()
+    protected ArgumentList setupJavacCommand()
         throws TaskException
     {
         return setupJavacCommand( false );
@@ -112,10 +113,10 @@ public abstract class DefaultCompilerAdapter
      * @param debugLevelCheck Description of Parameter
      * @return Description of the Returned Value
      */
-    protected Commandline setupJavacCommand( boolean debugLevelCheck )
+    protected ArgumentList setupJavacCommand( boolean debugLevelCheck )
         throws TaskException
     {
-        Commandline cmd = new Commandline();
+        ArgumentList cmd = new ArgumentList();
         setupJavacCommandlineSwitches( cmd, debugLevelCheck );
         logFilesToCompile( cmd );
         addFilesToCompile( cmd );
@@ -130,7 +131,7 @@ public abstract class DefaultCompilerAdapter
      * @param useDebugLevel Description of Parameter
      * @return Description of the Returned Value
      */
-    protected Commandline setupJavacCommandlineSwitches( Commandline cmd,
+    protected ArgumentList setupJavacCommandlineSwitches( ArgumentList cmd,
                                                          boolean useDebugLevel )
         throws TaskException
     {
@@ -253,10 +254,10 @@ public abstract class DefaultCompilerAdapter
      *
      * @return Description of the Returned Value
      */
-    protected Commandline setupModernJavacCommand()
+    protected ArgumentList setupModernJavacCommand()
         throws TaskException
     {
-        Commandline cmd = new Commandline();
+        ArgumentList cmd = new ArgumentList();
         setupModernJavacCommandlineSwitches( cmd );
 
         logFilesToCompile( cmd );
@@ -271,7 +272,7 @@ public abstract class DefaultCompilerAdapter
      * @param cmd Description of Parameter
      * @return Description of the Returned Value
      */
-    protected Commandline setupModernJavacCommandlineSwitches( Commandline cmd )
+    protected ArgumentList setupModernJavacCommandlineSwitches( ArgumentList cmd )
         throws TaskException
     {
         setupJavacCommandlineSwitches( cmd, true );
@@ -309,7 +310,7 @@ public abstract class DefaultCompilerAdapter
      *
      * @param cmd The feature to be added to the CurrentCompilerArgs attribute
      */
-    protected void addCurrentCompilerArgs( Commandline cmd )
+    protected void addCurrentCompilerArgs( ArgumentList cmd )
     {
         cmd.addArguments( getJavac().getCurrentCompilerArgs() );
     }
@@ -382,7 +383,7 @@ public abstract class DefaultCompilerAdapter
      *
      * @param cmd Description of Parameter
      */
-    protected void logFilesToCompile( final Commandline cmd )
+    protected void logFilesToCompile( final ArgumentList cmd )
         throws TaskException
     {
         final String[] cmdline = cmd.getArguments();
@@ -409,7 +410,7 @@ public abstract class DefaultCompilerAdapter
     /**
      * Adds the files to compile to a command-line
      */
-    protected void addFilesToCompile( final Commandline cmd )
+    protected void addFilesToCompile( final ArgumentList cmd )
     {
         for( int i = 0; i < m_compileList.length; i++ )
         {

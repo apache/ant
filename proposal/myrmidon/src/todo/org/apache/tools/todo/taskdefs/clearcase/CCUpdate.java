@@ -9,6 +9,7 @@ package org.apache.tools.todo.taskdefs.clearcase;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform an Update command to ClearCase. <p>
@@ -349,7 +350,7 @@ public class CCUpdate extends ClearCase
      *
      * @param cmd Description of Parameter
      */
-    private void getLogCommand( Commandline cmd )
+    private void getLogCommand( ArgumentList cmd )
     {
         if( getLog() == null )
         {
@@ -373,7 +374,7 @@ public class CCUpdate extends ClearCase
      *
      * @param cmd Description of Parameter
      */
-    private void checkOptions( Commandline cmd )
+    private void checkOptions( ArgumentList cmd )
     {
         // ClearCase items
         if( getGraphical() )

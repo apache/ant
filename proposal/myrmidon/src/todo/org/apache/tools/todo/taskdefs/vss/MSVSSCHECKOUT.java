@@ -10,6 +10,7 @@ package org.apache.tools.todo.taskdefs.vss;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform CheckOut commands to Microsoft Visual Source Safe.
@@ -118,7 +119,7 @@ public class MSVSSCHECKOUT
      * Checks the value set for the autoResponse. if it equals "Y" then we
      * return -I-Y if it equals "N" then we return -I-N otherwise we return -I
      */
-    public void getAutoresponse( final Commandline cmd )
+    public void getAutoresponse( final ArgumentList cmd )
     {
         if( m_autoResponse == null )
         {
@@ -144,7 +145,7 @@ public class MSVSSCHECKOUT
      *
      * The localpath is created if it didn't exist
      */
-    public void getLocalpathCommand( final Commandline cmd )
+    public void getLocalpathCommand( final ArgumentList cmd )
         throws TaskException
     {
         // make sure m_LocalDir exists, create it if it doesn't
@@ -167,7 +168,7 @@ public class MSVSSCHECKOUT
         cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_localPath );
     }
 
-    private void getRecursiveCommand( final Commandline cmd )
+    private void getRecursiveCommand( final ArgumentList cmd )
     {
         if( !m_recursive )
         {
@@ -183,7 +184,7 @@ public class MSVSSCHECKOUT
      * Simple order of priority. Returns the first specified of version, date,
      * label If none of these was specified returns ""
      */
-    private void getVersionCommand( final Commandline cmd )
+    private void getVersionCommand( final ArgumentList cmd )
     {
         if( null != m_version )
         {

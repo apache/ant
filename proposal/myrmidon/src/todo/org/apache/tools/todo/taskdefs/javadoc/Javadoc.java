@@ -27,6 +27,7 @@ import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.tools.todo.types.ScannerUtil;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -65,7 +66,7 @@ public class Javadoc
     extends AbstractTask
     implements ExecOutputHandler
 {
-    private Commandline m_command = new Commandline();
+    private ArgumentList m_command = new ArgumentList();
 
     private Path m_sourcePath;
     private File m_destDir;
@@ -882,7 +883,7 @@ public class Javadoc
      * @param packages Description of Parameter
      * @param excludePackages Description of Parameter
      */
-    private void evaluatePackages( Commandline toExecute, Path sourcePath,
+    private void evaluatePackages( ArgumentList toExecute, Path sourcePath,
                                    ArrayList packages, ArrayList excludePackages )
         throws TaskException
     {

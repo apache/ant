@@ -19,9 +19,9 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
-import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.SysProperties;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.util.FileUtils;
 
 /**
@@ -46,8 +46,8 @@ public class ExecuteJava
 
     private final Path m_classPath = new Path();
     private final EnvironmentData m_sysProperties = new EnvironmentData();
-    private final Commandline m_args = new Commandline();
-    private final Commandline m_vmArgs = new Commandline();
+    private final ArgumentList m_args = new ArgumentList();
+    private final ArgumentList m_vmArgs = new ArgumentList();
     private boolean m_fork;
     private File m_workingDirectory;
     private File m_jar;
@@ -150,7 +150,7 @@ public class ExecuteJava
      *
      * @return the application's arguments.  Can be modified.
      */
-    public Commandline getArguments()
+    public ArgumentList getArguments()
     {
         return m_args;
     }
@@ -161,7 +161,7 @@ public class ExecuteJava
      *
      * @return the JVM aguments.  Can be modified.
      */
-    public Commandline getVmArguments()
+    public ArgumentList getVmArguments()
     {
         return m_vmArgs;
     }
@@ -287,52 +287,51 @@ public class ExecuteJava
         exe.setIgnoreReturnCode( m_ignoreReturnCode );
 
         // Setup the command line
-        final Commandline command = exe.getCommandline();
 
         // Executable name
         if( m_jvm != null )
         {
-            command.setExecutable( m_jvm );
+            exe.setExecutable( m_jvm );
         }
         else
         {
-            command.setExecutable( getJavaExecutableName() );
+            exe.setExecutable( getJavaExecutableName() );
         }
 
         // JVM arguments
-        command.addArguments( m_vmArgs );
+        exe.addArguments( m_vmArgs );
 
         // Max memory size
         if( m_maxMemory != null )
         {
-            command.addArgument( "-Xmx" + m_maxMemory );
+            exe.addArgument( "-Xmx" + m_maxMemory );
         }
 
         // System properties
         final String[] props = SysProperties.getJavaVariables( m_sysProperties );
-        command.addArguments( props );
+        exe.addArguments( props );
 
         // Classpath
         final String[] classpath = m_classPath.listFiles( context );
         if( classpath.length > 0 )
         {
-            command.addArgument( "-classpath" );
-            command.addArgument( PathUtil.formatPath( classpath ) );
+            exe.addArgument( "-classpath" );
+            exe.addArgument( PathUtil.formatPath( classpath ) );
         }
 
         // What to execute
         if( m_jar != null )
         {
-            command.addArgument( "-jar" );
-            command.addArgument( m_jar );
+            exe.addArgument( "-jar" );
+            exe.addArgument( m_jar );
         }
         else
         {
-            command.addArgument( m_className );
+            exe.addArgument( m_className );
         }
 
         // Java app arguments
-        command.addArguments( m_args );
+        exe.addArguments( m_args );
 
         // Execute
         return exe.execute( context );

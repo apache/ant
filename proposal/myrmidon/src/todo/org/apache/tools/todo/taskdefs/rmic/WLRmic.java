@@ -12,6 +12,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.taskdefs.rmic.DefaultRmicAdapter;
 
 /**
@@ -49,7 +50,7 @@ public class WLRmic extends DefaultRmicAdapter
 
         final ExecuteJava exe = new ExecuteJava();
         exe.setClassName( "weblogic.rmic" );
-        final Commandline cmd = setupRmicCommand( new String[]{"-noexit"} );
+        final ArgumentList cmd = setupRmicCommand( new String[]{"-noexit"} );
         exe.getArguments().addArguments( cmd );
 
         exe.execute( getTaskContext() );

@@ -8,12 +8,10 @@
 package org.apache.tools.todo.taskdefs.jsp.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.java.ExecuteJava;
-import org.apache.antlib.java.JavaTask;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
-import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * The implementation of the jasper compiler. This is a cut-and-paste of the
@@ -50,7 +48,7 @@ public class JasperC
     /*
      * ------------------------------------------------------------
      */
-    private void setupJasperCommand( final Commandline cmd )
+    private void setupJasperCommand( final ArgumentList cmd )
         throws TaskException
     {
         JspC jspc = getJspc();

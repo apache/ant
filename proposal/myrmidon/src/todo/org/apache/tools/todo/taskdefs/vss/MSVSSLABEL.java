@@ -9,6 +9,7 @@ package org.apache.tools.todo.taskdefs.vss;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform LABEL commands to Microsoft Visual Source Safe. <p>
@@ -242,7 +243,7 @@ public class MSVSSLABEL extends MSVSS
      *
      * @param cmd Description of Parameter
      */
-    public void getAutoresponse( Commandline cmd )
+    public void getAutoresponse( ArgumentList cmd )
     {
 
         if( m_AutoResponse == null )
@@ -290,7 +291,7 @@ public class MSVSSLABEL extends MSVSS
      *
      * @param cmd the commandline the command is to be added to
      */
-    public void getLabelCommand( Commandline cmd )
+    public void getLabelCommand( ArgumentList cmd )
     {
         if( m_Label != null )
         {
@@ -303,7 +304,7 @@ public class MSVSSLABEL extends MSVSS
      *
      * @param cmd the commandline the command is to be added to
      */
-    public void getVersionCommand( Commandline cmd )
+    public void getVersionCommand( ArgumentList cmd )
     {
         if( m_Version != null )
         {

@@ -13,7 +13,6 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Commandline;
 
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.
@@ -105,8 +104,7 @@ public class Patch
     {
         validate();
 
-        final Execute exe = new Execute();
-        buildCommand( exe.getCommandline() );
+        final Execute exe = buildCommand();
         exe.execute( getContext() );
     }
 
@@ -132,8 +130,9 @@ public class Patch
         }
     }
 
-    private void buildCommand( final Commandline cmd )
+    private Execute buildCommand(  )
     {
+        final Execute cmd = new Execute();
         cmd.setExecutable( "patch" );
         if( m_backups )
         {
@@ -167,5 +166,6 @@ public class Patch
         {
             cmd.addArgument( m_originalFile );
         }
+        return cmd;
     }
 }

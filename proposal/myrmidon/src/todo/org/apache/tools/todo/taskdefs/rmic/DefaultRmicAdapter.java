@@ -13,10 +13,10 @@ import java.util.Random;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
+import org.apache.myrmidon.framework.file.Path;
+import org.apache.tools.todo.types.ArgumentList;
+import org.apache.tools.todo.util.FileUtils;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,
@@ -88,7 +88,7 @@ public abstract class DefaultRmicAdapter
      *
      * @return Description of the Returned Value
      */
-    protected Commandline setupRmicCommand()
+    protected ArgumentList setupRmicCommand()
         throws TaskException
     {
         return setupRmicCommand( null );
@@ -100,10 +100,10 @@ public abstract class DefaultRmicAdapter
      * @param options additional parameters needed by a specific implementation.
      * @return Description of the Returned Value
      */
-    protected Commandline setupRmicCommand( String[] options )
+    protected ArgumentList setupRmicCommand( String[] options )
         throws TaskException
     {
-        Commandline cmd = new Commandline();
+        ArgumentList cmd = new ArgumentList();
 
         if( options != null )
         {
@@ -220,7 +220,7 @@ public abstract class DefaultRmicAdapter
      *
      * @param cmd Description of Parameter
      */
-    protected void logAndAddFilesToCompile( final Commandline cmd )
+    protected void logAndAddFilesToCompile( final ArgumentList cmd )
         throws TaskException
     {
         ArrayList compileList = attributes.getCompileList();

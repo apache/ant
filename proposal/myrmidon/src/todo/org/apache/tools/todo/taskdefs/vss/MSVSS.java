@@ -14,6 +14,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * A base class for creating tasks for executing commands on Visual SourceSafe.
@@ -179,7 +180,7 @@ public abstract class MSVSS
     /**
      * @param cmd Description of Parameter
      */
-    public void getLoginCommand( Commandline cmd )
+    public void getLoginCommand( ArgumentList cmd )
     {
         if( m_vssLogin == null )
         {

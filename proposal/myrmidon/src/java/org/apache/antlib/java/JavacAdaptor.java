@@ -7,12 +7,12 @@
  */
 package org.apache.antlib.java;
 
-import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.file.Path;
-import org.apache.myrmidon.framework.file.FileListUtil;
-import org.apache.tools.todo.types.Commandline;
 import java.io.File;
 import java.lang.reflect.Method;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.file.FileListUtil;
+import org.apache.myrmidon.framework.file.Path;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * An adaptor for the in-process Javac compiler.
@@ -32,7 +32,7 @@ public class JavacAdaptor
     protected void compile( final File[] compileList )
         throws TaskException
     {
-        final Commandline cmd = new Commandline();
+        final ArgumentList cmd = new ArgumentList();
         setupModernJavacCommand( cmd, compileList );
 
         final String[] args = cmd.getArguments();
@@ -73,7 +73,7 @@ public class JavacAdaptor
     /**
      * Builds the command-line to invoke the compiler with.
      */
-    private void setupModernJavacCommand( final Commandline cmd,
+    private void setupModernJavacCommand( final ArgumentList cmd,
                                           final File[] files )
         throws TaskException
     {

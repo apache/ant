@@ -9,13 +9,11 @@ package org.apache.tools.todo.taskdefs.text;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.SourceFileScanner;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.util.mappers.IdentityMapper;
 
 /**
@@ -180,7 +178,7 @@ public class Native2Ascii
                                      + " would overwrite its self" );
         }
 
-        final Commandline cmd = buildCommand( srcFile, destFile );
+        final ArgumentList cmd = buildCommand( srcFile, destFile );
 
         // Make intermediate directories if needed
         // XXX JDK 1.1 dosen't have File.getParentFile,
@@ -201,10 +199,10 @@ public class Native2Ascii
         }
     }
 
-    private Commandline buildCommand( final File srcFile,
+    private ArgumentList buildCommand( final File srcFile,
                                       final File destFile )
     {
-        final Commandline cmd = new Commandline();// Command line to run
+        final ArgumentList cmd = new ArgumentList();// Command line to run
         // Set up the basic args (this could be done once, but
         // it's cleaner here)
         if( m_reverse )

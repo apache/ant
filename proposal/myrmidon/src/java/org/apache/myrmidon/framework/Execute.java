@@ -32,11 +32,11 @@ import org.apache.tools.todo.util.FileUtils;
  * @version $Revision$ $Date$
  */
 public class Execute
+    extends Commandline
 {
     private static final Resources REZ
         = ResourceManager.getPackageResources( Execute.class );
 
-    private Commandline m_command;
     private Properties m_environment = new Properties();
     private File m_workingDirectory;
     private boolean m_newEnvironment;
@@ -76,19 +76,8 @@ public class Execute
      */
     public void setCommandline( final Commandline command )
     {
-        m_command = command;
-    }
-
-    /**
-     * Returns the commandline of the process to launch.
-     */
-    public Commandline getCommandline()
-    {
-        if( null == m_command )
-        {
-            m_command = new Commandline();
-        }
-        return m_command;
+        setExecutable( command.getExecutable() );
+        addArguments( command );
     }
 
     /**
@@ -177,7 +166,7 @@ public class Execute
         }
         catch( final Exception e )
         {
-            final String message = REZ.getString( "execute.failed.error", m_command.getExecutable() );
+            final String message = REZ.getString( "execute.failed.error", getExecutable() );
             throw new TaskException( message, e );
         }
     }
@@ -207,7 +196,7 @@ public class Execute
      */
     private void validate() throws TaskException
     {
-        if( null == m_command.getExecutable() )
+        if( null == getExecutable() )
         {
             final String message = REZ.getString( "execute.no-executable.error" );
             throw new TaskException( message );
@@ -250,7 +239,7 @@ public class Execute
         if( ! m_ignoreReturnCode && returnCode != m_returnCode )
         {
             final String message = REZ.getString( "execute.bad-resultcode.error",
-                                                  m_command.getExecutable(),
+                                                  getExecutable(),
                                                   new Integer(returnCode) );
             throw new TaskException( message );
         }
@@ -265,7 +254,7 @@ public class Execute
         throws ExecException
     {
         // Build the command line
-        final String[] command = m_command.getCommandline();
+        final String[] command = getCommandLine();
 
         // Build the environment
         final Properties newEnvironment = new Properties();
@@ -285,5 +274,17 @@ public class Execute
         return new ExecMetaData( command,
                                  newEnvironment,
                                  workingDir );
+    }
+
+    /**
+     * Builds the command line.
+     */
+    private String[] getCommandLine()
+    {
+        final String[] args = getArguments();
+        final String[] result = new String[ args.length + 1 ];
+        result[ 0 ] = getExecutable().replace( '/', File.separatorChar ).replace( '\\', File.separatorChar );
+        System.arraycopy( args, 0, result, 1, args.length );
+        return result;
     }
 }

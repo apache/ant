@@ -14,6 +14,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.tools.todo.util.FileUtils;
 
 /**
@@ -61,7 +62,7 @@ public abstract class DefaultCompilerAdapter
      */
     protected void logAndAddFilesToCompile( JspC jspc,
                                             ArrayList compileList,
-                                            Commandline cmd )
+                                            ArgumentList cmd )
         throws TaskException
     {
         final String[] args = cmd.getArguments();

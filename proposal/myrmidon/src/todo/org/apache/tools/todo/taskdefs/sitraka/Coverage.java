@@ -19,6 +19,7 @@ import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.aut.nativelib.PathUtil;
 
@@ -57,9 +58,9 @@ public class Coverage
     private String m_vm;
     private File m_workingDir;
     private String m_className;
-    private Commandline m_args = new Commandline();
+    private ArgumentList m_args = new ArgumentList();
     private Path m_classpath = new Path();
-    private Commandline m_vmArgs = new Commandline();
+    private ArgumentList m_vmArgs = new ArgumentList();
 
     /**
      * classname to run as standalone or runner for filesets
@@ -241,12 +242,10 @@ public class Coverage
         {
             // we need to run Coverage from his directory due to dll/jar issues
             final Execute exe = new Execute();
-            final Commandline cmdl = exe.getCommandline();
-            cmdl.setExecutable( new File( m_home, "jplauncher" ).getAbsolutePath() );
-            cmdl.addArgument( "-jp_input=" + paramfile.getAbsolutePath() );
+            exe.setExecutable( new File( m_home, "jplauncher" ).getAbsolutePath() );
+            exe.addArgument( "-jp_input=" + paramfile.getAbsolutePath() );
 
             // use the custom handler for stdin issues
-            exe.setCommandline( cmdl );
             exe.execute( getContext() );
         }
         finally
@@ -269,7 +268,7 @@ public class Coverage
     protected String[] getParameters()
         throws TaskException
     {
-        Commandline params = new Commandline();
+        ArgumentList params = new ArgumentList();
         params.addArgument( "-jp_function=coverage" );
         if( m_vm != null )
         {

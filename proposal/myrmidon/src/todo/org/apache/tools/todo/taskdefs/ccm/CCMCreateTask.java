@@ -12,6 +12,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task allows to create new ccm task and set it as the default
@@ -135,7 +136,7 @@ public class CCMCreateTask
     public void execute()
         throws TaskException
     {
-        final Commandline commandLine = determineTask();
+        final ArgumentList commandLine = determineTask();
         if( null == m_task )
         {
             final String message = "Error determining task";
@@ -150,7 +151,7 @@ public class CCMCreateTask
         run( cmd, null );
     }
 
-    private Commandline determineTask()
+    private ArgumentList determineTask()
         throws TaskException
     {
         final Commandline commandLine = new Commandline();
@@ -169,7 +170,7 @@ public class CCMCreateTask
     /**
      * Check the command line options.
      */
-    private void checkOptions( final Commandline cmd )
+    private void checkOptions( final ArgumentList cmd )
     {
         if( m_comment != null )
         {
