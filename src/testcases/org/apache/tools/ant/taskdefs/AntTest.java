@@ -314,6 +314,26 @@ public class AntTest extends BuildFileTest {
         expectLog("topleveltarget", "Hello world");
     }
     
+    public void testMultiplePropertyFileChildren() {
+        PropertyChecker pcBar = new PropertyChecker("bar",
+                                                    new String[] {null, "Bar"});
+        PropertyChecker pcFoo = new PropertyChecker("foo",
+                                                    new String[] {null, "Foo"});
+        project.addBuildListener(pcBar);
+        project.addBuildListener(pcFoo);
+        executeTarget("multiple-property-file-children");
+        AssertionFailedError aeBar = pcBar.getError();
+        if (aeBar != null) {
+            throw aeBar;
+        }
+        AssertionFailedError aeFoo = pcFoo.getError();
+        if (aeFoo != null) {
+            throw aeFoo;
+        }
+        project.removeBuildListener(pcBar);
+        project.removeBuildListener(pcFoo);
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
@@ -472,6 +492,7 @@ public class AntTest extends BuildFileTest {
         private String key;
         private int calls = 0;
         private AssertionFailedError error;
+        private String message = "";
 
         PropertyChecker(String key, String[] values) {
             this.key = key;
@@ -489,6 +510,12 @@ public class AntTest extends BuildFileTest {
             if (event.getTarget().getName().equals("")) {
                 return;
             }
+            message += ", " + event.getTarget().getName();
+            if (calls >= expectedValues.length) {
+                error = new AssertionFailedError("Unexpected invocation of"
+                                                 + " target " + message);
+            }
+            
             if (error == null) {
                 try {
                     assertEquals(expectedValues[calls++],

@@ -185,4 +185,11 @@
     <ant antfile="ant.topleveltest.xml"/>
   </target>
 
+  <target name="multiple-property-file-children">
+    <ant target="dummy" antfile="ant.xml">
+      <property file="foo.properties"/>
+      <property file="bar.properties"/>
+    </ant>
+  </target>
+
 </project>
