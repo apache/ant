@@ -18,6 +18,9 @@
         <entry  key="firstname" value="${firstname}" />
         <entry  key="lastname"  value="${lastname}" />
         <entry  key="email"     value="${email}" />
+        <entry  key="phone"     default="${phone}" />
+        <entry  key="age"       default="${age}" type="int"/>
+        <entry  key="date"      default="${date}" type="date"/>
       </propertyfile>
       
    </target>

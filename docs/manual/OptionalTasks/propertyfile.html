@@ -56,7 +56,7 @@ are lost.  Work is being done to make this task a bit more &quot;human friendly&
 <h3>Parameters specified as nested elements</h3>
 <h4><a name="entryElement">Entry</a></h4>
 <p>Use nested <code>&lt;entry&gt;</code>
-elements to specify actual modifcations to the property file itself</p>
+elements to specify actual modifcations to the property file itself.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -71,8 +71,14 @@ elements to specify actual modifcations to the property file itself</p>
   <tr>
     <td valign="top">value</td>
     <td valign="top">Value to set (=), to add (+) or subtract (-)</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center" rowspan="2">At least one must be specified</td>
   </tr>
+  <tr>
+    <td valign="top">default</td>
+    <td valign="top">Initial value to set for a property if it is not
+                     already defined in the property file.<br>
+                     For type date, two additional keywords are allowed: &quot;now&quot; or &quot;never&quot;.</td>
+    </tr>
   <tr>
     <td valign="top">type</td>
     <td valign="top">Regard the value as : int, date or string (default)</td>
@@ -85,19 +91,29 @@ elements to specify actual modifcations to the property file itself</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td valign="top">default</td>
-    <td valign="top">Initial value to set for a property if it is not
-                     already defined in the property file.<br>
-                     For type date, two additional keywords are allowed: &quot;now&quot; or &quot;never&quot;.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
     <td valign="top">pattern</td>
     <td valign="top">For int and date type only. If present, Values will
                      be parsed and formatted accordingly.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+<p>The rules used when setting a property value are shown below.&nbsp; The 
+operation occurs <b>after</b> these rules are considered.</p>
+
+<ul>
+  <li>If only value is specified, the property is set to it regardless of its 
+  previous value.</li>
+  <li>If only default is specified and the property previously existed in the 
+  property file, it is unchanged.</li>
+  <li>If only default is specified and the property did not exist in the 
+  property file, the property is set to default.</li>
+  <li>If value and default are both specified and the property previously 
+  existed in the property file, the property is set to value.</li>
+  <li>If value and default are both specified and the property did not exist in 
+  the property file, the property is set to default.</li>
+</ul>
+<p>&nbsp;</p>
+
 <h3>Examples</h3>
 
 <p>The following changes the my.properties file.  Assume my.properties look like:</p>

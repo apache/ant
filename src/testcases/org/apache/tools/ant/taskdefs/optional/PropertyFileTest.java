@@ -101,27 +101,33 @@ public class PropertyFileTest extends TaskdefsTest {
      *  update properties that are already defined-
      */
     public void testUpdatesExistingProperties() throws Exception {
-        FileInputStream beforeUpdateFile = new FileInputStream(testPropsFilePath);
-        Properties beforeUpdate = new Properties();
-        beforeUpdate.load(beforeUpdateFile);
+        Properties beforeUpdate = getTestProperties();
         assertEquals(FNAME, beforeUpdate.getProperty(FNAME_KEY));
         assertEquals(LNAME, beforeUpdate.getProperty(LNAME_KEY));
         assertEquals(EMAIL, beforeUpdate.getProperty(EMAIL_KEY));
-        beforeUpdateFile.close();
+        assertEquals(null, beforeUpdate.getProperty(PHONE_KEY));
+        assertEquals(null, beforeUpdate.getProperty(AGE_KEY));
+        assertEquals(null, beforeUpdate.getProperty(DATE_KEY));
       
         // ask ant to update the properties...
         executeTarget("update-existing-properties");
       
-        FileInputStream afterUpdateFile = new FileInputStream(testPropsFilePath);
-        Properties afterUpdate = new Properties();
-        afterUpdate.load(afterUpdateFile);
+        Properties afterUpdate = getTestProperties();
         assertEquals(NEW_FNAME, afterUpdate.getProperty(FNAME_KEY));
         assertEquals(NEW_LNAME, afterUpdate.getProperty(LNAME_KEY));
         assertEquals(NEW_EMAIL, afterUpdate.getProperty(EMAIL_KEY));
-        afterUpdateFile.close();
+        assertEquals(NEW_PHONE, afterUpdate.getProperty(PHONE_KEY));
+        assertEquals(NEW_AGE, afterUpdate.getProperty(AGE_KEY));
+        assertEquals(NEW_DATE, afterUpdate.getProperty(DATE_KEY));
     }
 
-
+    private Properties getTestProperties() throws Exception {
+        Properties testProps = new Properties();
+        FileInputStream propsFile = new FileInputStream(testPropsFilePath);
+        testProps.load(propsFile);
+        propsFile.close();
+        return testProps;
+    }
 
 
     private void initTestPropFile() throws Exception {
@@ -142,6 +148,9 @@ public class PropertyFileTest extends TaskdefsTest {
         buildProps.put(FNAME_KEY, NEW_FNAME);
         buildProps.put(LNAME_KEY, NEW_LNAME);
         buildProps.put(EMAIL_KEY, NEW_EMAIL);
+        buildProps.put(PHONE_KEY, NEW_PHONE);
+        buildProps.put(AGE_KEY, NEW_AGE);
+        buildProps.put(DATE_KEY, NEW_DATE);
       
         FileOutputStream fos = new FileOutputStream(buildPropsFilePath);
         buildProps.save(fos, null);
@@ -153,7 +162,7 @@ public class PropertyFileTest extends TaskdefsTest {
         File tempFile = new File(testPropsFilePath);
         tempFile.delete();
         tempFile = null;
-      
+
         tempFile = new File(buildPropsFilePath);
         tempFile.delete();
         tempFile = null;
@@ -162,13 +171,13 @@ public class PropertyFileTest extends TaskdefsTest {
 
 
     private static final String 
-        projectFilePath     = "src/etc/testcases/taskdefs/propertyfile.xml",
+        projectFilePath     = "src/etc/testcases/taskdefs/optional/propertyfile.xml",
       
         testPropertyFile    = "propertyfile.test.properties",
         testPropertyFileKey = "test.propertyfile",
-        testPropsFilePath   = "src/etc/testcases/taskdefs/" + testPropertyFile,
+        testPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + testPropertyFile,
       
-        buildPropsFilePath  = "src/etc/testcases/taskdefs/propertyfile.build.properties",
+        buildPropsFilePath  = "src/etc/testcases/taskdefs/optional/propertyfile.build.properties",
       
         FNAME     = "Bruce",
         NEW_FNAME = "Clark",
@@ -180,6 +189,15 @@ public class PropertyFileTest extends TaskdefsTest {
       
         EMAIL     = "incredible@hulk.com",
         NEW_EMAIL = "kc@superman.com",
-        EMAIL_KEY = "email";
+        EMAIL_KEY = "email",
+   
+        NEW_PHONE = "(520) 555-1212",
+        PHONE_KEY = "phone",
+      
+        NEW_AGE = "30",
+        AGE_KEY = "age",
+      
+        NEW_DATE = "2001/01/01 12:45",
+        DATE_KEY = "date";
 }
 

@@ -307,7 +307,7 @@ public class PropertyFile extends Task
         private String              m_key = null;
         private int                 m_type = Type.STRING_TYPE;
         private int                 m_operation = Operation.EQUALS_OPER;
-        private String              m_value ="1";
+        private String              m_value = "";
         private String              m_default = null;
         private String              m_pattern = null;
 
@@ -394,6 +394,21 @@ public class PropertyFile extends Task
             if (m_pattern == null) m_pattern = "yyyy/MM/dd HH:mm";
             DateFormat fmt = new SimpleDateFormat(m_pattern);
 
+            // special case
+            if (m_default != null &&
+                NOW_VALUE_.equals(m_default.toLowerCase()) &&
+                (m_operation == Operation.INCREMENT_OPER ||
+                 m_operation == Operation.DECREMENT_OPER) ) {
+                oldValue = null;
+            }
+
+            if (oldValue != null) {
+                try {
+                    value.setTime(fmt.parse(oldValue));
+                }
+                catch (ParseException pe)  { /* swollow */ }
+            }
+
             if (m_value != null) {
                 if (NOW_VALUE_.equals(m_value.toLowerCase())) {
                     value.setTime(new Date());
@@ -421,36 +436,21 @@ public class PropertyFile extends Task
                 }
             }
 
-            // special case
-            if (m_default != null &&
-                NOW_VALUE_.equals(m_default.toLowerCase()) &&
-                (m_operation == Operation.INCREMENT_OPER ||
-                 m_operation == Operation.DECREMENT_OPER) ) {
-                oldValue = null;
+            if (m_default != null && oldValue == null) {
+                if (NOW_VALUE_.equals(m_default.toLowerCase())) {
+                    value.setTime(new Date());
+                }
+                else if (NULL_VALUE_.equals(m_default.toLowerCase())) {
+                    value = null;
+                }
+                else {
+                    try {
+                        value.setTime(fmt.parse(m_default));
+                    }
+                    catch (ParseException pe)  { /* swollow */ }
+                }
             }
 
-            if (oldValue != null) {
-                try {
-                    newValue.setTime(fmt.parse(oldValue));
-                }
-                catch (ParseException pe)  { /* swollow */ }
-            }
-            else {
-                if (m_default != null) {
-                    if (NOW_VALUE_.equals(m_default.toLowerCase())) {
-                        newValue.setTime(new Date());
-                    }
-                    else if (NULL_VALUE_.equals(m_default.toLowerCase())) {
-                        newValue = null;
-                    }
-                    else {
-                        try {
-                            newValue.setTime(fmt.parse(m_default));
-                        }
-                        catch (ParseException pe)  { /* swollow */ }
-                    }
-                }
-            }
 
             if (m_operation == Operation.EQUALS_OPER) {
                 newValue = value;
@@ -491,6 +491,13 @@ public class PropertyFile extends Task
             DecimalFormat fmt = (m_pattern != null) ? new DecimalFormat(m_pattern)
                                                     : new DecimalFormat();
 
+            if (oldValue != null) {
+                try {
+                    value = fmt.parse(oldValue).intValue();
+                }
+                catch (NumberFormatException nfe) { /* swollow */ }
+                catch (ParseException pe)  { /* swollow */ }
+            }
             if (m_value != null) {
                 try {
                     value = fmt.parse(m_value).intValue();
@@ -498,16 +505,9 @@ public class PropertyFile extends Task
                 catch (NumberFormatException nfe) { /* swollow */ }
                 catch (ParseException pe)  { /* swollow */ }
             }
-            if (oldValue != null) {
+            if (m_default != null && oldValue == null) {
                 try {
-                    newValue = fmt.parse(oldValue).intValue();
-                }
-                catch (NumberFormatException nfe) { /* swollow */ }
-                catch (ParseException pe)  { /* swollow */ }
-            }
-            else if (m_default != null) {
-                try {
-                    newValue = fmt.parse(m_default).intValue();
+                    value = fmt.parse(m_default).intValue();
                 }
                 catch (NumberFormatException nfe) { /* swollow */ }
                 catch (ParseException pe)  { /* swollow */ }
@@ -537,16 +537,21 @@ public class PropertyFile extends Task
             String value = "";
             String newValue  = "";
 
+            // the order of events is, of course, very important here
+            // default initially to the old value
+            if (oldValue != null) {
+                value = oldValue;
+            }
+            // but if a value is specified, use it
             if (m_value != null) {
                 value = m_value;
             }
-            if (oldValue != null) {
-                newValue = oldValue;
+            // even if value is specified, ignore it and set to the default
+            // value if it is specified and there is no previous value
+            if (m_default != null && oldValue == null) {
+                value = m_default;
             }
-            else if (m_default != null) {
-                newValue = m_default;
-            }
-
+            
             if (m_operation == Operation.EQUALS_OPER) {
                 newValue = value;
             }
@@ -555,7 +560,7 @@ public class PropertyFile extends Task
             }
             m_value = newValue;
         }
-
+        
         /**
          * Check if parameter combinations can be supported
          */
@@ -564,8 +569,8 @@ public class PropertyFile extends Task
                 m_operation == Operation.DECREMENT_OPER) {
                 throw new BuildException("- is not suported for string properties (key:" + m_key + ")");
             }
-            if (m_value == null) {
-                throw new BuildException("value is mandatory (key:" + m_key + ")");
+            if (m_value == null && m_default == null) {
+                throw new BuildException("value and/or default must be specified (key:" + m_key + ")");
             }
             if (m_key == null) {
                 throw new BuildException("key is mandatory");
