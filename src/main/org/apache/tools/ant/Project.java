@@ -948,11 +948,7 @@ public class Project {
      * @see Project#addOrReplaceTarget
      */
     public void addTarget(Target target) throws BuildException {
-        String name = target.getName();
-        if (targets.get(name) != null) {
-            throw new BuildException("Duplicate target: `" + name + "'");
-        }
-        addOrReplaceTarget(name, target);
+        addTarget(target.getName(), target);
     }
 
     /**
