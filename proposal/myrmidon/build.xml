@@ -76,7 +76,7 @@ Legal:
   </path>
 
   <!-- Main target -->
-  <target name="main" depends="dist-lite" />
+  <target name="main" depends="dist-lite" description="Builds the distribution"/>
 
   <!-- lets see what is available -->
   <target name="check_for_optional_packages">
@@ -382,6 +382,12 @@ Legal:
       <property name="antlib.name" value="runtime"/>
     </ant>
 
+    <!--
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="vfile"/>
+    </ant>
+    -->
+
     <jar jarfile="${build.lib}/selftest.atl"
          basedir="${build.classes}"
          manifest="${manifest.dir}/selftest.mf">
@@ -404,7 +410,7 @@ Legal:
   </target>
 
   <!-- Compiles and runs the unit tests -->
-  <target name="test" depends="compile" if="junit.present">
+  <target name="test" depends="compile" if="junit.present" description="Runs the unit tests">
     <!-- Compile the unit tests -->
     <mkdir dir="${test.classes}"/>
     <javac srcdir="src/testcases"
@@ -498,11 +504,10 @@ Legal:
   </target>
 
   <!-- Creates the distribution -->
-  <target name="dist" depends="dist-lite,test"/>
-
+  <target name="dist" depends="dist-lite,test" description="Builds the distribution"/>
 
   <!-- Cleans up build and distribution directories -->
-  <target name="clean">
+  <target name="clean" description="Deletes all built files">
     <delete dir="${build.dir}"/>
     <delete dir="${dist.dir}" failonerror="false"/>
     <delete>
@@ -511,7 +516,7 @@ Legal:
   </target>
 
   <!-- Rebuilds the distribution -->
-  <target name="rebuild">
+  <target name="rebuild" description="Rebuilds the distribution">
     <antcall target="clean"/>
     <antcall target="main"/>
   </target>
