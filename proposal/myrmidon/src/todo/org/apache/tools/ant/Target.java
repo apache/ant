@@ -153,11 +153,6 @@ public class Target implements TaskContainer
         }
     }
 
-    public void addDataType( RuntimeConfigurable r )
-    {
-        children.addElement( r );
-    }
-
     public void addDependency( String dependency )
     {
         dependencies.addElement( dependency );
@@ -184,8 +179,6 @@ public class Target implements TaskContainer
                 }
                 else
                 {
-                    RuntimeConfigurable r = (RuntimeConfigurable)o;
-                    r.maybeConfigure( project );
                 }
             }
         }
