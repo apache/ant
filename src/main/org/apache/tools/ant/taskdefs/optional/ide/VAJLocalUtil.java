@@ -54,11 +54,9 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-
 import java.util.Vector;
 import java.util.Enumeration;
 import java.io.File;
-
 
 import com.ibm.ivj.util.base.Package;
 import com.ibm.ivj.util.base.IvjException;
@@ -100,7 +98,7 @@ abstract class VAJLocalUtil implements VAJUtil{
                 errMsg = errMsg + "\n" + errors[i];
             }
         }
-        return new BuildException(errMsg);
+        return new BuildException(errMsg, e);
     }
 		
     /**
