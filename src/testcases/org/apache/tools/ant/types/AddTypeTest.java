@@ -118,7 +118,11 @@ public class AddTypeTest extends BuildFileTest {
             "condition.condition.task", "task masking condition",
             "doesn't support the nested");
     }
-    
+
+    public void testAddConfigured() {
+        expectLogContaining(
+            "myaddconfigured", "value is Value Setexecute: value is Value Set");
+    }
     // The following will be used as types and tasks
     
     public static interface A {}
@@ -158,6 +162,30 @@ public class AddTypeTest extends BuildFileTest {
         }
         public void execute() {
             project.log("My Condition execution");
+        }
+    }
+
+    public static class MyValue
+    {
+        private String text = "NOT SET YET";
+        public void addText(String text) {
+            this.text = text;
+        }
+        public String toString() {
+            return text;
+        }
+    }
+
+    public static class MyAddConfigured
+        extends Task
+    {
+        MyValue value;
+        public void addConfigured(MyValue value) {
+            log("value is " + value);
+            this.value = value;
+        }
+        public void execute() {
+            log("execute: value is " + value);
         }
     }
 

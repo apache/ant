@@ -64,6 +64,12 @@
     <typedef loaderref="nested.loader" classpathref="nested.classes"
              name = "nested.condition.type" 
              classname="${nested.package}AddTypeTest$MyCondition"/>
+    <typedef loaderref="nested.loader" classpathref="nested.classes"
+             name = "myaddconfigured" 
+             classname="${nested.package}AddTypeTest$MyAddConfigured"/>
+    <typedef loaderref="nested.loader" classpathref="nested.classes"
+             name = "myvalue" 
+             classname="${nested.package}AddTypeTest$MyValue"/>
  </target>
 
   <target name="nested.a" depends="init">
@@ -110,6 +116,12 @@
     <condition property="condition.condition.task">>
       <nested.condition.task/>
     </condition>
+  </target>
+
+  <target name="myaddconfigured" depends="init">
+    <myaddconfigured>
+      <myvalue>Value Set</myvalue>
+    </myaddconfigured>
   </target>
 
 </project>
