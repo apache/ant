@@ -103,18 +103,6 @@ element which is used to perform Entity and URI resolution</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">factory</td>
-
-    <td valign="top">fully qualified class name of the transformer
-      factory to use. For example
-      <tt>org.apache.xalan.processor.TransformerFactoryImpl</tt>
-       or <tt>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</tt>
-       or <tt>net.sf.saxon.TransformerFactoryImpl</tt>...
-      </td>
-    <td align="center" valign="top">No. Works only with 'trax'/default processor
-    and defaults to JAXP lookup mechanism.</td>
-  </tr>  
-  <tr>
     <td valign="top">includes</td>
     <td valign="top">comma- or space-separated list of patterns of files that must be included.
       All files are included when omitted.</td>
@@ -219,8 +207,29 @@ XSLT specifications</a>.
   </tr>
 </table>
 
-<h4>attribute ('trax' processors only)</h4>
-<p>Used to specify settings of the processor.
+<h4>factory ('trax' processors only)</h4>
+Used to specify factory settings.
+<h4>Parameters</h4>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">fully qualified classname of the
+    transformer factory to use. For example
+      <tt>org.apache.xalan.processor.TransformerFactoryImpl</tt>
+       or <tt>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</tt>
+       or <tt>net.sf.saxon.TransformerFactoryImpl</tt>...    
+    </td>
+    <td align="center" valign="top">No. Defaults to the JAXP lookup mechanism.</td>
+  </tr>
+</table>
+<blockquote>
+<h4>attribute </h4>
+<p>Used to specify settings of the processor factory.
 The attribute names and values are entirely processor specific
 so you must be aware of the implementation to figure them out.
 Read the documentation of your processor.
@@ -257,7 +266,7 @@ And in Saxon 7.x:
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
-
+</blockquote>
 
 <h3>Examples</h3>
 <blockquote>
@@ -298,7 +307,13 @@ And in Saxon 7.x:
   &lt;outputproperty name=&quot;indent&quot; value=&quot;yes&quot;/&gt;
 &lt;/xslt&gt;</pre>
 
-
+  <h4>Using factory settings</h4>
+<pre>&lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
+      style=&quot;style/apache.xsl&quot;&gt;
+  &lt;factory name=&quot;org.apache.xalan.processor.TransformerFactoryImpl&quot;&gt;  
+    &lt;attribute name=&quot;http://xml.apache.org/xalan/features/optimize&quot; value=&quot;true&quot;/&gt;
+  &lt;/factory&gt;
+&lt;/xslt&gt;</pre>
  </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights

@@ -146,22 +146,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Whether to style all files in the included directories as well.
-     *
      * @since Ant 1.5
      */
     private boolean performDirectoryScan = true;
 
     /**
-     * the factory class name to use for TraXLiaison
+     * factory element for TraX processors only
      * @since Ant 1.6
      */
-    private String factory = null;
-
-    /**
-     * the list of factory attributes to use for TraXLiaison
-     * @since Ant 1.6
-     */
-    private Vector attributes = new Vector();
+    private Factory factory = null;
 
     /**
      * Creates a new XSLTProcess Task.
@@ -179,14 +172,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setScanIncludedDirectories(boolean b) {
         performDirectoryScan = b;
-    }
-
-    /**
-     * Set the factory to use for the TraXLiaison.
-     * @param value the name of the  factory
-     */
-    public void setFactory(String value){
-        factory = value;
     }
 
     /**
@@ -713,76 +698,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
 
     /**
-     * Create an instance of a factory attribute.
-     * @return the newly created factory attribute
-     * @since Ant 1.6
-     */
-    public Attribute createAttribute() {
-        Attribute attr = new Attribute();
-        attributes.addElement(attr);
-        return attr;
-    }
-
-    /**
-     * A JAXP factory attribute. This is mostly processor specific, for
-     * example for Xalan 2.3+, the following attributes could be set:
-     * <ul>
-     *  <li>http://xml.apache.org/xalan/features/optimize (true|false) </li>
-     *  <li>http://xml.apache.org/xalan/features/incremental (true|false) </li>
-     * </ul>
-     * @since Ant 1.6
-     */
-    public static class Attribute implements DynamicConfigurator {
-
-        /** attribute name, mostly processor specific */
-        private String name;
-
-        /** attribute value, often a boolean string */
-        private Object value;
-
-        /**
-         * @return the attribute name.
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * @return the output property value.
-         */
-        public Object getValue() {
-            return value;
-        }
-
-        public Object createDynamicElement(String name) throws BuildException {
-            return null;
-        }
-
-        public void setDynamicAttribute(String name, String value)
-                throws BuildException {
-            // only 'name' and 'value' exist.
-            if ("name".equalsIgnoreCase(name)) {
-                this.name = value;
-            } else if ("value".equalsIgnoreCase(name)) {
-                // a value must be of a given type
-                // say boolean|integer|string that are mostly used.
-                if ("true".equalsIgnoreCase(value)
-                        || "false".equalsIgnoreCase(value) ){
-                    this.value = new Boolean(value);
-                } else {
-                    try {
-                        this.value = new Integer(value);
-                    } catch (NumberFormatException e) {
-                        this.value = value;
-                    }
-                }
-            } else {
-                throw new BuildException("Unsupported attribute: " + name);
-            }
-        }
-    }
-
-    /**
      * Initialize internal instance of XMLCatalog
      */
     public void init() throws BuildException {
@@ -826,20 +741,21 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     protected void configureTraXLiaison(TraXLiaison liaison){
         if (factory != null) {
-            liaison.setFactory(factory);
+            liaison.setFactory(factory.getName());
+
+            // configure factory attributes
+            for (Enumeration attrs = factory.getAttributes();
+                    attrs.hasMoreElements();) {
+                Factory.Attribute attr =
+                        (Factory.Attribute)attrs.nextElement();
+                liaison.setAttribute(attr.getName(), attr.getValue());
+            }
         }
 
         // use XMLCatalog as the entity resolver and URI resolver
         if (xmlCatalog != null) {
             liaison.setEntityResolver(xmlCatalog);
             liaison.setURIResolver(xmlCatalog);
-        }
-
-        // configure factory attributes
-        for (Enumeration attrs = attributes.elements();
-                attrs.hasMoreElements();) {
-            Attribute attr = (Attribute)attrs.nextElement();
-            liaison.setAttribute(attr.getName(), attr.getValue());
         }
 
         // configure output properties
@@ -849,5 +765,123 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             liaison.setOutputProperty(prop.getName(), prop.getValue());
         }
     }
+
+    /**
+     * Create the factory element to configure a trax liaison.
+     * @return the newly created factory element.
+     * @throws BuildException if the element is created more than one time.
+     */
+    public Factory createFactory() throws BuildException {
+        if (factory != null) {
+            throw new BuildException("'factory' element must be unique");
+        }
+        factory = new Factory();
+        return factory;
+    }
+
+    /**
+     * The factory element to configure a transformer factory
+     * @since Ant 1.6
+     */
+    public static class Factory {
+
+        /** the factory class name to use for TraXLiaison */
+        private String name;
+
+        /**
+         * the list of factory attributes to use for TraXLiaison
+         */
+        private Vector attributes = new Vector();
+
+        /**
+         * @return the name of the factory.
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Set the name of the factory
+         * @param name the name of the factory.
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Create an instance of a factory attribute.
+         * @return the newly created factory attribute
+         */
+        public void addAttribute(Attribute attr) {
+            attributes.addElement(attr);
+        }
+
+        /**
+         * return the attribute elements.
+         * @return the enumeration of attributes
+         */
+        public Enumeration getAttributes() {
+            return attributes.elements();
+        }
+
+        /**
+         * A JAXP factory attribute. This is mostly processor specific, for
+         * example for Xalan 2.3+, the following attributes could be set:
+         * <ul>
+         *  <li>http://xml.apache.org/xalan/features/optimize (true|false) </li>
+         *  <li>http://xml.apache.org/xalan/features/incremental (true|false) </li>
+         * </ul>
+         */
+        public static class Attribute implements DynamicConfigurator {
+
+            /** attribute name, mostly processor specific */
+            private String name;
+
+            /** attribute value, often a boolean string */
+            private Object value;
+
+            /**
+             * @return the attribute name.
+             */
+            public String getName() {
+                return name;
+            }
+
+            /**
+             * @return the output property value.
+             */
+            public Object getValue() {
+                return value;
+            }
+
+            public Object createDynamicElement(String name) throws BuildException {
+                return null;
+            }
+
+            public void setDynamicAttribute(String name, String value)
+                    throws BuildException {
+                // only 'name' and 'value' exist.
+                if ("name".equalsIgnoreCase(name)) {
+                    this.name = value;
+                } else if ("value".equalsIgnoreCase(name)) {
+                    // a value must be of a given type
+                    // say boolean|integer|string that are mostly used.
+                    if ("true".equalsIgnoreCase(value)
+                            || "false".equalsIgnoreCase(value) ){
+                        this.value = new Boolean(value);
+                    } else {
+                        try {
+                            this.value = new Integer(value);
+                        } catch (NumberFormatException e) {
+                            this.value = value;
+                        }
+                    }
+                } else {
+                    throw new BuildException("Unsupported attribute: " + name);
+                }
+            }
+        } // -- class Attribute
+
+    } // -- class Factory
 
 } //-- XSLTProcess

@@ -46,16 +46,18 @@
   <target name="testFactory" depends="init">
     <style in="xml/test.xml"
            out="xml/out/test-out.xml"
-           style="xml/test.xsl"
-           factory="org.apache.xalan.processor.TransformerFactoryImpl"/>
+           style="xml/test.xsl">
+           <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
+    </style>
   </target>
 
   <target name="testAttribute" depends="init">
     <style in="xml/test.xml"
            out="xml/out/test-out.xml"
-           style="xml/test.xsl"
-           factory="org.apache.xalan.processor.TransformerFactoryImpl">
-       <attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+           style="xml/test.xsl">
+           <factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+            <attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+           </factory>
     </style>
   </target>
 
