@@ -51,7 +51,7 @@ Legal:
   <property name="src.base" value="src"/>
   <property name="manifest.dir" value="${src.base}/manifest"/>
   <property name="xdocs.dir" value="${src.base}/xdocs"/>
-  <property name="src.dir" value="${src.base}/java"/>
+  <property name="java.dir" value="${src.base}/java"/>
   <property name="skins.dir" value="${src.base}/skins"/>
   <property name="script.dir" value="${src.base}/script"/>
   <property name="lib.dir" value="lib"/>
@@ -68,7 +68,7 @@ Legal:
   <property name="dist.conf" value="${dist.dir}/conf"/>
   <property name="dist.log" value="${dist.dir}/logs"/>
 
-  <property name="constants.file" value="org/apache/ant/Main.java"/>
+  <property name="constants.file" value="org/apache/ant/Constants.java"/>
 
   <!--
        ===================================================================
@@ -135,7 +135,9 @@ Legal:
   <target name="prepare-src" depends="prepare">
     <mkdir dir="${build.src}"/>
     <copy todir="${build.src}">
-      <fileset dir="${src.dir}"/>
+      <fileset dir="${java.dir}">
+      <include name="${constants.file}" />
+      </fileset>
     </copy>
  
     <replace file="${build.src}/${constants.file}" token="@@VERSION@@" value="${version}" />
@@ -150,17 +152,19 @@ Legal:
   <target name="compile" depends="prepare-src,prepare-lib">
 
     <mkdir dir="${build.classes}"/>
-    <javac srcdir="${build.src}"
+    <javac srcdir="${java.dir}"
            destdir="${build.classes}"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}">
         <exclude name="org/apache/ant/gui/**"/>
+        <exclude name="${constants.file}"/>
+        <src path="${build.src}" />
     </javac>
 
 <!--
     <copy todir="${build.classes}">
-      <fileset dir="${build.src}">
+      <fileset dir="${java.dir}">
         <include name="**/*.properties"/>
       </fileset>
     </copy>

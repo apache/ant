@@ -58,10 +58,8 @@ public class Main
     extends AbstractMain
 {
     //Constants to indicate the build of Ant/Myrmidon
-    public final static String     BUILD_DATE                = "@@DATE@@";
-    public final static String     BUILD_VERSION             = "@@VERSION@@";
     public final static String     VERSION                   = 
-        "Ant " + BUILD_VERSION + " compiled on " + BUILD_DATE;
+        "Ant " + Constants.BUILD_VERSION + " compiled on " + Constants.BUILD_DATE;
 
     //default log level
     protected final static String  DEFAULT_LOGLEVEL          = "WARN";
