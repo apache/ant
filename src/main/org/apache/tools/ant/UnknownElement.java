@@ -224,8 +224,6 @@ public class UnknownElement extends Task {
             + " - The task needs an external JAR file to execute" +lSep
             + "   and this is not found at the right place in the classpath." +lSep
             + "   Fix: check the documentation for dependencies." +lSep
-            + " - The task is not an Ant core or optional task " +lSep
-            + "   and needs to be declared using <taskdef>." +lSep
             + "   Fix: declare the task." +lSep
             + " - The task is an Ant optional task and optional.jar is absent"+lSep
             + "   Fix: look for optional.jar in ANT_HOME/lib, download if needed" +lSep
@@ -235,6 +233,8 @@ public class UnknownElement extends Task {
             + "   libraries, or download a release version from apache.org" +lSep
             + " - The build file was written for a later version of Ant" +lSep
             + "   Fix: upgrade to at least the latest release version of Ant" +lSep
+            + " - The task is not an Ant core or optional task " +lSep
+            + "   and needs to be declared using <taskdef>." +lSep
             + lSep
             + "Remember that for JAR files to be visible to Ant tasks implemented" +lSep
             + "in ANT_HOME/lib, the files must be in the same directory or on the" +lSep
