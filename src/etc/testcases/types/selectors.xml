@@ -5,6 +5,10 @@
   <property name="etc.dir" value=".."/>
   <property name="test.dir"
           value="selectortest"/>
+  <property name="testregexpsrc.dir"
+          value="regexpseltestsrc"/>
+  <property name="testregexpdest.dir"
+          value="regexpseltestdest"/>
   <property name="mirror.dir"
           value="selectortest2"/>
 
@@ -80,6 +84,28 @@
 
   <target name="cleanup.mirrorfiles">
     <delete dir="${mirror.dir}" />
+  </target>
+  
+  <target name="cleanupregexp">
+    <delete dir="${testregexpsrc.dir}" />
+    <delete dir="${testregexpdest.dir}" />
+  </target>
+  
+  <target name="containsregexp">
+    <mkdir dir="${testregexpsrc.dir}" />
+    <mkdir dir="${testregexpdest.dir}" />
+    <!-- Make two test files, shouldcopy.txt will get selected if everything works
+         shouldnotcopy.txt will not get selected for copy.  The test looks to see
+         that only one file is copied
+    -->
+    <echo message="Some testregexp text 2.0" file="${testregexpsrc.dir}/shouldcopy.txt" />
+    <echo message="Some testregexp text 20" file="${testregexpsrc.dir}/shouldnotcopy.txt" />
+    <copy todir="${testregexpdest.dir}">
+      <fileset dir="${testregexpsrc.dir}">
+        <include name="*.txt" />
+        <containsregexp expression="[0-9]\.[0,1,2]" />
+      </fileset>
+    </copy>
   </target>
 
 </project>

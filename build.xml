@@ -1514,6 +1514,8 @@
                    unless="some.regexp.support"/>
           <exclude name="${optional.package}/sitraka/*.java"
                    unless="some.regexp.support"/>
+          <exclude name="${ant.package}/types/selectors/ContainsRegexpTest.java"
+                   unless="some.regexp.support"/>
           <exclude name="${optional.package}/RhinoScriptTest.java"
                    unless="bsf.present"/>
           <exclude name="${optional.package}/RhinoScriptTest.java"
