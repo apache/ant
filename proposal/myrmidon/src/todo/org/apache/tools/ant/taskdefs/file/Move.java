@@ -33,11 +33,11 @@ import org.apache.tools.ant.util.FileUtils;
  *      </a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Move extends Copy
+public class Move
+    extends Copy
 {
     public Move()
     {
-        super();
         setForceOverwrite( true );
     }
 
