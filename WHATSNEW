@@ -489,6 +489,8 @@ Other changes:
 * DirectoryScanner has been optimized for cases where include patterns do not start with wildcards
   Bugzilla Report 20103.
 
+* Added keep-going feature. Bugzilla Report 21144
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
