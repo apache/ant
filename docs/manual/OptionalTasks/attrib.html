@@ -1,0 +1,97 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="attrib">Attrib</a></h2>
+<h3>Description</h3>
+
+<p>Changes the attributes of a file or all files inside specified
+directories.  Right now it has effect only under Windows. Each of the
+4 possible permissions has its own attribute, matching the arguments
+for the attrib command.</p>
+
+<p><a href="../CoreTypes/fileset.html">FileSet</a> can be specified
+using nested <code>&lt;fileset&gt;</code> elements.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file of which the permissions must be
+    changed.</td>
+    <td valign="top" valign="middle" rowspan="2">one of the two or
+      nested <code>&lt;fileset&gt;</code> elements.</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory whose permissions must be
+    changed.</td>
+  </tr>
+  <tr>
+    <td valign="top">readonly</td>
+    <td valign="top">the readonly permission.</td>
+    <td valign="top" rowspan="4">at least one of the four. </td>
+  </tr>
+  <tr>
+    <td valign="top">archive</td>
+    <td valign="top">the archive permission.</td>
+  </tr>
+  <tr>
+    <td valign="top">system</td>
+    <td valign="top">the system permission.</td>
+  </tr>
+  <tr>
+    <td valign="top">hidden</td>
+    <td valign="top">the hidden permission.</td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">One of <i>file</i>, <i>dir</i> or <i>both</i>. If set to
+      <i>file</i>, only the permissions of plain files are going to be changed.
+      If set to <i>dir</i>, only the directories are considered.</td>
+    <td align="center" valign="top">No, default is <i>file</i></td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;attrib file=&quot;${dist}/run.bat&quot; readonly=&quot;true&quot; hidden=&quot;true&quot;/&gt;</code></p>
+</blockquote>
+<p>makes the &quot;run.bat&quot; file read-only and hidden.</p>
+<blockquote>
+  <pre>&lt;attrib readonly=&quot;false&quot;&gt;
+  &lt;fileset dir=&quot;${meta.inf}&quot; includes=&quot;**/*.xml&quot;/&gt;
+&lt;attrib&gt;
+</pre>
+</blockquote>
+<p>makes all &quot;.xml&quot; files below <code>${meta.inf}</code> readable.</p>
+<blockquote>
+  <pre>
+&lt;attrib readonly=&quot;true&quot; archive=&quot;true&quot;&gt;
+  &lt;fileset dir=&quot;shared/sources1&quot;&gt;
+    &lt;exclude name=&quot;**/trial/**&quot;/&gt;
+  &lt;/fileset&gt;
+  &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
+&lt;/attrib&gt;
+</pre>
+</blockquote>
+<p>makes all files below <code>shared/sources1</code> (except those below any
+  directory named trial) read-only and archived. In addition all files belonging
+  to a FileSet with <code>id</code> <code>other.shared.sources</code> get the
+  same attributes.</p>
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software
+Foundation. All rights Reserved.</p>
+
+</body>
+</html>
+

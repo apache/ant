@@ -91,6 +91,8 @@ Other changes:
 
 * new tasks <chown> and <chgrp> which are wrappers of the Unix commands.
 
+* new task <attrib> to change file attributes on Windows systems.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
