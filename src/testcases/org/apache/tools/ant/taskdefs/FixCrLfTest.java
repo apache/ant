@@ -130,6 +130,35 @@ public class FixCrLfTest extends TaskdefsTest {
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk9.java"));
     }
     
+    public void testNoOverwrite() throws IOException {
+        executeTarget("test1");
+        File result = 
+            new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
+        long modTime = result.lastModified();
+
+        /*
+         * Sleep for some time to make sure a newer file would get a
+         * more recent timestamp according to the file system's
+         * granularity (should be > 2s to account for Windows FAT).
+         */
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException ie) {
+            fail(ie.getMessage());
+        } // end of try-catch
+
+        /* 
+         * make sure we get a new Project instance or the target won't get run
+         * a second time.
+         */
+        configureProject("src/etc/testcases/taskdefs/fixcrlf/build.xml");
+
+        executeTarget("test1");
+        result = 
+            new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
+        assertEquals(modTime, result.lastModified());
+    }
+
     public void assertEqualContent(File expect, File result) 
         throws AssertionFailedError, IOException {
         if (!result.exists()) {

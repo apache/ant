@@ -53,20 +53,16 @@
  */
 
 package org.apache.tools.ant.taskdefs;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.io.*;
 import java.util.*;
 
 /**
- * FixCRLF.java
- *
- * Based on FixCR.java
- * by Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>.
- *
  * Task to convert text source files to local OS formatting conventions, as
  * well as repair text files damaged by misconfigured or misguided editors or
  * file transfer programs.
@@ -137,7 +133,6 @@ public class FixCRLF extends MatchingTask {
     private StringBuffer linebuf = new StringBuffer(1024);
     private StringBuffer linebuf2 = new StringBuffer(1024);
     private int eol;
-    private int addcr = UNDEF;
     private String eolstr;
     private int ctrlz;
     private int tabs;
@@ -317,7 +312,7 @@ public class FixCRLF extends MatchingTask {
      */
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
-	
+        
         if (srcDir == null) {
             throw new BuildException("srcdir attribute must be set!");
         }
@@ -336,57 +331,6 @@ public class FixCRLF extends MatchingTask {
             }
         }
 
-	// Set up the correct EOL values
-	if (eol == UNDEF) {
-	    if (addcr == UNDEF) {
-		// Neither eol not addcr has been defined
-		// go for the system defaults
-		if (System.getProperty("line.separator").equals("\r")) {
-		    eol = CR;
-		} else if (System.getProperty("line.separator").equals("\n")) {
-		    eol = LF;
-		} else {
-		    eol = CRLF;
-		}
-		
-	    } // end of if (addcr == UNDEF)
-	    else {
-		// addcr has been defined - translate to eol values
-		switch (addcr) {
-		case ADD:
-		    eol = CRLF;
-		    break;
-		    
-		case REMOVE:
-		    eol = LF;
-		    break;
-		    
-		case ASIS:
-		    eol = ASIS;
-		    break;
-
-		} // end of switch (addcr)
-		
-	    } // end of if (addcr == UNDEF)else
-	    
-	} // end of if (eol == UNDEF)
-
-	switch (eol) {
-	    // set eolstr value unless ASIS
-	case CR:
-	    eolstr = new String("\r");
-	    break;
-	    
-	case LF:
-	    eolstr = new String("\n");
-	    break;
-	    
-	case CRLF:
-	    eolstr = new String("\r\n");
-	    break;
-	    
-	} // end of switch (eol)
-	
         // log options used
         log("options:" +
             " eol=" +
@@ -616,10 +560,9 @@ public class FixCRLF extends MatchingTask {
 
             if (destFile.exists()) {
                 // Compare the destination with the temp file
-                System.out.println("destFile exists");
+                log("destFile exists", Project.MSG_DEBUG);
                 if ( ! filesEqual(destFile, tmpFile)) {
-                    System.out.println("destFile exists: files not equal");
-                    log(destFile + " is being written", Project.MSG_VERBOSE);
+                    log(destFile + " is being written", Project.MSG_DEBUG);
                     if (!destFile.delete()) {
                         throw new BuildException("Unable to delete "
                                                  + destFile);
@@ -633,17 +576,16 @@ public class FixCRLF extends MatchingTask {
                     }
 
                 } else { // destination is equal to temp file
-                    System.out.println("destFile exists: files equal");
                     log(destFile +
                         " is not written, as the contents are identical",
-                        Project.MSG_VERBOSE);
+                        Project.MSG_DEBUG);
                     if (!tmpFile.delete()) {
                         throw new BuildException("Unable to delete "
-                                                 + destFile);
+                                                 + tmpFile);
                     }
                 }
             } else { // destFile does not exist - write the temp file
-                System.out.println("destFile does not exist");
+                log("destFile does not exist", Project.MSG_DEBUG);
                 if (!tmpFile.renameTo(destFile)) {
                     throw new BuildException(
                             "Failed to transform " + srcFile
