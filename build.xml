@@ -724,6 +724,7 @@
           <include name="**/*Test*" />
           <!-- abstract class, not a testcase -->
           <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
+          <exclude name="org/apache/tools/ant/BuildFileTest.java" />
           <exclude name="${regexp.package}/RegexpMatcherTest.java" />
           <exclude name="${regexp.package}/RegexpTest.java" />
 

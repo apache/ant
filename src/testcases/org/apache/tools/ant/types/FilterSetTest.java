@@ -56,7 +56,7 @@ package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.TaskdefsTest;
+import org.apache.tools.ant.BuildFileTest;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -68,7 +68,7 @@ import java.io.*;
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
-public class FilterSetTest extends TaskdefsTest {
+public class FilterSetTest extends BuildFileTest {
 
     static private final int BUF_SIZE = 32768;
     
