@@ -136,6 +136,13 @@ Fixed bugs:
   on the user specified classpath when a timeout occured.  Bugzilla
   Report 19953.
 
+* <different> selector : make ignoreFileTimes effectively default to true
+  and fix a bug in the comparison of timestamps. Bugzilla Report 20205
+
+* <different> selector can now be nested directly under a fileset 
+  Bugzilla Report 20220. Documentation of the different selector
+
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
