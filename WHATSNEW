@@ -47,9 +47,6 @@ Changes that could break older environments:
 * Ant's testcases now require JUnit 3.7 or above, as they now use the new
   assertTrue method instead of assert.
 
-* To make <javac> more consistent, <compilerarg>'s "implementation" attribute
-  has been renamed to "compiler".
-
 Fixed bugs:
 -----------
 * Fixed bug where <move> ignored <filterset>s.
@@ -212,10 +209,15 @@ Other changes:
 * <javac> now supports a new "listfiles" attribute to list the source
   files it's handing off to the compiler.
 
-* The compiler implementation for javac can now be chosen on a task by
-  task basis.  The new compiler attribute of <javac> can be used to override
+* The compiler implementation for <javac> can now be chosen on a task by
+  task basis.  The new "compiler" attribute of <javac> can be used to override
   the value of the build.compiler property, if set.
   
+* <javac> has a new nested element, <compilerarg>, which allows you
+  to specify additional args for the specific compiler you're using.
+
+* <javac>'s "source" attribute is now enabled for jikes as well.
+
 * <propertyfile>'s <entry> now has a 'unit' attribute to specify the
   increment/decrement unit on date operations.
   
@@ -235,8 +237,6 @@ Other changes:
 * <javadoc> now supports a <tag> nested element to provide the -tag option
   to the standard Java 1.4 doclet. The element is ignored when not running
   on Java 1.4.
-
-* <javac>'s source attribute is now enabled for jikes as well.
 
 * <ftp> can now chmod files on a remote server that supports
   "site chmod", as well as set the umask before transferring files, if
