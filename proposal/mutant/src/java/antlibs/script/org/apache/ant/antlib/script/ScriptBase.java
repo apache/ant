@@ -63,6 +63,7 @@ import java.util.Map;
 import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.DeferredTask;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.antlib.AntContext;
 
 /**
  * Task to import a component or components from a library
@@ -121,7 +122,7 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
         try {
             BSFManager manager = new BSFManager();
             manager.declareBean("self", this, getClass());
-            manager.declareBean("context", getContext, AntContext.class);
+            manager.declareBean("context", getContext(), AntContext.class);
             
             // execute the script
             BSFEngine engine = manager.loadScriptingEngine(language);
