@@ -281,6 +281,19 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         addSystemPackageRoot("javax");
     }
 
+
+    /**
+     * Create a classloader for the given project using the classpath given.
+     *
+     * @param project the project to which this classloader is to belong.
+     * @param classpath the classpath to use to load the classes.
+     * @param parentFirst if true indicates that the parent classloader should be consulted
+     *                    before trying to load the a class through this loader.
+     */
+    public AntClassLoader(Project project, Path classpath, boolean parentFirst) {
+        this(null, project, classpath, parentFirst);
+    }
+
     /**
      * Create an empty class loader. The classloader should be configured with path elements
      * to specify where the loader is to look for classes.
