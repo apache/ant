@@ -8,7 +8,7 @@
 package org.apache.ant.project;
 
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.framework.component.Component;
 
@@ -55,6 +55,6 @@ public interface ProjectEngine
      * @param context the context
      * @exception AntException if an error occurs
      */
-    void execute( Project project, String target, TaskletContext context )
+    void execute( Project project, String target, TaskContext context )
         throws AntException;
 }

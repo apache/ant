@@ -5,39 +5,38 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet;
+package org.apache.myrmidon.api;
 
 import java.io.File;
 import org.apache.ant.AntException;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.excalibur.property.PropertyException;
-import org.apache.avalon.excalibur.property.PropertyUtil; 
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.DefaultContext;
 
 /**
- * Default implementation of TaskletContext.
- * It represents the *Context* in which a task can be executed.
+ * Default implementation of TaskContext.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class DefaultTaskletContext
+public class DefaultTaskContext
     extends DefaultContext
-    implements TaskletContext
+    implements TaskContext
 {
-    protected File     m_baseDirectory;
+    private File     m_baseDirectory;
 
     /**
      * Constructor for Context with no parent contexts.
      */
-    public DefaultTaskletContext()
+    public DefaultTaskContext()
     {
         this( null );
     }
     /**
      * Constructor.
      */
-    public DefaultTaskletContext( final TaskletContext parent )
+    public DefaultTaskContext( final TaskContext parent )
     {
         super( parent );
 
@@ -64,7 +63,7 @@ public class DefaultTaskletContext
         }
     }
 
-    
+
     /**
      * Retrieve Name of tasklet.
      *
@@ -93,10 +92,10 @@ public class DefaultTaskletContext
     }
 
     /**
-     * Resolve filename. 
+     * Resolve filename.
      * This involves resolving it against baseDirectory and
-     * removing ../ and ./ references. It also means formatting 
-     * it appropriately for the particular OS (ie different OS have 
+     * removing ../ and ./ references. It also means formatting
+     * it appropriately for the particular OS (ie different OS have
      * different volumes, file conventions etc)
      *
      * @param filename the filename to resolve
@@ -110,7 +109,7 @@ public class DefaultTaskletContext
     }
 
     /**
-     * Resolve property. 
+     * Resolve property.
      * This evaluates all property substitutions based on current context.
      *
      * @param property the property to resolve
@@ -151,7 +150,7 @@ public class DefaultTaskletContext
     {
         setProperty( name, value, CURRENT );
     }
-    
+
     /**
      * Set property value.
      *
@@ -164,23 +163,23 @@ public class DefaultTaskletContext
         if( CURRENT == scope ) put( name, value );
         else if( PARENT == scope )
         {
-            if( null == m_parent ) 
+            if( null == m_parent )
             {
                 throw new AntException( "Can't set a property with parent scope when context " +
-                                        " has no parent" );   
+                                        " has no parent" );
             }
             else
             {
-                ((DefaultTaskletContext)m_parent).put( name, value );
+                ((DefaultTaskContext)m_parent).put( name, value );
             }
         }
         else if( TOP_LEVEL == scope )
         {
-            DefaultTaskletContext context = this;
+            DefaultTaskContext context = this;
 
             while( null != context.m_parent )
             {
-                context = (DefaultTaskletContext)context.m_parent;
+                context = (DefaultTaskContext)context.m_parent;
             }
 
             context.put( name, value );
@@ -194,7 +193,7 @@ public class DefaultTaskletContext
 
     /**
      * put a value in context.
-     * This put method is overidden so new baseDirectory can be saved 
+     * This put method is overidden so new baseDirectory can be saved
      * in member variable.
      *
      * @param key the key
@@ -228,19 +227,19 @@ public class DefaultTaskletContext
         if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
         {
             throw new AntException( "Property " + BASE_DIRECTORY +
-                                    " must have a value of type " + 
+                                    " must have a value of type " +
                                     File.class.getName() );
         }
         else if( NAME.equals( name ) && !( value instanceof String ) )
         {
             throw new AntException( "Property " + NAME +
-                                    " must have a value of type " + 
+                                    " must have a value of type " +
                                     String.class.getName() );
         }
         else if( JAVA_VERSION.equals( name ) && !( value instanceof JavaVersion ) )
         {
             throw new AntException( "property " + JAVA_VERSION +
-                                    " must have a value of type " + 
+                                    " must have a value of type " +
                                     JavaVersion.class.getName() );
         }
     }

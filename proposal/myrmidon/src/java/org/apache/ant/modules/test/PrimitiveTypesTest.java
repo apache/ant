@@ -9,7 +9,7 @@
 package org.apache.ant.modules.test;
 
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.AbstractTasklet;
+import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * Test conversion of all the primitive types.
@@ -17,7 +17,7 @@ import org.apache.ant.tasklet.AbstractTasklet;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class PrimitiveTypesTest 
-    extends AbstractTasklet
+    extends AbstractTask
 {
     public void setInteger( final Integer value )
     {

@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -118,8 +118,8 @@ public class DefaultProjectBuilder
         project.setDefaultTargetName( defaultTarget );
 
         //setup basic context of project
-        final TaskletContext context = project.getContext();
-        context.setProperty( TaskletContext.BASE_DIRECTORY, baseDirectory );
+        final TaskContext context = project.getContext();
+        context.setProperty( TaskContext.BASE_DIRECTORY, baseDirectory );
         context.setProperty( Project.PROJECT_FILE, file );
         context.setProperty( Project.PROJECT, projectName );
 

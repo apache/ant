@@ -10,7 +10,7 @@ package org.apache.ant.tasklet.engine;
 import org.apache.ant.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -60,6 +60,6 @@ public interface TaskletEngine
      * @param task the configruation data for task
      * @exception AntException if an error occurs
      */
-    void execute( Configuration task, TaskletContext context )
+    void execute( Configuration task, TaskContext context )
         throws AntException;
 }

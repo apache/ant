@@ -8,7 +8,7 @@
 package org.apache.ant.modules.basic;
 
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.AbstractTasklet;
+import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * This is the echo task to display a message.
@@ -16,7 +16,7 @@ import org.apache.ant.tasklet.AbstractTasklet;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Echo 
-    extends AbstractTasklet
+    extends AbstractTask
 {
     protected String              m_message;
 

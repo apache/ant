@@ -8,7 +8,7 @@
 package org.apache.ant.modules.test;
 
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.AbstractTasklet;
+import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * This is to test whether content is added.
@@ -16,7 +16,7 @@ import org.apache.ant.tasklet.AbstractTasklet;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class ContentTest 
-    extends AbstractTasklet
+    extends AbstractTask
 {
     public void addContent( final Integer value )
     {
@@ -31,7 +31,7 @@ public class ContentTest
     */
 
     public void execute()
-        throws AntException
+        throws Exception
     {
     }
 }

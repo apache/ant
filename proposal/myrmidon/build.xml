@@ -108,7 +108,7 @@ Legal:
     <jar jarfile="${build.lib}/myrmidon.jar" 
          basedir="${build.classes}" 
          manifest="${manifest.dir}/myrmidon-manifest.mf">
-      <include name="org/apache/ant/**" />
+      <include name="org/apache/**" />
       <exclude name="org/apache/ant/launcher/*" />
       <exclude name="org/apache/ant/tasks/**" />
       <exclude name="org/apache/ant/convert/core/**" />

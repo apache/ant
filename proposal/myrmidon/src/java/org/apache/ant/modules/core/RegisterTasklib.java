@@ -11,7 +11,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.AbstractTasklet;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
@@ -24,7 +24,7 @@ import org.apache.avalon.framework.camelot.DeploymentException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class RegisterTasklib 
-    extends AbstractTasklet
+    extends AbstractTask
     implements Composable
 {
     protected String              m_lib;

@@ -8,7 +8,7 @@
 package org.apache.ant.modules.test;
 
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.AbstractTasklet;
+import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * Test sub-elements addition.
@@ -16,7 +16,7 @@ import org.apache.ant.tasklet.AbstractTasklet;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class SubElementTest 
-    extends AbstractTasklet
+    extends AbstractTask
 {
     public static final class Beep
     {

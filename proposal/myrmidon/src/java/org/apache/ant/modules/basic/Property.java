@@ -13,8 +13,8 @@ import org.apache.ant.configuration.Configurer;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
-import org.apache.ant.tasklet.AbstractTasklet;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
@@ -30,7 +30,7 @@ import org.apache.avalon.framework.context.Resolvable;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Property 
-    extends AbstractTasklet
+    extends AbstractTask
     implements Configurable, Composable
 {
     protected String              m_name;
@@ -158,7 +158,7 @@ public class Property
             throw new AntException( "Value must be specified" );
         }
 
-        final TaskletContext context = getContext();
+        final TaskContext context = getContext();
 
         Object value = m_value;
 
@@ -178,7 +178,7 @@ public class Property
         }
         else
         {
-            context.setProperty( m_name, value, TaskletContext.PARENT );
+            context.setProperty( m_name, value, TaskContext.PARENT );
         }
     }
 }

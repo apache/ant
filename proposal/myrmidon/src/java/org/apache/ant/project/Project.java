@@ -9,7 +9,7 @@ package org.apache.ant.project;
 
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.avalon.framework.component.Component;
 
 /**
@@ -65,5 +65,5 @@ public interface Project
      *
      * @return the context
      */
-    TaskletContext getContext();
+    TaskContext getContext();
 }

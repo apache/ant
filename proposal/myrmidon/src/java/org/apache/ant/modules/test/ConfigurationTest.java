@@ -8,7 +8,7 @@
 package org.apache.ant.modules.test;
 
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.AbstractTasklet;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -19,7 +19,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class ConfigurationTest 
-    extends AbstractTasklet
+    extends AbstractTask
     implements Configurable
 {
     private String              m_message;

@@ -5,19 +5,22 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet;
+package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.Enum;
-import org.apache.avalon.framework.ValuedEnum;
+import org.apache.avalon.framework.context.Context;
 
 /**
- * This represents the *Context* in which a task can be executed.
+ * This interface represents the <em>Context</em> in which Task is executed.
+ * Like other Component APIs the TaskContext represents the communication
+ * path between the container and the Task.
+ * Unlike other APIs the Logging is provided through another interface (Loggable)
+ * as is access to Peer components (via Composable).
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface TaskletContext
+public interface TaskContext
     extends Context
 {
     //these values are used when setting properties to indicate the scope at
@@ -37,14 +40,14 @@ public interface TaskletContext
      * @return the version of JVM
      */
     JavaVersion getJavaVersion();
-    
+
     /**
      * Retrieve Name of tasklet.
      *
      * @return the name
      */
     String getName();
-    
+
     /**
      * Retrieve base directory.
      *
@@ -53,10 +56,10 @@ public interface TaskletContext
     File getBaseDirectory();
 
     /**
-     * Resolve filename. 
+     * Resolve filename.
      * This involves resolving it against baseDirectory and
-     * removing ../ and ./ references. It also means formatting 
-     * it appropriately for the particular OS (ie different OS have 
+     * removing ../ and ./ references. It also means formatting
+     * it appropriately for the particular OS (ie different OS have
      * different volumes, file conventions etc)
      *
      * @param filename the filename to resolve
@@ -65,7 +68,7 @@ public interface TaskletContext
     File resolveFile( String filename );
 
     /**
-     * Resolve property. 
+     * Resolve property.
      * This evaluates all property substitutions based on current context.
      *
      * @param property the property to resolve
@@ -88,7 +91,7 @@ public interface TaskletContext
      * @param value the value of property
      */
     void setProperty( String name, Object value );
-    
+
     /**
      * Set property value.
      *
@@ -96,7 +99,7 @@ public interface TaskletContext
      * @param value the value of property
      * @param scope the scope at which to set property
      */
-    void setProperty( String name, Object value, ScopeEnum scope  );
+    void setProperty( String name, Object value, ScopeEnum scope );
 
     /**
      * Safe wrapper class for Scope enums.

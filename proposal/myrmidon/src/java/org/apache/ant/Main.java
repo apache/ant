@@ -30,8 +30,8 @@ import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.project.ProjectListener;
 import org.apache.ant.runtime.AntEngine;
 import org.apache.ant.runtime.DefaultAntEngine;
-import org.apache.ant.tasklet.JavaVersion;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.JavaVersion;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
@@ -495,7 +495,7 @@ public class Main
         //defines.put( AntContextResources.TASKLIB_DIR, m_taskLibDir );
         //defines.put( TaskletContext.JAVA_VERSION, getJavaVersion() );
 
-        final TaskletContext context = project.getContext();
+        final TaskContext context = project.getContext();
         addToContext( context, defines );
 
         //Add system properties second so that they overide user-defined properties
@@ -508,7 +508,7 @@ public class Main
      * @param context the context
      * @param map the map of names->values
      */
-    protected void addToContext( final TaskletContext context, final Map map )
+    protected void addToContext( final TaskContext context, final Map map )
     {
         final Iterator keys = map.keySet().iterator();
 

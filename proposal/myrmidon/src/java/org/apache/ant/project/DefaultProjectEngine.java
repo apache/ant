@@ -10,8 +10,8 @@ package org.apache.ant.project;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.DefaultTaskletContext;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.DefaultTaskContext;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.ant.tasklet.engine.DefaultTaskletEngine;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.util.Condition;
@@ -87,7 +87,7 @@ public class DefaultProjectEngine
         //HACK: should do this a better way !!!!!!
         m_componentManager.put( "org.apache.ant.project.Project", project );
 
-        final TaskletContext context = project.getContext();
+        final TaskContext context = project.getContext();
 
         final String projectName = (String)context.getProperty( Project.PROJECT );
 
@@ -110,7 +110,7 @@ public class DefaultProjectEngine
      * @param context the context
      * @exception AntException if an error occurs
      */
-    public void execute( Project project, String target, TaskletContext context )
+    public void execute( Project project, String target, TaskContext context )
         throws AntException
     {
         execute( project, target, context, new ArrayList() );
@@ -127,7 +127,7 @@ public class DefaultProjectEngine
      */
     protected void execute( final Project project,
                             final String targetName,
-                            final TaskletContext context,
+                            final TaskContext context,
                             final ArrayList done )
         throws AntException
     {
@@ -165,7 +165,7 @@ public class DefaultProjectEngine
      */
     protected void executeTarget( final String targetName,
                                   final Target target,
-                                  final TaskletContext context )
+                                  final TaskContext context )
         throws AntException
     {
         //is this necessary ? I think not but ....
@@ -173,7 +173,7 @@ public class DefaultProjectEngine
         //m_componentManager.put( "org.apache.ant.project.Target", target );
 
         //create project context and set target name
-        final TaskletContext targetContext = new DefaultTaskletContext( context );
+        final TaskContext targetContext = new DefaultTaskContext( context );
         targetContext.setProperty( Project.TARGET, targetName );
 
         //notify listeners
@@ -196,7 +196,7 @@ public class DefaultProjectEngine
      */
     protected void executeTargetWork( final String name,
                                       final Target target,
-                                      final TaskletContext context )
+                                      final TaskContext context )
     {
         //check the condition associated with target.
         //if it is not satisfied then skip target
@@ -229,7 +229,7 @@ public class DefaultProjectEngine
      * @param context the context
      * @exception AntException if an error occurs
      */
-    protected void executeTask( final Configuration task, final TaskletContext context )
+    protected void executeTask( final Configuration task, final TaskContext context )
         throws AntException
     {
         final String name = task.getName();
@@ -241,7 +241,7 @@ public class DefaultProjectEngine
         //final TaskletContext targetContext = new DefaultTaskletContext( context );
 
         //is setting name even necessary ???
-        context.setProperty( TaskletContext.NAME, name );
+        context.setProperty( TaskContext.NAME, name );
 
         //notify listeners
         m_listenerSupport.taskletStarted( name );

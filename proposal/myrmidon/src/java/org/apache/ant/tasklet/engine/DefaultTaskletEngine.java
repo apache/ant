@@ -14,8 +14,8 @@ import org.apache.ant.configuration.DefaultConfigurer;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.ant.tasklet.Tasklet;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.Task;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -98,43 +98,44 @@ public class DefaultTaskletEngine
             lookup( "org.apache.ant.convert.engine.ConverterEngine" );
     }
 
-    public void execute( final Configuration task, final TaskletContext context )
+    public void execute( final Configuration taskData, final TaskContext context )
         throws AntException
     {
         getLogger().debug( "Creating" );
-        final Tasklet tasklet = createTasklet( task.getName() );
-        setupLogger( tasklet );
+        final Task task = createTask( taskData.getName() );
+        setupLogger( task );
 
         getLogger().debug( "Contextualizing" );
-        doContextualize( tasklet, task, context );
+        doContextualize( task, taskData, context );
 
         getLogger().debug( "Composing" );
-        doCompose( tasklet, task );
+        doCompose( task, taskData );
 
         getLogger().debug( "Configuring" );
-        doConfigure( tasklet, task, context );
+        doConfigure( task, taskData, context );
 
         getLogger().debug( "Initializing" );
-        doInitialize( tasklet, task );
+        doInitialize( task, taskData );
 
         getLogger().debug( "Running" );
-        try { tasklet.execute(); }
+
+        try { task.execute(); }
         catch( final Exception e )
         {
             throw new AntException( "Error executing task", e );
         }
 
         getLogger().debug( "Disposing" );
-        doDispose( tasklet, task );
+        doDispose( task, taskData );
     }
     
-    protected Tasklet createTasklet( final String name )
+    protected Task createTask( final String name )
         throws AntException
     {
         try
         {
             final Locator locator = (Locator)m_locatorRegistry.getInfo( name, Locator.class );
-            return (Tasklet)m_factory.create( locator, Tasklet.class );
+            return (Task)m_factory.create( locator, Task.class );
         }
         catch( final RegistryException re )
         {
@@ -146,80 +147,80 @@ public class DefaultTaskletEngine
         }
     }
 
-    protected void doConfigure( final Tasklet tasklet, 
-                                final Configuration task,
-                                final TaskletContext context )
+    protected void doConfigure( final Task task, 
+                                final Configuration taskData,
+                                final TaskContext context )
         throws AntException
     {
-        try { m_configurer.configure( tasklet, task, context ); }
+        try { m_configurer.configure( task, taskData, context ); }
         catch( final Throwable throwable )
         {
-            throw new AntException( "Error configuring task " +  task.getName() + " at " +
-                                    task.getLocation() + "(Reason: " + 
+            throw new AntException( "Error configuring task " +  taskData.getName() + " at " +
+                                    taskData.getLocation() + "(Reason: " + 
                                     throwable.getMessage() + ")", throwable );
         }
     }
     
-    protected void doCompose( final Tasklet tasklet, final Configuration task )
+    protected void doCompose( final Task task, final Configuration taskData )
         throws AntException
     {
-        if( tasklet instanceof Composable )
+        if( task instanceof Composable )
         {
-            try { ((Composable)tasklet).compose( m_componentManager ); }
+            try { ((Composable)task).compose( m_componentManager ); }
             catch( final Throwable throwable )
             {
-                throw new AntException( "Error composing task " +  task.getName() + " at " +
-                                        task.getLocation() + "(Reason: " + 
+                throw new AntException( "Error composing task " +  taskData.getName() + " at " +
+                                        taskData.getLocation() + "(Reason: " + 
                                         throwable.getMessage() + ")", throwable );            
             }
         }
     }
 
-    protected void doContextualize( final Tasklet tasklet, 
-                                    final Configuration task,
-                                    final TaskletContext context )
+    protected void doContextualize( final Task task, 
+                                    final Configuration taskData,
+                                    final TaskContext context )
         throws AntException
     {
         try 
         { 
-            if( tasklet instanceof Contextualizable )
+            if( task instanceof Contextualizable )
             {
-                ((Contextualizable)tasklet).contextualize( context ); 
+                ((Contextualizable)task).contextualize( context ); 
             }
         }
         catch( final Throwable throwable )
         {
-            throw new AntException( "Error contextualizing task " +  task.getName() + " at " +
-                                    task.getLocation() + "(Reason: " + 
+            throw new AntException( "Error contextualizing task " +  taskData.getName() + " at " +
+                                    taskData.getLocation() + "(Reason: " + 
                                     throwable.getMessage() + ")", throwable );            
         }
     }
 
-    protected void doDispose( final Tasklet tasklet, final Configuration task )
+    protected void doDispose( final Task task, final Configuration taskData )
         throws AntException
     {
-        if( tasklet instanceof Disposable )
+        if( task instanceof Disposable )
         {
-            try { ((Disposable)tasklet).dispose(); }
+            try { ((Disposable)task).dispose(); }
             catch( final Throwable throwable )
             {
-                throw new AntException( "Error disposing task " +  task.getName() + " at " +
-                                        task.getLocation() + "(Reason: " + 
+                throw new AntException( "Error disposing task " +  taskData.getName() + " at " +
+                                        taskData.getLocation() + "(Reason: " + 
                                         throwable.getMessage() + ")", throwable );
             }
         }
     }
 
-    protected void doInitialize( final Tasklet tasklet, final Configuration task )
+    protected void doInitialize( final Task task, final Configuration taskData )
         throws AntException
     {
-        if( tasklet instanceof Initializable )
+        if( task instanceof Initializable )
         {
-            try { ((Initializable)tasklet).initialize(); }
+            try { ((Initializable)task).initialize(); }
             catch( final Throwable throwable )
             {
-                throw new AntException( "Error initializing task " +  task.getName() + " at " +
-                                        task.getLocation() + "(Reason: " +
+                throw new AntException( "Error initializing task " +  taskData.getName() + " at " +
+                                        taskData.getLocation() + "(Reason: " +
                                         throwable.getMessage() + ")", throwable );
             }
         }

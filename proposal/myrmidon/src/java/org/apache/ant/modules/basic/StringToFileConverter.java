@@ -9,8 +9,8 @@ package org.apache.ant.modules.basic;
 
 import java.io.File;
 import org.apache.ant.convert.AbstractConverter;
-import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.framework.context.Context;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * String to file converter
@@ -28,8 +28,8 @@ public class StringToFileConverter
     public Object convert( final Object original, final Context context )
         throws Exception
     {
-        final TaskletContext taskletContext = (TaskletContext)context;
-        return taskletContext.resolveFile( (String)original );
+        final TaskContext taskContext = (TaskContext)context;
+        return taskContext.resolveFile( (String)original );
     }
 }
 

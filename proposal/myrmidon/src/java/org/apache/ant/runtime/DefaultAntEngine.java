@@ -14,7 +14,7 @@ import org.apache.ant.configuration.Configurer;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
-import org.apache.ant.tasklet.JavaVersion;
+import org.apache.myrmidon.api.JavaVersion;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.tasklet.engine.TskDeployer;

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet;
+package org.apache.myrmidon.api;
 
 import org.apache.ant.AntException;
 import org.apache.avalon.framework.activity.Disposable;
@@ -15,16 +15,16 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 
 /**
- * This is abstract base class for tasklets.
+ * This is the class that Task writers should extend to provide custom tasks.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public abstract class AbstractTasklet
+public abstract class AbstractTask
     extends AbstractLoggable
-    implements Tasklet, Contextualizable, Initializable, Disposable
+    implements Task, Contextualizable, Initializable, Disposable
 {
     ///Variable to hold context for use by sub-classes
-    private TaskletContext            m_context;
+    private TaskContext            m_context;
 
     /**
      * Retrieve context from container.
@@ -33,7 +33,7 @@ public abstract class AbstractTasklet
      */
     public void contextualize( final Context context )
     {
-        m_context = (TaskletContext)context;
+        m_context = (TaskContext)context;
     }
 
     /**
@@ -62,7 +62,7 @@ public abstract class AbstractTasklet
      *
      * @return the context
      */
-    protected final TaskletContext getContext()
+    protected final TaskContext getContext()
     {
         return m_context;
     }

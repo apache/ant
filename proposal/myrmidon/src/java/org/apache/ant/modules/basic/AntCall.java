@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import org.apache.ant.AntException;
 import org.apache.ant.project.Project;
 import org.apache.ant.project.ProjectEngine;
-import org.apache.ant.tasklet.AbstractTasklet;
-import org.apache.ant.tasklet.DefaultTaskletContext;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.DefaultTaskContext;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Composable;
@@ -25,20 +25,20 @@ import org.apache.avalon.framework.context.Context;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class AntCall 
-    extends AbstractTasklet
+    extends AbstractTask
     implements Composable
 {
     protected ProjectEngine         m_projectEngine;
     protected Project               m_project;
     protected String                m_target;
     protected ArrayList             m_properties     = new ArrayList();
-    protected TaskletContext        m_childContext;
+    protected TaskContext           m_childContext;
     protected ComponentManager      m_componentManager;
 
     public void contextualize( final Context context )
     {
         super.contextualize( context );
-        m_childContext = new DefaultTaskletContext( getContext() );
+        m_childContext = new DefaultTaskContext( getContext() );
     } 
 
     public void compose( final ComponentManager componentManager )

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.DefaultTaskletContext;
-import org.apache.ant.tasklet.TaskletContext;
+import org.apache.myrmidon.api.DefaultTaskContext;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Default project implementation.
@@ -24,7 +24,7 @@ import org.apache.ant.tasklet.TaskletContext;
 public class DefaultProject
     implements Project
 {
-    protected final TaskletContext       m_baseContext     = new DefaultTaskletContext();
+    protected final TaskContext          m_baseContext     = new DefaultTaskContext();
     protected final HashMap              m_targets         = new HashMap();
     protected Target                     m_implicitTarget;
     protected String                     m_defaultTarget;
@@ -87,7 +87,7 @@ public class DefaultProject
      *
      * @return the context
      */    
-    public TaskletContext getContext()
+    public TaskContext getContext()
     {
         return m_baseContext;
     }
