@@ -7,8 +7,8 @@
 
 <body>
 <h2>Overview of Ant core tasks</h2>
-<p>Given the large number of tasks available to a build designer, it may be 
-difficult to get an overall view of what each task can do.  The following 
+<p>Given the large number of tasks available to a build designer, it may be
+difficult to get an overall view of what each task can do.  The following
 table provides a short description of each task and a link to the complete
 documentation.</p>
 
@@ -28,37 +28,37 @@ documentation.</p>
     <td><p>Call another target within the same build-file optionally specifying some
 properties.</p></td>
   </tr>
-  
+
   <tr valign="top">
     <td><a href="antstructure.html">AntStructure</a></td>
     <td><p>Generates a DTD for Ant buildfiles which contains information
 about all tasks currently known to Ant.</p></td>
   </tr>
-  
+
   <tr valign="top">
     <td><a href="apply.html">Apply/<i>ExecOn</i></a></td>
     <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Ant is run on one of the specified operating
 systems.</p></td>
   </tr>
-  
+
   <tr valign="top">
     <td><a href="available.html">Available</a></td>
     <td><p>Sets a property if a resource is available at runtime. This resource can be a
 file, a directory, a class in the classpath, or a JVM system resource.</p></td>
   </tr>
-  
+
   <tr valign="top">
     <td><a href="chmod.html">Chmod</a></td>
-    <td><p>Changes the permissions of a file or all files inside specified directories. 
-    Right now it has effect only under Unix. The permissions are also UNIX style, like 
+    <td><p>Changes the permissions of a file or all files inside specified directories.
+    Right now it has effect only under Unix. The permissions are also UNIX style, like
     the argument for the chmod command.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="condition.html">Condition</a></td>
     <td><p>Sets a property if a certain condition holds true - this is a
-    generalization of <a href="available.html">Available</a> and 
+    generalization of <a href="available.html">Available</a> and
     <a href="uptodate.html">Uptodate</a>.</p></td>
   </tr>
 
@@ -79,20 +79,20 @@ file, a directory, a class in the classpath, or a JVM system resource.</p></td>
 
   <tr valign="top">
     <td><a href="cvs.html">Cvs</a></td>
-    <td><p>Handles packages/modules retrieved from a 
+    <td><p>Handles packages/modules retrieved from a
 <a href="http://www.cvshome.org/" target="_top">CVS</a> repository.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="cvspass.html">CVSPass</a></td>
-    <td><p>Adds entries to a .cvspass file. Adding entries to this file has the same 
+    <td><p>Adds entries to a .cvspass file. Adding entries to this file has the same
     affect as a cvs login command.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="delete.html">Delete</a></td>
-    <td><p>Deletes either a single file, all files in a specified directory 
-    and its sub-directories, or a set of files specified by one or more 
+    <td><p>Deletes either a single file, all files in a specified directory
+    and its sub-directories, or a set of files specified by one or more
     <a href="../CoreTypes/fileset.html">FileSet</a>s.</p></td>
   </tr>
 
@@ -166,6 +166,12 @@ through the Project commodity methods.</p></td>
   </tr>
 
   <tr valign="top">
+    <td><a href="input.html">Input</a></td>
+    <td><p>Allows user interaction during the build process by displaying a
+message and reading a line of input from the console.</p></td>
+  </tr>
+
+  <tr valign="top">
     <td><a href="jar.html">Jar</a></td>
     <td><p>Jars a set of files.</p></td>
   </tr>
@@ -184,7 +190,7 @@ specified.</p></td>
   <tr valign="top">
     <td><a href="javadoc.html">Javadoc/<i>Javadoc2</i></a></td>
     <td><p>Generates code documentation using the javadoc tool.</p>
-    <p><i>The Javadoc2 task is deprecated.  Use the Javadoc task 
+    <p><i>The Javadoc2 task is deprecated.  Use the Javadoc task
     instead.</i></p></td>
   </tr>
 
@@ -210,7 +216,7 @@ specified.</p></td>
     <td><p>Parallel is a container task - it can contain other Ant tasks. Each nested
     task within the parallel task will be executed in its own thread. </p>  </td>
   </tr>
-  
+
   <tr valign="top">
     <td><a href="patch.html">Patch</a></td>
     <td><p>Applies a diff file to originals.</p></td>
@@ -241,7 +247,7 @@ specified.</p></td>
 
   <tr valign="top">
     <td><a href="replace.html">Replace</a></td>
-    <td><p>Replace is a directory based task for replacing the occurrence of a given string with another string 
+    <td><p>Replace is a directory based task for replacing the occurrence of a given string with another string
     in selected file.</p></td>
   </tr>
 
@@ -252,12 +258,12 @@ specified.</p></td>
 
   <tr valign="top">
     <td><a href="sequential.html">Sequential</a></td>
-    <td><p>Sequential is a container task - it can contain other Ant tasks. The nested 
-    tasks are simply executed in sequence. Sequential's primary use is to support 
-    the sequential execution of a subset of tasks within the 
+    <td><p>Sequential is a container task - it can contain other Ant tasks. The nested
+    tasks are simply executed in sequence. Sequential's primary use is to support
+    the sequential execution of a subset of tasks within the
     <a href="parallel.html">parallel</a> task</p></td>
   </tr>
-  
+
   <tr valign="top">
     <td><a href="signjar.html">SignJar</a></td>
     <td><p>Signs a jar or zip file with the javasign command line tool.</p></td>
@@ -265,14 +271,14 @@ specified.</p></td>
 
   <tr valign="top">
     <td><a href="sleep.html">Sleep</a></td>
-    <td><p> A task for sleeping a short period of time, useful when a build or 
+    <td><p> A task for sleeping a short period of time, useful when a build or
     deployment process requires an interval between tasks.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="sql.html">Sql</a></td>
-    <td><p>Executes a series of SQL statements via JDBC to a database. Statements 
-    can either be read in from a text file using the <i>src</i> attribute or from 
+    <td><p>Executes a series of SQL statements via JDBC to a database. Statements
+    can either be read in from a text file using the <i>src</i> attribute or from
     between the enclosing SQL tags.</p></td>
   </tr>
 
@@ -300,8 +306,8 @@ specified.</p></td>
 
   <tr valign="top">
     <td><a href="tstamp.html">TStamp</a></td>
-    <td><p>Sets the <code>DSTAMP</code>, <code>TSTAMP</code>, and 
-    <code>TODAY</code> properties in the current project based on 
+    <td><p>Sets the <code>DSTAMP</code>, <code>TSTAMP</code>, and
+    <code>TODAY</code> properties in the current project based on
     the current date and time.</p></td>
   </tr>
 
@@ -340,8 +346,8 @@ specified.</p></td>
   <tr valign="top">
     <td><a href="war.html">War</a></td>
     <td><p>An extension of the <a href="jar.html">Jar</a> task with special
-    treatment for files that should end up in the <code>WEB-INF/lib</code>, 
-    <code>WEB-INF/classes</code> or <code>WEB-INF</code> directories of the 
+    treatment for files that should end up in the <code>WEB-INF/lib</code>,
+    <code>WEB-INF/classes</code> or <code>WEB-INF</code> directories of the
     Web Application Archive.</p></td>
   </tr>
 
