@@ -177,6 +177,10 @@ public class PropertySet extends DataType {
         return getRef().dynamic;
     }
 
+    public Mapper getMapper() {
+        return getRef()._mapper;
+    }
+
     public Properties getProperties() {
         Vector names = null;
         Project prj = getProject();
@@ -193,8 +197,9 @@ public class PropertySet extends DataType {
         }
 
         FileNameMapper mapper = null;
-        if (_mapper != null) {
-            mapper = _mapper.getImplementation();
+        Mapper myMapper = getMapper();
+        if (myMapper != null) {
+            mapper = myMapper.getImplementation();
         }
         Properties properties = new Properties();
         for (Enumeration e = names.elements(); e.hasMoreElements();) {
