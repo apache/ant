@@ -64,14 +64,14 @@ import java.io.*;
 public class DefaultLogger implements BuildLogger {
     private static int LEFT_COLUMN_SIZE = 12;
 
-    private PrintStream out;
-    private PrintStream err;
-    private int msgOutputLevel;
+    protected PrintStream out;
+    protected PrintStream err;
+    protected int msgOutputLevel;
     private long startTime = System.currentTimeMillis();
 	
-    private static String lSep = System.getProperty("line.separator");
+    protected static String lSep = System.getProperty("line.separator");
 
-    private boolean emacsMode = false;
+    protected boolean emacsMode = false;
 
     /**
      * Set the msgOutputLevel this logger is to respond to.
@@ -185,7 +185,7 @@ public class DefaultLogger implements BuildLogger {
         }
     }
 
-    private static String formatTime(long millis) {
+    protected static String formatTime(long millis) {
         long seconds = millis / 1000;
         long minutes = seconds / 60;
 
