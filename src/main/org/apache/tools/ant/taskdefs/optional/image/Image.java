@@ -153,6 +153,17 @@ public class Image extends MatchingTask {
         instructions.add(instr);
     }
 
+
+    /**
+    * Adds an ImageOperation to chain.
+    * Adds an ImageOperation to the chain.
+    * @param instr The ImageOperation to append to the chain
+    * @since Ant 1.7
+    */
+    public void add(ImageOperation instr) {
+        addImageOperation(instr);
+    }
+
     /**
      * Executes all the chained ImageOperations on the file
      * specified.
