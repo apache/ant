@@ -38,7 +38,7 @@ import org.apache.tools.ant.util.TimeoutObserver;
 import org.apache.tools.ant.util.Watchdog;
 
 /**
- *
+ * Execute a Java class.
  * @since Ant 1.2
  */
 public class ExecuteJava implements Runnable, TimeoutObserver {
@@ -53,12 +53,16 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     private boolean timedOut = false;
     private Thread thread = null;
 
+    /**
+     * Set the Java "command" for this ExecuteJava.
+     * @param javaCommand the classname and arguments in a Commandline.
+     */
     public void setJavaCommand(Commandline javaCommand) {
         this.javaCommand = javaCommand;
     }
 
     /**
-     * Set the classpath to be used when running the Java class
+     * Set the classpath to be used when running the Java class.
      *
      * @param p an Ant Path object containing the classpath.
      */
@@ -66,35 +70,45 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         classpath = p;
     }
 
+    /**
+     * Set the system properties to use when running the Java class.
+     * @param s CommandlineJava system properties.
+     */
     public void setSystemProperties(CommandlineJava.SysProperties s) {
         sysProperties = s;
     }
 
     /**
-     * Permissions for the application run.
+     * Set the permissions for the application run.
+     * @param permissions the Permissions to use.
      * @since Ant 1.6
-     * @param permissions
      */
     public void setPermissions(Permissions permissions) {
         perm = permissions;
     }
 
     /**
-     * All output (System.out as well as System.err) will be written
-     * to this Stream.
-     *
-     * @deprecated manage output at the task level
+     * Set the stream to which all output (System.out as well as System.err)
+     * will be written.
+     * @param out the PrintStream where output should be sent.
+     * @deprecated manage output at the task level.
      */
     public void setOutput(PrintStream out) {
     }
 
     /**
+     * Set the timeout for this ExecuteJava.
+     * @param timeout timeout as Long.
      * @since Ant 1.5
      */
     public void setTimeout(Long timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * Execute the Java class against the specified Ant Project.
+     * @param project the Project to use.
+     */
     public void execute(Project project) throws BuildException {
         final String classname = javaCommand.getExecutable();
 
@@ -180,6 +194,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
+     * Run this ExecuteJava in a Thread.
      * @since Ant 1.5
      */
     public void run() {
@@ -207,6 +222,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
+     * Mark timeout as having occurred.
+     * @param w the responsible Watchdog.
      * @since Ant 1.5
      */
     public synchronized void timeoutOccured(Watchdog w) {
@@ -218,6 +235,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
+     * Get whether the process was killed.
+     * @return <code>true</code> if the process was killed, false otherwise.
      * @since 1.19, Ant 1.5
      */
     public synchronized boolean killedProcess() {
@@ -225,10 +244,10 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
-     * Runs the Java command in a separate VM, this does not give you
+     * Run the Java command in a separate VM, this does not give you
      * the full flexibility of the Java task, but may be enough for
      * simple needs.
-     *
+     * @param pc the ProjectComponent to use for logging, etc.
      * @since Ant 1.6.3
      */
     public int fork(ProjectComponent pc) throws BuildException {
@@ -244,7 +263,6 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         if (sysProperties != null) {
             cmdl.addSysproperties(sysProperties);
         }
-
         Redirector redirector = new Redirector(pc);
         Execute exe
             = new Execute(redirector.createHandler(),
@@ -272,8 +290,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * containing the arguments and classpath for the java command.
      * The special file is supported by the "-V" switch on the VMS JVM.
      *
-     * @param exe
-     * @param command
+     * @param exe the Execute instance to alter.
+     * @param command the command-line.
      */
     public static void setupCommandLineForVMS(Execute exe, String[] command) {
         //Use the VM launcher instead of shell launcher on VMS
