@@ -387,7 +387,7 @@ public class Project {
      * @param listener The listener to remove from the list.
      *                 Should not be <code>null</code>.
      */
-    public void removeBuildListener(BuildListener listener) {
+    public synchronized void removeBuildListener(BuildListener listener) {
         // create a new Vector to avoid ConcurrentModificationExc when
         // the listeners get added/removed while we are in fire
         Vector newListeners = getBuildListeners();
