@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,10 +25,17 @@ package org.apache.tools.ant.types;
  */
 public class DirSet extends AbstractFileSet {
 
+    /**
+     * Constructor for DirSet.
+     */
     public DirSet() {
         super();
     }
 
+    /**
+     * Constructor for DirSet, with DirSet to shallowly clone.
+     * @param dirset the dirset to clone.
+     */
     protected DirSet(DirSet dirset) {
         super(dirset);
     }
@@ -36,6 +43,7 @@ public class DirSet extends AbstractFileSet {
     /**
      * Return a DirSet that has the same basedir and same patternsets
      * as this one.
+     * @return the cloned dirset.
      */
     public Object clone() {
         if (isReference()) {

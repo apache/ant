@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.apache.tools.ant.types;
 
 import java.util.Properties;
 import java.util.Stack;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -93,6 +92,7 @@ public class Mapper extends DataType implements Cloneable {
 
     /**
      * Set the class name of the FileNameMapper to use.
+     * @param classname the name of the class
      */
     public void setClassname(String classname) {
         if (isReference()) {
@@ -103,6 +103,7 @@ public class Mapper extends DataType implements Cloneable {
 
     /**
      * Set the classpath to load the FileNameMapper through (attribute).
+     * @param classpath the classpath
      */
     public void setClasspath(Path classpath) {
         if (isReference()) {
@@ -117,6 +118,7 @@ public class Mapper extends DataType implements Cloneable {
 
     /**
      * Set the classpath to load the FileNameMapper through (nested element).
+     * @return a path object to be configured
      */
     public Path createClasspath() {
         if (isReference()) {
@@ -131,16 +133,18 @@ public class Mapper extends DataType implements Cloneable {
     /**
      * Set the classpath to load the FileNameMapper through via
      * reference (attribute).
+     * @param ref the reference to the FileNameMapper
      */
-    public void setClasspathRef(Reference r) {
+    public void setClasspathRef(Reference ref) {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        createClasspath().setRefid(r);
+        createClasspath().setRefid(ref);
     }
 
     /**
      * Set the argument to FileNameMapper.setFrom
+     * @param from the from attribute to pass to the FileNameMapper
      */
     public void setFrom(String from) {
         if (isReference()) {
@@ -151,6 +155,7 @@ public class Mapper extends DataType implements Cloneable {
 
     /**
      * Set the argument to FileNameMapper.setTo
+     * @param to the to attribute to pass to the FileNameMapper
      */
     public void setTo(String to) {
         if (isReference()) {
@@ -164,6 +169,8 @@ public class Mapper extends DataType implements Cloneable {
      *
      * <p>You must not set any other attribute if you make it a
      * reference.</p>
+     * @param r the reference to another mapper
+     * @throws BuildException if other attributes are set
      */
     public void setRefid(Reference r) throws BuildException {
         if (type != null || from != null || to != null) {
@@ -174,6 +181,8 @@ public class Mapper extends DataType implements Cloneable {
 
     /**
      * Returns a fully configured FileNameMapper implementation.
+     * @return a FileNameMapper object to be configured
+     * @throws BuildException on error
      */
     public FileNameMapper getImplementation() throws BuildException {
         if (isReference()) {
@@ -216,6 +225,7 @@ public class Mapper extends DataType implements Cloneable {
      /**
      * Gets the Class object associated with the mapper implementation.
      * @return <CODE>Class</CODE>.
+     * @throws ClassNotFoundException if the class cannot be found
      */
     protected Class getImplementationClass() throws ClassNotFoundException {
 
@@ -234,6 +244,7 @@ public class Mapper extends DataType implements Cloneable {
     /**
      * Performs the check for circular references and returns the
      * referenced Mapper.
+     * @return the referenced Mapper
      */
     protected Mapper getRef() {
         if (!isChecked()) {
@@ -257,6 +268,7 @@ public class Mapper extends DataType implements Cloneable {
     public static class MapperType extends EnumeratedAttribute {
         private Properties implementations;
 
+        /** Constructor for the MapperType enumeration */
         public MapperType() {
             implementations = new Properties();
             implementations.put("identity",
@@ -275,11 +287,17 @@ public class Mapper extends DataType implements Cloneable {
                                 "org.apache.tools.ant.util.UnPackageNameMapper");
         }
 
+        /**
+         * @return the filenamemapper names
+         */
         public String[] getValues() {
             return new String[] {"identity", "flatten", "glob",
                                  "merge", "regexp", "package", "unpackage"};
         }
 
+        /**
+         * @return the classname for the filenamemapper name
+         */
         public String getImplementation() {
             return implementations.getProperty(getValue());
         }
