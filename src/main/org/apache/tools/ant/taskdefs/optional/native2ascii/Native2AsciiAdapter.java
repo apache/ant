@@ -17,7 +17,7 @@
 package org.apache.tools.ant.taskdef.optional.native2ascii;
 
 import java.io.File;
-import org.apache.tools.ant.taskdef.optional.Native2Ascii;
+import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
 
 public interface Native2AsciiAdapter {
     boolean convert(Native2Ascii args, File srcFile, File destFile);
