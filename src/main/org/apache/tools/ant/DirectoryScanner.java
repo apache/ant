@@ -168,6 +168,12 @@ public class DirectoryScanner
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    /** iterations for case-sensitive scanning. */
+    private static final boolean[] csScanOnly = new boolean[] {true};
+
+    /** iterations for non-case-sensitive scanning. */
+    private static final boolean[] csThenNonCs = new boolean[] {true, false};
+
     /**
      * Patterns which should be excluded by default.
      *
@@ -1522,13 +1528,11 @@ public class DirectoryScanner
         }
         String current = (String) pathElements.remove(0);
 
-        //always scan first NOT ignoring case; if cs, do a 2nd scan ignoring case:
-        boolean[] ignoreCase = cs ? new boolean[] {false}
-                                  : new boolean[] {false, true};
-        for (int i = 0; i < ignoreCase.length; i++) {
+        boolean[] matchCase = cs ? csScanOnly : csThenNonCs;
+        for (int i = 0; i < matchCase.length; i++) {
             for (int j = 0; j < files.length; j++) {
-                if (ignoreCase[i] ? files[j].equalsIgnoreCase(current)
-                                  : files[j].equals(current)) {
+                if (matchCase[i] ? files[j].equals(current)
+                                 : files[j].equalsIgnoreCase(current)) {
                     return findFile(new File(base, files[j]), pathElements, cs);
                 }
             }
