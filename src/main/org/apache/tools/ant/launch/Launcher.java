@@ -223,9 +223,15 @@ public class Launcher {
             main.startAnt(newArgs, null, null);
         } catch (Throwable t) {
             if (t instanceof InstantiationException) {
+                t.printStackTrace();
                 InstantiationException ie = (InstantiationException) t;
-                System.err.println("Instantiation Exception - root cause:");
-                ie.getCause().printStackTrace();
+                if (ie.getCause() == null) {
+                    System.err.println("Instantiation Exception - root cause: "
+                                       + ie.getCause());
+                } else {
+                     System.err.println("Instantiation Exception - root cause:");
+                     ie.getCause().printStackTrace();
+                }
             } else {
                 t.printStackTrace();
             }
