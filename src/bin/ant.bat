@@ -77,7 +77,7 @@ if not "%JIKESPATH%" == "" goto runAntWithJikes
 goto end
 
 :runAntWithJikes
-%JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
+%_JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 
 :end
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
