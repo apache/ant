@@ -475,4 +475,18 @@ public abstract class Task extends ProjectComponent {
     protected RuntimeConfigurable getWrapper() {
         return wrapper;
     }
+
+    /**
+     * Bind a task to another; use this when configuring a newly created
+     * task to do work on behalf of another.
+     * Project, OwningTarget, TaskName, Location and Description are all copied
+     * @param owner owning target
+     */
+    public final void bindToOwner(Task owner) {
+        setProject(owner.getProject());
+        setOwningTarget(owner.getOwningTarget());
+        setTaskName(owner.getTaskName());
+        setDescription(owner.getDescription());
+        setLocation(owner.getLocation());
+    }
 }
