@@ -17,6 +17,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.OutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -208,18 +209,15 @@ public class Execute {
     private static String[] getProcEnvCommand() {
         if (Os.isFamily("os/2")) {
             // OS/2 - use same mechanism as Windows 2000
-            String[] cmd = {"cmd", "/c", "set" };
-            return cmd;
+            return new String[] {"cmd", "/c", "set" };
         } else if (Os.isFamily("windows")) {
             // Determine if we're running under XP/2000/NT or 98/95
-            if (!Os.isFamily("win9x")) {
-                // Windows XP/2000/NT
-                String[] cmd = {"cmd", "/c", "set" };
-                return cmd;
-            } else {
+            if (Os.isFamily("win9x")) {
                 // Windows 98/95
-                String[] cmd = {"command.com", "/c", "set" };
-                return cmd;
+                return new String[] {"command.com", "/c", "set" };
+            } else {
+                // Windows XP/2000/NT/2003
+                return new String[] {"cmd", "/c", "set" };
             }
         } else if (Os.isFamily("z/os") || Os.isFamily("unix")) {
             // On most systems one could use: /bin/sh -c env
@@ -237,16 +235,13 @@ public class Execute {
             return cmd;
         } else if (Os.isFamily("netware") || Os.isFamily("os/400")) {
             // rely on PATH
-            String[] cmd = {"env"};
-            return cmd;
+            return new String[] {"env"};
         } else if (Os.isFamily("openvms")) {
-            String[] cmd = {"show", "logical"};
-            return cmd;
+            return new String[] {"show", "logical"};
         } else {
             // MAC OS 9 and previous
             //TODO: I have no idea how to get it, someone must fix it
-            String[] cmd = null;
-            return cmd;
+            return null;
         }
     }
 
@@ -515,6 +510,18 @@ public class Execute {
                     Project.MSG_VERBOSE);
             }
         }
+
+        OutputStream dummyOut = new OutputStream() {
+            public void write(int b) throws IOException {
+            }
+        };
+
+        ExecuteStreamHandler streamHandler = new PumpStreamHandler(dummyOut);
+        streamHandler.setProcessErrorStream(process.getErrorStream());
+        streamHandler.setProcessOutputStream(process.getInputStream());
+        streamHandler.start();
+        process.getOutputStream().close();
+
         project.log("spawned process " + process.toString(), Project.MSG_VERBOSE);
     }
 

@@ -71,6 +71,9 @@ Fixed bugs:
 * UNC pathnames did not work for ANT_HOME or -lib locations on Windows.
   Bugzilla report 27922.
 
+* I/O-intensive processes hung when executed via <exec spawn="true">.
+  Bugzilla reports 23893/26852.
+
 Other changes:
 --------------
 
