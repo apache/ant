@@ -17,6 +17,8 @@ Other changes:
 Fixed bugs:
 -----------
 
+* Fixed bug where ant would not copy system properties into new Project
+  in ant/antcall tasks when inheritall="false" is set.
 
 Changes from Ant 1.3 to Ant 1.4
 ===========================================
