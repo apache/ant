@@ -98,6 +98,9 @@ public class ZipFileSet extends FileSet {
     private int fileMode          = DEFAULT_FILE_MODE;
     private int dirMode           = DEFAULT_DIR_MODE;
 
+    private boolean fileModeHasBeenSet = false;
+    private boolean dirModeHasBeenSet  = false;
+
     public ZipFileSet() {
         super();
     }
@@ -114,6 +117,8 @@ public class ZipFileSet extends FileSet {
         hasDir = fileset.hasDir;
         fileMode = fileset.fileMode;
         dirMode = fileset.dirMode;
+        fileModeHasBeenSet = fileset.fileModeHasBeenSet;
+        dirModeHasBeenSet = fileset.dirModeHasBeenSet;
     }
 
     /**
@@ -243,7 +248,8 @@ public class ZipFileSet extends FileSet {
     public void setFileMode(String octalString) {
         if (isReference()) {
              throw tooManyAttributes();
-         }
+        }
+        fileModeHasBeenSet = true;
         this.fileMode =
             UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
     }
@@ -259,28 +265,53 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
+     * Whether the user has specified the mode explicitly.
+     *
+     * @since Ant 1.6
+     */
+    public boolean hasFileModeBeenSet() {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(getProject())).hasFileModeBeenSet();
+        }
+        return fileModeHasBeenSet;
+    }
+
+    /**
      * A 3 digit octal string, specify the user, group and
      * other modes in the standard Unix fashion;
      * optional, default=0755
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public void setDirMode(String octalString) {
         if (isReference()) {
              throw tooManyAttributes();
-         }
+        }
+        dirModeHasBeenSet = true;
         this.dirMode =
             UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
     }
 
     /**
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public int getDirMode(Project p) {
         if (isReference()) {
             return ((ZipFileSet)getRef(p)).getDirMode(p);
         }
         return dirMode;
+    }
+
+    /**
+     * Whether the user has specified the mode explicitly.
+     *
+     * @since Ant 1.6
+     */
+    public boolean hasDirModeBeenSet() {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(getProject())).hasDirModeBeenSet();
+        }
+        return dirModeHasBeenSet;
     }
 
     /**

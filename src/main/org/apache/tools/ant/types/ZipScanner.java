@@ -60,12 +60,12 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 
 /**
  * ZipScanner accesses the pattern matching algorithm in DirectoryScanner,
@@ -93,6 +93,13 @@ public class ZipScanner extends DirectoryScanner {
     private Hashtable myentries;
 
     /**
+     * encoding of file names.
+     *
+     * @since Ant 1.6
+     */
+    private String encoding;
+
+    /**
      * Sets the srcFile for scanning. This is the jar or zip file that
      * is scanned for matching entries.
      *
@@ -100,6 +107,15 @@ public class ZipScanner extends DirectoryScanner {
      */
     public void setSrc(File srcFile) {
         this.srcFile = srcFile;
+    }
+
+    /**
+     * Sets encoding of file names.
+     *
+     * @since Ant 1.6
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     /**
@@ -230,37 +246,29 @@ public class ZipScanner extends DirectoryScanner {
         }
 
         ZipEntry entry = null;
-        ZipInputStream in = null;
+        ZipFile zf = null;
         myentries = new Hashtable();
         try {
             try {
-                in = new ZipInputStream(new FileInputStream(srcFile));
+                zf = new ZipFile(srcFile, encoding);
+            } catch (ZipException ex) {
+                throw new BuildException("problem reading " + srcFile, ex);
             } catch (IOException ex) {
                 throw new BuildException("problem opening " + srcFile, ex);
             }
 
-            while (true) {
-                try {
-                    entry = in.getNextEntry();
-                    if (entry == null) {
-                        break;
-                    }
-                    myentries.put(new String(entry.getName()),
-                                  new Resource(entry.getName(), true,
-                                               entry.getTime(), 
-                                               entry.isDirectory()));
-                } catch (ZipException ex) {
-                    throw new BuildException("problem reading " + srcFile,
-                                             ex);
-                } catch (IOException e) {
-                    throw new BuildException("problem reading zip entry from " 
-                                             + srcFile, e);
-                }
+            Enumeration enum = zf.getEntries();
+            while (enum.hasMoreElements()) {
+                entry = (ZipEntry) enum.nextElement();
+                myentries.put(new String(entry.getName()),
+                              new Resource(entry.getName(), true, 
+                                           entry.getTime(), 
+                                           entry.isDirectory()));
             }
         } finally {
-            if (in != null) {
+            if (zf != null) {
                 try {
-                    in.close();
+                    zf.close();
                 } catch (IOException ex) {
                     // swallow
                 }

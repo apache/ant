@@ -66,7 +66,6 @@ import java.util.Hashtable;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.zip.CRC32;
-import java.util.zip.ZipFile;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -85,6 +84,7 @@ import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
@@ -362,6 +362,7 @@ public class Zip extends MatchingTask {
                 log("Adding file " + files[j] + " to fileset",
                     Project.MSG_VERBOSE);
                 ZipFileSet zf = new ZipFileSet();
+                zf.setProject(getProject());
                 zf.setSrc(new File(basedir, files[j]));
                 filesets.addElement(zf);
                 filesetsFromGroupfilesets.addElement(zf);
@@ -439,6 +440,7 @@ public class Zip extends MatchingTask {
                 if (doUpdate) {
                     addingNewFiles = false;
                     ZipFileSet oldFiles = new ZipFileSet();
+                    oldFiles.setProject(getProject());
                     oldFiles.setSrc(renamedFile);
 
                     for (int i = 0; i < addedFiles.size(); i++) {
@@ -447,6 +449,7 @@ public class Zip extends MatchingTask {
                     }
                     DirectoryScanner ds = 
                         oldFiles.getDirectoryScanner(getProject());
+                    ((ZipScanner) ds).setEncoding(encoding);
                     String[] f = ds.getIncludedFiles();
                     Resource[] r = new Resource[f.length];
                     for (int i = 0; i < f.length; i++) {
@@ -575,7 +578,7 @@ public class Zip extends MatchingTask {
                 dealingWithFiles = true;
                 base = fileset.getDir(getProject());
             } else {
-                zf = new ZipFile(zfs.getSrc(getProject()));
+                zf = new ZipFile(zfs.getSrc(getProject()), encoding);
             }
             
             for (int i = 0; i < resources.length; i++) {
@@ -595,17 +598,18 @@ public class Zip extends MatchingTask {
                 }
                 
                 addParentDirs(base, name, zOut, prefix, dirMode);
-                
+
                 if (!resources[i].isDirectory() && dealingWithFiles) {
                     File f = fileUtils.resolveFile(base, 
                                                    resources[i].getName());
                     zipFile(f, zOut, prefix + name, fileMode);
                 } else if (!resources[i].isDirectory()) {
-                    java.util.zip.ZipEntry ze = 
-                        zf.getEntry(resources[i].getName());
+                    ZipEntry ze = zf.getEntry(resources[i].getName());
                     if (ze != null) {
                         zipFile(zf.getInputStream(ze), zOut, prefix + name, 
-                                ze.getTime(), zfs.getSrc(getProject()), fileMode);
+                                ze.getTime(), zfs.getSrc(getProject()), 
+                                zfs.hasFileModeBeenSet() ? fileMode 
+                                                         : ze.getUnixMode());
                     }
                 }
             }
@@ -673,6 +677,7 @@ public class Zip extends MatchingTask {
     private synchronized ZipScanner getZipScanner() {
         if (zs == null) {
             zs = new ZipScanner();
+            zs.setEncoding(encoding);
             zs.setSrc(zipFile);
         }
         return zs;
@@ -849,6 +854,9 @@ public class Zip extends MatchingTask {
         for (int i = 0; i < filesets.length; i++) {
             DirectoryScanner rs = 
                 filesets[i].getDirectoryScanner(getProject());
+            if (rs instanceof ZipScanner) {
+                ((ZipScanner) rs).setEncoding(encoding);
+            }
             Vector resources = new Vector();
             String[] directories = rs.getIncludedDirectories();
             for (int j = 0; j < directories.length; j++) {
