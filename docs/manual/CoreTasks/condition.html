@@ -91,6 +91,21 @@ are redundant and will be ignored.</p>
     <td valign="top">The name of the operating system family to expect.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the operating system to expect.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">arch</td>
+    <td valign="top">The architecture of the operating system to expect.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">version</td>
+    <td valign="top">The version of the operating system to expect.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <p>Supported values for the family attribute are:
 <ul>
@@ -138,7 +153,7 @@ are redundant and will be ignored.</p>
   </tr>
 </table>
 
-<h4>checksum</h4> 
+<h4>checksum</h4>
 
 <p>This condition is identical to the <a
 href="checksum.html">Checksum</a> task, all attributes and nested
@@ -171,6 +186,14 @@ classpath.</p>
 <p>sets the property <code>isMacOsButNotMacOsX</code> if the current
 operating system is MacOS, but not MacOS X - which Ant considers to be
 in the Unix family as well.</p>
+
+<pre>
+  &lt;condition property=&quot;isSparc&quot;&gt;
+    &lt;os arch=&quot;sparc&quot; />
+  &lt;/condition&gt;
+</pre>
+<p>sets the property <code>isSparc</code> if the current
+operating system is running on a sparc architecture.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2001 Apache Software
