@@ -224,7 +224,6 @@ public class XSLTProcess extends MatchingTask {
      * Sets the file to use for styling relative to the base directory.
      */
     public void setProcessor(String processor) throws Exception {
-System.out.println("trying " + processor);
 
         if (processor.equals("trax")) {
             final Class clazz = 
