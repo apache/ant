@@ -71,6 +71,7 @@ public class ExecuteOn extends ExecTask {
     private int maxParallel = -1;
     private boolean addSourceFile = true;
     private boolean verbose = false;
+    private boolean ignoreMissing = true;
 
     /**
      * Has &lt;srcfile&gt; been specified before &lt;targetfile&gt;
@@ -180,6 +181,15 @@ public class ExecuteOn extends ExecTask {
      */
     public void setVerbose(boolean b) {
         verbose = b;
+    }
+
+    /**
+     * Whether to ignore nonexistent files from filelists.
+     *
+     * @since Ant 1.7
+     */
+    public void setIgnoremissing(boolean b) {
+        ignoreMissing = b;
     }
 
     /**
@@ -354,10 +364,10 @@ public class ExecuteOn extends ExecTask {
 
                 for (int j = 0; j < names.length; j++) {
                     File f = new File(base, names[j]);
-                    if ((f.isFile() && !"dir".equals(type))
+                    if ((!ignoreMissing) || (f.isFile() && !"dir".equals(type))
                         || (f.isDirectory() && !"file".equals(type))) {
 
-                        if (f.isFile()) {
+                        if (ignoreMissing || f.isFile()) {
                             totalFiles++;
                         } else {
                             totalDirs++;

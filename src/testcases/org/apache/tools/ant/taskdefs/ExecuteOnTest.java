@@ -550,6 +550,10 @@ public class ExecuteOnTest extends BuildFileTest {
         assertNull("unexpected redirector.err content", getFileString("redirector.err"));
     }
 
+    public void testIgnoreMissing() {
+        executeTarget("ignoremissing");
+    }
+
     //borrowed from TokenFilterTest
     private String getFileString(String filename) throws IOException {
         String result = null;

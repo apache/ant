@@ -33,6 +33,10 @@ Other changes:
 * A new base class DispatchTask has been added to facilitate elegant 
   creation of tasks with multiple actions.
 
+* <apply> has a new ignoremissing attribute (default true for BC)
+  which will allow nonexistent files specified via <filelist>s to
+  be passed to the executable.  Bugzilla Report 29585.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =====================================================
 
@@ -228,6 +232,8 @@ Other changes:
 * Add implicit nested element to <macrodef>. Bugzilla Report 25633.
 
 * Add deleteonexit attribute to <delete>.
+
+* Added Target.getIf/Unless().  Bugzilla Report 29320.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================

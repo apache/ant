@@ -303,6 +303,47 @@
         </apply>
     </target>
 
+    <target name="ignoremissing">
+        <filelist id="xylist" dir="${basedir}" files="x,y" />
+        <filelist id="xyzlist" dir="${basedir}" files="x,y,z" />
+
+        <touch file="x" />
+        <touch file="y" />
+
+        <pathconvert property="xy" pathsep="${line.separator}">
+            <path>
+                <filelist refid="xylist" />
+            </path>
+        </pathconvert>
+
+        <pathconvert property="xyz" pathsep="${line.separator}">
+            <path>
+                <filelist refid="xyzlist" />
+            </path>
+        </pathconvert>
+
+        <apply executable="echo" ignoremissing="true"
+               outputproperty="ignoretrue" append="true">
+            <filelist refid="xyzlist" />
+        </apply>
+
+        <apply executable="echo" ignoremissing="false"
+               outputproperty="ignorefalse" append="true">
+            <filelist refid="xyzlist" />
+        </apply>
+
+        <fail>
+            <condition>
+                <not>
+                    <and>
+                        <equals arg1="${xy}" arg2="${ignoretrue}" />
+                        <equals arg1="${xyz}" arg2="${ignorefalse}" />
+                    </and>
+                </not>
+            </condition>
+        </fail>
+    </target>
+
     <target name="cleanup">
         <delete>
             <fileset refid="xyz" />
