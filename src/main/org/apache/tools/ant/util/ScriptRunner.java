@@ -139,7 +139,15 @@ public class ScriptRunner {
             for (Iterator i = beans.keySet().iterator(); i.hasNext();) {
                 String key = (String) i.next();
                 Object value = beans.get(key);
-                manager.declareBean(key, value, value.getClass());
+                if (value != null) {
+                    manager.declareBean(key, value, value.getClass());
+                } else {
+                    // BSF uses a hashtable to store values
+                    // so cannot declareBean with a null value
+                    // So need to remove any bean of this name as
+                    // that bean should not be visible
+                    manager.undeclareBean(key);
+                }
             }
 
             // execute the script
