@@ -65,8 +65,24 @@ import org.apache.tools.ant.BuildException;
 public class Os implements Condition {
     private String family;
 
+    /**
+     * Sets the desired OS family type
+     * 
+     * @param f      The OS family type desired<br />
+     *               Possible values:<br />
+     *               <ul><li>dos</li>
+     *               <li>mac</li>
+     *               <li>netware</li>
+     *               <li>unix</li>
+     *               <li>windows</li></ul>
+     */
     public void setFamily(String f) {family = f.toLowerCase();}
 
+    /**
+     * Determines if the OS on which Ant is executing matches the type of 
+     * that set in setFamily.
+     * @see Os#setFamily(String)
+     */
     public boolean eval() throws BuildException {
         String osName = System.getProperty("os.name").toLowerCase();
         String pathSep = System.getProperty("path.separator");
