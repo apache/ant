@@ -539,7 +539,7 @@ public class XMLCatalog extends DataType
                 catalogResolver = new InternalResolver();
                 if (getCatalogPath() != null
                     && getCatalogPath().list().length != 0) {
-                        log("Warning: catalogpath listing external catalogs"
+                        log("Warning: XML resolver not found; external catalogs"
                             + " will be ignored", Project.MSG_WARN);
                     }
                 log("Failed to load Apache resolver: " + ex, Project.MSG_DEBUG);
