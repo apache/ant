@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -168,13 +168,17 @@ public class WhichResource extends Task {
         String location = null;
         if (classname != null) {
             //convert a class name into a resource
-            classname = classname.replace('.', '/');
-            resource = "/" + classname + ".class";
-        } else {
-            if (!resource.startsWith("/")) {
-                resource = "/" + resource;
-            }
+            resource = classname.replace('.', '/') + ".class";
         }
+
+        if (resource == null) {
+            throw new BuildException("One of class or resource is required");
+        }
+
+        if (resource.startsWith("/")) {
+            resource = resource.substring(1);
+        }
+
         log("Searching for " + resource, Project.MSG_VERBOSE);
         URL url;
         url = loader.getResource(resource);

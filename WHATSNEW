@@ -1,5 +1,17 @@
-Changes from Ant 1.6.B3 to Ant 1.6
-==================================
+Changes from Ant 1.6.0 to Ant 1.6.1
+===================================
+
+Fixed bugs:
+-----------
+
+* Fix handling of default ant namespace for nested elements.
+
+* Fix jboss element of ejb task (introduced in ant 1.6.0).
+
+* <whichresource> failed to load classes correctly.
+
+Changes from Ant 1.6.B3 to Ant 1.6.0
+====================================
 
 Changes that could break older environments:
 --------------------------------------------
