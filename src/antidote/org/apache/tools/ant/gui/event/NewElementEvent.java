@@ -51,44 +51,20 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.command;
-import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.event.NewTargetEvent;
-import org.apache.tools.ant.gui.acs.*;
-
+package org.apache.tools.ant.gui.event;
+import org.apache.tools.ant.gui.acs.ACSElement;
 /**
- * Command for creating a new target.
+ * Tag interface for indicating that an event is related to creating new
+ * build definition elements.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class NewTargetCmd extends AbstractCommand {
-    /** New project count for this session. Used to create default names, 
-     *  numbered as a convenience. */
-    private static int _count = 1;
-
-	/** 
-	 * Standard ctor.
-	 * 
-	 * @param context Application context.
-	 */
-    public NewTargetCmd(AppContext context) {
-        super(context);
-    }
-
+public interface NewElementEvent {
     /** 
-     * Create a new target and make it active.
+     * Get the element that has been added.
      * 
+     * @return New element.
      */
-    public void run() {
-        ACSProjectElement project = getContext().getSelectionManager().
-            getSelectedProject();
-        ACSTargetElement retval = 
-            ACSFactory.getInstance().createTarget(project);
-        retval.setName(getContext().getResources().
-                        getString(getClass(), "defName") + " " + _count++);
-        getContext().getEventBus().postEvent(
-            new NewTargetEvent(getContext(),  retval));
-        
-    }
+    ACSElement getNewElement();
 }

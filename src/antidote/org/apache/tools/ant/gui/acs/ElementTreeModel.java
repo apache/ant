@@ -59,7 +59,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeModelEvent;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import org.apache.tools.ant.gui.acs.*;
 import java.util.*;
 
 /**
@@ -90,6 +90,9 @@ public class ElementTreeModel implements TreeModel {
 
     /** 
      * Gets the set of children that this tree model is interested in.
+     * NB: This is <b>really</b> inefficient, but may not be an issue given
+     * the number of times it is ultimately called. A profiler definately needs
+     * to be applied here.
      * 
      * @param parent Parent to extract children from.
      */
@@ -123,7 +126,8 @@ public class ElementTreeModel implements TreeModel {
     public Object getChild(Object parent, int index) {
         if(parent instanceof Node) {
             Node n = (Node) parent;
-            return getChildren(n).get(index);
+            List children = getChildren(n);
+            return children.get(index);
         }
         else {
             return null;
@@ -194,6 +198,8 @@ public class ElementTreeModel implements TreeModel {
       * @param newValue the new value from the TreeCellEditor.
       */
     public void valueForPathChanged(TreePath path, Object newValue) {
+        // XXX What should the implementation be here?
+        fireNodeChanged((Node) path.getLastPathComponent());
     }
 
 
@@ -217,4 +223,90 @@ public class ElementTreeModel implements TreeModel {
         _listeners.remove(l);
     }
 
+    /** 
+     * Get the list of nodes from the root to the
+     * given node.
+     * 
+     * @param startNode Node to get path for.
+     */
+    public Node[] getPathToRoot(Node startNode) {
+        return getPathToRoot(startNode, 0);
+    }
+
+    /** 
+     * A recursive method for generating a list of nodes defining
+     * the path from the given node to the root.
+     * 
+     * @param node Node to get path for.
+     * @param depth The number of calls taken towards the root.
+     */
+    private Node[] getPathToRoot(Node node, int depth) {
+        Node[] retval = null;
+
+        depth++;
+        if(node == _root || node.getParentNode() == null) {
+            retval = new Node[depth];
+        }
+        else {
+            retval = getPathToRoot(node.getParentNode(), depth);
+        }
+
+        retval[retval.length - depth] = node;
+        return retval;
+    }
+
+
+    /** 
+     * Fire a node change event.
+     * 
+     * @param node Node that changed.
+     */
+    public void fireNodeChanged(Node node) {
+        TreeModelEvent event = new TreeModelEvent(this, getPathToRoot(node));
+
+        // XXX This doen't support modifying the list during dispatch...
+        Iterator it = _listeners.iterator();
+        while(it.hasNext()) {
+            TreeModelListener l = (TreeModelListener) it.next();
+            l.treeNodesChanged(event);
+        }
+    }
+
+    /** 
+     * Fire a node change event.
+     * 
+     * @param node Node that changed.
+     */
+    public void fireNodeAdded(Node node) {
+        Node parent = node.getParentNode();
+        TreeModelEvent event = null;
+        if(parent == null) {
+            event = new TreeModelEvent(this, getPathToRoot(node));
+        }
+        else {
+            Node[] path = getPathToRoot(parent);
+            int[] indicies = null;
+            Node[] children = new Node[] { node };
+
+            // XXX Right now we assume that the node was added at the end.
+            // This may not be the case in the future.
+            if(parent.getLastChild() == node) {
+                List filteredChildren = getChildren(parent);
+                indicies = new int[] { filteredChildren.indexOf(node) };
+            }
+            else {
+                throw new UnsupportedOperationException(
+                    "Haven't implemented non-append notification yet.");
+            }
+
+            event = new TreeModelEvent(this, path, indicies, children);
+        }
+
+        // XXX This doen't support modifying the list during dispatch...
+        Iterator it = _listeners.iterator();
+        while(it.hasNext()) {
+            TreeModelListener l = (TreeModelListener) it.next();
+            l.treeNodesInserted(event);
+        }
+    }
 }

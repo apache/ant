@@ -160,6 +160,15 @@ public class AppContext {
         return _selectionManager;
     }
 
+    /** 
+     * Determine if debug mode is turned on.
+     * 
+     * @return True if in debug mode, false otherwise.
+     */
+    public boolean isDebugOn() {
+        return _resources.getBoolean("debug");
+    }
+
 }
 
 

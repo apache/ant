@@ -54,13 +54,10 @@
 package org.apache.tools.ant.gui.modules.edit;
 import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.gui.acs.ElementTreeSelectionModel;
-import org.apache.tools.ant.gui.acs.ElementTreeModel;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import org.apache.tools.ant.gui.acs.*;
 import javax.swing.*;
 import javax.swing.tree.*;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.*;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -104,10 +101,11 @@ public class ElementNavigator extends AntModule {
         _tree.setCellRenderer(new ElementTreeCellRenderer());
         _tree.addMouseListener(new PopupHandler());
         _tree.putClientProperty("JTree.lineStyle", "Angled");
+        _tree.setShowsRootHandles(true);
         JScrollPane scroller = new JScrollPane(_tree);
         add(scroller);
 
-        setPreferredSize(new Dimension(200, 100));
+        setPreferredSize(new Dimension(250, 100));
         setMinimumSize(new Dimension(200, 100));
 
 	}
@@ -134,12 +132,18 @@ public class ElementNavigator extends AntModule {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
+            ElementTreeModel model = (ElementTreeModel)_tree.getModel();
+            // XXX This crap needs cleaning up. Type switching is lazy...
             if(event instanceof PropertyChangeEvent) {
                 // The project node has changed.
-// XXX This won't work until ACSTreeNodeElement.getParent() is fixed
-//                ElementTreeModel model = (ElementTreeModel)_tree.getModel();
-//                model.nodeChanged((TreeNode)model.getRoot());
-                
+                model.fireNodeChanged((ACSElement)event.getSource());
+            }
+            else if(event instanceof NewElementEvent && model != null) {
+                ACSElement element = ((NewElementEvent)event).getNewElement();
+                model.fireNodeAdded(element);
+                TreePath path = new TreePath(model.getPathToRoot(element));
+                _selections.setSelectionPath(path);
+                _tree.scrollPathToVisible(path);
             }
             else {
                 ACSProjectElement project = null;
@@ -190,6 +194,7 @@ public class ElementNavigator extends AntModule {
         public boolean accept(EventObject event) {
             return event instanceof ProjectSelectedEvent ||
                 event instanceof ProjectClosedEvent ||
+                event instanceof NewElementEvent ||
                 event instanceof PropertyChangeEvent;
         }
     }

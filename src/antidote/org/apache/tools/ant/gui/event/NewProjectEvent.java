@@ -67,7 +67,8 @@ import org.apache.tools.ant.gui.acs.ACSElement;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class NewProjectEvent extends ProjectSelectedEvent {
+public class NewProjectEvent extends ProjectSelectedEvent 
+    implements NewElementEvent {
 
 	/** 
 	 * Standard ctor.
@@ -77,5 +78,18 @@ public class NewProjectEvent extends ProjectSelectedEvent {
     public NewProjectEvent(
         AppContext context, ACSProjectElement project) {
         super(context, project);
+        if(project == null) {
+            throw new IllegalArgumentException("A new project can't be null.");
+        }
     }
+
+    /** 
+     * Get the newly added project.
+     * 
+     * @return New project.
+     */
+    public ACSElement getNewElement() {
+        return getSelectedProject();
+    }
+
 }

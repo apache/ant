@@ -201,9 +201,28 @@ public class ACSFactory {
     public ACSTargetElement createTarget(ACSProjectElement project) {
         ACSTargetElement retval = (ACSTargetElement) project.
             getOwnerDocument().createElement("target");
+        indent(project, 1);
         project.appendChild(retval);
         return retval;
     }
+
+    /** 
+     * Insert a new line and indentation at the end of the given
+     * node in preparation for a new element being added.
+     * 
+     * @param node Node to append indent to.
+     * @param level Indentation level.
+     */
+    private void indent(ACSElement node, int level) {
+        StringBuffer buf = new StringBuffer("\n");
+        for(int i = 0; i < level; i++) {
+            buf.append("    ");
+        }
+
+        Text text = node.getOwnerDocument().createTextNode(buf.toString());
+        node.appendChild(text);
+    }
+
 
 	/** 
 	 * Test code

@@ -232,7 +232,8 @@ public class ActionManager {
         for(int i = 0; i < actionIDs.length; i++) {
             AntAction action = (AntAction) _actions.get(actionIDs[i]);
             if(action != null) {
-                retval.add(action);
+                AbstractButton button = retval.add(action);
+                addNiceStuff(button, action);
             }
         }
 

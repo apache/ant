@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,44 +51,40 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.command;
+package org.apache.tools.ant.gui.event;
+import org.apache.tools.ant.gui.acs.ACSElement;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.event.NewTargetEvent;
-import org.apache.tools.ant.gui.acs.*;
 
 /**
- * Command for creating a new target.
+ * Event fired when a new target is created.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class NewTargetCmd extends AbstractCommand {
-    /** New project count for this session. Used to create default names, 
-     *  numbered as a convenience. */
-    private static int _count = 1;
+public class NewTargetEvent extends TargetSelectionEvent 
+    implements NewElementEvent {
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context.
+	 * @param context application context.
+     * @param target the new target.
 	 */
-    public NewTargetCmd(AppContext context) {
-        super(context);
+    public NewTargetEvent(AppContext context, 
+                          ACSTargetElement target) {
+        super(context, new ACSElement[] { target });
+        if(target == null) {
+            throw new IllegalArgumentException("A new target can't be null.");
+        }
     }
 
     /** 
-     * Create a new target and make it active.
+     * Get the newly added target.
      * 
+     * @return New target.
      */
-    public void run() {
-        ACSProjectElement project = getContext().getSelectionManager().
-            getSelectedProject();
-        ACSTargetElement retval = 
-            ACSFactory.getInstance().createTarget(project);
-        retval.setName(getContext().getResources().
-                        getString(getClass(), "defName") + " " + _count++);
-        getContext().getEventBus().postEvent(
-            new NewTargetEvent(getContext(),  retval));
-        
+    public ACSElement getNewElement() {
+        return getSelectedTargets()[0];
     }
 }
