@@ -195,10 +195,12 @@ public final class LoadFile extends Task {
             }
 
             if (text != null) {
-                project.setNewProperty(property, text);
-                log("loaded " + text.length() + " characters",
-                    Project.MSG_VERBOSE);
-                log(property + " := " + text, Project.MSG_DEBUG);
+                if (text.length() > 0) {
+                    project.setNewProperty(property, text);
+                    log("loaded " + text.length() + " characters",
+                        Project.MSG_VERBOSE);
+                    log(property + " := " + text, Project.MSG_DEBUG);
+                }
             }
 
         } catch (final IOException ioe) {
