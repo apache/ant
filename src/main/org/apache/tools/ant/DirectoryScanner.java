@@ -1179,7 +1179,7 @@ public class DirectoryScanner
      * @param pattern the pattern to check.
      * @param name the name to check.
      * @return whether the pattern is deeper than the name.
-     * @since Ant 1.6.3
+     * @since Ant 1.7
      */
     private boolean isDeeper(String pattern, String name) {
         Vector p = SelectorUtils.tokenizePath(pattern);
@@ -1216,12 +1216,13 @@ public class DirectoryScanner
     /**
      * Test whether all contents of the specified directory must be excluded.
      * @param name the directory name to check.
+     * @return whether all the specified directory's contents are excluded.
      */
     private boolean contentsExcluded(String name) {
         name = (name.endsWith(File.separator)) ? name : name + File.separator;
         for (int i = 0; i < excludes.length; i++) {
             String e = excludes[i];
-            if (e.endsWith(File.separator + "**") && SelectorUtils.matchPath(
+            if (e.endsWith("**") && SelectorUtils.matchPath(
                 e.substring(0, e.length() - 2), name, isCaseSensitive())) {
                 return true;
             }
