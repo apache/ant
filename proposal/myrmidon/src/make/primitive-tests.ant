@@ -14,7 +14,7 @@ Legal:
 ==============================================================================
 -->
 
-<project name="MySample" default="main" basedir=".">
+<project version="2.0.0">
 
   <import library="selftest" />
 
@@ -58,8 +58,7 @@ Legal:
         float="1.0"
         float2="2.0"
         double="3.0"
-        double2="4.0"
-     />
+        double2="4.0" />
 
     <sub-elements-test>
       <create-beep message="A string" />

@@ -15,8 +15,11 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.ExceptionUtil;
+import org.apache.avalon.framework.Version;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.components.model.DefaultProject;
@@ -38,6 +41,8 @@ public class DefaultProjectBuilder
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultProjectBuilder.class );
+
+    private final static Version VERSION = new Version( 2, 0, 0 );
 
     private final static int PROJECT_REFERENCES = 0;
     private final static int LIBRARY_IMPORTS = 1;
@@ -124,6 +129,14 @@ public class DefaultProjectBuilder
         //get project-level attributes
         final String baseDirectoryName = configuration.getAttribute( "basedir", null );
         final String defaultTarget = configuration.getAttribute( "default", "main" );
+        final Version version = getVersion( configuration );
+
+        if( !VERSION.complies( version ) )
+        {
+            final String message =
+                REZ.getString( "ant.bad-version.error", VERSION, version );
+            throw new Exception( message );
+        }
 
         //determine base directory for project.  Use the directory containing
         //the build file as the default.
@@ -146,6 +159,45 @@ public class DefaultProjectBuilder
         project.setBaseDirectory( baseDirectory );
 
         return project;
+    }
+
+    /**
+     * Retrieve the version attribute from the specified configuration element.
+     * Throw exceptions with meaningful errors if malformed or missing.
+     */
+    private Version getVersion( final Configuration configuration )
+        throws CascadingException
+    {
+        try
+        {
+            final String versionString = configuration.getAttribute( "version" );
+            return parseVersion( versionString );
+        }
+        catch( final ConfigurationException ce )
+        {
+            final String message = REZ.getString( "ant.version-missing.error" );
+            throw new CascadingException( message, ce );
+        }
+    }
+
+    /**
+     * Utility function to extract version
+     */
+    private Version parseVersion( final String versionString )
+        throws CascadingException
+    {
+
+        try
+        {
+            return Version.getVersion( versionString );
+        }
+        catch( final Exception e )
+        {
+            final String message =
+                REZ.getString( "ant.malformed.version", versionString );
+            getLogger().warn( message );
+            throw new CascadingException( message, e );
+        }
     }
 
     /**
