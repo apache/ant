@@ -16,6 +16,8 @@ import org.apache.myrmidon.api.TaskContext;
  *
  * @author <a href="mailto:darrell@apache.org">Darrell DeBoer</a>
  * @version $Revision$ $Date$
+ *
+ * @ant.type type="property-resolver" name="classic"
  */
 public class ClassicPropertyResolver
     extends DefaultPropertyResolver

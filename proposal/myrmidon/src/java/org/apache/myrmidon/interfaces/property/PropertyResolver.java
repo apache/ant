@@ -17,6 +17,8 @@ import org.apache.myrmidon.api.TaskContext;
  *
  * @author <a href="mailto:darrell@apache.org">Darrell DeBoer</a>
  * @version $Revision$ $Date$
+ *
+ * @ant:role shorthand="property-resolver"
  */
 public interface PropertyResolver
 {

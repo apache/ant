@@ -24,6 +24,8 @@ import org.apache.myrmidon.interfaces.property.PropertyResolver;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:darrell@apache.org">Darrell DeBoer</a>
  * @version $Revision$ $Date$
+ *
+ * @ant.type type="property-resolver" name="default"
  */
 public class DefaultPropertyResolver
     implements PropertyResolver, Serviceable

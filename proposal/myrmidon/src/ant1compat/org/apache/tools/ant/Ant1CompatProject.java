@@ -21,9 +21,10 @@ import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.property.ClassicPropertyResolver;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
@@ -63,8 +64,19 @@ public class Ant1CompatProject extends Project
             setName( projectName );
         }
 
-        m_ant1PropertyResolver = new ClassicPropertyResolver();
         m_converter = (Converter)context.getService( Converter.class );
+
+        TypeManager typeManager = (TypeManager)context.getService( TypeManager.class );
+        try
+        {
+            TypeFactory factory = typeManager.getFactory( PropertyResolver.ROLE );
+            m_ant1PropertyResolver = (PropertyResolver)factory.create( "classic" );
+        }
+        catch( TypeException e )
+        {
+            throw new TaskException( "Failed to create PropertyResolver.", e );
+        }
+
     }
 
     /**
