@@ -74,7 +74,7 @@ public class ReferencesTest extends TestCase{
     public static void testReferencesAreSoft() {
         boolean isJava11=JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
         WeakishReference reference = WeakishReference.createReference(new Object());
-        if (reference instanceof WeakishReference.HardReference
+        if ((reference.getClass().getName().indexOf("HardReference") > 0 )
             && !isJava11) {
             fail("We should be creating soft references in this version of Java");
         }
