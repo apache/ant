@@ -358,6 +358,10 @@ Other changes:
 * <apply> and <chmod> will display a summary if you set the new
   verbose attribute to true.  Bugzilla Report 19883.
 
+* <copy>/<move>'s failonerror attribute can now also be used to
+  continue the build if an I/O error caused a problem.  Bugzilla
+  Report 12999.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
