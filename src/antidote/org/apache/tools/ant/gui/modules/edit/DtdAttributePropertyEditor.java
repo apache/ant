@@ -181,13 +181,14 @@ public class DtdAttributePropertyEditor extends AbstractPropertyEditor {
      */
     private void updateComboBox() {
         _combo.removeAllItems();
+        ArrayList array = new ArrayList();
 
         // Add the optional attributes
         String[] valueArray = _attributes.getOptionalAttributes();
         if (valueArray != null) {
             for(int i = 0; i < valueArray.length; i++) {
                 if (_attributes.getProperty(valueArray[i]) == null) {
-                    _combo.addItem(valueArray[i]);
+                    array.add(valueArray[i]);
                 }
             }
         }
@@ -197,9 +198,14 @@ public class DtdAttributePropertyEditor extends AbstractPropertyEditor {
         if (valueArray != null) {
             for(int i = 0; i < valueArray.length; i++) {
                 if (_attributes.getProperty(valueArray[i]) == null) {
-                    _combo.addItem(valueArray[i]);
+                    array.add(valueArray[i]);
                 }
             }
+        }
+        
+        Collections.sort(array);
+        for(int i = 0; i < array.size(); i++) {
+            _combo.addItem(array.get(i));
         }
     }
 
