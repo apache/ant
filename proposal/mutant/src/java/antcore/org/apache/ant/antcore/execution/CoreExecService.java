@@ -237,30 +237,6 @@ public class CoreExecService implements ExecService {
     /**
      * Setup a sub-build.
      *
-     * @param properties the initiali properties to be used in the build
-     * @param model XXX Description of the Parameter
-     * @return Description of the Return Value
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    /*
-    public Object setupBuild(File antFile, Map properties)
-         throws ExecutionException {
-        try {
-            // Parse the build file into a project
-            XMLProjectParser parser = new XMLProjectParser();
-            Project project
-                 = parser.parseBuildFile(InitUtils.getFileURL(antFile));
-            return setupBuild(project, properties);
-        } catch (MalformedURLException e) {
-            throw new ExecutionException(e);
-        } catch (XMLParseException e) {
-            throw new ExecutionException(e);
-        }
-    }
-*/
-    /**
-     * Setup a sub-build.
-     *
      * @param model the project model to be used for the build
      * @param properties the initiali properties to be used in the build
      * @return Description of the Return Value

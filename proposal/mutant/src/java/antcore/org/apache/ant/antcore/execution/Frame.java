@@ -54,6 +54,7 @@
 package org.apache.ant.antcore.execution;
 import java.io.File;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -97,6 +98,13 @@ public class Frame implements DemuxOutputReceiver {
     /** The referenced frames corresponding to the referenced projects */
     private Map referencedFrames = new HashMap();
 
+    /** 
+     * The property overrides for the referenced frames. This map is indexed 
+     * by the reference names of the frame. Each entry is another Map of 
+     * property values indexed by their relative name.
+     */
+    private Map overrides = new HashMap();
+    
     /**
      * The context of this execution. This contains all data object's created
      * by tasks that have been executed
@@ -108,12 +116,6 @@ public class Frame implements DemuxOutputReceiver {
      * Ant and its libraries.
      */
     private InitConfig initConfig;
-
-    /**
-     * These are the standard libraries from which taskdefs, typedefs, etc may
-     * be imported.
-     */
-    private Map standardLibs;
 
     /** BuildEvent support used to fire events and manage listeners */
     private BuildEventSupport eventSupport = new BuildEventSupport();
@@ -158,9 +160,8 @@ public class Frame implements DemuxOutputReceiver {
      * @exception ExecutionException if a component of the library cannot be
      *      imported
      */
-    protected Frame(Map standardLibs, InitConfig initConfig,
+    protected Frame(InitConfig initConfig,
                     AntConfig config) throws ExecutionException {
-        this.standardLibs = standardLibs;
         this.config = config;
         this.initConfig = initConfig;
     }
@@ -189,11 +190,7 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void setProject(Project project) throws ExecutionException {
         this.project = project;
-        referencedFrames = new HashMap();
-
-        configureServices();
-        componentManager.setStandardLibraries(standardLibs);
-        setMagicProperties();
+        referencedFrames.clear();
     }
 
 
@@ -223,9 +220,10 @@ public class Frame implements DemuxOutputReceiver {
         Frame frame = getContainingFrame(name);
 
         if (frame == null) {
-            throw new ExecutionException("There is no project corresponding "
-                 + "to the name \"" + name + "\"");
+            setOverrideProperty(name, value, mutable);
+            return;
         }
+
         if (frame == this) {
             if (dataValues.containsKey(name) && !mutable) {
                 log("Ignoring oveeride for data value " + name,
@@ -238,6 +236,104 @@ public class Frame implements DemuxOutputReceiver {
         }
     }
 
+    /**
+     * When a frame has not yet been referenced, this method is used
+     * to set the initial properties for the frame when it is introduced.
+     *
+     * @param name the name of the value
+     * @param value the actual value
+     * @param mutable if true, existing values can be changed
+     * @exception ExecutionException if attempting to override a property in 
+     *                               the current frame. 
+     */
+    private void setOverrideProperty(String name, Object value, 
+                                     boolean mutable) 
+         throws ExecutionException {
+        int refIndex = name.indexOf(Project.REF_DELIMITER);
+        if (refIndex == -1) {
+            throw new ExecutionException("Property overrides can only be set" 
+                + " for properties in referenced projects - not " 
+                + name);
+        }
+        
+        String firstFrameName = name.substring(0, refIndex);
+        
+        String relativeName 
+            = name.substring(refIndex + Project.REF_DELIMITER.length());
+
+        Map frameOverrides = (Map) overrides.get(firstFrameName);
+        if (frameOverrides == null) {
+            frameOverrides = new HashMap();
+            overrides.put(firstFrameName, frameOverrides);
+        }
+
+        if (mutable || !frameOverrides.containsKey(relativeName)) {
+            frameOverrides.put(relativeName, value);
+        }            
+    }
+    
+    /**
+     * Get a value which exists in the frame property overrides awaiting 
+     * the frame to be introduced.
+     *
+     * @param name the name of the value
+     * @return the value of the property or null if the property does not 
+     * exist.
+     * @exception ExecutionException if attempting to get an override in 
+     *                               the current frame. 
+     */
+    private Object getOverrideProperty(String name) throws ExecutionException {
+        int refIndex = name.indexOf(Project.REF_DELIMITER);
+        if (refIndex == -1) {
+            throw new ExecutionException("Property overrides can only be" 
+                + " returned for properties in referenced projects - not " 
+                + name);
+        }
+        
+        String firstFrameName = name.substring(0, refIndex);
+        
+        String relativeName 
+            = name.substring(refIndex + Project.REF_DELIMITER.length());
+
+        Map frameOverrides = (Map) overrides.get(firstFrameName);
+        if (frameOverrides == null) {
+            return null;
+        }
+
+        return frameOverrides.get(relativeName);
+    }
+    
+    /**
+     * Get a value which exists in the frame property overrides awaiting 
+     * the frame to be introduced.
+     *
+     * @param name the name of the value
+     * @return the value of the property or null if the property does not 
+     * exist.
+     * @exception ExecutionException if attempting to check an override in 
+     *                               the current frame. 
+     */
+    private boolean isOverrideSet(String name) throws ExecutionException {
+        int refIndex = name.indexOf(Project.REF_DELIMITER);
+        if (refIndex == -1) {
+            throw new ExecutionException("Property overrides can only be" 
+                + " returned for properties in referenced projects - not " 
+                + name);
+        }
+        
+        String firstFrameName = name.substring(0, refIndex);
+        
+        String relativeName 
+            = name.substring(refIndex + Project.REF_DELIMITER.length());
+
+        Map frameOverrides = (Map) overrides.get(firstFrameName);
+        if (frameOverrides == null) {
+            return false;
+        }
+
+        return frameOverrides.containsKey(relativeName);
+    }
+    
 
     /**
      * Set the initial properties to be used when the frame starts execution
@@ -456,8 +552,7 @@ public class Frame implements DemuxOutputReceiver {
         Frame frame = getContainingFrame(name);
 
         if (frame == null) {
-            throw new ExecutionException("There is no project corresponding "
-                 + "to the name \"" + name + "\"");
+            return getOverrideProperty(name);
         }
         if (frame == this) {
             return dataValues.get(name);
@@ -480,8 +575,7 @@ public class Frame implements DemuxOutputReceiver {
         Frame frame = getContainingFrame(name);
 
         if (frame == null) {
-            throw new ExecutionException("There is no project corresponding "
-                 + "to the name \"" + name + "\"");
+            return isOverrideSet(name);
         }
         if (frame == this) {
             return dataValues.containsKey(name);
@@ -551,6 +645,14 @@ public class Frame implements DemuxOutputReceiver {
     protected void createProjectReference(String name, Project project) 
         throws ExecutionException {
        Frame referencedFrame = createFrame(project);
+
+       // does the frame have any overrides?
+       Map initialProperties = (Map) overrides.get(name);
+       if (initialProperties != null) {
+           referencedFrame.setInitialProperties(initialProperties);
+           overrides.remove(name);
+       }
+        
        referencedFrames.put(name, referencedFrame);
        referencedFrame.initialize();
     }
@@ -565,7 +667,7 @@ public class Frame implements DemuxOutputReceiver {
     protected Frame createFrame(Project project)
          throws ExecutionException {
         Frame newFrame
-             = new Frame(standardLibs, initConfig, config);
+             = new Frame(initConfig, config);
 
         newFrame.setProject(project);
         for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
@@ -573,6 +675,7 @@ public class Frame implements DemuxOutputReceiver {
 
             newFrame.addBuildListener(listener);
         }
+        
         return newFrame;
     }
 
@@ -840,11 +943,27 @@ public class Frame implements DemuxOutputReceiver {
      *      failed
      */
     protected void initialize() throws ExecutionException {
+        configureServices();
+        setMagicProperties();
         determineBaseDir();
 
-        Iterator taskIterator = project.getTasks();
-
-        executeTasks(taskIterator);
+        try {        
+            // load system ant lib
+            URL systemLibs 
+                = new URL(initConfig.getLibraryURL(), "syslibs/");
+            componentManager.loadLib(systemLibs.toString(), true);
+            
+            // execute any config tasks
+            executeTasks(config.getTasks());
+    
+            // now load other system libraries
+            URL antLibs = new URL(initConfig.getLibraryURL(), "antlibs/");
+            componentManager.loadLib(antLibs.toString(), false);                           
+            
+            executeTasks(project.getTasks());
+        } catch (MalformedURLException e) {
+            throw new ExecutionException("Unable to initialize antlibs", e);
+        }
     }
 
 
@@ -888,8 +1007,7 @@ public class Frame implements DemuxOutputReceiver {
     private void configureServices() {
         // create services and make them available in our services map
         fileService = new CoreFileService(this);
-        componentManager = new ComponentManager(this,
-            config.isRemoteLibAllowed(), config.getLibraryPathsMap());
+        componentManager = new ComponentManager(this);
         dataService = new CoreDataService(this,
             config.isUnsetPropertiesAllowed());
         execService = new CoreExecService(this);

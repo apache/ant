@@ -25,7 +25,7 @@ public class Ant1CompatBuilder {
                         "${lib.dir}/ant1compat", "*.jar");
         helper.addPathElementToPath("classpath", "${distlib.dir}/init.jar");
         helper.addPathElementToPath("classpath", "${distlib.dir}/common/common.jar");
-        helper.addPathElementToPath("classpath", "${distlib.dir}/antlibs/system.jar");
+        helper.addPathElementToPath("classpath", "${distlib.dir}/syslibs/system.jar");
     }
     protected void check_for_optional_packages(BuildHelper helper) {
     }
@@ -36,6 +36,7 @@ public class Ant1CompatBuilder {
         helper.javac("${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat", "${bin.dir}/ant1compat", "classpath");
         helper.copyFileset("${bin.dir}/ant1src_copy", "${bin.dir}/ant1compat");
         helper.copyFileset("${ant1etc.dir}", "${bin.dir}/ant1compat/${optional.package}/junit/xsl");
+        helper.mkdir("${distlib.dir}/antlibs/");
         helper.jar("${bin.dir}/ant1compat", "${distlib.dir}/antlibs/ant1compat.jar",
                    "${java.dir}/antlibs/ant1compat", "antlib.xml", null, null);
     }

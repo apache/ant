@@ -65,6 +65,5 @@ public abstract class Constants {
 
     /** The Ant aspect used to identify Ant metadata */
     public static final String ANT_ASPECT = "ant";
-
 }
 

@@ -38,6 +38,7 @@
   <taskdef name="dependset" classname="org.apache.tools.ant.taskdefs.DependSet"/>
   <taskdef name="ear" classname="org.apache.tools.ant.taskdefs.Ear"/>
   <taskdef name="echo" classname="org.apache.tools.ant.taskdefs.Echo"/>
+  <taskdef name="echoproperties" classname="org.apache.tools.ant.taskdefs.optional.EchoProperties"/>
   <taskdef name="ejbc" classname="org.apache.tools.ant.taskdefs.optional.ejb.Ejbc"/>
   <taskdef name="ejbjar" classname="org.apache.tools.ant.taskdefs.optional.ejb.EjbJar"/>
   <taskdef name="exec" classname="org.apache.tools.ant.taskdefs.ExecTask"/>
@@ -107,6 +108,7 @@
   <taskdef name="sosget" classname="org.apache.tools.ant.taskdefs.optional.sos.SOSGet"/>
   <taskdef name="soslabel" classname="org.apache.tools.ant.taskdefs.optional.sos.SOSLabel"/>
   <taskdef name="sound" classname="org.apache.tools.ant.taskdefs.optional.sound.SoundTask"/>
+  <taskdef name="splash" classname="org.apache.tools.ant.taskdefs.optional.splash.SplashTask"/>
   <taskdef name="sql" classname="org.apache.tools.ant.taskdefs.SQLExec"/>
   <taskdef name="stcheckin" classname="org.apache.tools.ant.taskdefs.optional.starteam.StarTeamCheckin"/>
   <taskdef name="stcheckout" classname="org.apache.tools.ant.taskdefs.optional.starteam.StarTeamCheckout"/>
@@ -155,9 +157,13 @@
   <typedef name="filelist" classname="org.apache.tools.ant.types.FileList"/>
   <typedef name="patternset" classname="org.apache.tools.ant.types.PatternSet"/>
   <typedef name="mapper" classname="org.apache.tools.ant.types.Mapper"/>
+  <typedef name="filterchain" classname="org.apache.tools.ant.types.FilterChain"/>
+  <typedef name="filterreader" classname="org.apache.tools.ant.types.AntFilterReader"/>
   <typedef name="filterset" classname="org.apache.tools.ant.types.FilterSet"/>
   <typedef name="description" classname="org.apache.tools.ant.types.Description"/>
   <typedef name="classfileset" classname="org.apache.tools.ant.types.optional.depend.ClassfileSet"/>
   <typedef name="substitution" classname="org.apache.tools.ant.types.Substitution"/>
+  <typedef name="regexp" classname="org.apache.tools.ant.types.RegularExpression"/>
   <typedef name="regularexpression" classname="org.apache.tools.ant.types.RegularExpression"/>
+  <typedef name="xmlcatalog" classname="org.apache.tools.ant.types.XMLCatalog"/>
 </antlib>

@@ -60,6 +60,7 @@ import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.init.InitUtils;
 
 /**
@@ -153,6 +154,8 @@ public class LibPath extends AbstractTask {
         AntContext context = getAntContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
+        log("Adding lib path " + url + " for " + libraryId, 
+            MessageLevel.MSG_DEBUG);    
         componentService.addLibPath(libraryId, url);
     }
 

@@ -79,6 +79,7 @@ import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.init.LoaderUtils;
+import org.apache.ant.antcore.config.AntConfig;
 
 /**
  * The instance of the ComponentServices made available by the core to the
@@ -110,7 +111,7 @@ public class ComponentManager implements ComponentService {
      * These are AntLibraries which have been loaded into this component
      * manager
      */
-    private Map antLibraries;
+    private Map antLibraries = new HashMap();
 
     /** dynamic libraries which have been defined */
     private Map dynamicLibraries;
@@ -122,7 +123,7 @@ public class ComponentManager implements ComponentService {
      * This map stores a list of additional paths for each library indexed
      * by the libraryId
      */
-    private Map libPathsMap;
+    private Map libPathsMap = new HashMap();
 
     /** Reflector objects used to configure Tasks from the Task models. */
     private Map setters = new HashMap();
@@ -132,17 +133,13 @@ public class ComponentManager implements ComponentService {
      * Constructor
      *
      * @param frame the frame containing this context
-     * @param allowRemoteLibs true if remote libraries can be loaded though
-     *      this service.
-     * @param configLibPaths the additional library paths specified in the
-     *      configuration
      */
-    protected ComponentManager(Frame frame, boolean allowRemoteLibs,
-                               Map configLibPaths) {
+    protected ComponentManager(Frame frame) {
         this.frame = frame;
-        libManager = new AntLibManager(allowRemoteLibs);
+        AntConfig config = frame.getConfig();
+        libManager = new AntLibManager(config.isRemoteLibAllowed());
         dynamicLibraries = new HashMap();
-        libPathsMap = new HashMap(configLibPaths);
+        libPathsMap = new HashMap();
     }
 
     /**
@@ -162,10 +159,11 @@ public class ComponentManager implements ComponentService {
             libManager.configLibraries(frame.getInitConfig(), librarySpecs,
                 antLibraries, libPathsMap);
 
-            if (importAll) {
-                Iterator i = librarySpecs.keySet().iterator();
-                while (i.hasNext()) {
-                    String libraryId = (String) i.next();
+            Iterator i = librarySpecs.keySet().iterator();
+            while (i.hasNext()) {
+                String libraryId = (String) i.next();
+                if (importAll 
+                    || libraryId.startsWith(Constants.ANT_LIB_PREFIX)) {
                     importLibrary(libraryId);
                 }
             }
@@ -343,30 +341,6 @@ public class ComponentManager implements ComponentService {
          throws ExecutionException {
         return createComponent(loader, factory, componentClass,
             componentName, componentName, addTaskAdapter, null);
-    }
-
-    /**
-     * Set the standard libraries (i.e. those which are independent of the
-     * build files) to be used in this component manager
-     *
-     * @param standardLibs A collection of AntLibrary objects indexed by
-     *      their libraryId
-     * @exception ExecutionException if the components cannot be imported
-     *      form the libraries fro which such importing is automatic.
-     */
-    protected void setStandardLibraries(Map standardLibs)
-         throws ExecutionException {
-
-        antLibraries = new HashMap(standardLibs);
-
-        // go through the libraries and import all standard ant libraries
-        for (Iterator i = antLibraries.keySet().iterator(); i.hasNext();) {
-            String libraryId = (String) i.next();
-            if (libraryId.startsWith(Constants.ANT_LIB_PREFIX)) {
-                // standard library - import whole library
-                importLibrary(libraryId);
-            }
-        }
     }
 
     /**

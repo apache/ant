@@ -78,15 +78,15 @@ public class MutantBuilder {
     }
     protected void antlibs(BuildHelper helper) {
     }
-    protected void build_lib(BuildHelper helper) {
-        helper.mkdir("${bin.dir}/antlibs/${libset}");
-        helper.mkdir("${distlib.dir}/antlibs");
+    protected void systemlib(BuildHelper helper) {
+        helper.mkdir("${bin.dir}/antlibs/system");
+        helper.mkdir("${distlib.dir}/syslibs");
         helper.createPath("classpath.antlibs");
         helper.addPathElementToPath("classpath.antlibs", "${distlib.dir}/common/common.jar");
         helper.addPathToPath("classpath.antlibs", "classpath.common");
-        helper.javac("${java.dir}/antlibs/${libset}", "${bin.dir}/antlibs/${libset}", "classpath.antlibs");
-        helper.jar("${bin.dir}/antlibs/${libset}", "${distlib.dir}/antlibs/${libset}.jar",
-                   "${java.dir}/antlibs/${libset}", "antlib.xml", null, null);
+        helper.javac("${java.dir}/antlibs/system", "${bin.dir}/antlibs/system", "classpath.antlibs");
+        helper.jar("${bin.dir}/antlibs/system", "${distlib.dir}/syslibs/system.jar",
+                   "${java.dir}/antlibs/system", "antlib.xml", null, null);
     }
     protected void main(BuildHelper helper) {
     }

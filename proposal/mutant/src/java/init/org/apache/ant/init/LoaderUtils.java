@@ -240,6 +240,7 @@ public class LoaderUtils {
         }
 
         if (!location.isDirectory()) {
+            urls = new URL[1];
             String path = location.getPath();
             for (int i = 0; i < extensions.length; ++i) {
                 if (path.endsWith(extensions[i])) {

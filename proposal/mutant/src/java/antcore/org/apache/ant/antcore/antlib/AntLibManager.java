@@ -152,7 +152,7 @@ public class AntLibManager {
      * @param librarySpecs the loaded specifications of the Ant libraries
      * @param initConfig the Ant initialization configuration
      * @param libraries the collection of libraries already configured
-     * @param libPathsMap a map of lists of library patsh fro each library
+     * @param libPathsMap a map of lists of library paths for each library
      * @exception ExecutionException if a library cannot be configured from
      *      the given specification
      */
@@ -231,7 +231,7 @@ public class AntLibManager {
     }
 
     /**
-     * add a library path to the given library
+     * Add a library path to the given library
      *
      * @param antLibrary the library to which the path is to be added
      * @param path the path to be added
@@ -320,11 +320,13 @@ public class AntLibManager {
             antLibrary.setParentLoader(initConfig.getCommonLoader());
             libraries.put(libraryId, antLibrary);
 
-            List libPaths = (List) libPathsMap.get(libraryId);
-            if (libPaths != null) {
-                for (Iterator j = libPaths.iterator(); j.hasNext();) {
-                    URL pathURL = (URL) j.next();
-                    addLibPath(antLibrary, pathURL);
+            if (libPathsMap != null) {
+                List libPaths = (List) libPathsMap.get(libraryId);
+                if (libPaths != null) {
+                    for (Iterator j = libPaths.iterator(); j.hasNext();) {
+                        URL pathURL = (URL) j.next();
+                        addLibPath(antLibrary, pathURL);
+                    }
                 }
             }
 

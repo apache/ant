@@ -54,6 +54,7 @@
 package org.apache.ant.antcore.config;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.antcore.xml.ElementHandler;
+import org.apache.ant.antcore.modelparser.BuildElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
@@ -123,36 +124,17 @@ public class AntConfigHandler extends ElementHandler {
                              Attributes attributes)
          throws SAXParseException {
 
-        try {
-            if (qualifiedName.equals("loadlib")) {
-                LoadLibHandler loadlibHandler
-                     = new LoadLibHandler();
-                loadlibHandler.start(getParseContext(), getXMLReader(),
-                    this, getLocator(), attributes, getElementSource(),
-                    qualifiedName);
-                config.addAntLibraryLocation(loadlibHandler.getLibLocation());
-            } else if (qualifiedName.equals("libpath")) {
-                LibPathHandler libPathHandler
-                     = new LibPathHandler();
-                libPathHandler.start(getParseContext(), getXMLReader(),
-                    this, getLocator(), attributes, getElementSource(),
-                    qualifiedName);
-
-                if (libPathHandler.getLibraryPath() != null) {
-                    config.addLibPath(libPathHandler.getLibraryId(),
-                        libPathHandler.getLibraryPath());
-                } else {
-                    config.addLibURL(libPathHandler.getLibraryId(),
-                        libPathHandler.getLibraryURL());
-                }
-
-            } else {
-                super.startElement(uri, localName, qualifiedName, attributes);
-            }
-        } catch (ConfigException e) {
-            throw new SAXParseException("Unable to process config",
-                getLocator(), e);
-        }
+        // everything else is a task
+        BuildElementHandler buildElementHandler = new BuildElementHandler();
+        buildElementHandler.start(getParseContext(), getXMLReader(),
+            this, getLocator(), attributes, getElementSource(),
+            qualifiedName);
+        config.addTask(buildElementHandler.getBuildElement());
+//        try {
+//        } catch (ConfigException e) {
+//            throw new SAXParseException("Unable to process config",
+//                getLocator(), e);
+//        }
     }
 
     /**

@@ -144,28 +144,25 @@
     <delete dir="${dist.dir}"/>
   </target>
 
-  <target name="antlibs" depends="common">
-    <antcall target="build-lib">
-      <param name="libset" value="system"/>
-    </antcall>
+  <target name="antlibs" depends="common, systemlib">
     <ant antfile="build/script.xml"/> 
   </target>
   
-  <target name="build-lib">
-    <mkdir dir="${bin.dir}/antlibs/${libset}"/>
-    <mkdir dir="${distlib.dir}/antlibs"/>
+  <target name="systemlib" depends="common">
+    <mkdir dir="${bin.dir}/antlibs/system"/>
+    <mkdir dir="${distlib.dir}/syslibs"/>
     <path id="classpath.antlibs">
       <path refid="classpath.common"/>
       <pathelement location="${distlib.dir}/common/common.jar"/>
     </path>
-    <depend destdir="${bin.dir}/antlibs/${libset}" srcdir="${java.dir}/antlibs/${libset}">
+    <depend destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system">
       <classpath refid="classpath.antlibs"/>
     </depend>
-    <javac destdir="${bin.dir}/antlibs/${libset}" srcdir="${java.dir}/antlibs/${libset}" debug="${debug}">
+    <javac destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system" debug="${debug}">
       <classpath refid="classpath.antlibs"/>
     </javac>
-    <jar basedir="${bin.dir}/antlibs/${libset}" jarfile="${distlib.dir}/antlibs/${libset}.jar">
-      <metainf dir="${java.dir}/antlibs/${libset}" 
+    <jar basedir="${bin.dir}/antlibs/system" jarfile="${distlib.dir}/syslibs/system.jar">
+      <metainf dir="${java.dir}/antlibs/system" 
                 includes="antlib.xml"/>
     </jar>
   </target>

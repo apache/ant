@@ -63,6 +63,7 @@ import java.util.Map;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.PathTokenizer;
 import org.apache.ant.init.InitUtils;
+import org.apache.ant.common.model.BuildElement;
 
 /**
  * An AntConfig is the java class representation of the antconfig.xml files
@@ -72,15 +73,6 @@ import org.apache.ant.init.InitUtils;
  * @created 20 January 2002
  */
 public class AntConfig {
-    /** The list of additional directories to be searched for Ant libraries */
-    private List libraryLocations = new ArrayList();
-
-    /**
-     * A list of additional paths for each ant library, indexed on the
-     * library id
-     */
-    private Map libPaths = new HashMap();
-
     /** Indicates if remote libraries may be used */
     private boolean remoteLibs = false;
 
@@ -90,6 +82,11 @@ public class AntConfig {
     /** Indicates if unset properties are ignored */
     private boolean unsetProperties = true;
 
+    /**
+     * Configuration tasks. 
+     */
+    private List tasks = new ArrayList();
+    
     /**
      * Indicate if unset properties are OK.
      *
@@ -118,50 +115,21 @@ public class AntConfig {
     }
 
     /**
-     * Get the additional locations in which to search for Ant Libraries
+     * Get the configuration tasks
      *
-     * @return an iterator over the library locations
+     * @return an iterator over the set of config tasks.
      */
-    public Iterator getLibraryLocations() {
-        return libraryLocations.iterator();
+    public Iterator getTasks() {
+        return tasks.iterator();
     }
 
     /**
-     * Get the list of additional path components for a given path
+     * Add a config task.
      *
-     * @param libraryId the identifier for the library
-     * @return the list of URLs for the additional paths for the given
-     *      library
+     * @param task a task to be executed as part of the configuration process.
      */
-    public List getLibraryPathList(String libraryId) {
-        List libraryPathList = (List) libPaths.get(libraryId);
-        if (libraryPathList == null) {
-            libraryPathList = new ArrayList();
-            libPaths.put(libraryId, libraryPathList);
-        }
-        return libraryPathList;
-    }
-
-
-    /**
-     * Get the map of library paths. This map contains a collection of List
-     * instances, indexed by the libraryIds. Each list is a set of
-     * additional classpath entries for the given library
-     *
-     * @return the library paths map
-     */
-    public Map getLibraryPathsMap() {
-        return libPaths;
-    }
-
-    /**
-     * Gets the libraryIds of the AntConfig
-     *
-     * @return an interator over the library identifiers for which there is
-     *      additional path information
-     */
-    public Iterator getLibraryIds() {
-        return libPaths.keySet().iterator();
+    public void addTask(BuildElement task) {
+        tasks.add(task);
     }
 
     /**
@@ -191,88 +159,18 @@ public class AntConfig {
     public void allowUnsetProperties(boolean allowUnsetProperties) {
         this.unsetProperties = allowUnsetProperties;
     }
-
+    
     /**
-     * Add an additional set of paths for the given library.
-     *
-     * @param libraryId The library id for which the additional class path
-     *      is being specified
-     * @param libraryPath the classpath style string for the library's
-     *      additonal paths
-     * @exception ConfigException if the appropriate URLs cannot be formed.
-     */
-    public void addLibPath(String libraryId, String libraryPath)
-         throws ConfigException {
-        try {
-            List libraryPathList = getLibraryPathList(libraryId);
-            PathTokenizer p = new PathTokenizer(libraryPath);
-            while (p.hasMoreTokens()) {
-                String pathElement = p.nextToken();
-                File pathElementFile = new File(pathElement);
-                URL pathElementURL = InitUtils.getFileURL(pathElementFile);
-                libraryPathList.add(pathElementURL);
-            }
-        } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to process libraryPath '"
-                 + libraryPath + "' for library '" + libraryId + "'", e);
-        }
-    }
-
-    /**
-     * Add an additional URL for the library's classpath
-     *
-     * @param libraryId the library's unique Id
-     * @param libraryURL a string which points to the additonal path
-     * @exception ConfigException if the URL could not be formed
-     */
-    public void addLibURL(String libraryId, String libraryURL)
-         throws ConfigException {
-        try {
-            List libraryPathList = getLibraryPathList(libraryId);
-            libraryPathList.add(new URL(libraryURL));
-        } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to process libraryURL '"
-                 + libraryURL + "' for library '" + libraryId + "'", e);
-        }
-
-    }
-
-    /**
-     * Merge in another ocnfiguration. The configuration being merged in
+     * Merge in another configuration. The configuration being merged in
      * takes precedence
      *
      * @param otherConfig the other AntConfig to be merged.
      */
     public void merge(AntConfig otherConfig) {
-        // merge by
-        List currentLibraryLocations = libraryLocations;
-        libraryLocations = new ArrayList();
-        libraryLocations.addAll(otherConfig.libraryLocations);
-        libraryLocations.addAll(currentLibraryLocations);
-
-        Iterator i = otherConfig.libPaths.keySet().iterator();
-        while (i.hasNext()) {
-            String libraryId = (String) i.next();
-            List currentList = getLibraryPathList(libraryId);
-            List combined = new ArrayList();
-            combined.addAll(otherConfig.getLibraryPathList(libraryId));
-            combined.addAll(currentList);
-            libPaths.put(libraryId, combined);
-        }
-
         remoteLibs = otherConfig.remoteLibs;
         remoteProjects = otherConfig.remoteProjects;
         unsetProperties = otherConfig.unsetProperties;
-    }
-
-    /**
-     * Add a new task directory to be searched for additional Ant libraries
-     *
-     * @param libraryLocation the location (can be a file or a URL) where
-     *      the libraries may be loaded from.
-     */
-    public void addAntLibraryLocation(String libraryLocation) {
-        libraryLocations.add(libraryLocation);
+        tasks.addAll(otherConfig.tasks);
     }
 }
 

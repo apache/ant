@@ -43,6 +43,7 @@
     <exclude name="org/apache/tools/ant/ProjectHelper.java"/>
     <exclude name="org/apache/tools/ant/Task.java"/>
     <exclude name="org/apache/tools/ant/Main.java"/>
+    <exclude name="org/apache/tools/ant/input/InputRequest.java"/>
   </patternset>
 
   <patternset id="notrequired">
@@ -63,6 +64,7 @@
     <include name="org/apache/tools/mail/**/*.java"/>
     <include name="org/apache/tools/tar/**/*.java"/>
     <include name="org/apache/tools/ant/*.java"/>
+    <include name="org/apache/tools/ant/input/*.java"/>
     <!-- <patternset refid="deprecated"/> -->
     <patternset refid="toohard"/>
     <patternset refid="converted"/>
@@ -74,7 +76,7 @@
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
     <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
     <pathelement location="${distlib.dir}/common/common.jar"/>
-    <pathelement location="${distlib.dir}/antlibs/system.jar"/>
+    <pathelement location="${distlib.dir}/syslibs/system.jar"/>
   </path>
 
   <!--
@@ -480,6 +482,7 @@
        </fileset>
     </copy>
 
+    <mkdir dir="${distlib.dir}/antlibs/"/>
     <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.jar">
       <metainf dir="${java.dir}/antlibs/ant1compat" 
                 includes="antlib.xml"/>

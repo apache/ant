@@ -77,9 +77,6 @@ import org.apache.ant.init.InitConfig;
  * @created 12 January 2002
  */
 public class ExecutionManager implements DemuxOutputReceiver {
-    /** The AntLibraries built from Ant's Populated Task Libraries. */
-    private Map antLibraries = new HashMap();
-
     /** BuildEvent support used to fire events and manage listeners */
     private BuildEventSupport eventSupport = new BuildEventSupport();
 
@@ -122,32 +119,6 @@ public class ExecutionManager implements DemuxOutputReceiver {
      *      loaded
      */
     public void init() throws ExecutionException {
-        Map librarySpecs = new HashMap(10);
-        try {
-            // start by loading the task libraries
-            URL standardLibsURL
-                 = new URL(initConfig.getLibraryURL(), "antlibs/");
-
-            AntLibManager libManager
-                 = new AntLibManager(config.isRemoteLibAllowed());
-
-            libManager.loadLibs(librarySpecs, standardLibsURL);
-            libManager.configLibraries(initConfig, librarySpecs, antLibraries,
-                config.getLibraryPathsMap());
-
-            librarySpecs.clear();
-            // add any additional libraries.
-            for (Iterator i = config.getLibraryLocations(); i.hasNext();) {
-                // try file first
-                String libLocation = (String) i.next();
-                libManager.loadLibs(librarySpecs, libLocation);
-            }
-            libManager.configLibraries(initConfig, librarySpecs, antLibraries,
-                config.getLibraryPathsMap());
-
-        } catch (MalformedURLException e) {
-            throw new ExecutionException("Unable to load Ant libraries", e);
-        }
     }
 
     /**
@@ -167,7 +138,7 @@ public class ExecutionManager implements DemuxOutputReceiver {
             // start by validating the project we have been given.
             project.validate();
 
-            mainFrame = new Frame(antLibraries, initConfig, config);
+            mainFrame = new Frame(initConfig, config);
             for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
                 BuildListener listener = (BuildListener) j.next();
                 mainFrame.addBuildListener(listener);

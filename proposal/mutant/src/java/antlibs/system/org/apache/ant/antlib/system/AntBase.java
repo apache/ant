@@ -53,14 +53,8 @@
  */
 package org.apache.ant.antlib.system;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.common.antlib.AbstractComponent;
-import org.apache.ant.common.antlib.AbstractTask;
-import org.apache.ant.common.antlib.AntContext;
-import org.apache.ant.common.service.DataService;
-import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
@@ -69,154 +63,8 @@ import org.apache.ant.common.util.ExecutionException;
  * @author Conor MacNeill
  * @created 4 February 2002
  */
-public abstract class AntBase extends AbstractTask {
+public abstract class AntBase extends SubBuild {
 
-    /**
-     * Simple Property value storing class
-     *
-     * @author Conor MacNeill
-     * @created 5 February 2002
-     */
-    public static class Property extends AbstractComponent {
-        /** The property name */
-        private String name;
-
-        /** The property value */
-        private String value;
-
-
-        /**
-         * Gets the name of the Property
-         *
-         * @return the name value
-         */
-        public String getName() {
-            return name;
-        }
-
-
-        /**
-         * Gets the value of the Property
-         *
-         * @return the value value
-         */
-        public String getValue() {
-            return value;
-        }
-
-
-        /**
-         * Sets the name of the Property
-         *
-         * @param name the new name value
-         */
-        public void setName(String name) {
-            this.name = name;
-        }
-
-
-        /**
-         * Sets the value of the Property
-         *
-         * @param value the new value value
-         */
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-
-        /**
-         * Validate this data type instance
-         *
-         * @exception ExecutionException if either attribute has not been set
-         */
-        public void validateComponent() throws ExecutionException {
-            if (name == null) {
-                throw new ExecutionException("\"name\" attribute of "
-                     + "<property> must be supplied");
-            }
-            if (value == null) {
-                throw new ExecutionException("\"value\" attribute of "
-                     + "<property> must be supplied");
-            }
-        }
-    }
-
-
-    /**
-     * A simple class to store information about references being passed
-     *
-     * @author Conor MacNeill
-     * @created 5 February 2002
-     */
-    public static class Reference extends AbstractComponent {
-        /** The id of the reference to be passed */
-        private String refId;
-        /** The id to be used in the sub-build for this reference */
-        private String toId;
-
-
-        /**
-         * Gets the refId of the Reference
-         *
-         * @return the refId value
-         */
-        public String getRefId() {
-            return refId;
-        }
-
-
-        /**
-         * Gets the toId of the Reference
-         *
-         * @return the toId value
-         */
-        public String getToId() {
-            return toId;
-        }
-
-
-        /**
-         * Sets the refId of the Reference
-         *
-         * @param refId the new refId value
-         */
-        public void setRefId(String refId) {
-            this.refId = refId;
-        }
-
-
-        /**
-         * Sets the toId of the Reference
-         *
-         * @param toId the new toId value
-         */
-        public void setToId(String toId) {
-            this.toId = toId;
-        }
-
-
-        /**
-         * Validate this data type instance
-         *
-         * @exception ExecutionException if the refid attribute has not been
-         *      set
-         */
-        public void validateComponent() throws ExecutionException {
-            if (refId == null) {
-                throw new ExecutionException("\"refid\" attribute of "
-                     + "<reference> must be supplied");
-            }
-        }
-    }
-
-
-    /** The core's data service for manipulating the properties */
-    private DataService dataService;
-
-    /** The core's ExecutionService for running builds and external programs */
-    private ExecService execService;
-    
     /**
      * flag which indicates if all current properties should be passed to the
      * subbuild
@@ -229,9 +77,6 @@ public abstract class AntBase extends AbstractTask {
      */
     private boolean inheritRefs = false;
 
-    /** The properties which will be passed to the sub-build */
-    private Map properties = new HashMap();
-
     /**
      * The key to the subbuild with which the Ant task can manage the subbuild
      */
@@ -240,51 +85,6 @@ public abstract class AntBase extends AbstractTask {
     /** The name of the target to be evaluated in the sub-build */
     private String targetName;
 
-
-    /**
-     * Add a property to be passed to the subbuild
-     *
-     * @param property descriptor for the property to be passed
-     */
-    public void addProperty(Property property) {
-        properties.put(property.getName(), property.getValue());
-    }
-
-
-    /**
-     * Add a reference to be passed
-     *
-     * @param reference the descriptor of the reference to be passed
-     * @exception ExecutionException if the reference does not reference a
-     *      valid object
-     */
-    public void addReference(Reference reference) throws ExecutionException {
-        String refId = reference.getRefId();
-
-        if (!dataService.isDataValueSet(refId)) {
-            throw new ExecutionException("RefId \"" + refId + "\" is not set");
-        }
-        Object value = dataService.getDataValue(refId);
-        String toId = reference.getToId();
-
-        if (toId == null) {
-            toId = refId;
-        }
-
-        properties.put(toId, value);
-    }
-
-
-    /**
-     * Get the core's execution service
-     *
-     * @return the core's execution service.
-     */
-    protected ExecService getExecService() {
-        return execService;
-    }
-
-
     /**
      * Get the properties to be used with the sub-build
      *
@@ -292,13 +92,13 @@ public abstract class AntBase extends AbstractTask {
      */
     protected Map getProperties() {
         if (!inheritAll) {
-            return properties;
+            return super.getProperties();
         }
 
         // need to combine existing properties with new ones
-        Map subBuildProperties = dataService.getAllProperties();
+        Map subBuildProperties = getDataService().getAllProperties();
 
-        subBuildProperties.putAll(properties);
+        subBuildProperties.putAll(super.getProperties());
         return subBuildProperties;
     }
 
@@ -331,7 +131,7 @@ public abstract class AntBase extends AbstractTask {
         if (subbuildKey == null) {
             super.handleSystemErr(line);
         } else {
-            execService.handleBuildOutput(subbuildKey, line, true);
+            getExecService().handleBuildOutput(subbuildKey, line, true);
         }
     }
 
@@ -349,25 +149,8 @@ public abstract class AntBase extends AbstractTask {
         if (subbuildKey == null) {
             super.handleSystemOut(line);
         } else {
-            execService.handleBuildOutput(subbuildKey, line, false);
+            getExecService().handleBuildOutput(subbuildKey, line, false);
         }
-    }
-
-
-    /**
-     * Initialise this task
-     *
-     * @param context core's context
-     * @param componentType the component type of this component (i.e its
-     *      defined name in the build file)
-     * @exception ExecutionException if we can't access the data service
-     */
-    public void init(AntContext context, String componentType)
-         throws ExecutionException {
-        super.init(context, componentType);
-        dataService = (DataService) getCoreService(DataService.class);
-        execService = (ExecService) getCoreService(ExecService.class);
-
     }
 
 
@@ -389,17 +172,6 @@ public abstract class AntBase extends AbstractTask {
      */
     public void setInheritRefs(boolean inheritRefs) {
         this.inheritRefs = inheritRefs;
-    }
-
-
-    /**
-     * Set a property for the subbuild
-     *
-     * @param propertyName the property name
-     * @param propertyValue the value of the property
-     */
-    protected void setProperty(String propertyName, Object propertyValue) {
-        properties.put(propertyName, propertyValue);
     }
 
 

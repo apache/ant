@@ -209,12 +209,7 @@ public class Builder {
         mutantBuilder.antcore(mainBuild);
         mutantBuilder.start(mainBuild);
         mutantBuilder.frontend(mainBuild);
-
-        BuildHelper systemBuild = new BuildHelper();
-        systemBuild.setProperty("libset", "system");
-        systemBuild.setProperty("dist.dir", "bootstrap");
-        mutantBuilder._init(systemBuild);
-        mutantBuilder.build_lib(systemBuild);
+        mutantBuilder.systemlib(mainBuild);
 
         Ant1CompatBuilder ant1Builder = new Ant1CompatBuilder();
         BuildHelper ant1Build = new BuildHelper();
