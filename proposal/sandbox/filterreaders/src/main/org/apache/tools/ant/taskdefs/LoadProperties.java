@@ -56,7 +56,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.FilterReaderSet;
+import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.util.ChainReaderHelper;
 
 import java.io.*;
@@ -76,9 +76,9 @@ public final class LoadProperties extends Task {
     private File srcFile = null;
 
     /**
-     * Holds filterReaderSets
+     * Holds filterchains
      */
-    private final Vector filterReaderSets = new Vector();
+    private final Vector filterChains = new Vector();
 
     /**
      * Sets the srcfile attribute.
@@ -124,7 +124,7 @@ public final class LoadProperties extends Task {
             ChainReaderHelper crh = new ChainReaderHelper();
             crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
-            crh.setFilterReaderSets(filterReaderSets);
+            crh.setFilterChains(filterChains);
 
             String text = crh.processStream();
             if (!text.endsWith("\n")) {
@@ -186,10 +186,10 @@ public final class LoadProperties extends Task {
     }
 
     /**
-     * Add the FilterReaderSet element.
+     * Add the FilterChain element.
      */
-    public final void addFilterReaderSet(FilterReaderSet filter) {
-        filterReaderSets.addElement(filter);
+    public final void addFilterChain(FilterChain filter) {
+        filterChains.addElement(filter);
     }
 
 //end class

@@ -20,13 +20,17 @@ Usecase:
 
 Design:
 ======
-* FilterReaderSet is a collection of 'AntFilterReader's
+* FilterChain is an ordered collection of 'AntFilterReader's and
+  'java.io.FilterReader's
 
 * Each AntFilterReader encloses the custom class representing 
   the actual java.io.FilterReader and contains configuration 
   parameters that may be used by the custom class if it
   implements the org.apache.tools.ant.types.Parameterizable
   interface.
+
+* For ease of use, Ant's core filter readers can
+  be used with a filter reader specific syntax also.
   
 * Custom filter readers can be created easily even
   without using any of Ant's API - all one needs to
@@ -44,14 +48,14 @@ Example:
 =======
 
 <loadfile srcFile="foo" property="bar">
-    <filterreaderset>
+    <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
-            <param name="cpp.comment" value="//"/>
-            <param name="oracle.comment" value="REM"/>
-            <param name="dbms.comment" value="--"/>
+            <param type="comment" value="//"/>
+            <param type="comment" value="REM "/>
+            <param type="comment" value="--"/>
         </filterreader>
         <filterreader classname="org.apache.tools.ant.filters.StripLineBreaks"/>
-    </filterreaderset>
+    </filterchain>
 </loadfile>
 
 The above example loads the contents of the file foo,
@@ -59,3 +63,16 @@ filters out the lines that begin with //, REM and --,
 removes line breaks and then stores the result in
 the property named bar.
 
+Since StripLineComments and StripLineBreaks are built-in
+Ant filter readers, the same can also be represented as:
+
+<loadfile srcFile="foo" property="bar">
+    <filterchain>
+        <striplinecomments>
+            <comment value="//"/>
+            <comment value="REM "/>
+            <comment value="--"/>
+        </striplinecomments>
+        <striplinebreaks/>
+    </filterchain>
+</loadfile>

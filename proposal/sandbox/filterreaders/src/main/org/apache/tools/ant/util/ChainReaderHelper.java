@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.AntFilterReader;
-import org.apache.tools.ant.types.FilterReaderSet;
+import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -87,9 +87,9 @@ public final class ChainReaderHelper {
     public int bufferSize = 4096;
 
     /**
-     * Collection of 'FilterReaderSet's.
+     * Chain of filters
      */
-    public Vector filterReaderSets = new Vector();
+    public Vector filterChains = new Vector();
 
     /**
      * Sets the primary reader
@@ -109,8 +109,8 @@ public final class ChainReaderHelper {
     /**
      * Sets the collection of filter reader sets
      */
-    public final void setFilterReaderSets(Vector frsets) {
-        filterReaderSets = frsets;
+    public final void setFilterChains(Vector fchain) {
+        filterChains = fchain;
     }
 
     /**
@@ -125,13 +125,13 @@ public final class ChainReaderHelper {
 
         Reader instream = primaryReader;
         final char[] buffer = new char[bufferSize];
-        final int filterReadersCount = filterReaderSets.size();
+        final int filterReadersCount = filterChains.size();
         final Vector finalFilters = new Vector();
 
         for (int i = 0; i < filterReadersCount; i++) {
-            final FilterReaderSet filterset =
-                (FilterReaderSet) filterReaderSets.elementAt(i);
-            final Vector filterReaders = filterset.getFilterReaders();
+            final FilterChain filterchain =
+                (FilterChain) filterChains.elementAt(i);
+            final Vector filterReaders = filterchain.getFilterReaders();
             final int readerCount = filterReaders.size();
             for (int j = 0; j < readerCount; j++) {
                 finalFilters.addElement(filterReaders.elementAt(j));

@@ -74,9 +74,9 @@ Load a file, don't fail if it is missing (a message is printed, though)
 <pre>    &lt;loadfile
       property="mail.recipients"
       srcFile="recipientlist.txt"&gt;
-      &lt;filterreaderset&gt;
-        &lt;filterreader classname="org.apache.tools.ant.filters.<a href="../CoreTypes/filterreaderset.html#StripLineBreaks">StripLineBreaks</a>" /&gt;
-      &lt;/filterreaderset&gt;
+      &lt;filterchain&gt;
+        &lt;filterreader classname="org.apache.tools.ant.filters.<a href="../CoreTypes/filterchain.html#StripLineBreaks">StripLineBreaks</a>" /&gt;
+      &lt;/filterchaint&gt;
     &lt;/loadfile&gt;
 </pre>
 Load a property which can be used as a parameter for another task (in this case mail),
