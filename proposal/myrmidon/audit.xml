@@ -33,7 +33,7 @@
 
     <target name="audit">
         <mkdir dir="${audit.dir}"/>
-        <maudit tofile="${audit.xml}" fix="${audit.fix}" metamatahome="${webgain-qa.home}">
+        <maudit tofile="${audit.xml}" fix="${audit.fix}" metamatahome="${metamata.home}">
 <!--            <rulespath refid="custom-rules"/>-->
             <classpath refid="project.class.path"/>
             <sourcepath path="${project.src.path}"/>
@@ -44,7 +44,7 @@
 
     <target name="metrics" description="Source code metrics">
         <mkdir dir="${metrics.dir}"/>
-        <mmetrics tofile="${metrics.xml}" metamatahome="${webgain-qa.home}" granularity="methods">
+        <mmetrics tofile="${metrics.xml}" metamatahome="${metamata.home}" granularity="methods">
             <classpath refid="project.class.path"/>
             <sourcepath path="${project.src.path}"/>
             <path path="${project.src.path}"/>
