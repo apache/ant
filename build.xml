@@ -239,12 +239,15 @@
          basedir="${build.classes}" 
          manifest="${manifest}">
       <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
+      <fileset dir="${build.classes}" 
+               includes="org/apache/tools/ant/taskdefs/optional/TraXLiaison.class" />
     </jar>
 
     <jar jarfile="${build.lib}/optional.jar" 
          basedir="${build.classes}" 
          manifest="${manifest}">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaison.class" />
     </jar>
 
   </target>

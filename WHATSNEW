@@ -6,6 +6,11 @@ Changes that could break older environments:
 
 * Zip.setWhenempty() has changed its signature.
 
+Other changes:
+--------------
+
+* Ant now uses JAXP 1.1
+
 Fixed bugs:
 -----------
 
