@@ -763,7 +763,7 @@ public class JUnitTask extends Task {
         }
         try {
             FileOutputStream outstream = new FileOutputStream(propsFile);
-            props.save(outstream, "Ant JUnitTask generated properties file");
+            props.store(outstream, "Ant JUnitTask generated properties file");
             outstream.close();
         } catch (java.io.IOException e) {
             propsFile.delete();
