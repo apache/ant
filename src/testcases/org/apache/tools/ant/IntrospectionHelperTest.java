@@ -359,6 +359,27 @@ public class IntrospectionHelperTest extends TestCase {
         } catch (BuildException be) {
             assertTrue(be.getException() instanceof AssertionFailedError);
         }
+        ih.setAttribute(p, this, "seventeen", "17");
+        try {
+            ih.setAttribute(p, this, "seventeen", "3");
+            fail("17 shouldn't be equals to three");
+        } catch (BuildException be) {
+            assertTrue(be.getException() instanceof AssertionFailedError);
+        }
+        ih.setAttribute(p, this, "eightteen", "18");
+        try {
+            ih.setAttribute(p, this, "eightteen", "3");
+            fail("18 shouldn't be equals to three");
+        } catch (BuildException be) {
+            assertTrue(be.getException() instanceof AssertionFailedError);
+        }
+        ih.setAttribute(p, this, "nineteen", "19");
+        try {
+            ih.setAttribute(p, this, "nineteen", "3");
+            fail("19 shouldn't be equals to three");
+        } catch (BuildException be) {
+            assertTrue(be.getException() instanceof AssertionFailedError);
+        }
     }
 
     public void testGetAttributes() {
@@ -373,6 +394,9 @@ public class IntrospectionHelperTest extends TestCase {
         h.put("fourteen", java.lang.StringBuffer.class);
         h.put("fifteen", java.lang.Character.TYPE);
         h.put("sixteen", java.lang.Character.class);
+        h.put("seventeen", java.lang.Byte.TYPE);
+        h.put("eightteen", java.lang.Short.TYPE);
+        h.put("nineteen", java.lang.Double.TYPE);
 
         /*
          * JUnit 3.7 adds a getName method to TestCase - so we now
@@ -453,6 +477,18 @@ public class IntrospectionHelperTest extends TestCase {
 
     public void setSixteen(Character c) {
         assertEquals(c.charValue(), 'a');
+    }
+
+    public void setSeventeen(byte b) {
+        assertEquals(17, b);
+    }
+
+    public void setEightteen(short s) {
+        assertEquals(18, s);
+    }
+
+    public void setNineteen(double d) {
+        assertEquals(19, d, 1e-6);
     }
 
 }// IntrospectionHelperTest

@@ -119,6 +119,24 @@ public class IntrospectionHelper implements BuildListener {
      */
     private static Hashtable helpers = new Hashtable();
 
+	/** 
+	 * Map from primitive types to wrapper classes for use in 
+	 * createAttributeSetter (Class to Class). Note that char 
+	 * and boolean are in here even though they get special treatment
+	 * - this way we only need to test for the wrapper class.
+	 */
+	private static final Hashtable PRIMITIVE_TYPE_MAP = new Hashtable(8);
+	
+	// Set up PRIMITIVE_TYPE_MAP
+	static {
+	    Class[] primitives = {Boolean.TYPE, Byte.TYPE, Character.TYPE, Short.TYPE, 
+	        Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE};
+	    Class[] wrappers = {Boolean.class, Byte.class, Character.class, Short.class, 
+	        Integer.class, Long.class, Float.class, Double.class};
+	    for (int i=0; i < primitives.length; i++)
+	        PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
+	}
+
     // XXX: (Jon Skeet) The documentation below doesn't draw a clear 
     // distinction between addConfigured and add. It's obvious what the
     // code *here* does (addConfigured sets both a creator method which
@@ -607,14 +625,6 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-    // XXX: (Jon Skeet) This method implementation could be made much simpler
-    // using a mapping from Integer.TYPE to Integer.class etc, so
-    // that when a primitive type is given, the wrapper is just
-    // automatically used. This would then fall through to the "worst case"
-    // where a string constructor is used - but this is what happens
-    // for Integer etc anyway. There would be a slight speed difference (due
-    // to using reflection where it's currently not being used), but the
-    // size of the code for this method would be reduced by 50 lines :)
      * Creates an implementation of AttributeSetter for the given
      * attribute type. Conversions (where necessary) are automatically
      * made for the following types:
@@ -637,17 +647,20 @@ public class IntrospectionHelper implements BuildListener {
      * 
      * @param m The method to invoke on the bean when the setter is invoked.
      *          Must not be <code>null</code>.
-     * @param arg The type of the single argument passed to the bean's method 
-     *            when the returned setter is invoked.
+     * @param arg The type of the single argument of the bean's method.
+     *            Must not be <code>null</code>.
      * 
      * @return an appropriate AttributeSetter instance, or <code>null</code>
      *         if no appropriate conversion is available.
      */
     private AttributeSetter createAttributeSetter(final Method m,
-                                                  final Class arg) {
+                                                  Class arg) {
+		// use wrappers for primitive classes, e.g. int and Integer are treated identically
+		final Class reflectedArg = PRIMITIVE_TYPE_MAP.containsKey (arg) ?
+		    (Class) PRIMITIVE_TYPE_MAP.get(arg) : arg;
 
         // simplest case - setAttribute expects String
-        if (java.lang.String.class.equals(arg)) {
+        if (java.lang.String.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
@@ -655,9 +668,8 @@ public class IntrospectionHelper implements BuildListener {
                     }
                 };
 
-        // now for the primitive types, use their wrappers
-        } else if (java.lang.Character.class.equals(arg)
-                   || java.lang.Character.TYPE.equals(arg)) {
+        // char and Character get special treatment - take the first character
+        } else if (java.lang.Character.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
@@ -665,59 +677,9 @@ public class IntrospectionHelper implements BuildListener {
                     }
 
                 };
-        } else if (java.lang.Byte.TYPE.equals(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Byte[] {new Byte(value)});
-                    }
-
-                };
-        } else if (java.lang.Short.TYPE.equals(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Short[] {new Short(value)});
-                    }
-
-                };
-        } else if (java.lang.Integer.TYPE.equals(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Integer[] {new Integer(value)});
-                    }
-
-                };
-        } else if (java.lang.Long.TYPE.equals(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Long[] {new Long(value)});
-                    }
-
-                };
-        } else if (java.lang.Float.TYPE.equals(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Float[] {new Float(value)});
-                    }
-
-                };
-        } else if (java.lang.Double.TYPE.equals(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Double[] {new Double(value)});
-                    }
-
-                };
-
-        // boolean gets an extra treatment, because we have a nice method
+        // boolean and Boolean get special treatment because we have a nice method
         // in Project
-        } else if (java.lang.Boolean.class.equals(arg)
-                   || java.lang.Boolean.TYPE.equals(arg)) {
+        } else if (java.lang.Boolean.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
@@ -728,7 +690,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
 
         // Class doesn't have a String constructor but a decent factory method
-        } else if (java.lang.Class.class.equals(arg)) {
+        } else if (java.lang.Class.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
@@ -741,7 +703,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
 
         // resolve relative paths through Project
-        } else if (java.io.File.class.equals(arg)) {
+        } else if (java.io.File.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
@@ -751,7 +713,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
 
         // resolve relative paths through Project
-        } else if (org.apache.tools.ant.types.Path.class.equals(arg)) {
+        } else if (org.apache.tools.ant.types.Path.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
@@ -761,12 +723,13 @@ public class IntrospectionHelper implements BuildListener {
                 };
 
         // EnumeratedAttributes have their own helper class
-        } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(arg)) {
+        } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
-                            org.apache.tools.ant.types.EnumeratedAttribute ea = (org.apache.tools.ant.types.EnumeratedAttribute)arg.newInstance();
+                            org.apache.tools.ant.types.EnumeratedAttribute ea = 
+                                (org.apache.tools.ant.types.EnumeratedAttribute)reflectedArg.newInstance();
                             ea.setValue(value);
                             m.invoke(parent, new EnumeratedAttribute[] {ea});
                         } catch (InstantiationException ie) {
@@ -776,11 +739,13 @@ public class IntrospectionHelper implements BuildListener {
                 };
 
         // worst case. look for a public String constructor and use it
+        // This is used (deliberately) for all primitives/wrappers other than 
+        // char and boolean
         } else {
 
             try {
                 final Constructor c =
-                    arg.getConstructor(new Class[] {java.lang.String.class});
+                    reflectedArg.getConstructor(new Class[] {java.lang.String.class});
 
                 return new AttributeSetter() {
                         public void set(Project p, Object parent,
