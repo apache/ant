@@ -75,4 +75,9 @@ Legal:
     <extensions-test/>
   </target>
 
+  <target name="typed-adder-test">
+    <log message="About to execute typed-adder-test"/>
+    <typed-adder-test/>
+  </target>
+
 </project>

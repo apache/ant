@@ -7,5 +7,6 @@
     <task name="content-test" classname="org.apache.antlib.selftest.ContentTest" />
     <task name="file-manip-test" classname="org.apache.antlib.selftest.FileManipulationTest" />
     <task name="extensions-test" classname="org.apache.antlib.selftest.ExtensionsTest" />
+    <task name="typed-adder-test" classname="org.apache.antlib.selftest.TypedAdderTest" />
   </types>
 </ant-lib>
