@@ -64,6 +64,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.beans.PropertyChangeEvent;
+import org.w3c.dom.Node;
 
 /**
  * Module for navigating build file elemenets.
@@ -74,7 +75,7 @@ import java.beans.PropertyChangeEvent;
 public class ElementNavigator extends AntModule {
 
     /** Navigation via a tree widget. */
-    private JTree _tree = null;
+    private DragTree _tree = null;
     /** The selection model being used. */
     private ElementTreeSelectionModel _selections = null;
 
@@ -96,7 +97,8 @@ public class ElementNavigator extends AntModule {
 
         setLayout(new GridLayout(1,1));
 
-        _tree = new JTree();
+        _tree = new DragTree();
+        _tree.addDragTreeListener(new DragHandler());
         _tree.setModel(null);
         _tree.setCellRenderer(new ElementTreeCellRenderer());
         _tree.addMouseListener(new PopupHandler());
@@ -278,6 +280,54 @@ public class ElementNavigator extends AntModule {
         }
         public void mouseClicked(MouseEvent e) {
             handle(e);
+        }
+    }
+    
+    /** Class for handling drag operation. */
+    private static class DragHandler implements DragTreeListener {
+        
+        /**
+         * Append the object to the end of the parent's child list.
+         */
+        public Object appendChild(Object parent, Object newChild) {
+            
+            ACSTreeNodeElement parentNode =
+                (ACSTreeNodeElement) parent;
+            ACSTreeNodeElement newChildNode =
+                (ACSTreeNodeElement) newChild;
+            ACSTreeNodeElement clone =
+                (ACSTreeNodeElement) newChildNode.cloneNode(true);
+            parentNode.appendChild(clone);
+            return clone;
+        }
+
+        /**
+         * Append the object to the end of the parent's child list.
+         */
+        public Object insertBefore(Object parent, Object index, Object newChild) {
+            
+            ACSTreeNodeElement parentNode =
+                (ACSTreeNodeElement) parent;
+            ACSTreeNodeElement indexNode =
+                (ACSTreeNodeElement) index;
+            ACSTreeNodeElement newChildNode =
+                (ACSTreeNodeElement) newChild;
+            ACSTreeNodeElement clone =
+                (ACSTreeNodeElement) newChildNode.cloneNode(true);
+            parentNode.insertBefore(clone, indexNode);
+            return clone;
+        }
+    
+        /**
+         * Append the object to the end of the parent's child list.
+         */
+        public void removeChild(Object child) {
+            
+            ACSTreeNodeElement childNode =
+                (ACSTreeNodeElement) child;
+            ACSTreeNodeElement parentNode =
+                (ACSTreeNodeElement) childNode.getParentNode();
+            parentNode.removeChild(childNode);
         }
     }
 }
