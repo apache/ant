@@ -128,7 +128,7 @@ public class Javac extends MatchingTask {
     private Path extdirs;
     private boolean includeAntRuntime = true;
     private boolean includeJavaRuntime = false;
-    private String fork = "false";
+    private boolean fork = false;
     private String forkedExecutable = null;
     private boolean nowarn = false;
     private String memoryInitialSize;
@@ -547,31 +547,27 @@ public class Javac extends MatchingTask {
     /**
      * Sets whether to fork the javac compiler.
      *
-     * @param f "true|false|on|off|yes|no" or the name of the javac
-     * executable.
+     * @param f "true|false|on|off|yes|no"
      */
-    public void setFork(String f) {
-        if (f.equalsIgnoreCase("on")
-            || f.equalsIgnoreCase("true")
-            || f.equalsIgnoreCase("yes")) {
-            fork = "true";
-            forkedExecutable = getSystemJavac();
-        } else if (f.equalsIgnoreCase("off")
-                   || f.equalsIgnoreCase("false")
-                   || f.equalsIgnoreCase("no")) {
-            fork = "false";
-            forkedExecutable = null;
-        } else {
-            fork = "true";
-            forkedExecutable = f;
-        }
+    public void setFork(boolean f) {
+        fork = f;
+    }
+
+    /**
+     * Sets the the name of the javac executable.
+     *
+     * <p>Ignored unless fork is true or extJavac has been specified
+     * as the compiler.</p>
+     */
+    public void setExecutable(String forkExec) {
+        forkedExecutable = forkExec;
     }
 
     /**
      * Is this a forked invocation of JDK's javac?
      */
     public boolean isForkedJavac() {
-        return !"false".equals(fork) || "extJavac".equals(getCompiler());
+        return fork || "extJavac".equals(getCompiler());
     }
 
     /**
@@ -753,7 +749,7 @@ public class Javac extends MatchingTask {
             this.compiler != null ? this.compiler 
                                   : project.getProperty("build.compiler");
 
-        if (!"false".equals(fork)) {
+        if (fork) {
             if (compilerImpl != null) {
                 if (isJdkCompiler(compilerImpl)) {
                     log("Since fork is true, ignoring compiler setting.",

@@ -252,10 +252,15 @@ invoking the compiler.</p>
   <tr>
     <td valign="top">fork</td>
     <td valign="top">Whether to execute <code>javac</code> using the
-      JDK compiler externally; defaults to <code>no</code>.  You can also
-      give a complete path to the <code>javac</code> executable to use
-      instead of <code>yes</code>, which would run the compiler of the Java
-      version that is currently running Ant.</td>
+      JDK compiler externally; defaults to <code>no</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">executable</td>
+    <td valign="top">Complete path to the <code>javac</code>
+      executable to use in case of <code>fork=&quot;yes&quot;</code>.
+      Defaults to the compiler of the Java version that is currently
+      running Ant.  Ignored if <code>fork=&quot;no&quot;</code></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

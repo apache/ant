@@ -89,13 +89,13 @@ public class JavacTest extends TestCase {
         project.setProperty("build.compiler", "modern");
         assertNull("no fork means no executable", javac.getJavacExecutable());
 
-        javac.setFork("true");
+        javac.setFork(true);
         assertNotNull("normal fork", javac.getJavacExecutable());
         assertTrue("name should contain \"javac\"", 
                    javac.getJavacExecutable().indexOf("javac") > -1);
 
         project.setProperty("build.compiler", "extJavac");
-        javac.setFork("false");
+        javac.setFork(false);
         assertNotNull("fork via property", javac.getJavacExecutable());
         assertTrue("name should contain \"javac\"", 
                    javac.getJavacExecutable().indexOf("javac") > -1);
@@ -105,7 +105,8 @@ public class JavacTest extends TestCase {
                    javac.getJavacExecutable());
 
         String myJavac = "Slartibartfast";
-        javac.setFork(myJavac);
+        javac.setFork(true);
+        javac.setExecutable(myJavac);
         assertEquals(myJavac, javac.getJavacExecutable());
     }
 
@@ -161,7 +162,7 @@ public class JavacTest extends TestCase {
         String testArg = ford + " " + prefect;
         arg.setValue(testArg);
         arg.setImplementation("extJavac");
-        javac.setFork("true");
+        javac.setFork(true);
         String[] args = javac.getCurrentCompilerArgs();
         assertEquals("both are forked javac", 1, args.length);
         assertEquals(testArg, args[0]);
@@ -177,31 +178,31 @@ public class JavacTest extends TestCase {
         assertTrue("default value", 
                    "modern".equals(compiler) || "classic".equals(compiler));
 
-        javac.setFork("true");
+        javac.setFork(true);
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("extJavac", compiler);
 
         // check build.compiler provides defaults
-        javac.setFork("false");
+        javac.setFork(false);
         project.setNewProperty("build.compiler", "jikes");
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("jikes", compiler);
 
-        javac.setFork("true");
+        javac.setFork(true);
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("jikes", compiler);
 
         // check attribute overrides build.compiler
-        javac.setFork("false");
+        javac.setFork(false);
         javac.setCompiler("jvc");
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("jvc", compiler);
 
-        javac.setFork("true");
+        javac.setFork(true);
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("jvc", compiler);
