@@ -102,6 +102,13 @@ public class ProjectHelper2 extends ProjectHelper {
      */
     private static FileUtils fu = FileUtils.newFileUtils();
 
+    /**
+     * Parse a source xml input.
+     *
+     * @param project the current project
+     * @param source  the xml source
+     * @exception BuildException if an error occurs
+     */
     public void parse(Project project, Object source)
             throws BuildException {
         getImportStack().addElement(source);
@@ -133,6 +140,9 @@ public class ProjectHelper2 extends ProjectHelper {
     /**
      * Parses the project file, configuring the project as it goes.
      *
+     * @param project the current project
+     * @param source  the xml source
+     * @param handler the root handler to use (contains the current context)
      * @exception BuildException if the configuration is invalid or cannot
      *                           be read
      */
@@ -232,10 +242,13 @@ public class ProjectHelper2 extends ProjectHelper {
          * Handles the start of an element. This base implementation does
          * nothing.
          *
+         * @param uri the namespace URI for the tag
          * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
+         * @param qname The qualified name of the element.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
+         * @param context The context that this element is in.
          *
          * @exception SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
@@ -251,10 +264,14 @@ public class ProjectHelper2 extends ProjectHelper {
          * throws an exception - you must override this method if you expect
          * child elements.
          *
+         * @param uri The namespace uri for this element.
          * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
+         * @param context The current context.
+         * @return a handler (in the derived classes)
          *
          * @exception SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
@@ -267,6 +284,15 @@ public class ProjectHelper2 extends ProjectHelper {
                 + " \"", context.getLocator());
         }
 
+        /**
+         * Handle the end of a element.
+         *
+         * @param uri the namespace uri of the element
+         * @param tag the tag of the element
+         * @param qname the qualified name of the element
+         * @param context the current context
+         * @exception SAXParseException if an error occurs
+         */
         public void onEndChild(String uri, String tag, String qname,
                                      AntXMLContext context)
             throws SAXParseException {
@@ -275,6 +301,9 @@ public class ProjectHelper2 extends ProjectHelper {
         /**
          * Called when this element and all elements nested into it have been
          * handled (i.e. at the </end_tag_of_the_element> ).
+         * @param uri the namespace uri for this element
+         * @param tag the element name
+         * @param context the current context
          */
         public void onEndElement(String uri, String tag,
                                  AntXMLContext context) {
@@ -288,6 +317,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
+         * @param context The current context.
          *
          * @exception SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
@@ -306,6 +336,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * Will be called every time a namespace is reached.
          * It'll verify if the ns was processed, and if not load the task
          * definitions.
+         * @param uri The namespace uri.
          */
         protected void checkNamespace(String uri) {
 
@@ -322,6 +353,11 @@ public class ProjectHelper2 extends ProjectHelper {
         private AntHandler currentHandler = null;
         private AntXMLContext context;
 
+        /**
+         * Creates a new RootHandler instance.
+         *
+         * @param context The context for the handler.
+         */
         public RootHandler(AntXMLContext context) {
             currentHandler = ProjectHelper2.mainHandler;
             antHandlers.push(currentHandler);
@@ -336,6 +372,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *                 implementation.
          * @param systemId The system identifier provided in the XML
          *                 document. Will not be <code>null</code>.
+         * @return an inputsource for this identifier
          */
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
@@ -369,8 +406,10 @@ public class ProjectHelper2 extends ProjectHelper {
          * Handles the start of a project element. A project handler is created
          * and initialised with the element name and attributes.
          *
+         * @param uri The namespace uri for this element.
          * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
          *
@@ -401,8 +440,10 @@ public class ProjectHelper2 extends ProjectHelper {
          * by the onEndElement() method and then the original handler
          * is restored to the parser.
          *
+         * @param uri  The namespace URI for this element.
          * @param name The name of the element which is ending.
          *             Will not be <code>null</code>.
+         * @param qName The qualified name for this element.
          *
          * @exception SAXException in case of error (not thrown in
          *                         this implementation)
@@ -417,14 +458,38 @@ public class ProjectHelper2 extends ProjectHelper {
             }
         }
 
+        /**
+         * Handle text within an element, calls currentHandler.characters.
+         *
+         * @param buf  A character array of the test.
+         * @param start The start offset in the array.
+         * @param count The number of characters to read.
+         * @exception SAXParseException if an error occurs
+         */
         public void characters(char[] buf, int start, int count)
             throws SAXParseException {
             currentHandler.characters(buf, start, count, context);
         }
     }
 
+    /**
+     * The main handler - it handles the &lt;project&gt; tag.
+     *
+     * @see AntHandler
+     */
     public static class MainHandler extends AntHandler {
 
+        /**
+         * Handle the project tag
+         *
+         * @param uri The namespace uri.
+         * @param name The element tag.
+         * @param qname The element qualified name.
+         * @param attrs The attributes of the element.
+         * @param context The current context.
+         * @return The project handler that handles subelements of project
+         * @exception SAXParseException if the qualified name is not "project".
+         */
         public AntHandler onStartChild(String uri, String name, String qname,
                                        Attributes attrs,
                                        AntXMLContext context)
@@ -454,11 +519,14 @@ public class ProjectHelper2 extends ProjectHelper {
          * this handler can deal with are: <code>"default"</code>,
          * <code>"name"</code>, <code>"id"</code> and <code>"basedir"</code>.
          *
+         * @param uri The namespace URI for this element.
          * @param tag Name of the element which caused this handler
          *            to be created. Should not be <code>null</code>.
          *            Ignored in this implementation.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element which caused this
          *              handler to be created. Must not be <code>null</code>.
+         * @param context The current context.
          *
          * @exception SAXParseException if an unexpected attribute is
          *            encountered or if the <code>"default"</code> attribute
@@ -573,10 +641,14 @@ public class ProjectHelper2 extends ProjectHelper {
          * appropriate handler is created and initialised with the details
          * of the element.
          *
-         * @param tag The name of the element being started.
+         * @param uri The namespace URI for this element.
+         * @param name The name of the element being started.
          *            Will not be <code>null</code>.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
+         * @param context The context for this element.
+         * @return a target or an element handler.
          *
          * @exception org.xml.sax.SAXParseException if the tag given is not
          *            <code>"taskdef"</code>, <code>"typedef"</code>,
@@ -609,11 +681,14 @@ public class ProjectHelper2 extends ProjectHelper {
          * <code>"unless"</code>, <code>"id"</code> and
          * <code>"description"</code>.
          *
+         * @param uri The namespace URI for this element.
          * @param tag Name of the element which caused this handler
          *            to be created. Should not be <code>null</code>.
          *            Ignored in this implementation.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element which caused this
          *              handler to be created. Must not be <code>null</code>.
+         * @param context The current context.
          *
          * @exception SAXParseException if an unexpected attribute is encountered
          *            or if the <code>"name"</code> attribute is missing.
@@ -695,10 +770,14 @@ public class ProjectHelper2 extends ProjectHelper {
         /**
          * Handles the start of an element within a target.
          *
-         * @param tag The name of the element being started.
+         * @param uri The namespace URI for this element.
+         * @param name The name of the element being started.
          *            Will not be <code>null</code>.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
+         * @param context The current context.
+         * @return an element handler.
          *
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
@@ -710,6 +789,14 @@ public class ProjectHelper2 extends ProjectHelper {
             return ProjectHelper2.elementHandler;
         }
 
+        /**
+         * Handle the end of the project, sets the current target of the
+         * context to be the implicit target.
+         *
+         * @param uri The namespace URI of the element.
+         * @param tag The name of the element.
+         * @param context The current context.
+         */
         public void onEndElement(String uri, String tag, AntXMLContext context) {
             context.setCurrentTarget(context.getImplicitTarget());
         }
@@ -733,11 +820,13 @@ public class ProjectHelper2 extends ProjectHelper {
          * its parent container (if any). Nested elements are then
          * added later as the parser encounters them.
          *
+         * @param uri The namespace URI for this element.
          * @param tag Name of the element which caused this handler
          *            to be created. Must not be <code>null</code>.
-         *
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element which caused this
          *              handler to be created. Must not be <code>null</code>.
+         * @param context The current context.
          *
          * @exception SAXParseException in case of error (not thrown in
          *                              this implementation)
@@ -803,6 +892,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
+         * @param context The current context.
          *
          * @exception SAXParseException if the element doesn't support text
          *
@@ -820,10 +910,14 @@ public class ProjectHelper2 extends ProjectHelper {
          * will always use another task handler, and all other tasks
          * will always use a nested element handler.
          *
+         * @param uri The namespace URI for this element.
          * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
+         * @param qname The qualified name for this element.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
+         * @param context The current context.
+         * @return The handler for elements.
          *
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
@@ -835,6 +929,14 @@ public class ProjectHelper2 extends ProjectHelper {
             return ProjectHelper2.elementHandler;
         }
 
+        /**
+         * Handles the end of the element. This pops the wrapper from
+         * the context.
+         *
+         * @param uri The namespace URI for the element.
+         * @param tag The name of the element.
+         * @param context The current context.
+         */
         public void onEndElement(String uri, String tag, AntXMLContext context) {
             context.popWrapper();
         }
