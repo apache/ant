@@ -360,7 +360,7 @@ public class JspC extends MatchingTask
 
         // compile the source files
 
-        String compiler = getProject().getProperty( "jsp.compiler" );
+        Object compiler = getProperty( "jsp.compiler" );
         if( compiler == null )
         {
             compiler = "jasper";
@@ -369,9 +369,8 @@ public class JspC extends MatchingTask
 
         if( compileList.size() > 0 )
         {
-
             CompilerAdapter adapter =
-                CompilerAdapterFactory.getCompiler( compiler, this );
+                CompilerAdapterFactory.getCompiler( compiler.toString(), this );
             getLogger().info( "Compiling " + compileList.size() +
                               " source file"
                               + ( compileList.size() == 1 ? "" : "s" )
