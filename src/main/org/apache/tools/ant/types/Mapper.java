@@ -213,6 +213,10 @@ public class Mapper extends DataType {
             throw be;
         } catch (Throwable t) {
             throw new BuildException(t);
+        } finally {
+            if (type != null) {
+                classname = null;
+            }
         }
     }
         

@@ -28,8 +28,11 @@ H6 {
 	MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
 }
 .Error {
-	font-weight:bold; color:red;
+	font-weight:bold; background:#EEEEE0; color:purple;
 }
 .Failure {
-	font-weight:bold; color:purple;
+	font-weight:bold; background:#EEEEE0; color:red;
+}
+.Pass {
+	background:#EEEEE0;
 }

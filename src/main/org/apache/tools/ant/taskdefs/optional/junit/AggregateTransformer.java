@@ -281,19 +281,25 @@ public class AggregateTransformer {
     }
 
     protected void createCascadingStyleSheet() throws IOException, SAXException {
+        InputStream in = null;
         if (styleDir == null) {
-            InputStream in = getResourceAsStream("html/stylesheet.css");
-            OutputStream out = new FileOutputStream( new File(toDir, "stylesheet.css"));
-            copy(in, out);              
+            in = getResourceAsStream("html/stylesheet.css");
+        } else {
+            in = new FileInputStream(new File(styleDir, "stylesheet.css"));
         }
+        OutputStream out = new FileOutputStream( new File(toDir, "stylesheet.css"));
+        copy(in, out);
     }
 
     protected void createFrameStructure() throws IOException, SAXException{
+        InputStream in = null;
         if (styleDir == null) {
-            InputStream in = getResourceAsStream("html/index.html");
-            OutputStream out = new FileOutputStream( new File(toDir, "index.html") );
-            copy(in, out);
+            in = getResourceAsStream("html/index.html");
+        } else {
+            in = new FileInputStream(new File(styleDir, "index.html"));
         }
+        OutputStream out = new FileOutputStream( new File(toDir, "index.html") );
+        copy(in, out);
     }
         
     /**

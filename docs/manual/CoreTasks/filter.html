@@ -44,7 +44,7 @@ filtersfile attribute.</p>
 <p>* see notes 1 and 2 above parameters table.</p>
 <h3>Examples</h3>
 <pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot;/&gt;
-  &lt;copy todir=&quot;${dest.dir}&quot;&gt;
+  &lt;copy todir=&quot;${dest.dir}&quot; filtering=&quot;true&quot;&gt;
     &lt;fileset dir=&quot;${src.dir}&quot;/&gt;
   &lt;/copy&gt;</pre> 
 <p>will copy recursively all the files from the <i>src.dir</i> directory into

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!-- This style sheet should contain just a named templates that used in the other specific templates -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:include href="toolkit.xsl"/>
 
+<!--
+    Display the whole list of testsuite
+-->
 <xsl:template match="testsuites">
 	<HTML>
 		<HEAD>
@@ -23,6 +24,10 @@
 	</HTML>
 </xsl:template>
 
+<!--
+    Display each testsuite name with an hyperlink to the package frame.
+    The hyperlink is made of the {packagename} + {classname} + "-details.html"
+-->
 <xsl:template match="testsuite">
 	<tr>
 		<td nowrap="nowrap">

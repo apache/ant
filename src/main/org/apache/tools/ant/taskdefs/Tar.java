@@ -175,7 +175,12 @@ public class Tar extends MatchingTask {
             
             if (!archiveIsUpToDate(files)) {
                 upToDate = false;
-                break;
+            }
+            
+            for (int i = 0; i < files.length; ++i) {
+                if (tarFile.equals(new File(fs.getDir(project), files[i]))) {
+                    throw new BuildException("A tar file cannot include itself", location);
+                }
             }
         }
 

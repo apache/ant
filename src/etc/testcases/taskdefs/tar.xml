@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xxx-test" basedir="." default="test1">
+<project name="tar-test" basedir="." default="test1">
 
   <target name="test1">
     <tar/>
@@ -14,4 +14,14 @@
     <tar basedir=""/>
   </target>
 
+  <target name="test4">
+    <touch file="test4.tar"/>
+    <tar tarfile="test4.tar"
+         basedir="."/>
+  </target>
+
+  
+  <target name="cleanup"> 
+    <delete file="test4.tar"/>
+  </target>
 </project>

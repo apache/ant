@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!-- This style sheet should contain just a named templates that used in the other specific templates -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- transform string like a.b.c to ../../../  -->
+<!--
+    format a number in to display its value in percent
+    @param value the number to format
+-->
+<xsl:template name="display-time">
+	<xsl:param name="value"/>
+	<xsl:value-of select="format-number($value,'0.000')"/>
+</xsl:template>
+
+<!--
+    format a number in to display its value in percent
+    @param value the number to format
+-->
+<xsl:template name="display-percent">
+	<xsl:param name="value"/>
+	<xsl:value-of select="format-number($value,'0.00%')"/>
+</xsl:template>
+
+<!--
+    transform string like a.b.c to ../../../
+    @param path the path to transform into a descending directory path
+-->
 <xsl:template name="path">
 	<xsl:param name="path"/>
 	<xsl:if test="contains($path,'.')">
@@ -119,18 +138,27 @@
 		<xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
 		<table border="0" cellpadding="5" cellspacing="2" width="95%">
 		<xsl:call-template name="summaryHeader"/>
-		<tr bgcolor="#EEEEE" valign="top">
+		<tr valign="top">
 			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="./failure | ./error">Error</xsl:when>
-					<xsl:otherwise>TableRowColor</xsl:otherwise>
-				</xsl:choose>
+    			<xsl:choose>
+    			    <xsl:when test="$failureCount &gt; 0">Failure</xsl:when>
+    				<xsl:when test="$errorCount &gt; 0">Error</xsl:when>
+    				<xsl:otherwise>Pass</xsl:otherwise>
+    			</xsl:choose>			
 			</xsl:attribute>		
 			<td><xsl:value-of select="$testCount"/></td>
 			<td><xsl:value-of select="$failureCount"/></td>
 			<td><xsl:value-of select="$errorCount"/></td>
-			<td><xsl:value-of select="format-number($successRate,'#,##0.00%')"/></td>
-			<td><xsl:value-of select="format-number($timeCount,'#,###0.000')"/></td>
+			<td>
+			    <xsl:call-template name="display-percent">
+			        <xsl:with-param name="value" select="$successRate"/>
+			    </xsl:call-template>
+			</td>
+			<td>
+			    <xsl:call-template name="display-time">
+			        <xsl:with-param name="value" select="$timeCount"/>
+			    </xsl:call-template>
+			</td>
 		</tr>
 		</table>
 		Note: <i>failures</i> are anticipated and checked for with assertions while <i>errors</i> are unanticipated.
@@ -142,10 +170,12 @@
 		=====================================================================
 -->
 <xsl:template match="testcase">
-	<TR bgcolor="#EEEEE" valign="top"><xsl:attribute name="class">
+	<TR valign="top">
+		<xsl:attribute name="class">
 			<xsl:choose>
-				<xsl:when test="./failure | ./error">Error</xsl:when>
-				<xsl:otherwise>TableRowColor</xsl:otherwise>
+			    <xsl:when test="./failure">Failure</xsl:when>
+				<xsl:when test="./error">Error</xsl:when>
+				<xsl:otherwise>Pass</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
 		<TD><xsl:value-of select="./@name"/></TD>
@@ -160,10 +190,14 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<TD>Success</TD>
-				<TD></TD>
+				<TD><xsl:apply-templates select="./pass"/></TD>
 			</xsl:otherwise>
 		</xsl:choose>
-		<td><xsl:value-of select="format-number(@time,'#,###0.000')"/></td>
+		<td>
+		    <xsl:call-template name="display-time">
+		        <xsl:with-param name="value" select="@time"/>
+		    </xsl:call-template>				
+		</td>
 	</TR>
 </xsl:template>
 

@@ -367,7 +367,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 args += " -compiler " + compiler;
             }
             
-            args += " -noexit " + sourceJar.getPath() + " " + destJar.getPath();
+            args += " " + sourceJar.getPath() + " " + destJar.getPath();
             
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("ejbc");
@@ -384,7 +384,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 javaTask.setFork(true);
             }
             else {
-                javaTask.setFork(false);
+                javaTask.setFork(true);
             }
             
 
