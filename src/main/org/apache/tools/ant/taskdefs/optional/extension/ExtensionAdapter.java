@@ -105,7 +105,7 @@ public class ExtensionAdapter extends DataType {
      * The URL from which the most recent version of this optional package
      * can be obtained if it is not already installed.
      */
-    private String implementationVendor;
+    private String implementationVendorURL;
 
     /**
      * Set the name of extension.
@@ -174,7 +174,7 @@ public class ExtensionAdapter extends DataType {
      */
     public void setImplementationUrl(final String implementationURL) {
         verifyNotAReference();
-        this.implementationVendor = implementationURL;
+        this.implementationVendorURL = implementationURL;
     }
 
     /**
@@ -195,7 +195,7 @@ public class ExtensionAdapter extends DataType {
             || null != implementationVersion
             || null != implementationVendorID
             || null != implementationVendor
-            || null != implementationVendor) {
+            || null != implementationVendorURL) {
             throw tooManyAttributes();
         }
         // change this to get the objects from the other reference
@@ -208,7 +208,7 @@ public class ExtensionAdapter extends DataType {
             implementationVersion = other.implementationVersion;
             implementationVendorID = other.implementationVendorID;
             implementationVendor = other.implementationVendor;
-            implementationVendor = other.implementationVendor;
+            implementationVendorURL = other.implementationVendorURL;
         } else {
             final String message =
                 reference.getRefId() + " doesn\'t refer to a Extension";
@@ -251,7 +251,7 @@ public class ExtensionAdapter extends DataType {
                               implementationVersionString,
                               implementationVendor,
                               implementationVendorID,
-                              implementationVendor);
+                              implementationVendorURL);
     }
 
     /**
