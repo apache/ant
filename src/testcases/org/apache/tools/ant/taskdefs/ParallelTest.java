@@ -53,10 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs;
 import java.io.PrintStream;
+import junit.framework.AssertionFailedError;
+import org.apache.tools.ant.BuildException;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DemuxOutputStream;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * Test of the parallel TaskContainer
@@ -104,17 +107,59 @@ public class ParallelTest extends BuildFileTest {
     }
 
     /** tests basic operation of the parallel task */
-    public void testTreadCount() {
+    public void testThreadCount() {
         // should get no output at all
         Project project = getProject();
         project.setUserProperty("test.direct", DIRECT_MESSAGE);
         project.setUserProperty("test.delayed", DELAYED_MESSAGE);
         expectOutputAndError("testThreadCount", "", "");
         String log = getLog();
-        assertEquals("parallel tasks did't block on threads properly", log,
-            "+1-1+2-2+3-3+1+2-1+3-2-3+1+2+3-1-2-3+1+2+3-1-2-3");
-
+        int pos = 0;
+        while (pos > -1) {
+            pos = countThreads(log, pos);
+        }
     }
+    
+    /**
+     * the test result string should match the regex 
+     * <code>^(\|\d+\/(+-)*)+\|$</code> for someting like 
+     * <code>|3/++--+-|5/+++++-----|</code>
+     *
+     *@returns -1 no more tests
+     *          # start pos of next test
+     *@throws AssertionFailedException when a constraint is invalid
+     */
+    static int countThreads(String s, int start) {
+        int firstPipe = s.indexOf('|', start);
+        int beginSlash = s.indexOf('/', firstPipe);
+        int lastPipe = s.indexOf('|', beginSlash);
+        if ((firstPipe == -1) || (beginSlash == -1) || (lastPipe == -1)) {
+            return -1;
+        }
+        
+        int max = Integer.parseInt(s.substring(firstPipe + 1, beginSlash));
+        int current = 0;
+        int pos = beginSlash + 1;
+        while (pos < lastPipe) {
+            switch (s.charAt(pos++)) {
+                case '+': 
+                    current++;
+                    break;
+                case '-':
+                    current--;
+                    break;
+                default:
+                    throw new AssertionFailedError("Only expect '+-' in result count, found " 
+                        + s.charAt(--pos) + " at position " + pos);
+            }
+            if (current > max) {
+                throw new AssertionFailedError("Number of executing threads exceeded number allowed: " 
+                    + current + " > " + max);
+            }
+        }
+        return lastPipe;
+    }
+    
 
     /** tests the failure of a task within a parallel construction */
     public void testFail() {
@@ -142,5 +187,6 @@ public class ParallelTest extends BuildFileTest {
             System.setErr(err);
         }
     }
+    
 }
 
