@@ -138,6 +138,12 @@ public class Depend extends MatchingTask {
     private Path dependClasspath;
 
     /**
+     * constants used with the cache file
+     */
+    private final static String CACHE_FILE_NAME = "dependencies.txt";
+    private final static String CLASSNAME_PREPEND = "||:";
+
+    /**
      * Set the classpath to be used for this dependency check.
      */
     public void setClasspath(Path classpath) {
@@ -169,46 +175,74 @@ public class Depend extends MatchingTask {
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
-    
-    private void writeDependencyList(File depFile, Vector dependencyList) throws IOException {
-        // new dependencies so need to write them out to the cache
-        PrintWriter pw = null;
-        try {
-            String parent = depFile.getParent();
-            if (parent != null) {
-                new File(parent).mkdirs(); 
-            }
-            
-            pw = new PrintWriter(new FileWriter(depFile));
-            for (Enumeration deps = dependencyList.elements(); deps.hasMoreElements();) {
-                pw.println(deps.nextElement());
-            }
-        }
-        finally {
-            if (pw != null) { 
-                pw.close();
-            }
-        }
-    }
-
-    private Vector readDependencyList(File depFile) throws IOException {
-        Vector dependencyList = null;
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new FileReader(depFile));
-            String line = null;
-            dependencyList = new Vector();
-            while ((line = in.readLine()) != null) {
-                dependencyList.addElement(line);
-            }
-        }
-        finally {
-            if (in != null) { 
-                in.close();
+        
+    /**
+     * Read the dependencies from cache file
+     */
+    private Hashtable readCachedDependencies() throws IOException{
+        Hashtable dependencyMap = new Hashtable();
+        
+        if (cache != null) {
+            File depFile = new File(cache, CACHE_FILE_NAME);
+            BufferedReader in = null;
+            if (depFile.exists()) {
+                try {
+                    in = new BufferedReader(new FileReader(depFile));
+                    String line = null;
+                    Vector dependencyList = null;
+                    String className = null;
+                    int prependLength = CLASSNAME_PREPEND.length();
+                    while ((line = in.readLine()) != null) {
+                        if (line.startsWith(CLASSNAME_PREPEND)) {
+                            dependencyList = new Vector();
+                            className = line.substring(prependLength);
+                            dependencyMap.put(className, dependencyList);
+                        }
+                        else {
+                            dependencyList.addElement(line);
+                        }
+                    }
+                }
+                finally {
+                    if (in != null) { 
+                        in.close();
+                    }
+                }
             }
         }
         
-        return dependencyList;
+        return dependencyMap;
+    }
+    
+    /**
+     * Write the dependencies to cache file
+     */
+    private void writeCachedDependencies(Hashtable dependencyMap) throws IOException{
+        if (cache != null) {
+            PrintWriter pw = null;
+            try {
+                cache.mkdirs(); 
+                File depFile = new File(cache, CACHE_FILE_NAME);
+                
+                pw = new PrintWriter(new FileWriter(depFile));
+                for (Enumeration deps = dependencyMap.keys(); deps.hasMoreElements();) {
+                    String className = (String)deps.nextElement();
+                    
+                    pw.println(CLASSNAME_PREPEND + className);
+                    
+                    Vector dependencyList = (Vector)dependencyMap.get(className);
+                    int size = dependencyList.size();
+                    for (int x = 0; x < size; x++) {
+                        pw.println(dependencyList.elementAt(x));
+                    }
+                }
+            }
+            finally {
+                if (pw != null) { 
+                    pw.close();
+                }
+            }
+        }
     }
 
 
@@ -221,7 +255,20 @@ public class Depend extends MatchingTask {
     private void determineDependencies() throws IOException {
         affectedClassMap = new Hashtable();
         classFileInfoMap = new Hashtable();
-        Hashtable dependencyMap = new Hashtable();
+        boolean cacheDirty = false;
+        
+        Hashtable dependencyMap = null;
+        File depCacheFile = null;
+        boolean depCacheFileExists = true;
+        long depCacheFileLastModified = Long.MAX_VALUE;
+        
+        // read the dependency cache from the disk
+        if (cache != null) {
+            dependencyMap = readCachedDependencies();
+            depCacheFile = new File(cache, CACHE_FILE_NAME);
+            depCacheFileExists = depCacheFile.exists();
+            depCacheFileLastModified = depCacheFile.lastModified();
+        }
         for (Enumeration e = getClassFiles(destPath).elements(); e.hasMoreElements(); ) {
             ClassFileInfo info = (ClassFileInfo)e.nextElement();
             log("Adding class info for " + info.className, Project.MSG_DEBUG);
@@ -230,12 +277,11 @@ public class Depend extends MatchingTask {
             Vector dependencyList = null;
             
             if (cache != null) {
-                // try to read the dependency info from the cache if it is not out of date
-                File depFile = new File(cache, info.relativeName + ".dep");
-                if (depFile.exists() && depFile.lastModified() > info.absoluteFile.lastModified()) {
+                // try to read the dependency info from the map if it is not out of date
+                if (depCacheFileExists && depCacheFileLastModified > info.absoluteFile.lastModified()) {
                     // depFile exists and is newer than the class file
-                    // need to read dependency list from the file.
-                    dependencyList = readDependencyList(depFile);
+                    // need to get dependency list from the map.
+                    dependencyList = (Vector)dependencyMap.get(info.className);
                 }
             }
             
@@ -248,12 +294,11 @@ public class Depend extends MatchingTask {
                     classFile.read(inFileStream);
                     
                     dependencyList = classFile.getClassRefs();
-                    
-                    if (cache != null) {
-                        // new dependencies so need to write them out to the cache
-                        File depFile = new File(cache, info.relativeName + ".dep");
-                        writeDependencyList(depFile, dependencyList);
+                    if (dependencyList != null) {
+                        cacheDirty = true;
+                        dependencyMap.put(info.className, dependencyList);
                     }
+                    
                 }
                 finally {
                     if (inFileStream != null) {
@@ -261,8 +306,7 @@ public class Depend extends MatchingTask {
                     }
                 }
             }
-            
-            dependencyMap.put(info.className, dependencyList);
+                        
             // This class depends on each class in the dependency list. For each
             // one of those, add this class into their affected classes list 
             for (Enumeration depEnum = dependencyList.elements(); depEnum.hasMoreElements(); ) {
@@ -325,6 +369,11 @@ public class Depend extends MatchingTask {
                     }
                 }
             }
+        }
+        
+        // write the dependency cache to the disk
+        if (cache != null && cacheDirty) {
+            writeCachedDependencies(dependencyMap);
         }
     }
     
