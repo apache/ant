@@ -9,7 +9,7 @@
 
   =======================================================================
 -->
-<project default="main" basedir=".">
+<project name="apache-ant" default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D each time it compiles it) -->
