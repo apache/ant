@@ -27,7 +27,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.3 - 2000/11/29</p>
+<p>Version 1.3 - 2000/11/30</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -4573,8 +4573,8 @@ it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
   <li><a href="propertyfile.html">PropertyFile</a></li>
   <li><a href="#renameexts">RenameExtensions</a></li>
   <li><a href="#script">Script</a></li>
-  <li><a href="#vssget">VssGet</a></li>
   <li><a href="#telnet">Telnet</a></li>
+  <li><a href="#vssget">VssGet</a></li>
 </ul>
 <hr>
 <h2><a name="cab">Cab</a></h2>
@@ -5354,6 +5354,91 @@ main:
 BUILD SUCCESSFUL
 </pre></blockquote>
 <hr>
+<h2><a name="telnet">Telnet</a></h2>
+<h3>Description</h3>
+Task to automate a remote telnet session. The task uses nested &lt;read&gt; to indicate strings to wait for, and  &lt;write&gt; tags to specify text to send.  
+
+<p>If you do specify a userid and password, the system will assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <th>Attribute</th>
+    <th>Values</th>
+    <th>Required</th>
+  </tr>
+  <tr>
+     <td>userid</td>
+     <td>the login id to use on the telnet server.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>password</td>
+     <td>the login password to use on the telnet server.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>server</td>
+     <td>the address of the remote telnet server.</td>
+     <td>Yes</td>
+  </tr>
+  <tr>
+     <td>port</td>
+     <td>the port number of the remote telnet server. Defaults to port 21.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>initialCR</td>
+     <td>send a cr after connecting ("yes"). Defaults to "no".</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>timeout</td>
+     <td>set a default timeout to wait for a response. Specified in seconds. Default is no timeout.</td>
+     <td>No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+A simple example of connecting to a server and running a command.  This assumes a prompt of "ogin:" for the userid, and a prompt of "assword:" for the password.
+<blockquote><pre>
+&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot;&gt;
+   &lt;read&gt;/home/bob&lt;/read&gt;
+   &lt;write&gt;ls&lt;/write&gt;
+   &lt;read string=&quot;/home/bob&quot;/&gt;
+&lt;/telnet&gt;
+</pre></blockquote>
+
+This task can be rewritten as:
+<blockquote><pre>
+&lt;telnet server=&quot;localhost&quot;&gt;
+   &lt;read&gt;ogin:&lt;/read&gt;
+   &lt;write&gt;bob&lt;/write&gt;
+   &lt;read&gt;assword:&lt;/read&gt;
+   &lt;write&gt;badpass&lt;/write&gt;
+   &lt;read&gt;/home/bob&lt;/read&gt;
+   &lt;write&gt;ls&lt;/write&gt;
+   &lt;read&gt;/home/bob&lt;/read&gt;
+&lt;/telnet&gt;
+</pre></blockquote>
+
+A timeout can be specified at the &lt;telnet&gt; level or at the &lt;read&gt; level. This will connect, issue a sleep command that is suppressed from displaying and wait 10 seconds before quitting.
+<blockquote><pre>
+&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
+   &lt;read&gt;/home/bob&lt;/read&gt;
+   &lt;write echo=&quot;false&quot;&gt;sleep 15&lt;/write&gt;
+   &lt;read timeout=&quot;10&quot;&gt;/home/bob&lt;/read&gt;
+&lt;/telnet&gt;
+</pre></blockquote>
+
+The task can be used with other ports as well:
+<blockquote><pre>
+&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; defaultTimeout=&quot;20&quot;&gt;
+   &lt;read/&gt;
+   &lt;write&gt;GET / http/0.9&lt;/write&gt;
+   &lt;write/&gt;
+   &lt;read timeout=&quot;10&quot;&gt;&amp;lt;/HTML&amp;gt;&lt;/read&gt;
+&lt;/telnet&gt;
+</pre></blockquote>
+<hr>
 <h2><a name="vssget">VssGet</a></h2>
 <h3>Description</h3>
 Task to perform GET commands to Microsoft Visual Source Safe.
@@ -5431,91 +5516,6 @@ which are labeled <i>Release1</i> and write them to the local directory
 <i>C:\mysrc\myproject</i>. The local files will be writable.</p>
 <hr>
 
-<h2><a name="telnet">Telnet</a></h2>
-<h3>Description</h3>
-Task to automate a remote telnet session. The task uses nested &lt;read&gt; to indicate strings to wait for, and  &lt;write&gt; tags to specify text to send.  
-
-<p>If you do specify a userid and password, the system will assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
-<h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <th>Attribute</th>
-    <th>Values</th>
-    <th>Required</th>
-  </tr>
-  <tr>
-     <td>userid</td>
-     <td>the login id to use on the telnet server.</td>
-     <td>No</td>
-  </tr>
-  <tr>
-     <td>password</td>
-     <td>the login password to use on the telnet server.</td>
-     <td>No</td>
-  </tr>
-  <tr>
-     <td>server</td>
-     <td>the address of the remote ftp server.</td>
-     <td>Yes</td>
-  </tr>
-  <tr>
-     <td>port</td>
-     <td>the port number of the remote ftp server. Defaults to port 21.</td>
-     <td>No</td>
-  </tr>
-  <tr>
-     <td>initialCR</td>
-     <td>send a cr after connecting ("yes"). Defaults to "no".</td>
-     <td>No</td>
-  </tr>
-  <tr>
-     <td>timeout</td>
-     <td>set a default timeout to wait for a response. Specified in seconds. Default is no timeout.</td>
-     <td>No</td>
-  </tr>
-</table>
-<h3>Examples</h3>
-A simple example of connecting to a server and running a command.  This assumes a prompt of "ogin:" for the userid, and a prompt of "ssword:" for the password.
-<blockquote><pre>
-&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot;&gt;
-   &lt;read&gt;/home/bob&lt;/read&gt;
-   &lt;write&gt;ls&lt;/read&gt;
-   &lt;read string=&quot;/home/bob&quot;/&gt;
-&lt;/telnet&gt;
-</pre></blockquote>
-
-This task can be rewritten as:
-<blockquote><pre>
-&lt;telnet server=&quot;localhost&quot;&gt;
-   &lt;read&gt;ogin:&lt;/read&gt;
-   &lt;write&gt;bob&lt;/read&gt;
-   &lt;read&gt;ssword:&lt;/read&gt;
-   &lt;write&gt;badpass&lt;/read&gt;
-   &lt;read&gt;/home/bob&lt;/read&gt;
-   &lt;write&gt;ls&lt;/read&gt;
-   &lt;read&gt;/home/bob&lt;/read&gt;
-&lt;/telnet&gt;
-</pre></blockquote>
-
-A timeout can be specified at the &lt;telnet&gt; level or at the &lt;read&gt; level. This will connect, issue a sleep command that is suppressed from displaying and wait 10 seconds before quitting.
-<blockquote><pre>
-&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
-   &lt;read&gt;/home/bob&lt;/read&gt;
-   &lt;write echo=&quot;false&quot;&gt;sleep 15&lt;/read&gt;
-   &lt;read timeout=&quot;10&quot;&gt;/home/bob&lt;/read&gt;
-&lt;/telnet&gt;
-</pre></blockquote>
-
-The task can be used with other ports as well:
-<blockquote><pre>
-&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; defaultTimeout=&quot;20&quot;&gt;
-   &lt;read/&gt;
-   &lt;write&gt;GET / http/0.9&lt;/read&gt;
-   &lt;write/&gt;
-   &lt;read timeout=&quot;10&quot;&gt;&amp;lt;/HTML&amp;gt;&lt;/read&gt;
-&lt;/telnet&gt;
-</pre></blockquote>
-<hr>
 <h2><a name="buildevents">Build Events</a></h2>
 Ant is capable of generating build events as it performs the tasks necessary to build a project. 
 Listeners can be attached to ant to receive these events. This capability could be used, for example,
