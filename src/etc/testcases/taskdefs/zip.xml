@@ -10,13 +10,24 @@
     <zip zipfile="zip.tmp"/>
   </target>
 
+  <!-- Test when the zip file includes itself
+  when target file exists before the zip task is run -->
   <target name="test3">
     <touch file="test3.zip"/>
-    <tar zipfile="test3.zip"
+    <zip zipfile="test3.zip"
          basedir="."/>
   </target>
-  
-  <target name="cleanup"> 
+
+  <!-- Test when the zip file includes itself
+  when target file does not exist before the zip task is run -->
+  <target name="test4">
+     <zip zipfile="test4.zip"
+         basedir="."/>
+  </target>
+
+
+  <target name="cleanup">
     <delete file="test3.zip"/>
+    <delete file="test4.zip"/>
   </target>
 </project>
