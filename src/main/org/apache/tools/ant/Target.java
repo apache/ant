@@ -196,12 +196,19 @@ public class Target implements TaskContainer {
     }
 
     private boolean testIfCondition() {
-        return "".equals(ifCondition) 
-            || project.getProperty(ifCondition) != null;
+        if ("".equals(ifCondition)) {
+            return true;
+        }
+        
+        String test = ProjectHelper.replaceProperties(getProject(), ifCondition, getProject().getProperties());
+        return project.getProperty(test) != null;
     }
 
     private boolean testUnlessCondition() {
-        return "".equals(unlessCondition) 
-            || project.getProperty(unlessCondition) == null;
+        if ("".equals(unlessCondition)) {
+            return true;
+        }
+        String test = ProjectHelper.replaceProperties(getProject(), unlessCondition, getProject().getProperties());
+        return project.getProperty(test) == null;
     }
 }
