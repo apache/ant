@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -143,6 +143,9 @@ public class MailMessage {
     /** sender email address */
     private String from;
 
+    /** list of email addresses to reply to */
+    private Vector replyto;
+
     /** list of email addresses to send to */
     private Vector to;
 
@@ -190,10 +193,11 @@ public class MailMessage {
   public MailMessage(String host, int port) throws IOException{
     this.port = port;
     this.host = host;
+    replyto = new Vector();
     to = new Vector();
     cc = new Vector();
     headers = new Hashtable();
-    setHeader("X-Mailer", "org.apache.tools.mail.MailMessage (jakarta.apache.org)");
+    setHeader("X-Mailer", "org.apache.tools.mail.MailMessage (ant.apache.org)");
     connect();
     sendHelo();
   }
@@ -217,6 +221,16 @@ public class MailMessage {
     sendFrom(from);
     this.from = from;
   }
+
+    /**
+     * Sets the replyto address
+     * This method may be
+     * called multiple times.
+     *
+     */
+    public void replyto(String rto) {
+      this.replyto.addElement(rto);
+    }
 
   /**
    * Sets the to address.  Also sets the "To" header.  This method may be
@@ -277,6 +291,7 @@ public class MailMessage {
    */
   public PrintStream getPrintStream() throws IOException {
     setFromHeader();
+    setReplyToHeader();
     setToHeader();
     setCcHeader();
     sendData();
@@ -288,6 +303,9 @@ public class MailMessage {
     setHeader("From", from);
   }
 
+  void setReplyToHeader() {
+      setHeader("Reply-To", vectorToList(replyto));
+  }
   void setToHeader() {
     setHeader("To", vectorToList(to));
   }

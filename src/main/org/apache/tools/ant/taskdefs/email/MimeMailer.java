@@ -170,7 +170,8 @@ class MimeMailer extends Mailer {
                 msg.setFrom(new InternetAddress(from.getAddress(),
                     from.getName()));
             }
-
+            // set the reply to addresses
+            msg.setReplyTo(internetAddresses(replyToList));
             msg.setRecipients(Message.RecipientType.TO,
                 internetAddresses(toList));
             msg.setRecipients(Message.RecipientType.CC,

@@ -153,12 +153,12 @@ public class MailLogger extends DefaultLogger {
             String mailhost = getValue(properties, "mailhost", "localhost");
             int port = Integer.parseInt(getValue(properties,"port",String.valueOf(MailMessage.DEFAULT_PORT)));
             String from = getValue(properties, "from", null);
-
+            String replytoList = getValue(properties,"replyto","");
             String toList = getValue(properties, prefix + ".to", null);
             String subject = getValue(properties, prefix + ".subject",
                     (success) ? "Build Success" : "Build Failure");
 
-            sendMail(mailhost, port, from, toList, subject, buffer.substring(0));
+            sendMail(mailhost, port, from, replytoList, toList, subject, buffer.substring(0));
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
             e.printStackTrace(System.err);
@@ -211,18 +211,24 @@ public class MailLogger extends DefaultLogger {
      * @param  mailhost         mail server
      * @param  port             mail server port number
      * @param  from             from address
+     * @param  replyToList      comma-separated replyto list
      * @param  toList           comma-separated recipient list
      * @param  subject          mail subject
      * @param  message          mail body
      * @exception  IOException  thrown if sending message fails
      */
-    private void sendMail(String mailhost, int port, String from, String toList,
+    private void sendMail(String mailhost, int port, String from, String replyToList, String toList,
                           String subject, String message) throws IOException {
         MailMessage mailMessage = new MailMessage(mailhost, port);
         mailMessage.setHeader("Date", DateUtils.getDateForHeader());
 
         mailMessage.from(from);
-
+        if (!replyToList.equals("")) {
+            StringTokenizer t = new StringTokenizer(replyToList, ", ", false);
+            while (t.hasMoreTokens()) {
+                mailMessage.replyto(t.nextToken());
+            }
+        }
         StringTokenizer t = new StringTokenizer(toList, ", ", false);
         while (t.hasMoreTokens()) {
             mailMessage.to(t.nextToken());

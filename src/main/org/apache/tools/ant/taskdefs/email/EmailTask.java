@@ -77,6 +77,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @author roxspring@imapmail.org Rob Oxspring
  * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5
  * @ant.task name="mail" category="network"
  */
@@ -120,9 +121,11 @@ public class EmailTask
     private boolean failOnError = true;
     private boolean includeFileNames = false;
     private String messageMimeType = null;
-
+    /** special headers */
     /** sender  */
     private EmailAddress from = null;
+    /** replyto */
+    private Vector replyToList = new Vector();
     /** TO recipients  */
     private Vector toList = new Vector();
     /** CC (Carbon Copy) recipients  */
@@ -135,6 +138,10 @@ public class EmailTask
     private Vector filesets = new Vector();
     /** Character set for MimeMailer*/
     private String charset=null;
+    /** if set to true, the email will not be actually sent */
+    private boolean debugonly=false;
+    /** a location where to print the email message */
+    private File debugoutput;
 
 
     /**
@@ -262,6 +269,28 @@ public class EmailTask
         }
 
         this.from = new EmailAddress(address);
+    }
+
+
+    /**
+     * Adds a replyto address element
+     *
+     * @param address The address to reply to
+     * @since ant 1.6
+     */
+    public void addReplyTo(EmailAddress address) {
+        this.replyToList.add(address);
+    }
+
+
+    /**
+     * Shorthand to set the replyto address element
+     *
+     * @param address The address to which replies should be directed
+     * @since ant 1.6
+     */
+    public void setReplyTo(String address) {
+        this.replyToList.add(new EmailAddress(address));
     }
 
 
@@ -501,6 +530,7 @@ public class EmailTask
             // let the user know what's going to happen
             log("Sending email: " + subject, Project.MSG_INFO);
             log("From " + from, Project.MSG_VERBOSE);
+            log("ReplyTo " + replyToList,Project.MSG_VERBOSE);
             log("To " + toList, Project.MSG_VERBOSE);
             log("Cc " + ccList, Project.MSG_VERBOSE);
             log("Bcc " + bccList, Project.MSG_VERBOSE);
@@ -510,6 +540,7 @@ public class EmailTask
             mailer.setPort(port);
             mailer.setMessage(message);
             mailer.setFrom(from);
+            mailer.setReplyToList(replyToList);
             mailer.setToList(toList);
             mailer.setCcList(ccList);
             mailer.setBccList(bccList);

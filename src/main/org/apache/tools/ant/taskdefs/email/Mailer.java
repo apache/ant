@@ -69,6 +69,7 @@ abstract class Mailer {
     protected int port = -1;
     protected Message message;
     protected EmailAddress from;
+    protected Vector replyToList = null;
     protected Vector toList = null;
     protected Vector ccList = null;
     protected Vector bccList = null;
@@ -114,6 +115,17 @@ abstract class Mailer {
      */
     public void setFrom(EmailAddress from) {
         this.from = from;
+    }
+
+
+    /**
+     * Sets the replyto addresses
+     *
+     * @param list
+     * @since ant 1.6
+     */
+    public void setReplyToList(Vector list) {
+        this.replyToList = list;
     }
 
 

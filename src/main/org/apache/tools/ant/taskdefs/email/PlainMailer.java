@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,11 @@ class PlainMailer extends Mailer {
 
             Enumeration e;
 
+            e = replyToList.elements();
+            while (e.hasMoreElements()) {
+                mailMessage.replyto(e.nextElement().toString());
+            }
+
             e = toList.elements();
             while (e.hasMoreElements()) {
                 mailMessage.to(e.nextElement().toString());
@@ -121,7 +126,6 @@ class PlainMailer extends Mailer {
         }
 
     }
-
 
     /**
      * Attaches a file to this email

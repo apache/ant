@@ -33,6 +33,11 @@ Library Dependencies</a> for more information.
     element.</td>
   </tr>
   <tr>
+    <td valign="top">replyto</td>
+    <td valign="top">Replyto email address.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">tolist</td>
     <td valign="top">Comma-separated list of recipients.</td>
     <td align="center" valign="middle" rowspan="3">At least one of these, or the
@@ -116,7 +121,7 @@ Library Dependencies</a> for more information.
 
 <h3>Parameters specified as nested elements</h3>
 
-<h4>to / cc / bcc / from</h4>
+<h4>to / cc / bcc / from/ replyto </h4>
 <p>Adds an email address element.  It takes the following attributes:</p>
 
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
@@ -187,7 +192,8 @@ the <code>&lt;message&gt;</code> element.</p>
 
 <blockquote><pre>
 &lt;mail mailhost=&quot;smtp.myisp.com&quot; mailport=&quot;1025&quot; subject=&quot;Test build&quot;&gt;
-  &lt;from address=&quot;me@myisp.com&quot;/&gt;
+  &lt;from address=&quot;config@myisp.com&quot;/&gt;
+  &lt;replyto address=&quot;me@myisp.com&quot;/&gt;
   &lt;to address=&quot;all@xyz.com&quot;/&gt;
   &lt;message&gt;The ${buildname} nightly build has completed&lt;/message&gt;
   &lt;fileset dir=&quot;dist&quot;&gt;
@@ -196,8 +202,9 @@ the <code>&lt;message&gt;</code> element.</p>
 &lt;/mail&gt;
 </pre></blockquote>
 
-<p>Sends an eMail from <i>me@myisp.com</i> to <i>all@xyz.com</i> with a subject of
-<i>Test Build</i> and attaches any zip files from the dist directory.&nbsp; The
+<p>Sends an eMail from <i>config@myisp.com</i> to <i>all@xyz.com</i> with a subject of
+<i>Test Build</i>. Replies to this email will go to <i>me@myisp.com</i>.
+Any zip files from the dist directory are attached.&nbsp; The
 task will attempt to use JavaMail and fall back to UU encoding or no encoding in
 that order depending on what support classes are available. <code>${buildname}</code>
 will be replaced with the <code>buildname</code> property's value.</p>
