@@ -96,12 +96,18 @@ public class Path extends DataType implements Cloneable {
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code>
      * attribute setters.
+     * @param project the <CODE>Project</CODE> for this path.
+     * @param path the <CODE>String</CODE> path definition.
      */
     public Path(Project p, String path) {
         this(p);
         createPathElement().setPath(path);
     }
 
+    /**
+     * Construct an empty <CODE>Path</CODE>.
+     * @param project the <CODE>Project</CODE> for this path.
+     */
     public Path(Project project) {
         setProject(project);
         elements = new Vector();
@@ -122,7 +128,7 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Parses a path definition and creates single PathElements.
-     * @param path the path definition.
+     * @param path the <CODE>String</CODE> path definition.
      */
     public void setPath(String path) throws BuildException {
         if (isReference()) {
@@ -322,21 +328,16 @@ public class Path extends DataType implements Cloneable {
                 }
             } else if (o instanceof DirSet) {
                 DirSet dset = (DirSet) o;
-                DirectoryScanner ds = dset.getDirectoryScanner(getProject());
-                String[] s = ds.getIncludedDirectories();
-                File dir = dset.getDir(getProject());
-                addUnlessPresent(result, dir, s);
+                addUnlessPresent(result, dset.getDir(getProject()),
+                    dset.getDirectoryScanner(getProject()).getIncludedDirectories());
             } else if (o instanceof FileSet) {
                 FileSet fs = (FileSet) o;
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] s = ds.getIncludedFiles();
-                File dir = fs.getDir(getProject());
-                addUnlessPresent(result, dir, s);
+                addUnlessPresent(result, fs.getDir(getProject()),
+                    fs.getDirectoryScanner(getProject()).getIncludedFiles());
             } else if (o instanceof FileList) {
                 FileList fl = (FileList) o;
-                String[] s = fl.getFiles(getProject());
-                File dir = fl.getDir(getProject());
-                addUnlessPresent(result, dir, s);
+                addUnlessPresent(result,
+                    fl.getDir(getProject()), fl.getFiles(getProject()));
             }
         }
         String[] res = new String[result.size()];
