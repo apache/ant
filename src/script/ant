@@ -224,7 +224,7 @@ fi
 
 # For Cygwin, switch paths to appropriate format before running java
 if $cygwin; then
-  if [ "$OS" = "Windows_NT" ] ; then
+  if [ "$OS" = "Windows_NT" ] && cygpath -m .>/dev/null 2>/dev/null ; then
     format=mixed
   else
     format=windows
@@ -233,7 +233,9 @@ if $cygwin; then
   ANT_LIB=`cygpath --$format "$ANT_LIB"`
   JAVA_HOME=`cygpath --$format "$JAVA_HOME"`
   LOCALCLASSPATH=`cygpath --path --$format "$LOCALCLASSPATH"`
-  CLASSPATH=`cygpath --path --$format "$OCALCLASSPATH"`
+  if [ -n "$CLASSPATH" ] ; then
+    CLASSPATH=`cygpath --path --$format "$CLASSPATH"`
+  fi
   CYGHOME=`cygpath --$format "$HOME"`
 fi
 
