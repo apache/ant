@@ -347,6 +347,9 @@ public class Checksum extends MatchingTask implements Condition {
             for (Enumeration e = includeFileMap.keys(); e.hasMoreElements();) {
                 messageDigest.reset();
                 File src = (File) e.nextElement();
+                if (!isCondition) {
+                    log("Calculating "+algorithm+" checksum for "+src);
+                }
                 fis = new FileInputStream(src);
                 DigestInputStream dis = new DigestInputStream(fis,
                                                               messageDigest);
