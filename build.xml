@@ -174,6 +174,9 @@
     <available property="xalan.envcheck"
                classname="org.apache.xalan.xslt.EnvironmentCheck"
                classpathref="classpath" />
+    <available property="which.present"
+               classname="org.apache.env.Which"
+               classpathref="classpath" />
 
     <available property="servlet.present"
                classname="javax.servlet.Servlet"
@@ -823,7 +826,10 @@
     </javac>
   </target>
 
-  <target name="dump-info" depends="xml-check">
+  <target name="dump-info" depends="dump-sys-properties,run-which" />
+
+  <target name="dump-sys-properties" unless="which.present" 
+          depends="xml-check">
     <echo message="java.vm.info=${java.vm.info}" />
     <echo message="java.vm.name=${java.vm.name}" />
     <echo message="java.vm.vendor=${java.vm.vendor}" />
@@ -836,8 +842,14 @@
   </target>
 
   <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
-  <target name="xml-check" depends="check_for_optional_packages" if="xalan.envcheck">
+  <target name="xml-check" depends="check_for_optional_packages" 
+          if="xalan.envcheck" unless="which.present">
       <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
+  </target>
+
+  <target name="run-which" depends="check_for_optional_packages"
+          if="which.present">
+      <java classname="org.apache.env.Which" taskname="which"/>
   </target>
 
   <!--
