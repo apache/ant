@@ -118,13 +118,16 @@ public class EchoProperties extends Task {
     private boolean failonerror = true;
 
     /**
-     *  prefix string controls which properties to save
+     *  Prefix string controls which properties to save.
      */
     private String prefix = null;
 
 
     /**
-     * set a file to use for the output
+     *  Set a file to store the property output.  If this is never specified,
+     *  then the output will be sent to the Ant log.
+     *
+     *@param destfile file to store the property output
      */
     public void setDestfile(File destfile) {
         this.destfile = destfile;
@@ -132,6 +135,8 @@ public class EchoProperties extends Task {
 
 
     /**
+     *  Sets the failure mode for the task.
+     *
      *@param  failonerror  <tt>true</tt> if IO exceptions are reported as build
      *      exceptions, or <tt>false</tt> if IO exceptions are ignored.
      */
@@ -141,6 +146,16 @@ public class EchoProperties extends Task {
 
 
     /**
+     *  If the prefix is set, then only properties which start with this
+     *  prefix string will be recorded.  If this is never set, or it is set
+     *  to an empty string or <tt>null</tt>, then all properties will be
+     *  recorded. <P>
+     *
+     *  For example, if the property is set as:
+     *    <PRE>&lt;echoproperties  prefix="ant." /&gt;</PRE>
+     *  then the property "ant.home" will be recorded, but "ant-example"
+     *  will not.
+     *
      *@param  prefix  The new prefix value
      */
     public void setPrefix(String prefix) {
@@ -181,6 +196,8 @@ public class EchoProperties extends Task {
 
     /**
      *  Send the key/value pairs in the hashtable to the given output stream.
+     *  Only those properties matching the <tt>prefix</tt> constraint will be
+     *  sent to the output stream.
      *  The output stream will be closed when this method returns.
      *
      *@param  allProps         propfile to save
@@ -188,7 +205,7 @@ public class EchoProperties extends Task {
      *@exception  IOException  trouble
      */
     protected void saveProperties(Hashtable allProps, OutputStream os)
-             throws IOException {
+             throws IOException, BuildException {
         Properties props = new Properties();
         Enumeration enum = allProps.keys();
         while (enum.hasMoreElements()) {
@@ -199,10 +216,69 @@ public class EchoProperties extends Task {
             }
         }
         try {
-            props.save(os, "Ant properties");
+            jdkSaveProperties( props, os, "Ant properties" );
         } finally {
             os.close();
         }
+    }
+    
+    
+    /**
+     *  JDK 1.2 allows for the safer method
+     *  <tt>Properties.store( OutputStream, String )</tt>, which throws an
+     *  <tt>IOException</tt> on an output error.  This method attempts to
+     *  use the JDK 1.2 method first, and if that does not exist, then the
+     *  JDK 1.0 compatible method
+     *  <tt>Properties.save( OutputStream, String )</tt> is used instead.
+     *
+     *@param props the properties to record
+     *@param os record the properties to this output stream
+     *@param header prepend this header to the property output
+     *@exception IOException on an I/O error during a write.  Only thrown
+     *      for JDK 1.2+.
+     */
+    protected void jdkSaveProperties( Properties props, OutputStream os,
+            String header )
+            throws IOException {
+        try {
+            java.lang.reflect.Method m = props.getClass().getMethod(
+                "store", new Class[] { OutputStream.class, String.class } );
+            m.invoke( props, new Object[] { os, header } );
+        } catch (java.lang.reflect.InvocationTargetException ite) {
+            Throwable t = ite.getTargetException();
+            if (t instanceof IOException) {
+                throw (IOException)t;
+            }
+            if (t instanceof RuntimeException) {
+                throw (RuntimeException)t;
+            }
+            
+            // not an expected exception.  Resort to JDK 1.0 to execute
+            // this method
+            jdk10SaveProperties( props, os, header );
+        } catch (ThreadDeath td) {
+            // don't trap thread death errors.
+            throw td;
+        } catch (Throwable ex) {
+            // this 'store' method is not available, so resort to the JDK 1.0
+            // compatible method.
+            jdk10SaveProperties( props, os, header );
+        }
+    }
+    
+    
+    /**
+     * Save the properties to the output stream using the JDK 1.0 compatible
+     * method.  This won't throw an <tt>IOException</tt> on an output error.
+     *
+     *@param props the properties to record
+     *@param os record the properties to this output stream
+     *@param header prepend this header to the property output
+     */
+    protected void jdk10SaveProperties( Properties props, OutputStream os,
+            String header )
+    {
+        props.save( os, header );
     }
 }
 
