@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,10 +144,9 @@ public final class LineContains
             }
         } else {
             line = readLine();
-            if (line == null) {
-                ch = -1;
-            } else {
-                final int containsSize = contains.size();
+            final int containsSize = contains.size();
+
+            while (line != null) {
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
                     if (line.indexOf(containsStr) == -1) {
@@ -156,6 +155,15 @@ public final class LineContains
                     }
                 }
 
+                if (line == null) {
+                    // line didn't match
+                    line = readLine();
+                } else {
+                    break;
+                }
+            }
+
+            if (line != null) {
                 return read();
             }
         }
