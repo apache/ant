@@ -57,6 +57,9 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 import org.apache.tools.tar.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Untar a file.
  *
@@ -74,6 +77,23 @@ public class Untar extends Task {
      * @exception BuildException Thrown in unrecoverable error.
      */
     public void execute() throws BuildException {
+
+        Method setLastModified = null;
+        Long[] times = null;
+        // 1.0 is ruled out anyway, so this ensures 1.2 or above
+        if (project.getJavaVersion() != Project.JAVA_1_1) {
+            try {
+                setLastModified = 
+                    java.io.File.class.getMethod("setLastModified", 
+                                                 new Class[] {Long.TYPE});
+
+                times = new Long[1];
+            } catch (Exception e) {
+                project.log("File.setLastModified(long) not found",
+                            Project.MSG_VERBOSE);
+            }
+        }
+                    
         try {
             if (source == null) {
                 throw new BuildException("No source specified");
@@ -115,8 +135,21 @@ public class Untar extends Task {
 
                         fos.close();
                     }
-                } catch( FileNotFoundException ex ) {
-                    System.out.println("FileNotFoundException: " +  te.getName()  );
+
+                    if (setLastModified != null) {
+                        times[0] = new Long(te.getModTime().getTime());
+                        try {
+                            setLastModified.invoke(f, times);
+                        } catch (Exception e) {
+                            project.log("cannot invoke File.setLastModified(long)",
+                                        Project.MSG_VERBOSE);
+                            setLastModified = null;
+                        }
+                    }
+
+                } catch(FileNotFoundException ex) {
+                    project.log("FileNotFoundException: " + te.getName(),
+                                Project.MSG_WARN);
                 }
             }
         } catch (IOException ioe) {

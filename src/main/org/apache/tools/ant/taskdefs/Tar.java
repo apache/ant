@@ -122,7 +122,7 @@ public class Tar extends MatchingTask {
 
         TarEntry te = new TarEntry(vPath);
         te.setSize(file.length());
-        te.setModTime(file.lastModified() / 1000);
+        te.setModTime(file.lastModified());
         tOut.putNextEntry(te);
 
         byte[] buffer = new byte[8 * 1024];
