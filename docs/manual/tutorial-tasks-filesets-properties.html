@@ -1,6 +1,7 @@
 <html>
 <head>
-  <title>Tutorial: Tasks using Properties, Filesets & Paths</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
+<title>Tutorial: Tasks using Properties, Filesets & Paths</title>
   <meta name="author" content="Jan Mat&egrave;rne">
   <style type="text/css">
   <!--
@@ -39,12 +40,12 @@ location of that file in a property.</p>
 <a name="buildenvironment"/>
 <h2>Build environment</h2>
 <p>We can use the buildfile from the other tutorial and modify it a little bit.
-That´s the advantage of using properties - we can reuse nearly the whole script. :-)</p>
+That's the advantage of using properties - we can reuse nearly the whole script. :-)</p>
 <pre class="code">
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
 &lt;project name="<b>FindTask</b>" basedir="." default="test"&gt;
     ...
-    &lt;target name="use.init" description="Taskdef´ the <b>Find</b>-Task" depends="jar"&gt;
+    &lt;target name="use.init" description="Taskdef's the <b>Find</b>-Task" depends="jar"&gt;
         &lt;taskdef name="<b>find</b>" classname="<b>Find</b>" classpath="${ant.project.name}.jar"/&gt;
     &lt;/target&gt;
 
@@ -73,7 +74,7 @@ ok, can be rewritten with the core tasks
 </pre>
 but I have to start on known ground :-)</p>
 <p>So what to do? Handling three attributes (property, value, print) and an execute method.
-Because this is only an introduction example I don´t do much checking:
+Because this is only an introduction example I don't do much checking:
 
 <pre class="code">
 import org.apache.tools.ant.BuildException;
@@ -106,7 +107,7 @@ public class Find extends Task {
 As said in the other tutorial, the property access is done via Project instance.
 We get this instance via the public <tt>getProject()</tt> method which we inherit from
 <tt>Task</tt> (more precise from ProjectComponent). Reading a property is done via
-<tt>getProperty(<i>propertyname</i>)</tt> (very simple, isn´t it?). This property returns
+<tt>getProperty(<i>propertyname</i>)</tt> (very simple, isn't it?). This property returns
 the value as String or <i>null</i> if not set.<br>
 Setting a property is ... not really difficult, but there is more than one setter. You can
 use the <tt>setProperty()</tt> method which will do the job like expected. But there is
@@ -115,13 +116,13 @@ to the specified value - whether it has a value before that or not. So we use an
 way. <tt>setNewProperty()</tt> sets the property only if there is no property with that
 name. Otherwise a message is logged.</p>
 
-<p><i>(by the way: a short word to ants "namespaces" (don´t
-be confused with xml namespaces which will be also introduces in the future (1.6 or 1.7):
+<p><i>(by the way: a short word to ants "namespaces" (don't
+be confused with xml namespaces:
 an <code>&lt;antcall&gt;</code> creates a new space for property names. All properties from the caller
 are passed to the callee, but the callee can set its own properties without notice by the
 caller.)</i></p>
 
-<p>There are some other setter, too (but I haven´t used them, so I can´t say something
+<p>There are some other setter, too (but I haven't used them, so I can't say something
 to them, sorry :-)</p>
 
 <p>After putting our two line example from above into a target names <tt>use.simple</tt>
@@ -153,7 +154,7 @@ and all works fine.</p>
 <a name="filesets"/>
 <h2>Using filesets</h2>
 <p>Ant provides a common way of bundling files: the fileset. Because you are reading
-this tutorial I think you know them and I don´t have to spend more explanations about
+this tutorial I think you know them and I don't have to spend more explanations about
 their usage in buildfiles. Our goal is to search a file in path. And on this step the
 path is simply a fileset (or more precise: a collection of filesets). So our usage
 would be
@@ -190,16 +191,16 @@ public class Find extends Task {
     }
 }
 </pre>
-Ok - that task wouldn´t do very much, but we can use it in the described manner without
+Ok - that task wouldn't do very much, but we can use it in the described manner without
 failure. On next step we have to implement the execute method. And before that we will
 implement the appropriate testcases (TDD - test driven development).</p>
 
 <p>In the other tutorial we have reused the already written targets of our buildfile.
-Now we will configure most of the testcases via java code (sometimes it´s much easier
+Now we will configure most of the testcases via java code (sometimes it's much easier
 to write a target than doing it via java coding). What can be tested?<ul>
 <li>not valid configured task (missing file, missing location, missing fileset)</li>
-<li>don´t find a present file</li>
-<li>behaviour if file can´t be found</li>
+<li>don't find a present file</li>
+<li>behaviour if file can't be found</li>
 </ul>
 Maybe you find some more testcases. But this is enough for now.<br>
 For each of these points we create a <tt>testXX</tt> method.</p>
@@ -293,7 +294,7 @@ can implement our task, so that these test cases will pass.</p>
 
 <p>On <b>//1</b> we check the prerequisites for our task. Doing that in a <tt>validate</tt>-method
 is a common way, because we separate the prerequisites from the real work. On <b>//2</b> we iterate
-over all nested filesets. If we don´t want to handle multiple filesets, the <tt>addFileset()</tt>
+over all nested filesets. If we don't want to handle multiple filesets, the <tt>addFileset()</tt>
 method has to reject the further calls. We can get the result of a fileset via its DirectoryScanner
 like done in <b>//3</b>. After that we create a plattform independend String representation of
 the file path (<b>//4</b>, can be done in other ways of course). We have to do the <tt>replace()</tt>,
@@ -364,13 +365,13 @@ too.</p>
         &lt;/path&gt;
     &lt;/find&gt;
 </pre>
-<p>On <b>*1</b> we rename only the vector. It´s just for better reading the source. On <b>*2</b>
+<p>On <b>*1</b> we rename only the vector. Itï¿½s just for better reading the source. On <b>*2</b>
 we have to provide the right method: an add<i>Name</i>(<i>Type</i> t). Therefore replace the
 fileset with path here. Finally we have to modify our buildfile on <b>*3</b> because our task
-doesn´t support nested filesets any longer. So we wrap the fileset inside a path.</p>
+doesnï¿½t support nested filesets any longer. So we wrap the fileset inside a path.</p>
 
 <p>And now we modify the testcase. Oh, not very much to do :-) Renaming the <tt>testMissingFileset()</tt>
-(not really a <i>must-be</i> but better it´s named like the think it does) and update the
+(not really a <i>must-be</i> but better itï¿½s named like the think it does) and update the
 <i>expected</i>-String in that method (now a <tt>path not set</tt> message is expected). The more complex
 test cases base on the buildscript. So the targets <tt>testFileNotPresent</tt> and <tt>testFilePresent</tt> have to be
 modified in the manner described above.</p>
@@ -378,7 +379,7 @@ modified in the manner described above.</p>
 <p>The test are finished. Now we have to adapt the task implementation. The easiest modification is
 in the <tt>validate()</tt> method where we change le last line to <tt>if (paths.size()&lt;1) throw new
 BuildException("path not set");</tt>. In the <tt>execute()</tt> method we have a little more work.
-... mmmh ... in reality it´s lesser work, because the Path class does the whole DirectoryScanner-handling
+... mmmh ... in reality it's lesser work, because the Path class does the whole DirectoryScanner-handling
 and creating-absolute-paths stuff for us. So the execute method is just:</p>
 
 <pre class="code">
@@ -476,7 +477,7 @@ elements are concatenated and separated with a customizable separator (default '
 </pre>
 
 <p>Now we need a directory structure where we CAN find files with the same
-name in different directories. Because we can´t sure to have one we create
+name in different directories. Because we can't sure to have one we create
 one on <b>*1</b> and <b>*2</b>. And of course we clean up that on <b>*4</b>. The creation
 can be done inside our test target or in a separate one, which will be better
 for reuse later (<b>*3</b>).
@@ -555,8 +556,8 @@ you decide to contribute your task. So we will doc our task in that form.</p>
 <li>has sections: description, parameters, nested elements, (maybe return codes) and (most
 important :-) examples</li>
 <li>parameters are listed in a table with columns for attribute name, its description and whether
-  it´s required (if you add a feature after an Ant release, provide a <tt>since Ant xx</tt>
-  statement when it´s introduced)</li>
+  it's required (if you add a feature after an Ant release, provide a <tt>since Ant xx</tt>
+  statement when it's introduced)</li>
 <li>describe the nested elements (since-statement if necessary)</li>
 <li>provide one or more useful examples; first code then description</li>
 </ul>
@@ -602,7 +603,7 @@ As a template we have:
 
 &lt;h3&gt;Examples&lt;/h3&gt;
 &lt;pre&gt;
-    <b>A code sample; don´t forget to escape the &lt; of the tags with &amp;lt;</b>
+    <b>A code sample; don't forget to escape the &lt; of the tags with &amp;lt;</b>
 &lt;/pre&gt;
 <b>what should that example do?</b>
 
@@ -706,7 +707,7 @@ information on that.</p>
 <li>Code compiles and runs on Java1.2 <b><i>have to try</i></b></li>
 <li>Member variables are private, and provide public accessor methods
         if access is actually needed. <b><i>have to check (checkstyle)</i></b></li>
-<li><i>Maybe</i> Task has failonerror attribute to control failure behaviour <b><i>hasn´t</i></b></li>
+<li><i>Maybe</i> Task has failonerror attribute to control failure behaviour <b><i>hasn't</i></b></li>
 <li>New test cases written and succeed <b><i>passed on JDK 1.4, have to try on JDK 1.2</i></b></li>
 <li>Documentation page written <b><i>ok</i></b></li>
 <li>Example task declarations in the documentation tested. <b><i>ok (used in tests)</i></b></li>
@@ -744,10 +745,10 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic update                //4
 </pre></p>
 
 <p>We use the <i>-d</i> flag on <b>//1</b> to specifiy the cvs directory. You can
-specify the environment variable CVSROOT with that value and after that you haven´t
+specify the environment variable CVSROOT with that value and after that you havenï¿½t
 to use that flag any more. On <b>//2</b> we get the whole cvs tree of ant. (Sorry,
 but that uses a lot of time ... 10 up to 30 minutes are not unusual ... but this has
-to be done only once :-). A cvs update doesn´t use a modulename but you have to be
+to be done only once :-). A cvs update doesn't use a modulename but you have to be
 inside the directory. Therefore we go into that on <b>//3</b> and do the update
 on <b>//4</b>.</p>
 
@@ -766,9 +767,9 @@ environment variable to the directory where the new created distribution is stor
 write it out). On <b>//3</b> we let Ant do all the tests (which enforced a compile
 of all tests) without stopping on first failure.</p>
 
-<p>Next we apply our work onto Ants sources. Because we haven´t modified any, this is
+<p>Next we apply our work onto Ants sources. Because we haven't modified any, this is
 a relative simple step. <i>(Because I have a local copy of Ant and usually contribute my
-work, I work on the local copy just from the beginning. The advantage: this step isn´t
+work, I work on the local copy just from the beginning. The advantage: this step isn't
 necessary and saves a lot of work if you modify existing source :-)</i>.
 
 <ul>
@@ -831,7 +832,7 @@ is the same as directly after the cvs update (without our modifications).</p>
 <h3>Apache copyright and license statement</h3>
 <p>Simply copy the license text from one the other source from the Ant source tree. But
 ensure that the current year is used in the<tt> * Copyright (c) 2000-2005 The Apache Software
-Foundation.  All rights reserved.</tt> lines. Don´t forget to add a license statement at the end
+Foundation.  All rights reserved.</tt> lines. Don't forget to add a license statement at the end
 of the find.html. (Can be copied from other manual files.)</p>
 
 
@@ -858,7 +859,7 @@ Sourceforge [11]</a> and Ant provides with the <tt>check.xml</tt> a buildfile wh
 for us.</p>
 
 <p>Download it and put the checkstyle-*-all.jar into your %USERPROFILE%\.ant\lib directory.
-All jar´s stored there are available to Ant so you haven´t to add it to you %ANT_HOME%\lib
+All jar's stored there are available to Ant so you haven't to add it to you %ANT_HOME%\lib
 directory (this feature was added with Ant 1.6).</p>
 
 <p>So we will run the tests with
@@ -874,7 +875,7 @@ to do that.</p>
 up to date and you will find the next error place much more easier without redoing the checkstyle.</p>
 
 <p>After cleaning up the code according to the messages we delete the reports directory and
-do a second checkstyle run. Now our task isn´t listed. That´s fine :-)</p>
+do a second checkstyle run. Now our task isn't listed. That's fine :-)</p>
 
 
 
@@ -913,14 +914,14 @@ entry. For both we need some information:</p>
 </tr>
 </table>
 
-<p>Sending an email with these information is very easy and I think I haven´t to show that.
+<p>Sending an email with these information is very easy and I think I haven't to show that.
 The other way - BugZilla - is slightly more difficult. But it has the advantage that entries
 will not be forgotten (once per week a report is generated). So I will show this way.</p>
 
 <p>You must have a BugZilla account for that. So open the <a href="http://issues.apache.org/bugzilla/">
 BugZilla Main Page [12]</a> and follow the link
 <a href="http://issues.apache.org/bugzilla/createaccount.cgi">Open a new Bugzilla account [13]</a>
-and the steps described there if you haven´t one.</p>
+and the steps described there if you haven't one.</p>
 
 <ol>
 <li>From the BugZilla main page choose <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">Enter
