@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -93,7 +93,6 @@ public class Java extends Task {
     private boolean newEnvironment = false;
     private File dir = null;
     private boolean failOnError = false;
-    private boolean append = false;
     private Long timeout = null;
     private Redirector redirector = new Redirector(this);
     private String resultProperty;
@@ -587,7 +586,7 @@ public class Java extends Task {
      * @since Ant 1.5
      */
     public void setAppend(boolean append) {
-        this.append = append;
+        redirector.setAppend(append);
         incompatibleWithSpawn = true;
     }
 
