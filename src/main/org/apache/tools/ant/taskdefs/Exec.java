@@ -118,9 +118,9 @@ public class Exec extends Task {
 
             // copy input and error to the output stream
             StreamPumper inputPumper =
-                new StreamPumper(proc.getInputStream(), "exec", project, fos);
+                new StreamPumper(proc.getInputStream(), Project.MSG_INFO, project, fos);
             StreamPumper errorPumper =
-                new StreamPumper(proc.getErrorStream(), "error", project, fos);
+                new StreamPumper(proc.getErrorStream(), Project.MSG_WARN, project, fos);
 
             // starts pumping away the generated output/error
             inputPumper.start();
@@ -167,17 +167,17 @@ public class Exec extends Task {
     // Process's runtime.
     class StreamPumper extends Thread {
         private BufferedReader din;
-        private String name;
+        private int messageLevel;
         private boolean endOfStream = false;
         private int SLEEP_TIME = 5;
         private Project project;
         private PrintWriter fos;
 
-        public StreamPumper(InputStream is, String name, Project project, PrintWriter fos) {
-            this.din     = new BufferedReader(new InputStreamReader(is));
-            this.name    = name;
+        public StreamPumper(InputStream is, int messageLevel, Project project, PrintWriter fos) {
+            this.din = new BufferedReader(new InputStreamReader(is));
+            this.messageLevel = messageLevel;
             this.project = project;
-            this.fos     = fos;
+            this.fos = fos;
         }
 
         public void pumpStream()
@@ -189,7 +189,7 @@ public class Exec extends Task {
 
                 if (line != null) {
                     if (fos == null)
-                        project.log(line, name, Project.MSG_INFO);
+                        project.log(line, messageLevel);
                     else
                         fos.println(line);
                 } else {
