@@ -23,8 +23,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  *  This task sets a property to  the name of a temporary file.
- *  Unlike the Java1.2 method to create a temporary file, this task
- *  does work on Java1.1. Also, it does not actually create the
+ *  Unlike {@link File#createTempFile}, this task does not actually create the
  *  temporary file, but it does guarantee that the file did not
  *  exist when the task was executed.
  * <p>
