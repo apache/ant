@@ -23,13 +23,13 @@ public class Os
     private static final Resources REZ =
         ResourceManager.getPackageResources( Os.class );
 
-    private final static String m_osName =
+    private final static String OS_NAME =
         System.getProperty( "os.name" ).toLowerCase( Locale.US );
-    private final static String m_osArch =
+    private final static String OS_ARCH =
         System.getProperty( "os.arch" ).toLowerCase( Locale.US );
-    private final static String m_osVersion =
+    private final static String OS_VERSION =
         System.getProperty( "os.version" ).toLowerCase( Locale.US );
-    private final static String m_pathSep =
+    private final static String PATH_SEP =
         System.getProperty( "path.separator" );
 
     private String m_arch;
@@ -118,7 +118,7 @@ public class Os
         boolean isVersion = true;
         if( version != null )
         {
-            isVersion = version.equals( m_osVersion );
+            isVersion = version.equals( OS_VERSION );
         }
         return isVersion;
     }
@@ -128,7 +128,7 @@ public class Os
         boolean isArch = true;
         if( arch != null )
         {
-            isArch = arch.equals( m_osArch );
+            isArch = arch.equals( OS_ARCH );
         }
         return isArch;
     }
@@ -138,7 +138,7 @@ public class Os
         boolean isName = true;
         if( name != null )
         {
-            isName = name.equals( m_osName );
+            isName = name.equals( OS_NAME );
         }
         return isName;
     }
@@ -150,28 +150,28 @@ public class Os
         {
             if( family.equals( "windows" ) )
             {
-                isFamily = m_osName.indexOf( "windows" ) > -1;
+                isFamily = OS_NAME.indexOf( "windows" ) > -1;
             }
             else if( family.equals( "os/2" ) )
             {
-                isFamily = m_osName.indexOf( "os/2" ) > -1;
+                isFamily = OS_NAME.indexOf( "os/2" ) > -1;
             }
             else if( family.equals( "netware" ) )
             {
-                isFamily = m_osName.indexOf( "netware" ) > -1;
+                isFamily = OS_NAME.indexOf( "netware" ) > -1;
             }
             else if( family.equals( "dos" ) )
             {
-                isFamily = m_pathSep.equals( ";" ) && !isFamily( "netware" );
+                isFamily = PATH_SEP.equals( ";" ) && !isFamily( "netware" );
             }
             else if( family.equals( "mac" ) )
             {
-                isFamily = m_osName.indexOf( "mac" ) > -1;
+                isFamily = OS_NAME.indexOf( "mac" ) > -1;
             }
             else if( family.equals( "unix" ) )
             {
-                isFamily = m_pathSep.equals( ":" ) &&
-                    ( !isFamily( "mac" ) || m_osName.endsWith( "x" ) );
+                isFamily = PATH_SEP.equals( ":" ) &&
+                    ( !isFamily( "mac" ) || OS_NAME.endsWith( "x" ) );
             }
             else
             {
