@@ -62,14 +62,14 @@ native2ascii, copy, move, mparse.
 * copydir, copyfile, deltree and rename are now deprecated. They
 should be replaced with the new copy, delete and move tasks.
 
-* <java> uses ClassLoader of its own in no-fork mode if a classpath is
+* <java> uses a ClassLoader of its own in no-fork mode if a classpath is
 specified.
 
 * <style> will create the necessary target directories and reprocess
 all files if the stylesheet changes.
 
 * New data types fileset and patternset - expected to get a broader use.
-They as well as PATH like structures can now be defined on a global
+They, as well as PATH like structures, can now be defined on a global
 level and later be referenced by their id attribute.
 
 * You can specify environment variables to <exec>.
@@ -115,3 +115,5 @@ cases.
 * Nested <src> in <javac> caused NullPointerException.
 
 * Corrupt Zip- and Jar-files ar now deleted if the task fails.
+
+* many more fixes we've forgotten to document here ...

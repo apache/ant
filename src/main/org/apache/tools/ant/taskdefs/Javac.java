@@ -521,7 +521,11 @@ public class Javac extends MatchingTask {
                 throw new BuildException(FAIL_MSG, location);
             }
         } catch (Exception ex) {
+            if (ex instanceof BuildException) {
+                throw (BuildException) ex;
+            } else {
                 throw new BuildException("Error starting modern compiler", ex, location);
+            }
         }
     }
 
