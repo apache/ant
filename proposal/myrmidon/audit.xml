@@ -1,4 +1,4 @@
-<project default="main" basedir=".">
+<project name="Myrmidon audit" default="main" basedir=".">
 
     <property file="host.properties"/>
     <property file="user.properties"/>

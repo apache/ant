@@ -1,4 +1,4 @@
-<project name="docs" default="main">
+<project name="Myrmidon Docs" default="main">
   <!--
     Give user a chance to override without editing this file
     (and without typing -D each time he compiles it)
@@ -7,7 +7,7 @@
   <property file="${user.home}/.ant.properties"/>
 
     <target name="main">
-        <taskdef name="anakia" 
+        <taskdef name="anakia"
                  classname="org.apache.velocity.anakia.AnakiaTask">
           <classpath>
             <fileset dir="${jakarta-site.dir}/lib">
