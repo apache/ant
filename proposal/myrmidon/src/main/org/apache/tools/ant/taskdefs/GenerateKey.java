@@ -24,48 +24,48 @@ public class GenerateKey
     /**
      * The alias of signer.
      */
-    protected String alias;
-    protected String dname;
-    protected DistinguishedName expandedDname;
-    protected String keyalg;
-    protected String keypass;
-    protected int keysize;
+    private String m_alias;
+    private String m_dname;
+    private DistinguishedName m_expandedDname;
+    private String m_keyalg;
+    private String m_keypass;
+    private int m_keysize;
 
     /**
      * The name of keystore file.
      */
-    protected String keystore;
+    private String m_keystore;
 
-    protected String sigalg;
-    protected String storepass;
-    protected String storetype;
-    protected int validity;
-    protected boolean verbose;
+    private String m_sigalg;
+    private String m_storepass;
+    private String m_storetype;
+    private int m_validity;
+    private boolean m_verbose;
 
     public void setAlias( final String alias )
     {
-        this.alias = alias;
+        m_alias = alias;
     }
 
     public void setDname( final String dname )
         throws TaskException
     {
-        if( null != expandedDname )
+        if( null != m_expandedDname )
         {
             throw new TaskException( "It is not possible to specify dname both " +
                                      "as attribute and element." );
         }
-        this.dname = dname;
+        m_dname = dname;
     }
 
     public void setKeyalg( final String keyalg )
     {
-        this.keyalg = keyalg;
+        m_keyalg = keyalg;
     }
 
     public void setKeypass( final String keypass )
     {
-        this.keypass = keypass;
+        m_keypass = keypass;
     }
 
     public void setKeysize( final String keysize )
@@ -73,7 +73,7 @@ public class GenerateKey
     {
         try
         {
-            this.keysize = Integer.parseInt( keysize );
+            m_keysize = Integer.parseInt( keysize );
         }
         catch( final NumberFormatException nfe )
         {
@@ -83,22 +83,22 @@ public class GenerateKey
 
     public void setKeystore( final String keystore )
     {
-        this.keystore = keystore;
+        m_keystore = keystore;
     }
 
     public void setSigalg( final String sigalg )
     {
-        this.sigalg = sigalg;
+        m_sigalg = sigalg;
     }
 
     public void setStorepass( final String storepass )
     {
-        this.storepass = storepass;
+        m_storepass = storepass;
     }
 
     public void setStoretype( final String storetype )
     {
-        this.storetype = storetype;
+        m_storetype = storetype;
     }
 
     public void setValidity( final String validity )
@@ -106,7 +106,7 @@ public class GenerateKey
     {
         try
         {
-            this.validity = Integer.parseInt( validity );
+            m_validity = Integer.parseInt( validity );
         }
         catch( final NumberFormatException nfe )
         {
@@ -116,215 +116,131 @@ public class GenerateKey
 
     public void setVerbose( final boolean verbose )
     {
-        this.verbose = verbose;
+        m_verbose = verbose;
     }
 
     public DistinguishedName createDname()
         throws TaskException
     {
-        if( null != expandedDname )
+        if( null != m_expandedDname )
         {
             throw new TaskException( "DName sub-element can only be specified once." );
         }
-        if( null != dname )
+        if( null != m_dname )
         {
             throw new TaskException( "It is not possible to specify dname both " +
                                      "as attribute and element." );
         }
-        expandedDname = new DistinguishedName();
-        return expandedDname;
+        m_expandedDname = new DistinguishedName();
+        return m_expandedDname;
     }
 
     public void execute()
         throws TaskException
     {
-        if( null == alias )
-        {
-            throw new TaskException( "alias attribute must be set" );
-        }
+        validate();
 
-        if( null == storepass )
-        {
-            throw new TaskException( "storepass attribute must be set" );
-        }
+        final String message = "Generating Key for " + m_alias;
+        getLogger().info( message );
 
-        if( null == dname && null == expandedDname )
-        {
-            throw new TaskException( "dname must be set" );
-        }
-
-        getLogger().info( "Generating Key for " + alias );
         final ExecTask cmd = (ExecTask)getProject().createTask( "exec" );
         cmd.setExecutable( "keytool" );
 
         cmd.createArg().setValue( "-genkey " );
 
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArg().setValue( "-v " );
         }
 
         cmd.createArg().setValue( "-alias" );
-        cmd.createArg().setValue( alias );
+        cmd.createArg().setValue( m_alias );
 
-        if( null != dname )
+        if( null != m_dname )
         {
             cmd.createArg().setValue( "-dname" );
-            cmd.createArg().setValue( dname );
+            cmd.createArg().setValue( m_dname );
         }
 
-        if( null != expandedDname )
+        if( null != m_expandedDname )
         {
             cmd.createArg().setValue( "-dname" );
-            cmd.createArg().setValue( expandedDname.toString() );
+            cmd.createArg().setValue( m_expandedDname.toString() );
         }
 
-        if( null != keystore )
+        if( null != m_keystore )
         {
             cmd.createArg().setValue( "-keystore" );
-            cmd.createArg().setValue( keystore );
+            cmd.createArg().setValue( m_keystore );
         }
 
-        if( null != storepass )
+        if( null != m_storepass )
         {
             cmd.createArg().setValue( "-storepass" );
-            cmd.createArg().setValue( storepass );
+            cmd.createArg().setValue( m_storepass );
         }
 
-        if( null != storetype )
+        if( null != m_storetype )
         {
             cmd.createArg().setValue( "-storetype" );
-            cmd.createArg().setValue( storetype );
+            cmd.createArg().setValue( m_storetype );
         }
 
         cmd.createArg().setValue( "-keypass" );
-        if( null != keypass )
+        if( null != m_keypass )
         {
-            cmd.createArg().setValue( keypass );
+            cmd.createArg().setValue( m_keypass );
         }
         else
         {
-            cmd.createArg().setValue( storepass );
+            cmd.createArg().setValue( m_storepass );
         }
 
-        if( null != sigalg )
+        if( null != m_sigalg )
         {
             cmd.createArg().setValue( "-sigalg" );
-            cmd.createArg().setValue( sigalg );
+            cmd.createArg().setValue( m_sigalg );
         }
 
-        if( null != keyalg )
+        if( null != m_keyalg )
         {
             cmd.createArg().setValue( "-keyalg" );
-            cmd.createArg().setValue( keyalg );
+            cmd.createArg().setValue( m_keyalg );
         }
 
-        if( 0 < keysize )
+        if( 0 < m_keysize )
         {
             cmd.createArg().setValue( "-keysize" );
-            cmd.createArg().setValue( "" + keysize );
+            cmd.createArg().setValue( "" + m_keysize );
         }
 
-        if( 0 < validity )
+        if( 0 < m_validity )
         {
             cmd.createArg().setValue( "-validity" );
-            cmd.createArg().setValue( "" + validity );
+            cmd.createArg().setValue( "" + m_validity );
         }
 
         cmd.execute();
     }
 
-    public static class DistinguishedName
+    private void validate() throws TaskException
     {
-
-        private ArrayList params = new ArrayList();
-        private String name;
-        private String path;
-
-        public Iterator getParams()
+        if( null == m_alias )
         {
-            return params.iterator();
+            final String message = "alias attribute must be set";
+            throw new TaskException( message );
         }
 
-        public Object createParam()
+        if( null == m_storepass )
         {
-            DnameParam param = new DnameParam();
-            params.add( param );
-
-            return param;
+            final String message = "storepass attribute must be set";
+            throw new TaskException( message );
         }
 
-        public String encode( final String string )
+        if( null == m_dname && null == m_expandedDname )
         {
-            int end = string.indexOf( ',' );
-
-            if( -1 == end )
-                return string;
-
-            final StringBuffer sb = new StringBuffer();
-
-            int start = 0;
-
-            while( -1 != end )
-            {
-                sb.append( string.substring( start, end ) );
-                sb.append( "\\," );
-                start = end + 1;
-                end = string.indexOf( ',', start );
-            }
-
-            sb.append( string.substring( start ) );
-
-            return sb.toString();
-        }
-
-        public String toString()
-        {
-            final int size = params.size();
-            final StringBuffer sb = new StringBuffer();
-            boolean firstPass = true;
-
-            for( int i = 0; i < size; i++ )
-            {
-                if( !firstPass )
-                {
-                    sb.append( " ," );
-                }
-                firstPass = false;
-
-                final DnameParam param = (DnameParam)params.get( i );
-                sb.append( encode( param.getName() ) );
-                sb.append( '=' );
-                sb.append( encode( param.getValue() ) );
-            }
-
-            return sb.toString();
-        }
-    }
-
-    public static class DnameParam
-    {
-        private String name;
-        private String value;
-
-        public void setName( String name )
-        {
-            this.name = name;
-        }
-
-        public void setValue( String value )
-        {
-            this.value = value;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public String getValue()
-        {
-            return value;
+            final String message = "dname must be set";
+            throw new TaskException( message );
         }
     }
 }
