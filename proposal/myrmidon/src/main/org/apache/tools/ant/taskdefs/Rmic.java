@@ -17,11 +17,9 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
-import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
@@ -63,18 +61,17 @@ public class Rmic extends MatchingTask
 
     private final static String FAIL_MSG
         = "Rmic failed, messages should have been provided.";
-    private boolean verify = false;
-    private boolean filtering = false;
+    private boolean verify;
 
-    private boolean iiop = false;
-    private boolean idl = false;
-    private boolean debug = false;
-    private boolean includeAntRuntime = true;
-    private boolean includeJavaRuntime = false;
+    private boolean iiop;
+    private boolean idl;
+    private boolean debug;
+    private boolean includeAntRuntime;
+    private boolean includeJavaRuntime;
 
     private ArrayList compileList = new ArrayList();
 
-    private ClassLoader loader = null;
+    private ClassLoader loader;
 
     private File baseDir;
     private String classname;
@@ -160,11 +157,6 @@ public class Rmic extends MatchingTask
         {
             this.extdirs.append( extdirs );
         }
-    }
-
-    public void setFiltering( boolean filter )
-    {
-        filtering = filter;
     }
 
     /**
@@ -315,21 +307,6 @@ public class Rmic extends MatchingTask
     public Path getExtdirs()
     {
         return extdirs;
-    }
-
-    /**
-     * Gets file list to compile.
-     *
-     * @return The FileList value
-     */
-    public ArrayList getFileList()
-    {
-        return compileList;
-    }
-
-    public boolean getFiltering()
-    {
-        return filtering;
     }
 
     /*
@@ -504,7 +481,7 @@ public class Rmic extends MatchingTask
     {
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( getProject() );
+            compileClasspath = new Path();
         }
         return compileClasspath.createPath();
     }
@@ -519,7 +496,7 @@ public class Rmic extends MatchingTask
     {
         if( extdirs == null )
         {
-            extdirs = new Path( getProject() );
+            extdirs = new Path();
         }
         return extdirs.createPath();
     }
@@ -653,12 +630,6 @@ public class Rmic extends MatchingTask
 
     /**
      * Move the generated source file(s) to the base directory
-     *
-     * @param baseDir Description of Parameter
-     * @param sourceBaseFile Description of Parameter
-     * @param classname Description of Parameter
-     * @param adapter Description of Parameter
-     * @exception TaskException Description of Exception
      */
     private void moveGeneratedFile( File baseDir, File sourceBaseFile,
                                     String classname,
@@ -679,15 +650,7 @@ public class Rmic extends MatchingTask
             File newFile = new File( sourceBaseFile, sourceFileName );
             try
             {
-                if( filtering )
-                {
-                    final FilterSetCollection filters = new FilterSetCollection( getProject().getGlobalFilterSet() );
-                    FileUtils.copyFile( oldFile, newFile, filters );
-                }
-                else
-                {
-                    FileUtil.copyFile( oldFile, newFile );
-                }
+                FileUtil.copyFile( oldFile, newFile );
                 oldFile.delete();
             }
             catch( IOException ioe )
