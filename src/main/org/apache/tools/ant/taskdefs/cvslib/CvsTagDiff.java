@@ -96,7 +96,7 @@ import org.apache.tools.ant.util.FileUtils;
  * </PRE>
  *
  * @author <a href="mailto:fred@castify.net">Frederic Lavigne</a>
- * @author <a href="mailto:rvanoo@xs4all.nl">Rob van Oostrum</a>
+ * @author <a href="mailto:rob@springwellfarms.ca">Rob van Oostrum</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"
@@ -216,10 +216,10 @@ public class CvsTagDiff extends AbstractCvsTask {
 
         // build the rdiff command
         String rdiff = "rdiff -s " +
-            (m_startTag != null ? ("-r " + m_startTag) : ("-D " + m_startDate))
-            + " "
-            + (m_endTag != null ? ("-r " + m_endTag) : ("-D " + m_endDate))
-            + " " + m_package;
+            (m_startTag != null ? ("-r " + m_startTag) : ("-D '" + m_startDate))
+            + "' "
+            + (m_endTag != null ? ("-r " + m_endTag) : ("-D '" + m_endDate))
+            + "' " + m_package;
         log("Cvs command is " + rdiff, Project.MSG_VERBOSE);
         setCommand(rdiff);
 
