@@ -177,7 +177,7 @@ fi
 if [ -n "$CYGHOME" ]; then
   if [ -n "$JIKESPATH" ]; then
     JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
   else
     exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
   fi
