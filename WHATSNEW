@@ -47,6 +47,8 @@ incompatible and caused problems with custom doclets like xdoclet.
 * Using the doclet, docletpath or docletpathref attributes of
 <javadoc> may have caused NullPointerExceptions.
 
+* nested <filesets> of <javadoc> would include too much.
+
 Other changes:
 --------------
 

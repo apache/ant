@@ -1428,7 +1428,6 @@ public class Javadoc extends Task {
      * @since 1.5
      */
     public void addFileset(FileSet fs) {
-        fs.createInclude().setName("**/*.java");
         fileSets.addElement(fs);
     }
 
@@ -1790,6 +1789,10 @@ public class Javadoc extends Task {
         Enumeration enum = fileSets.elements();
         while (enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
+            if (!fs.hasPatterns() && !fs.hasSelectors()) {
+                fs = (FileSet) fs.clone();
+                fs.createInclude().setName("**/*.java");
+            }
             File baseDir = fs.getDir(getProject());
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] files = ds.getIncludedFiles();

@@ -402,6 +402,27 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * Indicates whether there are any patterns here.
+     *
+     * @return whether any patterns are in this container
+     */
+    public boolean hasPatterns() {
+        if (defaultPatterns.hasPatterns()) {
+            return true;
+        }
+
+        Enumeration enum = additionalPatterns.elements();
+        while (enum.hasMoreElements()) {
+            PatternSet ps = (PatternSet) enum.nextElement();
+            if (ps.hasPatterns()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
      * Gives the count of the number of selectors in this container
      *
      * @return the number of selectors in this container
