@@ -165,11 +165,7 @@ public class Available
 
         if( eval() )
         {
-            if( null == getProject().getProperty( m_property ) )
-            {
-                setProperty( m_property, m_value );
-            }
-            //else ignore
+            setProperty( m_property, m_value );
         }
     }
 

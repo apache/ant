@@ -142,14 +142,7 @@ public class Input extends Task
         // adopted from org.apache.tools.ant.taskdefs.Property
         if( addproperty != null )
         {
-            if( getProject().getProperty( addproperty ) == null )
-            {
-                setProperty( addproperty, input );
-            }
-            else
-            {
-                getLogger().debug( "Override ignored for " + addproperty );
-            }
+            setProperty( addproperty, input );
         }
     }
 }
