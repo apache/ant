@@ -23,7 +23,7 @@
       <p>These lists are archived at</p>
 
         <ul>
-          <li><a href="http://archives.apache.org/eyebrowse/ViewLists">List Index on archives.apache.org</a></li>
+          <li><a href="http://mail-archives.apache.org/eyebrowse/ViewLists">List Index on mail-archives.apache.org</a></li>
           <li><a href="http://ant.apache.org/mail/">Full mbox archives of all lists</a></li>
           <li><a href="http://marc.theaimsgroup.com/">Mailing list Archives</a></li>
         </ul>
@@ -34,7 +34,7 @@
           <a href="mailto:user-subscribe@ant.apache.org">Subscribe</a>
           <a href="mailto:user-unsubscribe@ant.apache.org">Unsubscribe</a>
 <!--
-          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=user@ant.apache.org">Archive</a>
+          <a href="http://mail-archives.apache.org/eyebrowse/SummarizeList?listName=user@ant.apache.org">Archive</a>
 -->
           <a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Archive</a>
         </p>
@@ -50,7 +50,7 @@
           <a href="mailto:dev-subscribe@ant.apache.org">Subscribe</a>
           <a href="mailto:dev-unsubscribe@ant.apache.org">Unsubscribe</a>
 <!--
-          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=dev@ant.apache.org">Archive</a>
+          <a href="http://mail-archives.apache.org/eyebrowse/SummarizeList?listName=dev@ant.apache.org">Archive</a>
 -->
           <a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Archive</a>
         </p>
