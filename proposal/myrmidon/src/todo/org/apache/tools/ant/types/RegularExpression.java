@@ -108,9 +108,12 @@ public class RegularExpression extends DataType
     }
 
     public Regexp getRegexp( Project p )
+        throws TaskException
     {
         if( isReference() )
+        {
             return getRef( p ).getRegexp( p );
+        }
         return this.regexp;
     }
 

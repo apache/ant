@@ -38,11 +38,6 @@ public class Chmod extends ExecuteOn
         super.setSkipEmptyFilesets( true );
     }
 
-    public void setCommand( String e )
-    {
-        throw new TaskException( taskType + " doesn\'t support the command attribute" );
-    }
-
     /**
      * Sets whether default exclusions should be used or not.
      *
@@ -50,12 +45,14 @@ public class Chmod extends ExecuteOn
      *      should be used, "false"|"off"|"no" when they shouldn't be used.
      */
     public void setDefaultexcludes( boolean useDefaultExcludes )
+        throws TaskException
     {
         defaultSetDefined = true;
         defaultSet.setDefaultexcludes( useDefaultExcludes );
     }
 
     public void setDir( File src )
+        throws TaskException
     {
         defaultSet.setDir( src );
     }
@@ -67,17 +64,20 @@ public class Chmod extends ExecuteOn
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
+        throws TaskException
     {
         defaultSetDefined = true;
         defaultSet.setExcludes( excludes );
     }
 
     public void setExecutable( String e )
+        throws TaskException
     {
         throw new TaskException( taskType + " doesn\'t support the executable attribute" );
     }
 
     public void setFile( File src )
+        throws TaskException
     {
         FileSet fs = new FileSet();
         fs.setDir( new File( src.getParent() ) );
@@ -92,6 +92,7 @@ public class Chmod extends ExecuteOn
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
+        throws TaskException
     {
         defaultSetDefined = true;
         defaultSet.setIncludes( includes );
@@ -104,6 +105,7 @@ public class Chmod extends ExecuteOn
     }
 
     public void setSkipEmptyFilesets( boolean skip )
+        throws TaskException
     {
         throw new TaskException( taskType + " doesn\'t support the skipemptyfileset attribute" );
     }
@@ -114,6 +116,7 @@ public class Chmod extends ExecuteOn
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExclude()
+        throws TaskException
     {
         defaultSetDefined = true;
         return defaultSet.createExclude();
@@ -125,6 +128,7 @@ public class Chmod extends ExecuteOn
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createInclude()
+        throws TaskException
     {
         defaultSetDefined = true;
         return defaultSet.createInclude();
@@ -136,6 +140,7 @@ public class Chmod extends ExecuteOn
      * @return Description of the Returned Value
      */
     public PatternSet createPatternSet()
+        throws TaskException
     {
         defaultSetDefined = true;
         return defaultSet.createPatternSet();
@@ -176,6 +181,7 @@ public class Chmod extends ExecuteOn
     }
 
     protected void checkConfiguration()
+        throws TaskException
     {
         if( !havePerm )
         {

@@ -141,6 +141,7 @@ public abstract class MatchingTask extends Task
      * @return Description of the Returned Value
      */
     public PatternSet createPatternSet()
+        throws TaskException
     {
         return fileset.createPatternSet();
     }

@@ -330,6 +330,7 @@ public class Copy extends Task
      * good method for subclasses to override.
      */
     protected void doFileOperations()
+        throws TaskException
     {
         if( fileCopyMap.size() > 0 )
         {

@@ -64,6 +64,7 @@ public class Kjc extends DefaultCompilerAdapter
      * @return Description of the Returned Value
      */
     protected Commandline setupKjcCommand()
+        throws TaskException
     {
         Commandline cmd = new Commandline();
 

@@ -79,7 +79,7 @@ public class Ear extends Jar
     }
 
     protected void zipFile( File file, ZipOutputStream zOut, String vPath )
-        throws IOException
+        throws IOException, TaskException
     {
         // If the file being added is WEB-INF/web.xml, we warn if it's not the
         // one specified in the "webxml" attribute - or if it's being added twice,

@@ -94,6 +94,7 @@ public class Javac extends MatchingTask
      * @param r The new BootClasspathRef value
      */
     public void setBootClasspathRef( Reference r )
+        throws TaskException
     {
         createBootclasspath().setRefid( r );
     }
@@ -104,6 +105,7 @@ public class Javac extends MatchingTask
      * @param bootclasspath The new Bootclasspath value
      */
     public void setBootclasspath( Path bootclasspath )
+        throws TaskException
     {
         if( this.bootclasspath == null )
         {
@@ -121,6 +123,7 @@ public class Javac extends MatchingTask
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( compileClasspath == null )
         {
@@ -138,6 +141,7 @@ public class Javac extends MatchingTask
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -209,6 +213,7 @@ public class Javac extends MatchingTask
      * @param extdirs The new Extdirs value
      */
     public void setExtdirs( Path extdirs )
+        throws TaskException
     {
         if( this.extdirs == null )
         {
@@ -345,6 +350,7 @@ public class Javac extends MatchingTask
      * @param srcDir The new Srcdir value
      */
     public void setSrcdir( Path srcDir )
+        throws TaskException
     {
         if( src == null )
         {
@@ -649,6 +655,7 @@ public class Javac extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createBootclasspath()
+        throws TaskException
     {
         if( bootclasspath == null )
         {
@@ -663,6 +670,7 @@ public class Javac extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( compileClasspath == null )
         {
@@ -690,6 +698,7 @@ public class Javac extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createExtdirs()
+        throws TaskException
     {
         if( extdirs == null )
         {
@@ -704,6 +713,7 @@ public class Javac extends MatchingTask
      * @return a nested src element.
      */
     public Path createSrc()
+        throws TaskException
     {
         if( src == null )
         {

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -86,6 +87,7 @@ public class Input extends Task
      * @param msg The feature to be added to the Text attribute
      */
     public void addText( String msg )
+        throws TaskException
     {
         message += project.replaceProperties( msg );
     }

@@ -45,7 +45,8 @@ public abstract class Pack extends Task
         pack();
     }
 
-    protected abstract void pack();
+    protected abstract void pack()
+        throws TaskException;
 
     protected void zipFile( File file, OutputStream zOut )
         throws IOException

@@ -239,6 +239,7 @@ public class ReplaceRegExp extends Task
                                 Substitution s,
                                 String input,
                                 int options )
+        throws TaskException
     {
         String res = input;
         Regexp regexp = r.getRegexp( project );
@@ -259,7 +260,7 @@ public class ReplaceRegExp extends Task
      * @exception IOException Description of Exception
      */
     protected void doReplace( File f, int options )
-        throws IOException
+        throws IOException, TaskException
     {
         File parentDir = new File( new File( f.getAbsolutePath() ).getParent() );
         File temp = fileUtils.createTempFile( "replace", ".txt", parentDir );

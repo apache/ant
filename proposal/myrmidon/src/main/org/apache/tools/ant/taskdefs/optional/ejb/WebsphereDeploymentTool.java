@@ -878,10 +878,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
             File genericJarFile = super.getVendorOutputJarFile( baseName );
             super.writeJar( baseName, genericJarFile, files, publicId );
 
-
-
             // create the output .jar, if required
-
             if( alwaysRebuild || isRebuildRequired( genericJarFile, jarFile ) )
             {
                 buildWebsphereJar( genericJarFile, jarFile );
@@ -939,6 +936,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
      *      jarfile.
      */
     private void buildWebsphereJar( File sourceJar, File destJar )
+        throws TaskException
     {
         try
         {

@@ -71,6 +71,7 @@ public class Zip extends MatchingTask
     private String encoding;
 
     protected static String[][] grabFileNames( FileScanner[] scanners )
+        throws TaskException
     {
         String[][] result = new String[ scanners.length ][];
         for( int i = 0; i < scanners.length; i++ )
@@ -82,11 +83,6 @@ public class Zip extends MatchingTask
             System.arraycopy( dirs, 0, result[ i ], files.length, dirs.length );
         }
         return result;
-    }
-
-    protected static File[] grabFiles( FileScanner[] scanners )
-    {
-        return grabFiles( scanners, grabFileNames( scanners ) );
     }
 
     protected static File[] grabFiles( FileScanner[] scanners,
@@ -477,7 +473,7 @@ public class Zip extends MatchingTask
      */
     protected void addFiles( FileScanner scanner, ZipOutputStream zOut,
                              String prefix, String fullpath )
-        throws IOException
+        throws IOException, TaskException
     {
         if( prefix.length() > 0 && fullpath.length() > 0 )
             throw new TaskException( "Both prefix and fullpath attributes may not be set on the same fileset." );
@@ -534,7 +530,7 @@ public class Zip extends MatchingTask
      * @exception IOException Description of Exception
      */
     protected void addFiles( Vector filesets, ZipOutputStream zOut )
-        throws IOException
+        throws IOException, TaskException
     {
         // Add each fileset in the Vector.
         for( int i = 0; i < filesets.size(); i++ )
@@ -630,7 +626,7 @@ public class Zip extends MatchingTask
 
     protected void addZipEntries( ZipFileSet fs, DirectoryScanner ds,
                                   ZipOutputStream zOut, String prefix, String fullpath )
-        throws IOException
+        throws IOException, TaskException
     {
         if( prefix.length() > 0 && fullpath.length() > 0 )
             throw new TaskException( "Both prefix and fullpath attributes may not be set on the same fileset." );
@@ -703,6 +699,7 @@ public class Zip extends MatchingTask
      * @return true if the file is then considered up to date.
      */
     protected boolean createEmptyZip( File zipFile )
+        throws TaskException
     {
         // In this case using java.util.zip will not work
         // because it does not permit a zero-entry archive.
@@ -777,7 +774,7 @@ public class Zip extends MatchingTask
 
     protected void zipFile( InputStream in, ZipOutputStream zOut, String vPath,
                             long lastModified )
-        throws IOException
+        throws IOException, TaskException
     {
         ZipEntry ze = new ZipEntry( vPath );
         ze.setTime( lastModified );
@@ -846,7 +843,7 @@ public class Zip extends MatchingTask
     }
 
     protected void zipFile( File file, ZipOutputStream zOut, String vPath )
-        throws IOException
+        throws IOException, TaskException
     {
         if( file.equals( zipFile ) )
         {

@@ -103,6 +103,7 @@ public class Launcher
     }
 
     private static void addToolsJar( AntClassLoader antLoader )
+        throws TaskException
     {
         String javaHome = System.getProperty( "java.home" );
         if( javaHome.endsWith( "jre" ) )

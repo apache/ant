@@ -44,7 +44,8 @@ public abstract class Unpack extends Task
 
     protected abstract String getDefaultExtension();
 
-    protected abstract void extract();
+    protected abstract void extract()
+        throws TaskException;
 
     private void createDestFile( String defaultExtension )
     {

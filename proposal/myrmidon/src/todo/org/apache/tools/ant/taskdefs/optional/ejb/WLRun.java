@@ -343,6 +343,7 @@ public class WLRun extends Task
     }
 
     private void executeWLS6()
+        throws TaskException
     {
         File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL60_POLICY_FILE );
         if( !beaHome.isDirectory() )

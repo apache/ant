@@ -1086,17 +1086,10 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             while( ( pathElementsIndex < pathComponents.size() ) &&
                 ( url == null ) )
             {
-                try
-                {
-                    File pathComponent
-                        = (File)pathComponents.elementAt( pathElementsIndex );
-                    url = getResourceURL( pathComponent, this.resourceName );
-                    pathElementsIndex++;
-                }
-                catch( TaskException e )
-                {
-                    // ignore path elements which are not valid relative to the project
-                }
+                File pathComponent
+                    = (File)pathComponents.elementAt( pathElementsIndex );
+                url = getResourceURL( pathComponent, this.resourceName );
+                pathElementsIndex++;
             }
             this.nextResource = url;
         }

@@ -42,6 +42,7 @@ public class Gcj extends DefaultCompilerAdapter
     }
 
     protected Commandline setupGCJCommand()
+        throws TaskException
     {
         Commandline cmd = new Commandline();
         Path classpath = new Path( project );

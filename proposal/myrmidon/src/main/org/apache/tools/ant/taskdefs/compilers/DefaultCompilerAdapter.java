@@ -93,6 +93,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
     }
 
     protected Commandline setupJavacCommand()
+        throws TaskException
     {
         return setupJavacCommand( false );
     }
@@ -105,16 +106,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      * @return Description of the Returned Value
      */
     protected Commandline setupJavacCommand( boolean debugLevelCheck )
+        throws TaskException
     {
         Commandline cmd = new Commandline();
         setupJavacCommandlineSwitches( cmd, debugLevelCheck );
         logAndAddFilesToCompile( cmd );
         return cmd;
-    }
-
-    protected Commandline setupJavacCommandlineSwitches( Commandline cmd )
-    {
-        return setupJavacCommandlineSwitches( cmd, false );
     }
 
     /**
@@ -127,6 +124,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      */
     protected Commandline setupJavacCommandlineSwitches( Commandline cmd,
                                                          boolean useDebugLevel )
+        throws TaskException
     {
         Path classpath = getCompileClasspath();
 
@@ -292,6 +290,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      * @return Description of the Returned Value
      */
     protected Commandline setupModernJavacCommand()
+        throws TaskException
     {
         Commandline cmd = new Commandline();
         setupModernJavacCommandlineSwitches( cmd );
@@ -308,6 +307,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      * @return Description of the Returned Value
      */
     protected Commandline setupModernJavacCommandlineSwitches( Commandline cmd )
+        throws TaskException
     {
         setupJavacCommandlineSwitches( cmd, true );
         if( attributes.getSource() != null )
@@ -324,6 +324,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      * @return The CompileClasspath value
      */
     protected Path getCompileClasspath()
+        throws TaskException
     {
         Path classpath = new Path( project );
 

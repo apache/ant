@@ -1064,6 +1064,7 @@ public class IContract extends MatchingTask
 
         // make it public
         public void modify( Path path )
+            throws TaskException
         {
             // depending on what compiler to use, set the includeJavaRuntime flag
             if( "jikes".equals( compiler ) )

@@ -19,7 +19,8 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
-public class JasperC extends DefaultCompilerAdapter
+public class JasperC
+    extends DefaultCompilerAdapter
 {
     /*
      * ------------------------------------------------------------

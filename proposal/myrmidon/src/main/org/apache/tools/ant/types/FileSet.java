@@ -274,6 +274,7 @@ public class FileSet extends DataType implements Cloneable
         }
         catch( TaskException e )
         {
+            throw new IllegalStateException( e.getMessage() );
         }
     }
 

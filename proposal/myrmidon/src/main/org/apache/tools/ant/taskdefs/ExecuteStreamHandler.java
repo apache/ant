@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Used by <code>Execute</code> to handle input and output stream of
@@ -19,7 +20,6 @@ import java.io.OutputStream;
  */
 public interface ExecuteStreamHandler
 {
-
     /**
      * Install a handler for the input stream of the subprocess.
      *
@@ -59,5 +59,6 @@ public interface ExecuteStreamHandler
     /**
      * Stop handling of the streams - will not be restarted.
      */
-    void stop();
+    void stop()
+        throws TaskException;
 }

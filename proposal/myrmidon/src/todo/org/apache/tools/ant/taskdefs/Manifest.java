@@ -91,6 +91,7 @@ public class Manifest extends Task
      * Construct an empty manifest
      */
     public Manifest()
+        throws TaskException
     {
         mode = new Mode();
         mode.setValue( "replace" );
@@ -244,7 +245,7 @@ public class Manifest extends Task
     }
 
     public void addConfiguredSection( Section section )
-        throws ManifestException
+        throws ManifestException, TaskException
     {
         if( section.getName() == null )
         {
@@ -360,9 +361,7 @@ public class Manifest extends Task
         }
         catch( IOException e )
         {
-            throw new TaskException( "Failed to write " + manifestFile
-
-            e );
+            throw new TaskException( "Failed to write " + manifestFile, e );
         }
         finally
         {
@@ -726,7 +725,7 @@ public class Manifest extends Task
          *      section.
          */
         public String addAttributeAndCheck( Attribute attribute )
-            throws ManifestException
+            throws ManifestException, TaskException
         {
             if( attribute.getName() == null || attribute.getValue() == null )
             {
@@ -773,7 +772,7 @@ public class Manifest extends Task
         }
 
         public void addConfiguredAttribute( Attribute attribute )
-            throws ManifestException
+            throws ManifestException, TaskException
         {
             String check = addAttributeAndCheck( attribute );
             if( check != null )

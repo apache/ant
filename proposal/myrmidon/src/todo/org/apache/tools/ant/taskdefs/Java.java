@@ -61,6 +61,7 @@ public class Java extends Task
      * @param s The new Classpath value
      */
     public void setClasspath( Path s )
+        throws TaskException
     {
         createClasspath().append( s );
     }
@@ -71,6 +72,7 @@ public class Java extends Task
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -190,6 +192,7 @@ public class Java extends Task
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         return cmdl.createClasspath( project ).createPath();
     }

@@ -73,6 +73,7 @@ public class Jar extends Zip
     }
 
     public void setManifest( File manifestFile )
+        throws TaskException
     {
         if( !manifestFile.exists() )
         {
@@ -124,7 +125,7 @@ public class Jar extends Zip
     }
 
     public void addConfiguredManifest( Manifest newManifest )
-        throws ManifestException
+        throws ManifestException, TaskException
     {
         if( manifest == null )
         {
@@ -265,7 +266,7 @@ public class Jar extends Zip
     }
 
     protected void zipFile( File file, ZipOutputStream zOut, String vPath )
-        throws IOException
+        throws IOException, TaskException
     {
         // If the file being added is META-INF/MANIFEST.MF, we warn if it's not the
         // one specified in the "manifest" attribute - or if it's being added twice,
@@ -284,7 +285,7 @@ public class Jar extends Zip
     }
 
     protected void zipFile( InputStream is, ZipOutputStream zOut, String vPath, long lastModified )
-        throws IOException
+        throws IOException, TaskException
     {
         // If the file being added is META-INF/MANIFEST.MF, we merge it with the
         // current manifest
@@ -315,7 +316,7 @@ public class Jar extends Zip
      *      and adding it to the zip stream.
      */
     private void createIndexList( ZipOutputStream zOut )
-        throws IOException
+        throws IOException, TaskException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // encoding must be UTF8 as specified in the specs.
@@ -371,7 +372,7 @@ public class Jar extends Zip
      * @exception IOException Description of Exception
      */
     private void zipManifestEntry( InputStream is )
-        throws IOException
+        throws IOException, TaskException
     {
         try
         {

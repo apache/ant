@@ -223,6 +223,7 @@ public class Delete extends MatchingTask
      * @return Description of the Returned Value
      */
     public PatternSet createPatternSet()
+        throws TaskException
     {
         usedMatchingTask = true;
         return super.createPatternSet();
@@ -355,6 +356,7 @@ public class Delete extends MatchingTask
     //************************************************************************
 
     protected void removeDir( File d )
+        throws TaskException
     {
         String[] list = d.list();
         if( list == null )
@@ -402,6 +404,7 @@ public class Delete extends MatchingTask
      * @param dirs array of directories to delete; can of zero length
      */
     protected void removeFiles( File d, String[] files, String[] dirs )
+        throws TaskException
     {
         if( files.length > 0 )
         {

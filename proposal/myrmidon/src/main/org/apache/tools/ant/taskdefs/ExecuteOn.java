@@ -82,6 +82,7 @@ public class ExecuteOn extends ExecTask
      * @param skip The new SkipEmptyFilesets value
      */
     public void setSkipEmptyFilesets( boolean skip )
+        throws TaskException
     {
         skipEmpty = skip;
     }
@@ -130,6 +131,7 @@ public class ExecuteOn extends ExecTask
      * @return Description of the Returned Value
      */
     public Commandline.Marker createSrcfile()
+        throws TaskException
     {
         if( srcFilePos != null )
         {
@@ -146,6 +148,7 @@ public class ExecuteOn extends ExecTask
      * @return Description of the Returned Value
      */
     public Commandline.Marker createTargetfile()
+        throws TaskException
     {
         if( targetFilePos != null )
         {
@@ -343,6 +346,7 @@ public class ExecuteOn extends ExecTask
     }
 
     protected void checkConfiguration()
+        throws TaskException
     {
         super.checkConfiguration();
         if( filesets.size() == 0 )

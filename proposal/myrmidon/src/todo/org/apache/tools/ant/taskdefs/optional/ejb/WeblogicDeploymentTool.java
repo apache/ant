@@ -747,6 +747,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
      * @param publicId Description of Parameter
      */
     private void buildWeblogicJar( File sourceJar, File destJar, String publicId )
+        throws TaskException
     {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
 

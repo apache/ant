@@ -480,6 +480,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
      * @param sourceJar java.io.File representing the produced jar file
      */
     private void verifyBorlandJar( File sourceJar )
+        throws TaskException
     {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
         log( "verify " + sourceJar, Project.MSG_INFO );

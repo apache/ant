@@ -64,78 +64,86 @@ public class Execute
      */
     static
     {
-        // Try using a JDK 1.3 launcher
+
         try
         {
-            vmLauncher = new Java13CommandLauncher();
-        }
-        catch( NoSuchMethodException exc )
-        {
-            // Ignore and keep try
-        }
-
-        if( Os.isFamily( "mac" ) )
-        {
-            // Mac
-            shellLauncher = new MacCommandLauncher( new CommandLauncher() );
-        }
-        else if( Os.isFamily( "os/2" ) )
-        {
-            // OS/2 - use same mechanism as Windows 2000
-            shellLauncher = new WinNTCommandLauncher( new CommandLauncher() );
-        }
-        else if( Os.isFamily( "windows" ) )
-        {
-            // Windows.  Need to determine which JDK we're running in
-
-            CommandLauncher baseLauncher;
-            if( System.getProperty( "java.version" ).startsWith( "1.1" ) )
+            // Try using a JDK 1.3 launcher
+            try
             {
-                // JDK 1.1
-                baseLauncher = new Java11CommandLauncher();
+                vmLauncher = new Java13CommandLauncher();
+            }
+            catch( NoSuchMethodException exc )
+            {
+                // Ignore and keep try
+            }
+
+            if( Os.isFamily( "mac" ) )
+            {
+                // Mac
+                shellLauncher = new MacCommandLauncher( new CommandLauncher() );
+            }
+            else if( Os.isFamily( "os/2" ) )
+            {
+                // OS/2 - use same mechanism as Windows 2000
+                shellLauncher = new WinNTCommandLauncher( new CommandLauncher() );
+            }
+            else if( Os.isFamily( "windows" ) )
+            {
+                // Windows.  Need to determine which JDK we're running in
+
+                CommandLauncher baseLauncher;
+                if( System.getProperty( "java.version" ).startsWith( "1.1" ) )
+                {
+                    // JDK 1.1
+                    baseLauncher = new Java11CommandLauncher();
+                }
+                else
+                {
+                    // JDK 1.2
+                    baseLauncher = new CommandLauncher();
+                }
+
+                // Determine if we're running under 2000/NT or 98/95
+                String osname =
+                    System.getProperty( "os.name" ).toLowerCase( Locale.US );
+
+                if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
+                {
+                    // Windows 2000/NT
+                    shellLauncher = new WinNTCommandLauncher( baseLauncher );
+                }
+                else
+                {
+                    // Windows 98/95 - need to use an auxiliary script
+                    shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat", baseLauncher );
+                }
+            }
+            else if( ( new Os( "netware" ) ).eval() )
+            {
+                // NetWare.  Need to determine which JDK we're running in
+                CommandLauncher baseLauncher;
+                if( System.getProperty( "java.version" ).startsWith( "1.1" ) )
+                {
+                    // JDK 1.1
+                    baseLauncher = new Java11CommandLauncher();
+                }
+                else
+                {
+                    // JDK 1.2
+                    baseLauncher = new CommandLauncher();
+                }
+
+                shellLauncher = new PerlScriptCommandLauncher( "bin/antRun.pl", baseLauncher );
             }
             else
             {
-                // JDK 1.2
-                baseLauncher = new CommandLauncher();
-            }
-
-            // Determine if we're running under 2000/NT or 98/95
-            String osname =
-                System.getProperty( "os.name" ).toLowerCase( Locale.US );
-
-            if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
-            {
-                // Windows 2000/NT
-                shellLauncher = new WinNTCommandLauncher( baseLauncher );
-            }
-            else
-            {
-                // Windows 98/95 - need to use an auxiliary script
-                shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat", baseLauncher );
+                // Generic
+                shellLauncher = new ScriptCommandLauncher( "bin/antRun", new CommandLauncher() );
             }
         }
-        else if( ( new Os( "netware" ) ).eval() )
+        catch( TaskException e )
         {
-            // NetWare.  Need to determine which JDK we're running in
-            CommandLauncher baseLauncher;
-            if( System.getProperty( "java.version" ).startsWith( "1.1" ) )
-            {
-                // JDK 1.1
-                baseLauncher = new Java11CommandLauncher();
-            }
-            else
-            {
-                // JDK 1.2
-                baseLauncher = new CommandLauncher();
-            }
-
-            shellLauncher = new PerlScriptCommandLauncher( "bin/antRun.pl", baseLauncher );
-        }
-        else
-        {
-            // Generic
-            shellLauncher = new ScriptCommandLauncher( "bin/antRun", new CommandLauncher() );
+            e.printStackTrace();
         }
     }
 

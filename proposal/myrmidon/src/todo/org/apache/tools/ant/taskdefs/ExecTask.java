@@ -59,6 +59,7 @@ public class ExecTask extends Task
      * @param d The new Dir value
      */
     public void setDir( File d )
+        throws TaskException
     {
         this.dir = d;
     }
@@ -69,6 +70,7 @@ public class ExecTask extends Task
      * @param value The new Executable value
      */
     public void setExecutable( String value )
+        throws TaskException
     {
         cmdl.setExecutable( value );
     }
