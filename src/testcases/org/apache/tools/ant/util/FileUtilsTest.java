@@ -438,6 +438,9 @@ public class FileUtilsTest extends TestCase {
         if (Os.isFamily("dos")) {
             assertEquals("file:///C:/foo", fu.toURI("c:\\foo"));
         }
+        if (Os.isFamily("netware")) {
+            assertEquals("file:///SYS:/foo", fu.toURI("sys:\\foo"));
+        }
         assertEquals("file:///" + dosRoot + "foo", fu.toURI("/foo"));
         assertEquals("file:./foo",  fu.toURI("./foo"));
         assertEquals("file:///" + dosRoot + "foo", fu.toURI("\\foo"));
@@ -452,6 +455,9 @@ public class FileUtilsTest extends TestCase {
      * test fromUri
      */
     public void testFromURI() {
+        if (Os.isFamily("netware")) {
+            assertEqualsIgnoreDriveCase("SYS:\\foo", fu.fromURI("file:///sys:/foo"));
+        }
         if (Os.isFamily("dos")) {
             assertEqualsIgnoreDriveCase("C:\\foo", fu.fromURI("file:///c:/foo"));
         }

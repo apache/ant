@@ -1219,7 +1219,7 @@ public class FileUtils {
             path = normalize(path).getAbsolutePath();
             sb.append("//");
             // add an extra slash for filesystems with drive-specifiers
-            if (!path.startsWith("/")) {
+            if (!path.startsWith(File.separator)) {
                 sb.append("/");
             }
 

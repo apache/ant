@@ -134,7 +134,7 @@ public class Locator {
 
         uri = uri.replace('/', File.separatorChar);
         if (File.pathSeparatorChar == ';' && uri.startsWith("\\") && uri.length() > 2
-            && Character.isLetter(uri.charAt(1)) && uri.charAt(2) == ':') {
+            && Character.isLetter(uri.charAt(1)) && uri.lastIndexOf(':') > -1) {
             uri = uri.substring(1);
         }
 
