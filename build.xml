@@ -214,6 +214,15 @@
   -->
   <target name="compile" depends="prepare">
 
+    <javac srcdir="${build.src}"
+           destdir="${build.classes}"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           optimize="${optimize}" >
+      <classpath refid="classpath" />
+      <include name="${constants.file}" />
+    </javac>
+
     <javac srcdir="${java.dir}"
            destdir="${build.classes}"
            debug="${debug}"
@@ -250,10 +259,10 @@
       <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
     </javac>
 
-    <copy file="${build.src}/${ant.package}/defaultManifest.mf"
+    <copy file="${java.dir}/${ant.package}/defaultManifest.mf"
           todir="${build.classes}/${ant.package}" />
           
-    <copy file="${build.src}/${ant.package}/taskdefs/defaults.properties"
+    <copy file="${java.dir}/${ant.package}/taskdefs/defaults.properties"
           todir="${build.classes}/${ant.package}/taskdefs" />
 
   </target>

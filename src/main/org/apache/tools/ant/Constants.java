@@ -14,6 +14,6 @@ package org.apache.tools.ant;
  */
 interface Constants
 {
-    String  DATE     = "@@DATE@@";
-    String  VERSION  = "@@VERSION@@";
+    String  DATE     = "@DATE@";
+    String  VERSION  = "@VERSION@";
 }
