@@ -734,8 +734,7 @@ public class Javadoc extends Task {
         }
 
         Commandline toExecute = (Commandline)cmd.clone();
-        toExecute.setExecutable(System.getProperty("java.home") +
-            "/../bin/javadoc");
+	toExecute.setExecutable( getJavadocExecutableName() );
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
@@ -1142,6 +1141,32 @@ public class Javadoc extends Task {
      */
     private File createTempFile() {
         return new File("javadoc" + (new Random(System.currentTimeMillis())).nextLong());
+    }
+
+    private String getJavadocExecutableName()
+    {
+	// This is the most common extension case - exe for windows, nothing
+	// for *nix.
+	String extension = (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) ?
+	    ".exe" : "";
+
+	// Look for javadoc in the java.home/../bin directory.  Unfortunately
+	// on Windows java.home doesn't always refer to the correct location, 
+	// so we need to fall back to assuming javadoc is somewhere on the
+	// PATH.
+	File jdocExecutable = new File( System.getProperty("java.home") +
+		"/../bin/javadoc" + extension );
+
+	if (jdocExecutable.exists())
+	{
+	    return jdocExecutable.getAbsolutePath();
+	}
+	else
+	{
+	    log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
+		    ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
+	    return "javadoc";
+	}
     }
     
 }
