@@ -567,15 +567,38 @@ build.compiler to "jikes" for it to be used in your build files.
 #include targets to simplify multi build.xml projects
 </b><dd>
 
-You can import XML files into a build file using &lt;?import?&gt;
-an element of XML syntax which the standard parsers use. This lets
-a multi-project development program share code through reference,
+You can import XML files into a build file using the XML parser itself.
+This lets a multi-project development program share code through reference,
 rather than cut and paste re-use. It also lets one build up a file of
 standard tasks which can be reused over time. Because the import
 mechanism is at a level below which ant is aware, treat it as
 equivalent to the #include mechanism of the 'legacy' languages C and
 C++.
 
+<p>
+
+There are two inclusion mechanisms, an ugly one for all parsers and a
+clean one. For now, the ugly
+method is the most portable:-
+<pre>
+	&lt;!DOCTYPE project [
+	  &lt;!ENTITY IncludeBuildCore SYSTEM &quot;buildCore.xml&quot;&gt;
+	  &lt;!ENTITY IncludeBuildSecondary SYSTEM &quot;buildSecondary.xml&quot;&gt;
+	%IncludeBuildCore;
+	%IncludeBuildSecondary;
+	]&gt;  
+	
+	&lt;target name=&quot;includedBuild&quot;&gt;
+		&amp;IncludeBuildCore;
+		&amp;IncludeBuildSecondary;
+	&lt;/target&gt;
+</pre>
+The clean method using XInclude/Xpath will let you include named 
+targets from one build file or another, using
+<a href="http://www.w3.org/XML/Linking"> 
+the xpointer syntax</a>. You'll need to wait for the W3C proposals
+to finalise and the java XML parsers to implement it before
+using xpointer references.  
 <dt><b>
 Implement complex Ant builds through XSL
 </b><dd>
