@@ -97,7 +97,7 @@ public class Zip extends MatchingTask {
      * Encoding to use for filenames, defaults to the platform's
      * default encoding.
      */
-    private String encoding = null;
+    private String encoding;
 
     /**
      * This is the name/location of where to
@@ -751,5 +751,13 @@ public class Zip extends MatchingTask {
     protected void cleanUp() {
         addedDirs = new Hashtable();
         addedFiles = new Vector();
+        filesets = new Vector();
+        zipFile = null;
+        baseDir = null;
+        doCompress = true;
+        doUpdate = false;
+        doFilesonly = false;
+        addingNewFiles = false;
+        encoding = null;
     }
 }
