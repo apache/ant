@@ -128,7 +128,7 @@ public class Main {
     }
 
     /**
-     * Entry point allowing for more options from other front ends
+     * Entry point method.
      */
     public static void start(String[] args, Properties additionalUserProperties,
                              ClassLoader coreLoader) {
