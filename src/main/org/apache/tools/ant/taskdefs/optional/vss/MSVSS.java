@@ -377,7 +377,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return    An empty string if label is not set.
      */
     protected String getLabel() {
-        if (m_Label != null) {
+        if (m_Label != null && m_Label.length()>0) {
             if (m_Label.length() > 31) {
                 String label = m_Label.substring(0, 30);
                 log("Label is longer than 31 characters, truncated to: " + label, Project.MSG_WARN);
@@ -418,7 +418,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
             // Use getLabel() so labels longer then 30 char are truncated
             // and the user is warned
             String label = getLabel();
-            if (! label.equals("")) {
+            if (! label.equals("") && label!=null) {
                 return FLAG_VERSION_LABEL + label;
             }
         }
@@ -617,7 +617,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      */
     public String getFileTimeStamp() {
         if (m_timestamp == null) {
-            return FLAG_FILETIME_DEF;
+            return "";
         }
         else if (m_timestamp.getValue().equals(TIME_MODIFIED)) {
             return FLAG_FILETIME_MODIFIED;
