@@ -19,11 +19,30 @@ for sound-files, so be sure you only have sound-files in the
 directory you specify.</p>
 
 <h3>Parameters</h3>
+<p>(none)</p>
+
+<h3>Nested Elements</h3>
+<h4>success</h4>
+<p>Specifies the sound to be played if the build succeeded.</p>
+<h4>fail</h4>
+<p>Specifies the sound to be played if the build failed.</p>
+
+<h3>Nested Element Parameters</h3>
+<p>
+The following attributes may be used on the <code>&lt;success&gt;</code> 
+and <code>&lt;fail&gt;</code> elements:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">source</td>
+    <td valign="top">the path to a sound-file directory, or the name of a
+specific sound-file, to be played.
+    </td>
+    <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">loops</td>
@@ -40,26 +59,14 @@ directory you specify.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
-<p>
-To specify the sound-files or the sound-file directories, use the
-nested <code>&lt;success&gt;</code> and <code>&lt;fail&gt;</code> 
-elements:</p>
-<blockquote>
-<pre>
-&lt;success&gt;     the path to a sound-file directory, or the name of a
-              specific sound-file, to be played if the build succeeded.
-&lt;fail&gt;        the path to a sound-file directory, or the name of a
-              specific sound-file, to be played if the build succeeded.
-</pre>
-</blockquote>
 
 <h3>Examples</h3>
 <blockquote>
 <pre>
 &lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
-  &lt;sound loops=&quot;2&quot;&gt;
+  &lt;sound&gt;
     &lt;success source=&quot;${user.home}/sounds/bell.wav&quot;/&gt;
-    &lt;fail source=&quot;${user.home}/sounds/ohno.wav&quot;/&gt;
+    &lt;fail source=&quot;${user.home}/sounds/ohno.wav&quot; loops=&quot;2&quot;/&gt;
   &lt;/sound&gt;
   &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;
