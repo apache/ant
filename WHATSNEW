@@ -1,4 +1,4 @@
-Changes from Ant 1.5.1 to current CVS version
+Changes from Ant 1.5.2 to current CVS version
 =============================================
 
 Changes that could break older environments:
@@ -21,6 +21,9 @@ Changes that could break older environments:
 
 * ZipScanner#getIncludedFiles will now return the names of the ZipEntries
   that have been matched instead of the name of the archive.
+
+* XML namespaces are now enabled in the XML parser, meaning XML namespace 
+  declarations no longer cause errors. 
 
 Fixed bugs:
 -----------
@@ -102,10 +105,17 @@ Fixed bugs:
 * Ant will now exit with a return code of 1 if it encounters problems
   with the command line arguments.
 
+* ClassLoader creation changes to use a factory method in Project. A new
+  class AntClassLoader2 implemented for 1.2+ specific features including
+  Package information and addition of classes specified in the Class-Path
+  element of a Jar's manifest.
+
+* It is now possible in <exec> to resolve the executable to a project basedir or
+  execution dir relative executable. The resolveExecutable must be used to 
+  pick up such executables.
+
 Other changes:
 --------------
-* **/.DS_Store has been added to the list of default pattern excludes.
-
 * The filesetmanifest attribute of <jar> has been reenabled.
 
 * The start and end tokens for <translate> may now be longer than a
@@ -181,6 +191,10 @@ Other changes:
   all compilers.
 
 * <tar>'s up-to-date check didn't work for nested <(tar)fileset>s.
+
+* a new attribute "globalopts" can be added to all Perforce tasks.
+  You can put in it all the strings described by p4 help usage. Refer to 
+  the docs for more information.
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
