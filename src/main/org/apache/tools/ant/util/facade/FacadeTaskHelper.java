@@ -164,4 +164,14 @@ public class FacadeTaskHelper {
         tmp.copyInto(res);
         return res;
     }
+
+    /**
+     * Tests whether the implementation has been chosen by the user
+     * (either via a magic property or explicitly.
+     *
+     * @since Ant 1.5.2
+     */
+    public boolean hasBeenSet() {
+        return userChoice != null || magicValue != null;
+    }
 }
