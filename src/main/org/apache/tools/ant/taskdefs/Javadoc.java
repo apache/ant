@@ -201,6 +201,7 @@ public class Javadoc extends Task {
         }
     }
 
+    private boolean foundJavaFile = false;
     private Path sourcePath = null;
     private File destDir = null;
     private String sourceFiles = null;
@@ -797,7 +798,6 @@ public class Javadoc extends Task {
      * patterns.
      */
     private void evaluatePackages(Path sourcePath, Vector packages) {
-        log("Parsing source files for packages", Project.MSG_INFO);
         log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         log("Packages = " + packages, Project.MSG_VERBOSE);
 
@@ -805,10 +805,9 @@ public class Javadoc extends Task {
         String[] list = sourcePath.list();
         for (int j=0; j<list.length; j++) {
             File source = project.resolveFile(list[j]);
-            
-            Hashtable map = mapClasses(source);
+            Vector foundPackages = findPackages(source);
 
-            Enumeration e = map.keys();
+            Enumeration e = foundPackages.elements();
             while (e.hasMoreElements()) {
                 String pack = (String) e.nextElement();
                 for (int i = 0; i < packages.size(); i++) {
@@ -833,91 +832,6 @@ public class Javadoc extends Task {
         return string.startsWith(pattern.substring(0, pattern.length() - 2));
     }
 
-    /**
-     * Returns an hashtable of packages linked to the last parsed
-     * file in that package. This map is use to return a list of unique
-     * packages as map keys.
-     */
-    private Hashtable mapClasses(File path) {
-        Hashtable map = new Hashtable();
-
-        Vector files = new Vector();
-        getFiles(path, files);
-
-        Enumeration e = files.elements();
-        while (e.hasMoreElements()) {
-            File file = (File) e.nextElement();
-            String packageName = getPackageName(file);
-            if (packageName != null) map.put(packageName, file);
-        }
-
-        return map;
-    }
-
-    /**
-     * Fills the given vector with files under the given path filtered
-     * by the given file filter.
-     */
-    private void getFiles(File path, Vector list) {
-        if (!path.exists()) {
-            throw new BuildException("Path " + path + " does not exist.");
-        }
-
-        String[] files = path.list();
-        String cwd = path.getPath() + System.getProperty("file.separator");
-
-        if (files != null) {
-            int count = 0;
-            for (int i = 0; i < files.length; i++) {
-                File file = new File(cwd + files[i]);
-                if (file.isDirectory()) {
-                    getFiles(file, list);
-                } else if (files[i].endsWith(".java")) {
-                    count++;
-                    list.addElement(file);
-                }
-            }
-            if (count > 0) {
-                log("found " + count + " source files in " + path, Project.MSG_VERBOSE);
-            }
-        } else {
-            throw new BuildException("Error occurred during " + path + " evaluation.");
-        }
-    }
-
-    /**
-     * Return the package name of the given java source file.
-     * This method performs valid java parsing to figure out the package.
-     */
-    private String getPackageName(File file) {
-        String name = null;
-
-        try {
-            // do not remove the double buffered reader, this is a _major_ speed up in this special case!
-            BufferedReader reader = new BufferedReader(new JavaReader(new BufferedReader(new FileReader(file))));
-            String line;
-            while (true) {
-                line = reader.readLine();
-                if (line == null) {
-                    log("Could not evaluate package for " + file, Project.MSG_WARN);
-                    return null;
-                }
-                if (line.trim().startsWith("package ") ||
-                    line.trim().startsWith("package\t")) {
-                    name = line.substring(8, line.indexOf(";")).trim();
-                    break;
-                }
-            }
-            reader.close();
-        } catch (Exception e) {
-            log("Exception " + e + " parsing " + file, Project.MSG_WARN);
-            return null;
-        }
-
-        log(file + " --> " + name, Project.MSG_VERBOSE);
-
-        return name;
-    }
 
     private class JavadocOutputStream extends LogOutputStream {
         JavadocOutputStream(int level) {
@@ -957,83 +871,48 @@ public class Javadoc extends Task {
         }
     }
 
-    /**
-     * This is a java comment and string stripper reader that filters
-     * these lexical tokens out for purposes of simple Java parsing.
-     * (if you have more complex Java parsing needs, use a real lexer).
-     * Since this class heavily relies on the single char read function,
-     * you are reccomended to make it work on top of a buffered reader.
-     */
-    class JavaReader extends FilterReader {
-
-        public JavaReader(Reader in) {
-            super(in);
-        }
-
-        public int read() throws IOException {
-            int c = in.read();
-            if (c == '/') {
-                c = in.read();
-                if (c == '/') {
-                    while (c != '\n' && c != -1) c = in.read();
-                } else if (c == '*') {
-                    while (c != -1) {
-                        c = in.read();
-                        if (c == '*') {
-                            c = in.read();
-                            while (c == '*' && c != -1) {
-                                c = in.read();
-                            }
-                            
-                            if (c == '/') {
-                                c = read();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (c == '"') {
-                while (c != -1) {
-                    c = in.read();
-                    if (c == '\\') {
-                        c = in.read();
-                    } else if (c == '"') {
-                        c = read();
-                        break;
-                    }
-                }
-            }
-            if (c == '\'') {
-                c = in.read();
-                if (c == '\\') c = in.read();
-                c = in.read();
-                c = read();
-            }
-            return c;
-        }
-
-        public int read(char cbuf[], int off, int len) throws IOException {
-            for (int i = 0; i < len; i++) {
-                int c = read();
-                if (c == -1) {
-                    if (i == 0) {
-                        return -1;
-                    } else {
-                        return i;
-                    }
-                }
-                cbuf[off + i] = (char) c;
-            }
-            return len;
-        }
-
-        public long skip(long n) throws IOException {
-            for (long i = 0; i < n; i++) {
-                if (in.read() == -1) return i;
-            }
-            return n;
-        }
+    protected Vector findPackages(File srcDir) {
+    	Vector foundPkgs = new Vector();
+    	
+    	if ((srcDir != null) && (srcDir.isDirectory())) {
+    		scan(srcDir, "", foundPkgs);
+    	}
+    	
+    	return foundPkgs;
     }
 
+    protected void scan(File srcDir, String vpath, Vector pkgs) {
+    	foundJavaFile = false;
+    	File dir = new File(srcDir, vpath);
+    	
+    	if (!dir.isDirectory()) {
+    		return;
+    	}
+    
+    	String[] files = dir.list(new FilenameFilter () {
+    			public boolean accept(File dir, String name) {
+    				if (name.endsWith(".java")) {
+    					foundJavaFile = true;
+    					return false;
+    				}
+    				File d = new File(dir, name);
+    				if (d.isDirectory()) {
+    					return true;
+    				}
+    				return false;
+    			}
+    		});
+    
+    	if (foundJavaFile) {
+    		String newPkg = vpath.substring(1).replace(File.separatorChar, '.');
+    		if (!pkgs.contains(newPkg)) {
+    			pkgs.add(newPkg);
+    		}
+    	}
+    	
+    	for (int i=0; i<files.length; i++) {
+    		scan(srcDir, vpath + File.separator + files[i], pkgs);
+    	}
+    	return;
+    }
 }
