@@ -226,8 +226,7 @@ public class Ant extends Task {
             addAlmostAll(getProject().getProperties());
         }
 
-        Enumeration e;
-        e = propertySets.elements();
+        Enumeration e = propertySets.elements();
         while (e.hasMoreElements()) {
             PropertySet ps = (PropertySet) e.nextElement();
             addAlmostAll(ps.getProperties());
@@ -339,7 +338,8 @@ public class Ant extends Task {
 
             if (dir != null) {
                 newProject.setBaseDir(dir);
-                if (savedDir != null) { // has been set explicitly
+                if (savedDir != null) {
+                    // has been set explicitly
                     newProject.setInheritedProperty("basedir" ,
                                                     dir.getAbsolutePath());
                 }
@@ -357,8 +357,7 @@ public class Ant extends Task {
             antFile = file.getAbsolutePath();
 
             log("calling target " + (target != null ? target : "[default]")
-                    + " in build file " +  antFile.toString(),
-                    Project.MSG_VERBOSE);
+                    + " in build file " +  antFile, Project.MSG_VERBOSE);
             newProject.setUserProperty("ant.file" , antFile);
 
             // Are we trying to call the target in which we are defined (or
@@ -410,9 +409,12 @@ public class Ant extends Task {
 
             addReferences();
 
-            if (target != null) {
-                if (!"".equals(target)) {
+            if (target != null && !"".equals(target)) {
+                try {
+                    log("Entering " + antFile + "...");
                     newProject.executeTarget(target);
+                } finally {
+                    log("Exiting " + antFile + ".");
                 }
             }
         } finally {
