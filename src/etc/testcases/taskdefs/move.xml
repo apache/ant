@@ -59,11 +59,78 @@
     </move>
   </target>
 
+  <target name="testCompleteDirectoryMoveFileToFile">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move file="A" tofile="E" />
+    <fail message="E/1 not available">
+      <condition>
+        <not>
+          <available file="E/1" type="file" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="A remains">
+      <condition>
+        <available file="A" type="dir" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToDir">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move file="A" todir="E" />
+    <fail message="E/A/1 not available">
+      <condition>
+        <not>
+          <available file="E/A/1" type="file" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="A remains">
+      <condition>
+        <available file="A" type="dir" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToExistingFile">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <touch file="B"/>
+    <move file="A" tofile="B" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToExistingDir">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <move file="A" tofile="E" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToDirWithExistingFile">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <touch file="E/A"/>
+    <move file="A" todir="E" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToDirWithExistingDir">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <mkdir dir="E/A"/>
+    <move file="A" todir="E" />
+  </target>
+
   <target name="cleanup"> 
     <delete file="move.filterset.tmp"/>
     <delete file="move.filterchain.tmp"/>
-    <delete dir="A"/>
-    <delete dir="E"/>
+    <delete dir="A" />
+    <delete file="B" />
+    <delete dir="E" />
   </target>
 
 </project>

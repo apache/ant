@@ -42,7 +42,10 @@ Other changes:
   wsdl run on mono, as well as most of the .NET WSE2.0 options. Extra
   schemas (files or urls) can be named in the <schema> element.
   Compilers can be selected using the compiler attribute, which defaults
-  to "microsoft" on windows, and "mono" on everything else.   
+  to "microsoft" on windows, and "mono" on everything else.
+
+* Allow file attribute of <move> to rename a directory.
+  Bugzilla Report 22863.
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
