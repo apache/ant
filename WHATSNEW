@@ -82,6 +82,8 @@ Other changes:
 * bad link in docs to the enhancement page in bugzilla.
   Bugzilla report 33252.
 
+* Added length task to get strings' and files' lengths.
+
 Fixed bugs:
 -----------
 
