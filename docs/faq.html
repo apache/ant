@@ -183,6 +183,23 @@
       it doesn't seem to work. The files never get deleted. What's
       wrong?
   </a></li>
+                    <li><a href="#multi-conditions">
+  I want to execute a particular target only if
+        multiple conditions are true.
+  </a></li>
+                    <li><a href="#stop-dependency">
+  I have a target I want to skip if a variable is set,
+      so I have <code>unless="variable"</code> as an attribute 
+      of the target.  The trouble is that all of the targets that this target 
+      depends on are still executed. Why?
+  </a></li>
+                    <li><a href="#include-order">
+  In my fileset, I've put in an
+      <code>&lt;exclude&gt;</code> of all files followed by an
+      <code>&lt;include&gt;</code> of just the files I want, but it
+      isn't giving me anything at all. What's wrong?
+      
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -226,6 +243,10 @@
                     <li><a href="#mail-logger">
   How do I send an email with the result of my build
         process?
+  </a></li>
+                    <li><a href="#listener-properties">
+  How do I get at the properties that Ant was running
+      with from inside BuildListener?
   </a></li>
                 </ul>
       </blockquote>
@@ -294,10 +315,12 @@
       <blockquote>
                               <p>The page you are looking it is generated from 
           <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/faq.xml">this</a>
-
           document.  If you want to add a new question, please submit
-          a patch against this document, the structure is hoped to be
-          self-explaining.</p>
+          a patch against this document to one of Ant's mailing lists,
+          the structure is hoped to be self-explaining.</p>
+                                        <p>If you don't know how to create a patch, see the patches
+          section of <a href="http://jakarta.apache.org/site/source.html">this
+          page</a>.</p>
                         </blockquote>
     </td></tr>
   </table>
@@ -853,6 +876,233 @@ shell-prompt&gt; cat &lt; foo
     </td></tr>
   </table>
   </a>
+        <a name="multi-conditions">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          I want to execute a particular target only if
+        multiple conditions are true.
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>There are actually several answers to this question.</p>
+                                        <p>If you have only one set and one unset property to test,
+        you can put both an <code>if</code> and an <code>unless</code>
+        attribute into the target. The target will act as if they
+        are "anded" together.</p>
+                                        <p>If you are using a version of Ant 1.3 or earlier, the
+        way to work with all other cases is to chain targets together
+        to determine the specific state you wish to test for.</p>
+                                        <p>To see how this works, assume you have three properties,
+        <code>prop1</code>, <code>prop2</code>, and <code>prop3</code>.
+        You want to test that <code>prop1</code> and <code>prop2</code> 
+        are set, but that <code>prop3</code> is not. If the condition
+        holds true you want to echo "yes".</p>
+                                        <p>Here is the implementation in Ant 1.3 and earlier:</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+&lt;target name=&quot;cond&quot; depends=&quot;cond-if&quot;/&gt;
+
+&lt;target name=&quot;cond-if&quot; if=&quot;prop1&quot;&gt;
+  &lt;antcall target=&quot;cond-if-2&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;cond-if-2&quot; if=&quot;prop2&quot;&gt;
+  &lt;antcall target=&quot;cond-if-3&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;cond-if-3&quot; unless=&quot;prop3&quot;&gt;
+  &lt;echo message=&quot;yes&quot;/&gt;
+&lt;/target&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>Note that <code>&lt;antcall&gt;</code> tasks do not pass
+        property changes back up to the environment they were called
+        from.</p>
+                                        <p>Starting with Ant 1.4, you can use the
+        <code>&lt;condition&gt;</code> task.</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+&lt;target name=&quot;cond&quot; depends=&quot;cond-if,cond-else&quot;/&gt;
+
+&lt;target name=&quot;check-cond&quot;&gt;
+  &lt;condition property=&quot;cond-is-true&quot;&gt;
+    &lt;and&gt;
+      &lt;not&gt;
+        &lt;equals arg1=&quot;${prop1}&quot; arg2=&quot;$${prop1}&quot; /&gt;
+      &lt;/not&gt;
+      &lt;not&gt;
+        &lt;equals arg1=&quot;${prop2}&quot; arg2=&quot;$${prop2}&quot; /&gt;
+      &lt;/not&gt;
+      &lt;equals arg1=&quot;${prop3}&quot; arg2=&quot;$${prop3}&quot; /&gt;
+    &lt;/and&gt;
+  &lt;/condition&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;cond-if&quot; depends=&quot;check-cond&quot; if=&quot;cond-is-true&quot;&gt;
+  &lt;echo message=&quot;yes&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target name=&quot;cond-else&quot; depends=&quot;check-cond&quot; unless=&quot;cond-is-true&quot;&gt;
+  &lt;echo message=&quot;no&quot;/&gt;
+&lt;/target&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>This version takes advantage of two things:</p>
+                                        <ul>
+          <li>If a property <code>a</code> has not been set,
+          <code>${a}</code> will evaluate to <code>${a}</code>.</li>
+
+          <li>To get a literal <code>$</code> in Ant, you have to
+          escape it with another <code>$</code> - this will also break
+          the special treatment of the sequence <code>${</code>.</li>
+        </ul>
+                                        <p>This is neither readable, nor easy to understand, therefore
+        post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element 
+	to the <code>&lt;condition&gt;</code> task.</p>
+                                        <p>Here is the previous example done using
+        <code>&lt;isset&gt;</code>:</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+&lt;target name=&quot;check-cond&quot;&gt;
+  &lt;condition property=&quot;cond-is-true&quot;&gt;
+    &lt;and&gt;
+      &lt;isset property=&quot;prop1&quot;/&gt;
+      &lt;isset property=&quot;prop2&quot;/&gt;
+      &lt;not&gt;
+        &lt;isset property=&quot;prop3&quot;/&gt;
+      &lt;/not&gt;
+    &lt;/and&gt;
+  &lt;/condition&gt;
+&lt;/target&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>The last option is to use a scripting language to set the
+        properties. This can be particularly handy when you need much
+        better control than the simple conditions shown here, but of
+        course comes with the overhead of adding JAR files to support
+        the language, to say nothing of the added maintenance in requiring
+        two languages to implement a single system.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="stop-dependency">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          I have a target I want to skip if a variable is set,
+      so I have <code>unless="variable"</code> as an attribute 
+      of the target.  The trouble is that all of the targets that this target 
+      depends on are still executed. Why?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>The list of dependencies is generated by Ant before any of the
+        targets are run. This allows dependent targets such as an 
+        <code>init</code> target to set properties that can control the 
+	execution of the targets higher in the dependency graph. This 
+	is a good thing.</p>
+                                        <p>When your dependencies actually break down the higher level task
+        into several simpler steps, though, this behaviour becomes 
+        counterintuitive. There are a couple of solutions available:
+        </p>
+                                        <ol>
+          <li>Put the same condition on each of the dependent targets.</li>
+	  
+          <li>Execute the steps using <code>&lt;antcall&gt;</code>
+          instead of specifying them inside the <code>depends</code>
+          attribute.</li>
+        </ol>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="include-order">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          In my fileset, I've put in an
+      <code>&lt;exclude&gt;</code> of all files followed by an
+      <code>&lt;include&gt;</code> of just the files I want, but it
+      isn't giving me anything at all. What's wrong?
+      
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>The order of the <code>&lt;include&gt;</code> and
+        <code>&lt;exclude&gt;</code> tags within a fileset is ignored
+        when the fileset is created. Instead, all of the
+        <code>&lt;include&gt;</code> elements are processed together,
+        followed by all of the <code>&lt;exclude&gt;</code>
+        elements. This means that the <code>&lt;exclude&gt;</code>
+        elements only apply to the file list produced by the
+        <code>&lt;include&gt;</code> elements.</p>
+                                        <p>To get the files you want, focus on just the
+	<code>&lt;include&gt;</code> patterns that would be necessary
+	to get them. If you need to trim the list that the includes
+	would produce, use excludes.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
                         <a name="integration">
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
@@ -1294,6 +1544,54 @@ ant -listener BuildMonitor
         <code>activation.jar</code> from the 
         <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
         Beans Activation Framework</a> in your <code>CLASSPATH</code>.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="listener-properties">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          How do I get at the properties that Ant was running
+      with from inside BuildListener?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>You can get at a hashtable with all the properties that Ant
+        has been using through the BuildEvent parameter. For
+        example:</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+public void buildFinished(BuildEvent e) {
+    Hashtable table = e.getProject().getProperties();
+    String buildpath = (String)table.get(&quot;build.path&quot;);
+    ...
+}
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>This is more accurate than just reading the same property
+        files that your project does, since it will give the correct
+        results for properties that are specified on the command line
+        when running Ant.</p>
                         </blockquote>
     </td></tr>
   </table>

@@ -21,10 +21,13 @@
       <answer>
         <p>The page you are looking it is generated from 
           <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/faq.xml">this</a>
-
           document.  If you want to add a new question, please submit
-          a patch against this document, the structure is hoped to be
-          self-explaining.</p>
+          a patch against this document to one of Ant's mailing lists,
+          the structure is hoped to be self-explaining.</p>
+        
+        <p>If you don't know how to create a patch, see the patches
+          section of <a href="http://jakarta.apache.org/site/source.html">this
+          page</a>.</p>
       </answer>
     </faq>
   </faqsection>
@@ -316,6 +319,174 @@ shell-prompt> cat < foo
 
       </answer>
     </faq>
+
+    <faq id="multi-conditions">
+      <question>I want to execute a particular target only if
+        multiple conditions are true.</question>
+
+      <answer>
+        <p>There are actually several answers to this question.</p>
+
+        <p>If you have only one set and one unset property to test,
+        you can put both an <code>if</code> and an <code>unless</code>
+        attribute into the target. The target will act as if they
+        are &quot;anded&quot; together.</p>
+
+        <p>If you are using a version of Ant 1.3 or earlier, the
+        way to work with all other cases is to chain targets together
+        to determine the specific state you wish to test for.</p>
+
+        <p>To see how this works, assume you have three properties,
+        <code>prop1</code>, <code>prop2</code>, and <code>prop3</code>.
+        You want to test that <code>prop1</code> and <code>prop2</code> 
+        are set, but that <code>prop3</code> is not. If the condition
+        holds true you want to echo &quot;yes&quot;.</p>
+
+        <p>Here is the implementation in Ant 1.3 and earlier:</p>
+
+        <source><![CDATA[
+<target name="cond" depends="cond-if"/>
+
+<target name="cond-if" if="prop1">
+  <antcall target="cond-if-2"/>
+</target>
+
+<target name="cond-if-2" if="prop2">
+  <antcall target="cond-if-3"/>
+</target>
+
+<target name="cond-if-3" unless="prop3">
+  <echo message="yes"/>
+</target>
+]]></source>
+
+        <p>Note that <code>&lt;antcall&gt;</code> tasks do not pass
+        property changes back up to the environment they were called
+        from.</p>
+
+        <p>Starting with Ant 1.4, you can use the
+        <code>&lt;condition&gt;</code> task.</p>
+
+        <source><![CDATA[
+<target name="cond" depends="cond-if,cond-else"/>
+
+<target name="check-cond">
+  <condition property="cond-is-true">
+    <and>
+      <not>
+        <equals arg1="${prop1}" arg2="$${prop1}" />
+      </not>
+      <not>
+        <equals arg1="${prop2}" arg2="$${prop2}" />
+      </not>
+      <equals arg1="${prop3}" arg2="$${prop3}" />
+    </and>
+  </condition>
+</target>
+
+<target name="cond-if" depends="check-cond" if="cond-is-true">
+  <echo message="yes"/>
+</target>
+
+<target name="cond-else" depends="check-cond" unless="cond-is-true">
+  <echo message="no"/>
+</target>
+]]></source>
+
+        <p>This version takes advantage of two things:</p>
+
+        <ul>
+          <li>If a property <code>a</code> has not been set,
+          <code>${a}</code> will evaluate to <code>${a}</code>.</li>
+
+          <li>To get a literal <code>$</code> in Ant, you have to
+          escape it with another <code>$</code> - this will also break
+          the special treatment of the sequence <code>${</code>.</li>
+        </ul>
+
+        <p>This is neither readable, nor easy to understand, therefore
+        post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element 
+	to the <code>&lt;condition&gt;</code> task.</p>
+
+        <p>Here is the previous example done using
+        <code>&lt;isset&gt;</code>:</p>
+
+        <source><![CDATA[
+<target name="check-cond">
+  <condition property="cond-is-true">
+    <and>
+      <isset property="prop1"/>
+      <isset property="prop2"/>
+      <not>
+        <isset property="prop3"/>
+      </not>
+    </and>
+  </condition>
+</target>
+]]></source>
+
+        <p>The last option is to use a scripting language to set the
+        properties. This can be particularly handy when you need much
+        better control than the simple conditions shown here, but of
+        course comes with the overhead of adding JAR files to support
+        the language, to say nothing of the added maintenance in requiring
+        two languages to implement a single system.</p>
+      </answer>
+    </faq>
+    
+    <faq id="stop-dependency">
+      <question>I have a target I want to skip if a variable is set,
+      so I have <code>unless=&quot;variable&quot;</code> as an attribute 
+      of the target.  The trouble is that all of the targets that this target 
+      depends on are still executed. Why?</question>
+
+      <answer>
+        <p>The list of dependencies is generated by Ant before any of the
+        targets are run. This allows dependent targets such as an 
+        <code>init</code> target to set properties that can control the 
+	execution of the targets higher in the dependency graph. This 
+	is a good thing.</p>
+
+        <p>When your dependencies actually break down the higher level task
+        into several simpler steps, though, this behaviour becomes 
+        counterintuitive. There are a couple of solutions available:
+        </p>
+
+        <ol>
+          <li>Put the same condition on each of the dependent targets.</li>
+	  
+          <li>Execute the steps using <code>&lt;antcall&gt;</code>
+          instead of specifying them inside the <code>depends</code>
+          attribute.</li>
+        </ol>
+	
+      </answer>
+    </faq>
+    
+    <faq id="include-order">
+      <question>In my fileset, I've put in an
+      <code>&lt;exclude&gt;</code> of all files followed by an
+      <code>&lt;include&gt;</code> of just the files I want, but it
+      isn't giving me anything at all. What's wrong?
+      </question>
+
+      <answer>
+        <p>The order of the <code>&lt;include&gt;</code> and
+        <code>&lt;exclude&gt;</code> tags within a fileset is ignored
+        when the fileset is created. Instead, all of the
+        <code>&lt;include&gt;</code> elements are processed together,
+        followed by all of the <code>&lt;exclude&gt;</code>
+        elements. This means that the <code>&lt;exclude&gt;</code>
+        elements only apply to the file list produced by the
+        <code>&lt;include&gt;</code> elements.</p>
+
+	<p>To get the files you want, focus on just the
+	<code>&lt;include&gt;</code> patterns that would be necessary
+	to get them. If you need to trim the list that the includes
+	would produce, use excludes.</p>
+      </answer>
+    </faq>
+    
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">
@@ -617,6 +788,30 @@ ant -listener BuildMonitor
       </answer>
     </faq>
 
+    <faq id="listener-properties">
+      <question>How do I get at the properties that Ant was running
+      with from inside BuildListener?</question>
+
+      <answer>
+        <p>You can get at a hashtable with all the properties that Ant
+        has been using through the BuildEvent parameter. For
+        example:</p>
+
+        <source><![CDATA[
+public void buildFinished(BuildEvent e) {
+    Hashtable table = e.getProject().getProperties();
+    String buildpath = (String)table.get("build.path");
+    ...
+}
+]]></source>
+
+        <p>This is more accurate than just reading the same property
+        files that your project does, since it will give the correct
+        results for properties that are specified on the command line
+        when running Ant.</p>
+      </answer>
+    </faq>
+    
   </faqsection>
 
   <faqsection title="Known problems">
