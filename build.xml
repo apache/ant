@@ -21,6 +21,7 @@
   <property name="version" value="1.5alpha"/>
 
   <property name="debug" value="true" />
+  <property name="chmod.fail" value="true" />
   <property name="deprecation" value="false" />
   <property name="optimize" value="true" />
   <property name="junit.fork" value="false" />
@@ -406,9 +407,11 @@
     </fixcrlf>
     <fixcrlf srcdir="${dist.bin}" includes="*.pl" />
 
-    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" />
-    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" />
-    <chmod perm="ugo+x" type="file">
+    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" 
+           failonerror="${chmod.fail}" />
+    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" 
+           failonerror="${chmod.fail}" />
+    <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
        <fileset dir="${dist.bin}">
          <include name="**/ant" />
          <include name="**/antRun" />
@@ -473,9 +476,11 @@
       </fileset>
     </copy>
 
-    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" />
-    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" />
-    <chmod perm="ugo+x" type="file">
+    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" 
+           failonerror="${chmod.fail}" />
+    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" 
+           failonerror="${chmod.fail}" />
+    <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
        <fileset dir="${dist.bin}">
          <include name="**/ant" />
          <include name="**/antRun" />
@@ -566,9 +571,10 @@
       <include name="**/*.java" />
     </fixcrlf>
 
-    <chmod perm="ugo+x" dir="${src.dist.dir}" type="dir"/>
-    <chmod perm="ugo+r" dir="${src.dist.dir}" />
-    <chmod perm="ugo+x">
+    <chmod perm="ugo+x" dir="${src.dist.dir}" type="dir"
+           failonerror="${chmod.fail}" />
+    <chmod perm="ugo+r" dir="${src.dist.dir}" failonerror="${chmod.fail}" />
+    <chmod perm="ugo+x" failonerror="${chmod.fail}">
        <fileset dir="${src.dist.dir}">
          <include name="**/.sh" />
          <include name="**/ant" />
