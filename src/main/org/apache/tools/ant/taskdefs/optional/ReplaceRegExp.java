@@ -242,6 +242,7 @@ public class ReplaceRegExp extends Task {
      * want to only replace the first occurrence of a regular expression on
      * each line, which is not easy to do when processing the file as a whole.
      * Defaults to <i>false</i>.</td>
+     * @deprecated - use setByLine(boolean)
      */
     public void setByLine(String byline) {
         Boolean res = Boolean.valueOf(byline);
@@ -250,6 +251,17 @@ public class ReplaceRegExp extends Task {
             res = Boolean.FALSE;
         }
         this.byline = res.booleanValue();
+    }
+
+    /**
+     * Process the file(s) one line at a time, executing the replacement
+     * on one line at a time.  This is useful if you
+     * want to only replace the first occurrence of a regular expression on
+     * each line, which is not easy to do when processing the file as a whole.
+     * Defaults to <i>false</i>.</td>
+     */
+    public void setByLine(boolean byline) {
+        this.byline = byline;
     }
 
 
