@@ -55,6 +55,8 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Enumeration;
+import java.io.File;
+
 import org.apache.tools.ant.Project;
 
 /**
@@ -68,7 +70,10 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
-public class SelectSelector extends AndSelector {
+public class SelectSelector extends BaseSelectorContainer {
+
+    private String ifProperty;
+    private String unlessProperty;
 
     /**
      * Default constructor.
@@ -79,7 +84,16 @@ public class SelectSelector extends AndSelector {
     public String toString() {
         StringBuffer buf = new StringBuffer();
         if (hasSelectors()) {
-            buf.append("{select: ");
+            buf.append("{select");
+            if (ifProperty != null) {
+                buf.append(" if: ");
+                buf.append(ifProperty);
+            }
+            if (unlessProperty != null) {
+                buf.append(" unless: ");
+                buf.append(unlessProperty);
+            }
+            buf.append(" ");
             buf.append(super.toString());
             buf.append("}");
         }
@@ -155,11 +169,71 @@ public class SelectSelector extends AndSelector {
      * not.
      */
     public void verifySettings() {
-        if (selectorCount() != 1) {
-            setError("One and only one selector is allowed within the " +
+        int cnt = selectorCount();
+        if (cnt < 0 || cnt > 1) {
+            setError("Only one selector is allowed within the " +
                     "<select> tag");
         }
     }
 
+    /**
+     * Ensures that the selector passes the conditions placed
+     * on it with <code>if</code> and <code>unless</code>.
+     */
+    public boolean passesConditions() {
+            if (ifProperty != null &&
+                    getProject().getProperty(ifProperty) == null) {
+                return false;
+            } else if (unlessProperty != null &&
+                    getProject().getProperty(unlessProperty) != null) {
+                return false;
+            }
+            return true;
+    }
+
+    /**
+     * Sets the if attribute to a property which must exist for the
+     * selector to select any files.
+     */
+    public void setIf(String ifProperty) {
+        this.ifProperty = ifProperty;
+    }
+
+    /**
+     * Sets the unless attribute to a property which cannot exist for the
+     * selector to select any files.
+     */
+    public void setUnless(String unlessProperty) {
+        this.unlessProperty = unlessProperty;
+    }
+
+    /**
+     * Returns true (the file is selected) only if the if property (if any)
+     * exists, the unless property (if any) doesn't exist, and the
+     * contained selector (if any) selects the file. If there is no contained
+     * selector, return true (because we assume that the point was to test
+     * the if and unless conditions).
+     *
+     * @param basedir the base directory the scan is being done from
+     * @param filename the name of the file to check
+     * @param file a java.io.File object for the filename that the selector
+     * can use
+     * @return whether the file should be selected or not
+     */
+    public boolean isSelected(File basedir, String filename, File file) {
+        validate();
+
+        // Deal with if and unless properties first
+        if (!(passesConditions())) {
+            return false;
+        }
+
+        Enumeration e = selectorElements();
+        if (!(e.hasMoreElements())) {
+            return true;
+        }
+        FileSelector f = (FileSelector)e.nextElement();
+        return f.isSelected(basedir,filename,file);
+    }
 }
 
