@@ -285,7 +285,9 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>GNU General Public License</td>
+            <td>Release 1.0 has been licensed under the GNU General Public
+            License.  Starting with release 1.1 the license has been
+            changed to a BSD-like license.</td>
           </tr>
         </table>
       </subsection>
