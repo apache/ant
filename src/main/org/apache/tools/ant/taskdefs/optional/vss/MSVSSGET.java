@@ -157,11 +157,15 @@ public class MSVSSGET extends MSVSS {
         // -R
         commandLine.createArgument().setValue(getRecursive());
         // -V
-        commandLine.createArgument().setValue(getVersion());
+        commandLine.createArgument().setValue(getVersionDateLabel());
         // -W
         commandLine.createArgument().setValue(getWritable());
         // -Y
         commandLine.createArgument().setValue(getLogin());
+        // -G
+        commandLine.createArgument().setValue(getFileTimeStamp());
+        // -GWS or -GWR
+        commandLine.createArgument().setValue(getWritableFiles());
 
         return commandLine;
     }
@@ -234,5 +238,33 @@ public class MSVSSGET extends MSVSS {
      */
     public void setAutoresponse(String response){
         super.setInternalAutoResponse(response);
+    }
+
+    /**
+     * Set the behavior for timestamps of local files.; optional
+     *
+     * Valid options are <code>current</code>, <code>modified</code>, or
+     * <code>updated</code>. Defaults to <code>current</code>.
+     *
+     * @param timestamp     The file time stamping behaviour.
+     */
+    public void setFileTimeStamp(CurrentModUpdated timestamp) {
+        super.setInternalFileTimeStamp(timestamp);
+    }
+
+    /**
+     * Set the behavior when local files are writable.; optional
+     *
+     * Valid options are <code>replace</code>, <code>skip</code> and <code>fail</code>.
+     * Defaults to <code>fail</code>
+     *
+     * Due to ss.exe returning with an exit code of '100' for both errors and when
+     * a file has been skipped, <code>failonerror</code> is set to false when using
+     * the <code>skip</code> option
+     *
+     * @param files
+     */
+    public void setWritableFiles(WritableFiles files) {
+        super.setInternalWritableFiles(files);
     }
 }

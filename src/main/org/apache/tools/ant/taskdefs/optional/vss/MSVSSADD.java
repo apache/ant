@@ -125,7 +125,8 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Leave checked in files writable? Default: false.
+     * Sets behaviour, unset the READ-ONLY flag on files added to VSS.;
+     * optional, default false
      * @param   writable The boolean value for writable.
      */
     public final void setWritable(boolean writable) {

@@ -168,15 +168,6 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets behaviour, whether task should fail if there is an error creating
-     * the project.; optional, default true
-     * @param failOnError True if task should fail on any error.
-     */
-    public final void setFailOnError (boolean failOnError) {
-        super.setInternalFailOnError(failOnError);
-    }
-
-    /**
      * Sets the autoresponce behaviour.; optional.
      * <p>
      * Valid options are Y and N.

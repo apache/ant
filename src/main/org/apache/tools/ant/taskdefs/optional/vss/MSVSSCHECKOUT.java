@@ -98,9 +98,15 @@ public class MSVSSCHECKOUT extends MSVSS {
         // -R
         commandLine.createArgument().setValue(getRecursive());
         // -V
-        commandLine.createArgument().setValue(getVersion());
+        commandLine.createArgument().setValue(getVersionDateLabel());
         // -Y
         commandLine.createArgument().setValue(getLogin());
+        // -G
+        commandLine.createArgument().setValue(getFileTimeStamp());
+        // -GWS or -GWR
+        commandLine.createArgument().setValue(getWritableFiles());
+        // -G-
+        commandLine.createArgument().setValue(getGetLocalCopy());
 
         return commandLine;
     }
@@ -157,5 +163,42 @@ public class MSVSSCHECKOUT extends MSVSS {
      */
     public void setAutoresponse(String response){
         super.setInternalAutoResponse(response);
+    }
+
+    /**
+     * Set the option to the date and time given to the local copy.; optional
+     *
+     * Valid options are <code>current</code>, <code>modified</code>, or
+     * <code>updated</code>. Defaults to <code>current</code>.
+     *
+     * @param timestamp     The file time stamping behaviour.
+     */
+    public void setFileTimeStamp(CurrentModUpdated timestamp){
+        super.setInternalFileTimeStamp(timestamp);
+    }
+
+    /**
+     * Set the behaviour when local files are writable.; optional
+     *
+     * Valid options are <code>replace</code>, <code>skip</code> and <code>fail</code>.
+     * The default is <code>fail</code>
+     *
+     * Due to ss.exe returning with an exit code of '100' for both errors and when
+     * a file has been skipped, <code>failonerror</code> is set to false when using
+     * the <code>skip</code> option
+     *
+     * @param files     The writable files behaviour
+     */
+    public void setWritableFiles(WritableFiles files) {
+        super.setInternalWritableFiles(files);
+    }
+
+    /**
+     * Set the behaviour to retrieve local copies during a checkout.; optional, Defaults to true.
+     *
+     * @param get   The get local copy behaviour
+     */
+    public void setGetLocalCopy(boolean get) {
+        super.setInternalGetLocalCopy(get);
     }
 }

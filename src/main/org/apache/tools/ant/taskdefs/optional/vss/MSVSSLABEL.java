@@ -126,7 +126,9 @@ public class MSVSSLABEL extends MSVSS {
         if (getVsspath() == null) {
             throw new BuildException("vsspath attribute must be set!", getLocation());
         }
-        if (getLabel() == "") {
+
+        String label = getLabel();
+        if (label == "") {
             String msg = "label attribute must be set!";
             throw new BuildException(msg, getLocation());
         }
@@ -144,7 +146,7 @@ public class MSVSSLABEL extends MSVSS {
         // -I- or -I-Y or -I-N
         commandLine.createArgument().setValue(getAutoresponse());
         // -L Specify the new label on the command line (instead of being prompted)
-        commandLine.createArgument().setValue(getLabel());
+        commandLine.createArgument().setValue(label);
         // -V Label an existing file or project version
         commandLine.createArgument().setValue(getVersion());
         // -Y

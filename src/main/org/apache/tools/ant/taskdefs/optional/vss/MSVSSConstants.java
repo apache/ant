@@ -90,6 +90,20 @@ public interface MSVSSConstants {
     /**  The default style flag  */
     String STYLE_DEFAULT = "default";
 
+    /**  The text for  current (default) timestamp */
+    String TIME_CURRENT = "current";
+    /**  The text for  modified timestamp */
+    String TIME_MODIFIED = "modified";
+    /**  The text for  updated timestamp */
+    String TIME_UPDATED = "updated";
+
+    /**  The text for replacing writable files   */
+    String WRITABLE_REPLACE = "replace";
+    /**  The text for skiping writable files  */
+    String WRITABLE_SKIP = "skip";
+    /**  The text for failing on writable files  */
+    String WRITABLE_FAIL = "fail";
+
     String FLAG_LOGIN = "-Y";
     String FLAG_OVERRIDE_WORKING_DIR = "-GL";
     String FLAG_AUTORESPONSE_DEF = "-I-";
@@ -112,4 +126,10 @@ public interface MSVSSConstants {
     String FLAG_NO_FILE = "-F-";
     String FLAG_BRIEF = "-B";
     String FLAG_CODEDIFF = "-D";
+    String FLAG_FILETIME_DEF = "-GTC";
+    String FLAG_FILETIME_MODIFIED = "-GTM";
+    String FLAG_FILETIME_UPDATED = "-GTU";
+    String FLAG_REPLACE_WRITABLE = "-GWR";
+    String FLAG_SKIP_WRITABLE = "-GWS";
+    String FLAG_NO_GET = "-G-";
 }

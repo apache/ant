@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -126,10 +127,16 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     private boolean m_Writable = false;
     /**  Fail on error defaults to true */
     private boolean m_FailOnError = true;
+    /**  Get local copy for checkout defaults to true */
+    private boolean m_getLocalCopy = true;
     /**  Number of days offset for History */
     private int m_NumDays = Integer.MIN_VALUE;
     /**  Date format for History */
     private DateFormat m_DateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+    /**  Timestamp for retreived files */
+    private CurrentModUpdated m_timestamp = null;
+    /**  Behaviour for writable files */
+    private WritableFiles m_writablefiles = null;
 
     /**
      * Each sub-class must implemnt this method and return the constructed
@@ -197,6 +204,15 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
+     * Sets behaviour, whether task should fail if there is an error creating
+     * the project.; optional, default true
+     * @param failOnError True if task should fail on any error.
+     */
+    public final void setFailOnError (boolean failOnError) {
+        m_FailOnError = failOnError;
+    }
+
+    /**
      * Executes the task. <br>
      * Builds a command line to execute ss.exe and then calls Exec's run method
      * to execute the command line.
@@ -208,7 +224,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         Commandline commandLine = buildCmdLine();
         result = run(commandLine);
         if (result != 0 && getFailOnError()) {
-            String msg = "Failed executing: " + commandLine.toString()
+            String msg = "Failed executing: " + formatCommandLine(commandLine)
                      + " With a return code of " + result;
             throw new BuildException(msg, getLocation());
         }
@@ -292,6 +308,18 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         m_Writable = writable;
     }
 
+    protected void setInternalFileTimeStamp(CurrentModUpdated timestamp) {
+        m_timestamp = timestamp;
+    }
+
+    protected void setInternalWritableFiles(WritableFiles files) {
+        m_writablefiles = files;
+    }
+
+    protected void setInternalGetLocalCopy(boolean get) {
+        m_getLocalCopy = get;
+    }
+
     /**
      * Gets the sscommand string. "ss" or "c:\path\to\ss"
      *
@@ -344,10 +372,24 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     /**
      *  Gets the label string. "-Lbuild1"
      *
+     *  Max label length is 32 chars
+     *
      * @return    An empty string if label is not set.
      */
     protected String getLabel() {
-        return m_Label != null ? FLAG_LABEL + m_Label : "";
+        if (m_Label != null) {
+            if (m_Label.length() > 31) {
+                String label = m_Label.substring(0, 30);
+                log("Label is longer than 31 characters, truncated to: " + label, Project.MSG_WARN);
+                return FLAG_LABEL + label;
+            }
+            else {
+                return FLAG_LABEL + m_Label;
+            }
+        }
+        else {
+            return "";
+        }
     }
 
     /**
@@ -363,18 +405,33 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      *  Gets the version string. Returns the first specified of version "-V1.0",
      *  date "-Vd01.01.01", label "-Vlbuild1".
      *
+     * @return    An empty string if a version, date and label are not set.
+     */
+    protected String getVersionDateLabel() {
+        if (m_Version != null) {
+            return FLAG_VERSION + m_Version;
+        }
+        else if (m_Date != null) {
+            return FLAG_VERSION_DATE + m_Date;
+        }
+        else {
+            // Use getLabel() so labels longer then 30 char are truncated
+            // and the user is warned
+            String label = getLabel();
+            if (! label.equals("")) {
+                return FLAG_VERSION_LABEL + label;
+            }
+        }
+        return "";
+    }
+
+    /**
+     *  Gets the version string.
+     *
      * @return    An empty string if a version is not set.
      */
     protected String getVersion() {
-        if (m_Version != null) {
-            return FLAG_VERSION + m_Version;
-        } else if (m_Date != null) {
-            return FLAG_VERSION_DATE + m_Date;
-        } else if (m_Label != null) {
-            return FLAG_VERSION_LABEL + m_Label;
-        } else {
-            return "";
-        }
+        return m_Version != null ? FLAG_VERSION + m_Version : "";
     }
 
     /**
@@ -468,17 +525,37 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
             return "";
         }
         if (m_FromLabel != null && m_ToLabel != null) {
+            if (m_FromLabel.length() > 31) {
+                m_FromLabel = m_FromLabel.substring(0, 30);
+                log("FromLabel is longer than 31 characters, truncated to: "
+                    + m_FromLabel, Project.MSG_WARN);
+            }
+            if (m_ToLabel.length() > 31) {
+                m_ToLabel = m_ToLabel.substring(0, 30);
+                log("ToLabel is longer than 31 characters, truncated to: "
+                    + m_ToLabel, Project.MSG_WARN);
+            }
             return FLAG_VERSION_LABEL + m_ToLabel + VALUE_FROMLABEL + m_FromLabel;
         } else if (m_FromLabel != null) {
+            if (m_FromLabel.length() > 31) {
+                m_FromLabel = m_FromLabel.substring(0, 30);
+                log("FromLabel is longer than 31 characters, truncated to: "
+                    + m_FromLabel, Project.MSG_WARN);
+            }
             return FLAG_VERSION + VALUE_FROMLABEL + m_FromLabel;
         } else {
+            if (m_ToLabel.length() > 31) {
+                m_ToLabel = m_ToLabel.substring(0, 30);
+                log("ToLabel is longer than 31 characters, truncated to: "
+                    + m_ToLabel, Project.MSG_WARN);
+            }
             return FLAG_VERSION_LABEL + m_ToLabel;
         }
     }
 
     /**
      * Gets the Version date string.
-     * @return An empty string is neither Todate or from date are set.
+     * @return An empty string if neither Todate or from date are set.
      * @throws BuildException
      */
     protected String getVersionDate() throws BuildException {
@@ -511,13 +588,69 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     *  Gets the value of the fail on error flag. This is only used by execute
-     *  when checking the return code.
+     * Builds and returns the -G- flag if required.
      *
-     * @return    True if the FailOnError flag has been set.
+     * @return An empty string if get local copy is true.
+     */
+    protected String getGetLocalCopy() {
+        return (! m_getLocalCopy) ? FLAG_NO_GET : "";
+    }
+
+    /**
+     *  Gets the value of the fail on error flag.
+     *
+     * @return    True if the FailOnError flag has been set or if 'writablefiles=skip'.
      */
     private boolean getFailOnError() {
-        return m_FailOnError;
+        return getWritableFiles().equals(WRITABLE_SKIP) ? false : m_FailOnError;
+    }
+
+
+    /**
+     * Gets the value set for the FileTimeStamp.
+     * if it equals "current" then we return -GTC
+     * if it equals "modified" then we return -GTM
+     * if it equals "updated" then we return -GTU
+     * otherwise we return -GTC
+     *
+     * @return The default file time flag, if not set.
+     */
+    public String getFileTimeStamp() {
+        if (m_timestamp == null) {
+            return FLAG_FILETIME_DEF;
+        }
+        else if (m_timestamp.getValue().equals(TIME_MODIFIED)) {
+            return FLAG_FILETIME_MODIFIED;
+        }
+        else if (m_timestamp.getValue().equals(TIME_UPDATED)) {
+            return FLAG_FILETIME_UPDATED;
+        }
+        else {
+            return FLAG_FILETIME_DEF;
+        }
+    }
+
+
+    /**
+     * Gets the value to determine the behaviour when encountering writable files.
+     * @return An empty String, if not set.
+     */
+    public String getWritableFiles() {
+        if (m_writablefiles == null) {
+            return "";
+        }
+        else if (m_writablefiles.getValue().equals(WRITABLE_REPLACE)) {
+            return FLAG_REPLACE_WRITABLE;
+        }
+        else if (m_writablefiles.getValue().equals(WRITABLE_SKIP)) {
+            // ss.exe exits with '100', when files have been skipped
+            // so we have to ignore the failure
+            m_FailOnError = false;
+            return FLAG_SKIP_WRITABLE;
+        }
+        else {
+            return "";
+        }
     }
 
     /**
@@ -551,6 +684,8 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
             exe.setAntRun(getProject());
             exe.setWorkingDirectory(getProject().getBaseDir());
             exe.setCommandline(cmd.getCommandline());
+            // Use the OS launcher so we get environment variables
+            exe.setVMLauncher(false);
             return exe.execute();
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
@@ -575,5 +710,51 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         calend.add(Calendar.DATE, numDays);
         toDate = m_DateFormat.format(calend.getTime());
         return toDate;
+    }
+
+    /**
+     * Changes the password to '***' so it isn't displayed on screen if the build fails
+     *
+     * @param cmd   The command line to clean
+     * @return The command line as a string with out the password
+     */
+    private String formatCommandLine(Commandline cmd) {
+        StringBuffer sBuff = new StringBuffer(cmd.toString());
+        int indexUser = sBuff.indexOf(FLAG_LOGIN);
+        if (indexUser > 0) {
+            int indexPass = sBuff.indexOf(",", indexUser);
+            int indexAfterPass = sBuff.indexOf(" ", indexPass);
+
+            for (int i = indexPass + 1; i < indexAfterPass; i++) {
+                sBuff.setCharAt(i, '*');
+            }
+        }
+        return sBuff.toString();
+    }
+
+    /**
+     * Extention of EnumeratedAttribute to hold the values for file time stamp.
+     */
+    public static class CurrentModUpdated extends EnumeratedAttribute {
+        /**
+         * Gets the list of allowable values.
+         * @return The values.
+         */
+        public String[] getValues() {
+            return new String[] { TIME_CURRENT, TIME_MODIFIED, TIME_UPDATED };
+        }
+    }
+
+    /**
+     * Extention of EnumeratedAttribute to hold the values for writable filess.
+     */
+    public static class WritableFiles extends EnumeratedAttribute {
+        /**
+         * Gets the list of allowable values.
+         * @return The values.
+         */
+        public String[] getValues() {
+            return new String[] { WRITABLE_REPLACE, WRITABLE_SKIP, WRITABLE_FAIL };
+        }
     }
 }
