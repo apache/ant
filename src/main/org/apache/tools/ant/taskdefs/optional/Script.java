@@ -109,10 +109,16 @@ public class Script extends Task {
             // execute the script
             manager.exec(language, "<ANT>", 0, 0, script);
         } catch (BSFException be) {
-	    Exception e = be;
+	    Throwable t = be;
             Throwable te = be.getTargetException();
-            if (te != null && te instanceof Exception) e = (Exception) te;
-            throw new BuildException(e);
+            if (te != null) {
+                if  (te instanceof BuildException) {
+                    throw (BuildException) te;
+                } else {
+                    t = te;
+                }
+            }
+            throw new BuildException(t);
         }
     }
 
