@@ -6,6 +6,7 @@
     <task name="log" classname="org.apache.antlib.core.Log" />
     <task name="fail" classname="org.apache.antlib.core.Fail" />
     <task name="property" classname="org.apache.antlib.core.Property" />
+    <task name="load-properties" classname="org.apache.antlib.core.LoadProperties" />
 
   </types>
 
