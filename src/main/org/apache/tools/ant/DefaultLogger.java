@@ -55,8 +55,6 @@
 package org.apache.tools.ant;
 
 import java.io.PrintStream;
-import java.text.ChoiceFormat;
-import java.text.MessageFormat;
 
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
@@ -65,13 +63,15 @@ import org.apache.tools.ant.util.DateUtils;
  * Writes build events to a PrintStream. Currently, it
  * only writes which targets are being executed, and
  * any messages that get logged.
+ *
+ * @author Matt Foemmel
  */
 public class DefaultLogger implements BuildLogger {
     /** 
      * Size of left-hand column for right-justified task name.
      * @see #messageLogged(BuildEvent)
      */
-    private static int LEFT_COLUMN_SIZE = 12;
+    private static final int LEFT_COLUMN_SIZE = 12;
 
     /** PrintStream to write non-error messages to */
     protected PrintStream out;
@@ -279,6 +279,8 @@ public class DefaultLogger implements BuildLogger {
      * 
      * @param millis Length of time to format, in milliseonds.
      * 
+     * @return the time as a formatted string.
+     *
      * @see DateUtils#formatElapsedTime(long)
      */
     protected static String formatTime(final long millis) {

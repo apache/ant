@@ -62,6 +62,8 @@ import java.util.EventListener;
  *
  * @see BuildEvent
  * @see Project#addBuildListener(BuildListener)
+ *
+ * @author Matt Foemmel
  */
 public interface BuildListener extends EventListener {
 
