@@ -151,4 +151,14 @@ public class Environment {
         }
         return result;
     }
+
+    /**
+     * Get the raw vector of variables. This is not a clone.
+     * @return a potentially empty (but never null) vector of elements of type
+     * Variable
+     * @since Ant 1.7
+     */
+    public Vector getVariablesVector() {
+        return variables;
+    }
 }

@@ -152,6 +152,7 @@ Other changes:
    can be used with the jar attribute or nested filesets
   -a mapper to permit filename remapping on signing
   -tsaurl and tsacert attributes for timestamped JAR signing
+  -nested <sysproperty> elements, which can be used for proxy setup and the like
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================

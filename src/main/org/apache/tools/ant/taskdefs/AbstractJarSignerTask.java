@@ -18,12 +18,15 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RedirectorElement;
+import org.apache.tools.ant.types.Environment;
 
 import java.io.File;
 import java.util.Vector;
+import java.util.Enumeration;
 
 /**
  * This is factored out from {@link SignJar}; a base class that can be used
@@ -75,6 +78,12 @@ public abstract class AbstractJarSignerTask extends Task {
      * redirector used to talk to the jarsigner program
      */
     private RedirectorElement redirector;
+
+    /**
+     * Java declarations -J-Dname=value
+     */
+    private Environment sysProperties=new Environment();
+
     /**
      * error string for unit test verification: {@value}
      */
@@ -165,6 +174,14 @@ public abstract class AbstractJarSignerTask extends Task {
     }
 
     /**
+     * Add a system property.
+     *
+     * @param sysp system property.
+     */
+    public void addSysproperty(Environment.Variable sysp) {
+        sysProperties.addVariable(sysp);
+    }
+    /**
      * init processing logic; this is retained through our execution(s)
      */
     protected void beginExecution() {
@@ -201,13 +218,32 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     protected void setCommonOptions(final ExecTask cmd) {
         if (maxMemory != null) {
-            cmd.createArg().setValue("-J-Xmx" + maxMemory);
+            addValue(cmd,"-J-Xmx" + maxMemory);
         }
 
         if (verbose) {
-            cmd.createArg().setValue("-verbose");
+            addValue(cmd,"-verbose");
+        }
+        
+        //now patch in all system properties
+        Vector props=sysProperties.getVariablesVector();
+        Enumeration e=props.elements();
+        while (e.hasMoreElements()) {
+            Environment.Variable variable = (Environment.Variable) e.nextElement();
+            declareSysProperty(cmd,variable);
         }
     }
+
+    /**
+     *
+     * @param cmd command to configure
+     * @param property property to set
+     * @throws BuildException if the property is not correctly defined.
+     */
+    protected void declareSysProperty(ExecTask cmd,Environment.Variable property) {
+        addValue(cmd, "-J-D"+property.getContent());
+    }
+
 
     /**
      * bind to a keystore if the attributes are there
@@ -216,7 +252,7 @@ public abstract class AbstractJarSignerTask extends Task {
     protected void bindToKeystore(final ExecTask cmd) {
         if (null != keystore) {
             // is the keystore a file
-            cmd.createArg().setValue("-keystore");
+            addValue(cmd,"-keystore");
             String location;
             File keystoreFile = getProject().resolveFile(keystore);
             if (keystoreFile.exists()) {
@@ -225,11 +261,11 @@ public abstract class AbstractJarSignerTask extends Task {
                 // must be a URL - just pass as is
                 location = keystore;
             }
-            cmd.createArg().setValue(location);
+            addValue(cmd,location);
         }
         if (null != storetype) {
-            cmd.createArg().setValue("-storetype");
-            cmd.createArg().setValue(storetype);
+            addValue(cmd,"-storetype");
+            addValue(cmd, storetype);
         }
     }
 

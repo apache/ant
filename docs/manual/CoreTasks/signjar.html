@@ -144,7 +144,15 @@ block</td>
     <td valign="top">A mapper to rename jar files during signing</td>
     <td valign="top" align="center">No, and only one can be supplied</td>
   </tr>
+  <tr>
+    <td valign="top">sysproperty</td>
+    <td valign="top">JVM system properties, with the syntax of Ant
+    <a href="exec.html#env">environment variables</a> </td>
+    <td valign="top" align="center">No, and only one can be supplied</td>
+  </tr>
  </table>
+
+
 <h3>Examples</h3>
   <blockquote><pre>
 &lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
@@ -154,7 +162,34 @@ alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
   signs the ant.jar with alias &quot;apache-group&quot; accessing the
   keystore and private key via &quot;secret&quot; password.
 </p>
+  <blockquote><pre>
+&lt;signjar destDir="signed"
+    alias="testonly" keystore="testkeystore"
+    storepass="apacheant"
+    preservelastmodified="true"&gt;
+  &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+  &lt;flattenmapper /&gt;
+&lt;/signjar&gt;
+</pre></blockquote>
+<p>
+Sign all JAR files matching the dist/**/*.jar pattern, copying them to the
+directory "signed" afterwards. The flatten mapper means that they will
+all be copied to this directory, not to subdirectories.
 
+</p>
+  <blockquote><pre>
+&lt;signjar
+    alias="testonly" keystore="testkeystore"
+    storepass="apacheant"
+    lazy="true"
+    &gt;
+  &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+&lt;/signjar&gt;
+</pre></blockquote>
+<p>
+Sign all the JAR files in dist/**/*.jar <i>in-situ</i>. Lazy signing is used,
+so the files will only be signed if they are not already signed.
+</p>
 <h3>About timestamp signing</h3>
 
 <p>

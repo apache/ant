@@ -150,6 +150,10 @@ public class SignJarTest extends BuildFileTest {
         }
     }
 
+    public void testSysProperty() {
+        executeTarget("testSysProperty");
+    }
+
     public void testVerifyJar() {
         executeTarget("testVerifyJar");
     }

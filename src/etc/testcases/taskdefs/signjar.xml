@@ -6,8 +6,6 @@
   <property name="test.jar" location="${sign.dir}/signtest.jar" />
   <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
   
-  <mkdir dir="${sign.dir}" />
-  <mkdir dir="${subdir}" />
   
   <macrodef name="assertSigned">
     <attribute name="jar" default="${test.jar}" />
@@ -35,8 +33,13 @@
   <presetdef name="sign">
     <sign-base jar="${test.jar}" />
   </presetdef>
+
+  <target name="init">
+    <mkdir dir="${sign.dir}" />
+    <mkdir dir="${subdir}" />
+  </target>
   
-  <target name="jar" >
+  <target name="jar" depends="init">
     <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
   </target>  
 
@@ -117,9 +120,8 @@
   </target>
   
   <target name="testSignedJar" depends="jar">
-    <property name="new.jar" location="${sign.dir}/newfile.jar" />
-    <sign signedjar="${new.jar}"/>
-    <assertSigned jar="${new.jar}"/>
+    <sign signedjar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirtest.jar}"/>
   </target>
 
   <target name="testDestDirAndSignedJar" depends="jar">
@@ -181,6 +183,12 @@
     <sign tsaurl="http://localhost:0/" />
   </target>
   
+  <target name="testSysProperty" depends="jar">
+    <sign>
+      <sysproperty key="ant.home" value="${ant.home}" />
+    </sign>
+    <assertSigned/>    
+  </target>
   
   <target name="testVerifyJar" depends="basic">
     <verify-base jar="${test.jar}"/>
