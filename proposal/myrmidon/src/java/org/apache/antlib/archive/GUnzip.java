@@ -5,40 +5,33 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.antlib.archive;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.bzip2.CBZip2InputStream;
 
 /**
- * Expands a file that has been compressed with the BZIP2 algorithm. Normally
+ * Expands a file that has been compressed with the GZIP algorithm. Normally
  * used to compress non-compressed archives such as TAR files.
  *
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class BUnzip2
+public class GUnzip
     extends Unpack
 {
-    private final static String DEFAULT_EXTENSION = ".bz2";
+    private final static String DEFAULT_EXTENSION = ".gz";
 
     protected String getDefaultExtension()
     {
         return DEFAULT_EXTENSION;
     }
 
-    protected InputStream getUnpackingStream( final InputStream input )
+    protected InputStream getUnpackingStream( InputStream input )
         throws TaskException, IOException
     {
-        final int b1 = input.read();
-        final int b2 = input.read();
-        if( b1 != 'B' || b2 != 'Z' )
-        {
-            final String message = "Invalid bz2 file.";
-            throw new TaskException( message );
-        }
-
-        return new CBZip2InputStream( input );
+        return new GZIPInputStream( input );
     }
 }

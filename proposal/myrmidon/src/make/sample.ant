@@ -169,5 +169,26 @@ Legal:
     <log message-ref="refme2"/>
   </target>
 
+  <target name="gzip-test">
+    <property name="zip" value="../../dist/bin/sample.gz" />
+    <property name="unzip" value="../../dist/bin/sample.txt" />
+
+    <gzip src="sample.ant" zipfile="${zip}"/>
+    <log message="Gzipped file!"/>
+
+    <gunzip src="${zip}" dest="${unzip}"/>
+    <log message="Ungzipped file!"/>
+  </target>
+
+  <target name="bzip2-test">
+    <property name="zip" value="../../dist/bin/sample.gz" />
+    <property name="unzip" value="../../dist/bin/sample.txt" />
+
+    <bzip2 src="sample.ant" zipfile="${zip}"/>
+    <log message="Gzipped file!"/>
+
+    <bunzip2 src="${zip}" dest="${unzip}"/>
+    <log message="Ungzipped file!"/>
+  </target>
 
 </project>

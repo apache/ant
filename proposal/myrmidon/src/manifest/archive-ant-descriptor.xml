@@ -1,0 +1,10 @@
+<ant-lib>
+
+  <types>
+    <task name="bunzip2" classname="org.apache.antlib.archive.BUnzip2" />
+    <task name="bzip2" classname="org.apache.antlib.archive.BZip2" />
+    <task name="gunzip" classname="org.apache.antlib.archive.GUnzip" />
+    <task name="gzip" classname="org.apache.antlib.archive.GZip" />
+  </types>
+
+</ant-lib>

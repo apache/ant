@@ -5,29 +5,28 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.antlib.archive;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.bzip2.CBZip2OutputStream;
 
 /**
- * Compresses a file with the BZip2 algorithm. Normally used to compress
+ * Compresses a file with the GZIP algorithm. Normally used to compress
  * non-compressed archives such as TAR files.
  *
+ * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class BZip2
+public class GZip
     extends Pack
 {
-    private static final byte[] HEADER = new byte[]{(byte)'B', (byte)'Z'};
-
-    protected OutputStream getPackingStream( OutputStream output )
+    protected OutputStream getPackingStream( final OutputStream output )
         throws TaskException, IOException
     {
-        output.write( HEADER );
-        return new CBZip2OutputStream( output );
+        return new GZIPOutputStream( output );
     }
 }

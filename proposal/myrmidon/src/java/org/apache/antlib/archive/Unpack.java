@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.antlib.archive;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,12 +45,12 @@ public abstract class Unpack
     {
         validate();
 
-        final File source = getSrc();
+        final File src = getSrc();
         final File dest = getDest();
 
-        if( source.lastModified() > dest.lastModified() )
+        if( src.lastModified() > dest.lastModified() )
         {
-            final String message = "Expanding " + source.getAbsolutePath() +
+            final String message = "Expanding " + src.getAbsolutePath() +
                 " to " + dest.getAbsolutePath();
             getLogger().info( message );
 

@@ -350,6 +350,13 @@ Legal:
       </zipfileset>
     </jar>
 
+    <jar jarfile="${build.lib}/archive.atl" basedir="${build.classes}">
+      <include name="org/apache/antlib/archive/**" />
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="archive-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
     <jar jarfile="${build.lib}/cvslib.atl" basedir="${build.classes}">
       <include name="org/apache/antlib/cvslib/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
