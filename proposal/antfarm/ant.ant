@@ -1,0 +1,35 @@
+<!-- this is a test -->
+<project name="ant" 
+	xmlns:doc="http:/apache.org/ant-2.0.0/doc" 
+	doc:copyright="Copyright (c) 2000 The Apache Software Foundation">
+
+	<import name="java2sdk"/>
+	<import name="jaxp"/>
+
+	<target name="init" depends="java2sdk:init"/>
+
+	<target name="core" abc:aaaa="foo">
+		<javac dest="temp/core" classpath="">
+			<fileset src="core"/>
+		</javac>
+		<jar jarfile="dist/ant.jar" basedir="temp/core" manifest="core/META-INF/manifest.mf"/>
+	</target>
+
+	<target name="xml" depends="core jaxp:init">
+		<javac dest="temp/xml" classpath="dist/ant.jar:{jaxp:ant.base.dir}/jaxp.jar:{jaxp:ant.base.dir}/crimson.jar">
+			<fileset src="xml"/>
+		</javac>
+		<jar jarfile="dist/xml/ant-xml.jar" basedir="temp/xml"/>
+		<copy src="boot/xml/jaxp.jar" dest="dist/xml/jaxp.jar"/>
+		<copy src="boot/xml/crimson.jar" dest="dist/xml/crimson.jar"/>
+	</target>
+
+	<target name="tasks" depends="core">
+		<javac dest="temp/tasks" classpath="dist/ant.jar">
+			<fileset src="tasks"/>
+		</javac>
+		<jar jarfile="dist/tasks/standard.jar" basedir="temp/tasks"/>
+	</target>
+
+	<target name="all" depends="init core xml tasks"/>
+</project>
