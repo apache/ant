@@ -65,36 +65,15 @@ public final class Environment
     }
 
     /**
-     * Retrieve an array of EnvironmentData vars that contains a list of all
-     * native EnvironmentData Variables for the current process.
-     */
-    private static String[] getNativeEnvironmentAsArray()
-        throws IOException, ExecException
-    {
-        final Properties environment = getEnvironmentVariables();
-
-        final String[] env = new String[ environment.size() ];
-        final Iterator keys = environment.keySet().iterator();
-        int index = 0;
-        while( keys.hasNext() )
-        {
-            final String key = (String)keys.next();
-            final String value = environment.getProperty( key );
-            env[ index ] = key + '=' + value;
-            index++;
-        }
-
-        return env;
-    }
-
-    /**
      * Retrieve a Properties object that contains the list of all
      * native EnvironmentData Variables for the current process.
      */
     public static Properties getNativeEnvironment()
         throws IOException, ExecException
     {
-        return new Properties( getEnvironmentVariables() );
+        final Properties properties = new Properties();
+        properties.putAll( getEnvironmentVariables() );
+        return properties;
     }
 
     /**
@@ -151,7 +130,10 @@ public final class Environment
         }
 
         // Since we "look ahead" before adding, there's one last env var.
-        addProperty( properties, var );
+        if( null != var )
+        {
+            addProperty( properties, var );
+        }
         return properties;
     }
 
