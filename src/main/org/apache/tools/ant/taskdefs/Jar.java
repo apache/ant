@@ -425,7 +425,8 @@ public class Jar extends Zip {
             }
             catch (Exception e) {
                 // any problems and we will rebuild
-                log("Updating jar since cannot read current jar manifest: " + e.getClass().getName() + e.getMessage(),
+                log("Updating jar since cannot read current jar manifest: " 
+                    + e.getClass().getName() + " - " + e.getMessage(),
                     Project.MSG_VERBOSE);
                 return false;
             }
