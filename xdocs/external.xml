@@ -193,6 +193,33 @@
         </table>
       </subsection>
 
+      <subsection name="AntTimerTask">
+        <p><a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">Timer</a>
+        is task for measuring the time elapsed to complete other
+        tasks</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">http://www.jeckle.de/freeStuff/AntTimerTask/index.html</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mario@jeckle.de">mario@jeckle.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lesser GNU Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Checkstyle">
 
         <p>Checkstyle is a development tool to help programmers write
