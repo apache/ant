@@ -87,7 +87,7 @@ public class Jar extends Zip {
 	if (manifest != null) {
 	    ZipEntry ze = new ZipEntry("META-INF/");
 	    zOut.putNextEntry(ze);
-	    zipFile(manifest, zOut, "META-INF/MANIFEST.MF");
+	    super.zipFile(manifest, zOut, "META-INF/MANIFEST.MF");
 	} else {
 	    ZipEntry ze = new ZipEntry("META-INF/");
 	    zOut.putNextEntry(ze);
@@ -100,14 +100,22 @@ public class Jar extends Zip {
      }
 
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
-	throws IOException
+        throws IOException
     {
-	// First add directory to zip entry
-	if( ! "META-INF/".equals(vPath) ) {
-	    // we already added a META-INF
-	    ZipEntry ze = new ZipEntry(vPath);
-	    zOut.putNextEntry(ze);
+        // First add directory to zip entry
+        if(!vPath.equals("META-INF/")) {
+            // we already added a META-INF
+            ZipEntry ze = new ZipEntry(vPath);
+            zOut.putNextEntry(ze);
         }
-	super.zipDir(dir, zOut, vPath);
+    }
+
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+        throws IOException
+    {
+        // We already added a META-INF/MANIFEST.MF
+        if (!vPath.equals("META-INF/MANIFEST.MF")) {
+            super.zipFile(file, zOut, vPath);
+        }
     }
 }

@@ -67,11 +67,12 @@ import java.util.*;
 
 public class Copydir extends Task {
 
-    public File srcDir;
-    public File destDir;
-
+    private File srcDir;
+    private File destDir;
+    private String[] includes;
+    private String[] excludes;
+    private boolean useDefaultExcludes = true;
     private Hashtable filecopyList = new Hashtable();
-    private Vector ignoreList = new Vector();
 
     public void setSrc(String src) {
 	srcDir = project.resolveFile(src);
@@ -81,8 +82,85 @@ public class Copydir extends Task {
 	destDir = project.resolveFile(dest);
     }
     
+    /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        if (includes != null && includes.length() > 0) {
+            Vector tmpIncludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(includes, ", ", false);
+            while (tok.hasMoreTokens()) {
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpIncludes.addElement(pattern);
+                }
+            }
+            this.includes = new String[tmpIncludes.size()];
+            for (int i = 0; i < tmpIncludes.size(); i++) {
+                this.includes[i] = (String)tmpIncludes.elementAt(i);
+            }
+        } else {
+            this.includes = null;
+        }
+    }
+
+    /**
+     * Sets the set of exclude patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param excludes the string containing the exclude patterns
+     */
+    public void setExcludes(String excludes) {
+        if (excludes != null && excludes.length() > 0) {
+            Vector tmpExcludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
+            while (tok.hasMoreTokens()) {
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpExcludes.addElement(pattern);
+                }
+            }
+            this.excludes = new String[tmpExcludes.size()];
+            for (int i = 0; i < tmpExcludes.size(); i++) {
+                this.excludes[i] = (String)tmpExcludes.elementAt(i);
+            }
+        } else {
+            this.excludes = null;
+        }
+    }
+
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true" or "on" when default exclusions should
+     *                           be used, "false" or "off" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(String useDefaultExcludes) {
+        this.useDefaultExcludes = Project.toBoolean(useDefaultExcludes);
+    }
+
     public void execute() throws BuildException {
-	scanDir(srcDir, destDir);
+        if (srcDir == null) {
+            throw new BuildException("srcdir attribute must be set!");
+        }
+        if (!srcDir.exists()) {
+            throw new BuildException("srcdir does not exist!");
+        }
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(srcDir);
+        ds.setIncludes(includes);
+        ds.setExcludes(excludes);
+        if (useDefaultExcludes) {
+            ds.addDefaultExcludes();
+        }
+        ds.scan();
+        
+        String[] files = ds.getIncludedFiles();
+        scanDir(srcDir, destDir, files);
 	if (filecopyList.size() > 0) {
 	    project.log("Copying " + filecopyList.size() + " files to "
 			+ destDir.getAbsolutePath());
@@ -115,38 +193,32 @@ public class Copydir extends Task {
         @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
     */
     public void setIgnore(String ignoreString) {
-        ignoreString = ignoreString;
+        project.log("The ignore attribute is deprecated. "+
+                    "Please use the excludes attribute.",
+                    Project.MSG_WARN);
         if (ignoreString != null && ignoreString.length() > 0) {
-            StringTokenizer tok =
-            new StringTokenizer(ignoreString, ", ", false);
+            Vector tmpExcludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
             while (tok.hasMoreTokens()) {
-                ignoreList.addElement ( tok.nextToken().trim() );
+                tmpExcludes.addElement("**/"+tok.nextToken().trim()+"/**");
             }
+            this.excludes = new String[tmpExcludes.size()];
+            for (int i = 0; i < tmpExcludes.size(); i++) {
+                this.excludes[i] = (String)tmpExcludes.elementAt(i);
+            }
+        } else {
+            this.excludes = null;
         }
     }
 
-    private void scanDir(File from, File to) {
-        String[] list = from.list(new DesirableFilter());
-        if (list == null) {
-            project.log("Source directory " + srcDir.getAbsolutePath()
-                + " does not exist.", "copydir", Project.MSG_WARN);
-            return;
-        }
-        for (int i = 0; i < list.length; i++) {
-            String filename = list[i];
+    private void scanDir(File from, File to, String[] files) {
+        for (int i = 0; i < files.length; i++) {
+            String filename = files[i];
             File srcFile = new File(from, filename);
             File destFile = new File(to, filename);
-            if ( ! ignoreList.contains(filename) ) {            
-                if (srcFile.isDirectory()) {
-                    scanDir(srcFile, destFile);
-                } else {
-                    if (srcFile.lastModified() > destFile.lastModified()) {
-                        filecopyList.put(srcFile.getAbsolutePath(),
+            if (srcFile.lastModified() > destFile.lastModified()) {
+                filecopyList.put(srcFile.getAbsolutePath(),
                                  destFile.getAbsolutePath());
-                    }
-                }
-            } else {
-                project.log("Copydir Ignored: " + filename, Project.MSG_VERBOSE);
             }
         }
     }

@@ -74,10 +74,10 @@ public class Zip extends Task {
 
     private File zipFile;
     private File baseDir;
-    private Vector items = new Vector();
+    private String[] includes;
+    private String[] excludes;
+    private boolean useDefaultExcludes = true;
     private File manifest;    
-    private Vector ignoreList = new Vector();
-    private boolean allItems = false;
     protected String archiveType = "zip";
     
     /**
@@ -107,15 +107,28 @@ public class Zip extends Task {
         ignore lists are easier than include lists. ;-)
     */
     public void setItems(String itemString) {
-        if ( itemString.equals("*") ) {
-            allItems = true;
+        project.log("The items attribute is deprecated. "+
+                    "Please use the includes attribute.",
+                    Project.MSG_WARN);
+        if (itemString == null || itemString.equals("*")) {
+            includes = new String[1];
+            includes[0] = "**";
         } else {
-            StringTokenizer tok = new StringTokenizer(itemString, ",", false);
+            Vector tmpIncludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(itemString, ", ");
             while (tok.hasMoreTokens()) {
-                items.addElement(tok.nextToken().trim());
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpIncludes.addElement(pattern+"/**");
+                }
+            }
+            this.includes = new String[tmpIncludes.size()];
+            for (int i = 0; i < tmpIncludes.size(); i++) {
+                this.includes[i] = (String)tmpIncludes.elementAt(i);
             }
         }
     }
+
     /**
         List of filenames and directory names to not 
         include in the final .jar file. They should be either 
@@ -130,49 +143,127 @@ public class Zip extends Task {
         @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
     */
     public void setIgnore(String ignoreString) {
-        ignoreString = ignoreString;
-        if (ignoreString != null && ignoreString.length() > 0) {
-            StringTokenizer tok =
-            new StringTokenizer(ignoreString, ", ", false);
+        project.log("The ignore attribute is deprecated. "+
+                    "Please use the excludes attribute.",
+                    Project.MSG_WARN);
+        if (ignoreString == null) {
+            this.excludes = null;
+        } else {
+            Vector tmpExcludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(ignoreString, ", ");
             while (tok.hasMoreTokens()) {
-                ignoreList.addElement ( tok.nextToken().trim() );
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpExcludes.addElement("**/"+pattern+"/**");
+                }
+            }
+            this.excludes = new String[tmpExcludes.size()];
+            for (int i = 0; i < tmpExcludes.size(); i++) {
+                this.excludes[i] = (String)tmpExcludes.elementAt(i);
             }
         }
     }
     
+    /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        if (includes == null) {
+            this.includes = null;
+        } else {
+            Vector tmpIncludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(includes, ", ");
+            while (tok.hasMoreTokens()) {
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpIncludes.addElement(pattern);
+                }
+            }
+            this.includes = new String[tmpIncludes.size()];
+            for (int i = 0; i < tmpIncludes.size(); i++) {
+                this.includes[i] = (String)tmpIncludes.elementAt(i);
+            }
+        }
+    }
+
+    /**
+     * Sets the set of exclude patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param excludes the string containing the exclude patterns
+     */
+    public void setExcludes(String excludes) {
+        if (excludes == null) {
+            this.excludes = null;
+        } else {
+            Vector tmpExcludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
+            while (tok.hasMoreTokens()) {
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpExcludes.addElement(pattern);
+                }
+            }
+            this.excludes = new String[tmpExcludes.size()];
+            for (int i = 0; i < tmpExcludes.size(); i++) {
+                this.excludes[i] = (String)tmpExcludes.elementAt(i);
+            }
+        }
+    }
+
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true" or "on" when default exclusions should
+     *                           be used, "false" or "off" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(String useDefaultExcludes) {
+        this.useDefaultExcludes = Project.toBoolean(useDefaultExcludes);
+    }
+
     public void execute() throws BuildException {
-        project.log("Building " + archiveType + ": " + zipFile.getAbsolutePath());
-    
+        project.log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
+
+        if (baseDir == null) {
+            throw new BuildException("basedir attribute must be set!");
+        }
+        if (!baseDir.exists()) {
+            throw new BuildException("basedir does not exist!");
+        }
+
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(baseDir);
+        ds.setIncludes(includes);
+        ds.setExcludes(excludes);
+        if (useDefaultExcludes) {
+            ds.addDefaultExcludes();
+        }
+        ds.scan();
+
+        String[] files = ds.getIncludedFiles();
+        String[] dirs  = ds.getIncludedDirectories();
+
         try {
             ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
-	    initZipOutputStream(zOut);
-            
-            if ( allItems ) {
-                String[] lst = baseDir.list();
-                for (int i=0;i<lst.length;i++) {
-                    items.addElement(lst[i]);
-                }
+            initZipOutputStream(zOut);
+
+            for (int i = 0; i < dirs.length; i++) {
+                File f = new File(baseDir,dirs[i]);
+                String name = dirs[i].replace(File.separatorChar,'/')+"/";
+                zipDir(f, zOut, name);
             }
 
-            // add items
-            Enumeration e = items.elements();
-            while (e.hasMoreElements()) {
-                String s = (String)e.nextElement();
-                // check to make sure item is not in ignore list
-                // shouldn't be ignored here, but just want to make sure
-                if (! ignoreList.contains(s)) {
-                    File f = new File(baseDir, s);
-                    if (f.isDirectory()) {
-                        zipDir(f, zOut, s + "/");
-                    } else {
-                        zipFile(f, zOut, s);
-                    }
-                } else {
-                    project.log("Ignoring: " + s, Project.MSG_WARN);
-                }
+            for (int i = 0; i < files.length; i++) {
+                File f = new File(baseDir,files[i]);
+                String name = files[i].replace(File.separatorChar,'/');
+                zipFile(f, zOut, name);
             }
-    
-            // close up            
+
+            // close up
             zOut.close();
         } catch (IOException ioe) {
             String msg = "Problem creating " + archiveType + " " + ioe.getMessage();
@@ -181,29 +272,14 @@ public class Zip extends Task {
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
-	throws IOException, BuildException
+        throws IOException, BuildException
     {
-	zOut.setMethod(ZipOutputStream.DEFLATED);
+        zOut.setMethod(ZipOutputStream.DEFLATED);
     }
 
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
         throws IOException
     {
-        String[] list = dir.list();
-        for (int i = 0; i < list.length; i++) {
-            String f = list[i];
-            // check to make sure item is not in ignore list
-            if (! ignoreList.contains(f)) {
-                File file = new File(dir, f);
-                if (file.isDirectory()) {
-                    zipDir(file, zOut, vPath + f + "/");
-                } else {
-                    zipFile(file, zOut, vPath + f);
-                }
-            } else {
-                project.log("Ignoring: " + f, Project.MSG_WARN);
-            }
-        }
     }
 
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath)
@@ -211,7 +287,7 @@ public class Zip extends Task {
     {
         ZipEntry ze = new ZipEntry(vPath);
         zOut.putNextEntry(ze);
-        
+
         byte[] buffer = new byte[8 * 1024];
         int count = 0;
         do {
@@ -219,7 +295,7 @@ public class Zip extends Task {
             count = in.read(buffer, 0, buffer.length);
         } while (count != -1);
     }
-    
+
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {

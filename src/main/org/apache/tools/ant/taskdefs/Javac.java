@@ -98,6 +98,9 @@ public class Javac extends Task {
     private String target;
     private String bootclasspath;
     private String extdirs;
+    private String[] includes;
+    private String[] excludes;
+    private boolean useDefaultExcludes = true;
 
     private Vector compileList = new Vector();
     private Hashtable filecopyList = new Hashtable();
@@ -193,22 +196,91 @@ public class Javac extends Task {
     }
 
     /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        if (includes != null && includes.length() > 0) {
+            Vector tmpIncludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(includes, ", ", false);
+            while (tok.hasMoreTokens()) {
+                tmpIncludes.addElement(tok.nextToken().trim());
+            }
+            this.includes = new String[tmpIncludes.size()];
+            for (int i = 0; i < tmpIncludes.size(); i++) {
+                this.includes[i] = (String)tmpIncludes.elementAt(i);
+            }
+        } else {
+            this.includes = null;
+        }
+    }
+
+    /**
+     * Sets the set of exclude patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param excludes the string containing the exclude patterns
+     */
+    public void setExcludes(String excludes) {
+        if (excludes != null && excludes.length() > 0) {
+            Vector tmpExcludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
+            while (tok.hasMoreTokens()) {
+                tmpExcludes.addElement(tok.nextToken().trim());
+            }
+            this.excludes = new String[tmpExcludes.size()];
+            for (int i = 0; i < tmpExcludes.size(); i++) {
+                this.excludes[i] = (String)tmpExcludes.elementAt(i);
+            }
+        } else {
+            this.excludes = null;
+        }
+    }
+
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true" or "on" when default exclusions should
+     *                           be used, "false" or "off" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(String useDefaultExcludes) {
+        this.useDefaultExcludes = Project.toBoolean(useDefaultExcludes);
+    }
+
+    /**
      * Executes the task.
      */
-
     public void execute() throws BuildException {
-
         // first off, make sure that we've got a srcdir and destdir
 
-        if (srcDir == null || destDir == null ) {
-            String msg = "srcDir and destDir attributes must be set!";
-            throw new BuildException(msg);
+        if (srcDir == null) {
+            throw new BuildException("srcdir attribute must be set!");
+        }
+        if (!srcDir.exists()) {
+            throw new BuildException("srcdir does not exist!");
+        }
+        if (destDir == null) {
+            throw new BuildException("destdir attribute must be set!");
         }
 
         // scan source and dest dirs to build up both copy lists and
         // compile lists
 
-        scanDir(srcDir, destDir);
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(srcDir);
+        ds.setIncludes(includes);
+        ds.setExcludes(excludes);
+        if (useDefaultExcludes) {
+            ds.addDefaultExcludes();
+        }
+        ds.scan();
+
+        String[] files = ds.getIncludedFiles();
+
+        scanDir(srcDir, destDir, files);
 
         // compile the source files
 
@@ -262,33 +334,21 @@ public class Javac extends Task {
      * support files to be copied.
      */
 
-    private void scanDir(File srcDir, File destDir) {
-
-        String[] list = srcDir.list(new DesirableFilter());
-        int len = (list==null ? 0 : list.length);
-        for (int i = 0; i < len; i++) {
-            String filename = list[i];
-            File srcFile = new File(srcDir, filename);
-            File destFile = new File(destDir, filename);
-            if (srcFile.isDirectory()) {
-                // it's a dir, scan that recursively
-                scanDir(srcFile, destFile);
-            } else {
-                // it's a file, see if we compile it or just copy it
-                if (filename.endsWith(".java")) {
-                    File classFile =
-                        new File(destDir,
-                                 filename.substring(0,
-                                                    filename.indexOf(".java"))
+    private void scanDir(File srcDir, File destDir, String files[]) {
+        for (int i = 0; i < files.length; i++) {
+            File srcFile = new File(srcDir, files[i]);
+            if (files[i].endsWith(".java")) {
+                File classFile = new File(destDir, files[i].substring(0,
+                        files[i].indexOf(".java"))
                                                     + ".class");
                     if (srcFile.lastModified() > classFile.lastModified()) {
                         compileList.addElement(srcFile.getAbsolutePath());
                     }
                 } else {
+                File destFile = new File(destDir, files[i]);
                     if (srcFile.lastModified() > destFile.lastModified()) {
                         filecopyList.put(srcFile.getAbsolutePath(),
                                          destFile.getAbsolutePath());
-                    }
                 }
             }
         }
