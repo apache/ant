@@ -30,6 +30,10 @@ public final class StripLineBreaks
 
     private Parameter[] parameters;
 
+    private String lineBreaks = DEFAULT_LINE_BREAKS;
+
+    private boolean initialized = false;
+
     /**
      * Create a new filtered reader.
      *
@@ -39,64 +43,59 @@ public final class StripLineBreaks
         super(in);
     }
 
-    /**
-     * Strip line break characters from an array.
-     *
-     * @exception  IOException  If an I/O error occurs
-     */
-    public final int read(final char[] cbuf) throws IOException {
-        int length = -1;
-        if (cbuf != null) {
-            length = cbuf.length;
-            if (in != null) {
-                length = in.read(cbuf);
-            }
-            if (length != -1) {
-                String str = new String(cbuf, 0, length);
-                str = stripLineBreaks(str);
-                final char[] newcbuf = str.toCharArray();
-                System.arraycopy(newcbuf, 0, cbuf, 0, newcbuf.length);
-                for (int j = newcbuf.length; j < cbuf.length; j++) {
-                    cbuf[j] = 0;
+    public final int read() throws IOException {
+        if (!initialized) {
+            String userDefinedLineBreaks = null;
+            if (parameters != null) {
+                for (int i = 0; i < parameters.length; i++) {
+                    if (LINE_BREAKS_KEY.equals(parameters[i].getName())) {
+                        userDefinedLineBreaks = parameters[i].getValue();
+                        break;
+                    }
                 }
-                length = newcbuf.length;
+            }
+
+            if (userDefinedLineBreaks != null) {
+                lineBreaks = userDefinedLineBreaks;
+            }
+
+            initialized = true;
+        }
+
+        int ch = in.read();
+        while (ch != -1) {
+            if (lineBreaks.indexOf(ch) == -1) {
+                break;
+            } else {
+                ch = in.read();
             }
         }
-        return length;
+        return ch;
     }
 
-    /**
-     * strip out all line breaks from a string.
-     * @param source source
-     * This implementation always duplicates the string; it is nominally possible to probe
-     * the string first looking for any line breaks before bothering to do a copy. But we assume if
-     * the option is requested, then line breaks are probably in the source string.
-     */
-    private final String stripLineBreaks(final String source) {
-        final int len = source.length();
-        String userDefinedLineBreaks = null;
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (LINE_BREAKS_KEY.equals(parameters[i].getName())) {
-                    userDefinedLineBreaks = parameters[i].getValue();
-                    break;
+    public final int read(final char cbuf[], final int off,
+                          final int len) throws IOException {
+        for (int i = 0; i < len; i++) {
+            final int ch = read();
+            if (ch == -1) {
+                if (i == 0) {
+                    return -1;
+                } else {
+                    return i;
                 }
             }
+            cbuf[off + i] = (char) ch;
         }
+        return len;
+    }
 
-        String lineBreaks = DEFAULT_LINE_BREAKS;
-        if (userDefinedLineBreaks != null) {
-            lineBreaks = userDefinedLineBreaks;
-        }
-        final StringBuffer dest = new StringBuffer(len);
-        for(int i=0;i<len;++i) {
-            final char ch=source.charAt(i);
-            if(lineBreaks.indexOf(ch)==-1) {
-                dest.append(ch);
+    public final long skip(long n) throws IOException {
+        for (long i = 0; i < n; i++) {
+            if (in.read() == -1) {
+                return i;
             }
         }
-        return new String(dest);
-
+        return n;
     }
 
     /**
