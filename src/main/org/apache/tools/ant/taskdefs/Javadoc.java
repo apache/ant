@@ -366,10 +366,32 @@ public class Javadoc extends Exec {
                 argList.addElement("-linkoffline");
                 argList.addElement(linkoffline);
             }
+
+            // Javadoc 1.2 rules:
+            //   Multiple -group args allowed.
+            //   Each arg includes 3 strings: -group [name] [packagelist].
+            //   Elements in [packagelist] are colon-delimited.
+            //   An element in [packagelist] may end with the * wildcard.
+
+            // Ant javadoc task rules for group attribute:
+            //   Args are comma-delimited.
+            //   Each arg is 2 space-delimited strings.
+            //   E.g., group="XSLT_Packages org.apache.xalan.xslt*,XPath_Packages orgapache.xalan.xpath*"
             if (group != null) {
-                argList.addElement("-group");
-                argList.addElement(group);
+                StringTokenizer tok = new StringTokenizer(group, ",", false);
+                while (tok.hasMoreTokens()) {
+                  String grp = tok.nextToken().trim();
+                  int space = grp.indexOf(" ");
+                  if (space > 0){
+                    String name = grp.substring(0, space);
+                    String pkgList = grp.substring(space + 1);
+                    argList.addElement("-group");
+                    argList.addElement(name);
+                    argList.addElement(pkgList);
+                  }
+                }
             }
+
             if (stylesheetfile != null) {
                 argList.addElement("-stylesheetfile");
                 argList.addElement(stylesheetfile.getAbsolutePath());
