@@ -79,7 +79,7 @@ public class Mkdir extends Task {
 
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
-            if (result == false) {
+            if (!result) {
                 String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
                     "successful for an unknown reason";
                 throw new BuildException(msg, location);
