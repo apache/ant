@@ -360,7 +360,15 @@ public class Javac extends MatchingTask {
                         files[i], Project.MSG_WARN);
                 }
 
-                if (srcFile.lastModified() > classFile.lastModified()) {
+                if (!classFile.exists() || srcFile.lastModified() > classFile.lastModified()) {
+                    if (!classFile.exists()) {
+                        log("Compiling " + srcFile.getPath() + " because class file " 
+                                + classFile.getPath() + " does not exist", Project.MSG_VERBOSE);
+                    }
+                    else {
+                        log("Compiling " + srcFile.getPath() + " because it is out of date with respect to " 
+                                + classFile.getPath(), Project.MSG_VERBOSE);
+                    }                                                        
                     compileList.addElement(srcFile.getAbsolutePath());
                 }
             }
