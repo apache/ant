@@ -1,0 +1,33 @@
+<project default="main" basedir=".">
+
+  <!--
+    Give user a chance to override without editing this file
+    (and without typing -D each time he compiles it)
+  -->
+  <property file=".ant.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <path id="project.class.path">
+    <pathelement path="${java.class.path}" />
+    <fileset dir="lib">
+      <include name="*.jar" />
+    </fileset>
+    <pathelement path="build/classes" />
+  </path>
+
+  <!-- Main target -->
+  <target name="main" depends="style" />
+
+  <!-- lets see what is available -->
+  <target name="jdepend">
+    <jdepend outputfile="build/jdepend.xml" format="xml" fork="yes">
+      <classpath refid="project.class.path"/>
+      <sourcespath>
+          <pathelement location="src/java" />
+      </sourcespath>
+    </jdepend>
+
+    <style in="build/jdepend.xml" processor="trax" out="build/jdepend.html" style="../../src/etc/jdepend.xsl"/>
+  </target>
+
+</project>
