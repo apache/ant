@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<project name="java-test" basedir="." default="">
+
+  <property name="app" 
+    value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
+  
+  <path id="test.classpath">
+    <pathelement location="${build.tests}"/>
+  </path>
+  
+  <target name="noclassname">
+    <java/>
+  </target>
+
+  <target name="jarNoFork">
+    <java jar="test.jar" fork="false"/>
+  </target>  
+  
+  
+  <target name="jarAndClassname">
+    <java jar="test.jar" classname="${app}" />
+  </target>
+  
+  <target name="ClassnameAndjar">
+    <java classname="${app}" jar="test.jar"  />
+  </target>  
+  
+  <target name="run">
+    <fail unless="tests-classpath.value" /> 
+    <java classname="${app}"
+      classpath="${tests-classpath.value}"/>
+  </target>
+
+  <target name="run-fail">
+    <java classname="${app}" 
+      classpath="tests-classpath.value"
+      >
+        <arg value="-1"/>
+    </java>
+  </target>
+
+  <target name="run-fail-foe">
+    <java classname="${app}"
+        classpath="tests-classpath.value"
+        failonerror="true">
+        <arg value="-1"/>
+    </java>
+  </target>
+
+  <target name="run-fail-foe-fork">
+    <java classname="${app}"
+        classpath="tests-classpath.value"
+        failonerror="true"
+        fork="true">
+        <arg value="-1"/>
+    </java>
+  </target>
+
+  <target name="runExpectNoFail">
+    <java classname="${app}"
+        classpath="tests-classpath.value"
+        failonerror="true">
+        <arg value="-1"/>
+    </java>
+  </target>
+
+</project>
