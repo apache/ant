@@ -103,7 +103,7 @@ public class JUnitTask extends Task {
      * Set the path to junit classes.
      * @param junit path to junit classes.
      */
-    public void setJunit(String junit) {
+    public void setJunit(File junit) {
         commandline.createClasspath(project).createPathElement().setLocation(junit);
     }
 

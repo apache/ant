@@ -145,19 +145,8 @@ public class PathTest extends TestCase {
 
     public void testSetLocation() {
         Path p = new Path(project);
-        p.setLocation("/a");
+        p.setLocation(new File(File.separatorChar+"a"));
         String[] l = p.list();
-        if (isUnixStyle) {
-            assertEquals(1, l.length);
-            assertEquals("/a", l[0]);
-        } else {
-            assertEquals(1, l.length);
-            assertEquals("\\a", l[0]);
-        }
-
-        p = new Path(project);
-        p.setLocation("\\a");
-        l = p.list();
         if (isUnixStyle) {
             assertEquals(1, l.length);
             assertEquals("/a", l[0]);
@@ -171,7 +160,7 @@ public class PathTest extends TestCase {
         Path p = new Path(project, "/a:/b");
         String[] l = p.list();
         assertEquals("2 after construction", 2, l.length);
-        p.setLocation("/c");
+        p.setLocation(new File("/c"));
         l = p.list();
         assertEquals("3 after setLocation", 3, l.length);
         p.setPath("\\d;\\e");
@@ -186,9 +175,6 @@ public class PathTest extends TestCase {
         Path p = new Path(project, "");
         String[] l = p.list();
         assertEquals("0 after construction", 0, l.length);
-        p.setLocation("");
-        l = p.list();
-        assertEquals("0 after setLocation", 0, l.length);
         p.setPath("");
         l = p.list();
         assertEquals("0 after setPath", 0, l.length);
@@ -201,7 +187,7 @@ public class PathTest extends TestCase {
         Path p = new Path(project, "/a:/a");
         String[] l = p.list();
         assertEquals("1 after construction", 1, l.length);
-        p.setLocation("\\a");
+        p.setLocation(new File(File.separatorChar+"a"));
         l = p.list();
         assertEquals("1 after setLocation", 1, l.length);
         p.setPath("\\a;/a");

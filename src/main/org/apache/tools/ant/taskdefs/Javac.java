@@ -357,7 +357,7 @@ public class Javac extends MatchingTask {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
-        classpath.setLocation(destDir.getAbsolutePath());
+        classpath.setLocation(destDir);
 
         // add our classpath to the mix
 
@@ -415,7 +415,7 @@ public class Javac extends MatchingTask {
             File f = project.resolveFile(list[i]);
 
             if (f.exists()) {
-                target.setLocation(f.getAbsolutePath());
+                target.setLocation(f);
            } else {
                log("Dropping from classpath: "+
                    f.getAbsolutePath(), Project.MSG_VERBOSE);
@@ -782,7 +782,7 @@ public class Javac extends MatchingTask {
                for (int i=0 ; i < files.length ; i++) {
                    File f = new File(dir,files[i]);
                    if (f.exists() && f.isFile()) {
-                       classpath.setLocation(f.getAbsolutePath());
+                       classpath.setLocation(f);
                    }
                }
            }

@@ -134,9 +134,9 @@ public class MParse extends Task {
         }
 
         final Path classpath = cmdl.createClasspath(project);
-        classpath.createPathElement().setLocation(metahome.getAbsolutePath() + "/lib/metamatadebug.jar");
-        classpath.createPathElement().setLocation(metahome.getAbsolutePath() + "/lib/metamata.jar");
-        classpath.createPathElement().setLocation(metahome.getAbsolutePath() + "/lib/JavaCC.zip");
+        classpath.createPathElement().setLocation(new File(metahome.getAbsolutePath() + "/lib/metamatadebug.jar"));
+        classpath.createPathElement().setLocation(new File(metahome.getAbsolutePath() + "/lib/metamata.jar"));
+        classpath.createPathElement().setLocation(new File(metahome.getAbsolutePath() + "/lib/JavaCC.zip"));
 
         final Commandline.Argument arg = cmdl.createVmArgument();
         arg.setValue("-mx140M");

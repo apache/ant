@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PathTokenizer;
 
@@ -93,20 +95,44 @@ import java.text.StringCharacterIterator;
 
 public class Path {
 
-    private Vector definition;
+    private Vector elements;
     private Project project;
 
     public static Path systemClasspath = 
         new Path(null, System.getProperty("java.class.path"));
 
+
+    /**
+     * Helper class, holds the nested <pathelement> values.
+     */
+    public class PathElement {
+        private String[] parts;
+
+        public void setLocation(File loc) {
+            parts = new String[] {translateFile(loc.getAbsolutePath())};
+        }
+
+        public void setPath(String path) {
+            parts = Path.translatePath(project, path);
+        }
+
+        public String[] getParts() {
+            return parts;
+        }
+    }
+
+    /**
+     * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code>
+     * attribute setters.  
+     */
     public Path(Project p, String path) {
         this(p);
-        setPath(path);
+        createPathElement().setPath(path);
     }
 
     public Path(Project p) {
         this.project = project;
-        definition = new Vector();
+        elements = new Vector();
     }
 
     /**
@@ -114,15 +140,42 @@ public class Path {
      * @param location the location of the element to add (must not be
      * <code>null</code> nor empty.
      */
-    public void setLocation(String location) {
-        if (location != null && location.length() > 0) {
-            String element = translateFile(resolveFile(project, location));
-            if (definition.indexOf(element) == -1) {
-                definition.addElement(element);
-            }
-        }
+    public void setLocation(File location) {
+        createPathElement().setLocation(location);
     }
 
+
+    /**
+     * Parses a path definition and creates single PathElements.
+     * @param path the path definition.
+     */
+    public void setPath(String path) {
+        createPathElement().setPath(path);
+    }
+
+
+    /**
+     * Created the nested <pathelement> element.
+     */
+    public PathElement createPathElement() {
+        PathElement pe = new PathElement();
+        elements.addElement(pe);
+        return pe;
+    }
+
+    /**
+     * Adds a nested <fileset> element.
+     */
+    public void addFileset(FileSet fs) {
+        elements.addElement(fs);
+    }
+
+    /**
+     * Adds a nested <filesetref> element.
+     */
+    public void addFilesetRef(Reference r) {
+        elements.addElement(r);
+    }
 
     /**
      * Append the contents of the other Path instance to this.
@@ -130,40 +183,55 @@ public class Path {
     public void append(Path other) {
         String[] l = other.list();
         for (int i=0; i<l.length; i++) {
-            if (definition.indexOf(l[i]) == -1) {
-                definition.addElement(l[i]);
+            if (elements.indexOf(l[i]) == -1) {
+                elements.addElement(l[i]);
             }
         }
     }
-
-    /**
-     * Parses a path definition and creates single PathElements.
-     * @param path the path definition.
-     */
-    public void setPath(String path) {
-        final Vector elements = translatePath(project, path);
-        for (int i=0; i < elements.size(); i++) {
-            String element = (String) elements.elementAt(i);
-            if (definition.indexOf(element) == -1) {
-                definition.addElement(element);
-            }
-        }
-    }
-
-
-    public Path createPathElement() {
-        return this;
-    }
-
 
     /**
      * Returns all path elements defined by this and netsed path objects.
      * @return list of path elements.
      */
     public String[] list() {
-        final String[] result = new String[definition.size()];
-        definition.copyInto(result);
-        return result;
+        Vector result = new Vector(2*elements.size());
+        for (int i=0; i<elements.size(); i++) {
+            Object o = elements.elementAt(i);
+            if (o instanceof Reference) {
+                Reference r = (Reference) o;
+                o = r.getReferencedObject(project);
+                // we only support references to filesets right now
+                if (o == null || !(o instanceof FileSet)) {
+                    String msg = r.getRefId()+" doesn\'t denote a fileset";
+                    throw new BuildException(msg);
+                }
+            }
+            
+            if (o instanceof String) {
+                // obtained via append
+                addUnlessPresent(result, (String) o);
+            } else if (o instanceof PathElement) {
+                String[] parts = ((PathElement) o).getParts();
+                if (parts == null) {
+                    throw new BuildException("You must either set location or path on <pathelement>");
+                }
+                for (int j=0; j<parts.length; j++) {
+                    addUnlessPresent(result, parts[j]);
+                }
+            } else if (o instanceof FileSet) {
+                FileSet fs = (FileSet) o;
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                String[] s = ds.getIncludedFiles();
+                File dir = fs.getDir();
+                for (int j=0; j<s.length; j++) {
+                    addUnlessPresent(result, 
+                                     translateFile((new File(dir, s[j])).getAbsolutePath()));
+                }
+            }
+        }
+        String[] res = new String[result.size()];
+        result.copyInto(res);
+        return res;
     }
 
 
@@ -188,11 +256,12 @@ public class Path {
         return result.toString();
     }
 
-
-
-    public static Vector translatePath(Project project, String source) {
+    /**
+     * Splits a PATH (with : or ; as separators) into its parts.
+     */
+    public static String[] translatePath(Project project, String source) {
         final Vector result = new Vector();
-        if (source == null) return result;
+        if (source == null) return new String[0];
 
         PathTokenizer tok = new PathTokenizer(source);
         StringBuffer element = new StringBuffer();
@@ -204,10 +273,15 @@ public class Path {
             }
             result.addElement(element.toString());
         }
-        return result;
+        String[] res = new String[result.size()];
+        result.copyInto(res);
+        return res;
     }
 
-
+    /**
+     * Returns its argument with all file separator characters
+     * replaced so that they match the local OS conventions.  
+     */
     public static String translateFile(String source) {
         if (source == null) return "";
 
@@ -219,7 +293,6 @@ public class Path {
         return result.toString();
     }
 
-
     protected static boolean translateFileSep(StringBuffer buffer, int pos) {
         if (buffer.charAt(pos) == '/' || buffer.charAt(pos) == '\\') {
             buffer.setCharAt(pos, File.separatorChar);
@@ -228,8 +301,11 @@ public class Path {
         return false;
     }
 
+    /**
+     * How many parts does this Path instance consist of.
+     */
     public int size() {
-        return definition.size();
+        return list().length;
     }
 
     private static String resolveFile(Project project, String relativeName) {
@@ -237,6 +313,12 @@ public class Path {
             return project.resolveFile(relativeName).getAbsolutePath();
         }
         return relativeName;
+    }
+
+    private static void addUnlessPresent(Vector v, String s) {
+        if (v.indexOf(s) == -1) {
+            v.addElement(s);
+        }
     }
 
 }

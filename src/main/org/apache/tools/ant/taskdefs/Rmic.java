@@ -410,7 +410,7 @@ public class Rmic extends MatchingTask {
             File f = project.resolveFile(list[i]);
 
             if (f.exists()) {
-                target.setLocation(f.getAbsolutePath());
+                target.setLocation(f);
            } else {
                log("Dropping from classpath: "+
                    f.getAbsolutePath(), Project.MSG_VERBOSE);

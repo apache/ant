@@ -92,15 +92,16 @@ public class CommandlineJavaTest extends TestCase {
         assertEquals("no classpath", 
                      "org.apache.tools.ant.CommandlineJavaTest", s[3]);
 
-        c.createClasspath(project).setLocation("junit.jar");
-        c.createClasspath(project).setLocation("ant.jar");
+        c.createClasspath(project).setLocation(new File("junit.jar"));
+        c.createClasspath(project).setLocation(new File("ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
         assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
-        assertEquals("with classpath", 
-                     "junit.jar"+java.io.File.pathSeparator+"ant.jar", s[3]);
+        assert("junit.jar contained", 
+               s[3].indexOf("junit.jar"+java.io.File.pathSeparator) >= 0);
+        assert("ant.jar contained", s[3].endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
         assertEquals("with classpath", 
                      "org.apache.tools.ant.CommandlineJavaTest", s[5]);
