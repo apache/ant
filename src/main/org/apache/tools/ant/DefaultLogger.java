@@ -66,7 +66,8 @@ public class DefaultLogger implements BuildListener {
 
     private PrintStream out;
     private int msgOutputLevel;
-    private long startTime;
+    private long startTime = System.currentTimeMillis();
+
 
     /**
      *  Constructs a new logger which will write to the specified

@@ -238,12 +238,13 @@ public class Main {
         }
 
         Project project = new Project();
-        addBuildListeners(project);
-        project.fireBuildStarted();
 
         Throwable error = null;
 
         try {
+            addBuildListeners(project);
+            project.fireBuildStarted();
+            
             project.init();
 
             // set user-define properties
@@ -303,7 +304,7 @@ public class Main {
                 project.addBuildListener(listener);
             }
             catch(Exception exc) {
-                throw new BuildException("Unable to instantiate " + className, exc);
+                throw new BuildException("Unable to instantiate listener " + className, exc);
             }
         }
     }
