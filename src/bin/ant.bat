@@ -37,10 +37,11 @@ echo   to the installation directory of java.
 echo.
 
 :checkJikes
-if not "%JIKESPATH%" == "" set ANT_OPTS=%ANT_OPTS% -Djikes.class.path=%JIKESPATH%
+set ANT_OPTS_RUN=%ANT_OPTS%
+if not "%JIKESPATH%" == "" set ANT_OPTS_RUN=%ANT_OPTS% -Djikes.class.path=%JIKESPATH%
 
 :runAnt
-%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" %ANT_OPTS_RUN% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :end
 set LOCALCLASSPATH=
