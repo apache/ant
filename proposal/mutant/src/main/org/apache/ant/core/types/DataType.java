@@ -64,10 +64,10 @@ import java.io.*;
  */
 public abstract class DataType extends AbstractTask {
     private String reference = null;
+    private Object referencedObject = null;
 
-    final public void execute() throws ExecutionException {
+    public void execute() throws ExecutionException {
     }
-
 
     /**
      * Creates an exception that indicates that refid has to be the
@@ -100,16 +100,26 @@ public abstract class DataType extends AbstractTask {
      */
     public void setRefid(String reference) throws ExecutionException {
         this.reference = reference;
-        // check the reference now
-        getReferencedObject();
+        Object referencedObject = getTaskContext().getDataValue(reference);
+
+        if (referencedObject == null) {
+            throw new ExecutionException("Unable to locate the reference specified by refid '" +
+                                         getReference() + "'");
+        }
+        
+        if (!this.getClass().isAssignableFrom(referencedObject.getClass())) {
+            throw new ExecutionException("The object referenced by refid '" +
+                                         getReference() + "' is not compatible with this element ");
+        }
     }
 
     /**
      * Has the refid attribute of this element been set?
      */
     public boolean isReference() {
-        return reference != null;
+        return referencedObject != null;
     }
+
 
     protected Object getReferencedObject() throws ExecutionException {
         if (!isReference()) {
@@ -117,12 +127,7 @@ public abstract class DataType extends AbstractTask {
                                          "which does not have the refid attribute");
         }
         
-        Object referencedObject = getTaskContext().getDataValue(reference);
-        if (referencedObject == null) {
-            throw new ExecutionException("Unable to locate the reference specified by refid '" +
-                                         getReference() + "'");
-        }
-        return referencedObject;                                         
+        return referencedObject;
     }
     
     protected String getReference() {

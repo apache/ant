@@ -57,12 +57,10 @@ package org.apache.ant.core.types;
 import java.io.*;
 import java.util.*;
 import org.apache.ant.core.execution.*;
+import java.net.URL;
 
 /**
  * Named collection of include/exclude tags.
- *
- * <p>Moved out of MatchingTask to make it a standalone object that
- * could be referenced (by scripts for example).
  *
  * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a> 
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
@@ -74,9 +72,9 @@ public class PatternSet extends DataType {
     private List includeList = new ArrayList();
     private List excludeList = new ArrayList();
     
-//    private File incl = null;
-//    private File excl = null;
-//
+    private URL includeFile = null;
+    private URL excludeFile = null;
+
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
      * may be used to invalidate the entry based on the existence of a 
@@ -200,68 +198,77 @@ public class PatternSet extends DataType {
         return result;
     }
 
-//    /**
-//     * Sets the name of the file containing the includes patterns.
-//     *
-//     * @param incl The file to fetch the include patterns from.  
-//     */
-//     public void setIncludesfile(File incl) throws BuildException {
-//         if (isReference()) {
-//             throw tooManyAttributes();
-//         }
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param incl The file to fetch the include patterns from.  
+     */
+     public void setIncludesfile(URL includeFile) throws ExecutionException {
+         if (isReference()) {
+             throw tooManyAttributes();
+         }
+         
 //         if (!incl.exists()) {
 //             throw new BuildException("Includesfile "+incl.getAbsolutePath()
 //                                      +" not found.");
 //         }
-//         this.incl = incl;
-//     }
-//
-//    /**
-//     * Sets the name of the file containing the excludes patterns.
-//     *
-//     * @param excl The file to fetch the exclude patterns from.  
-//     */
-//     public void setExcludesfile(File excl) throws BuildException {
-//         if (isReference()) {
-//             throw tooManyAttributes();
-//         }
+         this.includeFile = includeFile;
+     }
+
+    /**
+     * Sets the name of the file containing the excludes patterns.
+     *
+     * @param excludeFile The file to fetch the exclude patterns from.  
+     */
+     public void setExcludesfile(URL excludeFile) throws ExecutionException {
+         if (isReference()) {
+             throw tooManyAttributes();
+         }
 //         if (!excl.exists()) {
 //             throw new BuildException("Excludesfile "+excl.getAbsolutePath()
 //                                      +" not found.");
 //         }
-//         this.excl = excl;
-//     }
-//    
-//    /**
-//     *  Reads path matching patterns from a file and adds them to the
-//     *  includes or excludes list (as appropriate).  
-//     */
-//    private void readPatterns(File patternfile, Vector patternlist, Project p)
-//        throws BuildException {
-//        
-//        try {
-//            // Get a FileReader
-//            BufferedReader patternReader = 
-//                new BufferedReader(new FileReader(patternfile)); 
-//        
-//            // Create one NameEntry in the appropriate pattern list for each 
-//            // line in the file.
-//            String line = patternReader.readLine();
-//            while (line != null) {
-//                if (line.length() > 0) {
-//                    line = ProjectHelper.replaceProperties(p, line,
-//                                                           p.getProperties());
-//                    addPatternToList(patternlist).setName(line);
-//                }
-//                line = patternReader.readLine();
-//            }
-//        } catch(IOException ioe)  {
-//            String msg = "An error occured while reading from pattern file: " 
-//                + patternfile;
-//            throw new BuildException(msg, ioe);
-//        }
-//    }
-//
+         this.excludeFile = excludeFile;
+     }
+    
+    /**
+     *  Reads path matching patterns from a file and adds them to the
+     *  includes or excludes list (as appropriate).  
+     */
+    private void readPatterns(URL patternFile, List patternList)
+        throws ExecutionException {
+        
+        BufferedReader patternReader = null;
+        try {
+            // Get a FileReader
+            patternReader = 
+                new BufferedReader(new InputStreamReader(patternFile.openStream())); 
+        
+            // Create one NameEntry in the appropriate pattern list for each 
+            // line in the file.
+            String line = null;
+            while ((line = patternReader.readLine()) != null) {
+                if (line.length() > 0) {
+                    line = getTaskContext().replacePropertyRefs(line);
+                    addPatternToList(patternList).setName(line);
+                }
+            }
+        } catch(IOException ioe)  {
+            throw new ExecutionException("An error occured while reading from pattern file: " 
+                                         + patternFile, ioe);
+        }
+        finally {
+            if (patternReader != null) {
+                try {
+                    patternReader.close();
+                }
+                catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+
     /**
      * Adds the patterns of the other instance to this set.
      */
@@ -292,7 +299,7 @@ public class PatternSet extends DataType {
         if (isReference()) {
             return getReferencedPatternSet().getIncludePatterns();
         } else {
-//            readFiles(p);
+            readFiles();
             return makeArray(includeList);
         }
     }
@@ -304,7 +311,7 @@ public class PatternSet extends DataType {
         if (isReference()) {
             return getReferencedPatternSet().getExcludePatterns();
         } else {
-//            readFiles(p);
+            readFiles();
             return makeArray(excludeList);
         }
     }
@@ -352,18 +359,18 @@ public class PatternSet extends DataType {
         return result;
     }
         
-//    /**
-//     * Read includefile ot excludefile if not already done so.
-//     */
-//    private void readFiles(Project p) {
-//        if (incl != null) {
-//            readPatterns(incl, includeList, p);
-//            incl = null;
-//        }
-//        if (excl != null) {
-//            readPatterns(excl, excludeList, p);
-//            excl = null;
-//        }
-//    }
-//
+    /**
+     * Read includefile ot excludefile if not already done so.
+     */
+    private void readFiles() throws ExecutionException {
+        if (includeFile != null) {
+            readPatterns(includeFile, includeList);
+            includeFile = null;
+        }
+        if (excludeFile != null) {
+            readPatterns(excludeFile, excludeList);
+            excludeFile = null;
+        }
+    }
+
 }
