@@ -1,3 +1,78 @@
+Changes from Ant 1.6.B2 to Ant 1.6.B3
+=====================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+Other changes:
+--------------
+
+
+
+Changes from Ant 1.6.B1 to Ant 1.6.B2
+=====================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* fix usage of mixed case names of add(typedef) introspection.
+  fix by moving the tolower method from unknownelement to introspectionhelper.
+
+* documentation added for -lib option used when starting ant via launcher
+  Bugzilla Report 23454.
+
+* user-friendly messages added for incorrect use of -lib option
+  Bugzilla Report 23454.
+
+* make <input/> be skipped when a property is already set
+  Bugzilla Report 19967.
+
+* improved cleanup of temporary files 
+  this concerns <javadoc/>, <replace/>, <zip/>, <javac/>, <cvstagdiff/>, <cab/>,
+  <replaceregexp/>, <junit/>, metamata tasks, sitraka tasks, <symlink/> 
+  temporary files are now marked with deleteOnExit
+  Bugzilla Report 17512.
+
+* Reuse the resolution logic of <property> inside <loadproperties>.
+  So <expandproperties/> is not needed any more together with <loadproperties/>
+  Bugzilla Report 17782.
+
+* Comparison of TemplateElement(s) and Attribute(s) fixed inside macrodef.
+
+* Don't silently swallow exceptions when something is wrong with adding or removing 
+  shutdown hooks , Bugzilla Report 23609.
+
+* noinform attribute for Websphere element of <ejbjar/> 
+  Bugzilla Report 23535.
+
+* <junit/> (JunitTestRunner)
+  Don't mask arbitrary exceptions when looking for a suite method.
+  Bugzilla Report 23033.
+
+* <ftp/> fix problem with relative remotedir
+  Bugzilla Report 23833.
+
+* ssh tasks : make .ssh/known_hosts optional
+
+* <vssget/>  was sending a wrong command line prefix for labels -VL-Lsome.label
+  this change fixes it to -VLsome.label instead
+
+* <zipfileset/> allow it to refer to a fileset, to which zipfileset specific attributes are added
+  this solves one frequent use case in the <war/> task
+
+Other changes:
+--------------
+
+* add an optional attribute to <import/>
+
+* upgrade protected access to public for setMacroDef for macroinstance object
+
 Changes from Ant 1.5.4 to Ant 1.6
 =================================
 
