@@ -121,6 +121,13 @@ public class Cvs extends Task {
      */
     private File error; 
 
+    /**
+     * If true it will stop the build if cvs exits with error.
+     * Default is false. (Iulian)
+     */
+    private boolean failOnError = false; 
+
+
     public void execute() throws BuildException {
 
         // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
@@ -206,7 +213,10 @@ public class Cvs extends Task {
         exe.setCommandline(toExecute.getCommandline());
         exe.setEnvironment(env.getVariables());
         try {
-            exe.execute();
+	    int retCode = exe.execute();
+	    /*Throw an exception if cvs exited with error. (Iulian)*/
+	    if(failOnError && retCode != 0)
+		throw new BuildException("cvs exited with error code "+ retCode);
         } catch (IOException e) {
             throw new BuildException(e, location);
         } finally {
@@ -283,6 +293,10 @@ public class Cvs extends Task {
     
     public void setError(File error) {
         this.error = error;
+    }
+
+    public void setFailOnError(boolean failOnError) {
+	this.failOnError = failOnError;
     }
 }
 
