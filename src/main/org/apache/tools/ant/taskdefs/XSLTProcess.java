@@ -523,13 +523,17 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 Project.MSG_DEBUG);
             log("Style file " + xslFile + " time: " + styleSheetLastModified,
                 Project.MSG_DEBUG);
-            if (force || inFile.lastModified() > outFile.lastModified()
-                || styleSheetLastModified > outFile.lastModified()) {
+            if (force || inFile.lastModified() >= outFile.lastModified()
+                || styleSheetLastModified >= outFile.lastModified()) {
                 ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile,
                     Project.MSG_INFO);
                 configureLiaison(stylesheet);
                 liaison.transform(inFile, outFile);
+            } else {
+                log("Skipping input file " + inFile
+                    + " because it is older than output file " + outFile
+                    + " and so is the stylesheet " + stylesheet, Project.MSG_DEBUG);
             }
         } catch (Exception ex) {
             log("Failed to process " + inFile, Project.MSG_INFO);
