@@ -42,6 +42,7 @@
   <patternset id="chmod.patterns">
     <include name="**/ant" />
     <include name="**/antRun" />
+    <include name="**/bootstrap.sh" />
   </patternset>
 
   <!-- =================================================================== -->
@@ -385,7 +386,7 @@
        </fileset>
      </copy>
 
-     <fixcrlf srcdir="${ant.srcdist.dir}" includes="ant,antRun" cr="remove"/>
+     <fixcrlf srcdir="${ant.srcdist.dir}" includes="ant,antRun,bootstrap.sh" cr="remove"/>
      <fixcrlf srcdir="${ant.srcdist.dir}" includes="*.bat" cr="add"/>
      <chmod perm="+x">
        <fileset dir="${ant.srcdist.dir}">
