@@ -236,6 +236,9 @@ Fixed bugs:
 * Project.toBoolean(String) now handles null as argument and does not throw a
   NullPointerException any more.
 
+* The socket condition will now close the socket created to test.
+  Bugzilla Report 23040.
+
 Other changes:
 --------------
 * All tasks can be used outside of <target>s.  Note that some tasks

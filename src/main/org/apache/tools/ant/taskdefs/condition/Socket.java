@@ -103,10 +103,21 @@ public class Socket extends ProjectComponent implements Condition {
         }
         log("Checking for listener at " + server + ":" + port,
             Project.MSG_VERBOSE);
+        java.net.Socket s = null;
         try {
-            new java.net.Socket(server, port);
+            s = new java.net.Socket(server, port);
         } catch (IOException e) {
             return false;
+        }
+        finally {
+          if (s != null){
+            try {
+              s.close();
+            }
+            catch (IOException ioe){
+              // Intentionally left blank
+            }
+          }
         }
         return true;
     }
