@@ -75,9 +75,14 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
         <td>Revert files</td>
     </tr>
 	    
-        <tr>
+    <tr>
         <td><a href="#p4add">P4Add</a></td>
         <td>Add files</td>
+    </tr>
+
+    <tr>
+        <td><a href="#p4fstat">P4Fstat</a></td>
+        <td>Show differences between local repository and p4 repository</td>
     </tr>
 </table>
 
@@ -566,6 +571,52 @@ and submit
 &lt;p4add&gt;
 &lt;p4submit change=&quot;${p4.change}&quot;/&gt;
 </pre>
+<hr>
+
+<h2><a name="p4fstat">P4Fstat</a></h2>
+<h3>Description:</h3>
+<p>
+Lists files under Perforce control and files not under Perforce control in one or several filesets
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">showfilter</td>
+    <td valign="top">should be one of
+      <table border="1">
+        <tr><td>value</td><td>description</td></tr>
+        <tr><td>&quot;all&quot;</td><td>list all files, first the ones which are under Perforce control, then the others</td></tr>
+        <tr><td>&quot;existing&quot;</td><td>list only files under Perforce control</td></tr>
+        <tr><td>&quot;non-existing&quot;</td><td>list only files which are not under Perforce control</td></tr></table>
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">fileset</td>
+    <td valign="top">one or several <a href="../CoreTypes/fileset.html">fileset(s)</a></td>
+    <td valign="top" align="center">yes (at least one fileset is needed)</td>
+  </tr>
+</table>
+Several nested filesets can be used with P4Fstat, one should be there at least.
+<h3>Examples</h3>
+will list all the files under C:\dev\gnu\depot, sorted by under Perforce or not under Perforce<br>
+<pre>
+&lt;project name=&quot;p4fstat&quot; default=&quot;p4fstat&quot; basedir=&quot;C:\dev\gnu&quot;&gt;
+    &lt;target name=&quot;p4fstat&quot; &gt;
+        &lt;p4fstat showfilter=&quot;all&quot;&gt;
+            &lt;fileset dir=&quot;depot&quot; includes=&quot;**/*&quot;/&gt;
+        &lt;/p4fstat&gt;
+    &lt;/target&gt;
+&lt;/project&gt;</p>
+</pre>
+
+
+
 
 <h2><a name="changes">Change History</a></h2>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -588,10 +639,11 @@ and submit
     Refactored exec'ing code</td>    
 </tr>
 <tr>
-    <td valign="top">Nov 2002</td>
+    <td valign="top">Jan 2003</td>
     <td valign="top">V1.2</td>
-    <td valign="top">Added globalopts to P4Base to allow<br>
-    additional global options to be set.</td>
+    <td valign="top">Added globalopts to P4Base to allow 
+                     additional global options to be set.<br>
+                     Added p4fstat task</td>
 </tr>
 </table>
 <hr>
