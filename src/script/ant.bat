@@ -77,11 +77,11 @@ echo.
 if not "%JIKESPATH%"=="" goto runAntWithJikes
 
 :runAnt
-"%_JAVACMD%" -classpath "%LOCALCLASSPATH%" "-Dant.home=%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+"%_JAVACMD%" %ANT_OPTS% -classpath "%LOCALCLASSPATH%" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.Main %ANT_ARGS% %ANT_CMD_LINE_ARGS%
 goto end
 
 :runAntWithJikes
-"%_JAVACMD%" -classpath "%LOCALCLASSPATH%" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+"%_JAVACMD%" %ANT_OPTS% -classpath "%LOCALCLASSPATH%" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.Main %ANT_ARGS% %ANT_CMD_LINE_ARGS%
 goto end
 
 :end
