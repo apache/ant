@@ -75,41 +75,41 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * Enumerated attribute with the values for the database vendor types
      */
     public static class DBVendor extends EnumeratedAttribute {
-	public String[] getValues() {
-	    return new String[] {
-		"SQL92", "SQL99", "DB2UDBWIN_V71", "DB2UDBOS390_V6", "DB2UDBAS400_V4R5",
-		"ORACLE_V8", "INFORMIX_V92", "SYBASE_V1192", "MSSQLSERVER_V7", "MYSQL_V323"
-	    };
-	}
+        public String[] getValues() {
+            return new String[] {
+                "SQL92", "SQL99", "DB2UDBWIN_V71", "DB2UDBOS390_V6", "DB2UDBAS400_V4R5",
+                    "ORACLE_V8", "INFORMIX_V92", "SYBASE_V1192", "MSSQLSERVER_V7", "MYSQL_V323"
+                    };
+        }
     }
-	
+        
     public static final String PUBLICID_EJB11
-	= "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
+        = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
     public static final String PUBLICID_EJB20
-	= "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
+        = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
     protected static final String SCHEMA_DIR = "Schema/";
-	
+        
     protected static final String WAS_EXT = "ibm-ejb-jar-ext.xmi";
     protected static final String WAS_BND = "ibm-ejb-jar-bnd.xmi";
     protected static final String WAS_CMP_MAP = "Map.mapxmi";
     protected static final String WAS_CMP_SCHEMA = "Schema.dbxmi";
-	
+        
     /** Instance variable that stores the suffix for the websphere jarfile. */
     private String jarSuffix = ".jar";
-	
+        
     /** Instance variable that stores the location of the ejb 1.1 DTD file. */
     private String ejb11DTD;
-	
+        
     /** Instance variable that determines whether generic ejb jars are kept. */
-	
+        
     private boolean keepgenerated = false;
-	
+        
     private String additionalArgs = "";
-	
+        
     private boolean keepGeneric = false;
-	
+        
     private String compiler = null;
-	
+        
     private boolean alwaysRebuild = true;
 
     private boolean ejbdeploy = true;
@@ -124,206 +124,206 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /** The DB Vendor name, the EJB is persisted against */
     private String dbVendor;
-	
+        
     /** The name of the database to create. (For top-down mapping only) */
     private String dbName;
-	
+        
     /** The name of the schema to create. (For top-down mappings only) */
     private String dbSchema;
-	
+        
     /** true - Only generate the deployment code, do not run RMIC or Javac */
     private boolean codegen;
-	
+        
     /** true - Only output error messages, suppress informational messages */
     private boolean quiet = true;
-	
+        
     /** true - Disable the validation steps */
     private boolean novalidate;
-	
+        
     /** true - Disable warning and informational messages */
     private boolean nowarn;
-	
+        
     /** true - Disable informational messages */
     private boolean noinform;
-	
+        
     /** true - Enable internal tracing */
     private boolean trace;
-	
+        
     /** Additional options for RMIC */
     private String rmicOptions;
-	
+        
     /** true-  Use the WebSphere 3.5 compatible mapping rules */
     private boolean use35MappingRules;
-	
+        
     /** the scratchdir for the ejbdeploy operation */
     private String tempdir = "_ejbdeploy_temp";
-	
+        
     /**
      * Get the classpath to the websphere classpaths
      */
     public Path createWASClasspath() {
-	if (wasClasspath == null) {
-	    wasClasspath = new Path(getTask().getProject());
-	}
-	return wasClasspath.createPath();
+        if (wasClasspath == null) {
+            wasClasspath = new Path(getTask().getProject());
+        }
+        return wasClasspath.createPath();
     }
-	
+        
     public void setWASClasspath(Path wasClasspath) {
-	this.wasClasspath = wasClasspath;
+        this.wasClasspath = wasClasspath;
     }
-	
+        
     /**
      * Sets the DB Vendor for the Entity Bean mapping
      */
     public void setDbvendor(DBVendor dbvendor) {
-	this.dbVendor = dbvendor.getValue();
+        this.dbVendor = dbvendor.getValue();
     }
-	
+        
     /**
      * Sets the name of the Database to create
      * @param String
      */
     public void setDbname(String dbName) {
-	this.dbName = dbName;
+        this.dbName = dbName;
     }
-	
+        
     /**
      * Sets the name of the schema to create
      * @param String
      */
     public void setDbschema(String dbSchema) {
-	this.dbSchema = dbSchema;
+        this.dbSchema = dbSchema;
     }
-	
+        
     /**
      * (true) Only generate the deployment code, do not run RMIC or Javac
      * @param boolean
      */
     public void setCodegen(boolean codegen) {
-	this.codegen = codegen;
+        this.codegen = codegen;
     }
-	
+        
     /**
      * (true) Only output error messages, suppress informational messages
      * @param boolean
      */
     public void setQuiet(boolean quiet) {
-	this.quiet = quiet;
+        this.quiet = quiet;
     }
-	
+        
     /**
      * (true) Disable the validation steps
      * @param boolean
      */
     public void setNovalidate(boolean novalidate) {
-	this.novalidate = novalidate;
+        this.novalidate = novalidate;
     }
-	
+        
     /**
      * (true) Disable warning and informational messages
      * @param boolean
      */
     public void setNowarn(boolean nowarn) {
-	this.nowarn = nowarn;
+        this.nowarn = nowarn;
     }
-	
+        
     /**
      * (true) Disable informational messages
      * @param boolean
      */
     public void setNoinform(boolean noinfom) {
-	this.noinform = noinform;
+        this.noinform = noinform;
     }
-	
+        
     /**
      * (true)  Enable internal tracing
      * @param boolean
      */
     public void setTrace(boolean trace) {
-	this.trace = trace;
+        this.trace = trace;
     }
-	
+        
     /**
      * (true) Use the WebSphere 3.5 compatible mapping rules
      * @param boolean
      */
     public void setUse35(boolean attr) {
-	use35MappingRules = attr;
+        use35MappingRules = attr;
     }
-	
+        
     /**
      * The compiler (switch <code>-compiler</code>) to use
      */
     public void setCompiler(String compiler) {
-	this.compiler = compiler;
+        this.compiler = compiler;
     }
-	
+        
     /**
      * Set the rebuild flag to false to only update changes in the
      * jar rather than rerunning ejbdeploy
      */
     public void setRebuild(boolean rebuild) {
-	this.alwaysRebuild = rebuild;
+        this.alwaysRebuild = rebuild;
     }
-	
-	
+        
+        
     /**
      * Setter used to store the suffix for the generated websphere jar file.
      * @param inString the string to use as the suffix.
      */
     public void setSuffix(String inString) {
-	this.jarSuffix = inString;
+        this.jarSuffix = inString;
     }
-	
+        
     /**
      * Setter used to store the value of keepGeneric
      * @param inValue a string, either 'true' or 'false'.
      */
     public void setKeepgeneric(boolean inValue) {
-	this.keepGeneric = inValue;
+        this.keepGeneric = inValue;
     }
-	
+        
     /**
      * Sets whether -keepgenerated is passed to ejbdeploy (that is,
      * the .java source files are kept).
      * @param inValue either 'true' or 'false'
      */
     public void setKeepgenerated(String inValue) {
-	this.keepgenerated = Boolean.valueOf(inValue).booleanValue();
+        this.keepgenerated = Boolean.valueOf(inValue).booleanValue();
     }
-	
+        
     /**
      * Decide, wether ejbdeploy should be called or not
      * @param ejbdeploy 
      */
     public void setEjbdeploy(boolean ejbdeploy) {
-	this.ejbdeploy = ejbdeploy;
+        this.ejbdeploy = ejbdeploy;
     }
 
     /**
      * sets some additional args to send to ejbdeploy.
      */
     public void setArgs(String args) {
-	this.additionalArgs = args;
+        this.additionalArgs = args;
     }
-	
+        
     /**
      * Setter used to store the location of the Sun's Generic EJB DTD.
      * This can be a file on the system or a resource on the classpath.
      * @param inString the string to use as the DTD location.
      */
     public void setEJBdtd(String inString) {
-	this.ejb11DTD = inString;
+        this.ejb11DTD = inString;
     }
-	
+        
     /**
      * Set the value of the oldCMP scheme. This is an antonym for
      * newCMP
      */
     public void setOldCMP(boolean oldCMP) {
-	this.newCMP = !oldCMP;
+        this.newCMP = !oldCMP;
     }
-	
+        
     /**
      * Set the value of the newCMP scheme. The old CMP scheme locates the
      * websphere CMP descriptor based on the naming convention where the
@@ -335,171 +335,171 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *
      */
     public void setNewCMP(boolean newCMP) {
-	this.newCMP = newCMP;
+        this.newCMP = newCMP;
     }
-	
+        
     /**
      * Sets the temporary directory for the ejbdeploy task
      */
     public void setTempdir(String tempdir) {
-	this.tempdir = tempdir;
+        this.tempdir = tempdir;
     }
-	
+        
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
-	DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
-	// register all the DTDs, both the ones that are known and
-	// any supplied by the user
-	handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
-		
-	for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-	    EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
-	    handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
-	}
-		
-	return handler;
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
+        // register all the DTDs, both the ones that are known and
+        // any supplied by the user
+        handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
+                
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
+                
+        return handler;
     }
-	
+        
     protected DescriptorHandler getWebsphereDescriptorHandler(final File srcDir) {
-	DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir) {
-		protected void processElement() {
-		}
-	    };
-		
-	for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-	    EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
-	    handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
-	}
-	return handler;
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir) {
+                protected void processElement() {
+                }
+            };
+                
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
+        return handler;
     }
-	
+        
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
 
-	String ddPrefix = (usingBaseJarName() ? "" : baseName);
-	String dbPrefix = (dbVendor == null)? "": dbVendor + "-";
-		
-	// Get the Extensions document
-	File websphereEXT = new File(getConfig().descriptorDir, ddPrefix + WAS_EXT);
-	if (websphereEXT.exists()) {
-	    ejbFiles.put(META_DIR + WAS_EXT,
-			 websphereEXT);
-	} else {
-	    log("Unable to locate websphere extensions. It was expected to be in " +
-		websphereEXT.getPath(), Project.MSG_VERBOSE);
-	}
-		
-	File websphereBND = new File(getConfig().descriptorDir, ddPrefix + WAS_BND);
-	if (websphereBND.exists()) {
-	    ejbFiles.put(META_DIR + WAS_BND,
-			 websphereBND);
-	}else {
-	    log("Unable to locate websphere bindings. It was expected to be in " +
-		websphereBND.getPath(), Project.MSG_VERBOSE);
-	}
-		
-	if (!newCMP) {
-	    log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
-	    log("Please adjust your websphere descriptor and set newCMP=\"true\" " +
-		"to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
-	}
-	else {
-	    // We attempt to put in the MAP and Schema files of CMP beans
-	    try
-		{
-				// Add the Map file
-		    File websphereMAP = new File(getConfig().descriptorDir,
-						 ddPrefix + dbPrefix + WAS_CMP_MAP);
-		    if (websphereMAP.exists()) {
-			ejbFiles.put(META_DIR + WAS_CMP_MAP,
-				     websphereMAP);
-		    } else {
-			log("Unable to locate the websphere Map: " +
-			    websphereMAP.getPath(), Project.MSG_VERBOSE);
-		    }
-		    File websphereSchema = new File(getConfig().descriptorDir,
-						    ddPrefix + dbPrefix + WAS_CMP_SCHEMA);
-		    if (websphereSchema.exists()) {
-			ejbFiles.put(META_DIR + SCHEMA_DIR + WAS_CMP_SCHEMA,
-				     websphereSchema);
-		    } else {
-			log("Unable to locate the websphere Schema: " +
-			    websphereSchema.getPath(), Project.MSG_VERBOSE);
-		    }
-				// Theres nothing else to see here...keep moving sonny
-		}
-	    catch(Exception e)
-		{
-		    String msg = "Exception while adding Vendor specific files: " +
-			e.toString();
-		    throw new BuildException(msg, e);
-		}
-	}
+        String ddPrefix = (usingBaseJarName() ? "" : baseName);
+        String dbPrefix = (dbVendor == null)? "": dbVendor + "-";
+                
+        // Get the Extensions document
+        File websphereEXT = new File(getConfig().descriptorDir, ddPrefix + WAS_EXT);
+        if (websphereEXT.exists()) {
+            ejbFiles.put(META_DIR + WAS_EXT,
+                         websphereEXT);
+        } else {
+            log("Unable to locate websphere extensions. It was expected to be in " +
+                websphereEXT.getPath(), Project.MSG_VERBOSE);
+        }
+                
+        File websphereBND = new File(getConfig().descriptorDir, ddPrefix + WAS_BND);
+        if (websphereBND.exists()) {
+            ejbFiles.put(META_DIR + WAS_BND,
+                         websphereBND);
+        }else {
+            log("Unable to locate websphere bindings. It was expected to be in " +
+                websphereBND.getPath(), Project.MSG_VERBOSE);
+        }
+                
+        if (!newCMP) {
+            log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
+            log("Please adjust your websphere descriptor and set newCMP=\"true\" " +
+                "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
+        }
+        else {
+            // We attempt to put in the MAP and Schema files of CMP beans
+            try
+                {
+                    // Add the Map file
+                    File websphereMAP = new File(getConfig().descriptorDir,
+                                                 ddPrefix + dbPrefix + WAS_CMP_MAP);
+                    if (websphereMAP.exists()) {
+                        ejbFiles.put(META_DIR + WAS_CMP_MAP,
+                                     websphereMAP);
+                    } else {
+                        log("Unable to locate the websphere Map: " +
+                            websphereMAP.getPath(), Project.MSG_VERBOSE);
+                    }
+                    File websphereSchema = new File(getConfig().descriptorDir,
+                                                    ddPrefix + dbPrefix + WAS_CMP_SCHEMA);
+                    if (websphereSchema.exists()) {
+                        ejbFiles.put(META_DIR + SCHEMA_DIR + WAS_CMP_SCHEMA,
+                                     websphereSchema);
+                    } else {
+                        log("Unable to locate the websphere Schema: " +
+                            websphereSchema.getPath(), Project.MSG_VERBOSE);
+                    }
+                    // Theres nothing else to see here...keep moving sonny
+                }
+            catch(Exception e)
+                {
+                    String msg = "Exception while adding Vendor specific files: " +
+                        e.toString();
+                    throw new BuildException(msg, e);
+                }
+        }
     }
-	
+        
     /**
      * Get the vendor specific name of the Jar that will be output. The modification date
      * of this jar will be checked against the dependent bean classes.
      */
     File getVendorOutputJarFile(String baseName) {
-	return new File(getDestDir(), baseName + jarSuffix);
+        return new File(getDestDir(), baseName + jarSuffix);
     }
-	
+        
     /**
      * Gets the options for the EJB Deploy operation
      * @return String
      */
     protected String getOptions() {
-	// Set the options
-	StringBuffer options = new StringBuffer();
-	if (dbVendor != null) {
-	    options.append(" -dbvendor ").append(dbVendor);
-	}
-	if (dbName != null) {
-	    options.append(" -dbname \"").append(dbName).append("\"");
-	}
-		
-	if (dbSchema != null) {
-	    options.append(" -dbschema \"").append(dbSchema).append("\"");
-	}
-		
-	if (codegen) {
-	    options.append(" -codegen");
-	}
-		
-	if (quiet) {
-	    options.append(" -quiet");
-	}
-		
-	if (novalidate) {
-	    options.append(" -novalidate");
-	}
-		
-	if (nowarn) {
-	    options.append(" -nowarn");
-	}
-		
-	if (noinform) {
-	    options.append(" -noinform");
-	}
-		
-	if (trace) {
-	    options.append(" -trace");
-	}
-		
-	if (use35MappingRules) {
-	    options.append(" -35");
-	}
-		
-	if (rmicOptions != null) {
-	    options.append(" -rmic \"").append(rmicOptions).append("\"");
-	}
-		
-	return options.toString();
+        // Set the options
+        StringBuffer options = new StringBuffer();
+        if (dbVendor != null) {
+            options.append(" -dbvendor ").append(dbVendor);
+        }
+        if (dbName != null) {
+            options.append(" -dbname \"").append(dbName).append("\"");
+        }
+                
+        if (dbSchema != null) {
+            options.append(" -dbschema \"").append(dbSchema).append("\"");
+        }
+                
+        if (codegen) {
+            options.append(" -codegen");
+        }
+                
+        if (quiet) {
+            options.append(" -quiet");
+        }
+                
+        if (novalidate) {
+            options.append(" -novalidate");
+        }
+                
+        if (nowarn) {
+            options.append(" -nowarn");
+        }
+                
+        if (noinform) {
+            options.append(" -noinform");
+        }
+                
+        if (trace) {
+            options.append(" -trace");
+        }
+                
+        if (use35MappingRules) {
+            options.append(" -35");
+        }
+                
+        if (rmicOptions != null) {
+            options.append(" -rmic \"").append(rmicOptions).append("\"");
+        }
+                
+        return options.toString();
     } // end getOptions
-	
+        
     /**
      * Helper method invoked by execute() for each websphere jar to be built.
      * Encapsulates the logic of constructing a java task for calling
@@ -509,120 +509,120 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *        jarfile.
      */
     private void buildWebsphereJar(File sourceJar, File destJar) {
-	try {
-	    if (ejbdeploy) {
-		String args =
-		    " " + sourceJar.getPath() +
-		    " " + tempdir +
-		    " " + destJar.getPath() +
-		    " " + getOptions();
+        try {
+            if (ejbdeploy) {
+                String args =
+                    " " + sourceJar.getPath() +
+                    " " + tempdir +
+                    " " + destJar.getPath() +
+                    " " + getOptions();
 
-		if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0) {
-		    args += " -cp " + getCombinedClasspath();
+                if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0) {
+                    args += " -cp " + getCombinedClasspath();
                 }
 
-		// Why do my ""'s get stripped away???
-		log("EJB Deploy Options: " + args, Project.MSG_VERBOSE);
-			
-		Java javaTask = (Java)getTask().getProject().createTask("java");
-		// Set the JvmArgs
-		javaTask.createJvmarg().setValue("-Xms64m");
-		javaTask.createJvmarg().setValue("-Xmx128m");
+                // Why do my ""'s get stripped away???
+                log("EJB Deploy Options: " + args, Project.MSG_VERBOSE);
+                        
+                Java javaTask = (Java)getTask().getProject().createTask("java");
+                // Set the JvmArgs
+                javaTask.createJvmarg().setValue("-Xms64m");
+                javaTask.createJvmarg().setValue("-Xmx128m");
 
-		// Set the Environment variable
-		Environment.Variable var = new Environment.Variable();
-		var.setKey("websphere.lib.dir");
-		var.setValue(getTask().getProject().getProperty("websphere.home") + "/lib");
-		javaTask.addSysproperty(var);
+                // Set the Environment variable
+                Environment.Variable var = new Environment.Variable();
+                var.setKey("websphere.lib.dir");
+                var.setValue(getTask().getProject().getProperty("websphere.home") + "/lib");
+                javaTask.addSysproperty(var);
 
-		// Set the working directory
-		javaTask.setDir(new File(getTask().getProject().getProperty("websphere.home")));
+                // Set the working directory
+                javaTask.setDir(new File(getTask().getProject().getProperty("websphere.home")));
 
-		// Set the Java class name
-		javaTask.setTaskName("ejbdeploy");
-		javaTask.setClassname("com.ibm.etools.ejbdeploy.EJBDeploy");
+                // Set the Java class name
+                javaTask.setTaskName("ejbdeploy");
+                javaTask.setClassname("com.ibm.etools.ejbdeploy.EJBDeploy");
 
-		Commandline.Argument arguments = javaTask.createArg();
-		arguments.setLine(args);
+                Commandline.Argument arguments = javaTask.createArg();
+                arguments.setLine(args);
 
-		Path classpath = wasClasspath;
-		if (classpath == null) {
-		    classpath = getCombinedClasspath();
-		}
+                Path classpath = wasClasspath;
+                if (classpath == null) {
+                    classpath = getCombinedClasspath();
+                }
 
-		if (classpath != null) {
-		    javaTask.setClasspath(classpath);
-		    javaTask.setFork(true);
-		}
-		else {
-		    javaTask.setFork(true);
-		}
+                if (classpath != null) {
+                    javaTask.setClasspath(classpath);
+                    javaTask.setFork(true);
+                }
+                else {
+                    javaTask.setFork(true);
+                }
 
-		log("Calling websphere.ejbdeploy for " + sourceJar.toString(),
-		    Project.MSG_VERBOSE);
+                log("Calling websphere.ejbdeploy for " + sourceJar.toString(),
+                    Project.MSG_VERBOSE);
 
-		javaTask.execute();
-	    }
-	}
-	catch (Exception e) {
-	    // Have to catch this because of the semantics of calling main()
-	    String msg = "Exception while calling ejbdeploy. Details: " + e.toString();
-	    throw new BuildException(msg, e);
-	}
+                javaTask.execute();
+            }
+        }
+        catch (Exception e) {
+            // Have to catch this because of the semantics of calling main()
+            String msg = "Exception while calling ejbdeploy. Details: " + e.toString();
+            throw new BuildException(msg, e);
+        }
     }
-	
+        
     /**
      * Method used to encapsulate the writing of the JAR file. Iterates over the
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
      */
     protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId)
-	throws BuildException
+        throws BuildException
     {
-	if (ejbdeploy) {
-	    // create the -generic.jar, if required
-	    File genericJarFile = super.getVendorOutputJarFile(baseName);
-	    super.writeJar(baseName, genericJarFile, files, publicId);
+        if (ejbdeploy) {
+            // create the -generic.jar, if required
+            File genericJarFile = super.getVendorOutputJarFile(baseName);
+            super.writeJar(baseName, genericJarFile, files, publicId);
 
-	    // create the output .jar, if required
-	    if (alwaysRebuild || isRebuildRequired(genericJarFile, jarFile)) {
-		buildWebsphereJar(genericJarFile, jarFile);
-	    }
-	    if (!keepGeneric) {
-		log("deleting generic jar " + genericJarFile.toString(),
-		    Project.MSG_VERBOSE);
-		genericJarFile.delete();
-	    }
-	}
-	else {
-	    // create the "undeployed" output .jar, if required
-	    super.writeJar(baseName, jarFile, files, publicId);
-	}
-	/*
-	// need to create a generic jar first.
-	File genericJarFile = super.getVendorOutputJarFile(baseName);
-	super.writeJar(baseName, genericJarFile, files, publicId);
-		
-	if (alwaysRebuild || isRebuildRequired(genericJarFile, jarFile)) {
-	    buildWebsphereJar(genericJarFile, jarFile);
-	}
-	if (!keepGeneric) {
-	    log("deleting generic jar " + genericJarFile.toString(),
-		Project.MSG_VERBOSE);
-	    genericJarFile.delete();
-	}
-	*/
+            // create the output .jar, if required
+            if (alwaysRebuild || isRebuildRequired(genericJarFile, jarFile)) {
+                buildWebsphereJar(genericJarFile, jarFile);
+            }
+            if (!keepGeneric) {
+                log("deleting generic jar " + genericJarFile.toString(),
+                    Project.MSG_VERBOSE);
+                genericJarFile.delete();
+            }
+        }
+        else {
+            // create the "undeployed" output .jar, if required
+            super.writeJar(baseName, jarFile, files, publicId);
+        }
+        /*
+        // need to create a generic jar first.
+        File genericJarFile = super.getVendorOutputJarFile(baseName);
+        super.writeJar(baseName, genericJarFile, files, publicId);
+                
+        if (alwaysRebuild || isRebuildRequired(genericJarFile, jarFile)) {
+        buildWebsphereJar(genericJarFile, jarFile);
+        }
+        if (!keepGeneric) {
+        log("deleting generic jar " + genericJarFile.toString(),
+        Project.MSG_VERBOSE);
+        genericJarFile.delete();
+        }
+        */
     }
-	
+        
     /**
      * Called to validate that the tool parameters have been configured.
      *
      */
     public void validateConfigured() throws BuildException {
-	super.validateConfigured();
+        super.validateConfigured();
     }
-	
-	
+        
+        
     /**
      * Helper method to check to see if a websphere EBJ1.1 jar needs to be rebuilt using
      * ejbdeploy.  Called from writeJar it sees if the "Bean" classes  are the only thing that needs
@@ -644,198 +644,198 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     protected boolean isRebuildRequired(File genericJarFile, File websphereJarFile)
     {
-	boolean rebuild = false;
-	
-	JarFile genericJar = null;
-	JarFile wasJar = null;
-	File newwasJarFile = null;
-	JarOutputStream newJarStream = null;
-		
-	try
-	    {
-		log("Checking if websphere Jar needs to be rebuilt for jar " + websphereJarFile.getName(),
-		    Project.MSG_VERBOSE);
-		// Only go forward if the generic and the websphere file both exist
-		if (genericJarFile.exists() && genericJarFile.isFile()
-		    && websphereJarFile.exists() && websphereJarFile.isFile())
-		    {
-				//open jar files
-			genericJar = new JarFile(genericJarFile);
-			wasJar = new JarFile(websphereJarFile);
-				
-			Hashtable genericEntries = new Hashtable();
-			Hashtable wasEntries = new Hashtable();
-			Hashtable replaceEntries = new Hashtable();
-				
-				//get the list of generic jar entries
-			for (Enumeration e = genericJar.entries(); e.hasMoreElements();)
-			    {
-				JarEntry je = (JarEntry)e.nextElement();
-				genericEntries.put(je.getName().replace('\\', '/'), je);
-			    }
-				//get the list of websphere jar entries
-			for (Enumeration e = wasJar.entries() ; e.hasMoreElements();)
-			    {
-				JarEntry je = (JarEntry)e.nextElement();
-				wasEntries.put(je.getName(), je);
-			    }
-				
-				//Cycle Through generic and make sure its in websphere
-			ClassLoader genericLoader = getClassLoaderFromJar(genericJarFile);
-			for (Enumeration e = genericEntries.keys(); e.hasMoreElements();)
-			    {
-				String filepath = (String)e.nextElement();
-				if (wasEntries.containsKey(filepath))    // File name/path match
-				    {
-					// Check files see if same
-					JarEntry genericEntry = (JarEntry)genericEntries.get(filepath);
-					JarEntry wasEntry = (JarEntry)wasEntries.get(filepath);
-					if ((genericEntry.getCrc() !=  wasEntry.getCrc())  || // Crc's Match
-					    (genericEntry.getSize() != wasEntry.getSize()) ) // Size Match
-					    {
-						if (genericEntry.getName().endsWith(".class"))
-						    {
-							//File are different see if its an object or an interface
-							String classname = genericEntry.getName().replace(File.separatorChar,'.');
-							classname = classname.substring(0,classname.lastIndexOf(".class"));
-							Class genclass = genericLoader.loadClass(classname);
-							if (genclass.isInterface())
-							    {
-								//Interface changed   rebuild jar.
-								log("Interface " + genclass.getName() + " has changed",Project.MSG_VERBOSE);
-								rebuild = true;
-								break;
-							    }
-							else
-							    {
-								//Object class Changed   update it.
-								replaceEntries.put(filepath, genericEntry);
-							    }
-						    }
-						else
-						    {
-							// is it the manifest. If so ignore it
-							if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
-							    //File other then class changed   rebuild
-							    log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
-							    rebuild = true;
-							}
-							break;
-						    }
-					    }
-				    }
-				else // a file doesnt exist rebuild
-				    {
-					log("File " + filepath + " not present in websphere jar",Project.MSG_VERBOSE);
-					rebuild =  true;
-					break;
-				    }
-			    }
-				
-			if (!rebuild)
-			    {
-				log("No rebuild needed - updating jar",Project.MSG_VERBOSE);
-				newwasJarFile = new File(websphereJarFile.getAbsolutePath() + ".temp");
-				if (newwasJarFile.exists()) {
-				    newwasJarFile.delete();
-				}
-					
-				newJarStream = new JarOutputStream(new FileOutputStream(newwasJarFile));
-				newJarStream.setLevel(0);
-					
-				//Copy files from old websphere jar
-				for (Enumeration e = wasEntries.elements() ; e.hasMoreElements();)
-				    {
-					byte[] buffer = new byte[1024];
-					int bytesRead;
-					InputStream is;
-					JarEntry je = (JarEntry)e.nextElement();
-					if (je.getCompressedSize() == -1 ||
-					    je.getCompressedSize() == je.getSize()) {
-					    newJarStream.setLevel(0);
-					}
-					else {
-					    newJarStream.setLevel(9);
-					}
-						
-					// Update with changed Bean class
-					if (replaceEntries.containsKey(je.getName()))
-					    {
-						log("Updating Bean class from generic Jar " + je.getName(),
-						    Project.MSG_VERBOSE);
-						// Use the entry from the generic jar
-						je = (JarEntry)replaceEntries.get(je.getName());
-						is = genericJar.getInputStream(je);
-					    }
-					else  //use fle from original websphere jar
-					    {
-						is = wasJar.getInputStream(je);
-					    }
-					newJarStream.putNextEntry(new JarEntry(je.getName()));
-						
-					while ((bytesRead = is.read(buffer)) != -1)
-					    {
-						newJarStream.write(buffer,0,bytesRead);
-					    }
-					is.close();
-				    }
-			    }
-			else
-			    {
-				log("websphere Jar rebuild needed due to changed interface or XML",Project.MSG_VERBOSE);
-			    }
-		    }
-		else
-		    {
-			rebuild = true;
-		    }
-	    }
-	catch(ClassNotFoundException cnfe)
-	    {
-		String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
-		    + ". Details: "
-		    + cnfe.getMessage();
-		throw new BuildException(cnfmsg, cnfe);
-	    }
-	catch(IOException ioe) {
-	    String msg = "IOException while processing ejb-jar file "
-		+ ". Details: "
-		+ ioe.getMessage();
-	    throw new BuildException(msg, ioe);
-	}
-	finally {
-	    // need to close files and perhaps rename output
-	    if (genericJar != null) {
-		try {
-		    genericJar.close();
-		}
-		catch (IOException closeException) {}
-	    }
-			
-	    if (wasJar != null) {
-		try {
-		    wasJar.close();
-		}
-		catch (IOException closeException) {}
-	    }
-			
-	    if (newJarStream != null) {
-		try {
-		    newJarStream.close();
-		}
-		catch (IOException closeException) {}
-				
-		websphereJarFile.delete();
-		newwasJarFile.renameTo(websphereJarFile);
-		if (!websphereJarFile.exists()) {
-		    rebuild = true;
-		}
-	    }
-	}
-		
-	return rebuild;
+        boolean rebuild = false;
+        
+        JarFile genericJar = null;
+        JarFile wasJar = null;
+        File newwasJarFile = null;
+        JarOutputStream newJarStream = null;
+                
+        try
+            {
+                log("Checking if websphere Jar needs to be rebuilt for jar " + websphereJarFile.getName(),
+                    Project.MSG_VERBOSE);
+                // Only go forward if the generic and the websphere file both exist
+                if (genericJarFile.exists() && genericJarFile.isFile()
+                    && websphereJarFile.exists() && websphereJarFile.isFile())
+                    {
+                        //open jar files
+                        genericJar = new JarFile(genericJarFile);
+                        wasJar = new JarFile(websphereJarFile);
+                                
+                        Hashtable genericEntries = new Hashtable();
+                        Hashtable wasEntries = new Hashtable();
+                        Hashtable replaceEntries = new Hashtable();
+                                
+                        //get the list of generic jar entries
+                        for (Enumeration e = genericJar.entries(); e.hasMoreElements();)
+                            {
+                                JarEntry je = (JarEntry)e.nextElement();
+                                genericEntries.put(je.getName().replace('\\', '/'), je);
+                            }
+                        //get the list of websphere jar entries
+                        for (Enumeration e = wasJar.entries() ; e.hasMoreElements();)
+                            {
+                                JarEntry je = (JarEntry)e.nextElement();
+                                wasEntries.put(je.getName(), je);
+                            }
+                                
+                        //Cycle Through generic and make sure its in websphere
+                        ClassLoader genericLoader = getClassLoaderFromJar(genericJarFile);
+                        for (Enumeration e = genericEntries.keys(); e.hasMoreElements();)
+                            {
+                                String filepath = (String)e.nextElement();
+                                if (wasEntries.containsKey(filepath))    // File name/path match
+                                    {
+                                        // Check files see if same
+                                        JarEntry genericEntry = (JarEntry)genericEntries.get(filepath);
+                                        JarEntry wasEntry = (JarEntry)wasEntries.get(filepath);
+                                        if ((genericEntry.getCrc() !=  wasEntry.getCrc())  || // Crc's Match
+                                            (genericEntry.getSize() != wasEntry.getSize()) ) // Size Match
+                                            {
+                                                if (genericEntry.getName().endsWith(".class"))
+                                                    {
+                                                        //File are different see if its an object or an interface
+                                                        String classname = genericEntry.getName().replace(File.separatorChar,'.');
+                                                        classname = classname.substring(0,classname.lastIndexOf(".class"));
+                                                        Class genclass = genericLoader.loadClass(classname);
+                                                        if (genclass.isInterface())
+                                                            {
+                                                                //Interface changed   rebuild jar.
+                                                                log("Interface " + genclass.getName() + " has changed",Project.MSG_VERBOSE);
+                                                                rebuild = true;
+                                                                break;
+                                                            }
+                                                        else
+                                                            {
+                                                                //Object class Changed   update it.
+                                                                replaceEntries.put(filepath, genericEntry);
+                                                            }
+                                                    }
+                                                else
+                                                    {
+                                                        // is it the manifest. If so ignore it
+                                                        if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
+                                                            //File other then class changed   rebuild
+                                                            log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
+                                                            rebuild = true;
+                                                        }
+                                                        break;
+                                                    }
+                                            }
+                                    }
+                                else // a file doesnt exist rebuild
+                                    {
+                                        log("File " + filepath + " not present in websphere jar",Project.MSG_VERBOSE);
+                                        rebuild =  true;
+                                        break;
+                                    }
+                            }
+                                
+                        if (!rebuild)
+                            {
+                                log("No rebuild needed - updating jar",Project.MSG_VERBOSE);
+                                newwasJarFile = new File(websphereJarFile.getAbsolutePath() + ".temp");
+                                if (newwasJarFile.exists()) {
+                                    newwasJarFile.delete();
+                                }
+                                        
+                                newJarStream = new JarOutputStream(new FileOutputStream(newwasJarFile));
+                                newJarStream.setLevel(0);
+                                        
+                                //Copy files from old websphere jar
+                                for (Enumeration e = wasEntries.elements() ; e.hasMoreElements();)
+                                    {
+                                        byte[] buffer = new byte[1024];
+                                        int bytesRead;
+                                        InputStream is;
+                                        JarEntry je = (JarEntry)e.nextElement();
+                                        if (je.getCompressedSize() == -1 ||
+                                            je.getCompressedSize() == je.getSize()) {
+                                            newJarStream.setLevel(0);
+                                        }
+                                        else {
+                                            newJarStream.setLevel(9);
+                                        }
+                                                
+                                        // Update with changed Bean class
+                                        if (replaceEntries.containsKey(je.getName()))
+                                            {
+                                                log("Updating Bean class from generic Jar " + je.getName(),
+                                                    Project.MSG_VERBOSE);
+                                                // Use the entry from the generic jar
+                                                je = (JarEntry)replaceEntries.get(je.getName());
+                                                is = genericJar.getInputStream(je);
+                                            }
+                                        else  //use fle from original websphere jar
+                                            {
+                                                is = wasJar.getInputStream(je);
+                                            }
+                                        newJarStream.putNextEntry(new JarEntry(je.getName()));
+                                                
+                                        while ((bytesRead = is.read(buffer)) != -1)
+                                            {
+                                                newJarStream.write(buffer,0,bytesRead);
+                                            }
+                                        is.close();
+                                    }
+                            }
+                        else
+                            {
+                                log("websphere Jar rebuild needed due to changed interface or XML",Project.MSG_VERBOSE);
+                            }
+                    }
+                else
+                    {
+                        rebuild = true;
+                    }
+            }
+        catch(ClassNotFoundException cnfe)
+            {
+                String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
+                    + ". Details: "
+                    + cnfe.getMessage();
+                throw new BuildException(cnfmsg, cnfe);
+            }
+        catch(IOException ioe) {
+            String msg = "IOException while processing ejb-jar file "
+                + ". Details: "
+                + ioe.getMessage();
+            throw new BuildException(msg, ioe);
+        }
+        finally {
+            // need to close files and perhaps rename output
+            if (genericJar != null) {
+                try {
+                    genericJar.close();
+                }
+                catch (IOException closeException) {}
+            }
+                        
+            if (wasJar != null) {
+                try {
+                    wasJar.close();
+                }
+                catch (IOException closeException) {}
+            }
+                        
+            if (newJarStream != null) {
+                try {
+                    newJarStream.close();
+                }
+                catch (IOException closeException) {}
+                                
+                websphereJarFile.delete();
+                newwasJarFile.renameTo(websphereJarFile);
+                if (!websphereJarFile.exists()) {
+                    rebuild = true;
+                }
+            }
+        }
+                
+        return rebuild;
     }
-	
+        
     /**
      * Helper method invoked by isRebuildRequired to get a ClassLoader for
      * a Jar File passed to it.
@@ -844,14 +844,14 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     protected ClassLoader getClassLoaderFromJar(File classjar) throws IOException
     {
-	Path lookupPath = new Path(getTask().getProject());
-	lookupPath.setLocation(classjar);
-	
-	Path classpath = getCombinedClasspath();
-	if (classpath != null) {
-	    lookupPath.append(classpath);
-	}
-		
-	return new AntClassLoader(getTask().getProject(), lookupPath);
+        Path lookupPath = new Path(getTask().getProject());
+        lookupPath.setLocation(classjar);
+        
+        Path classpath = getCombinedClasspath();
+        if (classpath != null) {
+            lookupPath.append(classpath);
+        }
+                
+        return new AntClassLoader(getTask().getProject(), lookupPath);
     }
 }
