@@ -108,6 +108,8 @@ Other changes:
 * New update attribute for <zip> and friends - update an existing
   archive instead of creating a new one.
 
+* <apply> and <execon> have been merged into a single task.
+
 Fixed bugs:
 -----------
 
@@ -174,6 +176,9 @@ Fixed bugs:
 
 * <junit> tries to include all necessary classes for the task itself
   to the classpath when running in fork mode - doesn't work for JDK 1.1
+
+* <apply> and <execon> do now execute the command only once, if you
+  specify the parallel attribute - instead of once per fileset.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================

@@ -7,17 +7,23 @@
 
 <body>
 
-<h2><a name="apply">Apply</a></h2>
+<h2><a name="apply">Apply/<i>ExecOn</i></a></h2>
+<p><i>The name execon is deprecated and only kept for backwards
+compatibilty.</i></p>
 <h3>Description</h3>
 <p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Ant is run on one of the specified operating
 systems.</p>
 <p>The files and/or directories of a number of <a
-href="../CoreTypes/fileset.html">FileSet</a>s are passed as arguments to the system
-command. The timestamp of each source file is compared to the
-timestamp of a target file which is defined by a nested <a
-href="../CoreTypes/mapper.html">mapper</a> element. At least one fileset and exactly
-one mapper element are required.</p>
+href="../CoreTypes/fileset.html">FileSet</a>s are passed as arguments
+to the system command.</p>
+<p>If you specify a nested <a
+href="../CoreTypes/mapper.html">mapper</a> and the destdir attribute,
+the timestamp of each source file is compared to the timestamp of a
+target file which is defined by the nested mapper element and searched
+for in the given destdir.</p>
+<p>At least one fileset is required, you must not specify more than
+one mapper.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -36,7 +42,7 @@ one mapper element are required.</p>
     <td valign="top">the directory where the &lt;apply&gt; expects the target files will be placed by the 
                      command, when it is executed. 
     </td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, if you specify a nested mapper</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
@@ -68,12 +74,6 @@ one mapper element are required.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">newenvironment</td>
-    <td valign="top">Do not propagate old environment when new environment
-      variables are specified.</td>
-    <td align="center" valign="top">No, default is <i>false</i></td>
-  </tr>
-  <tr>
     <td valign="top">skipemptyfilesets</td>
     <td valign="top">Don't run the command, if no source files have
       been found or are newer than their corresponding target
@@ -95,6 +95,23 @@ one mapper element are required.</p>
       the names of directories are considered.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
+  <tr>
+    <td valign="top">newenvironment</td>
+    <td valign="top">Do not propagate old environment when new environment
+      variables are specified.</td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
+  </tr>
+  <tr>
+    <td valign="top">vmlauncher</td>
+    <td valign="top">Run command using the Java VM's execution facilities
+        where available. If set to false the underlying OS's shell,
+        either directly or through the antRun scripts, will be used.
+        Under some operating systems, this gives access to facilities
+        not normally available through the VM including, under Windows,
+        being able to execute scripts, rather than their associated
+        interpreter.</td>
+    <td align="center" valign="top">No, default is <i>true</i></td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>fileset</h4>
@@ -114,7 +131,9 @@ use a nested <code>&lt;srcfile&gt;</code> element between your
 <p><code>&lt;targetfile&gt;</code> is similar to
 <code>&lt;srcfile&gt;</code> and marks the position of the target
 filename on the command line. If omitted, the target filenames will
-not be added to the command line at all.</p>
+not be added to the command line at all. This element can only be
+specified, if you also define a nested mapper and the destdir
+attribute.</p>
 <h4>env</h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements. See the
@@ -123,6 +142,34 @@ description in the section about <a href="exec.html#env">exec</a></p>
 <b>not</b> passed to the system command if you specify variables using
 <code>&lt;env&gt;</code>.</p>
 <h3>Examples</h3>
+<blockquote><pre>
+&lt;apply executable=&quot;ls&quot; &gt;
+  &lt;arg value=&quot;-l&quot;/&gt;
+  &lt;fileset dir=&quot;/tmp&quot;&gt;
+    &lt;patternset&gt;
+      &lt;exclude name=&quot;**/*.txt&quot;/&gt;
+    &lt;/patternset&gt;
+  &lt;/fileset&gt;
+  &lt;fileset refid=&quot;other.files&quot;/&gt;
+&lt;/apply&gt;
+</pre></blockquote>
+<p>invokes <code>ls -l</code>, adding the absolute filenames of all
+files below <code>/tmp</code> not ending in <code>.txt</code> and all
+files of the FileSet with <code>id</code> <code>other.files</code> to
+the command line.</p>
+<blockquote><pre>
+&lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot; &gt;
+  &lt;arg value=&quot;arg1&quot;/&gt;
+  &lt;srfile/&gt;
+  &lt;arg value=&quot;arg2&quot;/&gt;
+  &lt;fileset dir=&quot;/tmp&quot;/&gt;
+&lt;/apply&gt;
+</pre></blockquote>
+<p>invokes <code>somecommand arg1 SOURCEFILENAME arg2</code> for each
+file in <code>/tmp</code> replacing SOURCEFILENAME with the absolute
+filename of each file in turn. If <code>parallel</code> had been set
+to true, SOURCEFILENAME would be replaced with the absolute filenames
+of all files separated by spaces.</p>
 <blockquote><pre>
 &lt;apply executable=&quot;cc&quot; dest=&quot;src/C&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;-c&quot;/&gt;
