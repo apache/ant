@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antlib.system;
-import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.service.MagicProperties;
 

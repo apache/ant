@@ -325,11 +325,13 @@ public abstract class AntBase extends AbstractTask {
      * System.err, directly or indirectly.
      *
      * @param line The line of error info produce by the task
+     * @exception ExecutionException if the output cannot be handled.
      */
-    public void handleSystemErr(String line) {
+    public void handleSystemErr(String line) throws ExecutionException {
         if (subbuildKey == null) {
             super.handleSystemErr(line);
         } else {
+            execService.handleBuildOutput(subbuildKey, line, true);
         }
     }
 
@@ -341,11 +343,13 @@ public abstract class AntBase extends AbstractTask {
      * or indirectly.
      *
      * @param line The line of content produce by the task
+     * @exception ExecutionException if the output cannot be handled.
      */
-    public void handleSystemOut(String line) {
+    public void handleSystemOut(String line) throws ExecutionException {
         if (subbuildKey == null) {
             super.handleSystemOut(line);
         } else {
+            execService.handleBuildOutput(subbuildKey, line, false);
         }
     }
 

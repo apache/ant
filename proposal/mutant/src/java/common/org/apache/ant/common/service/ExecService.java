@@ -93,6 +93,7 @@ public interface ExecService {
      *
      * @param properties the initiali properties to be used in the build
      * @exception ExecutionException if the subbuild cannot be setup
+     * @return a key to the build allowing it to be executed and managed
      */
     Object setupBuild(Map properties)
          throws ExecutionException;
@@ -136,6 +137,8 @@ public interface ExecService {
      * @param subbuildKey the core's key for managing the subbuild.
      * @param line the content produce by the current thread.
      * @param isErr true if this content is from the thread's error stream.
+     *
+     * @exception ExecutionException if the subbuild cannot be found.
      */
     void handleBuildOutput(Object subbuildKey, String line, boolean isErr) 
         throws ExecutionException;

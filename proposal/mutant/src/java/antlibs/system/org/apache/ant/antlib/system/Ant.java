@@ -53,7 +53,6 @@
  */
 package org.apache.ant.antlib.system;
 import java.io.File;
-import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.FileUtils;

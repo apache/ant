@@ -89,8 +89,9 @@ public interface Task extends ExecutionComponent {
      * directly or indirectly.
      *
      * @param line The line of content produce by the task
+     * @exception ExecutionException if the output cannot be handled.
      */
-    void handleSystemOut(String line);
+    void handleSystemOut(String line) throws ExecutionException;
 
     /**
      * Handle error information produced by the task. When a task prints to
@@ -99,7 +100,8 @@ public interface Task extends ExecutionComponent {
      * System.err, directly or indirectly.
      *
      * @param line The line of error info produce by the task
+     * @exception ExecutionException if the output cannot be handled.
      */
-    void handleSystemErr(String line);
+    void handleSystemErr(String line) throws ExecutionException;
 }
 

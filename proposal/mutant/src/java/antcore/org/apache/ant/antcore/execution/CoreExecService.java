@@ -77,7 +77,7 @@ public class CoreExecService implements ExecService {
 
     /** The Frame this service instance is working for */
     private Frame frame;
-    
+
     /** A map of subbuild keys to the frame of the subbuild. */
     private Map subBuilds = new HashMap();
 
@@ -152,18 +152,12 @@ public class CoreExecService implements ExecService {
 
 
     /**
-     * Handle subbuild output.
+     * Gets the Frame for a subbuild based on the key
      *
-     * @param subbuildKey the core's key for managing the subbuild.
-     * @param line the content produce by the current thread.
-     * @param isErr true if this content is from the thread's error stream.
+     * @param key Description of the Parameter
+     * @return the subbuild's Frame
+     * @exception ExecutionException if the build cannot be found.
      */
-    public void handleBuildOutput(Object subbuildKey, String line,
-                                  boolean isErr) throws ExecutionException {
-        getSubbuildFrame(subbuildKey).threadOutput(line, isErr);                                      
-    }
-
-
     private Frame getSubbuildFrame(Object key) throws ExecutionException {
         Frame subFrame = (Frame) subBuilds.get(key);
 
@@ -173,7 +167,22 @@ public class CoreExecService implements ExecService {
         }
         return subFrame;
     }
-    
+
+
+    /**
+     * Handle subbuild output.
+     *
+     * @param subbuildKey the core's key for managing the subbuild.
+     * @param line the content produce by the current thread.
+     * @param isErr true if this content is from the thread's error stream.
+     * @exception ExecutionException if the subbuild cannot be found.
+     */
+    public void handleBuildOutput(Object subbuildKey, String line,
+                                  boolean isErr) throws ExecutionException {
+        getSubbuildFrame(subbuildKey).threadOutput(line, isErr);
+    }
+
+
     /**
      * Run a build which have been previously setup
      *
