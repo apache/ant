@@ -155,7 +155,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             parser.parse(inputSource);
         } catch (SAXParseException exc) {
             Location location =
-                new Location(buildFile.toString(), exc.getLineNumber(),
+                new Location(exc.getSystemId(), exc.getLineNumber(),
                     exc.getColumnNumber());
 
             Throwable t = exc.getException();
@@ -791,7 +791,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                 task.setTaskName(tag);
             }
 
-            task.setLocation(new Location(helperImpl.buildFile.toString(), helperImpl.locator.getLineNumber(),
+            task.setLocation(new Location(helperImpl.locator.getSystemId(), helperImpl.locator.getLineNumber(),
                                           helperImpl.locator.getColumnNumber()));
             helperImpl.configureId(task, attrs);
 
