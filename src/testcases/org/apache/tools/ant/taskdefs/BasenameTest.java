@@ -84,20 +84,38 @@ public class BasenameTest extends BuildFileTest {
 
     public void test4() { 
         executeTarget("test4");
-        String expected = "foo.txt";
         String checkprop = project.getProperty("file.w.suf");
-        if (!checkprop.equals(expected)) { 
-            fail("basename failed");
-        }
+        assertEquals("foo.txt", checkprop);
     }
     
     public void test5() { 
         executeTarget("test5");
-        String expected = "foo";
         String checkprop = project.getProperty("file.wo.suf");
-        if (!checkprop.equals(expected)) { 
-            fail("basename failed");
-        }
+        assertEquals("foo", checkprop);
     }
     
+    public void testMultipleDots() { 
+        executeTarget("testMultipleDots");
+        String checkprop = project.getProperty("file.wo.suf");
+        assertEquals("foo.bar", checkprop);
+    }
+    
+    public void testNoDots() { 
+        executeTarget("testNoDots");
+        String checkprop = project.getProperty("file.wo.suf");
+        assertEquals("foo.bar", checkprop);
+    }
+
+    public void testValueEqualsSuffixWithDot() { 
+        executeTarget("testValueEqualsSuffixWithDot");
+        String checkprop = project.getProperty("file.wo.suf");
+        assertEquals("", checkprop);
+    }
+
+    public void testValueEqualsSuffixWithoutDot() { 
+        executeTarget("testValueEqualsSuffixWithoutDot");
+        String checkprop = project.getProperty("file.wo.suf");
+        assertEquals("", checkprop);
+    }
+
 }
