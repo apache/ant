@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import java.io.IOException;
 
 /**
  * Call another target in the same project.
@@ -185,6 +186,15 @@ public class CallTarget extends Task {
         }
     }
     
+    public int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        if (callee != null) {
+            return callee.handleInput(buffer, offset, length);
+        } else {
+            return super.handleInput(buffer, offset, length);
+        }
+    }
+
     /**
      * Pass output sent to System.out to the new project.
      *

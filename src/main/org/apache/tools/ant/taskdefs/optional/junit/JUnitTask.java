@@ -714,6 +714,21 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * @see Task#handleInput(byte[], int, int)
+     * 
+     * @since Ant 1.6
+     */
+    protected int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        if (runner != null) {
+            return runner.handleInput(buffer, offset, length);
+        } else {
+            return super.handleInput(buffer, offset, length);
+        }
+    }
+    
+    
+    /**
      * Pass output sent to System.out to the TestRunner so it can
      * collect ot for the formatters.
      *

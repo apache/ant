@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,61 +51,50 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.BuildFileTest;
-import java.util.Random;
+package org.apache.tools.ant;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * A simple task that prints to System.out and System.err and then catches
- * the output which it then checks. If the output does not match, an
- * exception is thrown
  *
- * @since 1.5
+ * Passes input requests tot he project objetc for demuxing into 
+ * individual tasks and threads.
+ *
+ * @since Ant 1.6
  * @author Conor MacNeill
- * @created 21 February 2002
  */
-public class DemuxOutputTask extends Task {
-    private String randomOutValue;
-    private String randomErrValue;
-    private boolean outputReceived = false;
-    private boolean errorReceived = false;
+public class DemuxInputStream extends InputStream {
+
+    /**
+     * The project to from which to get input.
+     */
+    private Project project;
     
-    public void execute() {
-        Random generator = new Random();
-        randomOutValue = "Output Value is " + generator.nextInt();
-        randomErrValue = "Error Value is " + generator.nextInt();
-        
-        System.out.println(randomOutValue);
-        System.err.println(randomErrValue);
-        if (!outputReceived) {
-            throw new BuildException("Did not receive output");
-        } 
-        
-        if (!errorReceived) {
-            throw new BuildException("Did not receive error");
-        }
+    /**
+     * Create a DemuxInputStream for the given project
+     *
+     * @param project the project instance
+     */
+    public DemuxInputStream(Project project) {
+        this.project = project;
     }
 
-    protected void handleOutput(String line) {
-        if (line.length() != 0 && !line.equals(randomOutValue)) {
-            String message = "Received = [" + line + "], expected = [" 
-                + randomOutValue + "]";
-            throw new BuildException(message);
-        }
-        outputReceived = true;
+    /**
+     * @see InputStream.read()
+     */
+    public int read() throws IOException {
+        byte[] buffer = new byte[1];
+        project.demuxInput(buffer, 0, 1);
+        return buffer[0];
     }
     
-    protected void handleErrorOutput(String line) {
-        if (line.length() != 0 && !line.equals(randomErrValue)) {
-            String message = "Received = [" + line + "], expected = [" 
-                + randomErrValue + "]";
-            throw new BuildException(message);
-        }
-        errorReceived = true;
+
+    /**
+     * @see InputStream.read(byte[], int, int)
+     */
+    public int read(byte[] buffer, int offset, int length) throws IOException {
+        return project.demuxInput(buffer, offset, length);
     }
-    
-    
 }
-

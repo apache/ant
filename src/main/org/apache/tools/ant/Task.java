@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.util.Enumeration;
+import java.io.IOException;
 
 /**
  * Base class for all tasks.
@@ -313,6 +314,22 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
+     * Handle an input request by this task
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     * 
+     * @exception IOException if the data cannot be read
+     */
+    protected int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        return getProject().defaultInput(buffer, offset, length);
+    }
+    
+    /**
      * Handles an error line by logging it with the INFO priority.
      *
      * @param line The error line to log. Should not be <code>null</code>.
@@ -396,6 +413,9 @@ public abstract class Task extends ProjectComponent {
 
     /**
      * Has this task been marked invalid?
+     *
+     * @return true if this task is no longer valid. A new task should be 
+     * configured in this case.
      *
      * @since Ant 1.5
      */

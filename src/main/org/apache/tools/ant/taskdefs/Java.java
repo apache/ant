@@ -416,6 +416,15 @@ public class Java extends Task {
         }
     }
     
+    public int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        if (redirector.getInputStream() != null) {
+            return redirector.handleInput(buffer, offset, length);
+        } else {
+            return super.handleInput(buffer, offset, length);
+        }
+    }
+
     /**
      * Pass output sent to System.out to specified output file.
      *

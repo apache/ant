@@ -572,6 +572,8 @@ public class Main {
                 //System.setSecurityManager(new NoExitSecurityManager());
             }
             try {
+                project.setDefaultInputStream(System.in);
+                System.setIn(new DemuxInputStream(project));
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
                 System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
 
@@ -662,7 +664,7 @@ public class Main {
      * @exception BuildException if a specified InputHandler
      *                           implementation could not be loaded.
      */
-    private void addInputHandler(Project project) {
+    private void addInputHandler(Project project) throws BuildException {
         InputHandler handler = null;
         if (inputHandlerClassname == null) {
             handler = new DefaultInputHandler();
@@ -675,8 +677,7 @@ public class Main {
                     + inputHandlerClassname
                     + " does not implement the InputHandler interface";
                 throw new BuildException(msg);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 String msg = "Unable to instantiate specified input handler "
                     + "class " + inputHandlerClassname + " : "
                     + e.getClass().getName();
@@ -866,8 +867,8 @@ public class Main {
                      maxLength);
         //if there were no main targets, we list all subtargets
         //as it means nothing has a description
-        if(topNames.size()==0) {
-            printSubTargets=true;
+        if (topNames.size() == 0) {
+            printSubTargets = true;
         }
         if (printSubTargets) {
             printTargets(project, subNames, null, "Subtargets:", 0);
@@ -918,8 +919,8 @@ public class Main {
      *               position so they line up (so long as the names really
      *               <i>are</i> shorter than this).
      */
-    private static void printTargets(Project project,Vector names,
-                                     Vector descriptions,String heading,
+    private static void printTargets(Project project, Vector names,
+                                     Vector descriptions, String heading,
                                      int maxlen) {
         // now, start printing the targets and their descriptions
         String lSep = System.getProperty("line.separator");

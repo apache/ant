@@ -297,6 +297,18 @@ public class Ant extends Task {
     }
 
     /**
+     * @see Task#handleInput(byte[], int, int)
+     */
+    public int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        if (newProject != null) {
+            return newProject.demuxInput(buffer, offset, length);
+        } else {
+            return super.handleInput(buffer, offset, length);
+        }
+    }
+    
+    /**
      * Pass output sent to System.out to the new project.
      *
      * @since Ant 1.5.2
@@ -443,7 +455,8 @@ public class Ant extends Task {
      * requested.
      */
     private void addReferences() throws BuildException {
-        Hashtable thisReferences = (Hashtable) getProject().getReferences().clone();
+        Hashtable thisReferences 
+            = (Hashtable) getProject().getReferences().clone();
         Hashtable newReferences = newProject.getReferences();
         Enumeration e;
         if (references.size() > 0) {

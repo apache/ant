@@ -410,6 +410,11 @@ public class JUnitTestRunner implements TestListener {
         }
     }
     
+    protected int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        return -1;
+    }
+    
     protected void handleErrorOutput(String line) {
         if (systemError != null) {
             systemError.println(line);

@@ -90,7 +90,6 @@ import org.apache.tools.ant.util.LazyHashtable;
  */
 
 public class Project {
-
     /** Message priority of "error". */
     public static final int MSG_ERR = 0;
     /** Message priority of "warning". */
@@ -113,6 +112,13 @@ public class Project {
      */
     private static final String VISITED = "VISITED";
 
+    /**
+     * The class name of the Ant class loader to use for 
+     * JDK 1.2 and above
+     */
+    private static final String ANTCLASSLOADER_JDK12
+        = "org.apache.tools.ant.loader.AntClassLoader2";
+    
     /**
      * Version constant for Java 1.0
      *
@@ -205,14 +211,36 @@ public class Project {
     private InputHandler inputHandler = null;
 
     /**
+     * The default input stream used to read any input
+     */
+    private InputStream defaultInputStream = null;
+    
+    /**
      * Sets the input handler
+     * 
+     * @param handler the InputHandler instance to use for gathering input.
      */
     public void setInputHandler(InputHandler handler) {
         inputHandler = handler;
     }
 
     /**
+     * Set the default System input stream. Normally this stream is set to 
+     * System.in. This inputStream is used when no task inptu redirection is
+     * being performed.
+     *
+     * @param defaultInputStream the default input stream to use when input 
+     *        is reuested.
+     */
+    public void setDefaultInputStream(InputStream defaultInputStream) {
+        this.defaultInputStream = defaultInputStream;
+    }
+    
+    /**
      * Retrieves the current input handler.
+     *
+     * @return the InputHandler instance currently in place for the project 
+     *         instance.
      */
     public InputHandler getInputHandler() {
         return inputHandler;
@@ -250,7 +278,7 @@ public class Project {
             }
             props.load(in);
             in.close();
-            ((AntTaskTable)taskClassDefinitions).addDefinitions( props );
+            ((AntTaskTable) taskClassDefinitions).addDefinitions(props);
 
 
         } catch (IOException ioe) {
@@ -268,7 +296,7 @@ public class Project {
             props.load(in);
             in.close();
 
-            ((AntTaskTable)dataClassDefinitions).addDefinitions(props);
+            ((AntTaskTable) dataClassDefinitions).addDefinitions(props);
 
 
         } catch (IOException ioe) {
@@ -278,13 +306,18 @@ public class Project {
         setSystemProperties();
     }
 
+    /**
+     * Factory method to create a class loader for loading classes
+     *
+     * @return an appropriate classloader
+     */
     private AntClassLoader createClassLoader() {
         AntClassLoader loader = null;
         if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             try {
                 // 1.2+ - create advanced helper dynamically
                 Class loaderClass
-                    = Class.forName("org.apache.tools.ant.loader.AntClassLoader2");
+                    = Class.forName(ANTCLASSLOADER_JDK12);
                 loader = (AntClassLoader) loaderClass.newInstance();
             } catch (Exception e) {
                     log("Unable to create Class Loader: "
@@ -300,6 +333,14 @@ public class Project {
         return loader;
     }
 
+    /**
+     * Factory method to create a class loader for loading classes from
+     * a given path
+     *
+     * @param path the path from whcih clases are to be loaded.
+     * 
+     * @return an appropriate classloader
+     */
     public AntClassLoader createClassLoader(Path path) {
         AntClassLoader loader = createClassLoader();
         loader.setClassPath(path);
@@ -434,7 +475,8 @@ public class Project {
      * @since 1.5
      */
     public synchronized void setNewProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).setNewProperty( null, name, value);
+        PropertyHelper.getPropertyHelper(this).setNewProperty(null, name, 
+                                                              value);
     }
 
     /**
@@ -447,7 +489,8 @@ public class Project {
      * @see #setProperty(String,String)
      */
     public synchronized void setUserProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).setUserProperty( null, name, value);
+        PropertyHelper.getPropertyHelper(this).setUserProperty(null, name, 
+                                                               value);
     }
 
     /**
@@ -463,7 +506,7 @@ public class Project {
      * @see #setProperty(String,String)
      */
     public synchronized void setInheritedProperty(String name, String value) {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         ph.setInheritedProperty(null, name, value);
     }
 
@@ -476,8 +519,8 @@ public class Project {
      * @param value The property value. Must not be <code>null</code>.
      */
     private void setPropertyInternal(String name, String value) {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
-        ph.setProperty(null, name, value, false );
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        ph.setProperty(null, name, value, false);
     }
 
     /**
@@ -490,8 +533,8 @@ public class Project {
      *         or if a <code>null</code> name is provided.
      */
     public String getProperty(String name) {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
-        return (String)ph.getProperty(null, name);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return (String) ph.getProperty(null, name);
     }
 
     /**
@@ -509,9 +552,8 @@ public class Project {
      *                           property name, e.g. <code>${xxx</code>
      */
     public String replaceProperties(String value)
-        throws BuildException
-    {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        throws BuildException {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         return ph.replaceProperties(null, value, null);
     }
 
@@ -525,8 +567,8 @@ public class Project {
      *         or if a <code>null</code> name is provided.
      */
      public String getUserProperty(String name) {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
-        return (String)ph.getUserProperty( null, name );
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return (String) ph.getUserProperty(null, name);
     }
 
     /**
@@ -535,7 +577,7 @@ public class Project {
      *         (including user properties).
      */
     public Hashtable getProperties() {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         return ph.getProperties();
     }
 
@@ -544,7 +586,7 @@ public class Project {
      * @return a hashtable containing just the user properties
      */
     public Hashtable getUserProperties() {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         return ph.getUserProperties();
     }
 
@@ -561,7 +603,7 @@ public class Project {
      * @since Ant 1.5
      */
     public void copyUserProperties(Project other) {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         ph.copyUserProperties(other);
     }
 
@@ -578,7 +620,7 @@ public class Project {
      * @since Ant 1.5
      */
     public void copyInheritedProperties(Project other) {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         ph.copyInheritedProperties(other);
     }
 
@@ -654,8 +696,8 @@ public class Project {
      *         been set.
      */
     public String getDescription() {
-        if( description== null ) {
-            description=Description.getDescription(this);
+        if (description == null) {
+            description = Description.getDescription(this);
         }
 
         return description;
@@ -924,7 +966,7 @@ public class Project {
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        synchronized(dataClassDefinitions) {
+        synchronized (dataClassDefinitions) {
             Class old = (Class) dataClassDefinitions.get(typeName);
             if (null != old) {
                 if (old.equals(typeClass)) {
@@ -1043,8 +1085,8 @@ public class Project {
      *                           creation fails.
      */
     public Task createTask(String taskType) throws BuildException {
-        Task task=createNewTask(taskType);
-        if(task!=null) {
+        Task task = createNewTask(taskType);
+        if (task != null) {
             addCreatedTask(taskType, task);
         }
         return task;
@@ -1132,11 +1174,11 @@ public class Project {
             if (v != null) {
                 Enumeration enum = v.elements();
                 while (enum.hasMoreElements()) {
-                    WeakishReference ref=
+                    WeakishReference ref =
                             (WeakishReference) enum.nextElement();
                     Task t = (Task) ref.get();
                     //being a weak ref, it may be null by this point
-                    if(t!=null) {
+                    if (t != null) {
                         t.markInvalid();
                     }
                 }
@@ -1241,6 +1283,48 @@ public class Project {
     }
 
     /**
+     * Read data from the default input stream. If no default has been 
+     * specified, System.in is used. 
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     * 
+     * @exception IOException if the data cannot be read
+     */
+    public int defaultInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        if (defaultInputStream != null) {
+            return defaultInputStream.read(buffer, offset, length);
+        } else {
+            return System.in.read(buffer, offset, length);
+        }
+    }
+    
+    /**
+     * Demux an input request to the correct task.
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     * 
+     * @exception IOException if the data cannot be read
+     */     
+    public int demuxInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        Task task = (Task) threadTasks.get(Thread.currentThread());
+        if (task == null) {
+            return defaultInput(buffer, offset, length);
+        } else {
+            return task.handleInput(buffer, offset, length);
+        }
+    }
+    
+    /**
      * Demultiplexes flush operation so that each task receives the appropriate
      * messages. If the current thread is not currently executing a task,
      * the message is logged directly.
@@ -1250,8 +1334,6 @@ public class Project {
      * @param line Message to handle. Should not be <code>null</code>.
      * @param isError Whether the text represents an error (<code>true</code>)
      *        or information (<code>false</code>).
-     * @param terminated true if this line should be terminated with an 
-     *        end-of-line marker
      */
     public void demuxFlush(String line, boolean isError) {
         Task task = (Task) threadTasks.get(Thread.currentThread());
@@ -1763,7 +1845,7 @@ public class Project {
      */
     public void addReference(String name, Object value) {
         synchronized (references) {
-            Object old = ((AntRefTable)references).getReal(name);
+            Object old = ((AntRefTable) references).getReal(name);
             if (old == value) {
                 // no warning, this is not changing anything
                 return;
@@ -1777,7 +1859,7 @@ public class Project {
             try {
                 valueAsString = value.toString();
             } catch (Throwable t) {
-                log("Caught exception (" + t.getClass().getName() +")"
+                log("Caught exception (" + t.getClass().getName() + ")"
                     + " while expanding " + name + ": " + t.getMessage(),
                     MSG_WARN);
             }
@@ -2051,7 +2133,7 @@ public class Project {
         Project project;
         public AntRefTable(Project project) {
             super();
-            this.project=project;
+            this.project = project;
         }
 
         /** Returns the unmodified original object.
@@ -2061,8 +2143,8 @@ public class Project {
          * of UnknownElement ( this is similar with the JDNI
          * refs behavior )
          */
-        public Object getReal(Object key ) {
-            return super.get( key );
+        public Object getReal(Object key) {
+            return super.get(key);
         }
 
         /** Get method for the reference table.
@@ -2078,11 +2160,11 @@ public class Project {
          */
         public Object get(Object key) {
             //System.out.println("AntRefTable.get " + key);
-            Object o=super.get(key);
-            if( o instanceof UnknownElement ) {
+            Object o = super.get(key);
+            if (o instanceof UnknownElement) {
                 // Make sure that
-                ((UnknownElement)o).maybeConfigure();
-                o=((UnknownElement)o).getTask();
+                ((UnknownElement) o).maybeConfigure();
+                o = ((UnknownElement) o).getTask();
             }
             return o;
         }
@@ -2091,28 +2173,28 @@ public class Project {
     private static class AntTaskTable extends LazyHashtable {
         Project project;
         Properties props;
-        boolean tasks=false;
+        boolean tasks = false;
 
-        public AntTaskTable( Project p, boolean tasks ) {
-            this.project=p;
-            this.tasks=tasks;
+        public AntTaskTable(Project p, boolean tasks) {
+            this.project = p;
+            this.tasks = tasks;
         }
 
-        public void addDefinitions( Properties props ) {
-            this.props=props;
+        public void addDefinitions(Properties props) {
+            this.props = props;
         }
 
-        protected void initAll( ) {
-            if( initAllDone ) return;
+        protected void initAll() {
+            if (initAllDone ) return;
             project.log("InitAll", Project.MSG_DEBUG);
-            if( props==null ) return;
+            if (props==null ) return;
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
                 String key = (String) enum.nextElement();
                 Class taskClass=getTask( key );
-                if( taskClass!=null ) {
+                if (taskClass!=null ) {
                     // This will call a get() and a put()
-                    if( tasks )
+                    if (tasks )
                         project.addTaskDefinition(key, taskClass);
                     else
                         project.addDataTypeDefinition(key, taskClass );
@@ -2122,19 +2204,19 @@ public class Project {
         }
 
         protected Class getTask(String key) {
-            if( props==null ) return null; // for tasks loaded before init()
+            if (props==null ) return null; // for tasks loaded before init()
             String value=props.getProperty(key);
-            if( value==null) {
+            if (value==null) {
                 //project.log( "No class name for " + key, Project.MSG_VERBOSE );
                 return null;
             }
             try {
                 Class taskClass=null;
-                if( project.getCoreLoader() != null &&
+                if (project.getCoreLoader() != null &&
                     !("only".equals(project.getProperty("build.sysclasspath")))) {
                     try {
                         taskClass=project.getCoreLoader().loadClass(value);
-                        if( taskClass != null ) return taskClass;
+                        if (taskClass != null ) return taskClass;
                     } catch( Exception ex ) {
                     }
                 }
@@ -2153,11 +2235,11 @@ public class Project {
         // Hashtable implementation
         public Object get( Object key ) {
             Object orig=super.get( key );
-            if( orig!= null ) return orig;
-            if( ! (key instanceof String) ) return null;
+            if (orig!= null ) return orig;
+            if (! (key instanceof String) ) return null;
             project.log("Get task " + key, Project.MSG_DEBUG );
             Object taskClass=getTask( (String) key);
-            if( taskClass != null)
+            if (taskClass != null)
                 super.put( key, taskClass );
             return taskClass;
         }

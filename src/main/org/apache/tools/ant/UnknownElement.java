@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.util.Vector;
+import java.io.IOException;
 
 /**
  * Wrapper class that holds all the information necessary to create a task
@@ -124,7 +125,7 @@ public class UnknownElement extends Task {
 
         getWrapper().setProxy(realThing);
         if (realThing instanceof Task) {
-            Task task=(Task)realThing;
+            Task task = (Task) realThing;
 
             task.setProject(project);
             task.setRuntimeConfigurableWrapper(getWrapper());
@@ -135,7 +136,7 @@ public class UnknownElement extends Task {
 
             // For Script to work. Ugly
             // The reference is replaced by RuntimeConfigurable
-            this.getOwningTarget().replaceChild(this, (Task)realThing);
+            this.getOwningTarget().replaceChild(this, (Task) realThing);
         }
 
         handleChildren(realThing, getWrapper());
@@ -156,6 +157,26 @@ public class UnknownElement extends Task {
         }
     }
 
+    /**
+     * Handle an input request by this element
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     * 
+     * @exception IOException if the data cannot be read
+     */
+    protected int handleInput(byte[] buffer, int offset, int length) 
+        throws IOException {
+        if (realThing instanceof Task) {
+            return ((Task) realThing).handleInput(buffer, offset, length);
+        } else {
+            return super.handleInput(buffer, offset, length);
+        }
+            
+    }
     /**
      * Handles output sent to System.out by this task or its real task.
      *
@@ -214,7 +235,7 @@ public class UnknownElement extends Task {
 
         // the task will not be reused ( a new init() will be called )
         // Let GC do its job
-        realThing=null;
+        realThing = null;
     }
 
     /**
@@ -241,8 +262,7 @@ public class UnknownElement extends Task {
      */
     protected void handleChildren(Object parent,
                                   RuntimeConfigurable parentWrapper)
-        throws BuildException
-    {
+        throws BuildException {
         if (parent instanceof TaskAdapter) {
             parent = ((TaskAdapter) parent).getProxy();
         }
@@ -259,15 +279,15 @@ public class UnknownElement extends Task {
                 //ProjectComponentHelper helper=ProjectComponentHelper.getProjectComponentHelper();
                 //realChild = helper.createProjectComponent( child, getProject(), null,
                    //                                           child.getTag());
-                realChild=makeTask(child, childWrapper, false);
+                realChild = makeTask(child, childWrapper, false);
 
-                if (realChild == null ) {
+                if (realChild == null) {
                     throw getNotFoundException("task", child.getTag());
                 }
 
                 // XXX DataTypes will be wrapped or treated like normal components
-                if( realChild instanceof Task ) {
-                    Task task=(Task)realChild;
+                if (realChild instanceof Task) {
+                    Task task = (Task) realChild;
                     ((TaskContainer) parent).addTask(task);
                     task.setLocation(child.getLocation());
                     // UnknownElement always has an associated target
@@ -277,7 +297,8 @@ public class UnknownElement extends Task {
                     // What ? Add data type ? createElement ?
                 }
             } else {
-                realChild = ih.createElement(getProject(), parent, child.getTag());
+                realChild 
+                    = ih.createElement(getProject(), parent, child.getTag());
             }
 
             childWrapper.setProxy(realChild);
