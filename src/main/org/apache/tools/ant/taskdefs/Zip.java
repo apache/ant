@@ -449,12 +449,24 @@ public class Zip extends MatchingTask {
                     DirectoryScanner ds =
                         oldFiles.getDirectoryScanner(getProject());
                     ((ZipScanner) ds).setEncoding(encoding);
+
                     String[] f = ds.getIncludedFiles();
                     Resource[] r = new Resource[f.length];
                     for (int i = 0; i < f.length; i++) {
                         r[i] = ds.getResource(f[i]);
                     }
 
+                    if (!doFilesonly) {
+                        String[] d = ds.getIncludedDirectories();
+                        Resource[] dr = new Resource[d.length];
+                        for (int i = 0; i < d.length; i++) {
+                            dr[i] = ds.getResource(d[i]);
+                        }
+                        Resource[] tmp = r;
+                        r = new Resource[tmp.length + dr.length];
+                        System.arraycopy(dr, 0, r, 0, dr.length);
+                        System.arraycopy(tmp, 0, r, dr.length, tmp.length);
+                    }                    
                     addResources(oldFiles, r, zOut);
                 }
                 finalizeZipOutputStream(zOut);
@@ -596,7 +608,22 @@ public class Zip extends MatchingTask {
                     name = name + "/";
                 }
 
-                addParentDirs(base, name, zOut, prefix, dirMode);
+                if (!doFilesonly && !dealingWithFiles 
+                    && resources[i].isDirectory() 
+                    && !zfs.hasDirModeBeenSet()) {
+                    int nextToLastSlash = name.lastIndexOf("/",
+                                                           name.length() - 2);
+                    if (nextToLastSlash != -1) {
+                        addParentDirs(base, name.substring(0, 
+                                                           nextToLastSlash + 1),
+                                      zOut, prefix, dirMode);
+                    }
+                    ZipEntry ze = zf.getEntry(resources[i].getName());
+                    addParentDirs(base, name, zOut, prefix, ze.getUnixMode());
+                    
+                } else {
+                    addParentDirs(base, name, zOut, prefix, dirMode);
+                }
 
                 if (!resources[i].isDirectory() && dealingWithFiles) {
                     File f = fileUtils.resolveFile(base,
