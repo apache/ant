@@ -122,8 +122,7 @@ public class Gcj extends DefaultCompilerAdapter {
         cmd.createArgument().setPath(classpath);
 
         if (encoding != null) {
-            attributes.log("gcj doesn't support -encoding option.",
-                           Project.MSG_WARN);
+            cmd.createArgument().setValue("--encoding=" + encoding);
         }
         if (debug) {
             cmd.createArgument().setValue("-g1");
