@@ -101,7 +101,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Only execute the process if <code>os.name</code> includes this string.
+     * Only execute the process if <code>os.name</code> is included in this string.
      */
     public void setOs(String os) {
         this.os = os;

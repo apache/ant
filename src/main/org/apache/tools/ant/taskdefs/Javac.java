@@ -481,7 +481,9 @@ public class Javac extends MatchingTask {
             }
         }
         catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use classic compiler, as it is not available", location);
+            throw new BuildException("Cannot use classic compiler, as it is not available"+
+            						 " A common solution is to set the environment variable"+
+                                     " JAVA_HOME to your jdk directory.", location);
         }
         catch (Exception ex) {
             if (ex instanceof BuildException) {

@@ -1,4 +1,18 @@
+Changes from Ant 1.2 to the current sources
+===========================================
+
+Other changes:
+--------------
+
+* New tasks: propertyfile
+
+Fixed bugs:
+-----------
+
+* <signjar> doesn't use deprectated methods anymore.
+
 Changes from Ant 1.1 to Ant 1.2
+===============================
 
 Changes that could break older environments:
 --------------------------------------------

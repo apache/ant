@@ -60,6 +60,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PathTokenizer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Stack;
@@ -111,7 +112,16 @@ public class Path extends DataType implements Cloneable {
         private String[] parts;
 
         public void setLocation(File loc) {
-            parts = new String[] {translateFile(loc.getAbsolutePath())};
+            try {
+                parts = new String[] {translateFile(loc.getCanonicalPath())};
+            } catch(IOException e) {
+                // XXX I'd like to log something here but if I don't
+                //     have a Project I can't
+                if (project != null) {
+                    project.log(e.getMessage(), Project.MSG_WARN);
+                }
+                parts = new String[] {translateFile(loc.getAbsolutePath())};
+            }
         }
 
         public void setPath(String path) {
@@ -294,9 +304,15 @@ public class Path extends DataType implements Cloneable {
                 String[] s = ds.getIncludedFiles();
                 File dir = fs.getDir(project);
                 for (int j=0; j<s.length; j++) {
-                    addUnlessPresent(result, 
-                                     translateFile((new File(dir, s[j])).getAbsolutePath()));
-                }
+                    String canonicalPath;
+                    File f = new File(dir, s[j]);
+                    try {
+                        canonicalPath = f.getCanonicalPath();
+                    } catch(IOException e) {
+                        canonicalPath = f.getAbsolutePath();
+                    }
+                    addUnlessPresent(result, translateFile(canonicalPath));
+                } 
             }
         }
         String[] res = new String[result.size()];
@@ -430,7 +446,13 @@ public class Path extends DataType implements Cloneable {
      */
     private static String resolveFile(Project project, String relativeName) {
         if (project != null) {
-            return project.resolveFile(relativeName).getAbsolutePath();
+            File f = project.resolveFile(relativeName);
+            try {
+                return f.getCanonicalPath();
+            } catch(IOException e) {
+                project.log(e.getMessage(), Project.MSG_WARN);
+                return f.getAbsolutePath();
+            }
         }
         return relativeName;
     }

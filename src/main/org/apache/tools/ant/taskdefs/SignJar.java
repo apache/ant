@@ -150,67 +150,57 @@ public class SignJar extends Task {
 
         final StringBuffer sb = new StringBuffer();
 
-        sb.append("jarsigner ");
-
+        final ExecTask cmd = (ExecTask) project.createTask("exec");
+        cmd.setExecutable("jarsigner");
+        
         if (null != keystore) {
-            sb.append("-keystore \"");
-            sb.append(keystore);
-            sb.append("\" ");
+            cmd.createArg().setValue("-keystore");
+            cmd.createArg().setValue(keystore);
         } 
 
         if (null != storepass) {
-            sb.append("-storepass \"");
-            sb.append(storepass);
-            sb.append("\" ");
+            cmd.createArg().setValue("-storepass");
+            cmd.createArg().setValue(storepass);
         } 
 
         if (null != storetype) {
-            sb.append("-storetype \"");
-            sb.append(storetype);
-            sb.append("\" ");
+            cmd.createArg().setValue("-storetype");
+            cmd.createArg().setValue(storetype);
         } 
 
         if (null != keypass) {
-            sb.append("-keypass \"");
-            sb.append(keypass);
-            sb.append("\" ");
+            cmd.createArg().setValue("-keypass");
+            cmd.createArg().setValue(keypass);
         } 
 
         if (null != sigfile) {
-            sb.append("-sigfile \"");
-            sb.append(sigfile);
-            sb.append("\" ");
+            cmd.createArg().setValue("-sigfile");
+            cmd.createArg().setValue(sigfile);
         } 
 
         if (null != signedjar) {
-            sb.append("-signedjar \"");
-            sb.append(signedjar);
-            sb.append("\" ");
+            cmd.createArg().setValue("-signedjar");
+            cmd.createArg().setValue(signedjar);
         } 
 
         if (verbose) {
-            sb.append("-verbose ");
+            cmd.createArg().setValue("-verbose");
         } 
 
         if (internalsf) {
-            sb.append("-internalsf ");
+            cmd.createArg().setValue("-internalsf");
         } 
 
         if (sectionsonly) {
-            sb.append("-sectionsonly ");
+            cmd.createArg().setValue("-sectionsonly");
         } 
 
-        sb.append('\"');
-        sb.append(jar);
-        sb.append("\" ");
+        cmd.createArg().setValue(jar);
         
-        sb.append('\"');
-        sb.append(alias);
-        sb.append("\" ");
+
+        cmd.createArg().setValue(alias);
 
         log("Signing Jar : " + (new File(jar)).getAbsolutePath());
-        final ExecTask cmd = (ExecTask) project.createTask("exec");
-        cmd.setCommand(new Commandline(sb.toString()));
         cmd.setFailonerror(true);
         cmd.setTaskName( getTaskName() );
         cmd.execute();
