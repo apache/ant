@@ -16,6 +16,9 @@
 if multiple conditions are specified, then the task will wait until all conditions are true..</p>
 <p></p>
 <p>If both maxwait and maxwaitunit are not specified, the maxwait is 3 minutes (180000 milliseconds).</p>
+<p>If the <code>timeoutproperty</code> attribute has been set, a
+property of that name will be created if the condition didn't come
+true within the specified time.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -65,6 +68,12 @@ if multiple conditions are specified, then the task will wait until all conditio
                         <li>week</li>
                      </ul>
     </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">timeoutproperty</td>
+    <td valign="top">the name of the property to set if maxwait has
+      been exceeded.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>

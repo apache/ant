@@ -74,6 +74,7 @@ import java.util.Hashtable;
  * <li>maxwaitunit - The unit to be used to interpret maxwait attribute</li>
  * <li>checkevery - amount of time to sleep between each check</li>
  * <li>checkeveryunit - The unit to be used to interpret checkevery attribute</li>
+ * <li>timeoutproperty - name of a property to set if maxwait has been exceeded.</li>
  * </ul>
  *
  * The maxwaitunit and checkeveryunit are allowed to have the following values:
@@ -88,6 +89,7 @@ public class WaitFor extends ConditionBase {
     private long maxWaitMultiplier = 1l;
     private long checkEveryMillis = 500l;
     private long checkEveryMultiplier = 1l;
+    private String timeoutProperty;
 
     /**
      * Set the maximum length of time to wait
@@ -118,6 +120,13 @@ public class WaitFor extends ConditionBase {
     }
 
     /**
+     * Set the timeout property.
+     */
+    public void setTimeoutProperty(String p) {
+        timeoutProperty = p;
+    }
+
+    /**
      * Check repeatedly for the specified conditions until they become
      * true or the timeout expires.
      */
@@ -145,7 +154,9 @@ public class WaitFor extends ConditionBase {
             }
         }
 
-        throw new BuildException("Task did not complete in time");
+        if (timeoutProperty != null) {
+            project.setNewProperty(timeoutProperty, "true");
+        }
     }
 
     public static class Unit extends EnumeratedAttribute {
