@@ -381,6 +381,9 @@ Legal:
       <property name="antlib.name" value="runtime"/>
     </ant>
 
+    <ant antfile="antlib.xml">
+       <property name="antlib.name" value="sound"/>
+    </ant>
     <!--
     <ant antfile="antlib.xml">
       <property name="antlib.name" value="vfile"/>
