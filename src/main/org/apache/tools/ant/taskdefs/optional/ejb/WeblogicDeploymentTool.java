@@ -255,23 +255,12 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         this.newCMP = newCMP;
     }
     
-
-    protected DescriptorHandler getDescriptorHandler(File srcDir) {
-        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
-        // register all the DTDs, both the ones that are known and
-        // any supplied by the user
+    protected void registerKnownDTDs(DescriptorHandler handler) {
+        // register all the known DTDs
         handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL51_EJB11_DTD_LOCATION);
         handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL60_EJB11_DTD_LOCATION);
         handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
         handler.registerDTD(PUBLICID_EJB20, DEFAULT_WL60_EJB20_DTD_LOCATION);
-        
-        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
-            handler.registerDTD(dtdLocation.getPublicId(),
-                                dtdLocation.getLocation());
-        }
-        
-        return handler;                                    
     }
 
     protected DescriptorHandler getWeblogicDescriptorHandler(final File srcDir) {

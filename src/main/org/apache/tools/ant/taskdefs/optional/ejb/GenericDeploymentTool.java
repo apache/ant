@@ -269,10 +269,29 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
     }
 
-    protected DescriptorHandler getDescriptorHandler(File srcDir) {
-        return new DescriptorHandler(task, srcDir);
-    }
+    protected DescriptorHandler getDescriptorHandler(File srcDir) { 
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir); 
+        
+        registerKnownDTDs(handler);
+        
+        // register any DTDs supplied by the user
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) { 
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next(); 
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation()); 
+        } 
+        return handler; 
+    } 
     
+    /**
+     * Register the locations of all known DTDs.
+     *
+     * vendor-specific subclasses should override this method to define
+     * the vendor-specific locations of the EJB DTDs
+     */
+    protected void registerKnownDTDs(DescriptorHandler handler) {
+        // none to register for generic
+    }
+
     public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
         FileInputStream descriptorStream = null;
 
