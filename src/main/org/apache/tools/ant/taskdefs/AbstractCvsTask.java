@@ -350,20 +350,19 @@ public abstract class AbstractCvsTask extends Task {
             }
             log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
         } catch (BuildException e) {
-                if (failOnError) {
-                        throw(e);
-                }
-                Throwable t = e.getException();
-                if (t == null) {
-                        t = e;
-                }
-                log("Caught exception: " + t.getMessage(), Project.MSG_WARN);
+            if (failOnError) {
+                throw(e);
+            }
+            Throwable t = e.getException();
+            if (t == null) {
+                t = e;
+            }
+            log("Caught exception: " + t.getMessage(), Project.MSG_WARN);
         } catch (Exception e) {
-                if (failOnError) {
-                        throw new BuildException(e, getLocation());
-                }
-                log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
-                
+            if (failOnError) {
+                throw new BuildException(e, getLocation());
+            }
+            log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
         }
     }
 

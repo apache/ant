@@ -270,7 +270,7 @@ public class Javadoc extends Task {
          * Default constructor
          */
         public SourceFile() {
-                //empty
+            //empty
         }
 
         /**
@@ -1200,7 +1200,7 @@ public class Javadoc extends Task {
         private File packagelistLoc;
 
         public LinkArgument() {
-                //empty
+            //empty
         }
 
         public void setHref(String hr) {
@@ -1271,7 +1271,7 @@ public class Javadoc extends Task {
 
         /** Sole constructor. */
         public TagArgument () {
-                //empty
+            //empty
         }
 
         /**
@@ -1404,7 +1404,7 @@ public class Javadoc extends Task {
         private Vector packages = new Vector();
 
         public GroupArgument() {
-                //empty
+            //empty
         }
 
         public void setTitle(String src) {
