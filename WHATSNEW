@@ -47,6 +47,8 @@ Fixed bugs:
 
 * ejbjar's iPlanet nested element now can process multiple descriptors.
 
+* IPlanetEjbc was looking in the wrong place for four iiop files.
+
 Other changes:
 --------------
 
