@@ -15,6 +15,11 @@ Changes that could break older environments:
   handled to nested projects.
   Bugzilla report 25777
 
+* <junit> with filtertrace="true" will now also swallow lines for the
+  sun.reflect package.  If you need to see them in your stack trace,
+  you must set filtertrace to false.
+  Bugzilla Report 22758
+
 Other changes:
 --------------
 
