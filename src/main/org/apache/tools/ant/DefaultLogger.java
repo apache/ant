@@ -138,17 +138,7 @@ public class DefaultLogger implements BuildLogger {
         else {
             err.println(lSep + "BUILD FAILED" + lSep);
 
-            if (error instanceof BuildException) {
-                err.println(error.toString());
-
-                Throwable nested = ((BuildException)error).getException();
-                if (nested != null) {
-                    nested.printStackTrace(err);
-                }
-            }
-            else {
-                error.printStackTrace(err);
-            }
+            error.printStackTrace(err);
         }
 
         out.println(lSep + "Total time: " + formatTime(System.currentTimeMillis() - startTime));
