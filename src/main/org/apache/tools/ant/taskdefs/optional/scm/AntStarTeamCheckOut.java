@@ -660,9 +660,16 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 		String dirName = v.getDefaultPath();
 		// Settle on "/" as the default path separator for this purpose only.
 		dirName = dirName.replace('\\', '/');
-		// Take the StarTeam folder name furthest down in the hierarchy.
-		dirName = dirName.substring(dirName.lastIndexOf("/", dirName.length() - 2) + 1, dirName.length() - 1);
-
+                // Take the StarTeam folder name furthest down in the hierarchy.
+                int endDirIndex = dirName.length();
+                // If it ends with separator then strip it off
+                if (dirName.endsWith("/"))
+                {
+                    // This should be the SunOS and Linux case
+                    endDirIndex--;
+                }
+		dirName = dirName.substring(dirName.lastIndexOf("/", dirName.length() - 2) + 1, endDirIndex);
+                
 		// Replace the projectName in the file's absolute path to the viewName.
 		// This eventually makes the target of a checkout operation equal to:
 		// targetFolder + dirName + [subfolders] + itemName
