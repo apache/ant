@@ -1474,7 +1474,22 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.6.2
      */
-    protected void actOnTestResult(TestResultHolder result,JUnitTest test, 
+    protected void actOnTestResult(int exitValue, boolean wasKilled,
+                                   JUnitTest test, String name) {
+        TestResult t = new TestResult();
+        t.exitValue = exitValue;
+        t.wasKilled = wasKilled;
+        actOnTestResult(t, test, name);
+    }
+
+    /**
+     * Logs information about failed tests, potentially stops
+     * processing (by throwing a BuildException) if a failure/error
+     * occured or sets a property.
+     *
+     * @since Ant 1.7
+     */
+    protected void actOnTestResult(TestResultHolder result, JUnitTest test, 
                                    String name) {
         // if there is an error/failure and that it should halt, stop
         // everything otherwise just log a statement
@@ -1503,7 +1518,7 @@ public class JUnitTask extends Task {
         }
     }
 
-    private class TestResultHolder {
+    protected class TestResultHolder {
         public int exitCode = JUnitTestRunner.ERRORS;
         public boolean timedOut = false;
         public boolean crashed = false;
