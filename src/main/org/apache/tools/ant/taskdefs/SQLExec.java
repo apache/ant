@@ -503,7 +503,6 @@ public class SQLExec extends JDBCTask {
                 ||
                 (delimiterType.equals(DelimiterType.ROW) 
                  && line.equals(delimiter))) {
-                log("SQL: " + sql, Project.MSG_VERBOSE);
                 execSQL(sql.substring(0, sql.length() - delimiter.length()), 
                         out);
                 sql.replace(0, sql.length(), "");
@@ -527,6 +526,7 @@ public class SQLExec extends JDBCTask {
         
         try {  
             totalSql++;
+            log("SQL: " + sql, Project.MSG_VERBOSE);
             if (!statement.execute(sql)) {
                 log(statement.getUpdateCount() + " rows affected", 
                     Project.MSG_VERBOSE);
