@@ -223,9 +223,11 @@ ant.java.version    the JVM version Ant detected; currently it can hold
 <a name="example"><h3>Example Buildfile</h3></a>
 <pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
-
+    &lt;description&gt;
+        simple example build file
+    &lt;/description&gt;
   &lt;!-- set global properties for this build --&gt;
-  &lt;property name=&quot;src&quot; value=&quot;.&quot;/&gt;
+  &lt;property name=&quot;src&quot; value=&quot;src&quot;/&gt;
   &lt;property name=&quot;build&quot; value=&quot;build&quot;/&gt;
   &lt;property name=&quot;dist&quot;  value=&quot;dist&quot;/&gt;
 
@@ -236,12 +238,14 @@ ant.java.version    the JVM version Ant detected; currently it can hold
     &lt;mkdir dir=&quot;${build}&quot;/&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;compile&quot; depends=&quot;init&quot;&gt;
+  &lt;target name=&quot;compile&quot; depends=&quot;init&quot;
+        description=&quot;compile the source &quot; &gt;
     &lt;!-- Compile the java code from ${src} into ${build} --&gt;
     &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot;/&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;&gt;
+  &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;
+        description=&quot;generate the distribution&quot; &gt;
     &lt;!-- Create the distribution directory --&gt;
     &lt;mkdir dir=&quot;${dist}/lib&quot;/&gt;
 
@@ -249,13 +253,29 @@ ant.java.version    the JVM version Ant detected; currently it can hold
     &lt;jar jarfile=&quot;${dist}/lib/MyProject-${DSTAMP}.jar&quot; basedir=&quot;${build}&quot;/&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;clean&quot;&gt;
+  &lt;target name=&quot;clean&quot;
+        description=&quot;clean up&quot; &gt;
     &lt;!-- Delete the ${build} and ${dist} directory trees --&gt;
     &lt;delete dir=&quot;${build}&quot;/&gt;
     &lt;delete dir=&quot;${dist}&quot;/&gt;
   &lt;/target&gt;
 &lt;/project&gt;
 </pre>
+
+Notice that we are declaring properties outside any target. The
+<tt>&lt;property&gt;</tt>,<tt>&lt;path&gt;</tt> and <tt>&lt;taskdef&gt;</tt>
+tasks are special in that they can be declared outside any target. When you
+do this they are evaluated before any targets are executed. No other tasks
+can be declared outside targets.
+
+<p>
+We have given some targets descriptions; this causes the <tt>projecthelp</tt>
+invocation option to list them as public targets with the descriptions; the 
+other target is internal and not listed.
+<p>
+Finally, for this target to work the source in the <tt>src</tt> subdirectory
+should be stored in a directory tree which matches the package names. Check the
+<tt>&lt;javac&gt;</tt> task for details.  
 
 <a name="filters"><h3>Token Filters</h3></a>
 <p>A project can have a set of tokens that might be automatically expanded if
