@@ -150,13 +150,20 @@ class RedirectingStreamHandler
         // We cannot use a BufferedReader as the ready() method is bugged!
         // (see Bug 4329985, which is supposed to be fixed in JDK1.4 :
         //http://developer.java.sun.com/developer/bugParade/bugs/4329985.html)
-        while( m_error.ready() )
+        try
         {
-            final int value = m_error.read();
-            if( -1 != value )
+            while( m_error.ready() )
             {
-                m_errors.append( (char)value );
+                final int value = m_error.read();
+                if( -1 != value )
+                {
+                    m_errors.append( (char)value );
+                }
             }
+        }
+        catch( final IOException ioe )
+        {
+            //ignore --> Means stderror has been shutdown
         }
     }
 
