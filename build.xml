@@ -103,7 +103,7 @@
          Set up properties for the distribution area
        ===================================================================
   -->
-  <property name="dist.name" value="jakarta-${name}-${version}"/>
+  <property name="dist.name" value="apache-${name}-${version}"/>
   <property name="dist.base" value="distribution"/>
   <property name="dist.dir" value="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
