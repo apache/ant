@@ -393,7 +393,10 @@ V. Things we probably don't agree on.
 
 * check for more than one condition in if/unless attributes.
 
-* provide failonerror like functionality to all tasks.
+* provide failonerror like functionality to all tasks. (Provide this as an aspect??
+  much like logging aspect or classloader aspect).
 
 * internationalization
 
+* Ignore any classes contained in the damned ext dirs of a JVM - possibly by launching
+  with something like <code>jar -Djava.ext.dir=foo -jar ant.jar</code>
