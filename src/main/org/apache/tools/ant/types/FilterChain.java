@@ -139,7 +139,8 @@ public final class FilterChain extends DataType implements Cloneable {
     }
 
     /**
-     * Makes this instance in effect a reference to another FilterChain instance
+     * Makes this instance in effect a reference to another FilterChain 
+     * instance.
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>

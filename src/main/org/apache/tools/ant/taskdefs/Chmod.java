@@ -92,7 +92,7 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
-     * @see ProjectComponent#setProject
+     * @see org.apache.tools.ant.ProjectComponent#setProject
      */
     public void setProject(Project project) {
         super.setProject(project);

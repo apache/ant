@@ -803,7 +803,7 @@ public class FileUtils {
     }
 
     /**
-     * Emulation of File.createNewFile for JDK 1.1
+     * Emulation of File.createNewFile for JDK 1.1.
      *
      * <p>This method does <strong>not</strong> guarantee that the
      * operation is atomic.</p>

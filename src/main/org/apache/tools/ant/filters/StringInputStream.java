@@ -106,8 +106,11 @@ public class StringInputStream
         in.reset();
     }
 
+    /**
+     * @see InputStream#markSupported
+     */
     public boolean markSupported() {
-        return true;
+        return in.markSupported();
     }
 }
 

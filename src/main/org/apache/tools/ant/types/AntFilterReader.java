@@ -136,7 +136,8 @@ public final class AntFilterReader
     }
 
     /**
-     * Makes this instance in effect a reference to another AntFilterReader instance
+     * Makes this instance in effect a reference to another AntFilterReader 
+     * instance.
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>

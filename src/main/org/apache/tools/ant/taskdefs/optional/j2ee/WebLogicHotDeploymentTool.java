@@ -91,7 +91,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
     private String component;
 
     /**
-     *  Perform the actual deployment.<br>
+     *  Perform the actual deployment.
      *  For this implementation, a JVM is spawned and the weblogic.deploy
      *  tools is executed.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.

@@ -66,10 +66,8 @@ import org.apache.tools.ant.*;
  * @see <a href="http://java.sun.com/j2se/1.4/docs/guide/net/properties.html">
  *  java 1.4 network property list</a>
  * @author Steve Loughran
- * @created March 17, 2001
  * @ant.task
  */
-
 public class SetProxy extends Task {
 
     /**
@@ -99,7 +97,7 @@ public class SetProxy extends Task {
     private String nonProxyHosts = null;
 
     /**
-     * set a proxy host. the port should be defined too
+     * Set a proxy host. The port should be defined too.
      *
      * @param hostname the new proxy hostname
      */
@@ -137,8 +135,8 @@ public class SetProxy extends Task {
     }
 
     /**
-     * specify a list of hosts to bypass the proxy on; separate them with the 
-     * vertical bar character '|'
+     * Specify a list of hosts to bypass the proxy on. These should be separated
+     * with the vertical bar character '|'.
      * e.g. fozbot.corp.sun.com|*.eng.sun.com
      * @param nonProxyHosts lists of hosts to talk direct to
      */ 

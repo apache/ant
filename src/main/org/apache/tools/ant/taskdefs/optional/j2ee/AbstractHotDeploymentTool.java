@@ -138,7 +138,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  Perform the actual deployment.<br>
+     *  Perform the actual deployment.
      *  It's up to the subclasses to implement the actual behavior.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */

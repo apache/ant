@@ -427,10 +427,23 @@ public class XmlLogger implements BuildLogger {
 
     // -------------------------------------------------- BuildLogger interface
 
+    /**
+     * Set the logging level when using this as a Logger
+     *
+     * @param level the logging level - 
+     *        see {@link org.apache.tools.ant.Project#MSG_ERR Project} 
+     *        class for level definitions
+     */
     public void setMessageOutputLevel(int level) {
         msgOutputLevel = level;
     }
 
+    /**
+     * Set the output stream to which logging output is sent when operating 
+     * as a logger.
+     *
+     * @param output the output PrintStream.
+     */
     public void setOutputPrintStream(PrintStream output) {
         this.outStream = new PrintStream(output, true);
     }

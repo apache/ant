@@ -121,7 +121,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     }
 
     /**
-     *  Perform the actual deployment.<br>
+     *  Perform the actual deployment.
      *  For this generic implementation, a JVM is spawned using the
      *  supplied classpath, classname, JVM args, and command line arguments.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.

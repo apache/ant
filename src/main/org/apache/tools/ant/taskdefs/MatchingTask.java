@@ -83,7 +83,7 @@ public abstract class MatchingTask extends Task {
     protected FileSet fileset = new FileSet();
 
     /**
-     * @see ProjectComponent#setProject
+     * @see org.apache.tools.ant.ProjectComponent#setProject
      */
     public void setProject(Project project) {
         super.setProject(project);

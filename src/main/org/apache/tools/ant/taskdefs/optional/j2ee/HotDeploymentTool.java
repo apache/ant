@@ -86,7 +86,7 @@ public interface HotDeploymentTool {
     public void validateAttributes() throws BuildException;
 
     /**
-     *  Perform the actual deployment.<br>
+     *  Perform the actual deployment.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
     public void deploy() throws BuildException;
