@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
+import java.io.File;
 
 /**
  * Tests FileSet using the Copy task.
@@ -73,7 +75,7 @@ public class CopyTest extends BuildFileTest {
 
     public void test1() { 
         executeTarget("test1");
-        java.io.File f = new java.io.File(getProjectDir(), "copytest1.tmp");
+        File f = new File(getProjectDir(), "copytest1.tmp");
         if ( !f.exists()) {
             fail("Copy failed");
         }
@@ -85,9 +87,39 @@ public class CopyTest extends BuildFileTest {
 
     public void test2() { 
         executeTarget("test2");
-        java.io.File f = new java.io.File(getProjectDir(), "copytest1dir/copy.xml");
+        File f = new File(getProjectDir(), "copytest1dir/copy.xml");
         if ( !f.exists()) {
             fail("Copy failed");
         }
+    }
+    
+    public void test3() {
+        executeTarget("test3");
+        File file3  = new File(getProjectDir(), "copytest3.tmp");
+        assertTrue(file3.exists());
+        File file3a = new File(getProjectDir(), "copytest3a.tmp");
+        assertTrue(file3a.exists());
+        File file3b = new File(getProjectDir(), "copytest3b.tmp");
+        assertTrue(file3b.exists());
+        File file3c = new File(getProjectDir(), "copytest3c.tmp");
+        assertTrue(file3c.exists());
+        
+        //file length checks rely on touch generating a zero byte file
+        if(file3.length()==0) {
+            fail("could not overwrite an existing, older file");
+        }
+        if(file3c.length()!=0) {
+            fail("could not force overwrite an existing, newer file");
+        }
+        if(file3b.length()==0) {
+            fail("unexpectedly overwrote an existing, newer file");
+        }
+        
+        //file time checks for java1.2+ 
+        if (Project.getJavaVersion() != Project.JAVA_1_1) {
+            assertTrue(file3a.lastModified()==file3.lastModified()); 
+            assertTrue(file3c.lastModified()<file3a.lastModified()); 
+        }
+
     }
 }
