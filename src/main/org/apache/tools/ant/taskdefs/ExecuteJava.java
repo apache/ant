@@ -172,6 +172,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                                      + " classpath");
         } catch (SecurityException e) {
             throw e;
+        } catch (ThreadDeath e) {
+            throw e;
         } catch (Throwable e) {
             throw new BuildException(e);
         } finally {
