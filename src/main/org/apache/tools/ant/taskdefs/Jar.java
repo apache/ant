@@ -80,14 +80,6 @@ public class Jar extends Zip {
         super.setZipfile(jarFile);
     }
 
-    /**
-     * Adds a set of files (nested fileset attribute).
-     */
-    public void addPrefixedfileset(PrefixedFileSet set) {
-        log("Warning: Prefixfileset is a deprecated feature. The fileset subelement can be used in it's place", Project.MSG_WARN);
-        addFileset(set);
-    }
-    
     public void setManifest(File manifestFile) {
         manifest = manifestFile;
         if (!manifest.exists())

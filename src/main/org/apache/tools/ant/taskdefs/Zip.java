@@ -114,6 +114,13 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Adds a set of files (nested fileset attribute).
+     */
+    public void addPrefixedfileset(PrefixedFileSet set) {
+        addFileset(set);
+    }
+
+    /**
      * FileSet with an additional prefix attribute to specify the
      * location we want to move the files to (inside the archive).
      * Or, if this FileSet represents only a single file, then the
