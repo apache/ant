@@ -842,6 +842,9 @@
       <exclude name="${regexp.package}/Jdk14Regexp*Test.java"
                unless="jdk1.4+" />
 
+      <exclude name="${optional.package}/metamata/*.java"
+               unless="jakarta.oro.present"/>
+
       <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
                unless="some.regexp.support" />
       <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/XMLReportTest.java"
