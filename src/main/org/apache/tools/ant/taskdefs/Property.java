@@ -59,6 +59,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.types.DestFile;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import java.io.File;
@@ -88,15 +89,15 @@ public class Property extends Task {
     protected Reference ref;
 
     protected boolean userProperty; // set read-only properties
-    
+
     public Property() {
         super();
     }
-    
+
     protected Property(boolean userProperty) {
         this.userProperty = userProperty;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
@@ -117,8 +118,20 @@ public class Property extends Task {
         return value;
     }
 
+    /**
+     * @deprecated setFile(File) is deprecated and is replaced with
+     *             setFile(DestFile) to let Ant's core perform validation
+     */
     public void setFile(File file) {
-        this.file = file;
+        log("DEPRECATED - The setFile(File) method has been deprecated."
+            + " Use setFile(DestFile) instead.");
+        DestFile destFile = new DestFile();
+        destFile.setFile(file);
+        setFile(destFile);
+    }
+
+    public void setFile(DestFile file) {
+        this.file = file.getFile();
     }
 
     public File getFile() {
@@ -156,14 +169,14 @@ public class Property extends Task {
             this.classpath.append(classpath);
         }
     }
-    
+
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(project);
         }
         return this.classpath.createPath();
     }
-    
+
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
@@ -172,7 +185,7 @@ public class Property extends Task {
      * @deprecated This was never a supported feature and has been deprecated without replacement
      */
     public void setUserProperty(boolean userProperty) {
-        log("DEPRECATED: Ignoring request to set user property in Property task.", 
+        log("DEPRECATED: Ignoring request to set user property in Property task.",
             Project.MSG_WARN);
     }
 
@@ -196,13 +209,13 @@ public class Property extends Task {
         if ((name != null) && (value != null)) {
             addProperty(name, value);
         }
-        
+
         if (file != null) loadFile(file);
-        
+
         if (resource != null) loadResource(resource);
-        
+
         if (env != null) loadEnvironment(env);
-        
+
         if ((name != null) && (ref != null)) {
             Object obj = ref.getReferencedObject(getProject());
             if (obj != null) {
@@ -215,18 +228,18 @@ public class Property extends Task {
         Properties props = new Properties();
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
-            if (file.exists()) { 
+            if (file.exists()) {
                 FileInputStream fis = new FileInputStream(file);
-                try { 
+                try {
                     props.load(fis);
                 } finally {
-                    if (fis != null) { 
+                    if (fis != null) {
                         fis.close();
                     }
                 }
                 addProperties(props);
             } else {
-                log("Unable to find property file: " + file.getAbsolutePath(), 
+                log("Unable to find property file: " + file.getAbsolutePath(),
                     Project.MSG_VERBOSE);
             }
         } catch(IOException ex) {
@@ -238,21 +251,21 @@ public class Property extends Task {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
         try {
-            ClassLoader cL = null; 
+            ClassLoader cL = null;
             InputStream is = null;
 
-            if (classpath != null) { 
-                cL = new AntClassLoader(project, classpath); 
-            } else { 
-                cL = this.getClass().getClassLoader(); 
-            } 
+            if (classpath != null) {
+                cL = new AntClassLoader(project, classpath);
+            } else {
+                cL = this.getClass().getClassLoader();
+            }
 
             if (cL == null) {
                 is = ClassLoader.getSystemResourceAsStream(name);
             } else {
                 is = cL.getResourceAsStream(name);
             }
-            
+
             if (is != null) {
                 props.load(is);
                 addProperties(props);
@@ -275,7 +288,7 @@ public class Property extends Task {
             if (pos == -1) {
                 log("Ignoring: " + entry, Project.MSG_WARN);
             } else {
-                props.put(prefix + entry.substring(0, pos), 
+                props.put(prefix + entry.substring(0, pos),
                 entry.substring(pos + 1));
             }
         }
@@ -316,7 +329,7 @@ public class Property extends Task {
                 Vector fragments = new Vector();
                 Vector propertyRefs = new Vector();
                 ProjectHelper.parsePropertyString(value, fragments, propertyRefs);
-                
+
                 resolved = true;
                 if (propertyRefs.size() != 0) {
                     StringBuffer sb = new StringBuffer();
@@ -347,5 +360,5 @@ public class Property extends Task {
                 }
             }
         }
-    }    
+    }
 }
