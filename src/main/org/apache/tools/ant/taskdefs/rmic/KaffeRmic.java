@@ -77,10 +77,10 @@ public class KaffeRmic extends DefaultRmicAdapter {
         PrintStream err = System.err;
         PrintStream out = System.out;
 
+        // the project log
+        PrintStream logstr = 
+            new PrintStream(new LogOutputStream(getRmic(), Project.MSG_WARN));
         try {
-            // the project log
-            PrintStream logstr = 
-                new PrintStream(new LogOutputStream(getRmic(), Project.MSG_WARN));
             System.setOut(logstr);
             System.setErr(logstr);
 
@@ -106,6 +106,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
         } finally {
             System.setErr(err);
             System.setOut(out);
+            logstr.close();
         }
     }
 }

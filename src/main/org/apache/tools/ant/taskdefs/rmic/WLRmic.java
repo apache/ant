@@ -78,9 +78,9 @@ public class WLRmic extends DefaultRmicAdapter {
         PrintStream err = System.err;
         PrintStream out = System.out;
 
+        PrintStream logstr = 
+            new PrintStream(new LogOutputStream(getRmic(), Project.MSG_WARN));
         try {
-            PrintStream logstr = 
-                new PrintStream(new LogOutputStream(getRmic(), Project.MSG_WARN));
             System.setOut(logstr);
             System.setErr(logstr);
 
@@ -104,6 +104,7 @@ public class WLRmic extends DefaultRmicAdapter {
         } finally {
             System.setErr(err);
             System.setOut(out);
+            logstr.close();
         }
     }
 

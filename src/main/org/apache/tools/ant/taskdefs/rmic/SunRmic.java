@@ -74,11 +74,11 @@ public class SunRmic extends DefaultRmicAdapter {
         getRmic().log("Using SUN rmic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand();
 
-        try {
-            // Create an instance of the rmic, redirecting output to
-            // the project log
-            OutputStream logstr = new LogOutputStream(getRmic(), Project.MSG_WARN);
+        // Create an instance of the rmic, redirecting output to
+        // the project log
+        LogOutputStream logstr = new LogOutputStream(getRmic(), Project.MSG_WARN);
 
+        try {
             Class c = Class.forName("sun.rmi.rmic.Main");
             Constructor cons = c.getConstructor(new Class[] 
                 { OutputStream.class, String.class });
@@ -99,6 +99,12 @@ public class SunRmic extends DefaultRmicAdapter {
                 throw (BuildException) ex;
             } else {
                 throw new BuildException("Error starting SUN rmic: ", ex, getRmic().getLocation());
+            }
+        } finally {
+            try {
+                logstr.close();
+            } catch (IOException e) {
+                throw new BuildException(e);
             }
         }
     }
