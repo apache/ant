@@ -21,10 +21,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,6 +34,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.EntityResolver;
 
 /**
  * Loads property values from a valid XML file, generating the
@@ -178,6 +181,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     private File rootDirectory = null;
     private FileUtils fileUtils = FileUtils.newFileUtils();
     private Hashtable addedAttributes = new Hashtable();
+    private XMLCatalog xmlCatalog = new XMLCatalog();
 
     private static final String ID = "id";
     private static final String REF_ID = "refid";
@@ -202,6 +206,15 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
     public void init() {
         super.init();
+        xmlCatalog.setProject(getProject());
+    }
+
+
+    /**
+     * @return the xmlCatalog as the entityresolver.
+     */
+    protected EntityResolver getEntityResolver() {
+        return xmlCatalog;
     }
 
     /**
@@ -226,7 +239,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
               factory.setValidating(validate);
               factory.setNamespaceAware(false);
-              Document document = factory.newDocumentBuilder().parse(src);
+              DocumentBuilder builder = factory.newDocumentBuilder();
+              builder.setEntityResolver(getEntityResolver());
+              Document document = builder.parse(src);
               Element topElement = document.getDocumentElement();
 
               // Keep a hashtable of attributes added by this task.
@@ -571,48 +586,95 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         this.collapseAttributes = collapseAttributes;
     }
 
-    public void setSemanticAttributes (boolean semanticAttributes) {
+    /**
+     * Attribute to enable special handling of attributes - see ant manual.
+     * @param semanticAttributes if true enable the special handling.
+     */
+    public void setSemanticAttributes(boolean semanticAttributes) {
         this.semanticAttributes = semanticAttributes;
     }
 
-    public void setRootDirectory (File rootDirectory) {
+    /**
+     * The directory to use for resolving file references.
+     * Ignored if semanticAttributes is not set to true.
+     * @param rootDirectory the directory.
+     */
+    public void setRootDirectory(File rootDirectory) {
         this.rootDirectory = rootDirectory;
     }
 
-    public void setIncludeSemanticAttribute (boolean includeSemanticAttribute) {
+    /**
+     * Include the semantic attribute name as part of the property name.
+     * Ignored if semanticAttributes is not set to true.
+     * @param includeSemanticAttribute if true include the sematic attribute
+     *                                 name.
+     */
+    public void setIncludeSemanticAttribute(boolean includeSemanticAttribute) {
         this.includeSemanticAttribute = includeSemanticAttribute;
+    }
+
+    /**
+     * add an XMLCatalog as a nested element; optional.
+     * @param catalog the XMLCatalog to use
+     */
+    public void addConfiguredXMLCatalog(XMLCatalog catalog) {
+        xmlCatalog.addConfiguredXMLCatalog(catalog);
     }
 
     /* Expose members for extensibility */
 
+    /**
+     * @return the file attribute.
+     */
     protected File getFile () {
         return this.src;
     }
 
+    /**
+     * @return the prefix attribute.
+     */
     protected String getPrefix () {
         return this.prefix;
     }
 
+    /**
+     * @return the keeproot attribute.
+     */
     protected boolean getKeeproot () {
         return this.keepRoot;
     }
 
+    /**
+     * @return the validate attribute.
+     */
     protected boolean getValidate () {
         return this.validate;
     }
 
+    /**
+     * @return the collapse attributes attribute.
+     */
     protected boolean getCollapseAttributes () {
         return this.collapseAttributes;
     }
 
+    /**
+     * @return the semantic attributes attribute.
+     */
     protected boolean getSemanticAttributes () {
         return this.semanticAttributes;
     }
 
+    /**
+     * @return the root directory attribute.
+     */
     protected File getRootDirectory () {
         return this.rootDirectory;
     }
 
+    /**
+     * @return the include semantic attribute.
+     */
     protected boolean getIncludeSementicAttribute () {
         return this.includeSemanticAttribute;
     }
