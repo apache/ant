@@ -22,6 +22,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.AndSelector;
@@ -528,12 +529,15 @@ public class Delete extends MatchingTask {
 //  protected and private methods
 //************************************************************************
     /**
-     * Attempt to fix possible race condition when deleting
-     * files on WinXP. If the delete does not work,
+     * Accommodate Windows bug encountered in both Sun and IBM JDKs.
+     * Others possible. If the delete does not work, call System.gc(),
      * wait a little and try again.
      */
     private boolean delete(File f) {
         if (!f.delete()) {
+            if (Os.isFamily("windows")) {
+                System.gc();
+            }
             try {
                 Thread.sleep(DELETE_RETRY_SLEEP_MILLIS);
                 return f.delete();
