@@ -23,9 +23,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicConfiguratorNS;
-import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.DynamicElementNS;
 
 /**
  * Use this class as a nested element if you want to get a literal DOM
@@ -38,19 +37,22 @@ import org.apache.tools.ant.ProjectHelper;
  *
  * @since Ant 1.7
  */
-public class XMLFragment implements DynamicConfiguratorNS {
+public class XMLFragment implements DynamicElementNS {
 
     private Document doc;
     private DocumentFragment fragment;
 
+    /**
+     * Constructor for XMLFragment object.
+     */
     public XMLFragment() {
         doc = JAXPUtils.getDocumentBuilder().newDocument();
         fragment = doc.createDocumentFragment();
     }
 
     /**
-     * Return the DocumentFragment that corresponds to the nested
-     * structure.
+     * @return the DocumentFragment that corresponds to the nested
+     *          structure.
      */
     public DocumentFragment getFragment() {
         return fragment;
@@ -58,21 +60,18 @@ public class XMLFragment implements DynamicConfiguratorNS {
 
     /**
      * Add nested text.
+     * @param s the text to add
      */
     public void addText(String s) {
         addText(fragment, s);
     }
 
     /**
-     * No attributes for the wrapping element.
-     */
-    public void setDynamicAttribute(String uri, String name, String qName, String value)
-        throws BuildException {
-        throw new BuildException("Attribute " + name + " is not supported.");
-    }
-
-    /**
      * Creates a nested element.
+     * @param uri the uri of the nested element
+     * @param name the localname of the nested element
+     * @param qName the qualified name of the nested element
+     * @return an object that the element is applied to
      */
     public Object createDynamicElement(String uri, String name, String qName) {
         Element e = doc.createElementNS(uri, qName);
@@ -87,6 +86,9 @@ public class XMLFragment implements DynamicConfiguratorNS {
         }
     }
 
+    /**
+     * An object to handle (recursively) nested elements.
+     */
     public class Child implements DynamicConfiguratorNS {
         private Element e;
 
@@ -96,6 +98,7 @@ public class XMLFragment implements DynamicConfiguratorNS {
 
         /**
          * Add nested text.
+         * @param s the text to add
          */
         public void addText(String s) {
             XMLFragment.this.addText(e, s);
@@ -103,6 +106,10 @@ public class XMLFragment implements DynamicConfiguratorNS {
 
         /**
          * Sets the attribute
+         * @param uri the uri of the attribute
+         * @param name the localname of the attribute
+         * @param qName the qualified name of the attribute
+         * @param value the value of the attribute
          */
         public void setDynamicAttribute(
             String uri, String name, String qName, String value) {
@@ -115,6 +122,10 @@ public class XMLFragment implements DynamicConfiguratorNS {
 
         /**
          * Creates a nested element.
+         * @param uri the uri of the nested element
+         * @param name the localname of the nested element
+         * @param qName the qualified name of the nested element
+         * @return an object that the element is applied to
          */
         public Object createDynamicElement(String uri, String name, String qName) {
             Element e2 = null;
