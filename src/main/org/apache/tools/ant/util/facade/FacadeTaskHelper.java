@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class FacadeTaskHelper {
     /**
      * @param defaultValue The default value for the implementation.
      * Must not be null.
-     * @param magicValue the value of a magic property that may hold a user
+     * @param magicValue the value of a magic property that may hold a user.
      * choice.  May be null.
      */
     public FacadeTaskHelper(String defaultValue, String magicValue) {
@@ -72,6 +72,7 @@ public class FacadeTaskHelper {
 
     /**
      * Used to set the value of the magic property.
+     * @param magicValue the value of a magic property that may hold a user.
      */
     public void setMagicValue(String magicValue) {
         this.magicValue = magicValue;
@@ -79,6 +80,7 @@ public class FacadeTaskHelper {
 
     /**
      * Used for explicit user choices.
+     * @param userChoice the explicitly chosen implementation.
      */
     public void setImplementation(String userChoice) {
         this.userChoice = userChoice;
@@ -86,6 +88,7 @@ public class FacadeTaskHelper {
 
     /**
      * Retrieves the implementation.
+     * @return the implementation.
      */
     public String getImplementation() {
         return userChoice != null ? userChoice
@@ -94,7 +97,8 @@ public class FacadeTaskHelper {
     }
 
     /**
-     * Retrieves the explicit user choice
+     * Retrieves the explicit user choice.
+     * @return the explicit user choice.
      */
     public String getExplicitChoice() {
         return userChoice;
@@ -102,6 +106,7 @@ public class FacadeTaskHelper {
 
     /**
      * Command line argument.
+     * @param arg an argument to add.
      */
     public void addImplementationArgument(ImplementationSpecificArgument arg) {
         args.addElement(arg);
@@ -110,6 +115,7 @@ public class FacadeTaskHelper {
     /**
      * Retrieves the command line arguments enabled for the current
      * facade implementation.
+     * @return an array of command line arguements.
      */
     public String[] getArgs() {
         Vector tmp = new Vector(args.size());
@@ -129,7 +135,7 @@ public class FacadeTaskHelper {
     /**
      * Tests whether the implementation has been chosen by the user
      * (either via a magic property or explicitly.
-     *
+     * @return true if magic or user choice has be set.
      * @since Ant 1.5.2
      */
     public boolean hasBeenSet() {

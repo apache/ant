@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,14 +30,27 @@ import org.apache.tools.ant.types.Commandline;
 public class ImplementationSpecificArgument extends Commandline.Argument {
     private String impl;
 
+    /** Constructor for ImplementationSpecificArgument. */
     public ImplementationSpecificArgument() {
         super();
     }
 
+    /**
+     * Set the implementation this argument is for.
+     * @param impl the implementation this command line argument is for.
+     */
     public void setImplementation(String impl) {
         this.impl = impl;
     }
 
+    /**
+     * Return the parts this Argument consists of, if the
+     * implementation matches the chosen implementation.
+     * @see Commandline.Argument#getParts()
+     * @param chosenImpl the implementation to check against.
+     * @return the parts if the implemention matches or an zero length
+     *         array if not.
+     */
     public final String[] getParts(String chosenImpl) {
         if (impl == null || impl.equals(chosenImpl)) {
             return super.getParts();
