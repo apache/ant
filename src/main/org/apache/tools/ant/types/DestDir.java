@@ -64,21 +64,21 @@ import org.apache.tools.ant.BuildException;
  */
 public final class DestDir extends ValidatedFileAttribute {
 
-    /** 
+    private String message = null;
+
+    /**
      * empty constructor
      */
     public DestDir() {}
-    
-    
-     /** 
-     * file constructor; performs validation 
+
+
+     /**
+     * file constructor; performs validation
      * @param file the file to use
      */
     public DestDir(File file) throws BuildException {
-        setFile(file);    
+        setFile(file);
     }
-    
-    private String message = null;
 
     protected final String getMessage() {
         return message;
@@ -97,6 +97,22 @@ public final class DestDir extends ValidatedFileAttribute {
         if (f.exists() && !f.isDirectory()) {
             message = "DestDir " + f + " is not a directory.";
             return false;
+        }
+        //If DestDir does not exist, make sure it is well formed.
+        if (!f.exists()) {
+            File tmp = f;
+            while (tmp.getParent() != null) {
+                File parent = new File(tmp.getParent());
+                if (parent.exists()) {
+                    if (!parent.isDirectory()) {
+                        message = "DestDir " + f + " contains the path "
+                                  + parent + " that is not a directory.";
+                        return false;
+                    }
+                    break;
+                }
+                tmp = parent;
+            }
         }
         return true;
     }

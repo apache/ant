@@ -64,22 +64,21 @@ import org.apache.tools.ant.BuildException;
  */
 public final class DestFile extends ValidatedFileAttribute {
 
+    private String message;
 
-    /** 
+    /**
      * empty constructor
      */
     public DestFile() {}
-    
-    
-     /** 
-     * file constructor; performs validation 
+
+
+     /**
+     * file constructor; performs validation
      * @param file the file to use
      */
     public DestFile(File file) throws BuildException {
-        setFile(file);    
+        setFile(file);
     }
-    
-    private String message;
 
     protected final String getMessage() {
         return message;
@@ -99,9 +98,25 @@ public final class DestFile extends ValidatedFileAttribute {
             message = "DestFile " + f + " is not a file.";
             return false;
         }
+        //If DestFile does not exist, make sure it is well formed.
+        if (!f.exists()) {
+            File tmp = f;
+            while (tmp.getParent() != null) {
+                File parent = new File(tmp.getParent());
+                if (parent.exists()) {
+                    if (!parent.isDirectory()) {
+                        message = "DestFile " + f + " contains the path "
+                                  + parent + " that is not a directory.";
+                        return false;
+                    }
+                    break;
+                }
+                tmp = parent;
+            }
+        }
         return true;
     }
-    
+
     /**
      * test for the dest file being newer than the file passed in.
      * returns true iff the dest exists and is the same age or newer
@@ -112,13 +127,13 @@ public final class DestFile extends ValidatedFileAttribute {
     public boolean isUpToDate(File dependent) {
       if(!getFile().exists())
           return false;
-      return getFile().lastModified() >= dependent.lastModified();    
+      return getFile().lastModified() >= dependent.lastModified();
     }
-    
+
     /**
      * test for the dest file being newer than the SrcFile passed in.
      * returns true iff the dest exists and is the same age or newer
-     * @pre getFile()!=null  
+     * @pre getFile()!=null
      * @pre dependent!=null && depedent.getFile!=null;
      * @param dependent file we are dependent on
      * @return true iff we are up to date
