@@ -92,6 +92,7 @@
   <target name="check_for_optional_packages">
     <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
+    <available property="jdk1.4+" classname="java.lang.CharSequence" />
     <available property="bsf.present" 
                classname="com.ibm.bsf.BSFManager" 
                classpathref="classpath" />
@@ -182,6 +183,8 @@
                unless="jakarta.regexp.present" />
       <exclude name="${ant.package}/util/regexp/JakartaOroMatcher.java" 
                unless="jakarta.oro.present" />
+      <exclude name="${ant.package}/util/regexp/Jdk14RegexpMatcher.java" 
+               unless="jdk1.4+" />
 
       <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
@@ -595,6 +598,8 @@
                unless="jakarta.regexp.present" />
       <exclude name="org/apache/tools/ant/util/regexp/JakartaOroMatcherTest.java" 
                unless="jakarta.oro.present" />
+      <exclude name="org/apache/tools/ant/util/regexp/Jdk14RegexpMatcherTest.java" 
+               unless="jdk1.4+" />
     </javac>
   </target>
 
@@ -649,6 +654,8 @@
                    unless="jakarta.regexp.present" />
           <exclude name="org/apache/tools/ant/util/regexp/JakartaOroMatcherTest.java" 
                    unless="jakarta.oro.present" />
+          <exclude name="org/apache/tools/ant/util/regexp/Jdk14RegexpMatcherTest.java" 
+                   unless="jdk1.4+" />
           <exclude name="${optional.package}/ide/VAJExportTest.java" unless="vaj.present" />
                    
            <!-- run when you have the environment setup to support them -->
