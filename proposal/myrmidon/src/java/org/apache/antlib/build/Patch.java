@@ -9,6 +9,8 @@ package org.apache.antlib.build;
 
 import java.io.File;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
@@ -23,6 +25,9 @@ import org.apache.tools.ant.types.Commandline;
 public class Patch
     extends AbstractTask
 {
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( Patch.class );
+
     private File m_originalFile;
     private File m_patchFile;
     private boolean m_backups;
@@ -110,19 +115,20 @@ public class Patch
     {
         if( null == m_patchFile )
         {
-            final String message = "patchfile argument is required";
+            final String message = REZ.getString( "patch.missing-file.error" );
             throw new TaskException( message );
         }
 
         if( !m_patchFile.exists() )
         {
-            final String message = "patchfile " + m_patchFile + " doesn\'t exist";
+            final String message = REZ.getString( "patch.file-noexist.error", m_patchFile );
             throw new TaskException( message );
         }
 
         if( null != m_strip && m_strip.intValue() < 0 )
         {
-            throw new TaskException( "strip has to be >= 0" );
+            final String message = REZ.getString( "patch.neg-strip.error" );
+            throw new TaskException( message );
         }
     }
 
