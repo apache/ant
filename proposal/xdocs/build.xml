@@ -383,7 +383,8 @@
              classpathref="xdoclet.classpath"/>
     <antdoclet destdir="${gen.dir}"
                excludedtags="@version,@author"
-               force="${xdoclet.force}">
+               force="${xdoclet.force}"
+               mergedir="src">
       <fileset dir="${src.root}">
       <selector id="conditional-patterns">
         <not>
