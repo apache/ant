@@ -329,6 +329,14 @@ public class ExecTaskTest extends BuildFileTest {
         executeTarget("redirector17");
     }
 
+    public void testRedirector18() {
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
+        expectLog("redirector18", getProject().getProperty("ant.file")
+            + " out" + getProject().getProperty("ant.file") + " err");
+    }
+
     public void testspawn() {
         project.executeTarget("init");
         if (project.getProperty("test.can.run") == null) {

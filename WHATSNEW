@@ -77,12 +77,14 @@ Other changes:
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
-* Expose objects and  methods in IntrospectionHelper. Bugzilla Report 30794.
+* Expose objects and methods in IntrospectionHelper. Bugzilla Report 30794.
 
 * Allow file attribute of <move> to rename a directory.
   Bugzilla Report 22863.
 
 * Add xmlcatalog nested element to XmlProperty. Bugzilla report 27053.
+
+* New attribute alwayslog for <redirector> type.
 
 Fixed bugs:
 -----------

@@ -313,6 +313,22 @@
         <fail if="17fail">Files were created.</fail>
     </target>
 
+    <target name="redirector18" depends="init" if="test.can.run">
+        <exec executable="sh">
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}" />
+            <redirector alwayslog="true" logerror="true"
+                        outputproperty="redirector.out" />
+        </exec>
+        <fail message="property redirector.out has unexpected content">
+            <condition>
+                <not>
+                    <equals arg1="${ant.file} out" arg2="${redirector.out}" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+
     <target name="cleanup">
         <delete>
             <fileset file="${logFile}" />
