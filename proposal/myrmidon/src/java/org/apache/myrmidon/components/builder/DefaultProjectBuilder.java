@@ -18,10 +18,10 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.model.DefaultProject;
-import org.apache.myrmidon.model.DefaultTarget;
-import org.apache.myrmidon.model.Project;
-import org.apache.myrmidon.model.Target;
+import org.apache.myrmidon.components.model.DefaultProject;
+import org.apache.myrmidon.components.model.DefaultTarget;
+import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.components.model.Target;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

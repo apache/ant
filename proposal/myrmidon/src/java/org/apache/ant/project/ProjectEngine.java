@@ -11,7 +11,7 @@ import org.apache.ant.AntException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.model.Project;
+import org.apache.myrmidon.components.model.Project;
 
 /**
  * This is the interface between ProjectEngine and rest of the system.

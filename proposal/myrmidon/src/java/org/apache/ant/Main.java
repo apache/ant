@@ -46,7 +46,7 @@ import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
 import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.model.Project;
+import org.apache.myrmidon.components.model.Project;
 
 /**
  * The class to kick the tires and light the fires.

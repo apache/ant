@@ -9,7 +9,7 @@ package org.apache.ant.modules.basic;
 
 import java.util.ArrayList;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.model.Project;
+import org.apache.myrmidon.components.model.Project;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.DefaultTaskContext;

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.model;
+package org.apache.myrmidon.components.model;
 
 import java.util.ArrayList;
 import org.apache.ant.util.Condition;

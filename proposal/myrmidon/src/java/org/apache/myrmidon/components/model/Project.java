@@ -5,14 +5,14 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.model;
+package org.apache.myrmidon.components.model;
 
 import java.io.File;
 import org.apache.avalon.framework.component.Component;
 
 /**
  * Abstraction used to interact with projects.
- * Implementations may choose to structure it anyway they choose. 
+ * Implementations may choose to structure it anyway they choose.
  *
  * TODO: Determine if projects should carry their own name. Breaks IOC but
  * Can be useful as project files embed own name (or should that be description).

@@ -25,8 +25,8 @@ import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.model.Project;
-import org.apache.myrmidon.model.Target;
+import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.components.model.Target;
 
 /**
  * This is the default implementation of ProjectEngine.
