@@ -17,7 +17,7 @@
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
 </ul>
 
-<p>Version 1.0.7 - 2000/02/28</p>
+<p>Version 1.0.8 - 2000/03/04</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -2093,12 +2093,17 @@ it encounters for a specific task in the buildfile, before it executes is.</p>
 <p>Let's write our own task, that prints a message on the System.out stream. The
 task has one attribute called &quot;message&quot;.</p>
 <blockquote>
-  <pre>public class MyVeryOwnTask extends Task {
+  <pre>package com.mydomain;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
+public class MyVeryOwnTask extends Task {
   private String msg;
 
   // The method executing the task
   public void execute() throws BuildException {
-    System.out.println(message);
+    System.out.println(msg);
   }
 
   // The setter for the &quot;message&quot; attribute
@@ -2118,13 +2123,15 @@ task has one attribute called &quot;message&quot;.</p>
 </ol>
 <h3>Example</h3>
 <blockquote>
-  <pre>&lt;project name=&quot;TaskTest&quot; default=&quot;test&quot; basedir=&quot;.&quot;&gt;
+  <pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+
+&lt;project name=&quot;OwnTaskExample&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
   &lt;target name=&quot;init&quot;&gt;
     &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;test&quot;&gt;
-    &lt;mytask myattr=&quot;wombat&quot; /&gt;
+  &lt;target name=&quot;main&quot; depends=&quot;init&quot;&gt;
+    &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot; /&gt;
   &lt;/target&gt;
 &lt;/project&gt;
 </pre>
