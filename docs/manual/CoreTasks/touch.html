@@ -1,0 +1,57 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="touch">Touch</a></h2>
+<h3>Description</h3>
+<p>Changes the modification time of a file and possibly creates it at
+the same time.</p>
+<p>For JDK 1.1 only the creation of new files with a modification time
+of now works, all other cases will emit a warning.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the name of the file</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">millis</td>
+    <td valign="top">specifies the new modification time of the file
+       in milliseconds since midnight Jan 1 1970</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">datetime</td>
+    <td valign="top">specifies the new modification time of the file
+       in the format MM/DD/YYYY HH:MM AM_or_PM.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<p>If both <code>millis</code> and <code>datetime</code> are omitted
+the current time is assumed.</p>
+<h3>Examples</h3>
+<pre>  &lt;touch file=&quot;myfile&quot;/&gt;</pre>
+<p>creates <code>myfile</code> if it doesn't exist and changes the
+modification time to the current time.</p>
+<pre>  &lt;touch file=&quot;myfile&quot; datetime=&quot;06/28/2000 2:02 pm&quot;/&gt;</pre>
+<p>creates <code>myfile</code> if it doesn't exist and changes the
+modification time to Jun, 28 2000 2:02 pm (14:02 for those used to 24
+hour times).</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

@@ -1,0 +1,122 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="chmod">Chmod</a></h2>
+<h3>Description</h3>
+<p>Changes the permissions of a file or all files inside specified directories. Right now it has effect only under Unix.
+The permissions are also UNIX style, like the argument for the chmod command.</p>
+<p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based
+tasks</a>, on how the inclusion/exclusion of files works, and how to
+write patterns.</p>
+<p>This task holds an implicit <a href="../CoreTypes/fileset.html">FileSet</a> and
+supports all of FileSet's attributes and nested elements
+directly. More FileSets can be specified using nested
+<code>&lt;fileset&gt;</code> elements.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file or single directory of which the permissions 
+      must be changed.</td>
+    <td valign="top" valign="middle" rowspan="2">exactly one of the two or nested <code>&lt;fileset&gt;</code> elements.</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory which holds the files whose permissions 
+      must be changed.</td>
+  </tr>
+  <tr>
+    <td valign="top">perm</td>
+    <td valign="top">the new permissions.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">parallel</td>
+    <td valign="top">process all specified files using a single
+      <code>chmod</code> command. Defaults to true.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">One of <i>file</i>, <i>dir</i> or
+      <i>both</i>. If set to <i>file</i>, only the permissions of
+      plain files are going to be changed. If set to <i>dir</i>, only
+      the directories are considered.</td>
+    <td align="center" valign="top">No, default is <i>file</i></td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;</code></p>
+</blockquote>
+<p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
+UNIX system.</p>
+<blockquote>
+<pre>
+    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes=&quot;**/*.sh&quot;/&gt;
+</pre>
+</blockquote>
+<p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
+readable and executable for anyone on a UNIX system.</p>
+<blockquote>
+<pre>
+&lt;chmod perm=&quot;g+w&quot;&gt;
+  &lt;fileset dir=&quot;shared/sources1&quot;&gt;
+    &lt;exclude name=&quot;**/trial/**&quot;/&gt;
+  &lt;/fileset&gt;
+  &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
+&lt;/chmod&gt;
+</pre>
+</blockquote>
+<p>makes all files below <code>shared/sources1</code> (except those
+below any directory named trial) writable for members of the same
+group on a UNIX system. In addition all files belonging to a FileSet
+with <code>id</code> <code>other.shared.sources</code> get the same
+permissions.</p>
+<hr><p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

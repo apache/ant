@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="ant">Ant</a></h2>
+<h3>Description</h3>
+<p>Runs Ant on a supplied buildfile. This can be used to build subprojects.</p>
+<p>When the <i>antfile</i> attribute is omitted, the file &quot;build.xml&quot;
+in the supplied directory (<i>dir</i> attribute) is used.</p>
+<p>If no target attribute is supplied, the default target of the new project is
+used.</p>
+<p>The properties of the current project will be available in the new project.
+These properties will override the properties that are set in the new project.
+(See also the <a href="property.html">property task</a>). You can set properties
+in the new project from the old project by using nested property tags. This
+allows you to parameterize your subprojects.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">antfile</td>
+    <td valign="top">the buildfile to use. Defaults to &quot;build.xml&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+ 	<td valign="top">the directory to use as a basedir for the new Ant project. 
+					 Defaults to the current directory.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">the target of the new Ant project that should be executed.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">output</td>
+    <td valign="top">Filename to write the ant output to.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>
+  &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot;/&gt;
+
+  &lt;ant dir=&quot;subproject&quot;/&gt;
+
+  &lt;ant antfile=&quot;subproject/property_based_subbuild.xml&quot;&gt;
+    &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot;/&gt;
+    &lt;property file=&quot;config/subproject/default.properties&quot;/&gt;
+  &lt;/ant&gt;
+</pre>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
