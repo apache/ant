@@ -89,8 +89,6 @@ public class Checksum
 
     /**
      * Sets the MessageDigest algorithm to be used to calculate the checksum.
-     *
-     * @param algorithm The new Algorithm value
      */
     public void setAlgorithm( final String algorithm )
     {
@@ -99,8 +97,6 @@ public class Checksum
 
     /**
      * Sets the file for which the checksum is to be calculated.
-     *
-     * @param file The new File value
      */
     public void setFile( final File file )
     {
@@ -110,8 +106,6 @@ public class Checksum
     /**
      * Sets the File Extension that is be to used to create or identify
      * destination file
-     *
-     * @param fileext The new Fileext value
      */
     public void setFileext( final String fileext )
     {
@@ -121,8 +115,6 @@ public class Checksum
     /**
      * Overwrite existing file irrespective of whether it is newer than the
      * source file? Defaults to false.
-     *
-     * @param forceOverwrite The new ForceOverwrite value
      */
     public void setForceOverwrite( boolean forceOverwrite )
     {
@@ -131,8 +123,6 @@ public class Checksum
 
     /**
      * Sets the property to hold the generated checksum
-     *
-     * @param property The new Property value
      */
     public void setProperty( String property )
     {
@@ -153,8 +143,6 @@ public class Checksum
     /**
      * Sets verify property. This project property holds the result of a
      * checksum verification - "true" or "false"
-     *
-     * @param verifyProperty The new Verifyproperty value
      */
     public void setVerifyproperty( final String verifyProperty )
     {
@@ -163,8 +151,6 @@ public class Checksum
 
     /**
      * Adds a set of files (nested fileset attribute).
-     *
-     * @param set The feature to be added to the Fileset attribute
      */
     public void addFileset( final FileSet set )
     {
@@ -173,8 +159,6 @@ public class Checksum
 
     /**
      * Calculate the checksum(s).
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
@@ -182,9 +166,7 @@ public class Checksum
         final boolean value = validateAndExecute();
         if( m_verifyProperty != null )
         {
-            final String name = m_verifyProperty;
-            final Object value1 = new Boolean( value ).toString();
-            getContext().setProperty( name, value1 );
+            getContext().setProperty( m_verifyProperty, "" + value );
         }
     }
 
@@ -251,9 +233,10 @@ public class Checksum
         return checksumMatches;
     }
 
-    private boolean z( final File src, boolean checksumMatches )
+    private boolean z( final File src, final boolean checksumMatches )
         throws TaskException
     {
+        boolean match = checksumMatches;
         FileInputStream fis = null;
         FileOutputStream fos = null;
         try
@@ -262,23 +245,25 @@ public class Checksum
             final byte[] fileDigest = buildDigest( fis );
             IOUtil.shutdownStream( fis );
 
-            String checksum = "";
+            final StringBuffer sb = new StringBuffer();
             for( int i = 0; i < fileDigest.length; i++ )
             {
                 final String hexStr = Integer.toHexString( 0x00ff & fileDigest[ i ] );
                 if( hexStr.length() < 2 )
                 {
-                    checksum += "0";
+                    sb.append( '0' );
                 }
-                checksum += hexStr;
+                sb.append( hexStr );
             }
 
+            final String checksum = sb.toString();
+
             //can either be a property name string or a file
-            Object destination = m_includeFileMap.get( src );
+            final Object destination = m_includeFileMap.get( src );
             if( destination instanceof String )
             {
                 final String prop = (String)destination;
-                checksumMatches = checksum.equals( m_property );
+                match = checksum.equals( m_property );
                 getContext().setProperty( prop, checksum );
             }
             else if( destination instanceof File )
@@ -299,7 +284,7 @@ public class Checksum
             IOUtil.shutdownStream( fis );
             IOUtil.shutdownStream( fos );
         }
-        return checksumMatches;
+        return match;
     }
 
     private byte[] buildDigest( final InputStream input )
