@@ -124,28 +124,16 @@ public class ComponentHelper  {
         taskClassDefinitions= new AntTaskTable(project, true);
     }
 
-
-    /** Creates an ant component..
-     *
-     * A factory may have knowledge about the tasks it creates. It can return
-     * an object extending TaskAdapter that emulates Task/DataType. If null is returned,
-     * the next helper is tried.
-     *
-     * @param ns namespace if a SAX2 parser is used, null for 'classical' ant
-     * @param taskName the (local) name of the task.
-     */
-    public Object createComponent( String ns,
-                                   String taskName )
-            throws BuildException
-    {
-        if( getNext() != null ) {
-            return getNext().createComponent( ns, taskName);
-        }
-        return null;
-        // XXX class loader ? Can use the ns, but additional hints may be available in taskdef
-        //
-    }
-
+    /** Factory method to create the components.
+     * 
+     * This should be called by UnknownElement.
+     * 
+     * @param ue The component helper has access via ue to the entire XML tree.
+     * @param ns Namespace. Also available as ue.getNamespace()
+     * @param taskName The element name. Also available as ue.getTag()
+     * @return
+     * @throws BuildException
+     */ 
     public Object createComponent( UnknownElement ue,
                                    String ns,
                                    String taskName )
@@ -162,17 +150,23 @@ public class ComponentHelper  {
             // This is the original policy in ProjectHelper. The 1.5 version of UnkwnonwElement
             // used to try first to create a task, and if it failed tried a type. In 1.6 the diff
             // should disapear.
-            component = project.createDataType(taskName);
+            component = this.createDataType(taskName);
             if( component!=null ) return component;
         }
 
         // from UnkwnonwElement.createTask. The 'top level' case is removed, we're
         // allways lazy
-        component = project.createTask(taskName);
+        component = this.createTask(taskName);
 
         return component;
     }
 
+    /** Initialization code - implementing the original ant component
+     * loading from /org/apache/tools/ant/taskdefs/default.properties 
+     * and .../types/default.properties
+     * 
+     * @throws BuildException
+     */ 
     public void initDefaultDefinitions() throws BuildException {
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
 
@@ -229,8 +223,8 @@ public class ComponentHelper  {
      *                           this exception is thrown.
      *
      * @see #checkTaskClass(Class)
-     -         */
-    public void addTaskDefinition(String taskName, Class taskClass)
+     */
+    public void addTaskDefinition(String taskName, Class taskClass)   
             throws BuildException {
         Class old = (Class) taskClassDefinitions.get(taskName);
         if (null != old) {
@@ -368,6 +362,10 @@ public class ComponentHelper  {
      * Creates a new instance of a task, adding it to a list of
      * created tasks for later invalidation. This causes all tasks
      * to be remembered until the containing project is removed
+     *
+     *  Called from Project.createTask(), which can be called by tasks.
+     *  The method should be deprecated, as it doesn't support ns and libs.
+     *
      * @param taskType The name of the task to create an instance of.
      *                 Must not be <code>null</code>.
      *
