@@ -3,6 +3,9 @@ Changes from Ant 1.5.1 to current CVS version
 
 Changes that could break older environments:
 --------------------------------------------
+* ANT_OPTS environment variable is now applied at the start of the Java command 
+  line, allowing position specific parameters of some JVMs, such as -classic to 
+  be specified.
 
 Fixed bugs:
 -----------
@@ -60,7 +63,7 @@ Fixed bugs:
 * build.sysclasspath will now be honored by more tasks.
 
 * The signjar keystore attribute has been reverted to a String allowing
-  it to once again accept URLs. This should not affect current FIle based usage
+  it to once again accept URLs. This should not affect current File based usage
   unless you are extending the Signjar task.
 
 * <jar update="true"> would remove the original manifest.
@@ -68,6 +71,12 @@ Fixed bugs:
 * fix up folder creation in PVCS task
 
 * <tar>'s up-to-date check didn't work for nested <(tar)fileset>s.
+
+* Corrected a problem in XMLLogger where it would not associated messages with a
+  taskdef'd task
+
+* <uptodate> now works when using attributes (i.e. not filesets) and pointing 
+  to the same file
 
 Other changes:
 --------------
