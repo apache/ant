@@ -16,6 +16,7 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -32,8 +33,8 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class AggregateTransformer
+    extends AbstractLogEnabled
 {
-
     public final static String FRAMES = "frames";
 
     public final static String NOFRAMES = "noframes";
@@ -41,53 +42,40 @@ public class AggregateTransformer
     /**
      * XML Parser factory
      */
-    protected final static DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
+    private final static DocumentBuilderFactory c_dbfactory = DocumentBuilderFactory.newInstance();
 
     /**
      * the xml document to process
      */
-    protected Document document;
+    private Document m_document;
 
     /**
      * the format to use for the report. Must be <tt>FRAMES</tt> or <tt>NOFRAMES
      * </tt>
      */
-    protected String format;
+    private String m_format;
 
     /**
      * the style directory. XSLs should be read from here if necessary
      */
-    protected File styleDir;
+    private File m_styleDir;
 
-    /**
-     * Task
-     */
-    protected Task task;
+    private Task m_task;
 
     /**
      * the destination directory, this is the root from where html should be
      * generated
      */
-    protected File toDir;
+    private File m_toDir;
 
     public AggregateTransformer( Task task )
     {
-        this.task = task;
-    }
-
-    /**
-     * set the extension of the output files
-     *
-     * @param ext The new Extension value
-     */
-    public void setExtension( String ext )
-    {
-        task.getLogger().warn( "extension is not used anymore" );
+        m_task = task;
     }
 
     public void setFormat( Format format )
     {
-        this.format = format.getValue();
+        m_format = format.getValue();
     }
 
     /**
@@ -99,7 +87,7 @@ public class AggregateTransformer
      */
     public void setStyledir( File styledir )
     {
-        this.styleDir = styledir;
+        m_styleDir = styledir;
     }
 
     /**
@@ -109,12 +97,12 @@ public class AggregateTransformer
      */
     public void setTodir( File todir )
     {
-        this.toDir = todir;
+        m_toDir = todir;
     }
 
     public void setXmlDocument( Document doc )
     {
-        this.document = doc;
+        m_document = doc;
     }
 
     public void transform()
@@ -124,7 +112,7 @@ public class AggregateTransformer
         final long t0 = System.currentTimeMillis();
         try
         {
-            Element root = document.getDocumentElement();
+            Element root = m_document.getDocumentElement();
             XalanExecutor executor = XalanExecutor.newInstance( this );
             executor.execute();
         }
@@ -148,7 +136,7 @@ public class AggregateTransformer
     {
         try
         {
-            DocumentBuilder builder = dbfactory.newDocumentBuilder();
+            DocumentBuilder builder = c_dbfactory.newDocumentBuilder();
             InputStream in = new FileInputStream( xmlfile );
             try
             {
@@ -178,12 +166,12 @@ public class AggregateTransformer
         throws IOException
     {
         String xslname = "junit-frames.xsl";
-        if( NOFRAMES.equals( format ) )
+        if( NOFRAMES.equals( m_format ) )
         {
             xslname = "junit-noframes.xsl";
         }
         URL url = null;
-        if( styleDir == null )
+        if( m_styleDir == null )
         {
             url = getClass().getResource( "xsl/" + xslname );
             if( url == null )
@@ -193,7 +181,7 @@ public class AggregateTransformer
         }
         else
         {
-            File file = new File( styleDir, xslname );
+            File file = new File( m_styleDir, xslname );
             if( !file.exists() )
             {
                 throw new FileNotFoundException( "Could not find file '" + file + "'" );
@@ -212,14 +200,29 @@ public class AggregateTransformer
         throws TaskException
     {
         // set the destination directory relative from the project if needed.
-        if( toDir == null )
+        if( m_toDir == null )
         {
-            toDir = FileUtil.resolveFile( task.getBaseDirectory(), "." );
+            m_toDir = FileUtil.resolveFile( m_task.getBaseDirectory(), "." );
         }
-        else if( !toDir.isAbsolute() )
+        else if( !m_toDir.isAbsolute() )
         {
-            toDir = FileUtil.resolveFile( task.getBaseDirectory(), toDir.getPath() );
+            m_toDir = FileUtil.resolveFile( m_task.getBaseDirectory(), m_toDir.getPath() );
         }
+    }
+
+    protected Document getDocument()
+    {
+        return m_document;
+    }
+
+    protected String getFormat()
+    {
+        return m_format;
+    }
+
+    protected File getToDir()
+    {
+        return m_toDir;
     }
 
     public static class Format extends EnumeratedAttribute

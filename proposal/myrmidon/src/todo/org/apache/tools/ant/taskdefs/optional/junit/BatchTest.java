@@ -9,7 +9,9 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
@@ -32,7 +34,6 @@ import org.apache.tools.ant.types.FileSet;
  */
 public final class BatchTest extends BaseTest
 {
-
     /**
      * the list of filesets containing the testcase filename rules
      */
@@ -74,9 +75,10 @@ public final class BatchTest extends BaseTest
      *      JUnitTest</tt> instance.
      */
     public final Iterator iterator()
+        throws TaskException
     {
-        JUnitTest[] tests = createAllJUnitTest();
-        return Iterators.fromArray( tests );
+        final JUnitTest[] tests = createAllJUnitTest();
+        return Arrays.asList( tests ).iterator();
     }
 
     /**
@@ -99,8 +101,9 @@ public final class BatchTest extends BaseTest
      *      batch test.
      */
     final void addTestsTo( ArrayList v )
+        throws TaskException
     {
-        JUnitTest[] tests = createAllJUnitTest();
+        final JUnitTest[] tests = createAllJUnitTest();
         v.ensureCapacity( v.size() + tests.length );
         for( int i = 0; i < tests.length; i++ )
         {
@@ -121,6 +124,7 @@ public final class BatchTest extends BaseTest
      *      it will return <tt>org/apache/Whatever</tt> .
      */
     private String[] getFilenames()
+        throws TaskException
     {
         ArrayList v = new ArrayList();
         final int size = this.filesets.size();
@@ -144,9 +148,7 @@ public final class BatchTest extends BaseTest
             }
         }
 
-        String[] files = new String[ v.size() ];
-        v.copyInto( files );
-        return files;
+        return (String[])v.toArray( new String[ v.size() ] );
     }
 
     /**
@@ -156,6 +158,7 @@ public final class BatchTest extends BaseTest
      * @return the array of all <tt>JUnitTest</tt> s that belongs to this batch.
      */
     private JUnitTest[] createAllJUnitTest()
+        throws TaskException
     {
         String[] filenames = getFilenames();
         JUnitTest[] tests = new JUnitTest[ filenames.length ];
@@ -179,9 +182,9 @@ public final class BatchTest extends BaseTest
     {
         JUnitTest test = new JUnitTest();
         test.setName( classname );
-        test.setHaltonerror( this.haltOnError );
-        test.setHaltonfailure( this.haltOnFail );
-        test.setFiltertrace( this.filtertrace );
+        test.setHaltonerror( this.m_haltOnError );
+        test.setHaltonfailure( this.m_haltOnFail );
+        test.setFiltertrace( this.m_filtertrace );
         test.setFork( this.fork );
         test.setIf( this.ifProperty );
         test.setUnless( this.unlessProperty );

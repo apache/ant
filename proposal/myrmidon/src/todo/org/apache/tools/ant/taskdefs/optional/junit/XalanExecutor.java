@@ -95,7 +95,7 @@ abstract class XalanExecutor
     protected OutputStream getOutputStream()
         throws IOException
     {
-        if( caller.FRAMES.equals( caller.format ) )
+        if( caller.FRAMES.equals( caller.getFormat() ) )
         {
             // dummy output for the framed report
             // it's all done by extension...
@@ -103,7 +103,7 @@ abstract class XalanExecutor
         }
         else
         {
-            return new FileOutputStream( new File( caller.toDir, "junit-noframes.html" ) );
+            return new FileOutputStream( new File( caller.getToDir(), "junit-noframes.html" ) );
         }
     }
 

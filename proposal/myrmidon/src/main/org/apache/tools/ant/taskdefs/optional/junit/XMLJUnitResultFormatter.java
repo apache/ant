@@ -224,13 +224,14 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         Properties props = suite.getProperties();
         if( props != null )
         {
-            Iterator e = props.propertyNames();
+            final Iterator e = props.keySet().iterator();
             while( e.hasNext() )
             {
-                String name = (String)e.next();
-                Element propElement = doc.createElement( PROPERTY );
+                final String name = (String)e.next();
+                final String value = props.getProperty( name );
+                final Element propElement = doc.createElement( PROPERTY );
                 propElement.setAttribute( ATTR_NAME, name );
-                propElement.setAttribute( ATTR_VALUE, props.getProperty( name ) );
+                propElement.setAttribute( ATTR_VALUE, value );
                 propsElement.appendChild( propElement );
             }
         }

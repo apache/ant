@@ -21,7 +21,7 @@ import java.util.Properties;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -348,7 +348,7 @@ public class JUnitTask extends Task
      */
     public Path createClasspath()
     {
-        return commandline.createClasspath( getProject() ).createPath();
+        return commandline.createClasspath().createPath();
     }
 
     /**
@@ -408,6 +408,7 @@ public class JUnitTask extends Task
      * @return The IndividualTests value
      */
     protected Iterator getIndividualTests()
+        throws TaskException
     {
         Iterator[] enums = new Iterator[ batchTests.size() + 1 ];
         for( int i = 0; i < batchTests.size(); i++ )
@@ -416,7 +417,7 @@ public class JUnitTask extends Task
             enums[ i ] = batchtest.iterator();
         }
         enums[ enums.length - 1 ] = tests.iterator();
-        return Iterators.fromCompound( enums );
+        return new CompoundIterator( enums );
     }
 
     /**
@@ -482,7 +483,7 @@ public class JUnitTask extends Task
     protected Iterator allTests()
     {
         Iterator[] enums = {tests.iterator(), batchTests.iterator()};
-        return Iterator.fromCompound( enums );
+        return new CompoundIterator( enums );
     }
 
     /**
@@ -585,13 +586,11 @@ public class JUnitTask extends Task
      * @param watchdog the watchdog in charge of cancelling the test if it
      *      exceeds a certain amount of time. Can be <tt>null</tt> , in this
      *      case the test could probably hang forever.
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     private int executeAsForked( JUnitTest test )
         throws TaskException
     {
-        CommandlineJava cmd = (CommandlineJava)commandline.clone();
+        CommandlineJava cmd = commandline;//(CommandlineJava)commandline.clone();
 
         cmd.setClassname( "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" );
         cmd.createArgument().setValue( test.getName() );
@@ -642,10 +641,8 @@ public class JUnitTask extends Task
             throw new TaskException( "Error creating temporary properties file.", ioe );
         }
 
-        final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( getLogger(), false ) );
-        exe.setError( new LogOutputStream( getLogger(), true ) );
-
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
         exe.setCommandline( cmd.getCommandline() );
         if( dir != null )
         {
@@ -673,10 +670,6 @@ public class JUnitTask extends Task
 
     /**
      * Execute inside VM.
-     *
-     * @param test Description of Parameter
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     private int executeInVM( JUnitTest test )
         throws TaskException
@@ -748,11 +741,9 @@ public class JUnitTask extends Task
 
     private FormatterElement[] mergeFormatters( JUnitTest test )
     {
-        ArrayList feArrayList = (ArrayList)formatters.clone();
+        final ArrayList feArrayList = (ArrayList)formatters.clone();
         test.addFormattersTo( feArrayList );
-        FormatterElement[] feArray = new FormatterElement[ feArrayList.size() ];
-        feArrayList.copyInto( feArray );
-        return feArray;
+        return (FormatterElement[])feArrayList.toArray( new FormatterElement[ feArrayList.size() ] );
     }
 
     /**

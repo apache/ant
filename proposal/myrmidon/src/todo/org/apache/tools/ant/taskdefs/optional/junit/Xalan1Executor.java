@@ -27,8 +27,8 @@ public class Xalan1Executor extends XalanExecutor
     {
         XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
         // need to quote otherwise it breaks because of "extra illegal tokens"
-        processor.setStylesheetParam( "output.dir", "'" + caller.toDir.getAbsolutePath() + "'" );
-        XSLTInputSource xml_src = new XSLTInputSource( caller.document );
+        processor.setStylesheetParam( "output.dir", "'" + caller.getToDir().getAbsolutePath() + "'" );
+        XSLTInputSource xml_src = new XSLTInputSource( caller.getDocument() );
         String system_id = caller.getStylesheetSystemId();
         XSLTInputSource xsl_src = new XSLTInputSource( system_id );
         OutputStream os = getOutputStream();

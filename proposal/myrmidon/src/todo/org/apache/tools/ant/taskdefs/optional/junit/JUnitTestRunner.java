@@ -19,7 +19,6 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Properties;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -46,10 +45,9 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
  */
-
-public class JUnitTestRunner implements TestListener
+public class JUnitTestRunner
+    implements TestListener
 {
-
     /**
      * No problems with this test.
      */
@@ -70,7 +68,8 @@ public class JUnitTestRunner implements TestListener
      */
     private static boolean filtertrace = true;
 
-    private final static String[] DEFAULT_TRACE_FILTERS = new String[]{
+    private final static String[] DEFAULT_TRACE_FILTERS = new String[]
+    {
         "junit.framework.TestCase",
         "junit.framework.TestResult",
         "junit.framework.TestSuite",
@@ -82,57 +81,57 @@ public class JUnitTestRunner implements TestListener
         "org.apache.tools.ant."
     };
 
-    private static ArrayList fromCmdLine = new ArrayList();
+    private static ArrayList m_fromCmdLine = new ArrayList();
 
     /**
      * Holds the registered formatters.
      */
-    private ArrayList formatters = new ArrayList();
+    private ArrayList m_formatters = new ArrayList();
 
     /**
      * Do we stop on errors.
      */
-    private boolean haltOnError = false;
+    private boolean m_haltOnError;
 
     /**
      * Do we stop on test failures.
      */
-    private boolean haltOnFailure = false;
+    private boolean m_haltOnFailure;
 
     /**
      * The corresponding testsuite.
      */
-    private Test suite = null;
+    private Test m_suite;
 
     /**
      * Returncode
      */
-    private int retCode = SUCCESS;
+    private int m_retCode = SUCCESS;
 
     /**
      * Exception caught in constructor.
      */
-    private Exception exception;
+    private Exception m_exception;
 
     /**
      * The TestSuite we are currently running.
      */
-    private JUnitTest junitTest;
+    private JUnitTest m_junitTest;
 
     /**
      * Collects TestResults.
      */
-    private TestResult res;
+    private TestResult m_res;
 
     /**
      * output written during the test
      */
-    private PrintStream systemError;
+    private PrintStream m_systemError;
 
     /**
      * Error output during the test
      */
-    private PrintStream systemOut;
+    private PrintStream m_systemOut;
 
     /**
      * Constructor for fork=true or when the user hasn't specified a classpath.
@@ -142,8 +141,10 @@ public class JUnitTestRunner implements TestListener
      * @param filtertrace Description of Parameter
      * @param haltOnFailure Description of Parameter
      */
-    public JUnitTestRunner( JUnitTest test, boolean haltOnError, boolean filtertrace,
-                            boolean haltOnFailure )
+    public JUnitTestRunner( final JUnitTest test,
+                            final boolean haltOnError,
+                            final boolean filtertrace,
+                            final boolean haltOnFailure )
     {
         this( test, haltOnError, filtertrace, haltOnFailure, null );
     }
@@ -162,9 +163,9 @@ public class JUnitTestRunner implements TestListener
     {
         //JUnitTestRunner.filtertrace = filtertrace;
         this.filtertrace = filtertrace;
-        this.junitTest = test;
-        this.haltOnError = haltOnError;
-        this.haltOnFailure = haltOnFailure;
+        this.m_junitTest = test;
+        this.m_haltOnError = haltOnError;
+        this.m_haltOnFailure = haltOnFailure;
 
         try
         {
@@ -196,20 +197,20 @@ public class JUnitTestRunner implements TestListener
                 // if there is a suite method available, then try
                 // to extract the suite from it. If there is an error
                 // here it will be caught below and reported.
-                suite = (Test)suiteMethod.invoke( null, new Class[ 0 ] );
+                m_suite = (Test)suiteMethod.invoke( null, new Class[ 0 ] );
             }
             else
             {
                 // try to extract a test suite automatically
                 // this will generate warnings if the class is no suitable Test
-                suite = new TestSuite( testClass );
+                m_suite = new TestSuite( testClass );
             }
 
         }
         catch( Exception e )
         {
-            retCode = ERRORS;
-            exception = e;
+            m_retCode = ERRORS;
+            m_exception = e;
         }
     }
 
@@ -339,7 +340,7 @@ public class JUnitTestRunner implements TestListener
      * @exception IOException Description of Exception
      */
     public static void main( String[] args )
-        throws IOException
+        throws IOException, TaskException
     {
         boolean exitAtEnd = true;
         boolean haltError = false;
@@ -391,11 +392,7 @@ public class JUnitTestRunner implements TestListener
 
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
-        for( Iterator enum = p.keys(); enum.hasNext(); )
-        {
-            Object key = enum.next();
-            props.put( key, p.get( key ) );
-        }
+        props.putAll( p );
         t.setProperties( props );
 
         JUnitTestRunner runner = new JUnitTestRunner( t, haltError, stackfilter, haltFail );
@@ -426,7 +423,7 @@ public class JUnitTestRunner implements TestListener
             fe.setClassname( line.substring( 0, pos ) );
             fe.setOutfile( new File( line.substring( pos + 1 ) ) );
         }
-        fromCmdLine.add( fe.createFormatter() );
+        m_fromCmdLine.add( fe.createFormatter() );
     }
 
     private static boolean filterLine( String line )
@@ -443,9 +440,9 @@ public class JUnitTestRunner implements TestListener
 
     private static void transferFormatters( JUnitTestRunner runner )
     {
-        for( int i = 0; i < fromCmdLine.size(); i++ )
+        for( int i = 0; i < m_fromCmdLine.size(); i++ )
         {
-            runner.addFormatter( (JUnitResultFormatter)fromCmdLine.get( i ) );
+            runner.addFormatter( (JUnitResultFormatter)m_fromCmdLine.get( i ) );
         }
     }
 
@@ -456,7 +453,7 @@ public class JUnitTestRunner implements TestListener
      */
     public int getRetCode()
     {
-        return retCode;
+        return m_retCode;
     }
 
     /**
@@ -469,9 +466,9 @@ public class JUnitTestRunner implements TestListener
      */
     public void addError( Test test, Throwable t )
     {
-        if( haltOnError )
+        if( m_haltOnError )
         {
-            res.stop();
+            m_res.stop();
         }
     }
 
@@ -485,9 +482,9 @@ public class JUnitTestRunner implements TestListener
      */
     public void addFailure( Test test, Throwable t )
     {
-        if( haltOnFailure )
+        if( m_haltOnFailure )
         {
-            res.stop();
+            m_res.stop();
         }
     }
 
@@ -506,7 +503,7 @@ public class JUnitTestRunner implements TestListener
 
     public void addFormatter( JUnitResultFormatter f )
     {
-        formatters.add( f );
+        m_formatters.add( f );
     }
 
     /**
@@ -521,63 +518,65 @@ public class JUnitTestRunner implements TestListener
     }
 
     public void run()
+        throws TaskException
     {
-        res = new TestResult();
-        res.addListener( this );
-        for( int i = 0; i < formatters.size(); i++ )
+        m_res = new TestResult();
+        m_res.addListener( this );
+        for( int i = 0; i < m_formatters.size(); i++ )
         {
-            res.addListener( (TestListener)formatters.get( i ) );
+            final TestListener listener = (TestListener)m_formatters.get( i );
+            m_res.addListener( listener );
         }
 
         long start = System.currentTimeMillis();
 
         fireStartTestSuite();
-        if( exception != null )
+        if( m_exception != null )
         {// had an exception in the constructor
-            for( int i = 0; i < formatters.size(); i++ )
+            for( int i = 0; i < m_formatters.size(); i++ )
             {
-                ( (TestListener)formatters.get( i ) ).addError( null,
-                                                                exception );
+                ( (TestListener)m_formatters.get( i ) ).addError( null,
+                                                                  m_exception );
             }
-            junitTest.setCounts( 1, 0, 1 );
-            junitTest.setRunTime( 0 );
+            m_junitTest.setCounts( 1, 0, 1 );
+            m_junitTest.setRunTime( 0 );
         }
         else
         {
 
             ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
-            systemError = new PrintStream( errStrm );
+            m_systemError = new PrintStream( errStrm );
 
             ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
-            systemOut = new PrintStream( outStrm );
+            m_systemOut = new PrintStream( outStrm );
 
             try
             {
-                suite.run( res );
+                m_suite.run( m_res );
             }
             finally
             {
-                systemError.close();
-                systemError = null;
-                systemOut.close();
-                systemOut = null;
+                m_systemError.close();
+                m_systemError = null;
+                m_systemOut.close();
+                m_systemOut = null;
                 sendOutAndErr( new String( outStrm.toByteArray() ),
                                new String( errStrm.toByteArray() ) );
 
-                junitTest.setCounts( res.runCount(), res.failureCount(),
-                                     res.errorCount() );
-                junitTest.setRunTime( System.currentTimeMillis() - start );
+                m_junitTest.setCounts( m_res.runCount(), m_res.failureCount(),
+                                       m_res.errorCount() );
+                m_junitTest.setRunTime( System.currentTimeMillis() - start );
             }
         }
         fireEndTestSuite();
 
-        if( retCode != SUCCESS || res.errorCount() != 0 )
+        if( m_retCode != SUCCESS || m_res.errorCount() != 0 )
         {
-            retCode = ERRORS;
+            m_retCode = ERRORS;
         }
-        else if( res.failureCount() != 0 )
+        else if( m_res.failureCount() != 0 )
         {
-            retCode = FAILURES;
+            m_retCode = FAILURES;
         }
     }
 
@@ -585,8 +584,6 @@ public class JUnitTestRunner implements TestListener
      * Interface TestListener. <p>
      *
      * A new Test is started.
-     *
-     * @param t Description of Parameter
      */
     public void startTest( Test t )
     {
@@ -594,46 +591,53 @@ public class JUnitTestRunner implements TestListener
 
     protected void handleErrorOutput( String line )
     {
-        if( systemError != null )
+        if( m_systemError != null )
         {
-            systemError.println( line );
+            m_systemError.println( line );
         }
     }
 
     protected void handleOutput( String line )
     {
-        if( systemOut != null )
+        if( m_systemOut != null )
         {
-            systemOut.println( line );
+            m_systemOut.println( line );
         }
     }
 
     private void fireEndTestSuite()
+        throws TaskException
     {
-        for( int i = 0; i < formatters.size(); i++ )
+        final int size = m_formatters.size();
+        for( int i = 0; i < size; i++ )
         {
-            ( (JUnitResultFormatter)formatters.get( i ) ).endTestSuite( junitTest );
+            final JUnitResultFormatter formatter =
+                (JUnitResultFormatter)m_formatters.get( i );
+            formatter.endTestSuite( m_junitTest );
         }
     }
 
     private void fireStartTestSuite()
+        throws TaskException
     {
-        for( int i = 0; i < formatters.size(); i++ )
+        final int size = m_formatters.size();
+        for( int i = 0; i < size; i++ )
         {
-            ( (JUnitResultFormatter)formatters.get( i ) ).startTestSuite( junitTest );
+            final JUnitResultFormatter formatter = (JUnitResultFormatter)m_formatters.get( i );
+            formatter.startTestSuite( m_junitTest );
         }
     }
 
     private void sendOutAndErr( String out, String err )
     {
-        for( int i = 0; i < formatters.size(); i++ )
+        final int size = m_formatters.size();
+        for( int i = 0; i < size; i++ )
         {
-            JUnitResultFormatter formatter =
-                ( (JUnitResultFormatter)formatters.get( i ) );
+            final JUnitResultFormatter formatter =
+                (JUnitResultFormatter)m_formatters.get( i );
 
             formatter.setSystemOutput( out );
             formatter.setSystemError( err );
         }
     }
-
-}// JUnitTestRunner
+}

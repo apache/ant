@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 public abstract class BaseTest
 {
-    protected boolean haltOnError = false;
-    protected boolean haltOnFail = false;
-    protected boolean filtertrace = true;
+    protected boolean m_haltOnError = false;
+    protected boolean m_haltOnFail = false;
+    protected boolean m_filtertrace = true;
     protected boolean fork = false;
     protected String ifProperty = null;
     protected String unlessProperty = null;
@@ -45,7 +45,7 @@ public abstract class BaseTest
 
     public void setFiltertrace( boolean value )
     {
-        filtertrace = value;
+        m_filtertrace = value;
     }
 
     public void setFork( boolean value )
@@ -55,12 +55,12 @@ public abstract class BaseTest
 
     public void setHaltonerror( boolean value )
     {
-        haltOnError = value;
+        m_haltOnError = value;
     }
 
     public void setHaltonfailure( boolean value )
     {
-        haltOnFail = value;
+        m_haltOnFail = value;
     }
 
     public void setIf( String propertyName )
@@ -95,7 +95,7 @@ public abstract class BaseTest
 
     public boolean getFiltertrace()
     {
-        return filtertrace;
+        return m_filtertrace;
     }
 
     public boolean getFork()
@@ -105,12 +105,12 @@ public abstract class BaseTest
 
     public boolean getHaltonerror()
     {
-        return haltOnError;
+        return m_haltOnError;
     }
 
     public boolean getHaltonfailure()
     {
-        return haltOnFail;
+        return m_haltOnFail;
     }
 
     /**

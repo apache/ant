@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -43,9 +42,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class XMLResultAggregator extends Task implements XMLConstants
+public class XMLResultAggregator
+    extends Task
+    implements XMLConstants
 {
-
     /**
      * the default directory: <tt>.</tt> . It is resolved from the project
      * directory
@@ -147,7 +147,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
     public void execute()
         throws TaskException
     {
-        Element rootElement = createDocument();
+        final Element rootElement = createDocument();
         File destFile = getDestinationFile();
         // write the document
         try
@@ -176,6 +176,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
      * @return the destination file where should be written the result file.
      */
     protected File getDestinationFile()
+        throws TaskException
     {
         if( toFile == null )
         {
@@ -183,7 +184,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         }
         if( toDir == null )
         {
-            toDir = FileUtil.resolveFile( getBaseDirectory(), DEFAULT_DIR );
+            toDir = resolveFile( DEFAULT_DIR );
         }
         return new File( toDir, toFile );
     }
@@ -194,22 +195,23 @@ public class XMLResultAggregator extends Task implements XMLConstants
      * @return all files in the fileset that end with a '.xml'.
      */
     protected File[] getFiles()
+        throws TaskException
     {
-        ArrayList v = new ArrayList();
+        final ArrayList v = new ArrayList();
         final int size = filesets.size();
         for( int i = 0; i < size; i++ )
         {
-            FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
-            ds.scan();
-            String[] f = ds.getIncludedFiles();
-            for( int j = 0; j < f.length; j++ )
+            final FileSet fileSet = (FileSet)filesets.get( i );
+            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            scanner.scan();
+            final String[] includes = scanner.getIncludedFiles();
+            for( int j = 0; j < includes.length; j++ )
             {
-                String pathname = f[ j ];
+                final String pathname = includes[ j ];
                 if( pathname.endsWith( ".xml" ) )
                 {
-                    File file = new File( ds.getBasedir(), pathname );
-                    file = FileUtil.resolveFile( getBaseDirectory(), file.getPath() );
+                    File file = new File( scanner.getBasedir(), pathname );
+                    file = resolveFile( file.getPath() );
                     v.add( file );
                 }
             }
@@ -257,6 +259,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
      * @return the root element of DOM tree that aggregates all testsuites.
      */
     protected Element createDocument()
+        throws TaskException
     {
         // create the dom tree
         DocumentBuilder builder = getDocumentBuilder();
@@ -265,7 +268,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         doc.appendChild( rootElement );
 
         // get all files and add them to the document
-        File[] files = getFiles();
+        final File[] files = getFiles();
         for( int i = 0; i < files.length; i++ )
         {
             try

@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.ArrayList;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -224,28 +223,4 @@ public final class DOMUtil
         boolean accept( Node node );
     }
 
-    /**
-     * custom implementation of a nodelist
-     *
-     * @author RT
-     */
-    public static class NodeListImpl extends ArrayList implements NodeList
-    {
-        public int getLength()
-        {
-            return size();
-        }
-
-        public Node item( int i )
-        {
-            try
-            {
-                return (Node)get( i );
-            }
-            catch( ArrayIndexOutOfBoundsException e )
-            {
-                return null;// conforming to NodeList interface
-            }
-        }
-    }
 }
