@@ -18,19 +18,8 @@ Fixed bugs:
 
 * <junit> will now produce output when a test times out as well.
 
-* The starteam stcheckout, stcheckin tasks now correctly compute status of files
-  against whatever local tree they are run against and, optionally, will not
-  process a file if it is current.  Previously you had to process everything
-  unless you ran against the default folder which wasn't the normal use-case for
-  ant-starteam.  The stlist task now similarly displays that status correctly
-  making it a more generally useful tool. 
-  
   Other changes:
   --------------
-  
-* Starteam tasks now have support for revision labels and build labels.
-  Checkouts now have the option of using repository timestamps, instead
-  of current.
 
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
