@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<!--
+==============================================================================
+
+ Basic tests build file
+
+Authors:
+ Peter Donald <donaldp@apache.org>
+
+Legal:
+  Copyright (c) 2000 The Apache Software Foundation. All Rights Reserved.
+
+==============================================================================
+-->
+
+<project name="MySample" default="main" basedir=".">
+
+  <property name="year" value="2000"/>
+
+  <target name="main" depends="test-target" />
+
+  <target name="no-test-target" if="no-do-tests">
+    <echo message="No tests done here"/>
+  </target>
+
+  <target name="test-target" depends="no-test-target" unless="no-do-tests">
+
+    <echo message="Tests away"/>
+
+    <prim-test
+        integer="1"
+        integer2="2"
+        short="3"
+        short2="4"
+        long="5"
+        long2="6"
+        byte="7"
+        byte2="8"
+        string="aString"
+        float="1.0"
+        float2="2.0"
+        double="3.0"
+        double2="4.0"
+     />
+
+    <sub-elements-test>
+      <create-beep message="A string" />
+      <add-beep message="Another String" />
+    </sub-elements-test>
+
+    <conf-test message="..." />
+    
+    <content-test>123</content-test>
+    
+  </target>
+
+</project>
