@@ -76,19 +76,21 @@ public class Expand extends Task {
     public void execute() throws BuildException {
         Touch touch = (Touch) project.createTask("touch");
         touch.setTarget(target);
-                    
+        
+        File srcF=project.resolveFile(source);
+        File dir=project.resolveFile(dest);
+        
+        ZipInputStream zis = null;
 	try {
-	    File srcF=project.resolveFile(source);
-	    File dir=project.resolveFile(dest);
 	    
 	    log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
 	    // code from WarExpand
-	    ZipInputStream zis = new ZipInputStream(new FileInputStream(srcF));
+	    zis = new ZipInputStream(new FileInputStream(srcF));
 	    ZipEntry ze = null;
 	    
 	    while ((ze = zis.getNextEntry()) != null) {
+		File f = new File(dir, project.translatePath(ze.getName()));
 		try {
-		    File f = new File(dir, project.translatePath(ze.getName()));
 		    log("expand-file " + ze.getName() , Project.MSG_VERBOSE );
 		    // create intermediary directories - sometimes zip don't add them
 		    File dirF=new File(f.getParent());
@@ -115,12 +117,19 @@ public class Expand extends Task {
                     }
 
 		} catch( FileNotFoundException ex ) {
-		    System.out.println("FileNotFoundException: " +  ze.getName()  );
+		    log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
 		}
 	    }
-	    log("</log:expand>", Project.MSG_VERBOSE );
+	    log("expand complete", Project.MSG_VERBOSE );
 	} catch (IOException ioe) {
-	    ioe.printStackTrace();
+	    throw new BuildException("Error while expanding " + srcF.getPath(), ioe);
+	} finally {
+	    if (zis != null) {
+	        try {
+	            zis.close();
+	        }
+	        catch (IOException e) {}
+	    }
 	}
     }
 
