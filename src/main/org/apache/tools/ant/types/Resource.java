@@ -60,6 +60,7 @@ package org.apache.tools.ant.types;
  * and date/time information about a file, a zip entry or some similar
  * resource (URL, archive in a version control repository, ...)
  *
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5.2
  */
 public class Resource implements Cloneable {

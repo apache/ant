@@ -74,6 +74,7 @@ import org.apache.tools.ant.Task;
  * the matching Zip entries.
  *
  * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class ZipScanner extends DirectoryScanner {
 

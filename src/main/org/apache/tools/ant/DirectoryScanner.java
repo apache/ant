@@ -149,6 +149,7 @@ import org.apache.tools.ant.util.FileUtils;
  * <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
  * @author Magesh Umasankar
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class DirectoryScanner implements ResourceScanner, SelectorScanner {
 

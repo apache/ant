@@ -57,6 +57,7 @@ package org.apache.tools.ant.types;
  * this interface should be implemented by classes (Scanners) needing
  * to deliver information about resources.
  *
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5.2
  */
 public interface ResourceFactory {
