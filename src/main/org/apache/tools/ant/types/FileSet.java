@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
@@ -198,6 +199,16 @@ public class FileSet {
         }
 
         DirectoryScanner ds = new DirectoryScanner();
+        setupDirectoryScanner(ds, p);
+        ds.scan();
+        return ds;
+    }
+    
+    public void setupDirectoryScanner(FileScanner ds, Project p) {
+        if (ds == null) {
+            throw new IllegalArgumentException("ds cannot be null");
+        }
+        
         ds.setBasedir(dir);
 
         for (int i=0; i<additionalPatterns.size(); i++) {
@@ -219,8 +230,5 @@ public class FileSet {
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
         if (useDefaultExcludes) ds.addDefaultExcludes();
-        ds.scan();
-        return ds;
     }
-
 }

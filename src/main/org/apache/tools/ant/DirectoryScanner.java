@@ -133,14 +133,14 @@ import java.util.*;
  *
  * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
  */
-public class DirectoryScanner {
+public class DirectoryScanner implements FileScanner {
 
     /**
      * Patterns that should be excluded by default.
      *
      * @see #addDefaultExcludes()
      */
-    private final static String[] DEFAULTEXCLUDES = {
+    protected final static String[] DEFAULTEXCLUDES = {
         "**/*~",
         "**/#*#",
         "**/%*%",
@@ -152,56 +152,56 @@ public class DirectoryScanner {
     /**
      * The base directory which should be scanned.
      */
-    private File basedir;
+    protected File basedir;
 
     /**
      * The patterns for the files that should be included.
      */
-    private String[] includes;
+    protected String[] includes;
 
     /**
      * The patterns for the files that should be excluded.
      */
-    private String[] excludes;
+    protected String[] excludes;
 
     /**
      * The files that where found and matched at least one includes, and matched
      * no excludes.
      */
-    private Vector filesIncluded;
+    protected Vector filesIncluded;
 
     /**
      * The files that where found and did not match any includes.
      */
-    private Vector filesNotIncluded;
+    protected Vector filesNotIncluded;
 
     /**
      * The files that where found and matched at least one includes, and also
      * matched at least one excludes.
      */
-    private Vector filesExcluded;
+    protected Vector filesExcluded;
 
     /**
      * The directories that where found and matched at least one includes, and
      * matched no excludes.
      */
-    private Vector dirsIncluded;
+    protected Vector dirsIncluded;
 
     /**
      * The directories that where found and did not match any includes.
      */
-    private Vector dirsNotIncluded;
+    protected Vector dirsNotIncluded;
 
     /**
      * The files that where found and matched at least one includes, and also
      * matched at least one excludes.
      */
-    private Vector dirsExcluded;
+    protected Vector dirsExcluded;
 
     /**
      * Have the Vectors holding our results been built by a slow scan?
      */
-    private boolean haveSlowResults = false;
+    protected boolean haveSlowResults = false;
 
     /**
      * Constructor.
@@ -221,7 +221,7 @@ public class DirectoryScanner {
      * @param pattern the (non-null) pattern to match against
      * @param str     the (non-null) string (path) to match
      */
-    private static boolean matchPatternStart(String pattern, String str) {
+    protected static boolean matchPatternStart(String pattern, String str) {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
         // When pattern starts with a File.separator, str has to start with a
@@ -283,7 +283,7 @@ public class DirectoryScanner {
      * @return <code>true</code> when the pattern matches against the string.
      *         <code>false</code> otherwise.
      */
-    private static boolean matchPath(String pattern, String str) {
+    protected static boolean matchPath(String pattern, String str) {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
         // When pattern starts with a File.separator, str has to start with a
@@ -423,7 +423,7 @@ strLoop:
      * @return <code>true</code> when the string matches against the pattern,
      *         <code>false</code> otherwise.
      */
-    private static boolean match(String pattern, String str) {
+    protected static boolean match(String pattern, String str) {
         char[] patArr = pattern.toCharArray();
         char[] strArr = str.toCharArray();
         int patIdxStart = 0;
@@ -682,7 +682,7 @@ strLoop:
      *
      * <p>Returns immediately if a slow scan has already been requested.
      */
-    private void slowScan() {
+    protected void slowScan() {
         if (haveSlowResults) {
             return;
         }
@@ -725,7 +725,7 @@ strLoop:
      * @see #dirsNotIncluded
      * @see #dirsExcluded
      */
-    private void scandir(File dir, String vpath, boolean fast) {
+    protected void scandir(File dir, String vpath, boolean fast) {
         String[] newfiles = dir.list();
 
         if (newfiles == null) {
@@ -785,7 +785,7 @@ strLoop:
      * @return <code>true</code> when the name matches against at least one
      *         include pattern, <code>false</code> otherwise.
      */
-    private boolean isIncluded(String name) {
+    protected boolean isIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
             if (matchPath(includes[i],name)) {
                 return true;
@@ -801,7 +801,7 @@ strLoop:
      * @return <code>true</code> when the name matches against at least one
      *         include pattern, <code>false</code> otherwise.
      */
-    private boolean couldHoldIncluded(String name) {
+    protected boolean couldHoldIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
             if (matchPatternStart(includes[i],name)) {
                 return true;
@@ -817,7 +817,7 @@ strLoop:
      * @return <code>true</code> when the name matches against at least one
      *         exclude pattern, <code>false</code> otherwise.
      */
-    private boolean isExcluded(String name) {
+    protected boolean isExcluded(String name) {
         for (int i = 0; i < excludes.length; i++) {
             if (matchPath(excludes[i],name)) {
                 return true;
