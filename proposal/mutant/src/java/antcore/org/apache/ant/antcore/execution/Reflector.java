@@ -66,7 +66,7 @@ import org.apache.ant.common.util.ExecutionException;
  * instance of an object using reflection. It is the result of class
  * introspection.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 19 January 2002
  */
 public class Reflector implements Setter {
@@ -76,7 +76,7 @@ public class Reflector implements Setter {
      * setter method a class provides and for which a conversion from a
      * String value is available.
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 19 January 2002
      */
     private interface AttributeSetter {
@@ -101,7 +101,7 @@ public class Reflector implements Setter {
      * object. The object being added will have been fully configured by Ant
      * prior to calling this method.
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 19 January 2002
      */
     private interface ElementAdder {
@@ -124,7 +124,7 @@ public class Reflector implements Setter {
      * methods are now deprecated. It is better to use the add style methods
      * and support polymorphic interfaces.
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 31 January 2002
      */
     private interface ElementCreator {

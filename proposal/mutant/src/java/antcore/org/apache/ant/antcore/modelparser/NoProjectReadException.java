@@ -57,7 +57,7 @@ package org.apache.ant.antcore.modelparser;
  * A NoProjectReadException is used to indicate that a project was not read
  * from the particular source. This will happen if the source is empty.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 15 January 2002
  */
 public class NoProjectReadException extends Exception {

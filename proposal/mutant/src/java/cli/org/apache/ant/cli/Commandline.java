@@ -83,7 +83,7 @@ import org.apache.ant.init.InitUtils;
 /**
  * This is the command line front end. It drives the core.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class Commandline {

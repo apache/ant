@@ -64,14 +64,14 @@ import org.apache.ant.common.util.ExecutionException;
  * The ScriptFactory class is a factory for the Scripting tasks. It stores
  * the scripts as they are defined
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 February 2002
  */
 public class ScriptFactory extends StandardLibFactory {
     /**
      * An inner class used to record information about defined scripts.
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 11 February 2002
      */
     private static class ScriptInfo {

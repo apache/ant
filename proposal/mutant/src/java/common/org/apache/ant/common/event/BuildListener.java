@@ -59,7 +59,7 @@ import java.util.EventListener;
  * Classes that implement this interface will be notified when things
  * happend during a build.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 15 January 2002
  * @see BuildEvent
  */

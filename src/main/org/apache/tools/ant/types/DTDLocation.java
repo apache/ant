@@ -56,7 +56,7 @@ package org.apache.tools.ant.types;
 /**
  * Helper class to handle the DTD and Entity nested elements.
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author dIon Gillard
  */
 public class DTDLocation {

@@ -67,7 +67,7 @@ import java.io.File;
  * a set of deployment descriptors.
  
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
+ * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class Ejbc extends MatchingTask {
     /**

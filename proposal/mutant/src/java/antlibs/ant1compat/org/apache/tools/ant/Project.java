@@ -77,7 +77,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Project facade
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 30 January 2002
  */
 public class Project implements org.apache.ant.common.event.BuildListener {

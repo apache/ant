@@ -60,7 +60,7 @@ import org.xml.sax.SAXParseException;
 /**
  * XML Element Handler for Ant config files
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class AntConfigHandler extends ElementHandler {

@@ -16,7 +16,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * AspectHandler is the interface through which aspects are handled.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */

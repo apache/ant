@@ -65,7 +65,7 @@ import org.apache.ant.init.InitUtils;
 /**
  * Task to add an additional classpath to the given library
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class LibPath extends AbstractTask {

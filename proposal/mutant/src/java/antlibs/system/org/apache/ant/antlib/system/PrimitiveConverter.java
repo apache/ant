@@ -60,7 +60,7 @@ import org.apache.ant.common.util.PropertyUtils;
 /**
  * A converter to convert to Java's primitie types
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public class PrimitiveConverter extends AbstractConverter {
 

@@ -84,7 +84,7 @@ import org.apache.ant.init.LoaderUtils;
  * The instance of the ComponentServices made available by the core to the
  * ant libraries.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class ComponentManager implements ComponentService {

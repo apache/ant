@@ -62,7 +62,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * The ExecService provides executiuon services to tasks
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 8 February 2002
  */
 public interface ExecService {

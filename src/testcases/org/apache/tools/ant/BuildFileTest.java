@@ -67,7 +67,7 @@ import java.net.URL;
  * tests which extend this class. 
  * 
  * @author Nico Seessle <nico@seessle.de>
- * @author Conor MacNeill <conor@apache.org> 
+ * @author Conor MacNeill
  */
 public abstract class BuildFileTest extends TestCase { 
     

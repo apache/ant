@@ -56,7 +56,7 @@ package org.apache.ant.common.event;
 /**
  * The levels at which a log message may be sent.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 16 January 2002
  */
 public class MessageLevel {

@@ -62,7 +62,7 @@ import org.apache.ant.init.LoaderUtils;
 /**
  * The factory object for the Ant1 compatability Ant library
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 31 January 2002
  */
 public class Ant1Factory extends StandardLibFactory {

@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  * Class to manage Manifest information
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$ $Date$
  */

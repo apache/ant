@@ -65,7 +65,7 @@ import org.apache.tools.ant.types.Path;
  * Shutdown a Weblogic server.
 
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
+ * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class WLStop extends Task {
     /**

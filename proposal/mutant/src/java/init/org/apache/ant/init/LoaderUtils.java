@@ -68,7 +68,7 @@ import java.util.List;
  * LoaderUtils is a utility class with methods for configuring a class
  * loader from a URL.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class LoaderUtils {

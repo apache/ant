@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Path;
 /**
  * A converter to convert to the types supported by the Ant1 Ant library
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 1 February 2002
  */
 public class Ant1Converter extends AbstractConverter {

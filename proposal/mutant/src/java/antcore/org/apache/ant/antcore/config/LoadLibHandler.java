@@ -59,7 +59,7 @@ import org.xml.sax.SAXParseException;
 /**
  * An XML handler to handle the loadlib element of an AntConfig file.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class LoadLibHandler extends ElementHandler {

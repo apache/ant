@@ -65,7 +65,7 @@ import org.apache.ant.common.util.PropertyUtils;
  * It gives Ant libraries access to property values maintained in the
  * Frame.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 31 January 2002
  */
 public class CoreDataService implements DataService {

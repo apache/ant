@@ -65,7 +65,7 @@ import javax.ejb.deployment.DeploymentDescriptor;
  * This class is run with a classpath which includes the weblogic tools and the home and remote
  * interface class files referenced in the deployment descriptors being built.
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
+ * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class DDCreatorHelper {
     /**

@@ -65,7 +65,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * This class represents the Ant library.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 14 January 2002
  */
 public class AntLibrary implements ComponentLibrary {

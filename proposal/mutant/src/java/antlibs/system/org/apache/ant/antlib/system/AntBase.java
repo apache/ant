@@ -65,7 +65,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Common Base class for the Ant and AntCall tasks
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 4 February 2002
  */
 public abstract class AntBase extends AbstractTask {
@@ -73,7 +73,7 @@ public abstract class AntBase extends AbstractTask {
     /**
      * Simple Property value storing class
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 5 February 2002
      */
     public static class Property extends AbstractComponent {
@@ -141,7 +141,7 @@ public abstract class AntBase extends AbstractTask {
     /**
      * A simple class to store information about references being passed
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 5 February 2002
      */
     public static class Reference extends AbstractComponent {

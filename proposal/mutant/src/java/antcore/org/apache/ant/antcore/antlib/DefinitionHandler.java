@@ -59,7 +59,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Handler for definition within an Ant Library
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 13 January 2002
  */
 public class DefinitionHandler extends ElementHandler {

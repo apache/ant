@@ -63,7 +63,7 @@ import org.apache.ant.common.util.PropertyUtils;
 /**
  * Ant1 ProjectHelper facade
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 31 January 2002
  */
 public class ProjectHelper {

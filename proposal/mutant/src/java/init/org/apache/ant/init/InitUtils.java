@@ -60,7 +60,7 @@ import java.net.URL;
 /**
  * A set of utility methods required during initialisation and beyond
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class InitUtils {

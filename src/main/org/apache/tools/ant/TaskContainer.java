@@ -65,7 +65,7 @@ package org.apache.tools.ant;
  * @see Task#execute
  * @see BuildEvent
  * 
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public interface TaskContainer {
     /**

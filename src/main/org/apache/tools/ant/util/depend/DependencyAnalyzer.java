@@ -67,7 +67,7 @@ import org.apache.tools.ant.types.Path;
  * source files. Analyzer specific configuration is catered for through a
  * generic configure method
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 13 March 2002
  */
 public interface DependencyAnalyzer {

@@ -59,7 +59,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Core implementation of the event service
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 7 February 2002
  */
 public class CoreEventService implements EventService {

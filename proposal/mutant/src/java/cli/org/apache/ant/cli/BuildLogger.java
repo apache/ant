@@ -61,7 +61,7 @@ import org.apache.ant.common.event.BuildListener;
  * listener which has the 'right' to send output to the ant log, which is
  * usually System.out unles redirected by the -logfile option.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 15 January 2002
  */
 public interface BuildLogger extends BuildListener {

@@ -62,7 +62,7 @@ import org.apache.ant.common.util.Location;
  * This is the core's implementation of the AntContext for all core objects.
  * Specific subclasses handle types and tasks
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class ExecutionContext implements AntContext {

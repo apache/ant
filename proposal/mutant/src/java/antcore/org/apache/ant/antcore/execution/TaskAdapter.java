@@ -61,7 +61,7 @@ import org.apache.ant.common.util.ExecutionException;
  * Use introspection to "adapt" an arbitrary Bean (not extending Task, but
  * with similar patterns).
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 16 January 2002
  */
 public class TaskAdapter extends AbstractTask {

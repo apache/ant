@@ -61,7 +61,7 @@ import org.apache.ant.common.util.FileUtils;
  * The core's implementation of the File Service. The File Service is used
  * by Ant Library components to perform operations on the local file system
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class CoreFileService implements FileService {

@@ -60,7 +60,7 @@ import org.apache.ant.common.util.ExecutionException;
  * Service interface for Data value manipulation operations provided by the
  * core.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 31 January 2002
  */
 public interface DataService {

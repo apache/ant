@@ -73,7 +73,7 @@ import org.apache.ant.init.InitConfig;
  * creating Frames for each project that is part of the build and then
  * executing the tasks within those Execution Frames.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 12 January 2002
  */
 public class ExecutionManager implements DemuxOutputReceiver {

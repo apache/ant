@@ -66,7 +66,7 @@ import org.apache.ant.common.util.Location;
  * Writes build event to a PrintStream. Currently, it only writes which
  * targets are being executed, and any messages that get logged.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 15 January 2002
  */
 public class DefaultLogger implements BuildLogger {

@@ -64,7 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Handle the root of an XML parse. This class recognizes the root document
  * element and then passes control to the handler for that root element.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class RootHandler extends DefaultHandler {

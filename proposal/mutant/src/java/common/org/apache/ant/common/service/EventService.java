@@ -58,7 +58,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Core service to manage receiving of events by components within Ant.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 7 February 2002
  */
 public interface EventService {

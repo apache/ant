@@ -59,7 +59,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * A Component Library supplies components to the Ant core.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 8 February 2002
  */
 public interface ComponentLibrary {

@@ -73,7 +73,7 @@ import java.util.Vector;
  * A FilterSetCollection is a collection of filtersets each of which may have
  * a different start/end token settings.
  *
- * @author     <A href="mailto:conor@apache.org">Conor MacNeill</A>
+ * @author Conor MacNeill
  */
 public class FilterSetCollection {
     

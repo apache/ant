@@ -77,7 +77,7 @@ import java.text.SimpleDateFormat;
  * @author costin@dnt.ro
  * @author stefano@apache.org
  * @author roxspring@yahoo.com
- * @author conor@cognet.com.au
+ * @author Conor MacNeill
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
  * @ant.task category="utility"

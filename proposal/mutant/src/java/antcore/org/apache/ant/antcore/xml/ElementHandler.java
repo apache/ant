@@ -72,7 +72,7 @@ import org.apache.ant.common.util.PropertyUtils;
  * elements must be delegated to separate handlers. When this element is
  * finished, control returns to the parent handler.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public abstract class ElementHandler extends DefaultHandler {

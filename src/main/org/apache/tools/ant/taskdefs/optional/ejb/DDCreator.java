@@ -68,7 +68,7 @@ import java.io.File;
  *
  * This ant task is a front end for the weblogic DDCreator tool.
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
+ * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class DDCreator extends MatchingTask {
     /**

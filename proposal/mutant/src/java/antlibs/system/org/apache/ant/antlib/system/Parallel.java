@@ -68,7 +68,7 @@ import org.apache.ant.common.util.Location;
  * Implements a multi threaded task execution.
  *
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
- * @author <a href="mailto:conor@apache.org">Conor MacNeill </a>
+ * @author Conor MacNeill
  * @created 27 February 2002
  */
 public class Parallel extends AbstractTask
@@ -78,7 +78,7 @@ public class Parallel extends AbstractTask
      * Class which stores information about the thread to which each task is
      * associated
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 27 February 2002
      */
     private class TaskThread extends Thread {

@@ -61,7 +61,7 @@ import org.apache.tools.ant.Project;
 /**
  * Test of the parallel TaskContainer
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 21 February 2002
  */
 public class ParallelTest extends BuildFileTest {

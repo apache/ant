@@ -62,7 +62,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Element handler for the target element
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class TargetHandler extends ElementHandler {

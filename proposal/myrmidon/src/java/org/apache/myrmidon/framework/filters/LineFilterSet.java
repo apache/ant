@@ -14,8 +14,6 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * A collection of line filters.
  *
- * @author <A href="mailto:conor@apache.org">Conor MacNeill</A>
- *
  * @ant:data-type name="filterset"
  * @ant:type type="line-filter" name="filterset"
  */

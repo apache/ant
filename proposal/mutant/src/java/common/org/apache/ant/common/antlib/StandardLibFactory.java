@@ -57,7 +57,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Standard Ant Library Factory
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 1 February 2002
  * @see AntLibFactory
  */

@@ -65,7 +65,7 @@ import org.xml.sax.SAXParseException;
  * project to be references is parsed with a new parser and then added to
  * the current project under the given alias
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 10 January 2002
  */
 public class RefHandler extends ElementHandler {

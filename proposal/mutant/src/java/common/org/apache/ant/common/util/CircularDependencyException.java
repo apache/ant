@@ -57,7 +57,7 @@ package org.apache.ant.common.util;
  * A CircularDependencyException indicates that a circular dependency has
  * been detected
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class CircularDependencyException extends AntException {

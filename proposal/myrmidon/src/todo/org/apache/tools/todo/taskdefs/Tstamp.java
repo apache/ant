@@ -27,7 +27,7 @@ import org.apache.tools.todo.types.EnumeratedAttribute;
  * @author costin@dnt.ro
  * @author stefano@apache.org
  * @author roxspring@yahoo.com
- * @author conor@cognet.com.au
+ * @author Conor MacNeill
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class Tstamp

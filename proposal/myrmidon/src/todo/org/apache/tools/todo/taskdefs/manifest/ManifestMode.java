@@ -12,7 +12,7 @@ import org.apache.tools.todo.types.EnumeratedAttribute;
 /**
  * Helper class for Manifest's mode attribute.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$

@@ -60,7 +60,7 @@ import org.apache.ant.common.util.ExecutionException;
  * Service interface for File manipulation operations provided by the Ant
  * Core
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public interface FileService {

@@ -72,7 +72,7 @@ import org.apache.ant.init.LoaderUtils;
 /**
  * This class manages the configuration of Ant Libraries
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 29 January 2002
  */
 public class AntLibManager {

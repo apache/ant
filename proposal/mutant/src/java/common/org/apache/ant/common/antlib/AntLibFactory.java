@@ -60,7 +60,7 @@ import org.apache.ant.common.util.ExecutionException;
  * created by each ExecutiuonFrame which uses this library. The factory will
  * be created before any instances are required.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 31 January 2002
  */
 public interface AntLibFactory {

@@ -66,7 +66,7 @@ import java.io.File;
  * Execute a Weblogic server.
  
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
+ * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class WLRun extends Task {
     protected final static String DEFAULT_WL51_POLICY_FILE = "weblogic.policy";

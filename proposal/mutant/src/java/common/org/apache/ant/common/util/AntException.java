@@ -61,7 +61,7 @@ import java.io.PrintWriter;
  * the processing of Ant. AntExceptions may accept a Throwable as a cause
  * allowing exceptions to be nested
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 15 January 2002
  */
 public abstract class AntException extends Exception {

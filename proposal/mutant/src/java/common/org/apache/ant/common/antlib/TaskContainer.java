@@ -57,7 +57,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * A TaskContainer is an object which can contain and manage ExecutionTasks.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 19 January 2002
  */
 public interface TaskContainer {

@@ -68,7 +68,7 @@ import org.apache.ant.init.LoaderUtils;
  * This is the main startup class for the command line interface of Ant. It
  * establishes the classloaders used by the other components of Ant.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class Main {

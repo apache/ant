@@ -60,7 +60,7 @@ import java.io.File;
  * InitConfig is the initialization configuration created to start Ant. This
  * is passed to the front end when Ant is started.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class InitConfig {

@@ -93,7 +93,7 @@ import org.apache.tools.ant.types.FileSet;
  * </p>
  *
  * @author <a href="mailto:tfennell@sapient.com">Tim Fennell</a>
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public class EjbJar extends MatchingTask {
 

@@ -61,7 +61,7 @@ import java.io.PrintWriter;
  * phase. Such exceptions are usually fatal because Ant cannot be
  * sufficiently initialised to properly handle the exception.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 January 2002
  */
 public class InitException extends Exception {

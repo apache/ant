@@ -64,7 +64,7 @@ import org.xml.sax.SAXParseException;
  * The include handler is used to read in included projects or fragments
  * into a project.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 January 2002
  */
 public class IncludeHandler extends ElementHandler {

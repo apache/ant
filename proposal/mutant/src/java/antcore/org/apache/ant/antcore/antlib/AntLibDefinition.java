@@ -56,7 +56,7 @@ package org.apache.ant.antcore.antlib;
 /**
  * This class represents a definition in an AntLibrary.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 19 January 2002
  */
 public class AntLibDefinition {

@@ -59,7 +59,7 @@ package org.apache.tools.ant.taskdefs;
 /**
  * Exception thrown indicating problems in a JAR Manifest
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public class ManifestException extends Exception {
 

@@ -61,7 +61,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * A converter to convert to URLs relative to the project base dir 
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public class URLConverter extends AbstractConverter {
 

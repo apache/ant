@@ -66,7 +66,7 @@ import org.apache.tools.ant.types.Path;
  * An interface used to describe the actions required by any type of 
  * directory scanner.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class DependScanner extends DirectoryScanner {

@@ -58,7 +58,7 @@ package org.apache.ant.common.antlib;
  * datatype which implements this interface will be given an AntContext
  * instance through which it may interact with the Ant core.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public interface DataType extends ExecutionComponent {

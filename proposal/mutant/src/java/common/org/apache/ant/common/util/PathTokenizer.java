@@ -61,7 +61,7 @@ import java.util.StringTokenizer;
  * that path. The path can use path separators of either ':' or ';' and file
  * separators of either '/' or '\'
  *
- * @author Conor MacNeill (conor@ieee.org)
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class PathTokenizer {

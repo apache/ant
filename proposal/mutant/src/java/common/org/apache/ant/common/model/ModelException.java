@@ -60,7 +60,7 @@ import org.apache.ant.common.util.Location;
  * A model exception is thrown when an operation is attempted which would
  * violate the integrity of the Project/Target/Task object model
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 16 January 2002
  */
 public class ModelException extends AntException {

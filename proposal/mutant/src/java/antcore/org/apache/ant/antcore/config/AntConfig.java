@@ -68,7 +68,7 @@ import org.apache.ant.init.InitUtils;
  * An AntConfig is the java class representation of the antconfig.xml files
  * used to configure Ant.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class AntConfig {

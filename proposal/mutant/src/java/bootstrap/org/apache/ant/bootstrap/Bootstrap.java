@@ -62,7 +62,7 @@ import org.apache.ant.init.ClassLocator;
  * The Bootstrap class initailses the boot strap build, then loads the 
  * Builder class to perform the bootstrap build.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 18 February 2002
  */
 public class Bootstrap {

@@ -59,7 +59,7 @@ import org.xml.sax.SAXParseException;
 /**
  * An XML Handler for the libpath element in an Ant config file
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 January 2002
  */
 public class LibPathHandler extends ElementHandler {

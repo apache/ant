@@ -61,7 +61,7 @@ import java.util.List;
  * The Builder object builds the code for bootstrap purposes. It invokes the
  * mathods of the required targets in the converted build files.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 18 February 2002
  */
 public class Builder {

@@ -64,7 +64,7 @@ import org.apache.ant.init.InitUtils;
 /**
  * Load an AntLibrary and optionally import all its components
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 29 January 2002
  */
 public class LoadLib extends AbstractTask {

@@ -61,7 +61,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * ClassLoader utility methods
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 March 2002
  */
 public class LoaderUtils {

@@ -69,7 +69,7 @@ import org.xml.sax.XMLReader;
 /**
  * Holds the current parsing context.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class ParseContext {

@@ -69,7 +69,7 @@ import org.apache.ant.init.LoaderUtils;
 /**
  * This is the core's implementation of the Execution Service.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 8 February 2002
  */
 public class CoreExecService implements ExecService {

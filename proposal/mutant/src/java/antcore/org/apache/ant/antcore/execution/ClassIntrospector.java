@@ -59,7 +59,7 @@ import java.util.Map;
  * Introspects a class and builds a reflector for setting values on
  * instances of the class
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 19 January 2002
  */
 public class ClassIntrospector {

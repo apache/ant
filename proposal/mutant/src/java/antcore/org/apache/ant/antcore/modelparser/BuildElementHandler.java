@@ -63,7 +63,7 @@ import org.xml.sax.SAXParseException;
  * A BuildElementHandler parses the task elements of a build. Task elements
  * include tasks themselves plus all their nested elements to any depth.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class BuildElementHandler extends ElementHandler {

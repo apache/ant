@@ -58,7 +58,7 @@ import org.apache.ant.common.util.ExecutionException;
  * The Setter interface is used by the Ant core to set values and nested
  * elements in objects being configured.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 February 2002
  */
 public interface Setter {

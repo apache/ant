@@ -65,7 +65,7 @@ import org.apache.tools.ant.Project;
 /**
  * Testcase for the Manifest class used in the jar task. 
  * 
- * @author Conor MacNeill <conor@apache.org>
+ * @author Conor MacNeill
  */
 public class ManifestTest extends BuildFileTest {
 

@@ -79,7 +79,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  * using the forceLoadClass method. Any subsequent classes loaded by that
  * class will then use this loader rather than the system class loader.
  *
- * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:Jesse.Glick@netbeans.com">Jesse Glick</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */

@@ -56,7 +56,7 @@ package org.apache.tools.ant;
 /**
  * TaskContainer facade
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 31 January 2002
  */
 public interface TaskContainer

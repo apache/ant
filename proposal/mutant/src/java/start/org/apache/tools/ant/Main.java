@@ -56,7 +56,7 @@ package org.apache.tools.ant;
 /**
  * Old Ant1 entry point
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public class Main {
    /**

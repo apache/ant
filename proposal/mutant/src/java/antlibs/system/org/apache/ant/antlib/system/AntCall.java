@@ -59,7 +59,7 @@ import org.apache.ant.common.service.MagicProperties;
 /**
  * The Ant task - used to execute a different build file
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 4 February 2002
  */
 public class AntCall extends AntBase {

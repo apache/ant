@@ -58,7 +58,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Convert between a string and a data type
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 19 January 2002
  */
 public interface Converter {

@@ -58,7 +58,7 @@ import org.apache.ant.common.util.ExecutionException;
  * An execution component is a component from an AntLibrary which is used in
  * the execution of an Ant build. A component can have a context.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 1 February 2002
  */
 public interface ExecutionComponent {

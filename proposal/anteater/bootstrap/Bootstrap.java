@@ -17,7 +17,7 @@ import java.util.zip.*;
  * Ant should be done with itself whenever possible.
  *
  * @author James Duncan Davidson (duncan@apache.org)
- * @author Conor MacNeill (conor@m64.com)
+ * @author Conor MacNeill
  */
 public class Bootstrap {
     

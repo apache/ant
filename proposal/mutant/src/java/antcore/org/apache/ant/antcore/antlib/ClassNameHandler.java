@@ -59,7 +59,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Handler for elements which specify a class
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public class ClassNameHandler extends ElementHandler {
     /** The classname attribute name */

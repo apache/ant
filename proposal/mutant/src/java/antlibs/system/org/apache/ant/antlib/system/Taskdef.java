@@ -58,7 +58,7 @@ import org.apache.ant.common.antlib.AbstractTask;
 /**
  * Define a new task for use in the build file
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class Taskdef extends AbstractTask {

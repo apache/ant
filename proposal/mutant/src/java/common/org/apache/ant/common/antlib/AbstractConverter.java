@@ -57,7 +57,7 @@ package org.apache.ant.common.antlib;
 /**
  * Abstract implementation of the Converter interface
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  */
 public abstract class AbstractConverter implements Converter {
     /** The converters's context */

@@ -56,7 +56,7 @@ package org.apache.ant.antcore.execution;
 /**
  * Core constants
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 20 February 2002
  */
 public abstract class Constants {

@@ -62,7 +62,7 @@ import java.util.Hashtable;
  * Buffers content written per thread and forwards the buffers onto the
  * given receiver
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 22 February 2002
  */
 public class DemuxOutputStream extends OutputStream {
@@ -71,7 +71,7 @@ public class DemuxOutputStream extends OutputStream {
      * A data class to store information about a buffer. Such informatio is
      * stored on a per-thread basis.
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 22 February 2002
      */
     private static class BufferInfo {

@@ -66,7 +66,7 @@ import org.apache.bcel.classfile.Method;
 /**
  * A BCEL visitor implementation to collect class dependency information
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  * @created 15 March 2002
  */

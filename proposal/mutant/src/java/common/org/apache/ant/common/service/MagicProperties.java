@@ -56,7 +56,7 @@ package org.apache.ant.common.service;
 /**
  * Ant's magic properties
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 7 February 2002
  */
 public class MagicProperties {

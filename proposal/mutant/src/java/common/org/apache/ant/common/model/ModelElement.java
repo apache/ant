@@ -63,7 +63,7 @@ import org.apache.ant.common.util.Location;
  * associated with the model element for error reporting and debugging
  * purposes.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 January 2002
  */
 public abstract class ModelElement {

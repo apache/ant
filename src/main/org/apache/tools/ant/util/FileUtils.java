@@ -90,7 +90,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * there last modification time.
  *
  * @author duncan@x180.com
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 

@@ -62,7 +62,7 @@ import org.apache.ant.common.util.Location;
  * this interface. Other core services are available through the generic
  * service objects supported by the core.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 14 January 2002
  */
 public interface AntContext {

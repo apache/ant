@@ -58,7 +58,7 @@ import java.util.Stack;
  * Checks for circular dependencies when visiting nodes of an object
  * hierarchy
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 14 January 2002
  */
 public class CircularDependencyChecker {

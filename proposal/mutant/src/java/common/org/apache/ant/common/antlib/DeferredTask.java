@@ -58,7 +58,7 @@ package org.apache.ant.common.antlib;
  * itself at execution time. The attributes and nested elements are stored
  * by the task for later use
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 February 2002
  */
 public interface DeferredTask extends Task {

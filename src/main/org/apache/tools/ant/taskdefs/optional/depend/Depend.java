@@ -82,7 +82,7 @@ public class Depend extends MatchingTask {
     /**
      * A class (struct) user to manage information about a class
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      */
     private static class ClassFileInfo {
         /** The file where the class file is stored in the file system */

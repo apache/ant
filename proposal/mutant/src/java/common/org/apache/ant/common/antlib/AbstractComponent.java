@@ -58,7 +58,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Abstract implementation of the ExecutionComponent
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 5 February 2002
  */
 public abstract class AbstractComponent implements ExecutionComponent {

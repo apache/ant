@@ -59,7 +59,7 @@ import org.apache.ant.common.util.ExecutionException;
 /**
  * Define a task using a script
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 February 2002
  */
 public class ScriptDef extends AbstractTask {

@@ -58,7 +58,7 @@ import org.apache.ant.common.antlib.AbstractTask;
 /**
  * Define a new type to be used in the build
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class Typedef extends AbstractTask {

@@ -71,7 +71,7 @@ import java.util.zip.ZipEntry;
  * A helper class which allows the build files which have been converted to
  * code to be built.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 16 February 2002
  */
 public class BuildHelper {
@@ -79,7 +79,7 @@ public class BuildHelper {
     /**
      * Simple data class for storing info about a fileset.
      *
-     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @author Conor MacNeill
      * @created 18 February 2002
      */
     private static class FileSetInfo {

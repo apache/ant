@@ -61,7 +61,7 @@ import java.io.File;
  * The ClassLocator is a utility class which is used to determine the URL
  * from which a class was loaded.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class ClassLocator {

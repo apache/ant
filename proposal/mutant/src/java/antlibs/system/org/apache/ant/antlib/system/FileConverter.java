@@ -63,7 +63,7 @@ import org.apache.ant.common.service.FileService;
  * A converter to convert to File objects, resolving against the
  * project's basedir
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 21 January 2002
  */
 public class FileConverter extends AbstractConverter {

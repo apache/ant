@@ -60,7 +60,7 @@ import org.apache.ant.common.util.Location;
  * An XMLParseException is thrown when there is an error parsing the XML
  * representation of an Ant build file.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 January 2002
  */
 public class XMLParseException extends AntException {

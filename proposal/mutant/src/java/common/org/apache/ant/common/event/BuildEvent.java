@@ -61,7 +61,7 @@ import java.util.EventObject;
  * There are a number of different types of event and they will generally be
  * associated with some build element from the build model.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 15 January 2002
  */
 public class BuildEvent extends EventObject {

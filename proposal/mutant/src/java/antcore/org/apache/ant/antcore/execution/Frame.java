@@ -84,7 +84,7 @@ import org.apache.ant.init.InitConfig;
  * contains the data values set by Ant tasks as they are executed, including
  * task definitions, property values, etc.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 14 January 2002
  */
 public class Frame implements DemuxOutputReceiver {

@@ -63,7 +63,7 @@ import org.xml.sax.SAXParseException;
  * number of different handlers to which it delegates processing of child
  * elements.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class ProjectHandler extends ElementHandler {

@@ -65,7 +65,7 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
 /**
  * An analyzer capable fo traversing all class - class relationships.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  * @created 13 March 2002
  */

@@ -59,7 +59,7 @@ import org.apache.ant.common.util.ExecutionException;
  * An implementation of the Setter interface for configuring instances of
  * the DeferredTask interface
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 11 February 2002
  */
 public class DeferredSetter implements Setter {

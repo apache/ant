@@ -62,7 +62,7 @@ import org.apache.ant.antcore.xml.XMLParseException;
 /**
  * Parses an Ant project model from an XML source using a SAX Parser.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class XMLProjectParser {

@@ -67,7 +67,7 @@ import java.util.Enumeration;
  * Implements a multi threaded task execution.
  * <p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
- * @author <a href="mailto:conor@apache.org">Conor MacNeill </a>
+ * @author Conor MacNeill
  *
  * @ant.task category="control"
  */

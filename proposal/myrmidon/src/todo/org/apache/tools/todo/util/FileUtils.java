@@ -22,7 +22,7 @@ import org.apache.tools.todo.util.PathTokenizer;
  * runtime as well as copying files or setting there last modification time.
  *
  * @author duncan@x180.com
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */

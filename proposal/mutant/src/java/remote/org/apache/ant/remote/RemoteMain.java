@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 /**
  * Command line to run Ant core from a remote server
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class RemoteMain {

@@ -68,7 +68,7 @@ import org.apache.ant.common.antlib.AntContext;
 /**
  * Task to import a component or components from a library
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author Conor MacNeill
  * @created 27 January 2002
  */
 public class ScriptBase extends AbstractTask implements DeferredTask {
