@@ -464,6 +464,8 @@ public class ProjectHelper {
             if (task == null) {
                 task = new UnknownElement(tag);
                 task.setProject(project);
+                task.setTaskType(tag);
+                task.setTaskName(tag);
             }
 
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));

@@ -123,14 +123,14 @@ public class Move extends Copy {
                     try {
                         log("Moving " + fromFile + " to " + toFile, verbosity);
                     
-                        FilterSet executionFilterSet = new FilterSet();
+                        FilterSetCollection executionFilters = new FilterSetCollection();
                         if (filtering) {
-                            executionFilterSet.addFilterSet(project.getGlobalFilterSet());
+                            executionFilters.addFilterSet(project.getGlobalFilterSet());
                         }
                         for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
-                            executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
+                            executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
                         }
-                        getFileUtils().copyFile(f, d, executionFilterSet,
+                        getFileUtils().copyFile(f, d, executionFilters,
                                                 forceOverwrite);
                         
                         f = new File(fromFile);

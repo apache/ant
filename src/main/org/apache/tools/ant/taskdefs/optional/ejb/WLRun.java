@@ -263,12 +263,11 @@ public class WLRun extends Task {
 
         File propertiesFile = null;
         
+
         if (weblogicPropertiesFile == null) {
-            propertiesFile = new File(weblogicSystemHome, DEFAULT_PROPERTIES_FILE);
+            weblogicPropertiesFile = DEFAULT_PROPERTIES_FILE;
         }
-        else {
-            propertiesFile = new File(weblogicSystemHome, weblogicPropertiesFile);
-        }
+        propertiesFile = new File(weblogicSystemHome, weblogicPropertiesFile);
         if (!propertiesFile.exists()) {
             // OK, properties file may be absolute
             propertiesFile = project.resolveFile(weblogicPropertiesFile);

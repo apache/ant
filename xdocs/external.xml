@@ -243,6 +243,30 @@
 
     <section name="IDE/Editor Integration">
 
+      <subsection name="AntFarm">
+
+        <p>A plugin that integrates Ant into the jEdit editor.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>bundles Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://plugins.jedit.org/plugins/AntFarm">http://plugins.jedit.org/plugins/AntFarm</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jedit-devel@lists.sourceforge.net">jEdit developers mailinglist</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="AntRunner">
 
         <p>An OpenTool that integrates Ant into the JBuilder IDE.</p>

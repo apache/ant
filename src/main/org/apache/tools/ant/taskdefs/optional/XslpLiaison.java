@@ -54,40 +54,45 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.FileWriter;
+import java.io.*;
+import java.net.URL;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.xml.sax.InputSource;
 
-import com.kvisco.xsl.XSLProcessor;
-import com.kvisco.xsl.XSLReader;
-import com.kvisco.xsl.XSLStylesheet;
+import com.kvisco.xsl.*;
 
 /**
+ * Concrete liaison for XSLP
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version $Revision$ $Date$
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class XslpLiaison implements XSLTLiaison {
 
-    XSLProcessor processor;
-    XSLStylesheet xslSheet;
+    protected XSLProcessor processor;
+    protected XSLStylesheet xslSheet;
 
     public XslpLiaison() {
       processor = new XSLProcessor();
+      // uh ?! I'm forced to do that otherwise a setProperty crashes with NPE !
+      // I don't understand why the property map is static though...
+      // how can we do multithreading w/ multiple identical parameters ?
+      processor.getProperty("dummy-to-init-properties-map");
     }
 
-    public void setStylesheet(String fileName) throws Exception {
+    public void setStylesheet(File fileName) throws Exception {
       XSLReader xslReader = new XSLReader();
-      xslSheet = xslReader.read( fileName );
-    };
+      // a file:/// + getAbsolutePath() does not work here
+      // it is really the pathname
+      xslSheet = xslReader.read( fileName.getAbsolutePath() );
+    }
 
-    public void transform(String infile, String outfile) throws Exception {
-        FileWriter out = new FileWriter(outfile);
-        try {
-            processor.process(infile, xslSheet, out);
-        } finally {
-            out.close();
-        }
+    public void transform(File infile, File outfile) throws Exception {
+        FileOutputStream fos = new FileOutputStream(outfile);
+        // XSLP does not support encoding...we're in hot water.
+        OutputStreamWriter out = new OutputStreamWriter(fos,"UTF8");
+        processor.process(infile.getAbsolutePath(), xslSheet, out);
     }
 
     public void addParam(String name, String expression){

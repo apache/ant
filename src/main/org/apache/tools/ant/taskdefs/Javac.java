@@ -115,6 +115,7 @@ public class Javac extends MatchingTask {
     private boolean includeAntRuntime = true;
     private boolean includeJavaRuntime = false;
     private boolean fork = false;
+    private boolean nowarn = false;
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
@@ -409,6 +410,20 @@ public class Javac extends MatchingTask {
 	this.fork = fork;
     }
 	
+
+    /**
+     * Sets whether the -nowarn option should be used.
+     */
+    public void setNowarn(boolean flag) {
+        this.nowarn = flag;
+    }
+
+    /**
+     * Should the -nowarn option be used.
+     */
+    public boolean getNowarn() {
+        return nowarn;
+    }
 
     /**
      * Executes the task.

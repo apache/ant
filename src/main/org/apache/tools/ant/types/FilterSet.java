@@ -176,8 +176,8 @@ public class FilterSet extends DataType {
     /** The default token end string */
     public static final String DEFAULT_TOKEN_END = "@";
     
-    private String startOftoken = DEFAULT_TOKEN_START;
-    private String endOftoken = DEFAULT_TOKEN_END;
+    private String startOfToken = DEFAULT_TOKEN_START;
+    private String endOfToken = DEFAULT_TOKEN_END;
     
     /**
      * List of ordered filters and filter files.
@@ -245,8 +245,16 @@ public class FilterSet extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        startOftoken = startOfToken;
+        this.startOfToken = startOfToken;
     }
+
+    public String getBeginToken() {
+        if (isReference()) {
+            return getRef().getBeginToken();
+        }
+        return startOfToken;
+    }
+    
     
     /**
      * The string used to id the end of a token.
@@ -257,8 +265,16 @@ public class FilterSet extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        endOftoken = endOfToken;
+        this.endOfToken = endOfToken;
     }
+
+    public String getEndToken() {
+        if (isReference()) {
+            return getRef().getEndToken();
+        }
+        return endOfToken;
+    }
+    
     
     /**
      * Read the filters from the given file.
@@ -268,6 +284,10 @@ public class FilterSet extends DataType {
      * file.
      */
     public void readFiltersFromFile(File filtersFile) throws BuildException {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+
         if (filtersFile.isFile()) {
            log("Reading filters from " + filtersFile, Project.MSG_VERBOSE );
            FileInputStream in = null;
@@ -310,7 +330,9 @@ public class FilterSet extends DataType {
      * @return      The string with the tokens replaced.
      */
     public String replaceTokens(String line) {
-        int index = line.indexOf(startOftoken);
+        String beginToken = getBeginToken();
+        String endToken = getEndToken();
+        int index = line.indexOf(beginToken);
         
         if (index > -1) {
             Hashtable tokens = getFilterHash();
@@ -321,24 +343,24 @@ public class FilterSet extends DataType {
                 String value = null;
                 
                 do {
-                    int endIndex = line.indexOf(endOftoken, index + startOftoken.length() + 1 );
+                    int endIndex = line.indexOf(endToken, index + beginToken.length() + 1 );
                     if (endIndex == -1) {
                         break;
                     }
-                    token = line.substring(index + startOftoken.length(), endIndex );
+                    token = line.substring(index + beginToken.length(), endIndex );
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
                         value = (String)tokens.get(token);
-                        log( "Replacing: " + startOftoken + token + endOftoken + " -> " + value, Project.MSG_VERBOSE );
+                        log( "Replacing: " + beginToken + token + endToken + " -> " + value, Project.MSG_VERBOSE );
                         b.append(value);
-                        i = index + startOftoken.length() + token.length() + endOftoken.length();
+                        i = index + beginToken.length() + token.length() + endToken.length();
                     }
                     else {
-                        // just append startOftoken and search further
-                        b.append(startOftoken);
-                        i = index + startOftoken.length();
+                        // just append beginToken and search further
+                        b.append(beginToken);
+                        i = index + beginToken.length();
                     }
-                } while ((index = line.indexOf( startOftoken, i )) > -1 );
+                } while ((index = line.indexOf( beginToken, i )) > -1 );
                 
                 b.append(line.substring(i));
                 return b.toString();

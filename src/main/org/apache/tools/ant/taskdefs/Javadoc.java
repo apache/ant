@@ -681,9 +681,10 @@ public class Javadoc extends Task {
         public String getPackages() {
             StringBuffer p = new StringBuffer( "\"" );
             for (int i = 0; i < packages.size(); i++) {
-                p.append( packages.elementAt( i ).toString() );
-                if ( i > 0 )
+                if ( i > 0 ) {
                     p.append( ":" );
+                }
+                p.append( packages.elementAt(i).toString() );
             }
             p.append( "\"" );
             return p.toString();
