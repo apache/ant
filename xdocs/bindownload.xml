@@ -64,26 +64,27 @@ Other mirrors: <select name="Preferred">
 
 <div class="warning">
 <div class="label">Note</div>
-<div class="content">Ant 1.5.3 has been released on 9-April-2003 and may not be available on all 
-mirrors for a few days
+<div class="content">An updated version of Ant 1.5.3 has been released on 17-April-2003 and may not be available on all 
+mirrors for a few days. This updated version, apache-ant-1.5.3-1, is identical to the original 1.5.3 build apart from 
+the removal of a spurious junit.jar file. 
 </div>
 </div>
 
 <ul>
 <li><code>.zip</code> archive: 
-<a href="[preferred]/ant/binaries/apache-ant-1.5.3-bin.zip">apache-ant-1.5.3-bin.zip</a> 
-[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-bin.zip.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-bin.zip.md5">MD5</a>]</li>
+<a href="[preferred]/ant/binaries/apache-ant-1.5.3-1-bin.zip">apache-ant-1.5.3-1-bin.zip</a> 
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-1-bin.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-1-bin.zip.md5">MD5</a>]</li>
 
 <li><code>.tar.gz</code> archive: 
-<a href="[preferred]/ant/binaries/apache-ant-1.5.3-bin.tar.gz">apache-ant-1.5.3-bin.tar.gz</a> 
-[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-bin.tar.gz.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-bin.tar.gz.md5">MD5</a>]</li>
+<a href="[preferred]/ant/binaries/apache-ant-1.5.3-1-bin.tar.gz">apache-ant-1.5.3-1-bin.tar.gz</a> 
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-1-bin.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-1-bin.tar.gz.md5">MD5</a>]</li>
 
 <li><code>.tar.bz2</code> archive: 
-<a href="[preferred]/ant/binaries/apache-ant-1.5.3-bin.tar.bz2">apache-ant-1.5.3-bin.tar.bz2</a> 
-[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-bin.tar.bz2.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-bin.tar.bz2.md5">MD5</a>]</li>
+<a href="[preferred]/ant/binaries/apache-ant-1.5.3-1-bin.tar.bz2">apache-ant-1.5.3-1-bin.tar.bz2</a> 
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-1-bin.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.5.3-1-bin.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </section>
 
@@ -121,17 +122,17 @@ using</p>
 
 <p><code>
 % pgpk -a KEYS<br />
-% pgpv apache-ant-1.5.3-bin.tar.gz.asc<br />
+% pgpv apache-ant-1.5.3-1-bin.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % pgp -ka KEYS<br />
-% pgp apache-ant-1.5.3-bin.tar.gz.asc<br />
+% pgp apache-ant-1.5.3-1-bin.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % gpg --import KEYS<br />
-% gpg --verify apache-ant-1.5.3-bin.tar.gz.asc
+% gpg --verify apache-ant-1.5.3-1-bin.tar.gz.asc
 </code></p>
 
 <p>Alternatively, you can verify the MD5 signature on the files.  A
