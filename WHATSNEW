@@ -28,8 +28,23 @@ Other changes:
   specification of multiple sub-build targets, which are executed
   with a single dependency analysis.
 
-Changes from Ant 1.6.1 to current Ant 1.6 CVS version
+Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Other changes:
+--------------
+
+Fixed bugs:
+-----------
+
+* AbstractCvsTask prematurely closed its outputStream and errorStream.
+  Bugzilla 30097.
+
+Changes from Ant 1.6.1 to Ant 1.6.2
+===================================
 
 Changes that could break older environments:
 --------------------------------------------
