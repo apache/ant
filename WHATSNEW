@@ -14,6 +14,10 @@ default; They now are. <tempfile> fills a property with the name of a
 temporary file; <setproxy> lets you set the JVM's http, ftp and socks proxy
 settings.
 
+* <available classname="foo" ignoresystemclasses="true"> failed for
+JDK 1.1 and 1.2, even if the class could be found on the
+user-specified classpath.
+
 Changes from Ant 1.4.1 to 1.5beta1
 ==================================
 

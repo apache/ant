@@ -201,10 +201,6 @@ public class AvailableTest extends BuildFileTest {
 
     // Core class that exists in system classpath is ignored, but found in specified classpath
     public void test21() {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            // java.* classes are not found in JDK 1.1 even if specified in classpath attribute; test24 shows correct operation
-            return;
-        }
         executeTarget("test21");
         assertEquals("true",project.getProperty("test"));
     }
