@@ -9,9 +9,6 @@ package org.apache.antlib.runtime;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -19,9 +16,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
 import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
-import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * Task that definesMethod to register a single converter.
@@ -30,35 +25,13 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public class Facility
     extends AbstractContainerTask
-    implements Composable, Configurable
+    implements Configurable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( Facility.class );
 
     private String m_namespace;
     private AspectHandler m_aspectHandler;
-
-    private AspectManager m_aspectManager;
-    private TypeFactory m_factory;
-
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
-    {
-        super.compose( componentManager );
-
-        m_aspectManager = (AspectManager)componentManager.lookup( AspectManager.ROLE );
-
-        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        try
-        {
-            m_factory = typeManager.getFactory( AspectHandler.ROLE );
-        }
-        catch( final TypeException te )
-        {
-            final String message = REZ.getString( "facility.no-factory.error" );
-            throw new ComponentException( message, te );
-        }
-    }
 
     public void configure( final Configuration configuration )
         throws ConfigurationException
@@ -77,7 +50,8 @@ public class Facility
         {
             try
             {
-                m_aspectHandler = (AspectHandler)m_factory.create( children[ 0 ].getName() );
+                final TypeFactory typeFactory = getTypeFactory( AspectHandler.ROLE );
+                m_aspectHandler = (AspectHandler)typeFactory.create( children[ 0 ].getName() );
             }
             catch( final Exception e )
             {
@@ -109,6 +83,7 @@ public class Facility
             throw new TaskException( message );
         }
 
-        m_aspectManager.addAspectHandler( m_namespace, m_aspectHandler );
+        final AspectManager aspectManager = (AspectManager)getService( AspectManager.class );
+        aspectManager.addAspectHandler( m_namespace, m_aspectHandler );
     }
 }

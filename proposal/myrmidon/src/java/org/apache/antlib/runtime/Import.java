@@ -10,9 +10,6 @@ package org.apache.antlib.runtime;
 import java.io.File;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
@@ -25,19 +22,11 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
  */
 public class Import
     extends AbstractTask
-    implements Composable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( Import.class );
 
     private File m_lib;
-    private Deployer m_deployer;
-
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
-    {
-        m_deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
-    }
 
     public void setLib( final File lib )
     {
@@ -55,7 +44,8 @@ public class Import
 
         try
         {
-            m_deployer.deploy( m_lib );
+            final Deployer deployer = (Deployer)getService( Deployer.class );
+            deployer.deploy( m_lib );
         }
         catch( final DeploymentException de )
         {
