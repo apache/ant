@@ -12,8 +12,8 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
@@ -31,9 +31,9 @@ public class DefaultAspectManager
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultAspectManager.class );
 
-    private HashMap          m_aspectMap  = new HashMap();
-    private AspectHandler[]  m_aspects    = new AspectHandler[ 0 ];
-    private String[]         m_names      = new String[ 0 ];
+    private HashMap m_aspectMap = new HashMap();
+    private AspectHandler[] m_aspects = new AspectHandler[ 0 ];
+    private String[] m_names = new String[ 0 ];
 
     public void initialize()
         throws Exception
