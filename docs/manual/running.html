@@ -105,7 +105,7 @@ Options:
   -find &lt;file&gt;           (s)earch for buildfile towards the root of
     -s  &lt;file&gt;           the filesystem and use it
   -nice  number          A niceness value for the main thread:
-                         1 (lowest) to 10 (highest); 5 is the default                         
+                         1 (lowest) to 10 (highest); 5 is the default
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
@@ -212,6 +212,14 @@ set):</p>
   to find, even if the file is called <code>build.xml</code>.
 </ul>
 
+<h3><a name="sysprops">Java System Properties</a></h3>
+<p>Some of Ants core classes can be configured via system properties:</p>
+<ul>
+  <li><code>org.apache.tools.ant.ProjectHelper</code> - specifies the
+  classname to use as ProjectHelper. The class must extend org.apache.tools.ant.ProjectHelper.
+  If not set org.apache.tools.ant.ProjectHelper is used as ProjectHelper.</li>
+</ul>
+
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
 should not have any problems launching Ant form the Cygwin shell. It is important
@@ -293,4 +301,3 @@ Reserved.</p>
 
 </body>
 </html>
-
