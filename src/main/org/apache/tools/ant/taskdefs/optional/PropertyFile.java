@@ -546,10 +546,10 @@ public class PropertyFile extends Task
                 newValue = value;
             }
             else if (m_operation == Operation.INCREMENT_OPER) {
-                newValue += value;
+                newValue = ++value;
             }
             else if (m_operation == Operation.DECREMENT_OPER) {
-                newValue -= value;
+                newValue = --value;
             }
             m_value = fmt.format(newValue);
         }
