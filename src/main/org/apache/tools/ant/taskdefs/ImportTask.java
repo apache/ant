@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +96,7 @@ import java.util.Vector;
 public class ImportTask extends Task {
     private String file;
     private boolean optional;
+    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
 
     /**
      * sets the optional attribute
@@ -147,17 +149,12 @@ public class ImportTask extends Task {
         File buildFile = new File(getLocation().getFileName());
         buildFile = new File(buildFile.getAbsolutePath());
 
-        File buildFileParent = new File(buildFile.getParent());
-
         getProject().log("Importing file " + file + " from "
                          + buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
-        File importedFile = new File(file);
-        if (!importedFile.isAbsolute()) {
-            importedFile = new File(buildFileParent, file);
-        }
+        File importedFile = FILE_UTILS.resolveFile(buildFile,  file);
 
         if (!importedFile.exists()) {
             String message =
