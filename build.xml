@@ -16,7 +16,7 @@
   <property file=".ant.properties" />
   <property file="${user.home}/.ant.properties" />
   <property environment="env" />
-  
+
 
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
@@ -30,7 +30,7 @@
   <property name="junit.fork" value="false" />
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
-  
+
   <!--
        ===================================================================
          Set the properties related to the source tree
@@ -107,7 +107,7 @@
   <property name="src.dist.src" value="${src.dist.dir}/src"/>
   <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
-  
+
 
 
   <!--
@@ -120,9 +120,9 @@
   <patternset id="needs.jdk1.2+">
     <exclude name="${util.package}/optional/NoExitSecurityManager.java"
              unless="jdk1.2+" />
-    <exclude name="${optional.package}/Javah.java" 
+    <exclude name="${optional.package}/Javah.java"
              unless="jdk1.2+" />
-    <exclude name="${optional.package}/metamata/*.java" 
+    <exclude name="${optional.package}/metamata/*.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/EjbJar.java"
              unless="jdk1.2+" />
@@ -130,10 +130,12 @@
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/IPlanet*.java"
              unless="jdk1.2+" />
+    <exclude name="${optional.package}/extension/*.java"
+             unless="jdk1.2+" />
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
              unless="jdk1.2+" />
-    <!-- use various 1.2 methods -->             
+    <!-- use various 1.2 methods -->
     <exclude name="${optional.package}/sitraka/**/*.java"
              unless="jdk1.2+" />
   </patternset>
@@ -169,11 +171,11 @@
   <patternset id="needs.trax">
     <exclude name="${optional.package}/TraXLiaison*.java"
              unless="trax.present" />
-    <exclude name="${optional.package}/sitraka/**" 
+    <exclude name="${optional.package}/sitraka/**"
              unless="trax.present"/>
-    <exclude name="${optional.package}/metamata/MMetrics*" 
+    <exclude name="${optional.package}/metamata/MMetrics*"
              unless="trax.present"/>
-    <exclude name="${optional.package}/XsltTest.java" 
+    <exclude name="${optional.package}/XsltTest.java"
              unless="trax.present"/>
   </patternset>
   <patternset id="needs.xalan1">
@@ -187,7 +189,7 @@
              unless="xalan2.present" />
   </patternset>
   <patternset id="needs.xslp">
-    <exclude name="${optional.package}/XslpLiaison*.java" 
+    <exclude name="${optional.package}/XslpLiaison*.java"
              unless="xslp.present" />
   </patternset>
   <patternset id="needs.junit">
@@ -198,15 +200,15 @@
              unless="jakarta.regexp.present" />
   </patternset>
   <patternset id="needs.jakarta.oro">
-    <exclude name="${regexp.package}/JakartaOro*.java" 
+    <exclude name="${regexp.package}/JakartaOro*.java"
              unless="jakarta.oro.present" />
-    <exclude name="${optional.package}/perforce/*.java" 
+    <exclude name="${optional.package}/perforce/*.java"
              unless="jakarta.oro.present" />
-    <exclude name="${optional.package}/metamata/MAudit*.java" 
+    <exclude name="${optional.package}/metamata/MAudit*.java"
              unless="jakarta.oro.present"/>
   </patternset>
   <patternset id="needs.jakarta.bcel">
-    <exclude name="${ant.package}/filters/util/JavaClassHelper.java" 
+    <exclude name="${ant.package}/filters/util/JavaClassHelper.java"
              unless="bcel.present" />
     <exclude name="${util.package}/depend/bcel/*.java"
              unless="bcel.present" />
@@ -218,11 +220,11 @@
              unless="log4j.present" />
   </patternset>
   <patternset id="needs.bsf">
-    <exclude name="${optional.package}/Script.java" 
+    <exclude name="${optional.package}/Script.java"
              unless="bsf.present" />
   </patternset>
   <patternset id="needs.stylebook">
-    <exclude name="${optional.package}/StyleBook.java" 
+    <exclude name="${optional.package}/StyleBook.java"
              unless="stylebook.present" />
   </patternset>
   <patternset id="needs.javamail">
@@ -238,7 +240,7 @@
              unless="netrexx.present" />
   </patternset>
   <patternset id="needs.weblogic.ejbc">
-    <exclude name="${optional.package}/ejb/Ejbc*.java" 
+    <exclude name="${optional.package}/ejb/Ejbc*.java"
              unless="ejb.ejbc.present" />
   </patternset>
   <patternset id="needs.weblogic.ddcreator">
@@ -248,7 +250,7 @@
   <patternset id="needs.weblogic.server">
     <exclude name="${optional.package}/ejb/WLRun.java"
              unless="ejb.wls.present" />
-    <exclude name="${optional.package}/ejb/WLStop.java" 
+    <exclude name="${optional.package}/ejb/WLStop.java"
              unless="ejb.wls.present" />
   </patternset>
   <patternset id="needs.netcomponents">
@@ -264,7 +266,7 @@
              unless="starteam.present" />
   </patternset>
   <patternset id="needs.vaj">
-    <exclude name="${optional.package}/ide/VAJ*.java" 
+    <exclude name="${optional.package}/ide/VAJ*.java"
              unless="vaj.present" />
   </patternset>
   <patternset id="needs.antlr">
@@ -304,7 +306,7 @@
                classpathref="classpath" />
     <condition property="netrexx.present">
       <and>
-        <isset property="jdk1.2+"/>                
+        <isset property="jdk1.2+"/>
         <available classname="netrexx.lang.Rexx"
                    classpathref="classpath"/>
       </and>
@@ -359,7 +361,7 @@
                classpathref="classpath"/>
     <condition property="icontract.present">
         <and>
-            <isset property="jdk1.2+"/>                
+            <isset property="jdk1.2+"/>
             <available classname="com.reliablesystems.iContract.IContracted"
                        classpathref="classpath"/>
         </and>
@@ -390,7 +392,7 @@
                classpathref="classpath" />
     <condition property="bcel.present">
         <and>
-            <isset property="jdk1.2+"/>                
+            <isset property="jdk1.2+"/>
             <available classname="org.apache.bcel.Constants"
                        classpathref="classpath"/>
         </and>
@@ -415,7 +417,7 @@
         <isset property="jakarta.oro.present" />
       </or>
     </condition>
-    
+
     <condition property="tests.and.ant.share.classloader">
       <or>
         <equals arg1="${junit.fork}" arg2="true" />
@@ -443,18 +445,18 @@
                   substring="${build.tests.resolved}" />
       </or>
     </condition>
-    
+
     <condition property="jasper.present">
       <and>
         <available classname="org.apache.jasper.compiler.Compiler" />
         <available classname="org.apache.jasper.JasperException" />
       </and>
     </condition>
-    
+
     <available property="swing.present"
                classname="javax.swing.ImageIcon"
                classpathref="classpath"/>
-               
+
    <condition property="wsdl.found">
       <or>
         <available file="wsdl"     filepath="${env.PATH}" />
@@ -476,7 +478,7 @@
         <isset property="csc.found"/>
         <isset property="wsdl.found"/>
       </and>
-    </condition>               
+    </condition>
    <echo level="verbose"> csc.found=${csc.found}</echo>
   </target>
 
@@ -695,9 +697,9 @@
       <include name="*.pl" />
     </fixcrlf>
 
-    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" 
+    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**"
            failonerror="${chmod.fail}" />
-    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" 
+    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**"
            failonerror="${chmod.fail}" />
     <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
        <fileset dir="${dist.bin}">
@@ -766,9 +768,9 @@
       </fileset>
     </copy>
 
-    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" 
+    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**"
            failonerror="${chmod.fail}" />
-    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" 
+    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**"
            failonerror="${chmod.fail}" />
     <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
        <fileset dir="${dist.bin}">
@@ -1143,7 +1145,7 @@
 
   <target name="dump-info" depends="dump-sys-properties,run-which" />
 
-  <target name="dump-sys-properties" unless="which.present" 
+  <target name="dump-sys-properties" unless="which.present"
           depends="xml-check">
     <echo message="java.vm.info=${java.vm.info}" />
     <echo message="java.vm.name=${java.vm.name}" />
@@ -1157,7 +1159,7 @@
   </target>
 
   <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
-  <target name="xml-check" depends="check_for_optional_packages" 
+  <target name="xml-check" depends="check_for_optional_packages"
           if="xalan.envcheck" unless="which.present">
       <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
   </target>
@@ -1180,7 +1182,7 @@
     </condition>
     <echo level="verbose" > offline=${offline}</echo>
   </target>
-  
+
   <!--
        ===================================================================
          Run testcase
@@ -1190,7 +1192,7 @@
 
   <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present">
 
-    <junit printsummary="${junit.summary}" haltonfailure="yes" 
+    <junit printsummary="${junit.summary}" haltonfailure="yes"
            filtertrace="${junit.filtertrace}"
            fork="${junit.fork}">
 <!--      <jvmarg value="-classic"/> -->
@@ -1199,7 +1201,7 @@
 
       <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
-      <sysproperty key="tests-classpath.value" 
+      <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}" />
 
       <formatter type="brief" usefile="false" />
@@ -1215,7 +1217,7 @@
           <exclude name="${regexp.package}/RegexpTest.java" />
           <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java" />
           <exclude name="${ant.package}/types/AbstractFileSetTest.java" />
-          
+
           <!-- helper classes, not testcases -->
           <exclude name="org/example/**" />
           <exclude name="${ant.package}/taskdefs/TaskdefTest*Task.java" />
@@ -1238,10 +1240,10 @@
           <!-- fails under 1.1 -->
           <exclude name="${optional.package}/perforce/P4ChangeTest.java"
                    unless="jdk1.2+"/>
-          
+
           <!-- tests excluded if the test is run in offline mode -->
           <patternset refid="onlinetests"/>
-          
+
           <!-- failing tests excluded unless run.failing.tests is set -->
           <patternset refid="teststhatfail" />
 
@@ -1266,7 +1268,7 @@
                    unless="xalan2.present"/>
 
           <!-- needs BSF to work -->
-          <exclude name="${optional.package}/XalanLiaisonTest.java" 
+          <exclude name="${optional.package}/XalanLiaisonTest.java"
                    unless="bsf.present" />
 
           <!--
@@ -1278,12 +1280,12 @@
           <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+" />
 
-          <!-- misc oneoff tests --> 
+          <!-- misc oneoff tests -->
           <exclude name="${optional.package}/JspcTest.java"
                    unless="jasper.present" />
           <exclude name="${optional.package}/WsdlToDotnetTest.java"
-                   unless="dotnetapps.found" />                   
-           
+                   unless="dotnetapps.found" />
+
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
@@ -1299,9 +1301,9 @@
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs
           -->
-          <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java" 
+          <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
                    unless="have.cvs" />
-                   
+
         </fileset>
       </batchtest>
 
@@ -1313,13 +1315,13 @@
 
 
     <junit printsummary="${junit.summary}"
-          haltonfailure="yes" 
+          haltonfailure="yes"
           fork="${junit.fork}"
           filtertrace="${junit.filtertrace}">
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
-      <sysproperty key="tests-classpath.value" 
+      <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}" />
       <classpath refid="classes.zip" />
       <classpath refid="tests-classpath"/>
@@ -1332,10 +1334,10 @@
           depends="compile-tests"
           if="jdk1.3+">
     <java classpathref="tests-classpath"
-          classname="org.apache.tools.ant.taskdefs.TestProcess" 
+          classname="org.apache.tools.ant.taskdefs.TestProcess"
           fork="true" />
   </target>
-  
+
   <!--
        ===================================================================
          Main target - runs dist-lite by default
