@@ -654,6 +654,7 @@ public class JUnitTask extends Task {
             testLists.addAll(executeOrQueue(tests.elements(), forkPerTest));
         }
 
+        try {
         Iterator iter = testLists.iterator();
         while (iter.hasNext()) {
             List l = (List) iter.next();
@@ -662,6 +663,11 @@ public class JUnitTask extends Task {
             } else {
                 execute(l);
             }            
+        }
+        } finally {
+            if (classLoader != null && reloading) {
+                classLoader.cleanup();
+            }
         }
     }
 
@@ -1091,6 +1097,9 @@ public class JUnitTask extends Task {
             }
             if (classLoader != null) {
                 classLoader.resetThreadContextLoader();
+                if (!reloading) {
+                    classLoader.cleanup();
+                }
             }
         }
     }
