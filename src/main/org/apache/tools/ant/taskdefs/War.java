@@ -55,7 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ZipFileSet;
 
 import java.io.*;
 import java.util.Vector;
@@ -86,30 +86,30 @@ public class War extends Jar {
         if (!deploymentDescriptor.exists())
             throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
 
-        // Create a PrefixedFileSet for this file, and pass it up.
-        PrefixedFileSet fs = new PrefixedFileSet();
+        // Create a ZipFileSet for this file, and pass it up.
+        ZipFileSet fs = new ZipFileSet();
         fs.setDir(new File(deploymentDescriptor.getParent()));
         fs.setIncludes(deploymentDescriptor.getName());
         fs.setFullpath("WEB-INF/web.xml");
-        super.addPrefixedfileset(fs);
+        super.addFileset(fs);
     }
 
-    public void addLib(PrefixedFileSet fs) {
+    public void addLib(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/lib/");
-        super.addPrefixedfileset(fs);
+        super.addFileset(fs);
     }
 
-    public void addClasses(PrefixedFileSet fs) {
+    public void addClasses(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/classes/");
-        super.addPrefixedfileset(fs);
+        super.addFileset(fs);
     }
 
-    public void addWebinf(PrefixedFileSet fs) {
+    public void addWebinf(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/");
-        super.addPrefixedfileset(fs);
+        super.addFileset(fs);
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.ZipFileSet;
 
 import java.io.*;
 import java.util.zip.*;
@@ -85,12 +86,12 @@ public class Jar extends Zip {
         if (!manifest.exists())
             throw new BuildException("Manifest file: " + manifest + " does not exist.");
 
-        // Create a PrefixedFileSet for this file, and pass it up.
-        PrefixedFileSet fs = new PrefixedFileSet();
+        // Create a ZipFileSet for this file, and pass it up.
+        ZipFileSet fs = new ZipFileSet();
         fs.setDir(new File(manifest.getParent()));
         fs.setIncludes(manifest.getName());
         fs.setFullpath("META-INF/MANIFEST.MF");
-        super.addPrefixedfileset(fs);
+        super.addFileset(fs);
     }
 
 

@@ -109,40 +109,18 @@ public class Zip extends MatchingTask {
     /**
      * Adds a set of files (nested fileset attribute).
      */
-    public void addFileset(FileSet set) {
+    public void addFileset(ZipFileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * @deprecated addPrefixedfileset is deprecated; replaced by ZipFileSet
      */
-    public void addPrefixedfileset(PrefixedFileSet set) {
-        addFileset(set);
+    public void addPrefixedfileset(ZipFileSet set) {
+        log("WARNING: PrefixedFileSets are deprecated; use the fileset tag instead.");
+        filesets.addElement(set);
     }
 
-    /**
-     * FileSet with an additional prefix attribute to specify the
-     * location we want to move the files to (inside the archive).
-     * Or, if this FileSet represents only a single file, then the
-     * fullpath attribute can be set, which specifies the full path
-     * that the file should have when it is placed in the archive.
-     */
-    public static class PrefixedFileSet extends FileSet {
-        private String prefix = "";
-        private String fullpath = "";
-
-        public void setPrefix(String loc) {
-            prefix = loc;
-        }
-
-        public String getPrefix() {return prefix;}
-
-        public void setFullpath(String loc) {
-            fullpath = loc;
-        }
-
-        public String getFullpath() {return fullpath;}
-    }
 
     /**
      * Sets behavior of the task when no files match.
@@ -164,7 +142,7 @@ public class Zip extends MatchingTask {
     public void execute() throws BuildException {
         if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType)) {
             throw new BuildException( "basedir attribute must be set, or at least " + 
-                                      "one fileset or prefixedfileset must be given!" );
+                                      "one fileset must be given!" );
         }
 
         if (zipFile == null) {
@@ -191,7 +169,8 @@ public class Zip extends MatchingTask {
 
         try {
             boolean success = false;
-            ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+            ZipOutputStream zOut = 
+              new ZipOutputStream(new FileOutputStream(zipFile));
             try {
                 if (doCompress) {
                     zOut.setMethod(ZipOutputStream.DEFLATED);
@@ -279,6 +258,26 @@ public class Zip extends MatchingTask {
                 String name = files[i].replace(File.separatorChar,'/');
                 addParentDirs(thisBaseDir, name, zOut, prefix);
                 zipFile(f, zOut, prefix+name);
+            }
+        }
+    }
+
+    protected void addZipEntries(ZipFileSet fs, DirectoryScanner ds,
+      ZipOutputStream zOut, String prefix)
+        throws IOException
+    {
+        ZipScanner zipScanner = (ZipScanner) ds;
+        String zipSrc = fs.getSrc();
+
+        ZipEntry entry;
+        ZipInputStream in = new ZipInputStream(new FileInputStream(new File(zipSrc)));
+        while ((entry = in.getNextEntry()) != null) {
+            String vPath = entry.getName();
+            if (zipScanner.match(vPath)) {
+                addParentDirs(null, vPath, zOut, prefix);
+                if (! entry.isDirectory()) {
+                  zipFile(in, zOut, prefix+vPath, entry.getTime());
+                }
             }
         }
     }
@@ -499,28 +498,22 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Iterate over the given Vector of (prefixed)filesets and add
+     * Iterate over the given Vector of zipfilesets and add
      * all files to the ZipOutputStream using the given prefix.
      */
     protected void addFiles(Vector filesets, ZipOutputStream zOut)
         throws IOException {
         // Add each fileset in the Vector.
         for (int i = 0; i<filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
+            ZipFileSet fs = (ZipFileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
-            String prefix = "";
-            String fullpath = "";
-            if (fs instanceof PrefixedFileSet) {
-                PrefixedFileSet pfs = (PrefixedFileSet) fs;
-                prefix = pfs.getPrefix();
-                fullpath = pfs.getFullpath();
-            }
-            
+            String prefix = fs.getPrefix();
             if (prefix.length() > 0 
                 && !prefix.endsWith("/")
                 && !prefix.endsWith("\\")) {
                 prefix += "/";
             }
+            String fullpath = fs.getFullpath();
             // Need to manually add either fullpath's parent directory, or 
             // the prefix directory, to the archive. 
             if (prefix.length() > 0) {
@@ -529,8 +522,13 @@ public class Zip extends MatchingTask {
             } else if (fullpath.length() > 0) {
                 addParentDirs(null, fullpath, zOut, "");
             }
-            // Add the fileset.
-            addFiles(ds, zOut, prefix, fullpath);
+
+            if (fs.getSrc() != null) {
+              addZipEntries(fs, ds, zOut, prefix);
+             } else {
+               // Add the fileset.
+                 addFiles(ds, zOut, prefix, fullpath);
+             }
         }
     }
 
