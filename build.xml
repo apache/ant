@@ -982,8 +982,7 @@
        ===================================================================
   -->
   <target name="main"
-          description="--> creates a minimum distribution in ./dist">
-    <antcall inheritAll="false" target="dist-lite"/>
-  </target>
+          description="--> creates a minimum distribution in ./dist"
+          depends="dist-lite" />
 
 </project>
