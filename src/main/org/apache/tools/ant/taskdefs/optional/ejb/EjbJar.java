@@ -172,8 +172,7 @@ public class EjbJar extends MatchingTask {
          * The Manifest file
          */
         public File manifest;
-    };
-
+    }
 
     public static class NamingScheme extends EnumeratedAttribute {
         static public final String EJB_NAME = "ejb-name";

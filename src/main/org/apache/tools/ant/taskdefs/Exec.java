@@ -192,7 +192,7 @@ public class Exec extends Task {
         } else {
             fos.println(line);
         }
-    };
+    }
 
     protected void logFlush() {
         if (fos != null) fos.close();

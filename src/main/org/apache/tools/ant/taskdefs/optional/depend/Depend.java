@@ -83,7 +83,7 @@ public class Depend extends MatchingTask {
         
         /** The Java class name of this class */
         public String className;
-    };
+    }
 
     /**
      * The path where source files exist
