@@ -2,10 +2,10 @@
 <HTML>
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
-	<TITLE>Welcome to Ant1.6</TITLE>
+	<TITLE>Welcome to Apache Ant 1.6</TITLE>
 </HEAD>
 <BODY LANG="en-US" BGCOLOR="#ffffff" DIR="LTR">
-<H1>Welcome to Ant1.6</H1>
+<H1>Welcome to Apache Ant 1.6</H1>
 <P><BR><BR>
 </P>
 <H2>Your life just got better. 
@@ -19,18 +19,18 @@ likely to provide a fundamental kick-start to the currently somewhat
 subdued technology and software industries. 
 </P>
 <P>No, Ant1.6 will not fundamentally change your life. But if you do
-have to get software out on time -&quot;roughly what you asked for,
-roughly when you asked&quot;, then Ant1.6 provides lots of little
+have to get software out on time -"roughly what you asked for,
+roughly when you asked", then Ant1.6 provides lots of little
 improvements over the existing version. 
 </P>
 <P>Before we look at those details, lets look at the world of The
 Automated Build.</P>
 <P>Firstly, we'd like to thank everyone for all those awards that
-have been flowing in. The JavaWorld Editors' Choice Award for &quot;Most
-Useful Java Community-Developed Technology&quot;, The Java
-Developer's Journal &quot;Editors Choice Award&quot;, and Java Pro
-Reader's Choice award for &quot;Most Valuable Java Deployment
-Technology.&quot; Wow. That's a lot of awards. Aardman Animations
+have been flowing in. The JavaWorld Editors' Choice Award for "Most
+Useful Java Community-Developed Technology", The Java
+Developer's Journal "Editors Choice Award", and Java Pro
+Reader's Choice award for "Most Valuable Java Deployment
+Technology." Wow. That's a lot of awards. Aardman Animations
 keep all their Wallace and Gromit -related oscars in a cabinet in
 their tea room. If the Apache organization had a tea room, those Ant
 awards would be forcing all the other (excellent) Apache products to
@@ -42,8 +42,8 @@ build process. Ant is one of the best ways to do it in Java, and,
 over the past four years, it has moved from a tool used simply to
 build Tomcat cross-platform, to a tool used across many open source
 projects, and now to a tool used by almost all Java projects. Indeed,
-pretty much the only competitor in the Java space is a sibling project under
-the Apache banner, <A HREF="http://maven.apache.org/" TARGET="other">Maven</A>.
+pretty much the only competitor in the Java space is a sibling
+project under the Apache banner, <A HREF="http://maven.apache.org/" TARGET="other">Maven</A>.
 One of the obvious signs of Ant's success is that all the popular
 IDEs, from the Open Source -Emacs JDE, Eclipse, NetBeans and jEdit -
 to the commercial: IntelliJ IDEA, Borland JBuilder- all ship with
@@ -62,8 +62,8 @@ which shows how global the tool is -in use and in development terms.
 </P>
 <P>The other metric of success is the pre-announcement hints from our
 distant software colleagues in Redmond, Microsoft, of a new build
-tool, &quot;MSBuild&quot;, which &quot;might be the single most
-important feature innovation in our pipeline&quot;, according to one
+tool, "MSBuild", which "might be the single most
+important feature innovation in our pipeline", according to one
 MS developer. That is surely the greatest metric of success: XML
 based build tools are now viewed as so essential to the modern build
 process, that Microsoft has to come up with a competitor to Ant to
@@ -78,7 +78,7 @@ defects if they stand a significant chance of breaking existing
 builds. Its sad, but there are lots of little minor faults with Ant
 that we don't dare fix because, well, things might break. For
 example, why don't if= and unless= clauses also support
-if=&quot;${property}&quot; clauses? Alternatively, why isn't it an
+if="${property}" clauses? Alternatively, why isn't it an
 error to use a property that isn't defined. Everyone that has ever
 seen directories called ${build.dir} popping up the source tree will
 understand why that behaviour is not always what you want. Well, we
@@ -124,7 +124,8 @@ But the underlying parts of Ant are now set up for the next stage in
 development. 
 </P>
 <P>Whether we call the next version of Ant 1.7 or 2.0 is something we
-have yet to decide. Maybe we should call it 3.0 just to surprise people.</P>
+have yet to decide. Maybe we should call it 3.0 just to surprise
+people.</P>
 <H2>What has changed</H2>
 <P>Look at the <A HREF="WHATSNEW" TARGET="other">WHATSNEW</A>
 document to get a full list of changes. Here are some of the core
@@ -169,15 +170,14 @@ and out.
 	something we will fix in Ant1.7</P>
 </OL>
 <H3>Adapters</H3>
-<P >These are Java classes that
-<I>adapt</I>&gt;&nbsp;arbitrary Java classes into ant tasks or types.
-There has always been some of this stuff inside Ant, but now you can
-&lt;taskdef&gt; a task by naming not just the implementation class,
-but the adapter class. An adapter is essentially a meta task
-implementation -something that can be used to create new tasks
-dynamically. Which, when you consider that the core of Ant is
-fundamentally an XML to java mapping system and a simple workflow
-engine, may let you do very unusual things with Ant. 
+<P>These are Java classes that <I>adapt</I>&gt; arbitrary Java
+classes into ant tasks or types. There has always been some of this
+stuff inside Ant, but now you can &lt;taskdef&gt; a task by naming
+not just the implementation class, but the adapter class. An adapter
+is essentially a meta task implementation -something that can be used
+to create new tasks dynamically. Which, when you consider that the
+core of Ant is fundamentally an XML to java mapping system and a
+simple workflow engine, may let you do very unusual things with Ant. 
 </P>
 <H3>Antlib: Ant libraries</H3>
 <P>This is something we will expand in future. Till now you could
@@ -189,7 +189,7 @@ add more things -such as conditions or mappers, you were out of luck.</P>
 <P>Antlibs are Ant Libraries, JAR files containing the code to extend
 Ant, and an XML description file to describe how Ant is extended.
 Before anyone panics at 'yet another XML descriptor syntax' to learn:
-you may already know the syntax. We call it &quot;Ant build files&quot;.
+you may already know the syntax. We call it "Ant build files".
 Actually it is a subset: it can only contain those task declarations
 that are derived from org.apache.tools.ant.taskdefs.AntlibDefinition.
 That includes &lt;taskdef&gt; and &lt;typedef&gt;, and <I>any other
@@ -251,7 +251,7 @@ key points.
 	<LI><P>Synchronization with third party libraries. Of special note:
 	we have moved to the Apache commons-net.jar, the successor to
 	NetComponents for telnet and FTP as well as Apache BSF, the
-        successor to IBM BSF, for script.</P>
+	successor to IBM BSF, for script.</P>
 </OL>
 <P>There are many more enhancements, so we hope you will find your
 build projects easier. We have, as usual, jumped through hoops to
@@ -262,14 +262,67 @@ please don't hesitate to file a new bug report, preferably one with a
 replicable test and a patch to fix the problem. Please, please,
 please, do a search on bugzilla first. You do not want to be the
 seventy-third person to complain that Ant1.6 doesn't do something
-that it should.
+that it should. 
 </P>
 <P>Thanks, 
 </P>
 <P>The Ant development team. 
 </P>
-<P>PS: many thanks for Antoine to being the build manager for this
-release! 
+<H3>Acknowledgements</H3>
+<UL>
+	<LI><P>Many thanks for Antoine to being the build manager for this
+	release! 
+	</P>
+	<LI><P>Thank you to everyone who supplies the components we use in
+	Ant, particularly JUnit, commons-logging, log4J, Xerces, and Xalan. 
+	</P>
+	<LI><P>Everyone who has supplied bug reports, especially those with
+	patches and tests.</P>
+	<LI><P>IDE projects who incorporate Ant into their products. Not
+	only does this help Ant's success, you find lots of interesting
+	integration defects. Special mention to the Eclipse team for fixing
+	our memory leaks :)</P>
+</UL>
+<H3>Call to Action</H3>
+<P>It is an interesting time for Java. .NET is a serious challenger,
+and will get better. Microsoft are fully committed to .NET; as a
+software company it is their future. Sun, on the other hand, are
+still a hardware vendor who are trying to challenge both Microsoft
+and the PC vendors, and by implication Intel too. With those hardware
+margins under serious pressure from x86 and Linux+Win2K3, they cannot
+afford to cross-subsidize Java development the way they have done
+since 1995. We cannot rely on Sun alone for the survival of Java. So
+what then? IBM? In places, yes. IBM do contribute a lot. But the core
+strength of Java over .NET is its community. It is the community that
+gave the world leading edge development tools and other core
+components: Ant, JUnit, XDoclet, hsqldb, Hibernate, Struts, etc.
+These things weren't created by JCP committees, or built according to
+the strategic vision of a Fortune 100 company. They were written by
+Java developers, for Java developers, usually to meet their own
+tactical goals. 
+</P>
+<P>If Java is to survive -and we think it ought to- everyone who can
+needs to become active members of that community. It could be helping
+with Ant, but it could just as easily be helping with any other open
+source Java project, be hosted by Apache, FSF, Sourceforge or someone
+else, be it server-side, client-side or mobile-side. It could be an
+existing project, or it could be your own idea as to how things could
+be better. The key is: things will only be better if you put in the
+time to make it so. 
+</P>
+<H3>Call to Inaction</H3>
+<P>A special message to whoever it is in charge of commands in
+tools.jar: stop moving your entry points! In Ant1.5 we had to deal
+with the 'classic' javac entry point going away in Java1.4.0,
+seemingly coming back later. In Java 1.4.2, the javadoc entry point
+moved. The traditional command line invocation mechanism has been
+replaced by hosted invocation -Ant, Maven, IDEs, etc, and moving
+entry points around breaks these host applications. Even if we get a
+bug fix out in Ant a few weeks after the Java release, it takes
+months for this to trickle down to end users, especially via IDEs and
+other distributions. For example, Sun's own Java Web Services
+Developer Pack ships with Ant1.5.1, and so cannot run &lt;javadoc&gt;
+on a 1.4.2 installation. 
 </P>
 </BODY>
 </HTML>
