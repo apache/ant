@@ -68,6 +68,8 @@ package org.apache.tools.ant.types;
  *
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Revision$ $Date$
+ *
+ * @ant.datatype ignore="true"
  */
 public class Description extends DataType {
 

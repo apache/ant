@@ -66,6 +66,8 @@ import javax.xml.transform.stream.StreamResult;
 /**
  * Xalan executor via JAXP. Nothing special must exists in the classpath
  * besides of course, a parser, jaxp and xalan.
+ *
+ * @ant.task ignore="true"
  */
 public class Xalan2Executor extends XalanExecutor {
     void execute() throws Exception {

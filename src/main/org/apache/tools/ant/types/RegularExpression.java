@@ -93,6 +93,8 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  *
  * @see org.apache.tools.ant.util.regexp.Regexp
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
+ *
+ * @ant.datatype name="regexp"
  */
 public class RegularExpression extends DataType
 {
