@@ -30,6 +30,7 @@ import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.role.RoleManager;
@@ -57,6 +58,7 @@ public class DefaultEmbeddor
     private TypeManager              m_typeManager;
     private MasterConverter          m_converter;
     private ConverterRegistry        m_converterRegistry;
+    private ExtensionManager         m_extensionManager;
 
     private Executor                 m_executor;
     private Configurer               m_configurer;
@@ -197,6 +199,7 @@ public class DefaultEmbeddor
      */
     public void dispose()
     {
+        m_extensionManager = null;
         m_aspectManager = null;
         m_roleManager = null;
         m_converterRegistry = null;
@@ -228,26 +231,20 @@ public class DefaultEmbeddor
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
         //create all the default properties for components
-        defaults.setParameter( AspectManager.ROLE,
-                               "org.apache.myrmidon.components.aspect.DefaultAspectManager" );
-        defaults.setParameter( RoleManager.ROLE,
-                               "org.apache.myrmidon.components.role.DefaultRoleManager" );
-        defaults.setParameter( MasterConverter.ROLE,
-                               "org.apache.myrmidon.components.converter.DefaultMasterConverter" );
-        defaults.setParameter( ConverterRegistry.ROLE,
-                               "org.apache.myrmidon.components.converter.DefaultConverterRegistry" );
-        defaults.setParameter( TypeManager.ROLE,
-                               "org.apache.myrmidon.components.type.DefaultTypeManager" );
+        final String PREFIX = "org.apache.myrmidon.components.";
+        defaults.setParameter( AspectManager.ROLE, PREFIX + "aspect.DefaultAspectManager" );
+        defaults.setParameter( RoleManager.ROLE, PREFIX + "role.DefaultRoleManager" );
+        defaults.setParameter( MasterConverter.ROLE, PREFIX + "converter.DefaultMasterConverter" );
+        defaults.setParameter( ConverterRegistry.ROLE, PREFIX + "converter.DefaultConverterRegistry" );
+        defaults.setParameter( TypeManager.ROLE, PREFIX + "type.DefaultTypeManager" );
         defaults.setParameter( Executor.ROLE,
                                //"org.apache.myrmidon.components.executor.DefaultExecutor" );
                                //"org.apache.myrmidon.components.executor.PrintingExecutor" );
-                               "org.apache.myrmidon.components.executor.AspectAwareExecutor" );
-        defaults.setParameter( Workspace.ROLE,
-                               "org.apache.myrmidon.components.workspace.DefaultWorkspace" );
-        defaults.setParameter( Deployer.ROLE,
-                               "org.apache.myrmidon.components.deployer.DefaultDeployer" );
-        defaults.setParameter( Configurer.ROLE,
-                               "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
+                               PREFIX + "executor.AspectAwareExecutor" );
+        defaults.setParameter( Workspace.ROLE, PREFIX + "workspace.DefaultWorkspace" );
+        defaults.setParameter( Deployer.ROLE, PREFIX + "deployer.DefaultDeployer" );
+        defaults.setParameter( Configurer.ROLE, PREFIX + "configurer.DefaultConfigurer" );
+        defaults.setParameter( ExtensionManager.ROLE, PREFIX + "extensions.DefaultExtensionManager" );
 
         return defaults;
     }
@@ -269,6 +266,7 @@ public class DefaultEmbeddor
         //Following components required when Myrmidon allows user deployment of tasks etal.
         componentManager.put( RoleManager.ROLE, m_roleManager );
         componentManager.put( Deployer.ROLE, m_deployer );
+        componentManager.put( ExtensionManager.ROLE, m_extensionManager );
 
         //Following components used when want to types (ie tasks/mappers etc)
         componentManager.put( TypeManager.ROLE, m_typeManager );
@@ -295,6 +293,9 @@ public class DefaultEmbeddor
 
         component = getParameter( ConverterRegistry.ROLE );
         m_converterRegistry = (ConverterRegistry)createComponent( component, ConverterRegistry.class );
+
+        component = getParameter( ExtensionManager.ROLE );
+        m_extensionManager = (ExtensionManager)createComponent( component, ExtensionManager.class );
 
         component = getParameter( MasterConverter.ROLE );
         m_converter = (MasterConverter)createComponent( component, MasterConverter.class );
@@ -326,6 +327,7 @@ public class DefaultEmbeddor
     private void setupComponents()
         throws Exception
     {
+        setupComponent( m_extensionManager );
         setupComponent( m_roleManager );
         setupComponent( m_aspectManager );
         setupComponent( m_converterRegistry );
@@ -349,6 +351,11 @@ public class DefaultEmbeddor
         if( component instanceof Composable )
         {
             ((Composable)component).compose( m_componentManager );
+        }
+
+        if( component instanceof Parameterizable )
+        {
+            ((Parameterizable)component).parameterize( m_parameters );
         }
 
         if( component instanceof Initializable )
