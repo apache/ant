@@ -79,29 +79,19 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     protected static final String META_DIR  = "META-INF/";
     protected static final String EJB_DD    = "ejb-jar.xml";
 
-    /** Stores a handle to the directory of the source tree */
-    private File srcDir;
-
-    /** Stores a handle to the directory of the deployment descriptors */
-    private File descriptorDir;
+    /**
+     * The configuration from the containing task. This config combined with the 
+     * settings of the individual attributes here constitues the complete config for
+     * this deployment tool.
+     */
+    private EjbJar.Config config;
 
     /** Stores a handle to the directory to put the Jar files in */
     private File destDir;
     
-    /** Instance variable that stores the jar file name when not using the naming standard */
-    private String baseJarName;
-
-    /** The classpath to use with this deployment tool. */
+    /** The classpath to use with this deployment tool. This is appended to 
+        any paths from the ejbjar task itself.*/
     private Path classpath;
-
-    /**
-     * Instance variable that determines whether to use a package structure
-     * of a flat directory as the destination for the jar files.
-     */
-    private boolean flatDestDir = false;
-    
-    /** Instance variable that marks the end of the 'basename' */
-    private String baseNameTerminator = "-";
 
     /** Instance variable that stores the suffix for the generated jarfile. */
     private String genericJarSuffix = "-generic.jar";
@@ -157,37 +147,15 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Get the basename terminator.
      */
-    protected String getBaseNameTerminator() {
-        return baseNameTerminator;
+    protected EjbJar.Config getConfig() {
+        return config;
     }
     
-    /**
-     * Get the base jar name.
-     */
-    protected String getBaseJarName() {
-        return baseJarName;
-    }
-    
-    /**
-     * Get the source dir.
-     */
-    protected File getSrcDir() {
-        return srcDir;
-    }
-    
-    /**
-     * Get the meta-inf dir.
-     * 
-     */
-    protected File getDescriptorDir() {
-        return descriptorDir;
-    }
-
     /**
      * Returns true, if the meta-inf dir is being explicitly set, false otherwise.
      */
     protected boolean usingBaseJarName() {
-        return baseJarName != null;
+        return config.baseJarName != null;
     }
     
     /**
@@ -199,7 +167,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     /**
-     * creates a nested classpath element.
+     * Add the classpath for the user classes
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -215,8 +183,22 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         this.classpath = classpath;
     }
 
-    protected Path getClasspath() {
-        return classpath;
+    /**
+     * Get the classpath by combining the one from the surrounding task, if any
+     * and the one from tis tool.
+     */
+    protected Path getCombinedClasspath() {
+        Path combinedPath = classpath;
+        if (config.classpath != null) {
+            if (combinedPath == null) {
+                combinedPath = config.classpath;
+            }
+            else {
+                combinedPath.append(config.classpath);
+            }
+        }
+        
+        return combinedPath;
     }
     
     protected void log(String message, int level) {
@@ -227,19 +209,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Configure this tool for use in the ejbjar task.
      */
-    public void configure(File srcDir, File descriptorDir, String baseNameTerminator, 
-                          String baseJarName, boolean flatDestDir, Path classpath) {
-        this.srcDir = srcDir;
-        this.descriptorDir = descriptorDir;
-        this.baseJarName = baseJarName;
-        this.baseNameTerminator = baseNameTerminator;
-        this.flatDestDir = flatDestDir;
-        if (this.classpath != null) {
-            this.classpath.append(classpath);
-        }
-        else {
-            this.classpath = classpath;
-        }
+    public void configure(EjbJar.Config config) {
+        this.config = config;
+        
         classpathLoader = null;
     }
 
@@ -301,28 +273,26 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         return new DescriptorHandler(srcDir);
     }
     
-    public void processDescriptor(String descriptorFileName, SAXParser saxParser,
-                                  FileSet supportFileSet) {
+    public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
         FileInputStream descriptorStream = null;
 
         try {
-            DescriptorHandler handler = getDescriptorHandler(srcDir);
+            DescriptorHandler handler = getDescriptorHandler(config.srcDir);
             
             /* Parse the ejb deployment descriptor.  While it may not
              * look like much, we use a SAXParser and an inner class to
              * get hold of all the classfile names for the descriptor.
              */
-            descriptorStream = new FileInputStream(new File(getDescriptorDir(), descriptorFileName));
+            descriptorStream = new FileInputStream(new File(config.descriptorDir, descriptorFileName));
             saxParser.parse(new InputSource(descriptorStream), handler);
                             
             Hashtable ejbFiles = handler.getFiles();
                     
             // add in support classes if any
-            if (supportFileSet != null) {
+            if (config.supportFileSet != null) {
                 Project project = task.getProject();
-                File supportBaseDir = supportFileSet.getDir(project);
-                
-                DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
+                File supportBaseDir = config.supportFileSet.getDir(project);
+                DirectoryScanner supportScanner = config.supportFileSet.getDirectoryScanner(project);
                 supportScanner.scan();
                 String[] supportFiles = supportScanner.getIncludedFiles();
                 for (int i = 0; i < supportFiles.length; ++i) {
@@ -333,17 +303,17 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             String baseName = "";
             
             // Work out what the base name is
-            if (baseJarName != null) {
-                baseName = baseJarName;
+            if (config.baseJarName != null) {
+                baseName = config.baseJarName;
             } else {
                 int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
                 int endBaseName = -1;
                 if (lastSeparatorIndex != -1) {
-                    endBaseName = descriptorFileName.indexOf(baseNameTerminator, 
+                    endBaseName = descriptorFileName.indexOf(config.baseNameTerminator, 
                                                              lastSeparatorIndex);
                 }
                 else {
-                    endBaseName = descriptorFileName.indexOf(baseNameTerminator);
+                    endBaseName = descriptorFileName.indexOf(config.baseNameTerminator);
                 }
 
                 if (endBaseName != -1) {
@@ -354,7 +324,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
-                         new File(getDescriptorDir(), descriptorFileName));
+                         new File(config.descriptorDir, descriptorFileName));
             
             // now the vendor specific files, if any             
             addVendorFiles(ejbFiles, baseName);
@@ -364,7 +334,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!
-            if (flatDestDir && baseName.length() != 0) {
+            if (config.flatDestDir && baseName.length() != 0) {
                 int startName = baseName.lastIndexOf(File.separator);
                 if (startName == -1) {
                     startName = 0;
@@ -510,7 +480,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                     entryName = entryName.substring(0, entryName.lastIndexOf(entryFile.getName())-1) + File.separatorChar + innerfiles[i];
         
                     // link the file
-                    entryFile = new File(srcDir, entryName);
+                    entryFile = new File(config.srcDir, entryName);
         
                     log("adding innerclass file '" + entryName + "'", 
                             Project.MSG_VERBOSE);
@@ -597,7 +567,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     private void addInterface(Class theInterface, Hashtable checkEntries) {
         if (!theInterface.getName().startsWith("java")) // do not add system interfaces
         { 
-            File interfaceFile = new File(srcDir.getAbsolutePath() 
+            File interfaceFile = new File(config.srcDir.getAbsolutePath() 
                                         + File.separatorChar 
                                         + theInterface.getName().replace('.',File.separatorChar)
                                         + ".class"
@@ -618,7 +588,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     
         if (!superClass.getName().startsWith("java"))
         {
-            File superClassFile = new File(srcDir.getAbsolutePath() 
+            File superClassFile = new File(config.srcDir.getAbsolutePath() 
                                             + File.separatorChar 
                                             + superClass.getName().replace('.',File.separatorChar)
                                             + ".class");
@@ -650,12 +620,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             return classpathLoader;
         }
         
-        // only generate a URLClassLoader if we have a classpath
-        if (classpath == null) {
+        Path combinedClasspath = getCombinedClasspath();
+        
+        // only generate a new ClassLoader if we have a classpath
+        if (combinedClasspath == null) {
             classpathLoader = getClass().getClassLoader();
         }
         else {
-            classpathLoader = new AntClassLoader(getTask().getProject(), classpath);
+            classpathLoader = new AntClassLoader(getTask().getProject(), combinedClasspath);
         }
         
         return classpathLoader;

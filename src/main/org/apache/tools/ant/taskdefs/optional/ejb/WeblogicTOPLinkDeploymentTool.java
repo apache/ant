@@ -108,7 +108,7 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
         // Setup a naming standard here?.
 
-        File toplinkDD = new File(getDescriptorDir(), toplinkDescriptor);
+        File toplinkDD = new File(getConfig().descriptorDir, toplinkDescriptor);
 
         if (toplinkDD.exists()) {
             ejbFiles.put(META_DIR + toplinkDescriptor,

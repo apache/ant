@@ -67,18 +67,26 @@ import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.taskdefs.Java;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
-    public static final String PUBLICID_EJB
+    public static final String PUBLICID_EJB11
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
-    public static final String PUBLICID_WEBLOGIC
+    public static final String PUBLICID_EJB20
+        = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
+
+    public static final String PUBLICID_WEBLOGIC_EJB
         = "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB//EN";
     
-    protected static final String WL_DD = "weblogic-ejb-jar.xml";
-    protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
-
-    protected static final String DEFAULT_EJB_DTD_LOCATION 
+    protected static final String DEFAULT_WL51_EJB11_DTD_LOCATION 
         = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
+    protected static final String DEFAULT_WL60_EJB11_DTD_LOCATION 
+        = "/weblogic/ejb20/dd/xml/ejb11-jar.dtd";
+    protected static final String DEFAULT_WL60_EJB20_DTD_LOCATION 
+        = "/weblogic/ejb20/dd/xml/ejb20-jar.dtd";
+
     protected static final String DEFAULT_WL_DTD_LOCATION 
         = "/weblogic/ejb/deployment/xml/weblogic-ejb-jar.dtd";
+
+    protected static final String WL_DD = "weblogic-ejb-jar.xml";
+    protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
 
     /** Instance variable that stores the suffix for the weblogic jarfile. */
     private String jarSuffix = ".jar";
@@ -86,9 +94,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /** Instance variable that stores the location of the weblogic DTD file. */
     private String weblogicDTD;
 
-    /** Instance variable that stores the location of the generic EJB DTD file. */
-    private String ejbDTD;
-    
+    /** Instance variable that stores the location of the ejb 1.1 DTD file. */
+    private String ejb11DTD;
+        
     /** Instance variable that determines whether generic ejb jars are kept. */
 
     private boolean keepgenerated = false;
@@ -105,7 +113,20 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Indicates if the old CMP location convention is to be used.
      */
     private boolean oldCMP = true;
-    
+
+    /** The classpath to the weblogic classes. */
+    private Path wlClasspath;
+
+    /**
+     * Get the classpath to the weblogic classpaths
+     */
+    public Path createWLClasspath() {
+        if (wlClasspath == null) {
+            wlClasspath = new Path(getTask().getProject());
+        }
+        return wlClasspath.createPath();
+    }
+
     /**
      * The compiler (switch <code>-compiler</code>) to use
      */
@@ -161,7 +182,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * @param inString the string to use as the DTD location.
      */
     public void setWeblogicdtd(String inString) {
-        this.ejbDTD = inString;
+        setEJBdtd(inString);
     }
 
     /**
@@ -179,7 +200,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * @param inString the string to use as the DTD location.
      */
     public void setEJBdtd(String inString) {
-        this.ejbDTD = inString;
+        this.ejb11DTD = inString;
     }
 
     /**
@@ -198,24 +219,21 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
     
 
-    /**
-     * Register the location of the local resource copy of a DTD in a given
-     * handler.
-     */
-    private void registerDTD(DescriptorHandler handler, 
-                             String publicId, String dtdLocation) {
-        File dtdFile = new File(dtdLocation);
-        if (dtdFile.exists()) {
-            handler.registerFileDTD(publicId, dtdFile);
-        } else {
-            handler.registerResourceDTD(publicId, dtdLocation);
-        }                                            
-    }
-    
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = new DescriptorHandler(srcDir);
-        registerDTD(handler, PUBLICID_EJB, 
-                    ejbDTD == null ? DEFAULT_EJB_DTD_LOCATION : ejbDTD);
+        // register all the DTDs, both the ones that are known and
+        // any supplied by the user
+        handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL51_EJB11_DTD_LOCATION);
+        handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL60_EJB11_DTD_LOCATION);
+        handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
+        handler.registerDTD(PUBLICID_EJB20, DEFAULT_WL60_EJB20_DTD_LOCATION);
+        
+        
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
+        
         return handler;                                    
     }
 
@@ -229,14 +247,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         //trim the META_INF\ off of the file name
                         String fileName = fileNameWithMETA.substring(META_DIR.length(), 
                                                                      fileNameWithMETA.length() );
-                        File descriptorFile = new File(getDescriptorDir(), fileName);
+                        File descriptorFile = new File(getConfig().descriptorDir, fileName);
                         ejbFiles.put(fileNameWithMETA, descriptorFile);
                     }
                 }
             };
 
-        registerDTD(handler, PUBLICID_WEBLOGIC, 
-                    weblogicDTD == null ? DEFAULT_WL_DTD_LOCATION : weblogicDTD);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB, 
+                            weblogicDTD == null ? DEFAULT_WL_DTD_LOCATION : weblogicDTD);
         return handler;                                    
     }
 
@@ -245,9 +263,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * EJB Jar.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
-        String ddPrefix = (usingBaseJarName() ? "" : baseName + getBaseNameTerminator());
+        String ddPrefix = (usingBaseJarName() ? "" : baseName + getConfig().baseNameTerminator);
 
-        File weblogicDD = new File(getDescriptorDir(), ddPrefix + WL_DD);
+        File weblogicDD = new File(getConfig().descriptorDir, ddPrefix + WL_DD);
 
         if (weblogicDD.exists()) {
             ejbFiles.put(META_DIR + WL_DD,
@@ -264,7 +282,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             log("Please adjust your weblogic descriptor and set oldCMP=\"false\" " +
                 "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
             // The the weblogic cmp deployment descriptor
-            File weblogicCMPDD = new File(getDescriptorDir(), ddPrefix + WL_CMP_DD);
+            File weblogicCMPDD = new File(getConfig().descriptorDir, ddPrefix + WL_CMP_DD);
                 
             if (weblogicCMPDD.exists()) {
                 ejbFiles.put(META_DIR + WL_CMP_DD,
@@ -335,10 +353,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             args += " -noexit " + sourceJar.getPath() + " " + destJar.getPath();
             
             javaTask = (Java) getTask().getProject().createTask("java");
+            javaTask.setTaskName("ejbc");
             javaTask.setClassname("weblogic.ejbc");
             Commandline.Argument arguments = javaTask.createArg();
             arguments.setLine(args);
-            Path classpath = getClasspath();
+            Path classpath = wlClasspath;
+            if (classpath == null) {
+                classpath = getCombinedClasspath();
+            }
+            
             if (classpath != null) {
                 javaTask.setClasspath(classpath);
                 javaTask.setFork(true);
@@ -603,7 +626,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         Path lookupPath = new Path(getTask().getProject());
         lookupPath.setLocation(classjar);
         
-        Path classpath = getClasspath();
+        Path classpath = getCombinedClasspath();
         if (classpath != null) {
             lookupPath.append(classpath);
         }

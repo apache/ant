@@ -115,13 +115,20 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         this.srcDir = srcDir;
     }
     
-
-    public void registerFileDTD(String publicId, File dtdFile) {
-        fileDTDs.put(publicId, dtdFile);
-    }
-    
-    public void registerResourceDTD(String publicId, String resourceName) {
-        resourceDTDs.put(publicId, resourceName);
+    public void registerDTD(String publicId, String location) {
+        if (location == null) {
+            return;
+        }
+        
+        File fileDTD = new File(location);
+        if (fileDTD.exists()) {
+            fileDTDs.put(publicId, fileDTD);
+            return;
+        }
+        
+        if (getClass().getResource(location) != null) {
+            resourceDTDs.put(publicId, location);
+        }
     }
 
     public InputSource resolveEntity(String publicId, String systemId)
@@ -129,7 +136,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     {
         
         File dtdFile = (File) fileDTDs.get(publicId);
-        if (dtdFile != null && dtdFile.exists()) {
+        if (dtdFile != null) {
             try {
                 return new InputSource(new FileInputStream(dtdFile));
             } catch( FileNotFoundException ex ) {

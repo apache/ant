@@ -72,8 +72,7 @@ public interface EJBDeploymentTool {
      * @param supportFileSet a fileset containing all the files to be included in the 
      * `                     generated jarfile as support classes.
      */
-    public void processDescriptor(String descriptorFilename, SAXParser saxParser,
-                                  FileSet supportFileSet) 
+    public void processDescriptor(String descriptorFilename, SAXParser saxParser) 
         throws BuildException;
     
     /**
@@ -90,6 +89,5 @@ public interface EJBDeploymentTool {
     /**
      * Configure this tool for use in the ejbjar task.
      */
-    public void configure(File srcDir, File descriptorDir, String basenameTerminator, 
-                          String baseJarName, boolean flatDestDir, Path classpath);     
+    public void configure(EjbJar.Config config);     
 }
