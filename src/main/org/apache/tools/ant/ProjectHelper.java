@@ -179,6 +179,24 @@ public class ProjectHelper {
      * Handler for the root element. It's only child must be the "project" element.
      */
     private class RootHandler extends HandlerBase {
+
+        /**
+         * resolve file: URIs as releative to the project's basedir.
+         */
+        public InputSource resolveEntity(String publicId,
+                                         String systemId) {
+
+            if (systemId.startsWith("file:")) {
+                try {
+                    return new InputSource(new FileInputStream(project.resolveFile(systemId.substring(5))));
+                } catch (FileNotFoundException fne) {
+                    project.log(fne.getMessage(), Project.MSG_WARN);
+                }
+            }
+            // use default if not file or file not found
+            return null;
+        }
+
         public void startElement(String tag, AttributeList attrs) throws SAXParseException {
             if (tag.equals("project")) {
                 new ProjectHandler(this).init(tag, attrs);
