@@ -254,8 +254,22 @@ public class Path extends DataType implements Cloneable {
      *
      * @param source - source path whose components are examined for existence
      */
-    public void addExisting(Path source) {
+     public void addExisting(Path source) {
+         addExisting(source, false );
+     }
+
+    /** Same as addExisting, but support classpath behavior if tryUserDir
+     * is true. Classpaths are relative to user dir, not the project base.
+     * That used to break jspc test
+     *
+     * @param source
+     * @param tryUserDir
+     */
+    public void addExisting(Path source, boolean tryUserDir) {
         String[] list = source.list();
+        File userDir=(tryUserDir) ? new File(System.getProperty( "user.dir"))
+                : null;
+
         for (int i = 0; i < list.length; i++) {
             File f = null;
             if (getProject() != null) {
@@ -263,11 +277,15 @@ public class Path extends DataType implements Cloneable {
             } else {
                 f = new File(list[i]);
             }
-
+            // probably not the best choice, but it solves the problem of
+            // relative paths in CLASSPATH
+            if( tryUserDir && ! f.exists()) {
+                f=new File( userDir, list[i]);
+            }
             if (f.exists()) {
                 setLocation(f);
             } else {
-                log("dropping " + f + " from path as it doesn't exist", 
+                log("dropping " + f + " from path as it doesn't exist",
                     Project.MSG_VERBOSE);
             }
         }
@@ -293,7 +311,7 @@ public class Path extends DataType implements Cloneable {
                 o = r.getReferencedObject(getProject());
                 // we only support references to paths right now
                 if (!(o instanceof Path)) {
-                    String msg = r.getRefId() + " doesn\'t denote a path";
+                    String msg = r.getRefId() + " doesn\'t denote a path " + o;
                     throw new BuildException(msg);
                 }
             }
@@ -537,11 +555,11 @@ public class Path extends DataType implements Cloneable {
         
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
-            result.addExisting(Path.systemClasspath);
+            result.addExisting(Path.systemClasspath, true);
         
         } else if (order.equals("first")) {
             // first: developer could use a little help
-            result.addExisting(Path.systemClasspath);
+            result.addExisting(Path.systemClasspath, true);
             result.addExisting(this);
 
         } else if (order.equals("ignore")) {
@@ -556,7 +574,7 @@ public class Path extends DataType implements Cloneable {
             }
 
             result.addExisting(this);
-            result.addExisting(Path.systemClasspath);
+            result.addExisting(Path.systemClasspath, true);
         }
         
 
