@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -170,7 +170,10 @@ public class Available extends Task {
             }
             return true;
         } catch (ClassNotFoundException e) {
-            log(e.toString(), Project.MSG_VERBOSE);
+            log("Class not found: " + classname, Project.MSG_VERBOSE);
+            return false;
+        } catch (NoClassDefFoundError e) {
+            log("Class cound not be loaded: " + classname, Project.MSG_VERBOSE);
             return false;
         }
     }
