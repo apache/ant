@@ -211,7 +211,7 @@ public class FileUtils {
 
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
-            File parent = new File(destFile.getParent());
+            File parent = getParentFile(destFile);
             if (!parent.exists()) {
                 parent.mkdirs();
             }
@@ -347,14 +347,13 @@ public class FileUtils {
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {
-                String parentFile = helpFile.getParent();
-                if (parentFile == null) {
+                helpFile = getParentFile(helpFile);
+                if (helpFile == null) {
                     String msg = "The file or path you specified ("
                         + filename + ") is invalid relative to " 
                         + file.getPath();
                     throw new BuildException(msg);
                 }
-                helpFile = new File(parentFile);
             } else if (part.equals(".")) {
                 // Do nothing here
             } else {
@@ -557,6 +556,21 @@ public class FileUtils {
                 } catch (IOException e) {}
             }
         }
+    }
+
+    /**
+     * Emulation of File.getParentFile for JDK 1.1
+     *
+     * @since 1.10
+     */
+    public File getParentFile(File f) {
+        if (f != null) {
+            String p = f.getParent();
+            if (p != null) {
+                return new File(p);
+            }
+        }
+        return null;
     }
 }
 

@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -101,6 +102,8 @@ public class Replace extends MatchingTask {
     /** The encoding used to read and write files - if null, uses default */
     private String encoding = null;
     
+    private FileUtils fileUtils = FileUtils.newFileUtils();
+
     //Inner class
     public class NestedString {
 
@@ -302,20 +305,19 @@ public class Replace extends MatchingTask {
             throw new BuildException("Replace: source file " + src.getPath() + " doesn't exist", location);
         }
 
-        File temp = new File(src.getPath() + ".temp");
+        File temp = fileUtils.createTempFile("rep", ".tmp", 
+                                             fileUtils.getParentFile(src));
 
-        if (temp.exists()) {
-            throw new BuildException("Replace: temporary file " + temp.getPath() + " already exists", location);
-        }
-
+        Reader reader = null;
+        Writer writer = null;
         try {
-            Reader fileReader = encoding == null ? new FileReader(src)
-                                                 : new InputStreamReader(new FileInputStream(src), encoding);
-            Writer fileWriter = encoding == null ? new FileWriter(temp)
-                                                 : new OutputStreamWriter(new FileOutputStream(temp), encoding);
+            reader = encoding == null ? new FileReader(src)
+                : new InputStreamReader(new FileInputStream(src), encoding);
+            writer = encoding == null ? new FileWriter(temp)
+                : new OutputStreamWriter(new FileOutputStream(temp), encoding);
             
-            BufferedReader br = new BufferedReader(fileReader);
-            BufferedWriter bw = new BufferedWriter(fileWriter);
+            BufferedReader br = new BufferedReader(reader);
+            BufferedWriter bw = new BufferedWriter(writer);
 
             // read the entire file into a StringBuffer
             //   size of work buffer may be bigger than needed
@@ -365,7 +367,9 @@ public class Replace extends MatchingTask {
 
             // cleanup
             bw.close();
+            writer = null;
             br.close();
+            reader = null;
 
             // If there were changes, move the new one to the old one;
             // otherwise, delete the new one
@@ -373,13 +377,27 @@ public class Replace extends MatchingTask {
                 ++fileCount;
                 src.delete();
                 temp.renameTo(src);
-            } else {
-                temp.delete();
+                temp = null;
             }
         } catch (IOException ioe) {
             throw new BuildException("IOException in " + src + " - " + 
                                      ioe.getClass().getName() + ":" + ioe.getMessage(), ioe, location);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {}
+            }
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {}
+            }
+            if (temp != null) {
+                temp.delete();
+            }
         }
+        
     }
 
     private String processReplacefilters(String buffer, String filename) {
