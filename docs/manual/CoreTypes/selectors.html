@@ -60,6 +60,8 @@
         files that match a regular expression
       <li><a href="#sizeselect">&lt;size&gt;</a> - Select files
         that are larger or smaller than a particular number of bytes.
+      <li><a href="#typeselect">&lt;type&gt;</a> - Select files
+        that are either regular files or directories.
     </ul>
 
     <a name="containsselect"></a>
@@ -541,6 +543,53 @@
 </pre></blockquote>
 
     <p>Selects all JAR files that are larger than 4096 bytes.</p>
+
+    <a name="typeselect"></a>
+    <h4>Type Selector</h4>
+
+    <p>The <code>&lt;type&gt;</code> tag selects files of a certain type:
+    directory or regular.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">type</td>
+        <td valign="top">The type of file which should be tested for.
+            Acceptable values are:
+            <ul>
+                <li>file - regular files</li>
+                <li>dir - directories</li>
+            </ul>
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Type Selector to select only
+    directories in <code>${src}</code></p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${src}&quot;&gt;
+  &lt;type type="dir"/>
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>The Type Selector is often used in conjunction with other selectors.
+    For example, to select files that also exist in a <code>template</code>
+    directory, but avoid selecting empty directories, use:
+
+<blockquote><pre>
+&lt;fileset dir="${src}">
+    &lt;and>
+        &lt;present targetdir="template"/>
+        &lt;type type="file"/>
+    &lt;/and>
+&lt;/fileset>
+</pre></blockquote>
 
 
     <a name="selectcontainers"></a>

@@ -72,6 +72,7 @@ import org.apache.tools.ant.types.selectors.ExtendSelector;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.DifferentSelector;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
+import org.apache.tools.ant.types.selectors.TypeSelector;
 import org.apache.tools.ant.types.selectors.MajoritySelector;
 import org.apache.tools.ant.types.selectors.NoneSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
@@ -596,6 +597,13 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * add a selector filename entry on the selector list
      */
     public void addFilename(FilenameSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a selector type entry on the selector list
+     */
+    public void addType(TypeSelector selector) {
         appendSelector(selector);
     }
 
