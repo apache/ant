@@ -61,6 +61,9 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
+/**
+ * @ant.task category="scm"
+ */
 public class P4Resolve extends P4Base{
     private String resolvemode = null;
 

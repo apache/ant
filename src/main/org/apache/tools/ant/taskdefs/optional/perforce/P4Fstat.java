@@ -69,7 +69,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
-/** 
+/**
  * P4Fstat  - find out which files are under Perforce control and which are not.
  *
  * <br><b>Example Usage:</b><br>
@@ -86,6 +86,8 @@ import org.apache.tools.ant.types.FileSet;
  * @author <A HREF="mailto:miha@softhome.net">Miha</A>
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  * @author <A HREF="mailto:ashundi@tibco.com">Anli Shundi</A>
+ *
+ * @ant.task category="scm"
  */
 public class P4Fstat extends P4Base {
 
@@ -103,9 +105,9 @@ public class P4Fstat extends P4Base {
     private int doneFileNum = 0;
     private boolean debug = false;
 
-    private static final String EXISTING_HEADER 
+    private static final String EXISTING_HEADER
         = "Following files exist in perforce";
-    private static final String NONEXISTING_HEADER 
+    private static final String NONEXISTING_HEADER
         = "Following files do not exist in perforce";
 
 
@@ -117,7 +119,7 @@ public class P4Fstat extends P4Base {
         } else if (filter.equalsIgnoreCase("non-existing")) {
             show = SHOW_NON_EXISTING;
         } else {
-            throw new BuildException("P4Fstat: ShowFilter should be one of: " 
+            throw new BuildException("P4Fstat: ShowFilter should be one of: "
                 + "all, existing, non-existing");
         }
     }
@@ -125,7 +127,7 @@ public class P4Fstat extends P4Base {
 
     public void setChangelist(int changelist) throws BuildException {
         if (changelist <= 0) {
-            throw new BuildException("P4FStat: Changelist# should be a " 
+            throw new BuildException("P4FStat: Changelist# should be a "
                 + "positive number");
         }
 
@@ -203,7 +205,7 @@ public class P4Fstat extends P4Base {
 
     private void execP4Fstat(StringBuffer list) {
         if (debug) {
-            log("Executing fstat " + P4CmdOpts + " " + addCmd + list + "\n", 
+            log("Executing fstat " + P4CmdOpts + " " + addCmd + list + "\n",
                 Project.MSG_INFO);
         }
         execP4Command("fstat " + P4CmdOpts + " " + addCmd + list, handler);

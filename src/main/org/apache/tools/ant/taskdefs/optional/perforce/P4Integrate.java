@@ -71,6 +71,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author <A HREF="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</A>
  *
+ * @ant.task category="scm"
  */
 
 public class P4Integrate extends P4Base {
