@@ -493,12 +493,11 @@ public class ZipFile {
      * range can be read.
      */
     private class BoundedInputStream extends InputStream {
-        private long start, remaining;
+        private long remaining;
         private long loc;
         private boolean addDummyByte = false;
 
         BoundedInputStream(long start, long remaining) {
-            this.start = start;
             this.remaining = remaining;
             loc = start;
         }

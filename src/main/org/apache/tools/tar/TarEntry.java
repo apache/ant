@@ -204,7 +204,6 @@ public class TarEntry implements TarConstants {
 
         boolean isDir = name.endsWith("/");
 
-        this.checkSum = 0;
         this.devMajor = 0;
         this.devMinor = 0;
         this.name = new StringBuffer(name);

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -117,8 +117,6 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     private boolean blockRandomised;
 
-    private int bytesIn;
-    private int bytesOut;
     private int bsBuff;
     private int bsLive;
     private CRC mCrc = new CRC();
@@ -314,8 +312,6 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         bsStream = f;
         bsLive = 0;
         bsBuff = 0;
-        bytesOut = 0;
-        bytesIn = 0;
     }
 
     private int bsR(int n) {

@@ -82,9 +82,6 @@ public final class TailFilter extends BaseParamFilterReader
     /** Parameter name for the number of lines to be skipped. */
     private static final String SKIP_KEY = "skip";
 
-    /** Number of lines currently read in. */
-    private long linesRead = 0;
-
     /** Default number of lines to show */
     private static final int DEFAULT_NUM_LINES = 10;
 
@@ -96,9 +93,6 @@ public final class TailFilter extends BaseParamFilterReader
 
     /** Whether or not read-ahead been completed. */
     private boolean completedReadAhead = false;
-
-    /** Current index position on the buffer. */
-    private int bufferPos = 0;
 
     /** A line tokenizer */
     private LineTokenizer lineTokenizer = null;

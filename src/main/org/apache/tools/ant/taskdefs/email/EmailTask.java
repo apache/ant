@@ -136,10 +136,6 @@ public class EmailTask
     private Vector filesets = new Vector();
     /** Character set for MimeMailer*/
     private String charset = null;
-    /** if set to true, the email will not be actually sent */
-    private boolean debugonly = false;
-    /** a location where to print the email message */
-    private File debugoutput;
     /** User for SMTP auth */
     private String user = null;
     /** Password for SMTP auth */

@@ -87,8 +87,6 @@ public class Target implements TaskContainer {
     private Project project;
     /** Description of this target, if any. */
     private String description = null;
-    /** If adding top-level imported tasks */
-    private boolean addingImportedTasks;
     /** Imported tasks/types being added */
     private List importedTasks = null;
 

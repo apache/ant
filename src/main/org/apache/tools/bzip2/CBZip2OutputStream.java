@@ -272,7 +272,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
     boolean blockRandomised;
 
-    int bytesIn;
     int bytesOut;
     int bsBuff;
     int bsLive;
@@ -440,7 +439,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     private int blockCRC, combinedCRC;
 
     private void initialize() throws IOException {
-        bytesIn = 0;
         bytesOut = 0;
         nBlocksRandomised = 0;
 
@@ -553,7 +551,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         bsLive = 0;
         bsBuff = 0;
         bytesOut = 0;
-        bytesIn = 0;
     }
 
     private void bsFinishedWithStream() throws IOException {
