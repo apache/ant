@@ -64,7 +64,7 @@ public final class ChainReaderHelper {
      * Sets the primary reader
      * @param rdr the reader object
      */
-    public final void setPrimaryReader(Reader rdr) {
+    public void setPrimaryReader(Reader rdr) {
         primaryReader = rdr;
     }
 
@@ -72,7 +72,7 @@ public final class ChainReaderHelper {
      * Set the project to work with
      * @param project the current project
      */
-    public final void setProject(final Project project) {
+    public void setProject(final Project project) {
         this.project = project;
     }
 
@@ -81,7 +81,7 @@ public final class ChainReaderHelper {
      *
      * @return the current project
      */
-    public final Project getProject() {
+    public Project getProject() {
         return project;
     }
 
@@ -90,7 +90,7 @@ public final class ChainReaderHelper {
      * if this method is not invoked.
      * @param size the buffer size to use
      */
-    public final void setBufferSize(int size) {
+    public void setBufferSize(int size) {
         bufferSize = size;
     }
 
@@ -99,7 +99,7 @@ public final class ChainReaderHelper {
      *
      * @param fchain the filter chains collection
      */
-    public final void setFilterChains(Vector fchain) {
+    public void setFilterChains(Vector fchain) {
         filterChains = fchain;
     }
 
@@ -108,7 +108,7 @@ public final class ChainReaderHelper {
      * @return the assembled reader
      * @exception BuildException if an error occurs
      */
-    public final Reader getAssembledReader() throws BuildException {
+    public Reader getAssembledReader() throws BuildException {
         if (primaryReader == null) {
             throw new BuildException("primaryReader must not be null.");
         }
@@ -226,7 +226,7 @@ public final class ChainReaderHelper {
      * @return the contents of the file as a string
      * @exception IOException if an error occurs
      */
-    public final String readFully(Reader rdr)
+    public String readFully(Reader rdr)
         throws IOException {
         return FileUtils.readFully(rdr, bufferSize);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public final class ReplaceTokens
      * @exception IOException if the underlying stream throws an IOException
      * during reading
      */
-    public final int read() throws IOException {
+    public int read() throws IOException {
         if (!getInitialized()) {
             initialize();
             setInitialized(true);
@@ -177,7 +177,7 @@ public final class ReplaceTokens
      *
      * @param beginToken the character used to denote the beginning of a token
      */
-    public final void setBeginToken(final char beginToken) {
+    public void setBeginToken(final char beginToken) {
         this.beginToken = beginToken;
     }
 
@@ -186,7 +186,7 @@ public final class ReplaceTokens
      *
      * @return the character used to denote the beginning of a token
      */
-    private final char getBeginToken() {
+    private char getBeginToken() {
         return beginToken;
     }
 
@@ -195,7 +195,7 @@ public final class ReplaceTokens
      *
      * @param endToken the character used to denote the end of a token
      */
-    public final void setEndToken(final char endToken) {
+    public void setEndToken(final char endToken) {
         this.endToken = endToken;
     }
 
@@ -204,7 +204,7 @@ public final class ReplaceTokens
      *
      * @return the character used to denote the end of a token
      */
-    private final char getEndToken() {
+    private char getEndToken() {
         return endToken;
     }
 
@@ -214,7 +214,7 @@ public final class ReplaceTokens
      * @param token The token to add to the map of replacements.
      *              Must not be <code>null</code>.
      */
-    public final void addConfiguredToken(final Token token) {
+    public void addConfiguredToken(final Token token) {
         hash.put(token.getKey(), token.getValue());
     }
 
@@ -234,7 +234,7 @@ public final class ReplaceTokens
      * @return a map (String->String) of token keys to replacement
      * values
      */
-    private final Hashtable getTokens() {
+    private Hashtable getTokens() {
         return hash;
     }
 
@@ -248,7 +248,7 @@ public final class ReplaceTokens
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         ReplaceTokens newFilter = new ReplaceTokens(rdr);
         newFilter.setBeginToken(getBeginToken());
         newFilter.setEndToken(getEndToken());
@@ -260,7 +260,7 @@ public final class ReplaceTokens
     /**
      * Initializes tokens and loads the replacee-replacer hashtable.
      */
-    private final void initialize() {
+    private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public final class TabsToSpaces
      * @exception IOException if the underlying stream throws an IOException
      * during reading
      */
-    public final int read() throws IOException {
+    public int read() throws IOException {
         if (!getInitialized()) {
             initialize();
             setInitialized(true);
@@ -104,7 +104,7 @@ public final class TabsToSpaces
      *
      * @param tabLength the number of spaces to be used when converting a tab.
      */
-    public final void setTablength(final int tabLength) {
+    public void setTablength(final int tabLength) {
         this.tabLength = tabLength;
     }
 
@@ -113,7 +113,7 @@ public final class TabsToSpaces
      *
      * @return the number of spaces used when converting a tab
      */
-    private final int getTablength() {
+    private int getTablength() {
         return tabLength;
     }
 
@@ -127,7 +127,7 @@ public final class TabsToSpaces
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         TabsToSpaces newFilter = new TabsToSpaces(rdr);
         newFilter.setTablength(getTablength());
         newFilter.setInitialized(true);
@@ -137,7 +137,7 @@ public final class TabsToSpaces
     /**
      * Parses the parameters to set the tab length.
      */
-    private final void initialize() {
+    private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public final class LineContains
      * @exception IOException if the underlying stream throws an IOException
      * during reading
      */
-    public final int read() throws IOException {
+    public int read() throws IOException {
         if (!getInitialized()) {
             initialize();
             setInitialized(true);
@@ -138,7 +138,7 @@ public final class LineContains
      * @param contains The <code>contains</code> element to add.
      *                 Must not be <code>null</code>.
      */
-    public final void addConfiguredContains(final Contains contains) {
+    public void addConfiguredContains(final Contains contains) {
         this.contains.addElement(contains.getValue());
     }
 
@@ -162,7 +162,7 @@ public final class LineContains
      * returned object is "live" - in other words, changes made to the
      * returned object are mirrored in the filter.
      */
-    private final Vector getContains() {
+    private Vector getContains() {
         return contains;
     }
 
@@ -176,7 +176,7 @@ public final class LineContains
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         LineContains newFilter = new LineContains(rdr);
         newFilter.setContains(getContains());
         newFilter.setInitialized(true);
@@ -186,7 +186,7 @@ public final class LineContains
     /**
      * Parses the parameters to add user-defined contains strings.
      */
-    private final void initialize() {
+    private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {

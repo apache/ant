@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public final class HeadFilter extends BaseParamFilterReader
      * @exception IOException if the underlying stream throws an IOException
      * during reading
      */
-    public final int read() throws IOException {
+    public int read() throws IOException {
         if (!getInitialized()) {
             initialize();
             setInitialized(true);
@@ -122,7 +122,7 @@ public final class HeadFilter extends BaseParamFilterReader
      *
      * @param lines the number of lines to be returned in the filtered stream
      */
-    public final void setLines(final long lines) {
+    public void setLines(final long lines) {
         this.lines = lines;
     }
 
@@ -131,7 +131,7 @@ public final class HeadFilter extends BaseParamFilterReader
      *
      * @return the number of lines to be returned in the filtered stream
      */
-    private final long getLines() {
+    private long getLines() {
         return lines;
     }
 
@@ -140,7 +140,7 @@ public final class HeadFilter extends BaseParamFilterReader
      *
      * @param skip the number of lines to be skipped in the filtered stream
      */
-    public final void setSkip(final long skip) {
+    public void setSkip(final long skip) {
         this.skip = skip;
     }
 
@@ -149,7 +149,7 @@ public final class HeadFilter extends BaseParamFilterReader
      *
      * @return the number of lines to be skipped in the filtered stream
      */
-    private final long getSkip() {
+    private long getSkip() {
         return skip;
     }
 
@@ -163,7 +163,7 @@ public final class HeadFilter extends BaseParamFilterReader
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         HeadFilter newFilter = new HeadFilter(rdr);
         newFilter.setLines(getLines());
         newFilter.setSkip(getSkip());
@@ -176,7 +176,7 @@ public final class HeadFilter extends BaseParamFilterReader
      * it to set the number of lines to be returned in the filtered stream.
      * also scan for skip parameter.
      */
-    private final void initialize() {
+    private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {

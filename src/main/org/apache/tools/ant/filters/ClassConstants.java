@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public final class ClassConstants
      * during reading, or if the constants for the specified class cannot
      * be read (for example due to the class not being found).
      */
-    public final int read() throws IOException {
+    public int read() throws IOException {
 
         int ch = -1;
 
@@ -150,7 +150,7 @@ public final class ClassConstants
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         ClassConstants newFilter = new ClassConstants(rdr);
         return newFilter;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public final class StripJavaComments
      * @exception IOException if the underlying stream throws an IOException
      * during reading
      */
-    public final int read() throws IOException {
+    public int read() throws IOException {
         int ch = -1;
         if (readAheadCh != -1) {
             ch = readAheadCh;
@@ -137,7 +137,7 @@ public final class StripJavaComments
      *         the specified reader
      */
 
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         StripJavaComments newFilter = new StripJavaComments(rdr);
         return newFilter;
     }
