@@ -87,6 +87,7 @@ public class CallTarget extends Task {
     private String subTarget;
     private boolean initialized = false;
     private boolean inheritAll = true;
+    private boolean inheritRefs = false;
 
     /**
      * If true, inherit all properties from parent Project
@@ -97,6 +98,18 @@ public class CallTarget extends Task {
        inheritAll = inherit;
     } //-- setInheritAll
 
+    /**
+     * set the inherit refs flag
+     * @param inheritRefs new value
+     */
+    public void setInheritRefs(boolean inheritRefs) {
+        this.inheritRefs=inheritRefs;
+    }
+
+    /**
+     * init this task by creating new instance of the ant task and
+     * configuring it's by calling its own init method.
+     */
     public void init() {
         callee = (Ant) project.createTask("ant");
         callee.setOwningTarget(target);
@@ -106,7 +119,12 @@ public class CallTarget extends Task {
         initialized = true;
     }
 
-    public void execute() {
+    /**
+     * hand off the work to the ant task of ours, after setting it up
+     * @throws BuildException on validation failure or if the target didn't
+     * execute
+     */
+    public void execute() throws BuildException {
         if (!initialized) {
             init();
         }
@@ -120,6 +138,7 @@ public class CallTarget extends Task {
         callee.setAntfile(project.getProperty("ant.file"));
         callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);
+        callee.setInheritRefs(inheritRefs);
         callee.execute();
     }
 
