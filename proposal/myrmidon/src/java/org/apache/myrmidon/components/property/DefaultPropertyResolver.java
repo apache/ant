@@ -7,10 +7,15 @@
  */
 package org.apache.myrmidon.components.property;
 
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
@@ -21,10 +26,17 @@ import org.apache.myrmidon.interfaces.property.PropertyResolver;
  * @version $Revision$ $Date$
  */
 public class DefaultPropertyResolver
-    implements PropertyResolver
+    implements PropertyResolver, Serviceable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultPropertyResolver.class );
+
+    private Converter m_converter;
+
+    public void service( final ServiceManager serviceManager ) throws ServiceException
+    {
+        m_converter = (Converter)serviceManager.lookup( Converter.ROLE );
+    }
 
     /**
      * Resolve a string property. This evaluates all property
@@ -66,9 +78,9 @@ public class DefaultPropertyResolver
 
         while( true )
         {
-            final Object propertyValue =
-                getPropertyValue( content.substring( start + 2, end ),
-                                  context );
+            final String propertyValue =
+                getPropertyStringValue( content.substring( start + 2, end ),
+                                        context );
 
             sb.append( content.substring( lastPlace, start ) );
             sb.append( propertyValue );
@@ -127,7 +139,7 @@ public class DefaultPropertyResolver
         {
             final String propertyName = content.substring( start + 2, end );
             final Object key = recursiveResolveProperty( propertyName, context );
-            final Object value = getPropertyValue( key.toString(), context );
+            final String value = getPropertyStringValue( key.toString(), context );
 
             sb.append( content.substring( lastPlace, start ) );
             sb.append( value );
@@ -226,6 +238,28 @@ public class DefaultPropertyResolver
 
         final String message = REZ.getString( "prop.mismatched-braces.error" );
         throw new TaskException( message );
+    }
+
+    /**
+     * Returns a property's value, converted to a String.
+     */
+    private String getPropertyStringValue( final String propertyName,
+                                           final TaskContext context )
+        throws TaskException
+    {
+        final Object value = getPropertyValue( propertyName, context );
+        if( value instanceof String )
+        {
+            return (String)value;
+        }
+        try
+        {
+            return (String)m_converter.convert( String.class, value, context );
+        }
+        catch( final ConverterException e )
+        {
+            throw new TaskException( e.getMessage(), e );
+        }
     }
 
     /**

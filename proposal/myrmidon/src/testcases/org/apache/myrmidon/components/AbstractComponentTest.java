@@ -73,27 +73,27 @@ public abstract class AbstractComponentTest
             m_serviceManager = new DefaultServiceManager();
             List components = new ArrayList();
 
-            Object component = new DefaultMasterConverter();
+            Object component = createComponent( Converter.ROLE, DefaultMasterConverter.class );
             m_serviceManager.put( Converter.ROLE, component );
             components.add( component );
 
-            component = new DefaultConverterRegistry();
+            component = createComponent( ConverterRegistry.ROLE, DefaultConverterRegistry.class );
             m_serviceManager.put( ConverterRegistry.ROLE, component );
             components.add( component );
 
-            component = new DefaultTypeManager();
+            component = createComponent( TypeManager.ROLE, DefaultTypeManager.class );
             m_serviceManager.put( TypeManager.ROLE, component );
             components.add( component );
 
-            component = new DefaultConfigurer();
+            component = createComponent( Configurer.ROLE, DefaultConfigurer.class );
             m_serviceManager.put( Configurer.ROLE, component );
             components.add( component );
 
-            component = new DefaultDeployer();
+            component = createComponent( Deployer.ROLE, DefaultDeployer.class );
             m_serviceManager.put( Deployer.ROLE, component );
             components.add( component );
 
-            component = new DefaultExecutor();
+            component = createComponent( Executor.ROLE, DefaultExecutor.class );
             m_serviceManager.put( Executor.ROLE, component );
             components.add( component );
 
@@ -102,15 +102,15 @@ public abstract class AbstractComponentTest
             m_serviceManager.put( ClassLoaderManager.ROLE, classLoaderMgr );
             components.add( classLoaderMgr );
 
-            component = new DefaultExtensionManager();
+            component = createComponent( ExtensionManager.ROLE, DefaultExtensionManager.class );
             m_serviceManager.put( ExtensionManager.ROLE, component );
             components.add( component );
 
-            component = new DefaultRoleManager();
+            component = createComponent( RoleManager.ROLE, DefaultRoleManager.class );
             m_serviceManager.put( RoleManager.ROLE, component );
             components.add( component );
 
-            component = new DefaultPropertyResolver();
+            component = createComponent( PropertyResolver.ROLE, DefaultPropertyResolver.class );
             m_serviceManager.put( PropertyResolver.ROLE, component );
             components.add( component );
 
@@ -145,6 +145,16 @@ public abstract class AbstractComponentTest
         }
 
         return m_serviceManager;
+    }
+
+    /**
+     * Creates an instance of a component.  Sub-classes can override this
+     * method to add a particular implementation to the set of test components.
+     */
+    protected Object createComponent( final String role, final Class defaultImpl )
+        throws Exception
+    {
+        return defaultImpl.newInstance();
     }
 
     /**

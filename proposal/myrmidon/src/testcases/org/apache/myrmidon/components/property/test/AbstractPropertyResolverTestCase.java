@@ -9,10 +9,11 @@ package org.apache.myrmidon.components.property.test;
 
 import java.io.File;
 import java.util.Date;
+import org.apache.antlib.core.ObjectToStringConverter;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.AbstractMyrmidonTest;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
@@ -23,25 +24,44 @@ import org.apache.myrmidon.interfaces.property.PropertyResolver;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractPropertyResolverTestCase
-    extends AbstractMyrmidonTest
+    extends AbstractComponentTest
 {
     protected final static Resources REZ = getResourcesForTested( AbstractPropertyResolverTestCase.class );
 
     protected PropertyResolver m_resolver;
     protected DefaultTaskContext m_context;
 
-    public AbstractPropertyResolverTestCase( String name )
+    public AbstractPropertyResolverTestCase( final String name )
     {
         super( name );
     }
 
     protected void setUp() throws Exception
     {
-        m_resolver = createResolver();
+        m_resolver = (PropertyResolver)getServiceManager().lookup( PropertyResolver.ROLE );
 
         m_context = new DefaultTaskContext( null, null, getLogger() );
         m_context.setProperty( "intProp", new Integer( 333 ) );
         m_context.setProperty( "stringProp", "String property" );
+
+        registerConverter( ObjectToStringConverter.class, Object.class, String.class );
+    }
+
+    /**
+     * Creates an instance of a component.  Sub-classes can override this
+     * method to add a particular implementation to the set of test components.
+     */
+    protected Object createComponent( String role, Class defaultImpl )
+        throws Exception
+    {
+        if( role.equals( PropertyResolver.ROLE) )
+        {
+            return createResolver();
+        }
+        else
+        {
+            return super.createComponent( role, defaultImpl );
+        }
     }
 
     /**
@@ -65,7 +85,7 @@ public abstract class AbstractPropertyResolverTestCase
     /**
      * Simple tests with property on it's own, and accompanied by text.
      */
-    private void testPropertyValue( Object propObject )
+    private void testPropertyValue( final Object propObject )
         throws Exception
     {
         m_context.setProperty( "typedProp", propObject );

@@ -15,6 +15,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
+import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestAttributeConvert;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestConfigAdder;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestContent;
@@ -30,6 +31,7 @@ import org.apache.myrmidon.components.configurer.test.data.ConfigTestPropResolut
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestReferenceAttribute;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestReferenceConversion;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestReferenceElement;
+import org.apache.myrmidon.components.configurer.test.data.ConfigTestSetAndAdd;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestSetAttribute;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestSetElement;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedAdder;
@@ -38,7 +40,6 @@ import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedAdderR
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedAdderRole;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedConfigAdder;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestUnknownReference;
-import org.apache.myrmidon.components.configurer.test.data.ConfigTestSetAndAdd;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -78,6 +79,23 @@ public class DefaultConfigurerTestCase
         m_context = new DefaultTaskContext( null, getServiceManager(), getLogger() );
         final File baseDir = new File( "." ).getAbsoluteFile();
         m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
+    }
+
+    /**
+     * Creates an instance of a component.  Sub-classes can override this
+     * method to add a particular implementation to the set of test components.
+     */
+    protected Object createComponent( final String role, final Class defaultImpl )
+        throws Exception
+    {
+        if( role.equals( Configurer.ROLE) )
+        {
+            return new DefaultConfigurer();
+        }
+        else
+        {
+            return super.createComponent( role, defaultImpl );
+        }
     }
 
     /**

@@ -11,6 +11,7 @@ import java.io.File;
 import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.components.AbstractComponentTest;
+import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
@@ -46,6 +47,23 @@ public class DefaultDeployerTestCase
         super.setUp();
         m_deployer = (Deployer)getServiceManager().lookup( Deployer.ROLE );
         m_converter = (Converter)getServiceManager().lookup( Converter.ROLE );
+    }
+
+    /**
+     * Creates an instance of a component.  Sub-classes can override this
+     * method to add a particular implementation to the set of test components.
+     */
+    protected Object createComponent( final String role, final Class defaultImpl )
+        throws Exception
+    {
+        if( role.equals( Deployer.ROLE) )
+        {
+            return new DefaultDeployer();
+        }
+        else
+        {
+            return super.createComponent( role, defaultImpl );
+        }
     }
 
     /**
