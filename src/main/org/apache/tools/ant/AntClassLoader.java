@@ -921,7 +921,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 }
             }
             
-            throw new ClassNotFoundException();
+            throw new ClassNotFoundException(name);
         }
         finally {
             try {
