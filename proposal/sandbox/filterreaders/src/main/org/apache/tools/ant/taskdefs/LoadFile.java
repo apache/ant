@@ -60,10 +60,9 @@ import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
+import org.apache.tools.ant.util.ChainReaderHelper;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 /**
@@ -194,7 +193,12 @@ public final class LoadFile extends Task {
                 instream = new InputStreamReader(bis, encoding);
             }
 
-            String text = processStream(instream, size);
+            ChainReaderHelper crh = new ChainReaderHelper();
+            crh.setBufferSize(size);
+            crh.setPrimaryReader(instream);
+            crh.setFilterReaderSets(filterReaderSets);
+
+            String text = crh.processStream();
 
             if(evaluateProperties) {
                 text = project.replaceProperties(text);
@@ -227,79 +231,6 @@ public final class LoadFile extends Task {
                 //ignore
             }
         }
-    }
-
-    /**
-     * Process the input by passing it through the reader chain.
-     */
-    private final String processStream(final Reader inputReader, final int size)
-        throws BuildException, IOException {
-
-        Reader instream = inputReader;
-        final char[] buffer = new char[size];
-        final int filterReadersCount = filterReaderSets.size();
-        final Vector finalFilters = new Vector();
-
-        for (int i = 0; i < filterReadersCount; i++) {
-            final FilterReaderSet filterset =
-                (FilterReaderSet) filterReaderSets.elementAt(i);
-            final Vector filterReaders = filterset.getFilterReaders();
-            final int readerCount = filterReaders.size();
-            for (int j = 0; j < readerCount; j++) {
-                final AntFilterReader afr =
-                    (AntFilterReader) filterReaders.elementAt(j);
-                finalFilters.addElement(afr);
-            }
-        }
-
-        final int filtersCount = finalFilters.size();
-
-        if (filtersCount > 0) {
-            for (int i = 0; i < filtersCount; i++) {
-                final AntFilterReader filter =
-                    (AntFilterReader) finalFilters.elementAt(i);
-                final String className = filter.getClassName();
-                if (className != null) {
-                    try {
-                        final Class clazz = Class.forName(className);
-                        if (clazz != null) {
-                            final Constructor[] constructors =
-                                clazz.getConstructors();
-                            final Reader[] rdr = {instream};
-                            instream =
-                                (Reader) constructors[0].newInstance(rdr);
-                            if (Parameterizable.class.isAssignableFrom(clazz)) {
-                                final Parameter[] params = filter.getParams();
-                                ((Parameterizable)
-                                    instream).setParameters(params);
-                            }
-                        }
-                    } catch (final ClassNotFoundException cnfe) {
-                        throw new BuildException(cnfe, location);
-                    } catch (final InstantiationException ie) {
-                        throw new BuildException(ie, location);
-                    } catch (final IllegalAccessException iae) {
-                        throw new BuildException(iae, location);
-                    } catch (final InvocationTargetException ite) {
-                        throw new BuildException(ite, location);
-                    }
-                }
-            }
-        }
-
-        int bufferLength = 0;
-        String text = null;
-        while (bufferLength != -1) {
-            bufferLength = instream.read(buffer);
-            if (bufferLength != -1) {
-                if (text == null) {
-                    text = new String(buffer, 0, bufferLength);
-                } else {
-                    text += new String(buffer, 0, bufferLength);
-                }
-            }
-        }
-        return text;
     }
 
     /**
