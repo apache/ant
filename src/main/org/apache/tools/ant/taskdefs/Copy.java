@@ -88,6 +88,8 @@ import java.util.Enumeration;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ *
+ * @version $Revision$
  */
 public class Copy extends Task {
     protected File file = null;     // the source file
@@ -109,6 +111,7 @@ public class Copy extends Task {
     protected Mapper mapperElement = null;
     private Vector filterSets = new Vector();
     private FileUtils fileUtils;
+    private String encoding = null;
 
     public Copy() {
         fileUtils = FileUtils.newFileUtils();
@@ -161,6 +164,16 @@ public class Copy extends Task {
      */
     public void setPreserveLastModified(boolean preserve) {
         preserveLastModified = preserve;
+    }
+
+    /**
+     * Whether to give the copied files the same last modified time as
+     * the original files.
+     *
+     * @since 1.32, Ant 1.5
+     */
+    public boolean getPreserveLastModified() {
+        return preserveLastModified;
     }
 
     /**
@@ -232,6 +245,24 @@ public class Copy extends Task {
         }
         mapperElement = new Mapper(project);
         return mapperElement;
+    }
+
+    /**
+     * Sets the character encoding
+     *
+     * @since 1.32, Ant 1.5
+     */
+    public void setEncoding (String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
+     * @return the character encoding, <code>null</code> if not set.
+     *
+     * @since 1.32, Ant 1.5
+     */
+    public String getEncoding() {
+        return encoding;
     }
 
     /**
@@ -422,7 +453,8 @@ public class Copy extends Task {
                         executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
                     }
                     fileUtils.copyFile(fromFile, toFile, executionFilters,
-                                       forceOverwrite, preserveLastModified);
+                                       forceOverwrite, preserveLastModified,
+                                       encoding);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

@@ -64,6 +64,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -140,7 +142,7 @@ public class FileUtils {
                  overwrite, false);
     }
 
-     /**
+    /**
      * Convienence method to copy a file from a source to a
      * destination specifying if token filtering must be used, if
      * source files may overwrite newer destination files and the
@@ -154,6 +156,25 @@ public class FileUtils {
         throws IOException {
         copyFile(new File(sourceFile), new File(destFile), filters, 
                  overwrite, preserveLastModified);
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * source files may overwrite newer destination files and the
+     * last modified time of <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @throws IOException 
+     *
+     * @since 1.14, Ant 1.5
+     */
+    public void copyFile(String sourceFile, String destFile, 
+                         FilterSetCollection filters, boolean overwrite, 
+                         boolean preserveLastModified, String encoding)
+        throws IOException {
+        copyFile(new File(sourceFile), new File(destFile), filters, 
+                 overwrite, preserveLastModified, encoding);
     }
 
     /**
@@ -201,6 +222,26 @@ public class FileUtils {
     public void copyFile(File sourceFile, File destFile, FilterSetCollection filters,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
+        copyFile(sourceFile, destFile, filters, overwrite, 
+                 preserveLastModified, null);
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * source files may overwrite newer destination files, the last
+     * modified time of <code>destFile</code> file should be made
+     * equal to the last modified time of <code>sourceFile</code> and
+     * which character encoding to assume.
+     *
+     * @throws IOException 
+     *
+     * @since 1.14, Ant 1.5
+     */
+    public void copyFile(File sourceFile, File destFile, 
+                         FilterSetCollection filters, boolean overwrite, 
+                         boolean preserveLastModified, String encoding)
+        throws IOException {
         
         if (overwrite || !destFile.exists() ||
             destFile.lastModified() < sourceFile.lastModified()) {
@@ -217,8 +258,16 @@ public class FileUtils {
             }
 
             if (filters != null && filters.hasFilters()) {
-                BufferedReader in = new BufferedReader(new FileReader(sourceFile));
-                BufferedWriter out = new BufferedWriter(new FileWriter(destFile));
+                BufferedReader in = null;
+                BufferedWriter out = null;
+
+                if (encoding == null) {
+                    in = new BufferedReader(new FileReader(sourceFile));
+                    out = new BufferedWriter(new FileWriter(destFile));
+                } else {
+                    in = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile), encoding));
+                    out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destFile), encoding));
+                }
 
                 int length;
                 String newline = null;
