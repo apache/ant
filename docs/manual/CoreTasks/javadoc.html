@@ -67,7 +67,8 @@ means any VM of at least version 1.2.</p>
   </tr>
   <tr>
     <td valign="top">sourcefiles</td>
-    <td valign="top">Comma separated list of source files</td>
+    <td valign="top">Comma separated list of source files -- see also
+    the nested <code>source</code> element.</td>
     <td align="center" valign="top">all</td>
   </tr>
   <tr>
@@ -85,7 +86,7 @@ means any VM of at least version 1.2.</p>
   <tr>
     <td valign="top">packagenames</td>
     <td valign="top">Comma separated list of package files (with terminating
-      wildcard)</td>
+      wildcard) -- see also the nested <code>package</code> element.</td>
     <td align="center" valign="top">all</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -246,21 +247,25 @@ means any VM of at least version 1.2.</p>
   </tr>
   <tr>
     <td valign="top">link</td>
-    <td valign="top">Create links to javadoc output at the given URL</td>
+    <td valign="top">Create links to javadoc output at the given URL
+    -- see also the nested <code>link</code> element.</td>
     <td align="center" valign="top">1.2+</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">linkoffline</td>
     <td valign="top">Link to docs at &lt;url&gt; using package list at
-      &lt;url2&gt; - separate the URLs by using a space character.</td>
+    &lt;url2&gt; - separate the URLs by using a space character -- see
+    also the nested <code>link</code> element.</td>
     <td align="center" valign="top">1.2+</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">group</td>
     <td valign="top">Group specified packages together in overview
-      page.  The format is as described <a href="#groupattribute">below</a>.</td>
+    page.  The format is as described <a
+    href="#groupattribute">below</a> -- see also the nested
+    <code>group</code> element.</td>
     <td align="center" valign="top">1.2+</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -333,7 +338,9 @@ means any VM of at least version 1.2.</p>
   </tr>
   <tr>
     <td valign="top">doclet</td>
-    <td valign="top">Specifies the class file that starts the doclet used in generating the documentation.</td>
+    <td valign="top">Specifies the class file that starts the doclet
+    used in generating the documentation -- see also the nested
+    <code>doclet</code> element.</td>
     <td align="center" valign="top">1.2+</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -354,8 +361,9 @@ means any VM of at least version 1.2.</p>
   <tr>
     <td valign="top">additionalparam</td>
     <td valign="top">Lets you add additional parameters to the javadoc
-            command line. Useful for doclets. Parameters containing
-            spaces need to be quoted using &amp;quot;.</td>
+    command line. Useful for doclets. Parameters containing spaces
+    need to be quoted using &amp;quot; -- see also the nested
+    <code>arg</code> element.</td>
     <td align="center" valign="top">all</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -369,7 +377,7 @@ means any VM of at least version 1.2.</p>
   <tr>
     <td valign="top">excludepackagenames</td>
     <td valign="top">comma separated list of packages you don't want
-      docs for.</td>
+      docs for -- see also the nested <code>excludepackage</code> element.</td>
     <td align="center" valign="top">all</td>
     <td valign="top" align="center">No</td>
   </tr>
