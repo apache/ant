@@ -105,7 +105,7 @@ public class Filters {
         return buf.toString();
     }
 
-    abstract public static class FilterElement {
+    public abstract static class FilterElement {
         protected String clazz;
         protected String method = "*"; // default is all methods
         protected boolean enabled = true; // default is enable

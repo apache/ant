@@ -132,7 +132,7 @@ public class ReportFilters {
 
 
     /** default abstract filter element class */
-    abstract public static class FilterElement {
+    public abstract static class FilterElement {
         protected String clazz = "*"; // default is all classes
         protected String method = "*"; // default is all methods
 
