@@ -7,9 +7,9 @@
  */
 package org.apache.myrmidon.model;
 
-import java.util.Iterator;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  * Interface to represent targets in build file.
@@ -24,14 +24,14 @@ public interface Target
      *
      * @return the dependency list
      */
-    Iterator getDependencies();
+    String[] getDependencies();
 
     /**
      * Get tasks in target
      *
      * @return the target list
      */
-    Iterator getTasks();
+    Configuration[] getTasks();
 
     /**
      * Get condition under which target is executed.

@@ -311,6 +311,7 @@ public class Main
         setupLogger( embeddor );
         embeddor.parameterize( parameters );
         embeddor.initialize();
+        embeddor.start();
 
         final ProjectBuilder builder = embeddor.getProjectBuilder();
 
@@ -350,6 +351,7 @@ public class Main
 
         }
 
+        embeddor.stop();
         embeddor.dispose();
     }
 

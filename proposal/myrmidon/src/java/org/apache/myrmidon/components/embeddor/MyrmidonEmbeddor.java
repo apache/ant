@@ -113,8 +113,17 @@ public class MyrmidonEmbeddor
         setupComponents();
 
         setupFiles();
+    }
 
+    public void start()
+        throws Exception
+    {
         CamelotUtil.deployFromDirectory( m_deployer, m_taskLibDir, ".tsk" );
+    }
+
+    public void stop()
+    {
+        //Undeploy all the tasks by killing ExecutionFrame???
     }
 
     /**

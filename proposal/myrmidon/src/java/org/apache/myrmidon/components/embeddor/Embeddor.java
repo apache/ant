@@ -10,6 +10,7 @@ package org.apache.myrmidon.components.embeddor;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
@@ -20,7 +21,7 @@ import org.apache.myrmidon.components.builder.ProjectBuilder;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Embeddor
-    extends Component, Parameterizable, Initializable, Disposable
+    extends Component, Parameterizable, Initializable, Startable, Disposable
 {
     /**
      * Retrieve builder for runtime.

@@ -138,13 +138,12 @@ public class DefaultProjectEngine
         done.add( targetName );
 
         //execute all dependencies
-        final Iterator dependencies = target.getDependencies();
-        while( dependencies.hasNext() )
+        final String[] dependencies = target.getDependencies();
+        for( int i = 0; i < dependencies.length; i++ )
         {
-            final String dependency = (String)dependencies.next();
-            if( !done.contains( dependency ) )
+            if( !done.contains( dependencies[ i ] ) )
             {
-                execute( project, dependency, context, done );
+                execute( project, dependencies[ i ], context, done );
             }
         }
 
@@ -210,11 +209,10 @@ public class DefaultProjectEngine
         getLogger().debug( "Executing target " + name );
 
         //execute all tasks assciated with target
-        final Iterator tasks = target.getTasks();
-        while( tasks.hasNext() )
+        final Configuration[] tasks = target.getTasks();
+        for( int i = 0; i < tasks.length; i++ )
         {
-            final Configuration task = (Configuration)tasks.next();
-            executeTask( task, context );
+            executeTask( tasks[ i ], context );
         }
     }
 

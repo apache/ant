@@ -9,12 +9,8 @@ package org.apache.myrmidon.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.api.DefaultTaskContext;
-import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Default project implementation.

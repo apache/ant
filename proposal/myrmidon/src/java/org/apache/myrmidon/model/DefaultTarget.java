@@ -8,7 +8,6 @@
 package org.apache.myrmidon.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.configuration.Configuration;
 
@@ -20,9 +19,9 @@ import org.apache.avalon.framework.configuration.Configuration;
 public class DefaultTarget
     implements Target
 {
-    protected final ArrayList   m_dependencies     = new ArrayList();
-    protected final ArrayList   m_tasks            = new ArrayList();
-    protected final Condition   m_condition;
+    private final ArrayList   m_dependencies     = new ArrayList();
+    private final ArrayList   m_tasks            = new ArrayList();
+    private final Condition   m_condition;
 
     /**
      * Constructor taking condition for target.
@@ -56,9 +55,9 @@ public class DefaultTarget
      *
      * @return the dependency list
      */
-    public Iterator getDependencies()
+    public String[] getDependencies()
     {
-        return m_dependencies.iterator();
+        return (String[])m_dependencies.toArray( new String[ 0 ] );
     }
 
     /**
@@ -66,9 +65,9 @@ public class DefaultTarget
      *
      * @return the target list
      */
-    public Iterator getTasks()
+    public Configuration[] getTasks()
     {
-        return m_tasks.iterator();
+        return (Configuration[])m_tasks.toArray( new Configuration[ 0 ] );
     }
 
     /**
@@ -86,8 +85,8 @@ public class DefaultTarget
      *
      * @param taskConfiguration the task representation
      */
-    public void addTask( final Configuration taskConfiguration )
+    public void addTask( final Configuration taskData )
     {
-        m_tasks.add( taskConfiguration );
+        m_tasks.add( taskData );
     }
 }
