@@ -103,5 +103,6 @@ public final class StripLineBreaks
      */
     public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
+        initialized = false;
     }
 }
