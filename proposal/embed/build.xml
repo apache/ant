@@ -1,6 +1,7 @@
 <project name="embed" default="main" basedir=".">
   <description>Embed proposal</description>
   <property file="${user.home}/build.properties" />
+  <property file="user.properties" />
 
   <property name="base.path" location="/usr/share/java"/>
   <property name="ant.src" location="../.."/>
@@ -19,11 +20,13 @@
 
   <property name="commons-discovery.jar" location="${commons.src}/discovery/dist/commons-discovery.jar" />
 
+  <target name="init">
+      <mkdir dir="build/classes" />
+  </target>
     
   <target name="build" depends="main" />
-  <target name="main">
-    <mkdir dir="${ant.home}/lib"/>
-    <mkdir dir="build/classes" />
+
+  <target name="main" depends="init" >
     <javac srcdir="src/java"  
            debug="${debug}"
            destdir="${embed.build}/classes" >
@@ -39,19 +42,9 @@
       <include name="**" />
     </jar>
         
-    <echo message="${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
-
-    <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
-    <copy file="${commons-logging.jar}" toDir="${ant.home}/lib"/>
-    <copy file="${commons-discovery.jar}" toDir="${ant.home}/lib"/>
-
-    <copy file="${commons-logging.jar}" toDir="${embed.build}"/>
-    <copy file="${commons-discovery.jar}" toDir="${embed.build}"/>
   </target>
 
-  <target name="embed-optional">
-    <mkdir dir="${ant.home}/lib"/>
-    <mkdir dir="build/classes" />
+  <target name="embed-optional" depends="init" >
     <javac srcdir="src/java"  
            debug="${debug}"
            destdir="${embed.build}/classes" >
@@ -63,6 +56,7 @@
         <pathelement location="${velocity.jar}" />
         <pathelement location="${jexl.jar}" />
         <pathelement location="${commons-discovery.jar}" />
+        <pathelement location="${commons-logging.jar}" />
       </classpath>
     </javac>
 
@@ -74,35 +68,24 @@
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
     </jar>
         
-    <echo message="${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
-
-    <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
-    <copy file="${commons-logging.jar}" toDir="${ant.home}/lib"/>
-    <copy file="${commons-discovery.jar}" toDir="${ant.home}/lib"/>
-
-    <copy file="${commons-logging.jar}" toDir="${embed.build}"/>
-    <copy file="${commons-discovery.jar}" toDir="${embed.build}"/>
   </target>
 
   <target name="gump" description="Patch gump bootstrap ant" depends="main" >
-    <!-- What we'll do - in order to get around gump classpath use - is
-         to recreate ant.jar ( using build/classes ) to include our code -->
-    <unjar jar="${ant.src}/bootstrap/lib/ant.jar" dest="${embed.build}/classes" />
-    <delete file="${ant.src}/bootstrap/lib/ant.jar" />
-    <jar file="${ant.src}/bootstrap/lib/ant.jar" basedir="${embed.build}/classes"/>
   </target>
 
   <target name="install" description="Installs built jars">
-    <echo message="${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
+    <echo message="Copy ${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
+
+    <mkdir dir="${ant.home}/lib" />
     <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
+
   </target>
 
   <target name="install-embed" depends="main, install" 
-          description="Installs core built jars"/>
+          description="Builds and installs embed without optional"/>
  
   <target name="install-embed-optional" depends="embed-optional, install" 
-          description="Installs extra built jars">
-    <copy file="${commons-logging.jar}" toDir="${ant.home}/lib"/>
-    <copy file="${commons-discovery.jar}" toDir="${ant.home}/lib"/>
+          description="Installs extra built jars" >
+    <copy file="${embed.build}/optional-dynprop.jar" toDir="${ant.home}/lib"/>
   </target> 
 </project>
