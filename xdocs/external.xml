@@ -496,6 +496,10 @@
             <td><a href="http://objectstyle.org/woproject/">http://objectstyle.org/woproject/</a></td>
           </tr>
           <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:andrus@objectstyle.org">Andrus Adamchik</a></td>
+          </tr>
+          <tr>
             <th>License:</th>
             <td>Apache license</td>
           </tr>
