@@ -705,7 +705,7 @@ public class ProjectHelper {
     public static void addText(Project project, Object target, String text)
         throws BuildException {
 
-        if (text == null || text.trim().length() == 0) {
+        if (text == null ) {
             return;
         }
 

@@ -125,7 +125,7 @@ public class UnknownElement extends Task {
         }
 
         if (realThing instanceof Task) {
-            ((Task) realThing).perform();
+            ((Task) realThing).execute();
         }
     }
 

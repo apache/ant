@@ -315,10 +315,17 @@ public class IntrospectionHelper implements BuildListener {
      */
     public void addText(Project project, Object element, String text) {
         if (addText == null) {
-           String msg = getElementName(project, element) +
-           //String msg = "Class " + element.getClass().getName() +
-                " doesn't support nested text data.";
-            throw new BuildException(msg);
+            // Element doesn't handle text content
+            if ( text.trim().length() == 0 ) {
+                // Only whitespace - ignore
+                return;
+            }
+            else {
+                // Not whitespace - fail
+                String msg = getElementName(project, element) +
+                    " doesn't support nested text data.";
+                throw new BuildException(msg);
+            }
         }
         try {
             addText.invoke(element, new String[] {text});
