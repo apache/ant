@@ -181,16 +181,16 @@ public class SubAnt
         BuildException buildException = null;
         for (int i = 0; i < count; ++i) {
             File file = null;
-	    String subdirPath = null;
+            String subdirPath = null;
             Throwable thrownException = null;
             try {
                 File directory = null;
                 file = new File(filenames[i]);
                 if (file.isDirectory()) {
-		    if (verbose) {
-			subdirPath = file.getPath();
-			log("Entering directory: " + subdirPath + "\n", Project.MSG_INFO);
-		    }
+                    if (verbose) {
+                        subdirPath = file.getPath();
+                        log("Entering directory: " + subdirPath + "\n", Project.MSG_INFO);
+                    }
                     if (genericantfile != null) {
                         directory = file;
                         file = genericantfile;
@@ -199,22 +199,22 @@ public class SubAnt
                     }
                 }
                 execute(file, directory);
-		if (verbose && subdirPath != null) {
-		    log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
-		}
+                if (verbose && subdirPath != null) {
+                    log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+                }
             } catch (RuntimeException ex) {
                 if (!(getProject().isKeepGoingMode())) {
-		    if (verbose && subdirPath != null) {
-			log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
-		    }
+                    if (verbose && subdirPath != null) {
+                        log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+                    }
                     throw ex; // throw further
                 }
                 thrownException = ex;
             } catch (Throwable ex) {
                 if (!(getProject().isKeepGoingMode())) {
-		    if (verbose && subdirPath != null) {
-			log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
-		    }
+                    if (verbose && subdirPath != null) {
+                        log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+                    }
                     throw new BuildException(ex);
                 }
                 thrownException = ex;
@@ -238,9 +238,9 @@ public class SubAnt
                             new BuildException(thrownException);
                     }
                 }
-		if (verbose && subdirPath != null) {
-		    log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
-		}
+                if (verbose && subdirPath != null) {
+                    log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+                }
             }
         }
         // check if one of the builds failed in keep going mode
