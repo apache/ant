@@ -10,7 +10,7 @@
 
   <target name="testNoNamespace">
     <schemavalidate
-      defaultSchemaFile="${doc.xsd}"
+      noNamespaceFile="${doc.xsd}"
       file="xml/endpiece-noSchema.xml">
     </schemavalidate>
   </target>
