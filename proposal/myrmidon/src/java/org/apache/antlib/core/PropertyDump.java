@@ -10,6 +10,7 @@ package org.apache.antlib.core;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This is a simple task used to dump out all the proeprtys in the
@@ -45,6 +46,7 @@ public class PropertyDump
      * Printout all the properties in ant runtime.
      */
     public void execute()
+        throws TaskException
     {
         final Map properties = getContext().getProperties();
         final Iterator iterator = properties.keySet().iterator();
