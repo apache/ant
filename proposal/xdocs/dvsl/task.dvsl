@@ -245,7 +245,7 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
     <tr>
 #*    *##td($attrib.name)
 #*    *##td($node.description)
-#*    *##td($attrib.type)
+#*    *##td($attrib.briefType)
     </tr>
 #end
 
