@@ -565,21 +565,7 @@ public class Main {
                 project.setUserProperty("ant.file",
                     buildFile.getAbsolutePath());
 
-                // first use the ProjectHelper to create the project object
-                // from the given build file.
-                String noParserMessage = "No JAXP compliant XML parser found. "
-                    + "Please visit http://xml.apache.org "
-                    + "for a suitable parser";
-                try {
-                    Class.forName("javax.xml.parsers.SAXParserFactory");
-                    ProjectHelper.configureProject(project, buildFile);
-                } catch (NoClassDefFoundError ncdfe) {
-                    throw new BuildException(noParserMessage, ncdfe);
-                } catch (ClassNotFoundException cnfe) {
-                    throw new BuildException(noParserMessage, cnfe);
-                } catch (NullPointerException npe) {
-                    throw new BuildException(noParserMessage, npe);
-                }
+                ProjectHelper.configureProject(project, buildFile);
 
                 if (projectHelp) {
                     printDescription(project);

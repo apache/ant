@@ -139,7 +139,7 @@ public class ProjectHelper {
             + "in a helper plugin " + this.getClass().getName());
     }
 
-    
+
     /** 
      * Discovers a project helper instance. Uses the same patterns
      * as JAXP, commons-logging, etc: a system property, a JDK1.3
@@ -159,14 +159,15 @@ public class ProjectHelper {
         ProjectHelper helper = null;
         
         // First, try the system property
+        String helperClass = System.getProperty(HELPER_PROPERTY);
         try {
-            String helperClass = System.getProperty(HELPER_PROPERTY);
             if (helperClass != null) {
                 helper = newHelper(helperClass);
             }
         } catch (SecurityException e) {
-            // It's ok, we'll try next option
-            ;
+            System.out.println("Unable to load ProjectHelper class \"" 
+                + helperClass + " specified in system property " 
+                + HELPER_PROPERTY);
         }
 
         // A JDK1.3 'service' ( like in JAXP ). That will plug a helper
@@ -203,15 +204,22 @@ public class ProjectHelper {
                     }
                 }
             } catch (Exception ex) {
-                ;
+                System.out.println("Unable to load ProjectHelper " 
+                    + "from service \"" + SERVICE_ID); 
             }
         }
 
         if (helper != null) {
             return helper;
         } else {
-            // Default
-            return new ProjectHelperImpl();
+            try {
+                // Default
+                return new ProjectHelperImpl();
+            } catch (Throwable e) {
+                String message = "Unable to load default ProjectHelper due to "
+                    + e.getClass().getName() + ": " + e.getMessage();
+                throw new BuildException(message, e);
+            }
         }
     }
 

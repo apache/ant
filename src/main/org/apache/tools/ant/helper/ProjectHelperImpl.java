@@ -71,7 +71,7 @@ import org.xml.sax.helpers.XMLReaderAdapter;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
-
+import javax.xml.parsers.FactoryConfigurationError;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.Project;
@@ -165,6 +165,9 @@ public class ProjectHelperImpl extends ProjectHelper {
             parser.parse(inputSource);
         } catch (ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
+        } catch (FactoryConfigurationError e) {
+            throw new BuildException("XML parser has not been configured " 
+                + "correctly: " + e.getMessage(), e);
         } catch (SAXParseException exc) {
             Location location =
                 new Location(buildFile.toString(), exc.getLineNumber(),
