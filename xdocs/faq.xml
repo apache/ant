@@ -793,7 +793,7 @@ shell-prompt> m4 foo.m4 > foo
       </answer>
     </faq>
 
-    <faq id="InstantiationException">
+    <faq id="NoClassDefFoundError">
       <question>I installed Ant 1.6.x and now get
         <code>Exception in thread "main" java.lang.NoClassDefFoundError:
         </code>
@@ -819,7 +819,7 @@ shell-prompt> m4 foo.m4 > foo
       </answer>
     </faq>
 
-    <faq id="NoClassDefFoundError">
+    <faq id="InstantiationException">
       <question>I installed Ant 1.6.x and now get
         <code>java.lang.InstantiationException: org.apache.tools.ant.Main</code>
       </question>
