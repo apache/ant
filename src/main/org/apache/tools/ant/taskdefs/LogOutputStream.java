@@ -120,6 +120,15 @@ public class LogOutputStream extends OutputStream {
      * @param line the line to log.
      */
     protected void processLine(String line) {
+        processLine(line, level);
+    }
+
+    /**
+     * Logs a line to the log system of ant.
+     *
+     * @param line the line to log.
+     */
+    protected void processLine(String line, int level) {
         task.log(line, level);
     }
 
@@ -130,5 +139,9 @@ public class LogOutputStream extends OutputStream {
     public void close() throws IOException {
         if (buffer.size() > 0) processBuffer();
         super.close();
+    }
+
+    public int getMessageLevel() {
+        return level;
     }
 }

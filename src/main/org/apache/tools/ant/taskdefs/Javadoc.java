@@ -57,6 +57,8 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 import java.io.*;
@@ -89,7 +91,7 @@ import java.util.*;
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  */
 
-public class Javadoc extends Exec {
+public class Javadoc extends Task {
 
     public class DocletParam {
         private String name;
@@ -157,60 +159,53 @@ public class Javadoc extends Exec {
         }
     }
 
-    private String maxmemory = null;
+    private Commandline cmd = new Commandline();
+    private boolean javadoc1 = true;
+
+    private void addArgIf(boolean b, String arg) {
+        if (b) {
+            cmd.createArgument().setValue(arg);
+        }
+    }
+
+    private void add11ArgIf(boolean b, String arg) {
+        if (javadoc1 && b) {
+            cmd.createArgument().setValue(arg);
+        }
+    }
+
+    private void add12ArgIf(boolean b, String arg) {
+        if (!javadoc1 && b) {
+            cmd.createArgument().setValue(arg);
+        }
+    }
+
     private Path sourcePath = null;
-    private String additionalParam = null;
     private File destDir = null;
-    private File overviewFile = null;
     private String sourceFiles = null;
     private String packageNames = null;
-    private boolean pub = false;
-    private boolean prot = false;
-    private boolean pack = false;
-    private boolean priv = false;
     private boolean author = true;
     private boolean version = true;
     private DocletInfo doclet = null;
-    private boolean old = false;
     private Path classpath = null;
     private Path bootclasspath = null;
-    private String extdirs = null;
-    private boolean verbose = false;
-    private String locale = null;
-    private String encoding = null;
-    private boolean use = false;
-    private boolean splitindex = false;
-    private String windowtitle = null;
-    private String doctitle = null;
-    private String header = null;
-    private String footer = null;
-    private String bottom = null;
-    private String linkoffline = null;
-    private String link = null;
     private String group = null;
-    private boolean nodeprecated = false;
-    private boolean nodeprecatedlist = false;
-    private boolean notree = false;
-    private boolean noindex = false;
-    private boolean nohelp = false;
-    private boolean nonavbar = false;
-    private boolean serialwarn = false;
-    private File stylesheetfile = null;
-    private File helpfile = null;
-    private String docencoding = null;
     private Vector compileList = new Vector(10);
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
-    private String charset = null;
 
 
-    public void setMaxmemory(String src){
-        maxmemory = src;
+    public void setMaxmemory(String max){
+        if(javadoc1){
+            cmd.createArgument().setValue("-J-mx" + max);
+        } else{
+            cmd.createArgument().setValue("-J-Xmx" + max);
+        }
     }
 
-    public void setadditionalParam(String src){
-        additionalParam = src;
+    public void setAdditionalparam(String add){
+        cmd.createArgument().setValue(add);
     }
     
     public void setSourcepath(Path src) {
@@ -226,8 +221,10 @@ public class Javadoc extends Exec {
         }
         return sourcePath;
     }
-    public void setDestdir(String src) {
-        destDir = project.resolveFile(src);
+    public void setDestdir(File dir) {
+        cmd.createArgument().setValue("-d");
+        cmd.createArgument().setValue(dir.getAbsolutePath());
+        destDir = dir;
     }
     public void setSourcefiles(String src) {
         sourceFiles = src;
@@ -235,20 +232,23 @@ public class Javadoc extends Exec {
     public void setPackagenames(String src) {
         packageNames = src;
     }
-    public void setOverview(String src) {
-        overviewFile = project.resolveFile(src);
+    public void setOverview(File f) {
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-overview");
+            cmd.createArgument().setValue(f.getAbsolutePath());
+        }
     }
-    public void setPublic(String src) {
-        pub = Project.toBoolean(src);
+    public void setPublic(boolean b) {
+        addArgIf(b, "-public");
     }
-    public void setProtected(String src) {
-        prot = Project.toBoolean(src);
+    public void setProtected(boolean b) {
+        addArgIf(b, "-protected");
     }
-    public void setPackage(String src) {
-        pack = Project.toBoolean(src);
+    public void setPackage(boolean b) {
+        addArgIf(b, "-package");
     }
-    public void setPrivate(String src) {
-        priv = Project.toBoolean(src);
+    public void setPrivate(boolean b) {
+        addArgIf(b, "-private");
     }
     public void setDoclet(String src) {
         if (doclet == null) {
@@ -269,8 +269,8 @@ public class Javadoc extends Exec {
         return doclet;
     }
 
-    public void setOld(String src) {
-        old = Project.toBoolean(src);
+    public void setOld(boolean b) {
+        add12ArgIf(b, "-1.1");
     }
     public void setClasspath(Path src) {
         if (classpath == null) {
@@ -299,79 +299,119 @@ public class Javadoc extends Exec {
         return bootclasspath;
     }
     public void setExtdirs(String src) {
-        extdirs = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-extdirs");
+            cmd.createArgument().setValue(src);
+        }
     }
-    public void setVerbose(String src) {
-        verbose = Project.toBoolean(src);
+    public void setVerbose(boolean b) {
+        add12ArgIf(b, "-verbose");
     }
     public void setLocale(String src) {
-        locale = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-locale");
+            cmd.createArgument().setValue(src);
+        }
     }
-    public void setEncoding(String src) {
-        encoding = src;
+    public void setEncoding(String enc) {
+        cmd.createArgument().setValue("-encoding");
+        cmd.createArgument().setValue(enc);
     }
-    public void setVersion(String src) {
-        version = Project.toBoolean(src);
+    public void setVersion(boolean src) {
+        version = src;
     }
-    public void setUse(String src) {
-        use = Project.toBoolean(src);
+    public void setUse(boolean b) {
+        add12ArgIf(b, "-use");
     }
-    public void setAuthor(String src) {
-        author = Project.toBoolean(src);
+    public void setAuthor(boolean src) {
+        author = src;
     }
-    public void setSplitindex(String src) {
-        splitindex = Project.toBoolean(src);
+    public void setSplitindex(boolean b) {
+        add12ArgIf(b, "-splitindex");
     }
     public void setWindowtitle(String src) {
-        windowtitle = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-windowtitle");
+            cmd.createArgument().setValue(src);
+        }
     }
     public void setDoctitle(String src) {
-        doctitle = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-doctitle");
+            cmd.createArgument().setValue(src);
+        }
     }
     public void setHeader(String src) {
-        header = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-header");
+            cmd.createArgument().setValue(src);
+        }
     }
     public void setFooter(String src) {
-        footer = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-footer");
+            cmd.createArgument().setValue(src);
+        }
     }
     public void setBottom(String src) {
-        bottom = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-bottom");
+            cmd.createArgument().setValue(src);
+        }
     }
     public void setLinkoffline(String src) {
-        linkoffline = src;
+        if (!javadoc1) {
+            LinkArgument le = createLink();
+            le.setOffline(true);
+            StringTokenizer tok = new StringTokenizer(src, " ", false);
+            le.setHref(tok.nextToken());
+            le.setPackagelistLoc(tok.nextToken());
+        }
     }
     public void setGroup(String src) {
         group = src;
     }
     public void setLink(String src) {
-        link = src;
+        if (!javadoc1) {
+            createLink().setHref(src);
+        }
     }
-    public void setNodeprecated(String src) {
-        nodeprecated = Project.toBoolean(src);
+    public void setNodeprecated(boolean b) {
+        addArgIf(b, "-nodeprecated");
     }
-    public void setNodeprecatedlist(String src) {
-        nodeprecatedlist = Project.toBoolean(src);
+    public void setNodeprecatedlist(boolean b) {
+        add12ArgIf(b, "-nodeprecatedlist");
     }
-    public void setNotree(String src) {
-        notree = Project.toBoolean(src);
+    public void setNotree(boolean b) {
+        addArgIf(b, "-notree");
     }
-    public void setNoindex(String src) {
-        noindex = Project.toBoolean(src);
+    public void setNoindex(boolean b) {
+        addArgIf(b, "-noindex");
     }
-    public void setNohelp(String src) {
-        nohelp = Project.toBoolean(src);
+    public void setNohelp(boolean b) {
+        add12ArgIf(b, "-nohelp");
     }
-    public void setNonavbar(String src) {
-        nonavbar = Project.toBoolean(src);
+    public void setNonavbar(boolean b) {
+        add12ArgIf(b, "-nonavbar");
     }
-    public void setSerialwarn(String src) {
-        serialwarn = Project.toBoolean(src);
+    public void setSerialwarn(boolean b) {
+        add12ArgIf(b, "-serialwarn");
     }
-    public void setStylesheetfile(String src) {
-        stylesheetfile = project.resolveFile(src);
+    public void setStylesheetfile(File f) {
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-stylesheetfile");
+            cmd.createArgument().setValue(f.getAbsolutePath());
+        }
     }
-    public void setDocencoding(String src) {
-        docencoding = src;
+    public void setHelpfile(File f) {
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-helpfile");
+            cmd.createArgument().setValue(f.getAbsolutePath());
+        }
+    }
+    public void setDocencoding(String enc) {
+        cmd.createArgument().setValue("-docencoding");
+        cmd.createArgument().setValue(enc);
     }
     public void setPackageList(String src) {
         packageList = src;
@@ -407,8 +447,8 @@ public class Javadoc extends Exec {
             return packagelistLoc;
         }
         
-        public void setOffline(String offline) {
-            this.offline = Project.toBoolean(offline);
+        public void setOffline(boolean offline) {
+            this.offline = offline;
         }
         
         public boolean isLinkOffline() {
@@ -447,7 +487,15 @@ public class Javadoc extends Exec {
     }
     
     public void setCharset(String src) {
-        charset = src;
+        if (!javadoc1) {
+            cmd.createArgument().setValue("-charset");
+            cmd.createArgument().setValue(src);
+        }
+    }
+
+    public void init() {
+        cmd.setExecutable("javadoc");
+        javadoc1 = (Project.getJavaVersion() == Project.JAVA_1_1);
     }
 
     public void execute() throws BuildException {
@@ -460,105 +508,46 @@ public class Javadoc extends Exec {
             throw new BuildException(msg);
         }
 
-        boolean javadoc1 = (Project.getJavaVersion() == Project.JAVA_1_1);
-
         log("Generating Javadoc", Project.MSG_INFO);
-
-        Vector argList = new Vector();
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
             classpath = Path.systemClasspath;
 
 
-        if(maxmemory != null){
-            if(javadoc1){
-                argList.addElement("-J-mx" + maxmemory);
-            }
-            else{
-                argList.addElement("-J-Xmx" + maxmemory);
-            }
-        }
-
         if ( (!javadoc1) || (sourcePath == null) ) {
-            argList.addElement("-classpath");
-            argList.addElement(classpath.toString());
+            cmd.createArgument().setValue("-classpath");
+            cmd.createArgument().setValue(classpath.toString());
             if (sourcePath != null) {
-                argList.addElement("-sourcepath");
-                argList.addElement(sourcePath.toString());
+                cmd.createArgument().setValue("-sourcepath");
+                cmd.createArgument().setValue(sourcePath.toString());
             }
         } else {
-            argList.addElement("-classpath");
-            argList.addElement(sourcePath.toString() +
+            cmd.createArgument().setValue("-classpath");
+            cmd.createArgument().setValue(sourcePath.toString() +
                 System.getProperty("path.separator") + classpath.toString());
         }
 
-        if (destDir != null) {
-            argList.addElement("-d");
-            argList.addElement(destDir.getAbsolutePath());
-        }
         if (version && doclet == null)
-            argList.addElement ("-version");
-        if (nodeprecated)
-            argList.addElement ("-nodeprecated");
+            cmd.createArgument().setValue("-version");
         if (author && doclet == null)
-            argList.addElement ("-author");
-        if (noindex)
-            argList.addElement ("-noindex");
-        if (notree)
-            argList.addElement ("-notree");
-        if (pub)
-            argList.addElement ("-public");
-        if (prot)
-            argList.addElement ("-protected");
-        if (pack)
-            argList.addElement ("-package");
-        if (priv)
-            argList.addElement ("-private");
-        if (encoding != null) {
-            argList.addElement("-encoding");
-            argList.addElement(encoding);
-        }
-        if (docencoding != null) {
-            argList.addElement("-docencoding");
-            argList.addElement(docencoding);
-        }
+            cmd.createArgument().setValue("-author");
 
 // --------------------------------- javadoc2 arguments for default doclet
 
 // XXX: how do we handle a custom doclet?
 
         if (!javadoc1) {
-            if (overviewFile != null) {
-                argList.addElement("-overview");
-                argList.addElement(overviewFile.getAbsolutePath());
-            }
-            if (old)
-                argList.addElement("-1.1");
-            if (verbose)
-                argList.addElement("-verbose");
-            if (use)
-                argList.addElement("-use");
-            if (splitindex)
-                argList.addElement("-splitindex");
-            if (nodeprecatedlist)
-                argList.addElement("-nodeprecatedlist");
-            if (nohelp)
-                argList.addElement("-nohelp");
-            if (nonavbar)
-                argList.addElement("-nonavbar");
-            if (serialwarn)                     
-                argList.addElement("-serialwarn");
             if (doclet != null) {
                 if (doclet.getName() == null) {
-                    throw new BuildException("The doclet name must be specified.");
+                    throw new BuildException("The doclet name must be specified.", location);
                 }
                 else {                
-                    argList.addElement("-doclet");
-                    argList.addElement(doclet.getName());
+                    cmd.createArgument().setValue("-doclet");
+                    cmd.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
-                        argList.addElement("-docletpath");
-                        argList.addElement(doclet.getPath().toString());
+                        cmd.createArgument().setValue("-docletpath");
+                        cmd.createArgument().setValue(doclet.getPath().toString());
                     }
                     for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
@@ -566,54 +555,16 @@ public class Javadoc extends Exec {
                             throw new BuildException("Doclet parameters must have a name");
                         }
                         
-                        argList.addElement(param.getName());
+                        cmd.createArgument().setValue(param.getName());
                         if (param.getValue() != null) {
-                            argList.addElement(param.getValue());
+                            cmd.createArgument().setValue(param.getValue());
                         }
                     }                        
                 }
             } 
             if (bootclasspath != null) {
-                argList.addElement("-bootclasspath");
-                argList.addElement(bootclasspath.toString());
-            }
-            if (extdirs != null) {
-                argList.addElement("-extdirs");
-                argList.addElement(extdirs);
-            }
-            if (locale != null) {
-                argList.addElement("-locale");
-                argList.addElement(locale);
-            }
-            if (encoding != null) {
-                argList.addElement("-encoding");
-                argList.addElement(encoding);
-            }
-            if (windowtitle != null) {
-                argList.addElement("-windowtitle");
-                argList.addElement(windowtitle);
-            }
-            if (doctitle != null) {
-                argList.addElement("-doctitle");
-                argList.addElement(doctitle);
-            }
-            if (header != null) {
-                argList.addElement("-header");
-                argList.addElement(header);
-            }
-            if (footer != null) {
-                argList.addElement("-footer");
-                argList.addElement(footer);
-            }
-            if (bottom != null) {
-                argList.addElement("-bottom");
-                argList.addElement(bottom);
-            }
-            
-            // add the single link arguments
-            if (link != null) {
-                argList.addElement("-link");
-                argList.addElement(link);
+                cmd.createArgument().setValue("-bootclasspath");
+                cmd.createArgument().setValue(bootclasspath.toString());
             }
             
             // add the links arguments
@@ -631,23 +582,17 @@ public class Javadoc extends Exec {
                             throw new BuildException("The package list location for link " + la.getHref() +
                                                      " must be provided because the link is offline");
                         }
-                        argList.addElement("-linkoffline");
-                        argList.addElement(la.getHref());
-                        argList.addElement(packageListLocation);
+                        cmd.createArgument().setValue("-linkoffline");
+                        cmd.createArgument().setValue(la.getHref());
+                        cmd.createArgument().setValue(packageListLocation);
                     }
                     else {
-                        argList.addElement("-link");
-                        argList.addElement(la.getHref());
+                        cmd.createArgument().setValue("-link");
+                        cmd.createArgument().setValue(la.getHref());
                     }
                 }
             }                                   
                                                 
-            // add the single linkoffline arguments
-            if (linkoffline != null) {
-                argList.addElement("-linkoffline");
-                argList.addElement(linkoffline);
-            }
-            
             // add the single group arguments
             // Javadoc 1.2 rules:
             //   Multiple -group args allowed.
@@ -667,9 +612,9 @@ public class Javadoc extends Exec {
                   if (space > 0){
                     String name = grp.substring(0, space);
                     String pkgList = grp.substring(space + 1);
-                    argList.addElement("-group");
-                    argList.addElement(name);
-                    argList.addElement(pkgList);
+                    cmd.createArgument().setValue("-group");
+                    cmd.createArgument().setValue(name);
+                    cmd.createArgument().setValue(pkgList);
                   }
                 }
             }
@@ -683,27 +628,12 @@ public class Javadoc extends Exec {
                     if (title == null || packages == null) {
                         throw new BuildException("The title and packages must be specified for group elements.");
                     }
-                    argList.addElement("-group");
-                    argList.addElement(title);
-                    argList.addElement(packages);
+                    cmd.createArgument().setValue("-group");
+                    cmd.createArgument().setValue(title);
+                    cmd.createArgument().setValue(packages);
                 }
             }
 
-            if (stylesheetfile != null) {
-                argList.addElement("-stylesheetfile");
-                argList.addElement(stylesheetfile.getAbsolutePath());
-            }
-            if (helpfile != null) {
-                argList.addElement("-helpfile");
-                argList.addElement(helpfile.getAbsolutePath());
-            }
-            if (charset != null) {
-                argList.addElement("-charset");
-                argList.addElement(charset);
-            }
-            if (additionalParam != null) {
-                argList.addElement(additionalParam);
-            }
         }
 
         if ((packageNames != null) && (packageNames.length() > 0)) {
@@ -714,45 +644,46 @@ public class Javadoc extends Exec {
                 if (name.endsWith(".*")) {
                     packages.addElement(name);
                 } else {
-                    argList.addElement(name);
+                    cmd.createArgument().setValue(name);
                 }
             }
             if (packages.size() > 0) {
-                evaluatePackages(sourcePath, packages, argList);
+                evaluatePackages(sourcePath, packages);
             }
         }
 
         if ((sourceFiles != null) && (sourceFiles.length() > 0)) {
             StringTokenizer tok = new StringTokenizer(sourceFiles, ",", false);
             while (tok.hasMoreTokens()) {
-                argList.addElement(tok.nextToken().trim());
+                cmd.createArgument().setValue(tok.nextToken().trim());
             }
         }
 
          if (packageList != null) {
-            argList.addElement("@" + packageList);
+            cmd.createArgument().setValue("@" + packageList);
         }
-        log("Javadoc args: " + argList.toString(), Project.MSG_VERBOSE);
+        log("Javadoc args: " + cmd.getArguments(), Project.MSG_VERBOSE);
 
         log("Javadoc execution", Project.MSG_INFO);
 
-        StringBuffer b = new StringBuffer();
-        b.append("javadoc ");
-
-        Enumeration e = argList.elements();
-        while (e.hasMoreElements()) {
-            String arg = (String) e.nextElement();
-            if (!arg.startsWith("-")) {
-                b.append("\"");
-                b.append(arg);
-                b.append("\"");
-            } else {
-                b.append(arg);
-            }
-            if (e.hasMoreElements()) b.append(" ");
+        JavadocOutputStream out = new JavadocOutputStream(Project.MSG_INFO);
+        JavadocOutputStream err = new JavadocOutputStream(Project.MSG_WARN);
+        Execute exe = new Execute(new PumpStreamHandler(out, err));
+        exe.setAntRun(project);
+        exe.setWorkingDirectory(project.getBaseDir());
+        try {
+            exe.setCommandline(cmd.getCommandline());
+            exe.execute();
+        } catch (IOException e) {
+            throw new BuildException("Execute failed: " + e, e, location);
+        } finally {
+            out.logFlush();
+            err.logFlush();
+            try {
+                out.close();
+                err.close();
+            } catch (IOException e) {}
         }
-
-        run(b.toString());
     }
 
     /**
@@ -760,7 +691,7 @@ public class Javadoc extends Exec {
      * with the packages found in that path subdirs matching one of the given
      * patterns.
      */
-    private void evaluatePackages(Path sourcePath, Vector packages, Vector argList) {
+    private void evaluatePackages(Path sourcePath, Vector packages) {
         log("Parsing source files for packages", Project.MSG_INFO);
         log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         log("Packages = " + packages, Project.MSG_VERBOSE);
@@ -778,7 +709,7 @@ public class Javadoc extends Exec {
                 for (int i = 0; i < packages.size(); i++) {
                     if (matches(pack, (String) packages.elementAt(i))) {
                         if (!addedPackages.contains(pack)) {
-                            argList.addElement(pack);
+                            cmd.createArgument().setValue(pack);
                             addedPackages.addElement(pack);
                         }
                         break;
@@ -883,36 +814,42 @@ public class Javadoc extends Exec {
         return name;
     }
 
-    //
-    // Override the logging of output in order to filter out Generating
-    // messages.  Generating messages are set to a priority of VERBOSE
-    // unless they appear after what could be an informational message.
-    //
-    private String queuedLine = null;
-    protected void outputLog(String line, int messageLevel) {
-        if (messageLevel==project.MSG_INFO && line.startsWith("Generating ")) {
-            if (queuedLine != null) {
-                super.outputLog(queuedLine, Project.MSG_VERBOSE);
+    private class JavadocOutputStream extends LogOutputStream {
+        JavadocOutputStream(int level) {
+            super(Javadoc.this, level);
+        }
+
+        //
+        // Override the logging of output in order to filter out Generating
+        // messages.  Generating messages are set to a priority of VERBOSE
+        // unless they appear after what could be an informational message.
+        //
+        private String queuedLine = null;
+        protected void processLine(String line, int messageLevel) {
+            if (messageLevel == Project.MSG_INFO && line.startsWith("Generating ")) {
+                if (queuedLine != null) {
+                    super.processLine(queuedLine, Project.MSG_VERBOSE);
+                }
+                queuedLine = line;
+            } else {
+                if (queuedLine != null) {
+                    if (line.startsWith("Building "))
+                        super.processLine(queuedLine, Project.MSG_VERBOSE);
+                    else
+                        super.processLine(queuedLine, Project.MSG_INFO);
+                    queuedLine = null;
+                }
+                super.processLine(line, messageLevel);
             }
-            queuedLine = line;
-        } else {
+        }
+
+        
+        protected void logFlush() {
             if (queuedLine != null) {
-                if (line.startsWith("Building "))
-                    super.outputLog(queuedLine, Project.MSG_VERBOSE);
-                else
-                    super.outputLog(queuedLine, Project.MSG_INFO);
+                super.processLine(queuedLine, Project.MSG_VERBOSE);
                 queuedLine = null;
             }
-            super.outputLog(line, messageLevel);
         }
-    }
-
-    protected void logFlush() {
-        if (queuedLine != null) {
-            super.outputLog(queuedLine, Project.MSG_VERBOSE);
-            queuedLine = null;
-        }
-        super.logFlush();
     }
 
     /**
@@ -993,4 +930,5 @@ public class Javadoc extends Exec {
             return n;
         }
     }
+
 }

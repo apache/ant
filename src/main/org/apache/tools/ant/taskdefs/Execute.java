@@ -99,6 +99,16 @@ public class Execute {
      *
      * @param streamHandler the stream handler used to handle the input and
      *        output streams of the subprocess.
+     */
+    public Execute(ExecuteStreamHandler streamHandler) {
+        this(streamHandler, null);
+    }
+
+    /**
+     * Creates a new execute object.
+     *
+     * @param streamHandler the stream handler used to handle the input and
+     *        output streams of the subprocess.
      * @param watchdog a watchdog for the subprocess or <code>null</code> to
      *        to disable a timeout for the subprocess.
      */
