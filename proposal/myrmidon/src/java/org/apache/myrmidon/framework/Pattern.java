@@ -9,7 +9,10 @@ package org.apache.myrmidon.framework;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.tools.ant.Project;
 
 /**
  * Basic data type for holding patterns.
@@ -22,7 +25,7 @@ public class Pattern
     private final static Resources REZ =
         ResourceManager.getPackageResources( Pattern.class );
 
-    private String m_value;
+    private String m_name;
     private Condition m_condition;
 
     /**
@@ -30,9 +33,9 @@ public class Pattern
      *
      * @return the value of pattern
      */
-    public String getValue()
+    public String getName()
     {
-        return m_value;
+        return m_name;
     }
 
     /**
@@ -46,14 +49,13 @@ public class Pattern
     }
 
     /**
-     * Setter method for value of pattern.
-     * Conforms to setter patterns
+     * Setter method for name of pattern.
      *
-     * @param value the value
+     * @param name the name
      */
-    public void setValue( final String value )
+    public void setName( final String name )
     {
-        m_value = value;
+        m_name = name;
     }
 
     /**
@@ -82,11 +84,30 @@ public class Pattern
         m_condition = new Condition( false, condition );
     }
 
+    public String evaluateName( final TaskContext context )
+    {
+        try
+        {
+            final boolean result = getCondition().evaluate( context );
+            if( result )
+            {
+                return getName();
+            }
+        }
+        catch( final ContextException ce )
+        {
+            //ignore for the moment
+        }
+        return null;
+    }
+
+
     public String toString()
     {
-        String result = "Pattern['" + m_value + "',";
-        if( null != m_condition ) {
-          result = result + m_condition;
+        String result = "Pattern['" + m_name + "',";
+        if( null != m_condition )
+        {
+            result = result + m_condition;
         }
         return result + "]";
     }
