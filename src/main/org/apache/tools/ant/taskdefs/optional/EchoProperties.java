@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -208,7 +209,7 @@ public class EchoProperties extends Task {
         use Ant's properties */
         if (inFile == null && propertySets.size() == 0) {
             // add ant properties
-            CollectionUtils.putAll(allProps, getProject().getProperties());
+            allProps.putAll(getProject().getProperties());
         } else if (inFile != null) {
             if (inFile.exists() && inFile.isDirectory()) {
                 String message = "srcfile is a directory!";
@@ -235,7 +236,7 @@ public class EchoProperties extends Task {
                 in = new FileInputStream(inFile);
                 Properties props = new Properties();
                 props.load(in);
-                CollectionUtils.putAll(allProps, props);
+                allProps.putAll(props);
             } catch (FileNotFoundException fnfe) {
                 String message =
                     "Could not find file " + inFile.getAbsolutePath();
@@ -255,20 +256,14 @@ public class EchoProperties extends Task {
                 }
                 return;
             } finally {
-                try {
-                    if (null != in) {
-                        in.close();
-                    }
-                } catch (IOException ioe) {
-                    //ignore
-                }
+                FileUtils.close(in);
             }
         }
 
         Enumeration e = propertySets.elements();
         while (e.hasMoreElements()) {
             PropertySet ps = (PropertySet) e.nextElement();
-            CollectionUtils.putAll(allProps, ps.getProperties());
+            allProps.putAll(ps.getProperties());
         }
 
         OutputStream os = null;
@@ -353,7 +348,7 @@ public class EchoProperties extends Task {
         public String key;
         public String value;
 
-        public Tuple(String key, String value) {
+        private Tuple(String key, String value) {
             this.key = key;
             this.value = value;
         }
@@ -412,9 +407,7 @@ public class EchoProperties extends Task {
         } catch (IOException ioe) {
             throw new BuildException("Unable to write XML file", ioe);
         } finally {
-            if (wri != null) {
-                wri.close();
-            }
+            FileUtils.close(wri);
         }
     }
 
