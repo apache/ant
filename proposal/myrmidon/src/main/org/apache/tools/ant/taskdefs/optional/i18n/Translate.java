@@ -271,8 +271,6 @@ public class Translate
             bundleCountry = Locale.getDefault().getCountry();
         }
 
-        locale = new Locale( bundleLanguage, bundleCountry );
-
         if( bundleVariant == null )
         {
             Locale l = new Locale( bundleLanguage, bundleCountry );
