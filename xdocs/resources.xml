@@ -7,10 +7,36 @@
   </properties>
 
   <body>
+
+    <section name="FAQs">
+      <subsection name="At Ant's website">
+        <table>
+          <tr>
+            <th>FAQ</th>
+            <td><a href="faq.html">http://jakarta.apache.org/ant/faq.html</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="jGuru">
+        <p>jGuru hosts an interactive Ant discussion forum and FAQ system</p>
+
+        <table>
+          <tr>
+            <th>Forum</th>
+            <td><a href="http://www.jguru.com/forums/home.jsp?topic=Ant">http://www.jguru.com/forums/home.jsp?topic=Ant</a></td>
+          </tr>
+          <tr>
+            <th>FAQ</th>
+            <td><a href="http://www.jguru.com/faq/home.jsp?topic=Ant">http://www.jguru.com/faq/home.jsp?topic=Ant</a></td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
     
     <section name="Articles and Presentations">
 
-      <p>This page lists articles and presentations written about Ant.  If
+      <p>The following sections list articles and presentations written about Ant.  If
       you've written something that should be included, please post it to one
       of the mailing lists.</p>
 
