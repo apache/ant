@@ -54,10 +54,7 @@
 
 package org.apache.tools.ant;
 
-import java.io.Writer;
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 
 import java.util.Hashtable;
@@ -84,7 +81,10 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * @see Project#addBuildListener(BuildListener)
  */
-public class XmlLogger implements BuildListener {
+public class XmlLogger implements BuildLogger {
+
+    private int msgOutputLevel = Project.MSG_DEBUG;
+    private PrintStream outStream;
 
     /** DocumentBuilder to use when creating the document to start with. */
     private static final DocumentBuilder builder = getDocumentBuilder();
@@ -206,8 +206,11 @@ public class XmlLogger implements BuildListener {
         try {
             // specify output in UTF8 otherwise accented characters will blow
             // up everything
-            FileOutputStream fos = new FileOutputStream(outFilename);
-            out = new OutputStreamWriter(fos, "UTF8");
+            OutputStream stream = outStream;
+            if (stream == null) {
+                stream = new FileOutputStream(outFilename);
+            }
+            out = new OutputStreamWriter(stream, "UTF8");
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             if (xslUri.length() > 0) {
                 out.write("<?xml-stylesheet type=\"text/xsl\" href=\""
@@ -362,6 +365,10 @@ public class XmlLogger implements BuildListener {
      *              Will not be <code>null</code>.
      */
     public void messageLogged(BuildEvent event) {
+        int priority = event.getPriority();
+        if (priority > msgOutputLevel) {
+            return;
+        }
         Element messageElement = doc.createElement(MESSAGE_TAG);
 
         String name = "debug";
@@ -403,4 +410,27 @@ public class XmlLogger implements BuildListener {
             buildElement.element.appendChild(messageElement);
         }
     }
+
+    // -------------------------------------------------- BuildLogger interface
+
+    public void setMessageOutputLevel(int level) {
+        msgOutputLevel = level;
+    }
+    
+    public void setOutputPrintStream(PrintStream output) {
+        this.outStream = new PrintStream(output, true);
+    }
+
+    /**
+     * Ignore emacs mode, as it has no meaning in XML format
+     */
+    public void setEmacsMode(boolean emacsMode) {}
+
+    /**
+     * Ignore error print stream. All output will be written to
+     * either the XML log file or the PrintStream provided to
+     * setOutputPrintStream
+     */
+    public void setErrorPrintStream(PrintStream err) {}
+
 }
