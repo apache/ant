@@ -93,7 +93,7 @@ import org.apache.tools.zip.ZipOutputStream;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  *
  * @since Ant 1.1
@@ -537,10 +537,11 @@ public class Zip extends MatchingTask {
                                      + " file.");
         }
 
-        if (prefix.length() > 0
-            && !prefix.endsWith("/")
-            && !prefix.endsWith("\\")) {
-            prefix += "/";
+        if (prefix.length() > 0) {
+            if (!prefix.endsWith("/") && !prefix.endsWith("\\")) {
+                prefix += "/";
+            }
+            addParentDirs(null, prefix, zOut, "", dirMode);
         }
 
         ZipFile zf = null;

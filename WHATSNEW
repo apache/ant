@@ -30,6 +30,9 @@ Fixed bugs:
 * Ant will no longer implicitly add Sun's rt.jar in <javac> when you
   use jvc and don't specify a bootclasspath.  Bugzilla Report 18055.
   
+* The prefix attribute of <zipfileset> would not generate directory
+  entries for the prefix itself.  Bugzilla Report 18403.
+
 Other Changes:
 --------------
 * Added ability to specify manifest encoding for the <jar> and 
