@@ -12,6 +12,13 @@
 <p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Ant is run on one of the specified operating
 systems.</p>
+
+<h4>Cygwin Users</h4>
+<p>In general the &lt;exec&gt; task will not userstand paths such as /bin/sh for 
+the executable parameter. This is because the Java VM in which Ant is running is a 
+Windows executable and is not aware of Cygwin conventions.
+</p>
+ 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

@@ -95,21 +95,34 @@ file there. This directory will be known as ANT_HOME.
 <table width="80%">
 <tr>
   <td colspan="2">
-    <b>Windows 95 and Windows 98 Note:</b> 
+    <b>Windows 95, Windows 98 &amp; Windows ME Note:</b> 
   </td>
 </tr>
 <tr>
   <td width="5%">&nbsp;</td>
   <td><i>
 On these systems, the script used to launch Ant will have 
-problems if ANT_HOME is a long filename. This is due to 
+problems if ANT_HOME is a long filename (i.e. a filename which is not
+of the format known as &quot;8.3&quot;). This is due to 
 limitations in the OS's handling of the <code>&quot;for&quot;</code> 
 batch-file statement. It is recommended, therefore, that Ant be 
-installed in a <b>short</b> path, such as C:\Ant.</i>
+installed in a <b>short</b>, 8.3 path, such as C:\Ant. </i>
+  </td>
+</tr>
+<tr>
+  <td width="5%">&nbsp;</td>
+  <td>
+    <p>On these systems you will also need to configure more environment
+       space to cater for the environment variables used in the Ant lauch script.
+       To do this, you will need to add or update the following line in 
+       the <code>config.sys</code> file
+    </p>
+    <p><code>shell=c:\command.com c:\ /p /e:32768</code></p>
   </td>
 </tr>
 </table>
 
+<h3>Setup</h3>
 <p>
 Before you can run ant there is some additional set up you 
 will need to do:</p>
