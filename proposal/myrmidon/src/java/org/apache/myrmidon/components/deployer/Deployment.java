@@ -27,7 +27,7 @@ import org.xml.sax.XMLReader;
  */
 public class Deployment
 {
-    public final static String   DESCRIPTOR_NAME     = "META-INF/ant-types.xml";
+    public final static String   DESCRIPTOR_NAME     = "META-INF/ant-descriptor.xml";
 
     private File            m_file;
 
