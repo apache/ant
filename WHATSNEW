@@ -75,6 +75,13 @@ Other changes:
 
 * Data types like <path> can now be defined inside of <target>s
 
+* you can now specify a classpath for <style> - the XSLZ processor
+  will be loaded from this path
+
+* added a force attribute to <style> to support dependencies that the
+  task cannot determine itself (dependency on parameters, not file
+  modification times for example)
+
 Fixed bugs:
 -----------
 
@@ -124,7 +131,8 @@ Fixed bugs:
 * Allow DTD locations to be specified when building generic ejb-jars
 
 * Handle classpaths with spaces
-  
+
+* Make sure XSLT processors close their output files in <style>.  
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================

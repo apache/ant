@@ -63,6 +63,24 @@ inclusion/exclusion of files works, and how to write patterns.</p>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
+    <td valign="top">classpath</td> 
+    <td valign="top">the classpath to use when looking up the XSLT
+      processor.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">the classpath to use, given as <a
+      href="../using.html#references">reference</a> to a path defined elsewhere.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">force</td>
+    <td valign="top">Recreate target files, even if they are newer
+      than their corresponding source files or the stylesheet.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">processor</td>
     <td valign="top">name of the XSLT processor to use.  Permissible values are
       &quot;trax&quot; for a TraX compliant processor, &quot;xslp&quot; for the 
@@ -116,6 +134,10 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
+<h4>classpath</h4>
+<p>The classpath to load the processor from can be specified via a
+nested <code>&lt;classpath&gt;</code>, as well - that is, a 
+<a href="../using.html#path">path</a>-like structure.</p>
 <h4>param</h4>
 <p>Param is used to pass a parameter to the XSL stylesheet.</p>
 <h4>Parameters</h4>
