@@ -156,7 +156,7 @@ public class WLRun extends Task {
         weblogicServer.setFork(true);
         weblogicServer.setClassname(weblogicMainClass);
 
-        String jvmArgs = "";
+        String jvmArgs = additionalJvmArgs;
         
         if (weblogicClasspath != null) {
             jvmArgs += " -Dweblogic.class.path=" + weblogicClasspath;
@@ -166,7 +166,6 @@ public class WLRun extends Task {
         jvmArgs += " -Dweblogic.system.home=" + weblogicSystemHome;
         jvmArgs += " -Dweblogic.system.name=" + weblogicSystemName;
         jvmArgs += " -Dweblogic.system.propertiesFile=" + weblogicPropertiesFile;
-        jvmArgs += " " + additionalJvmArgs;
 
         weblogicServer.createJvmarg().setLine(jvmArgs);
         weblogicServer.createArg().setLine(additionalArgs);
@@ -244,12 +243,12 @@ public class WLRun extends Task {
     public void setJvmargs(String args) {
         this.additionalJvmArgs = args;
     }
-    public void setArgs(String args) 
-    {
+    
+    public void setArgs(String args) {
         additionalArgs = args;
     }
-    public void setWeblogicMainClass(String c)
-    {
+    
+    public void setWeblogicMainClass(String c) {
         weblogicMainClass = c;
     }
 }
