@@ -43,6 +43,12 @@ Changes that could break older environments:
   entries of all manifests found, but will be treated like all other
   manifest attributes - the most recent attribute(s) will be used.
 
+* New Launch mechanism implemented. This moves some functionality from
+  the batch files / shell scripts into Java. This removes environment
+  limitations, for command issues, directory depth issues on Windows. Also
+  allows a per-user library location to be used if the main Ant install
+  is locked down.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla
@@ -129,7 +135,7 @@ Fixed bugs:
   NB : a first correction was only introducing quotes for JDK 1.4
   It has been changed to quote for all external compilers when paths
   contain spaces.
-  Also the backslashes need to be converted to forward slashes 
+  Also the backslashes need to be converted to forward slashes
   Bugzilla Report 17683.
 
 * Setting filesonly to true in <zip> and related tasks would cause the
@@ -140,7 +146,7 @@ Fixed bugs:
 
 * URL-encoding in <vaj*port> didn't work properly.
 
-* VAJRemoteUtil called getAbsolutePath instead of getPath 
+* VAJRemoteUtil called getAbsolutePath instead of getPath
   causing problems when using a Windows VAJ server from a UNIX server.
   Bugzilla Report 20457.
 
@@ -178,8 +184,8 @@ Fixed bugs:
 * <fixcrlf> will now create the parent directories for the destination
   files if necessary.  Bugzilla Report 20840.
 
-* <xmlproperty> now handles CDATA sections. BugZilla Report 17195  
-  
+* <xmlproperty> now handles CDATA sections. BugZilla Report 17195
+
 * <translate> now translate tokens that are placed close together.
   Bugzilla Report 17297
 
@@ -439,9 +445,9 @@ Other changes:
 
 * <junit>'s nested <formatter> elements now support if/unless clauses.
 
-* <ejbjar>  
-  cmpversion attribute added 
-  jboss element will look for jbosscmp-jdbc.xml descriptor 
+* <ejbjar>
+  cmpversion attribute added
+  jboss element will look for jbosscmp-jdbc.xml descriptor
   if ejbjar has cmpversion="2.0" set
   Bugzilla Reports 14707 and 14709.
 
@@ -451,16 +457,16 @@ Other changes:
 
 * <mapper> has an "unpackage" mapper
   Bugzilla Report 18908
-  
+
 * Added <scriptdef> task allowing tasks to be defined using any BSF-supported
-  scripting language.  
+  scripting language.
 
 * <touch>'s datetime attribute can now accept time with a granularity
   of seconds as well.  Bugzilla Report 21014.
 
 * <checksum> has two new properties: totalproperty and todir.
 
-* FileUtils#createTempFile will now create temporary files in the 
+* FileUtils#createTempFile will now create temporary files in the
   directory pointed to by the property java.io.tmpdir
 
 * <unzip> and friends now supports an optional encoding attribute to
