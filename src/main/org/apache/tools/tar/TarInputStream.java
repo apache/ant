@@ -275,6 +275,12 @@ public class TarInputStream extends FilterInputStream {
                 longName.append(new String(buffer, 0, length));
             }
             getNextEntry();
+
+            // remove trailing null terminator
+            if (longName.length() > 0
+                && longName.charAt(longName.length() - 1) == 0) {
+                longName.deleteCharAt(longName.length() - 1);
+            }
             this.currEntry.setName(longName.toString());
         }
 
