@@ -1,0 +1,129 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="property">Property</a></h2>
+<h3>Description</h3>
+<p>Sets a property (by name and value), or set of properties (from file or
+resource) in the project.</p>
+<p>When a property was set by the user, or was a property in a parent project
+(that started this project with the <a href="ant.html">ant task</a>), then this
+property cannot be set, and will be ignored. This means that properties set
+outside the current project always override the properties of the current
+project.</p>
+<p>There are five ways to set properties:</p>
+<ul>
+  <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
+  <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
+  <li>By setting the <i>file</i> attribute with the filename of the property
+    file to load. This property file has the format as defined by the file used
+    in the class java.util.Properties.</li>
+  <li>By setting the <i>resource</i> attribute with the resource name of the
+    property file to load. This property file has the format as defined by the
+    file used in the class java.util.Properties.</li>
+  <li>By setting the <i>environment</i> attribute with a prefix to use.
+    Properties will be defined for every environment variable by
+    prefixing the supplied name and a period to the name of the variable.</li>
+</ul>
+<p>Although combinations of the three ways are possible, only one should be used
+at a time. Problems might occur with the order in which properties are set, for
+instance.</p>
+<p>The value part of the properties being set, might contain references to other
+properties. These references are resolved at the time these properties are set.
+This also holds for properties loaded from a property file.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the property to set.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the value of the property.</td>
+    <td valign="middle" align="center" rowspan="6">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">refid</td>
+    <td valign="top"><a href="../using.html#references">Reference</a> to an object
+      defined elsewhere. Only yields reasonable results for references
+      to <a href="../using.html#path">PATH like structures</a> or properties.</td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">the resource name of the property file.</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the filename of the property file .</td>
+  </tr>
+  <tr>
+    <td valign="top">location</td>
+    <td valign="top">Sets the property to the absolute filename of the
+      given file. If the value of this attribute is an absolute path, it
+      is left unchanged (with / and \ characters converted to the
+      current platforms conventions). Otherwise it is taken as a path
+      relative to the project's basedir and expanded.</td>
+  </tr>
+  <tr>
+    <td valign="top">environment</td>
+    <td valign="top">the prefix to use when retrieving environment variables. Thus
+    if you specify environment=&quot;myenv&quot; you will be able to access OS-specific 
+    environment variables via property names &quot;myenv.PATH&quot; or 
+	&quot;myenv.TERM&quot;. Note that if you supply a property name with a final 
+	&quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still 
+	allow access of environment variables through &quot;myenv.PATH&quot; and 
+	&quot;myenv.TERM&quot;. This functionality is currently only implemented 
+    on select platforms. Feel free to send patches to increase the number of platforms
+    this functionality is supported on ;)</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td> 
+    <td valign="top">the classpath to use when looking up a resource.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td> 
+    <td valign="top">the classpath to use when looking up a resource,
+      given as <a href="../using.html#references">reference</a> to a PATH defined
+      elsewhere..</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>classpath</h4>
+<p><code>Property</code>'s <i>classpath</i> attribute is a <a
+href="../using.html#path">PATH like structure</a> and can also be set via a nested
+<i>classpath</i> element.</p>
+<h3>Examples</h3>
+<pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</pre>
+<p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
+<pre>  &lt;property file=&quot;foo.properties&quot;/&gt;</pre>
+<p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
+<pre>  &lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
+<p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
+<p>Note that you can reference a global properties file for all of your Ant
+builds using the following:</p>
+<pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot;/&gt;</pre>
+<p>since the &quot;user.home&quot; property is defined by the Java virtual machine
+to be your home directory.  This technique is more appropriate for Unix than 
+Windows since the notion of a home directory doesn't exist on Windows.  On the
+JVM that I tested, the home directory on Windows is &quot;C:\&quot;.  Different JVM
+implementations may use other values for the home directory on Windows.</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

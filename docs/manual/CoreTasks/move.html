@@ -1,0 +1,117 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="move">Move</a></h2>
+<h3>Description</h3>
+<p>Moves a file to a new file or directory, or sets of files to
+a new directory.  By default, the
+destination file is overwritten if it already exists.  When <var>overwrite</var> is
+turned off, then files are only moved if the source file is newer than
+the destination file, or when the destination file does not exist.</p>
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select sets of files
+to move to the <var>todir</var> directory.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file to move</td>
+    <td valign="top" align="center">One of <var>file</var> or 
+     at least one nested fileset element</td>
+  </tr>
+  <tr>
+    <td valign="top">tofile</td>
+    <td valign="top">the file to move to</td>
+    <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute, 
+    either <var>tofile</var> or <var>todir</var> can be used.  With a nested fileset, 
+	 only <var>todir</var> is allowed.</td>
+  </tr>
+  <tr>
+    <td valign="top">todir</td>
+    <td valign="top">the directory to move to</td>
+  </tr>
+  <tr>
+    <td valign="top">overwrite</td>
+    <td valign="top">overwrite existing files even if the destination
+      files are newer (default is &quot;true&quot;)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">filtering</td>
+    <td valign="top">indicates whether token filtering should take place during
+      the move.  See the <a href="filter.html">filter</a> task for a description of
+      how filters work.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">flatten</td>
+    <td valign="top">ignore directory structure of source directory,
+      copy all files into a single directory, specified by the <var>todir</var>
+      attribute (default is &quot;false&quot;).Note that you can achieve the 
+      same effect by using a <a href="../CoreTypes/mapper.html#flatten-mapper">flatten mapper</a></td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includeEmptyDirs</td>
+	 <td valign="top">Copy empty directories included with the nested FileSet(s).
+	   Defaults to &quot;yes&quot;.</td>
+	 <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>mapper</h4>
+<p>You can define file name transformations by using a nested <a
+href="../CoreTypes/mapper.html">mapper</a> element. The default mapper used by
+<code>&lt;copy&gt;</code> is the <a
+href="../CoreTypes/mapper.html#identity-mapper">identity</a>.</p>
+<h3>Examples</h3>
+<p><b>Move a single file (rename a file)</b></p>
+<pre>
+  &lt;move file=&quot;file.orig&quot; tofile=&quot;file.moved&quot;/&gt;
+</pre>
+<p><b>Move a single file to a directory</b></p>
+<pre>
+  &lt;move file=&quot;file.orig&quot; todir=&quot;dir/to/move/to&quot;/&gt;
+</pre>
+<p><b>Move a directory to a new directory</b></p>
+<pre>
+  &lt;move todir=&quot;new/dir/to/move/to&quot;&gt;
+    &lt;fileset dir=&quot;src/dir&quot;/&gt;
+  &lt;/move&gt;
+</pre>
+<p><b>Move a set of files to a new directory</b></p>
+<pre>
+  &lt;move todir=&quot;some/new/dir&quot; &gt;
+    &lt;fileset dir=&quot;my/src/dir&quot; &gt;
+      &lt;include name=&quot;**/*.jar&quot;/&gt;
+      &lt;exclude name=&quot;**/ant.jar&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/move&gt;
+</pre>
+<p><b>Append <code>&quot;.bak&quot;</code> to the names of all files
+in a directory.</b></p>
+<pre>
+  &lt;move todir=&quot;my/src/dir&quot; &gt;
+    &lt;fileset dir=&quot;my/src/dir&quot; &gt;
+      &lt;exclude name=&quot;**/*.bak&quot;/&gt;
+    &lt;/fileset&gt;
+    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
+  &lt;/move&gt;
+</pre>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

@@ -68,13 +68,10 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
+import org.apache.xalan.xslt.XSLTProcessorFactory;
+import org.apache.xalan.xslt.XSLTProcessor;
+import org.apache.xalan.xslt.XSLTInputSource;
+import org.apache.xalan.xslt.XSLTResultTarget;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -168,9 +165,6 @@ public class AggregateTransformer {
 
     /** XML Parser factory */
     protected static final DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
-
-    /** XSL Parser factory */
-    protected static final TransformerFactory tfactory = TransformerFactory.newInstance();
 
     public AggregateTransformer(Task task){
         this.task = task;
@@ -268,7 +262,7 @@ public class AggregateTransformer {
     }
 
     /** create a single page summary */
-    protected void createSinglePageSummary(Element root) throws IOException, TransformerException {
+    protected void createSinglePageSummary(Element root) throws IOException, SAXException {
         transform(root, OVERVIEW_SUMMARY + ".xsl", OVERVIEW_SUMMARY + getExtension());
     }
 
@@ -286,7 +280,7 @@ public class AggregateTransformer {
         }
     }
 
-    protected void createCascadingStyleSheet() throws IOException, TransformerException {
+    protected void createCascadingStyleSheet() throws IOException, SAXException {
         if (styleDir == null) {
             InputStream in = getResourceAsStream("html/stylesheet.css");
             OutputStream out = new FileOutputStream( new File(toDir, "stylesheet.css"));
@@ -294,7 +288,7 @@ public class AggregateTransformer {
         }
     }
 
-    protected void createFrameStructure() throws IOException, TransformerException{
+    protected void createFrameStructure() throws IOException, SAXException{
         if (styleDir == null) {
             InputStream in = getResourceAsStream("html/index.html");
             OutputStream out = new FileOutputStream( new File(toDir, "index.html") );
@@ -306,7 +300,7 @@ public class AggregateTransformer {
      * Create the list of all packages.
      * @param root root of the xml document.
      */
-    protected void createPackageList(Node root) throws TransformerException {
+    protected void createPackageList(Node root) throws SAXException {
         transform(root, ALLPACKAGES + ".xsl", ALLPACKAGES + getExtension());
     }
 
@@ -314,7 +308,7 @@ public class AggregateTransformer {
      * Create the list of all classes.
      * @param root root of the xml document.
      */
-    protected void createClassList(Node root) throws TransformerException {
+    protected void createClassList(Node root) throws SAXException {
         transform(root, ALLCLASSES + ".xsl", ALLCLASSES + getExtension());
     }
 
@@ -322,7 +316,7 @@ public class AggregateTransformer {
      * Create the summary used in the overview.
      * @param root root of the xml document.
      */
-    protected void createPackageOverview(Node root) throws TransformerException {
+    protected void createPackageOverview(Node root) throws SAXException {
         transform(root,  OVERVIEW_PACKAGES + ".xsl", OVERVIEW_PACKAGES + getExtension());
     }
 
@@ -349,7 +343,7 @@ public class AggregateTransformer {
      * create all resulting html pages for all testsuites.
      * @param root should be 'testsuites' node.
      */
-    protected void createAllTestSuiteDetails(Element root) throws TransformerException {
+    protected void createAllTestSuiteDetails(Element root) throws SAXException {
         NodeList testsuites = root.getElementsByTagName(XMLConstants.TESTSUITE);
         final int size = testsuites.getLength();
         for (int i = 0; i < size; i++){
@@ -362,7 +356,7 @@ public class AggregateTransformer {
      * create the html resulting page of one testsuite.
      * @param root should be 'testsuite' node.
      */
-    protected void createTestSuiteDetails(Element testsuite) throws TransformerException {
+    protected void createTestSuiteDetails(Element testsuite) throws SAXException {
                 
         String packageName = testsuite.getAttribute(XMLConstants.ATTR_PACKAGE);         
         String pkgPath = packageToPath(packageName);
@@ -382,7 +376,7 @@ public class AggregateTransformer {
      * create the html resulting page of the summary of each package of the root element.
      * @param root should be 'testsuites' node.
      */
-    protected void createAllPackageDetails(Element root) throws TransformerException, ParserConfigurationException {
+    protected void createAllPackageDetails(Element root) throws SAXException, ParserConfigurationException {
         Enumeration packages = getPackages(root);
         while ( packages.hasMoreElements() ){
             String pkgname = (String)packages.nextElement();
@@ -409,7 +403,7 @@ public class AggregateTransformer {
      * @param root should be 'testsuites' node.
      * @param pkgname Name of the package that we want a summary.
      */
-    protected void createPackageDetails(Node root, String pkgname) throws TransformerException {
+    protected void createPackageDetails(Node root, String pkgname) throws SAXException {
         String path = packageToPath(pkgname);
 
         // apply style to get the list of the classes of this package and
@@ -443,13 +437,13 @@ public class AggregateTransformer {
      * @param xslfile style file
      * @param outfilename filename of the result of the style applied on the Node
      *
-     * @throws TransformerException SAX Parsing Error on the style Sheet.
+     * @throws SAXException SAX Parsing Error on the style Sheet.
      */
-    protected void transform(Node root, String xslname, String htmlname) throws TransformerException {
+    protected void transform(Node root, String xslname, String htmlname) throws SAXException {
         try{
             final long t0 = System.currentTimeMillis();
-            StreamSource xsl_source = getXSLStreamSource(xslname);
-            Transformer transformer = tfactory.newTransformer(xsl_source);
+            XSLTInputSource xsl_source = getXSLStreamSource(xslname);
+            XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
             File htmlfile = new File(toDir, htmlname);
             // create the directory if it does not exist
             File dir = new File(htmlfile.getParent()); // getParentFile is in JDK1.2+
@@ -457,22 +451,23 @@ public class AggregateTransformer {
                 dir.mkdirs();
             }
             task.log("Applying '" + xslname + "'. Generating '" + htmlfile + "'", Project.MSG_VERBOSE);
-            transformer.transform( new DOMSource(root), new StreamResult(htmlfile));
+            processor.process( new XSLTInputSource(root), xsl_source, new XSLTResultTarget(htmlfile.getAbsolutePath()) );
             final long dt = System.currentTimeMillis() - t0;
-            task.log("Transform time: " + dt + "ms");
+            task.log("Transform time for " + xslname + ": " + dt + "ms");
         } catch (IOException e){
             task.log(e.getMessage(), Project.MSG_ERR);
             e.printStackTrace(); //@todo bad, change this
-            throw new TransformerException(e.getMessage());
+            throw new SAXException(e.getMessage());
         }
     }
+
 
     /**
      * default xsls are embedded in the distribution jar. As a default we will use
      * them, otherwise we will get the one supplied by the client in a given
      * directory. It must have the same name.
      */
-    protected StreamSource getXSLStreamSource(String name) throws IOException {
+    protected XSLTInputSource getXSLStreamSource(String name) throws IOException {
         InputStream in;
         String systemId; //we need this because there are references in xsls
         if (styleDir == null){
@@ -483,7 +478,7 @@ public class AggregateTransformer {
             in= new FileInputStream(f);
             systemId = f.getAbsolutePath();
         }
-        StreamSource ss =  new StreamSource(in);
+        XSLTInputSource ss = new XSLTInputSource(in);
         ss.setSystemId(systemId);
         return ss;
     }

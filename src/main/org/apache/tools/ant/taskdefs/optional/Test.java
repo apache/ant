@@ -97,11 +97,11 @@ public class Test
         createArg().setValue( "-b=" + showBanner );
     } 
  
-    public void setShowTrace( final String showTrace ) {
+    public void setShowTrace( final boolean showTrace ) {
          createArg().setValue( "-t=" + showTrace );
     } 
  
-    public void setForceShowTrace( final String forceShowTrace ) { 
+    public void setForceShowTrace( final boolean forceShowTrace ) { 
         createArg().setValue( "-f=" + forceShowTrace );
     } 
  

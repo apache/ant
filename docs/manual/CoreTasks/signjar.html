@@ -1,0 +1,91 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="signjar">SignJar</a></h2>
+<h3>Description</h3>
+<p>Signs a jar or zip file with the javasign command line tool.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">jar</td>
+    <td valign="top">the jar file to sign</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">alias</td>
+    <td valign="top">the alias to sign under</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">storepass</td>
+    <td valign="top">password for keystore integrity.</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">keystore</td>
+    <td valign="top">keystore location</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">storetype</td>
+    <td valign="top">keystore type</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">keypass</td>
+    <td valign="top">password for private key (if different)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">sigfile</td>
+    <td valign="top">name of .SF/.DSA file</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">signedjar</td>
+    <td valign="top">name of signed JAR file</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">(true | false) verbose output when signing</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">internalsf</td>
+    <td valign="top">(true | false) include the .SF file inside the signature
+block</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">sectionsonly</td>
+    <td valign="top">(true | false) don't compute hash of entire manifest</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
+alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;</code></p>
+</blockquote>
+<p>signs the ant.jar with alias &quot;apache-group&quot; accessing the
+keystore and private key via &quot;secret&quot; password.</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

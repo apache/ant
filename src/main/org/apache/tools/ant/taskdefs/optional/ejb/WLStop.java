@@ -72,7 +72,7 @@ public class WLStop extends Task {
     /**
      * The classpath to be used. It must contains the weblogic.Admin class.
      */
-    private String classpath;
+    private Path classpath;
 
     /**
      * The weblogic username to use to request the shutdown.
@@ -116,8 +116,6 @@ public class WLStop extends Task {
         if (serverURL == null) {
             throw new BuildException("The url of the weblogic server must be provided.");
         }
-
-        String execClassPath = project.translatePath(classpath);
         
         Java weblogicAdmin = (Java)project.createTask("java");
         weblogicAdmin.setFork(true);
@@ -135,7 +133,7 @@ public class WLStop extends Task {
         }            
 
         weblogicAdmin.setArgs(args);
-        weblogicAdmin.setClasspath(new Path(project, execClassPath));                         
+        weblogicAdmin.setClasspath(classpath);                         
         weblogicAdmin.execute();
     }
     
@@ -144,10 +142,20 @@ public class WLStop extends Task {
      *
      * @param s the classpath to use when executing the weblogic admin task.
      */
-    public void setClasspath(String s) {
-        this.classpath = project.translatePath(s);
+    public void setClasspath(Path path) {
+        this.classpath = path;
     }
     
+    /**
+     * Add the classpath for the user classes
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(project);
+        }
+        return classpath.createPath();
+    }
+
     /**
      * Set the username to use to request shutdown of the server.
      *

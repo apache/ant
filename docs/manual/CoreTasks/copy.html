@@ -1,0 +1,121 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="copy">Copy</a></h2>
+<h3>Description</h3>
+<p>Copies a file or Fileset to a new file or directory.  Files are
+only copied if the source file is newer than the destination file,
+or when the destination file does not exist.  However, you can explicitly 
+overwrite files with the <var>overwrite</var> attribute.</p>
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select files to copy.  
+To use a fileset, the <var>todir</var> attribute must be set.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The file to copy.</td>
+    <td valign="top" align="center">One of either <var>file</var> or 
+    at least one nested fileset element.</td>
+  </tr>
+  <tr>
+    <td valign="top">preservelastmodified</td>
+    <td valign="top">Give the copied files the same last modified
+      time as the original files. Defaults to &quot;no&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tofile</td>
+    <td valign="top">The file to copy to.</td>
+    <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute, 
+    either <var>tofile</var> or <var>todir</var> can be used.  With nested filesets, 
+    only <var>todir</var> is allowed.</td>
+  </tr>
+  <tr>
+    <td valign="top">todir</td>
+    <td valign="top">The directory to copy to.</td>
+  </tr>
+  <tr>
+    <td valign="top">overwrite</td>
+    <td valign="top">Overwrite existing files even if the destination
+      files are newer. Defaults to &quot;no&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">filtering</td>
+    <td valign="top">Indicates whether token filtering should take place during
+      the copy. Defaults to &quot;no&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">flatten</td>
+    <td valign="top">Ignore directory structure of source directory,
+      copy all files into a single directory, specified by the <var>todir</var>
+      attribute. Defaults to &quot;no&quot;. Note that you can achieve the 
+      same effect by using a <a href="../CoreTypes/mapper.html#flatten-mapper">flatten mapper</a></td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includeEmptyDirs</td>
+	 <td valign="top">Copy empty directories included with the nested FileSet(s).
+	   Defaults to &quot;yes&quot;.</td>
+	 <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>mapper</h4>
+<p>You can define file name transformations by using a nested <a
+href="../CoreTypes/mapper.html">mapper</a> element. The default mapper used by
+<code>&lt;copy&gt;</code> is the <a
+href="../CoreTypes/mapper.html#identity-mapper">identity</a>.</p>
+<h3>Examples</h3>
+<p><b>Copy a single file</b></p>
+<pre>
+  &lt;copy file=&quot;myfile.txt&quot; tofile=&quot;mycopy.txt&quot;/&gt;
+</pre>
+<p><b>Copy a file to a directory</b></p>
+<pre>
+  &lt;copy file=&quot;myfile.txt&quot; todir=&quot;../some/dir/tree&quot;/&gt;
+</pre>
+<p><b>Copy a directory to another directory</b></p>
+<pre>
+  &lt;copy todir=&quot;../new/dir&quot;&gt;
+    &lt;fileset dir=&quot;src_dir&quot;/&gt;
+  &lt;/copy&gt;
+</pre>
+<p><b>Copy a set of files to a directory</b></p>
+<pre>
+  &lt;copy todir=&quot;../dest/dir&quot; &gt;
+    &lt;fileset dir=&quot;src_dir&quot &gt;
+      &lt;exclude name=&quot;**/*.java&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/copy&gt;
+
+  &lt;copy todir=&quot;../dest/dir&quot; &gt;
+    &lt;fileset dir=&quot;src_dir&quot excludes=&quot;**/*.java&quot;/&gt;
+  &lt;/copy&gt;
+</pre>
+<p><b>Copy a set of files to a directory appending
+&quot;<code>.bak</code>&quot; to the file name on the fly</b></p>
+<pre>
+  &lt;copy todir=&quot;../backup/dir&quot; &gt;
+    &lt;fileset dir=&quot;src_dir&quot /&gt;
+    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
+  &lt;/copy&gt;
+</pre>
+<hr><p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

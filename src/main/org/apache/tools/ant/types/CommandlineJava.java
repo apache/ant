@@ -239,7 +239,9 @@ public class CommandlineJava implements Cloneable {
         c.vmCommand = (Commandline) vmCommand.clone();
         c.javaCommand = (Commandline) javaCommand.clone();
         c.sysProperties = (SysProperties) sysProperties.clone();
-        c.classpath = (Path) classpath.clone();
+        if (classpath != null) {
+            c.classpath = (Path) classpath.clone();
+        }
         c.vmVersion = vmVersion;
         return c;
     }

@@ -57,6 +57,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.FileOutputStream;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -248,7 +249,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         for (int i = 0; i < files.length; i++) {
             try {
                 log("Parsing file: '" + files[i] + "'", Project.MSG_VERBOSE);
-                Document testsuiteDoc = builder.parse( files[i] );
+                //XXX there seems to be a bug in xerces 1.3.0 that doesn't like file object
+                // will investigate later. It does not use the given directory but
+                // the vm dir instead ? Works fine with crimson.
+                Document testsuiteDoc = builder.parse( "file:///" + files[i].getAbsolutePath() );
                 Element elem = testsuiteDoc.getDocumentElement();
                 // make sure that this is REALLY a testsuite.
                 if ( TESTSUITE.equals(elem.getNodeName()) ) {
@@ -261,6 +265,9 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
                 log("The file " + files[i] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN);
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                log(sw.toString(), Project.MSG_DEBUG);
             } catch (IOException e){
                 log("Error while accessing file " + files[i] + ": " + e.getMessage(), Project.MSG_ERR);
             }

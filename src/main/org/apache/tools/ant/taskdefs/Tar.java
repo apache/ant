@@ -70,18 +70,29 @@ import org.apache.tools.ant.types.*;
 
 public class Tar extends MatchingTask {
 
+    // permissable values for longfile attribute
+    static public final String WARN = "warn";
+    static public final String FAIL = "fail";
     static public final String TRUNCATE = "truncate";
     static public final String GNU = "gnu";
+    static public final String OMIT = "omit";
+
+    private String[] validModes = new String[] {WARN, FAIL, TRUNCATE, GNU, OMIT};
 
     File tarFile;
     File baseDir;
     
-    String longFileMode = null;
+    String longFileMode = WARN;
     
     Vector filesets = new Vector();
     Vector fileSetFiles = new Vector();
+    
+    /**
+     * Indicates whether the user has been warned about long files already.
+     */
+    private boolean longWarningGiven = false;
 
-    public TarFileSet createFileSet() {
+    public TarFileSet createTarFileSet() {
         TarFileSet fileset = new TarFileSet();
         filesets.addElement(fileset);
         return fileset;
@@ -106,16 +117,35 @@ public class Tar extends MatchingTask {
      * Set how to handle long files.
      *
      * Allowable values are
-     *   truncate
-     *   gnu
+     *   truncate - paths are truncated to the maximum length
+     *   fail - patsh greater than the maximim cause a build exception
+     *   warn - paths greater than the maximum cause a warning and GNU is used
+     *   gnu - GNU extensions are used for any paths greater than the maximum.
+     *   omit - paths greater than the maximum are omitted from the archive
      */
-    public void setLongfile(String method) {
-        this.longFileMode = method;
+    public void setLongfile(String mode) {
+        for (int i = 0; i < validModes.length; ++i) {
+            if (mode.equalsIgnoreCase(validModes[i])) {
+                this.longFileMode = mode;
+                return;
+            }
+        }
+        throw new BuildException("The longfile value " + mode + " is not a valid value");
     }
 
     public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!", 
+                                     location);
+        }
+
+        if (tarFile.exists() && tarFile.isDirectory()) {
+            throw new BuildException("tarfile is a directory!", 
+                                     location);
+        }
+
+        if (tarFile.exists() && !tarFile.canWrite()) {
+            throw new BuildException("Can not write to the specified tarfile!", 
                                      location);
         }
 
@@ -130,7 +160,12 @@ public class Tar extends MatchingTask {
             mainFileSet.setDefaultexcludes(useDefaultExcludes);
             filesets.addElement(mainFileSet);
         }
-
+        
+        if (filesets.size() == 0) {
+            throw new BuildException("You must supply either a basdir attribute or some nested filesets.", 
+                                     location);
+        }
+        
         // check if tr is out of date with respect to each
         // fileset
         boolean upToDate = true;
@@ -156,16 +191,19 @@ public class Tar extends MatchingTask {
         try {
             tOut = new TarOutputStream(new FileOutputStream(tarFile));
             tOut.setDebug(true);
-            if (longFileMode == null) {
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
-            }
-            else if (longFileMode.equalsIgnoreCase(TRUNCATE)) {
+            if (longFileMode.equalsIgnoreCase(TRUNCATE)) {
                 tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
             }
-            else if (longFileMode.equalsIgnoreCase(GNU)) {
+            else if (longFileMode.equalsIgnoreCase(FAIL) ||
+                     longFileMode.equalsIgnoreCase(OMIT)) {
+                tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
+            }
+            else {
+                // warn or GNU
                 tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
             }
         
+            longWarningGiven = false;
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
                 TarFileSet fs = (TarFileSet)e.nextElement();
                 String[] files = fs.getFiles(project);
@@ -196,6 +234,25 @@ public class Tar extends MatchingTask {
         FileInputStream fIn = new FileInputStream(file);
 
         try {
+            if (vPath.length() >= TarConstants.NAMELEN) {
+                if (longFileMode.equalsIgnoreCase(OMIT)) {
+                    log("Omitting: "+ vPath, Project.MSG_INFO);
+                    return;
+                } else if (longFileMode.equalsIgnoreCase(WARN)) {
+                    log("Entry: "+ vPath + " longer than " + 
+                        TarConstants.NAMELEN + " characters.", Project.MSG_WARN);
+                    if (!longWarningGiven) {                        
+                        log("Resulting tar file can only be processed successfully"
+                            + " by GNU compatible tar commands", Project.MSG_WARN);
+                        longWarningGiven = true;
+                    }
+                } else if (longFileMode.equalsIgnoreCase(FAIL)) {
+                    throw new BuildException(
+                        "Entry: "+ vPath + " longer than " + 
+                        TarConstants.NAMELEN + "characters.", location);
+                }
+            }
+
             TarEntry te = new TarEntry(vPath);
             te.setSize(file.length());
             te.setModTime(file.lastModified());
