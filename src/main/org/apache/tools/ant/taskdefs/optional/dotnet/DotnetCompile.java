@@ -115,7 +115,7 @@ public abstract class DotnetCompile
     /**
      *  flag to enable automatic reference inclusion
      */
-    private boolean includeDefaultReferences;
+    private boolean includeDefaultReferences = true;
 
     /**
      *  icon for incorporation into apps
@@ -313,7 +313,7 @@ public abstract class DotnetCompile
      * in dotnet, and tells the compiler to link in mscore.dll.
      *
      *  set the automatic reference inclusion flag on or off this flag controls
-     *  the string of references and the /nostdlib option in CSC
+     *  the /nostdlib option in CSC
      *
      *@param  f  on/off flag
      */
@@ -640,8 +640,6 @@ public abstract class DotnetCompile
     protected String getUtf8OutputParameter() {
         return utf8output ? "/utf8output" : null;
     }
-
-
 
 
     /**
