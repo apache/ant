@@ -54,10 +54,6 @@
 
 package org.apache.tools.ant;
 
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-
 /**
  * This class contains all the information
  * on a particular ant type,
@@ -94,17 +90,26 @@ public class AntTypeDefinition {
         return copy;
     }
 
-    /** set the project on the definition */
+    /**
+     * set the project on the definition
+     * @param project the project this definition belongs in
+     */
     public void setProject(Project project) {
         this.project = project;
     }
 
-    /** set the definiton's name */
+    /**
+     * set the definition's name
+     * @param name the name of the definition
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /** return the definition's name */
+    /**
+     * return the definition's name
+     * @return the name of the defintion
+     */
     public String getName() {
         return name;
     }
@@ -112,6 +117,7 @@ public class AntTypeDefinition {
     /**
      * set the class of the definition.
      * as a side-effect may set the classloader and classname
+     * @param clazz the class of this definition
      */
     public void setClass(Class clazz) {
         this.clazz = clazz;
@@ -126,12 +132,18 @@ public class AntTypeDefinition {
         }
     }
 
-    /** set the classname of the definition */
+    /**
+     * set the classname of the definition
+     * @param className the classname of this definition
+     */
     public void setClassName(String className) {
         this.className = className;
     }
 
-    /** get the classname of the definition */
+    /**
+     * get the classname of the definition
+     * @return the name of the class of this definition
+     */
     public String getClassName() {
         return className;
     }
@@ -140,6 +152,7 @@ public class AntTypeDefinition {
      * set the adapter class for this definition.
      * this class is used to adapt the definitions class if
      * required.
+     * @param adapterClass the adapterClass
      */
     public void setAdapterClass(Class adapterClass) {
         this.adapterClass = adapterClass;
@@ -147,8 +160,9 @@ public class AntTypeDefinition {
 
     /**
      * set the assignable class for this definition.
+     * @param adaptToClass the assignable class
      */
-    
+
     public void setAdaptToClass(Class adaptToClass) {
         this.adaptToClass = adaptToClass;
     }
@@ -156,12 +170,16 @@ public class AntTypeDefinition {
     /**
      * set the classloader to use to create an instance
      * of the definition
+     * @param classLoader the classLoader
      */
     public void setClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
-    /** get the classloader for this definition */
+    /**
+     * get the classloader for this definition
+     * @return the classloader for this definition
+     */
     public ClassLoader getClassLoader() {
         return classLoader;
     }
@@ -172,13 +190,14 @@ public class AntTypeDefinition {
      * (adapted class) if there is an adpater
      * class and the definition class is not
      * assignable from the assignable class.
+     * @return the exposed class
      */
-    
     public Class getExposedClass() {
         if (adaptToClass != null) {
             Class z = getTypeClass();
-            if (z == null)
+            if (z == null) {
                 return null;
+            }
             if (adaptToClass.isAssignableFrom(z)) {
                 return z;
             }
@@ -191,6 +210,7 @@ public class AntTypeDefinition {
 
     /**
      * get the definition class
+     * @return the type of the definition
      */
     public Class getTypeClass() {
         if (clazz != null) {
@@ -205,7 +225,7 @@ public class AntTypeDefinition {
             }
         } catch (NoClassDefFoundError ncdfe) {
             project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for type " 
+                        + ncdfe.getMessage() + ") for type "
                         + name, Project.MSG_DEBUG);
         } catch (ClassNotFoundException cnfe) {
             project.log("Could not load class (" + className
@@ -217,10 +237,10 @@ public class AntTypeDefinition {
     /**
      * create an instance of the definition.
      * The instance may be wrapped in a proxy class.
+     * @return the created object
      */
     public Object create() {
-        Object o = icreate();
-        return o;
+        return  icreate();
     }
 
     /**
@@ -232,7 +252,7 @@ public class AntTypeDefinition {
         if (c == null) {
             return null;
         }
-            
+
         Object o = createAndSet(c);
         if (o == null || adapterClass == null) {
             return o;
@@ -243,7 +263,7 @@ public class AntTypeDefinition {
                 return o;
             }
         }
-               
+
         TypeAdapter adapterObject = (TypeAdapter) createAndSet(adapterClass);
         if (adapterObject == null) {
             return null;
@@ -256,11 +276,11 @@ public class AntTypeDefinition {
     /**
      * check if the attributes are correct
      * <dl>
+     *   <li>if the class can be created.</li>
      *   <li>if an adapter class can be created</li>
-     *   <li>if the type is 
-     *  
-     *
-     * (Used during creation of the definition).
+     *   <li>if the type is assignable from adapto</li>
+     *   <li>if the type can be used with the adapter class</li>
+     * </dl>
      */
     public void checkClass() {
         if (clazz == null) {
@@ -273,8 +293,8 @@ public class AntTypeDefinition {
         // check adapter
         if (adapterClass != null) {
             boolean needToCheck = true;
-            if (adaptToClass != null &&
-                adaptToClass.isAssignableFrom(clazz)) {
+            if (adaptToClass != null
+                && adaptToClass.isAssignableFrom(clazz)) {
                 needToCheck = false;
             }
             if (needToCheck) {
@@ -304,7 +324,7 @@ public class AntTypeDefinition {
                 ctor = c.getConstructor(new Class[] {Project.class});
                 noArg = false;
             }
-                
+
             Object o = null;
             if (noArg) {
                 o = ctor.newInstance(new Object[0]);
@@ -313,7 +333,6 @@ public class AntTypeDefinition {
             }
             project.setProjectReference(o);
             return o;
-                
         } catch (java.lang.reflect.InvocationTargetException ex) {
             Throwable t = ex.getTargetException();
             throw new BuildException(
