@@ -220,9 +220,8 @@ public abstract class HttpRepository extends Repository {
     public boolean fetch(Library library, boolean useTimestamp) throws IOException {
 
         String path = getRemoteLibraryURL(library);
-        logVerbose("Library URL=" + path);
+        log("Downloading "+path +" to "+ library.getAbsolutePath());
         URL remoteURL=new URL(path);
-        logVerbose("destination =" + library.getAbsolutePath());
         long start, finish;
         start = System.currentTimeMillis();
         boolean success=get(remoteURL, library.getLibraryFile(),useTimestamp,
