@@ -339,7 +339,6 @@ public class Project {
      * set a user property, which can not be overwritten by
      * set/unset property calls
      * @see #setProperty(String,String)
-     * @see #unsetProperty(String)
      */
     public void setUserProperty(String name, String value) {
         log("Setting ro project property: " + name + " -> " +

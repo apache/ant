@@ -57,6 +57,11 @@ package org.apache.tools.ant;
 /**
  * Interface for objects which can contain tasks 
  *
+ * <p>It is recommended that implementations call {@link Task#perform
+ * perform} instead of {@link Task#execute execute} for the tasks they
+ * contain, as this method ensures that {@link BuildEvent BuildEvents}
+ * will be generated.</p>
+ *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
 public interface TaskContainer {
