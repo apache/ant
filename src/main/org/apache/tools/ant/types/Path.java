@@ -353,7 +353,14 @@ public class Path extends DataType implements Cloneable {
         StringBuffer element = new StringBuffer();
         while (tok.hasMoreTokens()) {
             element.setLength(0);
-            element.append(resolveFile(project, tok.nextToken()));
+            String pathElement = tok.nextToken();
+            try {
+                element.append(resolveFile(project, pathElement));
+            }
+            catch (BuildException e) {
+                project.log("Dropping path element " + pathElement + " as it is not valid relative to the project", 
+                            Project.MSG_VERBOSE);
+            }
             for (int i=0; i<element.length(); i++) {
                 translateFileSep(element, i);
             }
