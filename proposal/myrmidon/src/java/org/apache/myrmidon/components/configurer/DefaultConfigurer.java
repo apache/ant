@@ -46,7 +46,7 @@ public class DefaultConfigurer
     ///Attribute names that are reserved
     private final static String  RESERVED_ATTRIBUTES[] =
     {
-        "id", "logger"
+        "logger"
     };
 
     ///Element names that are reserved
