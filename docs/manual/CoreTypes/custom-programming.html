@@ -1,9 +1,8 @@
 <html>
   <head>
     <meta http-equiv="Content-Language" content="en-us"></meta>
-    <title>Custom Components</title>
+<title>Custom Components</title>
   </head>
-
   <body>
     <h2>Custom Components</h2>
     <h3>Overview</h3>
@@ -66,10 +65,10 @@ public class AllUpperCaseCondition extends Condition {
     // This method evaluates the condition
     public boolean eval() {
         if (value == null) {
-            throw new BuildException("value attribute is not set");
+            throw new BuildException(&quot;value attribute is not set&quot;);
         }
         return value.toUpperCase().equals(value);
-   }        
+   }
 }
       </pre>
     </blockquote>
@@ -80,9 +79,9 @@ public class AllUpperCaseCondition extends Condition {
     <blockquote>
       <pre>
 &lt;typedef
-    name="alluppercase"
-    classname="com.mydomain.AllUpperCaseCondition"
-    classpath="${mydomain.classes"/&gt;
+    name=&quot;alluppercase&quot;
+    classname=&quot;com.mydomain.AllUpperCaseCondition&quot;
+    classpath=&quot;${mydomain.classes}&quot;/&gt;
       </pre>
     </blockquote>
     <p>
@@ -91,8 +90,8 @@ public class AllUpperCaseCondition extends Condition {
     </p>
     <blockquote>
       <pre>
-&lt;condition property="allupper"&gt;
-   &lt;alluppercase value="THIS IS ALL UPPER CASE"/&gt;
+&lt;condition property=&quot;allupper&quot;&gt;
+   &lt;alluppercase value=&quot;THIS IS ALL UPPER CASE&quot;/&gt;
 &lt;/condition&gt;
       </pre>
     </blockquote>
@@ -110,7 +109,7 @@ public class AllUpperCaseCondition extends Condition {
     </p>
     <p>
       An example of a custom selection that selects filenames ending
-      in ".java" would be:
+      in &quot;.java&quot; would be:
     </p>
     <blockquote>
       <pre>
@@ -119,7 +118,7 @@ import java.io.File;
 import org.apache.tools.ant.types.selectors.FileSelector;
 public class JavaSelector implements FileSelector {
     public boolean isSelected(File b, String filename, File f) {
-       return filename.toLowerCase().endsWith(".java");
+       return filename.toLowerCase().endsWith(&quot;.java&quot;);
     }
 }
       </pre>
@@ -130,9 +129,9 @@ public class JavaSelector implements FileSelector {
     <blockquote>
       <pre>
 &lt;typedef
-    name="javaselector"
-    classname="com.mydomain.JavaSelector"
-    classpath="${mydomain.classes"/&gt;
+    name=&quot;javaselector&quot;
+    classname=&quot;com.mydomain.JavaSelector&quot;
+    classpath=&quot;${mydomain.classes}&quot;/&gt;
       </pre>
     </blockquote>
         <p>
@@ -141,14 +140,14 @@ public class JavaSelector implements FileSelector {
     </p>
     <blockquote>
       <pre>
-&lt;copy todir="to"&gt;
-   &lt;fileset dir="src"&gt;
+&lt;copy todir=&quot;to&quot;&gt;
+   &lt;fileset dir=&quot;src&quot;&gt;
       &lt;javaselector/&gt;
    &lt;/fileset&gt;
 &lt;/copy&gt;
       </pre>
     </blockquote>
-     
+
       <p>
         One may use
         <code>org.apache.tools.ant.types.selectors.BaseSelector</code>,
@@ -164,7 +163,7 @@ public class JavaSelector implements FileSelector {
         last chance to check your settings for consistency because it
         calls <code>verifySettings()</code>. Override this method and
         call <code>setError()</code> within it if you detect any
-        problems in how your selector is set up.</p>
+        problems in how your selector is set up.
     </p>
     <p>
       To write custom selector containers one should extend
@@ -190,7 +189,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     }
     public void verifySettings() {
         if (number &lt; 0) {
-           throw new BuildException("Number attribute should be set");
+           throw new BuildException(&quot;Number attribute should be set&quot;);
         }
     }
     public boolean isSelected(File baseDir, String filename, File file) {
@@ -212,13 +211,13 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     </p>
     <blockquote>
       <pre>
-&lt;typedef name="numberselected"
-         classname="com.mydomain.MatchNumberSelectors"/&gt;
+&lt;typedef name=&quot;numberselected&quot;
+         classname=&quot;com.mydomain.MatchNumberSelectors&quot;/&gt;
 ...
-&lt;fileset dir="${src.path}"&gt;
-   &lt;numberselected number="2"&gt;
-      &lt;contains text="script" casesensitive="no"/&gt;
-      &lt;size value="4" units="Ki" when="more"/&gt;
+&lt;fileset dir=&quot;${src.path}&quot;&gt;
+   &lt;numberselected number=&quot;2&quot;&gt;
+      &lt;contains text=&quot;script&quot; casesensitive=&quot;no&quot;/&gt;
+      &lt;size value=&quot;4&quot; units=&quot;Ki&quot; when=&quot;more&quot;/&gt;
       &lt;javaselector/&gt;
    &lt;/numberselected&gt;
 &lt;/fileset&gt;
@@ -229,7 +228,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     </p>
     <p>
       The custom selector was the pre ant 1.6 way of defining custom selectors.
-      This method is still supported for backward compatiblity.
+      This method is still supported for backward compatibility.
     </p>
     <p>You can write your own selectors and use them within the selector
       containers by specifying them within the &lt;custom&gt; tag.</p>
@@ -299,7 +298,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
 &lt;/fileset&gt;
       </pre></blockquote>
 
-    
+
     <p>The core selectors that can also be used as custom selectors
       are</p>
 
@@ -364,7 +363,7 @@ public class RemoveOddCharacters implements ChainableReader {
                 count++;
                 if ((count % 2) == 1) {
                     return c;
-                }   
+                }
               }
           }
       }
@@ -386,13 +385,13 @@ public class AddLineNumber extends ChainableReaderFilter {
    private void lineNumber = 0;
    public String filter(String string) {
       lineNumber++;
-      return "" + lineNumber + "\t" + string;
+      return &quot;&quot; + lineNumber + &quot;\t&quot; + string;
    }
 }
       </pre>
     </blockquote>
-      
-      
+
+
     <hr></hr>
     <p align="center">Copyright &copy; 2003 Apache Software Foundation. All rights
       Reserved.</p>
