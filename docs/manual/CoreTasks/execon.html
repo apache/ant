@@ -36,8 +36,9 @@ command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
   <tr>
     <td valign="top">os</td>
     <td valign="top">list of Operating Systems on which the command may be
-      executed.</td>
-    <td align="center" valign="top">No</td>
+      executed. If the current OS's name is contained in this list, the command will
+      be executed. The OS's name is determined by the Java Virtual machine and is set
+      in the &quot;os.name&quot; system property.</td>
   </tr>
   <tr>
     <td valign="top">output</td>
