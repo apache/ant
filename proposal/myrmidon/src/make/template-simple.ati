@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+
+  <target name="main">
+    <echo message="Before template"/>
+    <echo-template msg="Template echo 1!" />
+    <echo-template msg="Template echo 2!" />
+    <echo-template msg="Template echo 3!" />
+    <echo message="After template"/>
+  </target>
+
+</project>
