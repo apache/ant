@@ -87,8 +87,14 @@ public class RuntimeConfigurable implements Serializable {
      * XML attributes for the element. */
     private transient AttributeList attributes;
 
-    /** Attributes are stored in the attMap.
+    /** Attribute names and values. While the XML spec doesn't require
+     *  preserving the order ( AFAIK ), some ant tests do rely on the
+     *  exact order. The following code is copied from AttributeImpl.
+     *  We could also just use SAX2 Attributes and convert to SAX1 ( DOM
+     *  attribute Nodes can also be stored in SAX2 Attributges )
      */
+    private Vector attNames=new Vector();
+    private Vector attValues=new Vector();
     private Hashtable attMap=new Hashtable();
 
     /** Text appearing within the element. */
@@ -141,6 +147,8 @@ public class RuntimeConfigurable implements Serializable {
     }
 
     public void setAttribute( String name, String value ) {
+        attNames.addElement( name );
+        attValues.addElement( value );
         attMap.put( name, value );
     }
 
@@ -294,10 +302,9 @@ public class RuntimeConfigurable implements Serializable {
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper(p, target.getClass());
 
-        Enumeration attNames=attMap.keys();
-        while( attNames.hasMoreElements() ) {
-            String name=(String) attNames.nextElement();
-            String value=(String) attMap.get(name);
+        for( int i=0; i< attNames.size(); i++ ) {
+            String name=(String) attNames.elementAt(i);
+            String value=(String) attValues.elementAt(i);
 
             // reflect these into the target
             value = p.replaceProperties(value);
