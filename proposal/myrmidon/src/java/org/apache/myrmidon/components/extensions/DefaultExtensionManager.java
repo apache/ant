@@ -33,10 +33,21 @@ public class DefaultExtensionManager
     extends DefaultPackageRepository
     implements LogEnabled, Parameterizable, Initializable, Disposable, ExtensionManager
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultExtensionManager.class );
 
-    private final static String TOOLS_JAR = File.separator + "lib" + File.separator + "tools.jar";
+    /**
+     * The standard location of tools.jar for IBM/Sun JDKs.
+     */
+    private static final String TOOLS_JAR =
+        File.separator + "lib" + File.separator + "tools.jar";
+
+    /**
+     * The path relative to JRE in which tools.jar is located.
+     */
+    private static final String DEBIAN_TOOLS_JAR =
+        File.separator + ".." + File.separator + "j2sdk1.3" +
+        File.separator + "lib" + File.separator + "tools.jar";
 
     private Logger m_logger;
 
@@ -107,7 +118,19 @@ public class DefaultExtensionManager
             jdkHome = javaHome;
         }
 
-        final File tools = new File( jdkHome + TOOLS_JAR );
+        //We need to search through a few locations to locate tools.jar
+        File tools = new File( jdkHome + TOOLS_JAR );
+        if( tools.exists() )
+        {
+            return tools;
+        }
+
+        //The path to tools.jar. In some cases $JRE_HOME is not equal to
+        //$JAVA_HOME/jre. For example, on Debian, IBM's j2sdk1.3 .deb puts
+        //the JRE in /usr/lib/j2sdk1.3, and the JDK in /usr/lib/j2re1.3,
+        //tools.jar=${java.home}/../j2sdk1.3/lib/tools.jar
+        tools = new File( jdkHome + DEBIAN_TOOLS_JAR );
+
         if( !tools.exists() )
         {
             final String message = REZ.getString( "extension.missing-tools.error" );
