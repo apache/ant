@@ -83,6 +83,8 @@ public class FileUtilsTest extends TestCase {
         long secondModTime = removeThis.lastModified();
         assertTrue(secondModTime > modTime);
 
+        //check that the isUpToDate logic works
+        assertFalse(fu.isUpToDate(modTime,secondModTime));
 
         // number of milliseconds in a day
         final int millisperday=24 * 3600 * 1000;
