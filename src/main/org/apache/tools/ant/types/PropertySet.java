@@ -49,7 +49,7 @@ public class PropertySet extends DataType {
     private Mapper mapper;
 
     /**
-     * this is a nested class containing a reference to some properties
+     * This is a nested class containing a reference to some properties
      * and optionally a source of properties.
      */
     public static class PropertyRef {
@@ -62,7 +62,7 @@ public class PropertySet extends DataType {
 
         /**
          * Set the name.
-         * @param name a <code>String</code> value
+         * @param name a <code>String</code> value.
          */
         public void setName(String name) {
             assertValid("name", name);
@@ -71,7 +71,7 @@ public class PropertySet extends DataType {
 
         /**
          * Set the regular expression to use to filter the properties.
-         * @param regex a regular expression
+         * @param regex a regular expression.
          */
         public void setRegex(String regex) {
             assertValid("regex", regex);
@@ -80,7 +80,7 @@ public class PropertySet extends DataType {
 
         /**
          * Set the prefix to use.
-         * @param prefix a <code>String</code> value
+         * @param prefix a <code>String</code> value.
          */
         public void setPrefix(String prefix) {
             assertValid("prefix", prefix);
@@ -89,7 +89,7 @@ public class PropertySet extends DataType {
 
         /**
          * Builtin property names - all, system or commandline.
-         * @param b an enumerated <code>BuildinPropertySetName</code> value
+         * @param b an enumerated <code>BuildinPropertySetName</code> value.
          */
         public void setBuiltin(BuiltinPropertySetName b) {
             String pBuiltIn = b.getValue();
@@ -109,8 +109,8 @@ public class PropertySet extends DataType {
         }
 
         /**
-         * a debug toString()
-         * @return a string version of this object
+         * A debug toString().
+         * @return a string version of this object.
          */
         public String toString() {
             return "name=" + name + ", regex=" + regex + ", prefix=" + prefix
@@ -121,7 +121,7 @@ public class PropertySet extends DataType {
 
     /**
      * Allow properties of a particular name in the set.
-     * @param name the property name to allow
+     * @param name the property name to allow.
      */
     public void appendName(String name) {
         PropertyRef r = new PropertyRef();
@@ -131,7 +131,7 @@ public class PropertySet extends DataType {
 
     /**
      * Allow properties whose names match a regex in the set.
-     * @param regex the regular expression to use
+     * @param regex the regular expression to use.
      */
     public void appendRegex(String regex) {
         PropertyRef r = new PropertyRef();
@@ -141,7 +141,7 @@ public class PropertySet extends DataType {
 
     /**
      * Allow properties whose names start with a prefix in the set.
-     * @param prefix the prefix to use
+     * @param prefix the prefix to use.
      */
     public void appendPrefix(String prefix) {
         PropertyRef r = new PropertyRef();
@@ -151,7 +151,7 @@ public class PropertySet extends DataType {
 
     /**
      * Allow builtin (all, system or commandline) properties in the set.
-     * @param b the type of builtin properties
+     * @param b the type of builtin properties.
      */
     public void appendBuiltin(BuiltinPropertySetName b) {
         PropertyRef r = new PropertyRef();
@@ -160,10 +160,10 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * set a mapper to change property names
-     * @param type mapper type
-     * @param from source pattern
-     * @param to output pattern
+     * Set a mapper to change property names.
+     * @param type mapper type.
+     * @param from source pattern.
+     * @param to output pattern.
      */
     public void setMapper(String type, String from, String to) {
         Mapper mapper = createMapper();
@@ -184,7 +184,7 @@ public class PropertySet extends DataType {
 
     /**
      * Add another property set to this set.
-     * @param ref another property set
+     * @param ref another property set.
      */
     public void addPropertyset(PropertySet ref) {
         assertNotReference();
@@ -193,7 +193,7 @@ public class PropertySet extends DataType {
 
     /**
      * Create a mapper to map the property names.
-     * @return a mapper to be configured
+     * @return a mapper to be configured.
      */
     public Mapper createMapper() {
         assertNotReference();
@@ -205,8 +205,8 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * A nested filenamemapper
-     * @param fileNameMapper the mapper to add
+     * Add a nested FileNameMapper.
+     * @param fileNameMapper the mapper to add.
      * @since Ant 1.6.3
      */
     public void add(FileNameMapper fileNameMapper) {
@@ -214,7 +214,7 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * Whether to reevaluate the set everytime the set is used.
+     * Set whether to reevaluate the set everytime the set is used.
      * Default is true.
      *
      * @param dynamic if true, reevaluate the property set each time
@@ -228,10 +228,10 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * Whether to negate results.
+     * Set whether to negate results.
      * If "true", all properties not selected by nested elements will be returned.
-     *  Default is "false"
-     * @param negate if true, negate the selection criteria
+     *  Default is "false".
+     * @param negate if true, negate the selection criteria.
      */
     public void setNegate(boolean negate) {
         assertNotReference();
@@ -240,7 +240,7 @@ public class PropertySet extends DataType {
 
     /**
      * Get the dynamic attribute.
-     * @return true if the property set is to be evalulated each time it is used
+     * @return true if the property set is to be evalulated each time it is used.
      */
     public boolean getDynamic() {
         return isReference() ? getRef().dynamic : dynamic;
@@ -248,7 +248,7 @@ public class PropertySet extends DataType {
 
     /**
      * Get the mapper attribute.
-     * @return the mapper attribute
+     * @return the mapper attribute.
      */
     public Mapper getMapper() {
         return isReference() ? getRef().mapper : mapper;
@@ -270,8 +270,8 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * this is the operation to get the existing or recalculated properties.
-     * @return the properties for this propertyset
+     * This is the operation to get the existing or recalculated properties.
+     * @return the properties for this propertyset.
      */
     public Properties getProperties() {
         if (isReference()) {
@@ -302,7 +302,6 @@ public class PropertySet extends DataType {
         } else {
             names = cachedNames;
         }
-
         FileNameMapper mapper = null;
         Mapper myMapper = getMapper();
         if (myMapper != null) {
@@ -380,7 +379,7 @@ public class PropertySet extends DataType {
     /**
      * Performs the check for circular references and returns the
      * referenced PropertySet.
-     * @return the referenced PropertySet
+     * @return the referenced PropertySet.
      */
     protected PropertySet getRef() {
         if (!isChecked()) {
@@ -431,8 +430,8 @@ public class PropertySet extends DataType {
     }
 
     /**
-     * flag which tracks whether any attribute has been set; used by
-     * {@link #assertNotReference()} and {@link #setRefid(Reference)}
+     * Flag which tracks whether any attribute has been set; used by
+     * {@link #assertNotReference()} and {@link #setRefid(Reference)}.
      */
     private boolean noAttributeSet = true;
 
@@ -454,7 +453,7 @@ public class PropertySet extends DataType {
      * This gets a comma separated list of key=value pairs for
      * the properties in the set.
      * The output order is sorted according to the keys' <i>natural order</i>.
-     * @return a string rep of this object
+     * @return a string rep of this object.
      */
     public String toString() {
         StringBuffer b = new StringBuffer();
