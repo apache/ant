@@ -24,7 +24,6 @@ import java.util.TimeZone;
 /**
  * Class used to generate an XML changelog.
  *
- * @version $Revision$ $Date$
  */
 public class ChangeLogWriter {
     /** output format for dates written to xml file */

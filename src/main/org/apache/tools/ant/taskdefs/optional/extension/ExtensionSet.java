@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.Reference;
  * The Extension set lists a set of "Optional Packages" /
  * "Extensions".
  *
- * @version $Revision$ $Date$
  * @ant.data-type name="extension-set"
  */
 public class ExtensionSet

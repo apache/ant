@@ -46,7 +46,6 @@ import org.apache.tools.ant.types.selectors.NoneSelector;
  * mappers and filter chains. Files of the destination directory not
  * present in any of the source fileset are removed.</p>
  *
- * @version $Revision$
  * @since Ant 1.6
  *
  * revised by <a href="mailto:daniel.armbrust@mayo.edu">Dan Armbrust</a>

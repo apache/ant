@@ -23,7 +23,6 @@ import org.apache.tools.ant.util.FileUtils;
 import java.io.IOException;
 
 /**
- * @version $Revision$
  */
 public class BZip2Test extends BuildFileTest {
 

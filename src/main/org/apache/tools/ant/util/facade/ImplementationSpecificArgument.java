@@ -23,7 +23,6 @@ import org.apache.tools.ant.types.Commandline;
  * Extension of Commandline.Argument with a new attribute that choses
  * a specific implementation of the facade.
  *
- * @version $Revision$
  *
  * @since Ant 1.5
  */

@@ -32,7 +32,6 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * A set of useful methods relating to extensions.
  *
- * @version $Revision$ $Date$
  */
 public class ExtensionUtil {
     /**

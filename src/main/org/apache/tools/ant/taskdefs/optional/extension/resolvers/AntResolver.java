@@ -27,7 +27,6 @@ import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
 /**
  * Resolver that just returns s specified location.
  *
- * @version $Revision$ $Date$
  */
 public class AntResolver implements ExtensionResolver {
     private File antfile;

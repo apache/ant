@@ -29,7 +29,6 @@ import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.Path;
 
 /**
- * @version $Revision$
  */
 public class AntTest extends BuildFileTest {
 

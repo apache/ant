@@ -24,7 +24,6 @@ import java.util.ArrayList;
 /**
  * A class used to parse the output of the svn log command.
  *
- * @version $Revision$ $Date$
  */
 class SvnChangeLogParser extends LineOrientedOutputStream {
 

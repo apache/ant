@@ -111,7 +111,6 @@ import org.apache.tools.ant.util.FileUtils;
  * recorded as <code>link=subdir/foo.bar</code> and restored as
  * <code>link --> subdir/foo.bar</code>.
  *
- * @version $Revision$
  */
 public class Symlink extends DispatchTask {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();

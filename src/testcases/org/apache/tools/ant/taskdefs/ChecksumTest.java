@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.File;
 
 /**
- * @version $Revision$
  */
 public class ChecksumTest extends BuildFileTest {
 

@@ -21,7 +21,6 @@ import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @version $Revision$
  */
 public class AbstractSvnTaskTest extends BuildFileTest {
 

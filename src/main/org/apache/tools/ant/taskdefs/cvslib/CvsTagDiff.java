@@ -60,7 +60,6 @@ import org.apache.tools.ant.util.FileUtils;
  * &lt;!ELEMENT prevrevision ( #PCDATA ) &gt;
  * </PRE>
  *
- * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"
  */

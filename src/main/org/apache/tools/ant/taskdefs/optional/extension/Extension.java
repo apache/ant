@@ -35,7 +35,6 @@ import org.apache.tools.ant.util.StringUtils;
  * Java2 Standard Edition package, in file
  * <code>guide/extensions/versioning.html</code>.</p>
  *
- * @version $Revision$ $Date$
  */
 public final class Extension {
     /**

@@ -54,7 +54,6 @@ import org.apache.tools.ant.launch.Locator;
  * system file paths at runtime as well as copying files or setting
  * their last modification time.
  *
- * @version $Revision$
  */
 
 public class FileUtils {

@@ -36,7 +36,6 @@ import org.apache.tools.ant.util.FileUtils;
  * Processes a set of XML documents via XSLT. This is
  * useful for building views of XML based documentation.
  *
- * @version $Revision$
  *
  * @since Ant 1.1
  *

@@ -33,7 +33,6 @@ import java.util.TimeZone;
  *
  * @since Ant 1.5
  *
- * @version $Revision$
  */
 public final class DateUtils {
 

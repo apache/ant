@@ -42,7 +42,6 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @since Ant 1.2
  *
- * @version $Revision$
  */
 public class Execute {
 

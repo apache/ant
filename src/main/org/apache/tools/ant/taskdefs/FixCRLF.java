@@ -74,7 +74,6 @@ import org.apache.tools.ant.util.FileUtils;
  * CRCRLF is regarded as a single EOL to handle cases where other
  * programs have converted CRLF into CRCRLF.
  *
- * @version $Revision$ $Name$
  * @since Ant 1.1
  *
  * @ant.task category="filesystem"

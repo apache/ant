@@ -25,7 +25,6 @@ import org.apache.tools.ant.util.FileUtils;
  * Compares two files for bitwise equality based on size and
  * content. Timestamps are not at all looked at.
  *
- * @version $Revision$
  * @since Ant 1.5
  */
 

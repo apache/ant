@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import org.apache.tools.ant.Project;
 /**
  * Interface to locate a File that satisfies extension.
  *
- * @version $Revision$ $Date$
  */
 public interface ExtensionResolver {
     /**

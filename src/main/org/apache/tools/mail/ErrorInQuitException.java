@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.io.IOException;
  * href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=5273">Bug
  * report 5273</a>.</p>
  *
- * @version $Revision$
  */
 public class ErrorInQuitException extends IOException {
 

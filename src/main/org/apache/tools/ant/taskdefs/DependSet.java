@@ -72,7 +72,6 @@ import org.apache.tools.ant.util.FileUtils;
  * </li></ul>
  *
  * @ant.task category="filesystem"
- * @version $Revision$ $Date$
  * @since Ant 1.4
  */
 public class DependSet extends MatchingTask {

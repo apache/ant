@@ -32,7 +32,6 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  * <p>This task does not extend Task to take advantage of
  * ConditionBase.</p>
  *
- * @version $Revision$
  *
  * @since Ant 1.4
  *

@@ -31,7 +31,6 @@ import org.apache.tools.ant.Task;
 /**
  * Automates the telnet protocol.
  *
- * @version $Revision$
  */
 
 public class TelnetTask extends Task {

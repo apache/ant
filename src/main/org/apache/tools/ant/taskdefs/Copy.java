@@ -47,7 +47,6 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- * @version $Revision$
  *
  * @since Ant 1.2
  *

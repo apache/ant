@@ -20,7 +20,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @version $Revision$
  */
 public class GUnzipTest extends BuildFileTest {
 
