@@ -160,7 +160,7 @@ public class PathConvert extends Task {
 
     /**
      * An enumeration of supported targets:
-     * windows", "unix", "netware", and "os/2".
+     * "windows", "unix", "netware", and "os/2".
      */
     public static class TargetOs extends EnumeratedAttribute {
         /**
