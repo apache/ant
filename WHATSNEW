@@ -10,6 +10,11 @@ Changes that could break older environments:
 * Tar now writes two EOF blocks rather than one.
   Bugzilla report 28776
 
+* The Reference object now has a project field which it uses in preference
+  to the project passed in. This allows composite references to be
+  handled to nested projects.
+  Bugzilla report 25777
+
 Other changes:
 --------------
 
