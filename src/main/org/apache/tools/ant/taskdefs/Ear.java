@@ -78,7 +78,8 @@ public class Ear extends Jar {
     }
 
     public void setEarfile(File earFile) {
-        super.setZipfile(earFile);
+        log("DEPRECATED - The earfile attribute is deprecated. Use file attribute instead.");
+        setFile(earFile);
     }
     
     public void setAppxml(File descr) {
