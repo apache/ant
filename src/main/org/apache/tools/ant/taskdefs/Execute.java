@@ -92,14 +92,17 @@ public class Execute {
     private boolean newEnvironment = false;
 
     /** Controls whether the VM is used to launch commands, where possible */
-    private boolean useVMLauncher = true;    
-    
+    private boolean useVMLauncher = true;
+
     private static String antWorkingDirectory = System.getProperty("user.dir");
     private static CommandLauncher vmLauncher = null;
     private static CommandLauncher shellLauncher = null;
     private static Vector procEnvironment = null;
 
-    /** 
+    /** Used to destroy processes when the VM exits. */
+    private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
+
+    /**
      * Builds a command launcher for the OS and JVM we are running under
      */
     static {
@@ -133,7 +136,7 @@ public class Execute {
             }
 
             // Determine if we're running under 2000/NT or 98/95
-            String osname = 
+            String osname =
                 System.getProperty("os.name").toLowerCase(Locale.US);
 
             if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
@@ -183,7 +186,7 @@ public class Execute {
                 // Just try to use what we got
             }
 
-            BufferedReader in = 
+            BufferedReader in =
                 new BufferedReader(new StringReader(out.toString()));
             String var = null;
             String line, lineSep = System.getProperty("line.separator");
@@ -208,7 +211,7 @@ public class Execute {
             }
             // Since we "look ahead" before adding, there's one last env var.
             procEnvironment.addElement(var);
-        } 
+        }
         catch (java.io.IOException exc) {
             exc.printStackTrace();
             // Just try to see how much we got
@@ -224,7 +227,7 @@ public class Execute {
             return cmd;
         }
         else if ( Os.isFamily("windows") ) {
-            String osname = 
+            String osname =
                 System.getProperty("os.name").toLowerCase(Locale.US);
             // Determine if we're running under 2000/NT or 98/95
             if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
@@ -243,7 +246,7 @@ public class Execute {
             // Alternatively one could use: /bin/sh -c env
             String[] cmd = {"/usr/bin/env"};
             return cmd;
-        } 
+        }
         else if ( Os.isFamily("netware") ) {
             String[] cmd = {"env"};
             return cmd;
@@ -332,7 +335,7 @@ public class Execute {
      * Sets the environment variables for the subprocess to launch.
      *
      * @param commandline array of Strings, each element of which has
-     * an environment variable settings in format <em>key=value</em> 
+     * an environment variable settings in format <em>key=value</em>
      */
     public void setEnvironment(String[] env) {
         this.env = env;
@@ -366,17 +369,17 @@ public class Execute {
 
     /**
      * Launch this execution through the VM, where possible, rather than through
-     * the OS's shell. In some cases and operating systems using the shell will 
-     * allow the shell to perform additional processing such as associating an 
+     * the OS's shell. In some cases and operating systems using the shell will
+     * allow the shell to perform additional processing such as associating an
      * executable with a script, etc
      *
-     * @param vmLauncher true if exec should launch through thge VM, 
+     * @param vmLauncher true if exec should launch through thge VM,
      *                   false if the shell should be used to launch the command.
      */
     public void setVMLauncher(boolean useVMLauncher) {
         this.useVMLauncher = useVMLauncher;
     }
-    
+
     /**
      * Runs a process defined by the command line and returns its exit status.
      *
@@ -389,7 +392,7 @@ public class Execute {
         if (!useVMLauncher) {
             launcher = shellLauncher;
         }
-        
+
         final Process process = launcher.exec(project, getCommandline(), getEnvironment(), workingDirectory);
         try {
             streamHandler.setProcessInputStream(process.getOutputStream());
@@ -400,8 +403,18 @@ public class Execute {
             throw e;
         }
         streamHandler.start();
+
+        // add the process to the list of those to destroy if the VM exits
+        //
+        processDestroyer.add(process);
+
         if (watchdog != null) watchdog.start(process);
         waitFor(process);
+
+        // remove the process to the list of those to destroy if the VM exits
+        //
+        processDestroyer.remove(process);
+
         if (watchdog != null) watchdog.stop();
         streamHandler.stop();
         if (watchdog != null) watchdog.checkException();
@@ -434,9 +447,9 @@ public class Execute {
      * @since 1.5
      */
     public boolean killedProcess() {
-        return watchdog!=null && watchdog.killedProcess();    
+        return watchdog!=null && watchdog.killedProcess();
     }
-    
+
     /**
      * Patch the current environment with the new values from the user.
      * @return the patched environment
@@ -474,7 +487,7 @@ public class Execute {
     {
         try {
             task.log(Commandline.toString(cmdline), Project.MSG_VERBOSE);
-            Execute exe = new Execute(new LogStreamHandler(task, 
+            Execute exe = new Execute(new LogStreamHandler(task,
                                                            Project.MSG_INFO,
                                                            Project.MSG_ERR));
             exe.setAntRun(task.getProject());
@@ -483,7 +496,7 @@ public class Execute {
             if ( retval != 0 ) {
                 throw new BuildException(cmdline[0] + " failed with return code " + retval, task.getLocation());
             }
-        } 
+        }
         catch (java.io.IOException exc) {
             throw new BuildException("Could not launch " + cmdline[0] + ": " + exc, task.getLocation());
         }
@@ -496,7 +509,7 @@ public class Execute {
      */
     private static class CommandLauncher
     {
-        /** 
+        /**
          * Launches the given command in a new process.
          *
          * @param project       The project that the command is part of
@@ -509,11 +522,11 @@ public class Execute {
             if (project != null) {
                 project.log("Execute:CommandLauncher: " +
                             Commandline.toString(cmd), Project.MSG_DEBUG);
-            }                            
+            }
             return Runtime.getRuntime().exec(cmd, env);
         }
 
-        /** 
+        /**
          * Launches the given command in a new process, in the given working
          * directory.
          *
@@ -544,7 +557,7 @@ public class Execute {
          * Launches the given command in a new process.  Needs to quote
          * arguments
          */
-        public Process exec(Project project, String[] cmd, String[] env) throws IOException 
+        public Process exec(Project project, String[] cmd, String[] env) throws IOException
         {
             // Need to quote arguments with spaces, and to escape quote characters
             String[] newcmd = new String[cmd.length];
@@ -554,7 +567,7 @@ public class Execute {
             if (project != null) {
                 project.log("Execute:Java11CommandLauncher: " +
                             Commandline.toString(newcmd), Project.MSG_DEBUG);
-            }                            
+            }
             return Runtime.getRuntime().exec(newcmd, env);
         }
     }
@@ -571,44 +584,44 @@ public class Execute {
             _execWithCWD = Runtime.class.getMethod("exec", new Class[] {String[].class, String[].class, File.class});
         }
 
-        /** 
+        /**
          * Launches the given command in a new process, in the given working
          * directory
          */
-        public Process exec(Project project, String[] cmd, String[] env, File workingDir) 
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir)
             throws IOException
         {
             try {
                 if (project != null) {
                     project.log("Execute:Java13CommandLauncher: " +
                                 Commandline.toString(cmd), Project.MSG_DEBUG);
-                }                                
+                }
                 Object[] arguments = { cmd, env, workingDir };
                 return (Process)_execWithCWD.invoke(Runtime.getRuntime(), arguments);
-            } 
+            }
             catch (InvocationTargetException exc) {
                 Throwable realexc = exc.getTargetException();
                 if ( realexc instanceof ThreadDeath ) {
                     throw (ThreadDeath)realexc;
-                } 
+                }
                 else if ( realexc instanceof IOException ) {
                     throw (IOException)realexc;
-                } 
+                }
                 else {
                     throw new BuildException("Unable to execute command", realexc);
                 }
-            } 
+            }
             catch (Exception exc) {
                 // IllegalAccess, IllegalArgument, ClassCast
                 throw new BuildException("Unable to execute command", exc);
             }
         }
-        
+
         private Method _execWithCWD;
     }
-    
+
     /**
-     * A command launcher that proxies another command launcher.  
+     * A command launcher that proxies another command launcher.
      *
      * Sub-classes override exec(args, env, workdir)
      */
@@ -619,7 +632,7 @@ public class Execute {
             _launcher = launcher;
         }
 
-        /** 
+        /**
          * Launches the given command in a new process.  Delegates this
          * method to the proxied launcher
          */
@@ -643,7 +656,7 @@ public class Execute {
             super(launcher);
         }
 
-        /** 
+        /**
          * Launches the given command in a new process, in the given working
          * directory.
          */
@@ -685,7 +698,7 @@ public class Execute {
             super(launcher);
         }
 
-        /** 
+        /**
          * Launches the given command in a new process, in the given working
          * directory
          */
@@ -698,7 +711,7 @@ public class Execute {
             System.getProperties().put("user.dir", workingDir.getAbsolutePath());
             try {
                 return exec(project, cmd, env);
-            } 
+            }
             finally {
                 System.getProperties().put("user.dir", antWorkingDirectory);
             }
@@ -717,7 +730,7 @@ public class Execute {
             _script = script;
         }
 
-        /** 
+        /**
          * Launches the given command in a new process, in the given working
          * directory
          */
@@ -729,7 +742,7 @@ public class Execute {
                 }
                 throw new IOException("Cannot locate antRun script: No project provided");
             }
-            
+
             // Locate the auxiliary script
             String antHome = project.getProperty("ant.home");
             if ( antHome == null ) {
@@ -747,7 +760,7 @@ public class Execute {
             newcmd[0] = antRun;
             newcmd[1] = commandDir.getAbsolutePath();
             System.arraycopy(cmd, 0, newcmd, 2, cmd.length);
-            
+
             return exec(project, newcmd, env);
         }
 
@@ -766,7 +779,7 @@ public class Execute {
             _script = script;
         }
 
-        /** 
+        /**
          * Launches the given command in a new process, in the given working
          * directory
          */
@@ -778,7 +791,7 @@ public class Execute {
                 }
                 throw new IOException("Cannot locate antRun script: No project provided");
             }
-            
+
             // Locate the auxiliary script
             String antHome = project.getProperty("ant.home");
             if ( antHome == null ) {
@@ -797,7 +810,7 @@ public class Execute {
             newcmd[1] = antRun;
             newcmd[2] = commandDir.getAbsolutePath();
             System.arraycopy(cmd, 0, newcmd, 3, cmd.length);
-            
+
             return exec(project, newcmd, env);
         }
 

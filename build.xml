@@ -801,6 +801,9 @@
 
       <exclude name="${optional.package}/perforce/*.java"
                unless="jakarta.oro.present" />
+
+      <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java"
+               unless="jdk1.3+" />
     </javac>
   </target>
 
@@ -890,6 +893,9 @@
 
           <exclude name="${optional.package}/perforce/*.java"
                    unless="jakarta.oro.present" />
+
+          <!-- interactive test -->
+          <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java" />
         </fileset>
       </batchtest>
 
@@ -916,6 +922,14 @@
       <formatter type="plain" usefile="false" />
       <test name="${testcase}" />
     </junit>
+  </target>
+
+  <target name="interactive-tests" description="--> runs interactive tests"
+          depends="compile-tests"
+          if="jdk1.3+">
+    <java classpathref="tests-classpath"
+          classname="org.apache.tools.ant.taskdefs.TestProcess" 
+          fork="true" />
   </target>
 
   <!--
