@@ -55,7 +55,6 @@ public class Copy
     private boolean m_preserveLastModified;
     private boolean m_forceOverwrite;
     private boolean m_flatten;
-    private int m_verbosity = Project.MSG_VERBOSE;
     private boolean m_includeEmpty = true;
 
     private Hashtable m_fileCopyMap = new Hashtable();
@@ -149,23 +148,6 @@ public class Copy
     }
 
     /**
-     * Used to force listing of all names of copied files.
-     *
-     * @param verbose The new Verbose value
-     */
-    public void setVerbose( final boolean verbose )
-    {
-        if( verbose )
-        {
-            m_verbosity = Project.MSG_INFO;
-        }
-        else
-        {
-            m_verbosity = Project.MSG_VERBOSE;
-        }
-    }
-
-    /**
      * Adds a set of files (nested fileset attribute).
      *
      * @param set The feature to be added to the Fileset attribute
@@ -200,7 +182,7 @@ public class Copy
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        m_mapperElement = new Mapper( getProject() );
+        m_mapperElement = new Mapper();
         return m_mapperElement;
     }
 
@@ -413,7 +395,7 @@ public class Copy
         }
     }
 
-    private FilterSetCollection buildFilterSet()
+    protected final FilterSetCollection buildFilterSet()
     {
         final FilterSetCollection executionFilters = new FilterSetCollection();
         if( m_filtering )
@@ -548,11 +530,6 @@ public class Copy
     protected boolean isForceOverwrite()
     {
         return m_forceOverwrite;
-    }
-
-    protected int getVerbosity()
-    {
-        return m_verbosity;
     }
 
     protected boolean isIncludeEmpty()
