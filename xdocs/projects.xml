@@ -380,6 +380,37 @@
         </table>
       </subsection>
 
+      <subsection name="yEd">
+
+        <p>yEd is a freeware multi-purpose graph and diagram editor
+        that runs on the Java 2 platform. It provides an import filter
+        for Ant build scripts that makes it possible to conveniently
+        display and browse the dependenies between the different targets
+        of the build file. This is especially useful for debugging and
+        understanding large build files.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+
+            <td>Ant 1.x</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.yworks.com/products/yed/">http://www.yworks.com/products/yed/</a></td>
+          </tr>
+          <tr>
+
+            <th>Contact:</th>
+            <td><a href ='http://www.yworks.com/en/company_contact.htm'>yWorks Support</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware</td>
+          </tr>
+
+        </table>
+      </subsection>
     </section>
 
   </body>
