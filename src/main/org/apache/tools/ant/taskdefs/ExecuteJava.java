@@ -122,6 +122,7 @@ public class ExecuteJava {
                 AntClassLoader loader = new AntClassLoader(project, classpath, false);
                 loader.setIsolated(true);
                 target = loader.forceLoadClass(classname);
+                AntClassLoader.initializeClass(target);
             }
             final Method main = target.getMethod("main", param);
             main.invoke(null, argument);

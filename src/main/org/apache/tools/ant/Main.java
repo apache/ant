@@ -382,8 +382,8 @@ public class Main {
 
         try {
             addBuildListeners(project);
-            project.fireBuildStarted();
 
+            project.fireBuildStarted();
             project.init();
 
             // set user-define properties

@@ -203,6 +203,7 @@ public class Mapper extends DataType {
             } else {
                 AntClassLoader al = new AntClassLoader(p, classpath);
                 c = al.loadClass(classname);
+                AntClassLoader.initializeClass(c);
             }
             
             FileNameMapper m = (FileNameMapper) c.newInstance();

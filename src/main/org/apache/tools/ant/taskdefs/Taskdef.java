@@ -109,6 +109,7 @@ public class Taskdef extends Task {
             Class taskClass = null;
             if (loader != null) {
                 taskClass = loader.loadClass(value);
+                AntClassLoader.initializeClass(taskClass);
             } else {
                 taskClass = Class.forName(value);
             }

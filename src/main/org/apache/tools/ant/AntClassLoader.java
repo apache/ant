@@ -159,7 +159,22 @@ public class AntClassLoader  extends ClassLoader {
     public void setIsolated(boolean isolated) {
         ignoreBase = isolated;
     }
-    
+
+    /**
+     * Force initialization of a class in a JDK 1.1 compatible, albeit hacky 
+     * way 
+     */
+    static public void initializeClass(Class theClass) {
+        // ***HACK*** We try to create an instance to force the VM to run the
+        // class' static initializer. We don't care if the instance can't 
+        // be created - we are just interested in the side effect.
+        try {
+            theClass.newInstance();
+        }
+        catch (Exception e) {
+            //ignore - our work is done
+        }
+    }
     
     /**
      * Add a package root to the list of packages which must be loaded on the 

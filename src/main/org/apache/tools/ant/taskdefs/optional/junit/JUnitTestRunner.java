@@ -54,8 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.*;
 
 import junit.framework.*;
 import java.lang.reflect.*;
@@ -159,6 +158,7 @@ public class JUnitTestRunner implements TestListener {
                 testClass = Class.forName(test.getName());
             } else {
                 testClass = loader.loadClass(test.getName());
+                AntClassLoader.initializeClass(testClass);
             }
             
             Method suiteMethod = null;
