@@ -15,8 +15,7 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildListener;
+import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Javac;
@@ -715,7 +714,7 @@ public class IContract extends MatchingTask
 
             // We want to be notified if iContract jar is missing. This makes life easier for the user
             // who didn't understand that iContract is a separate library (duh!)
-            getProject().addBuildListener( new IContractPresenceDetector() );
+            getProject().addProjectListener( new IContractPresenceDetector() );
 
             // Prepare the directories for iContract. iContract will make them if they
             // don't exist, but for some reason I don't know, it will complain about the REP files
@@ -1079,38 +1078,20 @@ public class IContract extends MatchingTask
      * about missing iContract is missing. Used to indicate a more verbose error
      * to the user, with advice about how to solve the problem
      */
-    private class IContractPresenceDetector implements BuildListener
+    private class IContractPresenceDetector
+        extends AbstractProjectListener
     {
-        public void buildFinished( BuildEvent event )
-        {
-        }
-
-        public void buildStarted( BuildEvent event )
-        {
-        }
-
-        public void messageLogged( BuildEvent event )
+        /**
+         * Notify listener of log message event.
+         *
+         * @param message the message
+         */
+        public void log( final String message )
         {
             if( "java.lang.NoClassDefFoundError: com/reliablesystems/iContract/Tool".equals( event.getMessage() ) )
             {
                 iContractMissing = true;
             }
-        }
-
-        public void targetFinished( BuildEvent event )
-        {
-        }
-
-        public void targetStarted( BuildEvent event )
-        {
-        }
-
-        public void taskFinished( BuildEvent event )
-        {
-        }
-
-        public void taskStarted( BuildEvent event )
-        {
         }
     }
 }
