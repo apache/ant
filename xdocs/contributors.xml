@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-   Copyright 2002-2004 The Apache Software Foundation
+   Copyright 2002-2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -168,6 +168,35 @@ Project a reality and served as the first Chairman of the Jakarta PMC.
       <subsection name="Active Committers">
 
             <p>
+                <b>Dominique Devienne</b> (ddevienne at apache.org)
+<br/>
+Dominique has been involved non-stop with the Ant user community since
+the 1.4 days, trying without success to answer posts as well or as often
+as Diane Holt after she left the user list. He is opiniated (to a fault
+sometimes), but always striving for the best possible design. Dominique
+currently works for <a href="http://www.lgc.com">Landmark Graphics</a>.
+</p>
+
+            <p>
+                <b>Jesse Glick</b> (jesse dot glick at sun dot com)
+<br/>
+Jesse has been using Java since 1998 and joined Sun Microsystems as
+part of the company that produced the NetBeans IDE. After discovering
+Ant in the 1.2 days, he wrote most of NetBeans' Ant integration.
+Recently he has worked on the NetBeans 4.0 project system, based heavily
+on Ant as a build tool.
+</p>
+
+            <p>
+                <b>Martijn (J.M.) Kruithof</b> (ant at kruithof xs4all nl)
+<br/>
+Martijn Kruithof is a system engineer working with and on Java products 
+in a telecommunication network setting.
+</p>
+
+      </subsection>
+      <subsection name="Emeritus Committers">
+            <p>
                 <b>Preston Bannister</b><br/>
             </p>
 
@@ -178,16 +207,6 @@ Project a reality and served as the first Chairman of the Jakarta PMC.
             <p>
                 <b>Darrell DeBoer</b><br/>
             </p>
-
-            <p>
-                <b>Dominique Devienne</b> (ddevienne at apache.org)
-<br/>
-Dominique has been involved non-stop with the Ant user community since
-the 1.4 days, trying without success to answer posts as well or as often
-as Diane Holt after she left the user list. He is opiniated (to a fault
-sometimes), but always striving for the best possible design. Dominique
-currently works for <a href="http://www.lgc.com">Landmark Graphics</a>.
-</p>
 
             <p>
                 <b>Peter Donald</b> (peter at apache.org)
@@ -210,13 +229,20 @@ project in a spirit of co-operation over competition.
 </p>
 
             <p>
-                <b>Jesse Glick</b> (jesse dot glick at sun dot com)
+                <b>Simeon H.K. Fitch</b> (simeon.fitch at mseedsoft.com)
 <br/>
-Jesse has been using Java since 1998 and joined Sun Microsystems as
-part of the company that produced the NetBeans IDE. After discovering
-Ant in the 1.2 days, he wrote most of NetBeans' Ant integration.
-Recently he has worked on the NetBeans 4.0 project system, based heavily
-on Ant as a build tool.
+Simeon is owner of Mustard Seed Software, which specializes in developing
+distributed applications and user interfaces for the science, engineering,
+and research oriented clients. He is the lead architect and developer for
+Antidote, the GUI for Ant.
+</p>
+
+            <p>
+                <b>Thomas Haas</b> (tha at whitestein.com)
+<br/>
+Tom is interested in distributed systems, Java middleware and worked on an
+implementation of the JMS specification. At Whitestein Technologies he is
+working on bringing software agent technology and J2EE together.
 </p>
 
       <p>
@@ -229,15 +255,15 @@ He works at <a href="http://www.collab.net">CollabNet</a>.
 </p>
 
             <p>
+                <b>Justyna Horwat</b> (horwat at apache.org)
+<br/>
+</p>
+
+            <p>
                 <b>Arun Jamwal</b>
 <br/>
 </p>
-            <p>
-                <b>Martijn (J.M.) Kruithof</b> (ant at kruithof xs4all nl)
-<br/>
-Martijn Kruithof is a system engineer working with and on Java products 
-in a telecommunication network setting.
-</p>
+
             <p>
                 <b>Arnout J. Kuiper</b> (ajkuiper at planet.nl)
 <br/>
@@ -246,6 +272,33 @@ Arnout J. Kuiper is a Java Architect with the Sun Java Center at Sun
 Microsystems. His main focus is web-related technologies on the Java
 platform (J2EE, XML, ...).
 </p>
+
+<p>
+                <b>Stefano Mazzocchi</b> (stefano at apache.org)
+<br/>
+Stefano is addicted to software design, Java programming and
+open development. In the last 4 years, he has contributed way too much
+time to Apache, expecially on JServ, JMeter, Avalon, JAMES, Ant, Cocoon
+and helping to bring more projects into Apache-land, such as FOP, Batik,
+POI and Xindice. The problem is that he's too picky to be satisfied :-)
+</p>
+
+            <p>
+                <b>Glenn McAllister</b> (glenn at somanetworks.com)
+<br/>
+Glenn McAllister is a software developer at SOMA Networks, was formerly
+the same at IBM (plus tech writer plus build guy), and does some writing
+on the side for the VADD Technical Journal.
+</p>
+
+           <p>
+                <b>Craig McClanahan</b> (Craig.McClanahan at eng.sun.com)
+<br/>
+Craig was involved in the Apache JServ project, focused on implementing
+a next generation architecture and feature set for the core servlet
+engine.  He has recently joined Sun as technical lead for the servlet
+and JSP reference implementation.
+          </p>
 
             <p>
                 <b>Adam Murdoch</b>
@@ -299,57 +352,6 @@ years the last 5 of which have predominately been fully integrated,
 front and back, extraNet implementations which have been based on
 Apache, Java and Tcl.
 </p>
-
-      </subsection>
-      <subsection name="Emeritus Committers">
-            <p>
-                <b>Simeon H.K. Fitch</b> (simeon.fitch at mseedsoft.com)
-<br/>
-Simeon is owner of Mustard Seed Software, which specializes in developing
-distributed applications and user interfaces for the science, engineering,
-and research oriented clients. He is the lead architect and developer for
-Antidote, the GUI for Ant.
-</p>
-
-            <p>
-                <b>Thomas Haas</b> (tha at whitestein.com)
-<br/>
-Tom is interested in distributed systems, Java middleware and worked on an
-implementation of the JMS specification. At Whitestein Technologies he is
-working on bringing software agent technology and J2EE together.
-</p>
-
-            <p>
-                <b>Justyna Horwat</b> (horwat at apache.org)
-<br/>
-</p>
-
-<p>
-                <b>Stefano Mazzocchi</b> (stefano at apache.org)
-<br/>
-Stefano is addicted to software design, Java programming and
-open development. In the last 4 years, he has contributed way too much
-time to Apache, expecially on JServ, JMeter, Avalon, JAMES, Ant, Cocoon
-and helping to bring more projects into Apache-land, such as FOP, Batik,
-POI and Xindice. The problem is that he's too picky to be satisfied :-)
-</p>
-
-            <p>
-                <b>Glenn McAllister</b> (glenn at somanetworks.com)
-<br/>
-Glenn McAllister is a software developer at SOMA Networks, was formerly
-the same at IBM (plus tech writer plus build guy), and does some writing
-on the side for the VADD Technical Journal.
-</p>
-
-           <p>
-                <b>Craig McClanahan</b> (Craig.McClanahan at eng.sun.com)
-<br/>
-Craig was involved in the Apache JServ project, focused on implementing
-a next generation architecture and feature set for the core servlet
-engine.  He has recently joined Sun as technical lead for the servlet
-and JSP reference implementation.
-          </p>
 
           <p>
                 <b>Anil Vijendran</b> (akv at eng.sun.com)
