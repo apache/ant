@@ -370,10 +370,10 @@ public class NetCommand {
                 if (targetFile.lastModified() > outputTimestamp) {
                     filesOutOfDate++;
                     owner.log(targetFile.toString() + " is out of date",
-                            Project.MSG_VERBOSE);
+                              Project.MSG_VERBOSE);
                 } else {
                     owner.log(targetFile.toString(),
-                            Project.MSG_VERBOSE);
+                              Project.MSG_VERBOSE);
                 }
             }
         }

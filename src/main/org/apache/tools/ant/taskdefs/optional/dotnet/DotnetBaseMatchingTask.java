@@ -161,12 +161,10 @@ public class DotnetBaseMatchingTask extends MatchingTask {
         Hashtable filesToBuild = new Hashtable();
         int filesOutOfDate = buildFileList(command, filesToBuild, outputTimestamp);
 
-        //add the files to the command
-        addFilesToCommand(filesToBuild, command);
-
-
         //now run the command of exe + settings + files
         if (filesOutOfDate > 0) {
+            //add the files to the command
+            addFilesToCommand(filesToBuild, command);
             command.runCommand();
         } else {
             log("output file is up to date", Project.MSG_VERBOSE);
