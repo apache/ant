@@ -345,6 +345,8 @@ Fixed bugs:
 * <javac debug="false"> created an invalid command line when running
   the Symantec Java compiler.
 
+* Get with usetimestamp did not work on Java 1.2.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

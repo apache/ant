@@ -32,6 +32,10 @@ public class GetTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/get.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+
     public void test1() {
         expectBuildException("test1", "required argument missing");
     }
@@ -54,13 +58,10 @@ public class GetTest extends BuildFileTest {
 
     public void test6() {
         executeTarget("test6");
-        java.io.File f = new File(getProjectDir(), "get.tmp");
-        if (!f.exists()) {
-            fail("get failed");
-        } else {
-            f.delete();
-        }
+    }
 
+    public void testUseTimestamp() {
+        executeTarget("testUseTimestamp");
     }
 
 }

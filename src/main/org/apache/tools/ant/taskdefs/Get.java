@@ -21,6 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -137,7 +138,7 @@ public class Get extends Task {
         URLConnection connection = source.openConnection();
         //modify the headers
         //NB: things like user authentication could go in here too.
-        if (useTimestamp && hasTimestamp) {
+        if (hasTimestamp) {
             connection.setIfModifiedSince(timestamp);
         }
         // prepare Java 1.1 style credentials
@@ -160,13 +161,19 @@ public class Get extends Task {
             HttpURLConnection httpConnection
                     = (HttpURLConnection) connection;
             if (httpConnection.getResponseCode()
-                    == HttpURLConnection.HTTP_NOT_MODIFIED)  {
+                    == HttpURLConnection.HTTP_NOT_MODIFIED
+                //workaround:  doesn't work on 1.2
+                || (hasTimestamp
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+                && timestamp > httpConnection.getLastModified())) {
                 //not modified so no file download. just return
                 //instead and trace out something so the user
                 //doesn't think that the download happened when it
                 //didn't
                 log("Not modified - so not downloaded", logLevel);
                 return false;
+                // also, if timestamp is roughly >= now, HTTP_NOT_MODIFIED is _not_
+                // returned... We may want to remove the 1.2 qualifier above.
             }
             // test for 401 result (HTTP only)
             if (httpConnection.getResponseCode()
