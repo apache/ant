@@ -205,7 +205,8 @@ public class DOMElementWriter {
      */
     public String encode(String value) {
         sb.setLength(0);
-        for (int i = 0; i < value.length(); i++) {
+        int len = value.length();
+        for (int i = 0; i < len; i++) {
             char c = value.charAt(i);
             switch (c) {
             case '<':
@@ -236,7 +237,7 @@ public class DOMElementWriter {
                 break;
             }
         }
-        return sb.toString();
+        return sb.substring(0);
     }
 
     /**
@@ -261,13 +262,13 @@ public class DOMElementWriter {
             }
         }
 
-        String result = sb.toString();
+        String result = sb.substring(0);
         int cdEnd = result.indexOf("]]>");
         while (cdEnd != -1) {
             sb.setLength(cdEnd);
             sb.append("&#x5d;&#x5d;&gt;")
                 .append(result.substring(cdEnd+3));
-            result = sb.toString();
+            result = sb.substring(0);
             cdEnd = result.indexOf("]]>");
         }
         

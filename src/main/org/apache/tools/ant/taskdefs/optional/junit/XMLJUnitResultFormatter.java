@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -165,7 +166,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         if (out != null) {
             Writer wri = null;
             try {
-                wri = new OutputStreamWriter(out, "UTF8");
+                wri = new BufferedWriter(new OutputStreamWriter(out, "UTF8"));
                 wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
                 (new DOMElementWriter()).write(rootElement, wri, 0, "  ");
                 wri.flush();

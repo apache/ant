@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -81,12 +82,12 @@ abstract class XalanExecutor {
 
     /** get the appropriate stream based on the format (frames/noframes) */
     protected OutputStream getOutputStream() throws IOException {
-        if (caller.FRAMES.equals(caller.format)){
+        if (AggregateTransformer.FRAMES.equals(caller.format)){
             // dummy output for the framed report
             // it's all done by extension...
             return new ByteArrayOutputStream();
         } else {
-            return new FileOutputStream(new File(caller.toDir, "junit-noframes.html"));
+            return new BufferedOutputStream(new FileOutputStream(new File(caller.toDir, "junit-noframes.html")));
         }
     }
 
