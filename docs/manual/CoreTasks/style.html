@@ -187,9 +187,20 @@ element is used to perform Entity and URI resolution.</p>
   <tr>
     <td valign="top">expression</td>
     <td valign="top">Text value to be placed into the param.<br/>
-    Was originally intended to be an XSL expression.
+    Was originally intended to be an XSL expression.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">if</td>
+    <td valign="top">The param will only passed if this property is set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td>
+    <td valign="top">The param will only passed unless this property is set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+
 </table>
 
 <h4>outputproperty ('trax' processors only)</h4>
@@ -230,7 +241,7 @@ Used to specify factory settings.
     transformer factory to use. For example
       <tt>org.apache.xalan.processor.TransformerFactoryImpl</tt>
        or <tt>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</tt>
-       or <tt>net.sf.saxon.TransformerFactoryImpl</tt>...    
+       or <tt>net.sf.saxon.TransformerFactoryImpl</tt>...
     </td>
     <td align="center" valign="top">No. Defaults to the JAXP lookup mechanism.</td>
   </tr>
@@ -318,7 +329,7 @@ And in Saxon 7.x:
   <h4>Using factory settings</h4>
 <pre>&lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
       style=&quot;style/apache.xsl&quot;&gt;
-  &lt;factory name=&quot;org.apache.xalan.processor.TransformerFactoryImpl&quot;&gt;  
+  &lt;factory name=&quot;org.apache.xalan.processor.TransformerFactoryImpl&quot;&gt;
     &lt;attribute name=&quot;http://xml.apache.org/xalan/features/optimize&quot; value=&quot;true&quot;/&gt;
   &lt;/factory&gt;
 &lt;/xslt&gt;</pre>
@@ -329,4 +340,3 @@ Reserved.</p>
 
 </body>
 </html>
-

@@ -615,6 +615,19 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /** The parameter's value */
         private String expression = null;
 
+        private String ifProperty;
+        private String unlessProperty;
+        private Project project;
+
+        /**
+         * Set the current project
+         *
+         * @param project the current project
+         */
+        public void setProject(Project project) {
+            this.project = project;
+        }
+
         /**
          * Set the parameter name.
          *
@@ -657,6 +670,39 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 throw new BuildException("Expression attribute is missing.");
             }
             return expression;
+        }
+
+        /**
+         * Set whether this param should be used.  It will be
+         * used if the property has been set, otherwise it won't.
+         * @param ifProperty name of property
+         */
+        public void setIf(String ifProperty) {
+            this.ifProperty = ifProperty;
+        }
+
+        /**
+         * Set whether this param should NOT be used. It
+         * will not be used if the property has been set, orthwise it
+         * will be used.
+         * @param unlessProperty name of property
+         */
+        public void setUnless(String unlessProperty) {
+            this.unlessProperty = unlessProperty;
+        }
+        /**
+         * Ensures that the param passes the conditions placed
+         * on it with <code>if</code> and <code>unless</code> properties.
+         */
+        public boolean shouldUse() {
+            if (ifProperty != null && project.getProperty(ifProperty) == null) {
+                return false;
+            } else if (unlessProperty != null
+                    && project.getProperty(unlessProperty) != null) {
+                return false;
+            }
+            
+            return true;
         }
     } // Param
 
@@ -743,7 +789,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             liaison.setStylesheet(stylesheet);
             for (Enumeration e = params.elements(); e.hasMoreElements();) {
                 Param p = (Param) e.nextElement();
-                liaison.addParam(p.getName(), p.getExpression());
+                if (p.shouldUse()) {
+                    liaison.addParam(p.getName(), p.getExpression());
+                }
             }
             if (liaison instanceof TraXLiaison) {
                 configureTraXLiaison((TraXLiaison) liaison);

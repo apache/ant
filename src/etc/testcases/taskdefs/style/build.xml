@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<project name="style-test" basedir="." default="nothing">
+
+  <property name="out.dir" value="out"/>
+
+
+  <target name="setup">
+  </target>
+
+  <target name="teardown">
+      <delete dir="${out.dir}" failonerror="false" />
+  </target>
+
+  <target name="testStyleIsSet">
+      <style in="data.xml" out="${out.dir}/out.xml"/>
+  </target>
+
+  <target name="testTransferParameterSet">
+      <property name="value" value="myvalue"/>
+      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+          <param name="set" expression="${value}"/>
+      </style>
+  </target>
+
+  <target name="testTransferParameterEmpty">
+      <property name="value" value=""/>
+      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+          <param name="empty" expression="${value}"/>
+      </style>
+  </target>
+
+  <target name="testTransferParameterUnset">
+      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+          <param name="undefined" expression="${value}"/>
+      </style>
+  </target>
+
+  <target name="testTransferParameterUnsetWithIf">
+      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+          <param name="undefined" expression="${value}" if="value" />
+      </style>
+  </target>
+
+</project>
