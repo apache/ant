@@ -1228,18 +1228,35 @@ public class Project {
      *        or information (<code>false</code>).
      */
     public void demuxOutput(String line, boolean isError) {
+        demuxOutput(line, isError, true);
+    }
+
+    /**
+     * Demultiplexes output so that each task receives the appropriate
+     * messages. If the current thread is not currently executing a task,
+     * the message is logged directly.
+     *
+     * @param line Message to handle. Should not be <code>null</code>.
+     * @param isError Whether the text represents an error (<code>true</code>)
+     *        or information (<code>false</code>).
+     * @param terminated true if this line should be terminated with an 
+     *        end-of-line marker
+     */
+    public void demuxOutput(String line, boolean isError, boolean terminated) {
         Task task = (Task) threadTasks.get(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
         } else {
             if (isError) {
-                task.handleErrorOutput(line);
+                task.handleErrorOutput(line, terminated);
             } else {
-                task.handleOutput(line);
+                task.handleOutput(line, terminated);
             }
         }
     }
 
+    
+    
     /**
      * Executes the specified target and any targets it depends on.
      *

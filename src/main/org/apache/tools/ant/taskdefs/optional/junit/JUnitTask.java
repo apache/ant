@@ -714,6 +714,23 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Pass output sent to System.out to the TestRunner so it can
+     * collect ot for the formatters.
+     *
+     * @since Ant 1.6
+     */
+    protected void handleOutput(String line, boolean terminated) {
+        if (runner != null) {
+            runner.handleOutput(line, terminated);
+            if (showOutput) {
+                super.handleOutput(line, terminated);
+            }
+        } else {
+            super.handleOutput(line, terminated);
+        }
+    }
+
+    /**
      * Pass output sent to System.err to the TestRunner so it can
      * collect ot for the formatters.
      *
@@ -727,6 +744,24 @@ public class JUnitTask extends Task {
             }
         } else {
             super.handleErrorOutput(line);
+        }
+    }
+
+
+    /**
+     * Pass output sent to System.err to the TestRunner so it can
+     * collect ot for the formatters.
+     *
+     * @since Ant 1.6
+     */
+    protected void handleErrorOutput(String line, boolean terminated) {
+        if (runner != null) {
+            runner.handleErrorOutput(line, terminated);
+            if (showOutput) {
+                super.handleErrorOutput(line, terminated);
+            }
+        } else {
+            super.handleErrorOutput(line, terminated);
         }
     }
 

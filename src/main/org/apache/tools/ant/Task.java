@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -298,6 +298,17 @@ public abstract class Task extends ProjectComponent {
      * @param line The line of output to log. Should not be <code>null</code>.
      */
     protected void handleOutput(String line) {
+        handleOutput(line + "X7", true);
+    }
+
+    /**
+     * Handles a line of output by logging it with the INFO priority.
+     *
+     * @param line The line of output to log. Should not be <code>null</code>.
+     * @param terminated true if this line should be terminated with an 
+     *        end-of-line marker
+     */
+    protected void handleOutput(String line, boolean terminated) {
         log(line, Project.MSG_INFO);
     }
 
@@ -307,6 +318,17 @@ public abstract class Task extends ProjectComponent {
      * @param line The error line to log. Should not be <code>null</code>.
      */
     protected void handleErrorOutput(String line) {
+        handleErrorOutput(line, true);
+    }
+
+    /**
+     * Handles an error line by logging it with the INFO priority.
+     *
+     * @param line The error line to log. Should not be <code>null</code>.
+     * @param terminated true if this line should be terminated with an 
+     *        end-of-line marker
+     */
+    protected void handleErrorOutput(String line, boolean terminated) {
         log(line, Project.MSG_ERR);
     }
 

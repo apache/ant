@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -374,6 +374,23 @@ public class Java extends Task {
     }
     
     /**
+     * Pass output sent to System.out to specified output file.
+     *
+     * @since Ant 1.6
+     */
+    protected void handleOutput(String line, boolean terminated) {
+        if (outStream != null) {
+            if (terminated) {
+                outStream.println(line);
+            } else {
+                outStream.print(line);
+            }
+        } else {
+            super.handleOutput(line, terminated);
+        }
+    }
+    
+    /**
      * Pass output sent to System.err to specified output file.
      *
      * @since Ant 1.5
@@ -383,6 +400,23 @@ public class Java extends Task {
             outStream.println(line);
         } else {
             super.handleErrorOutput(line);
+        }
+    }
+    
+    /**
+     * Pass output sent to System.err to specified output file.
+     *
+     * @since Ant 1.6
+     */
+    protected void handleErrorOutput(String line, boolean terminated) {
+        if (outStream != null) {
+            if (terminated) {
+                outStream.println(line);
+            } else {
+                outStream.print(line);
+            }
+        } else {
+            super.handleErrorOutput(line, terminated);
         }
     }
     
@@ -402,6 +436,8 @@ public class Java extends Task {
                     new PrintStream(new FileOutputStream(out.getAbsolutePath(),
                                                          append));
                 exe.execute(getProject());
+                System.out.flush();
+                System.err.flush();
             } catch (IOException io) {
                 throw new BuildException(io, getLocation());
             } finally {

@@ -297,6 +297,19 @@ public class Ant extends Task {
     }
 
     /**
+     * Pass output sent to System.out to the new project.
+     *
+     * @since Ant 1.6
+     */
+    protected void handleOutput(String line, boolean terminated) {
+        if (newProject != null) {
+            newProject.demuxOutput(line, false, terminated);
+        } else {
+            super.handleOutput(line, terminated);
+        }
+    }
+
+    /**
      * Pass output sent to System.err to the new project.
      *
      * @since Ant 1.5
@@ -306,6 +319,19 @@ public class Ant extends Task {
             newProject.demuxOutput(line, true);
         } else {
             super.handleErrorOutput(line);
+        }
+    }
+
+    /**
+     * Pass output sent to System.err to the new project.
+     *
+     * @since Ant 1.6
+     */
+    protected void handleErrorOutput(String line, boolean terminated) {
+        if (newProject != null) {
+            newProject.demuxOutput(line, true, terminated);
+        } else {
+            super.handleErrorOutput(line, terminated);
         }
     }
 

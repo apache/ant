@@ -157,6 +157,19 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * Handles output sent to System.out by this task or its real task.
+     *
+     * @param line The line of output to log. Should not be <code>null</code>.
+     */
+    protected void handleOutput(String line, boolean terminated) {
+        if (realThing instanceof Task) {
+            ((Task) realThing).handleOutput(line, terminated);
+        } else {
+            super.handleOutput(line, terminated);
+        }
+    }
+
+    /**
      * Handles error output sent to System.err by this task or its real task.
      *
      * @param line The error line to log. Should not be <code>null</code>.
@@ -169,6 +182,20 @@ public class UnknownElement extends Task {
         }
     }
 
+
+    /**
+     * Handles error output sent to System.err by this task or its real task.
+     *
+     * @param line The error line to log. Should not be <code>null</code>.
+     */
+    protected void handleErrorOutput(String line, boolean terminated) {
+        if (realThing instanceof Task) {
+            ((Task) realThing).handleErrorOutput(line, terminated);
+        } else {
+            super.handleErrorOutput(line, terminated);
+        }
+    }
+    
     /**
      * Executes the real object if it's a task. If it's not a task
      * (e.g. a data type) then this method does nothing.
