@@ -138,9 +138,7 @@ public class Triggers {
         }
 
         /**
-         * What does this do? 
-         * @todo document
-         * @ant.attribute ignore="true"
+         * A alphanumeric custom name for the snapshot; optional.
          */
         public void setParam(String value) {
             param = value;
