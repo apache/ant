@@ -389,6 +389,12 @@ Bugzilla Report 19180.
 
 * <junit>'s nested <formatter> elements now support if/unless clauses.
 
+* <ejbjar>  
+  cmpversion attribute added 
+  jboss element will look for jbosscmp-jdbc.xml descriptor 
+  if ejbjar has cmpversion="2.0" set
+  Bugzilla Reports 14707 and 14709.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

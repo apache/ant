@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,7 +91,8 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:tfennell@sapient.com">Tim Fennell</a>
  * @author Conor MacNeill
- */
+ * @author <a href="mailto:rvanoo@xs4all.nl">Rob van Oostrum</a>
+ * */
 public class EjbJar extends MatchingTask {
 
     /**
@@ -202,6 +203,21 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * CMP versions supported
+     * valid CMP versions are 1.0 and 2.0
+     * @since ant 1.6
+     */
+    public static class CMPVersion extends EnumeratedAttribute {
+        public static final String CMP1_0 = "1.0";
+        public static final String CMP2_0 = "2.0";
+        public String[] getValues() {
+            return new String[]{
+                CMP1_0,
+                CMP2_0,
+            };
+        }
+    }
+    /**
      * The config which is built by this task and used by the various deployment
      * tools to access the configuration of the ejbjar task
      */
@@ -219,9 +235,11 @@ public class EjbJar extends MatchingTask {
     /** Instance variable that stores the suffix for the generated jarfile. */
     private String genericJarSuffix = "-generic.jar";
 
+    /** Instance variable that stores the CMP version for the jboss jarfile. */
+    private String cmpVersion = CMPVersion.CMP1_0;
+
     /** The list of deployment tools we are going to run. */
     private ArrayList deploymentTools = new ArrayList();
-
 
     /**
      * Add a deployment tool to the list of deployment tools that will be
@@ -444,6 +462,15 @@ public class EjbJar extends MatchingTask {
         }
     }
 
+    /**
+     * Gets the destination directory.
+     * 
+     * @return destination directory
+     * @since ant 1.6
+     */
+    public File getDestdir() {
+        return this.destDir;
+    }
 
     /**
      * Set the destination directory. The EJB jar files will be written into
@@ -457,6 +484,29 @@ public class EjbJar extends MatchingTask {
      */
     public void setDestdir(File inDir) {
         this.destDir = inDir;
+    }
+
+    /**
+     * Gets the CMP version.
+     * 
+     * @return CMP version
+     * @since ant 1.6
+     */
+    public String getCmpversion() {
+        return this.cmpVersion;
+    }
+
+    /**
+     * Sets the CMP version.
+     * 
+     * @param version CMP version.
+     * Must be either <code>1.0</code> or <code>2.0</code>.<br/>
+     * Default is <code>1.0</code>.<br/>
+     * Initially, only the JBoss implementation does something specific for CMP 2.0.<br/>
+     * @since ant 1.6
+     */
+    public void setCmpversion( CMPVersion version ) {
+        this.cmpVersion = version.getValue();
     }
 
     /**
@@ -599,6 +649,7 @@ public class EjbJar extends MatchingTask {
             throw new BuildException(msg, pce);
         }
     } // end of execute()
+
 }
 
 

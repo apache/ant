@@ -19,6 +19,7 @@
   <li>Conor MacNeill</li>
   <li>Cyrille Morvan (<a href="mailto:cmorvan@ingenosya.com">cmorvan@ingenosya.com</a>)</li>
   <li>Greg Nelson (<a href="mailto:gn@sun.com">gn@sun.com</a>)</li>
+  <li>Rob van Oostrum(<a href="mailto:rvanoo@xs4all.nl">rvanoo@xs4all.nl</a>)</li>
 </ul>
 
 <p>Version @VERSION@<br>
@@ -717,6 +718,13 @@ the value <code>none</code>.</p>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
+    <td valign="top">cmpversion</td>
+    <td valign="top">Either <code>1.0</code> or <code>2.0</code>.<br/>
+    Default is <code>1.0</code>.<br/>
+    A CMP 2.0 implementation exists currently only for JBoss.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">naming</td>
     <td valign="top">Controls the naming convention used to name generated
                      EJB jars. Please refer to the description above.</td>
@@ -844,8 +852,18 @@ deployment element are detailed here.
 <h3><a name="ejbjar_jboss">Jboss element</a></h3>
 
 <p>The jboss element searches for the JBoss specific deployment descriptors and adds them
-to the final ejb jar file. JBoss has two deployment descriptors jboss.xml and jaws.xml
-(for container manager persistence only). The JBoss server uses hot deployment and does
+to the final ejb jar file. JBoss has two deployment descriptors:
+<ul><li>jboss.xml</li>
+<li>for container manager persistence:<br/>
+<table border="1">
+<tr><td><b>CMP version</b></td><td><b>File name</b></td></tr>
+<tr><td>CMP 1.0</td><td>jaws.xml</td></tr>
+<tr><td>CMP 2.0</td><td>jbosscmp-jdbc.xml</td></tr>
+</table>
+</li>
+</ul>
+<br/>
+. The JBoss server uses hot deployment and does
 not require compilation of additional stubs and skeletons.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
