@@ -9,7 +9,6 @@ package org.apache.antlib.cvslib;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
 
 /**
  * CVS Entry.
