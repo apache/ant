@@ -103,11 +103,11 @@
 
                 <source><![CDATA[
 
-                <v-fileset dir="src">
-                    <name pattern="org/apache/tools/ant/**"/>
-                    <is-file/>
-                </v-fileset>
-                ]]></source>
+<v-fileset dir="src">
+    <name pattern="org/apache/tools/ant/**"/>
+    <is-file/>
+</v-fileset>
+]]></source>
 
                 <h3><code>&lt;flat-fileset&gt;</code></h3>
 

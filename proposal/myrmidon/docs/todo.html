@@ -285,8 +285,6 @@
                         <p>A completely unordered list of items, big and small:</p>
                                 <ul>
                     <li>Search through the code for 'TODO' items and fix them.</li>
-                    <li>Add a custom task to the build to generate antlib descriptors from source.
-                    It would wrap XDoclet, and replace <code>antlib.xml</code>.</li>
                     <li>Tidy-up CLIMain so that it calls System.exit() with a non-zero exit code,
                     if the build fails.</li>
                     <li>Tidy-up the 'build failed' message, so that the stack trace is only
@@ -304,7 +302,10 @@
                     <li>Convert PropertyUtil to a non-static PropertyResolver service.</li>
                     <li>Validate project and target names in DefaultProjectBuilder - reject dodgy
                     names like "," or "", or "  ".  Probably want to exclude names that start or
-                    end with white-space (though internal whitespace is probably fine).</li>
+                    end with white-space (though internal whitespace is probably fine).  We also
+                    want to reserve certain punctuation characters like . , : ? [ ] { }, etc for
+                    future use.</li>
+                    <li>Similarly, validate property names, using the same rules.</li>
                     <li>Detect duplicate type names.</li>
                     <li>Add fully qualified type names, based on antlib name and type shorthand name.
                     Allow these to be used in build files in addition to the shorthand names.</li>
