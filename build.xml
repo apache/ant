@@ -19,7 +19,7 @@
     <property name="build.dir" value="build"/>
     <property name="build.classes" value="build/classes"/>
     <property name="build.javadocs" value="build/javadocs"/>
-    <property name="dist.dir" value="dist"/>
+    <property name="dist.dir" value="../dist/ant"/>
    
     <property name="classpath" value="lib/xml.jar"/>
     <property name="packages" value="org.apache.tools.ant.*"/>
@@ -112,7 +112,7 @@
      <copyfile src="TODO" dest="${dist.dir}/TODO"/>
      <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
 
-     <jar jarfile="${name}-${version}.jar" basedir="${dist.dir}" items="."/>     
+     <jar jarfile="${name}.jar" basedir="${dist.dir}" items="."/>     
   </target>
 
   <!-- =================================================================== -->
@@ -129,7 +129,7 @@
   <target name="total-clean" depends="clean">
     <deltree dir="${bin.dir}"/>
     <delete file="${lib.dir}/${name}.jar"/>
-    <delete file="${name}-${version}.jar"/>
+    <delete file="${name}.jar"/>
   </target>
 
   <!-- in progress ! (may not work) -->
