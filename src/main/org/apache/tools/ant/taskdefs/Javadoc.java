@@ -251,16 +251,22 @@ public class Javadoc extends Exec {
         Vector argList = new Vector();
 
 // ------------------------------------------------ general javadoc arguments
-        if (sourcePath != null) {
-            argList.addElement("-sourcepath");
-            argList.addElement(sourcePath);
-        }
-        argList.addElement("-classpath");
-        if (classpath != null) {
+        if (classpath == null)
+            classpath = System.getProperty("java.class.path");
+
+        if ( (!javadoc1) || (sourcePath == null) ) {
+            argList.addElement("-classpath");
             argList.addElement(classpath);
-        } else {
-            argList.addElement(System.getProperty("java.class.path"));
+            if (sourcePath != null) {
+                argList.addElement("-sourcepath");
+                argList.addElement(sourcePath);
+            }
+        } else { 
+            argList.addElement("-classpath");
+            argList.addElement(sourcePath + 
+                System.getProperty("path.separator") + classpath);
         }
+
         if (destDir != null) {
             argList.addElement("-d");
             argList.addElement(destDir.getAbsolutePath());
