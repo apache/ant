@@ -1587,7 +1587,7 @@ public class DirectoryScanner
      * Set is live and should not be modified.
      * @return the Set of relative directory names that have been scanned.
      */
-    public Set getScannedDirs() {
+    /* package-private */ Set getScannedDirs() {
         return scannedDirs;
     }
 
