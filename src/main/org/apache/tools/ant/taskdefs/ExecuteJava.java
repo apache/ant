@@ -92,7 +92,7 @@ public class ExecuteJava {
         final Object[] argument = { javaCommand.getArguments() };
         try {
             if (sysProperties != null) {
-                sysProperties.restoreSystem();
+                sysProperties.setSystem();
             }
 
             final Class[] param = { Class.forName("[Ljava.lang.String;") };
