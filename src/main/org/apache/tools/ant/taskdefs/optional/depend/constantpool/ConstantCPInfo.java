@@ -60,7 +60,7 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
  *
  * @author Conor MacNeill
  */
-abstract public class ConstantCPInfo extends ConstantPoolEntry {
+public abstract class ConstantCPInfo extends ConstantPoolEntry {
 
     /**
      * The entry's untyped value.
