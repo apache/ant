@@ -196,6 +196,20 @@ files/directories from the CLASSPATH it passes to the compiler.</p>
     <td align="center" valign="top">No</td>
   </tr>  
   <tr>
+    <td valign="top">memoryInitialSize</td> 
+    <td valign="top">the initial size of the memory for the underlying VM, if javac is run
+    externally, ignored otherwise; defaults to the standard VM memory setting.
+    (examples: <code>83886080</code>, <code>81920k</code>, or <code>80m</code>)</td>
+    <td align="center" valign="top">No</td>
+  </tr>  
+  <tr>
+    <td valign="top">memoryMaximumSize</td> 
+    <td valign="top">the maximum size of the memory for the underlying VM, if javac is run
+    externally, ignored otherwise; defaults to the standard VM memory setting.
+    (examples: <code>83886080</code>, <code>81920k</code>, or <code>80m</code>)</td>
+    <td align="center" valign="top">No</td>
+  </tr>  
+  <tr>
     <td valign="top">failonerror</td> <td valign="top">
         indicates whether the build will continue even if there are compilation errors; defaults to <code>true</code>.
     </td>
