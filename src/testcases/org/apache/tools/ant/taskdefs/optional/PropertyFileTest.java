@@ -96,6 +96,16 @@ public class PropertyFileTest extends BuildFileTest {
         destroyTempFiles();
     }
 
+    public void testNonExistingFile() {
+        PropertyFile props = new PropertyFile();
+        props.setProject( getProject() );
+        File file = new File("this-file-does-not-exist.properties");
+        props.setFile(file);
+        assertFalse("Properties file exists before test.", file.exists());
+        props.execute();
+        assertTrue("Properties file does not exist after test.", file.exists());
+        file.delete();
+    }
 
     /**
      *  A unit test for JUnit- Excercises the propertyfile tasks ability to
@@ -109,10 +119,10 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals(null, beforeUpdate.getProperty(PHONE_KEY));
         assertEquals(null, beforeUpdate.getProperty(AGE_KEY));
         assertEquals(null, beforeUpdate.getProperty(DATE_KEY));
-      
+
         // ask ant to update the properties...
         executeTarget("update-existing-properties");
-      
+
         Properties afterUpdate = getTestProperties();
         assertEquals(NEW_FNAME, afterUpdate.getProperty(FNAME_KEY));
         assertEquals(NEW_LNAME, afterUpdate.getProperty(LNAME_KEY));
@@ -155,7 +165,7 @@ public class PropertyFileTest extends BuildFileTest {
         entry.setType(type);
 
         entry.setPattern("yyyy/MM/dd");
-        
+
         PropertyFile.Entry.Operation operation = new PropertyFile.Entry.Operation();
         operation.setValue("+");
         pf.execute();
@@ -180,7 +190,7 @@ public class PropertyFileTest extends BuildFileTest {
         testProps.put(LNAME_KEY, LNAME);
         testProps.put(EMAIL_KEY, EMAIL);
         testProps.put("existing.prop", "37");
-      
+
         FileOutputStream fos = new FileOutputStream(testPropsFilePath);
         testProps.store(fos, "defaults");
         fos.close();
@@ -196,7 +206,7 @@ public class PropertyFileTest extends BuildFileTest {
         buildProps.put(PHONE_KEY, NEW_PHONE);
         buildProps.put(AGE_KEY, NEW_AGE);
         buildProps.put(DATE_KEY, NEW_DATE);
-      
+
         FileOutputStream fos = new FileOutputStream(buildPropsFilePath);
         buildProps.store(fos, null);
         fos.close();
@@ -216,12 +226,12 @@ public class PropertyFileTest extends BuildFileTest {
         tempFile.delete();
         tempFile = null;
     }
-   
 
 
-    private static final String 
+
+    private static final String
         projectFilePath     = "src/etc/testcases/taskdefs/optional/propertyfile.xml",
-      
+
         testPropertyFile    = "propertyfile.test.properties",
         testPropertyFileKey = "test.propertyfile",
         testPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + testPropertyFile,
@@ -231,26 +241,25 @@ public class PropertyFileTest extends BuildFileTest {
         valueDoesNotGetOverwrittenPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + valueDoesNotGetOverwrittenPropertyFile,
 
         buildPropsFilePath  = "src/etc/testcases/taskdefs/optional/propertyfile.build.properties",
-      
+
         FNAME     = "Bruce",
         NEW_FNAME = "Clark",
         FNAME_KEY = "firstname",
-      
+
         LNAME     = "Banner",
         NEW_LNAME = "Kent",
         LNAME_KEY = "lastname",
-      
+
         EMAIL     = "incredible@hulk.com",
         NEW_EMAIL = "kc@superman.com",
         EMAIL_KEY = "email",
-   
+
         NEW_PHONE = "(520) 555-1212",
         PHONE_KEY = "phone",
-      
+
         NEW_AGE = "30",
         AGE_KEY = "age",
-      
+
         NEW_DATE = "2001/01/01 12:45",
         DATE_KEY = "date";
 }
-
