@@ -97,7 +97,7 @@ public class Exec extends Task {
                 command = "cmd /c cd " + dir + " && " + command;
         } else {
             String ant = project.getProperty("ant.home");
-            if (ant == null) throw new BuildException("Property 'ant.home' not found");
+            if (ant == null) throw new BuildException("Property 'ant.home' not found", location);
             String antRun = project.resolveFile(ant + "/bin/antRun").toString();
 
             command = antRun + " " + dir + " " + command;
@@ -141,7 +141,7 @@ public class Exec extends Task {
                 project.log("Result: " + err, "exec", Project.MSG_ERR);
             }
         } catch (IOException ioe) {
-            throw new BuildException("Error exec: " + command );
+            throw new BuildException("Error exec: " + command, ioe, location);
         } catch (InterruptedException ex) {}
 
         return err;
