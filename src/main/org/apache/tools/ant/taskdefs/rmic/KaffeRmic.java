@@ -30,6 +30,7 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class KaffeRmic extends DefaultRmicAdapter {
     public static final String RMIC_CLASSNAME = "gnu.java.rmi.rmic.RMIC";
+    // pre Kaffe 1.1.2
     private static final String OLD_RMIC_CLASSNAME = "kaffe.rmi.rmic.RMIC";
 
     /**
