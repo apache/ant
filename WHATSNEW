@@ -249,6 +249,8 @@ Other changes:
 
 * <patternset> now supports nested patternsets.
 
+* Perforce tasks now support a "failonerror" attribute (defaults to "true").
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -125,6 +125,26 @@ or environment variables. These are
 <p>
 Your local installation of Perforce may require other settings (e.g. P4PASSWD, P4CONFIG). At the moment, these can only be set outside of Ant, as environment variables.
 </p>
+<p>
+Additionally, you may also specify the following attributes:
+</p>
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td valign="top"><b>Attribute</b></td>
+  <td valign="top"><b>Description</b></td>
+  <td align="center" valign="top"><b>Required</b></td>
+</tr>
+<tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Specifies whether to stop the build
+     (<code>true</code>|<code>yes</code>|<code>on</code>)
+     or keep going (<code>false</code>|<code>no</code>|<code>off</code>)
+     if an error is returned from the p4 command.</td>
+    <td valign="top">No; defaults to true.</td>
+  </tr>
+</table>
+</p>
 
 <h3>Examples</h3>
 <p>Setting in the environment:-</p>
