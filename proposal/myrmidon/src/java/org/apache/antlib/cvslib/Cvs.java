@@ -16,7 +16,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.EnvironmentData;
 
 /**
  *
@@ -145,7 +145,7 @@ public class Cvs
         throws TaskException
     {
         final Commandline command = buildCommandline();
-        final Environment env = buildEnvironment();
+        final EnvironmentData env = buildEnvironment();
 
         //FIXME:
         ExecuteStreamHandler streamhandler =
@@ -172,12 +172,12 @@ public class Cvs
         }
     }
 
-    private Environment buildEnvironment()
+    private EnvironmentData buildEnvironment()
     {
-        final Environment env = new Environment();
+        final EnvironmentData env = new EnvironmentData();
         if( 0 < m_port )
         {
-            final Environment.Variable var = new Environment.Variable();
+            final EnvironmentData.Variable var = new EnvironmentData.Variable();
             var.setKey( "CVS_CLIENT_PORT" );
             var.setValue( String.valueOf( m_port ) );
             env.addVariable( var );
@@ -185,7 +185,7 @@ public class Cvs
 
         if( null != m_passwordFile )
         {
-            final Environment.Variable var = new Environment.Variable();
+            final EnvironmentData.Variable var = new EnvironmentData.Variable();
             var.setKey( "CVS_PASSFILE" );
             var.setValue( String.valueOf( m_passwordFile ) );
             env.addVariable( var );
@@ -193,7 +193,7 @@ public class Cvs
 
         if( null != m_cvsRsh )
         {
-            final Environment.Variable var = new Environment.Variable();
+            final EnvironmentData.Variable var = new EnvironmentData.Variable();
             var.setKey( "CVS_RSH" );
             var.setValue( String.valueOf( m_cvsRsh ) );
             env.addVariable( var );
