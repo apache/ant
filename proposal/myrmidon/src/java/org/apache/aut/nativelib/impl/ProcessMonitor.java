@@ -72,11 +72,33 @@ class ProcessMonitor
      */
     private final OutputStream m_error;
 
+    /**
+     * Specifies whether the monitor should shutdown
+     * input, output and error Streams when it finishes execution.
+     * This should be set to <code>true</code> for processes which
+     * will run asynchronously.
+     */
+    private final boolean m_shutdownStreams;
+
+    /**
+     * Creates a monitor for a given {@link java.lang.Process}, which pipes
+     * input from the given input stream to the process, and pipes the process
+     * output to the given OutputStreams.
+     *
+     * @param process the Process to be monitored
+     * @param input is read into the Process' stdin
+     * @param output receives the Process' stdout
+     * @param error receives the Process' stderr
+     * @param timeoutDuration how long to let the Process run before killing it.
+     * @param shutdownStreams specifies if the monitor should shutdown the
+     *             streams when the Process exits.
+     */
     public ProcessMonitor( final Process process,
                            final InputStream input,
                            final OutputStream output,
                            final OutputStream error,
-                           final long timeoutDuration )
+                           final long timeoutDuration,
+                           final boolean shutdownStreams )
     {
         if( null == process )
         {
@@ -100,6 +122,7 @@ class ProcessMonitor
         m_output = output;
         m_error = error;
         m_timeout = timeout;
+        m_shutdownStreams = shutdownStreams;
     }
 
     /**
@@ -139,9 +162,20 @@ class ProcessMonitor
         //that we have got all the data
         processStreams();
 
-        IOUtil.shutdownStream( m_input );
-        IOUtil.shutdownStream( m_output );
-        IOUtil.shutdownStream( m_error );
+        cleanupStreams();
+    }
+
+    /**
+     * Utility method which cleans up all IO Streams, if required.
+     */
+    private void cleanupStreams()
+    {
+        if( m_shutdownStreams )
+        {
+            IOUtil.shutdownStream( m_input );
+            IOUtil.shutdownStream( m_output );
+            IOUtil.shutdownStream( m_error );
+        }
     }
 
     /**

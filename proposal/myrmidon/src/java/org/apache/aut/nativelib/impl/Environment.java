@@ -19,6 +19,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * This is the class that can be used to retrieve the environment
@@ -157,13 +158,17 @@ final class Environment
         final ExecMetaData metaData = new ExecMetaData( command, null, workingDirectory );
 
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        final int retval = m_execManager.execute( metaData, null, output, output, 0 );
-        if( retval != 0 )
-        {
-            // Just try to use what we got
-        }
+        try {
+            final int retval = m_execManager.execute( metaData, null, output, output, 0 );
+            if( retval != 0 )
+            {
+                // Just try to use what we got
+            }
 
-        return output.toString();
+            return output.toString();
+        } finally {
+            IOUtil.shutdownStream( output );
+        }
     }
 
     /**

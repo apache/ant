@@ -115,7 +115,7 @@ public class DefaultExecManager
         final CommandLauncher launcher = getLauncher( command );
         final Process process = launcher.exec( command );
         final ProcessMonitor monitor =
-            new ProcessMonitor( process, input, output, error, timeout );
+            new ProcessMonitor( process, input, output, error, timeout, false );
 
         final Thread thread = new Thread( monitor, "ProcessMonitor" );
         thread.start();
