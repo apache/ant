@@ -194,7 +194,7 @@ public class JJDoc extends Task {
         process.setCommandline(cmdl.getCommandline());
 
         try {
-            if (Execute.isFailure(process.execute())) {
+            if (process.execute() != 0) {
                 throw new BuildException("JJDoc failed.");
             }
         } catch (IOException e) {

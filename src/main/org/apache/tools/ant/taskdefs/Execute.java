@@ -577,6 +577,15 @@ public class Execute {
     /**
      * Checks whether <code>exitValue</code> signals a failure on the current
      * system (OS specific).
+     *
+     * <p><b>Note</b> that this method relies on the conventions of
+     * the OS, it will return false results if the application you are
+     * running doesn't follow these conventions.  One notable
+     * exception is the Java VM provided by HP for OpenVMS - it will
+     * return 0 if successful (like on any other platform), but this
+     * signals a failure on OpenVMS.  So if you execute a new Java VM
+     * on OpenVMS, you cannot trust this method.</p>
+     *
      * @param exitValue the exit value (return code) to be checked
      * @return <code>true</code> if <code>exitValue</code> signals a failure
      */

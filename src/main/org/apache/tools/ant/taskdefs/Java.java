@@ -109,7 +109,7 @@ public class Java extends Task {
         int err = -1;
         try {
             err = executeJava();
-            if (fork && Execute.isFailure(err)) {
+            if (fork && err != 0) {
                 if (failOnError) {
                     throw new BuildException("Java returned: " + err, getLocation());
                 } else {

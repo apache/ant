@@ -183,7 +183,7 @@ public class MParse extends AbstractMetamataTask {
         log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         process.setCommandline(cmdl.getCommandline());
         try {
-            if (Execute.isFailure(process.execute())) {
+            if (process.execute() != 0) {
                 throw new BuildException("Metamata task failed.");
             }
         } catch (IOException e) {

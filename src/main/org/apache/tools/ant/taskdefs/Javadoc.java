@@ -1984,7 +1984,7 @@ public class Javadoc extends Task {
         try {
             exe.setCommandline(toExecute.getCommandline());
             int ret = exe.execute();
-            if (Execute.isFailure(ret) && failOnError) {
+            if (ret != 0 && failOnError) {
                 throw new BuildException("Javadoc returned " + ret, getLocation());
             }
         } catch (IOException e) {

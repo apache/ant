@@ -198,7 +198,7 @@ public class CCMCheck extends Continuus {
         checkOptions(commandLine);
 
         int result = run(commandLine);
-        if (Execute.isFailure(0)) {
+        if (Execute.isFailure(result)) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
