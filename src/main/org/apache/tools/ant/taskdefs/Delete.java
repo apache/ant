@@ -266,12 +266,11 @@ public class Delete extends MatchingTask {
 
                     if (!file.delete()) {
                         String message="Unable to delete file " + file.getAbsolutePath();
-                        if(failonerror) {
+                        if(failonerror)
                             throw new BuildException(message);
-                        } else { 
+                        else 
                             log(message, 
                                 quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                        }
                     }
                 }
             } else {
@@ -338,9 +337,7 @@ public class Delete extends MatchingTask {
 
     protected void removeDir(File d) {
         String[] list = d.list();
-        if (list == null) {
-          list = new String[0];
-        }
+        if (list == null) list = new String[0];
         for (int i = 0; i < list.length; i++) {
             String s = list[i];
             File f = new File(d, s);
@@ -350,24 +347,22 @@ public class Delete extends MatchingTask {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!f.delete()) {
                     String message="Unable to delete file " + f.getAbsolutePath();
-                    if(failonerror) {
+                    if(failonerror)
                         throw new BuildException(message);
-                    } else {
+                    else
                         log(message,
                             quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                    }
                 }
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
             String message="Unable to delete directory " + dir.getAbsolutePath();
-            if(failonerror) {
+            if(failonerror)
                 throw new BuildException(message);
-            } else {
+            else
                 log(message,
                     quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-            }
         }
     }
 
@@ -386,9 +381,9 @@ public class Delete extends MatchingTask {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!f.delete()) {
                     String message="Unable to delete file " + f.getAbsolutePath();
-                    if(failonerror) {
+                    if(failonerror)
                         throw new BuildException(message);
-                    } else
+                    else
                         log(message,
                             quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
@@ -396,8 +391,7 @@ public class Delete extends MatchingTask {
         }
 
         if (dirs.length > 0 && includeEmpty) {
-            in
-    }t dirCount = 0;
+            int dirCount = 0;
             for (int j=dirs.length-1; j>=0; j--) {
                 File dir = new File(d, dirs[j]);
                 String[] dirFiles = dir.list();
@@ -406,12 +400,11 @@ public class Delete extends MatchingTask {
                     if (!dir.delete()) {
                         String message="Unable to delete directory "
                                 + dir.getAbsolutePath();
-                        if(failonerror) {
+                        if(failonerror)
                             throw new BuildException(message);
-                        } else { {
+                        else
                             log(message,
                                 quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                        }
                     } else {
                         dirCount++;
                     }
