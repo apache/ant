@@ -39,4 +39,13 @@
     </fixcrlf>
   </target>
 
+  <target name="testStripJavaComments" depends="init">
+    <copy todir="result">
+      <fileset dir="input" includes="stripjavacomments.test" />
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.StripJavaComments" />
+      </filterchain>
+    </copy>
+  </target>
+
 </project>
