@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,10 @@ import java.io.File;
 
 public class TouchTest extends BuildFileTest {
 
-    private static String touchfile="src/etc/testcases/taskdefs/touchtest";
+    private static String TOUCH_FILE = "src/etc/testcases/taskdefs/touchtest";
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public TouchTest(String name) {
         super(name);
@@ -41,9 +44,9 @@ public class TouchTest extends BuildFileTest {
 
     public long getTargetTime() {
 
-        File file = new File(touchfile);
+        File file = new File(System.getProperty("root"), TOUCH_FILE);
         if(!file.exists()) {
-            throw new BuildException("failed to touch file "+touchfile);
+            throw new BuildException("failed to touch file " + file);
         }
         return file.lastModified();
     }
@@ -103,6 +106,42 @@ public class TouchTest extends BuildFileTest {
     }
 
     /**
+     * test the mapped file set
+     */
+    public void testMappedFileset() {
+        executeTarget("testMappedFileset");
+    }
+
+    /**
+     * test the explicit mapped file set
+     */
+    public void testExplicitMappedFileset() {
+        executeTarget("testExplicitMappedFileset");
+    }
+
+    /**
+     * test the mapped file list
+     */
+    public void testMappedFilelist() {
+        executeTarget("testMappedFilelist");
+    }
+
+    /**
+     * test the pattern attribute
+     */
+    public void testGoodPattern() {
+        executeTarget("testGoodPattern");
+    }
+
+    /**
+     * test the pattern attribute again
+     */
+    public void testBadPattern() {
+        expectBuildExceptionContaining("testBadPattern",
+            "No parsing exception thrown", "Unparseable");
+    }
+
+    /**
      * run a target to touch the test file; verify the timestamp is as expected
      * @param targetName
      * @param timestamp
@@ -110,7 +149,7 @@ public class TouchTest extends BuildFileTest {
     private void touchFile(String targetName, long timestamp) {
         executeTarget(targetName);
         long time = getTargetTime();
-        assertTimesNearlyMatch(timestamp,time);
+        assertTimesNearlyMatch(timestamp, time);
     }
 
     /**
@@ -119,7 +158,7 @@ public class TouchTest extends BuildFileTest {
      * @param time
      */
     public void assertTimesNearlyMatch(long timestamp,long time) {
-        long granularity= FileUtils.newFileUtils().getFileTimestampGranularity();
+        long granularity= FILE_UTILS.getFileTimestampGranularity();
         assertTimesNearlyMatch(timestamp, time, granularity);
     }
 
@@ -130,7 +169,7 @@ public class TouchTest extends BuildFileTest {
      * @param range
      */
     private void assertTimesNearlyMatch(long timestamp, long time, long range) {
-        assertTrue("Time "+timestamp+" is not within "+range+" ms of "+time,
-                Math.abs(time-timestamp)<=range);
+        assertTrue("Time " + timestamp + " is not within " + range + " ms of "
+            + time, (Math.abs(time - timestamp) <= range));
     }
 }
