@@ -13,6 +13,9 @@ $$.
 Fixed bugs:
 -----------
 
+* Fix LineContains to handle huge files elegantly without causing
+Stack Overflows.
+
 * if you ask for the "classic" compiler on Java1.4, you get upgraded to 
 "modern" because there is no classic compiler any more. 
 
