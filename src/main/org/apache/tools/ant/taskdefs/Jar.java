@@ -70,7 +70,9 @@ public class Jar extends Zip {
 
     private File manifestFile;
     private Manifest manifest;
-    private Manifest execManifest;    
+    private Manifest execManifest;  
+    
+    /** true if a manifest has been specified in the task */
     private boolean buildFileManifest = false;
     
     public Jar() {
@@ -279,6 +281,7 @@ public class Jar extends Zip {
                 theZipFile = new java.util.zip.ZipFile(zipFile);
                 java.util.zip.ZipEntry entry = theZipFile.getEntry("META-INF/MANIFEST.MF");
                 if (entry == null) {
+                    log("Updating jar since the current jar has no manifest", Project.MSG_VERBOSE);
                     return false;
                 }
                 Manifest currentManifest = new Manifest(theZipFile.getInputStream(entry));
@@ -286,11 +289,14 @@ public class Jar extends Zip {
                     manifest = getDefaultManifest();
                 }
                 if (!currentManifest.equals(manifest)) {
+                    log("Updating jar since jar manifest has changed", Project.MSG_VERBOSE);
                     return false;
                 }
             }
             catch (Exception e) {
                 // any problems and we will rebuild
+                log("Updating jar since cannot read current jar manifest: " + e.getClass().getName() + e.getMessage(), 
+                    Project.MSG_VERBOSE);
                 return false;
             }
             finally {
