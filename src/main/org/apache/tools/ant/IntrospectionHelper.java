@@ -96,6 +96,13 @@ public class IntrospectionHelper  {
     private Method addText = null;
 
     /**
+     * The method used to add nested elements which can't be added through
+     * nested creators. It allows a task to define a factory method for creating
+     * nested elements.
+     */
+    private Method elementFactoryMethod = null;
+
+    /**
      * The Class that's been introspected.
      */
     private Class bean;
@@ -138,6 +145,14 @@ public class IntrospectionHelper  {
                 && java.lang.String.class.equals(args[0])) {
 
                 addText = methods[i];
+                
+            } else if ("createElement".equals(name)
+                       && !returnType.isArray()
+                       && !returnType.isPrimitive()
+                       && args.length == 1
+                       && java.lang.String.class.equals(args[0])) {
+
+                elementFactoryMethod = methods[i];
 
             } else if (name.startsWith("set")
                        && java.lang.Void.TYPE.equals(returnType)
@@ -266,13 +281,23 @@ public class IntrospectionHelper  {
     public Object createElement(Object element, String elementName) 
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
-        if (nc == null) {
-            String msg = "Class " + element.getClass().getName() +
-                " doesn't support the nested \"" + elementName + "\" element";
-            throw new BuildException(msg);
-        }
         try {
-            return nc.create(element);
+            if (nc == null) {
+                Object nestedElement = null;
+                if (elementFactoryMethod != null) {
+                    nestedElement 
+                        = elementFactoryMethod.invoke(element, new Object[] {elementName});
+                }
+                if (nestedElement == null) {
+                    String msg = "Class " + element.getClass().getName() +
+                        " doesn't support the nested \"" + elementName + "\" element";
+                    throw new BuildException(msg);
+                }
+                return nestedElement;
+            }
+            else {
+                return nc.create(element);
+            }
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
