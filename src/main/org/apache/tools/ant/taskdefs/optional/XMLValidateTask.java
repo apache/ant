@@ -19,8 +19,6 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Vector;
 
 import org.apache.tools.ant.AntClassLoader;
@@ -59,7 +57,7 @@ public class XMLValidateTask extends Task {
     /**
      * helper for path -> URI and URI -> path conversions.
      */
-    private static FileUtils fu = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
 
     protected static final String INIT_FAILED_MSG =
         "Could not start xml validation: ";
@@ -455,7 +453,7 @@ public class XMLValidateTask extends Task {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
             InputSource is = new InputSource(new FileInputStream(afile));
-            String uri = fu.toURI(afile.getAbsolutePath());
+            String uri = FILE_UTILS.toURI(afile.getAbsolutePath());
             is.setSystemId(uri);
             xmlReader.parse(is);
         } catch (SAXException ex) {
@@ -545,18 +543,22 @@ public class XMLValidateTask extends Task {
         private String getMessage(SAXParseException e) {
             String sysID = e.getSystemId();
             if (sysID != null) {
-                try {
-                    int line = e.getLineNumber();
-                    int col = e.getColumnNumber();
-                    return new URL(sysID).getFile()
-                        + (line == -1
-                            ? ""
-                            : (":" + line + (col == -1 ? "" : (":" + col))))
-                        + ": "
-                        + e.getMessage();
-                } catch (MalformedURLException mfue) {
-                    // ignore and just return exception message
+                String name = sysID;
+                if (sysID.startsWith("file:")) {
+                    try {
+                        name = FILE_UTILS.fromURI(sysID);
+                    } catch (Exception ex) {
+                        // if this is not a valid file: just use the uri
+                    }
                 }
+                int line = e.getLineNumber();
+                int col = e.getColumnNumber();
+                return  name
+                    + (line == -1
+                       ? ""
+                       : (":" + line + (col == -1 ? "" : (":" + col))))
+                    + ": "
+                    + e.getMessage();
             }
             return e.getMessage();
         }

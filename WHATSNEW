@@ -79,6 +79,9 @@ Fixed bugs:
   twice - if the resource is in the project classpath and if the classloader is requested
   with a null path.
 
+* XMLValidate used URL#getFile rather than the ant method FileUtils#fromURI
+  Bugzilla report 32508
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
