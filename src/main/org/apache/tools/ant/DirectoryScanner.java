@@ -655,10 +655,12 @@ strLoop:
             throw new IllegalStateException("No basedir set");
         }
         if (!basedir.exists()) {
-            throw new IllegalStateException("basedir does not exist");
+            throw new IllegalStateException("basedir " + basedir
+                                            + " does not exist");
         }
         if (!basedir.isDirectory()) {
-            throw new IllegalStateException("basedir is not a directory");
+            throw new IllegalStateException("basedir " + basedir
+                                            + " is not a directory");
         }
 
         if (includes == null) {
