@@ -127,20 +127,26 @@ public class AvailableTest extends TaskdefsTest {
     // All three specified but class missing -> null
     public void test11() { 
         executeTarget("test11");
-        assertEquals(null, project.getProperty("test"));
+        assertNull(project.getProperty("test"));
     }
 
     // Specified property-name is "" -> true
     public void test12() { 
         executeTarget("test12");
-        assertEquals(null, project.getProperty("test"));
+        assertNull(project.getProperty("test"));
         assertEquals("true", project.getProperty(""));
     }
 
     // Specified file is "" -> invalid files do not exist
     public void test13() { 
         executeTarget("test13");
-        assertEquals(null, project.getProperty("test"));
+        assertNull(project.getProperty("test"));
+    }
+
+    // Specified file is "" actually a directory, so it should pass
+    public void test13b() { 
+        executeTarget("test13b");
+        assertEquals("true", project.getProperty("test"));
     }
 
     // Specified resource is "" -> can such a thing exist?
@@ -155,7 +161,7 @@ public class AvailableTest extends TaskdefsTest {
     // Specified class is "" -> can not exist
     public void test15() { 
         executeTarget("test15");
-        assertEquals(null, project.getProperty("test"));
+        assertNull(project.getProperty("test"));
     }
 
     // Specified dir is "" -> this is the current directory and should
@@ -175,6 +181,6 @@ public class AvailableTest extends TaskdefsTest {
     // Specified dir is "../this_dir_should_never_exist" -> null
     public void test18() { 
         executeTarget("test18");
-        assertEquals(null, project.getProperty("test"));
+        assertNull(project.getProperty("test"));
     }
 }

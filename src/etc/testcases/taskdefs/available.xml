@@ -65,6 +65,11 @@
 
   <target name="test13">
     <available property="test" 
+               file="" type="file" />
+  </target>
+
+  <target name="test13b">
+    <available property="test" 
                file=""/>
   </target>
 
