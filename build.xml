@@ -630,13 +630,18 @@
           <exclude name="org/apache/tools/ant/taskdefs/GUnzipTest.java" />
           <exclude name="org/apache/tools/ant/taskdefs/GzipTest.java" />
 
-          <!-- only run this test if ANTLR is installed -->
+          <!-- only run these tests if their required libraries are installed -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" 
                    unless="antlr.present" />
           <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexpMatcherTest.java" 
                    unless="jakarta.regexp.present" />
           <exclude name="org/apache/tools/ant/util/regexp/JakartaOroMatcherTest.java" 
                    unless="jakarta.oro.present" />
+          <exclude name="${optional.package}/ide/VAJExportTest.java" unless="vaj.present" />
+                   
+           <!-- run when you have the environment setup to support them -->
+          <exclude name="org/apache/tools/ant/taskdefs/optional/net/FtpTest.java" />
+
         </fileset>
       </batchtest>
 

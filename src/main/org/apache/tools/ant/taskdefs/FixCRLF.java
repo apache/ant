@@ -238,9 +238,9 @@ public class FixCRLF extends MatchingTask {
 
         // log options used
         log("options:" +
-            " cr=" + (addcr==-1 ? "add" : addcr==0 ? "asis" : "remove") +
-            " tab=" + (addtab==-1 ? "add" : addtab==0 ? "asis" : "remove") +
-            " eof=" + (ctrlz==-1 ? "add" : ctrlz==0 ? "asis" : "remove") +
+            " cr=" + (addcr==1 ? "add" : addcr==0 ? "asis" : "remove") +
+            " tab=" + (addtab==1 ? "add" : addtab==0 ? "asis" : "remove") +
+            " eof=" + (ctrlz==1 ? "add" : ctrlz==0 ? "asis" : "remove") +
             " tablength=" + tablength,
             Project.MSG_VERBOSE);
 
@@ -363,11 +363,54 @@ public class FixCRLF extends MatchingTask {
 
             // output the data
             try {
+                // Determine whether it should be written,
+                // that is if it is different than the potentially already existing file
+                boolean write = false;
+                byte[] existingdata = indata;
                 File destFile = srcFile;
-                if (destDir != null) destFile = new File(destDir, files[i]);
-                FileOutputStream outStream = new FileOutputStream(destFile);
-                outStream.write(outdata,0,o);
-                outStream.close();
+                if (destDir != null) {
+                    destFile = new File(destDir, files[i]);
+                    if(destFile.isFile()) {
+                        int len = (int)destFile.length();
+                        if(len != o) {
+                            write = true;
+                        } else {
+                            existingdata = new byte[len];
+                            try {
+                                FileInputStream in = new FileInputStream(destFile);
+                                in.read(existingdata);
+                                in.close();
+                            } catch (IOException e) {
+                                throw new BuildException(e);
+                            }
+                        }
+                    } else {
+                        write = true;
+                    }
+                }
+
+                if(!write) {
+                    if(existingdata.length != o) {
+                        write = true;
+                    } else {
+                        for(int j = 0; j < o; ++j) {
+                            if(existingdata[j] != outdata[j]) {
+                                write = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(write) {
+                    log(destFile + " is being written", Project.MSG_VERBOSE);
+                    FileOutputStream outStream = new FileOutputStream(destFile);
+                    outStream.write(outdata,0,o);
+                    outStream.close();
+                } else {
+                    log(destFile + " is not written, as the contents are identical",
+                        Project.MSG_VERBOSE);
+                }
             } catch (IOException e) {
                 throw new BuildException(e);
             }
