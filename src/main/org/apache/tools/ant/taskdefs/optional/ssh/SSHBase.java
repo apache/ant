@@ -40,6 +40,7 @@ public abstract class SSHBase extends Task implements LogListener {
     private String knownHosts;
     private int port = SSH_PORT;
     private boolean failOnError = true;
+    private boolean verbose;
     private SSHUserInfo userInfo;
 
     /**
@@ -69,6 +70,20 @@ public abstract class SSHBase extends Task implements LogListener {
 
     public boolean getFailonerror() {
         return failOnError;
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    public void setVerbose(boolean failure) {
+        verbose = failure;
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    public boolean getVerbose() {
+        return verbose;
     }
 
     /**

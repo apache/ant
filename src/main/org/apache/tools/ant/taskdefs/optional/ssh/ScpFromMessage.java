@@ -38,14 +38,25 @@ public class ScpFromMessage extends AbstractSshMessage {
     private File localFile;
     private boolean isRecursive = false;
 
+    /**
+     * @since Ant 1.6.2
+     */
+    public ScpFromMessage(boolean verbose,
+                          Session session,
+                          String aRemoteFile,
+                          File aLocalFile,
+                          boolean recursive) {
+        super(verbose, session);
+        this.remoteFile = aRemoteFile;
+        this.localFile = aLocalFile;
+        this.isRecursive = recursive;
+    }
+
     public ScpFromMessage(Session session,
                            String aRemoteFile,
                            File aLocalFile,
                            boolean recursive) {
-        super(session);
-        this.remoteFile = aRemoteFile;
-        this.localFile = aLocalFile;
-        this.isRecursive = recursive;
+        this(false, session, aRemoteFile, aLocalFile, recursive);
     }
 
     public void execute() throws IOException, JSchException {
@@ -153,6 +164,14 @@ public class ScpFromMessage extends AbstractSshMessage {
         int length;
         int totalLength = 0;
         long startTime = System.currentTimeMillis();
+
+        // only track progress for files larger than 100kb in verbose mode
+        boolean trackProgress = getVerbose() && filesize > 102400;
+        // since filesize keeps on decreasing we have to store the
+        // initial filesize
+        int initFilesize = filesize;
+        int percentTransmitted = 0;
+
         try {
             while (true) {
                 length = in.read(buf, 0,
@@ -165,6 +184,12 @@ public class ScpFromMessage extends AbstractSshMessage {
                 totalLength += length;
                 if (filesize == 0) {
                     break;
+                }
+
+                if (trackProgress) {
+                    percentTransmitted = trackProgress(initFilesize, 
+                                                       totalLength, 
+                                                       percentTransmitted);
                 }
             }
         } finally {
