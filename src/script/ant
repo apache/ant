@@ -1,6 +1,6 @@
 #! /bin/sh
 
-if [ -f $HOME/.antrc ] ; then 
+if [ -f "$HOME/.antrc" ] ; then 
   . $HOME/.antrc
 fi
 
