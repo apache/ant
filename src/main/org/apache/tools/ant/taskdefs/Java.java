@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.*;
@@ -120,8 +121,13 @@ public class Java extends Task {
 
             log("Running in same VM " + cmdl.getJavaCommand().toString(), 
                 Project.MSG_VERBOSE);
-            run(cmdl);
-            return 0;
+            try {
+                run(cmdl);
+                return 0;
+            }
+            catch (ExitException ex) {
+                return ex.getStatus();
+            }
         }
     }
 

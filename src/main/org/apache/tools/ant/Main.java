@@ -402,7 +402,7 @@ public class Main {
             System.out.println("Buildfile: " + buildFile);
         }
 
-        Project project = new Project();
+        final Project project = new Project();
         project.setSystemLoader(systemLoader);
         
         Throwable error = null;
@@ -412,7 +412,16 @@ public class Main {
 
             PrintStream err = System.err;
             PrintStream out = System.out;
-            
+            SecurityManager oldsm = System.getSecurityManager();
+            System.setSecurityManager(new SecurityManager() {
+                                        public void checkExit(int status) {
+                                            throw new ExitException(status);
+                                        }
+                                        
+                                        public void checkPermission(java.security.Permission p) {
+                                        }
+                                    });
+
             try {
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
                 System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
@@ -455,6 +464,7 @@ public class Main {
             finally {
                 System.setOut(out);
                 System.setErr(err);
+                System.setSecurityManager(oldsm);
             }
             if (projectHelp) {
                     printTargets(project);

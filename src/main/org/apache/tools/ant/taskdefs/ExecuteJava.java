@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -130,8 +131,9 @@ public class ExecuteJava {
             if (!(t instanceof SecurityException)) {
                 throw new BuildException(t);
             }
-            // else ignore because the security exception is thrown
-            // if the invoked application tried to call System.exit()
+            else {
+                throw (SecurityException)t;
+            }
         } catch (Exception e) {
             throw new BuildException(e);
         } finally {
