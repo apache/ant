@@ -84,12 +84,12 @@ to set up the proxy first.
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
 <p>Gets the index page of http://ant.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
 
-<pre>  &lt;get src=&quot;http://jakarta.apache.org/builds/tomcat/nightly/ant.zip&quot; 
-    dest=&quot;optional.jar&quot; 
+<pre>  &lt;get src=&quot;http://www.apache.org/dist/ant/KEYS&quot; 
+    dest=&quot;KEYS&quot; 
     verbose=&quot;true&quot;
     usetimestamp=&quot;true&quot;/&gt;</pre>
 <p>
-Gets the nightly ant build from the tomcat distribution, if the local copy
+Gets the PGP keys of Ant's (current and past) release managers, if the local copy
 is missing or out of date. Uses the verbose option 
 for progress information.
 </p>
