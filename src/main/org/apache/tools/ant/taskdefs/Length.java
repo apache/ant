@@ -149,7 +149,7 @@ public class Length extends Task {
     private void handleFilesets(Handler h) {
         HashSet included = new HashSet(filesets.size() * 10);
         for (int i = 0; i < filesets.size(); i++) {
-            FileSet fs = (FileSet)(filesets.get(i));
+            FileSet fs = (FileSet) (filesets.get(i));
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File basedir = fs.getDir(getProject());
             String[] f = ds.getIncludedFiles();
