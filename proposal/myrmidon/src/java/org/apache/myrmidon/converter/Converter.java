@@ -18,7 +18,7 @@ import org.apache.avalon.framework.context.Context;
  */
 public interface Converter
 {
-    String ROLE = "org.apache.myrmidon.converter.Converter";
+    String ROLE = Converter.class.getName();
 
     /**
      * Convert original to destination type.

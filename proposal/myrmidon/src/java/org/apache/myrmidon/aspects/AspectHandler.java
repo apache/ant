@@ -23,7 +23,7 @@ import org.apache.myrmidon.api.TaskException;
  */
 public interface AspectHandler
 {
-    String ROLE = "org.apache.myrmidon.aspects.AspectHandler";
+    String ROLE = AspectHandler.class.getName();
 
     Configuration preCreate( Configuration taskModel )
         throws TaskException;

@@ -16,5 +16,5 @@ package org.apache.myrmidon.framework;
  */
 public interface DataType
 {
-    String ROLE = "org.apache.myrmidon.framework.DataType";
+    String ROLE = DataType.class.getName();
 }

@@ -54,7 +54,7 @@ import org.apache.avalon.framework.component.Component;
 public interface FileSystemManager
     extends Component
 {
-    String ROLE = "org.apache.aut.vfs.FileSystemManager";
+    String ROLE = FileSystemManager.class.getName();
 
     /**
      * Returns the base file used to resolve relative paths.
