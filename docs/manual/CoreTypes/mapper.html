@@ -362,6 +362,32 @@ jakarta-ORO and finally try jakarta-regexp.</li>
     <td valign="top"><code>properties.Classes/dir/dir2/A</code></td>
   </tr>
 </table>
+<blockquote><pre>
+&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*?)(\$$[^/\\\.]*)?\.class$$&quot; to=&quot;\1.java&quot;/&gt;
+&lt;regexpmapper from=&quot;^(.*?)(\$$[^/\\\.]*)?\.class$$&quot; to=&quot;\1.java&quot;/&gt;
+</pre></blockquote>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file name</b></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>ClassLoader.class</code></td>
+    <td valign="top"><code>ClassLoader.java</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>java/lang/ClassLoader.class</code></td>
+    <td valign="top"><code>java/lang/ClassLoader.java</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>java\lang\ClassLoader$1.class</code></td>
+    <td valign="top"><code>java\lang\ClassLoader.java</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>java/lang/ClassLoader$foo$1.class</code></td>
+    <td valign="top"><code>java/lang/ClassLoader.java</code></td>
+  </tr>
+</table>
 
 <h4><a name="package-mapper">package</a></h4>
 <p>Sharing the same syntax as the <a href="#glob-mapper">glob mapper</a>,
