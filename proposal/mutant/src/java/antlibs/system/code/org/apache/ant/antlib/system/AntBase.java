@@ -307,7 +307,14 @@ public abstract class AntBase extends AbstractTask {
      * @return the properties the sub-build will start with
      */
     protected Map getProperties() {
-        return properties;
+        if (!inheritAll) {
+            return properties;
+        }
+        
+        // need to combine existing properties with new ones
+        Map subBuildProperties = dataService.getAllProperties();
+        subBuildProperties.putAll(properties);
+        return subBuildProperties;
     }
 
 }

@@ -66,7 +66,7 @@
     <patternset refid="converted"/>
   </fileset>
 
-  <path id="classpath.ant1compat">
+  <path id="classpath">
     <pathelement location="${distlib.dir}/init.jar"/>
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
     <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
@@ -79,95 +79,98 @@
     <available property="jdk1.4+" classname="java.lang.CharSequence" />
     <available property="bsf.present"
                classname="com.ibm.bsf.BSFManager"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="netrexx.present"
                classname="netrexx.lang.Rexx"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="trax.present"
                classname="javax.xml.transform.Transformer"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="xslp.present"
                classname="com.kvisco.xsl.XSLProcessor"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="xalan.present"
                classname="org.apache.xalan.xslt.XSLTProcessorFactory"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="xalan2.present"
                classname="org.apache.xalan.transformer.TransformerImpl"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="ejb.ejbc.present"
                classname="weblogic.ejbc"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="ejb.DDCreator.present"
                classname="weblogic.ejb.utils.DDCreator"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="ejb.wls.present"
                classname="weblogic.Server"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="junit.present"
                classname="junit.framework.TestCase"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="netcomp.present"
                classname="com.oroinc.net.ftp.FTPClient"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="starteam.present"
                classname="com.starbase.util.Platform"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="antlr.present"
                classname="antlr.Tool"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="vaj.present"
                classname="com.ibm.ivj.util.base.Workspace"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="stylebook.present"
                classname="org.apache.stylebook.Engine"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="jakarta.regexp.present"
                classname="org.apache.regexp.RE"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="jakarta.oro.present"
                classname="org.apache.oro.text.regex.Perl5Matcher"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="jmf.present"
                classname="javax.sound.sampled.Clip"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="icontract.present"
                classname="com.reliablesystems.iContract.IContracted"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="jdepend.present"
                classname="jdepend.framework.JDepend"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="log4j.present"
                classname="org.apache.log4j.Category"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <!-- this is just a way to check for a TraX implementation -->
     <available property="trax.impl.present"
                resource="META-INF/services/javax.xml.transform.TransformerFactory"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
     <available property="xalan.envcheck"
                classname="org.apache.xalan.xslt.EnvironmentCheck"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="which.present"
                classname="org.apache.env.Which"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
 
     <available property="servlet.present"
                classname="javax.servlet.Servlet"
-               classpathref="classpath.ant1compat"/>
+               classpathref="classpath"/>
 
     <available property="xerces.present"
                classname="org.apache.xerces.parsers.SAXParser"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
     <available property="bcel.present"
                classname="org.apache.bcel.Constants"
-               classpathref="classpath.ant1compat" />
+               classpathref="classpath" />
+    <available property="sunuue.present"
+               classname="sun.misc.UUEncoder"
+               classpathref="classpath" />
 
     <condition property="javamail.complete">
       <and>
         <available classname="javax.activation.DataHandler"
-                   classpathref="classpath.ant1compat"/>
+                   classpathref="classpath"/>
         <available classname="javax.mail.Transport"
-                   classpathref="classpath.ant1compat"/>
+                   classpathref="classpath"/>
       </and>
     </condition>
 
@@ -194,12 +197,12 @@
       <fileset refid="ant1src"/>
     </copy>
     <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src;${java.dir}/antlibs/ant1compat">
-      <classpath refid="classpath.ant1compat"/>
+      <classpath refid="classpath"/>
     </depend>
     <javac destdir="${bin.dir}/ant1compat" 
            srcdir="${bin.dir}/ant1src;${java.dir}/antlibs/ant1compat"
            includeAntRuntime="false" debug="${debug}">
-      <classpath refid="classpath.ant1compat"/>
+      <classpath refid="classpath"/>
       <exclude name="${regexp.package}/JakartaRegexp*.java"
                unless="jakarta.regexp.present" />
       <exclude name="${regexp.package}/JakartaOro*.java"
@@ -208,8 +211,13 @@
                unless="jdk1.4+" />
       <exclude name="${ant.package}/AntSecurityManager.java"
                unless="jdk1.2+" />
+      <exclude name="${ant.package}/util/optional/NoExitSecurityManager.java"
+               unless="jdk1.2+" />
       <exclude name="${ant.package}/listener/Log4jListener.java"
                unless="log4j.present" />
+
+      <exclude name="${ant.package}/taskdefs/email/UUMailer.java" unless="sunuue.present" />
+      <exclude name="${ant.package}/taskdefs/email/MimeMailer.java" unless="javamail.complete" />
 
       <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
@@ -228,7 +236,6 @@
       <exclude name="${optional.package}/ejb/IPlanet*.java" unless="ejbjar.support" />
       <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/junit/*" unless="junit.present" />
-      <exclude name="${optional.package}/net/MimeMail.java" unless="javamail.complete" />
       <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
       <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
       <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />

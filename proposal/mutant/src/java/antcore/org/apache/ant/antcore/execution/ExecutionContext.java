@@ -56,7 +56,6 @@ import java.io.File;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.ModelElement;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.FileUtils;
 
 /**
  * This is the core's implementation of the AntContext for all core objects.
@@ -74,9 +73,6 @@ public class ExecutionContext implements AntContext {
 
     /** the model in the build model with which this context is associated */
     private ModelElement modelElement;
-
-    /** General file utilities */
-    private FileUtils fileUtils = new FileUtils();
 
     /**
      * Initilaise this context's environment

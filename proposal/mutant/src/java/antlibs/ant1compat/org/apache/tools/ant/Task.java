@@ -53,6 +53,10 @@
  */
 package org.apache.tools.ant;
 
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.model.BuildElement;
+
 /**
  * Ant1 Task facade
  *
@@ -70,6 +74,20 @@ public abstract class Task extends ProjectComponent
     /** The description of this task */
     protected String description = null;
 
+    /**
+     * Initialise this component
+     *
+     * @param context the core context for this component
+     * @exception ExecutionException if the component cannot be initialized
+     */
+    public void init(AntContext context) throws ExecutionException {
+        super.init(context);
+        
+        BuildElement buildElement = (BuildElement)context.getModelElement();
+        taskType = buildElement.getType();
+        taskName = taskType;        
+    }
+        
     /**
      * Set the name to use in logging messages.
      *

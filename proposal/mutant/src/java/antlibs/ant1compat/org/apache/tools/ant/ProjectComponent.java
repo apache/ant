@@ -141,7 +141,9 @@ public abstract class ProjectComponent {
      * @param level the priority level of the message
      */
     public void log(String message, int level) {
-        context.log(message, level);
+        if (context != null) {
+            context.log(message, level);
+        }
     }
 
     /**
@@ -150,7 +152,7 @@ public abstract class ProjectComponent {
      * @param message the message to be logged
      */
     public void log(String message) {
-        context.log(message, Project.MSG_INFO);
+        log(message, Project.MSG_INFO);
     }
 
 

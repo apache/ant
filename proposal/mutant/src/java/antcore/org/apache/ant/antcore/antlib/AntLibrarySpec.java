@@ -106,9 +106,6 @@ public class AntLibrarySpec {
     /** Flag which indicates if tools.jar is required */
     private boolean toolsJarRequired = false;
 
-    /** Flag which indicates that this library is a system library */
-    private boolean systemLibrary = false;
-
     /**
      * This flag indicates that this task processes XML and wishes to use
      * the XML parser packaged with Ant

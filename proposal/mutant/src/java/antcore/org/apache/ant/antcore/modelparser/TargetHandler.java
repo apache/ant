@@ -115,6 +115,8 @@ public class TargetHandler extends ElementHandler {
                 target.addDependency(dependency);
             }
         }
+        target.setIfCondition(getAttribute(IF_ATTR));
+        target.setUnlessCondition(getAttribute(UNLESS_ATTR));
     }
 
 

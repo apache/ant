@@ -135,17 +135,12 @@ public class Ant1Factory extends StandardLibFactory {
      */
     public Object createTaskInstance(Class taskClass)
          throws InstantiationException, IllegalAccessException {
-        Object o = taskClass.newInstance();
-        if (o instanceof ProjectComponent) {
-            ((ProjectComponent)o).setProject(project);
+        Object instance = taskClass.newInstance();
+        if (instance instanceof ProjectComponent) {
+            ((ProjectComponent)instance).setProject(project);
         }
 
-        // XXX task.setTaskType(taskType);
-
-        // set default value, can be changed by the user
-        // XXX task.setTaskName(taskType);
-
-        return o;
+        return instance;
     }
 
     /**

@@ -127,13 +127,11 @@ public class ExecutionManager {
 
             librarySpecs.clear();
             // add any additional libraries.
-            if (config != null) {
                 for (Iterator i = config.getLibraryLocations(); i.hasNext(); ) {
                     // try file first
                     String libLocation = (String)i.next();
                     libManager.loadLib(librarySpecs, libLocation);
                 }
-            }
             libManager.configLibraries(initConfig, librarySpecs, antLibraries);
 
             addConfigLibPaths();
@@ -201,10 +199,6 @@ public class ExecutionManager {
      */
     private void addConfigLibPaths()
          throws ExecutionException {
-        if (config == null) {
-            return;
-        }
-
         // now add any additional library Paths specified by the config
         for (Iterator i = config.getLibraryIds(); i.hasNext(); ) {
             String libraryId = (String)i.next();

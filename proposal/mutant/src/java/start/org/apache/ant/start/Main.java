@@ -243,6 +243,8 @@ public class Main {
                  = new URLClassLoader(LoaderUtils.getLocationURLs(cliJarLib,
                 "cli.jar"), coreLoader);
 
+            //System.out.println("System Loader config");                
+            //LoaderUtils.dumpLoader(System.out, systemLoader);
             // System.out.println("Front End Loader config");
             // LoaderUtils.dumpLoader(System.out, frontEndLoader);
 

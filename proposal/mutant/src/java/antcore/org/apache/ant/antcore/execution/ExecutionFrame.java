@@ -604,6 +604,24 @@ public class ExecutionFrame {
          throws ExecutionException {
         Throwable failureCause = null;
         Target target = project.getTarget(targetName);
+        String ifCondition = target.getIfCondition();
+        String unlessCondition = target.getUnlessCondition();
+        
+        if (ifCondition != null) {
+            ifCondition = dataService.replacePropertyRefs(ifCondition.trim());
+            if (!isDataValueSet(ifCondition)) {
+                return;
+            }
+        }
+        
+        if (unlessCondition != null) {
+            unlessCondition 
+                = dataService.replacePropertyRefs(unlessCondition.trim());
+            if (isDataValueSet(unlessCondition)) {
+                return;
+            }
+        }
+
         try {
             Iterator taskIterator = target.getTasks();
             eventSupport.fireTargetStarted(target);
@@ -832,7 +850,6 @@ public class ExecutionFrame {
                  = reflector.createElement(element, nestedElementName);
             factory.registerCreatedElement(nestedElement);
             if (nestedElement instanceof ExecutionComponent) {
-                System.out.println("element is an execution component");
                 ExecutionComponent component
                      = (ExecutionComponent)nestedElement;
                 ExecutionContext context

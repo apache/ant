@@ -93,7 +93,7 @@ public class Commandline {
     public final static String DEFAULT_ANT1_FILENAME = "build.xml";
 
     /** The initialisation configuration for Ant */
-    private InitConfig config;
+    private InitConfig initConfig;
 
     /** Stream that we are using for logging */
     private PrintStream out = System.out;
@@ -109,6 +109,9 @@ public class Commandline {
 
     /** The command line properties */
     private Map definedProperties = new HashMap();
+
+    /** The Config files to use in this run */
+    private List configFiles = new ArrayList();
 
     /**
      * This is the build file to run. By default it is a file: type URL but
@@ -186,8 +189,26 @@ public class Commandline {
      *      formed.
      */
     private AntConfig getAntConfig(File configArea) throws ConfigException {
+        File configFile = new File(configArea, "antconfig.xml");
         try {
-            File configFile = new File(configArea, "antconfig.xml");
+            return getAntConfigFile(configFile);
+        } catch (FileNotFoundException e) {
+            // ignore if files are not present
+            return null;
+        }
+    }
+
+    /**
+     * Read in a config file
+     *
+     * @param configFile the file containing the XML config
+     * @return the parsed config object
+     * @exception ConfigException if the config cannot be parsed
+     * @exception FileNotFoundException if the file cannot be found.
+     */
+    private AntConfig getAntConfigFile(File configFile)
+         throws ConfigException, FileNotFoundException {
+        try {
             URL configFileURL = InitUtils.getFileURL(configFile);
 
             ParseContext context = new ParseContext();
@@ -198,15 +219,36 @@ public class Commandline {
             return configHandler.getAntConfig();
         } catch (MalformedURLException e) {
             throw new ConfigException("Unable to form URL to read config from "
-                 + configArea, e);
+                 + configFile, e);
         } catch (XMLParseException e) {
-            if (!(e.getCause() instanceof FileNotFoundException)) {
-                throw new ConfigException("Unable to parse config file from "
-                     + configArea, e);
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw (FileNotFoundException)e.getCause();
             }
-            // ignore missing config files
-            return null;
+
+            throw new ConfigException("Unable to parse config file from "
+                 + configFile, e);
         }
+    }
+
+    /**
+     * Get an option value
+     *
+     * @param args the full list of command line arguments
+     * @param position the position in the args array where the value shoudl be
+     * @param argType the option type
+     * @return the value of the option
+     * @exception ConfigException if the option cannot be read
+     */
+    private String getOption(String[] args, int position, String argType)
+         throws ConfigException {
+        String value = null;
+        try {
+            value = args[position];
+        } catch (IndexOutOfBoundsException e) {
+            throw new ConfigException("You must specify a value for the "
+                 + argType + " argument");
+        }
+        return value;
     }
 
 
@@ -217,20 +259,27 @@ public class Commandline {
      * @param initConfig Ant's initialization configuration
      */
     private void process(String[] args, InitConfig initConfig) {
-        this.config = initConfig;
+        this.initConfig = initConfig;
         System.out.println("Ant Home is " + initConfig.getAntHome());
         try {
             parseArguments(args);
 
+            AntConfig config = new AntConfig();
             AntConfig userConfig = getAntConfig(initConfig.getUserConfigArea());
             AntConfig systemConfig
                  = getAntConfig(initConfig.getSystemConfigArea());
 
-            AntConfig config = systemConfig;
-            if (config == null) {
-                config = userConfig;
-            } else if (userConfig != null) {
+            if (systemConfig != null) {
+                config.merge(systemConfig);
+            }
+            if (userConfig != null) {
                 config.merge(userConfig);
+            }
+
+            for (Iterator i = configFiles.iterator(); i.hasNext(); ) {
+                File configFile = (File)i.next();
+                AntConfig runConfig = getAntConfigFile(configFile);
+                config.merge(runConfig);
             }
 
             if (!buildFileURL.getProtocol().equals("file")
@@ -284,6 +333,7 @@ public class Commandline {
         return project;
     }
 
+
     /**
      * Parse the command line arguments.
      *
@@ -301,7 +351,7 @@ public class Commandline {
             if (arg.equals("-buildfile") || arg.equals("-file")
                  || arg.equals("-f")) {
                 try {
-                    String url = args[i++];
+                    String url = getOption(args, i++, arg);
                     if (url.indexOf(":") == -1) {
                         // We convert any hash characters to their URL escape.
                         buildFileURL = InitUtils.getFileURL(new File(url));
@@ -312,24 +362,16 @@ public class Commandline {
                     System.err.println("Buildfile is not valid: " +
                         e.getMessage());
                     throw new ConfigException("Build file is not valid", e);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.err.println("You must specify a buildfile when " +
-                        "using the -buildfile argument");
-                    return;
                 }
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
-                    File logFile = new File(args[i++]);
+                    File logFile = new File(getOption(args, i++, arg));
                     out = new PrintStream(new FileOutputStream(logFile));
                     err = out;
                 } catch (IOException ioe) {
                     System.err.println("Cannot write on the specified log " +
                         "file. Make sure the path exists and " +
                         "you have write permissions.");
-                    return;
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    System.err.println("You must specify a log file when " +
-                        "using the -log argument");
                     return;
                 }
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
@@ -340,27 +382,17 @@ public class Commandline {
             } else if (arg.equals("-debug")) {
                 // printVersion();
                 messageOutputLevel = MessageLevel.MSG_DEBUG;
+            } else if (arg.equals("-config") || arg.equals("-c")) {
+                configFiles.add(new File(getOption(args, i++, arg)));
             } else if (arg.equals("-listener")) {
-                try {
-                    listeners.add(args[i++]);
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    System.err.println("You must specify a classname when " +
-                        "using the -listener argument");
-                    return;
-                }
+                listeners.add(getOption(args, i++, arg));
             } else if (arg.equals("-logger")) {
                 if (loggerClassname != null) {
                     System.err.println("Only one logger class may be " +
                         "specified.");
                     return;
                 }
-                try {
-                    loggerClassname = args[i++];
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    System.err.println("You must specify a classname when " +
-                        "using the -logger argument");
-                    return;
-                }
+                loggerClassname = getOption(args, i++, arg);
             } else if (arg.startsWith("-D")) {
                 String name = arg.substring(2, arg.length());
                 String value = null;
@@ -368,8 +400,8 @@ public class Commandline {
                 if (posEq > 0) {
                     value = name.substring(posEq + 1);
                     name = name.substring(0, posEq);
-                } else if (i < args.length - 1) {
-                    value = args[++i];
+                } else {
+                    value = getOption(args, i++, arg);
                 }
                 definedProperties.put(name, value);
             } else if (arg.startsWith("-")) {
@@ -385,7 +417,7 @@ public class Commandline {
         if (buildFileURL == null) {
             File defaultBuildFile = new File(DEFAULT_BUILD_FILENAME);
             if (!defaultBuildFile.exists()) {
-                File ant1BuildFile =  new File(DEFAULT_ANT1_FILENAME);
+                File ant1BuildFile = new File(DEFAULT_ANT1_FILENAME);
                 if (ant1BuildFile.exists()) {
                     defaultBuildFile = ant1BuildFile;
                 }
