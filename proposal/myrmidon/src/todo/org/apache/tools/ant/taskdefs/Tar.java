@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.MergingMapper;
@@ -145,7 +144,7 @@ public class Tar
         for( Iterator e = filesets.iterator(); e.hasNext(); )
         {
             TarFileSet fs = (TarFileSet)e.next();
-            String[] files = fs.getFiles( getProject() );
+            String[] files = fs.getFiles();
 
             if( !archiveIsUpToDate( files ) )
             {
@@ -193,7 +192,7 @@ public class Tar
             for( Iterator e = filesets.iterator(); e.hasNext(); )
             {
                 TarFileSet fs = (TarFileSet)e.next();
-                String[] files = fs.getFiles( getProject() );
+                String[] files = fs.getFiles();
                 for( int i = 0; i < files.length; i++ )
                 {
                     File f = new File( fs.getDir(), files[ i ] );
@@ -344,14 +343,14 @@ public class Tar
          * @return a list of file and directory names, relative to the baseDir
          *      for the project.
          */
-        public String[] getFiles( Project p )
+        public String[] getFiles()
             throws TaskException
         {
             if( files == null )
             {
-                DirectoryScanner ds = getDirectoryScanner();
-                String[] directories = ds.getIncludedDirectories();
-                String[] filesPerSe = ds.getIncludedFiles();
+                final DirectoryScanner scanner = getDirectoryScanner();
+                final String[] directories = scanner.getIncludedDirectories();
+                final String[] filesPerSe = scanner.getIncludedFiles();
                 files = new String[ directories.length + filesPerSe.length ];
                 System.arraycopy( directories, 0, files, 0, directories.length );
                 System.arraycopy( filesPerSe, 0, files, directories.length,

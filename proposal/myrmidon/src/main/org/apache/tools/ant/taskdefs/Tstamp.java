@@ -18,7 +18,6 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -31,24 +30,24 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author conor@cognet.com.au
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public class Tstamp extends Task
+public class Tstamp
+    extends Task
 {
-
     private ArrayList customFormats = new ArrayList();
-    private String prefix = "";
+    private String m_prefix = "";
 
     public void setPrefix( String prefix )
     {
-        this.prefix = prefix;
-        if( !this.prefix.endsWith( "." ) )
+        this.m_prefix = prefix;
+        if( !this.m_prefix.endsWith( "." ) )
         {
-            this.prefix += ".";
+            this.m_prefix += ".";
         }
     }
 
     public CustomFormat createFormat()
     {
-        CustomFormat cts = new CustomFormat( prefix );
+        CustomFormat cts = new CustomFormat( m_prefix );
         customFormats.add( cts );
         return cts;
     }
@@ -61,19 +60,19 @@ public class Tstamp extends Task
             Date d = new Date();
 
             SimpleDateFormat dstamp = new SimpleDateFormat( "yyyyMMdd" );
-            setProperty( prefix + "DSTAMP", dstamp.format( d ) );
+            setProperty( m_prefix + "DSTAMP", dstamp.format( d ) );
 
             SimpleDateFormat tstamp = new SimpleDateFormat( "HHmm" );
-            setProperty( prefix + "TSTAMP", tstamp.format( d ) );
+            setProperty( m_prefix + "TSTAMP", tstamp.format( d ) );
 
             SimpleDateFormat today = new SimpleDateFormat( "MMMM d yyyy", Locale.US );
-            setProperty( prefix + "TODAY", today.format( d ) );
+            setProperty( m_prefix + "TODAY", today.format( d ) );
 
             Iterator i = customFormats.iterator();
             while( i.hasNext() )
             {
                 CustomFormat cts = (CustomFormat)i.next();
-                cts.execute( getProject(), d );
+                cts.execute( d );
             }
 
         }
@@ -206,7 +205,7 @@ public class Tstamp extends Task
             field = unit.getCalendarField();
         }
 
-        public void execute( Project project, Date date )
+        public void execute( Date date )
             throws TaskException
         {
             if( propertyName == null )
