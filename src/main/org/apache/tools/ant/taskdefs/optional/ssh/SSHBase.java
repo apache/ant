@@ -195,7 +195,7 @@ public abstract class SSHBase extends Task implements LogListener {
     protected Session openSession() throws JSchException {
         JSch jsch = new JSch();
         if (null != userInfo.getKeyfile()) {
-            jsch.addIdentity(userInfo.getKeyfile(), "passphrase");
+            jsch.addIdentity(userInfo.getKeyfile());
         }
 
         if( knownHosts != null ) {
