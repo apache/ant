@@ -83,10 +83,10 @@ public class Exec extends Task {
 
         // test if os match
         String myos = System.getProperty("os.name");
-        project.log("Myos = " + myos, Project.MSG_VERBOSE);
+        log("Myos = " + myos, Project.MSG_VERBOSE);
         if ((os != null) && (os.indexOf(myos) < 0)){
             // this command will be executed only on the specified OS
-            project.log("Not found in " + os, Project.MSG_VERBOSE);
+            log("Not found in " + os, Project.MSG_VERBOSE);
             return 0;
         }
 
@@ -106,14 +106,14 @@ public class Exec extends Task {
 
         try {
             // show the command
-            project.log(command, "exec", Project.MSG_VERBOSE);
+            log(command, Project.MSG_VERBOSE);
 
             // exec command on system runtime
             Process proc = Runtime.getRuntime().exec(command);
 
             if( out!=null )  {
                 fos=new PrintWriter( new FileWriter( out ) );
-                project.log("Output redirected to " + out, Project.MSG_VERBOSE);
+                log("Output redirected to " + out, Project.MSG_VERBOSE);
             }
 
             // copy input and error to the output stream
@@ -138,7 +138,7 @@ public class Exec extends Task {
             // check its exit value
             err = proc.exitValue();
             if (err != 0) {
-                project.log("Result: " + err, "exec", Project.MSG_ERR);
+                log("Result: " + err, Project.MSG_ERR);
             }
         } catch (IOException ioe) {
             throw new BuildException("Error exec: " + command, ioe, location);
@@ -165,7 +165,7 @@ public class Exec extends Task {
 
     protected void outputLog(String line, int messageLevel) {
         if (fos == null) {
-            project.log(line, messageLevel); 
+            log(line, messageLevel); 
         } else {
             fos.println(line);
         }

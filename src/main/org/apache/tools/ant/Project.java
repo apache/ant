@@ -104,8 +104,6 @@ public class Project {
     private File baseDir;
 
     private Vector listeners = new Vector();
-    protected Target currentTarget = null;
-    protected Task currentTask = null;
 
     public Project() {
     }
@@ -170,11 +168,15 @@ public class Project {
     }
 
     public void log(String msg, int msgLevel) {
-        fireMessageLogged(msg, msgLevel);
+        fireMessageLogged(this, msg, msgLevel);
     }
 
-    public void log(String msg, String tag, int msgLevel) {
-        fireMessageLogged(msg, msgLevel);
+    public void log(Task task, String msg, int msgLevel) {
+        fireMessageLogged(task, msg, msgLevel);
+    }
+
+    public void log(Target target, String msg, int msgLevel) {
+        fireMessageLogged(target, msg, msgLevel);
     }
 
     public void setProperty(String name, String value) {
@@ -708,19 +710,14 @@ public class Project {
     public void runTarget(Target target)
         throws BuildException {
 
-        currentTarget = target;
-
         try {
-            fireTargetStarted();
-            currentTarget.execute();
-            fireTargetFinished(null);
+            fireTargetStarted(target);
+            target.execute();
+            fireTargetFinished(target, null);
         }
         catch(RuntimeException exc) {
-            fireTargetFinished(exc);
+            fireTargetFinished(target, exc);
             throw exc;
-        }
-        finally {
-            currentTarget = null;
         }
     }
 
@@ -849,7 +846,7 @@ public class Project {
     }
 
     protected void fireBuildStarted() {
-        BuildEvent event = createBuildEvent();
+        BuildEvent event = new BuildEvent(this);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
@@ -857,62 +854,67 @@ public class Project {
     }
 
     protected void fireBuildFinished(Throwable exception) {
-        BuildEvent event = createBuildEvent(exception);
+        BuildEvent event = new BuildEvent(this);
+        event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
         }
     }
 
-    protected void fireTargetStarted() {
-        BuildEvent event = createBuildEvent();
+    protected void fireTargetStarted(Target target) {
+        BuildEvent event = new BuildEvent(target);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
         }
     }
 
-    protected void fireTargetFinished(Throwable exception) {
-        BuildEvent event = createBuildEvent(exception);
+    protected void fireTargetFinished(Target target, Throwable exception) {
+        BuildEvent event = new BuildEvent(target);
+        event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
         }
     }
 
-    protected void fireTaskStarted() {
-        BuildEvent event = createBuildEvent();
+    protected void fireTaskStarted(Task task) {
+        BuildEvent event = new BuildEvent(task);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
         }
     }
 
-    protected void fireTaskFinished(Throwable exception) {
-        BuildEvent event = createBuildEvent(exception);
+    protected void fireTaskFinished(Task task, Throwable exception) {
+        BuildEvent event = new BuildEvent(task);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
         }
     }
 
-    protected void fireMessageLogged(String message, int priority) {
-        BuildEvent event = createBuildEvent(message, priority);
+    private void fireMessageLoggedEvent(BuildEvent event, String message, int priority) {
+        event.setMessage(message, priority);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.messageLogged(event);
         }
     }
 
-    public BuildEvent createBuildEvent() {
-        return new BuildEvent(this, currentTarget, currentTask, null, MSG_VERBOSE, null);
+    protected void fireMessageLogged(Project project, String message, int priority) {
+        BuildEvent event = new BuildEvent(project);
+        fireMessageLoggedEvent(event, message, priority);
     }
 
-    public BuildEvent createBuildEvent(String msg, int priority) {
-        return new BuildEvent(this, currentTarget, currentTask, msg, priority, null);
+    protected void fireMessageLogged(Target target, String message, int priority) {
+        BuildEvent event = new BuildEvent(target);
+        fireMessageLoggedEvent(event, message, priority);
     }
 
-    public BuildEvent createBuildEvent(Throwable exception) {
-        return new BuildEvent(this, currentTarget, currentTask, null, MSG_VERBOSE, exception);
+    protected void fireMessageLogged(Task task, String message, int priority) {
+        BuildEvent event = new BuildEvent(task);
+        fireMessageLoggedEvent(event, message, priority);
     }
 }

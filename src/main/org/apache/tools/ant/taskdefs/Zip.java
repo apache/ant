@@ -120,7 +120,7 @@ public class Zip extends MatchingTask {
                 upToDate = false;
         if (upToDate) return;
 
-        project.log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
+        log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
         try {
             ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));

@@ -109,7 +109,7 @@ public class GUnzip extends Task {
         }
 
         if (source.lastModified() > dest.lastModified()) {
-            project.log("Expanding "+ source.getAbsolutePath() + " to "
+            log("Expanding "+ source.getAbsolutePath() + " to "
                         + dest.getAbsolutePath());
 
             try {

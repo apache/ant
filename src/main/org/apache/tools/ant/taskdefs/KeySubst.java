@@ -76,10 +76,10 @@ public class KeySubst extends Task {
         Do the execution.
     */
     public void execute() throws BuildException {
-        project.log("!! KeySubst is deprecated. Use Filter + CopyDir instead. !!");
-        project.log("Performing Substitions");
+        log("!! KeySubst is deprecated. Use Filter + CopyDir instead. !!");
+        log("Performing Substitions");
         if ( source == null || dest == null ) {
-            project.log("Source and destinations must not be null");
+            log("Source and destinations must not be null");
             return;            
         }
         BufferedReader br = null;
@@ -152,8 +152,8 @@ public class KeySubst extends Task {
                 
                 String name = itok.nextToken();
                 String value = itok.nextToken();
-//                project.log ( "Name: " + name );
-//                project.log ( "Value: " + value );
+//                log ( "Name: " + name );
+//                log ( "Value: " + value );
                 replacements.put ( name, value );
             }
         }

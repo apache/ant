@@ -100,7 +100,7 @@ public class Ant extends Task {
                 p1.addBuildListener(new DefaultLogger(out, Project.MSG_INFO));
             }
             catch( IOException ex ) {
-                project.log( "Ant: Can't set output to " + output );
+                log( "Ant: Can't set output to " + output );
             }
         }
 

@@ -61,29 +61,52 @@ public class BuildEvent extends EventObject {
     private Target target;
     private Task task;
     private String message;
-    private int priority;
+    private int priority = Project.MSG_VERBOSE;
     private Throwable exception;
 
+    
     /**
-     *  Constructs a new build event. Fields that are not relevant
-     *  can be set to null, except for the project field which is
-     *  required.
+     * Construct a BuildEvent for a project level event
+     *
+     * @param project the project that emitted the event.
      */
-    public BuildEvent(
-        Project project,
-        Target target,
-        Task task,
-        String message,
-        int priority,
-        Throwable exception) {
-
-        super(getSource(project, target, task));
-
+    public BuildEvent(Project project) {
+        super(project);
         this.project = project;
+        this.target = null;
+        this.task = null;
+    }
+    
+    /**
+     * Construct a BuildEvent for a target level event
+     *
+     * @param target the target that emitted the event.
+     */
+    public BuildEvent(Target target) {
+        super(target);
+        this.project = target.getProject();
         this.target = target;
+        this.task = null;
+    }
+    
+    /**
+     * Construct a BuildEvent for a task level event
+     *
+     * @param task the task that emitted the event.
+     */
+    public BuildEvent(Task task) {
+        super(task);
+        this.project = task.getProject();
+        this.target = task.getTarget();
         this.task = task;
+    }
+
+    public void setMessage(String message, int priority) {
         this.message = message;
         this.priority = priority;
+    }
+    
+    public void setException(Throwable exception) {
         this.exception = exception;
     }
 
@@ -98,6 +121,7 @@ public class BuildEvent extends EventObject {
      *  Returns the target that fired this event.
      */
     public Target getTarget() {
+        
         return target;
     }
 
@@ -138,16 +162,5 @@ public class BuildEvent extends EventObject {
      */
     public Throwable getException() {
         return exception;
-    }
-
-    /**
-     *  Returns the object that fired this event.
-     */
-    private static Object getSource(Project project, Target target, Task task) {
-        if (task != null) return task;
-        if (target != null) return target;
-        if (project != null) return project;
-
-        throw new IllegalArgumentException("Project field cannot be null");
     }
 }

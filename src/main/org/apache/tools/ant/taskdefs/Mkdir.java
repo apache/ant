@@ -77,7 +77,7 @@ public class Mkdir extends Task {
 		    "succesful for an unknown reason";
 		throw new BuildException(msg);
 	    }
-	    project.log("Created dir: " + dir.getAbsolutePath());
+	    log("Created dir: " + dir.getAbsolutePath());
 	}
     }
 

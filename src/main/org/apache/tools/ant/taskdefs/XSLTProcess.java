@@ -120,7 +120,7 @@ public class XSLTProcess extends MatchingTask {
 	    throw new BuildException(msg);
 	}
 	scanner = getDirectoryScanner(baseDir);
-	project.log("Transforming into "+destDir,project.MSG_INFO);
+	log("Transforming into "+destDir, Project.MSG_INFO);
 
         // if processor wasn't specified, default it to xslp or xalan,
         // depending on which is in the classpath
@@ -136,17 +136,17 @@ public class XSLTProcess extends MatchingTask {
            }
         }
 
-	project.log("Using "+liaison.getClass().toString(),project.MSG_VERBOSE);
+	log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
 	try {
 	    // Create a new XSL processor with the specified stylesheet
 	    if (xslFile != null) {
                 String file = new File(baseDir,xslFile.toString()).toString();
-		project.log("Loading stylesheet " + file, project.MSG_INFO);
+		log("Loading stylesheet " + file, Project.MSG_INFO);
                 liaison.setStylesheet( file );
 	    }
 	} catch (Exception ex) {
-	    project.log("Failed to read stylesheet " + xslFile,project.MSG_INFO);
+	    log("Failed to read stylesheet " + xslFile, Project.MSG_INFO);
             throw new BuildException(ex);
 	}
 
@@ -296,7 +296,7 @@ public class XSLTProcess extends MatchingTask {
 	    outFile = new File(destDir,xmlFile.substring(0,xmlFile.lastIndexOf('.'))+fileExt);
 	    if (inFile.lastModified() > outFile.lastModified()) {
 		//-- command line status
-		project.log("Processing " + xmlFile + " to " + outFile,project.MSG_VERBOSE);
+		log("Processing " + xmlFile + " to " + outFile, Project.MSG_VERBOSE);
 
 		liaison.transform(inFile.toString(), outFile.toString());
 	    }
@@ -304,7 +304,7 @@ public class XSLTProcess extends MatchingTask {
         catch (Exception ex) {
 	    // If failed to process document, must delete target document,
 	    // or it will not attempt to process it the second time
-	    project.log("Failed to process " + inFile,project.MSG_INFO);
+	    log("Failed to process " + inFile, Project.MSG_INFO);
 	    outFile.delete();
             throw new BuildException(ex);
         }

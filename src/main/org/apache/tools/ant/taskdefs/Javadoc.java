@@ -329,7 +329,7 @@ public class Javadoc extends Exec {
 
         boolean javadoc1 = (Project.getJavaVersion() == Project.JAVA_1_1);
 
-        project.log("Generating Javadoc", project.MSG_INFO);
+        log("Generating Javadoc", Project.MSG_INFO);
 
         Vector argList = new Vector();
 
@@ -577,9 +577,9 @@ public class Javadoc extends Exec {
          if (packageList != null) {
             argList.addElement("@" + packageList);
         }
-        project.log("Javadoc args: " + argList.toString(), "javadoc", project.MSG_VERBOSE);
+        log("Javadoc args: " + argList.toString(), Project.MSG_VERBOSE);
 
-        project.log("Javadoc execution", project.MSG_INFO);
+        log("Javadoc execution", Project.MSG_INFO);
 
         StringBuffer b = new StringBuffer();
         b.append("javadoc ");
@@ -606,9 +606,9 @@ public class Javadoc extends Exec {
      * patterns.
      */
     private void evaluatePackages(String sourcePath, Vector packages, Vector argList) {
-        project.log("Parsing source files for packages", project.MSG_INFO);
-        project.log("Source path = " + sourcePath, project.MSG_VERBOSE);
-        project.log("Packages = " + packages, project.MSG_VERBOSE);
+        log("Parsing source files for packages", Project.MSG_INFO);
+        log("Source path = " + sourcePath, Project.MSG_VERBOSE);
+        log("Packages = " + packages, Project.MSG_VERBOSE);
 
         Vector addedPackages = new Vector();
         PathTokenizer tokenizer = new PathTokenizer(sourcePath);
@@ -687,7 +687,7 @@ public class Javadoc extends Exec {
                 }
             }
             if (count > 0) {
-                project.log("found " + count + " source files in " + path, "javadoc", project.MSG_VERBOSE);
+                log("found " + count + " source files in " + path, Project.MSG_VERBOSE);
             }
         } else {
             throw new BuildException("Error occurred during " + path + " evaluation.");
@@ -708,7 +708,7 @@ public class Javadoc extends Exec {
             while (true) {
                 line = reader.readLine();
                 if (line == null) {
-                    project.log("Could not evaluate package for " + file, "javadoc", project.MSG_WARN);
+                    log("Could not evaluate package for " + file, Project.MSG_WARN);
                     return null;
                 }
                 if (line.trim().startsWith("package ")) {
@@ -718,11 +718,11 @@ public class Javadoc extends Exec {
             }
             reader.close();
         } catch (Exception e) {
-            project.log("Exception " + e + " parsing " + file, "javadoc", project.MSG_WARN);
+            log("Exception " + e + " parsing " + file, Project.MSG_WARN);
             return null;
         }
 
-        project.log(file + " --> " + name, "javadoc", project.MSG_VERBOSE);
+        log(file + " --> " + name, Project.MSG_VERBOSE);
 
         return name;
     }
@@ -736,15 +736,15 @@ public class Javadoc extends Exec {
     protected void outputLog(String line, int messageLevel) {
         if (messageLevel==project.MSG_INFO && line.startsWith("Generating ")) {
             if (queuedLine != null) {
-                super.outputLog(queuedLine, project.MSG_VERBOSE);
+                super.outputLog(queuedLine, Project.MSG_VERBOSE);
             }
             queuedLine = line;
         } else {
             if (queuedLine != null) {
                 if (line.startsWith("Building "))
-                    super.outputLog(queuedLine, project.MSG_VERBOSE);
+                    super.outputLog(queuedLine, Project.MSG_VERBOSE);
                 else
-                    super.outputLog(queuedLine, project.MSG_INFO);
+                    super.outputLog(queuedLine, Project.MSG_INFO);
                 queuedLine = null;
             }
             super.outputLog(line, messageLevel);
@@ -753,7 +753,7 @@ public class Javadoc extends Exec {
 
     protected void logFlush() {
         if (queuedLine != null) {
-            super.outputLog(queuedLine, project.MSG_VERBOSE);
+            super.outputLog(queuedLine, Project.MSG_VERBOSE);
             queuedLine = null;
         }
         super.logFlush();

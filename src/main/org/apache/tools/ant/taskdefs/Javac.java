@@ -284,8 +284,8 @@ public class Javac extends MatchingTask {
         }
 
         if (compileList.size() > 0) {
-            project.log("Compiling " + compileList.size() +
-                        " source files to " + destDir);
+            log("Compiling " + compileList.size() + 
+                " source files to " + destDir);
 
             if (compiler.equalsIgnoreCase("classic")) {
                 doClassicCompile();
@@ -302,12 +302,12 @@ public class Javac extends MatchingTask {
         // copy the support files
 
         if (filecopyList.size() > 0) {
-            project.log("The implicit copying of support files by javac has been deprecated. " +
-                        "Use the copydir task to copy support files explicitly.",
-                        Project.MSG_WARN);
+            log("The implicit copying of support files by javac has been deprecated. " +
+                "Use the copydir task to copy support files explicitly.",
+                Project.MSG_WARN);
 
-            project.log("Copying " + filecopyList.size() +
-                        " support files to " + destDir.getAbsolutePath());
+            log("Copying " + filecopyList.size() +
+                " support files to " + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
             while (enum.hasMoreElements()) {
                 String fromFile = (String) enum.nextElement();
@@ -348,8 +348,8 @@ public class Javac extends MatchingTask {
                                           files[i].indexOf(".java")) + ".class");
 
                 if (srcFile.lastModified() > now) {
-                    project.log("Warning: file modified in the future: " +
-                        files[i], project.MSG_WARN);
+                    log("Warning: file modified in the future: " +
+                        files[i], Project.MSG_WARN);
                 }
 
                 if (srcFile.lastModified() > classFile.lastModified()) {
@@ -435,8 +435,8 @@ public class Javac extends MatchingTask {
                target.append(File.pathSeparator);
                target.append(f.getAbsolutePath());
            } else {
-               project.log("Dropping from classpath: "+
-                   f.getAbsolutePath(),project.MSG_VERBOSE);
+               log("Dropping from classpath: "+
+                   f.getAbsolutePath(), Project.MSG_VERBOSE);
            }
        }
 
@@ -467,7 +467,7 @@ public class Javac extends MatchingTask {
      */
 
     private void doClassicCompile() throws BuildException {
-        project.log("Using classic compiler", project.MSG_VERBOSE);
+        log("Using classic compiler", Project.MSG_VERBOSE);
         String classpath = getCompileClasspath(false);
         Vector argList = new Vector();
 
@@ -505,8 +505,8 @@ public class Javac extends MatchingTask {
             argList.addElement(extdirs);
         }
 
-        project.log("Compilation args: " + argList.toString(),
-                    project.MSG_VERBOSE);
+        log("Compilation args: " + argList.toString(),
+            Project.MSG_VERBOSE);
 
         String[] args = new String[argList.size() + compileList.size()];
         int counter = 0;
@@ -529,14 +529,14 @@ public class Javac extends MatchingTask {
             counter++;
         }
 
-        project.log(niceSourceList.toString(), project.MSG_VERBOSE);
+        log(niceSourceList.toString(), Project.MSG_VERBOSE);
 
         // XXX
         // provide the compiler a different message sink - namely our own
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         sun.tools.javac.Main compiler =
-                new sun.tools.javac.Main(new TaskOutputStream(project, Project.MSG_WARN), "javac");
+                new sun.tools.javac.Main(new TaskOutputStream(this, Project.MSG_WARN), "javac");
 
         if (!compiler.compile(args)) {
             throw new BuildException("Compile failed");
@@ -548,7 +548,7 @@ public class Javac extends MatchingTask {
      */
 
     private void doModernCompile() throws BuildException {
-        project.log("Using modern compiler", project.MSG_VERBOSE);
+        log("Using modern compiler", Project.MSG_VERBOSE);
         String classpath = getCompileClasspath(false);
         Vector argList = new Vector();
 
@@ -580,8 +580,8 @@ public class Javac extends MatchingTask {
             argList.addElement(extdirs);
         }
 
-        project.log("Compilation args: " + argList.toString(),
-                    project.MSG_VERBOSE);
+        log("Compilation args: " + argList.toString(),
+            Project.MSG_VERBOSE);
 
         String[] args = new String[argList.size() + compileList.size()];
         int counter = 0;
@@ -604,7 +604,7 @@ public class Javac extends MatchingTask {
             counter++;
         }
 
-        project.log(niceSourceList.toString(), project.MSG_VERBOSE);
+        log(niceSourceList.toString(), Project.MSG_VERBOSE);
 
         // This won't build under JDK1.2.2 because the new compiler
         // doesn't exist there.
@@ -643,7 +643,7 @@ public class Javac extends MatchingTask {
      */
 
     private void doJikesCompile() throws BuildException {
-        project.log("Using jikes compiler",project.MSG_VERBOSE);
+        log("Using jikes compiler", Project.MSG_VERBOSE);
 
         StringBuffer classpath = new StringBuffer();
         classpath.append(getCompileClasspath(true));
@@ -721,8 +721,8 @@ public class Javac extends MatchingTask {
        if (!warnings)
            argList.addElement("-nowarn");
 
-        project.log("Compilation args: " + argList.toString(),
-                    project.MSG_VERBOSE);
+        log("Compilation args: " + argList.toString(),
+            Project.MSG_VERBOSE);
 
         String[] args = new String[argList.size() + compileList.size()];
         int counter = 0;
@@ -745,12 +745,12 @@ public class Javac extends MatchingTask {
             counter++;
         }
 
-        project.log(niceSourceList.toString(), project.MSG_VERBOSE);
+        log(niceSourceList.toString(), Project.MSG_VERBOSE);
 
         // XXX
         // provide the compiler a different message sink - namely our own
 
-        JikesOutputParser jop = new JikesOutputParser(project,emacsMode);
+        JikesOutputParser jop = new JikesOutputParser(this, emacsMode);
 
         Jikes compiler = new Jikes(jop,"jikes");
         compiler.compile(args);

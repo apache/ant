@@ -71,7 +71,7 @@ import java.io.*;
 
 public class TaskOutputStream extends OutputStream {
 
-    private Project project;
+    private Task task;
     private StringBuffer line;
     private int msgOutputLevel;
 
@@ -80,8 +80,8 @@ public class TaskOutputStream extends OutputStream {
      * as the output source for messages.
      */
 
-    TaskOutputStream(Project project, int msgOutputLevel) {
-        this.project = project;
+    TaskOutputStream(Task task, int msgOutputLevel) {
+        this.task = task;
         this.msgOutputLevel = msgOutputLevel;
 
         line = new StringBuffer();
@@ -111,7 +111,7 @@ public class TaskOutputStream extends OutputStream {
 
     private void processLine() {
         String s = line.toString();
-        project.log(s, msgOutputLevel);
+        task.log(s, msgOutputLevel);
         line = new StringBuffer();
     }
 }

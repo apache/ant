@@ -82,7 +82,7 @@ public class Get extends Task {
                 throw new BuildException(e.toString());
             }
 
-	    project.log("Getting: " + source);
+	    log("Getting: " + source);
 
 	    File destF=new File(dest);
 	    FileOutputStream fos = new FileOutputStream(destF);
@@ -93,11 +93,11 @@ public class Get extends Task {
 		    is = url.openStream();
 		    break;
 		} catch( IOException ex ) {
-		    project.log( "Error opening connection " + ex );
+		    log( "Error opening connection " + ex );
 		}
 	    }
 	    if( is==null ) {
-		project.log( "Can't get " + source + " to " + dest);
+		log( "Can't get " + source + " to " + dest);
 		if( ignoreErrors != null ) return;
 		throw new BuildException( "Can't get " + source + " to " + dest);
 	    }
@@ -113,7 +113,7 @@ public class Get extends Task {
 	    fos.close();
 	    is.close();
 	} catch (IOException ioe) {
-	    project.log("Error getting " + source + " to " + dest );
+	    log("Error getting " + source + " to " + dest );
 	    if( ignoreErrors != null ) return;
 	    throw new BuildException(ioe.toString());
 	}

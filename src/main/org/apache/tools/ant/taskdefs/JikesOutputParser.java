@@ -14,7 +14,7 @@ import java.io.*;
  * @author skanthak@muehlheim.de
  */
 public class JikesOutputParser {
-    protected Project project;
+    protected Task task;
     protected boolean errorFlag = false; // no errors so far
     protected int errors,warnings;
     protected boolean error = false;
@@ -22,11 +22,11 @@ public class JikesOutputParser {
     
     /**
      * Construct a new Parser object
-     * @param project - project in whichs context we are called
+     * @param task - task in whichs context we are called
      */
-    protected JikesOutputParser(Project project, boolean emacsMode) {
+    protected JikesOutputParser(Task task, boolean emacsMode) {
 	super();
-	this.project = project;
+	this.task = task;
         this.emacsMode = emacsMode;
     }
 
@@ -88,9 +88,9 @@ public class JikesOutputParser {
 
     private void log(String line) {
        if (!emacsMode) {
-           project.log("", (error ? Project.MSG_ERR : Project.MSG_WARN));
+           task.log("", (error ? Project.MSG_ERR : Project.MSG_WARN));
        }
-       project.log(line, (error ? Project.MSG_ERR : Project.MSG_WARN));
+       task.log(line, (error ? Project.MSG_ERR : Project.MSG_WARN));
     }
 
     /**

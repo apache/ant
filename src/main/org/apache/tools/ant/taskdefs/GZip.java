@@ -81,13 +81,13 @@ public class GZip extends Task {
     }
 
     public void execute() throws BuildException {
-        project.log("Building gzip: " + zipFile.getAbsolutePath());
+        log("Building gzip: " + zipFile.getAbsolutePath());
     
         try {
             GZIPOutputStream zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
         
             if (source.isDirectory()) {
-                project.log ("Cannot Gzip a directory!");
+                log ("Cannot Gzip a directory!");
             } else {
                 zipFile(source, zOut);
             }

@@ -223,11 +223,11 @@ public class FixCRLF extends MatchingTask {
         }
 
         // log options used
-        project.log("options:" +
+        log("options:" +
             " cr=" + (addcr==-1 ? "add" : addcr==0 ? "asis" : "remove") +
             " tab=" + (addtab==-1 ? "add" : addtab==0 ? "asis" : "remove") +
             " eof=" + (ctrlz==-1 ? "add" : ctrlz==0 ? "asis" : "remove"),
-            "fixcrlf", project.MSG_VERBOSE);
+            Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
         String[] files = ds.getIncludedFiles();
@@ -262,9 +262,9 @@ public class FixCRLF extends MatchingTask {
             boolean eof = ((count>0) && (indata[count-1] == 0x1A));
 
             // log stats (before fixes)
-            project.log(srcFile + ": size=" + count + " cr=" + cr +
+            log(srcFile + ": size=" + count + " cr=" + cr +
                         " lf=" + lf + " tab=" + tab + " eof=" + eof,
-                        "fixcrlf", project.MSG_VERBOSE);
+                        Project.MSG_VERBOSE);
 
             // determine the output buffer size (slightly pessimisticly)
             int outsize = count;

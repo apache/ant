@@ -105,8 +105,8 @@ public class Copydir extends MatchingTask {
         String[] files = ds.getIncludedFiles();
         scanDir(srcDir, destDir, files);
         if (filecopyList.size() > 0) {
-            project.log("Copying " + filecopyList.size() + " files to "
-                        + destDir.getAbsolutePath());
+            log("Copying " + filecopyList.size() + " files to "
+                + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
             while (enum.hasMoreElements()) {
                 String fromFile = (String) enum.nextElement();

@@ -78,6 +78,15 @@ public abstract class Task {
     }
 
     /**
+     * Get the Project to which this task belongs
+     *
+     * @param the task's project.
+     */
+    public Project getProject() {
+        return project;
+    }
+    
+    /**
      * Sets the target object of this task.
      *
      * @param target Target in whose scope this task belongs.
@@ -85,6 +94,35 @@ public abstract class Task {
     public void setTarget(Target target) {
         this.target = target;
     }
+
+    /**
+     * Get the Target to which this task belongs
+     *
+     * @param the task's target.
+     */
+    public Target getTarget() {
+        return target;
+    }
+    
+    /**
+     * Log a message with the default (INFO) priority.
+     *
+     * @param the message to be logged.
+     */
+    public void log(String msg) {
+        log(msg, Project.MSG_INFO);
+    }
+
+    /**
+     * Log a mesage with the give priority.
+     *
+     * @param the message to be logged.
+     * @param msgLevel the message priority at which this message is to be logged.
+     */
+    public void log(String msg, int msgLevel) {
+        project.log(this, msg, msgLevel);
+    }
+
 
     /** Sets a description of the current action. It will be usefull in commenting
      *  what we are doing.

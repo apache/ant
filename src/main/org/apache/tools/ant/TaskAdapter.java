@@ -76,13 +76,13 @@ public class TaskAdapter extends Task {
 	    Class c=proxy.getClass();
 	    executeM=c.getMethod( "execute", new Class[0] );
 	    if( executeM == null ) {
-		project.log("No execute in " + proxy.getClass(), "TaskAdapter", project.MSG_ERR);
+		log("No execute in " + proxy.getClass(), Project.MSG_ERR);
 		throw new BuildException("No execute in " + proxy.getClass());
 	    }
 	    executeM.invoke(proxy, null);
 	    return; 
 	} catch( Exception ex ) {
-	    project.log("Error in " + proxy.getClass(), "TaskAdapter", project.MSG_ERR);
+	    log("Error in " + proxy.getClass(), Project.MSG_ERR);
 	    throw new BuildException( ex );
 	}
 

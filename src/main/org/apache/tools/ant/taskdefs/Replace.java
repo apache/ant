@@ -85,7 +85,7 @@ public class Replace extends MatchingTask {
             throw new BuildException("Either the file or the dir attribute must be specified");
         }
         
-        project.log("Replacing " + token + " --> " + value);
+        log("Replacing " + token + " --> " + value);
 
         if (src != null) {
             processFile(src);

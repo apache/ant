@@ -98,9 +98,9 @@ public class Rmic extends MatchingTask {
     }
 
     public void setClass(String classname) {
-        project.log("The class attribute is deprecated. " +
-                    "Please use the classname attribute.",
-                    Project.MSG_WARN);
+        log("The class attribute is deprecated. " +
+            "Please use the classname attribute.",
+            Project.MSG_WARN);
         this.classname = classname;
     }
 
@@ -146,7 +146,7 @@ public class Rmic extends MatchingTask {
         }
 
         if (verify) {
-            project.log("Verify has been turned on.", Project.MSG_INFO);
+            log("Verify has been turned on.", Project.MSG_INFO);
         }
         File sourceBaseFile = null;
         if (null != sourceBase) {
@@ -193,8 +193,8 @@ public class Rmic extends MatchingTask {
             }
         } else {
             if (compileList.size() > 0) {
-                project.log("RMI Compiling " + compileList.size() +
-                            " classes to " + baseDir, Project.MSG_INFO);
+                log("RMI Compiling " + compileList.size() +
+                    " classes to " + baseDir, Project.MSG_INFO);
 
                 for (int j = 0; j < compileList.size(); j++) {
                     args[i++] = (String) compileList.elementAt(j);
@@ -272,16 +272,16 @@ public class Rmic extends MatchingTask {
                                 shouldAdd = false;
                             }
                         } catch (ClassNotFoundException e) {
-                            project.log("Unable to verify class " + classname + 
+                            log("Unable to verify class " + classname + 
                                     ". It could not be found.", Project.MSG_WARN);
                         } catch (NoClassDefFoundError e) {
-                            project.log("Unable to verify class " + classname + 
+                            log("Unable to verify class " + classname + 
                                         ". It is not defined.", Project.MSG_WARN);
                         }
                     }
                     if (shouldAdd) {
-                        project.log("Adding: " + classname + " to compile list",
-                                    Project.MSG_VERBOSE);
+                        log("Adding: " + classname + " to compile list",
+                            Project.MSG_VERBOSE);
                         compileList.addElement(classname);
                     }
                 }
@@ -329,8 +329,8 @@ public class Rmic extends MatchingTask {
                 classFile.getAbsolutePath().indexOf(".class")) + "_Skel.class");
         if (classFile.exists()) {
             if (classFile.lastModified() > now) {
-                project.log("Warning: file modified in the future: " +
-                            classFile, Project.MSG_WARN);
+                log("Warning: file modified in the future: " +
+                    classFile, Project.MSG_WARN);
             }
 
             if (classFile.lastModified() > stubFile.lastModified()) {
@@ -399,8 +399,8 @@ public class Rmic extends MatchingTask {
                target.append(File.pathSeparator);
                target.append(f.getAbsolutePath());
            } else {
-               project.log("Dropping from classpath: "+
-                           f.getAbsolutePath(), Project.MSG_VERBOSE);
+               log("Dropping from classpath: "+
+                   f.getAbsolutePath(), Project.MSG_VERBOSE);
            }
        }
 

@@ -94,7 +94,7 @@ public class Untar extends Task {
             }
             File dir=project.resolveFile(dest);
 
-            project.log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
+            log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
             // code from WarExpand
             TarInputStream tis = new TarInputStream(new FileInputStream(srcF));
             TarEntry te = null;
@@ -102,8 +102,7 @@ public class Untar extends Task {
             while ((te = tis.getNextEntry()) != null) {
                 try {
                     File f = new File(dir, project.translatePath(te.getName()));
-                    project.log("expand-file " + te.getName() , "untar", 
-                                Project.MSG_VERBOSE );
+                    log("expand-file " + te.getName(), Project.MSG_VERBOSE );
                     // create intermediary directories - sometimes tar don't add them
                     File dirF=new File(f.getParent());
                     dirF.mkdirs();
@@ -129,8 +128,8 @@ public class Untar extends Task {
                     }
 
                 } catch(FileNotFoundException ex) {
-                    project.log("FileNotFoundException: " + te.getName(),
-                                Project.MSG_WARN);
+                    log("FileNotFoundException: " + te.getName(),
+                        Project.MSG_WARN);
                 }
             }
         } catch (IOException ioe) {

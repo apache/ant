@@ -60,7 +60,7 @@ import java.io.*;
 
 /**
  * Serves as an output stream to Javac. This let's us print messages
- * out to the project and detect whether or not Javac had an error
+ * out to the log and detect whether or not Javac had an error
  * while compiling.
  *
  * @author James Duncan Davidson (duncan@x180.com)
@@ -68,17 +68,17 @@ import java.io.*;
 
 class JavacOutputStream extends OutputStream {
 
-    private Project project;
+    private Task task;
     private StringBuffer line;
     private boolean errorFlag = false;
 
     /**
-     * Constructs a new JavacOutputStream with the given project
+     * Constructs a new JavacOutputStream with the given task
      * as the output source for messages.
      */
     
-    JavacOutputStream(Project project) {
-        this.project = project;
+    JavacOutputStream(Task task) {
+        this.task = task;
         line = new StringBuffer();
     }
 
@@ -109,7 +109,7 @@ class JavacOutputStream extends OutputStream {
         if (s.indexOf("error") > -1) {
             errorFlag = true;
         }
-        project.log(s);
+        task.log(s);
         line = new StringBuffer();
     }
 

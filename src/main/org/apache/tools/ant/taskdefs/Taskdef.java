@@ -95,9 +95,9 @@ public class Taskdef extends Task {
     }
 
     public void setClass(String v) {
-        project.log("The class attribute is deprecated. " +
-                    "Please use the classname attribute.",
-                    Project.MSG_WARN);
+        log("The class attribute is deprecated. " +
+            "Please use the classname attribute.",
+            Project.MSG_WARN);
         value = v;
     }
 

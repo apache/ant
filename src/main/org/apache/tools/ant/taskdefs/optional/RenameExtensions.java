@@ -151,10 +151,10 @@ public class RenameExtensions extends MatchingTask {
                 if (replace || !destFile.exists()) {
                     list.put(srcFile, destFile);
                 } else {
-                    project.log("Rejecting file: '" + srcFile + "' for rename as replace is false and file exists", Project.MSG_VERBOSE);
+                    log("Rejecting file: '" + srcFile + "' for rename as replace is false and file exists", Project.MSG_VERBOSE);
                 }
             } else {
-                project.log("File '"+ filename + "' doesn't match fromExtension: '" + fromExtension + "'", Project.MSG_VERBOSE);
+                log("File '"+ filename + "' doesn't match fromExtension: '" + fromExtension + "'", Project.MSG_VERBOSE);
             }
         }
         return list;

@@ -84,7 +84,7 @@ public class Tar extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        project.log("Building tar: "+ tarFile.getAbsolutePath());
+        log("Building tar: "+ tarFile.getAbsolutePath());
 
         if (baseDir == null) {
             throw new BuildException("basedir attribute must be set!");

@@ -112,9 +112,9 @@ public class Touch extends Task {
      */
     public void execute() throws BuildException {
         if (file.exists() && project.getJavaVersion() == Project.JAVA_1_1) {
-            project.log("Cannot change the modification time of "
-                        + file + " in JDK 1.1",
-                        Project.MSG_WARN);
+            log("Cannot change the modification time of "
+                + file + " in JDK 1.1",
+                Project.MSG_WARN);
             return;
         }
         
@@ -130,9 +130,8 @@ public class Touch extends Task {
         }
 
         if (millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1) {
-            project.log(file + 
-                        " will be created but its modification time cannot be set in JDK 1.1",
-                        Project.MSG_WARN);
+            log(file + " will be created but its modification time cannot be set in JDK 1.1",
+                Project.MSG_WARN);
         }
 
         touch();
@@ -143,7 +142,7 @@ public class Touch extends Task {
      */
     void touch() throws BuildException {
         if (!file.exists()) {
-            project.log("Creating "+file, Project.MSG_INFO);
+            log("Creating "+file, Project.MSG_INFO);
             try {
                 FileOutputStream fos = new FileOutputStream(file);
                 fos.write(new byte[0]);
@@ -181,8 +180,8 @@ public class Touch extends Task {
         }
 
         try {
-            project.log("Setting modification time for "+file, 
-                        Project.MSG_VERBOSE);
+            log("Setting modification time for "+file, 
+                Project.MSG_VERBOSE);
 
             setLastModified.invoke(file, times);
         } catch (InvocationTargetException ite) {

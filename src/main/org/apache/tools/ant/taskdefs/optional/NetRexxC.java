@@ -442,7 +442,7 @@ public class NetRexxC extends MatchingTask {
 
         // compile the source files
         if (compileList.size() > 0) {
-            project.log("Compiling " + compileList.size() + " source files to " + destDir);
+            log("Compiling " + compileList.size() + " source files to " + destDir);
             doNetRexxCompile();
         }
     }
@@ -479,7 +479,7 @@ public class NetRexxC extends MatchingTask {
      */
     private void copyFilesToDestination() {
         if (filecopyList.size() > 0) {
-            project.log("Copying " + filecopyList.size() + " files to " + destDir.getAbsolutePath());
+            log("Copying " + filecopyList.size() + " files to " + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
             while (enum.hasMoreElements()) {
                 String fromFile = (String)enum.nextElement();
@@ -499,7 +499,7 @@ public class NetRexxC extends MatchingTask {
      * Peforms a copmile using the NetRexx 1.1.x compiler
      */
     private void doNetRexxCompile() throws BuildException {
-        project.log("Using NetRexx compiler", project.MSG_VERBOSE);
+        log("Using NetRexx compiler", Project.MSG_VERBOSE);
         String classpath = getCompileClasspath();
         StringBuffer compileOptions = new StringBuffer();
         StringBuffer fileList = new StringBuffer();
@@ -529,7 +529,7 @@ public class NetRexxC extends MatchingTask {
             compileOptions.append(compileOptionsArray[i]);
             compileOptions.append(" ");
         }
-        project.log(compileOptions.toString(), project.MSG_VERBOSE);
+        log(compileOptions.toString(), Project.MSG_VERBOSE);
 
         String eol = System.getProperty("line.separator");
         StringBuffer niceSourceList = new StringBuffer("Files to be compiled:" + eol);
@@ -540,7 +540,7 @@ public class NetRexxC extends MatchingTask {
             niceSourceList.append(eol);
         }
 
-        project.log(niceSourceList.toString(), project.MSG_VERBOSE);
+        log(niceSourceList.toString(), Project.MSG_VERBOSE);
 
         // need to set java.class.path property and restore it later
         // since the NetRexx compiler has no option for the classpath
@@ -554,15 +554,15 @@ public class NetRexxC extends MatchingTask {
                new Rexx(compileArgs), new PrintWriter(out));
 
             if (rc > 1) { // 1 is warnings from real NetRexxC
-                project.log(out.toString(), Project.MSG_ERR);
+                log(out.toString(), Project.MSG_ERR);
                 String msg = "Compile failed, messages should have been provided.";
                 throw new BuildException(msg);
             }
             else if (rc == 1) {
-                project.log(out.toString(), Project.MSG_WARN);
+                log(out.toString(), Project.MSG_WARN);
             }
             else {
-                project.log(out.toString(), Project.MSG_INFO);
+                log(out.toString(), Project.MSG_INFO);
             }        
         } finally {
             // need to reset java.class.path property
@@ -648,8 +648,8 @@ public class NetRexxC extends MatchingTask {
                 target.append(File.pathSeparator);
                 target.append(f.getAbsolutePath());
             } else {
-                project.log("Dropping from classpath: "+
-                f.getAbsolutePath(),project.MSG_VERBOSE);
+                log("Dropping from classpath: "+
+                f.getAbsolutePath(), Project.MSG_VERBOSE);
             }
         }
 

@@ -105,15 +105,15 @@ public class Property extends Task {
                     if (project.getUserProperty(name) == null) {
 		        project.setUserProperty(name, value);
                     } else {
-                        project.log("Override ignored for " + name, 
-                                    project.MSG_VERBOSE);
+                        log("Override ignored for " + name, 
+                            Project.MSG_VERBOSE);
                     }
 		else
                     if (project.getProperty(name) == null) {
 		        project.setProperty(name, value);
                     } else {
-                        project.log("Override ignored for " + name, 
-                                    project.MSG_VERBOSE);
+                        log("Override ignored for " + name, 
+                            Project.MSG_VERBOSE);
                     }
             }
 
@@ -128,7 +128,7 @@ public class Property extends Task {
 
     private void loadFile (String name) {
         Properties props = new Properties();
-        project.log("Loading " + name, project.MSG_VERBOSE);
+        log("Loading " + name, Project.MSG_VERBOSE);
         try {
             if (new File(name).exists()) {
                 props.load(new FileInputStream(name));
@@ -141,7 +141,7 @@ public class Property extends Task {
 
     private void loadResource( String name ) {
         Properties props = new Properties();
-        project.log("Resource Loading " + name, project.MSG_VERBOSE);
+        log("Resource Loading " + name, Project.MSG_VERBOSE);
         try {
             InputStream is = this.getClass().getResourceAsStream(name);
             if (is != null) {
@@ -163,15 +163,15 @@ public class Property extends Task {
                 if (project.getUserProperty(name) == null) {
 		    project.setUserProperty(name, v);
                 } else {
-                    project.log("Override ignored for " + name, 
-                                project.MSG_VERBOSE);
+                    log("Override ignored for " + name, 
+                        Project.MSG_VERBOSE);
                 }
             else
                 if (project.getProperty(name) == null) {
 		    project.setProperty(name, v);
                 } else {
-                    project.log("Override ignored for " + name, 
-                                project.MSG_VERBOSE);
+                    log("Override ignored for " + name, 
+                        Project.MSG_VERBOSE);
                 }
         }
     }

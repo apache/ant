@@ -137,9 +137,9 @@ public abstract class MatchingTask extends Task {
      * @param itemString the string containing the files to include.
      */
     public void setItems(String itemString) {
-        project.log("The items attribute is deprecated. " +
-                    "Please use the includes attribute.",
-                    Project.MSG_WARN);
+        log("The items attribute is deprecated. " +
+            "Please use the includes attribute.",
+            Project.MSG_WARN);
         if (itemString == null || itemString.equals("*") 
 				               || itemString.equals(".")) {
             createInclude().setName("**");
@@ -173,9 +173,9 @@ public abstract class MatchingTask extends Task {
      * @param ignoreString the string containing the files to ignore.
      */
     public void setIgnore(String ignoreString) {
-        project.log("The ignore attribute is deprecated." + 
-                    "Please use the excludes attribute.",
-                    Project.MSG_WARN);
+        log("The ignore attribute is deprecated." + 
+            "Please use the excludes attribute.",
+            Project.MSG_WARN);
         if (ignoreString != null && ignoreString.length() > 0) {
             Vector tmpExcludes = new Vector();
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
@@ -266,8 +266,8 @@ public abstract class MatchingTask extends Task {
                 line = patternReader.readLine();
             }
         } catch(IOException ioe)  {
-            project.log("An error occured while reading from pattern file: " 
-                        + patternfile, Project.MSG_ERR); 
+            log("An error occured while reading from pattern file: " 
+                + patternfile, Project.MSG_ERR); 
         }
     }
 
@@ -281,8 +281,8 @@ public abstract class MatchingTask extends Task {
          if (includesfile != null && includesfile.length() > 0) {
              File incl = project.resolveFile(includesfile);
              if (!incl.exists()) {
-                 project.log("Includesfile "+includesfile+" not found.", 
-                             Project.MSG_ERR); 
+                 log("Includesfile "+includesfile+" not found.", 
+                     Project.MSG_ERR); 
              } else {
                  readPatterns(incl, includeList);
              }
@@ -299,8 +299,8 @@ public abstract class MatchingTask extends Task {
          if (excludesfile != null && excludesfile.length() > 0) {
              File excl = project.resolveFile(excludesfile);
              if (!excl.exists()) {
-                 project.log("Excludesfile "+excludesfile+" not found.", 
-                             Project.MSG_ERR); 
+                 log("Excludesfile "+excludesfile+" not found.", 
+                     Project.MSG_ERR); 
              } else {
                  readPatterns(excl, excludeList);
              }

@@ -76,9 +76,9 @@ public class Available extends Task {
     }
 
     public void setClass(String classname) {
-        project.log("The class attribute is deprecated. " +
-                    "Please use the classname attribute.",
-                    Project.MSG_WARN);
+        log("The class attribute is deprecated. " +
+            "Please use the classname attribute.",
+            Project.MSG_WARN);
         this.classname = classname;
     }
 
@@ -107,7 +107,7 @@ public class Available extends Task {
             File f = new File(file);
             return f.exists();
         } catch (Exception e) {
-            project.log(e.toString(), "available", Project.MSG_VERBOSE);
+            log(e.toString(), Project.MSG_VERBOSE);
             return false;
         }
     }
@@ -121,7 +121,7 @@ public class Available extends Task {
             Class.forName(classname);
             return true;
         } catch (Throwable t) {
-            project.log(t.toString(), "available", Project.MSG_VERBOSE);
+            log(t.toString(), Project.MSG_VERBOSE);
             return false;
         }
     }

@@ -327,11 +327,9 @@ public class ProjectHelper {
 
         public void init(String tag, AttributeList attrs) throws SAXParseException {
             task = project.createTask(tag);
-            project.currentTask = task;
             configure(task, attrs);
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
             task.init();
-            project.currentTask = null;
 
             // Top level tasks don't have associated targets
             if (target != null) {

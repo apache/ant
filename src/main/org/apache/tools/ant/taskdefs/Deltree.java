@@ -72,7 +72,7 @@ public class Deltree extends Task {
     }
     
     public void execute() throws BuildException {
-	project.log("Deleting: " + dir.getAbsolutePath());
+	log("Deleting: " + dir.getAbsolutePath());
 
 	if (dir.exists()) {
 	    if (!dir.isDirectory()) {

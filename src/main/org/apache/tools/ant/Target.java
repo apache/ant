@@ -123,24 +123,20 @@ public class Target {
                 Task task = (Task) enum.nextElement();
 
                 try {
-                    project.currentTask = task;
-                    project.fireTaskStarted();
+                    project.fireTaskStarted(task);
                	    task.execute();
-                    project.fireTaskFinished(null);
+                    project.fireTaskFinished(task, null);
 		}
                 catch(RuntimeException exc) {
                     if (exc instanceof BuildException) {
                         ((BuildException)exc).setLocation(task.getLocation());
                     }
-                    project.fireTaskFinished(exc);
+                    project.fireTaskFinished(task, exc);
                     throw exc;
-                }
-                finally {
-                    project.currentTask = null;
                 }
             }
         } else {
-            project.log("Skipped because property '" + this.condition + "' not set.", this.name, Project.MSG_VERBOSE);
+            project.log(this, "Skipped because property '" + this.condition + "' not set.", Project.MSG_VERBOSE);
         }
     }
 }

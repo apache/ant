@@ -81,9 +81,9 @@ public class Chmod extends MatchingTask {
     }
 
     public void setSrc(String src) {
-        project.log("The src attribute is deprecated. " +
-                    "Please use the file attribute.",
-                    Project.MSG_WARN);
+        log("The src attribute is deprecated. " +
+            "Please use the file attribute.",
+            Project.MSG_WARN);
         setFile(src);
     }
 
@@ -100,7 +100,7 @@ public class Chmod extends MatchingTask {
                 if (srcFile != null && srcDir == null) {
                     chmod(srcFile.toString());
                 } else if(srcFile == null && srcDir == null) {
-                    project.log("The attribute 'file' or 'dir' needs to be set.", Project.MSG_WARN);
+                    log("The attribute 'file' or 'dir' needs to be set.", Project.MSG_WARN);
                     throw new BuildException("Required attribute not set in Chmod", location);
                 } else if(srcFile == null && srcDir != null) {
           
@@ -114,7 +114,7 @@ public class Chmod extends MatchingTask {
             }
         } catch (IOException ioe) {
             // ignore, but warn
-            project.log("Error in Chmod " + ioe.toString() , Project.MSG_WARN);
+            log("Error in Chmod " + ioe.toString() , Project.MSG_WARN);
         }
     }
 

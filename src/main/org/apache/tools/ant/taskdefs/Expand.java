@@ -81,7 +81,7 @@ public class Expand extends Task {
 	    File srcF=project.resolveFile(source);
 	    File dir=project.resolveFile(dest);
 	    
-	    project.log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
+	    log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
 	    // code from WarExpand
 	    ZipInputStream zis = new ZipInputStream(new FileInputStream(srcF));
 	    ZipEntry ze = null;
@@ -89,7 +89,7 @@ public class Expand extends Task {
 	    while ((ze = zis.getNextEntry()) != null) {
 		try {
 		    File f = new File(dir, project.translatePath(ze.getName()));
-		    project.log("expand-file " + ze.getName() , "expand", Project.MSG_VERBOSE );
+		    log("expand-file " + ze.getName() , Project.MSG_VERBOSE );
 		    // create intermediary directories - sometimes zip don't add them
 		    File dirF=new File(f.getParent());
 		    dirF.mkdirs();
@@ -118,7 +118,7 @@ public class Expand extends Task {
 		    System.out.println("FileNotFoundException: " +  ze.getName()  );
 		}
 	    }
-	    project.log("</log:expand>", Project.MSG_VERBOSE );
+	    log("</log:expand>", Project.MSG_VERBOSE );
 	} catch (IOException ioe) {
 	    ioe.printStackTrace();
 	}

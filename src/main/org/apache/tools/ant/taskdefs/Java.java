@@ -86,7 +86,7 @@ public class Java extends Exec {
      * a separate VM (fork = "yes").
      */
     public int executeJava() throws BuildException {
-        project.log("Calling " + classname, "java", project.MSG_VERBOSE);
+        log("Calling " + classname, Project.MSG_VERBOSE);
 
         if (classname == null) {
             throw new BuildException("Classname must not be null.");
@@ -113,8 +113,11 @@ public class Java extends Exec {
             return run(b.toString());
         } else {
             Vector argList = tokenize(args);
-            if (jvmargs != null) project.log("JVM args and classpath ignored when same JVM is used.", "java", project.MSG_VERBOSE);
-            project.log("Java args: " + argList.toString(), "java", project.MSG_VERBOSE);
+            if (jvmargs != null) {
+                log("JVM args and classpath ignored when same JVM is used.", Project.MSG_VERBOSE);
+            }
+        
+            log("Java args: " + argList.toString(), Project.MSG_VERBOSE);
             run(classname, argList);
             return 0;
         }
@@ -131,9 +134,9 @@ public class Java extends Exec {
      * Set the source file (deprecated).
      */
     public void setClass(String s) {
-        project.log("The class attribute is deprecated. " +
-                    "Please use the classname attribute.",
-                    Project.MSG_WARN);
+        log("The class attribute is deprecated. " +
+            "Please use the classname attribute.",
+            Project.MSG_WARN);
         this.classname = s;
     }
 
