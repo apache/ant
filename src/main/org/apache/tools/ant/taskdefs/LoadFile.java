@@ -35,7 +35,7 @@ import org.apache.tools.ant.types.FilterChain;
  * @since Ant 1.5
  * @ant.task category="utility"
  */
-public final class LoadFile extends Task {
+public class LoadFile extends Task {
 
     /**
      * source file, usually null
@@ -190,6 +190,7 @@ public final class LoadFile extends Task {
 
     /**
      * Add the FilterChain element.
+     * @param filter the filter to add
      */
     public final void addFilterChain(FilterChain filter) {
         filterChains.addElement(filter);
