@@ -156,9 +156,9 @@ public class Expand extends Task {
         ZipFile zf = null;
         try {
             zf = new ZipFile(srcF, encoding);
-            Enumeration enum = zf.getEntries();
-            while (enum.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) enum.nextElement();
+            Enumeration e = zf.getEntries();
+            while (e.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) e.nextElement();
                 extractFile(fileUtils, srcF, dir, zf.getInputStream(ze),
                             ze.getName(), new Date(ze.getTime()),
                             ze.isDirectory());

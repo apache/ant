@@ -194,10 +194,10 @@ public class UpToDate extends Task implements Condition {
                                      + " not found.");
         }
 
-        Enumeration enum = sourceFileSets.elements();
+        Enumeration e = sourceFileSets.elements();
         boolean upToDate = true;
-        while (upToDate && enum.hasMoreElements()) {
-            FileSet fs = (FileSet) enum.nextElement();
+        while (upToDate && e.hasMoreElements()) {
+            FileSet fs = (FileSet) e.nextElement();
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             upToDate = upToDate && scanDir(fs.getDir(getProject()),
                                            ds.getIncludedFiles());

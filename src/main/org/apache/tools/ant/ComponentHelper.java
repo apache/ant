@@ -746,9 +746,9 @@ public class ComponentHelper  {
             }
             props.load(in);
 
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String name = (String) enum.nextElement();
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
                 String className = props.getProperty(name);
                 AntTypeDefinition def = new AntTypeDefinition();
                 def.setName(name);
@@ -791,9 +791,9 @@ public class ComponentHelper  {
             }
             props.load(in);
 
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String name = (String) enum.nextElement();
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
                 String className = props.getProperty(name);
                 AntTypeDefinition def = new AntTypeDefinition();
                 def.setName(name);

@@ -273,9 +273,9 @@ public class Jar extends Zip {
 
             // must not use getEntry as "well behaving" applications
             // must accept the manifest in any capitalization
-            Enumeration enum = zf.entries();
-            while (enum.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) enum.nextElement();
+            Enumeration e = zf.entries();
+            while (e.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) e.nextElement();
                 if (ze.getName().equalsIgnoreCase(MANIFEST_NAME)) {
                     InputStreamReader isr =
                         new InputStreamReader(zf.getInputStream(ze), "UTF-8");
@@ -448,9 +448,9 @@ public class Jar extends Zip {
         // JarIndex is sorting the directories by ascending order.
         // it's painful to do in JDK 1.1 and it has no value but cosmetic
         // since it will be read into a hashtable by the classloader.
-        Enumeration enum = addedDirs.keys();
-        while (enum.hasMoreElements()) {
-            String dir = (String) enum.nextElement();
+        Enumeration e = addedDirs.keys();
+        while (e.hasMoreElements()) {
+            String dir = (String) e.nextElement();
 
             // try to be smart, not to be fooled by a weird directory name
             // @fixme do we need to check for directories starting by ./ ?
@@ -470,9 +470,9 @@ public class Jar extends Zip {
             writer.println(dir);
         }
 
-        enum = rootEntries.elements();
-        while (enum.hasMoreElements()) {
-            writer.println(enum.nextElement());
+        e = rootEntries.elements();
+        while (e.hasMoreElements()) {
+            writer.println(e.nextElement());
         }
 
         writer.flush();

@@ -304,12 +304,12 @@ public class Concat extends Task {
      * Specify the end of line to find and to add if
      * not present at end of each input file. This attribute
      * is used in conjuction with fixlastline.
-     * @param enum the type of new line to add -
+     * @param crlf the type of new line to add -
      *              cr, mac, lf, unix, crlf, or dos
      * @since Ant 1.6
      */
-    public void setEol(FixCRLF.CrLf enum) {
-        String s = enum.getValue();
+    public void setEol(FixCRLF.CrLf crlf) {
+        String s = crlf.getValue();
         if (s.equals("cr") || s.equals("mac")) {
             eolString = "\r";
         } else if (s.equals("lf") || s.equals("unix")) {

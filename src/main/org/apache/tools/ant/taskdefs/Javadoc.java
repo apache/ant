@@ -1927,9 +1927,9 @@ public class Javadoc extends Task {
                                                                true));
             }
 
-            Enumeration enum = packagesToDoc.elements();
-            while (enum.hasMoreElements()) {
-                String packageName = (String) enum.nextElement();
+            Enumeration e = packagesToDoc.elements();
+            while (e.hasMoreElements()) {
+                String packageName = (String) e.nextElement();
                 if (useExternalFile) {
                     srcListWriter.println(packageName);
                 } else {
@@ -1937,9 +1937,9 @@ public class Javadoc extends Task {
                 }
             }
 
-            enum = sourceFilesToDoc.elements();
-            while (enum.hasMoreElements()) {
-                SourceFile sf = (SourceFile) enum.nextElement();
+            e = sourceFilesToDoc.elements();
+            while (e.hasMoreElements()) {
+                SourceFile sf = (SourceFile) e.nextElement();
                 String sourceFileName = sf.getFile().getAbsolutePath();
                 if (useExternalFile) {
                     if (javadoc4 && sourceFileName.indexOf(" ") > -1) {
@@ -2013,9 +2013,9 @@ public class Javadoc extends Task {
      * @since 1.5
      */
     private void addFileSets(Vector sf) {
-        Enumeration enum = fileSets.elements();
-        while (enum.hasMoreElements()) {
-            FileSet fs = (FileSet) enum.nextElement();
+        Enumeration e = fileSets.elements();
+        while (e.hasMoreElements()) {
+            FileSet fs = (FileSet) e.nextElement();
             if (!fs.hasPatterns() && !fs.hasSelectors()) {
                 fs = (FileSet) fs.clone();
                 fs.createInclude().setName("**/*.java");
@@ -2047,9 +2047,9 @@ public class Javadoc extends Task {
         // and nested excludepackage elements
         if (sourcePath != null && packageNames.size() > 0) {
             PatternSet ps = new PatternSet();
-            Enumeration enum = packageNames.elements();
-            while (enum.hasMoreElements()) {
-                PackageName p = (PackageName) enum.nextElement();
+            Enumeration e = packageNames.elements();
+            while (e.hasMoreElements()) {
+                PackageName p = (PackageName) e.nextElement();
                 String pkg = p.getName().replace('.', '/');
                 if (pkg.endsWith("*")) {
                     pkg += "*";
@@ -2057,9 +2057,9 @@ public class Javadoc extends Task {
                 ps.createInclude().setName(pkg);
             }
 
-            enum = excludePackageNames.elements();
-            while (enum.hasMoreElements()) {
-                PackageName p = (PackageName) enum.nextElement();
+            e = excludePackageNames.elements();
+            while (e.hasMoreElements()) {
+                PackageName p = (PackageName) e.nextElement();
                 String pkg = p.getName().replace('.', '/');
                 if (pkg.endsWith("*")) {
                     pkg += "*";
@@ -2078,9 +2078,9 @@ public class Javadoc extends Task {
             }
         }
 
-        Enumeration enum = dirSets.elements();
-        while (enum.hasMoreElements()) {
-            DirSet ds = (DirSet) enum.nextElement();
+        Enumeration e = dirSets.elements();
+        while (e.hasMoreElements()) {
+            DirSet ds = (DirSet) e.nextElement();
             File baseDir = ds.getDir(getProject());
             log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG);
             DirectoryScanner dsc = ds.getDirectoryScanner(getProject());
