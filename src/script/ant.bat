@@ -87,6 +87,7 @@ echo   to the installation directory of java.
 echo.
 
 :checkJikes
+set ANT_ERROR=no
 if not "%JIKESPATH%" == "" goto runAntWithJikes
 
 :runAnt
@@ -97,14 +98,29 @@ goto end
 "%_JAVACMD%" -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" -Djikes.class.path="%JIKESPATH%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 
 :end
+if errorlevel 1 set ANT_ERROR=yes
 set LOCALCLASSPATH=
 set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
 if not "%OS%"=="Windows_NT" goto mainEnd
+
 :winNTend
+if %ANT_ERROR% == yes goto winNTError
+
+:winNTOK 
 @endlocal
+set ANT_ERROR=no
+goto :mainEnd
+
+:winNTError 
+@endlocal
+set ANT_ERROR=yes
+goto :mainEnd
 
 :mainEnd
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
+if %ANT_ERROR%=="yes" exit 1
+
+ 
 
