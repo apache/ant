@@ -69,8 +69,6 @@ import  org.apache.tools.ant.*;
  */
 public class Input extends Task {
     private String validargs = null;
-    private String exitargs = null;
-    private String exitmessage = "Build abborted.";
     private String message = "";
     private String addproperty = null;
     private String input = null;
@@ -92,31 +90,10 @@ public class Input extends Task {
      * according to property task which means that existing properties
      * cannot be overriden.
      *
-     * @param exitargs Name for the property to be created from input
+     * @param addproperty Name for the property to be created from input
      */
     public void setAddproperty (String addproperty) {
         this.addproperty = addproperty;
-    }
-
-    /*
-     * Defines exit condition parameters as comma separated String. If input
-     * matches one of these input task will end build by throwing a
-     * BuildException. ExitArgs are case sensitive. If you want the build to
-     * end on 'x' and 'X' you need to define both values as exit arguments.
-     *
-     * @param exitargs A comma separated String defining exit arguments.
-     */
-    public void setExitargs (String exitargs) {
-        this.exitargs = exitargs;
-    }
-
-    /**
-     * Sets the ExitMessage which gets displayed when exiting the build run.
-     * Default is 'Build abborted.'
-     * @param exitmessage The exit message to be displayed.
-     */
-    public void setExitmessage (String exitmessage) {
-        this.exitmessage = exitmessage;
     }
 
     /**
@@ -154,14 +131,6 @@ public class Input extends Task {
                 accept.addElement(stok.nextToken());
             }
         }
-        Vector exit = null;
-        if (exitargs != null) {
-            exit = new Vector();
-            StringTokenizer stok = new StringTokenizer(exitargs, ",", false);
-            while (stok.hasMoreTokens()) {
-                exit.addElement(stok.nextToken());
-            }
-        }
         log(message, Project.MSG_WARN);
         if (input == null) {
             try {
@@ -193,9 +162,6 @@ public class Input extends Task {
                 log("Override ignored for " + addproperty, Project.MSG_VERBOSE);
             }
         }
-        if (exit != null && exit.contains(input)) {
-            throw  new BuildException(exitmessage);
-        }
     }
 
     // copied n' pasted from org.apache.tools.ant.taskdefs.Exit
@@ -203,8 +169,7 @@ public class Input extends Task {
      * Set a multiline message.
      */
     public void addText(String msg) {
-        message +=
-            ProjectHelper.replaceProperties(project, msg);
+        message += project.replaceProperties(msg);
     }
 }
 

@@ -88,18 +88,6 @@ public class InputTest extends BuildFileTest {
         }
     }
 
-    public void test4() {
-        String log = "All data is going to be deleted from DB continue (y/n)?";
-        String message = "Build abborted.";
-        try {
-            executeTarget("test4");
-        } catch (org.apache.tools.ant.BuildException e) {
-            String realLog = getLog();
-            assertEquals(log, realLog);
-            assertEquals(message, e.getMessage());
-        }
-    }
-
     public void test5() {
         expectLog("test5",
                 "All data is going to be deleted from DB continue (y/n)?");
@@ -111,8 +99,4 @@ public class InputTest extends BuildFileTest {
         assertEquals("scott", project.getProperty("db.user"));
     }
 
-    public void test7() {
-        expectBuildException("test7",
-                "Don't trust if you don't have the source ;-)");
-    }
 }

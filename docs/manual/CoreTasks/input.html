@@ -18,9 +18,6 @@ or as character data nested into the element.</p>
 <p>Optinonally a set of valid imput arguments can be defined via the validargs
 attribute. Input task will require the user to reenter values until the entered
 value matches one of the predefined.</p>
-<p>Optionally a set of exit arguments can be defined via the exitargs attribute.
-Input task will throw a BuildException with a customisable exit message if the
-entered value matches one of the predefined.</p>
 <p>Optionally a property can be created from the value entered by the user. This
 property can then be used during the following build run. Input behaves according
 to <a href="property.html">property task</a> which means that existing properties
@@ -38,26 +35,12 @@ cannot be overriden.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td valign="top">exitmessage</td>
-    <td valign="top">the exit message which gets displayed when exiting the build run.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
     <td valign="top">validargs</td>
     <td valign="top">comma separated String containing valid input arguments. If set,
 	    input task will reject any input not defined here and input task will
 		require the user to reenter arguments until the entered one matches one of the
 		predefined. Validargs are compared case sensitive. If you want 'a' and 'A' to
     	be accepted you will need to define both arguments within validargs.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">exitargs</td>
-    <td valign="top">comma separated String containing exit arguments. If set,
-	    input task will throw a BuildException with a customisable exit message if the
-		entered value matches to one of the predefined. Exitargs are compared case
-		sensitive. If you want 'x' and 'X' to end the build run you will need to define
-		both arguments within exitargs.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -79,12 +62,17 @@ the build run until return key is pressed.</p>
   /&gt;</pre>
 <p>Will display the message &quot;Press Return key to continue...&quot; and pause
 the build run until return key is pressed.</p>
-<pre>  &lt;input
+<pre>
+  &lt;input
     message=&quot;All data is going to be deleted from DB continue (y/n)?&quot;
     validargs=&quot;y,n&quot;
-    exitargs=&quot;n&quot;
-    exitmessage=&quot;Build abborted by user.&quot;
-  /&gt;</pre>
+    addproperty=&quot;do.delete&quot;
+  /&gt;
+  &lt;condition propert=&quot;do.abort&quot;&gt;
+    &lt;equals arg1=&quot;n&quot; arg2=&quot;${do.delete}&quot; /&gt;
+  &lt;/condition&gt;
+  &lt;fail if=&quot;do.abort&quot;&gt;Build abborted by user.&lt;/fail&gt;
+</pre>
 <p>Will display the message &quot;All data is going to be deleted from DB continue
 (y/n)?&quot; and require 'y+retrun key' to continue build or 'n+return key'
 to exit build with following message &quot;Build abborted by user.&quot;.</p>

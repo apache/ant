@@ -16,15 +16,6 @@
     <input testinput="test"
            message="All data is going to be deleted from DB continue (y/n)?"
            validargs="y,n"
-           exitargs="n"
-           />
-  </target>
-
-  <target name="test4">
-    <input testinput="n"
-           message="All data is going to be deleted from DB continue (y/n)?"
-           validargs="y,n"
-           exitargs="n"
            />
   </target>
 
@@ -32,7 +23,6 @@
     <input testinput="y"
            message="All data is going to be deleted from DB continue (y/n)?"
            validargs="y,n"
-           exitargs="n"
            />
   </target>
 
@@ -43,13 +33,4 @@
            />
   </target>
 
-  <target name="test7">
-    <input testinput="R"
-           message="Press 'R' to make you very rich!"
-           validargs="R"
-           exitargs="R"
-           exitmessage="Don't trust if you don't have the source ;-)"
-           />
-  </target>
-  
 </project>
