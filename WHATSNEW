@@ -143,6 +143,10 @@ Fixed bugs:
 * <replaceregexp> didn't work for multi-byte encodings if byline was false.
   Bugzilla Report 19187.
 
+* <replaceregexp> was altering unnecessarily the timestamp of the directories
+  containing the files to process
+  Bugzilla Report 22541.
+
 * file names that include spaces need to be quoted inside the @argfile
   argument using forked <javac> and (all JDKS).  Bugzilla Report 10499.
   NB : a first correction was only introducing quotes for JDK 1.4

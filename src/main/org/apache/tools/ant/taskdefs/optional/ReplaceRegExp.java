@@ -317,8 +317,7 @@ public class ReplaceRegExp extends Task {
     /** Perform the replace on the entire file  */
     protected void doReplace(File f, int options)
          throws IOException {
-        File parentDir = fileUtils.getParentFile(f);
-        File temp = fileUtils.createTempFile("replace", ".txt", parentDir);
+        File temp = fileUtils.createTempFile("replace", ".txt", null);
 
         Reader r = null;
         FileWriter w = null;
