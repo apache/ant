@@ -9,12 +9,11 @@
 
 <body>
 
-  <section name="Ant 1.4 Beta">
-  <h3>Ant 1.4 Beta Available !</h3>
-  <p>The beta version of Ant 1.4 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.4Beta2/">
-     download</a>. If you have any feedback on the beta feel free to join the 
-     discussion on the ant-dev and ant-user mailing lists.
+  <section name="Ant 1.4">
+  <h3>Ant 1.4 Available !</h3>
+  <p>The Ant 1.4 release is now available for 
+     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.4/">
+     download</a>.
      </p>
   </section>
 
