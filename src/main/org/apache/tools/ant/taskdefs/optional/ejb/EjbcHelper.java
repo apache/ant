@@ -256,7 +256,7 @@ public class EjbcHelper {
             else {
                 System.out.println(descriptorFile.getName() + " is up to date");
             }
-            manifest += "Name: " + descriptorFile.getName() + "\nEnterprise-Bean: True\n\n";
+            manifest += "Name: " + descriptorName.replace('\\', '/') + "\nEnterprise-Bean: True\n\n";
         }
         
         FileWriter fw = new FileWriter(manifestFile);
