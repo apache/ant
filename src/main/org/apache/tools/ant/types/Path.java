@@ -457,9 +457,13 @@ public class Path extends DataType implements Cloneable {
      * Return a Path that holds the same elements as this instance.
      */
     public Object clone() {
-        Path p = new Path(getProject());
-        p.append(this);
-        return p;
+        try {
+            Path p = (Path) super.clone();
+            p.elements = (Vector) elements.clone();
+            return p;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
     }
 
     /**

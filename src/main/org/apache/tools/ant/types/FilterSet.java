@@ -487,9 +487,16 @@ public class FilterSet extends DataType implements Cloneable {
 
     public Object clone() throws BuildException {
         if (isReference()) {
-            return new FilterSet(getRef());
+            return ((FilterSet) getRef()).clone();
         } else {
-            return new FilterSet(this);
+            try {
+                FilterSet fs = (FilterSet) super.clone();
+                fs.filters = (Vector) getFilters().clone();
+                fs.setProject(getProject());
+                return fs;
+            } catch (CloneNotSupportedException e) {
+                throw new BuildException(e);
+            }
         }
     }
 

@@ -440,20 +440,21 @@ public class CommandlineJava implements Cloneable {
      * @return a CommandlineJava object
      */
     public Object clone() {
-        CommandlineJava c = new CommandlineJava();
-        c.vmCommand = (Commandline) vmCommand.clone();
-        c.javaCommand = (Commandline) javaCommand.clone();
-        c.sysProperties = (SysProperties) sysProperties.clone();
-        c.maxMemory = maxMemory;
-        if (classpath != null) {
-            c.classpath = (Path) classpath.clone();
+        try {
+            CommandlineJava c = (CommandlineJava) super.clone();
+            c.vmCommand = (Commandline) vmCommand.clone();
+            c.javaCommand = (Commandline) javaCommand.clone();
+            c.sysProperties = (SysProperties) sysProperties.clone();
+            if (classpath != null) {
+                c.classpath = (Path) classpath.clone();
+            }
+            if (bootclasspath != null) {
+                c.bootclasspath = (Path) bootclasspath.clone();
+            }
+            return c;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
         }
-        if (bootclasspath != null) {
-            c.bootclasspath = (Path) bootclasspath.clone();
-        }
-        c.vmVersion = vmVersion;
-        c.executeJar = executeJar;
-        return c;
     }
 
     /**

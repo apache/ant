@@ -668,4 +668,17 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         return sb.toString();
     }
 
+    /**
+     * @since Ant 1.6
+     */
+    public Object clone() {
+        try {
+            AbstractFileSet fs = (AbstractFileSet) super.clone();
+            fs.setProject(getProject());
+            return fs;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
+    }
+
 }

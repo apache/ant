@@ -310,9 +310,9 @@ public class ZipFileSet extends FileSet {
      */
     public Object clone() {
         if (isReference()) {
-            return new ZipFileSet((ZipFileSet) getRef(getProject()));
+            return ((ZipFileSet) getRef(getProject())).clone();
         } else {
-            return new ZipFileSet(this);
+            return super.clone();
         }
     }
 }

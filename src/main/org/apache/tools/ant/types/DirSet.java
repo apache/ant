@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,9 +76,9 @@ public class DirSet extends AbstractFileSet {
      */
     public Object clone() {
         if (isReference()) {
-            return new DirSet((DirSet) getRef(getProject()));
+            return ((DirSet) getRef(getProject())).clone();
         } else {
-            return new DirSet(this);
+            return super.clone();
         }
     }
 

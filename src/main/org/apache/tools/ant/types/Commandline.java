@@ -427,10 +427,13 @@ public class Commandline implements Cloneable {
     }
 
     public Object clone() {
-        Commandline c = new Commandline();
-        c.setExecutable(executable);
-        c.addArguments(getArguments());
-        return c;
+        try {
+            Commandline c = (Commandline) super.clone();
+            c.arguments = (Vector) arguments.clone();
+            return c;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
     }
 
     /**
