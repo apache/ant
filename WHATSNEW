@@ -128,6 +128,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* doc fix concerning the dependencies of the ftp task
+  Bugzilla Report 29334.
+
 * <xmlvalidate> has now a property nested element,
   allowing to set string properties for the parser
   Bugzilla Report 23395.

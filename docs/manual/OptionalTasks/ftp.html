@@ -14,8 +14,10 @@ list, delete files, and create directories.  See below for descriptions and exam
 to perform each task.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
 See <a href="../install.html#commons-net">Library Dependencies</a> for more information.</p>
-<p>The ftp task makes no attempt to determine what file system syntax is
-required by the remote server, and defaults to Unix standards.
+<p>The ftp task attempts to determine what file system is in place on the FTP server.
+Supported server types are Unix, NT, OS2, VMS, and OS400.  In addition, NT and OS400 servers
+which have been configured to display the directory in Unix style are also supported correctly.
+Otherwise, the system will default to Unix standards.
 <i>remotedir</i> must be specified in the exact syntax required by the ftp
 server. If the usual Unix conventions are not supported by the server,
 <i>separator</i> can be used to set the file separator that should be used
