@@ -59,12 +59,12 @@ import java.io.File;
 import org.apache.tools.ant.types.Parameterizable;
 
 /**
- * This is the interface to be used by all dynamic selectors, those that are
+ * This is the interface to be used by all custom selectors, those that are
  * called through the &lt;custom&gt; tag. It is the amalgamation of two
  * interfaces, the FileSelector and the Paramterizable interface. Note that
  * you will almost certainly want the default behaviour for handling
  * Parameters, so you probably want to use the BaseExtendSelector class
- * as the base class for your dynamic selector rather than implementing
+ * as the base class for your custom selector rather than implementing
  * this interface from scratch.
  *
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>

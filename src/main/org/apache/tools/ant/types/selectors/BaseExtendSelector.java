@@ -83,7 +83,7 @@ public abstract class BaseExtendSelector extends BaseSelector implements
     }
 
     /**
-     * Set all the Parameters for this dynamic selector, collected by
+     * Set all the Parameters for this custom selector, collected by
      * the ExtendSelector class.
      *
      * @param parameters the complete set of parameters for this selector

@@ -140,7 +140,7 @@
             <li>after - select files whose last modified date is after the indicated date
             <li>equal - select files  whose last modified date is this exact date
           </ul>
-          The default is before.
+          The default is equal.
         <td valign="top" align="center">No</td>
       </tr>
     </table>
@@ -401,7 +401,7 @@
             <li>more - select files greater than the indicated size
             <li>equal - select files this exact size
           </ul>
-          The default is less.
+          The default is equal.
         <td valign="top" align="center">No</td>
       </tr>
     </table>
@@ -607,7 +607,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the files in the top directory along with all the 
+    <p>Selects all the files in the top directory along with all the
     image files below it.
     </p>
 
@@ -645,7 +645,7 @@
             &lt;/fileset&gt;
         &lt;/zip&gt;
     &lt;/target&gt;
-    
+
 &lt;/project&gt;
 </pre></blockquote>
 
@@ -658,13 +658,13 @@
     <a name="customselect"></a>
     <h3>Custom Selectors</h3>
 
-    <p>You can write your own selectors and use them within the selector 
+    <p>You can write your own selectors and use them within the selector
     containers by specifying them within the &lt;custom&gt; tag.</p>
 
     <p>First, you have to write your selector class in Java. The only
     requirement it must meet in order to be a selector is that it implements
     the <code>org.apache.tools.ant.types.selectors.FileSelector</code>
-    interface, which contains a single method. See 
+    interface, which contains a single method. See
     <a href="selectors-program.html">Programming Selectors in Ant</a> for
     more information.</p>
 

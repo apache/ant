@@ -71,7 +71,7 @@ public class SizeSelector extends BaseExtendSelector {
     private long size = -1;
     private long multiplier = 1;
     private long sizelimit = -1;
-    private int cmp = 0;
+    private int cmp = 2;
     public final static String SIZE_KEY = "value";
     public final static String UNITS_KEY = "units";
     public final static String WHEN_KEY = "when";
@@ -179,7 +179,7 @@ public class SizeSelector extends BaseExtendSelector {
     }
 
     /**
-     * When using this as a dynamic selector, this method will be called.
+     * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
      * @param parameters the complete set of parameters for this selector

@@ -74,7 +74,7 @@ public class DateSelector extends BaseExtendSelector {
     private long millis = -1;
     private String dateTime = null;
     private boolean includeDirs = false;
-    private int cmp = 0;
+    private int cmp = 2;
     public final static String MILLIS_KEY = "millis";
     public final static String DATETIME_KEY = "datetime";
     public final static String CHECKDIRS_KEY = "checkdirs";
@@ -157,7 +157,7 @@ public class DateSelector extends BaseExtendSelector {
     }
 
     /**
-     * When using this as a dynamic selector, this method will be called.
+     * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
      * @param parameters the complete set of parameters for this selector
