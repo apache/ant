@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,6 +71,7 @@ import org.apache.tools.ant.Task;
 
 public class Mkdir extends Task {
 
+    private static final int MKDIR_RETRY_SLEEP_MILLIS = 10;
     /**
      * our little directory
      */
@@ -92,7 +93,7 @@ public class Mkdir extends Task {
         }
 
         if (!dir.exists()) {
-            boolean result = dir.mkdirs();
+            boolean result = mkdirs(dir);
             if (!result) {
                 String msg = "Directory " + dir.getAbsolutePath()
                     + " creation was not successful for an unknown reason";
@@ -109,6 +110,22 @@ public class Mkdir extends Task {
      */
     public void setDir(File dir) {
         this.dir = dir;
+    }
+    /**
+     * Attempt to fix possible race condition when creating
+     * directories on WinXP. If the mkdirs does not work,
+     * wait a little and try again.
+     */
+    private boolean mkdirs(File f) {
+        if (!f.mkdirs()) {
+            try {
+                Thread.sleep(MKDIR_RETRY_SLEEP_MILLIS);
+                return f.mkdirs();
+            } catch (InterruptedException ex) {
+                return f.mkdirs();
+            }
+        }
+        return true;
     }
 }
 
