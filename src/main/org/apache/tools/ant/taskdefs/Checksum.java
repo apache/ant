@@ -398,7 +398,8 @@ public class Checksum extends MatchingTask implements Condition {
                 if (destination instanceof java.lang.String) {
                     String prop = (String) destination;
                     if (isCondition) {
-                        checksumMatches = checksum.equals(property);
+                        checksumMatches = checksumMatches &&
+                            checksum.equals(property);
                     } else {
                         project.setNewProperty(prop, checksum);
                     }
@@ -414,7 +415,7 @@ public class Checksum extends MatchingTask implements Condition {
                             fis = null;
                             br.close();
                             isr.close();
-                            checksumMatches =
+                            checksumMatches = checksumMatches &&
                                 checksum.equals(suppliedChecksum);
                         } else {
                             checksumMatches = false;

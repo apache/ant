@@ -1,9 +1,12 @@
 
-Changes from Ant 1.5 to current CVS version
-===========================================
+Changes from Ant 1.5 to current 1.5Beta1
+========================================
 
 Fixed bugs:
 -----------
+* Checksum was broken in the following scenario: 
+  (using verifyproperty OR in a condition) AND using filesets 
+  with multiple files.
 
 * The ExpandProperties filter threw NPEs when defined using
   the <filterreader> format.
