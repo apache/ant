@@ -80,6 +80,7 @@ import org.apache.tools.ant.util.CollectionUtils;
  * greater than 72 bytes being wrapped and continued on the next
  * line. If an application can not handle the continuation mechanism, it
  * is a defect in the application, not this task.
+ *
  * @author Conor MacNeill
  * @author Stefan Bodewig
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
@@ -102,7 +103,7 @@ public class Manifest {
     public static final String ATTRIBUTE_FROM = "From";
 
     /** The Class-Path Header is special - it can be duplicated */
-    public static final String ATTRIBUTE_CLASSPATH = "class-path";
+    public static final String ATTRIBUTE_CLASSPATH = "Class-Path";
 
     /** Default Manifest version if one is not specified */
     public static final  String DEFAULT_MANIFEST_VERSION = "1.0";
@@ -463,7 +464,7 @@ public class Manifest {
             while (e.hasMoreElements()) {
                 String attributeName = (String) e.nextElement();
                 Attribute attribute = section.getAttribute(attributeName);
-                if (attributeName.equals(ATTRIBUTE_CLASSPATH)) {
+                if (attributeName.equalsIgnoreCase(ATTRIBUTE_CLASSPATH)) {
                     if (classpathAttribute == null) {
                         classpathAttribute = new Attribute();
                         classpathAttribute.setName(ATTRIBUTE_CLASSPATH);
@@ -609,7 +610,7 @@ public class Manifest {
             } else {
                 // classpath attributes go into a vector
                 String attributeKey = attribute.getKey();
-                if (attributeKey.equals(ATTRIBUTE_CLASSPATH)) {
+                if (attributeKey.equalsIgnoreCase(ATTRIBUTE_CLASSPATH)) {
                     Attribute classpathAttribute =
                         (Attribute) attributes.get(attributeKey);
 
