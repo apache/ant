@@ -28,13 +28,18 @@ public class Ant {
     /**
      *
      */
-    private Vector taskPathNodes = new Vector();
+    private File buildfile;
+    
+    /**
+     * Manager of tasks.
+     */
+    private TaskManager taskManager = new TaskManager();
     
     /**
      *
      */
-    private File buildfile;
-    
+    private Vector taskPathNodes = new Vector();
+
     /**
      *
      */
@@ -61,18 +66,13 @@ public class Ant {
      */   
     public void addTaskPathNode(File node) {
         taskPathNodes.insertElementAt(node, 0);
+        taskManager.addTaskPathNode(node);
     }
     
     /**
      *
      */
     public void buildTarget(String targetName) throws AntException {
-    
-        try {
-            loadTasks();
-        } catch (IOException ioe) {
-            throw new AntException(ioe.getMessage());
-        }
         
         Target target = project.getTarget(targetName);
         
@@ -81,24 +81,18 @@ public class Ant {
         Enumeration enum = target.getTasks().elements();
         while (enum.hasMoreElements()) {
             Task task = (Task)enum.nextElement();
-            Object o = abstractTaskClasses.get(task.getType());
-            if (o != null) {
-                Class c = (Class)o;
-                try {
-                    AbstractTask aTask = (AbstractTask)c.newInstance();
-                    aTask.setAttributes(task.getAttributes());
-                    aTask.setProject(project);
-                    boolean b = aTask.execute();
-                    if (!b) {
-                        throw new AntException("STOP: Task " + task + 
-                                               " did not succeed");
-                    }
-                } catch (Exception e) {
-                    // XXX yes yes yes, this shouldn't be a catch all...
-                    throw new AntException("ERR: " + e);
+            AbstractTask aTask = taskManager.getTaskInstance(task.getType());
+            try {
+                aTask.setProject(project);
+                aTask.setAttributes(task.getAttributes());
+                boolean b = aTask.execute();
+                if (!b) {
+                    throw new AntException("STOP: Task " + task + 
+                                            " did not succeed");
                 }
-            } else {
-                throw new AntException("Don't have a class for task type: " + task);
+            } catch (Exception e) {
+                // XXX yes yes yes, this shouldn't be a catch all...
+                throw new AntException("ERR: " + e);
             }
         }
     }
@@ -148,53 +142,6 @@ public class Ant {
     // ----------------------------------------------------------------- 
     
     /**
-     * Searches through the taskpath and loads up the taskImpl hashtable
-     *
-     * XXX we also need to lookup a taskdef.properties file out of a few
-     * strategic locations on disk to allow generic classes to be pulled
-     * from the classpath
-     */
-    private void loadTasks() throws IOException {
-        Enumeration enum = taskPathNodes.elements();
-        while (enum.hasMoreElements()) {
-            File dir = (File)enum.nextElement();
-            String[] files = dir.list();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].endsWith(".jar")) {
-                    File f = new File(dir, files[i]);
-                    ZipFile zf = new ZipFile(f);
-                    ZipEntry ze = zf.getEntry("/taskdef.properties");
-                    if (ze != null) {
-                        InputStream is = zf.getInputStream(ze);
-                        Properties props = new Properties();
-                        props.load(is);
-                        is.close();
-                        //System.out.println("Props: " + props);
-                        String s = props.getProperty("tasks");
-                        StringTokenizer tok = new StringTokenizer(s, ",", false);
-                        while (tok.hasMoreTokens()) {
-                            String taskType = tok.nextToken();
-                            String taskClassName = props.getProperty(taskType + 
-                                                                     ".class");
-                            //System.out.println("TASK: " + taskType + " class: " +
-                            //                taskClassName);
-                            ClassLoader pcl = this.getClass().getClassLoader();
-                            TaskClassLoader tcl = new TaskClassLoader(pcl, zf);
-                            try {
-                                Class clazz = tcl.findClass(taskClassName);
-                                abstractTaskClasses.put(taskType, clazz);
-                            } catch (ClassNotFoundException cnfe) {
-                                System.out.println(cnfe);
-                                System.out.println(cnfe.getMessage());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Sets up the taskpath based on the currently running operating
      * system. In general, the ordering of the taskpath is: user directory,
      * system directory, and then installation. This allows users or
@@ -211,13 +158,13 @@ public class Ant {
         // generic unix
         f = new File(userHome + ".ant", "tasks");
         if (f.exists() && f.isDirectory()) {
-            taskPathNodes.addElement(f);
+            taskManager.addTaskPathNode(f);
         }
         
         // macos x
         f = new File(userHome + "/Library/Ant", "Tasks");
         if (f.exists() && f.isDirectory()) {
-            taskPathNodes.addElement(f);
+            taskManager.addTaskPathNode(f);
         }
         
         // windows -- todo
@@ -227,13 +174,13 @@ public class Ant {
         // generic unix
         f = new File("/usr/local/ant/tasks");
         if (f.exists() && f.isDirectory()) {
-            taskPathNodes.addElement(f);
+            taskManager.addTaskPathNode(f);
         }
         
         // macos x
         f = new File("/Library/Ant/Tasks");
         if (f.exists() && f.isDirectory()) {
-            taskPathNodes.addElement(f);
+            taskManager.addTaskPathNode(f);
         }
         
         // windows -- todo

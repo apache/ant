@@ -4,6 +4,7 @@
 
 import java.io.*;
 import java.util.*;
+import java.util.jar.*;
 import java.util.zip.*;
 
 /**
@@ -161,31 +162,46 @@ public class Bootstrap2 {
     private static void jarDir(File dir, File jarfile) throws IOException {
         String[] files = dir.list();
         if (files.length > 0) {
-            System.out.println("Jaring: " + jarfile);
+            System.out.println("Jaring: " + jarfile);        
+            
             FileOutputStream fos = new FileOutputStream(jarfile);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            jarDir(dir, "", zos);
-            zos.close();      
+            JarOutputStream jos = new JarOutputStream(fos, new Manifest());
+            jarDir(dir, "", jos);
+            jos.close();      
         }
     }
     
-    private static void jarDir(File dir, String prefix, ZipOutputStream zos) throws 
+    private static void jarDir(File dir, String prefix, JarOutputStream jos) throws 
         IOException 
     {
         String[] files = dir.list();
         for (int i = 0; i < files.length; i++) {
             File f = new File(dir, files[i]);
             if (f.isDirectory()) {
-                jarDir(f, prefix + "/" + files[i], zos);
+                String zipEntryName;
+                if (!prefix.equals("")) {
+                    zipEntryName = prefix + "/" + files[i];
+                } else {
+                    zipEntryName = files[i];
+                }
+                ZipEntry ze = new ZipEntry(zipEntryName);
+                jos.putNextEntry(ze);
+                jarDir(f, zipEntryName, jos);
             } else {
-                ZipEntry ze = new ZipEntry(prefix + "/" + files[i]);
-                zos.putNextEntry(ze);
+                String zipEntryName;
+                if (!prefix.equals("")) {
+                    zipEntryName = prefix + "/" + files[i];
+                } else {
+                    zipEntryName = files[i];
+                }
+                ZipEntry ze = new ZipEntry(zipEntryName);
+                jos.putNextEntry(ze);
                 FileInputStream fis = new FileInputStream(f);
                 int count = 0;
                 byte[] buf = new byte[8 * 1024];
                 count = fis.read(buf, 0, buf.length);
                 while (count != -1) {
-                    zos.write(buf, 0, count);
+                    jos.write(buf, 0, count);
                     count = fis.read(buf, 0, buf.length);
                 }
                 fis.close();
