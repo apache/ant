@@ -80,7 +80,6 @@ import org.apache.tools.ant.UnknownElement;
 public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
     private UnknownElement nestedTask;
     private String         name;
-    private String         componentName;
     private String         uri;
 
     /**

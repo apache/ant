@@ -418,58 +418,31 @@ public class EchoProperties extends Task {
     /**
      *  JDK 1.2 allows for the safer method
      *  <tt>Properties.store(OutputStream, String)</tt>, which throws an
-     *  <tt>IOException</tt> on an output error.  This method attempts to
-     *  use the JDK 1.2 method first, and if that does not exist, then the
-     *  JDK 1.0 compatible method
-     *  <tt>Properties.save(OutputStream, String)</tt> is used instead.
+     *  <tt>IOException</tt> on an output error. 
      *
      *@param props the properties to record
      *@param os record the properties to this output stream
      *@param header prepend this header to the property output
-     *@exception IOException on an I/O error during a write.  Only thrown
-     *      for JDK 1.2+.
+     *@exception IOException on an I/O error during a write.  
      */
     protected void jdkSaveProperties(Properties props, OutputStream os,
                                      String header) throws IOException {
-        try {
-            java.lang.reflect.Method m = props.getClass().getMethod(
-                "store", new Class[]{OutputStream.class, String.class});
-            m.invoke(props, new Object[]{os, header});
-        } catch (java.lang.reflect.InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            if (t instanceof IOException) {
-                throw (IOException) t;
-            }
-            if (t instanceof RuntimeException) {
-                throw (RuntimeException) t;
-            }
+       try {
+           props.store(os, header);
 
-            // not an expected exception.  Resort to JDK 1.0 to execute
-            // this method
-            jdk10SaveProperties(props, os, header);
-        } catch (ThreadDeath td) {
-            // don't trap thread death errors.
-            throw td;
-        } catch (Throwable ex) {
-            // this 'store' method is not available, so resort to the JDK 1.0
-            // compatible method.
-            jdk10SaveProperties(props, os, header);
-        }
+       } catch (IOException ioe) {
+           throw new BuildException(ioe, getLocation());
+       } finally {
+           if (os != null) {
+               try {
+                   os.close();
+               } catch (IOException ioex) {
+                   log("Failed to close output stream");
+               }
+           }
+       }
     }
 
-
-    /**
-     * Save the properties to the output stream using the JDK 1.0 compatible
-     * method.  This won't throw an <tt>IOException</tt> on an output error.
-     *
-     *@param props the properties to record
-     *@param os record the properties to this output stream
-     *@param header prepend this header to the property output
-     */
-    protected void jdk10SaveProperties(Properties props, OutputStream os,
-                                       String header) {
-        props.save(os, header);
-    }
 
     /**
      * Uses the DocumentBuilderFactory to get a DocumentBuilder instance.

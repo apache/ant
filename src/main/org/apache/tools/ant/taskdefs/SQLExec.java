@@ -358,19 +358,19 @@ public class SQLExec extends JDBCTask {
                 if (transactions.size() == 0) {
                     throw new BuildException("Source file or fileset, "
                                              + "transactions or sql statement "
-                                             + "must be set!", location);
+                                             + "must be set!", getLocation());
                 }
             }
 
             if (srcFile != null && !srcFile.exists()) {
-                throw new BuildException("Source file does not exist!", location);
+                throw new BuildException("Source file does not exist!", getLocation());
             }
 
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                File srcDir = fs.getDir(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                File srcDir = fs.getDir(getProject());
 
                 String[] srcFiles = ds.getIncludedFiles();
 
@@ -428,7 +428,7 @@ public class SQLExec extends JDBCTask {
                         // ignore
                     }
                 }
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             } catch (SQLException e) {
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
@@ -437,7 +437,7 @@ public class SQLExec extends JDBCTask {
                         // ignore
                     }
                 }
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             } finally {
                 try {
                     if (statement != null) {
@@ -473,7 +473,7 @@ public class SQLExec extends JDBCTask {
             if (!keepformat) {
                 line = line.trim();
             }
-            line = project.replaceProperties(line);
+            line = getProject().replaceProperties(line);
             if (!keepformat) {
                 if (line.startsWith("//")) {
                     continue;

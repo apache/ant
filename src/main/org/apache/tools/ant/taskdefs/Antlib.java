@@ -123,7 +123,6 @@ public class Antlib extends Task implements TaskContainer {
     // Instance
     //
     private ClassLoader classLoader;
-    private String      prefix;
     private String      uri = "";
     private List  tasks = new ArrayList();
 

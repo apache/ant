@@ -437,9 +437,8 @@ public class FixCRLF extends MatchingTask {
                     } // end of try-catch
 
                 } else { // (tabs != ASIS)
-                    int ptr;
-
-                    while ((ptr = line.getNext()) < linelen) {
+                   
+                    while (line.getNext() < linelen) {
 
                         switch (lines.getState()) {
 

@@ -136,7 +136,7 @@ public class RegexpMatcherFactory {
 
     protected void testAvailability(String className) throws BuildException {
         try {
-            Class implClass = Class.forName(className);
+            Class.forName(className);
         } catch (Throwable t) {
             throw new BuildException(t);
         }

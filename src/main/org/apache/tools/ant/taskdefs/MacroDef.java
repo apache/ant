@@ -79,7 +79,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     private UnknownElement nestedTask;
     private String     name;
-    private String     componentName;
     private List       attributes = new ArrayList();
     private Map        elements = new HashMap();
     private String     uri;

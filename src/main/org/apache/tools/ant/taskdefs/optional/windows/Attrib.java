@@ -124,7 +124,7 @@ public class Attrib extends ExecuteOn {
      * @ant.attribute ignore="true"
      */
     public void setExecutable(String e) {
-        throw new BuildException(taskType
+        throw new BuildException(getTaskType()
             + " doesn\'t support the executable attribute", getLocation());
     }
 
@@ -132,7 +132,7 @@ public class Attrib extends ExecuteOn {
      * @ant.attribute ignore="true"
      */
     public void setCommand(String e) {
-        throw new BuildException(taskType
+        throw new BuildException(getTaskType()
             + " doesn\'t support the command attribute", getLocation());
     }
 
@@ -148,7 +148,7 @@ public class Attrib extends ExecuteOn {
      * @ant.attribute ignore="true"
      */
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(taskType + " doesn\'t support the "
+        throw new BuildException(getTaskType() + " doesn\'t support the "
                                  + "skipemptyfileset attribute",
                                  getLocation());
     }

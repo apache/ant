@@ -340,10 +340,12 @@ public class JJTree extends Task {
         return (outputDirectory + "/" + optionalOutputFile).replace('\\', '/');
     }
 
+ /*   
+  * Not used anymore
     private boolean isAbsolute(String fileName) {
         return (fileName.startsWith("/") || (new File(fileName).isAbsolute()));
     }
-
+*/
     /**
      * When running JJTree from an Ant taskdesk the -OUTPUT_DIRECTORY must
      * always be set. But when -OUTPUT_DIRECTORY is set, -OUTPUT_FILE is

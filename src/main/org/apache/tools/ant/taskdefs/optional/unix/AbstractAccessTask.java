@@ -107,7 +107,7 @@ public abstract class AbstractAccessTask
      * @param cmdl A user supplied command line that we won't accept.
      */
     public void setCommand(Commandline cmdl) {
-        throw new BuildException(taskType
+        throw new BuildException(getTaskType()
                                  + " doesn\'t support the command attribute",
                                  getLocation());
     }
@@ -119,7 +119,7 @@ public abstract class AbstractAccessTask
      * @param skip A user supplied boolean we won't accept.
      */
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(taskType + " doesn\'t support the "
+        throw new BuildException(getTaskType() + " doesn\'t support the "
                                  + "skipemptyfileset attribute",
                                  getLocation());
     }

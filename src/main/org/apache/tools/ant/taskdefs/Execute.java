@@ -677,7 +677,7 @@ public class Execute {
         throws IOException {
         HashMap logicals = new HashMap();
         String logName = null, logValue = null, newLogName;
-        String line, lineSep = System.getProperty("line.separator");
+        String line = null;
         while ((line = in.readLine()) != null) {
             // parse the VMS logicals into required format ("VAR=VAL[,VAL2]")
             if (line.startsWith("\t=")) {

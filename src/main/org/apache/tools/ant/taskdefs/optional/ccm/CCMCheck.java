@@ -172,10 +172,10 @@ public class CCMCheck extends Continuus {
         int sizeofFileSet = filesets.size();
         for (int i = 0; i < sizeofFileSet; i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] srcFiles = ds.getIncludedFiles();
             for (int j = 0; j < srcFiles.length; j++) {
-                File src = new File(fs.getDir(project), srcFiles[j]);
+                File src = new File(fs.getDir(getProject()), srcFiles[j]);
                 setFile(src);
                 doit();
             }

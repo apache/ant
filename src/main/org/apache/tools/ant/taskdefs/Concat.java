@@ -780,7 +780,6 @@ public class Concat extends Task {
             throws IOException {
 
             int amountRead = 0;
-            int iOff = off;
             while (pos < sourceFiles.size() || (needAddSeparator)) {
                 if (needAddSeparator) {
                     cbuf[off] = eolString.charAt(lastPos++);

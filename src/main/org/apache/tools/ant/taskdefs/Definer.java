@@ -89,7 +89,6 @@ public abstract class Definer extends DefBase {
 
     private   int    format = Format.PROPERTIES;
     private   boolean definerSet = false;
-    private   ClassLoader internalClassLoader;
     private   int         onError = OnError.FAIL;
     private   String      adapter;
     private   String      adaptTo;

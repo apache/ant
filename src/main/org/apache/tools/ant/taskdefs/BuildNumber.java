@@ -126,7 +126,7 @@ public class BuildNumber
 
             final String header = "Build Number for ANT. Do not edit!";
 
-            properties.save(output, header);
+            properties.store(output, header);
         } catch (final IOException ioe) {
             final String message = "Error while writing " + myFile;
 

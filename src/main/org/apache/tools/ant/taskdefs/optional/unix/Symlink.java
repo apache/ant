@@ -67,19 +67,14 @@ package org.apache.tools.ant.taskdefs.optional.unix;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 
 import java.util.Vector;
 import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Hashtable;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
@@ -457,13 +452,10 @@ public class Symlink extends Task {
     /**
      * Writes a properties file.
      *
-     * In jdk 1.2+ this method will use <code>Properties.store</code>
+     * This method use <code>Properties.store</code>
      * and thus report exceptions that occur while writing the file.
-     * In jdk 1.1 we are forced to use <code>Properties.save</code>
-     * and therefore all exceptions are masked. This method was lifted
-     * directly from the Proertyfile task with only slight editing.
-     * sticking something like this in FileUtils might  be
-     * a good idea to avoid duplication.
+     * 
+     * This is not jdk 1.1 compatible, but ant 1.6 is not anymore.
      *
      * @param properties     The properties object to be written.
      * @param propertyfile   The File to write to.
@@ -475,32 +467,17 @@ public class Symlink extends Task {
                                    String comment)
         throws BuildException {
 
-        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
         try {
-            bos = new BufferedOutputStream(new FileOutputStream(propertyfile));
+            fos = new FileOutputStream(propertyfile);
+            properties.store(fos, comment);
 
-            // Properties.store is not available in JDK 1.1
-            Method m =
-                Properties.class.getMethod("store",
-                                           new Class[] {
-                                               OutputStream.class,
-                                               String.class});
-            m.invoke(properties, new Object[] {bos, comment});
-
-        } catch (NoSuchMethodException nsme) {
-            properties.save(bos, comment);
-        } catch (InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            throw new BuildException(t, location);
-        } catch (IllegalAccessException iae) {
-            // impossible
-            throw new BuildException(iae, location);
         } catch (IOException ioe) {
-            throw new BuildException(ioe, location);
+            throw new BuildException(ioe, getLocation());
         } finally {
-            if (bos != null) {
+            if (fos != null) {
                 try {
-                    bos.close();
+                    fos.close();
                 } catch (IOException ioex) {
                     log("Failed to close output stream");
                 }

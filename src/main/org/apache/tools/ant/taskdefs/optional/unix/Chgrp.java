@@ -116,7 +116,7 @@ public class Chgrp extends AbstractAccessTask {
      * @param e User supplied executable that we won't accept.
      */
     public void setExecutable(String e) {
-        throw new BuildException(taskType
+        throw new BuildException(getTaskType()
                                  + " doesn\'t support the executable"
                                  + " attribute", getLocation());
     }

@@ -80,7 +80,6 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
-import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.launch.Locator;

@@ -153,7 +153,7 @@ public class Classloader extends Task {
      *  the path will be added to the loader.
      */
     public void setClasspathRef(Reference pathRef) throws BuildException {
-        classpath = (Path) pathRef.getReferencedObject(project);
+        classpath = (Path) pathRef.getReferencedObject(getProject());
     }
 
     /**
@@ -180,7 +180,7 @@ public class Classloader extends Task {
     public void execute() {
         try {
             // Gump friendly - don't mess with the core loader if only classpath
-            if ("only".equals(project.getProperty("build.sysclasspath"))
+            if ("only".equals(getProject().getProperty("build.sysclasspath"))
                 && (name == null || SYSTEM_LOADER_REF.equals(name))) {
                 log("Changing the system loader is disabled "
                     + "by build.sysclasspath=only", Project.MSG_WARN);
@@ -189,7 +189,7 @@ public class Classloader extends Task {
 
             String loaderName = (name == null) ? SYSTEM_LOADER_REF : name;
 
-            Object obj = project.getReference(loaderName);
+            Object obj = getProject().getReference(loaderName);
             if (reset) {
                 // Are any other references held ? Can we 'close' the loader
                 // so it removes the locks on jars ?
@@ -209,7 +209,7 @@ public class Classloader extends Task {
                 // Construct a new class loader
                 Object parent = null;
                 if (parentName != null) {
-                    parent = project.getReference(parentName);
+                    parent = getProject().getReference(parentName);
                     if (!(parent instanceof ClassLoader)) {
                         parent = null;
                     }
@@ -223,20 +223,20 @@ public class Classloader extends Task {
                     // The core loader must be reverse
                     //reverse=true;
                 }
-                project.log("Setting parent loader " + name + " "
+                getProject().log("Setting parent loader " + name + " "
                     + parent + " " + parentFirst, Project.MSG_DEBUG);
 
                 // The param is "parentFirst"
                 acl = new AntClassLoader((ClassLoader) parent,
-                        project, classpath, parentFirst);
+                         getProject(), classpath, parentFirst);
 
-                project.addReference(loaderName, acl);
+                getProject().addReference(loaderName, acl);
 
                 if (name == null) {
                     // This allows the core loader to load optional tasks
                     // without delegating
                     acl.addLoaderPackageRoot("org.apache.tools.ant.taskdefs.optional");
-                    project.setCoreLoader(acl);
+                    getProject().setCoreLoader(acl);
                 }
             }
             if (classpath != null) {
