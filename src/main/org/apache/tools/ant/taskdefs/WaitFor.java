@@ -85,7 +85,9 @@ import java.util.Hashtable;
 
 public class WaitFor extends ConditionBase {
     private long maxWaitMillis = 1000l * 60l * 3l; // default max wait time
+    private long maxWaitMultiplier = 1l;
     private long checkEveryMillis = 500l;
+    private long checkEveryMultiplier = 1l;
 
     /**
      * Set the maximum length of time to wait
@@ -98,7 +100,7 @@ public class WaitFor extends ConditionBase {
      * Set the max wait time unit
      */
     public void setMaxWaitUnit(Unit unit) {
-        maxWaitMillis *= unit.getMultiplier();
+        maxWaitMultiplier = unit.getMultiplier();
     }
 
     /**
@@ -112,7 +114,7 @@ public class WaitFor extends ConditionBase {
      * Set the check every time unit
      */
     public void setCheckEveryUnit(Unit unit) {
-        checkEveryMillis *= unit.getMultiplier();
+        checkEveryMultiplier = unit.getMultiplier();
     }
 
     /**
@@ -128,6 +130,8 @@ public class WaitFor extends ConditionBase {
         }
         Condition c = (Condition) getConditions().nextElement();
 
+        maxWaitMillis *= maxWaitMultiplier;
+        checkEveryMillis *= checkEveryMultiplier;
         long start = System.currentTimeMillis();
         long end = start + maxWaitMillis;
 
