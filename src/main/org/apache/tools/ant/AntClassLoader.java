@@ -58,6 +58,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.zip.*;
 import java.io.*;
+import java.net.*;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -378,6 +379,105 @@ public class AntClassLoader  extends ClassLoader {
         }
         
         return useSystemFirst;
+    }
+
+
+
+
+
+    /**
+     * Finds the resource with the given name. A resource is 
+     * some data (images, audio, text, etc)
+     * that can be accessed by class
+     * code in a way that is independent of the location of the code.
+     *
+     * @param name the name of the resource for which a stream is required.
+     *
+     * @return a URL for reading the resource, or null if the resource 
+     *         could not be found or the caller
+     * doesn't have adequate privileges to get the resource.
+     */
+    public URL getResource(String name) {
+        // we need to search the components of the path to see if we can find the
+        // class we want.
+        URL url = null;
+        if (isSystemFirst(name)) {
+            url = super.getResource(name);
+        }
+
+        // try and load from this loader if the parent eitehr didn't find it or
+        // wasn;t consulted.
+        if (url == null) {
+            String[] pathElements = classpath.list();
+            for (int i = 0; i < pathElements.length && url == null; ++i) {
+                File pathComponent = project.resolveFile((String)pathElements[i]);
+                url = getResourceURL(pathComponent, name);
+            }
+        }
+        
+        if (url == null && !isSystemFirst(name)) {
+            // this loader was first but it didn't find it - try the parent
+            url = super.getResource(name);
+        }
+
+        return url;
+    }
+
+    /**
+     * Get an inputstream to a given resource in the given file which may
+     * either be a directory or a zip file.
+     *
+     * @param file the file (directory or jar) in which to search for 
+     *             the resource.
+     * @param resourceName the name of the resource for which a stream 
+     *                     is required.
+     *
+     * @return a stream to the required resource or null if the 
+     *         resource cannot be found in the given file object
+     */
+    private URL getResourceURL(File file, String resourceName) {
+        try {
+            if (!file.exists()) {
+                return null;
+            }
+
+            if (file.isDirectory()) {
+                File resource = new File(file, resourceName);
+
+                if (resource.exists()) {
+                    try {
+                        return new URL("file:"+resource.toString());
+                    } catch (MalformedURLException ex) {
+                        return null;
+                    }
+                }
+            }
+            else {
+                ZipFile zipFile = null;
+                try {
+                    zipFile = new ZipFile(file);
+
+                    ZipEntry entry = zipFile.getEntry(resourceName);
+                    if (entry != null) {
+                        try {
+                            return new URL("jar:file:"+file.toString()+"!/"+entry);
+                        } catch (MalformedURLException ex) {
+                            return null;
+                        }
+                    }
+                }
+                finally {
+                    if (zipFile != null) {
+                        zipFile.close();
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 
