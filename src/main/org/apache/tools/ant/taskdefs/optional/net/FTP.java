@@ -177,6 +177,9 @@ public class FTP
      * internal class allowing to read the contents of a remote file system
      * using the FTP protocol
      * used in particular for ftp get operations
+     * differences with DirectoryScanner
+     * "" (the root of the fileset) is never included in the included directories
+     * followSymlinks defaults to false
      */
     protected class FTPDirectoryScanner extends DirectoryScanner {
         protected FTPClient ftp = null;
@@ -189,6 +192,7 @@ public class FTP
         public FTPDirectoryScanner(FTPClient ftp) {
             super();
             this.ftp = ftp;
+            this.setFollowSymlinks(false);
         }
 
 
@@ -215,17 +219,6 @@ public class FTP
 
             try {
                 String cwd = ftp.printWorkingDirectory();
-                // register also the root directory of the fileset if it matches
-                // include and exclude patterns
-                if (isIncluded("")) {
-                    if (!isExcluded("")) {
-                        dirsIncluded.addElement("");
-                    } else {
-                        dirsExcluded.addElement("");
-                    }
-                } else {
-                    dirsNotIncluded.addElement("");
-                }
                 // always start from the current ftp working dir
 
                 scandir(".", "", true);

@@ -157,7 +157,7 @@ public class FTPTest extends BuildFileTest{
                 ds.scan();
                 compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                                "alpha/beta/gamma/gamma.xml"},
-                    new String[] {"", "alpha", "alpha/beta",
+                    new String[] {"alpha", "alpha/beta",
                                   "alpha/beta/gamma"});
             }
         }
@@ -218,6 +218,7 @@ public class FTPTest extends BuildFileTest{
         FTP.FTPDirectoryScanner ds = myFTPTask.newScanner(ftp);
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/beta/gamma/"});
+        ds.setFollowSymlinks(true);
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha/beta/gamma"});
@@ -255,6 +256,7 @@ public class FTPTest extends BuildFileTest{
         FTP.FTPDirectoryScanner ds = myFTPTask.newScanner(ftp);
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/beta/gamma/"});
+        ds.setFollowSymlinks(true);
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha/beta/gamma"});
@@ -481,10 +483,9 @@ public class FTPTest extends BuildFileTest{
         FTP.FTPDirectoryScanner ds = myFTPTask.newScanner(ftp);
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setExcludes(new String[] {"alpha/**"});
-        ds.setFollowSymlinks(false);
         ds.scan();
         compareFiles(ds, new String[] {"delta/delta.xml"},
-                    new String[] {"", "delta"});
+                    new String[] {"delta"});
 
         ds = myFTPTask.newScanner(ftp);
         if (!changeRemoteDir(remoteTmpDir)) {
@@ -492,12 +493,11 @@ public class FTPTest extends BuildFileTest{
         }
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setExcludes(new String[] {"alpha"});
-        ds.setFollowSymlinks(false);
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml",
                                         "delta/delta.xml"},
-                     new String[] {"", "alpha/beta", "alpha/beta/gamma", "delta"});
+                     new String[] {"alpha/beta", "alpha/beta/gamma", "delta"});
 
     }
 
