@@ -42,4 +42,31 @@
   <target name="outputTests" 
           depends="testForkedOutput,testNonForkedOutput,testForkedThreadedOutput,testNonForkedThreadedOutput" />
 
+  <target name="crash">
+    <junit fork="true" errorproperty="crashed">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.VmCrash"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="nocrash">
+    <junit fork="true" errorproperty="crashed">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.NoVmCrash"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="timeout">
+    <junit fork="true" errorproperty="timeout" timeout="1000">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="notimeout">
+    <junit fork="true" errorproperty="timeout" timeout="15000">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
 </project>
