@@ -1185,11 +1185,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://jegustator.pavelvlasov.com/">http://jegustator.pavelvlasov.com/</a></td>
+            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.jegustator.html">http://www.pavelvlasov.com/pv/content/menu.show@id=products.jegustator.html</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:jegustator@pavelvlasov.com">jegustator@pavelvlasov.com</a></td>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -1592,7 +1592,7 @@
       </subsection>
 
       <subsection name="Pamda">
-        <p><a href="http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4">Pamda</a>
+        <p><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.pamda.html">Pamda</a>
         is an MDA tool (UML2Code generator) implemented as Ant task. Pamda supports
         Aspect-Oriented Modeling (AOM) and comes with AOM UML Profile and sample project.
         The tool uses XMI as its input and Velocity as template engine. All elements in
@@ -1607,11 +1607,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4">http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4</a></td>
+            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.pamda.html">http://www.pavelvlasov.com/pv/content/menu.show@id=products.pamda.html</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Contact Page</a></td>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -1900,11 +1900,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.speech4j.com/">http://www.speech4j.com/</a></td>
+            <td><a href="http://www.pavelvlasov.com/pv/content/Products/Speech4j/index.html">http://www.pavelvlasov.com/pv/content/Products/Speech4j/index.html</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:support@speech4j.com">support@speech4j.com</a></td>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
           </tr>
           <tr>
             <th>License:</th>
