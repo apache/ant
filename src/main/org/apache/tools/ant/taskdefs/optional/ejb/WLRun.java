@@ -69,9 +69,9 @@ import java.io.File;
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class WLRun extends Task {
-    protected final static String DEFAULT_WL51_POLICY_FILE = "weblogic.policy";
-    protected final static String DEFAULT_WL60_POLICY_FILE = "lib/weblogic.policy";
-    protected final static String DEFAULT_PROPERTIES_FILE = "weblogic.properties";
+    protected static final String DEFAULT_WL51_POLICY_FILE = "weblogic.policy";
+    protected static final String DEFAULT_WL60_POLICY_FILE = "lib/weblogic.policy";
+    protected static final String DEFAULT_PROPERTIES_FILE = "weblogic.properties";
 
     /**
      * The classpath to be used when running the Java VM. It must contain the weblogic

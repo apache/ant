@@ -139,29 +139,29 @@ public abstract class Continuus extends Task {
     /**
      * Constant for the thing to execute
      */
-    private final static String CCM_EXE = "ccm";
+    private static final String CCM_EXE = "ccm";
 
     /**
      * The 'CreateTask' command
      */
-    public final static String COMMAND_CREATE_TASK = "create_task";
+    public static final String COMMAND_CREATE_TASK = "create_task";
     /**
      * The 'Checkout' command
      */
-    public final static String COMMAND_CHECKOUT = "co";
+    public static final String COMMAND_CHECKOUT = "co";
     /**
      * The 'Checkin' command
      */
-    public final static String COMMAND_CHECKIN = "ci";
+    public static final String COMMAND_CHECKIN = "ci";
     /**
      * The 'Reconfigure' command
      */
-    public final static String COMMAND_RECONFIGURE = "reconfigure";
+    public static final String COMMAND_RECONFIGURE = "reconfigure";
 
     /**
      * The 'Reconfigure' command
      */
-    public final static String COMMAND_DEFAULT_TASK = "default_task";
+    public static final String COMMAND_DEFAULT_TASK = "default_task";
 
 
 }

@@ -130,7 +130,7 @@ public class Javadoc extends Task {
         }
     }
 
-    static public class ExtensionInfo extends ProjectComponent {
+    public static class ExtensionInfo extends ProjectComponent {
         private String name;
         private Path path;
         public void setName(String name) {

@@ -89,27 +89,27 @@ public class Tar extends MatchingTask {
      * @deprecated Tar.WARN is deprecated and is replaced with
      *             Tar.TarLongFileMode.WARN
      */
-    public final static String WARN = "warn";
+    public static final String WARN = "warn";
     /**
      * @deprecated Tar.FAIL is deprecated and is replaced with
      *             Tar.TarLongFileMode.FAIL
      */
-    public final static String FAIL = "fail";
+    public static final String FAIL = "fail";
     /**
      * @deprecated Tar.TRUNCATE is deprecated and is replaced with
      *             Tar.TarLongFileMode.TRUNCATE
      */
-    public final static String TRUNCATE = "truncate";
+    public static final String TRUNCATE = "truncate";
     /**
      * @deprecated Tar.GNU is deprecated and is replaced with
      *             Tar.TarLongFileMode.GNU
      */
-    public final static String GNU = "gnu";
+    public static final String GNU = "gnu";
     /**
      * @deprecated Tar.OMIT is deprecated and is replaced with
      *             Tar.TarLongFileMode.OMIT
      */
-    public final static String OMIT = "omit";
+    public static final String OMIT = "omit";
 
     File tarFile;
     File baseDir;
@@ -491,11 +491,11 @@ public class Tar extends MatchingTask {
     public static class TarLongFileMode extends EnumeratedAttribute {
 
         // permissable values for longfile attribute
-        public final static String WARN = "warn";
-        public final static String FAIL = "fail";
-        public final static String TRUNCATE = "truncate";
-        public final static String GNU = "gnu";
-        public final static String OMIT = "omit";
+        public static final String WARN = "warn";
+        public static final String FAIL = "fail";
+        public static final String TRUNCATE = "truncate";
+        public static final String GNU = "gnu";
+        public static final String OMIT = "omit";
 
         private final String[] validModes = {WARN, FAIL, TRUNCATE, GNU, OMIT};
 

@@ -78,7 +78,7 @@ final class MAuditParser {
     /** pattern used by maudit to report the error for a file */
     /** RE does not seems to support regexp pattern with comments so i'm stripping it*/
     // (?:file:)?((?#filepath).+):((?#line)\\d+)\\s*:\\s+((?#message).*)
-    private final static String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
+    private static final String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
 
     /** matcher that will be used to extract the info from the line */
     private final RegexpMatcher matcher;
@@ -117,7 +117,7 @@ final class MAuditParser {
     }
 
     /** the inner class used to report violation information */
-    final static class Violation {
+    static final class Violation {
         String file;
         String line;
         String error;

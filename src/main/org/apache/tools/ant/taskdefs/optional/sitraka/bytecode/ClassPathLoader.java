@@ -76,7 +76,7 @@ import java.util.zip.ZipFile;
  */
 public class ClassPathLoader {
 
-    public final static FileLoader NULL_LOADER = new NullLoader();
+    public static final FileLoader NULL_LOADER = new NullLoader();
 
     /** the list of files to look for */
     private File[] files;
@@ -275,8 +275,8 @@ final class JarLoader implements ClassPathLoader.FileLoader {
  */
 final class DirectoryLoader implements ClassPathLoader.FileLoader {
     private File directory;
-    private final static FilenameFilter DIRECTORY_FILTER = new DirectoryFilter();
-    private final static FilenameFilter CLASS_FILTER = new ClassFilter();
+    private static final FilenameFilter DIRECTORY_FILTER = new DirectoryFilter();
+    private static final FilenameFilter CLASS_FILTER = new ClassFilter();
 
     DirectoryLoader(File dir) {
         directory = dir;

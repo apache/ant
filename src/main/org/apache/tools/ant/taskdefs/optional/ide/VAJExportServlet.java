@@ -150,8 +150,8 @@ import java.io.File;
  */
 public class VAJExportServlet extends VAJToolsServlet {
     // constants for servlet param names
-    public final static String WITH_DEBUG_INFO = "deb";
-    public final static String OVERWRITE_PARAM = "owr";
+    public static final String WITH_DEBUG_INFO = "deb";
+    public static final String OVERWRITE_PARAM = "owr";
 
     /**
      * Respond to a request to export packages from the Workbench.

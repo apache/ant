@@ -67,8 +67,8 @@ import org.apache.tools.ant.Project;
  * @see EjbJar#createJboss
  */
 public class JbossDeploymentTool extends GenericDeploymentTool {
-    protected final static String JBOSS_DD = "jboss.xml";
-    protected final static String JBOSS_CMPD = "jaws.xml";
+    protected static final String JBOSS_DD = "jboss.xml";
+    protected static final String JBOSS_CMPD = "jaws.xml";
 
     /** Instance variable that stores the suffix for the jboss jarfile. */
     private String jarSuffix = ".jar";

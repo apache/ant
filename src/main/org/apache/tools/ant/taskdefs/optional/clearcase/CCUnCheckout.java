@@ -159,11 +159,11 @@ public class CCUnCheckout extends ClearCase {
         /**
      *  -keep flag -- keep a copy of the file with .keep extension
      */
-    public final static String FLAG_KEEPCOPY = "-keep";
+    public static final String FLAG_KEEPCOPY = "-keep";
         /**
      *  -rm flag -- remove the copy of the file
      */
-    public final static String FLAG_RM = "-rm";
+    public static final String FLAG_RM = "-rm";
 
 }
 

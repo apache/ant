@@ -72,12 +72,12 @@ import java.io.IOException;
  * TODO:    Update to BZip2 1.0.1
  */
 public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
-    protected final static int SETMASK = (1 << 21);
-    protected final static int CLEARMASK = (~SETMASK);
-    protected final static int GREATER_ICOST = 15;
-    protected final static int LESSER_ICOST = 0;
-    protected final static int SMALL_THRESH = 20;
-    protected final static int DEPTH_THRESH = 10;
+    protected static final int SETMASK = (1 << 21);
+    protected static final int CLEARMASK = (~SETMASK);
+    protected static final int GREATER_ICOST = 15;
+    protected static final int LESSER_ICOST = 0;
+    protected static final int SMALL_THRESH = 20;
+    protected static final int DEPTH_THRESH = 10;
 
     /*
       If you are ever unlucky/improbable enough
@@ -87,7 +87,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       stack go above 27 elems, so the following
       limit seems very generous.
     */
-    protected final static int QSORT_STACK_SIZE = 1000;
+    protected static final int QSORT_STACK_SIZE = 1000;
 
     private static void panic() {
         System.out.println("panic");

@@ -342,31 +342,31 @@ public class CCCheckin extends ClearCase {
         /**
      * -c flag -- comment to attach to the file
      */
-    public final static String FLAG_COMMENT = "-c";
+    public static final String FLAG_COMMENT = "-c";
         /**
      * -cfile flag -- file containing a comment to attach to the file
      */
-    public final static String FLAG_COMMENTFILE = "-cfile";
+    public static final String FLAG_COMMENTFILE = "-cfile";
         /**
      * -nc flag -- no comment is specified
      */
-    public final static String FLAG_NOCOMMENT = "-nc";
+    public static final String FLAG_NOCOMMENT = "-nc";
         /**
      * -nwarn flag -- suppresses warning messages
      */
-    public final static String FLAG_NOWARN = "-nwarn";
+    public static final String FLAG_NOWARN = "-nwarn";
         /**
      * -ptime flag -- preserves the modification time
      */
-    public final static String FLAG_PRESERVETIME = "-ptime";
+    public static final String FLAG_PRESERVETIME = "-ptime";
         /**
      * -keep flag -- keeps a copy of the file with a .keep extension
      */
-    public final static String FLAG_KEEPCOPY = "-keep";
+    public static final String FLAG_KEEPCOPY = "-keep";
         /**
      * -identical flag -- allows the file to be checked in even if it is identical to the original
      */
-    public final static String FLAG_IDENTICAL = "-identical";
+    public static final String FLAG_IDENTICAL = "-identical";
 
 }
 

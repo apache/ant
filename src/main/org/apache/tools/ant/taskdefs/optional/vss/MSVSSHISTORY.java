@@ -88,11 +88,11 @@ public class MSVSSHISTORY extends MSVSS {
     private String m_Style = "";
     private boolean m_Recursive = false;
     
-    public final static String VALUE_FROMDATE = "~d";
-    public final static String VALUE_FROMLABEL = "~L";
+    public static final String VALUE_FROMDATE = "~d";
+    public static final String VALUE_FROMLABEL = "~L";
 
-    public final static String FLAG_OUTPUT = "-O";
-    public final static String FLAG_USER = "-U";
+    public static final String FLAG_OUTPUT = "-O";
+    public static final String FLAG_USER = "-U";
 
     /**
      * Executes the task.

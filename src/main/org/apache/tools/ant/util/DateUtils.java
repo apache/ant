@@ -79,38 +79,38 @@ public final class DateUtils {
      * ISO8601-like pattern for date-time. It does not support timezone.
      *  <tt>yyyy-MM-ddTHH:mm:ss</tt>
      */
-    public final static String ISO8601_DATETIME_PATTERN
+    public static final String ISO8601_DATETIME_PATTERN
             = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * ISO8601-like pattern for date. <tt>yyyy-MM-dd</tt>
      */
-    public final static String ISO8601_DATE_PATTERN
+    public static final String ISO8601_DATE_PATTERN
             = "yyyy-MM-dd";
 
     /**
      * ISO8601-like pattern for time.  <tt>HH:mm:ss</tt>
      */
-    public final static String ISO8601_TIME_PATTERN
+    public static final String ISO8601_TIME_PATTERN
             = "HH:mm:ss";
 
 
 // code from Magesh moved from DefaultLogger and slightly modified
-    private final static MessageFormat MINUTE_SECONDS
+    private static final MessageFormat MINUTE_SECONDS
             = new MessageFormat("{0}{1}");
 
-    private final static double[] LIMITS = {0, 1, 2};
+    private static final double[] LIMITS = {0, 1, 2};
 
-    private final static String[] MINUTES_PART =
+    private static final String[] MINUTES_PART =
             {"", "1 minute ", "{0,number} minutes "};
 
-    private final static String[] SECONDS_PART =
+    private static final String[] SECONDS_PART =
             {"0 seconds", "1 second", "{1,number} seconds"};
 
-    private final static ChoiceFormat MINUTES_FORMAT =
+    private static final ChoiceFormat MINUTES_FORMAT =
             new ChoiceFormat(LIMITS, MINUTES_PART);
 
-    private final static ChoiceFormat SECONDS_FORMAT =
+    private static final ChoiceFormat SECONDS_FORMAT =
             new ChoiceFormat(LIMITS, SECONDS_PART);
 
     static {

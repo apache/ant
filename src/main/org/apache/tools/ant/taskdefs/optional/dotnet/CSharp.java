@@ -164,17 +164,17 @@ public class CSharp
      *  Name of the executable. The .exe suffix is deliberately not included in
      *  anticipation of the unix version
      */
-    private final static String csc_exe_name = "csc";
+    private static final String csc_exe_name = "csc";
 
     /**
      *  what is the file extension we search on?
      */
-    private final static String csc_file_ext = "cs";
+    private static final String csc_file_ext = "cs";
 
     /**
      *  derive the search pattern from the extension
      */
-    private final static String csc_file_pattern = "**/*." + csc_file_ext;
+    private static final String csc_file_pattern = "**/*." + csc_file_ext;
 
     /**
      *  list of reference classes. (pretty much a classpath equivalent)
@@ -257,7 +257,7 @@ public class CSharp
      *  need to reference mscorlib.dll, cos it is always there
      */
 
-    protected final static String DEFAULT_REFERENCE_LIST =
+    protected static final String DEFAULT_REFERENCE_LIST =
             "Accessibility.dll;" +
             "cscompmgd.dll;" +
             "CustomMarshalers.dll;" +

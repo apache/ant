@@ -153,7 +153,7 @@ public class PropertyFile extends Task {
     * Static variables.
     */
 
-    private final static String NEWLINE = System.getProperty("line.separator");
+    private static final String NEWLINE = System.getProperty("line.separator");
 
 
     /* ========================================================================
@@ -296,9 +296,9 @@ public class PropertyFile extends Task {
      * a task propertyfile.
      */
     public static class Entry {
-        private final static int DEFAULT_INT_VALUE = 0;
-        private final static String DEFAULT_DATE_VALUE = "now";
-        private final static String DEFAULT_STRING_VALUE = "";
+        private static final int DEFAULT_INT_VALUE = 0;
+        private static final String DEFAULT_DATE_VALUE = "now";
+        private static final String DEFAULT_STRING_VALUE = "";
 
         private String              key = null;
         private int                 type = Type.STRING_TYPE;
@@ -551,9 +551,9 @@ public class PropertyFile extends Task {
         public static class Operation extends EnumeratedAttribute {
 
             // Property type operations
-            public final static int INCREMENT_OPER =   0;
-            public final static int DECREMENT_OPER =   1;
-            public final static int EQUALS_OPER =      2;
+            public static final int INCREMENT_OPER =   0;
+            public static final int DECREMENT_OPER =   1;
+            public static final int EQUALS_OPER =      2;
 
             public String[] getValues() {
                 return new String[] {"+", "-", "="};
@@ -575,9 +575,9 @@ public class PropertyFile extends Task {
         public static class Type extends EnumeratedAttribute {
 
             // Property types
-            public final static int INTEGER_TYPE =     0;
-            public final static int DATE_TYPE =        1;
-            public final static int STRING_TYPE =      2;
+            public static final int INTEGER_TYPE =     0;
+            public static final int DATE_TYPE =        1;
+            public static final int STRING_TYPE =      2;
 
             public String[] getValues() {
                 return new String[] {"int", "date", "string"};
@@ -601,16 +601,16 @@ public class PropertyFile extends Task {
      */
     public static class Unit extends EnumeratedAttribute {
 
-        private final static String MILLISECOND = "millisecond";
-        private final static String SECOND = "second";
-        private final static String MINUTE = "minute";
-        private final static String HOUR = "hour";
-        private final static String DAY = "day";
-        private final static String WEEK = "week";
-        private final static String MONTH = "month";
-        private final static String YEAR = "year";
+        private static final String MILLISECOND = "millisecond";
+        private static final String SECOND = "second";
+        private static final String MINUTE = "minute";
+        private static final String HOUR = "hour";
+        private static final String DAY = "day";
+        private static final String WEEK = "week";
+        private static final String MONTH = "month";
+        private static final String YEAR = "year";
 
-        private final static String[] units = {
+        private static final String[] units = {
                                                 MILLISECOND,
                                                 SECOND,
                                                 MINUTE,

@@ -65,7 +65,7 @@ import java.util.Vector;
 public final class StringUtils {
 
     /** the line separator for this OS */
-    public final static String LINE_SEP = System.getProperty("line.separator");
+    public static final String LINE_SEP = System.getProperty("line.separator");
 
     /**
      * Splits up a string into a list of lines. It is equivalent

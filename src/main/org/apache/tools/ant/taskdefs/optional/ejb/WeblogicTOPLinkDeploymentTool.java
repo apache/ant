@@ -62,7 +62,7 @@ import org.apache.tools.ant.Project;
 
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
-    private final static String TL_DTD_LOC = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
+    private static final String TL_DTD_LOC = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
 
     private String toplinkDescriptor;
     private String toplinkDTD;

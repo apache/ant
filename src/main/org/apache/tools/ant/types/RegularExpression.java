@@ -97,10 +97,10 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * @ant.datatype name="regexp"
  */
 public class RegularExpression extends DataType {
-    public final static String DATA_TYPE_NAME = "regexp";
+    public static final String DATA_TYPE_NAME = "regexp";
 
     // The regular expression factory
-    private final static RegexpFactory factory = new RegexpFactory();
+    private static final RegexpFactory factory = new RegexpFactory();
 
     private Regexp regexp;
 

@@ -83,15 +83,15 @@ public class JavaEnvUtils {
     private static String javaVersion;
 
     /** Version constant for Java 1.0 */
-    public final static String JAVA_1_0 = "1.0";
+    public static final String JAVA_1_0 = "1.0";
     /** Version constant for Java 1.1 */
-    public final static String JAVA_1_1 = "1.1";
+    public static final String JAVA_1_1 = "1.1";
     /** Version constant for Java 1.2 */
-    public final static String JAVA_1_2 = "1.2";
+    public static final String JAVA_1_2 = "1.2";
     /** Version constant for Java 1.3 */
-    public final static String JAVA_1_3 = "1.3";
+    public static final String JAVA_1_3 = "1.3";
     /** Version constant for Java 1.4 */
-    public final static String JAVA_1_4 = "1.4";
+    public static final String JAVA_1_4 = "1.4";
 
     static {
 

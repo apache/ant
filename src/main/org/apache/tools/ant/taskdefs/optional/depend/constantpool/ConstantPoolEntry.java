@@ -67,37 +67,37 @@ import java.io.IOException;
 public abstract class ConstantPoolEntry {
 
     /** Tag value for UTF8 entries. */
-    public final static int CONSTANT_UTF8 = 1;
+    public static final int CONSTANT_UTF8 = 1;
 
     /** Tag value for Integer entries. */
-    public final static int CONSTANT_INTEGER = 3;
+    public static final int CONSTANT_INTEGER = 3;
 
     /** Tag value for Float entries. */
-    public final static int CONSTANT_FLOAT = 4;
+    public static final int CONSTANT_FLOAT = 4;
 
     /** Tag value for Long entries. */
-    public final static int CONSTANT_LONG = 5;
+    public static final int CONSTANT_LONG = 5;
 
     /** Tag value for Double entries. */
-    public final static int CONSTANT_DOUBLE = 6;
+    public static final int CONSTANT_DOUBLE = 6;
 
     /** Tag value for Class entries. */
-    public final static int CONSTANT_CLASS = 7;
+    public static final int CONSTANT_CLASS = 7;
 
     /** Tag value for String entries. */
-    public final static int CONSTANT_STRING = 8;
+    public static final int CONSTANT_STRING = 8;
 
     /** Tag value for Field Reference entries. */
-    public final static int CONSTANT_FIELDREF = 9;
+    public static final int CONSTANT_FIELDREF = 9;
 
     /** Tag value for Method Reference entries. */
-    public final static int CONSTANT_METHODREF = 10;
+    public static final int CONSTANT_METHODREF = 10;
 
     /** Tag value for Interface Method Reference entries. */
-    public final static int CONSTANT_INTERFACEMETHODREF = 11;
+    public static final int CONSTANT_INTERFACEMETHODREF = 11;
 
     /** Tag value for Name and Type entries. */
-    public final static int CONSTANT_NAMEANDTYPE = 12;
+    public static final int CONSTANT_NAMEANDTYPE = 12;
 
     /**
      * This entry's tag which identifies the type of this constant pool

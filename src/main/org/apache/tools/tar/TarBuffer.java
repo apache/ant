@@ -79,8 +79,8 @@ import java.io.IOException;
  
 public class TarBuffer {
         
-    public final static int DEFAULT_RCDSIZE = (512);
-    public final static int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
+    public static final int DEFAULT_RCDSIZE = (512);
+    public static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
     
     private InputStream     inStream;
     private OutputStream    outStream;

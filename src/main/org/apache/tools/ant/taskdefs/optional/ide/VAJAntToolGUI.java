@@ -115,7 +115,7 @@ public class VAJAntToolGUI extends Frame {
      * Members
      */
     private VAJBuildLogger logger = new VAJBuildLogger();
-    private final static String lineSeparator = "\r\n";
+    private static final String lineSeparator = "\r\n";
     private PrivateEventHandler iEventHandler = new PrivateEventHandler();
 
     /**

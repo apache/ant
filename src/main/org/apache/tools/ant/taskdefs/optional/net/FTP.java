@@ -104,12 +104,12 @@ import java.util.Vector;
  */
 public class FTP
      extends Task {
-    protected final static int SEND_FILES = 0;
-    protected final static int GET_FILES = 1;
-    protected final static int DEL_FILES = 2;
-    protected final static int LIST_FILES = 3;
-    protected final static int MK_DIR = 4;
-    protected final static int CHMOD = 5;
+    protected static final int SEND_FILES = 0;
+    protected static final int GET_FILES = 1;
+    protected static final int DEL_FILES = 2;
+    protected static final int LIST_FILES = 3;
+    protected static final int MK_DIR = 4;
+    protected static final int CHMOD = 5;
 
     private String remotedir;
     private String server;
@@ -133,7 +133,7 @@ public class FTP
     private String umask = null;
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
-    protected final static String[] ACTION_STRS = {
+    protected static final String[] ACTION_STRS = {
         "sending",
         "getting",
         "deleting",
@@ -142,7 +142,7 @@ public class FTP
         "chmod"
         };
 
-    protected final static String[] COMPLETED_ACTION_STRS = {
+    protected static final String[] COMPLETED_ACTION_STRS = {
         "sent",
         "retrieved",
         "deleted",
@@ -991,7 +991,7 @@ public class FTP
 
     public static class Action extends EnumeratedAttribute {
 
-        private final static String[] validActions = {
+        private static final String[] validActions = {
             "send", "put", "recv", "get", "del", "delete", "list", "mkdir",
             "chmod"
             };

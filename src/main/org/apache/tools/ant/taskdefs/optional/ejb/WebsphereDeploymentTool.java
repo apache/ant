@@ -107,16 +107,16 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
-    public final static String PUBLICID_EJB11
+    public static final String PUBLICID_EJB11
          = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
-    public final static String PUBLICID_EJB20
+    public static final String PUBLICID_EJB20
          = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
-    protected final static String SCHEMA_DIR = "Schema/";
+    protected static final String SCHEMA_DIR = "Schema/";
 
-    protected final static String WAS_EXT = "ibm-ejb-jar-ext.xmi";
-    protected final static String WAS_BND = "ibm-ejb-jar-bnd.xmi";
-    protected final static String WAS_CMP_MAP = "Map.mapxmi";
-    protected final static String WAS_CMP_SCHEMA = "Schema.dbxmi";
+    protected static final String WAS_EXT = "ibm-ejb-jar-ext.xmi";
+    protected static final String WAS_BND = "ibm-ejb-jar-bnd.xmi";
+    protected static final String WAS_CMP_MAP = "Map.mapxmi";
+    protected static final String WAS_CMP_SCHEMA = "Schema.dbxmi";
 
     /** Instance variable that stores the suffix for the websphere jarfile. */
     private String jarSuffix = ".jar";

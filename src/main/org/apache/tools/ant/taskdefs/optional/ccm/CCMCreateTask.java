@@ -264,32 +264,32 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     /**
      * /comment -- comments associated to the task
      */
-    public final static String FLAG_COMMENT = "/synopsis";
+    public static final String FLAG_COMMENT = "/synopsis";
 
     /**
      *  /platform flag -- target platform
      */
-    public final static String FLAG_PLATFORM = "/plat";
+    public static final String FLAG_PLATFORM = "/plat";
 
     /**
      * /resolver flag
      */
-    public final static String FLAG_RESOLVER = "/resolver";
+    public static final String FLAG_RESOLVER = "/resolver";
 
     /**
      * /release flag
      */
-    public final static String FLAG_RELEASE = "/release";
+    public static final String FLAG_RELEASE = "/release";
 
     /**
      * /release flag
      */
-    public final static String FLAG_SUBSYSTEM = "/subsystem";
+    public static final String FLAG_SUBSYSTEM = "/subsystem";
 
     /**
      *  -task flag -- associate checckout task with task
      */
-    public final static String FLAG_TASK = "/task";
+    public static final String FLAG_TASK = "/task";
 
 
     // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface

@@ -442,43 +442,43 @@ public class CCCheckout extends ClearCase {
         /**
      *  -reserved flag -- check out the file as reserved
      */
-    public final static String FLAG_RESERVED = "-reserved";
+    public static final String FLAG_RESERVED = "-reserved";
         /**
      *  -reserved flag -- check out the file as unreserved
      */
-    public final static String FLAG_UNRESERVED = "-unreserved";
+    public static final String FLAG_UNRESERVED = "-unreserved";
         /**
      * -out flag -- create a writable file under a different filename
      */
-    public final static String FLAG_OUT = "-out";
+    public static final String FLAG_OUT = "-out";
         /**
      * -ndata flag -- checks out the file but does not create an editable file containing its data
      */
-    public final static String FLAG_NODATA = "-ndata";
+    public static final String FLAG_NODATA = "-ndata";
         /**
      * -branch flag -- checks out the file on a specified branch
      */
-    public final static String FLAG_BRANCH = "-branch";
+    public static final String FLAG_BRANCH = "-branch";
         /**
      * -version flag -- allows checkout of a version that is not main latest
      */
-    public final static String FLAG_VERSION = "-version";
+    public static final String FLAG_VERSION = "-version";
         /**
      * -nwarn flag -- suppresses warning messages
      */
-    public final static String FLAG_NOWARN = "-nwarn";
+    public static final String FLAG_NOWARN = "-nwarn";
         /**
      * -c flag -- comment to attach to the file
      */
-    public final static String FLAG_COMMENT = "-c";
+    public static final String FLAG_COMMENT = "-c";
         /**
      * -cfile flag -- file containing a comment to attach to the file
      */
-    public final static String FLAG_COMMENTFILE = "-cfile";
+    public static final String FLAG_COMMENTFILE = "-cfile";
         /**
      * -nc flag -- no comment is specified
      */
-    public final static String FLAG_NOCOMMENT = "-nc";
+    public static final String FLAG_NOCOMMENT = "-nc";
 
 }
 

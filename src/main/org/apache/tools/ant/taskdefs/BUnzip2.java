@@ -76,7 +76,7 @@ import org.apache.tools.bzip2.CBZip2InputStream;
 
 public class BUnzip2 extends Unpack {
 
-    private final static String DEFAULT_EXTENSION = ".bz2";
+    private static final String DEFAULT_EXTENSION = ".bz2";
 
     protected String getDefaultExtension() {
         return DEFAULT_EXTENSION;

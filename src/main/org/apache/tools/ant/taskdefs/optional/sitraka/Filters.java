@@ -64,7 +64,7 @@ import java.util.Vector;
 public class Filters {
 
     /** default regexp to exclude everything */
-    public final static String DEFAULT_EXCLUDE = "*.*():E";
+    public static final String DEFAULT_EXCLUDE = "*.*():E";
 
     /** say whether we should use the default excludes or not */
     protected boolean defaultExclude = true;

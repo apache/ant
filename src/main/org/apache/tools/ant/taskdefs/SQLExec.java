@@ -107,8 +107,8 @@ import java.sql.ResultSetMetaData;
 public class SQLExec extends Task {
 
     public static class DelimiterType extends EnumeratedAttribute {
-        public final static String NORMAL = "normal";
-        public final static String ROW = "row";
+        public static final String NORMAL = "normal";
+        public static final String ROW = "row";
         public String[] getValues() {
             return new String[] {NORMAL, ROW};
         }

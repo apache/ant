@@ -71,7 +71,7 @@ import org.apache.tools.ant.BuildException;
  * @author Wolf Siberski
  */
 public class VAJAntTool {
-    private final static String TOOL_DATA_KEY = "AntTool";
+    private static final String TOOL_DATA_KEY = "AntTool";
 
 
     /**

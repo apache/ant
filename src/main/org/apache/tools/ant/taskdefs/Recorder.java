@@ -192,7 +192,7 @@ public class Recorder extends Task {
      * Possible values include: start and stop.
      */
     public static class ActionChoices extends EnumeratedAttribute {
-        private final static String[] values = {"start", "stop"};
+        private static final String[] values = {"start", "stop"};
 
 
         public String[] getValues() {
@@ -206,7 +206,7 @@ public class Recorder extends Task {
      * Possible values include: error, warn, info, verbose, debug.
      */
     public static class VerbosityLevelChoices extends EnumeratedAttribute {
-        private final static String[] values = {"error", "warn", "info",
+        private static final String[] values = {"error", "warn", "info",
             "verbose", "debug"};
 
 

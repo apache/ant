@@ -84,7 +84,7 @@ import java.util.Vector;
 public class Execute {
 
     /** Invalid exit code. **/
-    public final static int INVALID = Integer.MAX_VALUE;
+    public static final int INVALID = Integer.MAX_VALUE;
 
     private String[] cmdl = null;
     private String[] env = null;

@@ -99,18 +99,18 @@ import org.apache.tools.ant.util.DateUtils;
 public class MMetricsStreamHandler implements ExecuteStreamHandler {
 
     /** CLASS construct, it should be named something like 'MyClass' */
-    private final static String CLASS = "class";
+    private static final String CLASS = "class";
 
     /** package construct, it should be look like 'com.mycompany.something' */
-    private final static String PACKAGE = "package";
+    private static final String PACKAGE = "package";
 
     /** FILE construct, it should look like something 'MyClass.java' or 'MyClass.class' */
-    private final static String FILE = "file";
+    private static final String FILE = "file";
 
     /** METHOD construct, it should looke like something 'doSomething(...)' or 'doSomething()' */
-    private final static String METHOD = "method";
+    private static final String METHOD = "method";
 
-    private final static String[] ATTRIBUTES = {
+    private static final String[] ATTRIBUTES = {
         "name", "vg", "loc", "dit", "noa", "nrm", "nlm", "wmc",
         "rfc", "dac", "fanout", "cbo", "lcom", "nocl"};
 
@@ -339,7 +339,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
      * helper class to keep track of elements via its type and indent
      * that's all we need to guess a type.
      */
-    private final static class ElementEntry {
+    private static final class ElementEntry {
         private String type;
         private int indent;
 
@@ -360,9 +360,9 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
 
 class MetricsElement {
 
-    private final static NumberFormat METAMATA_NF;
+    private static final NumberFormat METAMATA_NF;
 
-    private final static NumberFormat NEUTRAL_NF;
+    private static final NumberFormat NEUTRAL_NF;
 
     static {
         METAMATA_NF = NumberFormat.getInstance();

@@ -422,7 +422,7 @@ public class Available extends Task implements Condition {
 
     public static class FileDir extends EnumeratedAttribute {
 
-        private final static String[] values = {"file", "dir"};
+        private static final String[] values = {"file", "dir"};
 
         public String[] getValues() {
             return values;

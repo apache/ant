@@ -86,7 +86,7 @@ import java.util.Enumeration;
  */
 public class Jar extends Zip {
     /** The index file name. */
-    private final static String INDEX_NAME = "META-INF/INDEX.LIST";
+    private static final String INDEX_NAME = "META-INF/INDEX.LIST";
 
     /** merged manifests added through addConfiguredManifest */
     private Manifest configuredManifest;

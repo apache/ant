@@ -396,8 +396,7 @@ public class ChangeLogTask extends Task {
         for (int i = 0; i < entrySet.length; i++ ) {
 	    
             final CVSEntry entry = entrySet[ i ];
-            if (userList.containsKey(entry.getAuthor()))
-            {
+            if (userList.containsKey(entry.getAuthor())) {
                 entry.setAuthor(userList.getProperty(entry.getAuthor()));
             }
         }

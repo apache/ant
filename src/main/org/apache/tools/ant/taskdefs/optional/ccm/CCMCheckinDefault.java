@@ -68,6 +68,6 @@ public class CCMCheckinDefault extends CCMCheck {
         setTask(DEFAULT_TASK);
     }
 
-    public final static String DEFAULT_TASK = "default";
+    public static final String DEFAULT_TASK = "default";
 }
 

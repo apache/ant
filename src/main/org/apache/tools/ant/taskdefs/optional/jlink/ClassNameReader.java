@@ -67,7 +67,7 @@ import java.io.DataInputStream;
  */
 class ConstantPool {
 
-    final static 
+    static final 
         byte UTF8 = 1, UNUSED = 2, INTEGER = 3, FLOAT = 4, LONG = 5, DOUBLE = 6,
         CLASS = 7, STRING = 8, FIELDREF = 9, METHODREF = 10,
         INTERFACEMETHODREF = 11, NAMEANDTYPE = 12;

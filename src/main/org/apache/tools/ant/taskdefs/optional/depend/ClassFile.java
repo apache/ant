@@ -73,7 +73,7 @@ import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPoolEn
 public class ClassFile {
 
     /** The Magic Value that marks the start of a Java class file  */
-    private final static int CLASS_MAGIC = 0xCAFEBABE;
+    private static final int CLASS_MAGIC = 0xCAFEBABE;
 
     /** This class' constant pool.  */
     private ConstantPool constantPool;

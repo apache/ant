@@ -244,11 +244,11 @@ public class JDependTask extends Task {
     /**
      * No problems with this test.
      */
-    private final static int SUCCESS = 0;
+    private static final int SUCCESS = 0;
     /**
      * An error occured.
      */
-    private final static int ERRORS = 1;
+    private static final int ERRORS = 1;
 
     public void execute() throws BuildException {
 

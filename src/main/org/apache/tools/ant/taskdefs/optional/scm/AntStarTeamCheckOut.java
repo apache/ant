@@ -122,7 +122,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
      * @see #getIncludes()
      * @see #setIncludes(String includes)
      */
-    public final static String DEFAULT_INCLUDESETTING = "*";
+    public static final String DEFAULT_INCLUDESETTING = "*";
 
     /**
      * This disables the exclude filter by default. In other words, no files
@@ -132,7 +132,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
      * @see #getExcludes()
      * @see #setExcludes(String excludes)
      */
-    public final static String DEFAULT_EXCLUDESETTING = null;
+    public static final String DEFAULT_EXCLUDESETTING = null;
 
     /**
      * The default folder to search; the root folder. Since
@@ -142,7 +142,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
      * @see #getFolderName()
      * @see #setFolderName(String folderName)
      */
-    public final static String DEFAULT_FOLDERSETTING = null;
+    public static final String DEFAULT_FOLDERSETTING = null;
 
     /**
      * This is used when formatting the output. The directory name is

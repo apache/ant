@@ -109,7 +109,7 @@ import java.util.Vector;
 
 public class Rmic extends MatchingTask {
 
-    private final static String FAIL_MSG 
+    private static final String FAIL_MSG 
         = "Rmic failed; see the compiler error output for details.";
 
     private File baseDir;

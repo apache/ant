@@ -81,8 +81,8 @@ import org.apache.tools.ant.types.Reference;
  * @ant.task name="blgenclient" category="ejb"
  */
 public class BorlandGenerateClient extends Task {
-    final static String JAVA_MODE = "java";
-    final static String FORK_MODE = "fork";
+    static final String JAVA_MODE = "java";
+    static final String FORK_MODE = "fork";
 
     /** debug the generateclient task */
     boolean debug = false;

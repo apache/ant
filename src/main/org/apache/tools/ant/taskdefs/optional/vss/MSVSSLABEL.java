@@ -117,7 +117,7 @@ public class MSVSSLABEL extends MSVSS {
     private String m_Version = null;
     private String m_Comment = "-";
 
-    public final static String FLAG_LABEL = "-L";
+    public static final String FLAG_LABEL = "-L";
 
     /**
      * Executes the task.

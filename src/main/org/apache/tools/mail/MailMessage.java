@@ -132,7 +132,7 @@ import java.util.Enumeration;
 public class MailMessage {
 
     /** default port for SMTP: 25 */
-    public final static int DEFAULT_PORT = 25;
+    public static final int DEFAULT_PORT = 25;
 
     /** host name for the mail server */
     private String host;

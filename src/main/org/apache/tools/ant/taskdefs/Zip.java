@@ -110,7 +110,7 @@ public class Zip extends MatchingTask {
     protected String archiveType = "zip";
 
     // For directories:
-    private final static long EMPTY_CRC = new CRC32 ().getValue ();
+    private static final long EMPTY_CRC = new CRC32 ().getValue ();
     protected String emptyBehavior = "skip";
     private Vector filesets = new Vector ();
     protected Hashtable addedDirs = new Hashtable();

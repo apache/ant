@@ -115,7 +115,7 @@ public class MAudit extends AbstractMetamataTask {
     /** pattern used by maudit to report the error for a file */
     /** RE does not seems to support regexp pattern with comments so i'm stripping it*/
     // (?:file:)?((?#filepath).+):((?#line)\\d+)\\s*:\\s+((?#message).*)
-    final static String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
+    static final String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
 
     private File outFile = null;
 

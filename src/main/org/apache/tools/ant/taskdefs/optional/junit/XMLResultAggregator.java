@@ -108,10 +108,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     protected Vector transformers = new Vector();
 
     /** The default directory: <tt>&#046;</tt>. It is resolved from the project directory */
-    public final static String DEFAULT_DIR = ".";
+    public static final String DEFAULT_DIR = ".";
 
     /** the default file name: <tt>TESTS-TestSuites.xml</tt> */
-    public final static String DEFAULT_FILENAME = "TESTS-TestSuites.xml";
+    public static final String DEFAULT_FILENAME = "TESTS-TestSuites.xml";
 
 
     public AggregateTransformer createReport(){

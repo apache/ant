@@ -164,11 +164,11 @@ public class NetRexxC extends MatchingTask {
     private boolean suppressDeprecation = false;
 
     // constants for the messages to suppress by flags and their corresponding properties
-    final static String MSG_METHOD_ARGUMENT_NOT_USED = "Warning: Method argument is not used";
-    final static String MSG_PRIVATE_PROPERTY_NOT_USED = "Warning: Private property is defined but not used";
-    final static String MSG_VARIABLE_NOT_USED = "Warning: Variable is set but not used";
-    final static String MSG_EXCEPTION_NOT_SIGNALLED = "is in SIGNALS list but is not signalled within the method";
-    final static String MSG_DEPRECATION = "has been deprecated";
+    static final String MSG_METHOD_ARGUMENT_NOT_USED = "Warning: Method argument is not used";
+    static final String MSG_PRIVATE_PROPERTY_NOT_USED = "Warning: Private property is defined but not used";
+    static final String MSG_VARIABLE_NOT_USED = "Warning: Variable is set but not used";
+    static final String MSG_EXCEPTION_NOT_SIGNALLED = "is in SIGNALS list but is not signalled within the method";
+    static final String MSG_DEPRECATION = "has been deprecated";
 
     // other implementation variables
     private Vector compileList = new Vector();

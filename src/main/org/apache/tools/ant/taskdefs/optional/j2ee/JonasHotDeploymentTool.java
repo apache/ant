@@ -81,17 +81,17 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
     /**
      *  Description of the Field
      */
-    protected final static String DEFAULT_ORB = "RMI";
+    protected static final String DEFAULT_ORB = "RMI";
 
     /**
      *  The classname of the tool to run *
      */
-    private final static String JONAS_DEPLOY_CLASS_NAME = "org.objectweb.jonas.adm.JonasAdmin";
+    private static final String JONAS_DEPLOY_CLASS_NAME = "org.objectweb.jonas.adm.JonasAdmin";
 
     /**
      *  All the valid actions that weblogic.deploy permits *
      */
-    private final static String[] VALID_ACTIONS =
+    private static final String[] VALID_ACTIONS =
             {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
 
     /**

@@ -71,9 +71,9 @@ import java.io.IOException;
  * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  */
 public class TarOutputStream extends FilterOutputStream {
-    public final static int LONGFILE_ERROR = 0;
-    public final static int LONGFILE_TRUNCATE = 1;
-    public final static int LONGFILE_GNU = 2;
+    public static final int LONGFILE_ERROR = 0;
+    public static final int LONGFILE_TRUNCATE = 1;
+    public static final int LONGFILE_GNU = 2;
     
     protected boolean   debug;
     protected int       currSize;

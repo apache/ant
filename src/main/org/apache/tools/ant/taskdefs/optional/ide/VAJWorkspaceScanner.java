@@ -88,7 +88,7 @@ import org.apache.tools.ant.DirectoryScanner;
 class VAJWorkspaceScanner extends DirectoryScanner {
 
     // Patterns that should be excluded by default.
-    private final static String[] DEFAULTEXCLUDES =
+    private static final String[] DEFAULTEXCLUDES =
     {
         "IBM*/**",
         "Java class libraries/**",

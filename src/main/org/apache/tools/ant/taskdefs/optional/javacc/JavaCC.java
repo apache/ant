@@ -77,27 +77,27 @@ import java.util.Enumeration;
 public class JavaCC extends Task {
 
     // keys to optional attributes
-    private final static String LOOKAHEAD              = "LOOKAHEAD";
-    private final static String CHOICE_AMBIGUITY_CHECK = "CHOICE_AMBIGUITY_CHECK";
-    private final static String OTHER_AMBIGUITY_CHECK  = "OTHER_AMBIGUITY_CHECK";
+    private static final String LOOKAHEAD              = "LOOKAHEAD";
+    private static final String CHOICE_AMBIGUITY_CHECK = "CHOICE_AMBIGUITY_CHECK";
+    private static final String OTHER_AMBIGUITY_CHECK  = "OTHER_AMBIGUITY_CHECK";
 
-    private final static String STATIC                 = "STATIC";
-    private final static String DEBUG_PARSER           = "DEBUG_PARSER";
-    private final static String DEBUG_LOOKAHEAD        = "DEBUG_LOOKAHEAD";
-    private final static String DEBUG_TOKEN_MANAGER    = "DEBUG_TOKEN_MANAGER";
-    private final static String OPTIMIZE_TOKEN_MANAGER = "OPTIMIZE_TOKEN_MANAGER";
-    private final static String ERROR_REPORTING        = "ERROR_REPORTING";
-    private final static String JAVA_UNICODE_ESCAPE    = "JAVA_UNICODE_ESCAPE";
-    private final static String UNICODE_INPUT          = "UNICODE_INPUT";
-    private final static String IGNORE_CASE            = "IGNORE_CASE";
-    private final static String COMMON_TOKEN_ACTION    = "COMMON_TOKEN_ACTION";
-    private final static String USER_TOKEN_MANAGER     = "USER_TOKEN_MANAGER";
-    private final static String USER_CHAR_STREAM       = "USER_CHAR_STREAM";
-    private final static String BUILD_PARSER           = "BUILD_PARSER";
-    private final static String BUILD_TOKEN_MANAGER    = "BUILD_TOKEN_MANAGER";
-    private final static String SANITY_CHECK           = "SANITY_CHECK";
-    private final static String FORCE_LA_CHECK         = "FORCE_LA_CHECK";
-    private final static String CACHE_TOKENS           = "CACHE_TOKENS";
+    private static final String STATIC                 = "STATIC";
+    private static final String DEBUG_PARSER           = "DEBUG_PARSER";
+    private static final String DEBUG_LOOKAHEAD        = "DEBUG_LOOKAHEAD";
+    private static final String DEBUG_TOKEN_MANAGER    = "DEBUG_TOKEN_MANAGER";
+    private static final String OPTIMIZE_TOKEN_MANAGER = "OPTIMIZE_TOKEN_MANAGER";
+    private static final String ERROR_REPORTING        = "ERROR_REPORTING";
+    private static final String JAVA_UNICODE_ESCAPE    = "JAVA_UNICODE_ESCAPE";
+    private static final String UNICODE_INPUT          = "UNICODE_INPUT";
+    private static final String IGNORE_CASE            = "IGNORE_CASE";
+    private static final String COMMON_TOKEN_ACTION    = "COMMON_TOKEN_ACTION";
+    private static final String USER_TOKEN_MANAGER     = "USER_TOKEN_MANAGER";
+    private static final String USER_CHAR_STREAM       = "USER_CHAR_STREAM";
+    private static final String BUILD_PARSER           = "BUILD_PARSER";
+    private static final String BUILD_TOKEN_MANAGER    = "BUILD_TOKEN_MANAGER";
+    private static final String SANITY_CHECK           = "SANITY_CHECK";
+    private static final String FORCE_LA_CHECK         = "FORCE_LA_CHECK";
+    private static final String CACHE_TOKENS           = "CACHE_TOKENS";
 
     private final Hashtable optionalAttrs = new Hashtable();
 

@@ -86,7 +86,7 @@ import java.util.zip.ZipException;
  */
 public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
 
-    private final static ZipShort HEADER_ID = new ZipShort(0x756E);
+    private static final ZipShort HEADER_ID = new ZipShort(0x756E);
 
     /**
      * Standard Unix stat(2) file mode.

@@ -95,7 +95,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @see #getIncludes()
      * @see #setIncludes(String includes)
      */
-    public final static String DEFAULT_INCLUDESETTING = "*";
+    public static final String DEFAULT_INCLUDESETTING = "*";
 
     /**
      * This disables the exclude filter by default. In other words, no files
@@ -105,7 +105,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @see #getExcludes()
      * @see #setExcludes(String excludes)
      */
-    public final static String DEFAULT_EXCLUDESETTING = null;
+    public static final String DEFAULT_EXCLUDESETTING = null;
 
     //ATTRIBUTES settable from ant.
 

@@ -168,10 +168,10 @@ public class FilterSet extends DataType implements Cloneable {
     }
     
     /** The default token start string */
-    public final static String DEFAULT_TOKEN_START = "@";
+    public static final String DEFAULT_TOKEN_START = "@";
     
     /** The default token end string */
-    public final static String DEFAULT_TOKEN_END = "@";
+    public static final String DEFAULT_TOKEN_END = "@";
     
     private String startOfToken = DEFAULT_TOKEN_START;
     private String endOfToken = DEFAULT_TOKEN_END;

@@ -79,7 +79,7 @@ public class Javac13 extends DefaultCompilerAdapter {
     /**
      * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
      */
-    private final static int MODERN_COMPILER_SUCCESS = 0;
+    private static final int MODERN_COMPILER_SUCCESS = 0;
 
     public boolean execute() throws BuildException {
         attributes.log("Using modern compiler", Project.MSG_VERBOSE);

@@ -164,7 +164,7 @@ public class JspC extends MatchingTask {
 
 
         
-    private final static String FAIL_MSG
+    private static final String FAIL_MSG
         = "Compile failed, messages should have been provided.";
     /* ------------------------------------------------------------ */
     /**

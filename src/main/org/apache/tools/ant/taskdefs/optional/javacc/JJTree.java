@@ -77,18 +77,18 @@ import java.util.Enumeration;
 public class JJTree extends Task {
 
     // keys to optional attributes
-    private final static String BUILD_NODE_FILES  = "BUILD_NODE_FILES";
-    private final static String MULTI             = "MULTI";
-    private final static String NODE_DEFAULT_VOID = "NODE_DEFAULT_VOID";
-    private final static String NODE_FACTORY      = "NODE_FACTORY";
-    private final static String NODE_SCOPE_HOOK   = "NODE_SCOPE_HOOK";
-    private final static String NODE_USES_PARSER  = "NODE_USES_PARSER";
-    private final static String STATIC            = "STATIC";
-    private final static String VISITOR           = "VISITOR";
+    private static final String BUILD_NODE_FILES  = "BUILD_NODE_FILES";
+    private static final String MULTI             = "MULTI";
+    private static final String NODE_DEFAULT_VOID = "NODE_DEFAULT_VOID";
+    private static final String NODE_FACTORY      = "NODE_FACTORY";
+    private static final String NODE_SCOPE_HOOK   = "NODE_SCOPE_HOOK";
+    private static final String NODE_USES_PARSER  = "NODE_USES_PARSER";
+    private static final String STATIC            = "STATIC";
+    private static final String VISITOR           = "VISITOR";
 
-    private final static String NODE_PACKAGE      = "NODE_PACKAGE";
-    private final static String VISITOR_EXCEPTION = "VISITOR_EXCEPTION";
-    private final static String NODE_PREFIX       = "NODE_PREFIX";
+    private static final String NODE_PACKAGE      = "NODE_PACKAGE";
+    private static final String VISITOR_EXCEPTION = "VISITOR_EXCEPTION";
+    private static final String NODE_PREFIX       = "NODE_PREFIX";
 
     private final Hashtable optionalAttrs = new Hashtable();
 

@@ -86,7 +86,7 @@ public class Exec extends Task {
     protected PrintWriter fos = null;
     private boolean failOnError = false;
 
-    private final static int BUFFER_SIZE = 512;
+    private static final int BUFFER_SIZE = 512;
 
     public Exec() {
         System.err.println("As of Ant 1.2 released in October 2000, the Exec class");

@@ -65,7 +65,7 @@ public class Test extends Java {
     protected Vector m_tests = new Vector();
 
 
-    protected final static class TestletEntry {
+    protected static final class TestletEntry {
 
         protected String m_testname = "";
 

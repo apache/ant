@@ -141,24 +141,24 @@ public abstract class ClearCase extends Task {
     /**
      * Constant for the thing to execute
      */
-    private final static String CLEARTOOL_EXE = "cleartool";
+    private static final String CLEARTOOL_EXE = "cleartool";
 
     /**
      * The 'Update' command
      */
-    public final static String COMMAND_UPDATE = "update";
+    public static final String COMMAND_UPDATE = "update";
     /**
      * The 'Checkout' command
      */
-    public final static String COMMAND_CHECKOUT = "checkout";
+    public static final String COMMAND_CHECKOUT = "checkout";
     /**
      * The 'Checkin' command
      */
-    public final static String COMMAND_CHECKIN = "checkin";
+    public static final String COMMAND_CHECKIN = "checkin";
     /**
      * The 'UndoCheckout' command
      */
-    public final static String COMMAND_UNCHECKOUT = "uncheckout";
+    public static final String COMMAND_UNCHECKOUT = "uncheckout";
 
 }
 

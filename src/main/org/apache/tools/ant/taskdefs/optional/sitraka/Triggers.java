@@ -132,10 +132,10 @@ public class Triggers {
     }
 
     /** mapping of actions to cryptic command line mnemonics */
-    private final static Hashtable actionMap = new Hashtable(3);
+    private static final Hashtable actionMap = new Hashtable(3);
 
     /** mapping of events to cryptic command line mnemonics */
-    private final static Hashtable eventMap = new Hashtable(3);
+    private static final Hashtable eventMap = new Hashtable(3);
 
     static {
         actionMap.put("enter", "E");

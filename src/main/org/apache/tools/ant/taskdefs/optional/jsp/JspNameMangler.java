@@ -161,7 +161,7 @@ public class JspNameMangler implements JspMangler {
      * @param ch char to mangle
      * @return mangled string; 5 digit hex value 
      */
-    private final static String mangleChar(char ch) {
+    private static final String mangleChar(char ch) {
 
         if (ch == File.separatorChar) {
             ch = '/';

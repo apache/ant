@@ -108,22 +108,22 @@ public class Ilasm
      *  Name of the executable. The .exe suffix is deliberately not included in
      *  anticipation of the unix version
      */
-    protected final static String exe_name = "ilasm";
+    protected static final String exe_name = "ilasm";
 
     /**
      *  what is the file extension we search on?
      */
-    protected final static String file_ext = "il";
+    protected static final String file_ext = "il";
 
     /**
      *  and now derive the search pattern from the extension
      */
-    protected final static String file_pattern = "**/*." + file_ext;
+    protected static final String file_pattern = "**/*." + file_ext;
 
     /**
      *  title of task for external presentation
      */
-    protected final static String exe_title = "ilasm";
+    protected static final String exe_title = "ilasm";
 
     /**
      *  source directory upon which the search pattern is applied

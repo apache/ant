@@ -109,22 +109,22 @@ import org.apache.tools.ant.types.Path;
  */
 public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler 
 {
-    public final static String PUBLICID_BORLAND_EJB
+    public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
-    protected final static String DEFAULT_BAS45_EJB11_DTD_LOCATION 
+    protected static final String DEFAULT_BAS45_EJB11_DTD_LOCATION 
     = "/com/inprise/j2ee/xml/dtds/ejb-jar.dtd";
     
-    protected final static String DEFAULT_BAS_DTD_LOCATION 
+    protected static final String DEFAULT_BAS_DTD_LOCATION 
     = "/com/inprise/j2ee/xml/dtds/ejb-inprise.dtd";       
     
-    protected final static String BAS_DD = "ejb-inprise.xml";    
+    protected static final String BAS_DD = "ejb-inprise.xml";    
 
     /** Java2iiop executable **/
-    protected final static String JAVA2IIOP = "java2iiop";
+    protected static final String JAVA2IIOP = "java2iiop";
 
     /** Verify class */
-    protected final static String VERIFY = "com.inprise.ejb.util.Verify";
+    protected static final String VERIFY = "com.inprise.ejb.util.Verify";
 
     /** Instance variable that stores the suffix for the borland jarfile. */
     private String jarSuffix = "-ejb.jar";

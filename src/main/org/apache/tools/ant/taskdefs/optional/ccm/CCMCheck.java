@@ -174,11 +174,11 @@ public class CCMCheck extends Continuus {
     /**
      * -comment flag -- comment to attach to the file
      */
-    public final static String FLAG_COMMENT = "/comment";
+    public static final String FLAG_COMMENT = "/comment";
 
     /**
      *  -task flag -- associate checckout task with task
      */
-    public final static String FLAG_TASK = "/task";
+    public static final String FLAG_TASK = "/task";
 }
 

@@ -104,17 +104,17 @@ public class JUnitTestRunner implements TestListener {
     /**
      * No problems with this test.
      */
-    public final static int SUCCESS = 0;
+    public static final int SUCCESS = 0;
 
     /**
      * Some tests failed.
      */
-    public final static int FAILURES = 1;
+    public static final int FAILURES = 1;
 
     /**
      * An error occured.
      */
-    public final static int ERRORS = 2;
+    public static final int ERRORS = 2;
 
     /**
      * Holds the registered formatters.
@@ -131,7 +131,7 @@ public class JUnitTestRunner implements TestListener {
      */
     private static boolean filtertrace = true;
     
-    private final static String[] DEFAULT_TRACE_FILTERS = new String[] {
+    private static final String[] DEFAULT_TRACE_FILTERS = new String[] {
                 "junit.framework.TestCase",
                 "junit.framework.TestResult",
                 "junit.framework.TestSuite",

@@ -174,14 +174,14 @@ public class WaitFor extends ConditionBase {
 
     public static class Unit extends EnumeratedAttribute {
 
-        private final static String MILLISECOND = "millisecond";
-        private final static String SECOND = "second";
-        private final static String MINUTE = "minute";
-        private final static String HOUR = "hour";
-        private final static String DAY = "day";
-        private final static String WEEK = "week";
+        private static final String MILLISECOND = "millisecond";
+        private static final String SECOND = "second";
+        private static final String MINUTE = "minute";
+        private static final String HOUR = "hour";
+        private static final String DAY = "day";
+        private static final String WEEK = "week";
 
-        private final static String[] units = {
+        private static final String[] units = {
             MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK
         };
 

@@ -84,9 +84,9 @@ import org.w3c.dom.Document;
  */
 public class AggregateTransformer {
 
-    public final static String FRAMES = "frames";
+    public static final String FRAMES = "frames";
 
-    public final static String NOFRAMES = "noframes";
+    public static final String NOFRAMES = "noframes";
 
     public static class Format extends EnumeratedAttribute {
         public String[] getValues(){

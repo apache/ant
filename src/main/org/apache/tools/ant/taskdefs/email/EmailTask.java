@@ -82,13 +82,13 @@ import org.apache.tools.ant.types.FileSet;
 public class EmailTask
      extends Task {
     /** Constant to show that the best available mailer should be used.  */
-    public final static String AUTO = "auto";
+    public static final String AUTO = "auto";
     /** Constant to allow the Mime mailer to be requested  */
-    public final static String MIME = "mime";
+    public static final String MIME = "mime";
     /** Constant to allow the UU mailer to be requested  */
-    public final static String UU = "uu";
+    public static final String UU = "uu";
     /** Constant to allow the plaintext mailer to be requested  */
-    public final static String PLAIN = "plain";
+    public static final String PLAIN = "plain";
 
 
     /**

@@ -113,7 +113,7 @@ import java.util.Vector;
 
 public class Javac extends MatchingTask {
 
-    private final static String FAIL_MSG
+    private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
     private Path src;
@@ -721,8 +721,7 @@ public class Javac extends MatchingTask {
                     Project.MSG_WARN);
                 facade.setImplementation("extJavac");
                 compilerImpl = "extJavac";
-            }
-            else {
+            } else {
                 log("Since compiler setting isn't classic or modern,"
                     + "ignoring fork setting.", Project.MSG_WARN);
             }
@@ -769,8 +768,7 @@ public class Javac extends MatchingTask {
                 + (destDir != null ? " to " + destDir : ""));
 
             if (listFiles) {
-                for (int i = 0 ; i < compileList.length ; i++)
-                {
+                for (int i = 0 ; i < compileList.length ; i++) {
                   String filename = compileList[i].getAbsolutePath();
                   log(filename) ;
                 }

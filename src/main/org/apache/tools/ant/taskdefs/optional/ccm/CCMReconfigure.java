@@ -177,18 +177,18 @@ public class CCMReconfigure extends Continuus {
     /**
      * /recurse --
      */
-    public final static String FLAG_RECURSE = "/recurse";
+    public static final String FLAG_RECURSE = "/recurse";
 
     /**
      * /recurse --
      */
-    public final static String FLAG_VERBOSE = "/verbose";
+    public static final String FLAG_VERBOSE = "/verbose";
 
 
     /**
      *  /project flag -- target project
      */
-    public final static String FLAG_PROJECT = "/project";
+    public static final String FLAG_PROJECT = "/project";
 
 }
 

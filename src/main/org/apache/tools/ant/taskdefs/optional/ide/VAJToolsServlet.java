@@ -102,14 +102,14 @@ public abstract class VAJToolsServlet extends HttpServlet {
     }
 
     // constants for servlet param names
-    public final static String DIR_PARAM = "dir";
-    public final static String INCLUDE_PARAM = "include";
-    public final static String EXCLUDE_PARAM = "exclude";
-    public final static String CLASSES_PARAM = "cls";
-    public final static String SOURCES_PARAM = "src";
-    public final static String RESOURCES_PARAM = "res";
-    public final static String DEFAULT_EXCLUDES_PARAM = "dex";
-    public final static String PROJECT_NAME_PARAM = "project";
+    public static final String DIR_PARAM = "dir";
+    public static final String INCLUDE_PARAM = "include";
+    public static final String EXCLUDE_PARAM = "exclude";
+    public static final String CLASSES_PARAM = "cls";
+    public static final String SOURCES_PARAM = "src";
+    public static final String RESOURCES_PARAM = "res";
+    public static final String DEFAULT_EXCLUDES_PARAM = "dex";
+    public static final String PROJECT_NAME_PARAM = "project";
 
 
     // current request

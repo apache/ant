@@ -103,7 +103,7 @@ import java.util.Enumeration;
 
 public class Javah extends Task {
 
-    private final static String FAIL_MSG = "Compile failed, messages should have been provided.";
+    private static final String FAIL_MSG = "Compile failed, messages should have been provided.";
 
     private Vector classes = new Vector(2);
     private String cls;

@@ -110,17 +110,17 @@ public class Pvcs extends org.apache.tools.ant.Task {
     /**
      * Constant for the thing to execute
      */
-    private final static String PCLI_EXE = "pcli";
+    private static final String PCLI_EXE = "pcli";
 
     /**
      * Constant for the PCLI listversionedfiles recursive i a format "get" understands
      */
-    private final static String PCLI_LVF_ARGS = "lvf -z -aw";
+    private static final String PCLI_LVF_ARGS = "lvf -z -aw";
 
     /**
      * Constant for the thing to execute
      */
-    private final static String GET_EXE = "get";
+    private static final String GET_EXE = "get";
 
 
     protected int runCmd(Commandline cmd, ExecuteStreamHandler out) {

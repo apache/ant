@@ -78,12 +78,12 @@ import org.apache.tools.ant.Project;
  * list can then be accessed through the getFiles() method.
  */
 public class DescriptorHandler extends org.xml.sax.HandlerBase {
-    private final static int STATE_LOOKING_EJBJAR = 1;
-    private final static int STATE_IN_EJBJAR = 2;
-    private final static int STATE_IN_BEANS = 3;
-    private final static int STATE_IN_SESSION = 4;
-    private final static int STATE_IN_ENTITY = 5;
-    private final static int STATE_IN_MESSAGE = 6;
+    private static final int STATE_LOOKING_EJBJAR = 1;
+    private static final int STATE_IN_EJBJAR = 2;
+    private static final int STATE_IN_BEANS = 3;
+    private static final int STATE_IN_SESSION = 4;
+    private static final int STATE_IN_ENTITY = 5;
+    private static final int STATE_IN_MESSAGE = 6;
 
     private Task owningTask;
 
@@ -93,19 +93,19 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
      */
-    private final static String EJB_REF               = "ejb-ref";
-    private final static String HOME_INTERFACE        = "home";
-    private final static String REMOTE_INTERFACE      = "remote";
-    private final static String LOCAL_HOME_INTERFACE  = "local-home";
-    private final static String LOCAL_INTERFACE       = "local";
-    private final static String BEAN_CLASS            = "ejb-class";
-    private final static String PK_CLASS              = "prim-key-class";
-    private final static String EJB_NAME              = "ejb-name";
-    private final static String EJB_JAR               = "ejb-jar";
-    private final static String ENTERPRISE_BEANS      = "enterprise-beans";
-    private final static String ENTITY_BEAN           = "entity";
-    private final static String SESSION_BEAN          = "session";
-    private final static String MESSAGE_BEAN          = "message-driven";
+    private static final String EJB_REF               = "ejb-ref";
+    private static final String HOME_INTERFACE        = "home";
+    private static final String REMOTE_INTERFACE      = "remote";
+    private static final String LOCAL_HOME_INTERFACE  = "local-home";
+    private static final String LOCAL_INTERFACE       = "local";
+    private static final String BEAN_CLASS            = "ejb-class";
+    private static final String PK_CLASS              = "prim-key-class";
+    private static final String EJB_NAME              = "ejb-name";
+    private static final String EJB_JAR               = "ejb-jar";
+    private static final String ENTERPRISE_BEANS      = "enterprise-beans";
+    private static final String ENTITY_BEAN           = "entity";
+    private static final String SESSION_BEAN          = "session";
+    private static final String MESSAGE_BEAN          = "message-driven";
 
     /**
      * The state of the parsing

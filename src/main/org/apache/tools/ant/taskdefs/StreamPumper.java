@@ -69,8 +69,8 @@ public class StreamPumper implements Runnable {
     // TODO: make SIZE and SLEEP instance variables.
     // TODO: add a status flag to note if an error occured in run.
 
-    private final static int SLEEP = 5;
-    private final static int SIZE = 128;
+    private static final int SLEEP = 5;
+    private static final int SIZE = 128;
     private InputStream is;
     private OutputStream os;
     private boolean finished;
