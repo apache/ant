@@ -67,7 +67,7 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
  * @version $Revision$ $Date$
  */
 class RedirectingStreamHandler
-    implements ExecuteStreamHandler
+    implements ExecuteStreamHandler, Runnable
 {
     private final ChangeLogParser m_parser;
     private BufferedReader m_reader;
@@ -127,13 +127,25 @@ class RedirectingStreamHandler
      */
     public void start() throws IOException
     {
+        //Start up a separate thread to consume error
+        //stream. Hopefully to avoid blocking of task
+        final Thread thread = new Thread( this, "ErrorConsumer" );
+        thread.start();
+
         String line = m_reader.readLine();
         while( null != line )
         {
             m_parser.stdout( line );
             line = m_reader.readLine();
         }
+    }
 
+    /**
+     * Process the standard error in a different
+     * thread to avoid blocking in some situaitons.
+     */
+    public void run()
+    {
         // Read the error stream so that it does not block !
         // We cannot use a BufferedReader as the ready() method is bugged!
         // (see Bug 4329985, which is supposed to be fixed in JDK1.4 :
