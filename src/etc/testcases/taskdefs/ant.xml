@@ -54,15 +54,15 @@
   </target>
 
   <target name="testInherit">
-    <ant antfile="ant/references.xml" inheritAll="true" target="dummy" />
+    <ant antfile="ant/references.xml" inheritRefs="true" target="dummy" />
   </target>
 
   <target name="testNoInherit">
-    <ant antfile="ant/references.xml" inheritAll="false" target="dummy" />
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy" />
   </target>
 
   <target name="testRename">
-    <ant antfile="ant/references.xml" inheritAll="false" target="dummy">
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy">
       <reference refid="path" torefid="newpath" />
     </ant>
   </target>

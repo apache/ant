@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.BuildException;
@@ -65,6 +66,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -105,6 +107,9 @@ public class Ant extends Task {
     /** should we inherit properties from the parent ? */
     private boolean inheritAll = true;
     
+    /** should we inherit references from the parent ? */
+    private boolean inheritRefs = false;
+    
     /** the properties to pass to the new project */
     private Vector properties = new Vector();
     
@@ -121,6 +126,15 @@ public class Ant extends Task {
      */
     public void setInheritAll(boolean value) {
        inheritAll = value;
+    }
+
+    /**
+     * If true, inherit all references from parent Project
+     * If false, inherit only those defined
+     * inside the ant call itself
+     */
+    public void setInheritRefs(boolean value) {
+       inheritRefs = value;
     }
 
     public void init() {
@@ -335,21 +349,64 @@ public class Ant extends Task {
                 if (toRefid == null) {
                     toRefid = refid;
                 }
-                newProject.addReference(toRefid, o);
+                copyReference(refid, toRefid);
             }
         }
 
         // Now add all references that are not defined in the
-        // subproject, if inheritAll is true
-        if (inheritAll) {
+        // subproject, if inheritRefs is true
+        if (inheritRefs) {
             for(e = thisReferences.keys(); e.hasMoreElements();) {
                 String key = (String)e.nextElement();
                 if (newReferences.containsKey(key)) {
                     continue;
                 }
-                newProject.addReference(key, thisReferences.get(key));
+                copyReference(key, key);
             }
         }
+    }
+
+    /**
+     * Try to clone and reconfigure the object referenced by oldkey in
+     * the parent project and add it to the new project with the key
+     * newkey.
+     *
+     * <p>If we cannot clone it, copy the referenced object itself and
+     * keep our fingers crossed.</p>
+     */
+    private void copyReference(String oldKey, String newKey) {
+        Object orig = project.getReference(oldKey);
+        Class c = orig.getClass();
+        Object copy = orig;
+        try {
+            Method cloneM = c.getMethod("clone", new Class[0]);
+            if (cloneM != null) {
+                copy = cloneM.invoke(orig, new Object[0]);
+            }
+        } catch (Exception e) {
+            // not Clonable
+        }
+        
+
+        if (copy instanceof ProjectComponent) {
+            ((ProjectComponent) copy).setProject(newProject);
+        } else {
+            try {
+                Method setProjectM = 
+                    c.getMethod( "setProject", new Class[] {Project.class});
+                if(setProjectM != null) {
+                    setProjectM.invoke(copy, new Object[] {newProject});
+                }
+            } catch (NoSuchMethodException e) {
+                // ignore this if the class being referenced does not have
+                // a set project method.
+            } catch(Exception e2) {
+                String msg = "Error setting new project instance for reference with id "
+                    + oldKey; 
+                throw new BuildException(msg, e2, location);
+            }
+        }
+        newProject.addReference(newKey, copy);
     }
 
     /**

@@ -158,7 +158,8 @@ public class AntTest extends BuildFileTest {
     }
 
     public void testReferenceInheritance() {
-        Path p = new Path(project);
+        Path p = Path.systemClasspath;
+        p.setProject(project);
         project.addReference("path", p);
         project.addReference("no-override", p);
         testReference("testInherit", new String[] {"path", "path"},
@@ -172,7 +173,8 @@ public class AntTest extends BuildFileTest {
     }
 
     public void testReferenceNoInheritance() {
-        Path p = new Path(project);
+        Path p = Path.systemClasspath;
+        p.setProject(project);
         project.addReference("path", p);
         project.addReference("no-override", p);
         testReference("testNoInherit", new String[] {"path", "path"},
@@ -188,7 +190,8 @@ public class AntTest extends BuildFileTest {
     }
 
     public void testReferenceRename() {
-        Path p = new Path(project);
+        Path p = Path.systemClasspath;
+        p.setProject(project);
         project.addReference("path", p);
         testReference("testRename", new String[] {"path", "path"},
                       new boolean[] {true, false}, p);
@@ -266,9 +269,37 @@ public class AntTest extends BuildFileTest {
         public void targetStarted(BuildEvent event) {
             if (error == null) {
                 try {
-                    assertEquals("Call "+calls+" refid=\'"+keys[calls]+"\'", 
-                                 expectSame[calls],
-                                 event.getProject().getReferences().get(keys[calls++]) == value);
+                    String msg = 
+                        "Call " + calls + " refid=\'" + keys[calls] + "\'";
+                    if (value == null) {
+                        Object o = event.getProject().getReference(keys[calls]);
+                        if (expectSame[calls++]) {
+                            assertNull(msg, o);
+                        } else {
+                            assertNotNull(msg, o);
+                        }
+                    } else {
+                        // a rather convoluted equals() test
+                        Path expect = (Path) value;
+                        Path received = (Path) event.getProject().getReference(keys[calls]);
+                        boolean shouldBeEqual = expectSame[calls++];
+                        if (received == null) {
+                            assertTrue(msg, !shouldBeEqual);
+                        } else {
+                            String[] l1 = expect.list();
+                            String[] l2 = received.list();
+                            if (l1.length == l2.length) {
+                                for (int i=0; i<l1.length; i++) {
+                                    if (!l1[i].equals(l2[i])) {
+                                        assertTrue(msg, !shouldBeEqual);
+                                    }
+                                }
+                                assertTrue(msg, shouldBeEqual);
+                            } else {
+                                assertTrue(msg, !shouldBeEqual);
+                            }
+                        }
+                    }
                 } catch (AssertionFailedError e) {
                     error = e;
                 }
