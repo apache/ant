@@ -38,7 +38,7 @@ public class ExecuteOn
     private Marker m_targetFilePos;
     private Mapper m_mapperElement;
     private FileNameMapper m_mapper;
-    private File m_destDir
+    private File m_destDir;
 
     /**
      * Has &lt;srcfile&gt; been specified before &lt;targetfile&gt;
@@ -399,7 +399,7 @@ public class ExecuteOn
 
                 if( !m_parallel )
                 {
-                    final String[] s = new String[ fileNames.size() ];
+                    String[] s = new String[ fileNames.size() ];
                     s = (String[])fileNames.toArray( s );
                     for( int j = 0; j < s.length; j++ )
                     {
