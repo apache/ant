@@ -181,7 +181,9 @@ if $cygwin; then
   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
-  ANT_OPTS="$ANT_OPTS -Dcygwin.user.home="`cygpath --path --windows "$HOME"`
+  CYGHOME=`cygpath --path --windows "$HOME"`
+  "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
+else
+  "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
 fi
 
-"$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
