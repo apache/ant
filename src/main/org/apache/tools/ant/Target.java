@@ -112,6 +112,10 @@ public class Target {
         this.condition = (property == null) ? "" : property;
     }
 
+    public String toString() {
+        return name;
+    }
+
     public void execute() throws BuildException {
         if (("".equals(this.condition)) || (project.getProperty(this.condition) != null)) {
             Enumeration enum = tasks.elements();
