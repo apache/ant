@@ -537,7 +537,11 @@ Check for Xerces-specific definition of the location of the no namespace schema.
 
 <p>Uses Java1.5+ networking APIs to probe for a (remote) system being
 reachable. Exactly what probe mechanisms are used is an implementation
-feature of the JVM. They may include ICMP "ping" packets
+feature of the JVM. They may include ICMP "ping" packets, UDP or TCP connections
+to port 7 "echo service" or other means. On Java1.4 and earlier, being able
+to resolve the hostname is considered success. This means that if DNS is not
+working or a URL/hostname is bad, the test will fail, but otherwise succeed
+even if the remote host is actually absent.
 
 </p>
 <p>
