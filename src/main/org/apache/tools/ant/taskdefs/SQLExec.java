@@ -180,7 +180,7 @@ public class SQLExec extends Task {
         Statement statement = null;
 
         try{
-            log("connectiing to " + url, Project.MSG_VERBOSE );
+            log("connecting to " + url, Project.MSG_VERBOSE );
             conn = DriverManager.getConnection(url, userId, password);
             statement = conn.createStatement();
 
@@ -227,10 +227,13 @@ public class SQLExec extends Task {
     }
 
     /**
-    * Exec the sql statement.
-    */
+     * Exec the sql statement.
+     */
     private void execSQL(Statement statement, String sql) throws SQLException{
-        statement.executeQuery(sql);
+        if (!statement.execute(sql)) {
+            log(statement.getUpdateCount()+" row affected", 
+                Project.MSG_VERBOSE);
+        }
     }
 
 }
