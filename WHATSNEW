@@ -21,6 +21,9 @@ Fixed bugs:
 
 * AntLikeTasksAtTopLevelTest failed on cygwin.
 
+* <junit> and <assertions> are working together. Bugzilla report 27218
+
+
 Other changes:
 --------------
 
