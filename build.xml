@@ -69,7 +69,6 @@
   <property name="dist.name" value="jakarta-${name}-${version}"/>
   <property name="dist.base" value="distribution"/>
   <property name="dist.dir" value="dist"/>
-  <property name="dist.dir" value="${defaultdist.dir}"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
   <property name="dist.docs" value="${dist.dir}/docs"/>
@@ -526,7 +525,7 @@
           description="--> cleans up build and dist directories">
     <delete dir="${build.dir}" />
     <delete dir="${dist.base}" />
-    <delete dir="${defaultdist.dir}" />
+    <delete dir="${dist.dir}" />
     <delete> 
       <fileset dir="." includes="**/*~" defaultexcludes="no"/>
     </delete>
