@@ -76,7 +76,11 @@ public class Xalan1Executor extends XalanExecutor {
         String system_id = caller.getStylesheetSystemId();
         XSLTInputSource xsl_src = new XSLTInputSource(system_id);
         OutputStream os = getOutputStream();
-        XSLTResultTarget target = new XSLTResultTarget(os);
-        processor.process( xml_src, xsl_src, target);
+        try {
+            XSLTResultTarget target = new XSLTResultTarget(os);
+            processor.process( xml_src, xsl_src, target);
+        } finally {
+            os.close();
+        }
     }
 }

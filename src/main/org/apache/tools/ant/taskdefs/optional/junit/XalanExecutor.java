@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -105,7 +105,8 @@ abstract class XalanExecutor {
         XalanExecutor executor = null;
         try {
             procVersion = Class.forName("org.apache.xalan.processor.XSLProcessorVersion");
-            executor = new Xalan2Executor();
+            executor = (XalanExecutor) Class.forName(
+                "org.apache.tools.ant.taskdefs.optional.junit.Xalan2Executor").newInstance();
         } catch (Exception xalan2missing){
             try {
                 procVersion = Class.forName("org.apache.xalan.xslt.XSLProcessorVersion");

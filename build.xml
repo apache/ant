@@ -188,8 +188,6 @@
              unless="xalan2.present" />
     <exclude name="${optional.package}/junit/AggregateTransformer.java"
              unless="xalan2.present" />
-    <exclude name="${optional.package}/junit/XalanExecutor.java"
-             unless="xalan2.present" />
     <exclude name="${optional.package}/junit/Xalan2Executor.java"
              unless="xalan2.present" />
   </patternset>

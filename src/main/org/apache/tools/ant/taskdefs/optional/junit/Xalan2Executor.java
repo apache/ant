@@ -77,8 +77,12 @@ public class Xalan2Executor extends XalanExecutor {
         Transformer tformer = tfactory.newTransformer(xsl_src);
         Source xml_src = new DOMSource(caller.document);
         OutputStream os = getOutputStream();
-        tformer.setParameter("output.dir", caller.toDir.getAbsolutePath());
-        Result result = new StreamResult(os);
-        tformer.transform(xml_src, result);
+        try {
+            tformer.setParameter("output.dir", caller.toDir.getAbsolutePath());
+            Result result = new StreamResult(os);
+            tformer.transform(xml_src, result);
+        } finally {
+            os.close();
+        }
     }
 }
