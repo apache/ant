@@ -9,7 +9,6 @@ package org.apache.tools.ant.types;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
-import org.apache.tools.ant.Project;
 
 /**
  * A representation of a Java command line that is nothing more than a composite
@@ -190,7 +189,7 @@ public class CommandlineJava implements Cloneable
         return javaCommand.createArgument();
     }
 
-    public Path createClasspath( Project p )
+    public Path createClasspath()
     {
         if( classpath == null )
         {
