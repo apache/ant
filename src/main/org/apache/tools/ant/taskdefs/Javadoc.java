@@ -262,8 +262,6 @@ public class Javadoc extends Task {
     }
 
     public void setDestdir(File dir) {
-        cmd.createArgument().setValue("-d");
-        cmd.createArgument().setFile(dir);
         destDir = dir;
     }
     public void setSourcefiles(String src) {
@@ -586,8 +584,8 @@ public class Javadoc extends Task {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
         }
 
-        if (sourcePath == null || destDir == null ) {
-            String msg = "sourcePath and destDir attributes must be set!";
+        if (sourcePath == null) {
+            String msg = "sourcePath attribute must be set!";
             throw new BuildException(msg);
         }
 
@@ -618,6 +616,15 @@ public class Javadoc extends Task {
             toExecute.createArgument().setValue("-version");
         if (author && doclet == null)
             toExecute.createArgument().setValue("-author");
+
+        if (javadoc1 || doclet == null) {
+            if (destDir == null) {
+                String msg = "destDir attribute must be set!";
+                throw new BuildException(msg);
+            }
+            cmd.createArgument().setValue("-d");
+            cmd.createArgument().setFile(destDir);
+        }
 
 // --------------------------------- javadoc2 arguments for default doclet
 
