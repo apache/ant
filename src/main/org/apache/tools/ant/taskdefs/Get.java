@@ -218,11 +218,16 @@ public class Get extends Task {
             try {
                 byte[] buffer = new byte[100 * 1024];
                 int length;
+                int dots = 0;
 
                 while ((length = is.read(buffer)) >= 0) {
                     fos.write(buffer, 0, length);
                     if (verbose) {
                         System.out.print(".");
+                        if (dots++ > 50) {
+                            System.out.flush();
+                            dots = 0;
+                        }
                     }
                 }
                 if (verbose) {
