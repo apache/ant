@@ -1794,7 +1794,7 @@ public class Javadoc extends Task {
         // taken from packagenames attribute and nested package
         // elements and excludes taken from excludepackages attribute
         // and nested excludepackage elements
-        if (sourcePath != null) {
+        if (sourcePath != null && packageNames.size() > 0) {
             PatternSet ps = new PatternSet();
             Enumeration enum = packageNames.elements();
             while (enum.hasMoreElements()) {
@@ -1859,6 +1859,9 @@ public class Javadoc extends Task {
             }
             if (containsPackages) {
                 sp.createPathElement().setLocation(baseDir);
+            } else {
+                log(baseDir + " doesn\'t contain any packages, dropping it.",
+                    Project.MSG_VERBOSE); 
             }
         }
     }
