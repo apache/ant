@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,6 +104,10 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     private Hashtable testElements = new Hashtable();
     /**
+     * tests that failed.
+     */
+    private Hashtable failedTests = new Hashtable();
+    /**
      * Timing helper.
      */
     private Hashtable testStarts = new Hashtable();
@@ -186,12 +190,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     public void startTest(Test t) {
         testStarts.put(t, new Long(System.currentTimeMillis()));
-
-        Element currentTest = doc.createElement(TESTCASE);
-        currentTest.setAttribute(ATTR_NAME, 
-                                 JUnitVersionHelper.getTestCaseName(t));
-        rootElement.appendChild(currentTest);
-        testElements.put(t, currentTest);
     }
 
     /**
@@ -200,16 +198,24 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A Test is finished.
      */
     public void endTest(Test test) {
-        Element currentTest = (Element) testElements.get(test);
-        
         // Fix for bug #5637 - if a junit.extensions.TestSetup is
         // used and throws an exception during setUp then startTest
         // would never have been called
-        if (currentTest == null) {
+        if (!testStarts.containsKey(test)) {
             startTest(test);
+        }
+
+        Element currentTest = null;
+        if (!failedTests.containsKey(test)) {
+            currentTest = doc.createElement(TESTCASE);
+            currentTest.setAttribute(ATTR_NAME, 
+                                     JUnitVersionHelper.getTestCaseName(test));
+            rootElement.appendChild(currentTest);
+            testElements.put(test, currentTest);
+        } else {
             currentTest = (Element) testElements.get(test);
         }
-        
+
         Long l = (Long) testStarts.get(test);
         currentTest.setAttribute(ATTR_TIME,
             "" + ((System.currentTimeMillis() - l.longValue()) / 1000.0));
@@ -245,6 +251,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     private void formatError(String type, Test test, Throwable t) {
         if (test != null) {
             endTest(test);
+            failedTests.put(test, test);
         }
 
         Element nested = doc.createElement(type);

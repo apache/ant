@@ -195,6 +195,9 @@ Other changes:
 * Copy has a new outputencoding attribute that can be used to change
   the encoding while copying files.  Bugzilla Report 18217.
 
+* The xml formatter for JUnit will now honor test case names set with
+  setName.  Bugzilla Report 17040.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
