@@ -78,6 +78,8 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
+ * @since Ant 1.5
+ *
  * @ant.task category="control"
  */
 public class Checksum extends MatchingTask implements Condition {
@@ -216,6 +218,7 @@ public class Checksum extends MatchingTask implements Condition {
      * Validate attributes and get down to business.
      */
     private boolean validateAndExecute() throws BuildException {
+        String savedFileExt = fileext;
 
         if (file == null && filesets.size() == 0) {
             throw new BuildException(
@@ -265,13 +268,6 @@ public class Checksum extends MatchingTask implements Condition {
                 "ForceOverwrite cannot be used when conditions are being used.");
         }
 
-        if (fileext == null) {
-            fileext = "." + algorithm;
-        } else if (fileext.trim().length() == 0) {
-            throw new BuildException(
-                "File extension when specified must not be an empty string");
-        }
-
         messageDigest = null;
         if (provider != null) {
             try {
@@ -294,20 +290,32 @@ public class Checksum extends MatchingTask implements Condition {
                 location);
         }
 
-        addToIncludeFileMap(file);
-
-        int sizeofFileSet = filesets.size();
-        for (int i = 0; i < sizeofFileSet; i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            String[] srcFiles = ds.getIncludedFiles();
-            for (int j = 0; j < srcFiles.length; j++) {
-                File src = new File(fs.getDir(project), srcFiles[j]);
-                addToIncludeFileMap(src);
-            }
+        if (fileext == null) {
+            fileext = "." + algorithm;
+        } else if (fileext.trim().length() == 0) {
+            throw new BuildException(
+                "File extension when specified must not be an empty string");
         }
 
-        return generateChecksums();
+        try {
+            addToIncludeFileMap(file);
+            
+            int sizeofFileSet = filesets.size();
+            for (int i = 0; i < sizeofFileSet; i++) {
+                FileSet fs = (FileSet) filesets.elementAt(i);
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                String[] srcFiles = ds.getIncludedFiles();
+                for (int j = 0; j < srcFiles.length; j++) {
+                    File src = new File(fs.getDir(project), srcFiles[j]);
+                    addToIncludeFileMap(src);
+                }
+            }
+
+            return generateChecksums();
+        } finally {
+            fileext = savedFileExt;
+            includeFileMap.clear();
+        }
     }
 
     /**
@@ -379,13 +387,12 @@ public class Checksum extends MatchingTask implements Condition {
                     if (isCondition) {
                         checksumMatches = checksum.equals(property);
                     } else {
-                        project.setProperty(prop, checksum);
+                        project.setNewProperty(prop, checksum);
                     }
                 } else if (destination instanceof java.io.File) {
                     if (isCondition) {
                         File existingFile = (File) destination;
-                        if (existingFile.exists() &&
-                            existingFile.length() == checksum.length()) {
+                        if (existingFile.exists()) {
                             fis = new FileInputStream(existingFile);
                             InputStreamReader isr = new InputStreamReader(fis);
                             BufferedReader br = new BufferedReader(isr);
