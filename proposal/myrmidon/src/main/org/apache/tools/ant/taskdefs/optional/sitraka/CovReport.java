@@ -22,9 +22,9 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.Path;
 import org.w3c.dom.Document;
 
 /**

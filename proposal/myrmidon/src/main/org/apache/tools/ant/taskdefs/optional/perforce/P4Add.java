@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.FileSet;
+import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * P4Add - add the specified files to perforce. <b>Example Usage:</b>

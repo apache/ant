@@ -11,7 +11,7 @@ import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * Task allows to create new ccm task and set it as the default

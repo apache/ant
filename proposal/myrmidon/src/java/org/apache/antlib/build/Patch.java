@@ -14,7 +14,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.

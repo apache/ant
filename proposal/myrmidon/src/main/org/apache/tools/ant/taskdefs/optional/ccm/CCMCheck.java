@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);

@@ -13,8 +13,8 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.util.FileUtils;
 
 /**
  * Task to interact with a CVS repository.

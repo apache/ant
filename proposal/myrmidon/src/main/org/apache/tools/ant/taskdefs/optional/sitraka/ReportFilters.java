@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.util.ArrayList;
-import org.apache.tools.ant.util.regexp.RegexpMatcher;
-import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
+import org.apache.tools.todo.util.regexp.RegexpMatcher;
+import org.apache.tools.todo.util.regexp.RegexpMatcherFactory;
 
 /**
  * Filters information from coverage, somewhat similar to a <tt>FileSet</tt> .

@@ -273,9 +273,9 @@ Legal:
             <exclude name="org/apache/aut/vfs/provider/smb/**" unless="jcifs.present"/>
         </patternset>
 
-        <property name="ant.package" value="org/apache/tools/ant"/>
+        <property name="ant.package" value="org/apache/tools/todo"/>
         <property name="antlib.package" value="org/apache/antlib"/>
-        <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
+        <property name="optional.package" value="org/apache/tools/ant/taskdefs/optional"/>
         <property name="optional.type.package" value="${ant.package}/types/optional"/>
         <property name="util.package" value="${ant.package}/util"/>
         <property name="regexp.package" value="${util.package}/regexp"/>

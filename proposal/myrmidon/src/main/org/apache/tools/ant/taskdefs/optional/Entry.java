@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 
 /**
  * Instance of this class represents nested elements of a task propertyfile.

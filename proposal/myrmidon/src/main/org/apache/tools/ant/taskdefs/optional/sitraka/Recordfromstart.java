@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 
 public class Recordfromstart
     extends EnumeratedAttribute

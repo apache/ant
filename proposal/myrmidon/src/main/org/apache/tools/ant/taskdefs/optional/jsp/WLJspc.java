@@ -12,13 +12,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.Argument;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.todo.taskdefs.Java;
+import org.apache.tools.todo.taskdefs.MatchingTask;
+import org.apache.tools.todo.types.Argument;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.Path;
 
 /**
  * Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)
@@ -154,8 +152,6 @@ public class WLJspc extends MatchingTask
             throw new TaskException( "package attribute must be present." );
         }
 
-        String systemClassPath = System.getProperty( "java.class.path" );
-
         pathToPackage = this.destinationPackage.replace( '.', File.separatorChar );
         // get all the files in the sourceDirectory
         DirectoryScanner ds = super.getDirectoryScanner( sourceDirectory );
@@ -272,7 +268,6 @@ public class WLJspc extends MatchingTask
             // Can be written better... this is too hacky!
             jspFile = new File( files[ i ] );
             parents = jspFile.getParent();
-            int loc = 0;
 
             if( ( parents != null ) && ( !( "" ).equals( parents ) ) )
             {

@@ -9,10 +9,10 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.todo.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
-import org.apache.tools.ant.types.Argument;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Argument;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * The implementation of the jasper compiler. This is a cut-and-paste of the

@@ -24,9 +24,9 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.FileSet;
+import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * This task can be used to create checksums for files. It can also be used to

@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.todo.types.DirectoryScanner;
 
 class FTPDirectoryScanner
     extends DirectoryScanner

@@ -15,7 +15,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * This is a utility class designed to make executing native

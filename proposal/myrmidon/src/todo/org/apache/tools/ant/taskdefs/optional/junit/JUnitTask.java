@@ -22,14 +22,14 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.types.Argument;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.EnvironmentVariable;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PathUtil;
-import org.apache.tools.ant.types.SysProperties;
+import org.apache.tools.todo.types.Argument;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.CommandlineJava;
+import org.apache.tools.todo.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnvironmentVariable;
+import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
+import org.apache.tools.todo.types.SysProperties;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -112,7 +112,6 @@ public class JUnitTask extends AbstractTask
     private Integer timeout = null;
     private boolean summary = false;
     private String summaryValue = "";
-    private boolean filtertrace = true;
     private JUnitTestRunner runner = null;
 
     /**
@@ -358,8 +357,6 @@ public class JUnitTask extends AbstractTask
     /**
      * Create a new JVM argument. Ignored if no JVM is forked.
      *
-     * @return create a new JVM argument so that any argument can be passed to
-     *      the JVM.
      * @see #setFork(boolean)
      */
     public void addJvmarg( final Argument argument )

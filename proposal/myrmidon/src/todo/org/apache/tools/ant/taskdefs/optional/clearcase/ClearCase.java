@@ -12,7 +12,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * A base class for creating tasks for executing commands on ClearCase. <p>

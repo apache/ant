@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * Task to perform LABEL commands to Microsoft Visual Source Safe. <p>

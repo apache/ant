@@ -20,11 +20,11 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.ScannerUtil;
-import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.util.mappers.IdentityMapper;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.FileSet;
+import org.apache.tools.todo.types.ScannerUtil;
+import org.apache.tools.todo.types.SourceFileScanner;
+import org.apache.tools.todo.util.mappers.IdentityMapper;
 
 /**
  * This is a task used to copy files.

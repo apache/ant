@@ -12,7 +12,7 @@ import java.util.Iterator;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * This is the default implementation for the CompilerAdapter interface. This is

@@ -17,11 +17,11 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.taskdefs.ExecuteJava;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.ant.types.Argument;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.CommandlineJava;
+import org.apache.tools.todo.types.Path;
 
 /**
  * ANTLR task.

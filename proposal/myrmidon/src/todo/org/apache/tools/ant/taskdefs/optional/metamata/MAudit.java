@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.todo.types.Path;
 
 /**
  * Metamata Audit evaluates Java code for programming errors, weaknesses, and

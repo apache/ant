@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.net;
 
 import java.util.Locale;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 
 public class Action
     extends EnumeratedAttribute

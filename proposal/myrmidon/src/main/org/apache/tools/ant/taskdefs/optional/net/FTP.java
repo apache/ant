@@ -25,9 +25,9 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.FileScanner;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.todo.types.FileScanner;
+import org.apache.tools.todo.types.FileSet;
+import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * Basic FTP client that performs the following actions:

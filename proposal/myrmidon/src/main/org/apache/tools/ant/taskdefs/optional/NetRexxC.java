@@ -22,8 +22,8 @@ import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.todo.taskdefs.MatchingTask;
+import org.apache.tools.todo.types.DirectoryScanner;
 
 /**
  * Task to compile NetRexx source files. This task can take the following

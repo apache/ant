@@ -14,7 +14,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.oro.text.perl.Perl5Util;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * Base class for Perforce (P4) ANT tasks. See individual task for example

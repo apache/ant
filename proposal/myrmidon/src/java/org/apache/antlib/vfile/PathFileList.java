@@ -12,7 +12,7 @@ import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileSystemManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.todo.util.FileUtils;
 
 /**
  * A path made up of file names separated by ; and : characters.  Similar to

@@ -12,8 +12,8 @@ import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.Condition;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * A condition that evaluates to true if the requested class or resource

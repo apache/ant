@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * Checks out files from a specific StarTeam server, project, view, and folder.

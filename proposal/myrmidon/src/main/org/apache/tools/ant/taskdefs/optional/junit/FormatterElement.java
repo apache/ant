@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 
 /**
  * <p>

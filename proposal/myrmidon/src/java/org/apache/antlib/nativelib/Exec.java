@@ -17,10 +17,10 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.types.Argument;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.EnvironmentData;
-import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.tools.todo.types.Argument;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.EnvironmentData;
+import org.apache.tools.todo.types.EnvironmentVariable;
 
 /**
  * Executes a native command.

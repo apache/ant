@@ -11,8 +11,8 @@ import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.Path;
 
 /**
  * Task to perform GET commands to Microsoft Visual Source Safe. <p>

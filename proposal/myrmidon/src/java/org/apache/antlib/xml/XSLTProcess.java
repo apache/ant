@@ -25,9 +25,9 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.myrmidon.framework.FileSet;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * A Task to process via XSLT a set of XML documents. This is useful for

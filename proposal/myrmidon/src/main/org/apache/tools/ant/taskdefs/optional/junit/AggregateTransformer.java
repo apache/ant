@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
 
 /**

@@ -15,8 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 
 /**
  * Task to perform HISTORY commands to Microsoft Visual Source Safe.

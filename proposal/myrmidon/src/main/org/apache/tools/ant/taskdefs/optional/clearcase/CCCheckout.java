@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.todo.types.Commandline;
 
 /**
  * Task to perform Checkout command to ClearCase. <p>

@@ -19,12 +19,12 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.myrmidon.listeners.LogEvent;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.compilers.Javac;
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.todo.taskdefs.Java;
+import org.apache.tools.todo.taskdefs.javac.Javac;
+import org.apache.tools.todo.taskdefs.MatchingTask;
+import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.Path;
 
 /**
  * Instruments Java classes with <a href="http://www.reliable-systems.com/tools/">

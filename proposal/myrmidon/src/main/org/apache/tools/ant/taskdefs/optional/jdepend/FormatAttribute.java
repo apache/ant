@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jdepend;
 
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnumeratedAttribute;
 
 public class FormatAttribute
     extends EnumeratedAttribute
