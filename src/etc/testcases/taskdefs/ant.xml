@@ -185,4 +185,40 @@
     <ant antfile="ant.topleveltest.xml"/>
   </target>
 
+  <target name="multiple-property-file-children">
+    <ant target="dummy" antfile="ant.xml">
+      <property file="foo.properties"/>
+      <property file="bar.properties"/>
+    </ant>
+  </target>
+
+  <target name="blank-target">
+    <ant antfile="ant.topleveltest.xml">
+      <target name="" />
+    </ant>
+  </target>
+
+  <target name="multiple-targets">
+    <ant antfile="ant.xml">
+      <target name="ta" />
+      <target name="tb" />
+      <target name="tc" />
+    </ant>
+  </target>
+
+  <target name="multiple-targets-2">
+    <ant antfile="ant.xml">
+      <target name="tb" />
+      <target name="da" />
+    </ant>
+  </target>
+
+  <target name="ta"><echo>ta</echo></target>
+  <target name="tb" depends="da,dc"><echo>tb</echo></target>
+  <target name="tc" depends="db,dc"><echo>tc</echo></target>
+
+  <target name="da"><echo>da</echo></target>
+  <target name="db"><echo>db</echo></target>
+  <target name="dc"><echo>dc</echo></target>
+
 </project>

@@ -275,6 +275,38 @@ public class AntTest extends BuildFileTest {
         expectLog("topleveltarget", "Hello world");
     }
 
+    public void testMultiplePropertyFileChildren() {
+        PropertyChecker pcBar = new PropertyChecker("bar",
+                                                    new String[] {null, "Bar"});
+        PropertyChecker pcFoo = new PropertyChecker("foo",
+                                                    new String[] {null, "Foo"});
+        project.addBuildListener(pcBar);
+        project.addBuildListener(pcFoo);
+        executeTarget("multiple-property-file-children");
+        AssertionFailedError aeBar = pcBar.getError();
+        if (aeBar != null) {
+            throw aeBar;
+        }
+        AssertionFailedError aeFoo = pcFoo.getError();
+        if (aeFoo != null) {
+            throw aeFoo;
+        }
+        project.removeBuildListener(pcBar);
+        project.removeBuildListener(pcFoo);
+    }
+
+    public void testBlankTarget() {
+        expectBuildException("blank-target", "target name must not be empty");
+    }
+
+    public void testMultipleTargets() {
+        expectLog("multiple-targets", "tadadctbdbtc");
+    }
+
+    public void testMultipleTargets2() {
+        expectLog("multiple-targets-2", "dadctb");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
@@ -450,6 +482,12 @@ public class AntTest extends BuildFileTest {
             if (event.getTarget().getName().equals("")) {
                 return;
             }
+            if (calls >= expectedValues.length) {
+                error = new AssertionFailedError("Unexpected invocation of"
+                                                 + " target "
+                                                 + event.getTarget().getName());
+            }
+
             if (error == null) {
                 try {
                     assertEquals(expectedValues[calls++],

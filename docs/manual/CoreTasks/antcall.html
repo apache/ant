@@ -11,9 +11,9 @@
 <h2><a name="antcall">AntCall</a></h2>
 <h3>Description</h3>
 
-<p>Call another target within the same build-file optionally
-specifying some properties (param's in this context).  <strong>This
-task must no be used outside of a <code>target</code>.</strong></p>
+<p>Call another target within the same buildfile optionally
+specifying some properties (params in this context).  <strong>This
+task must not be used outside of a <code>target</code>.</strong></p>
 
 <p>By default, all of the properties of the current project will be
 available in the new project.   Alternatively, you can
@@ -42,7 +42,7 @@ also be called within the context of any new parameters. For example. if
 the target &quot;doSomethingElse&quot; depended on the target &quot;init&quot;, then the
 <i>antcall</i> of &quot;doSomethingElse&quot; will call &quot;init&quot; during the call.
 Of course, any properties defined in the antcall task or inherited from the calling target
-will be fixed and not overridable in the init task -or indeed in the &quot;doSomethingElse&quot; task.
+will be fixed and not overridable in the init task--or indeed in the &quot;doSomethingElse&quot; task.
 </p>
 
 <p>If the build file changes after you've started the build, the
@@ -89,7 +89,12 @@ attribute).</p>
 <h3>Parameters specified as nested elements</h3>
 <h4>param</h4>
 <p>Specifies the properties to set before running the specified target. See <a
-href="property.html">property</a> for usage guidelines.</p>
+href="property.html">property</a> for usage guidelines.<br/>
+These properties become equivalent to properties you define on
+the command line. These are special properties and they will always get passed
+down, even through additional <code>&lt;*ant*&gt;</code> tasks with inheritall set to
+false (see above).
+</p>
 
 <h4><a name="reference">reference</a></h4>
 <p>Used to choose references that shall be copied into the new project,
@@ -120,6 +125,26 @@ project with <a
 href="../CoreTypes/propertyset.html">propertyset</a>s.</p>
 
 <p><em>since Ant 1.6</em>.</p>
+
+<h4>target</h4>
+
+<p>You can specify multiple targets using nested <code>&lt;target&gt;</code> elements
+instead of using the target attribute.  These will be executed as if
+Ant had been invoked with a single target whose dependencies are the
+targets so specified, in the order specified.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the called target.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<p><em>since Ant 1.6.3</em>.</p>
 
 <h3>Examples</h3>
 <pre>

@@ -17,9 +17,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 import java.io.IOException;
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.PropertySet;
 
 /**
  * Call another target in the same project.
@@ -41,7 +43,6 @@ import java.io.IOException;
  * defined in the project itself.
  *
  *
- *
  * @since Ant 1.2
  *
  * @ant.task name="antcall" category="control"
@@ -49,15 +50,17 @@ import java.io.IOException;
 public class CallTarget extends Task {
 
     private Ant callee;
-    private String subTarget;
     // must match the default value of Ant#inheritAll
     private boolean inheritAll = true;
     // must match the default value of Ant#inheritRefs
     private boolean inheritRefs = false;
 
+    private boolean targetSet = false;
+
     /**
      * If true, pass all properties to the new Ant project.
      * Defaults to true.
+     * @param inherit <code>boolean</code> flag.
      */
     public void setInheritAll(boolean inherit) {
        inheritAll = inherit;
@@ -65,16 +68,16 @@ public class CallTarget extends Task {
 
     /**
      * If true, pass all references to the new Ant project.
-     * Defaults to false
-     * @param inheritRefs new value
+     * Defaults to false.
+     * @param inheritRefs <code>boolean</code> flag.
      */
     public void setInheritRefs(boolean inheritRefs) {
         this.inheritRefs = inheritRefs;
     }
 
     /**
-     * init this task by creating new instance of the ant task and
-     * configuring it's by calling its own init method.
+     * Initialize this task by creating new instance of the ant task and
+     * configuring it by calling its own init method.
      */
     public void init() {
         callee = (Ant) getProject().createTask("ant");
@@ -85,29 +88,28 @@ public class CallTarget extends Task {
     }
 
     /**
-     * hand off the work to the ant task of ours, after setting it up
+     * Delegate the work to the ant task instance, after setting it up.
      * @throws BuildException on validation failure or if the target didn't
-     * execute
+     * execute.
      */
     public void execute() throws BuildException {
         if (callee == null) {
             init();
         }
-
-        if (subTarget == null) {
-            throw new BuildException("Attribute target is required.",
-                                     getLocation());
+        if (!targetSet) {
+            throw new BuildException(
+                "Attribute target or at least one nested target is required.",
+                 getLocation());
         }
-
         callee.setAntfile(getProject().getProperty("ant.file"));
-        callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);
         callee.setInheritRefs(inheritRefs);
         callee.execute();
     }
 
     /**
-     * Property to pass to the invoked target.
+     * Create a new Property to pass to the invoked target(s).
+     * @return a <code>Property</code> object.
      */
     public Property createParam() {
         if (callee == null) {
@@ -119,6 +121,7 @@ public class CallTarget extends Task {
     /**
      * Reference element identifying a data type to carry
      * over to the invoked target.
+     * @param r the specified <code>Ant.Reference</code>.
      * @since Ant 1.5
      */
     public void addReference(Ant.Reference r) {
@@ -130,10 +133,10 @@ public class CallTarget extends Task {
 
     /**
      * Set of properties to pass to the new project.
-     *
+     * @param ps the <code>PropertySet</code> to pass.
      * @since Ant 1.6
      */
-    public void addPropertyset(org.apache.tools.ant.types.PropertySet ps) {
+    public void addPropertyset(PropertySet ps) {
         if (callee == null) {
             init();
         }
@@ -141,14 +144,32 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Target to execute, required.
+     * Set target to execute.
+     * @param target the name of the target to execute.
      */
     public void setTarget(String target) {
-        subTarget = target;
+        if (callee == null) {
+            init();
+        }
+        callee.setTarget(target);
+        targetSet = true;
     }
 
     /**
-     * Pass output sent to System.out to the new project.
+     * Add a target to the list of targets to invoke.
+     * @param t <code>Ant.TargetElement</code> representing the target.
+     * @since Ant 1.6.3
+     */
+    public void addConfiguredTarget(Ant.TargetElement t) {
+        if (callee == null) {
+            init();
+        }
+        callee.addConfiguredTarget(t);
+        targetSet = true;
+    }
+
+    /**
+     * @see Task#handleOutput(String)
      *
      * @since Ant 1.5
      */
@@ -175,7 +196,7 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Pass output sent to System.out to the new project.
+     * @see Task#handleFlush(String)
      *
      * @since Ant 1.5.2
      */
@@ -188,7 +209,7 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Pass output sent to System.err to the new project.
+     * @see Task#handleErrorOutput(String)
      *
      * @since Ant 1.5
      */
@@ -201,7 +222,7 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Pass output sent to System.err to the new project and flush stream.
+     * @see Task#handleErrorFlush(String)
      *
      * @since Ant 1.5.2
      */

@@ -22,6 +22,13 @@ Other changes:
 
 * New attribute alwayslog for <redirector> type.
 
+* Added <target> nested elements to <ant> and <antcall> to allow
+  specification of multiple sub-build targets, which are executed
+  with a single dependency analysis.
+
+* Refactored Target invocation into org.apache.tools.ant.Executor
+  implementations.  Bugzilla Reports 21421, 29248.
+
 Fixed bugs:
 -----------
 

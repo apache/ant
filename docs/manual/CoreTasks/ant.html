@@ -13,7 +13,7 @@
 
 <p>Runs Ant on a supplied buildfile. This can be used to build
 subprojects.  <strong>This task must not be used outside of a
-<code>target</code> if it invoces the same build file it is part
+<code>target</code> if it invokes the same build file it is part
 of.</strong></p>
 
 <p>When the <i>antfile</i> attribute is omitted, the file &quot;build.xml&quot;
@@ -34,7 +34,7 @@ by using nested property tags. These properties are always passed
 to the new project and any project created in that project
 regardless of the setting of <i>inheritAll</i>.  This allows you to
 parameterize your subprojects.  Properties defined on the command line
-can not be overridden by nested <code>&lt;property&gt;</code> elements.</p>
+cannot be overridden by nested <code>&lt;property&gt;</code> elements.</p>
 
 <p>References to data types can also be passed to the new project, but
 by default they are not.  If you set the inheritrefs attribute to
@@ -103,7 +103,12 @@ inside of targets.</p>
 
 <h4>property</h4>
 <p>See the description of the <a href="property.html">property
-task</a>.  Note that the <code>refid</code> attribute points to a
+task</a>. <br/>
+These properties become equivalent to properties you define on
+the command line. These are special properties and they will always get passed
+down, even through additional <code>&lt;*ant*&gt;</code> tasks with inheritall set to
+false (see above). <br/>
+Note that the <code>refid</code> attribute points to a
 reference in the calling project, not in the new one.</p>
 
 <h4><a name="reference">reference</a></h4>
@@ -135,6 +140,26 @@ project with <a
 href="../CoreTypes/propertyset.html">propertyset</a>s.</p>
 
 <p><em>since Ant 1.6</em>.</p>
+
+<h4>target</h4>
+
+<p>You can specify multiple targets using nested <code>&lt;target&gt;</code> elements
+instead of using the target attribute.  These will be executed as if
+Ant had been invoked with a single target whose dependencies are the
+targets so specified, in the order specified.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the called target.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<p><em>since Ant 1.6.3</em>.</p>
 
 <h3>Basedir of the new project</h3>
 

@@ -33,6 +33,8 @@ import java.util.Set;
 import java.util.HashSet;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.helper.DefaultExecutor;
+import org.apache.tools.ant.helper.KeepGoingExecutor;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Description;
@@ -274,16 +276,14 @@ public class Project {
      */
     private AntClassLoader createClassLoader() {
         AntClassLoader loader = null;
-        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            try {
-                // 1.2+ - create advanced helper dynamically
-                Class loaderClass
+        try {
+            // 1.2+ - create advanced helper dynamically
+            Class loaderClass
                     = Class.forName(ANTCLASSLOADER_JDK12);
-                loader = (AntClassLoader) loaderClass.newInstance();
-            } catch (Exception e) {
-                    log("Unable to create Class Loader: "
-                        + e.getMessage(), Project.MSG_DEBUG);
-            }
+            loader = (AntClassLoader) loaderClass.newInstance();
+        } catch (Exception e) {
+            log("Unable to create Class Loader: "
+                    + e.getMessage(), Project.MSG_DEBUG);
         }
 
         if (loader == null) {
@@ -766,7 +766,9 @@ public class Project {
     /**
      * Sets "keep-going" mode. In this mode ANT will try to execute
      * as many targets as possible. All targets that do not depend
-     * on failed target(s) will be executed.
+     * on failed target(s) will be executed.  If the keepGoing settor/getter
+     * methods are used in conjunction with the <code>ant.executor.class</code>
+     * property, they will have no effect.
      * @param keepGoingMode "keep-going" mode
      * @since Ant 1.6
      */
@@ -775,7 +777,9 @@ public class Project {
     }
 
     /**
-     * Returns the keep-going mode.
+     * Returns the keep-going mode.  If the keepGoing settor/getter
+     * methods are used in conjunction with the <code>ant.executor.class</code>
+     * property, they will have no effect.
      * @return "keep-going" mode
      * @since Ant 1.6
      */
@@ -1056,19 +1060,38 @@ public class Project {
      */
     public void executeTargets(Vector targetNames) throws BuildException {
 
-        BuildException thrownException = null;
-        for (int i = 0; i < targetNames.size(); i++) {
+        Object o = getReference("ant.executor");
+        if (o == null) {
+            String classname = getProperty("ant.executor.class");
+            if (classname == null) {
+                classname = (keepGoingMode)
+                    ? KeepGoingExecutor.class.getName()
+                    : DefaultExecutor.class.getName();
+            }
+            log("Attempting to create object of type " + classname, MSG_DEBUG);
             try {
-                executeTarget((String) targetNames.elementAt(i));
-            } catch (BuildException ex) {
-                if (!(keepGoingMode)) {
-                    throw ex; // Throw further
+                o = Class.forName(classname, true, coreLoader).newInstance();
+            } catch (ClassNotFoundException seaEnEfEx) {
+                //try the current classloader
+                try {
+                    o = Class.forName(classname).newInstance();
+                } catch (Exception ex) {
+                    log(ex.toString(), MSG_ERR);
                 }
-                thrownException = ex;
+            } catch (Exception ex) {
+                log(ex.toString(), MSG_ERR);
+            }
+            if (o != null) {
+                addReference("ant.executor", o);
             }
         }
-        if (thrownException != null) {
-            throw thrownException;
+
+        if (o == null) {
+            throw new BuildException("Unable to obtain a Target Executor instance.");
+        } else {
+            String[] targetNameArray = (String[])(targetNames.toArray(
+                new String[targetNames.size()]));
+            ((Executor)o).executeTargets(this, targetNameArray);
         }
     }
 
@@ -1183,13 +1206,19 @@ public class Project {
             throw new BuildException(msg);
         }
 
-        // Sort the dependency tree, and run everything from the
-        // beginning until we hit our targetName.
+        // Sort and run the dependency tree.
         // Sorting checks if all the targets (and dependencies)
         // exist, and if there is any cycle in the dependency
         // graph.
-        Vector sortedTargets = topoSort(targetName, targets);
+        executeSortedTargets(topoSort(targetName, targets, false));
+    }
 
+    /**
+     * Executes a <code>Vector</code> of sorted targets.
+     * @param sortedTargets   the aforementioned <code>Vector</code>.
+     */
+    public void executeSortedTargets(Vector sortedTargets)
+        throws BuildException {
         Set succeededTargets = new HashSet();
         BuildException buildException = null; // first build exception
         for (Enumeration iter = sortedTargets.elements();
@@ -1246,9 +1275,6 @@ public class Project {
                         }
                     }
                 }
-            }
-            if (curtarget.getName().equals(targetName)) { // old exit condition
-                break;
             }
         }
         if (buildException != null) {
@@ -1531,11 +1557,6 @@ public class Project {
      */
     public void setFileLastModified(File file, long time)
          throws BuildException {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            log("Cannot change the modification time of " + file
-                + " in JDK 1.1", Project.MSG_WARN);
-            return;
-        }
         fileUtils.setFileLastModified(file, time);
         log("Setting modification time for " + file, MSG_VERBOSE);
     }
@@ -1558,45 +1579,106 @@ public class Project {
     }
 
     /**
-     * Topologically sorts a set of targets.
+     * Topologically sorts a set of targets.  Equivalent to calling
+     * <code>topoSort(new String[] {root}, targets, true)</code>.
      *
      * @param root The name of the root target. The sort is created in such
      *             a way that the sequence of Targets up to the root
      *             target is the minimum possible such sequence.
      *             Must not be <code>null</code>.
-     * @param targets A map of names to targets (String to Target).
+     * @param targets A Hashtable mapping names to Targets.
      *                Must not be <code>null</code>.
-     * @return a vector of Target objects in sorted order.
+     * @return a Vector of ALL Target objects in sorted order.
      * @exception BuildException if there is a cyclic dependency among the
      *                           targets, or if a named target does not exist.
      */
     public final Vector topoSort(String root, Hashtable targets)
         throws BuildException {
+        return topoSort(new String[] {root}, targets, true);
+    }
+
+    /**
+     * Topologically sorts a set of targets.  Equivalent to calling
+     * <code>topoSort(new String[] {root}, targets, returnAll)</code>.
+     *
+     * @param root The name of the root target. The sort is created in such
+     *             a way that the sequence of Targets up to the root
+     *             target is the minimum possible such sequence.
+     *             Must not be <code>null</code>.
+     * @param targets A Hashtable mapping names to Targets.
+     *                Must not be <code>null</code>.
+     * @param returnAll <code>boolean</code> indicating whether to return all
+     *                  targets, or the execution sequence only.
+     * @return a Vector of Target objects in sorted order.
+     * @exception BuildException if there is a cyclic dependency among the
+     *                           targets, or if a named target does not exist.
+     * @since Ant 1.6.3
+     */
+    public final Vector topoSort(String root, Hashtable targets,
+                                 boolean returnAll) throws BuildException {
+        return topoSort(new String[] {root}, targets, returnAll);
+    }
+
+    /**
+     * Topologically sorts a set of targets.
+     *
+     * @param root <code>String[]</code> containing the names of the root targets.
+     *             The sort is created in such a way that the ordered sequence of
+     *             Targets is the minimum possible such sequence to the specified
+     *             root targets.
+     *             Must not be <code>null</code>.
+     * @param targets A map of names to targets (String to Target).
+     *                Must not be <code>null</code>.
+     * @param returnAll <code>boolean</code> indicating whether to return all
+     *                  targets, or the execution sequence only.
+     * @return a Vector of Target objects in sorted order.
+     * @exception BuildException if there is a cyclic dependency among the
+     *                           targets, or if a named target does not exist.
+     * @since Ant 1.6.3
+     */
+    public final Vector topoSort(String[] root, Hashtable targets,
+                                 boolean returnAll) throws BuildException {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
         Stack visiting = new Stack();
 
-        // We first run a DFS based sort using the root as the starting node.
-        // This creates the minimum sequence of Targets to the root node.
+        // We first run a DFS based sort using each root as a starting node.
+        // This creates the minimum sequence of Targets to the root node(s).
         // We then do a sort on any remaining unVISITED targets.
         // This is unnecessary for doing our build, but it catches
         // circular dependencies or missing Targets on the entire
         // dependency tree, not just on the Targets that depend on the
         // build Target.
 
-        tsort(root, targets, state, visiting, ret);
-        log("Build sequence for target `" + root + "' is " + ret, MSG_VERBOSE);
+        for (int i = 0; i < root.length; i++) {
+            String st = (String)(state.get(root[i]));
+            if (st == null) {
+                tsort(root[i], targets, state, visiting, ret);
+            } else if (st == VISITING) {
+                throw new RuntimeException("Unexpected node in visiting state: "
+                    + root[i]);
+            }
+        }
+        StringBuffer buf = new StringBuffer("Build sequence for target(s)");
+
+        for (int j = 0; j < root.length; j++) {
+            buf.append((j == 0) ? " `" : ", `").append(root[j]).append('\'');
+        }
+        buf.append(" is " + ret);
+        log(buf.toString(), MSG_VERBOSE);
+
+        Vector complete = (returnAll) ? ret : new Vector(ret);
         for (Enumeration en = targets.keys(); en.hasMoreElements();) {
             String curTarget = (String) en.nextElement();
             String st = (String) state.get(curTarget);
             if (st == null) {
-                tsort(curTarget, targets, state, visiting, ret);
+                tsort(curTarget, targets, state, visiting, complete);
             } else if (st == VISITING) {
                 throw new RuntimeException("Unexpected node in visiting state: "
                     + curTarget);
             }
         }
-        log("Complete build sequence is " + ret, MSG_VERBOSE);
+        log("Complete build sequence is " + complete, MSG_VERBOSE);
         return ret;
     }
 
@@ -2064,7 +2146,7 @@ public class Project {
          */
         public Object get(Object key) {
             //System.out.println("AntRefTable.get " + key);
-            Object o = super.get(key);
+            Object o = getReal(key);
             if (o instanceof UnknownElement) {
                 // Make sure that
                 UnknownElement ue = (UnknownElement) o;
