@@ -20,7 +20,6 @@ import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.util.DOMElementWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
