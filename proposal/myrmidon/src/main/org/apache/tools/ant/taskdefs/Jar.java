@@ -22,7 +22,7 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.ZipFileSet;
-import org.apache.tools.zip.ZipOutputStream;
+import org.apache.aut.zip.ZipOutputStream;
 
 /**
  * Creates a JAR archive.
@@ -127,7 +127,7 @@ public class Jar
         getLogger().warn( message );
     }
 
-    public void addConfiguredManifest( Manifest newManifest )
+    public void addManifest( Manifest newManifest )
         throws ManifestException, TaskException
     {
         if( m_manifest == null )

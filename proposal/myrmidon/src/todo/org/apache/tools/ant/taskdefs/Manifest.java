@@ -32,7 +32,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class Manifest extends Task
+public class Manifest
+    extends Task
 {
     /**
      * The standard manifest version header
@@ -152,7 +153,7 @@ public class Manifest extends Task
 
             section.setName( nextSectionName );
             nextSectionName = section.read( reader );
-            addConfiguredSection( section );
+            addSection( section );
         }
     }
 
@@ -239,13 +240,13 @@ public class Manifest extends Task
         return warnings.iterator();
     }
 
-    public void addConfiguredAttribute( Attribute attribute )
+    public void addAttribute( final Attribute attribute )
         throws ManifestException, TaskException
     {
-        mainSection.addConfiguredAttribute( attribute );
+        mainSection.addAttribute( attribute );
     }
 
-    public void addConfiguredSection( Section section )
+    public void addSection( final Section section )
         throws ManifestException, TaskException
     {
         if( section.getName() == null )
@@ -446,7 +447,7 @@ public class Manifest extends Task
         {
             try
             {
-                mainSection.addConfiguredAttribute( new Attribute( ATTRIBUTE_SIGNATURE_VERSION, signatureVersion ) );
+                mainSection.addAttribute( new Attribute( ATTRIBUTE_SIGNATURE_VERSION, signatureVersion ) );
             }
             catch( ManifestException e )
             {
@@ -772,7 +773,7 @@ public class Manifest extends Task
             return null;
         }
 
-        public void addConfiguredAttribute( Attribute attribute )
+        public void addAttribute( Attribute attribute )
             throws ManifestException, TaskException
         {
             String check = addAttributeAndCheck( attribute );
