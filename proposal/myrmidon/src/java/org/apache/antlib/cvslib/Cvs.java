@@ -14,6 +14,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
@@ -147,11 +148,9 @@ public class Cvs
         final Commandline command = buildCommandline();
         final EnvironmentData env = buildEnvironment();
 
-        //FIXME:
-        final LogStreamHandler streamhandler =
-            new LogStreamHandler( null, Project.MSG_INFO, Project.MSG_WARN );
-
-        final Execute exe = new Execute( streamhandler, null );
+        final Execute exe = new Execute();
+        exe.setOutput( new LogOutputStream( null, Project.MSG_INFO ) );
+        exe.setError( new LogOutputStream( null, Project.MSG_WARN ) );
         if( m_dest == null ) m_dest = getBaseDirectory();
         exe.setWorkingDirectory( m_dest );
 

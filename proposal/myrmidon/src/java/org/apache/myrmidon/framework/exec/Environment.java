@@ -15,10 +15,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
-import org.apache.myrmidon.framework.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 
 /**
  * This is the class that can be used to retrieve the environment
@@ -224,7 +223,10 @@ public final class Environment
         throws IOException, ExecException
     {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        final Execute exe = new Execute( new PumpStreamHandler( output ) );
+        final Execute exe = new Execute();
+        exe.setOutput( output );
+        exe.setError( output );
+
         exe.setCommandline( getEnvCommand() );
 
         // Make sure we do not recurse forever
