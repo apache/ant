@@ -1,19 +1,22 @@
 <ant-lib version="1.0">
 
-  <types>
+    <types>
 
-    <listener name="default" classname="org.apache.myrmidon.listeners.DefaultProjectListener"/>
-    <listener name="classic" classname="org.apache.myrmidon.listeners.ClassicProjectListener"/>
-    <listener name="noprefix" classname="org.apache.myrmidon.listeners.NoPrefixProjectListener"/>
-    <aspect name="noop" classname="org.apache.myrmidon.aspects.NoopAspectHandler"/>
-    <project-builder name="ant" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
-    <project-builder name="xml" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
-    <project-builder name="ati" classname="org.apache.myrmidon.components.builder.ATIProjectBuilder"/>
+        <listener name="default" classname="org.apache.myrmidon.listeners.DefaultProjectListener"/>
+        <listener name="classic" classname="org.apache.myrmidon.listeners.ClassicProjectListener"/>
+        <listener name="noprefix" classname="org.apache.myrmidon.listeners.NoPrefixProjectListener"/>
+        <aspect name="noop" classname="org.apache.myrmidon.aspects.NoopAspectHandler"/>
+        <project-builder name="ant" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
+        <project-builder name="xml" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
+        <project-builder name="ati" classname="org.apache.myrmidon.components.builder.ATIProjectBuilder"/>
 
-    <!-- basic tasks/datatypes/coverters required in most environments -->
-    <task name="pattern" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
-    <data-type name="pattern" classname="org.apache.myrmidon.framework.Pattern" />
+        <configurer name="default" classname="org.apache.myrmidon.components.configurer.DefaultConfigurer"/>
+        <configurer name="classic" classname="org.apache.myrmidon.components.configurer.ClassicConfigurer"/>
 
-  </types>
+        <!-- basic tasks/datatypes/coverters required in most environments -->
+        <task name="pattern" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
+        <data-type name="pattern" classname="org.apache.myrmidon.framework.Pattern" />
+
+    </types>
 
 </ant-lib>
