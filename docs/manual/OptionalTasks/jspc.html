@@ -25,7 +25,21 @@ in class or taglib dependencies, or &lt;jsp:include&gt; references.
 By default the task uses the Jasper JSP compiler. This
 means the task needs jasper.jar and jasper-runtime.jar, which come with
 builds of Tomcat 4/Catalina from the
-<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>
+<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>.
+We recommend Tomcat version 4.1.x for the most robust version of jasper.
+
+<p>
+There are many limitations with this task which partially stem from the
+many versions of Jasper, others from implementation 'issues' in the task
+(i.e. nobody's willingness to radically change large bits of it to work
+around jasper). Because of this and the fact that JSP pages do not have
+to be portable across implementations -or versions of implementations-
+this task is better used for validating JSP pages before deployment,
+rather than precompiling them. For that, just deploy and run your httpunit
+junit tests after deployment to compile and test your pages, all in one
+go.
+ 
+</p>
 
 
 <h3>Parameters</h3>
@@ -81,7 +95,7 @@ The Task has the following attributes:<p>
     This can also be specified
     by the nested element <code>classpath</code>
     <a href="../using.html#path">Path</a>).</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">No, but it seems to work better when used</td>
   </tr>
   <tr>
     <td valign="top">classpathref</td>
@@ -126,6 +140,17 @@ The Task has the following attributes:<p>
     by the <code>compiler</code> attribute.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">webinc</td>
+    <td valign="top">Output file name for the fraction of web.xml that lists servlets.</td>
+    <td valign="top" align="center">No</td>
+  </tr>    
+  <tr>
+    <td valign="top">webxml</td>
+    <td valign="top">File name for web.xml to be generated</td>
+    <td valign="top" align="center">No</td>
+  </tr>  
+
   </table>
 
 <P>The <tt>mapped</tt> option will, if set to true, split the JSP text content into a
@@ -228,8 +253,12 @@ java files if class dependencies indicate it is needed.
 
 <p><h4>Notes</h4>
 Using the <code>package</code> attribute it is possible to identify the resulting
-java files and thus do full dependency checking - this task only rebuilds
-java files if their jsp file has been modified.
+java files and thus do full dependency checking - this task should only rebuild
+java files if their jsp file has been modified. However, this only works
+with some versions of jasper (specifically tomcat version 4.0.x), as
+the naming scheme changed after that. Even when it does work, changes in
+.TLD imports or in compile time includes do not get picked up.
+
 <p>
 Jasper generates JSP pages against the JSP1.3 specification -an implementation of
 version 2.2 of the servlet specification is needed to compile or run the java code.
