@@ -104,7 +104,8 @@ public class Ant extends Task {
     private String target = null;
     
     /** the output */
-    private String output = null;
+    private String output  = null;
+    private String outfile = null;
     
     /** should we inherit properties from the parent ? */
     private boolean inheritAll = true;
@@ -174,8 +175,12 @@ public class Ant extends Task {
         }
 
         if (output != null) {
+            if (dir != null) {
+                File file = FileUtils.newFileUtils().resolveFile(dir, output);
+                outfile = file.getAbsolutePath();
+            }
             try {
-                PrintStream out = new PrintStream(new FileOutputStream(output));
+                PrintStream out = new PrintStream(new FileOutputStream(outfile));
                 DefaultLogger logger = new DefaultLogger();
                 logger.setMessageOutputLevel(Project.MSG_INFO);
                 logger.setOutputPrintStream(out);
