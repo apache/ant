@@ -524,6 +524,32 @@
         </table>
       </subsection>
 
+      <subsection name="Dependencies">
+          <p>The dependencies task manages a set of external dependencies which
+            may be downloaded from a remote repository,
+             such as ibiblio.org. Uses a local cache to avoid repeated
+            downloads.</p>
+
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Tested with 1.5.1, should work with 1.4+.</td>
+           </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://www.httpunit.org/doc/dependencies.html">http://www.httpunit.org/doc/dependencies.html</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:russgold@httpunit.org">Russell Gold</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>MIT License</td>
+            </tr>
+          </table>
+    </subsection>
+
       <subsection name="Dependency Finder">
         <p>Dependency Finder extracts dependencies and OO metrics from
         Java class files produced by most Java compilers. It can compute
