@@ -101,6 +101,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @since Ant 1.5
  * @ant.task name="changelog"
  */
 public class ChangeLogTask
@@ -194,7 +195,8 @@ public class ChangeLogTask
      */
     public void setDaysinpast( final int days )
     {
-        final long time = System.currentTimeMillis() - (long)days * 24 * 60 * 60 * 1000;
+        final long time = System.currentTimeMillis() 
+            - (long)days * 24 * 60 * 60 * 1000;
         setStart( new Date( time ) );
     }
 
@@ -213,82 +215,83 @@ public class ChangeLogTask
      */
     public void execute() throws BuildException
     {
-        validate();
+        File savedDir = m_dir; // may be altered in validate
+        try {
 
-        final Properties userList = new Properties();
+            validate();
 
-        loadUserlist( userList );
+            final Properties userList = new Properties();
+            
+            loadUserlist( userList );
+            
+            for( Enumeration e = m_cvsUsers.elements(); 
+                 e.hasMoreElements(); ) {
+                final CvsUser user = (CvsUser)e.nextElement();
+                user.validate();
+                userList.put( user.getUserID(), user.getDisplayname() );
+            }
+            
+            final Commandline command = new Commandline();
+            command.setExecutable( "cvs" );
+            command.createArgument().setValue( "log" );
 
-        for( Enumeration e = m_cvsUsers.elements(); e.hasMoreElements(); )
-        {
-            final CvsUser user = (CvsUser)e.nextElement();
-            user.validate();
-            userList.put( user.getUserID(), user.getDisplayname() );
-        }
-
-        final Commandline command = new Commandline();
-        command.setExecutable( "cvs" );
-        command.createArgument().setValue( "log" );
-
-        if( null != m_start )
-        {
-            final SimpleDateFormat outputDate =
-                new SimpleDateFormat( "yyyy-MM-dd" );
-
-            // We want something of the form: -d ">=YYYY-MM-dd"
-            final String dateRange = "-d >=" + outputDate.format( m_start );
-            command.createArgument().setValue( dateRange );
-        }
+            if( null != m_start ) {
+                final SimpleDateFormat outputDate =
+                    new SimpleDateFormat( "yyyy-MM-dd" );
+                
+                // We want something of the form: -d ">=YYYY-MM-dd"
+                final String dateRange = "-d >=" 
+                    + outputDate.format( m_start );
+                command.createArgument().setValue( dateRange );
+            }
 
 
-        // Check if list of files to check has been specified
-        if( !m_filesets.isEmpty() )
-        {
-            final Enumeration e = m_filesets.elements();
-            while( e.hasMoreElements() )
-            {
-                final FileSet fileSet = (FileSet)e.nextElement();
-                final DirectoryScanner scanner = fileSet.getDirectoryScanner( project );
-                final String[] files = scanner.getIncludedFiles();
-                for( int i = 0; i < files.length; i++ )
-                {
-                    command.createArgument().setValue( files[ i ] );
+            // Check if list of files to check has been specified
+            if( !m_filesets.isEmpty() ) {
+                final Enumeration e = m_filesets.elements();
+                while( e.hasMoreElements() ) {
+                    final FileSet fileSet = (FileSet)e.nextElement();
+                    final DirectoryScanner scanner = 
+                        fileSet.getDirectoryScanner( project );
+                    final String[] files = scanner.getIncludedFiles();
+                    for( int i = 0; i < files.length; i++ ) {
+                        command.createArgument().setValue( files[ i ] );
+                    }
                 }
             }
-        }
 
-        final ChangeLogParser parser = new ChangeLogParser( userList );
-        final RedirectingStreamHandler handler =
-            new RedirectingStreamHandler( parser );
+            final ChangeLogParser parser = new ChangeLogParser( userList );
+            final RedirectingStreamHandler handler =
+                new RedirectingStreamHandler( parser );
 
-        log( "ChangeLog command: [" + command.toString() + "]", Project.MSG_VERBOSE );
+            log( "ChangeLog command: [" + command.toString() + "]", 
+                 Project.MSG_VERBOSE );
 
-        final Execute exe = new Execute( handler );
-        exe.setWorkingDirectory( m_dir );
-        exe.setCommandline( command.getCommandline() );
-        exe.setAntRun( getProject() );
-        try
-        {
-            final int resultCode = exe.execute();
-            if( 0 != resultCode )
-            {
-                throw new BuildException( "Error running cvs log" );
+            final Execute exe = new Execute( handler );
+            exe.setWorkingDirectory( m_dir );
+            exe.setCommandline( command.getCommandline() );
+            exe.setAntRun( getProject() );
+            try {
+                final int resultCode = exe.execute();
+                if( 0 != resultCode ) {
+                    throw new BuildException( "Error running cvs log" );
+                }
+            } catch( final IOException ioe ) {
+                throw new BuildException( ioe.toString() );
             }
-        }
-        catch( final IOException ioe )
-        {
-            throw new BuildException( ioe.toString() );
-        }
 
-        final String errors = handler.getErrors();
-        if( null != errors )
-        {
-            log( errors, Project.MSG_ERR );
-        }
+            final String errors = handler.getErrors();
+            if( null != errors ) {
+                log( errors, Project.MSG_ERR );
+            }
 
-        final CVSEntry[] entrySet = parser.getEntrySetAsArray();
-        final CVSEntry[] filteredEntrySet = filterEntrySet( entrySet );
-        writeChangeLog( filteredEntrySet );
+            final CVSEntry[] entrySet = parser.getEntrySetAsArray();
+            final CVSEntry[] filteredEntrySet = filterEntrySet( entrySet );
+            writeChangeLog( filteredEntrySet );
+
+        } finally {
+            m_dir = savedDir;
+        }
     }
 
     /**
@@ -310,12 +313,14 @@ public class ChangeLogTask
         }
         if( !m_dir.exists() )
         {
-            final String message = "Cannot find base dir " + m_dir.getAbsolutePath();
+            final String message = "Cannot find base dir " 
+                + m_dir.getAbsolutePath();
             throw new BuildException( message );
         }
         if( null != m_usersFile && !m_usersFile.exists() )
         {
-            final String message = "Cannot find user lookup list " + m_usersFile.getAbsolutePath();
+            final String message = "Cannot find user lookup list " 
+                + m_usersFile.getAbsolutePath();
             throw new BuildException( message );
         }
     }
