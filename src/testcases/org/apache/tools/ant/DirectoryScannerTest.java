@@ -144,6 +144,34 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
 
+    public void testAllowSymlinks() {
+        if (!supportsSymlinks) {
+            return;
+        }
+        
+        getProject().executeTarget("symlink-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/beta/gamma/"});
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha/beta/gamma"});
+    }
+
+    public void testProhibitSymlinks() {
+        if (!supportsSymlinks) {
+            return;
+        }
+        
+        getProject().executeTarget("symlink-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/beta/gamma/"});
+        ds.setFollowSymlinks(false);
+        ds.scan();
+        compareFiles(ds, new String[] {}, new String[] {});
+    }
+
     // father and child pattern test
     public void testOrderOfIncludePatternsIrrelevant() {
         String [] expectedFiles = {"alpha/beta/beta.xml", 
