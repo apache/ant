@@ -70,8 +70,8 @@ import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
  * </p>
  * <i>
  * This code is based on the code from Erich Gamma made for the
- * JUnit plugin for Eclipse. {@link http://www.eclipse.org} and is merged
- * with code originating from Ant 1.4.x.
+ * JUnit plugin for <a href="http://www.eclipse.org">Eclipse</a> and is
+ * merged with code originating from Ant 1.4.x.
  * </i>
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
