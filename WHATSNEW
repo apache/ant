@@ -1,5 +1,5 @@
-Changes from Ant 1.5.4 to current CVS version
-=============================================
+Changes from Ant 1.5.4 to Ant 1.6
+=================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -244,6 +244,9 @@ Fixed bugs:
 
 * <junit includeantruntime="true" fork="true"> replaced the CLASSPATH instead
   of adding to it.  Bugzilla Report 14971.
+
+* <splash> could fail on JVMs that use null to indicate the system classloader.
+  Bugzilla Report 23320.
 
 Other changes:
 --------------
