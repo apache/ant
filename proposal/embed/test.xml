@@ -2,8 +2,12 @@
   <property name="ant.src" location="../.."/>
         
   <import file="build.xml"/>
-  
-  <echo>Base.path from build.xml ( in top level ): ${base.path}</echo>
+
+  <!-- This is a tricky problem: import will append tasks at the
+    end of the task list. That's a bug, it should replace the
+    <import> task with the content. When fixed, this should show
+    the real value. --> 
+  <echo message="Base.path from build.xml ( in top level ): ${base.path}"/>
   
   <target name="init">
      <property name="junit.jar" location="${base.path}/junit3.7/junit.jar"/>
@@ -84,7 +88,7 @@
     <echo message="jxPath /references/myJars: ${jxpath:/references/myJars}" />
 
     <!-- This is XMLDOM.java - a datatype that holds an xml DOM  -->
-    <typedef name="xmldom" classname="org.apache.tools.ant.types.XMLDOM"/>
+    <typedef name="xmldom" classname="org.apache.tools.ant.taskdefs.XMLDOM"/>
 
     <!-- Init XMLDOM. The DOM of file test.xml will be referenced via the id-->
     <xmldom id="test.xml" file="test.xml"/>  

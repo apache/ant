@@ -261,10 +261,10 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         }
         
         if (characters.length() != 0) {
-            // First do substitution. This allows <echo>Message</echo> to work
-            // like <echo message="..." />. And it's more fun.
+//             // First do substitution. This allows <echo>Message</echo> to work
+//             // like <echo message="..." />. And it's more fun.
             String txt=characters.toString();
-            txt=ph.replaceProperties( txt );
+//             txt=ph.replaceProperties( txt );
             ProjectHelper.addText(p, wrappedObject, txt);
             characters.setLength(0);
         }
