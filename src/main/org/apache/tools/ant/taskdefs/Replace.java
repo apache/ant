@@ -78,7 +78,11 @@ public class Replace extends MatchingTask {
     private Vector replacefilters = new Vector();
 
     private File dir = null;
-   
+
+    private int fileCount;
+    private int replaceCount;    
+    private boolean summary = false;
+    
     //Inner class
     public class NestedString {
 
@@ -187,19 +191,25 @@ public class Replace extends MatchingTask {
         }
 
         validateReplacefilters();
+        fileCount = 0;
+        replaceCount = 0;
 
         if (src != null) {
             processFile(src);
         }
 
         if (dir != null) {
-        DirectoryScanner ds = super.getDirectoryScanner(dir);
+            DirectoryScanner ds = super.getDirectoryScanner(dir);
             String[] srcs = ds.getIncludedFiles();
 
             for(int i=0; i<srcs.length; i++) {
                 File file = new File(dir,srcs[i]);
                 processFile(file);
             }
+        }
+        
+        if (summary) {
+            log("Replaced " + replaceCount + " occurrences in " + fileCount + " files.", Project.MSG_INFO);
         }
     }
     
@@ -337,6 +347,7 @@ public class Replace extends MatchingTask {
             // If there were changes, move the new one to the old one;
             // otherwise, delete the new one
             if (changes) {
+                ++fileCount;
                 src.delete();
                 temp.renameTo(src);
             } else {
@@ -370,6 +381,16 @@ public class Replace extends MatchingTask {
         this.src = file;
     }
 
+    /**
+     * Request a summary
+     *
+     * @param summary true if you would like a summary logged of the replace operation
+     */
+    public void setSummary(boolean summary) {
+        this.summary = summary;
+    }
+    
+    
     /**
      * Set the source files path when using matching tasks.
      */
@@ -445,6 +466,7 @@ public class Replace extends MatchingTask {
             // search again
             start = found + str1.length();
             found = str.indexOf(str1,start);
+            ++replaceCount;
         }
 
         // write the remaining characters
