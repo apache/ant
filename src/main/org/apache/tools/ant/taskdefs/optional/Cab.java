@@ -80,6 +80,7 @@ import org.apache.tools.ant.util.FileUtils;
  * Create a CAB archive.
  *
  * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>
+ * @author Jesse Stockall
  */
 
 public class Cab extends MatchingTask {
@@ -144,13 +145,13 @@ public class Cab extends MatchingTask {
      */
     protected void checkConfiguration() throws BuildException {
         if (baseDir == null) {
-            throw new BuildException("basedir attribute must be set!");
+            throw new BuildException("basedir attribute must be set!", getLocation());
         }
         if (!baseDir.exists()) {
-            throw new BuildException("basedir does not exist!");
+            throw new BuildException("basedir does not exist!", getLocation());
         }
         if (cabFile == null) {
-            throw new BuildException("cabfile attribute must be set!");
+            throw new BuildException("cabfile attribute must be set!" , getLocation());
         }
     }
 
@@ -181,31 +182,6 @@ public class Cab extends MatchingTask {
             }
         }
         return upToDate;
-    }
-
-    /**
-     * Create the cabarc command line to use.
-     */
-    protected Commandline createCommand(File listFile) {
-        Commandline command = new Commandline();
-        command.setExecutable("cabarc");
-        command.createArgument().setValue("-r");
-        command.createArgument().setValue("-p");
-
-        if (!doCompress) {
-            command.createArgument().setValue("-m");
-            command.createArgument().setValue("none");
-        }
-
-        if (cmdOptions != null) {
-            command.createArgument().setLine(cmdOptions);
-        }
-
-        command.createArgument().setValue("n");
-        command.createArgument().setFile(cabFile);
-        command.createArgument().setValue("@" + listFile.getAbsolutePath());
-
-        return command;
     }
 
     /**
@@ -287,7 +263,7 @@ public class Cab extends MatchingTask {
             sb.append("\n").append(cabFile.getAbsolutePath()).append("\n");
 
             try {
-                Process p = Execute.launch(getProject(), 
+                Process p = Execute.launch(getProject(),
                                            new String[] {"listcab"}, null,
                                            baseDir, true);
                 OutputStream out = p.getOutputStream();
@@ -302,7 +278,7 @@ public class Cab extends MatchingTask {
                 LogOutputStream errLog = new LogOutputStream(this, Project.MSG_ERR);
                 StreamPumper    outPump = new StreamPumper(p.getInputStream(), outLog);
                 StreamPumper    errPump = new StreamPumper(p.getErrorStream(), errLog);
-                
+
                 // Pump streams asynchronously
                 (new Thread(outPump)).start();
                 (new Thread(errPump)).start();
@@ -328,7 +304,7 @@ public class Cab extends MatchingTask {
                 }
             } catch (IOException ex) {
                 String msg = "Problem creating " + cabFile + " " + ex.getMessage();
-                throw new BuildException(msg);
+                throw new BuildException(msg, getLocation());
             }
         } else {
             try {
@@ -345,7 +321,23 @@ public class Cab extends MatchingTask {
                     exec.setOutput(outFile);
                 }
 
-                exec.setCommand(createCommand(listFile));
+                exec.setExecutable("cabarc");
+                exec.createArg().setValue("-r");
+                exec.createArg().setValue("-p");
+
+                if (!doCompress) {
+                    exec.createArg().setValue("-m");
+                    exec.createArg().setValue("none");
+                }
+
+                if (cmdOptions != null) {
+                    exec.createArg().setLine(cmdOptions);
+                }
+
+                exec.createArg().setValue("n");
+                exec.createArg().setFile(cabFile);
+                exec.createArg().setValue("@" + listFile.getAbsolutePath());
+
                 exec.execute();
 
                 if (outFile != null) {
@@ -355,7 +347,7 @@ public class Cab extends MatchingTask {
                 listFile.delete();
             } catch (IOException ioe) {
                 String msg = "Problem creating " + cabFile + " " + ioe.getMessage();
-                throw new BuildException(msg);
+                throw new BuildException(msg, getLocation());
             }
         }
     }
