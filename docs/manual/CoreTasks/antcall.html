@@ -9,8 +9,11 @@
 
 <h2><a name="antcall">AntCall</a></h2>
 <h3>Description</h3>
-<p>Call another target within the same build-file optionally specifying some
-properties (param's in this context)</p>
+
+<p>Call another target within the same build-file optionally
+specifying some properties (param's in this context).  <strong>This
+task must no be used outside of a <code>target</code>.</strong></p>
+
 <p>By default, all of the properties of the current project will be
 available in the new project.   Alternatively, you can
 set the <i>inheritAll</i> attribute to <code>false</code> and only

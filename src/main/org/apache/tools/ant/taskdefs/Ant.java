@@ -357,21 +357,31 @@ public class Ant extends Task {
                     + " in build file " +  antFile.toString(),
                     Project.MSG_VERBOSE);
             newProject.setUserProperty("ant.file" , antFile);
+
+            // Are we trying to call the target in which we are defined (or
+            // the build file if this is a top level task)?
+            if (newProject.getProperty("ant.file")
+                .equals(getProject().getProperty("ant.file"))
+                && getOwningTarget() != null) {
+                if (getOwningTarget().getName().equals("")) {
+                    if (getTaskName().equals("antcall")) {
+                        throw new BuildException("antcall must not be used at"
+                                                 + " the top level.");
+                    } else {
+                        throw new BuildException(getTaskName() + " task at the"
+                                                 + " top level must not invoke"
+                                                 + " its own build file.");
+                    }
+                } else if (getOwningTarget().getName().equals(target)) {
+                    throw new BuildException(getTaskName() + " task calling "
+                                             + "its own parent target.");
+                }
+            }
+
             ProjectHelper.configureProject(newProject, new File(antFile));
 
             if (target == null) {
                 target = newProject.getDefaultTarget();
-            }
-
-            // Are we trying to call the target in which we are defined (or
-            // the build file if this is a top level task)?
-            if (newProject.getBaseDir().equals(getProject().getBaseDir())
-                && newProject.getProperty("ant.file").equals(getProject().getProperty("ant.file"))
-                && getOwningTarget() != null
-                && (getOwningTarget().getName().equals("")
-                    || getOwningTarget().getName().equals(target))) {
-                throw new BuildException("ant task calling its own parent "
-                                         + "target");
             }
 
             addReferences();

@@ -288,7 +288,9 @@ ant.java.version    the JVM version Ant detected; currently it can hold
 Ant 1.6 all tasks can be declared outside targets (earlier version
 only allowed <tt>&lt;property&gt;</tt>,<tt>&lt;typedef&gt;</tt> and
 <tt>&lt;taskdef&gt;</tt>).  When you do this they are evaluated before
-any targets are executed.</p>
+any targets are executed.  Some tasks will generate build failures if
+they are used outside of targets as they may cause infinite loops
+otherwise (<code>&lt;antcall&gt;</code> for example).</p>
 
 <p>
 We have given some targets descriptions; this causes the <tt>projecthelp</tt>

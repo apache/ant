@@ -431,6 +431,7 @@ public class SubAnt
     private Ant createAntTask(File directory) {
         Ant ant = (Ant) getProject().createTask("ant");
         ant.setOwningTarget(getOwningTarget());
+        ant.setTaskName(getTaskName());
         ant.init();
         if (target != null && target.length() > 0) {
             ant.setTarget(target);

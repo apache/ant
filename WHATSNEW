@@ -231,6 +231,11 @@ Fixed bugs:
 
 Other changes:
 --------------
+* All tasks can be used outside of <target>s.  Note that some tasks
+  will not work at all outside of targets as they would cause infinite
+  loops (<antcall> as well as <ant> and <subant> if they invoke the
+  current build file).
+
 * Six new Clearcase tasks added.
 
 * A new filter reader namely tokenfilter has been added.  Bugzilla
@@ -257,8 +262,6 @@ Other changes:
 * <filterset> will now resolve filters recursively.
 
 * <input> has a new attribute that allows you to specify a default value.
-
-* All tasks can be used outside of <target>s
 
 * Added <image> task (requires JAI).
 
