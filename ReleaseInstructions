@@ -65,9 +65,9 @@ Note: This document was updated in the context of releasing Ant 1.6.
             * xdocs/srcdownload.xml
             * xdocs/bindownload.xml
 
-        Generate the html files by invoking ant on docs.xml - you need
-        jakarta-site2 checked out for this.  Commit the modified/generated
-        files
+        Generate the html files by invoking ant on docs.xml
+        (use -projecthelp for instructions).
+        Commit the modified/generated files
 
 6.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  To find out what libraries you need, execute

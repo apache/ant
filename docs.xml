@@ -1,22 +1,44 @@
 <project name="build-site" default="docs" basedir=".">
 
+    <description>
+        Build documentation - XDocs and Javadoc.
+        For building XDocs, edit xdocs/**/*.xml first.
+        If ../jakarta-site2 does not exist, set -Dsite.dir=... for it,
+        or just use -Dvelocity.dir=.../velocity-4.x if you have downloaded Velocity somewhere.
+
+        XXX for no apparent reason, your CWD must be the main Ant source dir, or this will fail:
+        .../docs.xml:64: org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource './site.vsl'
+    </description>
+
     <!-- Initialization properties -->
     <property name="project.name" value="ant"/>
     <property name="docs.src"     location="xdocs"/>
     <property name="docs.dest"    location="docs"/>
     <property name="project.file" value="stylesheets/project.xml" />
-    <property name="site.dir"     location="../jakarta-site2" />
     <property name="templ.path"   location="xdocs/stylesheets" />
     <property name="velocity.props"   location="${docs.src}/velocity.properties" />
     <property name="include.xml"  value="**/*.xml" />
 
-    <path id="anakia.classpath">
-        <fileset dir="${site.dir}/lib">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
+    <target name="setup-explicit-classpath" if="velocity.dir">
+        <path id="anakia.classpath">
+            <fileset dir="${velocity.dir}">
+                <include name="velocity-dep-*.jar"/>
+                <!-- XXX why is this needed separately? -->
+                <include name="build/lib/jdom-*.jar"/>
+            </fileset>
+        </path>
+    </target>
 
-    <target name="prepare">
+    <target name="setup-implicit-classpath" unless="velocity.dir">
+        <property name="site.dir" location="../jakarta-site2"/>
+        <path id="anakia.classpath">
+            <fileset dir="${site.dir}/lib">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+    </target>
+
+    <target name="prepare" depends="setup-explicit-classpath,setup-implicit-classpath">
         <available classname="org.apache.velocity.anakia.AnakiaTask"
                    property="AnakiaTask.present">
             <classpath refid="anakia.classpath"/>
@@ -30,7 +52,7 @@
         </echo>
     </target>
 
-    <target name="docs" depends="prepare-error" if="AnakiaTask.present">
+    <target name="docs" if="AnakiaTask.present" depends="prepare-error" description="Create XDocs.">
         <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask">
             <classpath refid="anakia.classpath"/>
         </taskdef>
@@ -46,11 +68,12 @@
         </anakia>
     </target>
 
-    <target name="javadocs">
+    <target name="javadocs" description="Create Javadoc.">
       <ant antfile="build.xml" target="dist_javadocs">
         <property name="dist.javadocs" value="${docs.dest}/manual/api" />
       </ant>
     </target>
 
-    <target name="all" depends="docs, javadocs"/>
+    <target name="all" depends="docs,javadocs" description="Create both XDocs and Javadoc."/>
+
 </project>
