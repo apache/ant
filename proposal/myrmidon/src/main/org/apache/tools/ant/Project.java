@@ -115,20 +115,6 @@ public class Project
     }
 
     /**
-     * returns the boolean equivalent of a string, which is considered true if
-     * either "on", "true", or "yes" is found, ignoring case.
-     *
-     * @param s Description of Parameter
-     * @return Description of the Returned Value
-     */
-    public static boolean toBoolean( String s )
-    {
-        return ( s.equalsIgnoreCase( "on" ) ||
-            s.equalsIgnoreCase( "true" ) ||
-            s.equalsIgnoreCase( "yes" ) );
-    }
-
-    /**
      * get the base directory of the project as a file object
      *
      * @return the base directory. If this is null, then the base dir is not

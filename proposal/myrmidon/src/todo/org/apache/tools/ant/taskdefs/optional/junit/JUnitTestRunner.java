@@ -361,15 +361,15 @@ public class JUnitTestRunner implements TestListener
         {
             if( args[ i ].startsWith( "haltOnError=" ) )
             {
-                haltError = Project.toBoolean( args[ i ].substring( 12 ) );
+                haltError = "true".equals( args[ i ].substring( 12 ) );
             }
             else if( args[ i ].startsWith( "haltOnFailure=" ) )
             {
-                haltFail = Project.toBoolean( args[ i ].substring( 14 ) );
+                haltFail = "true".equals( args[ i ].substring( 14 ) );
             }
             else if( args[ i ].startsWith( "filtertrace=" ) )
             {
-                stackfilter = Project.toBoolean( args[ i ].substring( 12 ) );
+                stackfilter = "true".equals( args[ i ].substring( 12 ) );
             }
             else if( args[ i ].startsWith( "formatter=" ) )
             {
