@@ -63,14 +63,16 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.awt.Color;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.EventObject;
 import java.util.Date;
 
 /**
  * Logging console display.
- * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ *
+ * @version $Revision$
+ * @author Simeon Fitch
  */
 public class BuildConsole extends AntModule {
     /** Area where messages are printed. */
@@ -81,17 +83,17 @@ public class BuildConsole extends AntModule {
     private ConsoleStyleContext _styles = null;
 	/** ClearLog Button. */
 	private JButton _clearLog = null;
-    
-	/** 
+
+	/**
 	 * Default ctor.
 	 */
     public BuildConsole() {
     }
 
 
-	/** 
+	/**
 	 * Using the given AppContext, initialize the display.
-	 * 
+	 *
 	 * @param context Application context.
 	 */
     public void contextualize(AppContext context) {
@@ -114,7 +116,7 @@ public class BuildConsole extends AntModule {
         _logLevel = new JComboBox(LogLevelEnum.getValues());
         _logLevel.setSelectedItem(LogLevelEnum.INFO);
         controls.add(_logLevel);
-        
+
         // Padding.
         controls.add(Box.createHorizontalStrut(10));
 		_clearLog = new JButton(
@@ -125,12 +127,30 @@ public class BuildConsole extends AntModule {
 
         add(BorderLayout.NORTH, controls);
 
+        /** Anonymous class to respond to resize envents and
+         * post <code>ConsoleNotVisibleEvent</code> or
+         * <code>ConsoleVisibleEvent</code> events.
+         */
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                AppContext c = BuildConsole.this.getContext();
+                if (BuildConsole.this.getHeight() == 0) {
+                    c.getEventBus().postEvent(new ConsoleNotVisibleEvent(c));
+                } else {
+                    c.getEventBus().postEvent(new ConsoleVisibleEvent(c));
+                }
+            }
+            public void componentHidden(ComponentEvent e) {}
+            public void componentMoved(ComponentEvent e) {}
+            public void componentShown(ComponentEvent e) {}
+        });
+
     }
 
 
-    /** 
+    /**
      * Clear the contents of the console.
-     * 
+     *
      */
     private void clearDisplay() {
         Document doc = _text.getDocument();
@@ -146,19 +166,19 @@ public class BuildConsole extends AntModule {
     private class Handler implements BusMember {
         private final Filter _filter = new Filter();
 
-        /** 
+        /**
          * Get the filter to that is used to determine if an event should
          * to to the member.
-         * 
+         *
          * @return Filter to use.
          */
         public BusFilter getBusFilter() {
             return _filter;
         }
-        
-        /** 
+
+        /**
          * Called when an event is to be posed to the member.
-         * 
+         *
          * @param event Event to post.
          * @return true if event should be propogated, false if
          * it should be cancelled.
@@ -176,7 +196,7 @@ public class BuildConsole extends AntModule {
               case BuildEventType.BUILD_STARTED_VAL:
 
               case BuildEventType.BUILD_FINISHED_VAL:
-                  text = buildEvent.getType().toString() + 
+                  text = buildEvent.getType().toString() +
                       " (" + new Date().toString() + ")";
                   style = _styles.getHeadingStyle();
                   break;
@@ -191,7 +211,7 @@ public class BuildConsole extends AntModule {
               case BuildEventType.MESSAGE_LOGGED_VAL:
                   // Filter out events that are below our
                   // selected filterint level.
-                  LogLevelEnum level = 
+                  LogLevelEnum level =
                       (LogLevelEnum) _logLevel.getSelectedItem();
                   int priority = buildEvent.getEvent().getPriority();
                   if(priority <= level.getValue()) {
@@ -226,9 +246,9 @@ public class BuildConsole extends AntModule {
 
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
-        /** 
+        /**
          * Determines if the given event should be accepted.
-         * 
+         *
          * @param event Event to test.
          * @return True if event should be given to BusMember, false otherwise.
          */
@@ -255,9 +275,9 @@ public class BuildConsole extends AntModule {
             Color.blue
         };
 
-        /** 
+        /**
          * Default ctor.
-         * 
+         *
          */
         public ConsoleStyleContext() {
             Style defaultStyle = getStyle(DEFAULT_STYLE);
@@ -283,9 +303,9 @@ public class BuildConsole extends AntModule {
             StyleConstants.setUnderline(subheading, false);
         }
 
-        /** 
+        /**
          * Get the style to use for the given logging level.
-         * 
+         *
          * @param level Logging level.
          * @return Style to use for display.
          */
@@ -294,36 +314,36 @@ public class BuildConsole extends AntModule {
             return retval == null ? getDefaultStyle() : retval;
         }
 
-        /** 
+        /**
          * Get the default style.
-         * 
+         *
          * @return Default style.
          */
         Style getDefaultStyle() {
             return getStyle(DEFAULT_STYLE);
         }
 
-        /** 
+        /**
          * Get the style to use for headings.
-         * 
+         *
          * @return Heading style.
          */
         Style getHeadingStyle() {
             return getStyle(HEADING_STYLE);
         }
 
-        /** 
+        /**
          * Get the style to use for subheadings.
-         * 
+         *
          * @return Subheading style.
          */
         Style getSubheadingStyle() {
             return getStyle(SUBHEADING_STYLE);
         }
 
-        /** 
+        /**
          * Get a StyledDocument initialized with this.
-         * 
+         *
          * @return SytledDocument.
          */
         StyledDocument getStyledDocument() {

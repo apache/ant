@@ -55,16 +55,19 @@ package org.apache.tools.ant.gui.core;
 
 import org.apache.tools.ant.gui.event.*;
 import org.apache.tools.ant.gui.command.Command;
+import org.apache.tools.ant.gui.util.CheckableButtonModel;
 import javax.swing.*;
+import javax.accessibility.*;
 import java.util.*;
+import java.beans.*;
 import java.lang.reflect.Constructor;
 
 /**
  * Manager of antidote actions. Receives its configuration from the action
  * ResourceBundle.
- * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ *
+ * @version $Revision$
+ * @author Simeon Fitch
  */
 public class ActionManager {
     /** Parameters for the Command constructor. */
@@ -86,9 +89,9 @@ public class ActionManager {
     private EventToActionMapper _mapper = null;
 
 
-	/** 
+	/**
 	 * Standard ctor.
-	 * 
+	 *
 	 * @param bus Event bus to post events to.
      * @param resources Location of resources.
 	 */
@@ -113,9 +116,9 @@ public class ActionManager {
         }
     }
 
-	/** 
+	/**
 	 * Create a menubar for the application based on the configuration file.
-	 * 
+	 *
 	 * @return Menubar.
 	 */
     public JMenuBar createMenuBar() {
@@ -162,7 +165,7 @@ public class ActionManager {
                 }
 
                 // See if we should add a separator.
-                if(action.isPreceededBySeparator() && 
+                if(action.isPreceededBySeparator() &&
                    menu.getMenuComponentCount() > 0) {
                     menu.addSeparator();
                 }
@@ -173,10 +176,14 @@ public class ActionManager {
                     addNiceStuff(item, action);
                 }
                 else {
-                    JCheckBoxMenuItem b = 
+                    JCheckBoxMenuItem b =
                         new JCheckBoxMenuItem(action.getName());
                     b.setActionCommand(action.getID());
                     b.addActionListener(action);
+
+                    action.addPropertyChangeListener(
+                        new PropertyWatcher(b));
+
                     // XXX eck. This is a 1.3 feature. Fix ME!
                     // Need to provide binding between action and widget.
 //                    b.setAction(action);
@@ -190,14 +197,14 @@ public class ActionManager {
         return retval;
     }
 
-	/** 
+	/**
 	 * Create a tool bar based on the current configuration.
-	 * 
+	 *
 	 * @return Toolbar ready for action.
 	 */
     public JToolBar createToolBar() {
         JToolBar retval = new JToolBar();
-        
+
         for(int i = 0; i < _actionIDs.length; i++) {
             AntAction action = (AntAction) _actions.get(_actionIDs[i]);
             // If it has an icon, then we add it to the toolbar.
@@ -209,6 +216,15 @@ public class ActionManager {
                 JButton button = retval.add(action);
                 button.setText(null);
 
+                // Watch for CHECKED changes
+                action.addPropertyChangeListener(
+                    new PropertyWatcher(button));
+
+                if(action.isToggle()) {
+                    ButtonModel model = new CheckableButtonModel();
+                    button.setModel(model);
+                }
+
                 addNiceStuff(button, action);
             }
         }
@@ -216,12 +232,12 @@ public class ActionManager {
         return retval;
     }
 
-	/** 
+	/**
 	 * Create a popup menu with the given actionIDs.
      * XXX check this for object leak. Does the button
      * get added to the action as a listener? There are also some
      * changes to this behavior in 1.3.
-	 * 
+	 *
 	 * @param actionIDs List of action IDs for actions
      *  to appear in popup menu.
 	 * @return Popup menu to display.
@@ -240,9 +256,9 @@ public class ActionManager {
         return retval;
     }
 
-	/** 
+	/**
 	 * Get the command assocaited with the Action with the given id.
-	 * 
+	 *
 	 * @param actionID Id of action to get command for.
 	 * @return Command associated with action, or null if none available.
 	 */
@@ -253,7 +269,7 @@ public class ActionManager {
             Class clazz = action.getCommandClass();
             if(clazz != null) {
                 try {
-                    Constructor ctor = 
+                    Constructor ctor =
                         clazz.getConstructor(COMMAND_CTOR_PARAMS);
                     retval = (Command) ctor.newInstance(
                         new Object[] { context });
@@ -268,10 +284,10 @@ public class ActionManager {
     }
 
 
-	/** 
+	/**
 	 * Add tool tip, Mnemonic, etc.
-	 * 
-	 * @param button Button to work on. 
+	 *
+	 * @param button Button to work on.
 	 * @param action Associated action.
 	 */
     private void addNiceStuff(AbstractButton button, AntAction action) {
@@ -297,19 +313,19 @@ public class ActionManager {
     private class Enabler implements BusMember {
         private final Filter _filter = new Filter();
 
-        /** 
+        /**
          * Get the filter to that is used to determine if an event should
          * to to the member.
-         * 
+         *
          * @return Filter to use.
          */
         public BusFilter getBusFilter() {
             return _filter;
         }
-        
-        /** 
+
+        /**
          * Receives all events.
-         * 
+         *
          * @param event Event to post.
          * @return true if event should be propogated, false if
          * it should be cancelled.
@@ -322,9 +338,9 @@ public class ActionManager {
 
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
-        /** 
+        /**
          * Determines if the given event should be accepted.
-         * 
+         *
          * @param event Event to test.
          * @return True if event should be given to BusMember, false otherwise.
          */
@@ -333,5 +349,31 @@ public class ActionManager {
         }
     }
 
+    /** Class which's hooks the action to toggle buttons. */
+    private static class PropertyWatcher implements PropertyChangeListener {
+        private AbstractButton _target;
 
+	/**
+	 * Standard ctor.
+	 *
+	 * @param target Button to update
+	 */
+        public PropertyWatcher(AbstractButton target) {
+            _target = target;
+        }
+
+        /**
+         * Change the Selected stated of the button if the CHECKED
+         * property is set on the <code>action</code>
+         *
+         * @param event Event to test.
+         */
+        public void propertyChange(PropertyChangeEvent e) {
+            String propertyName = e.getPropertyName();
+            if (propertyName.equals(AccessibleState.CHECKED.toString())) {
+                Boolean newValue = (Boolean) e.getNewValue();
+                _target.setSelected(newValue.booleanValue());
+            }
+        }
+    }
 }

@@ -15,7 +15,7 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
-q *
+ *
  * 3. The end-user documentation included with the redistribution, if
  *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
@@ -51,78 +51,23 @@ q *
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.command;
-import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.event.ErrorEvent;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
-import org.apache.tools.ant.gui.event.ShowConsoleEvent;
+package org.apache.tools.ant.gui.event;
+
+import org.apache.tools.ant.gui.core.*;
 
 /**
- * Starts an Ant build.
+ * Event fired when the console pane is not visible
  *
  * @version $Revision$
- * @author Simeon Fitch
+ * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
-public class BuildCmd extends AbstractCommand {
-
-    /** Project to build. */
-    private ACSProjectElement _project = null;
-    /** Targets to build. */
-    private ACSTargetElement[] _targets = null;
-
+public class ConsoleNotVisibleEvent extends AntEvent {
 	/**
 	 * Standard ctor.
 	 *
+	 * @param context application context.
 	 */
-    public BuildCmd(AppContext context) {
+    public ConsoleNotVisibleEvent(AppContext context) {
         super(context);
-    }
-
-    /**
-     * Set the specific project to build (instead of the default).
-     *
-     * @param project Project to build.
-     */
-    public void setProject(ACSProjectElement project) {
-        _project = project;
-    }
-
-    /**
-     * Set the specific targets to build (instead of the default).
-     *
-     * @param targets Array of targets to build.
-     */
-    public void setTargets(ACSTargetElement[] targets) {
-        _targets = targets;
-    }
-
-	/**
-	 * Start the Ant build.
-	 *
-	 */
-    public void run() {
-
-        // Show the build console
-        getContext().getEventBus().postEvent(
-            new ShowConsoleEvent(getContext()));
-
-        if(_project == null) {
-            _project = getContext().getSelectionManager().getSelectedProject();
-        }
-
-        if(_targets == null) {
-            _targets = getContext().getSelectionManager().getSelectedTargets();
-        }
-
-        if(_project != null) {
-            try {
-                getContext().getProjectManager().build(_project, _targets);
-            }
-            catch(Throwable ex) {
-                getContext().getEventBus().postEvent(
-                    new ErrorEvent(getContext(), ex));
-            }
-        }
     }
 }

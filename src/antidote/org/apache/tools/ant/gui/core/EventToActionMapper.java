@@ -52,14 +52,16 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.core;
+
 import java.util.*;
+import javax.accessibility.AccessibleState;
 
 /**
- * The purpose of this class is to manage the 
+ * The purpose of this class is to manage the
  * mappings between event type and action enabled state.
- * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ *
+ * @version $Revision$
+ * @author Simeon Fitch
  */
 class EventToActionMapper {
 
@@ -69,29 +71,37 @@ class EventToActionMapper {
     /** Lookup for enable(false) events. Key is event type, value is
      *  a list of actions that are changed by the event. */
     private Map _disableOn = new HashMap();
+    /** Lookup for CHECK(true) events. Key is event type, value is
+     *  a list of actions that are changed by the event. */
+    private Map _checkedTrueOn = new HashMap();
+    /** Lookup for CHECK(false) events. Key is event type, value is
+     *  a list of actions that are changed by the event. */
+    private Map _checkedFalseOn = new HashMap();
 
 
-	/** 
+	/**
 	 * Defaul ctor.
-	 * 
+	 *
 	 */
     public EventToActionMapper() {
     }
 
-	/** 
+	/**
 	 * Add an action.
-	 * 
+	 *
 	 * @param action Action to add.
 	 */
     public void addAction(AntAction action) {
         putAction(action, action.getEnableOnEvents(), _enableOn);
         putAction(action, action.getDisableOnEvents(), _disableOn);
+        putAction(action, action.getCheckedTrueOnEvents(), _checkedTrueOn);
+        putAction(action, action.getCheckedFalseOnEvents(), _checkedFalseOn);
     }
 
-	/** 
+	/**
 	 * For the given action store it in the event type mapping
      * for each of the given types.
-	 * 
+	 *
 	 * @param action Action to store.
 	 * @param clazzes Array of types to store it under.
 	 * @param storage The place to store the association.
@@ -109,11 +119,11 @@ class EventToActionMapper {
             values.add(action);
         }
     }
-	/** 
-	 * For the given event change the state of any actions that 
+	/**
+	 * For the given event change the state of any actions that
      * have been registered as needing a transition as a result of
      * the event.
-	 * 
+	 *
 	 * @param event The event to apply.
 	 */
     public void applyEvent(EventObject event) {
@@ -126,11 +136,17 @@ class EventToActionMapper {
 
         vals = (List) _disableOn.get(event.getClass());
         changeState(vals, false);
+
+        vals = (List) _checkedTrueOn.get(event.getClass());
+        changeChecked(vals, true);
+
+        vals = (List) _checkedFalseOn.get(event.getClass());
+        changeChecked(vals, false);
     }
 
-	/** 
+	/**
 	 * Set the enabled state of the given actions.
-	 * 
+	 *
 	 * @param actions List of AntActions to set state for.
 	 * @param state The state to set them to.
 	 */
@@ -140,6 +156,22 @@ class EventToActionMapper {
         for(int i = 0, len = actions.size(); i < len; i++) {
             AntAction action = (AntAction) actions.get(i);
             action.setEnabled(state);
+        }
+    }
+
+	/**
+	 * Set the CHECKED property of the given actions.
+	 *
+	 * @param actions List of AntActions to set checked properties for.
+	 * @param checked The checked value to set them to.
+	 */
+    private void changeChecked(List actions, boolean checked) {
+        if(actions == null) return;
+
+        for(int i = 0, len = actions.size(); i < len; i++) {
+            AntAction action = (AntAction) actions.get(i);
+            action.putValue(AccessibleState.CHECKED.toString(),
+                new Boolean(checked));
         }
     }
 }

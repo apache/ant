@@ -15,7 +15,7 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
-q *
+ *
  * 3. The end-user documentation included with the redistribution, if
  *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
@@ -53,76 +53,95 @@ q *
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.event.ErrorEvent;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
-import org.apache.tools.ant.gui.event.ShowConsoleEvent;
+import org.apache.tools.ant.gui.event.*;
+import java.awt.*;
+import javax.swing.*;
 
 /**
- * Starts an Ant build.
+ * Toggles the display of the console window
  *
  * @version $Revision$
- * @author Simeon Fitch
+ * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
-public class BuildCmd extends AbstractCommand {
+public class ShowOrHideConsoleCmd extends AbstractCommand {
+    /** Always show the console */
+    boolean _alwaysShow = false;
 
-    /** Project to build. */
-    private ACSProjectElement _project = null;
-    /** Targets to build. */
-    private ACSTargetElement[] _targets = null;
-
-	/**
-	 * Standard ctor.
-	 *
-	 */
-    public BuildCmd(AppContext context) {
+    /**
+    * Standard ctor.
+    *
+    * @param context Application context.
+     */
+    public ShowOrHideConsoleCmd(AppContext context) {
         super(context);
+        _alwaysShow = false;
     }
 
     /**
-     * Set the specific project to build (instead of the default).
-     *
-     * @param project Project to build.
+    * Standard ctor.
+    *
+    * @param context Application context.
      */
-    public void setProject(ACSProjectElement project) {
-        _project = project;
+    public ShowOrHideConsoleCmd(AppContext context, boolean alwaysShow) {
+        super(context);
+        _alwaysShow = alwaysShow;
     }
+
 
     /**
-     * Set the specific targets to build (instead of the default).
-     *
-     * @param targets Array of targets to build.
+     * If the console pane is visible, hide it.
+     * If the console pane is not visible, show it.
      */
-    public void setTargets(ACSTargetElement[] targets) {
-        _targets = targets;
-    }
-
-	/**
-	 * Start the Ant build.
-	 *
-	 */
     public void run() {
-
-        // Show the build console
-        getContext().getEventBus().postEvent(
-            new ShowConsoleEvent(getContext()));
-
-        if(_project == null) {
-            _project = getContext().getSelectionManager().getSelectedProject();
-        }
-
-        if(_targets == null) {
-            _targets = getContext().getSelectionManager().getSelectedTargets();
-        }
-
-        if(_project != null) {
-            try {
-                getContext().getProjectManager().build(_project, _targets);
+        JComponent component = (JComponent) findComponent("Console");
+        JSplitPane pane = (JSplitPane) component.getParent();
+        if (_alwaysShow) {
+            if (component.getHeight() == 0) {
+                pane.setDividerLocation(pane.getLastDividerLocation());
             }
-            catch(Throwable ex) {
-                getContext().getEventBus().postEvent(
-                    new ErrorEvent(getContext(), ex));
+        } else {
+            if (component.getHeight() == 0) {
+                pane.setDividerLocation(pane.getLastDividerLocation());
+            } else {
+                pane.setDividerLocation(1.0);
             }
         }
+    }
+
+    /**
+     * Starting from the top Frame, find the
+     * first child window with the input name.
+     *
+     * @param name The name of the <code>Component</code>
+     */
+    private Component findComponent(String name) {
+        JFrame frame = (JFrame) getContext().getParentFrame();
+        JRootPane root = frame.getRootPane();
+        return findChild(root.getContentPane(), name);
+    }
+
+    /**
+     * Search the <code>Container</code> for a <code>Component</code>
+     * with the input name. The search is recursive.
+     *
+     * @param container The <code>Container</code> to search
+     * @param name The name of the <code>Component</code>
+     */
+    private Component findChild(Container container, String name) {
+        Component[] components = container.getComponents();
+        for (int i = 0; i < components.length; i++) {
+            Component component = components[i];
+            if ( name.equals(component.getName()) ) {
+                return component;
+            }
+            if (component instanceof java.awt.Container) {
+                Component test = findChild(
+                    (java.awt.Container) component, name);
+                if (test != null) {
+                    return test;
+                }
+            }
+        }
+        return null;
     }
 }

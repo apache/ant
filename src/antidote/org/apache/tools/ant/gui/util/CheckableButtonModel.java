@@ -15,7 +15,7 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
-q *
+ *
  * 3. The end-user documentation included with the redistribution, if
  *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
@@ -51,78 +51,94 @@ q *
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.command;
-import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.event.ErrorEvent;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
-import org.apache.tools.ant.gui.event.ShowConsoleEvent;
+package org.apache.tools.ant.gui.util;
+
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultButtonModel;
 
 /**
- * Starts an Ant build.
+ * Provides a button which appears "pressed" when it is in
+ * a selected state.
+ * <p>
+ * Call <code>setSelected</code> to select the button. When the
+ * button is selected, both the PRESSED and ARMED properties are
+ * set which gives the button a pressed appearance.
  *
  * @version $Revision$
- * @author Simeon Fitch
+ * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
-public class BuildCmd extends AbstractCommand {
+public class CheckableButtonModel extends DefaultButtonModel {
 
-    /** Project to build. */
-    private ACSProjectElement _project = null;
-    /** Targets to build. */
-    private ACSTargetElement[] _targets = null;
+    boolean _pressed = false;
+    boolean _armed = false;
 
-	/**
-	 * Standard ctor.
-	 *
-	 */
-    public BuildCmd(AppContext context) {
-        super(context);
+    /**
+     * Constructs a CheckableButtonModel
+     *
+     */
+    public CheckableButtonModel() {
     }
 
     /**
-     * Set the specific project to build (instead of the default).
+     * Sets the button to pressed or unpressed.
      *
-     * @param project Project to build.
+     * @param b true to set the button to "pressed"
+     * @see #isPressed
      */
-    public void setProject(ACSProjectElement project) {
-        _project = project;
+    public void setPressed(boolean b) {
+
+        if((_pressed == b) || !isEnabled()) {
+            return;
+        }
+
+        _pressed = b;
+
+        if(!_pressed && _armed) {
+            fireActionPerformed(
+                new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
+                                getActionCommand())
+                );
+        }
+
+        fireStateChanged();
+
+        stateMask |= PRESSED;
     }
 
     /**
-     * Set the specific targets to build (instead of the default).
+     * Marks the button as "armed". If the mouse button is
+     * released while it is over this item, the button's action event
+     * fires. If the mouse button is released elsewhere, the
+     * event does not fire and the button is disarmed.
      *
-     * @param targets Array of targets to build.
+     * @param b true to arm the button so it can be selected
      */
-    public void setTargets(ACSTargetElement[] targets) {
-        _targets = targets;
+    public void setArmed(boolean b) {
+
+        if((_armed == b) || !isEnabled()) {
+            return;
+        }
+
+        _armed = b;
+        fireStateChanged();
+        stateMask |= ARMED;
     }
 
-	/**
-	 * Start the Ant build.
-	 *
-	 */
-    public void run() {
+    /**
+     * Returns true if the button is selected.
+     *
+     * @return true if the button is "selected"
+     */
+    public boolean isArmed() {
+        return isSelected();
+    }
 
-        // Show the build console
-        getContext().getEventBus().postEvent(
-            new ShowConsoleEvent(getContext()));
-
-        if(_project == null) {
-            _project = getContext().getSelectionManager().getSelectedProject();
-        }
-
-        if(_targets == null) {
-            _targets = getContext().getSelectionManager().getSelectedTargets();
-        }
-
-        if(_project != null) {
-            try {
-                getContext().getProjectManager().build(_project, _targets);
-            }
-            catch(Throwable ex) {
-                getContext().getEventBus().postEvent(
-                    new ErrorEvent(getContext(), ex));
-            }
-        }
+    /**
+     * Returns true if the button is selected.
+     *
+     * @return true if the button is "selected"
+     */
+    public boolean isPressed() {
+        return isSelected();
     }
 }

@@ -54,18 +54,20 @@
 package org.apache.tools.ant.gui.core;
 
 import javax.swing.*;
+import javax.accessibility.*;
 import java.net.URL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.*;
 import java.util.*;
 
 import org.apache.tools.ant.gui.event.EventBus;
 
 /**
- * Class representing an action in the Antidote application. 
- * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ * Class representing an action in the Antidote application.
+ *
+ * @version $Revision$
+ * @author Simeon Fitch
  */
 public class AntAction extends AbstractAction {
     /** Property name for the parent menu item. */
@@ -76,6 +78,8 @@ public class AntAction extends AbstractAction {
     public static final String ENABLE_ON = "enableOn";
     public static final String DISABLE_ON = "disableOn";
     public static final String TOGGLE = "toggle";
+    public static final String CHECKED_TRUE_ON = "checkedTrueOn";
+    public static final String CHECKED_FALSE_ON = "checkedFalseOn";
     public static final String COMMAND = "command";
 
     /** Property resources. */
@@ -85,22 +89,28 @@ public class AntAction extends AbstractAction {
     /** Unique id. */
     private String _id = null;
 
-    /** Events that the action should cause transition to the 
+    /** Events that the action should cause transition to the
      *  enabled(true) state. */
     private Class[] _enableOn = null;
-    /** Events that the action should cause transition to the 
+    /** Events that the action should cause transition to the
      *  enabled(false) state. */
     private Class[] _disableOn = null;
+    /** Events that the action should cause transition to the
+     *  checked state. */
+    private Class[] _checkedTrueOn = null;
+    /** Events that the action should cause transition to the
+     *  not checked state. */
+    private Class[] _checkedFalseOn = null;
     /** Flag indicating toggle action. */
     private boolean _toggle = false;
 
-
-    /** 
+    /**
      * Standard ctor.
-     * 
+     *
      * @param id Unique id for the action
      */
     public AntAction(ResourceManager resources, EventBus bus, String id) {
+
         _resources = resources;
         _bus = bus;
         _id = id;
@@ -149,13 +159,14 @@ public class AntAction extends AbstractAction {
 
         _enableOn = resolveClasses(getString(ENABLE_ON));
         _disableOn = resolveClasses(getString(DISABLE_ON));
-
+        _checkedTrueOn = resolveClasses(getString(CHECKED_TRUE_ON));
+        _checkedFalseOn = resolveClasses(getString(CHECKED_FALSE_ON));
     }
-        
-	/** 
+
+	/**
 	 * Convenience method for looking put a resource with the name
      * "id.key". Will return null if the resource doesn't exist.
-	 * 
+	 *
 	 * @param key Key name for the action.
 	 * @return String resource for composite key, or null if not found.
 	 */
@@ -166,16 +177,16 @@ public class AntAction extends AbstractAction {
         }
         catch(MissingResourceException ex) {
             // Its ok to be missing a resource name...
-            // Too bad the API throws an exception in this case. 
+            // Too bad the API throws an exception in this case.
         }
         return retval;
     }
 
 
-	/** 
+	/**
 	 * Parse out the list of classes from the given string and
      * resolve them into classes.
-	 * 
+	 *
 	 * @param classNames Comma delimited list of class names.
 	 */
     private Class[] resolveClasses(String classNames) {
@@ -191,7 +202,7 @@ public class AntAction extends AbstractAction {
             catch(ClassNotFoundException ex) {
                 //XXX log me.
                 System.err.println(
-                    "Warning: the event class " + name + 
+                    "Warning: the event class " + name +
                     " was not found. Please check config file.");
             }
         }
@@ -201,46 +212,46 @@ public class AntAction extends AbstractAction {
         return retval;
     }
 
-    /** 
+    /**
      * Unique id for the action.
-     * 
+     *
      * @return Action id.
      */
     public String getID() {
         return _id;
     }
 
-    /** 
+    /**
      * Get the name of the menu in the menu bar that this action shoul
      * appear under.
-     * 
+     *
      * @return Menu to appear under, or null if not a menu action.
      */
     public String getParentMenuName() {
         return (String) getValue(PARENT_MENU_NAME);
     }
-        
-    /** 
+
+    /**
      * Get the localized name for the action.
-     * 
+     *
      * @return Name
      */
     public String getName() {
         return (String) getValue(NAME);
     }
-        
-    /** 
+
+    /**
      * Get the short description. Used in tool tips.
-     * 
+     *
      * @return Short description.
      */
     public String getShortDescription() {
         return (String) getValue(SHORT_DESCRIPTION);
     }
-        
-    /** 
+
+    /**
      * Determine if a separator should appear before the action.
-     * 
+     *
      * @return True if add separator, false otherwise.
      */
     public boolean isPreceededBySeparator() {
@@ -248,18 +259,18 @@ public class AntAction extends AbstractAction {
             String.valueOf(getValue(SEPARATOR))).booleanValue();
     }
 
-    /** 
+    /**
      * Get the icon.
-     * 
+     *
      * @return Icon for action, or null if none.
      */
     public Icon getIcon() {
         return (Icon) getValue(SMALL_ICON);
     }
 
-	/** 
+	/**
 	 * Get the accelerator keystroke.
-	 * 
+	 *
 	 * @return Accelerator
 	 */
     public KeyStroke getAccelerator() {
@@ -267,27 +278,43 @@ public class AntAction extends AbstractAction {
     }
 
 
-	/** 
+	/**
 	 * Get the event types which should cause this to go to the
      * enabled state.
-	 * 
+	 *
 	 */
     public Class[] getEnableOnEvents() {
         return _enableOn;
     }
 
-	/** 
-	 * Get the event types which should cause this to go to 
+	/**
+	 * Get the event types which should cause this to go to
      * this disabled state.
-	 * 
+	 *
 	 */
     public Class[] getDisableOnEvents() {
         return _disableOn;
     }
 
-	/** 
+	/**
+	 * Get the event types which should cause this to go to the
+         * checked state.
+	 */
+    public Class[] getCheckedTrueOnEvents() {
+        return _checkedTrueOn;
+    }
+
+	/**
+	 * Get the event types which should cause this to go to the
+         * not checked state.
+	 */
+    public Class[] getCheckedFalseOnEvents() {
+        return _checkedFalseOn;
+    }
+
+	/**
 	 * True if this is a toggle action, false otherwise.
-	 * 
+	 *
 	 * @return True if this is a toggle action, false otherwise.
 	 */
     public boolean isToggle() {
@@ -295,18 +322,18 @@ public class AntAction extends AbstractAction {
     }
 
 
-	/** 
+	/**
 	 * Get the assciated command class.
-	 * 
+	 *
 	 * @return Command class.
 	 */
     public Class getCommandClass() {
         return (Class) getValue(COMMAND);
     }
 
-    /** 
+    /**
      * Pass the action on to the EventBus.
-     * 
+     *
      * @param e Event to forward.
      */
     public void actionPerformed(ActionEvent e) {
