@@ -1306,7 +1306,7 @@ public class FileUtils {
         CharacterIterator iter = new StringCharacterIterator(path);
         for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
-            if (isSpecial[c]) {
+            if (c < 256 && isSpecial[c]) {
                 sb.append('%');
                 sb.append(escapedChar1[c]);
                 sb.append(escapedChar2[c]);
