@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
@@ -60,7 +60,7 @@ public abstract class AbstractSshMessage {
      * Reads the response, throws a BuildException if the response
      * indicates an error.
      */
-    protected void waitForAck(InputStream in) 
+    protected void waitForAck(InputStream in)
         throws IOException, BuildException {
         int b = in.read();
 
@@ -79,7 +79,7 @@ public abstract class AbstractSshMessage {
                 sb.append((char) c);
                 c = in.read();
             }
-            
+
             if (b == 1) {
                 throw new BuildException("server indicated an error: "
                                          + sb.toString());

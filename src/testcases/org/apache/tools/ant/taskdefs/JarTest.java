@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -61,7 +61,7 @@ public class JarTest extends BuildFileTest {
             } catch (IOException e) {
             }
         }
-        
+
         executeTarget("cleanup");
     }
 
@@ -140,7 +140,7 @@ public class JarTest extends BuildFileTest {
                    jarModifiedDate < jarFile.lastModified());
     }
 
-    public void testManifestStaysIntact() 
+    public void testManifestStaysIntact()
         throws IOException, ManifestException {
         executeTarget("testManifestStaysIntact");
 
@@ -236,7 +236,7 @@ public class JarTest extends BuildFileTest {
             boolean foundSub = false;
             boolean foundSubFoo = false;
             boolean foundFoo = false;
-            
+
             String line = r.readLine();
             while (line != null) {
                 if (line.equals("foo")) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -26,7 +26,7 @@ import org.apache.tools.ant.BuildFileTest;
  *
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  */
-public class CVSPassTest extends BuildFileTest { 
+public class CVSPassTest extends BuildFileTest {
     private final String EOL = System.getProperty("line.separator");
     private final String JAKARTA_URL =
         ":pserver:anoncvs@jakarta.apache.org:/home/cvspublic Ay=0=h<Z";
@@ -34,17 +34,17 @@ public class CVSPassTest extends BuildFileTest {
         ":pserver:anoncvs@xml.apache.org:/home/cvspublic Ay=0=h<Z";
     private final String TIGRIS_URL =
         ":pserver:guest@cvs.tigris.org:/cvs AIbdZ,";
-    
-    
-    public CVSPassTest(String name) { 
+
+
+    public CVSPassTest(String name) {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/cvspass.xml");
     }
 
-    public void testNoCVSRoot() { 
+    public void testNoCVSRoot() {
         try{
             executeTarget("test1");
             fail("BuildException not thrown");
@@ -53,7 +53,7 @@ public class CVSPassTest extends BuildFileTest {
         }
     }
 
-    public void testNoPassword() { 
+    public void testNoPassword() {
         try{
             executeTarget("test2");
             fail("BuildException not thrown");
@@ -66,7 +66,7 @@ public class CVSPassTest extends BuildFileTest {
         executeTarget("cleanup");
     }
 
-    public void testPassFile() throws Exception { 
+    public void testPassFile() throws Exception {
         executeTarget("test3");
         File f = new File(getProjectDir(), "testpassfile.tmp");
 
@@ -76,7 +76,7 @@ public class CVSPassTest extends BuildFileTest {
 
     }
 
-    public void testPassFileDuplicateEntry() throws Exception { 
+    public void testPassFileDuplicateEntry() throws Exception {
         executeTarget("test4");
         File f = new File(getProjectDir(), "testpassfile.tmp");
 
@@ -88,7 +88,7 @@ public class CVSPassTest extends BuildFileTest {
             readFile(f));
     }
 
-    public void testPassFileMultipleEntry() throws Exception { 
+    public void testPassFileMultipleEntry() throws Exception {
         executeTarget("test5");
         File f = new File(getProjectDir(), "testpassfile.tmp");
 
@@ -102,8 +102,8 @@ public class CVSPassTest extends BuildFileTest {
     }
 
     private String readFile(File f) throws Exception {
-        BufferedReader reader = null; 
-        
+        BufferedReader reader = null;
+
         try {
             reader = new BufferedReader(new FileReader(f));
 

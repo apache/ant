@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
@@ -140,8 +140,8 @@ public class Scp extends SSHBase {
         Session session = null;
         try {
             session = openSession();
-            ScpFromMessage message = 
-                new ScpFromMessage(session, file, 
+            ScpFromMessage message =
+                new ScpFromMessage(session, file,
                                    getProject().resolveFile(toPath),
                                    fromSshUri.endsWith("*"));
             log("Receiving file: " + file);
@@ -188,7 +188,7 @@ public class Scp extends SSHBase {
         Session session = null;
         try {
             session = openSession();
-            ScpToMessage message = 
+            ScpToMessage message =
                 new ScpToMessage(session, getProject().resolveFile(fromPath),
                                  file);
             message.setLogListener(this);

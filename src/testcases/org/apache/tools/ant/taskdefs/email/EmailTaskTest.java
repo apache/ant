@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.email;
@@ -25,16 +25,16 @@ import org.apache.tools.ant.BuildFileTest;
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class EmailTaskTest extends BuildFileTest {
-    
+
     public EmailTaskTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/email/mail.xml");
     }
 
-    public void test1() { 
+    public void test1() {
         expectBuildException("test1", "SMTP auth only possible with MIME mail");
     }
 

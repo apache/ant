@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2001,2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -24,48 +24,48 @@ import java.io.*;
 import junit.framework.AssertionFailedError;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
 public class ReplaceTest extends BuildFileTest {
 
     private static final String TEST_PATH = "src/etc/testcases/taskdefs/replace/";
     public ReplaceTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/replace.xml");
     }
-    
-    public void test1() { 
+
+    public void test1() {
         expectBuildException("test1", "required argument not specified");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument not specified");
     }
 
-    public void test3() { 
+    public void test3() {
         expectBuildException("test3", "required argument not specified");
     }
 
-    public void test4() { 
+    public void test4() {
         expectBuildException("test4", "empty token not allowed");
     }
 
-    public void test5() { 
+    public void test5() {
         executeTarget("test5");
     }
 
-    public void test6() { 
+    public void test6() {
         expectBuildException("test6", "required argument not specified");
     }
 
-    public void test7() { 
+    public void test7() {
         expectBuildException("test7", "empty token not allowed");
     }
 
-    public void test8() { 
+    public void test8() {
         executeTarget("test8");
     }
 

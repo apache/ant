@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -48,7 +48,7 @@ public class AddTypeTest extends BuildFileTest {
     public void testAddSelector() {
         executeTarget("addselector");
     }
-    
+
     public void testNestedA() {
         expectLogContaining("nested.a", "add A called");
     }
@@ -90,9 +90,9 @@ public class AddTypeTest extends BuildFileTest {
     public void testNamespace() {
         executeTarget("namespacetest");
     }
-    
+
     // The following will be used as types and tasks
-    
+
     public static interface A {}
     public static interface B {}
     public static interface C extends A {}
@@ -116,7 +116,7 @@ public class AddTypeTest extends BuildFileTest {
             log("add C called");
         }
     }
-    
+
     public static class MyCondition
         implements Condition
     {

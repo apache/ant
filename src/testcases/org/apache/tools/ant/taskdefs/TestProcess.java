@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -34,7 +34,7 @@ public class TestProcess
         {
             System.out.println("shutting down TestProcess");
             run = false;
-            
+
             synchronized(this)
             {
                 while (!done)
@@ -42,7 +42,7 @@ public class TestProcess
                     try { wait(); } catch (InterruptedException ie) {}
                 }
             }
-            
+
             System.out.println("TestProcess shut down");
         }
     }
@@ -52,7 +52,7 @@ public class TestProcess
         for (int i = 0; i < 5 && run; i++)
         {
             System.out.println(Thread.currentThread().getName());
-            
+
             try { Thread.sleep(2000); } catch (InterruptedException ie) {}
         }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.util.regexp;
@@ -24,7 +24,7 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests for the JDK 1.4 implementation of the RegexpMatcher interface.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
 

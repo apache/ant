@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.util.regexp;
@@ -20,7 +20,7 @@ package org.apache.tools.ant.util.regexp;
 /**
  * Tests for all implementations of the Regexp interface.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public abstract class RegexpTest extends RegexpMatcherTest {
 
@@ -41,7 +41,7 @@ public abstract class RegexpTest extends RegexpMatcherTest {
         Regexp reg = (Regexp) getReg();
         reg.setPattern(pattern);
         assertTrue(reg.matches(test));
-        assertEquals("abedcfg-abcdefg", reg.substitute(test, "ab\\2d\\1f", 
+        assertEquals("abedcfg-abcdefg", reg.substitute(test, "ab\\2d\\1f",
                                                        Regexp.MATCH_DEFAULT));
     }
 
@@ -49,7 +49,7 @@ public abstract class RegexpTest extends RegexpMatcherTest {
         Regexp reg = (Regexp) getReg();
         reg.setPattern(pattern);
         assertTrue(reg.matches(test));
-        assertEquals("abedcfg-abcdefg", reg.substitute(test, "ab\\2d\\1f", 
+        assertEquals("abedcfg-abcdefg", reg.substitute(test, "ab\\2d\\1f",
                                                        Regexp.REPLACE_FIRST));
     }
 
@@ -57,7 +57,7 @@ public abstract class RegexpTest extends RegexpMatcherTest {
         Regexp reg = (Regexp) getReg();
         reg.setPattern(pattern);
         assertTrue(reg.matches(test));
-        assertEquals("abedcfg-abedcfg", reg.substitute(test, "ab\\2d\\1f", 
+        assertEquals("abedcfg-abedcfg", reg.substitute(test, "ab\\2d\\1f",
                                                        Regexp.REPLACE_ALL));
     }
 }

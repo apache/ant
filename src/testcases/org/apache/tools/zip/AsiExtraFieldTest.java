@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.zip;
@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.AsiExtraField.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public class AsiExtraFieldTest extends TestCase implements UnixStat {
     public AsiExtraFieldTest(String name) {
@@ -51,7 +51,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
         a.setUserId(5);
         a.setGroupId(6);
         byte[] b = a.getLocalFileDataData();
-        
+
         // CRC manually calculated, sorry
         byte[] expect = {(byte)0xC6, 0x02, 0x78, (byte)0xB6, // CRC
                          0123, (byte)0x80,                   // mode
@@ -87,7 +87,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
                        5, 0, 6, 0};                        // uid, gid
         AsiExtraField a = new AsiExtraField();
         a.parseFromLocalFileData(data, 0, data.length);
-        assertEquals("length plain file", data.length, 
+        assertEquals("length plain file", data.length,
                      a.getLocalFileDataLength().getValue());
         assertTrue("plain file, no link", !a.isLink());
         assertTrue("plain file, no dir", !a.isDirectory());
@@ -102,7 +102,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
                            (byte)'t', (byte)'e', (byte)'s', (byte)'t'};
         a = new AsiExtraField();
         a.parseFromLocalFileData(data, 0, data.length);
-        assertEquals("length link", data.length, 
+        assertEquals("length link", data.length,
                      a.getLocalFileDataLength().getValue());
         assertTrue("link, is link", a.isLink());
         assertTrue("link, no dir", !a.isDirectory());
@@ -117,7 +117,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
                            5, 0, 6, 0};                          // uid, gid
         a = new AsiExtraField();
         a.parseFromLocalFileData(data, 0, data.length);
-        assertEquals("length dir", data.length, 
+        assertEquals("length dir", data.length,
                      a.getLocalFileDataLength().getValue());
         assertTrue("dir, no link", !a.isLink());
         assertTrue("dir, is dir", a.isDirectory());
@@ -134,7 +134,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
             a.parseFromLocalFileData(data, 0, data.length);
             fail("should raise bad CRC exception");
         } catch (Exception e) {
-            assertEquals("bad CRC checksum 0 instead of ebf018e", 
+            assertEquals("bad CRC checksum 0 instead of ebf018e",
                          e.getMessage());
         }
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -21,37 +21,37 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
- * @author Stefan Bodewig 
+ * @author Nico Seessle <nico@seessle.de>
+ * @author Stefan Bodewig
  */
-public class FailTest extends BuildFileTest { 
-    
-    public FailTest(String name) { 
+public class FailTest extends BuildFileTest {
+
+    public FailTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/fail.xml");
     }
 
-    public void test1() { 
+    public void test1() {
         expectBuildExceptionContaining("test1",
                 "it is required to fail :-)",
                 "No message");
     }
 
-    public void test2() { 
-        expectSpecificBuildException("test2", 
+    public void test2() {
+        expectSpecificBuildException("test2",
             "it is required to fail :-)",
             "test2");
     }
-    
-    public void testText() { 
+
+    public void testText() {
         expectSpecificBuildException("testText",
             "it is required to fail :-)",
             "testText");
     }
-    
+
     public void testIf() {
         try {
             executeTarget("testIf");
@@ -63,7 +63,7 @@ public class FailTest extends BuildFileTest {
     }
 
     public void testUnless() {
-        expectBuildException("testUnless", 
+        expectBuildException("testUnless",
                              "testUnless must fail unless foo has been set");
         project.setProperty("foo", "");
         try {

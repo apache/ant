@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.zip;
@@ -127,7 +127,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.15
      */
     private long localDataStart = 0;
-    
+
     /**
      * Start of central directory.
      *
@@ -175,7 +175,7 @@ public class ZipOutputStream extends FilterOutputStream {
     private String encoding = null;
 
     /**
-     * Deflater object for output 
+     * Deflater object for output
      *
      * <p>This attribute is only protected to provide a level of API
      * backwards compatibility.  This class used to extend {@link
@@ -185,7 +185,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.14
      */
     protected Deflater def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
-    
+
     /**
      * Deflater buffer
      *
@@ -197,7 +197,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.14
      */
     protected byte[] buf = new byte[512];
-    
+
     /**
      * Optional random access output
      *
@@ -237,7 +237,7 @@ public class ZipOutputStream extends FilterOutputStream {
     public ZipOutputStream(File file) throws IOException {
         super(null);
 
-        try {  
+        try {
             raf = new RandomAccessFile(file, "rw");
             raf.setLength(0);
         } catch (IOException e) {
@@ -406,7 +406,7 @@ public class ZipOutputStream extends FilterOutputStream {
                                        + " method when not writing to a file");
             }
             entry.setComprSize(entry.getSize());
-        } 
+        }
 
         if (entry.getMethod() == DEFLATED && hasCompressionLevelChanged) {
             def.setLevel(level);
@@ -481,15 +481,15 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     /**
-     * Closes this output stream and releases any system resources 
-     * associated with the stream. 
+     * Closes this output stream and releases any system resources
+     * associated with the stream.
      *
      * @exception  IOException  if an I/O error occurs.
      * @since 1.14
      */
     public void close() throws IOException {
         finish();
-        
+
         if (raf != null) {
             raf.close();
         }
@@ -499,8 +499,8 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     /**
-     * Flushes this output stream and forces any buffered output bytes 
-     * to be written out to the stream. 
+     * Flushes this output stream and forces any buffered output bytes
+     * to be written out to the stream.
      *
      * @exception  IOException  if an I/O error occurs.
      * @since 1.14
@@ -543,7 +543,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * Writes next block of compressed data to the output stream.
      *
      * @since 1.14
-     */ 
+     */
     protected final void deflate() throws IOException {
         int len = def.deflate(buf, 0, buf.length);
         if (len > 0) {
@@ -817,13 +817,13 @@ public class ZipOutputStream extends FilterOutputStream {
     protected final void writeOut(byte [] data) throws IOException {
         writeOut(data, 0, data.length);
     }
-    
+
     /**
      * Write bytes to output or random access file
      *
      * @since 1.14
      */
-    protected final void writeOut(byte [] data, int offset, int length) 
+    protected final void writeOut(byte [] data, int offset, int length)
         throws IOException {
         if (raf != null) {
             raf.write(data, offset, length);

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -386,15 +386,15 @@ public class CommandlineJava implements Cloneable {
             clonedSysProperties.addSyspropertyset(ps);
             clonedSysProperties.addDefinitionsToList(listIterator);
         }
-        
+
         //boot classpath
         if (haveBootclasspath(true)) {
             listIterator.add("-Xbootclasspath:" + bootclasspath.toString());
         } else if (cloneBootclasspath()) {
-            listIterator.add("-Xbootclasspath:" + 
+            listIterator.add("-Xbootclasspath:" +
                              Path.systemBootClasspath.toString());
         }
-        
+
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
@@ -483,13 +483,13 @@ public class CommandlineJava implements Cloneable {
      * @deprecated please dont use this -it effectively creates the entire command.
      */
     public int size() {
-        int size = getActualVMCommand().size() + javaCommand.size() 
+        int size = getActualVMCommand().size() + javaCommand.size()
             + sysProperties.size();
         // cloned system properties
         if (isCloneVm()) {
             size += System.getProperties().size();
         }
-        
+
         // classpath is "-classpath <classpath>" -> 2 args
         if (haveClasspath()) {
             size += 2;
@@ -658,7 +658,7 @@ public class CommandlineJava implements Cloneable {
         return isCloneVm() && !vmVersion.startsWith("1.1")
             && Path.systemBootClasspath.size() > 0;
     }
-        
+
     /**
      * Has the cloneVm attribute or the magic property build.clonevm been set?
      *

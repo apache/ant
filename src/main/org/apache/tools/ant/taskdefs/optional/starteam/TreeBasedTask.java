@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
@@ -131,7 +131,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * holder for the asofdate attribute
      */
     private String asOfDate = null;
-    
+
     /**
      * holder for the asofdateformat attribute
      */
@@ -309,7 +309,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * non-public method callable only by derived classes that implement
      * setAsOfDate (so that derived tasks that do not accept this
      * parameter will fail if user attempts to use it.
-     * 
+     *
      * @param asOfDate asOfDate entered by user.
      * @since Ant 1.6
      */
@@ -318,12 +318,12 @@ public abstract class TreeBasedTask extends StarTeamTask {
             this.asOfDate = asOfDate;
         }
     }
-    
+
     /**
      * non-public method callable only by derived classes that implement
      * setAsOfDateFormat (so that derived tasks that do not accept this
      * parameter will fail if user attempts to use it.
-     * 
+     *
      * @param asOfDateFormat asOfDate format entered by user.
      * @since Ant 1.6
      */
@@ -333,11 +333,11 @@ public abstract class TreeBasedTask extends StarTeamTask {
         }
     }
 
-    
+
     /**
      * return the asOfDate entered by the user for internal use by derived
      * classes.
-     * 
+     *
      * @return the asOfDate entered by the user
      * @since Ant 1.6
      */
@@ -345,22 +345,22 @@ public abstract class TreeBasedTask extends StarTeamTask {
         return this.asOfDate;
     }
 
-    
+
 
     /**
      * If an asofDate parameter has been supplied by the user return a
      * StarTeam view based on the configuration of the StarTeam view
      * specified the user as of the date specified in the parameter.
      * If no asofDate has been specified, return null.
-     * 
+     *
      * This method is meant to be called from within implementations of the
      * <code>createSnapshotView</code> abstract method.
-     * 
+     *
      * @param raw    the raw view to be configured as of the supplied date
-     * 
+     *
      * @return the view as configured.
      * @exception BuildException
-     *                   thrown if the date is not parsable by the default or 
+     *                   thrown if the date is not parsable by the default or
      *                   supplied format patterns.
      * @since Ant 1.6
      */
@@ -374,23 +374,23 @@ public abstract class TreeBasedTask extends StarTeamTask {
             fmt = new SimpleDateFormat(this.asOfDateFormat);
             try {
                 asOfDate = fmt.parse(this.asOfDate);
-            } 
-            catch (ParseException px) 
+            }
+            catch (ParseException px)
             {
-                throw new BuildException("AsOfDate " 
-                                         + this.asOfDate 
+                throw new BuildException("AsOfDate "
+                                         + this.asOfDate
                                          + " not parsable by supplied format "
-                                         + this.asOfDateFormat); 
+                                         + this.asOfDateFormat);
             }
         } else {
             try {
                 asOfDate = DateUtils.parseIso8601DateTimeOrDate(
-                    this.asOfDate); 
+                    this.asOfDate);
             } catch (ParseException px) {
-                throw new BuildException("AsOfDate " 
-                                         + this.asOfDate 
+                throw new BuildException("AsOfDate "
+                                         + this.asOfDate
                                          + " not parsable by default"
-                                         + " ISO8601 formats"); 
+                                         + " ISO8601 formats");
             }
         }
         return new View(raw, ViewConfiguration.createFromTime(
@@ -401,7 +401,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     /**
      * return the label passed to the task by the user as a string
-     * 
+     *
      * @return the label passed to the task by the user as a string
      */
     protected String getLabel() {

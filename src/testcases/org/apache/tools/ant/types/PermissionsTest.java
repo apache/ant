@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -27,13 +27,13 @@ import org.apache.tools.ant.ExitException;
  * @author <a href="mailto:martijn@kruithof.xs4all.nl>Martijn Kruithof</a>
  */
 public class PermissionsTest extends TestCase {
-    
+
     Permissions perms;
 
     public PermissionsTest(String name) {
         super(name);
     }
-    
+
     public void setUp() {
         perms = new Permissions();
         Permissions.Permission perm = new Permissions.Permission();
@@ -43,7 +43,7 @@ public class PermissionsTest extends TestCase {
         perm.setName("user.*");
         perm.setClass("java.util.PropertyPermission");
         perms.addConfiguredGrant(perm);
-        
+
         perm = new Permissions.Permission();
         perm.setActions("read");
         perm.setName("java.home");
@@ -57,25 +57,25 @@ public class PermissionsTest extends TestCase {
         perms.addConfiguredGrant(perm);
 
         // Revoke permission to write user.home (granted above via user.*), still able to read though.
-        // and the default granted permission to read os.name. 
+        // and the default granted permission to read os.name.
         perm = new Permissions.Permission();
         perm.setActions("write");
         perm.setName("user.home");
         perm.setClass("java.util.PropertyPermission");
-        perms.addConfiguredRevoke(perm);        
-        
+        perms.addConfiguredRevoke(perm);
+
         perm = new Permissions.Permission();
         perm.setActions("read");
         perm.setName("os.*");
         perm.setClass("java.util.PropertyPermission");
-        perms.addConfiguredRevoke(perm);        
+        perms.addConfiguredRevoke(perm);
     }
-    
+
     /** Tests a permission that is granted per default. */
     public void testDefaultGranted() {
         perms.setSecurityManager();
         try {
-            String s = System.getProperty("line.separator");      
+            String s = System.getProperty("line.separator");
         } finally {
             perms.restoreSecurityManager();
         }
@@ -86,7 +86,7 @@ public class PermissionsTest extends TestCase {
         perms.setSecurityManager();
         try {
             String s = System.getProperty("user.name");
-            System.setProperty("user.name", s);      
+            System.setProperty("user.name", s);
         } finally {
             perms.restoreSecurityManager();
         }
@@ -98,7 +98,7 @@ public class PermissionsTest extends TestCase {
         try {
             String s = System.getProperty("user.home");
             System.setProperty("user.home", s);
-            fail("Could perform an action that should have been forbidden.");      
+            fail("Could perform an action that should have been forbidden.");
         } catch (SecurityException e){
             // Was expected, test passes
         } finally {
@@ -111,7 +111,7 @@ public class PermissionsTest extends TestCase {
         perms.setSecurityManager();
         try {
             System.getProperty("os.name");
-            fail("Could perform an action that should have been forbidden.");      
+            fail("Could perform an action that should have been forbidden.");
         } catch (SecurityException e){
             // Was expected, test passes
         } finally {
@@ -124,14 +124,14 @@ public class PermissionsTest extends TestCase {
         perms.setSecurityManager();
         try {
             String s = System.setProperty("line.separator",ls);
-            fail("Could perform an action that should have been forbidden.");    
+            fail("Could perform an action that should have been forbidden.");
         } catch (SecurityException e){
             // Was expected, test passes
         } finally {
             perms.restoreSecurityManager();
         }
     }
-    
+
     /** Tests an exit condition. */
     public void testExit() {
         perms.setSecurityManager();
@@ -146,10 +146,10 @@ public class PermissionsTest extends TestCase {
             System.out.println("testExit successfull.");
         } finally {
             perms.restoreSecurityManager();
-        }   
+        }
     }
-    
-    
+
+
     public void tearDown() {
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional;
 
@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * JUnit Testcase for the optional replaceregexp task.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ReplaceRegExpTest extends BuildFileTest {
@@ -35,15 +35,15 @@ public class ReplaceRegExpTest extends BuildFileTest {
     public ReplaceRegExpTest(String name) {
         super(name);
     }
-    
-    public void setUp() { 
+
+    public void setUp() {
         configureProject(PROJECT_PATH + "/replaceregexp.xml");
     }
-    
-    public void tearDown() { 
+
+    public void tearDown() {
         executeTarget("cleanup");
     }
-    
+
     public void testReplace() throws IOException {
         Properties original = new Properties();
         FileInputStream propsFile = null;

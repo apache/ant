@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -24,33 +24,33 @@ import org.apache.tools.ant.BuildFileTest;
  *
  * @author Conor MacNeill
  */
-public class IncludeTest extends BuildFileTest { 
-    
-    public IncludeTest(String name) { 
+public class IncludeTest extends BuildFileTest {
+
+    public IncludeTest(String name) {
         super(name);
-    }    
-    
-    public void test1() { 
+    }
+
+    public void test1() {
         configureProject("src/etc/testcases/core/include/basic/include.xml");
         expectLog("test1", "from included entity");
     }
-    
-    public void test2() { 
+
+    public void test2() {
         configureProject("src/etc/testcases/core/include/frag#ment/include.xml");
         expectLog("test1", "from included entity");
     }
-    
-    public void test3() { 
+
+    public void test3() {
         configureProject("src/etc/testcases/core/include/frag#ment/simple.xml");
         expectLog("test1", "from simple buildfile");
     }
-    
-    public void test4() { 
+
+    public void test4() {
         configureProject("src/etc/testcases/core/include/basic/relative.xml");
         expectLog("test1", "from included entity");
     }
-    
-    public void test5() { 
+
+    public void test5() {
         configureProject("src/etc/testcases/core/include/frag#ment/relative.xml");
         expectLog("test1", "from included entity");
     }
@@ -60,7 +60,7 @@ public class IncludeTest extends BuildFileTest {
             configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
             fail("should have caused a parser exception");
         } catch (BuildException e) {
-            assertTrue(e.getLocation().toString() 
+            assertTrue(e.getLocation().toString()
                        + " should refer to build.xml",
                        e.getLocation().toString().indexOf("build.xml:") > -1);
         }
@@ -72,10 +72,10 @@ public class IncludeTest extends BuildFileTest {
             executeTarget("test");
             fail("should have cause a build failure");
         } catch (BuildException e) {
-            assertTrue(e.getMessage() 
+            assertTrue(e.getMessage()
                        + " should start with \'Warning: Could not find",
                          e.getMessage().startsWith("Warning: Could not find file "));
-            assertTrue(e.getLocation().toString() 
+            assertTrue(e.getLocation().toString()
                        + " should end with build.xml:14: ",
                        e.getLocation().toString().endsWith("build.xml:14: "));
         }
@@ -86,7 +86,7 @@ public class IncludeTest extends BuildFileTest {
             configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
             fail("should have caused a parser exception");
         } catch (BuildException e) {
-            assertTrue(e.getLocation().toString() 
+            assertTrue(e.getLocation().toString()
                        + " should refer to included_file.xml",
                        e.getLocation().toString()
                        .indexOf("included_file.xml:") > -1);
@@ -99,26 +99,26 @@ public class IncludeTest extends BuildFileTest {
             executeTarget("test");
             fail("should have cause a build failure");
         } catch (BuildException e) {
-            assertTrue(e.getMessage() 
+            assertTrue(e.getMessage()
                        + " should start with \'Warning: Could not find",
                          e.getMessage().startsWith("Warning: Could not find file "));
-            assertTrue(e.getLocation().toString() 
+            assertTrue(e.getLocation().toString()
                        + " should end with included_file.xml:2: ",
                        e.getLocation().toString().endsWith("included_file.xml:2: "));
         }
     }
 
-    public void testWithSpaceInclude() { 
+    public void testWithSpaceInclude() {
         configureProject("src/etc/testcases/core/include/with space/include.xml");
         expectLog("test1", "from included entity in 'with space'");
     }
-    
-    public void testWithSpaceSimple() { 
+
+    public void testWithSpaceSimple() {
         configureProject("src/etc/testcases/core/include/with space/simple.xml");
         expectLog("test1", "from simple buildfile in 'with space'");
     }
-    
-    public void testWithSpaceRelative() { 
+
+    public void testWithSpaceRelative() {
         configureProject("src/etc/testcases/core/include/with space/relative.xml");
         expectLog("test1", "from included entity in 'with space'");
     }

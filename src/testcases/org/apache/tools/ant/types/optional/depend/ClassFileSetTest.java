@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types.optional.depend;
@@ -30,13 +30,13 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.DirectoryScanner;
 
 /**
- * Testcase for the Classfileset optional type. 
- * 
+ * Testcase for the Classfileset optional type.
+ *
  * @author Conor MacNeill
  */
 public class ClassFileSetTest extends BuildFileTest {
     public static final String RESULT_FILESET = "result";
-    
+
     public ClassFileSetTest(String name) {
         super(name);
     }
@@ -63,18 +63,18 @@ public class ClassFileSetTest extends BuildFileTest {
         for (int i = 0; i < scannedFiles.length; ++i) {
             files.put(scannedFiles[i], scannedFiles[i]);
         }
-        assertEquals("Classfileset did not pick up expected number of " 
+        assertEquals("Classfileset did not pick up expected number of "
             + "class files", 4, files.size());
-        assertTrue("Result did not contain A.class", 
+        assertTrue("Result did not contain A.class",
             files.containsKey("A.class"));
-        assertTrue("Result did not contain B.class", 
+        assertTrue("Result did not contain B.class",
             files.containsKey("B.class"));
-        assertTrue("Result did not contain C.class", 
+        assertTrue("Result did not contain C.class",
             files.containsKey("C.class"));
-        assertTrue("Result did not contain D.class", 
+        assertTrue("Result did not contain D.class",
             files.containsKey("D.class"));
     }
-    
+
     /**
      * Test small classfileset
      */
@@ -88,11 +88,11 @@ public class ClassFileSetTest extends BuildFileTest {
         for (int i = 0; i < scannedFiles.length; ++i) {
             files.put(scannedFiles[i], scannedFiles[i]);
         }
-        assertEquals("Classfileset did not pick up expected number of " 
+        assertEquals("Classfileset did not pick up expected number of "
             + "class files", 2, files.size());
-        assertTrue("Result did not contain B.class", 
+        assertTrue("Result did not contain B.class",
             files.containsKey("B.class"));
-        assertTrue("Result did not contain C.class", 
+        assertTrue("Result did not contain C.class",
             files.containsKey("C.class"));
     }
 
@@ -109,19 +109,19 @@ public class ClassFileSetTest extends BuildFileTest {
         for (int i = 0; i < scannedFiles.length; ++i) {
             files.put(scannedFiles[i], scannedFiles[i]);
         }
-        assertEquals("Classfileset did not pick up expected number of " 
+        assertEquals("Classfileset did not pick up expected number of "
             + "class files", 1, files.size());
-        assertTrue("Result did not contain C.class", 
+        assertTrue("Result did not contain C.class",
             files.containsKey("C.class"));
     }
-    
+
     /**
      * Test that you can pass a classfileset by reference to a fileset.
      */
     public void testByReference() {
         executeTarget("testbyreference");
     }
-    
+
     /**
      * Test that classes included in a method "System.out.println(MyClass.class)" are included.
      */
@@ -147,8 +147,8 @@ public class ClassFileSetTest extends BuildFileTest {
             files.containsKey("D.class"));
         assertTrue("Result did not contain E.class",
             files.containsKey("E.class"));
-    }   
-    
+    }
+
     /**
      * Test that classes included in a method "System.out.println(Outer.Inner.class)" are included.
      */

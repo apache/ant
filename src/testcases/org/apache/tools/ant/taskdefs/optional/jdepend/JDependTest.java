@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.jdepend;
@@ -53,7 +53,7 @@ public class JDependTest extends BuildFileTest {
         expectOutputContaining(
             "simple", "Package: org.apache.tools.ant.util.facade");
     }
-    
+
     /**
      * Test xml
      */
@@ -70,7 +70,7 @@ public class JDependTest extends BuildFileTest {
         expectLogContaining(
             "fork", "Package: org.apache.tools.ant.util.facade");
     }
-    
+
     /**
      * Test fork xml
      */
@@ -86,7 +86,7 @@ public class JDependTest extends BuildFileTest {
         expectLogContaining(
             "fork-timeout", "JDepend FAILED - Timed out");
     }
-    
+
 
     /**
      * Test timeout without timing out
@@ -106,7 +106,7 @@ public class JDependTest extends BuildFileTest {
                    + realOutput + "\"",
                    realOutput.indexOf(substring) >= 0);
     }
-    
+
     /**
      * Assert that the given message has been outputted
      */

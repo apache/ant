@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.condition;
 
@@ -39,23 +39,23 @@ public class IsReferenceTest extends BuildFileTest {
     }
 
     public void testBasic() {
-       expectPropertySet("basic", "global-path"); 
+       expectPropertySet("basic", "global-path");
        assertPropertySet("target-path");
        assertPropertyUnset("undefined");
     }
 
     public void testNotEnoughArgs() {
-        expectSpecificBuildException("isreference-incomplete", 
+        expectSpecificBuildException("isreference-incomplete",
                                      "refid attribute has been omitted",
                                      "No reference specified for isreference "
                                      + "condition");
     }
 
     public void testType() {
-       expectPropertySet("type", "global-path"); 
+       expectPropertySet("type", "global-path");
        assertPropertyUnset("global-path-as-fileset");
        assertPropertyUnset("global-path-as-foo");
-       assertPropertySet("global-echo"); 
+       assertPropertySet("global-echo");
     }
 
 }

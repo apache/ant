@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 /**
  * Test case for ant class loader
  *
- * @author Conor MacNeill</a> 
+ * @author Conor MacNeill</a>
  */
 public class AntClassLoaderTest extends TestCase {
 
@@ -47,7 +47,7 @@ public class AntClassLoaderTest extends TestCase {
         } catch (ClassNotFoundException e) {
             // ignore expected
         }
-        
+
         loader.cleanup();
         try {
             // we don't expect to find this
@@ -58,7 +58,7 @@ public class AntClassLoaderTest extends TestCase {
         } catch (NullPointerException e) {
             fail("loader should not fail even if cleaned up");
         }
-        
+
         // tell the build it is finished
         p.fireBuildFinished(null);
         try {

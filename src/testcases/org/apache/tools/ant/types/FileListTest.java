@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -130,7 +130,7 @@ public class FileListTest extends TestCase {
                          be.getMessage());
         }
 
-        // dummy1 --> dummy2 --> dummy3 
+        // dummy1 --> dummy2 --> dummy3
         // (which has the Project's basedir as root).
         f1 = new FileList();
         project.addReference("dummy1", f1);

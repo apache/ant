@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.filters;
@@ -32,20 +32,20 @@ public class ReplaceTokensTest extends BuildFileTest {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/filters/build.xml");
     }
-    
-    public void tearDown() { 
+
+    public void tearDown() {
         executeTarget("cleanup");
     }
-    
-    public void testReplaceTokens() throws IOException { 
+
+    public void testReplaceTokens() throws IOException {
         executeTarget("testReplaceTokens");
         File expected = getProject().resolveFile("expected/replacetokens.test");
         File result = getProject().resolveFile("result/replacetokens.test");
         FileUtils fu = FileUtils.newFileUtils();
         assertTrue(fu.contentEquals(expected, result));
     }
-    
+
 }

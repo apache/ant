@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
@@ -31,27 +31,27 @@ public class JUnitVersionHelperTest extends TestCase {
     }
 
     public void testMyOwnName() {
-        assertEquals("testMyOwnName", 
+        assertEquals("testMyOwnName",
                      JUnitVersionHelper.getTestCaseName(this));
     }
 
     public void testNonTestCaseName() {
-        assertEquals("I'm a foo", 
+        assertEquals("I'm a foo",
                      JUnitVersionHelper.getTestCaseName(new Foo1()));
     }
 
     public void testNoStringReturn() {
-        assertEquals("unknown", 
+        assertEquals("unknown",
                      JUnitVersionHelper.getTestCaseName(new Foo2()));
     }
 
     public void testNoGetName() {
-        assertEquals("unknown", 
+        assertEquals("unknown",
                      JUnitVersionHelper.getTestCaseName(new Foo3()));
     }
 
     public void testNameNotGetName() {
-        assertEquals("I'm a foo, too", 
+        assertEquals("I'm a foo, too",
                      JUnitVersionHelper.getTestCaseName(new Foo4()));
     }
 
@@ -60,7 +60,7 @@ public class JUnitVersionHelperTest extends TestCase {
     }
 
     public void testTestCaseSubClass() {
-        assertEquals("overridden getName", 
+        assertEquals("overridden getName",
                      JUnitVersionHelper.getTestCaseName(new Foo5()));
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -21,49 +21,49 @@ import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
-public class CopydirTest extends BuildFileTest { 
-    
-    public CopydirTest(String name) { 
+public class CopydirTest extends BuildFileTest {
+
+    public CopydirTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/copydir.xml");
     }
-    
+
     public void tearDown() {
         executeTarget("cleanup");
     }
-    
-    public void test1() { 
+
+    public void test1() {
         expectBuildException("test1", "required argument not specified");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument not specified");
     }
 
-    public void test3() { 
+    public void test3() {
         expectBuildException("test3", "required argument not specified");
     }
 
-    public void test4() { 
+    public void test4() {
         expectLog("test4", "DEPRECATED - The copydir task is deprecated.  Use copy instead.Warning: src == dest");
     }
-    
-    public void test5() { 
+
+    public void test5() {
         executeTarget("test5");
         java.io.File f = new java.io.File(getProjectDir(), "../taskdefs.tmp");
-        if (!f.exists() || !f.isDirectory()) { 
+        if (!f.exists() || !f.isDirectory()) {
             fail("Copy failed");
         }
         // We keep this, so we have something to delete in later tests :-)
     }
 
-    public void test6() { 
+    public void test6() {
         expectBuildException("test6", "target is file");
     }
-    
+
 }

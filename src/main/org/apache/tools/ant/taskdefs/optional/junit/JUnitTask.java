@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.junit;
@@ -648,9 +648,9 @@ public class JUnitTask extends Task {
 
         // if there is an error/failure and that it should halt, stop
         // everything otherwise just log a statement
-        boolean errorOccurredHere = 
+        boolean errorOccurredHere =
             exitValue == JUnitTestRunner.ERRORS || wasKilled;
-        boolean failureOccurredHere = 
+        boolean failureOccurredHere =
             exitValue != JUnitTestRunner.SUCCESS || wasKilled;
         if (errorOccurredHere || failureOccurredHere) {
             if ((errorOccurredHere && test.getHaltonerror())
@@ -703,7 +703,7 @@ public class JUnitTask extends Task {
                 String s = (String) e.nextElement();
                 if (s.startsWith("CLASSPATH=")) {
                     cmd.createClasspath(getProject()).createPath()
-                        .append(new Path(getProject(), 
+                        .append(new Path(getProject(),
                                          s.substring(10 // "CLASSPATH=".length()
                                                      )));
                 }
@@ -1128,11 +1128,11 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Adds the actual timeout to the formatter. 
+     * Adds the actual timeout to the formatter.
      * Only used from the logTimeout method.
      * @since Ant 1.6
      */
-    private void addTimeout(JUnitTest test, JUnitResultFormatter formatter, 
+    private void addTimeout(JUnitTest test, JUnitResultFormatter formatter,
                             OutputStream out) {
         formatter.setOutput(out);
         formatter.startTestSuite(test);

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
@@ -192,7 +192,7 @@ public class StarTeamCheckout extends TreeBasedTask {
     public void setAsOfDate(String asOfDateParam) {
         _setAsOfDate(asOfDateParam);
     }
-    
+
     /**
      * Date Format with which asOfDate parameter to be parsed; optional.
      * Must be a SimpleDateFormat compatible string.
@@ -261,12 +261,12 @@ public class StarTeamCheckout extends TreeBasedTask {
             boolean lockStatusBad = false;
             if (null != getLabel()) {
                 log("Neither locked nor unlocked may be true"
-                    + " when checking out a labeled version.", 
+                    + " when checking out a labeled version.",
                     Project.MSG_ERR);
                 lockStatusBad = true;
             } else if (null != getAsOfDate()) {
                 log("Neither locked nor unlocked may be true"
-                    + " when checking out by date.", 
+                    + " when checking out by date.",
                     Project.MSG_ERR);
                 lockStatusBad = true;
             }

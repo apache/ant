@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
@@ -25,10 +25,10 @@ import org.apache.tools.ant.util.FileUtils;
 public class XMLFormatterWithCDATAOnSystemOut extends BuildFileTest {
 
     private static String DIR = "src/etc/testcases/taskdefs/optional/junit";
-    private static String REPORT = 
+    private static String REPORT =
         "TEST-" + XMLFormatterWithCDATAOnSystemOut.class.getName() + ".xml";
 
-    private static String TESTDATA = 
+    private static String TESTDATA =
         "<ERROR>" +
         "<![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
         "  <RESPONSE>" +

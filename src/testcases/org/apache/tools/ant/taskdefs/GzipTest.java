@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,40 +12,40 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
- 
+
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
-public class GzipTest extends BuildFileTest { 
-    
-    public GzipTest(String name) { 
+public class GzipTest extends BuildFileTest {
+
+    public GzipTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/gzip.xml");
     }
 
-    public void test1() { 
+    public void test1() {
         expectBuildException("test1", "required argument missing");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument missing");
     }
 
-    public void test3() { 
+    public void test3() {
         expectBuildException("test3", "required argument missing");
     }
 
-    public void test4() { 
+    public void test4() {
         expectBuildException("test4", "zipfile must not point to a directory");
     }
 

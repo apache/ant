@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -41,7 +41,7 @@ public class CommandlineTest extends TestCase {
         for (int i=0; i<3; i++) {
             assertEquals(""+(i+1), s[i]);
         }
-        
+
         s = Commandline.translateCommandline("");
         assertEquals("empty string", 0, s.length);
 
@@ -59,7 +59,7 @@ public class CommandlineTest extends TestCase {
         s = Commandline.translateCommandline("1 \"2 3\" 4");
         assertEquals("Case with double quotes and whitespace", 3, s.length);
         assertEquals("Double quotes stripped, space included", "2 3", s[1]);
-        
+
         s = Commandline.translateCommandline("1 \"2\'3\" 4");
         assertEquals("Case with double quotes around single quote", 3, s.length);
         assertEquals("Double quotes stripped, single quote included", "2\'3",
@@ -68,7 +68,7 @@ public class CommandlineTest extends TestCase {
         s = Commandline.translateCommandline("1 \'2 3\' 4");
         assertEquals("Case with single quotes and whitespace", 3, s.length);
         assertEquals("Single quotes stripped, space included", "2 3", s[1]);
-        
+
         s = Commandline.translateCommandline("1 \'2\"3\' 4");
         assertEquals("Case with single quotes around double quote", 3, s.length);
         assertEquals("Single quotes stripped, double quote included", "2\"3",
@@ -108,7 +108,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("Singlequoted null arg", "", s[0]);
 
         // now to the expected failures
-        
+
         try {
             s = Commandline.translateCommandline("a \'b c");
             fail("unbalanced single quotes undetected");

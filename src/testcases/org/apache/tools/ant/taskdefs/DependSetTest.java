@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -24,17 +24,17 @@ import org.apache.tools.ant.BuildFileTest;
  *
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
-public class DependSetTest extends BuildFileTest { 
-    
-    public DependSetTest(String name) { 
+public class DependSetTest extends BuildFileTest {
+
+    public DependSetTest(String name) {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/dependset.xml");
     }
 
-    public void test1() { 
+    public void test1() {
        expectBuildException("test1","At least one <srcfileset> or <srcfilelist> element must be set");
     }
 
@@ -42,19 +42,19 @@ public class DependSetTest extends BuildFileTest {
         executeTarget("cleanup");
     }
 
-    public void test2() { 
+    public void test2() {
        expectBuildException("test2","At least one <targetfileset> or <targetfilelist> element must be set");
     }
 
-    public void test3() { 
+    public void test3() {
        expectBuildException("test1","At least one <srcfileset> or <srcfilelist> element must be set");
     }
 
-    public void test4() { 
+    public void test4() {
         executeTarget("test4");
     }
 
-    public void test5() { 
+    public void test5() {
         executeTarget("test5");
         java.io.File f = new java.io.File(getProjectDir(), "older.tmp");
         if (f.exists()) {

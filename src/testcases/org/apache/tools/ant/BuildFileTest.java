@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -71,7 +71,7 @@ public abstract class BuildFileTest extends TestCase {
         String realLog = getLog();
         assertEquals(log, realLog);
     }
-    
+
     /**
      * Assert that the given substring is in the log messages
      */
@@ -82,7 +82,7 @@ public abstract class BuildFileTest extends TestCase {
                    + realLog + "\"",
                    realLog.indexOf(substring) >= 0);
     }
-    
+
     /**
      * Assert that the given message has been logged with a priority
      * &gt;= INFO when running the given target.
@@ -377,12 +377,12 @@ public abstract class BuildFileTest extends TestCase {
      */
     private static class AntOutputStream extends java.io.OutputStream {
         private StringBuffer buffer;
-        
+
         public AntOutputStream( StringBuffer buffer ) {
             this.buffer = buffer;
         }
-        
-        public void write(int b) { 
+
+        public void write(int b) {
             buffer.append((char)b);
         }
     }

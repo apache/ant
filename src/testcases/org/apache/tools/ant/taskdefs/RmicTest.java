@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -64,13 +64,13 @@ public class RmicTest extends TestCase {
         arg.setCompiler("weblogic");
         args = rmic.getCurrentCompilerArgs();
         assertNotNull(args);
-        assertEquals("implementation is weblogic but build.rmic is null", 
+        assertEquals("implementation is weblogic but build.rmic is null",
                      0, args.length);
 
         project.setProperty("build.rmic", "sun");
         args = rmic.getCurrentCompilerArgs();
         assertNotNull(args);
-        assertEquals("implementation is weblogic but build.rmic is sun", 
+        assertEquals("implementation is weblogic but build.rmic is sun",
                      0, args.length);
 
         project.setProperty("build.rmic", "weblogic");
@@ -86,7 +86,7 @@ public class RmicTest extends TestCase {
         // check defaults
         String compiler = rmic.getCompiler();
         assertNotNull(compiler);
-        assertTrue("default value", 
+        assertTrue("default value",
                    "sun".equals(compiler) || "kaffe".equals(compiler));
 
         project.setNewProperty("build.rmic", "weblogic");

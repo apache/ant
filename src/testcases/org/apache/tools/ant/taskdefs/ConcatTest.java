@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -31,7 +31,7 @@ import java.io.Reader;
  *
  * @author <a href="mailto:derek@activate.net">Derek Slager</a>
  */
-public class ConcatTest 
+public class ConcatTest
     extends BuildFileTest {
 
     /**
@@ -146,7 +146,7 @@ public class ConcatTest
         final long newSize = file2.length();
 
         assertEquals(origSize, newSize);
-        
+
     }
     public void testAppend() {
         test3();
@@ -160,7 +160,7 @@ public class ConcatTest
         final long newSize = file2.length();
 
         assertEquals(origSize*2, newSize);
-        
+
     }
 
     public void testFilter() {
@@ -207,7 +207,7 @@ public class ConcatTest
         executeTarget("testmultireader");
         assertTrue(getLog().indexOf("Bye") > -1);
         assertTrue(getLog().indexOf("Hello") == -1);
-    }        
+    }
     /**
      * Check if fixlastline works
      */
@@ -218,7 +218,7 @@ public class ConcatTest
             "testfixlastline", "concat.line4",
             "end of line" + System.getProperty("line.separator")
             + "This has");
-    }        
+    }
 
     /**
      * Check if fixlastline works with eol
@@ -229,7 +229,7 @@ public class ConcatTest
         expectFileContains(
             "testfixlastlineeol", "concat.linecr",
             "end of line\rThis has");
-    }        
+    }
 
     // ------------------------------------------------------
     //   Helper methods - should be in BuildFileTest
@@ -246,16 +246,16 @@ public class ConcatTest
         finally {
             try {r.close();} catch (Throwable ignore) {}
         }
-        
+
     }
-        
+
     private String getFileString(String target, String filename)
         throws IOException
     {
         executeTarget(target);
         return getFileString(filename);
     }
-    
+
     private void expectFileContains(
         String target, String filename, String contains)
         throws IOException

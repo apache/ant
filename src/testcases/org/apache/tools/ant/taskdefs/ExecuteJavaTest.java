@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -39,7 +39,7 @@ public class ExecuteJavaTest extends TestCase {
 
     private final static int CLOCK_ERROR=200;
     private final static int TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
-    
+
     private ExecuteJava ej;
     private Project project;
 
@@ -79,10 +79,10 @@ public class ExecuteJavaTest extends TestCase {
         assertTrue("process should have been killed", ej.killedProcess());
 
         assertTrue("elapse time of "+elapsed
-                   +" ms is less than timeout value of "+TIME_OUT_TEST+" ms", 
+                   +" ms is less than timeout value of "+TIME_OUT_TEST+" ms",
                    elapsed >= TIME_OUT_TEST);
         assertTrue("elapse time of "+elapsed
-                   +" ms is greater than run value of "+(TIME_OUT*2)+" ms", 
+                   +" ms is greater than run value of "+(TIME_OUT*2)+" ms",
                    elapsed < TIME_OUT*2);
     }
 

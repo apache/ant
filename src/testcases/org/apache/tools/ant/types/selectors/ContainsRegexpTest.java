@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types.selectors;
@@ -41,7 +41,7 @@ public class ContainsRegexpTest extends TestCase {
     }
 
     public void testContainsRegexp() {
-        TaskdefForRegexpTest MyTask = 
+        TaskdefForRegexpTest MyTask =
             new TaskdefForRegexpTest("containsregexp");
         try {
             MyTask.setUp();
@@ -56,7 +56,7 @@ public class ContainsRegexpTest extends TestCase {
             super(name);
         }
 
-        public void setUp() { 
+        public void setUp() {
             configureProject("src/etc/testcases/types/selectors.xml");
         }
 
@@ -64,7 +64,7 @@ public class ContainsRegexpTest extends TestCase {
             executeTarget("cleanupregexp");
         }
 
-        public void test() { 
+        public void test() {
             File dir = null;
             File[] files = null;
             int filecount;
@@ -74,11 +74,11 @@ public class ContainsRegexpTest extends TestCase {
             dir = new File(getProjectDir() + "/regexpseltestdest/");
             files = dir.listFiles();
             filecount = files.length;
-	  
+	
             if (filecount != 1)
                 assertEquals("ContainsRegexp test should have copied 1 file",
                              1, files.length);
-	  
+	
         }
     }
 }

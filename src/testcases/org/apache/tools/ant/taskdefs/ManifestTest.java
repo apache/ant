@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -27,8 +27,8 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 
 /**
- * Testcase for the Manifest class used in the jar task. 
- * 
+ * Testcase for the Manifest class used in the jar task.
+ *
  * @author Conor MacNeill
  */
 public class ManifestTest extends BuildFileTest {
@@ -37,11 +37,11 @@ public class ManifestTest extends BuildFileTest {
         = "src/etc/testcases/taskdefs/manifests/META-INF/MANIFEST.MF";
 
     public static final String LONG_LINE
-        = "AReallyLongLineToTestLineBreakingInManifests-ACapabilityWhich" + 
+        = "AReallyLongLineToTestLineBreakingInManifests-ACapabilityWhich" +
           "IsSureToLeadToHundredsOfQuestionsAboutWhyAntMungesManifests" +
           "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas" +
           "AProblemWithThatItIsNotABugInAnt";
-        
+
     public ManifestTest(String name) {
         super(name);
     }
@@ -55,7 +55,7 @@ public class ManifestTest extends BuildFileTest {
     }
 
     /**
-     * Empty manifest - is OK 
+     * Empty manifest - is OK
      */
     public void test1() throws ManifestException, IOException {
         executeTarget("test1");
@@ -63,7 +63,7 @@ public class ManifestTest extends BuildFileTest {
         String version = manifest.getManifestVersion();
         assertEquals("Manifest was not created with correct version - ", "1.0", version);
     }
-    
+
     /**
      * Simple Manifest with version 2.0
      */
@@ -73,7 +73,7 @@ public class ManifestTest extends BuildFileTest {
         String version = manifest.getManifestVersion();
         assertEquals("Manifest was not created with correct version - ", "2.0", version);
     }
-    
+
     /**
      * Malformed manifest - no : on the line
      */
@@ -99,7 +99,7 @@ public class ManifestTest extends BuildFileTest {
         boolean hasWarning = output.indexOf("Manifest warning: \"Name\" attributes should not occur in the main section") != -1;
         assertEquals("Expected warning about Name in main section", true, hasWarning);
     }
-    
+
     /**
      * New Section not starting with Name attribute.
      */
@@ -110,7 +110,7 @@ public class ManifestTest extends BuildFileTest {
         boolean hasWarning = output.indexOf("Manifest sections should start with a \"Name\" attribute") != -1;
         assertEquals("Expected warning about section not starting with Name: attribute", true, hasWarning);
     }
-     
+
     /**
      * From attribute is illegal
      */
@@ -130,12 +130,12 @@ public class ManifestTest extends BuildFileTest {
         Manifest.Section mainSection = manifest.getMainSection();
         String classpath = mainSection.getAttributeValue("class-path");
         assertEquals("Class-Path attribute was not set correctly - ", "fubar", classpath);
-        
+
         Manifest.Section testSection = manifest.getSection("Test");
         String testAttr = testSection.getAttributeValue("TestAttr");
         assertEquals("TestAttr attribute was not set correctly - ", "Test", testAttr);
     }
-     
+
     /**
      * Inline manifest - Invalid since has a Name attribute in the section element
      */
@@ -143,7 +143,7 @@ public class ManifestTest extends BuildFileTest {
         expectBuildExceptionContaining("test9", "Construction is invalid - Name attribute should not be used",
                                        "Specify the section name using the \"name\" attribute of the <section> element");
     }
-     
+
     /**
      * Inline manifest - Invalid attribute without name
      */
@@ -151,7 +151,7 @@ public class ManifestTest extends BuildFileTest {
         expectBuildExceptionContaining("test10", "Attribute has no name",
                                        "Attributes must have name and value");
     }
-     
+
     /**
      * Inline manifest - Invalid attribute without value
      */
@@ -159,7 +159,7 @@ public class ManifestTest extends BuildFileTest {
         expectBuildExceptionContaining("test11", "Attribute has no value",
                                        "Attributes must have name and value");
     }
-     
+
     /**
      * Inline manifest - Invalid attribute without value
      */
@@ -167,7 +167,7 @@ public class ManifestTest extends BuildFileTest {
         expectBuildExceptionContaining("test12", "Section with no name",
                                        "Sections must have a name");
     }
-     
+
     /**
      * Inline manifest - Duplicate attribute
      */
@@ -175,7 +175,7 @@ public class ManifestTest extends BuildFileTest {
         expectBuildExceptionContaining("test13", "Duplicate Attribute",
                                        "The attribute \"Test\" may not occur more than once in the same section");
     }
-     
+
     /**
      * Inline manifest - OK since classpath entries can be duplicated.
      */
@@ -184,10 +184,10 @@ public class ManifestTest extends BuildFileTest {
         Manifest manifest = getManifest(EXPANDED_MANIFEST);
         Manifest.Section mainSection = manifest.getMainSection();
         String classpath = mainSection.getAttributeValue("class-path");
-        assertEquals("Class-Path attribute was not set correctly - ", 
+        assertEquals("Class-Path attribute was not set correctly - ",
             "Test1 Test2 Test3 Test4", classpath);
     }
-     
+
     /**
      * Tets long line wrapping
      */
@@ -199,10 +199,10 @@ public class ManifestTest extends BuildFileTest {
         Manifest manifest = getManifest(EXPANDED_MANIFEST);
         Manifest.Section mainSection = manifest.getMainSection();
         String classpath = mainSection.getAttributeValue("class-path");
-        assertEquals("Class-Path attribute was not set correctly - ", 
+        assertEquals("Class-Path attribute was not set correctly - ",
             LONG_LINE, classpath);
     }
-     
+
     /**
      * Tests ordering of sections
      */
@@ -215,7 +215,7 @@ public class ManifestTest extends BuildFileTest {
         String section2 = (String)e.nextElement();
         assertEquals("First section name unexpected", "Test1", section1);
         assertEquals("Second section name unexpected", "Test2", section2);
-        
+
         Manifest.Section section = manifest.getSection("Test1");
         e = section.getAttributeKeys();
         String attr1Key = (String)e.nextElement();
@@ -225,7 +225,7 @@ public class ManifestTest extends BuildFileTest {
         assertEquals("First attribute name unexpected", "TestAttr1", attr1);
         assertEquals("Second attribute name unexpected", "TestAttr2", attr2);
     }
-     
+
     /**
      * Tests ordering of sections
      */
@@ -248,14 +248,14 @@ public class ManifestTest extends BuildFileTest {
         assertEquals("First attribute name unexpected", "TestAttr2", attr1);
         assertEquals("Second attribute name unexpected", "TestAttr1", attr2);
     }
-     
+
     /**
      * file attribute for manifest task is required.
      */
     public void testNoFile() {
         expectBuildException("testNoFile", "file is required");
     }
-    
+
     /**
      * replace changes Manifest-Version from 2.0 to 1.0
      */

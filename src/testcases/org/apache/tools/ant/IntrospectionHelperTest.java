@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2001,2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -26,7 +26,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.IntrospectionHelper.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 
 public class IntrospectionHelperTest extends TestCase {
@@ -37,7 +37,7 @@ public class IntrospectionHelperTest extends TestCase {
     public IntrospectionHelperTest(String name) {
         super(name);
     }
-    
+
     public void setUp() {
         p = new Project();
         p.setBasedir(projectBasedir);
@@ -65,14 +65,14 @@ public class IntrospectionHelperTest extends TestCase {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(java.lang.String.class);
         assertTrue("String doesn\'t support addText", !ih.supportsCharacters());
         ih = IntrospectionHelper.getHelper(getClass());
-        assertTrue("IntrospectionHelperTest supports addText", 
+        assertTrue("IntrospectionHelperTest supports addText",
                ih.supportsCharacters());
     }
 
     public void addText(String text) {
         assertEquals("test", text);
     }
-    
+
     public void testElementCreators() throws BuildException {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
         try {
@@ -150,7 +150,7 @@ public class IntrospectionHelperTest extends TestCase {
             assertTrue(be.getException() instanceof NullPointerException);
         }
     }
-    
+
     public void testGetNestedElements() {
         Hashtable h = new Hashtable();
         h.put("six", java.lang.String.class);
@@ -209,7 +209,7 @@ public class IntrospectionHelperTest extends TestCase {
     public void addThirteen(StringBuffer sb) {
         sb.append("test");
     }
-    
+
     public void addFourteen(StringBuffer s) {
         throw new NullPointerException();
     }

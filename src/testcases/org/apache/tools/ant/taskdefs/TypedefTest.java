@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -24,30 +24,30 @@ import org.apache.tools.ant.BuildFileTest;
  * @author Stefan Bodewig
  * @version $Revision$
  */
-public class TypedefTest extends BuildFileTest { 
-    
-    public TypedefTest(String name) { 
+public class TypedefTest extends BuildFileTest {
+
+    public TypedefTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/typedef.xml");
     }
-    
-    public void testEmpty() { 
+
+    public void testEmpty() {
         expectBuildException("empty", "required argument not specified");
     }
 
-    public void testNoName() { 
+    public void testNoName() {
         expectBuildException("noName", "required argument not specified");
     }
 
-    public void testNoClassname() { 
+    public void testNoClassname() {
         expectBuildException("noClassname", "required argument not specified");
     }
 
-    public void testClassNotFound() { 
-        expectBuildException("classNotFound", 
+    public void testClassNotFound() {
+        expectBuildException("classNotFound",
                              "classname specified doesn't exist");
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs;
 
@@ -452,7 +452,7 @@ public class Zip extends MatchingTask {
                         r = new Resource[tmp.length + dr.length];
                         System.arraycopy(dr, 0, r, 0, dr.length);
                         System.arraycopy(tmp, 0, r, dr.length, tmp.length);
-                    }                    
+                    }
                     addResources(oldFiles, r, zOut);
                 }
                 finalizeZipOutputStream(zOut);
@@ -594,19 +594,19 @@ public class Zip extends MatchingTask {
                     name = name + "/";
                 }
 
-                if (!doFilesonly && !dealingWithFiles 
-                    && resources[i].isDirectory() 
+                if (!doFilesonly && !dealingWithFiles
+                    && resources[i].isDirectory()
                     && !zfs.hasDirModeBeenSet()) {
                     int nextToLastSlash = name.lastIndexOf("/",
                                                            name.length() - 2);
                     if (nextToLastSlash != -1) {
-                        addParentDirs(base, name.substring(0, 
+                        addParentDirs(base, name.substring(0,
                                                            nextToLastSlash + 1),
                                       zOut, prefix, dirMode);
                     }
                     ZipEntry ze = zf.getEntry(resources[i].getName());
                     addParentDirs(base, name, zOut, prefix, ze.getUnixMode());
-                    
+
                 } else {
                     addParentDirs(base, name, zOut, prefix, dirMode);
                 }
@@ -617,7 +617,7 @@ public class Zip extends MatchingTask {
                     zipFile(f, zOut, prefix + name, fileMode);
                 } else if (!resources[i].isDirectory()) {
                     ZipEntry ze = zf.getEntry(resources[i].getName());
-                    
+
                     if (ze != null) {
                         boolean oldCompress = doCompress;
                         if (keepCompression) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -46,13 +46,13 @@ public class MacroDefTest extends BuildFileTest {
             "duplicate.attribute",
             "the attribute text has already been specified");
     }
-    
+
     public void testDuplicateElement() {
         expectBuildException(
             "duplicate.element",
             "the element text has already been specified");
     }
-    
+
     public void testUri() {
         expectLog("uri", "Hello World");
     }

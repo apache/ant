@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -20,29 +20,29 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
-public class EchoTest extends BuildFileTest { 
-    
-    public EchoTest(String name) { 
+public class EchoTest extends BuildFileTest {
+
+    public EchoTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/echo.xml");
     }
-    
+
     // Output an empty String
-    public void test1() { 
+    public void test1() {
         expectLog("test1", "");
     }
 
     // Output 'OUTPUT OF ECHO'
-    public void test2() { 
+    public void test2() {
         expectLog("test2", "OUTPUT OF ECHO");
     }
-    
-    public void test3() { 
+
+    public void test3() {
         expectLog("test3", "\n"+
                               "    This \n"+
                               "    is\n"+

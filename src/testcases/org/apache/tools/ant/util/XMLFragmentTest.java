@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.util;
@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XMLFragmentTest extends BuildFileTest {
-    
+
     public XMLFragmentTest(String name) {
         super(name);
     }
@@ -44,7 +44,7 @@ public class XMLFragmentTest extends BuildFileTest {
     }
 
     public void testNestedChildren() {
-        XMLFragment x = 
+        XMLFragment x =
             (XMLFragment) getProject().getReference("with-children");
         assertNotNull(x);
         Node n = x.getFragment();

@@ -8,7 +8,7 @@ import java.io.File;
 
 import junit.framework.AssertionFailedError;
 
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,14 +22,14 @@ import junit.framework.AssertionFailedError;
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 /**
  * TraX XSLTLiaison testcase
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class TraXLiaisonTest extends AbstractXSLTLiaisonTest 
+public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     implements XSLTLogger {
 
     public TraXLiaisonTest(String name){

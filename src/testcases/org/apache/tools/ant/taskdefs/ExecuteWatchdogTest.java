@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -36,7 +36,7 @@ public class ExecuteWatchdogTest extends TestCase {
 
     private final static int CLOCK_ERROR=200;
     private final static int TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
-    
+
     private ExecuteWatchdog watchdog;
 
     public ExecuteWatchdogTest(String name) {
@@ -87,7 +87,7 @@ public class ExecuteWatchdogTest extends TestCase {
         }
         return buf.toString();
     }
-    
+
     private int waitForEnd(Process p) throws Exception {
         int retcode = p.waitFor();
         if (retcode != 0){
