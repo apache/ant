@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ public class SmtpResponseReader {
 
     /**
      * Wrap this input stream.
+     * @param in the stream to wrap.
      */
     public SmtpResponseReader(InputStream in) {
         reader = new BufferedReader(new InputStreamReader(in));
@@ -48,6 +49,7 @@ public class SmtpResponseReader {
      * @return Responsecode (3 digits) + Blank + Text from all
      *         response line concatenated (with blanks replacing the \r\n
      *         sequences).
+     * @throws IOException on error.
      */
     public String getResponse() throws IOException {
         result.setLength(0);
@@ -69,6 +71,7 @@ public class SmtpResponseReader {
 
     /**
      * Closes the underlying stream.
+     * @throws IOException on error.
      */
     public void close() throws IOException {
         reader.close();
@@ -76,6 +79,8 @@ public class SmtpResponseReader {
 
     /**
      * Should we expect more input?
+     * @param line the line to check.
+     * @return true if there are more lines to check.
      */
     protected boolean hasMoreLines(String line) {
         return line.length() > 3 && line.charAt(3) == '-';
