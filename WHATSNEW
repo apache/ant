@@ -50,6 +50,8 @@ Fixed bugs:
 
 * MacroDef did not allow attributes named 'description'. Bugzilla Report 27175.
 
+* Throw build exception if name attribute missing from patternset. Bugzill Report 25982.
+
 Other changes:
 --------------
 
