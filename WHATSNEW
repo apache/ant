@@ -47,6 +47,9 @@ Changes that could break older environments:
 * Ant's testcases now require JUnit 3.7 or above, as they now use the new
   assertTrue method instead of assert.
 
+* If the 'output' attribute of <ant> is set to a simple filename or a
+  relative path, the file is created relative to ${basedir}, not ${user.dir}.
+
 Fixed bugs:
 -----------
 * Fixed bug where <move> ignored <filterset>s.
@@ -259,6 +262,15 @@ Other changes:
 * <path> now supports nested <dirset> and <filelist> elements.
 
 * <pathconvert> now supports nested <dirset> and <filelist> elements.
+
+* <pathconvert>'s "dirsep" and "pathsep" attributes now accept
+  multi-character values.
+
+* <copy> task now has a 'failonerror' attribute to allow keep-going
+  behaviour when the file to be copied is not found (defaults to "true").
+
+* <uptodate> now has a 'srcfile' attribute to allow specifying a 
+  full-path filename.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
