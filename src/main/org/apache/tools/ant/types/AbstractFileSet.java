@@ -586,6 +586,7 @@ public abstract class AbstractFileSet extends DataType
             throw noChildrenAllowed();
         }
         selectors.addElement(selector);
+        directoryScanner = null;
     }
 
     /* Methods below all add specific selectors */
@@ -784,7 +785,6 @@ public abstract class AbstractFileSet extends DataType
                         .addElement(((PatternSet) e.nextElement()).clone());
                 }
                 fs.selectors = (Vector) fs.selectors.clone();
-                fs.directoryScanner = null; // Clear the cached directory scanner
                 return fs;
             } catch (CloneNotSupportedException e) {
                 throw new BuildException(e);
