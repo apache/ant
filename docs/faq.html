@@ -342,6 +342,12 @@
         - they worked in Ant 1.5?
       
       </a></li>
+                <li><a href="#java.exception.stacktrace">
+  
+        The program I run via &lt;java&gt; throws an exception but I
+        can't seem to get the full stack trace.
+      
+      </a></li>
             </ul>
     
       <h3 class="section">Answers</h3>
@@ -1593,6 +1599,18 @@ mv /tmp/foo $ANT_HOME/bin/antRun
                         <p>
           This approach should work for ant1.5 and ant1.6.
         </p>
+                    <p class="faq">
+      <a name="java.exception.stacktrace"></a>
+      
+        The program I run via &lt;java&gt; throws an exception but I
+        can't seem to get the full stack trace.
+      
+    </p>
+                  <p>This is a know bug that has been fixed after the release of
+        Ant 1.6.1.</p>
+                        <p>As a workaround, run your &lt;java&gt; task with
+        <code>fork="true"</code> and Ant will display the full
+        trace.</p>
                     </div>
   </div>
 

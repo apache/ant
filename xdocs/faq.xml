@@ -1409,6 +1409,21 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         </p>
       </answer>
     </faq>
+
+    <faq id="java.exception.stacktrace">
+      <question>
+        The program I run via &lt;java&gt; throws an exception but I
+        can't seem to get the full stack trace.
+      </question>
+      <answer>
+        <p>This is a know bug that has been fixed after the release of
+        Ant 1.6.1.</p>
+
+        <p>As a workaround, run your &lt;java&gt; task with
+        <code>fork="true"</code> and Ant will display the full
+        trace.</p>
+      </answer>
+    </faq>
   </faqsection>
 
 </document>

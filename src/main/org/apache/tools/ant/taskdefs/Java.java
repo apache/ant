@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
@@ -169,14 +171,14 @@ public class Java extends Task {
             if (failOnError) {
                 throw e;
             } else {
-                log(e.getMessage(), Project.MSG_ERR);
+                log(e);
                 return 0;
             }
         } catch (Throwable t) {
             if (failOnError) {
                 throw new BuildException(t);
             } else {
-                log(t.getMessage(), Project.MSG_ERR);
+                log(t);
                 return 0;
             }
         }
@@ -792,4 +794,14 @@ public class Java extends Task {
         return new ExecuteWatchdog(timeout.longValue());
     }
 
+    /**
+     * @since 1.6.2
+     */
+    private void log(Throwable t) {
+        StringWriter sw = new StringWriter();
+        PrintWriter w = new PrintWriter(sw);
+        t.printStackTrace(w);
+        w.close();
+        log(sw.toString(), Project.MSG_ERR);
+    }
 }
