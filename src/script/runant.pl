@@ -61,6 +61,8 @@ if ($^O eq "NetWare")
   $onnetware = 1;
 }
 
+my $oncygwin = ($^O eq "cygwin");
+
 #ISSUE: what java wants to split up classpath varies from platform to platform 
 #and perl is not too hot at hinting which box it is on.
 #here I assume ":" 'cept on win32, dos, and netware. Add extra tests here as needed.
@@ -105,6 +107,17 @@ if($ENV{JIKESPATH} ne "")
 #construct arguments to java
 my @ARGS;
 push @ARGS, @ANT_OPTS;
+
+my $CYGHOME = "";
+
+if ($oncygwin == 1) {
+  $localpath = `cygpath --path --windows $localpath`;
+  chomp ($localpath);
+  $HOME = `cygpath --path --windows $HOME`;
+  chomp ($HOME);
+  $CYGHOME = `cygpath --path --windows $ENV{HOME}`;
+  chomp ($CYGHOME);
+}
 if ($onnetware == 1)
 {
 # make classpath literally $CLASSPATH; and then the contents of $localpath
@@ -117,6 +130,10 @@ else
   push @ARGS, "-classpath", "$localpath";
 }
 push @ARGS, "-Dant.home=$HOME";
+if ( ! $CYGHOME eq "" )
+{
+  push @ARGS, "-Dcygwin.user.home=\"$CYGHOME\""
+}
 push @ARGS, "org.apache.tools.ant.launch.Launcher", @ANT_ARGS;
 push @ARGS, @ARGV;
 
