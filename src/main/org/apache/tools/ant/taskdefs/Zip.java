@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -87,12 +87,12 @@ public class Zip extends MatchingTask {
     private Vector filesets = new Vector ();
     private Hashtable addedDirs = new Hashtable();
     private Vector addedFiles = new Vector();
-    
-    /** true when we are adding new files into the Zip file, as opposed to 
+
+    /** true when we are adding new files into the Zip file, as opposed to
         adding back the unchanged files */
     private boolean addingNewFiles;
-    
-    
+
+
     /**
      * Encoding to use for filenames, defaults to the platform's
      * default encoding.
@@ -100,7 +100,7 @@ public class Zip extends MatchingTask {
     private String encoding = null;
 
     /**
-     * This is the name/location of where to 
+     * This is the name/location of where to
      * create the .zip file.
      *
      * @deprecated Use setFile() instead
@@ -109,18 +109,18 @@ public class Zip extends MatchingTask {
         log("DEPRECATED - The zipfile attribute is deprecated. Use file attribute instead.");
         setFile( zipFile );
     }
-    
+
     /**
-     * This is the name/location of where to 
+     * This is the name/location of where to
      * create the .zip file.
      *
      */
     public void setFile(File file) {
         this.zipFile = file;
     }
-    
+
     /**
-     * This is the base directory to look in for 
+     * This is the base directory to look in for
      * things to zip.
      */
     public void setBasedir(File baseDir) {
@@ -198,7 +198,7 @@ public class Zip extends MatchingTask {
 
     public void execute() throws BuildException {
         if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType)) {
-            throw new BuildException( "basedir attribute must be set, or at least " + 
+            throw new BuildException( "basedir attribute must be set, or at least " +
                                       "one fileset must be given!" );
         }
 
@@ -210,18 +210,18 @@ public class Zip extends MatchingTask {
         File renamedFile = null;
         // Whether or not an actual update is required -
         // we don't need to update if the original file doesn't exist
-        
+
         addingNewFiles = true;
         boolean reallyDoUpdate = false;
         if (doUpdate && zipFile.exists())
         {
             reallyDoUpdate = true;
-            
+
             int i;
             for (i=0; i < 1000; i++)
             {
                 renamedFile = new File(zipFile.getParent(), "tmp."+i);
-                
+
                 if (!renamedFile.exists()) {
                     break;
                 }
@@ -229,7 +229,7 @@ public class Zip extends MatchingTask {
             if (i == 1000) {
                 throw new BuildException("Can't find available temporary filename to which to rename old file.");
             }
-            
+
             try
             {
                 if (!zipFile.renameTo(renamedFile)) {
@@ -241,7 +241,7 @@ public class Zip extends MatchingTask {
                 throw new BuildException("Not allowed to rename old file to temporary file");
             }
         }
-        
+
         // Create the scanners to pass to isUpToDate().
         Vector dss = new Vector ();
         if (baseDir != null) {
@@ -262,12 +262,12 @@ public class Zip extends MatchingTask {
         }
 
         String action = reallyDoUpdate ? "Updating " : "Building ";
-        
+
         log(action + archiveType +": "+ zipFile.getAbsolutePath());
 
         boolean success = false;
         try {
-            ZipOutputStream zOut = 
+            ZipOutputStream zOut =
               new ZipOutputStream(new FileOutputStream(zipFile));
             zOut.setEncoding(encoding);
             try {
@@ -288,7 +288,7 @@ public class Zip extends MatchingTask {
                     addingNewFiles = false;
                     ZipFileSet oldFiles = new ZipFileSet();
                     oldFiles.setSrc(renamedFile);
-                    
+
                     StringBuffer exclusionPattern = new StringBuffer();
                     for (int i=0; i < addedFiles.size(); i++)
                     {
@@ -311,11 +311,11 @@ public class Zip extends MatchingTask {
                         zOut.close();
                     }
                 } catch(IOException ex) {
-                    // If we're in this finally clause because of an exception, we don't 
+                    // If we're in this finally clause because of an exception, we don't
                     // really care if there's an exception when closing the stream. E.g. if it
                     // throws "ZIP file must have at least one entry", because an exception happened
                     // before we added any files, then we must swallow this exception. Otherwise,
-                    // the error that's reported will be the close() error, which is not the real 
+                    // the error that's reported will be the close() error, which is not the real
                     // cause of the problem.
                     if (success)
                         throw ex;
@@ -335,12 +335,12 @@ public class Zip extends MatchingTask {
                         renamedFile.getName()+" back)";
                 }
             }
-            
+
             throw new BuildException(msg, ioe, location);
         } finally {
             cleanUp();
         }
-        
+
         // If we've been successful on an update, delete the temporary file
         if (success && reallyDoUpdate) {
             if (!renamedFile.delete()) {
@@ -357,14 +357,14 @@ public class Zip extends MatchingTask {
     protected boolean isAddingNewFiles() {
         return addingNewFiles;
     }
-    
+
     /**
      * Add all files of the given FileScanner to the ZipOutputStream
      * prependig the given prefix to each filename.
      *
-     * <p>Ensure parent directories have been added as well.  
+     * <p>Ensure parent directories have been added as well.
      */
-    protected void addFiles(FileScanner scanner, ZipOutputStream zOut, 
+    protected void addFiles(FileScanner scanner, ZipOutputStream zOut,
                             String prefix, String fullpath) throws IOException {
         if (prefix.length() > 0 && fullpath.length() > 0)
              throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
@@ -477,8 +477,8 @@ public class Zip extends MatchingTask {
         }
         return true;
     }
-    
-    
+
+
     /**
      * Check whether the archive is up-to-date; and handle behavior for empty archives.
      * @param scanners list of prepared scanners containing files to archive
@@ -529,7 +529,7 @@ public class Zip extends MatchingTask {
         return grabFiles(scanners, grabFileNames(scanners));
     }
 
-    protected static File[] grabFiles(FileScanner[] scanners, 
+    protected static File[] grabFiles(FileScanner[] scanners,
                                       String[][] fileNames) {
         Vector files = new Vector();
         for (int i = 0; i < fileNames.length; i++) {
@@ -563,7 +563,7 @@ public class Zip extends MatchingTask {
             return;
         }
         addedDirs.put(vPath, vPath);
-        
+
         ZipEntry ze = new ZipEntry (vPath);
         if (dir != null && dir.exists()) {
             ze.setTime(dir.lastModified());
@@ -590,12 +590,12 @@ public class Zip extends MatchingTask {
 
         /*
          * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
-         * size and the CRC sum before you start writing the data when using 
+         * size and the CRC sum before you start writing the data when using
          * STORED mode.
          *
          * This forces us to process the data twice.
          *
-         * I couldn't find any documentation on this, just found out by try 
+         * I couldn't find any documentation on this, just found out by try
          * and error.
          */
         if (!doCompress) {
@@ -667,7 +667,7 @@ public class Zip extends MatchingTask {
         if( !doFilesonly ) {
             Stack directories = new Stack();
             int slashPos = entry.length();
-            
+
             while ((slashPos = entry.lastIndexOf((int)'/', slashPos-1)) != -1) {
                 String dir = entry.substring(0, slashPos+1);
                 if (addedDirs.get(prefix+dir) != null) {
@@ -675,7 +675,7 @@ public class Zip extends MatchingTask {
                 }
                 directories.push(dir);
             }
-            
+
             while (!directories.isEmpty()) {
                 String dir = (String) directories.pop();
                 File f = null;
@@ -707,15 +707,15 @@ public class Zip extends MatchingTask {
                 prefix = zfs.getPrefix();
                 fullpath = zfs.getFullpath();
             }
-            
-            if (prefix.length() > 0 
+
+            if (prefix.length() > 0
                 && !prefix.endsWith("/")
                 && !prefix.endsWith("\\")) {
                 prefix += "/";
             }
 
-            // Need to manually add either fullpath's parent directory, or 
-            // the prefix directory, to the archive. 
+            // Need to manually add either fullpath's parent directory, or
+            // the prefix directory, to the archive.
             if (prefix.length() > 0) {
                 addParentDirs(null, prefix, zOut, "");
                 zipDir(null, zOut, prefix);
