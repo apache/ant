@@ -81,6 +81,7 @@ public class Copy extends Task {
     protected Vector filesets = new Vector();
 
     protected boolean filtering = false;
+    protected boolean preserveLastModified = false;
     protected boolean forceOverwrite = false;
     protected boolean flatten = false;
     protected int verbosity = Project.MSG_VERBOSE;
@@ -110,6 +111,13 @@ public class Copy extends Task {
      */
     public void setTodir(File destDir) {
         this.destDir = destDir;
+    }
+
+    /**
+     * Give the copied files the same last modified time as the original files.
+     */
+    public void setPreserveLastModified(String preserve) {
+        preserveLastModified = Project.toBoolean(preserve);
     }
 
     /**
@@ -327,7 +335,8 @@ public class Copy extends Task {
                     project.copyFile(fromFile, 
                                      toFile, 
                                      filtering, 
-                                     forceOverwrite);
+                                     forceOverwrite,
+                                     preserveLastModified);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
