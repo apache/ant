@@ -12,7 +12,7 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
-import org.apache.tools.ant.taskdefs.Checksum;
+import org.apache.antlib.build.Checksum;
 import org.apache.tools.ant.taskdefs.UpToDate;
 
 /**
