@@ -578,7 +578,7 @@ public class Java extends Task {
      */
     public void setTimeout(Long value) {
         timeout = value;
-        incompatibleWithSpawn = true;
+        incompatibleWithSpawn |= timeout!=null;
     }
 
     /**
