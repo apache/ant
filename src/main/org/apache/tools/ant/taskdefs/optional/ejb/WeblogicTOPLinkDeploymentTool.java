@@ -108,12 +108,25 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
         // Setup a naming standard here?.
 
-        File toplinkDD = new File(getConfig().descriptorDir, toplinkDescriptor);
 
+        File toplinkDD = null;
+        if (usingBaseJarName()) {
+            toplinkDD = new File(getConfig().descriptorDir, toplinkDescriptor);
+        }
+        else {
+            String ddPrefix = baseName + getConfig().baseNameTerminator;
+            File actualDir = (new File(getConfig().descriptorDir, ddPrefix)).getParentFile();
+            toplinkDD = new File(actualDir, toplinkDescriptor);
+        }
+        
         if (toplinkDD.exists()) {
             ejbFiles.put(META_DIR + toplinkDescriptor,
                          toplinkDD);
         }
+        else {
+            log("Unable to locate toplink deployment descriptor. It was expected to be in " + 
+                toplinkDD.getPath(), Project.MSG_WARN);
+        }                
     }
     
     /**
