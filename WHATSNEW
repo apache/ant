@@ -62,8 +62,6 @@ Other changes:
 * Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
   variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
 
-* Added revision and userid attributes to <pvcs> documentation.
-
 * Added a new "failall" value for the onerror attribute of <typedef>.
   Bugzilla report 31685.
 
@@ -173,6 +171,8 @@ Other changes:
 
 * Added searchpath attribute to <exec> for searching path variable(s)
   when resolveexecutable = true.
+
+* Added revision and userid attributes to <pvcs> documentation.
 
 Fixed bugs:
 -----------
