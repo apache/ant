@@ -11,7 +11,6 @@ import java.io.File;
 import org.apache.avalon.Context;
 import org.apache.avalon.util.Enum;
 import org.apache.avalon.util.ValuedEnum;
-import org.apache.log.Logger;
 
 /**
  * This represents the *Context* in which a task can be executed.
@@ -30,7 +29,6 @@ public interface TaskletContext
     //these are the names of properties that every TaskContext must contain
     String          JAVA_VERSION       = "ant.java.version";
     String          BASE_DIRECTORY     = "ant.base.directory";
-    String          LOGGER             = "ant.logger";
     String          NAME               = "ant.task.name";
 
     /**
@@ -46,13 +44,6 @@ public interface TaskletContext
      * @return the name
      */
     String getName();
-
-    /**
-     * Retrieve Logger associated with task.
-     *
-     * @return the logger
-     */
-    Logger getLogger();
     
     /**
      * Retrieve base directory.

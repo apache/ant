@@ -15,6 +15,7 @@ import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Context;
 import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.Composer;
@@ -32,10 +33,19 @@ public class AntCall
     protected Project               m_project;
     protected String                m_target;
     protected ArrayList             m_properties     = new ArrayList();
+    protected TaskletContext        m_childContext;
+    protected ComponentManager      m_componentManager;
+
+    public void contextualize( final Context context )
+    {
+        super.contextualize( context );
+        m_childContext = new DefaultTaskletContext( getContext() );
+    } 
 
     public void compose( final ComponentManager componentManager )
         throws ComponentNotFoundException, ComponentNotAccessibleException
     {
+        m_componentManager = componentManager;
         m_projectEngine = (ProjectEngine)componentManager.
             lookup( "org.apache.ant.project.ProjectEngine" );
         m_project = (Project)componentManager.lookup( "org.apache.ant.project.Project" );
@@ -47,8 +57,12 @@ public class AntCall
     }
 
     public Property createParam()
+        throws Exception
     {
         final Property property = new Property();
+        property.setLogger( getLogger() );
+        property.contextualize( m_childContext );
+        property.compose( m_componentManager );
         m_properties.add( property );
         return property;
     }
@@ -61,17 +75,14 @@ public class AntCall
             throw new AntException( "Target attribute must be specified" );
         }
 
-        final TaskletContext context = new DefaultTaskletContext( getContext() );
-
         final int size = m_properties.size();
         for( int i = 0; i < size; i++ )
         {
             final Property property = (Property)m_properties.get( i );
-            property.contextualize( context );
             property.run();
         }
 
         getLogger().info( "Calling target " + m_target );
-        m_projectEngine.execute( m_project, m_target, context );
+        m_projectEngine.execute( m_project, m_target, m_childContext );
     }
 }

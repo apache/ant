@@ -10,13 +10,13 @@ package org.apache.ant.project;
 import org.apache.log.LogEntry;
 import org.apache.log.LogTarget;
 
-public class ProjectToListenerAdapter
+public class LogTargetToListenerAdapter
     implements LogTarget
 {
 
     protected final ProjectListener    m_listener;
 
-    public ProjectToListenerAdapter( final ProjectListener listener )
+    public LogTargetToListenerAdapter( final ProjectListener listener )
     {
         m_listener = listener;
     }

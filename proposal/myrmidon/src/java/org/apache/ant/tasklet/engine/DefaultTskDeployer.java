@@ -45,6 +45,7 @@ public class DefaultTskDeployer
 {
     protected final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
+    protected LocatorRegistry       m_dataTypeRegistry;
     protected LocatorRegistry       m_taskletRegistry;
     protected LocatorRegistry       m_converterRegistry;
     protected ConverterRegistry     m_converterInfoRegistry;
@@ -69,16 +70,17 @@ public class DefaultTskDeployer
     public void compose( final ComponentManager componentManager )
         throws ComponentNotFoundException, ComponentNotAccessibleException
     {
-        final ConverterEngine converterEngine = (ConverterEngine)componentManager.
-            lookup( "org.apache.ant.convert.ConverterEngine" );
-
-        m_converterInfoRegistry = converterEngine.getConverterRegistry();
-        m_converterRegistry = converterEngine.getLocatorRegistry();
-
         final TaskletEngine taskletEngine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
 
-        m_taskletRegistry = taskletEngine.getLocatorRegistry();
+        final ConverterEngine converterEngine = taskletEngine.getConverterEngine();
+
+        m_converterInfoRegistry = converterEngine.getInfoRegistry();
+        m_converterRegistry = converterEngine.getRegistry();
+
+        m_taskletRegistry = taskletEngine.getRegistry();
+        
+        m_dataTypeRegistry = taskletEngine.getDataTypeEngine().getRegistry();
     }
 
     public void setLogger( final Logger logger )
@@ -105,6 +107,13 @@ public class DefaultTskDeployer
             {
                 final Configuration converter = (Configuration)converters.next();
                 handleConverter( converter, url );
+            }
+
+            final Iterator datatypes = taskdefs.getChildren( "datatype" );
+            while( datatypes.hasNext() )
+            {
+                final Configuration datatype = (Configuration)datatypes.next();
+                handleDataType( datatype, url );
             }
         }
         catch( final ConfigurationException ce )
@@ -137,6 +146,11 @@ public class DefaultTskDeployer
         {
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
         }
+    }
+
+    public void deployDataType( final String name, final String location, final URL url )
+        throws DeploymentException
+    {
     }
     
     public void deployTasklet( final String name, final String location, final URL url )
@@ -212,5 +226,23 @@ public class DefaultTskDeployer
         }
         
         m_logger.debug( "Registered tasklet " + name + " as " + classname );
+    }
+  
+    protected void handleDataType( final Configuration datatype, final URL url )
+        throws DeploymentException, ConfigurationException
+    {
+        final String name = datatype.getAttribute( "name" );
+        final String classname = datatype.getAttribute( "classname" );
+        
+        final DefaultLocator info = new DefaultLocator( classname, url );
+        
+        try { m_dataTypeRegistry.register( name, info ); }
+        catch( final RegistryException re )
+        {
+            throw new DeploymentException( "Error registering " + name + " due to " + re,
+                                           re );
+        }
+        
+        m_logger.debug( "Registered datatype " + name + " as " + classname );
     }
 }

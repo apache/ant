@@ -37,7 +37,7 @@ public class RegisterTasklet
         else
         {
             final DefaultLocator locator = new DefaultLocator( classname, url );
-            m_engine.getLocatorRegistry().register( name, locator ); 
+            m_engine.getRegistry().register( name, locator ); 
         }
     }
 }

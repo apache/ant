@@ -7,27 +7,130 @@
  */
 package org.apache.ant.tasks.core;
 
+import java.util.Iterator;
 import org.apache.ant.AntException;
+import org.apache.ant.configuration.Configurable;
+import org.apache.ant.configuration.Configuration;
+import org.apache.ant.configuration.Configurer;
+import org.apache.ant.convert.Converter;
+import org.apache.ant.datatypes.DataType;
+import org.apache.ant.datatypes.DataTypeEngine;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.TaskletContext;
+import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.Resolvable;
 
 /**
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Property 
     extends AbstractTasklet
+    implements Configurable, Composer
 {
     protected String              m_name;
-    protected String              m_value;
+    protected Object              m_value;
     protected boolean             m_localScope     = true;
+    protected DataTypeEngine      m_engine;
+    protected Converter           m_converter;
+    protected Configurer          m_configurer;
+    
+    public void compose( final ComponentManager componentManager )
+        throws ComponentNotFoundException, ComponentNotAccessibleException
+    {
+        m_configurer = (Configurer)componentManager.
+            lookup( "org.apache.ant.configuration.Configurer" );
+        
+        final TaskletEngine taskletEngine = (TaskletEngine)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+
+        m_engine = taskletEngine.getDataTypeEngine();
+        m_converter = taskletEngine.getConverterEngine();
+    }
+
+    public void configure( final Configuration configuration )
+        throws ConfigurationException
+    {
+        final Iterator attributes = configuration.getAttributeNames();
+
+        while( attributes.hasNext() )
+        {
+            final String name = (String)attributes.next();
+            final String value = configuration.getAttribute( name );
+
+            final Object object = getContext().resolveValue( value );
+
+            if( null == object )
+            {
+                throw new AntException( "Value for attribute " + name + "resolved to null" );
+            }
+
+            if( name.equals( "name" ) )
+            {
+                try { setName( (String)m_converter.convert( String.class, object ) ); }
+                catch( final Exception e )
+                {
+                    throw new ConfigurationException( "Error converting value", e );
+                }
+            }
+            else if( name.equals( "value" ) )
+            {
+                setValue( object );
+            }
+            else if( name.equals( "local-scope" ) ) 
+            {
+                try 
+                {
+                    final Boolean localScope = 
+                        (Boolean)m_converter.convert( Boolean.class, object );
+                    setLocalScope( Boolean.TRUE == localScope ); 
+                }
+                catch( final Exception e )
+                {
+                    throw new ConfigurationException( "Error converting value", e );
+                }
+            }
+            else
+            {
+                throw new ConfigurationException( "Unknown attribute " + name );
+            }
+        }
+
+        final Iterator children = configuration.getChildren();
+        while( children.hasNext() )
+        {
+            final Configuration child = (Configuration)children.next();
+
+            try
+            {
+                final DataType value = m_engine.createDataType( child.getName() );
+                setValue( value );
+                m_configurer.configure( value, child, getContext() );
+            }
+            catch( final Exception e )
+            {
+                throw new ConfigurationException( "Unable to set datatype", e );
+            }
+        }
+    }
 
     public void setName( final String name )
     {
         m_name = name;
     }
     
-    public void setValue( final String value )
+    public void setValue( final Object value )
+        throws AntException
     {
+        if( null != m_value )
+        {
+            throw new AntException( "Value can not be set multiple times" );
+        }
+
         m_value = value;
     }
     
@@ -50,7 +153,18 @@ public class Property
         }
 
         final TaskletContext context = getContext();
-        final Object value = context.resolveValue( m_value );
+
+        Object value = m_value;
+
+        if( value instanceof String )
+        {
+            value = context.resolveValue( (String)value );
+        }
+
+        while( null != value && value instanceof Resolvable )
+        {
+            value = ((Resolvable)value).resolve( context );
+        }
 
         if( m_localScope )
         {

@@ -9,6 +9,8 @@
   <task name="register-converter" classname="org.apache.ant.tasks.core.RegisterConverter" />
   <task name="ant-call" classname="org.apache.ant.tasks.core.AntCall" />
 
+  <datatype name="pattern" classname="org.apache.ant.datatypes.Pattern" />
+
   <converter classname="org.apache.ant.convert.core.StringToLongConverter" 
              source="java.lang.String" 
              destination="java.lang.Long" />

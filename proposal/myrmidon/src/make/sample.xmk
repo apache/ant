@@ -20,12 +20,13 @@ Legal:
 
   <target name="main" depends="property-test" />
 
-  <!--
-       ===================================================================
-                                  Help on usage
-       ===================================================================
-  -->
-  <target name="option-test">
+  <target name="no-test-target" unless="do-tests">
+    <echo message="No tests done here"/>
+  </target>
+
+  <target name="test-target" depends="no-test-target" if="do-tests">
+
+    <echo message="Tests away"/>
 
     <prim-test
         integer="1"
@@ -54,7 +55,7 @@ Legal:
     
   </target>
 
-  <target name="property-test">
+  <target name="property-test" depends="test-target">
     <property name="blah" value="fred" />
     <property name="${blah}" value="barney" />
 
@@ -76,6 +77,12 @@ Legal:
     <ant-call target="property-test2">
       <param name="blah" value="blah-value" />
     </ant-call>
+
+    <property name="foo">
+      <pattern name="*.java"/>
+    </property>
+
+    <echo message="foo=${foo}" />
 
   </target>
 

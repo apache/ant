@@ -13,6 +13,7 @@ import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
 import org.apache.ant.configuration.ConfigurationBuilder;
+import org.apache.ant.datatypes.Condition;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.ConfigurationException;
 import org.apache.log.Logger;
@@ -133,20 +134,20 @@ public class DefaultProjectBuilder
                                     "unless condition at " + configuration.getLocation() );    
         }
 
-        final DefaultTarget target = new DefaultTarget();
-        
+        Condition condition = null;
+
         if( null != ifCondition )
         {
             m_logger.debug( "Target if condition: " + ifCondition );
-            target.setIfCondition( true );
-            target.setCondition( ifCondition );
+            condition = new Condition( true, ifCondition );
         }
         else if( null != unlessCondition )
         {
             m_logger.debug( "Target unless condition: " + unlessCondition );
-            target.setIfCondition( false );
-            target.setCondition( unlessCondition );
+            condition = new Condition( false, unlessCondition );
         }
+
+        final DefaultTarget target = new DefaultTarget( condition );
 
         if( null != depends )
         {

@@ -27,6 +27,16 @@ public abstract class AbstractTasklet
     private Logger                    m_logger;
 
     /**
+     * Receive logger from container.
+     *
+     * @param logger the logger
+     */
+    public void setLogger( final Logger logger )
+    {
+        m_logger = logger;
+    }
+
+    /**
      * Retrieve context from container.
      *
      * @param context the context
@@ -34,7 +44,6 @@ public abstract class AbstractTasklet
     public void contextualize( final Context context )
     {
         m_context = (TaskletContext)context;
-        m_logger = (Logger)m_context.getLogger();
     }
 
     /**

@@ -10,10 +10,11 @@ package org.apache.ant.tasklet.engine;
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
 import org.apache.ant.convert.ConverterEngine;
+import org.apache.ant.datatypes.DataTypeEngine;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.Component;
-import org.apache.avalon.Loggable;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.log.Logger;
  
@@ -37,7 +38,7 @@ public interface TaskletEngine
      *
      * @return the LocatorRegistry
      */
-    LocatorRegistry getLocatorRegistry();
+    LocatorRegistry getRegistry();
 
     /**
      * Retrieve converter engine.
@@ -46,6 +47,13 @@ public interface TaskletEngine
      */
     ConverterEngine getConverterEngine();
 
+    /**
+     * Retrieve datatype engine.
+     *
+     * @return the DataTypeEngine
+     */
+    DataTypeEngine getDataTypeEngine();
+    
     /**
      * execute a task.
      *

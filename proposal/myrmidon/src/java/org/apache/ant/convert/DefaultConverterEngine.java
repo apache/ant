@@ -19,9 +19,10 @@ import org.apache.log.Logger;
 public class DefaultConverterEngine
     implements ConverterEngine, Initializable
 {
+    protected final static boolean DEBUG                = false;
     protected DefaultFactory       m_factory;
-    protected LocatorRegistry      m_locatorRegistry;
-    protected ConverterRegistry    m_converterRegistry;
+    protected LocatorRegistry      m_registry;
+    protected ConverterRegistry    m_infoRegistry;
     protected Logger               m_logger;
 
     public void setLogger( final Logger logger )
@@ -29,30 +30,30 @@ public class DefaultConverterEngine
         m_logger = logger;
     }
 
-    public LocatorRegistry getLocatorRegistry()
+    public LocatorRegistry getRegistry()
     {
-        return m_locatorRegistry;
+        return m_registry;
     }
 
-    public ConverterRegistry getConverterRegistry()
+    public ConverterRegistry getInfoRegistry()
     {
-        return m_converterRegistry;
+        return m_infoRegistry;
     }
 
     public void init()
         throws Exception
     {
-        m_converterRegistry = createConverterRegistry();
-        m_locatorRegistry = createLocatorRegistry();
+        m_infoRegistry = createInfoRegistry();
+        m_registry = createRegistry();
         m_factory =  createFactory();
     }
     
-    protected ConverterRegistry createConverterRegistry()
+    protected ConverterRegistry createInfoRegistry()
     {
         return new DefaultConverterRegistry();
     }
 
-    protected LocatorRegistry createLocatorRegistry()
+    protected LocatorRegistry createRegistry()
     {
         return new DefaultLocatorRegistry();
     }
@@ -65,18 +66,31 @@ public class DefaultConverterEngine
     public Object convert( Class destination, final Object original )
         throws Exception
     {
+        final Class originalClass = original.getClass();
+
+        if( destination.isAssignableFrom( originalClass ) )
+        {
+            return original;
+        }
+
+        if( DEBUG )
+        {
+            m_logger.debug( "Looking for converter from " + originalClass.getName() +
+                            " to " + destination.getName() );
+        }
+
         final String name = 
-            m_converterRegistry.getConverterInfoName( original.getClass().getName(), 
-                                                      destination.getName() );
+            m_infoRegistry.getConverterInfoName( originalClass.getName(), 
+                                                 destination.getName() );
             
         if( null == name ) 
         {
             throw new ConverterException( "Unable to find converter for " + 
-                                          original.getClass() + " to " + destination + 
-                                          " conversion" );
+                                          originalClass.getName() + " to " + 
+                                          destination.getName() + " conversion" );
         }
 
-        final Locator locator = m_locatorRegistry.getLocator( name );
+        final Locator locator = m_registry.getLocator( name );
         final Converter converter = (Converter)m_factory.create( locator, Converter.class );
         return converter.convert( destination, original );
     }

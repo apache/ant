@@ -112,10 +112,8 @@ public class RegisterConverter
 
             try
             {
-                m_engine.getConverterEngine().
-                    getConverterRegistry().register( m_classname, info ); 
-                m_engine.getConverterEngine().
-                    getLocatorRegistry().register( m_classname, locator ); 
+                m_engine.getConverterEngine().getInfoRegistry().register( m_classname, info ); 
+                m_engine.getConverterEngine().getRegistry().register( m_classname, locator ); 
             }
             catch( final RegistryException re )
             {

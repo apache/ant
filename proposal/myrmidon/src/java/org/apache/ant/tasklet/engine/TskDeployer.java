@@ -23,7 +23,10 @@ public interface TskDeployer
 {
     void deployConverter( String name, String location, URL url )
         throws DeploymentException;
-    
+
+    void deployDataType( String name, String location, URL url )
+        throws DeploymentException;    
+
     void deployTasklet( String name, String location, URL url )
         throws DeploymentException;
 }

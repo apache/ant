@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
+import org.apache.ant.datatypes.Condition;
 import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.DefaultTaskletEngine;
@@ -100,13 +101,9 @@ public class DefaultProjectEngine
 
         m_listenerSupport.projectStarted( projectName );
 
-        executeTargetWork( "<init>", project.getImplicitTarget(), context );
-
         //context = new DefaultTaskletContext( context );
-        
-        //placing logger lower (at targetlevel or at task level)
-        //is possible if you want more fine grained control
-        context.setProperty( TaskletContext.LOGGER, m_logger );
+
+        executeTargetWork( "<init>", project.getImplicitTarget(), context );
 
         execute( project, target, context );
 
@@ -168,6 +165,18 @@ public class DefaultProjectEngine
                                       final Target target, 
                                       final TaskletContext context )
     {
+        final Condition condition = target.getCondition();
+
+        if( null != condition )
+        {
+            if( false == condition.evaluate( context ) )
+            {
+                m_logger.debug( "Skipping target " + name + 
+                                " as it does not satisfy condition" );
+                return;
+            }
+        }
+
         m_logger.debug( "Executing target " + name );
 
         final Iterator tasks = target.getTasks();

@@ -10,15 +10,30 @@ package org.apache.ant.project;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.configuration.Configuration;
+import org.apache.ant.datatypes.Condition;
 
 public class DefaultTarget
     implements Target
 {
-    protected ArrayList         m_dependencies     = new ArrayList();
-    protected ArrayList         m_tasks            = new ArrayList();
-    protected String            m_condition;
-    protected boolean           m_isIfCondition;
+    protected final ArrayList   m_dependencies     = new ArrayList();
+    protected final ArrayList   m_tasks            = new ArrayList();
+    protected final Condition   m_condition;
 
+    public DefaultTarget( final Condition condition )
+    {
+        m_condition = condition;
+    }
+
+    public DefaultTarget()
+    {
+        this( null );
+    }
+
+    public Condition getCondition()
+    {
+        return m_condition;
+    }
+    
     public Iterator getDependencies()
     {
         return m_dependencies.iterator();
@@ -27,26 +42,6 @@ public class DefaultTarget
     public Iterator getTasks()
     {
         return m_tasks.iterator();
-    }
-
-    public String getCondition()
-    {
-        return m_condition;
-    }
-
-    public void setCondition( final String condition )
-    {
-        m_condition = condition;
-    }
-
-    public boolean isIfCondition()
-    {
-        return m_isIfCondition;
-    }
-
-    public void setIfCondition( final boolean isIfCondition )
-    {
-        m_isIfCondition = isIfCondition;
     }
 
     public void addDependency( final String dependency )

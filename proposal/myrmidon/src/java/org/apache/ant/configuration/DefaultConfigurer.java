@@ -19,8 +19,10 @@ import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Context;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.util.PropertyException;
 import org.apache.avalon.util.PropertyUtil;
+import org.apache.log.Logger;
 
 /**
  * Class used to configure tasks.
@@ -28,7 +30,7 @@ import org.apache.avalon.util.PropertyUtil;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultConfigurer
-    implements Configurer, Composer
+    implements Configurer, Composer, Loggable
 {
     protected final static String  RESERVED_ATTRIBUTES[] = 
     {
@@ -40,7 +42,14 @@ public class DefaultConfigurer
         "content"
     };
 
+    protected final static boolean DEBUG         = false;
     protected Converter            m_converter;
+    protected Logger               m_logger;
+
+    public void setLogger( final Logger logger )
+    {
+        m_logger = logger;
+    }
 
     public void compose( final ComponentManager componentManager )
         throws ComponentNotFoundException, ComponentNotAccessibleException
@@ -66,18 +75,39 @@ public class DefaultConfigurer
                            final Context context )
         throws ConfigurationException
     {
+        if( DEBUG )
+        {
+            m_logger.debug( "Configuring " + object );
+        }
+
         if( object instanceof Configurable )
         {
+            if( DEBUG ) 
+            {
+                m_logger.debug( "Configuring object via Configurable interface" );
+            }
+
             ((Configurable)object).configure( configuration );
         }
         else
         {
-            final Iterator attributes = configuration.getAttributeNames();
+            if( DEBUG ) 
+            {
+                m_logger.debug( "Configuring object via Configurable reflection" );
+            }
 
+            final Iterator attributes = configuration.getAttributeNames();
             while( attributes.hasNext() )
             {
                 final String name = (String)attributes.next();
                 final String value = configuration.getAttribute( name );
+             
+                if( DEBUG ) 
+                {
+                    m_logger.debug( "Configuring attribute name=" + name +
+                                    " value=" + value );
+                }
+                
                 configureAttribute( object, name, value, context );
             }
 
@@ -86,6 +116,12 @@ public class DefaultConfigurer
             while( elements.hasNext() )
             {
                 final Configuration element = (Configuration)elements.next();
+                
+                if( DEBUG ) 
+                {
+                    m_logger.debug( "Configuring subelement name=" + element.getName() );
+                }
+                
                 configureElement( object, element, context );
             }
 
@@ -95,6 +131,11 @@ public class DefaultConfigurer
             {
                 if( !content.trim().equals( "" ) )
                 {
+                    if( DEBUG ) 
+                    {
+                        m_logger.debug( "Configuring content " + content );
+                    }
+                    
                     configureContent( object, content, context );
                 }
             }
@@ -206,22 +247,24 @@ public class DefaultConfigurer
             parameterType = getComplexTypeFor( parameterType );
         }
         
-        if( !parameterType.isAssignableFrom( sourceClass ) )
+        try
         {
-            try
+            value = m_converter.convert( parameterType, value );
+        }
+        catch( final ConverterException ce )
+        {
+            if( DEBUG )
             {
-                value = m_converter.convert( parameterType, object );
+                m_logger.debug( "Failed to find converter ", ce );
             }
-            catch( final ConverterException ce )
-            {
-                return false;
-            }
-            catch( final Exception e )
-            {
-                throw new ConfigurationException( "Error converting attribute for " + 
-                                                  method.getName(),
-                                                  e );
-            }
+
+            return false;
+        }
+        catch( final Exception e )
+        {
+            throw new ConfigurationException( "Error converting attribute for " + 
+                                              method.getName(),
+                                              e );
         }
         
         try

@@ -13,7 +13,6 @@ import org.apache.avalon.DefaultContext;
 import org.apache.avalon.util.PropertyException;
 import org.apache.avalon.util.PropertyUtil; 
 import org.apache.avalon.util.io.FileUtil;
-import org.apache.log.Logger;
 
 /**
  * Default implementation of TaskletContext.
@@ -68,16 +67,6 @@ public class DefaultTaskletContext
         return (String)get( NAME );
     }
 
-    /**
-     * Retrieve Logger associated with task.
-     *
-     * @return the logger
-     */
-    public Logger getLogger()
-    {
-        return (Logger)get( LOGGER );
-    }
-    
     /**
      * Retrieve base directory.
      *
@@ -209,13 +198,7 @@ public class DefaultTaskletContext
     protected void checkPropertyValid( final String name, final Object value )
         throws AntException
     {
-        if( LOGGER.equals( name ) && !( value instanceof Logger ) )
-        {
-            throw new AntException( "property " + LOGGER +
-                                    " must have a value of type " + 
-                                    Logger.class.getName() );
-        }
-        else if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
+        if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
         {
             throw new AntException( "Property " + BASE_DIRECTORY +
                                     " must have a value of type " + 

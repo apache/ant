@@ -9,6 +9,7 @@ package org.apache.ant.tasklet;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Loggable;
 
 /**
  * This represents the individual tasks.
@@ -23,6 +24,6 @@ import org.apache.avalon.Contextualizable;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Tasklet
-    extends Component, Contextualizable, Runnable
+    extends Component, Contextualizable, Runnable, Loggable
 {
 }

@@ -27,7 +27,7 @@ import org.apache.ant.project.Project;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.project.ProjectListener;
-import org.apache.ant.project.ProjectToListenerAdapter;
+import org.apache.ant.project.LogTargetToListenerAdapter;
 import org.apache.ant.tasklet.JavaVersion;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
@@ -232,7 +232,8 @@ public class Main
             new CLOptionDescriptor( "define",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     DEFINE_OPT,
-                                    "Define a variable (ie -Dfoo=var)" );
+                                    "Define a variable (ie -Dfoo=var)",
+                                    new int[ 0 ] );
         return options;
     }
 
@@ -481,7 +482,7 @@ public class Main
     protected void setupListener( final String listenerName )
     {
         m_listener = createListener( listenerName );
-        m_logger.addLogTarget( new ProjectToListenerAdapter( m_listener ) );
+        m_logger.addLogTarget( new LogTargetToListenerAdapter( m_listener ) );
     }
 
     /**
@@ -566,7 +567,6 @@ public class Main
         defines.put( AntContextResources.LIB_DIR, m_libDir );
         defines.put( AntContextResources.TASKLIB_DIR, m_taskLibDir );
         //defines.put( AntContextResources.USER_DIR, m_userDir );
-        defines.put( TaskletContext.LOGGER, m_logger );
         defines.put( TaskletContext.JAVA_VERSION, getJavaVersion() );
 
         final TaskletContext context = project.getContext();
