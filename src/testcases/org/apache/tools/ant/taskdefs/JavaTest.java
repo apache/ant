@@ -59,11 +59,11 @@ import java.io.*;
 import org.apache.tools.ant.*;
 
 /**
- * Some basic tests mainly intended to test for jar/classname behavior.
- * @todo has to be enhanced to use TaskdefsTest instead.
+ * stress out java task
+ * @author steve loughran
  * @author <a href="mailto:sbailliez@apache.org>Stephane Bailliez</a> 
  */
-public class JavaTest extends TestCase { 
+public class JavaTest extends BuildFileTest {
     
     protected Java java;
     
@@ -72,49 +72,95 @@ public class JavaTest extends TestCase {
     }    
     
     public void setUp() { 
-        java = new Java();
+        configureProject("src/etc/testcases/taskdefs/java.xml");
+        
+        final String propname="tests-classpath.value";
+        String testClasspath=System.getProperty(propname);
+        System.out.println("Test cp="+testClasspath);
+        //project.setProperty(propname,testClasspath);
+        
+    }
+
+    public void tearDown() {
     }
 
     public void testNoJarNoClassname(){
-        try {
-            java.execute();
-            fail("Should have failed. Cannot run with no classname nor jar");
-        } catch (BuildException e){
-            assertEquals("Classname must not be null.", e.getMessage());
-        }
+        expectBuildExceptionContaining("noclassname",
+            "parameter validation",
+            "Classname must not be null.");   
     }
 
     public void testJarNoFork() {
-        java.setJar( new File("test.jar") );
-        java.setFork(false);
-        try {
-            java.execute();
-            fail("Should have failed. Cannot run jar in non-forked mode");
-        } catch (BuildException e){
-            assertEquals("Cannot execute a jar in non-forked mode. Please set fork='true'. ", e.getMessage());
-        }
+        expectBuildExceptionContaining("jarNoFork",
+            "parameter validation",
+            "Cannot execute a jar in non-forked mode. Please set fork='true'. ");        
     }
-       
-    public void testClassname() { 
-        java.setClassname("test.class.Name");
-    }
-    
+      
     public void testJarAndClassName() { 
-        try {
-            java.setJar( new File("test.jar") );
-            java.setClassname("test.class.Name");
-            fail("Should not be able to set both classname AND jar");
-        } catch (BuildException e){
-        }
+        expectBuildException("jarAndClassname",
+            "Should not be able to set both classname AND jar");
     }
+                
 
     public void testClassnameAndJar() { 
-        try {
-            java.setClassname("test.class.Name");
-            java.setJar( new File("test.jar") );
-            fail("Should not be able to set both classname AND jar");
-        } catch (BuildException e){
-        }
+        expectBuildException("ClassnameAndjar",
+            "Should not be able to set both classname AND jar");
+    }
+
+    public void testRun() {
+        executeTarget("run");
+    }
+
+    public void testRunFail() {
+        executeTarget("run-fail");
     }
     
+    public void testRunFailFoe() {
+        expectBuildExceptionContaining("run-fail-foe",
+            "java failures being propagated",
+            "Java returned:");
+    }
+
+    public void testRunFailFoeFork() {
+        expectBuildExceptionContaining("run-fail-foe-fork",
+            "java failures being propagated",
+            "Java returned:");
+    }
+
+        
+    public void testRunExpectNoFail() {
+        executeTarget("runExpectNoFail");
+    }
+    
+    /**
+     * entry point class with no dependencies other
+     * than normal JRE runtime
+     */
+    public static class EntryPoint {
+        
+    /**
+     * this entry point is used by the java.xml tests to
+     * generate failure strings to handle
+     * argv[0] = exit code (optional)
+     * argv[1] = string to print to System.out (optional)
+     * argv[1] = string to print to System.err (optional)
+     */
+        public static void main(String[] argv) {
+            int exitCode=0;
+            if(argv.length>0) {
+                try {
+                    exitCode=Integer.parseInt(argv[1]);
+                } catch(NumberFormatException nfe) {
+                    exitCode=-1;
+                }
+            }
+            if(argv.length>1) {
+                System.out.println(argv[1]);
+            }
+            if(argv.length>2) {
+                System.err.println(argv[2]);
+            }
+            System.exit(exitCode);
+        }
+    }
 }
