@@ -118,9 +118,7 @@ class ProcessMonitor
     {
         while( STATE_RUNNING == m_state )
         {
-            processStandardInput();
-            processStandardOutput();
-            processStandardError();
+            processStreams();
 
             if( !isProcessStopped() )
             {
@@ -137,9 +135,23 @@ class ProcessMonitor
             }
         }
 
+        //Process streams again to make sure
+        //that we have got all the data
+        processStreams();
+
         IOUtil.shutdownStream( m_input );
         IOUtil.shutdownStream( m_output );
         IOUtil.shutdownStream( m_error );
+    }
+
+    /**
+     * Utility method to process all the standard streams.
+     */
+    private void processStreams()
+    {
+        processStandardInput();
+        processStandardOutput();
+        processStandardError();
     }
 
     /**
