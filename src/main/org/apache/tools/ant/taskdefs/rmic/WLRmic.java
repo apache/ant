@@ -30,6 +30,11 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class WLRmic extends DefaultRmicAdapter {
     public static final String WLRMIC_CLASSNAME = "weblogic.rmic";
+    /**
+     * the name of this adapter for users to select
+     */
+    public static final String COMPILER_NAME = "weblogic";
+
     public static final String ERROR_NO_WLRMIC_ON_CLASSPATH = "Cannot use WebLogic rmic, as it is not "
                                          + "available.  A common solution is to "
                                          + "set the environment variable "

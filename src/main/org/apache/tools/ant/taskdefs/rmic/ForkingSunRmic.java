@@ -42,6 +42,11 @@ import java.io.IOException;
 public class ForkingSunRmic extends DefaultRmicAdapter {
 
     /**
+     * the name of this adapter for users to select
+     */
+    public static final String COMPILER_NAME = "forking";
+    
+    /**
      * exec by creating a new command
      * @return
      * @throws BuildException
@@ -63,6 +68,7 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
             exe.setAntRun(project);
             exe.setWorkingDirectory(project.getBaseDir());
             exe.setCommandline(args);
+
             exe.execute();
             return exe.getExitValue()==0;
         } catch (IOException exception) {

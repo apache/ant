@@ -32,12 +32,18 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;patternset&gt;</code> elements.</p>
 <p>It is possible to use different compilers. This can be selected
 with the &quot;build.rmic&quot; property or the <code>compiler</code>
-attribute. <a name="compilervalues">There are three choices</a>:</p>
+attribute.
+<a name="compilervalues">Here are the choices</a>:</p>
 <ul>
+  <li>default -the default compiler (kaffe or sun) for the platform.
   <li>sun (the standard compiler of the JDK)</li>
   <li>kaffe (the standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
   <li>weblogic</li>
   <li>forking - the sun compiler forked into a separate process</li>
+  <li> "" (empty string). This has the same behaviour as not setting the compiler attribute.
+    First the value of <tt>build.rmic<tt> is used if defined, and if not, the default
+    for the platform is chosen. If build.rmic is set to this, you get the default.
+
 </ul>
 
 <p>The <a href="http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>

@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
+import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
 
 /**
  * Date: 04-Aug-2004
@@ -48,6 +50,19 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * verify that "default" binds us to the default compiler
+     */
+    public void testDefault() throws Exception {
+        executeTarget("testDefault");
+    }
+
+    /**
+     * verify that "" binds us to the default compiler
+     */
+    public void testEmpty() throws Exception {
+        executeTarget("testEmpty");
+    }
+    /**
      * A unit test for JUnit
      */
     public void testRmic() throws Exception {
@@ -68,10 +83,24 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
-     * A unit test for JUnit
+     * test the forking compiler
      */
-    public void testForking() throws Exception {
+    public void NotestForking() throws Exception {
         executeTarget("testForking");
+    }
+
+    /**
+     * test the forking compiler
+     */
+    public void NotestForkingAntClasspath() throws Exception {
+        executeTarget("testForkingAntClasspath");
+    }
+
+    /**
+     * test the forking compiler
+     */
+    public void testAntClasspath() throws Exception {
+        executeTarget("testAntClasspath");
     }
 
     /**
@@ -90,6 +119,71 @@ public class RmicAdvancedTest extends BuildFileTest {
         expectBuildExceptionContaining("testWrongClass",
                 "class not an RMIC adapter",
                 RmicAdapterFactory.ERROR_NOT_RMIC_ADAPTER);
+    }
+
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testDefaultBadClass() throws Exception {
+        expectBuildExceptionContaining("testDefaultBadClass",
+                "expected the class to fail",
+                Rmic.ERROR_RMIC_FAILED);
+        //dont look for much text here as it is vendor and version dependent
+        assertLogContaining("unimplemented.class");
+    }
+
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testMagicProperty() throws Exception {
+        expectBuildExceptionContaining("testMagicProperty",
+                "magic property not working",
+                RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+    }
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testMagicPropertyOverridesEmptyString() throws Exception {
+        expectBuildExceptionContaining("testMagicPropertyOverridesEmptyString",
+                "magic property not working",
+                RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+    }
+
+
+    /**
+     * test the forking compiler
+     */
+    public void testMagicPropertyIsEmptyString() throws Exception {
+        executeTarget("testMagicPropertyIsEmptyString");
+    }
+
+
+    public void NotestFailingAdapter() throws Exception {
+        expectBuildExceptionContaining("testFailingAdapter",
+                "expected failures to propagate",
+                Rmic.ERROR_RMIC_FAILED);
+    }
+
+
+    /**
+     * this little bunny verifies that we can load stuff, and that
+     * a failure to execute is turned into a fault
+     */
+    public static class FailingRmicAdapter extends DefaultRmicAdapter {
+        public static final String LOG_MESSAGE = "hello from FailingRmicAdapter";
+
+        /**
+         * Executes the task.
+         *
+         * @return false -always
+         */
+        public boolean execute() throws BuildException {
+            getRmic().log(LOG_MESSAGE);
+            return false;
+        }
     }
 }
 

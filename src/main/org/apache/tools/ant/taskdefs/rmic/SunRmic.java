@@ -39,6 +39,11 @@ public class SunRmic extends DefaultRmicAdapter {
     public static final String RMIC_CLASSNAME = "sun.rmi.rmic.Main";
 
     /**
+     * the name of this adapter for users to select
+     */
+    public static final String COMPILER_NAME = "sun";
+    
+    /**
      * name of the executable
      */
     public static final String RMIC_EXECUTABLE = "rmic";

@@ -80,7 +80,7 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 
 public class Rmic extends MatchingTask {
 
-    private static final String FAIL_MSG
+    public static final String ERROR_RMIC_FAILED
         = "Rmic failed; see the compiler error output for details.";
 
     private File baseDir;
@@ -116,8 +116,7 @@ public class Rmic extends MatchingTask {
     public static final String ERROR_BASE_NOT_SET = "base attribute must be set!";
 
     public Rmic() {
-        String facadeName=KaffeRmic.isAvailable()?"kaffe":"sun";
-        facade = new FacadeTaskHelper(facadeName);
+        facade = new FacadeTaskHelper(RmicAdapterFactory.DEFAULT_COMPILER);
     }
 
     /**
@@ -398,7 +397,9 @@ public class Rmic extends MatchingTask {
      * @since Ant 1.5
      */
     public void setCompiler(String compiler) {
-        facade.setImplementation(compiler);
+        if(compiler.length()>0) {
+            facade.setImplementation(compiler);
+        }
     }
 
     /**
@@ -481,7 +482,7 @@ public class Rmic extends MatchingTask {
 
                 // finally, lets execute the compiler!!
                 if (!adapter.execute()) {
-                    throw new BuildException(FAIL_MSG, getLocation());
+                    throw new BuildException(ERROR_RMIC_FAILED, getLocation());
                 }
             }
 
@@ -583,9 +584,9 @@ public class Rmic extends MatchingTask {
         }
 
         for (int i = 0; i < newFiles.length; i++) {
-            String classname = newFiles[i].replace(File.separatorChar, '.');
-            classname = classname.substring(0, classname.lastIndexOf(".class"));
-            compileList.addElement(classname);
+            String name = newFiles[i].replace(File.separatorChar, '.');
+            name = name.substring(0, name.lastIndexOf(".class"));
+            compileList.addElement(name);
         }
     }
 
