@@ -32,7 +32,7 @@ migrate from regular makefiles, where you would use this option of javadoc.
 The packages listed in packagelist are not checked, so the task performs even 
 if some packages are missing or broken. Use this option if you wish to convert from 
 an existing makefile. Once things are running you should then switch to the regular 
-notation. 
+notation. </p>
 
 <p>DEPRECATION: the javadoc2 task simply points to the javadoc task and it's
 there for back compatibility reasons. Since this task will be removed in future
@@ -416,18 +416,18 @@ use to process the input source files. A number of the standard javadoc argument
 are actually arguments of the standard doclet. If these are specified in the javadoc
 task's attributes, they will be passed to the doclet specified in the 
 <code>&lt;doclet&gt;</code> nested element. Such attributes should only be specified, 
-therefore, if they can be interpreted by the doclet in use.
+therefore, if they can be interpreted by the doclet in use.</p>
 
 <p>If the doclet requires additional parameters, these can be specified with
 <code>&lt;param&gt;</code> elements within the <code>&lt;doclet&gt;</code> 
 element. These paramaters are restricted to simple strings. An example usage
-of the doclet element is shown below:
+of the doclet element is shown below:</p>
 
 <pre>  &lt;javadoc ...&gt;
-     &lt;doclet name="theDoclet"
-             path="path/to/theDoclet"&gt;
-        &lt;param name="-foo" value="foovalue"/&gt;
-        &lt;param name="-bar" value="barvalue"/&gt;
+     &lt;doclet name=&quot;theDoclet&quot;
+             path=&quot;path/to/theDoclet&quot;&gt;
+        &lt;param name=&quot;-foo&quot; value=&quot;foovalue&quot;/&gt;
+        &lt;param name=&quot;-bar&quot; value=&quot;barvalue&quot;/&gt;
      &lt;/doclet&gt;
   &lt;/javadoc&gt;
 </pre>

@@ -1,3 +1,4 @@
+<html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Ant PropertyFile Task</title>
@@ -20,19 +21,19 @@
 <ul>
   <li><a href="#introduction">Introduction</a></li>
   <li><a href="#proptask">PropertyFile Task</a></li>
-  <li><a href="#entrytask">Entry Task</a></li>
+  <li><a href="#entryElement">Entry Task</a></li>
 </ul>
 
 <hr>
 <h2><a name="introduction">Introduction</a></h2>
-<p>Ant provides an optional task for editing property files.  Thes is very useful
+<p>Ant provides an optional task for editing property files.  This is very useful
 when wanting to make unattended modifications to configuration files for application
 servers and applications.  Currently, the task maintains a working property file with
 the ability to add properties or make changes to existing ones.  However, any comments
-are lost.  Work is being done to make this task a bit more "human friendly".
+are lost.  Work is being done to make this task a bit more &quot;human friendly&quot;.</p>
 
 <hr>
-<h2><a name="tasks">PropertyFile Task</a></h2>
+<h2><a name="proptask">PropertyFile Task</a></h2>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
@@ -53,9 +54,9 @@ are lost.  Work is being done to make this task a bit more "human friendly".
 </table>
 
 <h3>Parameters specified as nested elements</h3>
-<h4>Entry</h4>
+<h4><a name="entryElement">Entry</a></h4>
 <p>Use nested <code>&lt;entry&gt;</code>
-elements to specify actual modifcations to the property file itself
+elements to specify actual modifcations to the property file itself</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -79,7 +80,7 @@ elements to specify actual modifcations to the property file itself
   </tr>
   <tr>
     <td valign="top">operation</td>
-    <td valign="top">"+" or "=" (default) for all datatypes<br>"-" (for date and int only).<br>
+    <td valign="top">&quot;+&quot; or &quot;=&quot; (default) for all datatypes<br>&quot;-&quot; (for date and int only).<br>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -87,68 +88,69 @@ elements to specify actual modifcations to the property file itself
     <td valign="top">default</td>
     <td valign="top">Initial value to set for a property if it is not
                      already defined in the property file.<br>
-                     For type date, two additional keywordsw are allowed: "now" or "never".</td>
+                     For type date, two additional keywords are allowed: &quot;now&quot; or &quot;never&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">pattern</td>
     <td valign="top">For int and date type only. If present, Values will
-                     be paresed and formated accordingly.</td>
+                     be parsed and formatted accordingly.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
 
-<p>The following changes the my.properties file.  Assume my.properties look like:<br>
-<p>
-<ul># A comment<br>
-akey=novalue<br></ul>
+<p>The following changes the my.properties file.  Assume my.properties look like:</p>
+
+<pre># A comment
+akey=novalue</pre>
+
+<p>After running, the file would now look like
 </p>
-After running, the file would now look like
+<pre>#Thu Nov 02 23:41:47 EST 2000
+akey=avalue
+adate=2000/11/02 23\:41
+anint=1
+formated.int=0014
+formated.date=028 17\:34
+</pre>
 <p>
-<ul>#Thu Nov 02 23:41:47 EST 2000<br>
-akey=avalue<br>
-adate=2000/11/02 23\:41<br>
-anint=1<br>
-formated.int=0014<br>
-formated.date=028 17\:34<br></ul>
-</p>
 The slashes conform to the expectations of the Properties class.  The file will be stored in a manner so that each character is examined and escaped if necessary.  Note that the original comment is now lost.  Please keep this in mind when running this task against heavily commented properties files.  It may be best to have a commented version in the source tree, copy it to a deployment area, and then run the modifications on the copy.  Future versions of PropertyFile will hopefully eliminate this shortcoming.
 </p>
 
-<pre><blockquote>&lt;propertyfile
-    file="my.properties"
-    comment"My properties" &gt;
-  &lt;entry  key="akey" value="avalue" /&gt;
-  &lt;entry  key="adate" type="date" value="now"/&gt;
-  &lt;entry  key="anint" type="int" operation="+"/&gt;
-  &lt;entry  key="formated.int" type="int" default="0013" operation="+" pattern="0000"/&gt;
-  &lt;entry  key="formated.date" type="date" value="now" pattern="DDD HH:mm"/&gt;
+<blockquote><pre>&lt;propertyfile
+    file=&quot;my.properties&quot;
+    comment&quot;My properties&quot; &gt;
+  &lt;entry  key=&quot;akey&quot; value=&quot;avalue&quot; /&gt;
+  &lt;entry  key=&quot;adate&quot; type=&quot;date&quot; value=&quot;now&quot;/&gt;
+  &lt;entry  key=&quot;anint&quot; type=&quot;int&quot; operation=&quot;+&quot;/&gt;
+  &lt;entry  key=&quot;formated.int&quot; type=&quot;int&quot; default=&quot;0013&quot; operation=&quot;+&quot; pattern=&quot;0000&quot;/&gt;
+  &lt;entry  key=&quot;formated.date&quot; type=&quot;date&quot; value=&quot;now&quot; pattern=&quot;DDD HH:mm&quot;/&gt;
 &lt;/propertyfile&gt;
-</blockquote></pre>
+</pre></blockquote>
 <p>
-To produce dates relative from today :
-<pre><blockquote>&lt;propertyfile
-    file="my.properties"
-    comment"My properties" &gt;
-  &lt;entry  key="formated.date-1"
-      type="date" default="now" pattern="DDD"
-      operation="-" value="1"/&gt;
-  &lt;entry  key="formated.tomorrow"
-      type="date" default="now" pattern="DDD"
-      operation="+" value="1"/&gt;
+To produce dates relative from today :</p>
+<blockquote><pre>&lt;propertyfile
+    file=&quot;my.properties&quot;
+    comment=&quot;My properties&quot; &gt;
+  &lt;entry  key=&quot;formated.date-1&quot;
+      type=&quot;date&quot; default=&quot;now&quot; pattern=&quot;DDD&quot;
+      operation=&quot;-&quot; value=&quot;1&quot;/&gt;
+  &lt;entry  key=&quot;formated.tomorrow&quot;
+      type=&quot;date&quot; default=&quot;now&quot; pattern=&quot;DDD&quot;
+      operation=&quot;+&quot; value=&quot;1&quot;/&gt;
 &lt;/propertyfile&gt;
-</blockquote></pre>
-</p>
+</pre></blockquote>
+
 <p>
-Concatenation of strings :
-<pre><blockquote>&lt;propertyfile
-    file="my.properties"
-    comment"My properties" &gt;
-  &lt;entry  key="progress" default="" operation="+" value="."/&gt;
+Concatenation of strings :</p>
+<blockquote><pre>&lt;propertyfile
+    file=&quot;my.properties&quot;
+    comment=&quot;My properties&quot; &gt;
+  &lt;entry  key=&quot;progress&quot; default=&quot;&quot; operation=&quot;+&quot; value=&quot;.&quot;/&gt;
 &lt;/propertyfile&gt;
-</blockquote></pre>
-Each time called, a "." will be appended to "progress"
+</pre></blockquote>
+<p>Each time called, a &quot;.&quot; will be appended to &quot;progress&quot;
 </p>
 </body>
 </html>

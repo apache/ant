@@ -32,17 +32,17 @@ The extended fileset attributes from the zip task are also available
 in the jar task.
 See the <a href="zip.html">Zip</a> task for more details and examples.</p>
 <p>If the manifest is omitted, a simple one will be supplied by Ant.
-You should not include <samp>META-INF/MANIFEST.MF</samp> in your set of files.
+You should not include <samp>META-INF/MANIFEST.MF</samp> in your set of files.</p>
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>create</code> (the default), the JAR is created anyway with only a manifest.
 If <code>skip</code>, the JAR is not created and a warning is issued.
-If <code>fail</code>, the JAR is not created and the build is halted with an error.
+If <code>fail</code>, the JAR is not created and the build is halted with an error.</p>
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file. 
 The same thing can be accomplished by using the <i>fullpath</i>
 attribute of a zipfileset in a Zip task. The one difference is that if the
 <i>manifest</i> attribute is not specified, the Jar task will 
 include an empty one for you.)</p>
-</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

@@ -12,7 +12,7 @@
 <p>An extension of the <a href="jar.html">Jar</a> task with special
 treatment for files that should end up in the
 <code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
-<code>WEB-INF</code> directories of the Web Application Archive.
+<code>WEB-INF</code> directories of the Web Application Archive.</p>
 <p>(The War task is a shortcut for specifying the particular layout of a WAR file. 
 The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
 attributes of zipfilesets in a Zip or Jar task.)</p>
@@ -102,7 +102,7 @@ end up in the <code>WEB-INF</code> directory of the war file. If this
 fileset includes a file named <code>web.xml</code>, the file is
 ignored and you will get a warning.</p>
 <h3>Examples</h3>
-<p>Assume the following structure in the project's base directory:
+<p>Assume the following structure in the project's base directory:</p>
 <pre>
 thirdparty/libs/jdbc1.jar
 thirdparty/libs/jdbc2.jar
@@ -123,7 +123,7 @@ then the war file <code>myapp.war</code> created with
   &lt;/lib&gt;
   &lt;classes dir=&quot;build/main&quot;/&gt;
   &lt;zipfileset dir=&quot;src/graphics/images/gifs&quot; 
-              prefix="images"/&gt;
+              prefix=&quot;images&quot;/&gt;
 &lt;/war&gt;
 </pre>
 will consist of

@@ -33,7 +33,7 @@ You will also need the perforce client executable (p4 or p4.exe but not p4win.ex
 
 
 <h2><a name="tasks">The Tasks</a></h2>
-<ul>
+
 <table border="0" cellspacing="0" cellpadding="3">
     <tr>
         <td><a href="#p4sync">P4Sync</a></td>
@@ -42,21 +42,24 @@ You will also need the perforce client executable (p4 or p4.exe but not p4win.ex
     <tr>
         <td><a href="#p4change">P4Change</a></td>
         <td>Request a new changelist from the perforce server</td>
+    </tr>
     <tr>
         <td><a href="#p4edit">P4Edit</a></td>
         <td>Open files for edit (checkout)</td>
+    </tr>
     <tr>
         <td><a href="#p4submit">P4Submit</a></td>
         <td>Submit a changelist to the perforce server (checkin)</td>
+    </tr>
     <tr>
         <td><a href="#p4have">P4Have</a></td>
         <td>List current files in client view, useful for reporting</td>
+    </tr>
     <tr>
         <td><a href="#p4label">P4Label</a></td>
         <td>Create a label reflecting files in the current workspace</td>
     </tr>
 </table>
-</ul>
 
 <h3>General P4 Properties</h3>
 <p>Each p4 task requires a number of settings, either through build-wide properties, individual attributes 
@@ -107,9 +110,9 @@ Your local  installation of perforce may require other settings (e.g. P4PASSWD, 
 <h3>Examples</h3>
 <p>Setting in the environment:-</p>
 <p>
-(Unix csh)
+(Unix csh)</p>
 <pre>setenv P4PORT myperforcebox:1666</pre>
-(Unix sh et al)
+<p>(Unix sh et al)</p>
 <pre>P4USER=myp4userid; export P4USER</pre>
 <p>Using build properties:-</p>
 <pre>&lt;property name=&quot;p4.client&quot; value=&quot;nightlybuild&quot;/&gt;</pre>
@@ -124,14 +127,14 @@ Your local  installation of perforce may require other settings (e.g. P4PASSWD, 
 	.
 /&gt;
 </pre>
-</p>
+
 <p>
 For more information regarding the underlying 'p4' commands you are referred to the Perforce Command Reference
 available from the <a href="http://www.perforce.com/" target="_top">Perforce website</a>.
 </p>
 
 <h3>Taskdefs</h3>
-<p>Standard taskdefs (for you to copy'n'paste)
+<p>Standard taskdefs (for you to copy'n'paste)</p>
 <pre>
     &lt;taskdef name=&quot;p4sync&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Sync&quot; /&gt;
     &lt;taskdef name=&quot;p4change&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Change&quot; /&gt;
@@ -143,10 +146,10 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 
 <hr>
 <h2>Task Descriptions</h2>
-<h2><a name="#p4sync">P4Sync</a></h2>
+<h2><a name="p4sync">P4Sync</a></h2>
 <h3>Description:</h3>
-<p>Synchronise the current workspace with the depot.</p>
-</p>
+<p>Synchronize the current workspace with the depot.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -174,7 +177,7 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 
 
 
-<h2><a name="#p4change">P4Change</a></h2>
+<h2><a name="p4change">P4Change</a></h2>
 <h3>Description:</h3>
 <p>Request a new changelist from the perforce server. 
 This task sets the ${p4.change} property which can then be passed to P4Submit or P4Edit.
@@ -201,7 +204,7 @@ This task sets the ${p4.change} property which can then be passed to P4Submit or
 
 
 
-<h2><a name="#p4edit">P4Edit</a></h2>
+<h2><a name="p4edit">P4Edit</a></h2>
 <h3>Description:</h3>
 <p>Open file(s) for edit. P4Change should be used to obtain a new changelist for P4Edit as,
 although P4Edit can open files to the default change,  P4Submit cannot yet submit it.
@@ -237,7 +240,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 
 
 
-<h2><a name="#p4submit">P4Submit</a></h2>
+<h2><a name="p4submit">P4Submit</a></h2>
 <h3>Description:</h3>
 <p>Submit a changelist, usually obtained from P4Change.
 </p>
@@ -263,7 +266,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 
 
 
-<h2><a name="#p4have">P4Have</a></h2>
+<h2><a name="p4have">P4Have</a></h2>
 <h3>Description:</h3>
 <p>List handy file info reflecting the current client contents.
 </p>
@@ -289,7 +292,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 
 
 
-<h2><a name="#p4label">P4Label</a></h2>
+<h2><a name="p4label">P4Label</a></h2>
 <h3>Description:</h3>
 <p>Create a new label and set contents to reflect current client file revisions.
 </p>
@@ -329,18 +332,18 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 <hr>
 
 
-<h2><a name="#changes">Change History</a></h2>
+<h2><a name="changes">Change History</a></h2>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
     <td valign="top">Sept 2000</td>
     <td valign="top" align="center">--</td>
-    <td valign="top">Internal Release within Rubus<td>
+    <td valign="top">Internal Release within Rubus</td>
 </tr>
 
 <tr>
     <td valign="top">Nov 2000</td>
     <td valign="top">V1.0</td>
-    <td valign="top">Initial Release donated to ASF :-)<td>
+    <td valign="top">Initial Release donated to ASF :-)</td>
 </tr>
 <tr>
     <td valign="top">Jan 2001</td>

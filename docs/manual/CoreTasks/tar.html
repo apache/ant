@@ -12,7 +12,7 @@
 <p>Creates a tar archive.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to tar.</p>
 <p>This task is a <a href="../dirtasks.html#directorybasedtasks">directory based task</a>
-and, as such, forms an implict <a href="../CoreTypes/fileset.html">Fileset</a>. This 
+and, as such, forms an implicit <a href="../CoreTypes/fileset.html">Fileset</a>. This 
 defines which files, relative to the <i>basedir</i>, will be included in the
 archive. The tar task supports all the attributes of Fileset to refine the
 set of files to be included in the implicit fileset.</p>
@@ -31,7 +31,7 @@ the file will be in the archive and that the archive can be untarred by any comp
 tar. If the loss of path information is not acceptable, and it rarely is, longfile may be set to 
 the value <code>gnu</code>. The tar task will then produce a GNU tar file which can have 
 arbitrary length paths. Note however, that the resulting archive will only be able to be untarred 
-with GNU tar.
+with GNU tar.</p>
 
 <p>Note that this task does not perform compression. You might want to use the 
 <a href="gzip.html">GZip</a> task to prepare a .tar.gz package.</p>
@@ -149,7 +149,7 @@ or files with the name <code>todo.html</code> are excluded.</p>
   &lt;/fileset&gt;
 &lt;/tar&gt; </pre>
 
-<p>This example shows building a tar which uses ther GNU extensions for long paths and
+<p>This example shows building a tar which uses the GNU extensions for long paths and
 where some files need to be marked as executable (mode 755)
 and the rest are use the default mode (read-write by owner). The first
 fileset selects just the executable files. The second fileset must exclude
@@ -157,7 +157,7 @@ the executable files and include all others. </p>
 
 <p><strong>Note: </strong> The tar task does not ensure that a file is only selected
 once by one fileset. If the same file is selected by more than one fileset, it will be included in the 
-tar file twice, with the same path.
+tar file twice, with the same path.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights

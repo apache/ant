@@ -9,7 +9,7 @@
 
 <h2><a name="test">Test</a></h2>
 <h3>Description</h3>
-<p>This is a primitive task to execute a unit test in the org.apache.testlet framework.
+<p>This is a primitive task to execute a unit test in the org.apache.testlet framework.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -48,14 +48,14 @@
 </table>
 <p>
 The user can also specify the nested &lt;classpath&gt; element which defines classpath 
-in which the task is executed. The user also specifys a subelement per testlet executed
-which has content that specifies tasklet classname.
+in which the task is executed. The user also specifies a subelement per testlet executed
+which has content that specifies tasklet classname.</p>
 
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;test showSuccess="false" showBanner="false" showTrace="true" forceShowTrace="true"&gt;
-   &lt;classpath refid="test.classpath"/&gt;
+&lt;test showSuccess=&quot;false&quot; showBanner=&quot;false&quot; showTrace=&quot;true&quot; forceShowTrace=&quot;true&quot;&gt;
+   &lt;classpath refid=&quot;test.classpath&quot;/&gt;
    &lt;testlet&gt;org.foo.MyTestlet&lt;testlet/&gt;
    &lt;testlet&gt;org.foo.MyOtherTestlet&lt;testlet/&gt;
 &lt;test/&gt;

@@ -23,7 +23,7 @@ initialization target.</p>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
-  <tr> <td colspan="3"/> No parameters</td>
+  <tr> <td colspan="3"> No parameters</td>
   </tr>
 </table>
 
@@ -31,7 +31,7 @@ initialization target.</p>
 The tstamp task supports a format nested element which allows a property to be
 given the current date and time in a given format. The date/time patterns are as defined in the Java 
 SimpleDateFormat class. 
-<p>
+
 
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -55,11 +55,11 @@ SimpleDateFormat class.
 </table>
 
 <h3>Examples</h3>
-<p> Set the standard DSTAMP, TSTAMP and TODAY properties according to the formats above
+<p> Set the standard DSTAMP, TSTAMP and TODAY properties according to the formats above</p>
 <pre>  &lt;tstamp/&gt;</pre>
 
 <p> As for the above example, set the standard properties and also set the property 
-&quot;TODAY_UK&quot; with the date/time pattern &quot;d MMM yyyy&quot;
+&quot;TODAY_UK&quot; with the date/time pattern &quot;d MMM yyyy&quot;</p>
 
 <pre>  &lt;tstamp&gt;
     &lt;format property=&quot;TODAY_UK&quot; pattern=&quot;d MMMM yyyy&quot;&gt;

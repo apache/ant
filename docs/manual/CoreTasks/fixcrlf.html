@@ -77,16 +77,16 @@ supports all attributes of <code>&lt;fileset&gt;</code>
     <td valign="top">Specifies how carriage return (CR) characters are to
       be handled.  Valid values for this property are:
       <ul>
-      <li>add: ensure that there is a CR before every LF
-      <li>asis: leave CR characters alone
-      <li>remove: remove all CR characters
+      <li>add: ensure that there is a CR before every LF</li>
+      <li>asis: leave CR characters alone</li>
+      <li>remove: remove all CR characters</li>
       </ul>
       Default is based on the platform on which you are running this task.
       For Unix platforms, the default is remove.  For DOS based systems
       (including Windows), the default is add.
       <p>
       Note: Unless this property is specified as &quot;asis&quot;, extra CR characters
-      which do not precede a LF will be removed.
+      which do not precede a LF will be removed.</p>
       </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -95,14 +95,14 @@ supports all attributes of <code>&lt;fileset&gt;</code>
     <td valign="top">Specifies how tab characters are to be handled.  Valid
       values for this property are:
       <ul>
-      <li>add: convert sequences of spaces which span a tab stop to tabs
-      <li>asis: leave tab and space characters alone
-      <li>remove: convert tabs to spaces
+      <li>add: convert sequences of spaces which span a tab stop to tabs</li>
+      <li>asis: leave tab and space characters alone</li>
+      <li>remove: convert tabs to spaces</li>
       </ul>
       Default for this parameter is &quot;asis&quot;.
       <p>
       Note: Unless this property is specified as &quot;asis&quot;, extra spaces and
-      tabs after the last non-whitespace character on the line will be removed.
+      tabs after the last non-whitespace character on the line will be removed.</p>
       </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -117,9 +117,9 @@ supports all attributes of <code>&lt;fileset&gt;</code>
     <td valign="top">Specifies how DOS end of file (control-Z) characters are
       to be handled.  Valid values for this property are:
       <ul>
-      <li>add: ensure that there is an EOF character at the end of the file
-      <li>asis: leave EOF characters alone
-      <li>remove: remove any EOF character found at the end
+      <li>add: ensure that there is an EOF character at the end of the file</li>
+      <li>asis: leave EOF characters alone</li>
+      <li>remove: remove any EOF character found at the end</li>
       </ul>
       Default is based on the platform on which you are running this task.
       For Unix platforms, the default is remove.  For DOS based systems
@@ -134,7 +134,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
        includes=&quot;**/*.sh&quot;
   /&gt;</pre>
 <p>Removes carriage return and eof characters from the shell scripts.  Tabs and
-spaces are left as is.
+spaces are left as is.</p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
        cr=&quot;add&quot;
        includes=&quot;**/*.bat&quot;

@@ -81,7 +81,7 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
 <pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot;/&gt;</pre>
 <p>updates the package/module that has previously been checked out into
 &quot;${ws.dir}&quot;.</p>
-<pre>  &lt;cvs command=&quot;-q diff -u -N&quot; output="patch.txt"/&gt;</pre>
+<pre>  &lt;cvs command=&quot;-q diff -u -N&quot; output=&quot;patch.txt&quot;/&gt;</pre>
 <p>silently (-q) creates a file called patch.txt which contains a unified (-u) diff which includes new files added via &quot;cvs add&quot; (-N) and can be used as input to patch.</p>
 <pre>  &lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
 <p>Updates from the head of repository ignoring sticky bits (-A) and creating any new directories as necessary (-d).</p>

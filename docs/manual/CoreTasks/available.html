@@ -78,7 +78,7 @@ if the file <i>./lib/jaxp11/jaxp.jar</i> is found.</p>
 &lt;property name=&quot;jaxp.jar&quot; value=&quot;./lib/jaxp11/jaxp.jar&quot;/&gt;
 &lt;path id=&quot;jaxp&quot; location=&quot;${jaxp.jar}&quot;/&gt;
 ...in target ...
-&lt;available classname=&quot;javax.xml.transform.Transformer&quot; classpathref="jaxp" property=&quot;jaxp11.present&quot;/&gt;
+&lt;available classname=&quot;javax.xml.transform.Transformer&quot; classpathref=&quot;jaxp&quot; property=&quot;jaxp11.present&quot;/&gt;
 </pre>
 <p>sets the property <code><i>jaxp11.present</i></code> to the value &quot;true&quot;
 if the class <i>javax.xml.transform.Transformer</i> is found in the classpath referenced by <code>jaxp</code> (in this case, it is <code>./lib/jaxp11/jaxp.jar</code>).

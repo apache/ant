@@ -69,17 +69,16 @@ systems.</p>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p>
 <pre>
 &lt;exec dir=&quot;${src}&quot; executable=&quot;cmd.exe&quot; os=&quot;Windows 2000&quot; output=&quot;dir.txt&quot;&gt;
   &lt;arg line=&quot;/c dir&quot;/&gt;
-&lt;/exec&gt;</pre></p>
+&lt;/exec&gt;</pre>
 </blockquote>
 <h3>Parameters specified as nested elements</h3>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
-href="index.html#arg">Command line arguments</a>.</p>
+href="../using.html#arg">Command line arguments</a>.</p>
 <h4><a name="env">env</a></h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements.</p>
@@ -129,12 +128,12 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
 system command.</p>
 <p><b>Note:</b> Although it may work for you to specify arguments using 
-a simple arg-element and seperate them by spaces it may fail if you switch to
+a simple arg-element and separate them by spaces it may fail if you switch to
 a newer version of the JDK. JDK &lt; 1.2 will pass these as separate arguments
 to the program you are calling, JDK &gt;= 1.2 will pass them as a single 
 argument and cause most calls to fail.</p>
 <p><b>Note2:</b> If you are using Ant on Windows and a new DOS-Window pops up
-for every command which is excuted this may be a problem of the JDK you are using.
+for every command which is executed this may be a problem of the JDK you are using.
 This problem may occur with all JDK's &lt; 1.2.</p>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights

@@ -32,7 +32,7 @@ with the following attributes:</p>
   <tr>
     <td valign="top">type</td>
     <td valign="top">specifies one of the built-in implementations.</td>
-    <td align="center" valign="center" rowspan="2">Exactly one of both</td>
+    <td rowspan="2" align="center" valign="middle">Exactly one of both</td>
   </tr>
   <tr>
     <td valign="top">classname</td>
@@ -211,7 +211,7 @@ that don't match the <code>from</code> pattern will be ignored.</p>
   </tr>
   <tr>
     <td valign="top"><code>Classes/dir/dir2/A.properties</code></td>
-    <td valign="top"><code>Qlasses/dir/dir2/A.property</td>
+    <td valign="top"><code>Qlasses/dir/dir2/A.property</code></td>
   </tr>
 </table>
 <h4><a name="regexp-mapper">regexp</a></h4>
@@ -232,13 +232,13 @@ hides the specifics of the library. Ant comes with implementations for
 <a href="http://jakarta.apache.org/regexp/" target="_top">jakarta-regexp</a> and <a
 href="http://jakarta.apache.org/oro/" target="_top">jakarta-ORO</a>. If you compile
 from sources and plan to use one of them, make sure the libraries are
-in your <code>CLASSPATH</code>.</a> For information about using <a
+in your <code>CLASSPATH</code>. For information about using <a
 href="http://www.cacas.org/~wes/java/" target="_top">gnu.regexp</a> or <a
 href="http://www.crocodile.org/~sts/Rex/" target="_top">gnu.rex</a> with Ant, see <a
 href="http://marc.theaimsgroup.com/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
 article.</p>
 <p>Ant will choose the regular-expression library based on the
-following algorithm:
+following algorithm:</p>
 <ul>
 <li>If the system property
 <code>ant.regexp.matcherimpl</code> has been set, it is taken as the
@@ -248,7 +248,7 @@ should be used.</li>
 <li>If it has not been set, first try jakarta-ORO; if that
 cannot be found, try jakarta-regexp.</li>
 </ul>
-</p>
+
 <b>Examples:</b>
 <blockquote><pre>
 &lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)\.java$$&quot; to=&quot;\1.java.bak&quot;/&gt;

@@ -1,5 +1,7 @@
 <html>
 <head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
 </head>
 <body>
 
@@ -9,12 +11,12 @@
 
 <p>Multiple statements can be set and each statement is delimited from the next use a semi-colon. Individual lines within the statements can be commented using either -- or // at the start of the line.</p>
 
-<p>The auto-commit attribute specifies whether auto commit should be turned on or off whilst executing the statements. If auto-commit is turned on each statement will be executed and commited. If it is turned off the statements will all be executed as one transaction.</p>
+<p>The auto-commit attribute specifies whether auto commit should be turned on or off whilst executing the statements. If auto-commit is turned on each statement will be executed and committed. If it is turned off the statements will all be executed as one transaction.</p>
 
-<p>The <i>onerror</i> attribute specifies how to preceed when an error occurs during the execution of one of the statements. 
+<p>The <i>onerror</i> attribute specifies how to proceed when an error occurs during the execution of one of the statements. 
 The possible values are: <b>continue</b> execution, only show the error;
 <b>stop</b> execution and commit transaction;
-and <b>abort</b> execution and transaction and fail task.
+and <b>abort</b> execution and transaction and fail task.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -51,17 +53,17 @@ and <b>abort</b> execution and transaction and fail task.
 <tr>
   <td width="12%" valign="top">autocommit</td>
   <td width="78%" valign="top">Auto commit flag for database connection (default false)</td>
-  <td width="10%" valign="top">No, default "false"</td>
+  <td width="10%" valign="top">No, default &quot;false&quot;</td>
 </tr>
 <tr>
   <td width="12%" valign="top">print</td>
   <td width="78%" valign="top">Print result sets from the statements (default false)</td>
-  <td width="10%" valign="top">No, default "false"</td>
+  <td width="10%" valign="top">No, default &quot;false&quot;</td>
 </tr>
 <tr>
   <td width="12%" valign="top">showheaders</td>
   <td width="78%" valign="top">Print headers for result sets from the statements (default true)</td>
-  <td width="10%" valign="top">No, default "true"</td>
+  <td width="10%" valign="top">No, default &quot;true&quot;</td>
 </tr>
 <tr>
   <td width="12%" valign="top">output</td>
@@ -76,7 +78,7 @@ and <b>abort</b> execution and transaction and fail task.
 <tr>
   <td width="12%" valign="top">onerror</td>
   <td width="78%" valign="top">Action to perform when statement fails: continue, stop, abort</td>
-  <td width="10%" valign="top">No, default "abort"</td>
+  <td width="10%" valign="top">No, default &quot;abort&quot;</td>
 </tr>
 <tr>
   <td width="12%" valign="top">rdbms</td>
@@ -95,7 +97,7 @@ and <b>abort</b> execution and transaction and fail task.
 <p>Use nested <code>&lt;transaction&gt;</code> 
 elements to specify multiple blocks of commands to the executed
 executed in the same connection but different transactions. This
-is particularly usefull when there are multiple files to execute
+is particularly useful when there are multiple files to execute
 on the same schema.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -118,22 +120,22 @@ The
 </p>
 
 <h3>Examples</h3>
-<pre><blockquote>&lt;sql
-    driver="org.database.jdbcDriver"
-    url="jdbc:database-url"
-    userid="sa"
-    password="pass"
-    src="data.sql"
+<blockquote><pre>&lt;sql
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot;
+    src=&quot;data.sql&quot;
 /&gt;
 </pre></blockquote>
 
 <p>Connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the file data.sql</p>
 
 <blockquote><pre>&lt;sql
-    driver="org.database.jdbcDriver"
-    url="jdbc:database-url"
-    userid="sa"
-    password="pass"
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot;
     &gt;
 insert
 into table some_table
@@ -151,10 +153,10 @@ need to escape <code>&lt;</code>, <code>&gt;</code> <code>&amp;</code>
 or other special characters. For example:</p>
 
 <blockquote><pre>&lt;sql
-    driver="org.database.jdbcDriver"
-    url="jdbc:database-url"
-    userid="sa"
-    password="pass"
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot;
     &gt;&lt;![CDATA[
 
 update some_table set column1 = column1 + 1 where column2 &lt; 42;
@@ -164,14 +166,14 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 
 <p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the files data1.sql, data2.sql and data3.sql and then executes the truncate operation on <i>some_other_table</i>.</p>
 
-<pre><blockquote>&lt;sql
-    driver="org.database.jdbcDriver"
-    url="jdbc:database-url"
-    userid="sa"
-    password="pass" &gt;
-  &lt;transaction  src="data1.sql" /&gt;
-  &lt;transaction  src="data2.sql" /&gt;
-  &lt;transaction  src="data3.sql" /&gt;
+<blockquote><pre>&lt;sql
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot; &gt;
+  &lt;transaction  src=&quot;data1.sql&quot; /&gt;
+  &lt;transaction  src=&quot;data2.sql&quot; /&gt;
+  &lt;transaction  src=&quot;data3.sql&quot; /&gt;
   &lt;transaction&gt;
     truncate table some_other_table;
   &lt;/transaction&gt;
@@ -180,31 +182,32 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 
 <p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the file data.sql, with output piped to outputfile.txt, searching /some/jdbc.jar as well as the system classpath for the driver class.</p>
 
-<pre><blockquote>&lt;sql
-    driver="org.database.jdbcDriver"
-    url="jdbc:database-url"
-    userid="sa"
-    password="pass"
-    src="data.sql"
-    print="yes"
-    output="outputfile.txt"
+<blockquote><pre>&lt;sql
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot;
+    src=&quot;data.sql&quot;
+    print=&quot;yes&quot;
+    output=&quot;outputfile.txt&quot;
     &gt;
 &lt;classpath&gt;
-	&lt;pathelement location="/some/jdbc.jar"&gt;
+	&lt;pathelement location=&quot;/some/jdbc.jar&quot;&gt;
 &lt;/classpath&gt;
 &lt;/sql&gt;
 </pre></blockquote>
 
-<p>The following will only execute if the RDBMS is "oracle" and the version starts with "8.1."</p>
+<p>The following will only execute if the RDBMS is &quot;oracle&quot; and the version 
+starts with &quot;8.1.&quot;</p>
 
-<pre><blockquote>&lt;sql
-    driver="org.database.jdbcDriver"
-    url="jdbc:database-url"
-    userid="sa"
-    password="pass"
-    src="data.sql"
-    rdbms="oracle"
-    version="8.1."
+<blockquote><pre>&lt;sql
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot;
+    src=&quot;data.sql&quot;
+    rdbms=&quot;oracle&quot;
+    version=&quot;8.1.&quot;
     &gt;
 insert
 into table some_table

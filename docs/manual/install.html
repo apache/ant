@@ -7,15 +7,6 @@
 
 <body>
 
-<html>
-
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<title>Ant User Manual</title>
-</head>
-
-<body>
-
 <h1>Installing Ant</h1>
 <h2><a name="getting">Getting Ant</a></h2>
 <h3>Binary edition</h3>
@@ -46,7 +37,7 @@ Ant CVS repository</a> on-line. </p>
 <h2><a name="sysrequirements">System Requirements</a></h2>
 <p>
 To build and use Ant, you must have a JAXP-compliant XML parser installed and 
-available on your classpath.
+available on your classpath.</p>
 <p>
 Both the binary and source distributions of Ant include the reference 
 implementation of JAXP 1.0. Please see 
@@ -57,7 +48,7 @@ If you wish to use a different JAXP-compliant parser, you should remove
 from Ant's <code>lib</code> directory.
 
 You can then either put the jars from your preferred parser into Ant's 
-<code>lib</code> directory or put the jars on the system classpath.
+<code>lib</code> directory or put the jars on the system classpath.</p>
 
 <p>
 For the current version of Ant, you will also need a JDK installed on
@@ -79,7 +70,7 @@ To install Ant, choose a directory and copy the distribution
 file there. This directory will be known as ANT_HOME. 
 
 Before you can run ant there is some additional set up you 
-will need to do:
+will need to do:</p>
 <ul>
 <li>Add the <code>bin</code> directory to your path.</li>
 <li>Set the <code>ANT_HOME</code> environment variable to
@@ -97,7 +88,7 @@ for for a list of jar requirements for various optional tasks.
 <p><strong>Note:</strong> Do not install Ant's ant.jar file into the lib/ext
 directory of the JDK/JRE. Ant is an application, whilst the extension 
 directory is intended for JDK extensions. In particular there are security 
-restrictions on the classes which may be loaded by an extension.
+restrictions on the classes which may be loaded by an extension.</p>
 
 <h3>Windows</h3>
 <p>Assume Ant is installed in <code>c:\ant\</code>. The following sets up the
@@ -113,36 +104,35 @@ the environment:</p>
 export JAVA_HOME=/usr/local/jdk-1.2.2
 export PATH=${PATH}:${ANT_HOME}/bin</pre>
 
-<a name="advanced">
-<h3>Advanced</h3>
-</a>
+
+<h3><a name="advanced">Advanced</a></h3>
+
 <p>There are lots of variants that can be used to run Ant. What you need is at
 least the following:</p>
-<blockquote>
-The classpath for Ant must contain <code>ant.jar</code> and any jars/classes 
-needed for your chosen JAXP-compliant XML parser.</p>
-<p>When you need JDK functionality
+<ul>
+<li>The classpath for Ant must contain <code>ant.jar</code> and any jars/classes 
+needed for your chosen JAXP-compliant XML parser.</li>
+<li>When you need JDK functionality
 (such as for the <a href="CoreTasks/javac.html">javac</a> task or the
 <a href="CoreTasks/rmic.html">rmic</a> task), then for JDK 1.1, the <code>classes.zip</code>
 file of the JDK must be added to the classpath; for JDK 1.2 or JDK 1.3, <code>tools.jar</code>
 must be added. The scripts supplied with Ant,
 in the <code>bin</code> directory, will add 
 the required JDK classes automatically, if the <code>JAVA_HOME</code>
-environment variable is set.</p>
+environment variable is set.</li>
 
-<p>When you are executing platform-specific applications, such as the 
+<li>When you are executing platform-specific applications, such as the 
 <a href="CoreTasks/exec.html">exec</a> task or the 
 <a href="CoreTasks/cvs.html">cvs</a> task, the property <code>ant.home</code>
 must be set to the directory containing where you installed Ant. Again
 this is set by the Ant scripts to the value of the ANT_HOME environment
-variable.
-</blockquote>
-
+variable.</li>
+</ul>
 
 <hr>  
 <h2><a name="buildingant">Building Ant</a></h2>
 <p>To build Ant from source, you can either install the Ant source distribution
-or checkout the jakarta-ant module from CVS.
+or checkout the jakarta-ant module from CVS.</p>
 <p>Once you have installed the source, change into the installation
 directory.</p>
 
@@ -176,10 +166,10 @@ make the jars available as described under
 
 <li>If necessary it will bootstrap the Ant code. Bootstrapping involves the manual 
 compilation of enough Ant code to be able to run Ant. The bootstrapped Ant is
-used for the remainder of the build steps. 
+used for the remainder of the build steps. </li>
 
 <li>Invokes the bootstrapped Ant with the parameters passed to the build script. In 
-this case, these paramaters define an Ant property value and specify the "dist" target
+this case, these parameters define an Ant property value and specify the &quot;dist&quot; target
 in Ant's own <code>build.xml</code> file.
 </ul>
 
@@ -204,7 +194,7 @@ You can avoid the lengthy Javadoc step, if desired, with:
 This will only install the <code>bin</code> and <code>lib</code> directories. 
 <p>Both the <code>install</code> and 
 <code>install-lite</code> targets will overwrite 
-the current Ant version in <code>ANT_HOME</code>.
+the current Ant version in <code>ANT_HOME</code>.</p>
 
 <hr>
 <h2><a name="running">Running Ant</a></h2>
@@ -212,7 +202,7 @@ the current Ant version in <code>ANT_HOME</code>.
 section. Just type <code>ant</code>.</p>
 <p>When nothing is specified, Ant looks for a <code>build.xml</code>
 file in the current directory. If found, it uses that file as the
-buildfile. If you use the <nobr><code>-find</code></nobr> option,
+buildfile. If you use the <code>-find</code> option,
 Ant will search for a buildfile in 
 the parent directory, and so on, until the root of the filesystem 
 has been reached. To make Ant use
@@ -227,7 +217,7 @@ the <nobr><code>-D<i>property</i>=<i>value</i></code></nobr> option,
 where <i>property</i> is the name of the property,
 and <i>value</i> is the value for that property.
 This can also be used to pass in the value of some environment variables.
-You can also access environment valiables using the <a href="CoreTasks/property.html">
+You can also access environment variables using the <a href="CoreTasks/property.html">
 property</a> task.
 
 Just pass <nobr><code>-DMYVAR=%MYVAR%</code></nobr> (Windows) or
@@ -299,11 +289,11 @@ with:</p>
 
 <p>These instructions actually do exactly the same as the <code>ant</code>
 command. The options and target are the same as when running Ant with the <code>ant</code>
-command. This example assumes you have set your classpath to include:
+command. This example assumes you have set your classpath to include:</p>
 <ul>
-<li><code>ant.jar</code>
-<li>jars/classes for your XML parser
-<li>the JDK's required jar/zip files
+<li><code>ant.jar</code></li>
+<li>jars/classes for your XML parser</li>
+<li>the JDK's required jar/zip files</li>
 </ul>
 <hr>
 <h2><a name="librarydependencies">Library Dependencies</a></h2>

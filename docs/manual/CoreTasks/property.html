@@ -28,7 +28,7 @@ project.</p>
     file used in the class java.util.Properties.</li>
   <li>By setting the <i>environment</i> attribute with a prefix to use.
     Properties will be defined for every environment variable by
-    prefixing the suplied name and a period to the name of the variable.</li>
+    prefixing the supplied name and a period to the name of the variable.</li>
 </ul>
 <p>Although combinations of the three ways are possible, only one should be used
 at a time. Problems might occur with the order in which properties are set, for
@@ -78,11 +78,12 @@ This also holds for properties loaded from a property file.</p>
   <tr>
     <td valign="top">environment</td>
     <td valign="top">the prefix to use when retrieving environment variables. Thus
-    if you specify environment="myenv" you will be able to access OS-specific 
-    environment variables via property names "myenv.PATH" or "myenv.TERM". Note
-    that if you supply a property name with a final "." it will not be doubled. ie
-    environment="myenv." will still allow access of environment variables through
-    "myenv.PATH" and "myenv.TERM". This functionality is currently only implemented 
+    if you specify environment=&quot;myenv&quot; you will be able to access OS-specific 
+    environment variables via property names &quot;myenv.PATH&quot; or 
+	&quot;myenv.TERM&quot;. Note that if you supply a property name with a final 
+	&quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still 
+	allow access of environment variables through &quot;myenv.PATH&quot; and 
+	&quot;myenv.TERM&quot;. This functionality is currently only implemented 
     on select platforms. Feel free to send patches to increase the number of platforms
     this functionality is supported on ;)</td>
   </tr>
@@ -112,7 +113,7 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 <pre>  &lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
 <p>Note that you can reference a global properties file for all of your Ant
-builds using the following:
+builds using the following:</p>
 <pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot;/&gt;</pre>
 <p>since the &quot;user.home&quot; property is defined by the Java virtual machine
 to be your home directory.  This technique is more appropriate for Unix than 

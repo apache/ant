@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Depend</a></h2>
+<h2>Depend</h2>
 
 A task to manage Java class file dependencies.
 
@@ -72,11 +72,11 @@ author's machine using JDK1.3 </p>
   </tr>
   <tr>
     <td>Running &lt;depend&gt; when up-to-date and no cache</td>
-    <td>4 seconds (Depend takes 2 seconds)
+    <td>4 seconds (Depend takes 2 seconds)</td>
   </tr>
   <tr>
     <td>Running &lt;depend&gt; when up-to-date and with a cache</td>
-    <td>2 seconds (Depend takes 1 seconds)
+    <td>2 seconds (Depend takes 1 seconds)</td>
   </tr>
 </table>
 
@@ -92,13 +92,13 @@ your classes are. </p>
 
 <ul>
 <li>If the Java compiler optimizes away a class relationship, 
-    there can be a source dependency without a class dependency. 
+    there can be a source dependency without a class dependency. </li>
     
 <li>Non public classes cause two problems. Firstly depend cannot relate
     the class file to a source file. In the future this may be addressed
     using the source file attribute in the classfile. Secondly, neither 
     depend nor the compiler tasks can detect when a non public class is
-    missing. Inner classes are handled by the depend task.
+    missing. Inner classes are handled by the depend task.</li>
 </ul>
 
 

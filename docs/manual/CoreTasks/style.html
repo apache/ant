@@ -36,7 +36,7 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   </tr>
   <tr>
     <td valign="top">basedir</td>
-    <td valign="top">where to find the source xml file.</td>
+    <td valign="top">where to find the source XML file.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
@@ -103,7 +103,7 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   </tr>
   <tr>
     <td valign="top">out</td>
-    <td valign="top">specifies the output name for the sytled result from the 
+    <td valign="top">specifies the output name for the styled result from the 
       in attribute.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -132,18 +132,15 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p>
   <pre>
 &lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
        extension=&quot;html&quot; style=&quot;style/apache.xsl&quot;/&gt;</pre>
-  <h4><br>
-    Using XSL parameters<br>
-  </h4>
+  <h4>Using XSL parameters</h4>
   <pre>&lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
 		extension=&quot;html&quot; style=&quot;style/apache.xsl&quot;&gt;
 	&lt;param name=&quot;date&quot; expression=&quot;'07-01-2000'&quot;/&gt;
 &lt;/style&gt;</pre>
-  <p>This will replace an xsl:param definition&lt;xsl:param name="date"&gt;&lt;/xsl:param&gt; 
+  <p>This will replace an xsl:param definition&lt;xsl:param name=&quot;date&quot;&gt;&lt;/xsl:param&gt; 
     with the text value 07-01-2000 </p>
   </blockquote>
 <hr>

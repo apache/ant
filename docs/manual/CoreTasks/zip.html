@@ -20,7 +20,7 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. 
+inclusion/exclusion of files works, and how to write patterns. </p>
 <p>This task forms an implicit <a href="../CoreTypes/fileset.html">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
@@ -109,7 +109,7 @@ with that path in the archive. If the <i>fullpath</i> attribute is set, the file
 exact location in the archive. (The <i>fullpath</i> attribute can only be set for filesets that represent a single file. The <i>prefix</i> and <i>fullpath</i> attributes cannot both be set on the same fileset.)  The <i>src</i> attribute
 may be used in place of the <i>dir</i> attribute to specify a zip file whose
 contents will be extracted and included in the archive.  As with directories, include and exclude patterns may be used to specify a subset of the zip file
-for inclusion in the archive.
+for inclusion in the archive.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
@@ -144,12 +144,13 @@ it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
   &lt;/zip&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory
 in the archive, adds the file <code>ChangeLog27.txt</code> in the
-current directory as <code>docs/ChangeLog.txt</code>, and includes all the html files in <code>examples.zip</code> under <code>docs/examples</code>.  The archive might end up containing the files:
+current directory as <code>docs/ChangeLog.txt</code>, and includes all the html files in <code>examples.zip</code> 
+under <code>docs/examples</code>.  The archive might end up containing the files:</p>
 <pre><code>    docs/user-guide/html/index.html
     docs/ChangeLog.txt
     docs/examples/index.html
 </code></pre>
-</p>
+
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights

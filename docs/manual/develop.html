@@ -32,6 +32,7 @@ boolean &#150; your method will be passed the value
 </li>
 <li>
 <code>Class</code>
+</li>
 <li>
 <code>File</code>
 (in which case the value of the attribute is interpreted relative to the 
@@ -42,6 +43,7 @@ any other type that has a constructor with a single
 <code>String</code> argument
 </li>
 </ul>
+</li>
 <li>If your task has enumerated attributes, you should consider using
 a subclass of <code>org.apache.tools.ant.types.EnumeratedAttribute</code>
 as an argument
@@ -58,7 +60,7 @@ an <code>Object</code> type. The name of the create method must begin with
 a <code>public void</code> method that takes a single argument of an 
 <code>Object</code> type with a no-argument constructor.
 The name of the add method 
-must begin with <code>add</code>, followed by the element name.
+must begin with <code>add</code>, followed by the element name.</li>
 <li>Write a <code>public void execute</code> method, with no arguments, that
 throws a <code>BuildException</code>. This method implements the task
 itself.</li>
@@ -166,31 +168,32 @@ package. Then you can use it as if it were a built-in task.</p>
 
 <hr>
 <h2><a name="buildevents">Build Events</a></h2>
-Ant is capable of generating build events as it performs the tasks necessary to build a project. 
+<P>Ant is capable of generating build events as it performs the tasks necessary to build a project. 
 Listeners can be attached to Ant to receive these events. This capability could be used, for example,
 to connect Ant to a GUI or to integrate Ant with an IDE. 
-
+</P>
 <p>To use build events you need to create an ant <code>Project</code> object. You can then call the 
 <code>addBuildListener</code> method to add your listener to the project. Your listener must implement
 the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive BuildEvents 
-for the following events
+for the following events</P>
 <ul>
-<li>Build started
-<li>Build finished
-<li>Target started
-<li>Target finished
-<li>Task started
-<li>Task finished
-<li>Message logged
+<li>Build started</li>
+<li>Build finished</li>
+<li>Target started</li>
+<li>Target finished</li>
+<li>Task started</li>
+<li>Task finished</li>
+<li>Message logged</li>
 </ul>
 
+<p>
 If you wish to attach a listener from the command line you may use the
-<code>-listener</code> option. For example:
+<code>-listener</code> option. For example:</p>
 <blockquote>
   <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
 </blockquote>
-will run Ant with a listener that generates an XML representation of the build progress. This 
-listener is included with Ant, as is the default listener, which generates the logging to standard output.
+<p>will run Ant with a listener that generates an XML representation of the build progress. This 
+listener is included with Ant, as is the default listener, which generates the logging to standard output.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights

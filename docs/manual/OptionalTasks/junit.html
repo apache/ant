@@ -25,24 +25,24 @@ elements</a>.</p>
   <tr>
     <td valign="top">printsummary</td> 
     <td valign="top">Print one line statistics for each testcase.</td>
-    <td align="center" valign="top">No, default is "off"</td>
+    <td align="center" valign="top">No, default is &quot;off&quot;</td>
   </tr>
   <tr>
     <td valign="top">fork</td> 
     <td valign="top">Run the tests in a separate VM.</td>
-    <td align="center" valign="top">No, default is "off"</td>
+    <td align="center" valign="top">No, default is &quot;off&quot;</td>
   </tr>
   <tr>
     <td valign="top">haltonerror</td> 
     <td valign="top">Stop the build process if an error occurs during the test
        run.</td>
-    <td align="center" valign="top">No, default is "off"</td>
+    <td align="center" valign="top">No, default is &quot;off&quot;</td>
   </tr>
   <tr>
     <td valign="top">haltonfailure</td> 
     <td valign="top">Stop the build process if a test fails (errors are 
       considered failures as well).</td>
-    <td align="center" valign="top">No, default is "off"</td>
+    <td align="center" valign="top">No, default is &quot;off&quot;</td>
   </tr>
   <tr>
     <td valign="top">timeout</td> 
@@ -75,7 +75,7 @@ elements</a>.</p>
 <h3><a name="nested">Nested Elements</a></h3>
 
 <p><code>junit</code> supports a nested <code>&lt;classpath&gt;</code>
-element, that represents a <a href="index.html#path">PATH like
+element, that represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 
 <h4>jvmarg</h4>
@@ -83,31 +83,31 @@ structure</a>.</p>
 <p>If fork is enabled, additional parameters may be passed to the new
 VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:</p>
 
-<pre><blockquote>
+<blockquote><pre>
 &lt;junit fork=&quot;yes&quot;&gt;
   &lt;jvmarg value=&quot;-Djava.compiler=NONE&quot;/&gt;
   ...
 &lt;/junit&gt;
-</blockquote></pre>
-would run the test in a VM without JIT.</p>
+</pre></blockquote>
+<p>would run the test in a VM without JIT.</p>
 
 <p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
-href="index.html#arg">Command line arguments</a>.</p>
+href="../using.html#arg">Command line arguments</a>.</p>
 
 <h4>sysproperty</h4>
 
 <p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify system
 properties required by the class. These properties will be made available
 to the VM during the execution of the test (either ANT's VM or the forked VM).
-The attributes for this element are the same as for <a href="index.html#env">environment variables</a>.
+The attributes for this element are the same as for <a href="../CoreTasks/exec.html#env">environment variables</a>.</p>
 
-<pre><blockquote>
+<blockquote><pre>
 &lt;junit fork=&quot;no&quot;&gt;
   &lt;sysproperty key=&quot;basedir&quot; value=&quot;${basedir}&quot;/&gt;
   ...
 &lt;/junit&gt;
-</blockquote></pre>
-would run the test in ANT's VM and make the <code>basedir</code> property
+</pre></blockquote>
+<p>would run the test in ANT's VM and make the <code>basedir</code> property
 available to the test.</p>
 
 
@@ -117,7 +117,7 @@ available to the test.</p>
 formats. Output will always be sent to a file unless you set the
 usefile attribute to false, the name of the file is determined by the
 name of the test and can be set by the <code>outfile</code> attribute
-of <code>&lt;test&gt;</code>.
+of <code>&lt;test&gt;</code>.</p>
 
 <p>There are two predefined formatters, one prints the test results in
 XML format, the other emits plain text. Custom formatters that need to
@@ -133,7 +133,7 @@ can be specified.</p>
 </tr>
   <tr>
     <td valign="top">type</td> 
-    <td valign="top">Use a predefined formatter (either "xml" or "plain").</td>
+    <td valign="top">Use a predefined formatter (either &quot;xml&quot; or &quot;plain&quot;).</td>
     <td align="center" rowspan="2">Exactly one of these.</td>
   </tr>
   <tr>
@@ -271,19 +271,19 @@ generates a test class name for each file that ends in
 <code>&lt;formatter&gt;</code> elements.</p>
 
 <h3>Examples</h3>
-<pre><blockquote>
+<blockquote><pre>
 &lt;junit&gt;
-  &lt;test name="my.test.TestCase" /&gt;
+  &lt;test name=&quot;my.test.TestCase&quot; /&gt;
 &lt;/junit&gt;
 </pre></blockquote>
 
 <p>Runs the test defined in <code>my.test.TestCase</code> in the same
 VM. No output will be generated unless the test fails.</p>
 
-<pre><blockquote>
-&lt;junit printsummary="yes" fork="yes" haltonfailure="yes"&gt;
-  &lt;formatter type="plain" /&gt;
-  &lt;test name="my.test.TestCase" /&gt;
+<blockquote><pre>
+&lt;junit printsummary=&quot;yes&quot; fork=&quot;yes&quot; haltonfailure=&quot;yes&quot;&gt;
+  &lt;formatter type=&quot;plain&quot; /&gt;
+  &lt;test name=&quot;my.test.TestCase&quot; /&gt;
 &lt;/junit&gt;
 </pre></blockquote>
 
@@ -293,23 +293,23 @@ printed. A detailed report of the test can be found in
 <code>TEST-my.test.TestCase.txt</code>. The build process will be
 stopped if the test fails.</p>
 
-<pre><blockquote>
-&lt;junit printsummary="yes" haltonfailure="yes"&gt;
+<blockquote><pre>
+&lt;junit printsummary=&quot;yes&quot; haltonfailure=&quot;yes&quot;&gt;
   &lt;classpath&gt;
-    &lt;pathelement location="${build.tests}" /&gt;
-    &lt;pathelement path="${java.class.path}" /&gt;
+    &lt;pathelement location=&quot;${build.tests}&quot; /&gt;
+    &lt;pathelement path=&quot;${java.class.path}&quot; /&gt;
   &lt;/classpath&gt;
 
-  &lt;formatter type="plain" /&gt;
+  &lt;formatter type=&quot;plain&quot; /&gt;
 
-  &lt;test name="my.test.TestCase" haltonfailure="no" outfile="result" &gt;
-    &lt;formatter type="xml" /&gt;
+  &lt;test name=&quot;my.test.TestCase&quot; haltonfailure=&quot;no&quot; outfile=&quot;result&quot; &gt;
+    &lt;formatter type=&quot;xml&quot; /&gt;
   &lt;/test&gt;
 
-  &lt;batchtest fork="yes" todir="${reports.tests}"&gt;
-    &lt;fileset dir="${src.tests}"&gt;
-      &lt;include name="**/*Test*.java" /&gt;
-      &lt;exclude name="**/AllTests.java" /&lt;
+  &lt;batchtest fork=&quot;yes&quot; todir=&quot;${reports.tests}&quot;&gt;
+    &lt;fileset dir=&quot;${src.tests}&quot;&gt;
+      &lt;include name=&quot;**/*Test*.java&quot; /&gt;
+      &lt;exclude name=&quot;**/AllTests.java&quot; /&lt;
     &lt;/fileset&gt;
   &lt;/batchtest&gt;
 &lt;/junit&gt;

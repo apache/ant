@@ -16,7 +16,7 @@ sound-file to play, or, if a directory is specified, the
 Note: At this point, the random selection is based on all the files
 in the directory, not just those ending in appropriate suffixes
 for sound-files, so be sure you only have sound-files in the 
-directory you specify.
+directory you specify.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -43,7 +43,7 @@ directory you specify.
 <p>
 To specify the sound-files or the sound-file directories, use the
 nested <code>&lt;success&gt;</code> and <code>&lt;fail&gt;</code> 
-elements:
+elements:</p>
 <blockquote>
 <pre>
 &lt;success&gt;     the path to a sound-file directory, or the name of a
@@ -56,12 +56,12 @@ elements:
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;target name="fun" if="fun" unless="fun.done"&gt;
-  &lt;sound loops="2"&gt;
-    &lt;success source="${user.home}/sounds/bell.wav"/&gt;
-    &lt;fail source="${user.home}/sounds/ohno.wav"/&gt;
+&lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
+  &lt;sound loops=&quot;2&quot;&gt;
+    &lt;success source=&quot;${user.home}/sounds/bell.wav&quot;/&gt;
+    &lt;fail source=&quot;${user.home}/sounds/ohno.wav&quot;/&gt;
   &lt;/sound&gt;
-  &lt;property name="fun.done" value="true"/&gt;
+  &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;
 </pre>
 </blockquote>
@@ -75,12 +75,12 @@ targets depend on, the
 more than once.
 <blockquote>
 <pre>
-&lt;target name="fun" if="fun" unless="fun.done"&gt;
+&lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
   &lt;sound>
-    &lt;success source="//intranet/sounds/success"/&gt;
-    &lt;fail source="//intranet/sounds/failure"/&gt;
+    &lt;success source=&quot;//intranet/sounds/success&quot;/&gt;
+    &lt;fail source=&quot;//intranet/sounds/failure&quot;/&gt;
   &lt;/sound&gt;
-  &lt;property name="fun.done" value="true"/&gt;
+  &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;
 </pre>
 </blockquote>
