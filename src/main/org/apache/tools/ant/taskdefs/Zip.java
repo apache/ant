@@ -115,6 +115,12 @@ public class Zip extends MatchingTask {
     private boolean roundUp = true;
 
     /**
+     * Comment for the archive.
+     * @since Ant 1.6.3
+     */
+    private String comment = "";
+
+    /**
      * This is the name/location of where to
      * create the .zip file.
      *
@@ -289,6 +295,26 @@ public class Zip extends MatchingTask {
      */
     public void setKeepCompression(boolean keep) {
         keepCompression = keep;
+    }
+    
+    /**
+     * Comment to use for archive.
+     *
+     * @param comment The content of the comment.
+     * @since Ant 1.6.3
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
+     * Comment of the archive
+     *
+     * @return Comment of the archive.
+     * @since Ant 1.6.3
+     */
+    public String getComment() {
+        return comment;
     }
 
     /**
@@ -484,6 +510,7 @@ public class Zip extends MatchingTask {
                     }
                     addResources(oldFiles, r, zOut);
                 }
+                zOut.setComment(comment);
                 finalizeZipOutputStream(zOut);
 
                 // If we've been successful on an update, delete the

@@ -182,6 +182,9 @@ Other changes:
   silently ignores the message.  BuildListeners still should avoid
   accessing either stream.
 
+* Added a comment attribute to the zip task.
+  Bugzilla report 22793.
+
 Fixed bugs:
 -----------
 
