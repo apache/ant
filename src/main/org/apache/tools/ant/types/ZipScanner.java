@@ -259,9 +259,9 @@ public class ZipScanner extends DirectoryScanner {
                 throw new BuildException("problem opening " + srcFile, ex);
             }
 
-            Enumeration enum = zf.getEntries();
-            while (enum.hasMoreElements()) {
-                entry = (ZipEntry) enum.nextElement();
+            Enumeration e = zf.getEntries();
+            while (e.hasMoreElements()) {
+                entry = (ZipEntry) e.nextElement();
                 myentries.put(new String(entry.getName()),
                               new Resource(entry.getName(), true,
                                            entry.getTime(),

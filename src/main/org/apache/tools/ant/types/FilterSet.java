@@ -324,14 +324,14 @@ public class FilterSet extends DataType implements Cloneable {
               in = new FileInputStream(filtersFile);
               props.load(in);
 
-              Enumeration enum = props.propertyNames();
+              Enumeration e = props.propertyNames();
               Vector filters = getFilters();
-              while (enum.hasMoreElements()) {
-                 String strPropName = (String) enum.nextElement();
+              while (e.hasMoreElements()) {
+                 String strPropName = (String) e.nextElement();
                  String strValue = props.getProperty(strPropName);
                  filters.addElement(new Filter(strPropName, strValue));
               }
-           } catch (Exception e) {
+           } catch (Exception ex) {
               throw new BuildException("Could not read filters from file: "
                 + filtersFile);
            } finally {

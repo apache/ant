@@ -466,9 +466,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
             return true;
         }
 
-        Enumeration enum = additionalPatterns.elements();
-        while (enum.hasMoreElements()) {
-            PatternSet ps = (PatternSet) enum.nextElement();
+        Enumeration e = additionalPatterns.elements();
+        while (e.hasMoreElements()) {
+            PatternSet ps = (PatternSet) e.nextElement();
             if (ps.hasPatterns(getProject())) {
                 return true;
             }

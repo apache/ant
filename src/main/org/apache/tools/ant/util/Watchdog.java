@@ -90,9 +90,9 @@ public class Watchdog implements Runnable {
     }
 
     protected final void fireTimeoutOccured() {
-        Enumeration enum = observers.elements();
-        while (enum.hasMoreElements()) {
-            ((TimeoutObserver) enum.nextElement()).timeoutOccured(this);
+        Enumeration e = observers.elements();
+        while (e.hasMoreElements()) {
+            ((TimeoutObserver) e.nextElement()).timeoutOccured(this);
         }
     }
 

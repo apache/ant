@@ -265,21 +265,21 @@ public class PropertySet extends DataType {
                 }
             } else if (ref.builtin != null) {
 
-                Enumeration enum = null;
+                Enumeration e2 = null;
                 if (ref.builtin.equals(BuiltinPropertySetName.ALL)) {
-                    enum = properties.keys();
+                    e2 = properties.keys();
                 } else if (ref.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
-                    enum = System.getProperties().keys();
+                    e2 = System.getProperties().keys();
                 } else if (ref.builtin.equals(BuiltinPropertySetName
                                               .COMMANDLINE)) {
-                    enum = getProject().getUserProperties().keys();
+                    e2 = getProject().getUserProperties().keys();
                 } else {
                     throw new BuildException("Impossible: Invalid builtin "
                                              + "attribute!");
                 }
 
-                while (enum.hasMoreElements()) {
-                    names.addElement(enum.nextElement());
+                while (e2.hasMoreElements()) {
+                    names.addElement(e2.nextElement());
                 }
 
             } else {

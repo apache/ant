@@ -141,8 +141,8 @@ public class CommandlineJava implements Cloneable {
                 }
             }
             Properties propertySets = mergePropertySets();
-            for (Enumeration enum = propertySets.keys(); enum.hasMoreElements();) {
-                String key = (String) enum.nextElement();
+            for (Enumeration e = propertySets.keys(); e.hasMoreElements();) {
+                String key = (String) e.nextElement();
                 String value = propertySets.getProperty(key);
                 listIt.add("-D" + key + "=" + value);
             }

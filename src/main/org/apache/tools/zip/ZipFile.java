@@ -429,9 +429,9 @@ public class ZipFile {
      */
     private void resolveLocalFileHeaderData()
         throws IOException {
-        Enumeration enum = getEntries();
-        while (enum.hasMoreElements()) {
-            ZipEntry ze = (ZipEntry) enum.nextElement();
+        Enumeration e = getEntries();
+        while (e.hasMoreElements()) {
+            ZipEntry ze = (ZipEntry) e.nextElement();
             long offset = ((Long) entries.get(ze)).longValue();
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
             byte[] b = new byte[2];
