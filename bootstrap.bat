@@ -20,6 +20,8 @@ echo ... Bootstrapping Ant Distribution
 
 if     "%OS%" == "Windows_NT" if exist bootstrap rmdir/s/q bootstrap
 if not "%OS%" == "Windows_NT" if exist bootstrap deltree/y bootstrap
+if     "%OS%" == "Windows_NT" if exist build\classes rmdir/s/q build\classes
+if not "%OS%" == "Windows_NT" if exist build\classes deltree/y build\classes
 
 SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;lib\optional\junit.jar
 
