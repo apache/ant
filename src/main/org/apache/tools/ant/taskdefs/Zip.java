@@ -150,9 +150,11 @@ public class Zip extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType))
+        if (baseDir == null && filesets.size() == 0 && 
+            locFileSets.size() == 0 && "zip".equals(archiveType)) {
             throw new BuildException( "basedir attribute must be set, or at least " + 
-                                      "one fileset must be given!" );
+                                      "one fileset or prefixedfileset must be given!" );
+        }
 
         if (zipFile == null) {
             throw new BuildException("You must specify the " + archiveType + " file to create!");
@@ -178,6 +180,7 @@ public class Zip extends MatchingTask {
         log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
         try {
+            boolean success = false;
             ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
             try {
                 if (doCompress) {
@@ -191,9 +194,24 @@ public class Zip extends MatchingTask {
             
                 for (int j = 0; j < dssSize; j++) {
                     addFiles(scanners[j], zOut, "");
+ 
+                success = true;
                 }
             } finally {
-                zOut.close ();
+                // Close the output stream.
+                try {
+                    if (zOut != null)
+                        zOut.close ();
+                } catch(IOException ex) {
+                    // If we're in this finally clause because of an exception, we don't 
+                    // really care if there's an exception when closing the stream. E.g. if it
+                    // throws "ZIP file must have at least one entry", because an exception happened
+                    // before we added any files, then we must swallow this exception. Otherwise,
+                    // the error that's reported will be the close() error, which is not the real 
+                    // cause of the problem.
+                    if (success)
+                        throw ex;
+                }
             }
         } catch (IOException ioe) {
             String msg = "Problem creating " + archiveType + ": " + ioe.getMessage();
@@ -473,7 +491,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Iterate over the given Vector of relocatablefilesets and add
+     * Iterate over the given Vector of prefixedfilesets and add
      * all files to the ZipOutputStream using the given prefix.
      */
     protected void addPrefixedFiles(Vector v, ZipOutputStream zOut)
@@ -487,7 +505,10 @@ public class Zip extends MatchingTask {
                 && !prefix.endsWith("\\")) {
                 prefix += "/";
             }
-            zipDir(null, zOut, prefix);
+            if (prefix.length() > 0) {
+                addParentDirs(null, prefix, zOut, "");
+                zipDir(null, zOut, prefix);
+            }
             addFiles(ds, zOut, prefix);
         }
     }
