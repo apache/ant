@@ -74,6 +74,20 @@ public class Java extends Task {
     private boolean incompatibleWithSpawn = false;
 
     /**
+     * Normal constructor
+     */
+    public Java() {
+    }
+
+    /**
+     * create a bound task
+     * @param owner owner
+     */
+    public Java(Task owner) {
+        bindToOwner(owner);
+    }
+
+    /**
      * Do the execution.
      * @throws BuildException if failOnError is set to true and the application
      * returns a nonzero result code.

@@ -24,6 +24,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
@@ -71,6 +72,24 @@ public class ExecTask extends Task {
      * command
      */
     private boolean vmLauncher = true;
+
+
+    /**
+     * Create an instance.
+     * Needs to be configured by binding to a project.
+     */
+    public ExecTask() {
+    }
+
+    /**
+     * create an instance that is helping another task.
+     * Project, OwningTarget, TaskName and description are all
+     * pulled out
+     * @param owner task that we belong to
+     */
+    public ExecTask(Task owner) {
+        bindToOwner(owner);
+    }
 
     /**
      * Set whether or not you want the process to be spawned.
