@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.Iterator;
 
@@ -395,6 +396,19 @@ public class DirectoryScannerTest extends BuildFileTest {
                                         "delta/delta.xml"},
                      new String[] {"", "alpha/beta", "alpha/beta/gamma", "delta"});
 
+    }
+
+    public void testIsExcludedDirectoryScanned() {
+        getProject().executeTarget("children-of-excluded-dir-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setExcludes(new String[] {"**/gamma/**"});
+        ds.setFollowSymlinks(false);
+        ds.scan();
+        Set set = ds.getScannedDirs();
+        assertFalse("empty set", set.isEmpty());
+        String s = "alpha/beta/gamma/".replace('/', File.separatorChar);
+        assertFalse("scanned " + s, set.contains(s));
     }
 
     private void compareFiles(DirectoryScanner ds, String[] expectedFiles,

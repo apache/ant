@@ -920,6 +920,7 @@ public class DirectoryScanner
         dirsExcluded     = new Vector();
         dirsDeselected   = new Vector();
         everythingIncluded = (basedir != null);
+        scannedDirs.clear();
     }
 
     /**
@@ -1118,7 +1119,7 @@ public class DirectoryScanner
             dirsDeselected.addElement(name);
         }
         everythingIncluded &= included;
-        if (fast && couldHoldIncluded(name)) {
+        if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name + File.separator, fast);
         }
     }
@@ -1204,6 +1205,22 @@ public class DirectoryScanner
             }
         }
         return true;
+    }
+
+    /**
+     * Test whether all contents of the specified directory must be excluded.
+     * @param name the directory name to check.
+     */
+    private boolean contentsExcluded(String name) {
+        name = (name.endsWith(File.separator)) ? name : name + File.separator;
+        for (int i = 0; i < excludes.length; i++) {
+            String e = excludes[i];
+            if (e.endsWith(File.separator + "**") && SelectorUtils.matchPath(
+                e.substring(0, e.length() - 2), name, isCaseSensitive())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1566,13 +1583,21 @@ public class DirectoryScanner
     }
 
     /**
+     * This method is of interest for testing purposes.  The returned
+     * Set is live and should not be modified.
+     * @return the Set of relative directory names that have been scanned.
+     */
+    public Set getScannedDirs() {
+        return scannedDirs;
+    }
+
+    /**
      * Clear internal caches.
      *
      * @since Ant 1.6
      */
     private synchronized void clearCaches() {
         fileListMap.clear();
-        scannedDirs.clear();
         includeNonPatterns.clear();
         excludeNonPatterns.clear();
         includePatterns = null;
