@@ -12,13 +12,6 @@ Fixed bugs:
 
 * <whichresource> failed to load classes correctly.
 
-* replacestring tokenfilter only replaced the first occurrence.
-
-* AntLikeTasksAtTopLevelTest failed on cygwin.
-
-* I/O-intensive processes hung when executed via <exec spawn="true">.
-  Bugzilla reports 23893/26852.
-
 Other changes:
 --------------
 
@@ -125,6 +118,13 @@ Fixed bugs:
 
 * UNC pathnames did not work for ANT_HOME or -lib locations on Windows.
   Bugzilla report 27922.
+
+* replacestring tokenfilter only replaced the first occurrence.
+
+* AntLikeTasksAtTopLevelTest failed on cygwin.
+
+* I/O-intensive processes hung when executed via <exec spawn="true">.
+  Bugzilla reports 23893/26852.
 
 Other changes:
 --------------
