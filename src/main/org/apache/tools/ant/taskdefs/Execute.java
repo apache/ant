@@ -89,18 +89,21 @@ public class Execute {
     private Project project = null;
     private boolean newEnvironment = false;
 
+    /** Controls whether the VM is used to launch commands, where possible */
+    private boolean useVMLauncher = true;    
+    
     private static String antWorkingDirectory = System.getProperty("user.dir");
-    private static CommandLauncher launcher = createCommandLauncher();
+    private static CommandLauncher vmLauncher = null;
+    private static CommandLauncher shellLauncher = null;
     private static Vector procEnvironment = null;
 
     /** 
      * Builds a command launcher for the OS and JVM we are running under
      */
-    private static CommandLauncher createCommandLauncher()
-    {
+    static {
         // Try using a JDK 1.3 launcher
         try {
-            return new Java13CommandLauncher();
+            vmLauncher = new Java13CommandLauncher();
         }
         catch ( NoSuchMethodException exc ) {
             // Ignore and keep try
@@ -109,11 +112,11 @@ public class Execute {
         String osname = System.getProperty("os.name").toLowerCase();
         if ( osname.indexOf("mac os") >= 0 ) {
             // Mac
-            return new MacCommandLauncher(new CommandLauncher());
+            shellLauncher = new MacCommandLauncher(new CommandLauncher());
         }
         else if ( osname.indexOf("os/2") >= 0 ) {
             // OS/2 - use same mechanism as Windows 2000
-            return new WinNTCommandLauncher(new CommandLauncher());
+            shellLauncher = new WinNTCommandLauncher(new CommandLauncher());
         }
         else if ( osname.indexOf("windows") >= 0 ) {
             // Windows.  Need to determine which JDK we're running in
@@ -130,16 +133,16 @@ public class Execute {
             // Determine if we're running under 2000/NT or 98/95
             if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
                 // Windows 2000/NT
-                return new WinNTCommandLauncher(baseLauncher);
+                shellLauncher = new WinNTCommandLauncher(baseLauncher);
             }
             else {
                 // Windows 98/95 - need to use an auxiliary script
-                return new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
+                shellLauncher = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
             }
         }
         else {
             // Generic
-            return new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
+            shellLauncher = new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
         }
     }
 
@@ -353,6 +356,19 @@ public class Execute {
     }
 
     /**
+     * Launch this execution through the VM, where possible, rather than through
+     * the OS's shell. In some cases and operating systems using the shell will 
+     * allow the shell to perform additional processing such as associating an 
+     * executable with a script, etc
+     *
+     * @param vmLauncher true if exec should launch through thge VM, 
+     *                   false if the shell should be used to launch the command.
+     */
+    public void setVMLauncher(boolean useVMLauncher) {
+        this.useVMLauncher = useVMLauncher;
+    }
+    
+    /**
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>
@@ -360,6 +376,11 @@ public class Execute {
      *            of the subprocess failed
      */
     public int execute() throws IOException {
+        CommandLauncher launcher = vmLauncher != null ? vmLauncher : shellLauncher;
+        if (!useVMLauncher) {
+            launcher = shellLauncher;
+        }
+        
         final Process process = launcher.exec(project, getCommandline(), getEnvironment(), workingDirectory);
         try {
             streamHandler.setProcessInputStream(process.getOutputStream());
@@ -605,8 +626,9 @@ public class Execute {
          */
         public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
         {
+            File commandDir = workingDir;
             if ( workingDir == null ) {
-                return exec(project, cmd, env);
+                commandDir = project.getBaseDir();
             }
 
             // Use cmd.exe to change to the specified directory before running
@@ -617,7 +639,7 @@ public class Execute {
             newcmd[1] = "/c";
             newcmd[2] = "cd";
             newcmd[3] = "/d";
-            newcmd[4] = workingDir.getAbsolutePath();
+            newcmd[4] = commandDir.getAbsolutePath();
             newcmd[5] = "&&";
             System.arraycopy(cmd, 0, newcmd, preCmdLength, cmd.length);
 
@@ -674,14 +696,14 @@ public class Execute {
          */
         public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
         {
-            if ( workingDir == null ) {
-                return exec(project, cmd, env);
-            }
-
-            // Locate the auxiliary script
             if ( project == null ) {
+                if ( workingDir == null ) {
+                    return exec(project, cmd, env);
+                }
                 throw new IOException("Cannot locate antRun script: No project provided");
             }
+            
+            // Locate the auxiliary script
             String antHome = project.getProperty("ant.home");
             if ( antHome == null ) {
                 throw new IOException("Cannot locate antRun script: Property 'ant.home' not found");
@@ -689,9 +711,14 @@ public class Execute {
             String antRun = project.resolveFile(antHome + File.separator + _script).toString();
 
             // Build the command
+            File commandDir = workingDir;
+            if ( workingDir == null ) {
+                commandDir = project.getBaseDir();
+            }
+
             String[] newcmd = new String[cmd.length + 2];
             newcmd[0] = antRun;
-            newcmd[1] = workingDir.getAbsolutePath();
+            newcmd[1] = commandDir.getAbsolutePath();
             System.arraycopy(cmd, 0, newcmd, 2, cmd.length);
             
             return exec(project, newcmd, env);

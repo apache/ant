@@ -80,6 +80,9 @@ public class ExecTask extends Task {
     protected Commandline cmdl = new Commandline();
     private FileOutputStream fos = null;
 
+    /** Controls whether the VM (1.3 and above) is used to execute the command */
+    private boolean vmLauncher = true;
+     
     /**
      * Timeout in milliseconds after which the process will be killed.
      */
@@ -194,6 +197,14 @@ public class ExecTask extends Task {
     }
 
     /**
+     * Control whether the VM is used to launch the new process or
+     * whether the OS's shell is used.
+     */
+    public void setVMLauncher(boolean vmLauncher) {
+        this.vmLauncher = vmLauncher;
+    }
+    
+    /**
      * Create an Execute instance with the correct working directory set.
      */
     protected Execute prepareExec() throws BuildException {
@@ -205,6 +216,7 @@ public class ExecTask extends Task {
         Execute exe = new Execute(createHandler(), createWatchdog());
         exe.setAntRun(project);
         exe.setWorkingDirectory(dir);
+        exe.setVMLauncher(vmLauncher);
         String[] environment = env.getVariables();
         if (environment != null) {
             for (int i=0; i<environment.length; i++) {
