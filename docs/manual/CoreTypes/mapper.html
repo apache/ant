@@ -239,6 +239,69 @@ that don't match the <code>from</code> pattern will be ignored.</p>
     <td valign="top"><code>Qlasses/dir/dir2/A.property</code></td>
   </tr>
 </table>
+  <p>
+    The globmapper mapper can take the following extra attributes.
+  </p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">casesensitice</td>
+      <td valign="top">
+        If this is false, the mapper will ignore case when matching the glob pattern.
+        This attribute can be true or false, the default is true.
+      <em>Since ant 1.6.3.</em>
+      </td>
+      <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+      <td valign="top">handledirchar</td>
+      <td valign="top">
+        If this is specified, the mapper will ignore the difference between the normal
+        directory separator characters - \ and /.
+        This attribute can be true or false, the default is false.
+        This attribute is useful for cross-platform build files.
+        <em>Since ant 1.6.3.</em>
+        <td align="center" valign="top">No</td>
+      </tr>
+    </table>
+    <p>
+      An example:
+    </p>
+    <pre>
+      &lt;pathconvert property="x" targetos="unix"&gt;
+        &lt;path path="Aj.Java"/&gt;
+        &lt;mapper&gt;
+        &lt;chainedmapper&gt;
+          &lt;flattenmapper/&gt;
+          &lt;globmapper from="a*.java" to="*.java.bak" casesensitive="no"/&gt;
+        &lt;/chainedmapper&gt;
+        &lt;/mapper&gt;
+      &lt;/pathconvert&gt;
+      &lt;echo&gt;x is ${x}&lt;/echo&gt;
+    </pre>
+    <p>
+      will output "x is j.java.bak".
+    </p>
+    <p>
+      and
+    </p>
+    <pre>
+      &lt;pathconvert property="x" targetos="unix"&gt;
+        &lt;path path="d/e/f/j.java"/&gt;
+        &lt;mapper&gt;
+          &lt;globmapper from="${basedir}\d/e\*" to="*" ignoredirchar="yes"/&gt;
+        &lt;/mapper&gt;
+      &lt;/pathconvert&gt;
+      &lt;echo&gt;x is ${x}&lt;/echo&gt;
+    </pre>
+    <p>
+      will output "x is f/j.java".
+    </p>
+
 <h4><a name="regexp-mapper">regexp</a></h4>
 <p>Both <code>to</code> and <code>from</code> define regular
 expressions. If the source file name matches the <code>from</code>
@@ -254,7 +317,7 @@ another dollar-sign in Ant.</p>
 <p>The regexp mapper needs a supporting library and an implementation
 of <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
 hides the specifics of the library. Ant comes with implementations for
-<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/regex/package-summary.html"  target="_top">the java.util.regex package of JDK 1.4</a>,
+<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/regex/package-summary.html"  target="_top">the java.util.regex package of JDK 1.4 or higher</a>,
 <a href="http://jakarta.apache.org/regexp/" target="_top">jakarta-regexp</a> and <a
 href="http://jakarta.apache.org/oro/" target="_top">jakarta-ORO</a>. If you compile
 from sources and plan to use one of them, make sure the libraries are
@@ -263,13 +326,16 @@ href="http://www.cacas.org/~wes/java/" target="_top">gnu.regexp</a> or <a
 href="http://www.crocodile.org/~sts/Rex/" target="_top">gnu.rex</a> with Ant, see <a
 href="http://marc.theaimsgroup.com/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
 article.</p>
-<p>This means, you need <code>optional.jar</code> from the Ant release
-you are using <strong>and</strong> one of the supported regular
-expression libraries.  Make sure, both will be loaded from the same
+<p>This means, you need one of the supported regular expression
+  libraries <strong>and</strong>
+  the corresponding <code>ant-[jakarta-oro, jakarta-regexp, apache-oro, apache-regexp}.jar</code>
+from the Ant release you are using.
+Make sure, both will be loaded from the same
 classpath, that is either put them into your <code>CLASSPATH</code>,
 <code>ANT_HOME/lib</code> directory or a nested
 <code>&lt;classpath&gt;</code> element of the mapper - you cannot have
-<code>optional.jar</code> in <code>ANT_HOME/lib</code> and the library
+<code>ant-[jakarta-oro, jakarta-regexp, apache-oro, apache-regexp].jar</code> in <code>ANT_HOME/lib</code>
+ and the library
 in a nested <code>&lt;classpath&gt;</code>.</p>
 <p>Ant will choose the regular-expression library based on the
 following algorithm:</p>
@@ -337,8 +403,8 @@ jakarta-ORO and finally try jakarta-regexp.</li>
   </tr>
 </table>
 <blockquote><pre>
-&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)\.(.*)$$&quot; to=&quot;\2.\1&quot;/&gt;
-&lt;regexpmapper from=&quot;^(.*)\.(.*)$$&quot; to=&quot;\2.\1&quot;/&gt;
+&lt;mapper type="regexp" from="^(.*)\.(.*)$$" to="\2.\1"/&gt;
+&lt;regexpmapper from="^(.*)\.(.*)$$&" to="\2.\1"/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -363,8 +429,8 @@ jakarta-ORO and finally try jakarta-regexp.</li>
   </tr>
 </table>
 <blockquote><pre>
-&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*?)(\$$[^/\\\.]*)?\.class$$&quot; to=&quot;\1.java&quot;/&gt;
-&lt;regexpmapper from=&quot;^(.*?)(\$$[^/\\\.]*)?\.class$$&quot; to=&quot;\1.java&quot;/&gt;
+&lt;mapper type="regexp" from="^(.*?)(\$$[^/\\\.]*)?\.class$$" to="\1.java"/&gt;
+&lt;regexpmapper from="^(.*?)(\$$[^/\\\.]*)?\.class$$" to="\1.java"/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -388,7 +454,65 @@ jakarta-ORO and finally try jakarta-regexp.</li>
     <td valign="top"><code>java/lang/ClassLoader.java</code></td>
   </tr>
 </table>
-
+  <p>
+    The regexpmapper mapper can take the following extra attributes.
+  </p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">casesensitive</td>
+      <td valign="top">
+        If this is false, the mapper will ignore case when matching the pattern.
+        This attribute can be true or false, the default is true.
+      <em>Since ant 1.6.3.</em>
+      </td>
+      <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+      <td valign="top">handledirchar</td>
+      <td valign="top">
+        If this is specified, the mapper will treat a \ character in a filename
+        as a / for the purposes of matching.
+        This attribute can be true or false, the default is false.
+        This attribute is useful for cross-platform build files.
+        <em>Since ant 1.6.3.</em>
+        <td align="center" valign="top">No</td>
+      </tr>
+    </table>
+    <p>
+      An example:
+    </p>
+    <pre>
+      &lt;pathconvert property="x" targetos="unix"&gt;
+        &lt;path path="Aj.Java"/&gt;
+        &lt;chainedmapper&gt;
+          &lt;flattenmapper/&gt;
+          &lt;globmapper from="a(*.)java" to="\1.java.bak" casesensitive="no"/&gt;
+        &lt;/chainedmapper&gt;
+      &lt;/pathconvert&gt;
+      &lt;echo&gt;x is ${x}&lt;/echo&gt;
+    </pre>
+    <p>
+      will output "x is j.java.bak".
+    </p>
+    <p>
+      and
+    </p>
+    <pre>
+    &lt;pathconvert property="hd.prop" targetos="windows"&gt;
+      &lt;path path="d\e/f\j.java"/&gt;
+      &lt;chainedmapper&gt;
+        &lt;regexpmapper from="${basedir}/d/e/(.*)" to="\1" handledirchar="yes"/&gt;
+      &lt;/chainedmapper&gt;
+    &lt;/pathconvert&gt;
+    </pre>
+    <p>
+      will set <code>hd.prop</code> to "f\j.java".
+    </p>
 <h4><a name="package-mapper">package</a></h4>
 <p>Sharing the same syntax as the <a href="#glob-mapper">glob mapper</a>,
 the package mapper replaces
@@ -502,6 +626,55 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
   </tr>
 </table>
   <p>The chained mapper has no corresponding
+    <code>&lt;mapper <b>type</b>&gt;</code> attribute.
+  </p>
+
+    <!--                                        -->
+    <!--             Filter Mapper              -->
+    <!--                                        -->
+
+<h4><a name="filter-mapper">filtermapper (since ant 1.6.3)</a></h4>
+    <p>
+      This mapper implementation applies a <a href="filterchain.html">filterchain</a>
+      to the source file name.
+    </p>
+<b>Examples:</b>
+<blockquote><pre>
+&lt;filtermapper&gt;
+  &lt;replacestring from="\" to="/"/&gt;
+&lt;/filtermapper&gt;
+</pre></blockquote>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file names</b></td>
+  </tr>
+  <tr>
+    <td valign="center"><code>foo\bar\A.java</code></td>
+    <td valign="top"><code>foo/bar/A.java</code></td>
+  </tr>
+</table>
+<blockquote><pre>
+&lt;filtermapper&gt;
+  &lt;scriptfilter language="beanshell"&gt;
+    self.setToken(self.getToken().toUpperCase());
+  &lt;/scriptfilter&gt;
+&lt;/filtermapper&gt;
+</pre></blockquote>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file names</b></td>
+  </tr>
+  <tr>
+    <td valign="center"><code>foo\bar\A.java</code></td>
+    <td valign="top"><code>FOO\BAR\A.JAVA</code></td>
+  </tr>
+</table>
+
+  <p>The filtermapper has no corresponding
     <code>&lt;mapper <b>type</b>&gt;</code> attribute.
   </p>
 <hr>
