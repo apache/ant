@@ -89,6 +89,10 @@ Other changes:
 
 * Added clone task. Bugzilla report 32631.
 
+* Add else attribute to the condition task, which specifies an
+  optional alternate value to set the property to if the nested
+  condition evaluates to false. Bugzilla report 33074.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

@@ -347,6 +347,31 @@
     </condition>
     <echo>${isfalse-incomplete}</echo>
   </target>
+
+  <target name="testElse">
+    <condition property="unset" value="foo">
+      <or />
+    </condition>
+    <condition property="value" value="foo" else="bar">
+      <and />
+    </condition>
+    <condition property="else" value="foo" else="bar">
+      <or />
+    </condition>
+    <fail>
+      <condition>
+        <or>
+          <isset property="unset" />
+          <not>
+            <and>
+              <equals arg1="${value}" arg2="foo" />
+              <equals arg1="${else}" arg2="bar" />
+            </and>
+          </not>
+        </or>
+      </condition>
+    </fail>
+  </target>
   
   <target name="cleanup" >
     <delete file="match1.txt" />
