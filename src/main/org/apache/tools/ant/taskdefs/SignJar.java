@@ -48,39 +48,9 @@ import org.apache.tools.ant.util.FileNameMapper;
  * @ant.task category="java"
  * @since Ant 1.1
  */
-public class SignJar extends Task {
+public class SignJar extends AbstractJarSignerTask {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
-    /**
-     * The name of the jar file.
-     */
-    protected File jar;
-
-    /**
-     * The alias of signer.
-     */
-    protected String alias;
-
-    /**
-     * The url or path of keystore file.
-     */
-    private String keystore;
-
-    /**
-     * password for the store
-     */
-    protected String storepass;
-
-    /**
-     * type of store,-storetype param
-     */
-    protected String storetype;
-
-    /**
-     * password for the key in the store
-     */
-    protected String keypass;
 
     /**
      * name to a signature file
@@ -91,11 +61,6 @@ public class SignJar extends Task {
      * name of a single jar
      */
     protected File signedjar;
-
-    /**
-     * verbose output
-     */
-    protected boolean verbose;
 
     /**
      * flag for internal sf signing
@@ -111,21 +76,6 @@ public class SignJar extends Task {
      * flag to preserve timestamp on modified files
      */
     private boolean preserveLastModified;
-
-    /**
-     * redirector used to talk to the jarsigner program
-     */
-    private RedirectorElement redirector;
-
-    /**
-     * The maximum amount of memory to use for Jar signer
-     */
-    private String maxMemory;
-
-    /**
-     * the filesets of the jars to sign
-     */
-    protected Vector filesets = new Vector();
 
     /**
      * Whether to assume a jar which has an appropriate .SF file in is already
@@ -169,11 +119,6 @@ public class SignJar extends Task {
     /**
      * error string for unit test verification: {@value}
      */
-    public static final String WARN_JAR_AND_FILESET = "nested filesets will be ignored if the jar attribute has"
-            + " been specified.";
-    /**
-     * error string for unit test verification: {@value}
-     */
     public static final String ERROR_BAD_MAP = "Cannot map source file to anything sensible: ";
     /**
      * error string for unit test verification: {@value}
@@ -182,85 +127,11 @@ public class SignJar extends Task {
     /**
      * error string for unit test verification: {@value}
      */
-    public static final String ERROR_NO_SOURCE = "jar must be set through jar attribute "
-            + "or nested filesets";
-    /**
-     * error string for unit test verification: {@value}
-     */
     public static final String ERROR_NO_ALIAS = "alias attribute must be set";
     /**
      * error string for unit test verification: {@value}
      */
     public static final String ERROR_NO_STOREPASS = "storepass attribute must be set";
-
-    /**
-     * name of JDK program we are looking for
-     */
-    protected static final String JARSIGNER_COMMAND = "jarsigner";
-
-    /**
-     * Set the maximum memory to be used by the jarsigner process
-     *
-     * @param max a string indicating the maximum memory according to the JVM
-     *            conventions (e.g. 128m is 128 Megabytes)
-     */
-    public void setMaxmemory(String max) {
-        maxMemory = max;
-    }
-
-    /**
-     * the jar file to sign; required
-     *
-     * @param jar the jar file to sign
-     */
-    public void setJar(final File jar) {
-        this.jar = jar;
-    }
-
-    /**
-     * the alias to sign under; required
-     *
-     * @param alias the alias to sign under
-     */
-    public void setAlias(final String alias) {
-        this.alias = alias;
-    }
-
-    /**
-     * keystore location; required
-     *
-     * @param keystore the keystore location
-     */
-    public void setKeystore(final String keystore) {
-        this.keystore = keystore;
-    }
-
-    /**
-     * password for keystore integrity; required
-     *
-     * @param storepass the password for the keystore
-     */
-    public void setStorepass(final String storepass) {
-        this.storepass = storepass;
-    }
-
-    /**
-     * keystore type; optional
-     *
-     * @param storetype the keystore type
-     */
-    public void setStoretype(final String storetype) {
-        this.storetype = storetype;
-    }
-
-    /**
-     * password for private key (if different); optional
-     *
-     * @param keypass the password for the key (if different)
-     */
-    public void setKeypass(final String keypass) {
-        this.keypass = keypass;
-    }
 
     /**
      * name of .SF/.DSA file; optional
@@ -278,15 +149,6 @@ public class SignJar extends Task {
      */
     public void setSignedjar(final File signedjar) {
         this.signedjar = signedjar;
-    }
-
-    /**
-     * Enable verbose output when signing ; optional: default false
-     *
-     * @param verbose if true enable verbose output
-     */
-    public void setVerbose(final boolean verbose) {
-        this.verbose = verbose;
     }
 
     /**
@@ -316,16 +178,6 @@ public class SignJar extends Task {
      */
     public void setLazy(final boolean lazy) {
         this.lazy = lazy;
-    }
-
-    /**
-     * Adds a set of files to sign
-     *
-     * @param set a set of files to sign
-     * @since Ant 1.4
-     */
-    public void addFileset(final FileSet set) {
-        filesets.addElement(set);
     }
 
     /**
@@ -436,85 +288,64 @@ public class SignJar extends Task {
             throw new BuildException(ERROR_MAPPER_WITHOUT_DEST);
         }
 
-        //init processing logic; this is retained through our execution(s)
-        redirector = createRedirector();
+        beginExecution();
 
 
-        //special case single jar handling with signedjar attribute set
-        if (hasJar && hasSignedJar) {
-            // single jar processing
-            signOneJar(jar, signedjar);
-            //return here.
-            return;
-        }
-
-        //the rest of the method treats single jar like
-        //a nested fileset with one file
-
-        if (hasJar) {
-            //we create a fileset with the source file.
-            //this lets us combine our logic for handling output directories,
-            //mapping etc.
-            FileSet sourceJar = new FileSet();
-            sourceJar.setFile(jar);
-            sourceJar.setDir(jar.getParentFile());
-            addFileset(sourceJar);
-        }
-        //set up our mapping policy
-        FileNameMapper destMapper;
-        if (hasMapper) {
-            destMapper = mapper;
-        } else {
-            //no mapper? use the identity policy
-            destMapper = new IdentityMapper();
-        }
-
-
-        //at this point the filesets are set up with lists of files,
-        //and the mapper is ready to map from source dirs to dest files
-        //now we iterate through every JAR giving source and dest names
-        // deal with the filesets
-        for (int i = 0; i < filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            //get all included files in a fileset
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] jarFiles = ds.getIncludedFiles();
-            File baseDir = fs.getDir(getProject());
-
-            //calculate our destination directory; it is either the destDir
-            //attribute, or the base dir of the fileset (for in situ updates)
-            File toDir = hasDestDir ? destDir : baseDir;
-
-            //loop through all jars in the fileset
-            for (int j = 0; j < jarFiles.length; j++) {
-                String jarFile = jarFiles[j];
-                //determine the destination filename via the mapper
-                String[] destFilenames = destMapper.mapFileName(jarFile);
-                if (destFilenames == null || destFilenames.length != 1) {
-                    //we only like simple mappers.
-                    throw new BuildException(ERROR_BAD_MAP + jarFile);
-                }
-                File destFile = new File(toDir, destFilenames[0]);
-                File jarSource = new File(baseDir, jarFile);
-                signOneJar(jarSource, destFile);
+        try {
+            //special case single jar handling with signedjar attribute set
+            if (hasJar && hasSignedJar) {
+                // single jar processing
+                signOneJar(jar, signedjar);
+                //return here.
+                return;
             }
-        }
-    }
 
-    /**
-     * Create the redirector to use, if any.
-     *
-     * @return a configured RedirectorElement.
-     */
-    private RedirectorElement createRedirector() {
-        RedirectorElement result = new RedirectorElement();
-        StringBuffer input = new StringBuffer(storepass).append('\n');
-        if (keypass != null) {
-            input.append(keypass).append('\n');
+            //the rest of the method treats single jar like
+            //a nested fileset with one file
+
+            Vector sources = createUnifiedSources();
+            //set up our mapping policy
+            FileNameMapper destMapper;
+            if (hasMapper) {
+                destMapper = mapper;
+            } else {
+                //no mapper? use the identity policy
+                destMapper = new IdentityMapper();
+            }
+
+
+            //at this point the filesets are set up with lists of files,
+            //and the mapper is ready to map from source dirs to dest files
+            //now we iterate through every JAR giving source and dest names
+            // deal with the filesets
+            for (int i = 0; i < sources.size(); i++) {
+                FileSet fs = (FileSet) sources.elementAt(i);
+                //get all included files in a fileset
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                String[] jarFiles = ds.getIncludedFiles();
+                File baseDir = fs.getDir(getProject());
+
+                //calculate our destination directory; it is either the destDir
+                //attribute, or the base dir of the fileset (for in situ updates)
+                File toDir = hasDestDir ? destDir : baseDir;
+
+                //loop through all jars in the fileset
+                for (int j = 0; j < jarFiles.length; j++) {
+                    String jarFile = jarFiles[j];
+                    //determine the destination filename via the mapper
+                    String[] destFilenames = destMapper.mapFileName(jarFile);
+                    if (destFilenames == null || destFilenames.length != 1) {
+                        //we only like simple mappers.
+                        throw new BuildException(ERROR_BAD_MAP + jarFile);
+                    }
+                    File destFile = new File(toDir, destFilenames[0]);
+                    File jarSource = new File(baseDir, jarFile);
+                    signOneJar(jarSource, destFile);
+                }
+            }
+        } finally {
+            endExecution();
         }
-        result.setInputString(input.toString());
-        result.setLogInputString(false);
-        return result;
     }
 
     /**
@@ -540,71 +371,47 @@ public class SignJar extends Task {
         }
 
         long lastModified = jarSource.lastModified();
-        final ExecTask cmd = new ExecTask(this);
-        cmd.setExecutable(JavaEnvUtils.getJdkExecutable(JARSIGNER_COMMAND));
-        cmd.setTaskType(JARSIGNER_COMMAND);
+        final ExecTask cmd = createJarSigner();
 
-        if (maxMemory != null) {
-            cmd.createArg().setValue("-J-Xmx" + maxMemory);
-        }
+        setCommonOptions(cmd);
 
-        if (null != keystore) {
-            // is the keystore a file
-            cmd.createArg().setValue("-keystore");
-            String location;
-            File keystoreFile = getProject().resolveFile(keystore);
-            if (keystoreFile.exists()) {
-                location = keystoreFile.getPath();
-            } else {
-                // must be a URL - just pass as is
-                location = keystore;
-            }
-            cmd.createArg().setValue(location);
-        }
-        if (null != storetype) {
-            cmd.createArg().setValue("-storetype");
-            cmd.createArg().setValue(storetype);
-        }
+        bindToKeystore(cmd);
         if (null != sigfile) {
-            cmd.createArg().setValue("-sigfile");
-            cmd.createArg().setValue(sigfile);
+            addValue(cmd, "-sigfile");
+            String value = this.sigfile;
+            addValue(cmd, value);
         }
 
         //DO NOT SET THE -signedjar OPTION if source==dest
         //unless you like fielding hotspot crash reports
         if (null != target && !jarSource.equals(target)) {
-            cmd.createArg().setValue("-signedjar");
-            cmd.createArg().setValue(target.getPath());
-        }
-
-        if (verbose) {
-            cmd.createArg().setValue("-verbose");
+            addValue(cmd, "-signedjar");
+            addValue(cmd, target.getPath());
         }
 
         if (internalsf) {
-            cmd.createArg().setValue("-internalsf");
+            addValue(cmd, "-internalsf");
         }
 
         if (sectionsonly) {
-            cmd.createArg().setValue("-sectionsonly");
+            addValue(cmd, "-sectionsonly");
         }
 
         //add -tsa operations if declared
         addTimestampAuthorityCommands(cmd);
 
         //JAR source is required
-        cmd.createArg().setValue(jarSource.getPath());
+        addValue(cmd, jarSource.getPath());
 
         //alias is required for signing
-        cmd.createArg().setValue(alias);
+        addValue(cmd, alias);
 
         log("Signing JAR: " +
                 jarSource.getAbsolutePath()
                 +" to " +
                 target.getAbsolutePath()
                 + " as " + alias);
-        cmd.setFailonerror(true);
-        cmd.addConfiguredRedirector(redirector);
+
         cmd.execute();
 
         // restore the lastModified attribute
@@ -621,12 +428,12 @@ public class SignJar extends Task {
      */
     private void addTimestampAuthorityCommands(final ExecTask cmd) {
         if(tsaurl!=null) {
-            cmd.createArg().setValue("-tsa");
-            cmd.createArg().setValue(tsaurl);
+            addValue(cmd, "-tsa");
+            addValue(cmd, tsaurl);
         }
         if (tsacert != null) {
-            cmd.createArg().setValue("-tsacert");
-            cmd.createArg().setValue(tsacert);
+            addValue(cmd, "-tsacert");
+            addValue(cmd, tsacert);
         }
     }
 

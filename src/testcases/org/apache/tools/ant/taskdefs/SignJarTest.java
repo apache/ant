@@ -17,14 +17,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Vector;
-import java.util.Enumeration;
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -156,4 +149,24 @@ public class SignJarTest extends BuildFileTest {
             assertLogContaining("java.net.ConnectException");
         }
     }
+
+    public void testVerifyJar() {
+        executeTarget("testVerifyJar");
+    }
+
+    public void testVerifyNoArgs() {
+        expectBuildExceptionContaining("testVerifyNoArgs",
+                "no args",
+                AbstractJarSignerTask.ERROR_NO_SOURCE);
+    }
+
+    public void NotestVerifyJarUnsigned() {
+        expectBuildException("testVerifyJarUnsigned",
+                "unsigned JAR file");
+    }
+
+    public void testVerifyFileset() {
+        executeTarget("testVerifyFileset");
+    }
+
 }

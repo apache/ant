@@ -24,6 +24,13 @@
     <signjar alias="testonly" keystore="testkeystore"
            storepass="apacheant"/>
   </presetdef>
+
+  <presetdef name="verify-base">
+    <verifyjar keystore="testkeystore"
+           storepass="apacheant"/>
+  </presetdef>
+
+
   
   <presetdef name="sign">
     <sign-base jar="${test.jar}" />
@@ -172,6 +179,25 @@
 
   <target name="testTsaLocalhost" depends="jar">
     <sign tsaurl="http://localhost:0/" />
+  </target>
+  
+  
+  <target name="testVerifyJar" depends="basic">
+    <verify-base jar="${test.jar}"/>
+  </target>
+
+  <target name="testVerifyJarUnsigned" depends="jar">
+    <verify-base jar="${test.jar}"/>
+  </target>
+  
+  <target name="testVerifyFileset" depends="basic">
+    <verify-base >
+      <fileset file="${test.jar}" />
+    </verify-base>
+  </target>
+
+  <target name="testVerifyNoArgs">
+    <verify-base />
   </target>
   
 </project>
