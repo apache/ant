@@ -31,6 +31,10 @@
     <antcall target=""/>
   </target>
 
+  <target name="test4b">
+    <antcall target="does-not-exist"/>
+  </target>
+
   <target name="test5">
     <antcall target="dummy"/>
   </target>

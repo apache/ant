@@ -1,6 +1,11 @@
 Changes from Ant 1.5 to current CVS version
 ===========================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* Targets cannot have the empty string as their name any longer.
+
 Fixed bugs:
 -----------
 

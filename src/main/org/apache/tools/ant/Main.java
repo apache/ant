@@ -604,8 +604,12 @@ public class Main {
                 }
 
                 // make sure that we have a target to execute
-                if (targets.size() == 0 && project.getDefaultTarget() != null) {
-                    targets.addElement(project.getDefaultTarget());
+                if (targets.size() == 0) {
+                    if (project.getDefaultTarget() != null) {
+                        targets.addElement(project.getDefaultTarget());
+                    } else {
+                        targets.addElement(""); // implicit target
+                    }
                 }
 
                 project.executeTargets(targets);
@@ -845,6 +849,9 @@ public class Main {
         while (ptargets.hasMoreElements()) {
             currentTarget = (Target) ptargets.nextElement();
             targetName = currentTarget.getName();
+            if (targetName.equals("")) {
+                continue;
+            }
             targetDescription = currentTarget.getDescription();
             // maintain a sorted list of targets
             if (targetDescription == null) {

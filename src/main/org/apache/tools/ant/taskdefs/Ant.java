@@ -360,7 +360,8 @@ public class Ant extends Task {
             // the build file if this is a top level task)?
             if (newProject.getBaseDir().equals(project.getBaseDir()) &&
                 newProject.getProperty("ant.file").equals(project.getProperty("ant.file"))
-                && (getOwningTarget() == null ||
+                && getOwningTarget() != null
+                && (getOwningTarget().getName().equals("") ||
                     getOwningTarget().getName().equals(target))) {
                 throw new BuildException("ant task calling its own parent "
                                          + "target");
@@ -370,6 +371,8 @@ public class Ant extends Task {
 
             if (target != null) {
                 newProject.executeTarget(target);
+            } else {
+                newProject.executeTarget("");
             }
         } finally {
             // help the gc
@@ -518,6 +521,10 @@ public class Ant extends Task {
      * Defaults to the new project's default target.
      */
     public void setTarget(String s) {
+        if (s.equals("")) {
+            throw new BuildException("target attribute must not be empty");
+        }
+        
         this.target = s;
     }
 

@@ -68,12 +68,12 @@ public class TopLevelTaskTest extends BuildFileTest {
 
     public void testNoTarget() {
         configureProject("src/etc/testcases/core/topleveltasks/notarget.xml");
-        assertEquals("Called", getLog());
+        expectLog("", "Called");
     }
 
     public void testCalledFromTopLevelAnt() {
         configureProject("src/etc/testcases/core/topleveltasks/toplevelant.xml");
-        assertEquals("Called", getLog());
+        expectLog("", "Called");
     }
 
     public void testCalledFromTargetLevelAnt() {

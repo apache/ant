@@ -99,7 +99,11 @@ public class AntTest extends BuildFileTest {
     }
 
     public void test4() {
-        expectBuildException("test4", "target doesn't exist");
+        expectBuildException("test4", "target attribute must not be empty");
+    }
+
+    public void test4b() {
+        expectBuildException("test4b", "target doesn't exist");
     }
 
     public void test5() {
@@ -308,6 +312,9 @@ public class AntTest extends BuildFileTest {
         public void messageLogged(BuildEvent event) {}
 
         public void targetStarted(BuildEvent event) {
+            if (event.getTarget().getName().equals("")) {
+                return;
+            }
             if (error == null) {
                 try {
                     assertEquals(expectedBasedirs[calls++],
@@ -345,6 +352,9 @@ public class AntTest extends BuildFileTest {
         public void messageLogged(BuildEvent event) {}
 
         public void targetStarted(BuildEvent event) {
+            if (event.getTarget().getName().equals("")) {
+                return;
+            }
             if (error == null) {
                 try {
                     String msg =
@@ -457,6 +467,9 @@ public class AntTest extends BuildFileTest {
         public void messageLogged(BuildEvent event) {}
 
         public void targetStarted(BuildEvent event) {
+            if (event.getTarget().getName().equals("")) {
+                return;
+            }
             if (error == null) {
                 try {
                     assertEquals(expectedValues[calls++],

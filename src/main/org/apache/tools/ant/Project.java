@@ -1773,7 +1773,7 @@ public class Project {
                 // no warning, this is not changing anything
                 return;
             }
-            if (old != null) {
+            if (old != null && !(old instanceof UnknownElement)) {
                 log("Overriding previous definition of reference to " + name,
                     MSG_WARN);
             }

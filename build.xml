@@ -328,20 +328,6 @@
   
   <!--
        ===================================================================
-         Set up a patternsets that matches the parts of our JUnit testsuite
-         that may be useful for task developers.
-       ===================================================================
-  -->
-  <patternset id="useful.tests">
-    <include name="${ant.package}/BuildFileTest*" />
-    <include name="${regexp.package}/RegexpMatcherTest*" />
-    <include name="${regexp.package}/RegexpTest*" />
-    <include name="${optional.package}/AbstractXSLTLiaisonTest*" />
-    <include name="${ant.package}/types/AbstractFileSetTest*" />
-  </patternset>
-
-  <!--
-       ===================================================================
          Check to see what optional dependencies are available
        ===================================================================
   -->

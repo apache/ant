@@ -208,7 +208,8 @@ public class DefaultLogger implements BuildLogger {
      *              Must not be <code>null</code>.
       */
     public void targetStarted(BuildEvent event) {
-        if (Project.MSG_INFO <= msgOutputLevel) {
+        if (Project.MSG_INFO <= msgOutputLevel
+            && !event.getTarget().getName().equals("")) {
             String msg = StringUtils.LINE_SEP 
                 + event.getTarget().getName() + ":";
             printMessage(msg, out, event.getPriority());
