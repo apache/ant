@@ -64,6 +64,17 @@
             <td>Erik</td>
           </tr>
 
+          <tr>
+            <td>Extension utilities</td>
+            <td>Port across task that prints out details of extensions for
+            a certain library/jar, or all jars in a path. Port across task
+            that generates a manifest (including dependencies and extension 
+            specification) based on a set of jars in path. Port across task
+            that checks that the list of pre-req extensions are present in 
+            path.</td>
+            <td>Peter</td>
+          </tr>
+
 <!-- for cut and paste use
           <tr>
             <td></td>
