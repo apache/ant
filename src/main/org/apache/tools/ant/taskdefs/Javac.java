@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
@@ -89,6 +90,7 @@ import java.util.*;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 
 public class Javac extends MatchingTask {
@@ -114,7 +116,7 @@ public class Javac extends MatchingTask {
     private Path extdirs;
     private static String lSep = System.getProperty("line.separator");
 
-    protected Vector compileList = new Vector();
+    protected File[] compileList = new File[0];
 
     /**
      * Create a nested <src ...> element for multiple source path
@@ -322,10 +324,10 @@ public class Javac extends MatchingTask {
             }
         }
 
-        if (compileList.size() > 0) {
-            log("Compiling " + compileList.size() + 
+        if (compileList.length > 0) {
+            log("Compiling " + compileList.length + 
                 " source file"
-                + (compileList.size() == 1 ? "" : "s")
+                + (compileList.length == 1 ? "" : "s")
                 + (destDir != null ? " to " + destDir : ""));
 
             if (compiler.equalsIgnoreCase("classic")) {
@@ -347,7 +349,7 @@ public class Javac extends MatchingTask {
      * Clear the list of files to be compiled and copied.. 
      */
     protected void resetFileLists() {
-        compileList.removeAllElements();
+        compileList = new File[0];
     }
 
     /**
@@ -356,33 +358,11 @@ public class Javac extends MatchingTask {
      */
 
     protected void scanDir(File srcDir, File destDir, String files[]) {
-
-        long now = (new Date()).getTime();
-
-        for (int i = 0; i < files.length; i++) {
-            File srcFile = new File(srcDir, files[i]);
-            if (files[i].endsWith(".java")) {
-                File classFile = new File(destDir, files[i].substring(0,
-                                          files[i].indexOf(".java")) + ".class");
-
-                if (srcFile.lastModified() > now) {
-                    log("Warning: file modified in the future: " +
-                        files[i], Project.MSG_WARN);
-                }
-
-                if (!classFile.exists() || srcFile.lastModified() > classFile.lastModified()) {
-                    if (!classFile.exists()) {
-                        log("Compiling " + srcFile.getPath() + " because class file " 
-                                + classFile.getPath() + " does not exist", Project.MSG_DEBUG);
-                    }
-                    else {
-                        log("Compiling " + srcFile.getPath() + " because it is out of date with respect to " 
-                                + classFile.getPath(), Project.MSG_DEBUG);
-                    }                                                        
-                    compileList.addElement(srcFile.getAbsolutePath());
-                }
-            }
-        }
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("*.java");
+        m.setTo("*.class");
+        SourceFileScanner sfs = new SourceFileScanner(this);
+        compileList = sfs.restrictAsFiles(files, srcDir, destDir, m);
     }
 
     // XXX
@@ -619,16 +599,15 @@ public class Javac extends MatchingTask {
             Project.MSG_VERBOSE);
 
         StringBuffer niceSourceList = new StringBuffer("File");
-        if (compileList.size() != 1) {
+        if (compileList.length != 1) {
             niceSourceList.append("s");
         }
         niceSourceList.append(" to be compiled:");
 
         niceSourceList.append(lSep);
 
-        Enumeration enum = compileList.elements();
-        while (enum.hasMoreElements()) {
-            String arg = (String)enum.nextElement();
+        for (int i=0; i < compileList.length; i++) {
+            String arg = compileList[i].getAbsolutePath();
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg + lSep);
         }

@@ -52,40 +52,86 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
-
-import org.apache.tools.ant.types.*;
+package org.apache.tools.ant.util;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Very limited test class for Project. Waiting to be extended.
+ * Tests for org.apache.tools.ant.util;GlobPatternMapper.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public class ProjectTest extends TestCase {
+public class GlobPatternMapperTest extends TestCase {
 
-    private Project p;
-
-    public ProjectTest(String name) {
+    public GlobPatternMapperTest(String name) {
         super(name);
     }
 
-    public void setUp() {
-        p = new Project();
-        p.init();
+    public void testNoPatternAtAll() {
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("foobar");
+        m.setTo("baz");
+        assertNull("Shouldn\'t match foobar", m.mapFileName("plonk"));
+        String[] result = m.mapFileName("foobar");
+        assertNotNull("Should match foobar", result);
+        assertEquals("only one result for foobar", 1, result.length);
+        assertEquals("baz", result[0]);
     }
 
-    public void testDataTypes() throws BuildException {
-        assertNull("dummy is not a known data type", 
-                   p.createDataType("dummy"));
-        Object o = p.createDataType("fileset");
-        assertNotNull("fileset is a known type", o);
-        assert("fileset creates FileSet", o instanceof FileSet);
-        assert("PatternSet", 
-               p.createDataType("patternset") instanceof PatternSet);
-        assert("Path", p.createDataType("path") instanceof Path);
+    public void testPostfixOnly() {
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("*foo");
+        m.setTo("*plonk");
+        assertNull("Shouldn\'t match *foo", m.mapFileName("bar.baz"));
+        String[] result = m.mapFileName("bar.foo");
+        assertNotNull("Should match *.foo", result);
+        assertEquals("only one result for bar.foo", 1, result.length);
+        assertEquals("bar.plonk", result[0]);
+
+        // Try a silly case
+        m.setTo("foo*");
+        result = m.mapFileName("bar.foo");
+        assertEquals("foobar.", result[0]);
+    }
+
+    public void testPrefixOnly() {
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("foo*");
+        m.setTo("plonk*");
+        assertNull("Shouldn\'t match foo*", m.mapFileName("bar.baz"));
+        String[] result = m.mapFileName("foo.bar");
+        assertNotNull("Should match foo*", result);
+        assertEquals("only one result for foo.bar", 1, result.length);
+        assertEquals("plonk.bar", result[0]);
+
+        // Try a silly case
+        m.setTo("*foo");
+        result = m.mapFileName("foo.bar");
+        assertEquals(".barfoo", result[0]);
+    }
+
+    public void testPreAndPostfix() {
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("foo*bar");
+        m.setTo("plonk*pling");
+        assertNull("Shouldn\'t match foo*bar", m.mapFileName("bar.baz"));
+        String[] result = m.mapFileName("foo.bar");
+        assertNotNull("Should match foo*bar", result);
+        assertEquals("only one result for foo.bar", 1, result.length);
+        assertEquals("plonk.pling", result[0]);
+
+        // and a little longer
+        result = m.mapFileName("foo.baz.bar");
+        assertNotNull("Should match foo*bar", result);
+        assertEquals("only one result for foo.baz.bar", 1, result.length);
+        assertEquals("plonk.baz.pling", result[0]);
+
+        // and a little shorter
+        result = m.mapFileName("foobar");
+        assertNotNull("Should match foo*bar", result);
+        assertEquals("only one result for foobar", 1, result.length);
+        assertEquals("plonkpling", result[0]);
     }
 }

@@ -160,7 +160,7 @@ public class SourceFileScanner {
      * absolute).
      */
     public File[] restrictAsFiles(String[] files, File srcDir, File destDir,
-                             FileNameMapper mapper) {
+                                  FileNameMapper mapper) {
         String[] res = restrict(files, srcDir, destDir, mapper);
         File[] result = new File[res.length];
         for (int i=0; i<res.length; i++) {
