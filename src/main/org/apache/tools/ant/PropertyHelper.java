@@ -581,7 +581,6 @@ public class PropertyHelper {
      *         (including user properties and local properties).
      */
     public Hashtable getProperties() {
-        System.out.println("GetProperties called");
         Hashtable ret = new Hashtable(properties);
         Map locals = threadLocalProperties.getProps();
         for (Iterator i = locals.entrySet().iterator(); i.hasNext();) {
