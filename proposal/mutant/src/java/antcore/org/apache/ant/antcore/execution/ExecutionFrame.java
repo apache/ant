@@ -72,6 +72,7 @@ import org.apache.ant.common.model.Target;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
+import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.ExecutionException;
@@ -88,9 +89,6 @@ import org.apache.ant.init.InitConfig;
  * @created 14 January 2002
  */
 public class ExecutionFrame {
-    /** A magic property which sets the execution base directory */
-    public final static String BASEDIR_PROP = "basedir";
-
     /** The Ant aspect used to identify Ant metadata */
     public final static String ANT_ASPECT = "ant";
 
@@ -206,6 +204,7 @@ public class ExecutionFrame {
 
         configureServices();
         componentManager.setStandardLibraries(standardLibs);
+        setMagicProperties();
     }
 
     /**
@@ -246,6 +245,17 @@ public class ExecutionFrame {
 
         // add in system properties
         addProperties(System.getProperties());
+    }
+
+    /**
+     * Set the values of various magic properties
+     *
+     * @exception ExecutionException if the properties cannot be set
+     */
+    protected void setMagicProperties() throws ExecutionException {
+        // set up various magic properties
+        setDataValue(MagicProperties.ANT_HOME,
+            initConfig.getAntHome().toString(), true);
     }
 
     /**
@@ -606,17 +616,17 @@ public class ExecutionFrame {
         Target target = project.getTarget(targetName);
         String ifCondition = target.getIfCondition();
         String unlessCondition = target.getUnlessCondition();
-        
+
         if (ifCondition != null) {
             ifCondition = dataService.replacePropertyRefs(ifCondition.trim());
             if (!isDataValueSet(ifCondition)) {
                 return;
             }
         }
-        
+
         if (unlessCondition != null) {
-            unlessCondition 
-                = dataService.replacePropertyRefs(unlessCondition.trim());
+            unlessCondition
+                 = dataService.replacePropertyRefs(unlessCondition.trim());
             if (isDataValueSet(unlessCondition)) {
                 return;
             }
@@ -712,8 +722,9 @@ public class ExecutionFrame {
      *      determined
      */
     private void determineBaseDirs() throws ExecutionException {
-        if (isDataValueSet(BASEDIR_PROP)) {
-            baseDir = new File(getDataValue(BASEDIR_PROP).toString());
+        if (isDataValueSet(MagicProperties.BASEDIR)) {
+            baseDir
+                 = new File(getDataValue(MagicProperties.BASEDIR).toString());
         } else {
             URL projectURL = project.getSourceURL();
             if (projectURL.getProtocol().equals("file")) {
@@ -729,8 +740,8 @@ public class ExecutionFrame {
             } else {
                 baseDir = new File(".");
             }
-            setDataValue(BASEDIR_PROP, baseDir.getPath(), true);
         }
+        setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
 
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             ExecutionFrame refFrame = (ExecutionFrame)i.next();
@@ -747,7 +758,7 @@ public class ExecutionFrame {
         fileService = new ExecutionFileService(this);
         componentManager
              = new ComponentManager(this, config.isRemoteLibAllowed());
-        dataService = new ExecutionDataService(this, 
+        dataService = new ExecutionDataService(this,
             config.isUnsetPropertiesAllowed());
 
         services.put(FileService.class, fileService);

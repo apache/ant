@@ -56,6 +56,7 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.init.LoaderUtils;
 
 /**
  * The factory object for the Ant1 compatability Ant library
@@ -81,9 +82,15 @@ public class Ant1Factory extends StandardLibFactory {
      */
     public void init(AntContext context) throws ExecutionException {
         this.context = context;
+        // set the system classpath. In Ant2, the system classpath will not
+        // in general, have any useful information. For Ant1 compatability
+        // we set it now to include the Ant1 facade classes
+        System.setProperty("java.class.path", getAnt1Classpath());
+
         project = new Project();
         project.init(context);
     }
+
 
     /**
      * Create an instance of the requested type class
@@ -195,6 +202,17 @@ public class Ant1Factory extends StandardLibFactory {
             ProjectComponent component = (ProjectComponent)createdElement;
             component.setProject(project);
         }
+    }
+
+    /**
+     * Get an Ant1 equivalent classpath
+     *
+     * @return an Ant1 suitable classpath
+     */
+    String getAnt1Classpath() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        String path = LoaderUtils.getClasspath(classLoader);
+        return path;
     }
 }
 

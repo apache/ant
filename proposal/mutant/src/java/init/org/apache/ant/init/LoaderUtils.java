@@ -147,6 +147,43 @@ public class LoaderUtils {
         return urls;
     }
 
+    /**
+     * Get the classpath from a classloader. This can only extract path
+     * components from the loaders which are instances of URLClassLoaders
+     *
+     * @param loader the loader whose path is required
+     * @return the loader's configuration expressed as a classpath
+     */
+    public static String getClasspath(ClassLoader loader) {
+        StringBuffer pathBuffer = null;
+        if (loader instanceof URLClassLoader) {
+            URLClassLoader urlLoader = (URLClassLoader)loader;
+            URL[] urls = urlLoader.getURLs();
+            for (int i = 0; i < urls.length; ++i) {
+                if (!urls[i].getProtocol().equals("file")) {
+                    continue;
+                }
+                String pathElement = urls[i].getFile();
+                if (pathBuffer == null) {
+                    pathBuffer = new StringBuffer(pathElement);
+                } else {
+                    pathBuffer.append(File.pathSeparatorChar);
+                    pathBuffer.append(pathElement);
+                }
+            }
+        }
+        String path = pathBuffer == null ? "" : pathBuffer.toString();
+        ClassLoader parentLoader = loader.getParent();
+        if (parentLoader != null) {
+            String parentPath = getClasspath(parentLoader);
+            if (parentPath.length() != 0) {
+                path = parentPath + File.pathSeparator + path;
+            }
+        }
+
+        return path;
+    }
+
 
     /**
      * Debug method to dump a class loader hierarchy to a PrintStream

@@ -278,7 +278,7 @@
     <copy todir="${bin.dir}/ant1compat">
       <fileset dir="${bin.dir}/ant1src" excludes="**/*.java"/>
     </copy>
-    <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.tsk">
+    <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.jar">
       <metainf dir="${java.dir}/antlibs/ant1compat" 
                 includes="antlib.xml"/>
     </jar>
