@@ -722,7 +722,19 @@ public class ProjectHelper {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parent.getClass());
         ih.storeElement(project, parent, child, tag);
     }
-    
+
+    /**
+     * Replace ${} style constructions in the given value with the string value of
+     * the corresponding data types.
+     *
+     * @param value the string to be scanned for property references.
+     * @since 1.5
+     */
+     public static String replaceProperties(Project project, String value)
+            throws BuildException {
+         return replaceProperties(project,value,project.getProperties());
+     }
+
     /**
      * Replace ${} style constructions in the given value with the string value of
      * the corresponding data types.
