@@ -494,12 +494,6 @@ public class XSLTProcess
                 loadClass( "org.apache.tools.ant.taskdefs.optional.TraXLiaison" );
             m_liaison = (XSLTLiaison)clazz.newInstance();
         }
-        else if( proc.equals( "xalan" ) )
-        {
-            final Class clazz =
-                loadClass( "org.apache.tools.ant.taskdefs.optional.XalanLiaison" );
-            m_liaison = (XSLTLiaison)clazz.newInstance();
-        }
         else
         {
             m_liaison = (XSLTLiaison)loadClass( proc ).newInstance();
