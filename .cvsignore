@@ -3,8 +3,8 @@ dist
 build
 bootstrap
 distribution
-prj.el
-emacs-jprj.el
-bootstrap.bat.pif
+*.el
+*.ipr
+*.pif
 velocity.log
 
