@@ -6,12 +6,93 @@
     <title>Frequently Asked Questions</title>
   </properties>
 
+  <faqsection title="General">
+    <faq id="what-is-ant">
+      <question>What is Ant?</question>
+      <answer>
+        <p> Ant is a Java based build tool. In theory it is kind of
+        like &quot;make&quot; without makes wrinkles and with the full
+        portability of pure Java code.</p>
+      </answer>
+    </faq>
+
+    <faq id="ant-name">
+      <question>Why do you call it Ant?</question>
+      <answer>
+
+        <p>According to Ant&apos;s original author James Duncan
+        Davidson, the name is an acronym for &quot;Another Neat
+        Tool&quot;.</p>
+        
+        <p>Later explanations go along the lines of &quot;Ants are
+        doing an extremely good job at building things&quot; or
+        &quot;Ants are very small and can carry a weight a dozen times
+        of their own&quot; - describing what Ant is intended to
+        be.</p>
+      </answer>
+    </faq>
+
+    <faq id="history">
+      <question>Tell us a little bit about Ant&apos;s history.</question>
+      <answer>
+
+        <p>Initially Ant was part of the Tomcat code base when it was
+        donated to the Apache Software Foundation - it has been
+        created by James Duncan Davidson, who also is the original
+        author of Tomcat. Ant was there to build Tomcat, nothing
+        else.</p>
+
+        <p>Soon thereafter several open source Java projects realized
+        that Ant could solve the problems they had with makefiles.
+        Starting with the projects hosted at Jakarta and the old Java
+        Apache project, Ant spread like a virus and now is the build
+        tool of choice for a lot of projects.</p>
+
+        <p>In January 2000 Ant was moved to a separate CVS module and
+        was promoted to a project of its own, independent of
+        Tomcat.</p>
+
+        <p>The first version of Ant that was exposed a lager audience
+        was the one that shipped with Tomcat's 3.1 release on 19 April
+        2000.  This version has later been referenced to as Ant
+        0.3.1.</p>
+
+        <p>The first official release of Ant as a stand alone product was
+        Ant 1.1 released on 19 July 2000.  The complete release
+        history:</p>
+
+        <table>
+          <tr>
+            <th>Ant Version</th>
+            <th>Release Date</th>
+          </tr>
+
+          <tr>
+            <td>1.1</td>
+            <td>19 July 2000</td>
+          </tr>
+
+          <tr>
+            <td>1.2</td>
+            <td>24 October 2000</td>
+          </tr>
+
+          <tr>
+            <td>1.3</td>
+            <td>3 March 2001</td>
+          </tr>
+        </table>
+      </answer>
+    </faq>
+
+  </faqsection>
+
   <faqsection title="Installation">
     <faq id="no-gnu-tar">
       <question>I get checksum errors when I try to extract the
       <code>tar.gz</code> distribution file. Why?</question>
       <answer>
-        <p>Ant&apos;s distibution contains file names that are longer
+        <p>Ant&apos;s distribution contains file names that are longer
         than 100 characters, which is not supported by the standard
         tar file format. Several different implementations of tar use
         different and incompatible ways to work around this
@@ -27,6 +108,44 @@
         found <a href="http://www.gnu.org/software/tar/tar.html">here</a> 
         or use the zip archive instead (you can extract it using
         <code>jar xf</code>).</p>
+      </answer>
+    </faq>
+  </faqsection>
+
+  <faqsection title="Ant and IDEs/Editors">
+    <faq id="integration">
+      <question>Is Ant supported by my IDE/Editor?</question>
+      <answer>
+        <p>See the <a href="external.html#IDE%47Editor+Integration">section 
+        on IDE integration</a> on our external resource page.</p>
+      </answer>
+    </faq>
+
+    <faq id="emacs-mode">
+      <question>Why doesn't (X)Emacs parse the error messages generated
+        by Ant correctly?</question>
+      <answer>
+
+        <p>Ant adds a &quot;banner&quot; with the name of the current
+        task in front of all messages - and there are no built-in
+        regular expressions in Emacs that would account for this.</p>
+
+        <p>You can disable this banner by invoking Ant with the
+        <code>-emacs</code> switch. Alternatively you can add the
+        following snippet to your <code>.emacs</code> to make Emacs
+        understand Ant&apos;s output.</p>
+
+        <source><![CDATA[
+(require 'compile)
+(setq compilation-error-regexp-alist
+  (append (list 
+     ;; works for jikes
+     '("^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):\\([0-9]+\\):[0-9]+:[0-9]+:" 1 2 3)
+     ;; works for javac 
+     '("^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):" 1 2))
+  compilation-error-regexp-alist))
+]]></source>
+
       </answer>
     </faq>
   </faqsection>
@@ -70,5 +189,179 @@
 ]]></source>
       </answer>
     </faq>
+
+    <faq id="mail-logger">
+      <question>How do I send an email with the result of my build
+        process?</question>
+
+      <answer>
+
+        <p>You can use a custom BuildListener, that sends out an email
+        in the buildFinished() method.  Will Glozer
+        &lt;will.glozer@jda.com&gt; has written such a listener based
+        on JavaMail, the source is</p>
+
+        <source><![CDATA[
+import java.io.*;
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import org.apache.tools.ant.*;
+
+/**
+ * A simple listener that waits for a build to finish and sends an email
+ * of the results.  The settings are stored in "monitor.properties" and
+ * are fairly self explanatory.
+ *
+ * @author      Will Glozer
+ * @version     1.05a 09/06/2000
+ */
+public class BuildMonitor implements BuildListener {
+    protected Properties props;
+
+    /**
+     * Create a new BuildMonitor.
+     */
+    public BuildMonitor() throws Exception {
+        props = new Properties();
+        InputStream is = getClass().getResourceAsStream("monitor.properties");
+        props.load(is);
+        is.close();
+    }
+
+    public void buildStarted(BuildEvent e) {
+    }
+
+    /**
+     * Determine the status of the build and the actions to follow, now that
+     * the build has completed.
+     *
+     * @param       e       Event describing the build tatus.
+     */
+    public void buildFinished(BuildEvent e) {
+        Throwable th = e.getException();
+        String status = (th != null) ? "failed" : "succeeded";
+        
+        try {
+            String key = "build." + status;
+            if (props.getProperty(key + ".notify").equalsIgnoreCase("false")) {
+                    return;
+            }
+            
+            Session session = Session.getDefaultInstance(props, null);
+
+            MimeMessage message = new MimeMessage(session);
+            message.addRecipients(Message.RecipientType.TO, parseAddresses(
+                props.getProperty(key + ".email.to")));
+            message.setSubject(props.getProperty(key + ".email.subject"));
+
+            BufferedReader br = new BufferedReader(new FileReader(
+                props.getProperty("build.log")));
+            StringWriter sw = new StringWriter();
+            
+            String line = br.readLine();
+            while (line != null) {
+                sw.write(line);
+                sw.write("\n");
+                line = br.readLine();
+            }
+            br.close();
+            
+            message.setText(sw.toString(), "UTF-8");
+            sw.close();
+            
+            Transport transport = session.getTransport();
+            transport.connect();
+            transport.send(message);
+            transport.close();
+        } catch (Exception ex) {
+            System.out.println("BuildMonitor failed to send email!");
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Parse a comma separated list of internet email addresses.
+     *
+     * @param       s       The list of addresses.
+     * @return      Array of Addresses.
+     */
+    protected Address[] parseAddresses(String s) throws Exception {
+        StringTokenizer st = new StringTokenizer(s, ",");
+        Address[] addrs = new Address[st.countTokens()];
+
+        for (int i = 0; i < addrs.length; i++) {
+            addrs[i] = new InternetAddress(st.nextToken());
+        }
+        return addrs;
+    }
+
+    public void messageLogged(BuildEvent e) {
+    }
+
+    public void targetStarted(BuildEvent e) {
+    }
+
+    public void targetFinished(BuildEvent e) {
+    }
+
+    public void taskStarted(BuildEvent e) {        
+    }
+
+    public void taskFinished(BuildEvent e) {
+    }
+}
+]]></source>
+          
+      <p>With a <code>monitor.properties</code> like this</p>
+
+        <source><![CDATA[
+# configuration for build monitor
+
+mail.transport.protocol=smtp
+mail.smtp.host=<host>
+mail.from=Will Glozer <will.glozer@jda.com>
+
+build.log=build.log
+
+build.failed.notify=true
+build.failed.email.to=will.glozer@jda.com
+build.failed.email.subject=Nightly build failed!
+
+build.succeeded.notify=true
+build.succeeded.email.to=will.glozer@jda.com
+build.succeeded.email.subject=Nightly build succeeded!
+]]></source>
+
+        <p><code>monitor.properties</code> should be placed right next
+        to your compiled <code>BuildMonitor.class</code>.  To use it,
+        invoke Ant like</p>
+        
+        <source><![CDATA[
+ant -logger BuildMonitor
+]]></source>
+      </answer>
+    </faq>
+
   </faqsection>
+
+  <faqsection title="Known problems">
+    <faq id="remove-cr">
+      <question>&lt;chmod&gt; or &lt;exec&gt; don&apos;t work in Ant
+        1.3 on Unix</question>
+      <answer>
+
+        <p>The <code>antRun</code> script in <code>ANT_HOME/bin</code>
+        has DOS instead of Unix line endings, you must remove the
+        carriage return characters from this file.  This can be done by
+        using Ant&apos;s &lt;fixcrlf&gt; task or something like:</p>
+
+        <source><![CDATA[
+tr -d '\r' < $ANT_HOME/bin/antRun > /tmp/foo
+mv /tmp/foo $ANT_HOME/bin/antRun
+]]></source>
+      </answer>
+    </faq>
+  </faqsection>
+
 </document>

@@ -88,6 +88,28 @@
                       <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>General</strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+        <ul>
+                    <li><a href="#what-is-ant">
+  <question>What is Ant?</question>
+  </a></li>
+                    <li><a href="#ant-name">
+  <question>Why do you call it Ant?</question>
+  </a></li>
+                    <li><a href="#history">
+  <question>Tell us a little bit about Ant's history.</question>
+  </a></li>
+                </ul>
+      </blockquote>
+    </td></tr>
+  </table>
+                <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
         <strong>Installation</strong>
       </font>
     </td></tr>
@@ -105,6 +127,26 @@
                 <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>Ant and IDEs/Editors</strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+        <ul>
+                    <li><a href="#integration">
+  <question>Is Ant supported by my IDE/Editor?</question>
+  </a></li>
+                    <li><a href="#emacs-mode">
+  <question>Why doesn't (X)Emacs parse the error messages generated
+        by Ant correctly?</question>
+  </a></li>
+                </ul>
+      </blockquote>
+    </td></tr>
+  </table>
+                <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
         <strong>Advanced issues</strong>
       </font>
     </td></tr>
@@ -113,6 +155,27 @@
         <ul>
                     <li><a href="#xml-entity-include">
   <question>How do I include an XML snippet in my build file?</question>
+  </a></li>
+                    <li><a href="#mail-logger">
+  <question>How do I send an email with the result of my build
+        process?</question>
+  </a></li>
+                </ul>
+      </blockquote>
+    </td></tr>
+  </table>
+                <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>Known problems</strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+        <ul>
+                    <li><a href="#remove-cr">
+  <question>&lt;chmod&gt; or &lt;exec&gt; don't work in Ant
+        1.3 on Unix</question>
   </a></li>
                 </ul>
       </blockquote>
@@ -130,7 +193,141 @@
     </td></tr>
     <tr><td>
       <blockquote>
-                      <a name="no-gnu-tar">
+                      <a name="what-is-ant">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>What is Ant?</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p> Ant is a Java based build tool. In theory it is kind of
+        like "make" without makes wrinkles and with the full
+        portability of pure Java code.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="ant-name">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>Why do you call it Ant?</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>According to Ant's original author James Duncan
+        Davidson, the name is an acronym for "Another Neat
+        Tool".</p>
+                                        <p>Later explanations go along the lines of "Ants are
+        doing an extremely good job at building things" or
+        "Ants are very small and can carry a weight a dozen times
+        of their own" - describing what Ant is intended to
+        be.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="history">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>Tell us a little bit about Ant's history.</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>Initially Ant was part of the Tomcat code base when it was
+        donated to the Apache Software Foundation - it has been
+        created by James Duncan Davidson, who also is the original
+        author of Tomcat. Ant was there to build Tomcat, nothing
+        else.</p>
+                                        <p>Soon thereafter several open source Java projects realized
+        that Ant could solve the problems they had with makefiles.
+        Starting with the projects hosted at Jakarta and the old Java
+        Apache project, Ant spread like a virus and now is the build
+        tool of choice for a lot of projects.</p>
+                                        <p>In January 2000 Ant was moved to a separate CVS module and
+        was promoted to a project of its own, independent of
+        Tomcat.</p>
+                                        <p>The first version of Ant that was exposed a lager audience
+        was the one that shipped with Tomcat's 3.1 release on 19 April
+        2000.  This version has later been referenced to as Ant
+        0.3.1.</p>
+                                        <p>The first official release of Ant as a stand alone product was
+        Ant 1.1 released on 19 July 2000.  The complete release
+        history:</p>
+                                          <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant Version
+        </font>
+  </td>
+                      <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Release Date
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          1.1
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          19 July 2000
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          1.2
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          24 October 2000
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          1.3
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          3 March 2001
+        </font>
+  </td>
+      </tr>
+        </table>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+                        <a name="no-gnu-tar">
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
@@ -142,7 +339,7 @@
     </td></tr>
     <tr><td>
       <blockquote>
-                              <p>Ant's distibution contains file names that are longer
+                              <p>Ant's distribution contains file names that are longer
         than 100 characters, which is not supported by the standard
         tar file format. Several different implementations of tar use
         different and incompatible ways to work around this
@@ -156,6 +353,74 @@
         found <a href="http://www.gnu.org/software/tar/tar.html">here</a> 
         or use the zip archive instead (you can extract it using
         <code>jar xf</code>).</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+                        <a name="integration">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>Is Ant supported by my IDE/Editor?</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>See the <a href="external.html#IDE%47Editor+Integration">section 
+        on IDE integration</a> on our external resource page.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="emacs-mode">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>Why doesn't (X)Emacs parse the error messages generated
+        by Ant correctly?</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>Ant adds a "banner" with the name of the current
+        task in front of all messages - and there are no built-in
+        regular expressions in Emacs that would account for this.</p>
+                                        <p>You can disable this banner by invoking Ant with the
+        <code>-emacs</code> switch. Alternatively you can add the
+        following snippet to your <code>.emacs</code> to make Emacs
+        understand Ant's output.</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+(require 'compile)
+(setq compilation-error-regexp-alist
+  (append (list 
+     ;; works for jikes
+     '(&quot;^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):\\([0-9]+\\):[0-9]+:[0-9]+:&quot; 1 2 3)
+     ;; works for javac 
+     '(&quot;^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):&quot; 1 2))
+  compilation-error-regexp-alist))
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
                         </blockquote>
     </td></tr>
   </table>
@@ -226,6 +491,257 @@
 &lt;!DOCTYPE project PUBLIC &quot;-//ANT//DTD project//EN&quot; &quot;file:./ant.dtd&quot; [
    &lt;!ENTITY include SYSTEM &quot;file:./header.xml&quot;&gt;
 ]&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="mail-logger">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>How do I send an email with the result of my build
+        process?</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>You can use a custom BuildListener, that sends out an email
+        in the buildFinished() method.  Will Glozer
+        &lt;will.glozer@jda.com&gt; has written such a listener based
+        on JavaMail, the source is</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+import java.io.*;
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import org.apache.tools.ant.*;
+
+/**
+ * A simple listener that waits for a build to finish and sends an email
+ * of the results.  The settings are stored in &quot;monitor.properties&quot; and
+ * are fairly self explanatory.
+ *
+ * @author      Will Glozer
+ * @version     1.05a 09/06/2000
+ */
+public class BuildMonitor implements BuildListener {
+    protected Properties props;
+
+    /**
+     * Create a new BuildMonitor.
+     */
+    public BuildMonitor() throws Exception {
+        props = new Properties();
+        InputStream is = getClass().getResourceAsStream(&quot;monitor.properties&quot;);
+        props.load(is);
+        is.close();
+    }
+
+    public void buildStarted(BuildEvent e) {
+    }
+
+    /**
+     * Determine the status of the build and the actions to follow, now that
+     * the build has completed.
+     *
+     * @param       e       Event describing the build tatus.
+     */
+    public void buildFinished(BuildEvent e) {
+        Throwable th = e.getException();
+        String status = (th != null) ? &quot;failed&quot; : &quot;succeeded&quot;;
+        
+        try {
+            String key = &quot;build.&quot; + status;
+            if (props.getProperty(key + &quot;.notify&quot;).equalsIgnoreCase(&quot;false&quot;)) {
+                    return;
+            }
+            
+            Session session = Session.getDefaultInstance(props, null);
+
+            MimeMessage message = new MimeMessage(session);
+            message.addRecipients(Message.RecipientType.TO, parseAddresses(
+                props.getProperty(key + &quot;.email.to&quot;)));
+            message.setSubject(props.getProperty(key + &quot;.email.subject&quot;));
+
+            BufferedReader br = new BufferedReader(new FileReader(
+                props.getProperty(&quot;build.log&quot;)));
+            StringWriter sw = new StringWriter();
+            
+            String line = br.readLine();
+            while (line != null) {
+                sw.write(line);
+                sw.write(&quot;\n&quot;);
+                line = br.readLine();
+            }
+            br.close();
+            
+            message.setText(sw.toString(), &quot;UTF-8&quot;);
+            sw.close();
+            
+            Transport transport = session.getTransport();
+            transport.connect();
+            transport.send(message);
+            transport.close();
+        } catch (Exception ex) {
+            System.out.println(&quot;BuildMonitor failed to send email!&quot;);
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Parse a comma separated list of internet email addresses.
+     *
+     * @param       s       The list of addresses.
+     * @return      Array of Addresses.
+     */
+    protected Address[] parseAddresses(String s) throws Exception {
+        StringTokenizer st = new StringTokenizer(s, &quot;,&quot;);
+        Address[] addrs = new Address[st.countTokens()];
+
+        for (int i = 0; i &lt; addrs.length; i++) {
+            addrs[i] = new InternetAddress(st.nextToken());
+        }
+        return addrs;
+    }
+
+    public void messageLogged(BuildEvent e) {
+    }
+
+    public void targetStarted(BuildEvent e) {
+    }
+
+    public void targetFinished(BuildEvent e) {
+    }
+
+    public void taskStarted(BuildEvent e) {        
+    }
+
+    public void taskFinished(BuildEvent e) {
+    }
+}
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>With a <code>monitor.properties</code> like this</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+# configuration for build monitor
+
+mail.transport.protocol=smtp
+mail.smtp.host=&lt;host&gt;
+mail.from=Will Glozer &lt;will.glozer@jda.com&gt;
+
+build.log=build.log
+
+build.failed.notify=true
+build.failed.email.to=will.glozer@jda.com
+build.failed.email.subject=Nightly build failed!
+
+build.succeeded.notify=true
+build.succeeded.email.to=will.glozer@jda.com
+build.succeeded.email.subject=Nightly build succeeded!
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p><code>monitor.properties</code> should be placed right next
+        to your compiled <code>BuildMonitor.class</code>.  To use it,
+        invoke Ant like</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+ant -logger BuildMonitor
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+                        <a name="remove-cr">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <question>&lt;chmod&gt; or &lt;exec&gt; don't work in Ant
+        1.3 on Unix</question>
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>The <code>antRun</code> script in <code>ANT_HOME/bin</code>
+        has DOS instead of Unix line endings, you must remove the
+        carriage return characters from this file.  This can be done by
+        using Ant's &lt;fixcrlf&gt; task or something like:</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+tr -d '\r' &lt; $ANT_HOME/bin/antRun &gt; /tmp/foo
+mv /tmp/foo $ANT_HOME/bin/antRun
 </pre></td>
         <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
       </tr>
