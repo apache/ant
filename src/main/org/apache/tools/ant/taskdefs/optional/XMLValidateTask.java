@@ -54,7 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -70,6 +70,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -91,6 +92,11 @@ import org.xml.sax.helpers.ParserAdapter;
  * @author Nick Pellow <a href="mailto:nick@svana.org">nick@svana.org</a>
  */
 public class XMLValidateTask extends Task {
+
+    /**
+     * helper for path -> URI and URI -> path conversions.
+     */
+    private static FileUtils fu = FileUtils.newFileUtils();
 
     protected static String INIT_FAILED_MSG =
         "Could not start xml validation: ";
@@ -398,13 +404,8 @@ public class XMLValidateTask extends Task {
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
-            InputSource is = new InputSource(new FileReader(afile));
-            String uri = "file:" + afile.getAbsolutePath().replace('\\', '/');
-            for (int index = uri.indexOf('#'); index != -1;
-                 index = uri.indexOf('#')) {
-                uri = uri.substring(0, index) + "%23"
-                    + uri.substring(index + 1);
-            }
+            InputSource is = new InputSource(new FileInputStream(afile));
+            String uri = fu.toURI(afile.getAbsolutePath());
             is.setSystemId(uri);
             xmlReader.parse(is);
         } catch (SAXException ex) {

@@ -179,4 +179,26 @@ public class XmlValidateTest extends BuildFileTest {
             }
         }
     }
+
+    /**
+     * iso-2022-jp.xml is valid but wouldn't get recognized on systems
+     * with a different native encoding.
+     *
+     * Bug 11279
+     */
+    public void testIso2022Jp() {
+        executeTarget("testIso2022Jp");
+    }
+
+    /**
+     * utf-8.xml is invalid as it contains non-UTF-8 characters, but
+     * would pass on systems with a native iso-8859-1 (or similar)
+     * encoding.
+     *
+     * Bug 11279
+     */
+    public void testUtf8() {
+        expectBuildException("testUtf8", "invalid characters in file");
+    }
+
 }

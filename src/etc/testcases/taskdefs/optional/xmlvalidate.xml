@@ -73,4 +73,12 @@
     </xmlvalidate>
   </target>
     
+  <target name="testIso2022Jp">
+    <xmlvalidate warn="false" file="xml/iso-2022-jp.xml"/>
+  </target>
+
+  <target name="testUtf8">
+    <xmlvalidate warn="false" file="xml/utf-8.xml"/>
+  </target>
+
 </project>
