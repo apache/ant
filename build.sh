@@ -16,7 +16,11 @@ case "`uname`" in
 esac
 
 REALANTHOME=$ANT_HOME
-ANT_HOME=bootstrap
+if [ -z $PWD ]; then
+    ANT_HOME=./bootstrap
+else
+    ANT_HOME=$PWD/bootstrap
+fi
 export ANT_HOME
 
 if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
