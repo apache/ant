@@ -111,10 +111,15 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
         
         String myOS = System.getProperty("os.name");
         if(myOS == null) throw new BuildException("Unable to determine OS");
+        myOS = myOS.toLowerCase();
         
-        if(myOS.toLowerCase().indexOf("nt") >= 0) {
+        if( myOS.indexOf("os/2") >= 0 ) {
+            shell = "cmd /c ";
+        } else if( myOS.startsWith("windows") 
+                   && (myOS.indexOf("2000") >= 0 || myOS.indexOf("nt") >= 0 ) ) {
             shell = "cmd /c ";
         } else {
+            // What about Mac OS? No perforce support there?
             shell = "/bin/sh "; //This needs testing on Unix!!!!
         }
         //Get default P4 settings from environment - Mark would have done something cool with
