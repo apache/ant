@@ -58,8 +58,6 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
@@ -120,6 +118,8 @@ public class P4Change extends P4Base {
                                     
                         } else if(util.match("/<enter description here>/",line)) {
 
+                            // we need to escape the description in case there are /
+                            description = backslash(description);
                             line = util.substitute("s/<enter description here>/" + description + "/", line);
                                         
                         } else if(util.match("/\\/\\//", line)) {
@@ -134,6 +134,27 @@ public class P4Change extends P4Base {
                 }});
                 
         return stringbuf.toString();
+    }
+
+    /**
+     * Ensure that a string is backslashing slashes so that  it does not
+     * confuse them with Perl substitution delimiter in Oro. Backslashes are
+     * always backslashes in a string unless they escape the delimiter.
+     * @param value the string to backslash for slashes
+     * @return the backslashed string
+     * @see < a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/perl/Perl5Util.html#substitute(java.lang.String,%20java.lang.String)">Oro</a>
+     */
+    protected String backslash(String value){
+        final StringBuffer buf = new StringBuffer(value.length());
+        final int len = value.length();
+        for (int i = 0; i < len; i++){
+            char c = value.charAt(i);
+            if (c == '/'){
+                buf.append('\\');
+            }
+            buf.append(c);
+        }
+        return buf.toString();
     }
 
     /* Set Description Variable. */
