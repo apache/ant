@@ -386,6 +386,9 @@ Legal:
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="selftest-ant-descriptor.xml"/>
       </zipfileset>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
+        <include name="empty-roles.xml"/>
+      </zipfileset>
     </jar>
 
     <jar jarfile="${build.lib}/selftest-extension1.jar"
