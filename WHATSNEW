@@ -163,6 +163,10 @@ Other changes:
 
 * you can now specify the -sourcepath for <javac> explicitly.
 
+* The compiler implementation for javac can now be chosen on a task by
+  task basis.  Use the new compiler attribute of <javac> to override
+  the build.compiler property.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

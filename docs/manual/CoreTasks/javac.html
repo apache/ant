@@ -29,7 +29,7 @@ want to use default exclusions or not. See the section on <a
 href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns.</p>
 <p>It is possible to use different compilers. This can be selected with the
-&quot;build.compiler&quot; property. Here are the choices:-</p>
+&quot;build.compiler&quot; property or the compiler attribute. Here are the choices:-</p>
 <ul>
   <li>classic (the standard compiler of JDK 1.1/1.2) - javac1.1 and
      javac1.2 can be used as aliases</li>
@@ -257,6 +257,12 @@ invoking the compiler.</p>
     appended to <code>-g</code>.  If debug is not turned on, this attribute will be
     ignored.
     </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compiler</td>
+    <td valign="top">The compiler implementation to use.
+      Defaults to the value of the <code>build.compiler</code> property.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>

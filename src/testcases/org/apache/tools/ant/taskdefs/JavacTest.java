@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -165,6 +165,46 @@ public class JavacTest extends TestCase {
         String[] args = javac.getCurrentCompilerArgs();
         assertEquals("both are forked javac", 1, args.length);
         assertEquals(testArg, args[0]);
+    }
+
+    /**
+     * Test compiler attribute.
+     */
+    public void testCompilerAttribute() {
+        // check defaults
+        String compiler = javac.getCompiler();
+        assertNotNull(compiler);
+        assertTrue("default value", 
+                   "modern".equals(compiler) || "classic".equals(compiler));
+
+        javac.setFork("true");
+        compiler = javac.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("extJavac", compiler);
+
+        // check build.compiler provides defaults
+        javac.setFork("false");
+        project.setNewProperty("build.compiler", "jikes");
+        compiler = javac.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("jikes", compiler);
+
+        javac.setFork("true");
+        compiler = javac.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("jikes", compiler);
+
+        // check attribute overrides build.compiler
+        javac.setFork("false");
+        javac.setCompiler("jvc");
+        compiler = javac.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("jvc", compiler);
+
+        javac.setFork("true");
+        compiler = javac.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("jvc", compiler);
     }
 
 }

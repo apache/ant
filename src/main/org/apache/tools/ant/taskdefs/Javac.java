@@ -90,6 +90,7 @@ import java.util.Vector;
  * <li>includeantruntime
  * <li>includejavaruntime
  * <li>source
+ * <li>compiler
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
  * <p>
@@ -135,6 +136,15 @@ public class Javac extends MatchingTask {
 
     private String source;
     private String debugLevel;
+
+    /**
+     * The compiler set via the compiler attribute.
+     *
+     * <p>default is null</p>
+     *
+     * @since 1.84, Ant 1.5
+     */
+    private String compiler = null;
 
     /**
      * Get the value of debugLevel.
@@ -544,8 +554,7 @@ public class Javac extends MatchingTask {
      * Is this a forked invocation of JDK's javac?
      */
     public boolean isForkedJavac() {
-        return !"false".equals(fork) ||
-            "extJavac".equals(project.getProperty("build.compiler"));
+        return !"false".equals(fork) || "extJavac".equals(getCompiler());
     }
 
     /**
@@ -665,13 +674,13 @@ public class Javac extends MatchingTask {
         return compileList;
     }
 
-    protected boolean isJdkCompiler(String compiler) {
-        return "modern".equals(compiler) ||
-            "classic".equals(compiler) ||
-            "javac1.1".equals(compiler) ||
-            "javac1.2".equals(compiler) ||
-            "javac1.3".equals(compiler) ||
-            "javac1.4".equals(compiler);
+    protected boolean isJdkCompiler(String compilerImpl) {
+        return "modern".equals(compilerImpl) ||
+            "classic".equals(compilerImpl) ||
+            "javac1.1".equals(compilerImpl) ||
+            "javac1.2".equals(compilerImpl) ||
+            "javac1.3".equals(compilerImpl) ||
+            "javac1.4".equals(compilerImpl);
     }
 
     protected String getSystemJavac() {
@@ -705,34 +714,53 @@ public class Javac extends MatchingTask {
         }
     }
 
-    private String determineCompiler() {
-        String compiler = project.getProperty("build.compiler");
+    /**
+     * Chose the implementation for this particular task.
+     *
+     * @since 1.84, Ant 1.5
+     */
+    public void setCompiler(String compiler) {
+        this.compiler = compiler;
+    }
+
+    /**
+     * The implementation for this particular task.
+     *
+     * <p>Defaults to the build.compiler property but can be overriden
+     * via the compiler and for attributes.</p>
+     *
+     * @since 1.84, Ant 1.5
+     */
+    public String getCompiler() {
+        String compilerImpl = 
+            this.compiler != null ? this.compiler 
+                                  : project.getProperty("build.compiler");
 
         if (!"false".equals(fork)) {
-            if (compiler != null) {
-                if (isJdkCompiler(compiler)) {
+            if (compilerImpl != null) {
+                if (isJdkCompiler(compilerImpl)) {
                     log("Since fork is true, ignoring build.compiler setting.",
                         Project.MSG_WARN);
-                    compiler = "extJavac";
+                    compilerImpl = "extJavac";
                 }
                 else {
                     log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
                 }
             }
             else {
-                compiler = "extJavac";
+                compilerImpl = "extJavac";
             }
         }
 
-        if (compiler == null) {
+        if (compilerImpl == null) {
             if (Project.getJavaVersion() != Project.JAVA_1_1 &&
                 Project.getJavaVersion() != Project.JAVA_1_2) {
-                compiler = "modern";
+                compilerImpl = "modern";
             } else {
-                compiler = "classic";
+                compilerImpl = "classic";
             }
         }
-        return compiler;
+        return compilerImpl;
     }
 
     /**
@@ -765,7 +793,7 @@ public class Javac extends MatchingTask {
      * @since 1.82, Ant 1.5
      */
     protected void compile() {
-        String compiler = determineCompiler();
+        String compilerImpl = getCompiler();
 
         if (compileList.length > 0) {
             log("Compiling " + compileList.length +
@@ -774,7 +802,7 @@ public class Javac extends MatchingTask {
                 + (destDir != null ? " to " + destDir : ""));
 
             CompilerAdapter adapter = 
-                CompilerAdapterFactory.getCompiler(compiler, this);
+                CompilerAdapterFactory.getCompiler(compilerImpl, this);
 
             // now we need to populate the compiler adapter
             adapter.setJavac(this);
@@ -805,7 +833,7 @@ public class Javac extends MatchingTask {
         }
 
         public String[] getParts() {
-            if (impl == null || impl.equals(determineCompiler())) {
+            if (impl == null || impl.equals(getCompiler())) {
                 return super.getParts();
             } else {
                 return new String[0];
