@@ -178,6 +178,16 @@ public class AntStructure extends Task {
         StringBuffer sb = new StringBuffer("<!ELEMENT ");
         sb.append(name).append(" ");
 
+        if (org.apache.tools.ant.types.Reference.class.equals(element)) {
+            sb.append("EMPTY>").append(lSep);
+            sb.append("<!ATTLIST ").append(name);
+            sb.append(lSep).append("          id ID #IMPLIED");
+            sb.append(lSep).append("          refid IDREF #IMPLIED");
+            sb.append(">").append(lSep);
+            out.println(sb);
+            return;
+        }
+
         Vector v = new Vector();
         if (ih.supportsCharacters()) {
             v.addElement("#PCDATA");
@@ -218,6 +228,8 @@ public class AntStructure extends Task {
             if (type.equals(java.lang.Boolean.class) || 
                 type.equals(java.lang.Boolean.TYPE)) {
                 sb.append("%boolean; ");
+            } else if (org.apache.tools.ant.types.Reference.class.isAssignableFrom(type)) { 
+                sb.append("IDREF ");
             } else if (org.apache.tools.ant.EnumeratedAttribute.class.isAssignableFrom(type)) {
                 try {
                     EnumeratedAttribute ea = 

@@ -57,7 +57,9 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+
 import java.io.File;
+import java.util.Vector;
 
 /**
  * Moved out of MatchingTask to make it a standalone object that could
@@ -71,7 +73,8 @@ import java.io.File;
  */
 public class FileSet {
     
-    private PatternSet patterns = new PatternSet();
+    private PatternSet defaultPatterns = new PatternSet();
+    private Vector additionalPatterns = new Vector();
 
     private File dir;
     private boolean useDefaultExcludes = true;
@@ -95,21 +98,29 @@ public class FileSet {
     }
 
     public PatternSet createPatternSet() {
+        PatternSet patterns = new PatternSet();
+        additionalPatterns.addElement(patterns);
         return patterns;
+    }
+
+    public Reference createPatternSetRef() {
+        Reference r = new Reference();
+        additionalPatterns.addElement(r);
+        return r;
     }
 
     /**
      * add a name entry on the include list
      */
     public PatternSet.NameEntry createInclude() {
-        return patterns.createInclude();
+        return defaultPatterns.createInclude();
     }
     
     /**
      * add a name entry on the exclude list
      */
     public PatternSet.NameEntry createExclude() {
-        return patterns.createExclude();
+        return defaultPatterns.createExclude();
     }
 
     /**
@@ -119,7 +130,7 @@ public class FileSet {
      * @param includes the string containing the include patterns
      */
     public void setIncludes(String includes) {
-        patterns.setIncludes(includes);
+        defaultPatterns.setIncludes(includes);
     }
 
     /**
@@ -129,7 +140,7 @@ public class FileSet {
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes(String excludes) {
-        patterns.setExcludes(excludes);
+        defaultPatterns.setExcludes(excludes);
     }
 
     /**
@@ -139,7 +150,7 @@ public class FileSet {
      * the include patterns from.  
      */
      public void setIncludesfile(File incl) throws BuildException {
-         patterns.setIncludesfile(incl);
+         defaultPatterns.setIncludesfile(incl);
      }
 
     /**
@@ -149,7 +160,7 @@ public class FileSet {
      * the include patterns from.  
      */
      public void setExcludesfile(File excl) throws BuildException {
-         patterns.setExcludesfile(excl);
+         defaultPatterns.setExcludesfile(excl);
      }
 
     /**
@@ -169,8 +180,25 @@ public class FileSet {
     public DirectoryScanner getDirectoryScanner(Project p) {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(dir);
-        ds.setIncludes(patterns.getIncludePatterns(p));
-        ds.setExcludes(patterns.getExcludePatterns(p));
+
+        for (int i=0; i<additionalPatterns.size(); i++) {
+            Object o = additionalPatterns.elementAt(i);
+            if (o instanceof PatternSet) {
+                defaultPatterns.append((PatternSet) o);
+            } else {
+                Reference r = (Reference) o;
+                o = r.getReferencedObject(p);
+                if (o instanceof PatternSet) {
+                    defaultPatterns.append((PatternSet) o);
+                } else {
+                    String msg = r.getRefId()+" doesn\'t denote a patternset";
+                    throw new BuildException(msg);
+                }
+            }
+        }
+        
+        ds.setIncludes(defaultPatterns.getIncludePatterns(p));
+        ds.setExcludes(defaultPatterns.getExcludePatterns(p));
         if (useDefaultExcludes) ds.addDefaultExcludes();
         ds.scan();
         return ds;
