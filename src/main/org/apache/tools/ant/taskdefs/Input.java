@@ -60,14 +60,16 @@ import  java.io.IOException;
 import  java.util.StringTokenizer;
 import  java.util.Vector;
 import org.apache.tools.ant.Task;
+
 import org.apache.tools.ant.BuildException;
+
 import org.apache.tools.ant.Project;
 
 
 /**
  * Ant task to read input line from console.
  *
- * @author Ulrich Schmidt <usch@usch.net>
+ * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
  */
 public class Input extends Task {
     private String validargs = null;

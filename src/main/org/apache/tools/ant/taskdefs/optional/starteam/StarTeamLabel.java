@@ -69,12 +69,14 @@ import org.apache.tools.ant.BuildException;
  * This class logs into StarTeam and creates a label for the repository at the
  * time of the last successful build.
  * Ant Usage:
- * <taskdef name="stlabel"
- *                classname="org.apache.tools.ant.taskdefs.optional.starteam.StarTeamLabel"/>
- *     <stlabel
+ * <pre>
+ * &lt;taskdef name="stlabel"
+ *          classname="org.apache.tools.ant.taskdefs.optional.starteam.StarTeamLabel"/&lt;
+ *     &lt;stlabel
  * label="1.0" lastbuild="20011514100000" description="Successful Build"
  * username="BuildMaster" password="ant"
- * starteamurl="server:port/project/view"/>
+ * starteamurl="server:port/project/view"/&gt;
+ * </pre>
  *
  * @author Christopher Charlier, ThoughtWorks, Inc. 2001
  * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>

@@ -71,11 +71,14 @@ import org.apache.tools.ant.Project;
 /**
  * This class logs into StarTeam checks out any changes that have occurred since
  * the last successful build. It also creates all working directories on the
- * local directory if appropriate. Ant Usage: <taskdef name="starteamcheckout"
- * classname="org.apache.tools.ant.taskdefs.StarTeamCheckout"/>
- * <starteamcheckout username="BuildMaster" password="ant" starteamFolder="Source"
+ * local directory if appropriate. Ant Usage:
+ * <pre>
+ * &lt;taskdef name="starteamcheckout"
+ * classname="org.apache.tools.ant.taskdefs.StarTeamCheckout"/&gt;
+ * &lt;starteamcheckout username="BuildMaster" password="ant" starteamFolder="Source"
  * starteamurl="servername:portnum/project/view"
- * createworkingdirectories="true"/>
+ * createworkingdirectories="true"/&gt;
+ * </pre>
  *
  * @author Christopher Charlier, ThoughtWorks, Inc. 2001
  * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>

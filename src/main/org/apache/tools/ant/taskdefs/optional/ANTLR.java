@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.Path;
  * ANTLR task.
  *
  * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
- * @author <a href="mailto:sbailliez@apache.org>Stephane Bailliez</a>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class ANTLR extends Task {
 

@@ -55,14 +55,21 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
+
 import java.io.IOException;
+
 import java.io.FileOutputStream;
+
 import java.io.InputStream;
 import java.util.jar.JarFile;
+
 import java.util.jar.JarOutputStream;
+
 import java.util.jar.JarEntry;
 import java.util.Iterator;
+
 import java.util.Hashtable;
+
 import java.util.Enumeration;
 
 
@@ -70,17 +77,22 @@ import java.util.Enumeration;
 
 
 import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.BuildException;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+
 import org.apache.tools.ant.types.Path;
+
 import org.apache.tools.ant.types.Environment;
+
 import org.apache.tools.ant.types.Commandline;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
- * @author <mailto:msahu@interkeel.com>Maneesh Sahu</mailto>
+ * @author <a href="mailto:msahu@interkeel.com">Maneesh Sahu</a>
  */
 public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
