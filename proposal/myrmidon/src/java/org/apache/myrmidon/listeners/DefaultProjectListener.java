@@ -79,7 +79,7 @@ public class DefaultProjectListener
     {
         if( null != m_targetName )
         {
-            output( m_targetName + ":\n" );
+            System.out.println( m_targetName + ":\n" );
             m_targetName = null;
         }
 
