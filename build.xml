@@ -71,6 +71,8 @@
   <property name="packages" value="org.apache.tools.*"/>
   <property name="manifest" value="src/etc/manifest"/>
 
+  <property name="constants.file" value="org/apache/tools/ant/Constants.java" />
+
   <!-- 
        ===================================================================
        Set some the defaults the user can override in .ant.properties     
@@ -190,15 +192,15 @@
     <mkdir dir="${build.classes}"/>
 
     <copy todir="${build.src}">
-      <fileset dir="${java.dir}"/>
+      <fileset dir="${java.dir}">
+        <include name="${constants.file}" />
+        <include name="org/apache/tools/ant/defaultManifest.mf" />
+      </fileset>
     </copy>
 
-    <replace file="${build.src}/org/apache/tools/ant/Main.java" 
-             token="@VERSION@" 
-             value="${version}"/>
-    <replace file="${build.src}/org/apache/tools/ant/Main.java" 
-             token="@DATE@"
-             value="${date}"/>
+    <replace file="${build.src}/${constants.file}" token="@VERSION@" value="${version}"/>
+    <replace file="${build.src}/${constants.file}" token="@DATE@" value="${date}"/>
+    
     <replace file="${build.src}/org/apache/tools/ant/defaultManifest.mf" 
              token="@VERSION@" 
              value="${version}"/>
@@ -212,13 +214,16 @@
   -->
   <target name="compile" depends="prepare">
 
-    <javac srcdir="${build.src}"
+    <javac srcdir="${java.dir}"
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
            optimize="${optimize}" >
       <classpath refid="classpath" />
 
+      <src path="${build.src}" />
+
+      <exclude name="${constants.file}" />
       <exclude name="${ant.package}/util/regexp/JakartaRegexpMatcher.java" 
                unless="jakarta.regexp.present" />
       <exclude name="${ant.package}/util/regexp/JakartaOroMatcher.java" 
@@ -374,7 +379,7 @@
     <delete file="${dist.base}/${dist.name}-bin.tar"/>
   </target>
 
- <!--
+  <!--
        ===================================================================
                             Create the source distribution
        ===================================================================
