@@ -76,6 +76,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.util.FileUtils;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
     public final static String PUBLICID_EJB11
@@ -149,6 +150,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      */
     private Integer jvmDebugLevel = null;
 
+    /** File utilities instance for copying jars */
+    private FileUtils fileUtils = FileUtils.newFileUtils();
+    
     /**
      * Get the classpath to the weblogic classpaths
      */
@@ -420,7 +424,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
         if (noEJBC) {
             try {
-                getTask().getProject().copyFile(sourceJar, destJar);
+                fileUtils.copyFile(sourceJar, destJar);
                 if (!keepgenerated) {
                     sourceJar.delete();
                 }
