@@ -7,12 +7,9 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
@@ -46,7 +43,7 @@ public class DefaultExecutionFrame
         }
         catch( TaskException te )
         {
-            throw new ContextException(te.getMessage(), te);
+            throw new ContextException( te.getMessage(), te );
         }
     }
 
