@@ -231,6 +231,8 @@ public class Zip extends MatchingTask {
             }
 
             throw new BuildException(msg, ioe, location);
+        } finally {
+            cleanUp();
         }
     }
 
@@ -525,4 +527,12 @@ public class Zip extends MatchingTask {
             addFiles(ds, zOut, prefix, fullpath);
         }
     }
+
+    /**
+     * Do any clean up necessary to allow this instance to be used again.
+     *
+     * <p>When we get here, the Zip file has been closed and all we
+     * need to do is to reset some globals.</p>
+     */
+    protected void cleanUp() {}
 }

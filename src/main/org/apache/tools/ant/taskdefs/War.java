@@ -142,4 +142,13 @@ public class War extends Jar {
             super.zipFile(file, zOut, vPath);
         }
     }
+
+    /**
+     * Make sure we don't think we already have a web.xml next time this task
+     * gets executed.
+     */
+    protected void cleanUp() {
+        descriptorAdded = false;
+        super.cleanUp();
+    }
 }

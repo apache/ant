@@ -129,4 +129,13 @@ public class Jar extends Zip {
             super.zipFile(file, zOut, vPath);
         }
     }
+
+    /**
+     * Make sure we don't think we already have a MANIFEST next time this task
+     * gets executed.
+     */
+    protected void cleanUp() {
+        manifestAdded = false;
+        super.cleanUp();
+    }
 }
