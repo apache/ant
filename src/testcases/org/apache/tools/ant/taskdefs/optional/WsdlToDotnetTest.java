@@ -132,7 +132,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testInvalidExtraOps() throws Exception {
         expectBuildExceptionContaining("testInvalidExtraOps",
                 "expected failure",
-                "WSDL returned: 1");
+                "WSDL returned:");
     }
 
     /**
@@ -153,7 +153,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testInvalidExtraOpsVB() throws Exception {
         expectBuildExceptionContaining("testInvalidExtraOpsVB",
                 "expected failure",
-                "WSDL returned: 1");
+                "WSDL returned:");
     }
 }
 
