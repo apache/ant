@@ -75,7 +75,10 @@ Other changes:
 * Added a new "failall" value for the onerror attribute of <typedef>.
   Bugzilla report 31685.
 
-* New task <getlibraries> can retrieve library files from a maven repository.  
+* New task <getlibraries> can retrieve library files from a maven repository.
+
+* unzip/unwar/unjar/untar now supports a nested mapper, which lets you unzip
+  in useful ways. 
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
