@@ -153,7 +153,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
         }
         Vector v = new Vector();
         int cnt = matcher.groupCount();
-        for (int i=0; i<=cnt; i++) {
+        for (int i = 0; i <= cnt; i++) {
             v.addElement(matcher.group(i));
         }
         return v;

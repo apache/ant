@@ -90,15 +90,15 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
 
     protected void init(ImageIcon img) {
        
-        JPanel pan = (JPanel)getContentPane();
+        JPanel pan = (JPanel) getContentPane();
         JLabel piccy;
-        if(img == null ) {
+        if (img == null) {
             piccy = new JLabel();
         } else {
             piccy = new JLabel(img);
         }
             
-        piccy.setBorder(BorderFactory.createLineBorder(Color.black,1));
+        piccy.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         text = new JLabel("Building....", JLabel.CENTER);
         text.setFont(new Font("Sans-Serif", Font.BOLD, 12));
         text.setBorder(BorderFactory.createEtchedBorder());
@@ -108,8 +108,8 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         JPanel pan2 = new JPanel();
         pan2.setLayout(new BorderLayout());
 
-        pan2.add(text,BorderLayout.NORTH);
-        pan2.add(pb,BorderLayout.SOUTH);
+        pan2.add(text, BorderLayout.NORTH);
+        pan2.add(pb, BorderLayout.SOUTH);
 
         pan.setLayout(new BorderLayout());
         pan.add(piccy, BorderLayout.CENTER);
@@ -121,9 +121,9 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
 
         Dimension size = getSize();
         Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (scr.width - size.width) /2;
-        int y = (scr.height - size.height) /2;
-        setBounds(x,y,size.width, size.height);
+        int x = (scr.width - size.width) / 2;
+        int y = (scr.height - size.height) / 2;
+        setBounds(x, y, size.width, size.height);
     }
 
     public void setText(String txt) {
@@ -131,7 +131,7 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
     }
 
     public void actionPerformed(ActionEvent a) {
-        if(total < max) {
+        if (total < max) {
             total++;
         } else {
             total = min;

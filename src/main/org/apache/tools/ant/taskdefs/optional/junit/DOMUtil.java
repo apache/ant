@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -114,7 +114,7 @@ public final class DOMUtil {
                     NodeList recmatches = listChildNodes(child, filter, recurse);
                     final int reclength = matches.getLength();
                     for (int j = 0; j < reclength; j++) {
-                        matches.addElement( recmatches.item(i) );
+                        matches.addElement(recmatches.item(i));
                     }
                 }
             }
@@ -129,7 +129,7 @@ public final class DOMUtil {
         }
         public Node item(int i){
             try {
-                return (Node)elementAt(i);
+                return (Node) elementAt(i);
             } catch (ArrayIndexOutOfBoundsException e){
                 return null; // conforming to NodeList interface
             }
@@ -145,7 +145,7 @@ public final class DOMUtil {
      */
     public static String getNodeAttribute(Node node, String name) {
         if (node instanceof Element) {
-            Element element = (Element)node;
+            Element element = (Element) node;
             return element.getAttribute(name);
         }
         return null;
@@ -169,9 +169,9 @@ public final class DOMUtil {
         final int len = childList.getLength();
         for (int i = 0; i < len; i++) {
             Node child = childList.item(i);
-            if ( child != null && child.getNodeType() == Node.ELEMENT_NODE &&
+            if (child != null && child.getNodeType() == Node.ELEMENT_NODE &&
                  child.getNodeName().equals(tagname)) {
-                return (Element)child;
+                return (Element) child;
             }
         }
         return null;
@@ -204,10 +204,10 @@ public final class DOMUtil {
             copy = doc.createDocumentFragment();
             break;
         case Node.ELEMENT_NODE:
-            final Element elem = doc.createElement(((Element)child).getTagName());
+            final Element elem = doc.createElement(((Element) child).getTagName());
             copy = elem;
             final NamedNodeMap attributes = child.getAttributes();
-            if ( attributes != null) {
+            if (attributes != null) {
                 final int size = attributes.getLength();
                 for (int i = 0; i < size; i++) {
                     final Attr attr = (Attr) attributes.item(i);
@@ -219,7 +219,7 @@ public final class DOMUtil {
             copy = doc.createEntityReference(child.getNodeName());
             break;
         case Node.PROCESSING_INSTRUCTION_NODE:
-            final ProcessingInstruction pi = (ProcessingInstruction)child;
+            final ProcessingInstruction pi = (ProcessingInstruction) child;
             copy = doc.createProcessingInstruction(pi.getTarget(), pi.getData());
             break;
         case Node.TEXT_NODE:

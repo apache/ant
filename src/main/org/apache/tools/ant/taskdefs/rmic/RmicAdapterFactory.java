@@ -88,9 +88,9 @@ public class RmicAdapterFactory {
      * @throws BuildException if the rmic type could not be resolved into
      * a rmic adapter.
      */
-    public static RmicAdapter getRmic( String rmicType, Task task ) 
+    public static RmicAdapter getRmic(String rmicType, Task task) 
         throws BuildException {
-        if( rmicType == null){
+        if (rmicType == null) {
             /* 
              * When not specified rmicType, search SUN's rmic and
              * Kaffe's rmic.
@@ -110,14 +110,14 @@ public class RmicAdapterFactory {
             }
         }
 
-        if ( rmicType.equalsIgnoreCase("sun") ) {
+        if (rmicType.equalsIgnoreCase("sun")) {
             return new SunRmic();
-        } else if ( rmicType.equalsIgnoreCase("kaffe") ) {
+        } else if (rmicType.equalsIgnoreCase("kaffe")) {
             return new KaffeRmic();
-        } else if ( rmicType.equalsIgnoreCase("weblogic") ) {
+        } else if (rmicType.equalsIgnoreCase("weblogic")) {
             return new WLRmic();
         }
-        return resolveClassName( rmicType );
+        return resolveClassName(rmicType);
     }
 
     /**
@@ -128,18 +128,18 @@ public class RmicAdapterFactory {
      * @throws BuildException This is the fit that is thrown if className
      * isn't an instance of RmicAdapter.
      */
-    private static RmicAdapter resolveClassName( String className )
+    private static RmicAdapter resolveClassName(String className)
         throws BuildException {
         try {
-            Class c = Class.forName( className );
+            Class c = Class.forName(className);
             Object o = c.newInstance();
             return (RmicAdapter) o;
-        } catch ( ClassNotFoundException cnfe ) {
-            throw new BuildException( className + " can\'t be found.", cnfe );
-        } catch ( ClassCastException cce ) {
+        } catch (ClassNotFoundException cnfe) {
+            throw new BuildException(className + " can\'t be found.", cnfe);
+        } catch (ClassCastException cce) {
             throw new BuildException(className + " isn\'t the classname of "
                                      + "a rmic adapter.", cce);
-        } catch ( Throwable t ) {
+        } catch (Throwable t) {
             // for all other possibilities
             throw new BuildException(className + " caused an interesting "
                                      + "exception.", t);

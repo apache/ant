@@ -151,7 +151,7 @@ public class DOMElementWriter {
                     out.write(lSep);
                     hasChildren = true;
                 }
-                write((Element)child, out, indent + 1, indentWith);
+                write((Element) child, out, indent + 1, indentWith);
                 break;
                 
             case Node.TEXT_NODE:
@@ -160,7 +160,7 @@ public class DOMElementWriter {
                 
             case Node.CDATA_SECTION_NODE:
                 out.write("<![CDATA[");
-                out.write(encodedata(((Text)child).getData()));
+                out.write(encodedata(((Text) child).getData()));
                 out.write("]]>");
                 break;
 
@@ -174,7 +174,7 @@ public class DOMElementWriter {
                 out.write("<?");
                 out.write(child.getNodeName());
                 String data = child.getNodeValue();
-                if ( data != null && data.length() > 0 ) {
+                if (data != null && data.length() > 0) {
                     out.write(' ');
                     out.write(data);
                 }
@@ -206,7 +206,7 @@ public class DOMElementWriter {
      */
     public String encode(String value) {
         sb.setLength(0);
-        for (int i=0; i<value.length(); i++) {
+        for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
             switch (c) {
             case '<':
@@ -224,7 +224,7 @@ public class DOMElementWriter {
             case '&':
                 int nextSemi = value.indexOf(";", i);
                 if (nextSemi < 0
-                    || !isReference(value.substring(i, nextSemi+1))) {
+                    || !isReference(value.substring(i, nextSemi + 1))) {
                     sb.append("&amp;");
                 } else {
                     sb.append('&');
@@ -268,14 +268,14 @@ public class DOMElementWriter {
         if (ent.charAt(1) == '#') {
             if (ent.charAt(2) == 'x') {
                 try {
-                    Integer.parseInt(ent.substring(3, ent.length()-1), 16);
+                    Integer.parseInt(ent.substring(3, ent.length() - 1), 16);
                     return true;
                 } catch (NumberFormatException nfe) {
                     return false;
                 }
             } else {
                 try {
-                    Integer.parseInt(ent.substring(2, ent.length()-1));
+                    Integer.parseInt(ent.substring(2, ent.length() - 1));
                     return true;
                 } catch (NumberFormatException nfe) {
                     return false;
@@ -284,7 +284,7 @@ public class DOMElementWriter {
         }
 
         String name = ent.substring(1, ent.length() - 1);
-        for (int i=0; i<knownEntities.length; i++) {
+        for (int i = 0; i < knownEntities.length; i++) {
             if (name.equals(knownEntities[i])) {
                 return true;
             }
@@ -296,7 +296,8 @@ public class DOMElementWriter {
      * Is the given character allowed inside an XML document?
      *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
      *
      * @since 1.10, Ant 1.5
      */

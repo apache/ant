@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -141,24 +141,24 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
         sb.append(", Time elapsed: ");
-        sb.append(nf.format(suite.getRunTime()/1000.0));
+        sb.append(nf.format(suite.getRunTime() / 1000.0));
         sb.append(" sec");
         sb.append(newLine);
         
         // append the err and output streams to the log
         if (systemOutput != null && systemOutput.length() > 0) {
-            sb.append("------------- Standard Output ---------------" )
+            sb.append("------------- Standard Output ---------------")
                 .append(newLine)
                 .append(systemOutput)
-                .append("------------- ---------------- ---------------" )
+                .append("------------- ---------------- ---------------")
                 .append(newLine);
         }
         
         if (systemError != null && systemError.length() > 0) {
-            sb.append("------------- Standard Error -----------------" )
+            sb.append("------------- Standard Error -----------------")
                 .append(newLine)
                 .append(systemError)
-                .append("------------- ---------------- ---------------" )
+                .append("------------- ---------------- ---------------")
                 .append(newLine);
         }
 
@@ -206,7 +206,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             }
             Long l = (Long) testStarts.get(test);
             wri.println(" took " 
-                        + nf.format((System.currentTimeMillis()-l.longValue())
+                        + nf.format((System.currentTimeMillis() - l.longValue())
                                     / 1000.0)
                         + " sec");
         }

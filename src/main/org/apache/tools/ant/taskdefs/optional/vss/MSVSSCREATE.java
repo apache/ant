@@ -151,7 +151,7 @@ public class MSVSSCREATE extends MSVSS {
         commandLine.createArgument().setValue(getVsspath());
 
         // -C
-        commandLine.createArgument().setValue("-C"+getComment());
+        commandLine.createArgument().setValue("-C" + getComment());
 
         // -I- or -I-Y or -I-N
         getAutoresponse(commandLine);
@@ -198,7 +198,7 @@ public class MSVSSCREATE extends MSVSS {
      * @param quiet whether or not command should be run in "quiet mode".
      */
     public final void setQuiet (boolean quiet) {
-        this.m_Quiet=quiet;
+        this.m_Quiet = quiet;
     }
 
     /** 
@@ -217,7 +217,7 @@ public class MSVSSCREATE extends MSVSS {
      * the project.
      */
     public final void setFailOnError (boolean failOnError) {
-        this.m_FailOnError=failOnError;
+        this.m_FailOnError = failOnError;
     }
 
     /**

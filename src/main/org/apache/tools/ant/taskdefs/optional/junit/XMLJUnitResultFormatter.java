@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -92,7 +92,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
         }
-        catch(Exception exc) {
+        catch (Exception exc) {
             throw new ExceptionInInitializerError(exc);
         }
     }
@@ -160,10 +160,10 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * The whole testsuite ended.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
-        rootElement.setAttribute(ATTR_TESTS, ""+suite.runCount());
-        rootElement.setAttribute(ATTR_FAILURES, ""+suite.failureCount());
-        rootElement.setAttribute(ATTR_ERRORS, ""+suite.errorCount());
-        rootElement.setAttribute(ATTR_TIME, ""+(suite.getRunTime()/1000.0));
+        rootElement.setAttribute(ATTR_TESTS, "" + suite.runCount());
+        rootElement.setAttribute(ATTR_FAILURES, "" + suite.failureCount());
+        rootElement.setAttribute(ATTR_ERRORS, "" + suite.errorCount());
+        rootElement.setAttribute(ATTR_TIME, "" + (suite.getRunTime() / 1000.0));
         if (out != null) {
             Writer wri = null;
             try {
@@ -171,7 +171,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
                 wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
                 (new DOMElementWriter()).write(rootElement, wri, 0, "  ");
                 wri.flush();
-            } catch(IOException exc) {
+            } catch (IOException exc) {
                 throw new BuildException("Unable to write log file", exc);
             } finally {
                 if (out != System.out && out != System.err) {
@@ -218,8 +218,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         
         Long l = (Long) testStarts.get(test);
         currentTest.setAttribute(ATTR_TIME,
-                                 ""+((System.currentTimeMillis()-l.longValue())
-                                           / 1000.0));
+            "" + ((System.currentTimeMillis() - l.longValue()) / 1000.0));
     }
 
     /**

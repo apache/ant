@@ -128,9 +128,9 @@ public class ProjectHelperImpl extends ProjectHelper {
      */
     public void parse(Project project, Object source) throws BuildException {
         if (!(source instanceof File)) {
-            throw new BuildException( "Only File source supported by default plugin" );
+            throw new BuildException("Only File source supported by default plugin");
         }
-        File buildFile = (File)source;
+        File buildFile = (File) source;
         FileInputStream inputStream = null;
         InputSource inputSource = null;
 
@@ -193,7 +193,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                                      exc);
         } catch (IOException exc) {
             throw new BuildException("Error reading project file: "
-                                     +exc.getMessage(), exc);
+                                     + exc.getMessage(), exc);
         } finally {
             if (inputStream != null) {
                 try {
@@ -321,7 +321,7 @@ public class ProjectHelperImpl extends ProjectHelper {
     static class RootHandler extends HandlerBase {
         ProjectHelperImpl helperImpl;
         
-        public RootHandler( ProjectHelperImpl helperImpl ) {
+        public RootHandler(ProjectHelperImpl helperImpl) {
             this.helperImpl = helperImpl;
         }
         
@@ -876,9 +876,11 @@ public class ProjectHelperImpl extends ProjectHelper {
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (task instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
-                new TaskHandler(helperImpl, this, (TaskContainer)task, wrapper, target).init(name, attrs);
+                new TaskHandler(helperImpl, this, (TaskContainer) task, 
+                    wrapper, target).init(name, attrs);
             } else {
-                new NestedElementHandler(helperImpl, this, task, wrapper, target).init(name, attrs);
+                new NestedElementHandler(helperImpl, this, task, 
+                    wrapper, target).init(name, attrs);
             }
         }
     }
@@ -1027,9 +1029,11 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (child instanceof TaskContainer) {
                 // taskcontainer nested element can contain other tasks - no other 
                 // nested elements possible
-                new TaskHandler(helperImpl, this, (TaskContainer)child, childWrapper, target).init(name, attrs);
+                new TaskHandler(helperImpl, this, (TaskContainer) child, 
+                    childWrapper, target).init(name, attrs);
             } else {
-                new NestedElementHandler(helperImpl, this, child, childWrapper, target).init(name, attrs);
+                new NestedElementHandler(helperImpl, this, child, 
+                    childWrapper, target).init(name, attrs);
             }
         }
     }

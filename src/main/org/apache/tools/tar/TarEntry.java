@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -224,7 +224,7 @@ public class TarEntry implements TarConstants {
             else if (osname.toLowerCase().indexOf("netware") > -1) {
                 int colon = name.indexOf(':');
                 if (colon != -1) {
-                    name=name.substring(colon+1);
+                    name = name.substring(colon + 1);
                 }
             }
         } 
@@ -517,7 +517,7 @@ public class TarEntry implements TarConstants {
      * @return An array of TarEntry's for this entry's children.
      */ 
     public TarEntry[] getDirectoryEntries() {
-        if (this.file == null ||!this.file.isDirectory()) {
+        if (this.file == null || !this.file.isDirectory()) {
             return new TarEntry[0];
         } 
         

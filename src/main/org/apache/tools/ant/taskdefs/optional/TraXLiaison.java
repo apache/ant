@@ -148,12 +148,12 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             if (resolver != null) {
                 if (tfactory.getFeature(SAXSource.FEATURE)) {
                     SAXParserFactory spFactory = SAXParserFactory.newInstance();
-                    spFactory.setNamespaceAware( true ); 
+                    spFactory.setNamespaceAware(true); 
                     XMLReader reader = spFactory.newSAXParser().getXMLReader();
                     reader.setEntityResolver(resolver);
                     src = new SAXSource(reader, new InputSource(fis));
                 } else {
-                    throw new IllegalStateException("xcatalog specified, but "+
+                    throw new IllegalStateException("xcatalog specified, but " +
                         "parser doesn't support SAX");
                 }
             } else {
@@ -193,7 +193,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     // making sure it is really a /'ed path
     protected String getSystemId(File file){
         String path = file.getAbsolutePath();
-        path = path.replace('\\','/');
+        path = path.replace('\\', '/');
 
         // on Windows, use 'file:///'
         if (File.separatorChar == '\\') {
@@ -234,27 +234,27 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         }
         
         StringBuffer msg = new StringBuffer();
-        if(e.getLocator() != null) {
-            if(e.getLocator().getSystemId() != null) {
+        if (e.getLocator() != null) {
+            if (e.getLocator().getSystemId() != null) {
                 String url = e.getLocator().getSystemId();
-                if(url.startsWith("file:///")) {
+                if (url.startsWith("file:///")) {
                   url = url.substring(8);
                 }
                 msg.append(url);
             } else {
                 msg.append("Unknown file");
             }
-            if(e.getLocator().getLineNumber() != -1) {                          
-                msg.append(":"+e.getLocator().getLineNumber());
-                if(e.getLocator().getColumnNumber() != -1) {
-                    msg.append(":"+e.getLocator().getColumnNumber());
+            if (e.getLocator().getLineNumber() != -1) {                          
+                msg.append(":" + e.getLocator().getLineNumber());
+                if (e.getLocator().getColumnNumber() != -1) {
+                    msg.append(":" + e.getLocator().getColumnNumber());
                 }
             }
         }
-        msg.append(": "+type+"! ");
+        msg.append(": " + type + "! ");
         msg.append(e.getMessage());
-        if(e.getCause() != null) {
-            msg.append(" Cause: "+e.getCause());
+        if (e.getCause() != null) {
+            msg.append(" Cause: " + e.getCause());
         }
 
         logger.log(msg.toString());

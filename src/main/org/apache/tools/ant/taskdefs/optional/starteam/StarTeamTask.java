@@ -250,7 +250,7 @@ public abstract class StarTeamTask extends Task {
                 this.servername + ":" +
                 this.serverport + "/" +
                 this.projectname + "/" +
-                ((null == this.viewname)?"":this.viewname);
+                ((null == this.viewname) ? "" : this.viewname);
     }
 
     /**

@@ -97,7 +97,7 @@ public abstract class DefaultJspCompilerAdapter
 
         Enumeration enum = compileList.elements();
         while (enum.hasMoreElements()) {
-            String arg = (String)enum.nextElement();
+            String arg = (String) enum.nextElement();
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg + lSep);
         }
@@ -113,7 +113,7 @@ public abstract class DefaultJspCompilerAdapter
     /**
      * set the owner
      */
-    public void setJspc( JspC owner ) {
+    public void setJspc(JspC owner) {
         this.owner = owner;
     }
 
@@ -130,8 +130,8 @@ public abstract class DefaultJspCompilerAdapter
      *
      * @param  argument  The argument
      */
-    protected void addArg(Commandline cmd,String argument) {
-        if(argument != null && argument.length() != 0) {
+    protected void addArg(Commandline cmd, String argument) {
+        if (argument != null && argument.length() != 0) {
            cmd.createArgument().setValue(argument);
         }
     }
@@ -144,7 +144,7 @@ public abstract class DefaultJspCompilerAdapter
      * @param  value     the parameter
      */
     protected void addArg(Commandline cmd, String argument, String value) {
-        if(value!= null) {
+        if (value != null) {
             cmd.createArgument().setValue(argument);
             cmd.createArgument().setValue(value);
         }
@@ -157,7 +157,7 @@ public abstract class DefaultJspCompilerAdapter
      * @param  file     the parameter
      */
     protected void addArg(Commandline cmd, String argument, File file) {
-        if(file != null) {
+        if (file != null) {
             cmd.createArgument().setValue(argument);
             cmd.createArgument().setFile(file);
         }

@@ -227,7 +227,7 @@ public class Concat extends Task {
         try {
             // Iterate the FileSet collection, concatenating each file as
             // it is encountered.
-            for (Enumeration e = fileSets.elements(); e.hasMoreElements(); ) {
+            for (Enumeration e = fileSets.elements(); e.hasMoreElements();) {
                 
                 // Root directory for files.
                 File fileSetBase = null;
@@ -392,17 +392,14 @@ public class Concat extends Task {
                     // Log using WARN so it displays in 'quiet' mode.
                     out = new PrintWriter(
                               new OutputStreamWriter(
-                                  new LogOutputStream(this, Project.MSG_WARN)
-                                  )
-                              );
+                                  new LogOutputStream(this, Project.MSG_WARN)));
                 } else {
                     out = new PrintWriter(
                               new OutputStreamWriter(
                                   new FileOutputStream(destinationFile
                                                        .getAbsolutePath(),
                                                        append),
-                                  encoding)
-                              );
+                                  encoding));
                     
                     // This flag should only be recognized for the first
                     // file. In the context of a single 'cat', we always
@@ -412,11 +409,8 @@ public class Concat extends Task {
 
                 for (int i = 0; i < len; i++) {
                     in = new BufferedReader(
-                            new InputStreamReader(
-                                new FileInputStream(input[i]), 
-                                encoding
-                            )
-                        );
+                            new InputStreamReader(new FileInputStream(input[i]), 
+                                encoding));
 
                     String line;
                     while ((line = in.readLine()) != null) {
@@ -480,9 +474,7 @@ public class Concat extends Task {
         // Reads the text, line by line.
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(
-                new StringReader(text)
-            );
+            reader = new BufferedReader(new StringReader(text));
 
             String line;
             while ((line = reader.readLine()) != null) {

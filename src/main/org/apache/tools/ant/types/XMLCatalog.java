@@ -228,7 +228,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
                             log("No match, parser will use: '" + systemId + "'",
                                 Project.MSG_DEBUG);
                         }
-                    } catch ( IOException ioe) {
+                    } catch (IOException ioe) {
                         //ignore
                     }
                 }
@@ -254,7 +254,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         Enumeration elements = getElements().elements();
         DTDLocation element = null;
         while (elements.hasMoreElements()) {
-            element = (DTDLocation)elements.nextElement();
+            element = (DTDLocation) elements.nextElement();
             if (element.getPublicId().equals(publicId)) {
                 return element;
             }

@@ -133,15 +133,16 @@ public class Pvcs extends org.apache.tools.ant.Task {
             return exe.execute();
         }
         catch (java.io.IOException e) {
-            String msg = "Failed executing: " + cmd.toString() + ". Exception: "+e.getMessage();
+            String msg = "Failed executing: " + cmd.toString() 
+                + ". Exception: " + e.getMessage();
             throw new BuildException(msg, location);
         }
     }
 
     private String getExecutable(String exe) {
         StringBuffer correctedExe = new StringBuffer();
-        if(getPvcsbin()!=null) {
-            if(pvcsbin.endsWith(File.separator)) {
+        if (getPvcsbin() != null) {
+            if (pvcsbin.endsWith(File.separator)) {
                 correctedExe.append(pvcsbin);
             } else {
                 correctedExe.append(pvcsbin).append(File.separator);
@@ -157,7 +158,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
         Project aProj = getProject();
         int result = 0;
 
-        if(repository == null || repository.trim().equals("")) {
+        if (repository == null || repository.trim().equals("")) {
             throw new BuildException("Required argument repository not specified");
         }
 
@@ -171,10 +172,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
         commandLine.createArgument().setValue("lvf");
         commandLine.createArgument().setValue("-z");
         commandLine.createArgument().setValue("-aw");
-        if(getWorkspace()!=null) {
-            commandLine.createArgument().setValue("-sp"+getWorkspace());
+        if (getWorkspace() != null) {
+            commandLine.createArgument().setValue("-sp" + getWorkspace());
         }
-        commandLine.createArgument().setValue("-pr"+getRepository());
+        commandLine.createArgument().setValue("-pr" + getRepository());
 
         String uid = getUserId();
 
@@ -183,19 +184,20 @@ public class Pvcs extends org.apache.tools.ant.Task {
         }
 
         // default pvcs project is "/"
-        if(getPvcsproject() == null && getPvcsprojects().isEmpty()) {
+        if (getPvcsproject() == null && getPvcsprojects().isEmpty()) {
             pvcsProject = "/";
         }
 
-        if(getPvcsproject()!=null) {
+        if (getPvcsproject() != null) {
             commandLine.createArgument().setValue(getPvcsproject());
         }
-        if(!getPvcsprojects().isEmpty()) {
+        if (!getPvcsprojects().isEmpty()) {
             Enumeration e = getPvcsprojects().elements();
             while (e.hasMoreElements()) {
-                String projectName = ((PvcsProject)e.nextElement()).getName();
+                String projectName = ((PvcsProject) e.nextElement()).getName();
                 if (projectName == null || (projectName.trim()).equals("")) {
-                    throw new BuildException("name is a required attribute of pvcsproject");
+                    throw new BuildException("name is a required attribute " 
+                        + "of pvcsproject");
                 }
                 commandLine.createArgument().setValue(projectName);
             }
@@ -205,17 +207,21 @@ public class Pvcs extends org.apache.tools.ant.Task {
         File tmp2 = null;
         try {
             Random rand = new Random(System.currentTimeMillis());
-            tmp = new File("pvcs_ant_"+rand.nextLong()+".log");
-            tmp2 = new File("pvcs_ant_"+rand.nextLong()+".log");
+            tmp = new File("pvcs_ant_" + rand.nextLong() + ".log");
+            tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
             log("Executing " + commandLine.toString(), Project.MSG_VERBOSE);
-            result = runCmd(commandLine, new PumpStreamHandler(new FileOutputStream(tmp), new LogOutputStream(this,Project.MSG_WARN)));
-            if ( result != 0 && !ignorerc) {
+            result = runCmd(commandLine, 
+                new PumpStreamHandler(new FileOutputStream(tmp), 
+                new LogOutputStream(this, Project.MSG_WARN)));
+            if (result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
                 throw new BuildException(msg, location);
             }
 
-            if(!tmp.exists()) {
-                throw new BuildException("Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"");
+            if (!tmp.exists()) {
+                throw new BuildException("Communication between ant and pvcs " 
+                    + "failed. No output generated from executing PVCS " 
+                    + "commandline interface \"pcli\" and \"get\"");
             }
 
             // Create folders in workspace
@@ -229,17 +235,18 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
 
-            if(getForce()!=null && getForce().equals("yes")) {
+            if (getForce() != null && getForce().equals("yes")) {
                 commandLine.createArgument().setValue("-Y");
             } else {
                 commandLine.createArgument().setValue("-N");
             }
 
-            if(getPromotiongroup()!=null) {
-                commandLine.createArgument().setValue("-G"+getPromotiongroup());
+            if (getPromotiongroup() != null) {
+                commandLine.createArgument().setValue("-G" 
+                    + getPromotiongroup());
             } else {
-                if(getLabel()!=null) {
-                    commandLine.createArgument().setValue("-r"+getLabel());
+                if (getLabel() != null) {
+                    commandLine.createArgument().setValue("-r" + getLabel());
                 }
             }
 
@@ -247,24 +254,29 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 commandLine.createArgument().setValue("-U");
             }
 
-            commandLine.createArgument().setValue("@"+tmp2.getAbsolutePath());
+            commandLine.createArgument().setValue("@" + tmp2.getAbsolutePath());
             log("Getting files", Project.MSG_INFO);
             log("Executing " + commandLine.toString(), Project.MSG_VERBOSE);
-            result = runCmd(commandLine, new LogStreamHandler(this,Project.MSG_INFO, Project.MSG_WARN));
-            if ( result != 0 && !ignorerc) {
-                String msg = "Failed executing: " + commandLine.toString() + ". Return code was "+result;
+            result = runCmd(commandLine, 
+                new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
+            if (result != 0 && !ignorerc) {
+                String msg = "Failed executing: " + commandLine.toString() 
+                    + ". Return code was " + result;
                 throw new BuildException(msg, location);
             }
 
-        } catch(FileNotFoundException e) {
-            String msg = "Failed executing: " + commandLine.toString() + ". Exception: "+e.getMessage();
-            throw new BuildException(msg,location);
-        } catch(IOException e) {
-            String msg = "Failed executing: " + commandLine.toString() + ". Exception: "+e.getMessage();
-            throw new BuildException(msg,location);
-        } catch(ParseException e) {
-            String msg = "Failed executing: " + commandLine.toString() + ". Exception: "+e.getMessage();
-            throw new BuildException(msg,location);
+        } catch (FileNotFoundException e) {
+            String msg = "Failed executing: " + commandLine.toString() 
+                + ". Exception: " + e.getMessage();
+            throw new BuildException(msg, location);
+        } catch (IOException e) {
+            String msg = "Failed executing: " + commandLine.toString() 
+                + ". Exception: " + e.getMessage();
+            throw new BuildException(msg, location);
+        } catch (ParseException e) {
+            String msg = "Failed executing: " + commandLine.toString() 
+                + ". Exception: " + e.getMessage();
+            throw new BuildException(msg, location);
         } finally {
             if (tmp != null) {
                 tmp.delete();
@@ -280,45 +292,50 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     private void createFolders(File file) throws IOException, ParseException {
         BufferedReader in = new BufferedReader(new FileReader(file));
-        MessageFormat mf = new MessageFormat( getFilenameFormat() );
+        MessageFormat mf = new MessageFormat(getFilenameFormat());
         String line = in.readLine();
-        while(line != null) {
-            log("Considering \""+line+"\"", Project.MSG_VERBOSE);
-            if(line.startsWith("\"\\") ||
+        while (line != null) {
+            log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
+            if (line.startsWith("\"\\") ||
                line.startsWith("\"/") ||
-               line.startsWith(getLineStart()) ) {
+               line.startsWith(getLineStart())) {
                 Object[] objs = mf.parse(line);
-                String f = (String)objs[1];
+                String f = (String) objs[1];
                 // Extract the name of the directory from the filename
                 int index = f.lastIndexOf(File.separator);
                 if (index > -1) {
                     File dir = new File(f.substring(0, index));
-                    if(!dir.exists()) {
-                        log("Creating "+dir.getAbsolutePath(), Project.MSG_VERBOSE);
-                        if(dir.mkdirs()) {
-                            log("Created "+dir.getAbsolutePath(), Project.MSG_INFO);
+                    if (!dir.exists()) {
+                        log("Creating " + dir.getAbsolutePath(), 
+                            Project.MSG_VERBOSE);
+                        if (dir.mkdirs()) {
+                            log("Created " + dir.getAbsolutePath(), 
+                                Project.MSG_INFO);
                         } else {
-                            log("Failed to create "+dir.getAbsolutePath(), Project.MSG_INFO);
+                            log("Failed to create " + dir.getAbsolutePath(), 
+                                Project.MSG_INFO);
                         }
                     } else {
-                        log(dir.getAbsolutePath() + " exists. Skipping", Project.MSG_VERBOSE);
+                        log(dir.getAbsolutePath() + " exists. Skipping", 
+                            Project.MSG_VERBOSE);
                     }
                 } else {
                     log("File separator problem with " + line,
                         Project.MSG_WARN);
                 }
             } else {
-                log("Skipped \""+line+"\"", Project.MSG_VERBOSE);
+                log("Skipped \"" + line + "\"", Project.MSG_VERBOSE);
             }
             line = in.readLine();
         }
     }
 
     /**
-     * Simple hack to handle the PVCS command-line tools botch when handling UNC notation.
+     * Simple hack to handle the PVCS command-line tools botch when 
+     * handling UNC notation.
      */
-    private void massagePCLI(File in, File out) throws FileNotFoundException, IOException
-    {
+    private void massagePCLI(File in, File out) 
+        throws FileNotFoundException, IOException {
         BufferedReader inReader = new BufferedReader(new FileReader(in));
         BufferedWriter outWriter = new BufferedWriter(new FileWriter(out));
         String s = null;
@@ -432,8 +449,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @param repo String (yes/no)
      */
     public void setForce(String f) {
-        if(f!=null && f.equalsIgnoreCase("yes")) {
-            force="yes";
+        if (f != null && f.equalsIgnoreCase("yes")) {
+            force = "yes";
         } else {
             force = "no";
         }
@@ -452,7 +469,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @param repo String
      */
     public void setPromotiongroup(String w) {
-        promotiongroup=w;
+        promotiongroup = w;
     }
 
     /**
@@ -468,7 +485,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @param repo String
      */
     public void setLabel(String l) {
-        label=l;
+        label = l;
     }
 
     /**
@@ -525,12 +542,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
         workspace = null;
         repository = null;
         pvcsbin = null;
-        force=null;
-        promotiongroup=null;
-        label=null;
-        ignorerc=false;
+        force = null;
+        promotiongroup = null;
+        label = null;
+        ignorerc = false;
         updateOnly = false;
-        lineStart="\"P:";
-        filenameFormat="{0}_arc({1})";
+        lineStart = "\"P:";
+        filenameFormat = "{0}_arc({1})";
     }
 }

@@ -82,7 +82,7 @@ public class TelnetTask extends Task {
     /**
      *  The password to login with, if automated login is used
      */
-    private String password= null;
+    private String password = null;
 
     /**
      *  The server to connect to. 
@@ -123,7 +123,7 @@ public class TelnetTask extends Task {
     public void execute() throws BuildException 
     {
        /**  A server name is required to continue */
-       if (server== null) {
+       if (server == null) {
            throw new BuildException("No Server Specified");
        }
        /**  A userid and password must appear together 
@@ -140,8 +140,8 @@ public class TelnetTask extends Task {
        telnet = new AntTelnetClient();
        try {
            telnet.connect(server, port);
-       } catch(IOException e) {
-           throw new BuildException("Can't connect to "+server);
+       } catch (IOException e) {
+           throw new BuildException("Can't connect to " + server);
        }
        /**  Login if userid and password were specified */
        if (userid != null && password != null) {
@@ -149,11 +149,11 @@ public class TelnetTask extends Task {
        }
        /**  Process each sub command */
        Enumeration tasksToRun = telnetTasks.elements();
-       while (tasksToRun!=null && tasksToRun.hasMoreElements())
+       while (tasksToRun != null && tasksToRun.hasMoreElements())
        {
            TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
            if (task instanceof TelnetRead && defaultTimeout != null) {
-               ((TelnetRead)task).setDefaultTimeout(defaultTimeout);
+               ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
            }
            task.execute(telnet);
        }
@@ -218,7 +218,7 @@ public class TelnetTask extends Task {
    
     public TelnetSubTask createRead()
     {
-        TelnetSubTask task = (TelnetSubTask)new TelnetRead();
+        TelnetSubTask task = (TelnetSubTask) new TelnetRead();
         telnetTasks.addElement(task);
         return task;
     }
@@ -229,7 +229,7 @@ public class TelnetTask extends Task {
      */
     public TelnetSubTask createWrite()
     {
-        TelnetSubTask task = (TelnetSubTask)new TelnetWrite();
+        TelnetSubTask task = (TelnetSubTask) new TelnetWrite();
         telnetTasks.addElement(task);
         return task;
     }
@@ -240,7 +240,7 @@ public class TelnetTask extends Task {
      */
     public class TelnetSubTask
     {
-        protected String taskString= "";
+        protected String taskString = "";
         public void execute(AntTelnetClient telnet) 
                 throws BuildException
         {
@@ -331,7 +331,7 @@ public class TelnetTask extends Task {
        */
       public void waitForString(String s, Integer timeout)
       {
-        InputStream is =this.getInputStream();
+        InputStream is = this.getInputStream();
         try {
           StringBuffer sb = new StringBuffer();
           if (timeout == null || timeout.intValue() == 0)
@@ -344,8 +344,8 @@ public class TelnetTask extends Task {
           else
           {
               Calendar endTime = Calendar.getInstance(); 
-              endTime.add(Calendar.SECOND,timeout.intValue());
-              while ( sb.toString().indexOf(s) == -1)
+              endTime.add(Calendar.SECOND, timeout.intValue());
+              while (sb.toString().indexOf(s) == -1)
               {
                   while (Calendar.getInstance().before(endTime) &&
                          is.available() == 0) {
@@ -374,7 +374,7 @@ public class TelnetTask extends Task {
        */
       public void sendString(String s, boolean echoString)
       {
-        OutputStream os =this.getOutputStream();
+        OutputStream os = this.getOutputStream();
         try {
           os.write((s + "\n").getBytes());
           if (echoString) {

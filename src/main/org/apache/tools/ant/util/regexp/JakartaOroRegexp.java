@@ -77,7 +77,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp
     {
         // translate \1 to $1 so that the Perl5Substitution will work
         StringBuffer subst = new StringBuffer();
-        for (int i=0; i<argument.length(); i++) {
+        for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
             if (c == '\\') {
                 if (++i < argument.length()) {

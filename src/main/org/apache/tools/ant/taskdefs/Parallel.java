@@ -99,7 +99,7 @@ public class Parallel extends Task
         int threadNumber = 0;
         for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); 
              threadNumber++) {
-            Task nestedTask = (Task)e.nextElement();
+            Task nestedTask = (Task) e.nextElement();
             threads[threadNumber] = new TaskThread(threadNumber, nestedTask);
         }
 
@@ -132,7 +132,7 @@ public class Parallel extends Task
                 }
                 if (t instanceof BuildException && 
                         firstLocation == Location.UNKNOWN_LOCATION) {
-                    firstLocation = ((BuildException)t).getLocation();
+                    firstLocation = ((BuildException) t).getLocation();
                 }
                 exceptionMessage.append(StringUtils.LINE_SEP);
                 exceptionMessage.append(t.getMessage());
@@ -141,7 +141,7 @@ public class Parallel extends Task
         
         if (numExceptions == 1) {
             if (firstException instanceof BuildException) {
-                throw (BuildException)firstException;
+                throw (BuildException) firstException;
             }
             else {
                 throw new BuildException(firstException);

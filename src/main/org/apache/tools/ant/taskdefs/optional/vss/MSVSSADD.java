@@ -107,10 +107,10 @@ public class MSVSSADD extends MSVSS {
         // -Y
         getLoginCommand(commandLine);
         // -C
-        commandLine.createArgument().setValue("-C"+getComment());
+        commandLine.createArgument().setValue("-C" + getComment());
 
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }
@@ -127,7 +127,7 @@ public class MSVSSADD extends MSVSS {
      * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
      */
     public void getRecursiveCommand(Commandline cmd) {
-        if ( !m_Recursive ) {
+        if (!m_Recursive) {
             return;
         } else {
             cmd.createArgument().setValue(FLAG_RECURSION);
@@ -145,7 +145,7 @@ public class MSVSSADD extends MSVSS {
      * @return the 'make writable' command if the attribute was 'true', otherwise an empty string
      */
     public void getWritableCommand(Commandline cmd) {
-        if ( !m_Writable ) {
+        if (!m_Writable) {
             return;
         } else {
             cmd.createArgument().setValue(FLAG_WRITABLE);
@@ -153,7 +153,7 @@ public class MSVSSADD extends MSVSS {
     }
 
     public void setAutoresponse(String response){
-        if ( response.equals("") || response.equals("null") ) {
+        if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;
         } else {
             m_AutoResponse = response;
@@ -168,14 +168,14 @@ public class MSVSSADD extends MSVSS {
      */
     public void getAutoresponse(Commandline cmd) {
 
-        if ( m_AutoResponse == null) {
+        if (m_AutoResponse == null) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } else if ( m_AutoResponse.equalsIgnoreCase("Y")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
 
-        } else if ( m_AutoResponse.equalsIgnoreCase("N")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
-        }else {
+        } else {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
         } // end of else
 
@@ -188,7 +188,7 @@ public class MSVSSADD extends MSVSS {
      * is what SourceSafe uses for an empty comment.
      */
     public void setComment(String comment) {
-        if ( comment.equals("") || comment.equals("null") ) {
+        if (comment.equals("") || comment.equals("null")) {
             m_Comment = "-";
         } else {
             m_Comment = comment;

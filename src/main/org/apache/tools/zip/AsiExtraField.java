@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -147,12 +147,12 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
      * @since 1.1
      */
     public ZipShort getLocalFileDataLength() {
-        return new ZipShort(  4         // CRC
-                            + 2         // Mode
-                            + 4         // SizDev
-                            + 2         // UID
-                            + 2         // GID
-                            + getLinkedFile().getBytes().length);
+        return new ZipShort(4         // CRC
+                          + 2         // Mode
+                          + 4         // SizDev
+                          + 2         // UID
+                          + 2         // GID
+                          + getLinkedFile().getBytes().length);
     }
 
     /**
@@ -321,8 +321,8 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         throws ZipException {
 
         long givenChecksum = (new ZipLong(data, offset)).getValue();
-        byte[] tmp = new byte[length-4];
-        System.arraycopy(data, offset+4, tmp, 0, length-4);
+        byte[] tmp = new byte[length - 4];
+        System.arraycopy(data, offset + 4, tmp, 0, length - 4);
         crc.reset();
         crc.update(tmp);
         long realChecksum = crc.getValue();

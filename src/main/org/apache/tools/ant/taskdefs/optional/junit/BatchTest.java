@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -122,7 +122,7 @@ public final class BatchTest extends BaseTest {
      */
     final void addTestsTo(Vector v){
         JUnitTest[] tests = createAllJUnitTest();
-        v.ensureCapacity( v.size() + tests.length);
+        v.ensureCapacity(v.size() + tests.length);
         for (int i = 0; i < tests.length; i++) {
             v.addElement(tests[i]);
         }
@@ -156,7 +156,7 @@ public final class BatchTest extends BaseTest {
     private String[] getFilenames(){
         Vector v = new Vector();
         final int size = this.filesets.size();
-        for (int j=0; j<size; j++) {
+        for (int j = 0; j < size; j++) {
             FileSet fs = (FileSet) filesets.elementAt(j);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             ds.scan();
@@ -164,9 +164,9 @@ public final class BatchTest extends BaseTest {
             for (int k = 0; k < f.length; k++) {
                 String pathname = f[k];
                 if (pathname.endsWith(".java")) {
-                    v.addElement(pathname.substring(0, pathname.length()-".java".length()));
+                    v.addElement(pathname.substring(0, pathname.length() - ".java".length()));
                 } else if (pathname.endsWith(".class")) {
-                    v.addElement(pathname.substring(0, pathname.length()-".class".length()));
+                    v.addElement(pathname.substring(0, pathname.length() - ".class".length()));
                 }
             }
         }
@@ -208,7 +208,7 @@ public final class BatchTest extends BaseTest {
         test.setErrorProperty(errorProperty);
         Enumeration list = this.formatters.elements();
         while (list.hasMoreElements()) {
-            test.addFormatter((FormatterElement)list.nextElement());
+            test.addFormatter((FormatterElement) list.nextElement());
         }
         return test;
     }

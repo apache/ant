@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -120,11 +120,11 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
         this.out = out;
     }
 
-    public void setSystemOutput( String out ) {
+    public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
-    public void setSystemError( String err ) {
+    public void setSystemError(String err) {
         systemError = err;
     }
 
@@ -132,7 +132,7 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
      * Should the output to System.out and System.err be written to
      * the summary.
      */
-    public void setWithOutAndErr( boolean value ) {
+    public void setWithOutAndErr(boolean value) {
         withOutAndErr = value;
     }
 
@@ -148,18 +148,18 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
         sb.append(", Time elapsed: ");
-        sb.append(nf.format(suite.getRunTime()/1000.0));
+        sb.append(nf.format(suite.getRunTime() / 1000.0));
         sb.append(" sec");
         sb.append(newLine);
 
         if (withOutAndErr) {
             if (systemOutput != null && systemOutput.length() > 0) {
-                sb.append( "Output:" ).append(newLine).append(systemOutput)
+                sb.append("Output:").append(newLine).append(systemOutput)
                     .append(newLine);
             }
             
             if (systemError != null && systemError.length() > 0) {
-                sb.append( "Error: " ).append(newLine).append(systemError)
+                sb.append("Error: ").append(newLine).append(systemError)
                     .append(newLine);
             }
         }

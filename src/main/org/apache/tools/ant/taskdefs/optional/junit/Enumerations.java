@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -206,7 +206,7 @@ class ArrayEnumeration implements Enumeration {
          * @throws  NoSuchElementException  if no more elements exist.
          */
     public Object nextElement() throws NoSuchElementException {
-                if ( hasMoreElements() ) {
+                if (hasMoreElements()) {
                         return enumArray[index].nextElement();
                 }
                 throw new NoSuchElementException();

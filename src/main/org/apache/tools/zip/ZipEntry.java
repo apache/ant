@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -193,7 +193,7 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      */
     public void setExtraFields(ZipExtraField[] fields) {
         extraFields.removeAllElements();
-        for (int i=0; i<fields.length; i++) {
+        for (int i = 0; i < fields.length; i++) {
             extraFields.addElement(fields[i]);
         }
         setExtra();
@@ -219,7 +219,7 @@ public class ZipEntry extends java.util.zip.ZipEntry {
     public void addExtraField(ZipExtraField ze) {
         ZipShort type = ze.getHeaderId();
         boolean done = false;
-        for (int i=0; !done && i<extraFields.size(); i++) {
+        for (int i = 0; !done && i < extraFields.size(); i++) {
             if (((ZipExtraField) extraFields.elementAt(i)).getHeaderId().equals(type)) {
                 extraFields.setElementAt(ze, i);
                 done = true;
@@ -238,7 +238,7 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      */
     public void removeExtraField(ZipShort type) {
         boolean done = false;
-        for (int i=0; !done && i<extraFields.size(); i++) {
+        for (int i = 0; !done && i < extraFields.size(); i++) {
             if (((ZipExtraField) extraFields.elementAt(i)).getHeaderId().equals(type)) {
                 extraFields.removeElementAt(i);
                 done = true;

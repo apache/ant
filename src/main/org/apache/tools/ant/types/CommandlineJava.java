@@ -112,11 +112,11 @@ public class CommandlineJava implements Cloneable {
             try {
                 sys = System.getProperties();
                 Properties p = new Properties();
-                for (Enumeration e = sys.keys(); e.hasMoreElements(); ) {
+                for (Enumeration e = sys.keys(); e.hasMoreElements();) {
                     Object o = e.nextElement();
                     p.put(o, sys.get(o));
                 }
-                for (Enumeration e = variables.elements(); e.hasMoreElements(); ) {
+                for (Enumeration e = variables.elements(); e.hasMoreElements();) {
                     Environment.Variable v = (Environment.Variable) e.nextElement();
                     p.put(v.getKey(), v.getValue());
                 }
@@ -144,7 +144,9 @@ public class CommandlineJava implements Cloneable {
                 SysProperties c = (SysProperties) super.clone();
                 c.variables = (Vector) variables.clone();
                 return c;
-            } catch(CloneNotSupportedException e){return null;}
+            } catch (CloneNotSupportedException e) {
+                return null;
+            }
         }
 
     }
@@ -282,7 +284,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     private Commandline getActualVMCommand() {
-        Commandline actualVMCommand = (Commandline)vmCommand.clone();
+        Commandline actualVMCommand = (Commandline) vmCommand.clone();
         if (maxMemory != null) {
             if (vmVersion.startsWith("1.1")) {
                 actualVMCommand.createArgument().setValue("-mx" + maxMemory);

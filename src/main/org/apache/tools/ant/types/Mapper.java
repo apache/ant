@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -233,7 +233,7 @@ public class Mapper extends DataType implements Cloneable {
         
         Object o = ref.getReferencedObject(getProject());
         if (!(o instanceof Mapper)) {
-            String msg = ref.getRefId()+" doesn\'t denote a mapper";
+            String msg = ref.getRefId() + " doesn\'t denote a mapper";
             throw new BuildException(msg);
         } else {
             return (Mapper) o;

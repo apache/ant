@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,7 +107,7 @@ public class SoundTask extends Task {
 
         AntSoundPlayer soundPlayer = new AntSoundPlayer();
 
-        if ( success == null ) {
+        if (success == null) {
             log("No nested success element found.", Project.MSG_WARN);
         } else {
             soundPlayer.addBuildSuccessfulSound(success.getSource(),
@@ -165,18 +165,18 @@ public class SoundTask extends Task {
         public File getSource() {
             File nofile = null ;
             // Check if source is a directory
-            if( source.exists() ) {
-                if( source.isDirectory() ) {
+            if (source.exists()) {
+                if (source.isDirectory()) {
                     // get the list of files in the dir
                     String[] entries = source.list() ;
                     Vector files = new Vector() ;
-                    for (int i=0 ; i < entries.length ; i++) {
+                    for (int i = 0 ; i < entries.length ; i++) {
                         File f = new File(source, entries[i]) ;
                         if (f.isFile()) {
                             files.addElement(f) ;
                         }
                     }
-                    if ( files.size() < 1 ) {
+                    if (files.size() < 1) {
                         throw new BuildException("No files found in directory " + source);
                     }
                     int numfiles = files.size() ;
@@ -184,7 +184,7 @@ public class SoundTask extends Task {
                     Random rn = new Random() ;
                     int x = rn.nextInt(numfiles) ;
                     // set the source to the file at that location
-                    this.source = (File)files.elementAt(x) ;
+                    this.source = (File) files.elementAt(x);
                 }
             } else {
                 log(source + ": invalid path.", Project.MSG_WARN) ;

@@ -118,7 +118,7 @@ public class JspC extends MatchingTask
     private File destDir;
     private String packageName ;
     /** name of the compiler to use */
-    private String compilerName="jasper";
+    private String compilerName = "jasper";
 
     /**
      *  -ieplugin <clsid>Java Plugin classid for Internet Explorer
@@ -127,7 +127,7 @@ public class JspC extends MatchingTask
     private boolean mapped ;
     private int verbose = 0;
     protected Vector compileList = new Vector();
-    Vector javaFiles=new Vector();
+    Vector javaFiles = new Vector();
 
     /**
      *  flag to control action on execution trouble
@@ -336,7 +336,7 @@ public class JspC extends MatchingTask
     public void addWebApp(WebAppParameter webappParam) 
         throws BuildException {
         //demand create vector of filesets
-        if(webApp == null) {
+        if (webApp == null) {
             webApp = webappParam;
         }
         else {
@@ -352,7 +352,7 @@ public class JspC extends MatchingTask
      * Sets the compiler to use. Optional: default=jasper
      */
     public void setCompiler(String compiler) {
-        this.compilerName=compiler;
+        this.compilerName = compiler;
     }
 
     /**
@@ -393,33 +393,33 @@ public class JspC extends MatchingTask
             JspCompilerAdapterFactory.getCompiler(compilerName, this);
 
         // if the compiler does its own dependency stuff, we just call it right now
-        if(compiler.implementsOwnDependencyChecking()) {
+        if (compiler.implementsOwnDependencyChecking()) {
             doCompilation(compiler);
             return;
         }
 
         //the remainder of this method is only for compilers that need their dependency work done
-        JspMangler mangler=compiler.createMangler();
+        JspMangler mangler = compiler.createMangler();
 
         // scan source directories and dest directory to build up both copy
         // lists and compile lists
         resetFileLists();
-        int filecount=0;
+        int filecount = 0;
         for (int i = 0; i < list.length; i++) {
-            File srcDir = (File)project.resolveFile(list[i]);
+            File srcDir = (File) project.resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \"" + srcDir.getPath() +
                                          "\" does not exist!", location);
             }
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
             String[] files = ds.getIncludedFiles();
-            filecount=files.length;
+            filecount = files.length;
             scanDir(srcDir, dest, mangler, files);
         }
 
         // compile the source files
 
-        log("compiling "+compileList.size()+" files",Project.MSG_VERBOSE);
+        log("compiling " + compileList.size() + " files", Project.MSG_VERBOSE);
 
         if (compileList.size() > 0) {
 
@@ -431,11 +431,11 @@ public class JspC extends MatchingTask
 
         }
         else {
-            if(filecount==0) {
-                log("there were no files to compile",Project.MSG_INFO);
+            if (filecount == 0) {
+                log("there were no files to compile", Project.MSG_INFO);
             }
             else {
-                log("all files are up to date",Project.MSG_VERBOSE);
+                log("all files are up to date", Project.MSG_VERBOSE);
             }
         }
     }
@@ -462,7 +462,7 @@ public class JspC extends MatchingTask
     private void doCompilation(JspCompilerAdapter compiler)
             throws BuildException {
         // now we need to populate the compiler adapter
-        compiler.setJspc( this );
+        compiler.setJspc(this);
 
         // finally, lets execute the compiler!!
         if (!compiler.execute()) {
@@ -493,17 +493,17 @@ public class JspC extends MatchingTask
         long now = (new Date()).getTime();
 
         for (int i = 0; i < files.length; i++) {
-            String filename=files[i];
+            String filename = files[i];
             File srcFile = new File(srcDir, filename);
-            File javaFile=mapToJavaFile(mangler,srcFile, srcDir, dest);
+            File javaFile = mapToJavaFile(mangler, srcFile, srcDir, dest);
 
             if (srcFile.lastModified() > now) {
-                    log("Warning: file modified in the future: " +filename,
-                            Project.MSG_WARN);
+                log("Warning: file modified in the future: " + filename,
+                        Project.MSG_WARN);
             }
-            boolean shouldCompile=false;
-            shouldCompile=isCompileNeeded(srcFile, javaFile);
-            if(shouldCompile) {
+            boolean shouldCompile = false;
+            shouldCompile = isCompileNeeded(srcFile, javaFile);
+            if (shouldCompile) {
                compileList.addElement(srcFile.getAbsolutePath());
                javaFiles.addElement(javaFile);
             }
@@ -527,25 +527,25 @@ public class JspC extends MatchingTask
      *
      */
     private boolean isCompileNeeded(File srcFile, File javaFile) {
-        boolean shouldCompile=false;
+        boolean shouldCompile = false;
         if (!javaFile.exists()) {
-            shouldCompile=true;
-            log("Compiling " + srcFile.getPath() +
-                    " because java file "+ javaFile.getPath() + " does not exist",
-                    Project.MSG_VERBOSE);
+            shouldCompile = true;
+            log("Compiling " + srcFile.getPath() 
+                + " because java file " + javaFile.getPath() 
+                + " does not exist", Project.MSG_VERBOSE);
             } else {
-                if( srcFile.lastModified() > javaFile.lastModified()) {
-                    shouldCompile=true;
-                    log("Compiling " + srcFile.getPath() +
-                        " because it is out of date with respect to " + javaFile.getPath(),
+                if (srcFile.lastModified() > javaFile.lastModified()) {
+                    shouldCompile = true;
+                    log("Compiling " + srcFile.getPath() 
+                        + " because it is out of date with respect to " 
+                        + javaFile.getPath(),
                         Project.MSG_VERBOSE);
                 } else {
-                    if( javaFile.length()==0) {
-                        shouldCompile=true;
-                        log("Compiling " + srcFile.getPath() +
-                                " because java file "+ javaFile.getPath()
-                                + " is empty",
-                                Project.MSG_VERBOSE);
+                    if (javaFile.length() == 0) {
+                        shouldCompile = true;
+                        log("Compiling " + srcFile.getPath() 
+                            + " because java file " + javaFile.getPath()
+                            + " is empty", Project.MSG_VERBOSE);
                     }
                 }
         }
@@ -561,9 +561,9 @@ public class JspC extends MatchingTask
         if (!srcFile.getName().endsWith(".jsp")) {
             return null;
         }
-        String javaFileName=mangler.mapJspToJavaName(srcFile);
+        String javaFileName = mangler.mapJspToJavaName(srcFile);
 //        String srcFileDir=srcFile.getParent();
-        String packageNameIn=srcFile.getAbsolutePath();
+        String packageNameIn = srcFile.getAbsolutePath();
         return new File(dest, javaFileName);
     }
 
@@ -573,12 +573,12 @@ public class JspC extends MatchingTask
      * fails, it leaves incomplete files around.
      */
     public void deleteEmptyJavaFiles() {
-        if(javaFiles!=null) {
+        if (javaFiles != null) {
             Enumeration enum = javaFiles.elements();
             while (enum.hasMoreElements()) {
-                File file = (File )enum.nextElement();
-                if(file.exists() && file.length()==0) {
-                    log("deleting empty output file "+file);
+                File file = (File) enum.nextElement();
+                if (file.exists() && file.length() == 0) {
+                    log("deleting empty output file " + file);
                     file.delete();
                 }
             }
@@ -607,7 +607,7 @@ public class JspC extends MatchingTask
      * set directory; alternate syntax
      */
         public void setBaseDir(File directory) {
-            this.directory=directory;
+            this.directory = directory;
         }
     //end inner class    
     }

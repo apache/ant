@@ -124,7 +124,7 @@ public class LoaderUtils {
 
         try {
             Thread currentThread = Thread.currentThread();
-            return (ClassLoader)getContextClassLoader.invoke(currentThread,
+            return (ClassLoader) getContextClassLoader.invoke(currentThread,
                 new Object[0]);
         } catch (IllegalAccessException e) {
             throw new BuildException

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,12 +88,12 @@ public final class StringUtils {
         Vector elems = new Vector();
         int pos = -1;
         int i = 0;
-        while ( (pos = data.indexOf(ch, i) ) != -1 ){
+        while ((pos = data.indexOf(ch, i)) != -1){
             String elem = data.substring(i, pos);
             elems.addElement(elem);
             i = pos + 1;
         }
-        elems.addElement( data.substring(i) );
+        elems.addElement(data.substring(i));
         return elems;
     }
 
@@ -108,11 +108,11 @@ public final class StringUtils {
         StringBuffer buf = new StringBuffer(data.length());
         int pos = -1;
         int i = 0;
-        while ( (pos = data.indexOf(from, i)) != -1 ){
-            buf.append( data.substring(i, pos) ).append(to);
+        while ((pos = data.indexOf(from, i)) != -1){
+            buf.append(data.substring(i, pos)).append(to);
             i = pos + from.length();
         }
-        buf.append( data.substring(i) );
+        buf.append(data.substring(i));
         return buf.toString();
     }
 
@@ -121,9 +121,9 @@ public final class StringUtils {
      * @param t the exception to get the stacktrace from.
      * @return the stacktrace from the given exception.
      */
-    public static String getStackTrace(Throwable t){
+    public static String getStackTrace(Throwable t) {
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw,true);
+        PrintWriter pw = new PrintWriter(sw, true);
         t.printStackTrace(pw);
         pw.flush();
         pw.close();

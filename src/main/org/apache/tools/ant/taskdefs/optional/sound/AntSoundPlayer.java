@@ -141,7 +141,8 @@ public class AntSoundPlayer implements LineListener, BuildListener {
             audioInputStream = AudioSystem.getAudioInputStream(file);
         }
         catch (UnsupportedAudioFileException uafe) {
-            project.log("Audio format is not yet supported: "+uafe.getMessage());
+            project.log("Audio format is not yet supported: " 
+                + uafe.getMessage());
         }
         catch (IOException ioe) {
             ioe.printStackTrace();
@@ -229,7 +230,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         if (event.getException() == null && fileSuccess != null) {
             // build successfull!
             play(event.getProject(), fileSuccess, loopsSuccess, durationSuccess);
-        } else if ( event.getException() != null && fileFail != null) {
+        } else if (event.getException() != null && fileFail != null) {
             play(event.getProject(), fileFail, loopsFail, durationFail);
         }
     }

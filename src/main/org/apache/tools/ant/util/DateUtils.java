@@ -212,7 +212,7 @@ public final class DateUtils {
      */
     public static int getPhaseOfMoon(Calendar cal) {
         int dayOfTheYear = cal.get(Calendar.DAY_OF_YEAR);
-        int yearInMetonicCycle = ((cal.get(Calendar.YEAR)-1900) % 19) + 1;
+        int yearInMetonicCycle = ((cal.get(Calendar.YEAR) - 1900) % 19) + 1;
 	int epact = (11 * yearInMetonicCycle + 18) % 30;
 	if ((epact == 25 && yearInMetonicCycle > 11) || epact == 24) {
             epact++;

@@ -148,7 +148,7 @@ public class MSVSSHISTORY extends MSVSS {
         System.out.println("***: " + commandLine);
         
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }
@@ -159,7 +159,7 @@ public class MSVSSHISTORY extends MSVSS {
      * Set the Start Date for the Comparison of two versions in SourceSafe History
      */
     public void setFromDate(String fromDate) {
-        if ( fromDate.equals("") || fromDate == null ) {
+        if (fromDate.equals("") || fromDate == null) {
             m_FromDate = null;
         } else {
             m_FromDate = fromDate;
@@ -170,7 +170,7 @@ public class MSVSSHISTORY extends MSVSS {
      * Set the Start Label 
      */
     public void setFromLabel(String fromLabel) {
-        if ( fromLabel.equals("") || fromLabel == null ) {
+        if (fromLabel.equals("") || fromLabel == null) {
             m_FromLabel = null;
         } else {
             m_FromLabel = fromLabel;
@@ -181,7 +181,7 @@ public class MSVSSHISTORY extends MSVSS {
      * Set the End Label 
      */
     public void setToLabel(String toLabel) {
-        if ( toLabel.equals("") || toLabel == null ) {
+        if (toLabel.equals("") || toLabel == null) {
             m_ToLabel = null;
         } else {
             m_ToLabel = toLabel;
@@ -192,7 +192,7 @@ public class MSVSSHISTORY extends MSVSS {
      * Set the End Date for the Comparison of two versions in SourceSafe History
      */
     public void setToDate(String toDate) {
-        if ( toDate.equals("") || toDate == null ) {
+        if (toDate.equals("") || toDate == null) {
             m_ToDate = null;
         } else {
             m_ToDate = toDate;
@@ -212,7 +212,7 @@ public class MSVSSHISTORY extends MSVSS {
      * Set the output file name for SourceSafe output.
      */
     public void setOutput(File outfile) {
-        if ( outfile == null ) {
+        if (outfile == null) {
             m_OutputFileName = null;
         } else {
             m_OutputFileName = outfile.getAbsolutePath();
@@ -223,7 +223,7 @@ public class MSVSSHISTORY extends MSVSS {
      * Set the Start Date for the Comparison of two versions in SourceSafe History.
      */
     public void setDateFormat(String dateFormat) {
-        if ( !(dateFormat.equals("") || dateFormat == null) ) {
+        if (!(dateFormat.equals("") || dateFormat == null)) {
             m_DateFormat = new SimpleDateFormat(dateFormat);
         }
     }
@@ -233,12 +233,14 @@ public class MSVSSHISTORY extends MSVSS {
      * @param cmd the commandline the command is to be added to
      */
     private void getVersionDateCommand(Commandline cmd) throws BuildException {
-        if ( m_FromDate == null && m_ToDate == null && m_NumDays == Integer.MIN_VALUE) {
+        if (m_FromDate == null && m_ToDate == null 
+            && m_NumDays == Integer.MIN_VALUE) {
             return;
         }
         
-        if ( m_FromDate != null && m_ToDate != null) {
-            cmd.createArgument().setValue(FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + m_FromDate);
+        if (m_FromDate != null && m_ToDate != null) {
+            cmd.createArgument().setValue(FLAG_VERSION_DATE + m_ToDate 
+                + VALUE_FROMDATE + m_FromDate);
         } else if (m_ToDate != null && m_NumDays != Integer.MIN_VALUE) {
             String startDate = null;
             try {
@@ -271,11 +273,11 @@ public class MSVSSHISTORY extends MSVSS {
      * @param cmd the commandline the command is to be added to
      */
     private void getVersionLabelCommand(Commandline cmd) throws BuildException {
-        if ( m_FromLabel == null && m_ToLabel == null ) {
+        if (m_FromLabel == null && m_ToLabel == null) {
             return;
         }
         
-        if ( m_FromLabel != null && m_ToLabel != null) {
+        if (m_FromLabel != null && m_ToLabel != null) {
             cmd.createArgument().setValue(FLAG_VERSION_LABEL + m_ToLabel + VALUE_FROMLABEL + m_FromLabel);
         } else if (m_FromLabel != null) {
             cmd.createArgument().setValue(FLAG_VERSION + VALUE_FROMLABEL + m_FromLabel);
@@ -289,7 +291,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param cmd the commandline the command is to be added to
      */
     private void getOutputCommand(Commandline cmd) {
-        if ( m_OutputFileName != null) {
+        if (m_OutputFileName != null) {
             cmd.createArgument().setValue(FLAG_OUTPUT + m_OutputFileName);
         }
     }
@@ -299,7 +301,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param cmd the commandline the command is to be added to
      */
     private void getUserCommand(Commandline cmd) {
-        if ( m_User != null) {
+        if (m_User != null) {
             cmd.createArgument().setValue(FLAG_USER + m_User);
         }
     }
@@ -312,7 +314,7 @@ public class MSVSSHISTORY extends MSVSS {
     private String calcDate(String fromDate, int numDays) throws ParseException {
         String toDate = null;
         Date currdate = new Date();
-        Calendar calend= new GregorianCalendar();
+        Calendar calend = new GregorianCalendar();
         currdate = m_DateFormat.parse(fromDate); 
         calend.setTime(currdate);
         calend.add(Calendar.DATE, numDays);
@@ -338,7 +340,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
      */
     private void getRecursiveCommand(Commandline cmd) {
-        if ( !m_Recursive ) {
+        if (!m_Recursive) {
             return;
         } else {
             cmd.createArgument().setValue(FLAG_RECURSION);
@@ -376,6 +378,4 @@ public class MSVSSHISTORY extends MSVSS {
            return new String[] {"brief", "codediff", "nofile", "default"};
        }
    }
-
-
 }

@@ -79,7 +79,7 @@ public interface RmicAdapter {
     /**
      * Sets the rmic attributes, which are stored in the Rmic task.
      */
-    void setRmic( Rmic attributes );
+    void setRmic(Rmic attributes);
 
     /**
      * Executes the task.

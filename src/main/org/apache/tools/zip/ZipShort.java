@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -89,7 +89,7 @@ public class ZipShort implements Cloneable {
      * @since 1.1
      */
     public ZipShort (byte[] bytes, int offset) {
-        value = (bytes[offset+1] << 8) & 0xFF00;
+        value = (bytes[offset + 1] << 8) & 0xFF00;
         value += (bytes[offset] & 0xFF);
     }
 

@@ -92,7 +92,7 @@ public class Commandline implements Cloneable {
         String[] tmp = translateCommandline(to_process);
         if (tmp != null && tmp.length > 0) {
             setExecutable(tmp[0]);
-            for (int i=1; i<tmp.length; i++) {
+            for (int i = 1; i < tmp.length; i++) {
                 createArgument().setValue(tmp[i]);
             }
         }
@@ -124,7 +124,7 @@ public class Commandline implements Cloneable {
          * @param line line to split into several commandline arguments
          */
         public void setLine(String line) {
-            if( line == null ) {
+            if (line == null) {
                 return;
             }
             parts = translateCommandline(line);
@@ -183,7 +183,7 @@ public class Commandline implements Cloneable {
         public int getPosition() {
             if (realPos == -1) {
                 realPos = (executable == null ? 0 : 1);
-                for (int i=0; i<position; i++) {
+                for (int i = 0; i < position; i++) {
                     Argument arg = (Argument) arguments.elementAt(i);
                     realPos += arg.getParts().length;
                 }
@@ -203,7 +203,7 @@ public class Commandline implements Cloneable {
      * @return the argument object.
      */
     public Argument createArgument() {
-        return this.createArgument( false );
+        return this.createArgument(false);
     }
 
     /**
@@ -215,10 +215,10 @@ public class Commandline implements Cloneable {
      * @param insertAtStart if true, the argument is inserted at the
      * beginning of the list of args, otherwise it is appended.
      */
-    public Argument createArgument( boolean insertAtStart ) {
+    public Argument createArgument(boolean insertAtStart) {
         Argument argument = new Argument();
-        if(insertAtStart) {
-            arguments.insertElementAt(argument,0);
+        if (insertAtStart) {
+            arguments.insertElementAt(argument, 0);
         } else {
             arguments.addElement(argument);
         }
@@ -243,7 +243,7 @@ public class Commandline implements Cloneable {
 
 
     public void addArguments(String[] line) {
-        for (int i=0; i < line.length; i++) {
+        for (int i = 0; i < line.length; i++) {
             createArgument().setValue(line[i]);
         }
     }
@@ -256,7 +256,7 @@ public class Commandline implements Cloneable {
         if (executable == null) {
           return args;
         }
-        final String[] result = new String[args.length+1];
+        final String[] result = new String[args.length + 1];
         result[0] = executable;
         System.arraycopy(args, 0, result, 1, args.length);
         return result;
@@ -268,12 +268,12 @@ public class Commandline implements Cloneable {
      * <code>addValue</code> or the argument object.
      */
     public String[] getArguments() {
-        Vector result = new Vector(arguments.size()*2);
-        for (int i=0; i<arguments.size(); i++) {
+        Vector result = new Vector(arguments.size() * 2);
+        for (int i = 0; i < arguments.size(); i++) {
             Argument arg = (Argument) arguments.elementAt(i);
             String[] s = arg.getParts();
-            if( s != null ) {
-                for (int j=0; j<s.length; j++) {
+            if (s != null) {
+                for (int j = 0; j < s.length; j++) {
                     result.addElement(s[j]);
                 }
             }
@@ -304,10 +304,10 @@ public class Commandline implements Cloneable {
             if (argument.indexOf("\'") > -1) {
                 throw new BuildException("Can\'t handle single and double quotes in same argument");
             } else {
-                return '\''+argument+'\'';
+                return '\'' + argument + '\'';
             }
         } else if (argument.indexOf("\'") > -1 || argument.indexOf(" ") > -1) {
-            return '\"'+argument+'\"';
+            return '\"' + argument + '\"';
         } else {
             return argument;
         }
@@ -321,7 +321,7 @@ public class Commandline implements Cloneable {
 
         // path containing one or more elements
         final StringBuffer result = new StringBuffer();
-        for (int i=0; i < line.length; i++) {
+        for (int i = 0; i < line.length; i++) {
             if (i > 0) {
                 result.append(' ');
             }

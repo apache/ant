@@ -95,7 +95,8 @@ public class XMLValidateTask extends Task {
      * validation.
      */
     // The crimson implementation is shipped with ant.
-    public static String DEFAULT_XML_READER_CLASSNAME= "org.apache.crimson.parser.XMLReaderImpl";
+    public static String DEFAULT_XML_READER_CLASSNAME
+        = "org.apache.crimson.parser.XMLReaderImpl";
 
     protected static String INIT_FAILED_MSG = "Could not start xml validation: ";
 
@@ -234,7 +235,7 @@ public class XMLValidateTask extends Task {
         LocalResolver resolver = new LocalResolver();
 
         for (Enumeration i = dtdLocations.elements(); i.hasMoreElements();) {
-            DTDLocation location = (DTDLocation)i.nextElement();
+            DTDLocation location = (DTDLocation) i.nextElement();
             resolver.registerDTD(location);
         }
         return resolver;
@@ -243,7 +244,7 @@ public class XMLValidateTask extends Task {
     public void execute() throws BuildException {
 
         int fileProcessed = 0;
-        if (file == null && (filesets.size()==0) ) {
+        if (file == null && (filesets.size() == 0)) {
             throw new BuildException("Specify at least one source - a file or a fileset.");
         }
 
@@ -264,13 +265,13 @@ public class XMLValidateTask extends Task {
             }
         }
 
-        for (int i=0; i<filesets.size(); i++) {
+        for (int i = 0; i < filesets.size(); i++) {
 
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             String[] files = ds.getIncludedFiles();
 
-            for (int j=0; j < files.length ; j++)  {
+            for (int j = 0; j < files.length ; j++)  {
                 File srcFile = new File(fs.getDir(project), files[j]);
                 doValidate(srcFile);
                 fileProcessed++;
@@ -288,7 +289,7 @@ public class XMLValidateTask extends Task {
         try {
             // load the parser class
             // with JAXP, we would use a SAXParser factory
-            Class readerClass= null;
+            Class readerClass = null;
             //Class readerImpl = null;
             //Class parserImpl = null;
             if (classpath != null) {
@@ -313,9 +314,8 @@ public class XMLValidateTask extends Task {
                     xmlReader = new ParserAdapter(parser);
                     log("Using SAX1 parser " + readerClassName, Project.MSG_VERBOSE);
                 }  else {
-                    throw new BuildException(INIT_FAILED_MSG
-                                             + readerClassName
-                                             + " implements nor SAX1 Parser nor SAX2 XMLReader.");
+                    throw new BuildException(INIT_FAILED_MSG + readerClassName
+                        + " implements nor SAX1 Parser nor SAX2 XMLReader.");
                 }
             }
         } catch (ClassNotFoundException e) {
@@ -329,11 +329,11 @@ public class XMLValidateTask extends Task {
         xmlReader.setEntityResolver(getEntityResolver());
         xmlReader.setErrorHandler(errorHandler);
 
-        if (! (xmlReader instanceof ParserAdapter)) {
+        if (!(xmlReader instanceof ParserAdapter)) {
             // turn validation on
-            if (! lenient) {
-                boolean ok = setFeature("http://xml.org/sax/features/validation",true,true);
-                if (! ok) {
+            if (!lenient) {
+                boolean ok = setFeature("http://xml.org/sax/features/validation", true, true);
+                if (!ok) {
                     throw new BuildException(INIT_FAILED_MSG
                                              + readerClassName
                                              + " doesn't provide validation");
@@ -341,7 +341,7 @@ public class XMLValidateTask extends Task {
             }
             // set other features
             Enumeration enum = features.keys();
-            while(enum.hasMoreElements()) {
+            while (enum.hasMoreElements()) {
                 String featureId = (String) enum.nextElement();
                 setFeature(featureId, ((Boolean) features.get(featureId)).booleanValue(), true);
             }
@@ -356,7 +356,7 @@ public class XMLValidateTask extends Task {
 
         boolean  toReturn = false;
         try {
-            xmlReader.setFeature(feature,value);
+            xmlReader.setFeature(feature, value);
             toReturn = true;
         } catch (SAXNotRecognizedException e) {
             if (warn) {
@@ -386,23 +386,26 @@ public class XMLValidateTask extends Task {
             String uri = "file:" + afile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1;
                  index = uri.indexOf('#')) {
-                uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
+                uri = uri.substring(0, index) + "%23" 
+                    + uri.substring(index + 1);
             }
             is.setSystemId(uri);
             xmlReader.parse(is);
         } catch (SAXException ex) {
             if (failOnError) {
-                throw new BuildException("Could not validate document " + afile);
+                throw new BuildException("Could not validate document " 
+                    + afile);
             }
         } catch (IOException ex) {
-            throw new BuildException("Could not validate document " + afile, ex);
+            throw new BuildException("Could not validate document " + afile, 
+                ex);
         }
 
         if (errorHandler.getFailure()) {
             if (failOnError) {
                 throw new BuildException(afile + " is not a valid XML document.");
             } else {
-                log(afile + " is not a valid XML document",Project.MSG_ERR);
+                log(afile + " is not a valid XML document", Project.MSG_ERR);
             }
         }
     }
@@ -433,19 +436,19 @@ public class XMLValidateTask extends Task {
 
         public void fatalError(SAXParseException exception) {
             failed = true;
-            doLog(exception,Project.MSG_ERR);
+            doLog(exception, Project.MSG_ERR);
         }
 
         public void error(SAXParseException exception) {
             failed = true;
-            doLog(exception,Project.MSG_ERR);
+            doLog(exception, Project.MSG_ERR);
         }
 
         public void warning(SAXParseException exception) {
             // depending on implementation, XMLReader can yield hips of warning,
             // only output then if user explicitely asked for it
             if (warn) {
-                doLog(exception,Project.MSG_WARN);
+                doLog(exception, Project.MSG_WARN);
             }
         }
 
@@ -493,7 +496,8 @@ public class XMLValidateTask extends Task {
             if (fileDTD.exists()) {
                 if (publicId != null) {
                     fileDTDs.put(publicId, fileDTD);
-                    log("Mapped publicId " + publicId + " to file " + fileDTD, Project.MSG_VERBOSE);
+                    log("Mapped publicId " + publicId + " to file " + fileDTD, 
+                        Project.MSG_VERBOSE);
                 }
                 return;
             }
@@ -501,7 +505,8 @@ public class XMLValidateTask extends Task {
             if (LocalResolver.this.getClass().getResource(location) != null) {
                 if (publicId != null) {
                     resourceDTDs.put(publicId, location);
-                    log("Mapped publicId " + publicId + " to resource " + location, Project.MSG_VERBOSE);
+                    log("Mapped publicId " + publicId + " to resource " 
+                        + location, Project.MSG_VERBOSE);
                 }
             }
 
@@ -510,7 +515,7 @@ public class XMLValidateTask extends Task {
                     URL urldtd = new URL(location);
                     urlDTDs.put(publicId, urldtd);
                 }
-            } catch ( java.net.MalformedURLException   e) {
+            } catch (MalformedURLException e) {
                 //ignored
             }
         }
@@ -523,27 +528,28 @@ public class XMLValidateTask extends Task {
                 try {
                     log("Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE);
                     return new InputSource(new FileInputStream(dtdFile));
-                } catch( FileNotFoundException ex ) {
+                } catch (FileNotFoundException ex) {
                     // ignore
                 }
             }
 
-            String dtdResourceName = (String)resourceDTDs.get(publicId);
+            String dtdResourceName = (String) resourceDTDs.get(publicId);
             if (dtdResourceName != null) {
                 InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
                 if (is != null) {
-                    log("Resolved " + publicId + " to local resource " + dtdResourceName, Project.MSG_VERBOSE);
+                    log("Resolved " + publicId + " to local resource " 
+                        + dtdResourceName, Project.MSG_VERBOSE);
                     return new InputSource(is);
                 }
             }
 
             URL dtdUrl = (URL) urlDTDs.get(publicId);
-            if ( dtdUrl != null ) {
+            if (dtdUrl != null) {
                 try {
                     InputStream is = dtdUrl.openStream();
                     log("Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE);
                     return new InputSource(is);
-                } catch ( IOException ioe) {
+                } catch (IOException ioe) {
                     //ignore
                 }
             }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,11 +115,11 @@ public class SourceFileScanner {
         }
 
         Vector v = new Vector();
-        for (int i=0; i< files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
 
             String[] targets = mapper.mapFileName(files[i]);
             if (targets == null || targets.length == 0) {
-                task.log(files[i]+" skipped - don\'t know how to handle it",
+                task.log(files[i] + " skipped - don\'t know how to handle it",
                          Project.MSG_VERBOSE);
                 continue;
             }
@@ -127,23 +127,23 @@ public class SourceFileScanner {
             File src = fileUtils.resolveFile(srcDir, files[i]);
 
             if (src.lastModified() > now) {
-                task.log("Warning: "+files[i]+" modified in the future.", 
+                task.log("Warning: " + files[i] + " modified in the future.", 
                          Project.MSG_WARN);
             }
 
             boolean added = false;
             targetList.setLength(0);
-            for (int j=0; !added && j<targets.length; j++) {
+            for (int j = 0; !added && j < targets.length; j++) {
                 File dest = fileUtils.resolveFile(destDir, targets[j]);
                 
                 if (!dest.exists()) {
-                    task.log(files[i]+" added as "+dest.getAbsolutePath()+" doesn\'t exist.",
-                             Project.MSG_VERBOSE);
+                    task.log(files[i] + " added as " + dest.getAbsolutePath()
+                        + " doesn\'t exist.", Project.MSG_VERBOSE);
                     v.addElement(files[i]);
                     added = true;
                 } else if (src.lastModified() > dest.lastModified()) {
-                    task.log(files[i]+" added as "+dest.getAbsolutePath()+" is outdated.",
-                             Project.MSG_VERBOSE);
+                    task.log(files[i] + " added as " + dest.getAbsolutePath()
+                        + " is outdated.", Project.MSG_VERBOSE);
                     v.addElement(files[i]);
                     added = true;
                 } else {
@@ -155,7 +155,7 @@ public class SourceFileScanner {
             }
 
             if (!added) {
-                task.log(files[i]+" omitted as "+targetList.toString()
+                task.log(files[i] + " omitted as " + targetList.toString()
                          + (targets.length == 1 ? " is" : " are ")
                          + " up to date.", Project.MSG_VERBOSE);
             }
@@ -175,7 +175,7 @@ public class SourceFileScanner {
                                   FileNameMapper mapper) {
         String[] res = restrict(files, srcDir, destDir, mapper);
         File[] result = new File[res.length];
-        for (int i=0; i<res.length; i++) {
+        for (int i = 0; i < res.length; i++) {
             result[i] = new File(srcDir, res[i]);
         }
         return result;

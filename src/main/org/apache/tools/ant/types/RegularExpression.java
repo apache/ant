@@ -153,7 +153,8 @@ public class RegularExpression extends DataType
         Object o = ref.getReferencedObject(p);
         if (!(o instanceof RegularExpression))
         {
-            String msg = ref.getRefId() + " doesn\'t denote a "+DATA_TYPE_NAME;
+            String msg = ref.getRefId() + " doesn\'t denote a " 
+                + DATA_TYPE_NAME;
             throw new BuildException(msg);
         } 
         else 

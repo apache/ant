@@ -114,7 +114,7 @@ public class MSVSSCHECKOUT extends MSVSS {
         getLoginCommand(commandLine);
 
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }
@@ -163,7 +163,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
      */
     public void getRecursiveCommand(Commandline cmd) {
-        if ( !m_Recursive ) {
+        if (!m_Recursive) {
             return;
         } else {
             cmd.createArgument().setValue(FLAG_RECURSION);
@@ -179,7 +179,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * has not been defined to ant!
      */
     public void setVersion(String version) {
-        if (version.equals("") || version.equals("null") ) {
+        if (version.equals("") || version.equals("null")) {
             m_Version = null;
         } else {
             m_Version = version;
@@ -195,7 +195,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * has not been defined to ant!
      */
     public void setDate(String date) {
-        if (date.equals("") || date.equals("null") ) {
+        if (date.equals("") || date.equals("null")) {
             m_Date = null;
         } else {
             m_Date = date;
@@ -211,7 +211,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * has not been defined to ant!
      */
     public void setLabel(String label) {
-        if ( label.equals("") || label.equals("null") ) {
+        if (label.equals("") || label.equals("null")) {
             m_Label = null;
         } else {
             m_Label = label;
@@ -224,9 +224,9 @@ public class MSVSSCHECKOUT extends MSVSS {
      */
     public void getVersionCommand(Commandline cmd) {
 
-        if ( m_Version != null) {
+        if (m_Version != null) {
             cmd.createArgument().setValue(FLAG_VERSION + m_Version);
-        } else if ( m_Date != null) {
+        } else if (m_Date != null) {
             cmd.createArgument().setValue(FLAG_VERSION_DATE + m_Date);
         } else if (m_Label != null) {
             cmd.createArgument().setValue(FLAG_VERSION_LABEL + m_Label);
@@ -234,7 +234,7 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     public void setAutoresponse(String response){
-        if ( response.equals("") || response.equals("null") ) {
+        if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;
         } else {
             m_AutoResponse = response;
@@ -249,14 +249,14 @@ public class MSVSSCHECKOUT extends MSVSS {
      */
     public void getAutoresponse(Commandline cmd) {
 
-        if ( m_AutoResponse == null) {
+        if (m_AutoResponse == null) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } else if ( m_AutoResponse.equalsIgnoreCase("Y")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
 
-        } else if ( m_AutoResponse.equalsIgnoreCase("N")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
-        }else {
+        } else {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
         } // end of else
 

@@ -101,7 +101,7 @@ public class SplashTask extends Task {
    
 
     public void execute() throws BuildException {
-        if (splash != null ) {
+        if (splash != null) {
             splash.setVisible(false);
             getProject().removeBuildListener(splash);
             splash.dispose();
@@ -112,10 +112,10 @@ public class SplashTask extends Task {
         InputStream in = null;
 
         if (imgurl != null) {
-            try{
+            try {
                 URLConnection conn = null;
                 
-                if(useProxy &&
+                if (useProxy &&
                    (proxy != null && proxy.length() > 0) &&
                    (port != null && port.length() > 0)) {
                     
@@ -129,7 +129,7 @@ public class SplashTask extends Task {
                     conn = url.openConnection();
                     if (user != null && user.length() > 0) {
                         String encodedcreds = 
-                            new sun.misc.BASE64Encoder().encode((new String(user+":"+password)).getBytes());
+                            new sun.misc.BASE64Encoder().encode((new String(user + ":" + password)).getBytes());
                         conn.setRequestProperty("Proxy-Authorization", 
                                                 encodedcreds);
                     }
@@ -150,9 +150,11 @@ public class SplashTask extends Task {
                 // Catch everything - some of the above return nulls, throw exceptions or generally misbehave
                 // in the event of a problem etc
                 
-            } catch(Throwable ioe) {
-                log("Unable to download image, trying default Ant Logo", Project.MSG_DEBUG);
-                log("(Exception was \""+ioe.getMessage()+"\"", Project.MSG_DEBUG);
+            } catch (Throwable ioe) {
+                log("Unable to download image, trying default Ant Logo", 
+                    Project.MSG_DEBUG);
+                log("(Exception was \"" + ioe.getMessage() + "\"", 
+                    Project.MSG_DEBUG);
             }
         }
 
@@ -160,14 +162,14 @@ public class SplashTask extends Task {
             in = SplashTask.class.getClassLoader().getResourceAsStream("images/ant_logo_large.gif");
         }
 
-        if(in != null) {
+        if (in != null) {
             DataInputStream din = new DataInputStream(in);
             boolean success = false;
             try {
                 ByteArrayOutputStream bout = new ByteArrayOutputStream();
                 int data;
-                while((data = din.read()) != -1) {
-                    bout.write((byte)data);
+                while ((data = din.read()) != -1) {
+                    bout.write((byte) data);
                 }
                 
                 log("Got ByteArray, creating splash",  Project.MSG_DEBUG);
@@ -175,7 +177,7 @@ public class SplashTask extends Task {
                 
                 splash = new SplashScreen(img);
                 success = true;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new BuildException(e);
             } finally {
                 try {

@@ -99,7 +99,7 @@ public abstract class MSVSS extends Task {
      */
     public final String getSSCommand() {
         String toReturn = m_SSDir;
-        if ( !toReturn.equals("") && !toReturn.endsWith("\\") ) {
+        if (!toReturn.equals("") && !toReturn.endsWith("\\")) {
             toReturn += "\\";
         }
         toReturn += SS_EXE;
@@ -122,7 +122,7 @@ public abstract class MSVSS extends Task {
      * @return the appropriate login command if the 'login' attribute was specified, otherwise an empty string
      */
     public void getLoginCommand(Commandline cmd) {
-        if ( m_vssLogin == null ) {
+        if (m_vssLogin == null) {
             return;
         } else {
             cmd.createArgument().setValue(FLAG_LOGIN + m_vssLogin);
@@ -138,8 +138,8 @@ public abstract class MSVSS extends Task {
      * @param vssPath
      */
     public final void setVsspath(String vssPath) {
-        if ( vssPath.startsWith("vss://") ) {
-            m_vssPath= PROJECT_PREFIX + vssPath.substring(5);
+        if (vssPath.startsWith("vss://")) {
+            m_vssPath = PROJECT_PREFIX + vssPath.substring(5);
         } else {
             m_vssPath = PROJECT_PREFIX + vssPath;
         }
@@ -171,11 +171,11 @@ public abstract class MSVSS extends Task {
             // environment-variable SSDIR to this value
             if (m_serverPath != null) {
                 String[] env = exe.getEnvironment();
-                if( env == null ) {
+                if (env == null) {
                     env = new String[0];
                 }
-                String[] newEnv = new String[env.length+1];
-                for( int i=0;i<env.length;i++ ) {
+                String[] newEnv = new String[env.length + 1];
+                for (int i = 0; i < env.length ; i++) {
                     newEnv[i] = env[i];
                 }
                 newEnv[env.length] = "SSDIR=" + m_serverPath;

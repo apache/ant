@@ -101,7 +101,7 @@ public class FilterSetCollection {
     public String replaceTokens(String line) {
         String replacedLine = line;
         for (Enumeration e = filterSets.elements(); e.hasMoreElements();) {
-            FilterSet filterSet = (FilterSet)e.nextElement();
+            FilterSet filterSet = (FilterSet) e.nextElement();
             replacedLine = filterSet.replaceTokens(replacedLine);
         }
         return replacedLine;
@@ -114,7 +114,7 @@ public class FilterSetCollection {
     */
     public boolean hasFilters() {
         for (Enumeration e = filterSets.elements(); e.hasMoreElements();) {
-            FilterSet filterSet = (FilterSet)e.nextElement();
+            FilterSet filterSet = (FilterSet) e.nextElement();
             if (filterSet.hasFilters()) {
                 return true;
             }

@@ -283,8 +283,8 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         if (project != null) {
             Hashtable typedefs = project.getDataTypeDefinitions();
             for (Enumeration e = typedefs.keys(); e.hasMoreElements();) {
-                String typeName = (String)e.nextElement();
-                Class typeClass = (Class)typedefs.get(typeName);
+                String typeName = (String) e.nextElement();
+                Class typeClass = (Class) typedefs.get(typeName);
                 if (typeClass == getClass()) {
                     return typeName;
                 }
@@ -314,11 +314,11 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         }
 
         if (!dir.exists()) {
-            throw new BuildException(dir.getAbsolutePath()+" not found.");
+            throw new BuildException(dir.getAbsolutePath() + " not found.");
         }
         if (!dir.isDirectory()) {
             throw new BuildException(dir.getAbsolutePath()
-                                     +" is not a directory.");
+                                     + " is not a directory.");
         }
 
         DirectoryScanner ds = new DirectoryScanner();
@@ -341,7 +341,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         }
 
         p.log(getDataTypeName() + ": Setup scanner in dir " + dir + 
-            " with " + defaultPatterns, Project.MSG_DEBUG );
+            " with " + defaultPatterns, Project.MSG_DEBUG);
         
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
@@ -364,7 +364,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         
         Object o = ref.getReferencedObject(p);
         if (!getClass().isAssignableFrom(o.getClass())) {
-            String msg = ref.getRefId()+" doesn\'t denote a " 
+            String msg = ref.getRefId() + " doesn\'t denote a " 
                 + getDataTypeName();
             throw new BuildException(msg);
         } else {

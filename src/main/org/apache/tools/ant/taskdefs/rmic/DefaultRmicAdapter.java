@@ -86,7 +86,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     public DefaultRmicAdapter() {
     }
 
-    public void setRmic( Rmic attributes ) {
+    public void setRmic(Rmic attributes) {
         this.attributes = attributes;
         mapper = new RmicFileNameMapper();
     }
@@ -146,11 +146,11 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         // Combine the build classpath with the system classpath, in an 
         // order determined by the value of build.sysclasspath
         if (attributes.getClasspath() == null) {
-            if ( attributes.getIncludeantruntime() ) {
+            if (attributes.getIncludeantruntime()) {
                 classpath.addExisting(Path.systemClasspath);
             }
         } else {
-            if ( attributes.getIncludeantruntime() ) {
+            if (attributes.getIncludeantruntime()) {
                 classpath.addExisting(attributes.getClasspath()
                                       .concatSystemClasspath("last"));
             } else {
@@ -182,7 +182,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         Commandline cmd = new Commandline();
 
         if (options != null) {
-            for (int i=0; i<options.length; i++) {
+            for (int i = 0; i < options.length; i++) {
                 cmd.createArgument().setValue(options[i]);
             }
         }
@@ -222,27 +222,27 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             cmd.createArgument().setValue("-keepgenerated");
         }
 
-        if( attributes.getIiop() ) {
+        if (attributes.getIiop()) {
             attributes.log("IIOP has been turned on.", Project.MSG_INFO);
             cmd.createArgument().setValue("-iiop");
-            if( attributes.getIiopopts() != null ) {
+            if (attributes.getIiopopts() != null) {
                 attributes.log("IIOP Options: " + attributes.getIiopopts(),
-                               Project.MSG_INFO );
+                               Project.MSG_INFO);
                 cmd.createArgument().setValue(attributes.getIiopopts());
             }
         }
 
-        if( attributes.getIdl() )  {
+        if (attributes.getIdl())  {
             cmd.createArgument().setValue("-idl");
             attributes.log("IDL has been turned on.", Project.MSG_INFO);
-            if( attributes.getIdlopts() != null ) {
+            if (attributes.getIdlopts() != null) {
                 cmd.createArgument().setValue(attributes.getIdlopts());
                 attributes.log("IDL Options: " + attributes.getIdlopts(),
-                               Project.MSG_INFO );
+                               Project.MSG_INFO);
             }
         }
 
-        if( attributes.getDebug())  {
+        if (attributes.getDebug()) {
             cmd.createArgument().setValue("-g");
         }
 
@@ -266,8 +266,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
         niceSourceList.append(" to be compiled:");
 
-        for (int i=0; i < compileList.size(); i++) {
-            String arg = (String)compileList.elementAt(i);
+        for (int i = 0; i < compileList.size(); i++) {
+            String arg = (String) compileList.elementAt(i);
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg);
         }
@@ -306,15 +306,15 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         public String[] mapFileName(String name) {
             if (name == null
                 || !name.endsWith(".class")
-                || name.endsWith(getStubClassSuffix()+".class") 
-                || name.endsWith(getSkelClassSuffix()+".class") 
-                || name.endsWith(getTieClassSuffix()+".class")) {
+                || name.endsWith(getStubClassSuffix() + ".class") 
+                || name.endsWith(getSkelClassSuffix() + ".class") 
+                || name.endsWith(getTieClassSuffix() + ".class")) {
                 // Not a .class file or the one we'd generate
                 return null;
             }
 
             // we know that name.endsWith(".class")
-            String base = name.substring(0, name.length()-6);
+            String base = name.substring(0, name.length() - 6);
 
             String classname = base.replace(File.separatorChar, '.');
             if (attributes.getVerify() &&
@@ -330,7 +330,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
              * This is supposed to make Ant always recompile the
              * class, as a file of that name should not exist.
              */
-            String[] target = new String[] {name+".tmp."+rand.nextLong()};
+            String[] target = new String[] {name + ".tmp." + rand.nextLong()};
 
             if (!attributes.getIiop() && !attributes.getIdl()) {
                 // JRMP with simple naming convention
@@ -413,5 +413,4 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             return target;
         }
     }
-
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,7 +77,9 @@ public class UnrecognizedExtraField implements ZipExtraField {
         this.headerId = headerId;
     }
 
-    public ZipShort getHeaderId() {return headerId;}
+    public ZipShort getHeaderId() {
+        return headerId;
+    }
 
     /**
      * Extra field data in local file data - without
@@ -95,7 +97,9 @@ public class UnrecognizedExtraField implements ZipExtraField {
         return new ZipShort(localData.length);
     }
 
-    public byte[] getLocalFileDataData() {return localData;}
+    public byte[] getLocalFileDataData() {
+        return localData;
+    }
 
     /**
      * Extra field data in central directory - without

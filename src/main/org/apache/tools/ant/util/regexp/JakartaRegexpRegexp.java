@@ -86,7 +86,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
 
         // replace \1 with the corresponding group
         StringBuffer result = new StringBuffer();
-        for (int i=0; i<argument.length(); i++) {
+        for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
             if (c == '\\') {
                 if (++i < argument.length()) {

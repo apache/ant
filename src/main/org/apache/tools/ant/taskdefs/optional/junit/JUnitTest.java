@@ -148,15 +148,29 @@ public class JUnitTest extends BaseTest implements Cloneable {
         this.runTime = runTime;
     }
 
-    public long runCount() {return runs;}
-    public long failureCount() {return failures;}
-    public long errorCount() {return errors;}
-    public long getRunTime() {return runTime;}
+    public long runCount() {
+        return runs;
+    }
+    
+    public long failureCount() {
+        return failures;
+    }
+    
+    public long errorCount() {
+        return errors;
+    }
+    
+    public long getRunTime() {
+        return runTime;
+    }
 
-    public Properties getProperties() { return props;}
+    public Properties getProperties() {
+        return props;
+    }
+    
     public void setProperties(Hashtable p) { 
         props = new Properties();  
-        for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
+        for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
             Object key = enum.nextElement();
             props.put(key, p.get(key));
         }
@@ -185,7 +199,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
     void addFormattersTo(Vector v){
         final int count = formatters.size();
         for (int i = 0; i < count; i++){
-            v.addElement( formatters.elementAt(i) );
+            v.addElement(formatters.elementAt(i));
         }
     }
 

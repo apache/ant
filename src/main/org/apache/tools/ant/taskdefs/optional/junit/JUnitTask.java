@@ -499,8 +499,8 @@ public class JUnitTask extends Task {
     public void execute() throws BuildException {
         Enumeration list = getIndividualTests();
         while (list.hasMoreElements()) {
-            JUnitTest test = (JUnitTest)list.nextElement();
-            if ( test.shouldRun(project)) {
+            JUnitTest test = (JUnitTest) list.nextElement();
+            if (test.shouldRun(project)) {
                 execute(test);
             }
         }
@@ -518,7 +518,7 @@ public class JUnitTask extends Task {
         }
 
         if (test.getOutfile() == null) {
-            test.setOutfile( "TEST-" + test.getName() );
+            test.setOutfile("TEST-" + test.getName());
         }
 
         // execute the test and get the return code
@@ -542,11 +542,10 @@ public class JUnitTask extends Task {
         if (errorOccurredHere || failureOccurredHere) {
             if ((errorOccurredHere && test.getHaltonerror())
                 || (failureOccurredHere && test.getHaltonfailure())) {
-                throw new BuildException("Test "+test.getName()+" failed"
-                                         +(wasKilled ? " (timeout)" : ""),
-                                         location);
+                throw new BuildException("Test " + test.getName() + " failed"
+                    + (wasKilled ? " (timeout)" : ""), location);
             } else {
-                log("TEST "+test.getName()+" FAILED"
+                log("TEST " + test.getName() + " FAILED"
                     + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
                 if (errorOccurredHere && test.getErrorProperty() != null) {
                     project.setNewProperty(test.getErrorProperty(), "true");
@@ -579,7 +578,7 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue("haltOnFailure=" 
                                       + test.getHaltonfailure());
         if (includeAntRuntime) {
-            log("Implicitly adding "+antRuntimeClasses+" to CLASSPATH",
+            log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
                 Project.MSG_VERBOSE);
             cmd.createClasspath(getProject()).createPath()
                 .append(antRuntimeClasses);
@@ -597,10 +596,10 @@ public class JUnitTask extends Task {
             FormatterElement fe = feArray[i];
             formatterArg.append("formatter=");
             formatterArg.append(fe.getClassname());
-            File outFile = getOutput(fe,test);
+            File outFile = getOutput(fe, test);
             if (outFile != null) {
                 formatterArg.append(",");
-                formatterArg.append( outFile );
+                formatterArg.append(outFile);
             }
             cmd.createArgument().setValue(formatterArg.toString());
             formatterArg.setLength(0);
@@ -615,13 +614,13 @@ public class JUnitTask extends Task {
                                       + propsFile.getAbsolutePath());
         Hashtable p = project.getProperties();
         Properties props = new Properties();
-        for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
+        for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
             Object key = enum.nextElement();
             props.put(key, p.get(key));
         }
         try {
             FileOutputStream outstream = new FileOutputStream(propsFile);
-            props.save(outstream,"Ant JUnitTask generated properties file");
+            props.save(outstream, "Ant JUnitTask generated properties file");
             outstream.close();
         } catch (java.io.IOException e) {
             propsFile.delete();
@@ -641,15 +640,15 @@ public class JUnitTask extends Task {
 
         String[] environment = env.getVariables();
         if (environment != null) {
-            for (int i=0; i<environment.length; i++) {
-                log("Setting environment variable: "+environment[i],
+            for (int i = 0; i < environment.length; i++) {
+                log("Setting environment variable: " + environment[i],
                     Project.MSG_VERBOSE);
             }
         }
         execute.setNewenvironment(newEnvironment);
         execute.setEnvironment(environment);
 
-        log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
+        log("Executing: " + cmd.toString(), Project.MSG_VERBOSE);
         int retVal;
         try {
             retVal = execute.execute();
@@ -725,7 +724,7 @@ public class JUnitTask extends Task {
                 Project.MSG_VERBOSE);
             Path classpath = (Path) commandline.getClasspath().clone();
             if (includeAntRuntime) {
-                log("Implicitly adding "+antRuntimeClasses+" to CLASSPATH", 
+                log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH", 
                     Project.MSG_VERBOSE);
                 classpath.append(antRuntimeClasses);
             }
@@ -750,19 +749,19 @@ public class JUnitTask extends Task {
                 SummaryJUnitResultFormatter f = 
                     new SummaryJUnitResultFormatter();
                 f.setWithOutAndErr("withoutanderr"
-                                   .equalsIgnoreCase( summaryValue ));
-                f.setOutput( getDefaultOutput() );
+                                   .equalsIgnoreCase(summaryValue));
+                f.setOutput(getDefaultOutput());
                 runner.addFormatter(f);
             }
 
             final FormatterElement[] feArray = mergeFormatters(test);
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];
-                File outFile = getOutput(fe,test);
+                File outFile = getOutput(fe, test);
                 if (outFile != null) {
                     fe.setOutfile(outFile);
                 } else {
-                    fe.setOutput( getDefaultOutput() );
+                    fe.setOutput(getDefaultOutput());
                 }
                 runner.addFormatter(fe.createFormatter());
             }
@@ -809,7 +808,7 @@ public class JUnitTask extends Task {
         final int count = batchTests.size();
         final Enumeration[] enums = new Enumeration[ count + 1];
         for (int i = 0; i < count; i++) {
-            BatchTest batchtest = (BatchTest)batchTests.elementAt(i);
+            BatchTest batchtest = (BatchTest) batchTests.elementAt(i);
             enums[i] = batchtest.elements();
         }
         enums[enums.length - 1] = tests.elements();
@@ -828,7 +827,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.3
      */
     private FormatterElement[] mergeFormatters(JUnitTest test){
-        Vector feVector = (Vector)formatters.clone();
+        Vector feVector = (Vector) formatters.clone();
         test.addFormattersTo(feVector);
         FormatterElement[] feArray = new FormatterElement[feVector.size()];
         feVector.copyInto(feArray);
@@ -844,7 +843,7 @@ public class JUnitTask extends Task {
     protected File getOutput(FormatterElement fe, JUnitTest test){
         if (fe.getUseFile()) {
             String filename = test.getOutfile() + fe.getExtension();
-            File destFile = new File( test.getTodir(), filename );
+            File destFile = new File(test.getTodir(), filename);
             String absFilename = destFile.getAbsolutePath();
             return project.resolveFile(absFilename);
         }
@@ -867,23 +866,23 @@ public class JUnitTask extends Task {
             if (u.startsWith("jar:file:")) {
                 int pling = u.indexOf("!");
                 String jarName = u.substring(9, pling);
-                log("Found "+jarName, Project.MSG_DEBUG);
+                log("Found " + jarName, Project.MSG_DEBUG);
                 antRuntimeClasses.createPath()
                     .setLocation(new File((new File(jarName))
                                           .getAbsolutePath()));
             } else if (u.startsWith("file:")) {
                 int tail = u.indexOf(resource);
                 String dirName = u.substring(5, tail);
-                log("Found "+dirName, Project.MSG_DEBUG);
+                log("Found " + dirName, Project.MSG_DEBUG);
                 antRuntimeClasses.createPath()
                     .setLocation(new File((new File(dirName))
                                           .getAbsolutePath()));
             } else {
-                log("Don\'t know how to handle resource URL "+u,
+                log("Don\'t know how to handle resource URL " + u,
                     Project.MSG_DEBUG);
             }
         } else {
-            log("Couldn\'t find "+resource, Project.MSG_DEBUG);
+            log("Couldn\'t find " + resource, Project.MSG_DEBUG);
         }
     }
 

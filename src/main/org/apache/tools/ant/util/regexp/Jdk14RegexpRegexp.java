@@ -86,7 +86,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
     {
         // translate \1 to $(1) so that the Matcher will work
         StringBuffer subst = new StringBuffer();
-        for (int i=0; i<argument.length(); i++) {
+        for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
             if (c == '\\') {
                 if (++i < argument.length()) {

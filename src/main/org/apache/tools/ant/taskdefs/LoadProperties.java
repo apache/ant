@@ -122,7 +122,7 @@ public final class LoadProperties extends Task {
 
         try {
             final long len = srcFile.length();
-            final int size=(int) len;
+            final int size = (int) len;
 
             //open up the file
             fis = new FileInputStream(srcFile);

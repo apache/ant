@@ -168,7 +168,7 @@ public class CvsTagDiff extends Task {
      * @exception BuildException if an error occurs
      */
     public void init() throws BuildException {
-        m_cvs = (Cvs)getProject().createTask("cvs");
+        m_cvs = (Cvs) getProject().createTask("cvs");
     }
     
     /**
@@ -290,10 +290,10 @@ public class CvsTagDiff extends Task {
         
         // build the rdiff command
         String rdiff = "rdiff -s " +
-            (m_startTag!=null?("-r " + m_startTag):("-D " + m_startDate)) 
-            + " " +
-            (m_endTag!=null?("-r " + m_endTag):("-D " + m_endDate)) + " " +
-            m_package;
+            (m_startTag != null ? ("-r " + m_startTag) : ("-D " + m_startDate)) 
+            + " " 
+            + (m_endTag != null ? ("-r " + m_endTag) : ("-D " + m_endDate)) 
+            + " " + m_package;
         log("Cvs command is " + rdiff, Project.MSG_VERBOSE);
         m_cvs.setCommand(rdiff);
 

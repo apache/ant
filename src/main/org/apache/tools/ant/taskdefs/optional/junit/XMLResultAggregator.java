@@ -160,7 +160,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         File destFile = getDestinationFile();
         // write the document
         try {
-            writeDOMTree(rootElement.getOwnerDocument(),  destFile );
+            writeDOMTree(rootElement.getOwnerDocument(), destFile);
         } catch (IOException e){
             throw new BuildException("Unable to write test aggregate to '" + destFile + "'", e);
         }
@@ -204,10 +204,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             String[] f = ds.getIncludedFiles();
             for (int j = 0; j < f.length; j++) {
                 String pathname = f[j];
-                if ( pathname.endsWith(".xml") ) {
+                if (pathname.endsWith(".xml")) {
                     File file = new File(ds.getBasedir(), pathname);
                     file = project.resolveFile(file.getPath());
-                    v.addElement( file );
+                    v.addElement(file);
                 }
             }
         }
@@ -229,7 +229,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         OutputStream out = null;
         PrintWriter wri = null;
         try {
-            out = new FileOutputStream( file );
+            out = new FileOutputStream(file);
             wri = new PrintWriter(new OutputStreamWriter(out, "UTF8"));
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             (new DOMElementWriter()).write(doc.getDocumentElement(), wri, 0, "  ");
@@ -270,10 +270,11 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 //XXX there seems to be a bug in xerces 1.3.0 that doesn't like file object
                 // will investigate later. It does not use the given directory but
                 // the vm dir instead ? Works fine with crimson.
-                Document testsuiteDoc = builder.parse( "file:///" + files[i].getAbsolutePath() );
+                Document testsuiteDoc 
+                    = builder.parse("file:///" + files[i].getAbsolutePath());
                 Element elem = testsuiteDoc.getDocumentElement();
                 // make sure that this is REALLY a testsuite.
-                if ( TESTSUITE.equals(elem.getNodeName()) ) {
+                if (TESTSUITE.equals(elem.getNodeName())) {
                     addTestSuite(rootElement, elem);
                 } else {
                     // issue a warning.
@@ -310,7 +311,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         // a missing . might imply no package at all. Don't get fooled.
         String pkgName = (pos == -1) ? "" : fullclassname.substring(0, pos);
         String classname = (pos == -1) ? fullclassname : fullclassname.substring(pos + 1);
-        Element copy = (Element)DOMUtil.importNode(root, testsuite);
+        Element copy = (Element) DOMUtil.importNode(root, testsuite);
 
         // modify the name attribute and set the package
         copy.setAttribute(ATTR_NAME, classname);
@@ -326,7 +327,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch(Exception exc) {
+        } catch (Exception exc) {
             throw new ExceptionInInitializerError(exc);
         }
     }

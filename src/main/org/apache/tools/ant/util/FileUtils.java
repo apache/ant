@@ -489,13 +489,10 @@ public class FileUtils {
 
         // deal with absolute files
         if (!onNetWare) {
-            if (filename.startsWith(File.separator) ||
-                
-                (filename.length() >= 2 &&
-                 Character.isLetter(filename.charAt(0)) &&
-                 filename.charAt(1) == ':')
-                
-                ) {
+            if (filename.startsWith(File.separator) 
+                || (filename.length() >= 2 
+                    && Character.isLetter(filename.charAt(0)) 
+                    && filename.charAt(1) == ':')) {
                 return normalize(filename);
             }
         } else {
@@ -503,9 +500,8 @@ public class FileUtils {
             // the path name breaks down when NetWare is a supported platform.
             // Netware volumes are of the pattern: "data:\"
             int colon = filename.indexOf(":");
-            if (filename.startsWith(File.separator) ||
-                (colon > -1)
-                ) {
+            if (filename.startsWith(File.separator) 
+                || (colon > -1)) {
                 return normalize(filename);
             }
         }
@@ -562,17 +558,15 @@ public class FileUtils {
 
         if (!onNetWare) {
             if (!path.startsWith(File.separator) &&
-                ! (path.length() >= 2 &&
+                !(path.length() >= 2 &&
                    Character.isLetter(path.charAt(0)) &&
-                   colon == 1)
-                ) {
+                   colon == 1)) {
                 String msg = path + " is not an absolute path";
                 throw new BuildException(msg);
             }
         } else {
-            if (!path.startsWith(File.separator) &&
-                (colon == -1)
-                ) {
+            if (!path.startsWith(File.separator) 
+                && (colon == -1)) {
                 String msg = path + " is not an absolute path";
                 throw new BuildException(msg);
             }
@@ -585,8 +579,7 @@ public class FileUtils {
              path.length() >= 2 &&
              Character.isLetter(path.charAt(0)) &&
              path.charAt(1) == ':') ||
-            (onNetWare && colon > -1)
-            ) {
+            (onNetWare && colon > -1)) {
 
             dosWithDrive = true;
 
@@ -603,10 +596,9 @@ public class FileUtils {
 
             // Eliminate consecutive slashes after the drive spec
             StringBuffer sbPath = new StringBuffer();
-            for (int i = colon+1; i < ca.length; i++) {
+            for (int i = colon + 1; i < ca.length; i++) {
                 if ((ca[i] != '\\') ||
-                    (ca[i] == '\\' && ca[i - 1] != '\\')
-                    ) {
+                    (ca[i] == '\\' && ca[i - 1] != '\\')) {
                     sbPath.append(ca[i]);
                 }
             }
@@ -618,7 +610,7 @@ public class FileUtils {
                 path = "";
             } else if (path.charAt(1) == File.separatorChar) {
                 // UNC drive
-                root = File.separator+File.separator;
+                root = File.separator + File.separator;
                 path = path.substring(2);
             } else {
                 root = File.separator;
@@ -635,7 +627,7 @@ public class FileUtils {
                 continue;
             } else if ("..".equals(thisToken)) {
                 if (s.size() < 2) {
-                    throw new BuildException("Cannot resolve path "+orig);
+                    throw new BuildException("Cannot resolve path " + orig);
                 } else {
                     s.pop();
                 }
@@ -645,7 +637,7 @@ public class FileUtils {
         }
 
         StringBuffer sb = new StringBuffer();
-        for (int i=0; i<s.size(); i++) {
+        for (int i = 0; i < s.size(); i++) {
             if (i > 1) {
                 // not before the filesystem root and not after it, since root
                 // already contains one

@@ -88,7 +88,7 @@ public class Patch extends Task {
      */
     public void setPatchfile(File file) {
         if (!file.exists()) {
-            throw new BuildException("patchfile "+file+" doesn\'t exist", 
+            throw new BuildException("patchfile " + file + " doesn\'t exist", 
                                      location);
         }
         cmd.createArgument().setValue("-i");
@@ -124,7 +124,7 @@ public class Patch extends Task {
         if (num < 0) {
             throw new BuildException("strip has to be >= 0", location);
         }
-        cmd.createArgument().setValue("-p"+num);
+        cmd.createArgument().setValue("-p" + num);
     }
 
     /**
@@ -151,7 +151,7 @@ public class Patch extends Task {
                                      location);
         } 
         
-        Commandline toExecute = (Commandline)cmd.clone();
+        Commandline toExecute = (Commandline) cmd.clone();
         toExecute.setExecutable("patch");
 
         if (originalFile != null) {

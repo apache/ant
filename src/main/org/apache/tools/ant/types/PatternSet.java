@@ -173,13 +173,13 @@ public class PatternSet extends DataType {
         String[] nestedExcludes = p.getExcludePatterns(getProject());
 
         if (nestedIncludes != null) {
-            for (int i=0; i < nestedIncludes.length; i++) {
+            for (int i = 0; i < nestedIncludes.length; i++) {
                 createInclude().setName(nestedIncludes[i]);
             }
         }
 
         if (nestedExcludes != null) {
-            for (int i=0; i < nestedExcludes.length; i++) {
+            for (int i = 0; i < nestedExcludes.length; i++) {
                 createExclude().setName(nestedExcludes[i]);
             }
         }
@@ -317,15 +317,15 @@ public class PatternSet extends DataType {
                 }
                 line = patternReader.readLine();
             }
-        } catch(IOException ioe)  {
+        } catch (IOException ioe)  {
             String msg = "An error occured while reading from pattern file: " 
                 + patternfile;
             throw new BuildException(msg, ioe);
         } finally {
-            if( null != patternReader ) {
+            if (null != patternReader) {
                 try {
                     patternReader.close();
-                } catch(IOException ioe) { 
+                } catch (IOException ioe) { 
                     //Ignore exception
                 }
             }
@@ -342,14 +342,14 @@ public class PatternSet extends DataType {
 
         String[] incl = other.getIncludePatterns(p);
         if (incl != null) {
-            for (int i=0; i<incl.length; i++) {
+            for (int i = 0; i < incl.length; i++) {
                 createInclude().setName(incl[i]);
             }
         }
         
         String[] excl = other.getExcludePatterns(p);
         if (excl != null) {
-            for (int i=0; i<excl.length; i++) {
+            for (int i = 0; i < excl.length; i++) {
                 createExclude().setName(excl[i]);
             }
         }
@@ -400,7 +400,7 @@ public class PatternSet extends DataType {
         
         Object o = ref.getReferencedObject(p);
         if (!(o instanceof PatternSet)) {
-            String msg = ref.getRefId()+" doesn\'t denote a patternset";
+            String msg = ref.getRefId() + " doesn\'t denote a patternset";
             throw new BuildException(msg);
         } else {
             return (PatternSet) o;
@@ -417,7 +417,7 @@ public class PatternSet extends DataType {
 
         Vector tmpNames = new Vector();
         for (Enumeration e = list.elements() ; e.hasMoreElements() ;) {
-            NameEntry ne = (NameEntry)e.nextElement();
+            NameEntry ne = (NameEntry) e.nextElement();
             String pattern = ne.evalName(p);
             if (pattern != null && pattern.length() > 0) {
                 tmpNames.addElement(pattern);
@@ -436,7 +436,7 @@ public class PatternSet extends DataType {
         if (includesFileList.size() > 0) {
             Enumeration e = includesFileList.elements();
             while (e.hasMoreElements()) {
-                NameEntry ne = (NameEntry)e.nextElement();
+                NameEntry ne = (NameEntry) e.nextElement();
                 String fileName = ne.evalName(p);
                 if (fileName != null) {
                     File inclFile = p.resolveFile(fileName);
@@ -454,7 +454,7 @@ public class PatternSet extends DataType {
         if (excludesFileList.size() > 0) {
             Enumeration e = excludesFileList.elements();
             while (e.hasMoreElements()) {
-                NameEntry ne = (NameEntry)e.nextElement();
+                NameEntry ne = (NameEntry) e.nextElement();
                 String fileName = ne.evalName(p);
                 if (fileName != null) {
                     File exclFile = p.resolveFile(fileName);

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,8 +95,8 @@ public abstract class DataType extends ProjectComponent {
      * Sets a description of the current data type. It will be useful
      * in commenting what we are doing.  
      */
-    public void setDescription( String desc ) {
-        description=desc;
+    public void setDescription(String desc) {
+        description = desc;
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class DataType extends ProjectComponent {
         
         Object o = ref.getReferencedObject(getProject());
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
-            String msg = ref.getRefId()+" doesn\'t denote a " + dataTypeName;
+            String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
         } else {
             return o;
@@ -187,8 +187,8 @@ public abstract class DataType extends ProjectComponent {
      * only attribute if it is set.  
      */
     protected BuildException tooManyAttributes() {
-        return new BuildException( "You must not specify more than one attribute" +
-                                   " when using refid" );
+        return new BuildException("You must not specify more than one " 
+            + "attribute when using refid");
     }
 
     /**
@@ -196,7 +196,8 @@ public abstract class DataType extends ProjectComponent {
      * not have child elements if the refid attribute is set.  
      */
     protected BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested elements when using refid");
+        return new BuildException("You must not specify nested elements " 
+            + "when using refid");
     }
 
     /**
@@ -204,6 +205,7 @@ public abstract class DataType extends ProjectComponent {
      * loop of data types referencing each other.  
      */
     protected BuildException circularReference() {
-        return new BuildException("This data type contains a circular reference.");
+        return new BuildException("This data type contains a circular " 
+            + "reference.");
     }
 }

@@ -114,7 +114,7 @@ public class JlinkTask extends MatchingTask {
             this.mergefiles = mergefiles;
         }
         else {
-            this.mergefiles .append(mergefiles);
+            this.mergefiles.append(mergefiles);
         }
     }
 
@@ -167,16 +167,16 @@ public class JlinkTask extends MatchingTask {
         linker.setOutfile(outfile.getPath());
         linker.setCompression(compress);
         if (haveMergeFiles()) {
-            log("merge files: " + mergefiles.toString(), Project.MSG_VERBOSE );
-            linker.addMergeFiles( mergefiles.list() );
+            log("merge files: " + mergefiles.toString(), Project.MSG_VERBOSE);
+            linker.addMergeFiles(mergefiles.list());
         }
         if (haveAddFiles()) {
-            log("add files: " + addfiles.toString(), Project .MSG_VERBOSE);
+            log("add files: " + addfiles.toString(), Project.MSG_VERBOSE);
             linker.addAddFiles(addfiles.list());
         }
         try  {
             linker.link();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new BuildException(ex, location);
         }
     }

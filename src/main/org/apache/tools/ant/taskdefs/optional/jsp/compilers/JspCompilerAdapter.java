@@ -76,7 +76,7 @@ public interface JspCompilerAdapter {
     /**
      * Sets the compiler attributes, which are stored in the Jspc task.
      */
-    void setJspc( JspC attributes );
+    void setJspc(JspC attributes);
 
     /**
      * Executes the task.

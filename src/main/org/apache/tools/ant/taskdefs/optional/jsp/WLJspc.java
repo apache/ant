@@ -146,7 +146,8 @@ public class WLJspc extends MatchingTask
         
         String systemClassPath = System.getProperty("java.class.path");
         
-        pathToPackage = this.destinationPackage.replace('.',File.separatorChar);
+        pathToPackage 
+            = this.destinationPackage.replace('.', File.separatorChar);
         // get all the files in the sourceDirectory
         DirectoryScanner ds = super.getDirectoryScanner(sourceDirectory);
 
@@ -162,7 +163,7 @@ public class WLJspc extends MatchingTask
         // Therefore, takes loads of time 
         // Can pass directories at a time (*.jsp) but easily runs out of memory on hefty dirs 
         // (even on  a Sun)
-        Java helperTask = (Java)project.createTask("java");
+        Java helperTask = (Java) project.createTask("java");
         helperTask.setFork(true);
         helperTask.setClassname("weblogic.jspc");
         helperTask.setTaskName(getTaskName());
@@ -171,7 +172,7 @@ public class WLJspc extends MatchingTask
         File jspFile = null;
         String parents = "";
         String arg = "";
-        int j=0;
+        int j = 0;
         //XXX  this array stuff is a remnant of prev trials.. gotta remove. 
         args[j++] = "-d";
         args[j++] = destinationDirectory.getAbsolutePath().trim(); 
@@ -189,9 +190,9 @@ public class WLJspc extends MatchingTask
         args[j++] = compileClasspath.toString();
             
         this.scanDir(files);
-        log("Compiling "+filesToDo.size() + " JSP files");
+        log("Compiling " + filesToDo.size() + " JSP files");
             
-        for (int i=0;i<filesToDo.size();i++) {
+        for (int i = 0; i < filesToDo.size(); i++) {
             //XXX
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky! 
@@ -200,18 +201,19 @@ public class WLJspc extends MatchingTask
             args[j] = "-package";
             parents = jspFile.getParent();
             if ((parents != null)  && (!("").equals(parents))) {
-                parents =  this.replaceString(parents,File.separator,"_.");
-                args[j+1] = destinationPackage +"."+ "_"+parents;   
-            }else {
-                args[j+1] = destinationPackage;
+                parents =  this.replaceString(parents, File.separator, "_.");
+                args[j + 1] = destinationPackage + "." + "_" + parents;
+            } else {
+                args[j + 1] = destinationPackage;
             }
             
             
-            args[j+2] =  sourceDirectory+File.separator+(String) filesToDo.elementAt(i);
-            arg="";
+            args[j + 2] =  sourceDirectory + File.separator 
+                + (String) filesToDo.elementAt(i);
+            arg = "";
             
-            for (int x=0;x<12;x++) {
-                arg += " "+ args[x];
+            for (int x = 0; x < 12; x++) {
+                arg += " " + args[x];
             }
             
             System.out.println("arg = " + arg);
@@ -220,7 +222,7 @@ public class WLJspc extends MatchingTask
             helperTask.setArgs(arg);
             helperTask.setClasspath(compileClasspath);
             if (helperTask.executeJava() != 0) {                         
-                log(files[i] + " failed to compile",Project.MSG_WARN) ;
+                log(files[i] + " failed to compile", Project.MSG_WARN);
             }
         }
     }
@@ -278,7 +280,7 @@ public class WLJspc extends MatchingTask
      */
     public void setPackage(String packageName) {
         
-        destinationPackage=packageName; 
+        destinationPackage = packageName; 
     }
     
     
@@ -296,12 +298,12 @@ public class WLJspc extends MatchingTask
             // Can be written better... this is too hacky!
             jspFile = new File(files[i]);
             parents = jspFile.getParent();
-            int loc=0;
+            int loc = 0;
             
             if ((parents != null)  && (!("").equals(parents))) {
-                parents =  this.replaceString(parents,File.separator,"_/");
-                pack = pathToPackage +File.separator+ "_"+parents;  
-            }else {
+                parents =  this.replaceString(parents, File.separator, "_/");
+                pack = pathToPackage + File.separator + "_" + parents;
+            } else {
                 pack = pathToPackage;
             }
             
@@ -324,22 +326,22 @@ public class WLJspc extends MatchingTask
             if (srcFile.lastModified() > classFile.lastModified()) {
                //log("Files are" + srcFile.getAbsolutePath()+" " +classFile.getAbsolutePath());
                 filesToDo.addElement(files[i]);
-                log("Recompiling File "+files[i],Project.MSG_VERBOSE);
+                log("Recompiling File " + files[i], Project.MSG_VERBOSE);
             }
         }
     }
     
     
-    protected String replaceString(String inpString,String escapeChars,String replaceChars) {
-        String localString="";
-        int numTokens=0;
-        StringTokenizer st=new StringTokenizer(inpString,escapeChars,true);
-        numTokens=st.countTokens();
-        for(int i=0;i<numTokens;i++)
-        {
-            String test=st.nextToken();
-            test=(test.equals(escapeChars)?replaceChars:test);
-            localString+=test;
+    protected String replaceString(String inpString, String escapeChars,
+                                   String replaceChars) {
+        String localString = "";
+        int numTokens = 0;
+        StringTokenizer st = new StringTokenizer(inpString, escapeChars, true);
+        numTokens = st.countTokens();
+        for (int i = 0; i < numTokens; i++) {
+            String test = st.nextToken();
+            test = (test.equals(escapeChars) ? replaceChars : test);
+            localString += test;
         }
         return localString;
     }

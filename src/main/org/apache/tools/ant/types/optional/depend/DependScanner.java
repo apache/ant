@@ -145,7 +145,7 @@ public class DependScanner extends DirectoryScanner {
         int count = included.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String)included.elementAt(i); 
+            files[i] = (String) included.elementAt(i); 
         }
         return files;
     }
@@ -161,7 +161,7 @@ public class DependScanner extends DirectoryScanner {
         DependencyAnalyzer analyzer = null;
         try {
             Class analyzerClass = Class.forName(analyzerClassName);
-            analyzer = (DependencyAnalyzer)analyzerClass.newInstance();
+            analyzer = (DependencyAnalyzer) analyzerClass.newInstance();
         } catch (Exception e) {
             throw new BuildException("Unable to load dependency analyzer: " 
                 + analyzerClassName, e);
@@ -169,7 +169,7 @@ public class DependScanner extends DirectoryScanner {
         analyzer.addClassPath(new Path(null, basedir.getPath()));
         
         for (Enumeration e = rootClasses.elements(); e.hasMoreElements();) {
-            String rootClass = (String)e.nextElement();
+            String rootClass = (String) e.nextElement();
             analyzer.addRootClass(rootClass);
         }
 
@@ -182,7 +182,7 @@ public class DependScanner extends DirectoryScanner {
         }
 
         while (e.hasMoreElements()) {
-            String classname = (String)e.nextElement();
+            String classname = (String) e.nextElement();
             String filename = classname.replace('.', File.separatorChar);
             filename = filename + ".class";
             File depFile = new File(basedir, filename);

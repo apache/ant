@@ -163,7 +163,7 @@ public class FileList extends DataType {
         
         Object o = ref.getReferencedObject(p);
         if (!(o instanceof FileList)) {
-            String msg = ref.getRefId()+" doesn\'t denote a filelist";
+            String msg = ref.getRefId() + " doesn\'t denote a filelist";
             throw new BuildException(msg);
         } else {
             return (FileList) o;

@@ -196,7 +196,7 @@ public class ZipFileSet extends FileSet {
         
         Object o = ref.getReferencedObject(p);
         if (!(o instanceof FileSet)) {
-            String msg = ref.getRefId()+" doesn\'t denote a fileset";
+            String msg = ref.getRefId() + " doesn\'t denote a fileset";
             throw new BuildException(msg);
         } else {
             return (AbstractFileSet) o;

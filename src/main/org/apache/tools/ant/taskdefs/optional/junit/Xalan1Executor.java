@@ -78,7 +78,7 @@ public class Xalan1Executor extends XalanExecutor {
         OutputStream os = getOutputStream();
         try {
             XSLTResultTarget target = new XSLTResultTarget(os);
-            processor.process( xml_src, xsl_src, target);
+            processor.process(xml_src, xsl_src, target);
         } finally {
             os.close();
         }

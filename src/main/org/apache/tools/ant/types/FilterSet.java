@@ -112,7 +112,7 @@ public class FilterSet extends DataType implements Cloneable {
          *
          * @param token  The new Token value
          */
-        public void setToken( String token ) {
+        public void setToken(String token) {
            this.token = token;
         }
         
@@ -121,7 +121,7 @@ public class FilterSet extends DataType implements Cloneable {
          *
          * @param value  The new Value value
          */
-        public void setValue( String value ) {
+        public void setValue(String value) {
            this.value = value;
         }
         
@@ -191,7 +191,7 @@ public class FilterSet extends DataType implements Cloneable {
      */
     protected FilterSet(FilterSet filterset) {
         super();
-        this.filters = (Vector)filterset.getFilters().clone();
+        this.filters = (Vector) filterset.getFilters().clone();
     }
 
     protected Vector getFilters() {
@@ -202,7 +202,7 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     protected FilterSet getRef() {
-        return (FilterSet)getCheckedRef(FilterSet.class, "filterset");
+        return (FilterSet) getCheckedRef(FilterSet.class, "filterset");
     }
     
     /**
@@ -261,7 +261,7 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @param endOfToken  The new Endtoken value
      */
-    public void setEndToken( String endOfToken ) {
+    public void setEndToken(String endOfToken) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -292,7 +292,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
 
         if (filtersFile.isFile()) {
-           log("Reading filters from " + filtersFile, Project.MSG_VERBOSE );
+           log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
            FileInputStream in = null;
            try {
               Properties props = new Properties();
@@ -308,10 +308,11 @@ public class FilterSet extends DataType implements Cloneable {
               }
            }
            catch (Exception e) {
-              throw new BuildException( "Could not read filters from file: " + filtersFile );
+              throw new BuildException("Could not read filters from file: " 
+                + filtersFile);
            }
            finally {
-              if ( in != null ) {
+              if (in != null) {
                  try {
                     in.close();
                  }
@@ -321,7 +322,8 @@ public class FilterSet extends DataType implements Cloneable {
            }
         }
         else {
-           throw new BuildException( "Must specify a file not a directory in the filtersfile attribute:" + filtersFile );
+           throw new BuildException("Must specify a file not a directory in " 
+            + "the filtersfile attribute:" + filtersFile);
         }
     }
     
@@ -346,24 +348,28 @@ public class FilterSet extends DataType implements Cloneable {
                 String value = null;
                 
                 do {
-                    int endIndex = line.indexOf(endToken, index + beginToken.length() + 1 );
+                    int endIndex = line.indexOf(endToken, 
+                        index + beginToken.length() + 1);
                     if (endIndex == -1) {
                         break;
                     }
-                    token = line.substring(index + beginToken.length(), endIndex );
+                    token 
+                        = line.substring(index + beginToken.length(), endIndex);
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
-                        value = (String)tokens.get(token);
-                        log( "Replacing: " + beginToken + token + endToken + " -> " + value, Project.MSG_VERBOSE );
+                        value = (String) tokens.get(token);
+                        log("Replacing: " + beginToken + token + endToken 
+                            + " -> " + value, Project.MSG_VERBOSE);
                         b.append(value);
-                        i = index + beginToken.length() + token.length() + endToken.length();
+                        i = index + beginToken.length() + token.length() 
+                            + endToken.length();
                     }
                     else {
                         // just append beginToken and search further
                         b.append(beginToken);
                         i = index + beginToken.length();
                     }
-                } while ((index = line.indexOf( beginToken, i )) > -1 );
+                } while ((index = line.indexOf(beginToken, i)) > -1);
                 
                 b.append(line.substring(i));
                 return b.toString();

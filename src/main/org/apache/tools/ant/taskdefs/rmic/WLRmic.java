@@ -94,7 +94,7 @@ public class WLRmic extends DefaultRmicAdapter {
             throw new BuildException("Cannot use WebLogic rmic, as it is not "
                                      + "available.  A common solution is to "
                                      + "set the environment variable "
-                                     + "CLASSPATH.", getRmic().getLocation() );
+                                     + "CLASSPATH.", getRmic().getLocation());
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;

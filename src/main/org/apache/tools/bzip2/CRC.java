@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -156,7 +156,7 @@ class CRC {
 
     void updateCRC(int inCh) {
         int temp = (globalCrc >> 24) ^ inCh;
-        if(temp < 0) {
+        if (temp < 0) {
             temp = 256 + temp;
         }
         globalCrc = (globalCrc << 8) ^ CRC.crc32Table[temp];

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,15 +78,15 @@ public interface JUnitResultFormatter extends TestListener {
     /**
      * Sets the stream the formatter is supposed to write its results to.
      */
-    void setOutput( OutputStream out );
+    void setOutput(OutputStream out);
 
     /**
      * This is what the test has written to System.out
      */
-    void setSystemOutput( String out );
+    void setSystemOutput(String out);
 
     /**
      * This is what the test has written to System.err
      */
-    void setSystemError( String err );
+    void setSystemError(String err);
 }

@@ -190,7 +190,7 @@ public class MParse extends Task {
 
         // set the metamata.home property
         final Commandline.Argument vmArgs = cmdl.createVmArgument();
-        vmArgs.setValue("-Dmetamata.home=" + metahome.getAbsolutePath() );
+        vmArgs.setValue("-Dmetamata.home=" + metahome.getAbsolutePath());
 
 
         // write all the options to a temp file and use it ro run the process
@@ -254,8 +254,8 @@ public class MParse extends Task {
      */
     protected File[] getMetamataLibs(){
         Vector files = new Vector();
-        files.addElement( new File(metahome, "lib/metamata.jar") );
-        files.addElement( new File(metahome, "bin/lib/JavaCC.zip") );
+        files.addElement(new File(metahome, "lib/metamata.jar"));
+        files.addElement(new File(metahome, "bin/lib/JavaCC.zip"));
         
         File[] array = new File[ files.size() ];
         files.copyInto(array);
@@ -278,12 +278,14 @@ public class MParse extends Task {
         File[] jars = getMetamataLibs();
         for (int i = 0; i < jars.length; i++){
             if (!jars[i].exists()){
-                throw new BuildException( jars[i] + " does not exist. Check your metamata installation.");
+                throw new BuildException(jars[i] 
+                    + " does not exist. Check your metamata installation.");
             }           
         }
         
         // check that the target is ok and resolve it.
-        if (target == null || !target.isFile() || !target.getName().endsWith(".jj") ) {
+        if (target == null || !target.isFile() 
+            || !target.getName().endsWith(".jj")) {
             throw new BuildException("Invalid target: " + target);
         }
         target = project.resolveFile(target.getPath());
@@ -332,7 +334,7 @@ public class MParse extends Task {
             fw = new FileWriter(tofile);
             PrintWriter pw = new PrintWriter(fw);
             for (int i = 0; i < options.length; i++){
-                pw.println( options[i] );
+                pw.println(options[i]);
             }
             pw.flush();
         } catch (IOException e){

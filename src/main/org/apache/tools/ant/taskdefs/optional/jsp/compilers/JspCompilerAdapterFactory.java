@@ -85,15 +85,15 @@ public class JspCompilerAdapterFactory {
      * @throws BuildException if the compiler type could not be resolved into
      * a compiler adapter.
      */
-    public static JspCompilerAdapter getCompiler( String compilerType, Task task )
+    public static JspCompilerAdapter getCompiler(String compilerType, Task task)
         throws BuildException {
         /* If I've done things right, this should be the extent of the
          * conditional statements required.
          */
-        if ( compilerType.equalsIgnoreCase("jasper") ) {
+        if (compilerType.equalsIgnoreCase("jasper")) {
             return new JasperC();
         }
-        return resolveClassName( compilerType );
+        return resolveClassName(compilerType);
     }
 
     /**
@@ -104,18 +104,18 @@ public class JspCompilerAdapterFactory {
      * @throws BuildException This is the fit that is thrown if className
      * isn't an instance of JspCompilerAdapter.
      */
-    private static JspCompilerAdapter resolveClassName( String className )
+    private static JspCompilerAdapter resolveClassName(String className)
         throws BuildException {
         try {
-            Class c = Class.forName( className );
+            Class c = Class.forName(className);
             Object o = c.newInstance();
             return (JspCompilerAdapter) o;
-        } catch ( ClassNotFoundException cnfe ) {
-            throw new BuildException( className + " can\'t be found.", cnfe );
-        } catch ( ClassCastException cce ) {
+        } catch (ClassNotFoundException cnfe) {
+            throw new BuildException(className + " can\'t be found.", cnfe);
+        } catch (ClassCastException cce) {
             throw new BuildException(className + " isn\'t the classname of "
                                      + "a compiler adapter.", cce);
-        } catch ( Throwable t ) {
+        } catch (Throwable t) {
             // for all other possibilities
             throw new BuildException(className + " caused an interesting "
                                      + "exception.", t);

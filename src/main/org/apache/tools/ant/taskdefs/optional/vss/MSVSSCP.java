@@ -101,14 +101,14 @@ public class MSVSSCP extends MSVSS {
         getLoginCommand(commandLine);
         
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }
     }
 
     public void setAutoresponse(String response) {
-        if ( response.equals("") || response.equals("null") ) {
+        if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;
         } else {
             m_AutoResponse = response;
@@ -123,14 +123,14 @@ public class MSVSSCP extends MSVSS {
      */
     public void getAutoresponse(Commandline cmd) {
 
-        if ( m_AutoResponse == null) {
+        if (m_AutoResponse == null) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } else if ( m_AutoResponse.equalsIgnoreCase("Y")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
 
-        } else if ( m_AutoResponse.equalsIgnoreCase("N")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
-        }else {
+        } else {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
         } // end of else
 

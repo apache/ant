@@ -237,7 +237,9 @@ public class ZipOutputStream extends DeflaterOutputStream {
      * 
      * @since 1.3
      */
-    public String getEncoding() {return encoding;}
+    public String getEncoding() {
+        return encoding;
+    }
 
     /*
      * Found out by experiment, that DeflaterOutputStream.close()
@@ -254,10 +256,10 @@ public class ZipOutputStream extends DeflaterOutputStream {
     public void finish() throws IOException {
         closeEntry();
         cdOffset = new ZipLong(written);
-        for (int i=0; i<entries.size(); i++) {
+        for (int i = 0; i < entries.size(); i++) {
             writeCentralFileHeader((ZipEntry) entries.elementAt(i));
         }
-        cdLength = new ZipLong(written-cdOffset.getValue());
+        cdLength = new ZipLong(written - cdOffset.getValue());
         writeCentralDirectoryEnd();
         offsets.clear();
         entries.removeAllElements();
@@ -292,7 +294,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         } else {
             if (entry.getCrc() != realCrc) {
                 throw new ZipException("bad CRC checksum for entry "
-                                       +entry.getName()+ ": " 
+                                       + entry.getName() + ": " 
                                        + Long.toHexString(entry.getCrc())
                                        + " instead of " 
                                        + Long.toHexString(realCrc));
@@ -300,7 +302,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
 
             if (entry.getSize() != written - dataStart) {
                 throw new ZipException("bad size for entry "
-                                       +entry.getName()+ ": " 
+                                       + entry.getName() + ": " 
                                        + entry.getSize()
                                        + " instead of " 
                                        + (written - dataStart));

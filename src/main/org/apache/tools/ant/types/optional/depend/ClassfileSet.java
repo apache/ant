@@ -132,7 +132,7 @@ public class ClassfileSet extends FileSet {
      */
     protected ClassfileSet(ClassfileSet s) {
         super(s);
-        rootClasses = (Vector)s.rootClasses.clone();
+        rootClasses = (Vector) s.rootClasses.clone();
     }
 
     /**
@@ -156,9 +156,9 @@ public class ClassfileSet extends FileSet {
             return getRef(p).getDirectoryScanner(p);
         }
 
-        Vector allRootClasses = (Vector)rootClasses.clone();
+        Vector allRootClasses = (Vector) rootClasses.clone();
         for (Enumeration e = rootFileSets.elements(); e.hasMoreElements();) {
-            FileSet additionalRootSet = (FileSet)e.nextElement();
+            FileSet additionalRootSet = (FileSet) e.nextElement();
             DirectoryScanner additionalScanner
                 = additionalRootSet.getDirectoryScanner(p);
             String[] files = additionalScanner.getIncludedFiles();

@@ -90,15 +90,15 @@ public class SunRmic extends DefaultRmicAdapter {
             Method doRmic = c.getMethod("compile", 
                                         new Class [] { String[].class });
             Boolean ok = 
-                (Boolean)doRmic.invoke(rmic, 
-                                       (new Object[] {cmd.getArguments()} ));
+                (Boolean) doRmic.invoke(rmic, 
+                                       (new Object[] {cmd.getArguments()}));
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use SUN rmic, as it is not "
                                      + "available.  A common solution is to "
                                      + "set the environment variable "
                                      + "JAVA_HOME or CLASSPATH.",
-                                     getRmic().getLocation() );
+                                     getRmic().getLocation());
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;

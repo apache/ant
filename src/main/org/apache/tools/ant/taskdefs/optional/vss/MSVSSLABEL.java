@@ -152,7 +152,7 @@ public class MSVSSLABEL extends MSVSS
         commandLine.createArgument().setValue(getVsspath());
 
         // -C
-        commandLine.createArgument().setValue("-C"+getComment());
+        commandLine.createArgument().setValue("-C" + getComment());
 
         // -I- or -I-Y or -I-N
         getAutoresponse(commandLine);
@@ -169,7 +169,7 @@ public class MSVSSLABEL extends MSVSS
         getLoginCommand(commandLine);
 
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }
@@ -185,7 +185,7 @@ public class MSVSSLABEL extends MSVSS
      * has not been defined to ant!
      */
     public void setLabel(String label) {
-        if ( label.equals("") || label.equals("null") ) {
+        if (label.equals("") || label.equals("null")) {
             m_Label = null;
         } else {
             m_Label = label;
@@ -197,7 +197,7 @@ public class MSVSSLABEL extends MSVSS
      * @param cmd the commandline the command is to be added to
      */
     public void getVersionCommand(Commandline cmd) {
-        if ( m_Version != null) {
+        if (m_Version != null) {
             cmd.createArgument().setValue(FLAG_VERSION + m_Version);
         }
     }
@@ -207,7 +207,7 @@ public class MSVSSLABEL extends MSVSS
      * @param cmd the commandline the command is to be added to
      */
     public void getLabelCommand(Commandline cmd) {
-        if ( m_Label != null) {
+        if (m_Label != null) {
             cmd.createArgument().setValue(FLAG_LABEL + m_Label);
         }
     }
@@ -221,7 +221,7 @@ public class MSVSSLABEL extends MSVSS
      * has not been defined to ant!
      */
     public void setVersion(String version) {
-        if (version.equals("") || version.equals("null") ) {
+        if (version.equals("") || version.equals("null")) {
             m_Version = null;
         } else {
             m_Version = version;
@@ -243,7 +243,7 @@ public class MSVSSLABEL extends MSVSS
      * is what SourceSafe uses for an empty comment.
      */
     public void setComment(String comment) {
-        if ( comment.equals("") || comment.equals("null") ) {
+        if (comment.equals("") || comment.equals("null")) {
             m_Comment = "-";
         } else {
             m_Comment = comment;
@@ -259,7 +259,7 @@ public class MSVSSLABEL extends MSVSS
     }
     
     public void setAutoresponse(String response){
-        if ( response.equals("") || response.equals("null") ) {
+        if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;
         } else {
             m_AutoResponse = response;
@@ -274,16 +274,15 @@ public class MSVSSLABEL extends MSVSS
      */
     public void getAutoresponse(Commandline cmd) {
         
-        if ( m_AutoResponse == null) {
+        if (m_AutoResponse == null) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } else if ( m_AutoResponse.equalsIgnoreCase("Y")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
             
-        } else if ( m_AutoResponse.equalsIgnoreCase("N")) {
+        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
-        }else {
+        } else {
             cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
         } // end of else
-
     }
 }

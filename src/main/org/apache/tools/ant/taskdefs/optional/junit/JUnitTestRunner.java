@@ -214,8 +214,8 @@ public class JUnitTestRunner implements TestListener {
             Method suiteMethod = null;
             try {
                 // check if there is a suite method
-                suiteMethod= testClass.getMethod("suite", new Class[0]);
-            } catch(Exception e) {
+                suiteMethod = testClass.getMethod("suite", new Class[0]);
+            } catch (Exception e) {
                 // no appropriate suite method found. We don't report any
                 // error here since it might be perfectly normal. We don't
                 // know exactly what is the cause, but we're doing exactly
@@ -225,14 +225,14 @@ public class JUnitTestRunner implements TestListener {
                 // if there is a suite method available, then try
                 // to extract the suite from it. If there is an error
                 // here it will be caught below and reported.
-                suite = (Test)suiteMethod.invoke(null, new Class[0]);
+                suite = (Test) suiteMethod.invoke(null, new Class[0]);
             } else {
                 // try to extract a test suite automatically
                 // this will generate warnings if the class is no suitable Test
-                suite= new TestSuite(testClass);
+                suite = new TestSuite(testClass);
             }
             
-        } catch(Exception e) {
+        } catch (Exception e) {
             retCode = ERRORS;
             exception = e;
         }
@@ -241,16 +241,16 @@ public class JUnitTestRunner implements TestListener {
     public void run() {
         res = new TestResult();
         res.addListener(this);
-        for (int i=0; i < formatters.size(); i++) {
-            res.addListener((TestListener)formatters.elementAt(i));
+        for (int i = 0; i < formatters.size(); i++) {
+            res.addListener((TestListener) formatters.elementAt(i));
         }
 
         long start = System.currentTimeMillis();
 
         fireStartTestSuite();
         if (exception != null) { // had an exception in the constructor
-            for (int i=0; i < formatters.size(); i++) {
-                ((TestListener)formatters.elementAt(i)).addError(null, 
+            for (int i = 0; i < formatters.size(); i++) {
+                ((TestListener) formatters.elementAt(i)).addError(null, 
                                                                  exception);
             }
             junitTest.setCounts(1, 0, 1);
@@ -373,9 +373,9 @@ public class JUnitTestRunner implements TestListener {
     }
     
     private void sendOutAndErr(String out, String err) {
-        for (int i=0; i<formatters.size(); i++) {
+        for (int i = 0; i < formatters.size(); i++) {
             JUnitResultFormatter formatter = 
-                ((JUnitResultFormatter)formatters.elementAt(i));
+                ((JUnitResultFormatter) formatters.elementAt(i));
             
             formatter.setSystemOutput(out);
             formatter.setSystemError(err);
@@ -383,14 +383,14 @@ public class JUnitTestRunner implements TestListener {
     }
 
     private void fireStartTestSuite() {
-        for (int i=0; i<formatters.size(); i++) {
-            ((JUnitResultFormatter)formatters.elementAt(i)).startTestSuite(junitTest);
+        for (int i = 0; i < formatters.size(); i++) {
+            ((JUnitResultFormatter) formatters.elementAt(i)).startTestSuite(junitTest);
         }
     }
 
     private void fireEndTestSuite() {
-        for (int i=0; i<formatters.size(); i++) {
-            ((JUnitResultFormatter)formatters.elementAt(i)).endTestSuite(junitTest);
+        for (int i = 0; i < formatters.size(); i++) {
+            ((JUnitResultFormatter) formatters.elementAt(i)).endTestSuite(junitTest);
         }
     }
 
@@ -431,7 +431,7 @@ public class JUnitTestRunner implements TestListener {
             System.exit(ERRORS);
         }
 
-        for (int i=1; i<args.length; i++) {
+        for (int i = 1; i < args.length; i++) {
             if (args[i].startsWith("haltOnError=")) {
                 haltError = Project.toBoolean(args[i].substring(12));
             } else if (args[i].startsWith("haltOnFailure=")) {
@@ -456,7 +456,7 @@ public class JUnitTestRunner implements TestListener {
         
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
-        for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
+        for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
             Object key = enum.nextElement();
             props.put(key, p.get(key));
         }
@@ -472,7 +472,7 @@ public class JUnitTestRunner implements TestListener {
     private static Vector fromCmdLine = new Vector();
 
     private static void transferFormatters(JUnitTestRunner runner) {
-        for (int i=0; i<fromCmdLine.size(); i++) {
+        for (int i = 0; i < fromCmdLine.size(); i++) {
             runner.addFormatter((JUnitResultFormatter) fromCmdLine.elementAt(i));
         }
     }
@@ -488,7 +488,7 @@ public class JUnitTestRunner implements TestListener {
             fe.setClassname(line);
         } else {
             fe.setClassname(line.substring(0, pos));
-            fe.setOutfile( new File(line.substring(pos + 1)) );
+            fe.setOutfile(new File(line.substring(pos + 1)));
         }
         fromCmdLine.addElement(fe.createFormatter());
     }

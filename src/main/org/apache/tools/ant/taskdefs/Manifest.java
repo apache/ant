@@ -184,7 +184,7 @@ public class Manifest extends Task {
                 return false;
             }
 
-            Attribute rhsAttribute = (Attribute)rhs;
+            Attribute rhsAttribute = (Attribute) rhs;
             return (name != null && rhsAttribute.name != null &&
                     getKey().equals(rhsAttribute.getKey()) &&
                     values != null && 
@@ -266,7 +266,7 @@ public class Manifest extends Task {
             
             String fullValue = "";
             for (Enumeration e = getValues(); e.hasMoreElements();) {
-                String value = (String)e.nextElement();
+                String value = (String) e.nextElement();
                 fullValue += value + " ";
             }
             return fullValue.trim();
@@ -301,7 +301,7 @@ public class Manifest extends Task {
          * @param line the continuation line.
          */
         public void addContinuation(String line) {
-            String currentValue = (String)values.elementAt(currentIndex);
+            String currentValue = (String) values.elementAt(currentIndex);
             setValue(currentValue + line.substring(1));
         }
 
@@ -314,7 +314,7 @@ public class Manifest extends Task {
          */
         public void write(PrintWriter writer) throws IOException {
             for (Enumeration e = getValues(); e.hasMoreElements();) {
-                writeValue(writer, (String)e.nextElement());
+                writeValue(writer, (String) e.nextElement());
             }
         }
         
@@ -451,14 +451,14 @@ public class Manifest extends Task {
 
             Enumeration e = section.getAttributeKeys();
             while (e.hasMoreElements()) {
-                String attributeName = (String)e.nextElement();
+                String attributeName = (String) e.nextElement();
                 Attribute attribute = section.getAttribute(attributeName);
                 if (attributeName.equals(ATTRIBUTE_CLASSPATH) &&
                         attributes.containsKey(attributeName)) {
                     Attribute ourClassPath = getAttribute(attributeName);
                     Enumeration cpe = attribute.getValues();
                     while (cpe.hasMoreElements()) {
-                        String value = (String)cpe.nextElement();
+                        String value = (String) cpe.nextElement();
                         ourClassPath.addValue(value);
                     }
                 } else {
@@ -488,7 +488,7 @@ public class Manifest extends Task {
             }
             Enumeration e = getAttributeKeys();
             while (e.hasMoreElements()) {
-                String key = (String)e.nextElement();
+                String key = (String) e.nextElement();
                 Attribute attribute = getAttribute(key);
                 attribute.write(writer);
             }
@@ -504,7 +504,7 @@ public class Manifest extends Task {
          *         instances.
          */
         public Attribute getAttribute(String attributeName) {
-            return (Attribute)attributes.get(attributeName.toLowerCase());
+            return (Attribute) attributes.get(attributeName.toLowerCase());
         }
 
         /**
@@ -594,14 +594,14 @@ public class Manifest extends Task {
                 String attributeKey = attribute.getKey();
                 if (attributeKey.equals(ATTRIBUTE_CLASSPATH)) {
                     Attribute classpathAttribute = 
-                        (Attribute)attributes.get(attributeKey);
+                        (Attribute) attributes.get(attributeKey);
                     
                     if (classpathAttribute == null) {
                         storeAttribute(attribute);
                     } else {
                         Enumeration e = attribute.getValues();
                         while (e.hasMoreElements()) {
-                            String value = (String)e.nextElement();
+                            String value = (String) e.nextElement();
                             classpathAttribute.addValue(value);
                         }
                     }
@@ -649,13 +649,13 @@ public class Manifest extends Task {
                 return false;
             }
 
-            Section rhsSection = (Section)rhs;
+            Section rhsSection = (Section) rhs;
             if (attributes.size() != rhsSection.attributes.size()) {
                 return false;
             }
 
             for (Enumeration e = attributes.keys(); e.hasMoreElements();) {
-                String attributeName = (String)e.nextElement();
+                String attributeName = (String) e.nextElement();
                 Object attributeValue  = attributes.get(attributeName);
                 Object rhsAttributeValue 
                     = rhsSection.attributes.get(attributeName);
@@ -843,10 +843,10 @@ public class Manifest extends Task {
 
              Enumeration e = other.getSectionNames();
              while (e.hasMoreElements()) {
-                 String sectionName = (String)e.nextElement();
-                 Section ourSection = (Section)sections.get(sectionName);
+                 String sectionName = (String) e.nextElement();
+                 Section ourSection = (Section) sections.get(sectionName);
                  Section otherSection 
-                    = (Section)other.sections.get(sectionName);
+                    = (Section) other.sections.get(sectionName);
                  if (ourSection == null) {
                      if (otherSection != null) {
                          addConfiguredSection(otherSection);
@@ -889,7 +889,7 @@ public class Manifest extends Task {
 
         Enumeration e = sectionIndex.elements();
         while (e.hasMoreElements()) {
-            String sectionName = (String)e.nextElement();
+            String sectionName = (String) e.nextElement();
             Section section = getSection(sectionName);
             section.write(writer);
         }
@@ -927,7 +927,7 @@ public class Manifest extends Task {
         // create a vector and add in the warnings for all the sections
         Enumeration e = sections.elements(); 
         while (e.hasMoreElements()) {
-            Section section = (Section)e.nextElement();
+            Section section = (Section) e.nextElement();
             Enumeration e2 = section.getWarnings(); 
             while (e2.hasMoreElements()) {
                 warnings.addElement(e2.nextElement());
@@ -945,7 +945,7 @@ public class Manifest extends Task {
             return false;
         }
 
-        Manifest rhsManifest = (Manifest)rhs;
+        Manifest rhsManifest = (Manifest) rhs;
         if (manifestVersion == null) {
             if (rhsManifest.manifestVersion != null) {
                 return false;
@@ -963,9 +963,9 @@ public class Manifest extends Task {
 
         Enumeration e = sections.elements(); 
         while (e.hasMoreElements()) {
-            Section section = (Section)e.nextElement();
+            Section section = (Section) e.nextElement();
             Section rhsSection 
-                = (Section)rhsManifest.sections.get(section.getName());
+                = (Section) rhsManifest.sections.get(section.getName());
             if (!section.equals(rhsSection)) {
                 return false;
             }
@@ -1018,7 +1018,7 @@ public class Manifest extends Task {
      * does not exist in the manifest
      */
     public Section getSection(String name) {
-        return (Section)sections.get(name);
+        return (Section) sections.get(name);
     }
 
     /**

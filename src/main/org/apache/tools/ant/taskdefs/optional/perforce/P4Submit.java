@@ -90,9 +90,7 @@ public class P4Submit extends P4Base {
                         public void process(String line) {
                             log(line, Project.MSG_VERBOSE);
                         }
-                    }
-            );
-
+                    });
         } else {
             //here we'd parse the output from change -o into submit -i
             //in order to support default change.

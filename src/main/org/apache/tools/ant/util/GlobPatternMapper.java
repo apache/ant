@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -109,7 +109,7 @@ public class GlobPatternMapper implements FileNameMapper {
             fromPostfix = "";
         } else {
             fromPrefix = from.substring(0, index);
-            fromPostfix = from.substring(index+1);
+            fromPostfix = from.substring(index + 1);
         }
         prefixLength = fromPrefix.length();
         postfixLength = fromPostfix.length();
@@ -125,7 +125,7 @@ public class GlobPatternMapper implements FileNameMapper {
             toPostfix = "";
         } else {
             toPrefix = to.substring(0, index);
-            toPostfix = to.substring(index+1);
+            toPostfix = to.substring(index + 1);
         }
     }
 

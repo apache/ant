@@ -199,7 +199,7 @@ public class AggregateTransformer {
         // set the destination directory relative from the project if needed.
         if (toDir == null) {
             toDir = task.getProject().resolveFile(".");
-        } else if ( !toDir.isAbsolute() ) {
+        } else if (!toDir.isAbsolute()) {
             toDir = task.getProject().resolveFile(toDir.getPath());
         }
     }

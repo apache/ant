@@ -87,7 +87,7 @@ public class JasperC extends DefaultJspCompilerAdapter
             // Create an instance of the compiler, redirecting output to
             // the project log
             // REVISIT. ugly. 
-            Java java = (Java)(getJspc().getProject()).createTask("java");
+            Java java = (Java) (getJspc().getProject()).createTask("java");
             if (getJspc().getClasspath() != null) {
                 java.setClasspath(getJspc().getClasspath());
             }
@@ -96,7 +96,7 @@ public class JasperC extends DefaultJspCompilerAdapter
             }
             java.setClassname("org.apache.jasper.JspC");
             String args[] = cmd.getArguments();
-            for (int  i =0; i < args.length; i++) {
+            for (int i = 0; i < args.length; i++) {
                 java.createArg().setValue(args[i]);
             }
             java.setFailonerror(getJspc().getFailonerror());
@@ -129,20 +129,20 @@ public class JasperC extends DefaultJspCompilerAdapter
     private Commandline setupJasperCommand() {
         Commandline cmd = new Commandline();
         JspC jspc = getJspc();
-        addArg(cmd,"-d",jspc.getDestdir());
-        addArg(cmd,"-p",jspc.getPackage());
-        addArg(cmd,"-v"+jspc.getVerbose());
-        addArg(cmd,"-uriroot",jspc.getUriroot());
-        addArg(cmd,"-uribase",jspc.getUribase());
-        addArg(cmd,"-ieplugin",jspc.getIeplugin());
-        addArg(cmd,"-die9");
+        addArg(cmd, "-d", jspc.getDestdir());
+        addArg(cmd, "-p", jspc.getPackage());
+        addArg(cmd, "-v" + jspc.getVerbose());
+        addArg(cmd, "-uriroot", jspc.getUriroot());
+        addArg(cmd, "-uribase", jspc.getUribase());
+        addArg(cmd, "-ieplugin", jspc.getIeplugin());
+        addArg(cmd, "-die9");
 
         if (jspc.isMapped()){
-            addArg(cmd,"-mapped");
+            addArg(cmd, "-mapped");
         }       
-        if(jspc.getWebApp()!=null) {
-            File dir=jspc.getWebApp().getDirectory();
-            addArg(cmd,"-webapp",dir);
+        if (jspc.getWebApp() != null) {
+            File dir = jspc.getWebApp().getDirectory();
+            addArg(cmd, "-webapp", dir);
         }
         logAndAddFilesToCompile(getJspc(), getJspc().getCompileList(), cmd);
         return cmd;
