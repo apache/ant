@@ -116,22 +116,6 @@ public class Jikes
         {
             cmd.createArgument().setValue( "-depend" );
         }
-        /**
-         * XXX Perhaps we shouldn't use properties for these three options
-         * (emacs mode, warnings and pedantic), but include it in the javac
-         * directive?
-         */
-
-        /**
-         * Jikes has the nice feature to print error messages in a form readable
-         * by emacs, so that emacs can directly set the cursor to the place,
-         * where the error occured.
-         */
-        String emacsProperty = m_project.getProperty( "build.compiler.emacs" );
-        if( emacsProperty != null && Project.toBoolean( emacsProperty ) )
-        {
-            cmd.createArgument().setValue( "+E" );
-        }
 
         if( m_attributes.getNowarn() )
         {
@@ -142,25 +126,6 @@ public class Jikes
              * compatibility
              */
             cmd.createArgument().setValue( "-nowarn" );
-        }
-
-        /**
-         * Jikes can issue pedantic warnings.
-         */
-        String pedanticProperty = m_project.getProperty( "build.compiler.pedantic" );
-        if( pedanticProperty != null && Project.toBoolean( pedanticProperty ) )
-        {
-            cmd.createArgument().setValue( "+P" );
-        }
-
-        /**
-         * Jikes supports something it calls "full dependency checking", see the
-         * jikes documentation for differences between -depend and +F.
-         */
-        String fullDependProperty = m_project.getProperty( "build.compiler.fulldepend" );
-        if( fullDependProperty != null && Project.toBoolean( fullDependProperty ) )
-        {
-            cmd.createArgument().setValue( "+F" );
         }
 
         addCurrentCompilerArgs( cmd );
