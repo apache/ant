@@ -27,7 +27,6 @@ import java.io.IOException;
 /**
  * JUnit Testcase for the optional replaceregexp task.
  *
- * @version $Revision$
  */
 public class ReplaceRegExpTest extends BuildFileTest {
     private static final String PROJECT_PATH = "src/etc/testcases/taskdefs/optional";

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003,2005 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,7 +63,6 @@ import xdoclet.TemplateSubTask;
  * @ant.element   display-name="taskdefproperties" name="taskdefproperties"
  *      parent="org.apache.ant.xdoclet.AntDocletTask"
  * @ant.task      ignore="true"
- * @version       $Revision$
  */
 public class TaskDefPropertiesSubTask extends AntSubTask
 {

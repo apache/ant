@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.Reference;
  * <p>Optionally tests whether it is of a given type/class.</p>
  *
  * @since Ant 1.6
- * @version $Revision$
  */
 public class IsReference extends ProjectComponent implements Condition {
     private Reference ref;

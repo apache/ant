@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003,2005 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,6 @@ import xjavadoc.XClass;
  * @ant.element          display-name="taskdescriptor" name="taskdescriptor"
  *      parent="xdoclet.modules.apache.ant.org.apache.ant.xdoclet.AntDocletTask"
  * @ant.task             ignore="true"
- * @version              $Revision$
  * @xdoclet.merge-file   file="{0}.xml" relates-to="{0}.xml" description="Used for code examples. An example merge file
  *      may be found in Ant's proposal/xdocs/src directory."
  */

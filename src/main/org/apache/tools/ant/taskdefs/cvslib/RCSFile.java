@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.cvslib;
 /**
  * Represents a RCS File change.
  *
- * @version $Revision$ $Date$
  */
 class RCSFile {
     private String m_name;

@@ -54,7 +54,6 @@
  *
  * Version tracking now done with following ID:
  *
- * $Id$
  *
  * BUG:
  * 		Doesn't like boolean.class!

@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ import org.apache.tools.ant.util.IdentityMapper;
  * mappers and filter chains. Files of the destination directory not
  * present in any of the source fileset are removed.</p>
  *
- * @version $Revision$
  * @since Ant 1.6
  *
  * revised by <a href="mailto:daniel.armbrust@mayo.edu">Dan Armbrust</a>

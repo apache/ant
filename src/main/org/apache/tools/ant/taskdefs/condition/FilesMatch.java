@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import org.apache.tools.ant.util.FileUtils;
  * Compares two files for bitwise equality based on size and
  * content. Timestamps are not at all looked at.
  *
- * @version $Revision$
  * @since Ant 1.5
  */
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ package org.apache.tools.zip;
  * Utility class that represents a two byte integer with conversion
  * rules for the big endian byte order of ZIP files.
  *
- * @version $Revision$
  */
 public final class ZipShort implements Cloneable {
 

@@ -106,7 +106,6 @@ import org.apache.tools.ant.taskdefs.Execute;
  * recorded as <code>link=subdir/foo.bar</code> and restored as
  * <code>link --> subdir/foo.bar</code>.
  *
- * @version $Revision$
  */
 public class Symlink extends Task {
 

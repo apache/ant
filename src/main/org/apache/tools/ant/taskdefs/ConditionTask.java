@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  * <p>This task does not extend Task to take advantage of
  * ConditionBase.</p>
  *
- * @version $Revision$
  *
  * @since Ant 1.4
  *

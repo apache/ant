@@ -116,7 +116,6 @@ import junit.framework.TestResult;
  * number of attributes and elements allow you to set up how this JVM
  * runs.
  *
- * @version $Revision$
  *
  * @since Ant 1.2
  *
