@@ -206,7 +206,8 @@ public class Commandline implements Cloneable {
      */
     public void setExecutable(String executable) {
         if (executable == null || executable.length() == 0) return;
-        this.executable = executable;
+        this.executable = executable.replace('/', File.separatorChar)
+            .replace('\\', File.separatorChar);
     }
 
 
