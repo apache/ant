@@ -367,6 +367,7 @@ public abstract class Task extends ProjectComponent {
                     ex.setLocation(getLocation());
                 }
                 reason = ex;
+                throw ex;
             } catch (Exception ex) {
                 reason = ex;
                 BuildException be = new BuildException(ex);
