@@ -288,6 +288,11 @@ public class FilterSet extends DataType implements Cloneable {
             throw tooManyAttributes();
         }
 
+        if (!filtersFile.exists()) {
+            throw new BuildException("Could not read filters from file " 
+                                     + filtersFile + " as it doesn't exist.");
+        }
+
         if (filtersFile.isFile()) {
            log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
            FileInputStream in = null;
