@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.BuildException;
 import java.util.Vector;
 
 /**
@@ -132,5 +133,39 @@ public final class AntFilterReader
         Parameter[] params = new Parameter[parameters.size()];
         parameters.copyInto(params);
         return params;
+    }
+
+    /**
+     * Makes this instance in effect a reference to another AntFilterReader instance
+     *
+     * <p>You must not set another attribute or nest elements inside
+     * this element if you make it a reference.</p>
+     *
+     * @param r the reference to which this instance is associated
+     * @exception BuildException if this instance already has been configured.
+     */
+    public void setRefid(Reference r) throws BuildException {
+        if (!parameters.isEmpty() || className != null
+                || classpath != null) {
+            throw tooManyAttributes();
+        }
+        // change this to get the objects from the other reference
+        Object o = r.getReferencedObject(getProject());
+        if (o instanceof AntFilterReader) {
+            AntFilterReader afr = (AntFilterReader) o;
+            setClassName(afr.getClassName());
+            setClasspath(afr.getClasspath());
+            Parameter[] p = afr.getParams();
+            if (p != null) {
+                for (int i = 0; i < p.length; i++) {
+                    addParam(p[i]);
+                }
+            }
+        } else {
+            String msg = r.getRefId() + " doesn\'t refer to a FilterReader";
+            throw new BuildException(msg);
+        }
+
+        super.setRefid(r);
     }
 }
