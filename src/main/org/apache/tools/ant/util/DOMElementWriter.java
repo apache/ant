@@ -67,6 +67,7 @@ import org.w3c.dom.*;
  *
  * @author The original author of XmlLogger
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:bailliez@noos.fr">Stephane Bailliez</tt>
  */
 public class DOMElementWriter {
 
@@ -119,18 +120,39 @@ public class DOMElementWriter {
         for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
 
-            if (child.getNodeType() == Node.ELEMENT_NODE) {
+            switch (child.getNodeType()) {
+                
+            case Node.ELEMENT_NODE:
                 if (!hasChildren) {
                     out.write(lSep);
                     hasChildren = true;
                 }
                 write((Element)child, out, indent + 1, indentWith);
-            }
-
-            if (child.getNodeType() == Node.TEXT_NODE) {
+                break;
+                
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
                 out.write("<![CDATA[");
                 out.write(((Text)child).getData());
                 out.write("]]>");
+                break;
+
+            case Node.ENTITY_REFERENCE_NODE:
+                out.write('&');
+                out.write(child.getNodeName());
+                out.write(';');
+                break;
+
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                out.write("<?");
+                out.write(child.getNodeName());
+                String data = child.getNodeValue();
+                if ( data != null && data.length() > 0 ) {
+                    out.write(' ');
+                    out.write(data);
+                }
+                out.write("?>");
+                break;
             }
         }
 

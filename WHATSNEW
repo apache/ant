@@ -22,7 +22,7 @@ Other changes:
 * A GUI Frontend: Antidote. This is currently in development.
 
 * New tasks: stylebook, propertyfile, depend, antlr, telnet, csc,
-  ilasm, apply, javah, several clearcase tasks
+  ilasm, apply, javah, several clearcase tasks, junitreport
 
 * Added output attribute to <java>.
 
