@@ -253,6 +253,7 @@ but some configuration problem on your machine.
 &lt;/exec&gt;
 </pre></blockquote>
 <p>starts <code>emacs</code> on display 1 of the X Window System.</p>
+
 <blockquote><pre>
 &lt;exec ... &gt;
   &lt;env key=&quot;PATH&quot; path=&quot;${java.library.path}:${basedir}/bin&quot;/&gt;
@@ -260,6 +261,19 @@ but some configuration problem on your machine.
 </pre></blockquote>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
 system command.</p>
+
+<blockquote><pre>
+&lt;property name="browser" location="C:/Programme/Internet Explorer/iexplore.exe"/&gt;
+&lt;property name="file" location="ant/docs/manual/index.html"/&gt;
+
+&lt;exec executable="${browser}" spawn="true"&gt;
+    &lt;arg value="${file}"/&gt;
+&lt;/exec&gt;
+</pre></blockquote>
+<p>Starts the <i>${browser}</i> with the specified <i>${file}</i> and end the
+ant process. The browser will let be open.</p>
+
+
 <p><b>Note:</b> Although it may work for you to specify arguments using 
 a simple arg-element and separate them by spaces it may fail if you switch to
 a newer version of the JDK. JDK &lt; 1.2 will pass these as separate arguments
