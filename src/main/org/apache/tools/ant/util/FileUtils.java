@@ -583,7 +583,7 @@ public class FileUtils {
                         in = new BufferedReader(rdr);
                     }
 
-                    TokenFilter.LineTokenizer lineTokenizer = new TokenFilter.LineTokenizer();
+                    LineTokenizer lineTokenizer = new LineTokenizer();
                     lineTokenizer.setIncludeDelims(true);
                     String newline = null;
                     String line = lineTokenizer.getToken(in);

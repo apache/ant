@@ -71,6 +71,7 @@ import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.LineTokenizer;
 
 /**
  * Translates text embedded in files using Resource Bundle files.
@@ -573,7 +574,7 @@ public class Translate extends MatchingTask {
                         BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
-                        TokenFilter.LineTokenizer lineTokenizer = new TokenFilter.LineTokenizer();
+                        LineTokenizer lineTokenizer = new LineTokenizer();
                         lineTokenizer.setIncludeDelims(true);
                         line = lineTokenizer.getToken(in);
                         while ((line) != null) {

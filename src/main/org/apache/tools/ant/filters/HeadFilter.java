@@ -55,6 +55,7 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
+import org.apache.tools.ant.util.LineTokenizer;
 import org.apache.tools.ant.types.Parameter;
 
 /**
@@ -91,7 +92,7 @@ public final class HeadFilter extends BaseParamFilterReader
     private long skip = 0;
 
     /** A line tokenizer */
-    private TokenFilter.LineTokenizer lineTokenizer = null;
+    private LineTokenizer lineTokenizer = null;
 
     /** the current line from the input stream */
     private String    line      = null;
@@ -115,7 +116,7 @@ public final class HeadFilter extends BaseParamFilterReader
      */
     public HeadFilter(final Reader in) {
         super(in);
-        lineTokenizer = new TokenFilter.LineTokenizer();
+        lineTokenizer = new LineTokenizer();
         lineTokenizer.setIncludeDelims(true);
     }
 

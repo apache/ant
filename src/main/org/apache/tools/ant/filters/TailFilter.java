@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.LinkedList;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.util.LineTokenizer;
 
 /**
  * Reads the last <code>n</code> lines of a stream. (Default is last10 lines.)
@@ -100,7 +101,7 @@ public final class TailFilter extends BaseParamFilterReader
     private int bufferPos = 0;
 
     /** A line tokenizer */
-    private TokenFilter.LineTokenizer lineTokenizer = null;
+    private LineTokenizer lineTokenizer = null;
 
     /** the current line from the input stream */
     private String    line      = null;
@@ -126,7 +127,7 @@ public final class TailFilter extends BaseParamFilterReader
      */
     public TailFilter(final Reader in) {
         super(in);
-        lineTokenizer = new TokenFilter.LineTokenizer();
+        lineTokenizer = new LineTokenizer();
         lineTokenizer.setIncludeDelims(true);
     }
 

@@ -63,6 +63,8 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.Tokenizer;
+import org.apache.tools.ant.util.LineTokenizer;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
@@ -77,28 +79,6 @@ import org.apache.tools.ant.util.regexp.Regexp;
  */
 public class TokenFilter extends BaseFilterReader
     implements ChainableReader {
-    /**
-     * input stream tokenizers implement this interface
-     */
-    public interface Tokenizer {
-        /**
-         * get the next token from the input stream
-         * @param in the input stream
-         * @return the next token, or null for the end
-         *         of the stream
-         * @throws IOException if an error occurs
-         */
-        String getToken(Reader in)
-            throws IOException;
-
-        /**
-         * return the string between tokens, after the
-         * previous token.
-         * @return the intra-token string
-         */
-        String getPostToken();
-    }
-
     /**
      * string filters implement this interface
      */
@@ -359,96 +339,6 @@ public class TokenFilter extends BaseFilterReader
         public String getPostToken() {
             return "";
         }
-    }
-
-
-    /**
-     * class to tokenize the input as lines seperated
-     * by \r (mac style), \r\n (dos/windows style) or \n (unix style)
-     */
-    public static class LineTokenizer extends ProjectComponent
-        implements Tokenizer {
-        private String  lineEnd = "";
-        private int     pushed = -2;
-        private boolean includeDelims = false;
-
-        /**
-         * attribute includedelims - whether to include
-         * the line ending with the line, or to return
-         * it in the posttoken
-         * default false
-         * @param includeDelims if true include /r and /n in the line
-         */
-
-        public void setIncludeDelims(boolean includeDelims) {
-            this.includeDelims = includeDelims;
-        }
-
-        /**
-         * get the next line from the input
-         *
-         * @param in the input reader
-         * @return the line excluding /r or /n, unless includedelims is set
-         * @exception IOException if an error occurs reading
-         */
-        public String getToken(Reader in) throws IOException {
-            int ch = -1;
-            if (pushed != -2) {
-                ch = pushed;
-                pushed = -2;
-            } else {
-                ch = in.read();
-            }
-            if (ch == -1) {
-                return null;
-            }
-
-            lineEnd = "";
-            StringBuffer line = new StringBuffer();
-
-            int state = 0;
-            while (ch != -1) {
-                if (state == 0) {
-                    if (ch == '\r') {
-                        state = 1;
-                    } else if (ch == '\n') {
-                        lineEnd = "\n";
-                        break;
-                    } else {
-                        line.append((char) ch);
-                    }
-                } else {
-                    state = 0;
-                    if (ch == '\n') {
-                        lineEnd = "\r\n";
-                    } else {
-                        pushed = ch;
-                        lineEnd = "\r";
-                    }
-                    break;
-                }
-                ch = in.read();
-            }
-            if (ch == -1 && state == 1) {
-                lineEnd = "\r";
-            }
-
-            if (includeDelims) {
-                line.append(lineEnd);
-            }
-            return line.toString();
-        }
-
-        /**
-         * @return the line ending character(s) for the current line
-         */
-        public String getPostToken() {
-            if (includeDelims) {
-                return "";
-            }
-            return lineEnd;
-        }
-
     }
 
     /**
