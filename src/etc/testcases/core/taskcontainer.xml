@@ -31,6 +31,16 @@
     </sequential>
   </target>
 
+  <target name="testCaseInsensitive">
+    <taskdef name="Prattle" classname="org.apache.tools.ant.taskdefs.Echo"/>  
+    <taskdef name="Seq"  
+             classname="org.apache.tools.ant.taskdefs.Sequential"/>  
+    <Prattle>hello</Prattle>  
+    <Seq>  
+      <Prattle> world</Prattle>  
+    </Seq>  
+  </target>  
+
   <target name="cleanup">
     <delete dir="${build.dir}"/>
   </target>

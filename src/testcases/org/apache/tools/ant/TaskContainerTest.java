@@ -86,4 +86,12 @@ public class TaskContainerTest extends BuildFileTest {
                    getLog().indexOf("As nested task: it worked") > -1);
     }
 
+    public void testCaseInsensitive() {
+        executeTarget("testCaseInsensitive");
+        assertTrue("works outside of container",
+                   getLog().indexOf("hello ") > -1);
+        assertTrue("works inside of container",
+                   getLog().indexOf("world") > -1);
+    }
+
 }
