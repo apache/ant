@@ -1339,6 +1339,13 @@
 
       <selector refid="conditional-patterns"/>
     </javac>
+    
+    <!-- Used by AntlibTest.testAntlibResource: -->
+    <jar jarfile="${build.tests}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
+        <zipfileset dir="${tests.etc.dir}" fullpath="taskdefs/test.antlib.xml">
+            <include name="taskdefs/test2.antlib.xml"/>
+        </zipfileset>
+    </jar>
   </target>
 
   <target name="dump-info" depends="dump-sys-properties,run-which"/>
