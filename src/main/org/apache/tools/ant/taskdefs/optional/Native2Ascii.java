@@ -108,7 +108,7 @@ public class Native2Ascii extends MatchingTask {
     /**
      * Set the source directory in which to find files to convert.
      *
-     * @param srcDir Direcrory to find input file in.
+     * @param srcDir directory to find input file in.
      */
     public void setSrc(File srcDir){
         this.srcDir = srcDir;
@@ -116,7 +116,7 @@ public class Native2Ascii extends MatchingTask {
 
 
     /**
-     * Set the destination dirctory to place converted files into.
+     * Set the destination directory to place converted files into.
      *
      * @param destDir directory to place output file into.
      */
@@ -200,7 +200,8 @@ public class Native2Ascii extends MatchingTask {
     /**
      * Convert a single file.
      *
-     * @param fileName Name of the file to convert (relative to srcDir).
+     * @param srcName name of the input file.
+     * @param destName name of the input file.
      */
     private void convert(String srcName, String destName) throws BuildException {
 
