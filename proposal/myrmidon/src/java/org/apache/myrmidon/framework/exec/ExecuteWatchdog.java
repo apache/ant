@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs.exec;
+package org.apache.myrmidon.framework.exec;
 
 import org.apache.myrmidon.api.TaskException;
 
@@ -65,7 +65,7 @@ public class ExecuteWatchdog
         {
             throw new IllegalArgumentException( "timeout lesser than 1." );
         }
-        this.m_timeout = timeout;
+        m_timeout = timeout;
     }
 
     /**
@@ -175,14 +175,14 @@ public class ExecuteWatchdog
         {
             throw new NullPointerException( "process is null." );
         }
-        if( this.m_process != null )
+        if( m_process != null )
         {
             throw new IllegalStateException( "Already running." );
         }
-        this.m_caught = null;
-        this.m_killedProcess = false;
-        this.m_watch = true;
-        this.m_process = process;
+        m_caught = null;
+        m_killedProcess = false;
+        m_watch = true;
+        m_process = process;
         final Thread thread = new Thread( this, "WATCHDOG" );
         thread.setDaemon( true );
         thread.start();

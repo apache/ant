@@ -17,6 +17,7 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
