@@ -314,6 +314,10 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             gentask = (BorlandGenerateClient) getTask().getProject().createTask("internal_bas_generateclient");
             gentask.setEjbjar(sourceJar);
             gentask.setDebug(java2iiopdebug);            
+            Path classpath = getCombinedClasspath();             
+            if (classpath != null) {
+                gentask.setClasspath(classpath);
+            }
             gentask.setTaskName("generate client");
             gentask.execute();
         }

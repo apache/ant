@@ -37,15 +37,24 @@
       =&gt; hellobean-ejbclient.jar</td>
     <td align="center" valign="middle" width="62">no</td>
   </tr>
+  <tr>
+    <td valign="top" width="63">mode</td>
+    <td valign="top" width="915">choose the command launching mode. Two values: 
+      java or fork. default = java. Possibility to specify a classpath.</td>
+    <td align="center" valign="middle" width="62">no</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
 <p>The following build.xml snippit is an example of how to use Borland element 
-  into the ejbjar task
-<pre>  ....
-&lt;generateclient ejbjar=&quot;lib/secutest-ejb.jar&quot; clientjar=&quot;lib/client.jar&quot; debug=&quot;true&quot;/&gt;
-....
-   </pre>
+   into the ejbjar task using the java mode.
+<pre>
+&lt;blgenclient ejbjar=&quot;lib/secutest-ejb.jar&quot; clientjar=&quot;lib/client.jar&quot; debug=&quot;true&quot; mode=&quot;java&quot;&gt;
+    &lt;classpath&gt;
+        &lt;pathelement locacation=&quot;mymodule.jar&quot;/&gt;
+    &lt;/classpath&gt;
+&lt;/blgenclient&gt;
+</pre>
 <pre>&nbsp;</pre>
 
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
