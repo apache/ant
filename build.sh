@@ -1,6 +1,11 @@
 #!/bin/sh
 
-ADDL_CLASSPATH=./lib/ant.jar
+if [ "$ANT_HOME" == "" ] ; then
+  ANT_HOME=`pwd`
+fi
+export ANT_HOME
+
+ADDL_CLASSPATH=$ANT_HOME/lib/ant.jar
 
 if [ "$CLASSPATH" != "" ] ; then
   CLASSPATH=$CLASSPATH:$ADDL_CLASSPATH
