@@ -572,6 +572,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                     log("Could not load class " + classname + " for super class check", 
                                   Project.MSG_WARN);
                 }                            
+                catch (NoClassDefFoundError ncdfe) {
+                    log("Could not fully load class " + classname + " for super class check", 
+                                  Project.MSG_WARN);
+                }                            
             } //if 
         } // while 
     }
