@@ -111,6 +111,9 @@ Fixed bugs:
 * <setproxy> failed to set user/password on some JDKs.
   Bugzilla report 32667
 
+* untar would go into infinite loop for some invalid tar files.
+  Bugzill report 29877
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
