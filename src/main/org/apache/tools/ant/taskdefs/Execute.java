@@ -145,6 +145,20 @@ public class Execute {
                 shellLauncher = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
             }
         }
+        else if ( (new Os("netware")).eval() ) {
+            // NetWare.  Need to determine which JDK we're running in
+            CommandLauncher baseLauncher;
+            if ( System.getProperty("java.version").startsWith("1.1") ) {
+                // JDK 1.1
+                baseLauncher = new Java11CommandLauncher();
+            }
+            else {
+                // JDK 1.2
+                baseLauncher = new CommandLauncher();
+            }
+
+            shellLauncher = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
+        }
         else {
             // Generic
             shellLauncher = new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
@@ -719,6 +733,56 @@ public class Execute {
             newcmd[0] = antRun;
             newcmd[1] = commandDir.getAbsolutePath();
             System.arraycopy(cmd, 0, newcmd, 2, cmd.length);
+            
+            return exec(project, newcmd, env);
+        }
+
+        private String _script;
+    }
+
+    /**
+     * A command launcher that uses an auxiliary perl script to launch commands
+     * in directories other than the current working directory.
+     */
+    private static class PerlScriptCommandLauncher extends CommandLauncherProxy
+    {
+        PerlScriptCommandLauncher(String script, CommandLauncher launcher)
+        {
+            super(launcher);
+            _script = script;
+        }
+
+        /** 
+         * Launches the given command in a new process, in the given working
+         * directory
+         */
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        {
+            if ( project == null ) {
+                if ( workingDir == null ) {
+                    return exec(project, cmd, env);
+                }
+                throw new IOException("Cannot locate antRun script: No project provided");
+            }
+            
+            // Locate the auxiliary script
+            String antHome = project.getProperty("ant.home");
+            if ( antHome == null ) {
+                throw new IOException("Cannot locate antRun script: Property 'ant.home' not found");
+            }
+            String antRun = project.resolveFile(antHome + File.separator + _script).toString();
+
+            // Build the command
+            File commandDir = workingDir;
+            if ( workingDir == null && project != null ) {
+                commandDir = project.getBaseDir();
+            }
+
+            String[] newcmd = new String[cmd.length + 3];
+            newcmd[0] = "perl";
+            newcmd[1] = antRun;
+            newcmd[2] = commandDir.getAbsolutePath();
+            System.arraycopy(cmd, 0, newcmd, 3, cmd.length);
             
             return exec(project, newcmd, env);
         }
