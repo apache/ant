@@ -32,6 +32,7 @@ public class TarInputStream
     private boolean m_hasHitEOF;
     private byte[] m_oneBuf;
     private byte[] m_readBuf;
+    private boolean m_v7Format;
 
     public TarInputStream( final InputStream input )
     {
@@ -133,27 +134,7 @@ public class TarInputStream
                 headerBuf[ 259 ] == 't' && headerBuf[ 260 ] == 'a' &&
                 headerBuf[ 261 ] == 'r' ) )
             {
-                m_entrySize = 0;
-                m_entryOffset = 0;
-                m_currEntry = null;
-
-                final String message = "bad header in block " +
-                    m_buffer.getCurrentBlockNum() +
-                    " record " + m_buffer.getCurrentRecordNum() + ", " +
-                    "header magic is not 'ustar', but '" +
-                    headerBuf[ 257 ] +
-                    headerBuf[ 258 ] +
-                    headerBuf[ 259 ] +
-                    headerBuf[ 260 ] +
-                    headerBuf[ 261 ] +
-                    "', or (dec) " +
-                    ( (int)headerBuf[ 257 ] ) + ", " +
-                    ( (int)headerBuf[ 258 ] ) + ", " +
-                    ( (int)headerBuf[ 259 ] ) + ", " +
-                    ( (int)headerBuf[ 260 ] ) + ", " +
-                    ( (int)headerBuf[ 261 ] );
-
-                throw new IOException( message );
+                m_v7Format = true;
             }
 
             if( m_debug )
