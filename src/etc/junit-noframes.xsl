@@ -22,7 +22,7 @@
  
 <!--
  
- Sample stylesheet to be used with An JUnitReport output.
+ Sample stylesheet to be used with Ant JUnitReport output.
  
  It creates a non-framed report that can be useful to send via
  e-mail or such.

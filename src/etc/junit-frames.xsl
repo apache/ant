@@ -23,7 +23,7 @@
 
 <!--
 
- Sample stylesheet to be used with An JUnitReport output.
+ Sample stylesheet to be used with Ant JUnitReport output.
 
  It creates a set of HTML files a la javadoc where you can browse easily
  through all packages and classes.
