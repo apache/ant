@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.IOException;
+import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.tools.ant.Project;
@@ -213,19 +214,9 @@ public abstract class MSVSS extends Task
             // environment-variable SSDIR to this value
             if( m_serverPath != null )
             {
-                String[] env = exe.getEnvironment();
-                if( env == null )
-                {
-                    env = new String[ 0 ];
-                }
-                String[] newEnv = new String[ env.length + 1 ];
-                for( int i = 0; i < env.length; i++ )
-                {
-                    newEnv[ i ] = env[ i ];
-                }
-                newEnv[ env.length ] = "SSDIR=" + m_serverPath;
-
-                exe.setEnvironment( Environment.createEnvVars( newEnv )  );
+                final Properties env = new Properties();
+                env.setProperty( "SSDIR", m_serverPath );
+                exe.setEnvironment( env );
             }
 
             exe.setWorkingDirectory( getBaseDirectory() );
