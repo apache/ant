@@ -134,6 +134,8 @@ Fixed bugs:
 
 * Make sure XSLT processors close their output files in <style>.  
 
+* perform proper uptodate check in <rmic> when compiling for IIOP.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
