@@ -37,6 +37,28 @@ Changes that could break older environments:
 
 * <fixcrlf> will not remove trailing whitespace at the end of lines anymore.
 
+* The Classloader usage has been changed for the taskdef, property, available 
+  and sql tasks so that it delegates to the parent classloader. This may cause 
+  ClassNotFoundExceptions to be thrown if a system class attempts to load a
+  class in the taskdef's classpath (typically factory objects).
+
+* Ant now allows multithreading of tasks and the containment of tasks within
+  other tasks. This can break customer listeners which do not expect messages
+  from a task before the previous task has finished. 
+  
+* Ant now installs its own ouput stream into System.out to route output to the
+  task currently executing on the current thread. This also means that all 
+  output is now routed as Ant message events. Customer listeners and loggers 
+  should not call System.out at any time. This has always been true but such 
+  usage now will cause problems due to possible recursion.
+
+* Invalid manifest files will now cause build failures in the <jar> task.
+
+* Ant Introspection now looks for methods with method names starting with
+  addConfigured. When called these methods are passed an argument after it has 
+  been configured from the build file. Custom tasks supporting nested elements 
+  starting with the name configured will no longer function.  
+
 Other changes:
 --------------
 
@@ -75,18 +97,25 @@ Other changes:
 
 * New <junit> formatter named "brief"
 
-* Add support for Borland Application Server to the <ejbjar> task using
-  a <borland> nested element.
+* <ejbjar> changes
+  * Add support for Borland Application Server to the <ejbjar> task using
+    a <borland> nested element.
+  * Add support for iPlanet Application Server to the <ejbjar> task. Also 
+    includes some iPlanet utility tasks
+  * Add support for JBoss Application Server to the <ejbjar> task. 
+  * Add a naming attribute to control the naming scheme that
+    ejbjar uses to name the generated EJB jars.
+  * Weblogic element now sets the compiler class for EJB 2.0 beans
+  * <dtd> elements can be specified at the <ejbjar> level for building generic
+    beans
+  * <dtd> elements can now be URLs
+  * Allow the manifest to be specified for the generated jars
+  * The weblogic element now supprts an attribte noEJBC to skip the processing
+    of the jar by ejbc. The ejbc step will then occur at deployment
+  * weblogic will tell ejbc to use Jikes compiler if build.compiler is set to 
+    jikes. It can be restored to the default, javac, operation if desired.  
   
-* Add support for iPlanet Application Server to the <ejbjar> task. Also 
-  includes some iPlanet utility tasks
-  
-* Add support for JBoss Application Server to the <ejbjar> task. 
-
-* Add a naming attribute to <ejbjar> to control the naming scheme that
-  ejbjar uses to name the generated EJB jars.
-  
-* Allow the SQL Delimiter to be set in the so that Oracle stored procs may be
+* Allow the <sql> Delimiter to be set in the so that Oracle stored procs may be
   entered  
 
 * <execon> and <apply> can now optionally skip empty filesets.
@@ -149,6 +178,40 @@ Other changes:
 
 * <move> will now try to rename() files before copying them byte by
   byte - only if filtering is of, of course.
+  
+* <ant> and <antcall> tasks now support a new attribute inheritAll. When set to
+  false, only user properties are passed through to the target Ant instance.
+  This includes properties set on the command line and properties explicitly
+  passed
+  
+* <javadoc> now skips off line links if the package list cannot be found.
+
+* <wlrun> now allows the security policy file to exist outside the weblogic
+  directory.
+  
+* <java> task will set the Thread contextClassLoader under JDKs 1.2+ to the
+  classloader for the class being executed.
+  
+* Introduce the concept of a TaskContainer - a task or element which can contain
+  Ant Tasks. 
+  
+* Add new tasks implementing the TaskContainer interface <parallel> and
+  <sequential> which allow parallel execution of tasks to be specified.
+
+* <depend> task will now take into account dependencies on jar files and class
+  files from a given classpath.
+  
+* <jar> manifest entries may now be specified in the build file either 
+  completely or to be merged with a manifest file.
+
+* <tstamp> task custom formats now support locales. 
+
+* Added a listner which will forward events to Log4J. The log4j configuration 
+  file should be in the directory from which Ant is run or passed as a system
+  property using a JVM argument.
+
+* Introduced the concept of <filtersets> to allow for more control in which 
+  filters get applied in a <copy> or <move> operation.       
 
 Fixed bugs:
 -----------
@@ -193,11 +256,11 @@ Fixed bugs:
 * Create the <ejbjar> weblogic command line as a set of arguments rather than
   as a single line. Avoids problems with paths which contain spaces.
   
+* <ejbjar> now fails when the weblogic ejbc compiler reports an error.
+  
 * Make the AntClassLoader load resources in the same order as it currently
   loads classes. 
   
-* Allow DTD locations to be specified when building generic ejb-jars
-
 * Handle classpaths with spaces
 
 * Make sure XSLT processors close their output files in <style>.  
@@ -223,10 +286,31 @@ Fixed bugs:
 * directory based tasks and fileset could miss some included files in
   directories that have been excluded
 
-* <fixcrl> failed for large files.
+* <fixcrlf> failed for large files.
 
 * <move> removed files you tried to move to themselves.
 
+* <sql> task will not trty to print the result set unless the query succeeded.
+
+* Ant classloader will now ignore paths which are invalid relative to the
+  project base
+  
+* <ejbjar> weblogic elements check for jar file changes has been fixed.
+  Previously some changes would not be included.
+
+* properties loaded from properties files are now resolved internally. This
+  removes the spurious warnings about usage of properties which have not been
+  set.
+  
+* <jar> task and friends now process the JAR manifest to ensure it is valid.
+
+* The task finished event now includes any exception thrown by the task.
+
+* <java> task now supports a jvmVersion attribute so that if another JVM is
+  being used, Ant can determine which options to use for features such as the 
+  VM memory limits 
+
+  
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
