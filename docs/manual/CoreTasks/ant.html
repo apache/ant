@@ -33,18 +33,24 @@ setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.
   </tr>
   <tr>
     <td valign="top">antfile</td>
-    <td valign="top">the buildfile to use. Defaults to &quot;build.xml&quot;.</td>
+    <td valign="top">the buildfile to use. Defaults to
+      &quot;build.xml&quot;.  This file is expected to be a filename
+      relative to the dir attribute given.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
  	<td valign="top">the directory to use as a basedir for the new Ant project. 
-					 Defaults to the current directory.</td>
+      Defaults to the current project's basedir, unless
+      ineritall has been set to false, in which case it doesn't
+      have a default value.  This will override the basedir
+      setting of the called project.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">target</td>
-    <td valign="top">the target of the new Ant project that should be executed.</td>
+    <td valign="top">the target of the new Ant project that should be executed.
+      Defaults to the new project's default target.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
