@@ -20,6 +20,8 @@ public class CBZip2OutputStream
     extends OutputStream
     implements BZip2Constants
 {
+    private final static int LOWER_BYTE_MASK = 0x000000ff;
+    private final static int UPPER_BYTE_MASK = 0xffffff00;
     private final static int SETMASK = ( 1 << 21 );
     private final static int CLEARMASK = ( ~SETMASK );
     private final static int GREATER_ICOST = 15;
@@ -41,18 +43,18 @@ public class CBZip2OutputStream
 
     private boolean[] m_inUse = new boolean[ 256 ];
 
-    private char[] seqToUnseq = new char[ 256 ];
-    private char[] unseqToSeq = new char[ 256 ];
+    private char[] m_seqToUnseq = new char[ 256 ];
+    private char[] m_unseqToSeq = new char[ 256 ];
 
-    private char[] selector = new char[ MAX_SELECTORS ];
-    private char[] selectorMtf = new char[ MAX_SELECTORS ];
+    private char[] m_selector = new char[ MAX_SELECTORS ];
+    private char[] m_selectorMtf = new char[ MAX_SELECTORS ];
 
-    private int[] mtfFreq = new int[ MAX_ALPHA_SIZE ];
+    private int[] m_mtfFreq = new int[ MAX_ALPHA_SIZE ];
 
-    private int currentChar = -1;
-    private int runLength = 0;
+    private int m_currentChar = -1;
+    private int m_runLength;
 
-    boolean closed = false;
+    private boolean m_closed;
 
     /*
      * Knuth's increments seem to work better
@@ -60,89 +62,86 @@ public class CBZip2OutputStream
      * because the number of elems to sort is
      * usually small, typically <= 20.
      */
-    private int[] incs = new int[]
+    private int[] m_incs = new int[]
     {
         1, 4, 13, 40, 121, 364, 1093, 3280,
         9841, 29524, 88573, 265720,
         797161, 2391484
     };
 
-    boolean blockRandomised;
+    private boolean m_blockRandomised;
 
     /*
      * always: in the range 0 .. 9.
      * The current block size is 100000 * this number.
      */
-    int blockSize100k;
-    int bsBuff;
-    int bsLive;
+    private int m_blockSize100k;
+    private int m_bsBuff;
+    private int m_bsLive;
 
-    int bytesIn;
-    int bytesOut;
+    private int m_bytesIn;
+    private int m_bytesOut;
 
     /*
      * index of the last char in the block, so
      * the block size == last + 1.
      */
-    int last;
+    private int m_last;
 
     /*
      * index in zptr[] of original string after sorting.
      */
-    int origPtr;
+    private int m_origPtr;
 
-    private int allowableBlockSize;
+    private int m_allowableBlockSize;
 
-    private char[] block;
+    private char[] m_block;
 
-    private int blockCRC, combinedCRC;
+    private int m_blockCRC;
+    private int m_combinedCRC;
 
-    private OutputStream bsStream;
-    private boolean firstAttempt;
-    private int[] ftab;
-    private int nBlocksRandomised;
-    private int nInUse;
+    private OutputStream m_bsStream;
+    private boolean m_firstAttempt;
+    private int[] m_ftab;
+    private int m_nBlocksRandomised;
+    private int m_nInUse;
 
-    private int nMTF;
-    private int[] quadrant;
-    private short[] szptr;
-    private int workDone;
+    private int m_nMTF;
+    private int[] m_quadrant;
+    private short[] m_szptr;
+    private int m_workDone;
 
     /*
      * Used when sorting.  If too many long comparisons
      * happen, we stop sorting, randomise the block
      * slightly, and try again.
      */
-    private int workFactor;
-    private int workLimit;
-    private int[] zptr;
+    private int m_workFactor;
+    private int m_workLimit;
+    private int[] m_zptr;
 
-    public CBZip2OutputStream( OutputStream inStream )
+    public CBZip2OutputStream( final OutputStream output )
         throws IOException
     {
-        this( inStream, 9 );
+        this( output, 9 );
     }
 
-    public CBZip2OutputStream( OutputStream inStream, int inBlockSize )
+    public CBZip2OutputStream( final OutputStream output, final int blockSize )
         throws IOException
     {
-        block = null;
-        quadrant = null;
-        zptr = null;
-        ftab = null;
+        bsSetStream( output );
+        m_workFactor = 50;
 
-        bsSetStream( inStream );
-
-        workFactor = 50;
-        if( inBlockSize > 9 )
+        int outBlockSize = blockSize;
+        if( outBlockSize > 9 )
         {
-            inBlockSize = 9;
+            outBlockSize = 9;
         }
-        if( inBlockSize < 1 )
+        if( outBlockSize < 1 )
         {
-            inBlockSize = 1;
+            outBlockSize = 1;
         }
-        blockSize100k = inBlockSize;
+        m_blockSize100k = outBlockSize;
         allocateCompressStructures();
         initialize();
         initBlock();
@@ -189,12 +188,12 @@ public class CBZip2OutputStream
         boolean tooLong;
 
         int[] heap = new int[ MAX_ALPHA_SIZE + 2 ];
-        int[] weight = new int[ MAX_ALPHA_SIZE * 2 ];
+        int[] weights = new int[ MAX_ALPHA_SIZE * 2 ];
         int[] parent = new int[ MAX_ALPHA_SIZE * 2 ];
 
         for( i = 0; i < alphaSize; i++ )
         {
-            weight[ i + 1 ] = ( freq[ i ] == 0 ? 1 : freq[ i ] ) << 8;
+            weights[ i + 1 ] = ( freq[ i ] == 0 ? 1 : freq[ i ] ) << 8;
         }
 
         while( true )
@@ -203,7 +202,7 @@ public class CBZip2OutputStream
             nHeap = 0;
 
             heap[ 0 ] = 0;
-            weight[ 0 ] = 0;
+            weights[ 0 ] = 0;
             parent[ 0 ] = -2;
 
             for( i = 1; i <= alphaSize; i++ )
@@ -216,7 +215,7 @@ public class CBZip2OutputStream
                     int tmp;
                     zz = nHeap;
                     tmp = heap[ zz ];
-                    while( weight[ tmp ] < weight[ heap[ zz >> 1 ] ] )
+                    while( weights[ tmp ] < weights[ heap[ zz >> 1 ] ] )
                     {
                         heap[ zz ] = heap[ zz >> 1 ];
                         zz >>= 1;
@@ -248,11 +247,11 @@ public class CBZip2OutputStream
                             break;
                         }
                         if( yy < nHeap &&
-                            weight[ heap[ yy + 1 ] ] < weight[ heap[ yy ] ] )
+                            weights[ heap[ yy + 1 ] ] < weights[ heap[ yy ] ] )
                         {
                             yy++;
                         }
-                        if( weight[ tmp ] < weight[ heap[ yy ] ] )
+                        if( weights[ tmp ] < weights[ heap[ yy ] ] )
                         {
                             break;
                         }
@@ -278,11 +277,11 @@ public class CBZip2OutputStream
                             break;
                         }
                         if( yy < nHeap &&
-                            weight[ heap[ yy + 1 ] ] < weight[ heap[ yy ] ] )
+                            weights[ heap[ yy + 1 ] ] < weights[ heap[ yy ] ] )
                         {
                             yy++;
                         }
-                        if( weight[ tmp ] < weight[ heap[ yy ] ] )
+                        if( weights[ tmp ] < weights[ heap[ yy ] ] )
                         {
                             break;
                         }
@@ -294,12 +293,10 @@ public class CBZip2OutputStream
                 nNodes++;
                 parent[ n1 ] = parent[ n2 ] = nNodes;
 
-                weight[ nNodes ] = ( ( weight[ n1 ] & 0xffffff00 )
-                    + ( weight[ n2 ] & 0xffffff00 ) )
-                    | ( 1 + ( ( ( weight[ n1 ] & 0x000000ff ) >
-                    ( weight[ n2 ] & 0x000000ff ) ) ?
-                    ( weight[ n1 ] & 0x000000ff ) :
-                    ( weight[ n2 ] & 0x000000ff ) ) );
+                final int v1 = weights[ n1 ];
+                final int v2 = weights[ n2 ];
+                final int weight = calculateWeight( v1, v2 );
+                weights[ nNodes ] = weight;
 
                 parent[ nNodes ] = -1;
                 nHeap++;
@@ -309,7 +306,7 @@ public class CBZip2OutputStream
                     int tmp = 0;
                     zz = nHeap;
                     tmp = heap[ zz ];
-                    while( weight[ tmp ] < weight[ heap[ zz >> 1 ] ] )
+                    while( weights[ tmp ] < weights[ heap[ zz >> 1 ] ] )
                     {
                         heap[ zz ] = heap[ zz >> 1 ];
                         zz >>= 1;
@@ -346,11 +343,20 @@ public class CBZip2OutputStream
 
             for( i = 1; i < alphaSize; i++ )
             {
-                j = weight[ i ] >> 8;
+                j = weights[ i ] >> 8;
                 j = 1 + ( j / 2 );
-                weight[ i ] = j << 8;
+                weights[ i ] = j << 8;
             }
         }
+    }
+
+    private static int calculateWeight( final int v1, final int v2 )
+    {
+        final int upper = ( v1 & UPPER_BYTE_MASK ) + ( v2 & UPPER_BYTE_MASK );
+        final int v1Lower = ( v1 & LOWER_BYTE_MASK );
+        final int v2Lower = ( v2 & LOWER_BYTE_MASK );
+        final int nnnn = ( v1Lower > v2Lower ) ? v1Lower : v2Lower;
+        return upper | ( 1 + nnnn );
     }
 
     private static void panic()
@@ -362,21 +368,21 @@ public class CBZip2OutputStream
     public void close()
         throws IOException
     {
-        if( closed )
+        if( m_closed )
         {
             return;
         }
 
-        if( runLength > 0 )
+        if( m_runLength > 0 )
         {
             writeRun();
         }
-        currentChar = -1;
+        m_currentChar = -1;
         endBlock();
         endCompression();
-        closed = true;
+        m_closed = true;
         super.close();
-        bsStream.close();
+        m_bsStream.close();
     }
 
     public void finalize()
@@ -389,7 +395,7 @@ public class CBZip2OutputStream
         throws IOException
     {
         super.flush();
-        bsStream.flush();
+        m_bsStream.flush();
     }
 
     /**
@@ -402,42 +408,42 @@ public class CBZip2OutputStream
         throws IOException
     {
         int b = ( 256 + bv ) % 256;
-        if( currentChar != -1 )
+        if( m_currentChar != -1 )
         {
-            if( currentChar == b )
+            if( m_currentChar == b )
             {
-                runLength++;
-                if( runLength > 254 )
+                m_runLength++;
+                if( m_runLength > 254 )
                 {
                     writeRun();
-                    currentChar = -1;
-                    runLength = 0;
+                    m_currentChar = -1;
+                    m_runLength = 0;
                 }
             }
             else
             {
                 writeRun();
-                runLength = 1;
-                currentChar = b;
+                m_runLength = 1;
+                m_currentChar = b;
             }
         }
         else
         {
-            currentChar = b;
-            runLength++;
+            m_currentChar = b;
+            m_runLength++;
         }
     }
 
     private void allocateCompressStructures()
     {
-        int n = BASE_BLOCK_SIZE * blockSize100k;
-        block = new char[ ( n + 1 + NUM_OVERSHOOT_BYTES ) ];
-        quadrant = new int[ ( n + NUM_OVERSHOOT_BYTES ) ];
-        zptr = new int[ n ];
-        ftab = new int[ 65537 ];
+        int n = BASE_BLOCK_SIZE * m_blockSize100k;
+        m_block = new char[ ( n + 1 + NUM_OVERSHOOT_BYTES ) ];
+        m_quadrant = new int[ ( n + NUM_OVERSHOOT_BYTES ) ];
+        m_zptr = new int[ n ];
+        m_ftab = new int[ 65537 ];
 
-        if( block == null || quadrant == null || zptr == null
-            || ftab == null )
+        if( m_block == null || m_quadrant == null || m_zptr == null
+            || m_ftab == null )
         {
             //int totalDraw = (n + 1 + NUM_OVERSHOOT_BYTES) + (n + NUM_OVERSHOOT_BYTES) + n + 65537;
             //compressOutOfMemory ( totalDraw, n );
@@ -455,26 +461,26 @@ public class CBZip2OutputStream
          */
         //    szptr = zptr;
 
-        szptr = new short[ 2 * n ];
+        m_szptr = new short[ 2 * n ];
     }
 
     private void bsFinishedWithStream()
         throws IOException
     {
-        while( bsLive > 0 )
+        while( m_bsLive > 0 )
         {
-            int ch = ( bsBuff >> 24 );
+            int ch = ( m_bsBuff >> 24 );
             try
             {
-                bsStream.write( ch );// write 8-bit
+                m_bsStream.write( ch );// write 8-bit
             }
             catch( IOException e )
             {
                 throw e;
             }
-            bsBuff <<= 8;
-            bsLive -= 8;
-            bytesOut++;
+            m_bsBuff <<= 8;
+            m_bsLive -= 8;
+            m_bytesOut++;
         }
     }
 
@@ -501,67 +507,67 @@ public class CBZip2OutputStream
 
     private void bsSetStream( OutputStream f )
     {
-        bsStream = f;
-        bsLive = 0;
-        bsBuff = 0;
-        bytesOut = 0;
-        bytesIn = 0;
+        m_bsStream = f;
+        m_bsLive = 0;
+        m_bsBuff = 0;
+        m_bytesOut = 0;
+        m_bytesIn = 0;
     }
 
     private void bsW( int n, int v )
         throws IOException
     {
-        while( bsLive >= 8 )
+        while( m_bsLive >= 8 )
         {
-            int ch = ( bsBuff >> 24 );
+            int ch = ( m_bsBuff >> 24 );
             try
             {
-                bsStream.write( ch );// write 8-bit
+                m_bsStream.write( ch );// write 8-bit
             }
             catch( IOException e )
             {
                 throw e;
             }
-            bsBuff <<= 8;
-            bsLive -= 8;
-            bytesOut++;
+            m_bsBuff <<= 8;
+            m_bsLive -= 8;
+            m_bytesOut++;
         }
-        bsBuff |= ( v << ( 32 - bsLive - n ) );
-        bsLive += n;
+        m_bsBuff |= ( v << ( 32 - m_bsLive - n ) );
+        m_bsLive += n;
     }
 
     private void doReversibleTransformation()
     {
         int i;
 
-        workLimit = workFactor * last;
-        workDone = 0;
-        blockRandomised = false;
-        firstAttempt = true;
+        m_workLimit = m_workFactor * m_last;
+        m_workDone = 0;
+        m_blockRandomised = false;
+        m_firstAttempt = true;
 
         mainSort();
 
-        if( workDone > workLimit && firstAttempt )
+        if( m_workDone > m_workLimit && m_firstAttempt )
         {
             randomiseBlock();
-            workLimit = workDone = 0;
-            blockRandomised = true;
-            firstAttempt = false;
+            m_workLimit = m_workDone = 0;
+            m_blockRandomised = true;
+            m_firstAttempt = false;
             mainSort();
         }
 
-        origPtr = -1;
-        for( i = 0; i <= last; i++ )
+        m_origPtr = -1;
+        for( i = 0; i <= m_last; i++ )
         {
-            if( zptr[ i ] == 0 )
+            if( m_zptr[ i ] == 0 )
             {
-                origPtr = i;
+                m_origPtr = i;
                 break;
             }
         }
         ;
 
-        if( origPtr == -1 )
+        if( m_origPtr == -1 )
         {
             panic();
         }
@@ -570,9 +576,9 @@ public class CBZip2OutputStream
     private void endBlock()
         throws IOException
     {
-        blockCRC = m_crc.getFinalCRC();
-        combinedCRC = ( combinedCRC << 1 ) | ( combinedCRC >>> 31 );
-        combinedCRC ^= blockCRC;
+        m_blockCRC = m_crc.getFinalCRC();
+        m_combinedCRC = ( m_combinedCRC << 1 ) | ( m_combinedCRC >>> 31 );
+        m_combinedCRC ^= m_blockCRC;
 
         /*
          * sort the block and establish posn of original string
@@ -602,15 +608,15 @@ public class CBZip2OutputStream
         /*
          * Now the block's CRC, so it is in a known place.
          */
-        bsPutint( blockCRC );
+        bsPutint( m_blockCRC );
 
         /*
          * Now a single bit indicating randomisation.
          */
-        if( blockRandomised )
+        if( m_blockRandomised )
         {
             bsW( 1, 1 );
-            nBlocksRandomised++;
+            m_nBlocksRandomised++;
         }
         else
         {
@@ -640,7 +646,7 @@ public class CBZip2OutputStream
         bsPutUChar( 0x50 );
         bsPutUChar( 0x90 );
 
-        bsPutint( combinedCRC );
+        bsPutint( m_combinedCRC );
 
         bsFinishedWithStream();
     }
@@ -653,8 +659,8 @@ public class CBZip2OutputStream
         int s1;
         int s2;
 
-        c1 = block[ i1 + 1 ];
-        c2 = block[ i2 + 1 ];
+        c1 = m_block[ i1 + 1 ];
+        c2 = m_block[ i2 + 1 ];
         if( c1 != c2 )
         {
             return ( c1 > c2 );
@@ -662,8 +668,8 @@ public class CBZip2OutputStream
         i1++;
         i2++;
 
-        c1 = block[ i1 + 1 ];
-        c2 = block[ i2 + 1 ];
+        c1 = m_block[ i1 + 1 ];
+        c2 = m_block[ i2 + 1 ];
         if( c1 != c2 )
         {
             return ( c1 > c2 );
@@ -671,8 +677,8 @@ public class CBZip2OutputStream
         i1++;
         i2++;
 
-        c1 = block[ i1 + 1 ];
-        c2 = block[ i2 + 1 ];
+        c1 = m_block[ i1 + 1 ];
+        c2 = m_block[ i2 + 1 ];
         if( c1 != c2 )
         {
             return ( c1 > c2 );
@@ -680,8 +686,8 @@ public class CBZip2OutputStream
         i1++;
         i2++;
 
-        c1 = block[ i1 + 1 ];
-        c2 = block[ i2 + 1 ];
+        c1 = m_block[ i1 + 1 ];
+        c2 = m_block[ i2 + 1 ];
         if( c1 != c2 )
         {
             return ( c1 > c2 );
@@ -689,8 +695,8 @@ public class CBZip2OutputStream
         i1++;
         i2++;
 
-        c1 = block[ i1 + 1 ];
-        c2 = block[ i2 + 1 ];
+        c1 = m_block[ i1 + 1 ];
+        c2 = m_block[ i2 + 1 ];
         if( c1 != c2 )
         {
             return ( c1 > c2 );
@@ -698,8 +704,8 @@ public class CBZip2OutputStream
         i1++;
         i2++;
 
-        c1 = block[ i1 + 1 ];
-        c2 = block[ i2 + 1 ];
+        c1 = m_block[ i1 + 1 ];
+        c2 = m_block[ i2 + 1 ];
         if( c1 != c2 )
         {
             return ( c1 > c2 );
@@ -707,18 +713,18 @@ public class CBZip2OutputStream
         i1++;
         i2++;
 
-        k = last + 1;
+        k = m_last + 1;
 
         do
         {
-            c1 = block[ i1 + 1 ];
-            c2 = block[ i2 + 1 ];
+            c1 = m_block[ i1 + 1 ];
+            c2 = m_block[ i2 + 1 ];
             if( c1 != c2 )
             {
                 return ( c1 > c2 );
             }
-            s1 = quadrant[ i1 ];
-            s2 = quadrant[ i2 ];
+            s1 = m_quadrant[ i1 ];
+            s2 = m_quadrant[ i2 ];
             if( s1 != s2 )
             {
                 return ( s1 > s2 );
@@ -726,14 +732,14 @@ public class CBZip2OutputStream
             i1++;
             i2++;
 
-            c1 = block[ i1 + 1 ];
-            c2 = block[ i2 + 1 ];
+            c1 = m_block[ i1 + 1 ];
+            c2 = m_block[ i2 + 1 ];
             if( c1 != c2 )
             {
                 return ( c1 > c2 );
             }
-            s1 = quadrant[ i1 ];
-            s2 = quadrant[ i2 ];
+            s1 = m_quadrant[ i1 ];
+            s2 = m_quadrant[ i2 ];
             if( s1 != s2 )
             {
                 return ( s1 > s2 );
@@ -741,14 +747,14 @@ public class CBZip2OutputStream
             i1++;
             i2++;
 
-            c1 = block[ i1 + 1 ];
-            c2 = block[ i2 + 1 ];
+            c1 = m_block[ i1 + 1 ];
+            c2 = m_block[ i2 + 1 ];
             if( c1 != c2 )
             {
                 return ( c1 > c2 );
             }
-            s1 = quadrant[ i1 ];
-            s2 = quadrant[ i2 ];
+            s1 = m_quadrant[ i1 ];
+            s2 = m_quadrant[ i2 ];
             if( s1 != s2 )
             {
                 return ( s1 > s2 );
@@ -756,14 +762,14 @@ public class CBZip2OutputStream
             i1++;
             i2++;
 
-            c1 = block[ i1 + 1 ];
-            c2 = block[ i2 + 1 ];
+            c1 = m_block[ i1 + 1 ];
+            c2 = m_block[ i2 + 1 ];
             if( c1 != c2 )
             {
                 return ( c1 > c2 );
             }
-            s1 = quadrant[ i1 ];
-            s2 = quadrant[ i2 ];
+            s1 = m_quadrant[ i1 ];
+            s2 = m_quadrant[ i2 ];
             if( s1 != s2 )
             {
                 return ( s1 > s2 );
@@ -771,21 +777,21 @@ public class CBZip2OutputStream
             i1++;
             i2++;
 
-            if( i1 > last )
+            if( i1 > m_last )
             {
-                i1 -= last;
+                i1 -= m_last;
                 i1--;
             }
             ;
-            if( i2 > last )
+            if( i2 > m_last )
             {
-                i2 -= last;
+                i2 -= m_last;
                 i2--;
             }
             ;
 
             k -= 4;
-            workDone++;
+            m_workDone++;
         } while( k >= 0 );
 
         return false;
@@ -803,25 +809,25 @@ public class CBZip2OutputStream
         int EOB;
 
         makeMaps();
-        EOB = nInUse + 1;
+        EOB = m_nInUse + 1;
 
         for( i = 0; i <= EOB; i++ )
         {
-            mtfFreq[ i ] = 0;
+            m_mtfFreq[ i ] = 0;
         }
 
         wr = 0;
         zPend = 0;
-        for( i = 0; i < nInUse; i++ )
+        for( i = 0; i < m_nInUse; i++ )
         {
             yy[ i ] = (char)i;
         }
 
-        for( i = 0; i <= last; i++ )
+        for( i = 0; i <= m_last; i++ )
         {
             char ll_i;
 
-            ll_i = unseqToSeq[ block[ zptr[ i ] ] ];
+            ll_i = m_unseqToSeq[ m_block[ m_zptr[ i ] ] ];
 
             j = 0;
             tmp = yy[ j ];
@@ -849,14 +855,14 @@ public class CBZip2OutputStream
                         switch( zPend % 2 )
                         {
                             case 0:
-                                szptr[ wr ] = (short)RUNA;
+                                m_szptr[ wr ] = (short)RUNA;
                                 wr++;
-                                mtfFreq[ RUNA ]++;
+                                m_mtfFreq[ RUNA ]++;
                                 break;
                             case 1:
-                                szptr[ wr ] = (short)RUNB;
+                                m_szptr[ wr ] = (short)RUNB;
                                 wr++;
-                                mtfFreq[ RUNB ]++;
+                                m_mtfFreq[ RUNB ]++;
                                 break;
                         }
                         ;
@@ -869,9 +875,9 @@ public class CBZip2OutputStream
                     ;
                     zPend = 0;
                 }
-                szptr[ wr ] = (short)( j + 1 );
+                m_szptr[ wr ] = (short)( j + 1 );
                 wr++;
-                mtfFreq[ j + 1 ]++;
+                m_mtfFreq[ j + 1 ]++;
             }
         }
 
@@ -883,14 +889,14 @@ public class CBZip2OutputStream
                 switch( zPend % 2 )
                 {
                     case 0:
-                        szptr[ wr ] = (short)RUNA;
+                        m_szptr[ wr ] = (short)RUNA;
                         wr++;
-                        mtfFreq[ RUNA ]++;
+                        m_mtfFreq[ RUNA ]++;
                         break;
                     case 1:
-                        szptr[ wr ] = (short)RUNB;
+                        m_szptr[ wr ] = (short)RUNB;
                         wr++;
-                        mtfFreq[ RUNB ]++;
+                        m_mtfFreq[ RUNB ]++;
                         break;
                 }
                 if( zPend < 2 )
@@ -901,11 +907,11 @@ public class CBZip2OutputStream
             }
         }
 
-        szptr[ wr ] = (short)EOB;
+        m_szptr[ wr ] = (short)EOB;
         wr++;
-        mtfFreq[ EOB ]++;
+        m_mtfFreq[ EOB ]++;
 
-        nMTF = wr;
+        m_nMTF = wr;
     }
 
     private void hbAssignCodes( int[] code, char[] length, int minLen,
@@ -935,7 +941,7 @@ public class CBZip2OutputStream
     {
         //        blockNo++;
         m_crc.initialiseCRC();
-        last = -1;
+        m_last = -1;
         //        ch = 0;
 
         for( int i = 0; i < 256; i++ )
@@ -946,24 +952,24 @@ public class CBZip2OutputStream
         /*
          * 20 is just a paranoia constant
          */
-        allowableBlockSize = BASE_BLOCK_SIZE * blockSize100k - 20;
+        m_allowableBlockSize = BASE_BLOCK_SIZE * m_blockSize100k - 20;
     }
 
     private void initialize()
         throws IOException
     {
-        bytesIn = 0;
-        bytesOut = 0;
-        nBlocksRandomised = 0;
+        m_bytesIn = 0;
+        m_bytesOut = 0;
+        m_nBlocksRandomised = 0;
 
         /*
          * Write `magic' bytes h indicating file-format == huffmanised,
          * followed by a digit indicating blockSize100k.
          */
         bsPutUChar( 'h' );
-        bsPutUChar( '0' + blockSize100k );
+        bsPutUChar( '0' + m_blockSize100k );
 
-        combinedCRC = 0;
+        m_combinedCRC = 0;
     }
 
     private void mainSort()
@@ -987,28 +993,28 @@ public class CBZip2OutputStream
         //   if (verbosity >= 4) fprintf ( stderr, "        sort initialise ...\n" );
         for( i = 0; i < NUM_OVERSHOOT_BYTES; i++ )
         {
-            block[ last + i + 2 ] = block[ ( i % ( last + 1 ) ) + 1 ];
+            m_block[ m_last + i + 2 ] = m_block[ ( i % ( m_last + 1 ) ) + 1 ];
         }
-        for( i = 0; i <= last + NUM_OVERSHOOT_BYTES; i++ )
+        for( i = 0; i <= m_last + NUM_OVERSHOOT_BYTES; i++ )
         {
-            quadrant[ i ] = 0;
+            m_quadrant[ i ] = 0;
         }
 
-        block[ 0 ] = (char)( block[ last + 1 ] );
+        m_block[ 0 ] = (char)( m_block[ m_last + 1 ] );
 
-        if( last < 4000 )
+        if( m_last < 4000 )
         {
             /*
              * Use simpleSort(), since the full sorting mechanism
              * has quite a large constant overhead.
              */
-            for( i = 0; i <= last; i++ )
+            for( i = 0; i <= m_last; i++ )
             {
-                zptr[ i ] = i;
+                m_zptr[ i ] = i;
             }
-            firstAttempt = false;
-            workDone = workLimit = 0;
-            simpleSort( 0, last, 0 );
+            m_firstAttempt = false;
+            m_workDone = m_workLimit = 0;
+            simpleSort( 0, m_last, 0 );
         }
         else
         {
@@ -1020,35 +1026,35 @@ public class CBZip2OutputStream
 
             for( i = 0; i <= 65536; i++ )
             {
-                ftab[ i ] = 0;
+                m_ftab[ i ] = 0;
             }
 
-            c1 = block[ 0 ];
-            for( i = 0; i <= last; i++ )
+            c1 = m_block[ 0 ];
+            for( i = 0; i <= m_last; i++ )
             {
-                c2 = block[ i + 1 ];
-                ftab[ ( c1 << 8 ) + c2 ]++;
+                c2 = m_block[ i + 1 ];
+                m_ftab[ ( c1 << 8 ) + c2 ]++;
                 c1 = c2;
             }
 
             for( i = 1; i <= 65536; i++ )
             {
-                ftab[ i ] += ftab[ i - 1 ];
+                m_ftab[ i ] += m_ftab[ i - 1 ];
             }
 
-            c1 = block[ 1 ];
-            for( i = 0; i < last; i++ )
+            c1 = m_block[ 1 ];
+            for( i = 0; i < m_last; i++ )
             {
-                c2 = block[ i + 2 ];
+                c2 = m_block[ i + 2 ];
                 j = ( c1 << 8 ) + c2;
                 c1 = c2;
-                ftab[ j ]--;
-                zptr[ ftab[ j ] ] = i;
+                m_ftab[ j ]--;
+                m_zptr[ m_ftab[ j ] ] = i;
             }
 
-            j = ( ( block[ last + 1 ] ) << 8 ) + ( block[ 1 ] );
-            ftab[ j ]--;
-            zptr[ ftab[ j ] ] = last;
+            j = ( ( m_block[ m_last + 1 ] ) << 8 ) + ( m_block[ 1 ] );
+            m_ftab[ j ]--;
+            m_zptr[ m_ftab[ j ] ] = m_last;
 
             /*
              * Now ftab contains the first loc of every small bucket.
@@ -1073,9 +1079,9 @@ public class CBZip2OutputStream
                     {
                         vv = runningOrder[ i ];
                         j = i;
-                        while( ( ftab[ ( ( runningOrder[ j - h ] ) + 1 ) << 8 ]
-                            - ftab[ ( runningOrder[ j - h ] ) << 8 ] ) >
-                            ( ftab[ ( ( vv ) + 1 ) << 8 ] - ftab[ ( vv ) << 8 ] ) )
+                        while( ( m_ftab[ ( ( runningOrder[ j - h ] ) + 1 ) << 8 ]
+                            - m_ftab[ ( runningOrder[ j - h ] ) << 8 ] ) >
+                            ( m_ftab[ ( ( vv ) + 1 ) << 8 ] - m_ftab[ ( vv ) << 8 ] ) )
                         {
                             runningOrder[ j ] = runningOrder[ j - h ];
                             j = j - h;
@@ -1110,20 +1116,20 @@ public class CBZip2OutputStream
                 for( j = 0; j <= 255; j++ )
                 {
                     sb = ( ss << 8 ) + j;
-                    if( !( ( ftab[ sb ] & SETMASK ) == SETMASK ) )
+                    if( !( ( m_ftab[ sb ] & SETMASK ) == SETMASK ) )
                     {
-                        int lo = ftab[ sb ] & CLEARMASK;
-                        int hi = ( ftab[ sb + 1 ] & CLEARMASK ) - 1;
+                        int lo = m_ftab[ sb ] & CLEARMASK;
+                        int hi = ( m_ftab[ sb + 1 ] & CLEARMASK ) - 1;
                         if( hi > lo )
                         {
                             qSort3( lo, hi, 2 );
                             numQSorted += ( hi - lo + 1 );
-                            if( workDone > workLimit && firstAttempt )
+                            if( m_workDone > m_workLimit && m_firstAttempt )
                             {
                                 return;
                             }
                         }
-                        ftab[ sb ] |= SETMASK;
+                        m_ftab[ sb ] |= SETMASK;
                     }
                 }
 
@@ -1139,8 +1145,8 @@ public class CBZip2OutputStream
 
                 if( i < 255 )
                 {
-                    int bbStart = ftab[ ss << 8 ] & CLEARMASK;
-                    int bbSize = ( ftab[ ( ss + 1 ) << 8 ] & CLEARMASK ) - bbStart;
+                    int bbStart = m_ftab[ ss << 8 ] & CLEARMASK;
+                    int bbSize = ( m_ftab[ ( ss + 1 ) << 8 ] & CLEARMASK ) - bbStart;
                     int shifts = 0;
 
                     while( ( bbSize >> shifts ) > 65534 )
@@ -1150,12 +1156,12 @@ public class CBZip2OutputStream
 
                     for( j = 0; j < bbSize; j++ )
                     {
-                        int a2update = zptr[ bbStart + j ];
+                        int a2update = m_zptr[ bbStart + j ];
                         int qVal = ( j >> shifts );
-                        quadrant[ a2update ] = qVal;
+                        m_quadrant[ a2update ] = qVal;
                         if( a2update < NUM_OVERSHOOT_BYTES )
                         {
-                            quadrant[ a2update + last + 1 ] = qVal;
+                            m_quadrant[ a2update + m_last + 1 ] = qVal;
                         }
                     }
 
@@ -1171,23 +1177,23 @@ public class CBZip2OutputStream
                  */
                 for( j = 0; j <= 255; j++ )
                 {
-                    copy[ j ] = ftab[ ( j << 8 ) + ss ] & CLEARMASK;
+                    copy[ j ] = m_ftab[ ( j << 8 ) + ss ] & CLEARMASK;
                 }
 
-                for( j = ftab[ ss << 8 ] & CLEARMASK;
-                     j < ( ftab[ ( ss + 1 ) << 8 ] & CLEARMASK ); j++ )
+                for( j = m_ftab[ ss << 8 ] & CLEARMASK;
+                     j < ( m_ftab[ ( ss + 1 ) << 8 ] & CLEARMASK ); j++ )
                 {
-                    c1 = block[ zptr[ j ] ];
+                    c1 = m_block[ m_zptr[ j ] ];
                     if( !bigDone[ c1 ] )
                     {
-                        zptr[ copy[ c1 ] ] = zptr[ j ] == 0 ? last : zptr[ j ] - 1;
+                        m_zptr[ copy[ c1 ] ] = m_zptr[ j ] == 0 ? m_last : m_zptr[ j ] - 1;
                         copy[ c1 ]++;
                     }
                 }
 
                 for( j = 0; j <= 255; j++ )
                 {
-                    ftab[ ( j << 8 ) + ss ] |= SETMASK;
+                    m_ftab[ ( j << 8 ) + ss ] |= SETMASK;
                 }
             }
         }
@@ -1196,14 +1202,14 @@ public class CBZip2OutputStream
     private void makeMaps()
     {
         int i;
-        nInUse = 0;
+        m_nInUse = 0;
         for( i = 0; i < 256; i++ )
         {
             if( m_inUse[ i ] )
             {
-                seqToUnseq[ nInUse ] = (char)i;
-                unseqToSeq[ i ] = (char)nInUse;
-                nInUse++;
+                m_seqToUnseq[ m_nInUse ] = (char)i;
+                m_unseqToSeq[ i ] = (char)m_nInUse;
+                m_nInUse++;
             }
         }
     }
@@ -1233,7 +1239,7 @@ public class CBZip2OutputStream
     private void moveToFrontCodeAndSend()
         throws IOException
     {
-        bsPutIntVS( 24, origPtr );
+        bsPutIntVS( 24, m_origPtr );
         generateMTFValues();
         sendMTFValues();
     }
@@ -1279,16 +1285,16 @@ public class CBZip2OutputStream
             if( hi - lo < SMALL_THRESH || d > DEPTH_THRESH )
             {
                 simpleSort( lo, hi, d );
-                if( workDone > workLimit && firstAttempt )
+                if( m_workDone > m_workLimit && m_firstAttempt )
                 {
                     return;
                 }
                 continue;
             }
 
-            med = med3( block[ zptr[ lo ] + d + 1 ],
-                        block[ zptr[ hi ] + d + 1 ],
-                        block[ zptr[ ( lo + hi ) >> 1 ] + d + 1 ] );
+            med = med3( m_block[ m_zptr[ lo ] + d + 1 ],
+                        m_block[ m_zptr[ hi ] + d + 1 ],
+                        m_block[ m_zptr[ ( lo + hi ) >> 1 ] + d + 1 ] );
 
             unLo = ltLo = lo;
             unHi = gtHi = hi;
@@ -1301,13 +1307,13 @@ public class CBZip2OutputStream
                     {
                         break;
                     }
-                    n = ( (int)block[ zptr[ unLo ] + d + 1 ] ) - med;
+                    n = ( (int)m_block[ m_zptr[ unLo ] + d + 1 ] ) - med;
                     if( n == 0 )
                     {
                         int temp = 0;
-                        temp = zptr[ unLo ];
-                        zptr[ unLo ] = zptr[ ltLo ];
-                        zptr[ ltLo ] = temp;
+                        temp = m_zptr[ unLo ];
+                        m_zptr[ unLo ] = m_zptr[ ltLo ];
+                        m_zptr[ ltLo ] = temp;
                         ltLo++;
                         unLo++;
                         continue;
@@ -1325,13 +1331,13 @@ public class CBZip2OutputStream
                     {
                         break;
                     }
-                    n = ( (int)block[ zptr[ unHi ] + d + 1 ] ) - med;
+                    n = ( (int)m_block[ m_zptr[ unHi ] + d + 1 ] ) - med;
                     if( n == 0 )
                     {
                         int temp = 0;
-                        temp = zptr[ unHi ];
-                        zptr[ unHi ] = zptr[ gtHi ];
-                        zptr[ gtHi ] = temp;
+                        temp = m_zptr[ unHi ];
+                        m_zptr[ unHi ] = m_zptr[ gtHi ];
+                        m_zptr[ gtHi ] = temp;
                         gtHi--;
                         unHi--;
                         continue;
@@ -1348,9 +1354,9 @@ public class CBZip2OutputStream
                     break;
                 }
                 int temp = 0;
-                temp = zptr[ unLo ];
-                zptr[ unLo ] = zptr[ unHi ];
-                zptr[ unHi ] = temp;
+                temp = m_zptr[ unLo ];
+                m_zptr[ unLo ] = m_zptr[ unHi ];
+                m_zptr[ unHi ] = temp;
                 unLo++;
                 unHi--;
             }
@@ -1399,7 +1405,7 @@ public class CBZip2OutputStream
             m_inUse[ i ] = false;
         }
 
-        for( i = 0; i <= last; i++ )
+        for( i = 0; i <= m_last; i++ )
         {
             if( rNToGo == 0 )
             {
@@ -1411,11 +1417,11 @@ public class CBZip2OutputStream
                 }
             }
             rNToGo--;
-            block[ i + 1 ] ^= ( ( rNToGo == 1 ) ? 1 : 0 );
+            m_block[ i + 1 ] ^= ( ( rNToGo == 1 ) ? 1 : 0 );
             // handle 16 bit signed numbers
-            block[ i + 1 ] &= 0xFF;
+            m_block[ i + 1 ] &= 0xFF;
 
-            m_inUse[ block[ i + 1 ] ] = true;
+            m_inUse[ m_block[ i + 1 ] ] = true;
         }
     }
 
@@ -1451,7 +1457,7 @@ public class CBZip2OutputStream
         int nGroups;
         int nBytes;
 
-        alphaSize = nInUse + 2;
+        alphaSize = m_nInUse + 2;
         for( t = 0; t < N_GROUPS; t++ )
         {
             for( v = 0; v < alphaSize; v++ )
@@ -1463,24 +1469,24 @@ public class CBZip2OutputStream
         /*
          * Decide how many coding tables to use
          */
-        if( nMTF <= 0 )
+        if( m_nMTF <= 0 )
         {
             panic();
         }
 
-        if( nMTF < 200 )
+        if( m_nMTF < 200 )
         {
             nGroups = 2;
         }
-        else if( nMTF < 600 )
+        else if( m_nMTF < 600 )
         {
             nGroups = 3;
         }
-        else if( nMTF < 1200 )
+        else if( m_nMTF < 1200 )
         {
             nGroups = 4;
         }
-        else if( nMTF < 2400 )
+        else if( m_nMTF < 2400 )
         {
             nGroups = 5;
         }
@@ -1498,7 +1504,7 @@ public class CBZip2OutputStream
             int aFreq;
 
             nPart = nGroups;
-            remF = nMTF;
+            remF = m_nMTF;
             gs = 0;
             while( nPart > 0 )
             {
@@ -1508,13 +1514,13 @@ public class CBZip2OutputStream
                 while( aFreq < tFreq && ge < alphaSize - 1 )
                 {
                     ge++;
-                    aFreq += mtfFreq[ ge ];
+                    aFreq += m_mtfFreq[ ge ];
                 }
 
                 if( ge > gs && nPart != nGroups && nPart != 1
                     && ( ( nGroups - nPart ) % 2 == 1 ) )
                 {
-                    aFreq -= mtfFreq[ ge ];
+                    aFreq -= m_mtfFreq[ ge ];
                     ge--;
                 }
 
@@ -1566,14 +1572,14 @@ public class CBZip2OutputStream
                 /*
                  * Set group start & end marks.
                  */
-                if( gs >= nMTF )
+                if( gs >= m_nMTF )
                 {
                     break;
                 }
                 ge = gs + G_SIZE - 1;
-                if( ge >= nMTF )
+                if( ge >= m_nMTF )
                 {
-                    ge = nMTF - 1;
+                    ge = m_nMTF - 1;
                 }
 
                 /*
@@ -1596,7 +1602,7 @@ public class CBZip2OutputStream
                     cost0 = cost1 = cost2 = cost3 = cost4 = cost5 = 0;
                     for( i = gs; i <= ge; i++ )
                     {
-                        short icv = szptr[ i ];
+                        short icv = m_szptr[ i ];
                         cost0 += len[ 0 ][ icv ];
                         cost1 += len[ 1 ][ icv ];
                         cost2 += len[ 2 ][ icv ];
@@ -1615,7 +1621,7 @@ public class CBZip2OutputStream
                 {
                     for( i = gs; i <= ge; i++ )
                     {
-                        short icv = szptr[ i ];
+                        short icv = m_szptr[ i ];
                         for( t = 0; t < nGroups; t++ )
                         {
                             cost[ t ] += len[ t ][ icv ];
@@ -1640,7 +1646,7 @@ public class CBZip2OutputStream
                 ;
                 totc += bc;
                 fave[ bt ]++;
-                selector[ nSelectors ] = (char)bt;
+                m_selector[ nSelectors ] = (char)bt;
                 nSelectors++;
 
                 /*
@@ -1648,7 +1654,7 @@ public class CBZip2OutputStream
                  */
                 for( i = gs; i <= ge; i++ )
                 {
-                    rfreq[ bt ][ szptr[ i ] ]++;
+                    rfreq[ bt ][ m_szptr[ i ] ]++;
                 }
 
                 gs = ge + 1;
@@ -1689,7 +1695,7 @@ public class CBZip2OutputStream
             }
             for( i = 0; i < nSelectors; i++ )
             {
-                ll_i = selector[ i ];
+                ll_i = m_selector[ i ];
                 j = 0;
                 tmp = pos[ j ];
                 while( ll_i != tmp )
@@ -1700,7 +1706,7 @@ public class CBZip2OutputStream
                     pos[ j ] = tmp2;
                 }
                 pos[ 0 ] = tmp;
-                selectorMtf[ i ] = (char)j;
+                m_selectorMtf[ i ] = (char)j;
             }
         }
 
@@ -1751,7 +1757,7 @@ public class CBZip2OutputStream
                 }
             }
 
-            nBytes = bytesOut;
+            nBytes = m_bytesOut;
             for( i = 0; i < 16; i++ )
             {
                 if( inUse16[ i ] )
@@ -1787,12 +1793,12 @@ public class CBZip2OutputStream
         /*
          * Now the selectors.
          */
-        nBytes = bytesOut;
+        nBytes = m_bytesOut;
         bsW( 3, nGroups );
         bsW( 15, nSelectors );
         for( i = 0; i < nSelectors; i++ )
         {
-            for( j = 0; j < selectorMtf[ i ]; j++ )
+            for( j = 0; j < m_selectorMtf[ i ]; j++ )
             {
                 bsW( 1, 1 );
             }
@@ -1802,7 +1808,7 @@ public class CBZip2OutputStream
         /*
          * Now the coding tables.
          */
-        nBytes = bytesOut;
+        nBytes = m_bytesOut;
 
         for( t = 0; t < nGroups; t++ )
         {
@@ -1833,24 +1839,24 @@ public class CBZip2OutputStream
         /*
          * And finally, the block data proper
          */
-        nBytes = bytesOut;
+        nBytes = m_bytesOut;
         selCtr = 0;
         gs = 0;
         while( true )
         {
-            if( gs >= nMTF )
+            if( gs >= m_nMTF )
             {
                 break;
             }
             ge = gs + G_SIZE - 1;
-            if( ge >= nMTF )
+            if( ge >= m_nMTF )
             {
-                ge = nMTF - 1;
+                ge = m_nMTF - 1;
             }
             for( i = gs; i <= ge; i++ )
             {
-                bsW( len[ selector[ selCtr ] ][ szptr[ i ] ],
-                     code[ selector[ selCtr ] ][ szptr[ i ] ] );
+                bsW( len[ m_selector[ selCtr ] ][ m_szptr[ i ] ],
+                     code[ m_selector[ selCtr ] ][ m_szptr[ i ] ] );
             }
 
             gs = ge + 1;
@@ -1878,7 +1884,7 @@ public class CBZip2OutputStream
         }
 
         hp = 0;
-        while( incs[ hp ] < bigN )
+        while( m_incs[ hp ] < bigN )
         {
             hp++;
         }
@@ -1886,7 +1892,7 @@ public class CBZip2OutputStream
 
         for( ; hp >= 0; hp-- )
         {
-            h = incs[ hp ];
+            h = m_incs[ hp ];
 
             i = lo + h;
             while( true )
@@ -1898,18 +1904,18 @@ public class CBZip2OutputStream
                 {
                     break;
                 }
-                v = zptr[ i ];
+                v = m_zptr[ i ];
                 j = i;
-                while( fullGtU( zptr[ j - h ] + d, v + d ) )
+                while( fullGtU( m_zptr[ j - h ] + d, v + d ) )
                 {
-                    zptr[ j ] = zptr[ j - h ];
+                    m_zptr[ j ] = m_zptr[ j - h ];
                     j = j - h;
                     if( j <= ( lo + h - 1 ) )
                     {
                         break;
                     }
                 }
-                zptr[ j ] = v;
+                m_zptr[ j ] = v;
                 i++;
 
                 /*
@@ -1919,18 +1925,18 @@ public class CBZip2OutputStream
                 {
                     break;
                 }
-                v = zptr[ i ];
+                v = m_zptr[ i ];
                 j = i;
-                while( fullGtU( zptr[ j - h ] + d, v + d ) )
+                while( fullGtU( m_zptr[ j - h ] + d, v + d ) )
                 {
-                    zptr[ j ] = zptr[ j - h ];
+                    m_zptr[ j ] = m_zptr[ j - h ];
                     j = j - h;
                     if( j <= ( lo + h - 1 ) )
                     {
                         break;
                     }
                 }
-                zptr[ j ] = v;
+                m_zptr[ j ] = v;
                 i++;
 
                 /*
@@ -1940,21 +1946,21 @@ public class CBZip2OutputStream
                 {
                     break;
                 }
-                v = zptr[ i ];
+                v = m_zptr[ i ];
                 j = i;
-                while( fullGtU( zptr[ j - h ] + d, v + d ) )
+                while( fullGtU( m_zptr[ j - h ] + d, v + d ) )
                 {
-                    zptr[ j ] = zptr[ j - h ];
+                    m_zptr[ j ] = m_zptr[ j - h ];
                     j = j - h;
                     if( j <= ( lo + h - 1 ) )
                     {
                         break;
                     }
                 }
-                zptr[ j ] = v;
+                m_zptr[ j ] = v;
                 i++;
 
-                if( workDone > workLimit && firstAttempt )
+                if( m_workDone > m_workLimit && m_firstAttempt )
                 {
                     return;
                 }
@@ -1967,9 +1973,9 @@ public class CBZip2OutputStream
         int temp = 0;
         while( n > 0 )
         {
-            temp = zptr[ p1 ];
-            zptr[ p1 ] = zptr[ p2 ];
-            zptr[ p2 ] = temp;
+            temp = m_zptr[ p1 ];
+            m_zptr[ p1 ] = m_zptr[ p2 ];
+            m_zptr[ p2 ] = temp;
             p1++;
             p2++;
             n--;
@@ -1979,45 +1985,45 @@ public class CBZip2OutputStream
     private void writeRun()
         throws IOException
     {
-        if( last < allowableBlockSize )
+        if( m_last < m_allowableBlockSize )
         {
-            m_inUse[ currentChar ] = true;
-            for( int i = 0; i < runLength; i++ )
+            m_inUse[ m_currentChar ] = true;
+            for( int i = 0; i < m_runLength; i++ )
             {
-                m_crc.updateCRC( (char)currentChar );
+                m_crc.updateCRC( (char)m_currentChar );
             }
-            switch( runLength )
+            switch( m_runLength )
             {
                 case 1:
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
                     break;
                 case 2:
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
                     break;
                 case 3:
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
                     break;
                 default:
-                    m_inUse[ runLength - 4 ] = true;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)currentChar;
-                    last++;
-                    block[ last + 1 ] = (char)( runLength - 4 );
+                    m_inUse[ m_runLength - 4 ] = true;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)m_currentChar;
+                    m_last++;
+                    m_block[ m_last + 1 ] = (char)( m_runLength - 4 );
                     break;
             }
         }
