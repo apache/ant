@@ -25,7 +25,7 @@
   -->
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
-  <property name="version" value="1.6.1beta1"/>
+  <property name="version" value="1.6.1"/>
   <property name="manifest-version" value="1.6.1"/>
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
