@@ -67,72 +67,40 @@ import org.apache.tools.ant.*;
  *
  * @author Costin Manolache
  */
-public class TaskAdapter2 extends Task {
-
+public class TaskAdapter2 extends Task { // implements DynamicConfigurator {
+    /* Need to support DynamicConfigurator so that adapted tasks can
+       support that too.
+    */
+    
     /** Object to act as a proxy for. */
     private Object proxy;
     private String methodName="execute";
     
-    /**
-     * Checks whether or not a class is suitable to be adapted by TaskAdapter.
-     *
-     * This only checks conditions which are additionally required for 
-     * tasks adapted by TaskAdapter. Thus, this method should be called by
-     * Project.checkTaskClass.
-     *
-     * Throws a BuildException and logs as Project.MSG_ERR for
-     * conditions that will cause the task execution to fail.
-     * Logs other suspicious conditions with Project.MSG_WARN.
-     * 
-     * @param taskClass Class to test for suitability. 
-     *                  Must not be <code>null</code>.
-     * @param project   Project to log warnings/errors to. 
-     *                  Must not be <code>null</code>.
-     * 
-     * @see Project#checkTaskClass(Class)
-     */
-    public static void checkTaskClass(final Class taskClass, final Project project) {
-        // Any task can be used via adapter. If it doesn't have any execute()
-        // method, no problem - it will do nothing, but still get an 'id'
-        // and be registered in the project reference table and useable by other
-        // tasks.
-        
-        if( true )
-            return;
-
-        // don't have to check for interface, since then
-        // taskClass would be abstract too.
-        try {
-            final Method executeM = taskClass.getMethod( "execute", null );
-            // don't have to check for public, since
-            // getMethod finds public method only.
-            // don't have to check for abstract, since then
-            // taskClass would be abstract too.
-            if(!Void.TYPE.equals(executeM.getReturnType())) {
-                final String message =
-                    "return type of execute() should be void but was \""+
-                    executeM.getReturnType()+"\" in " + taskClass;
-                project.log(message, Project.MSG_WARN);
-            }
-        } catch(NoSuchMethodException e) {
-            final String message = "No public execute() in " + taskClass;
-            project.log(message, Project.MSG_ERR);
-            throw new BuildException(message);
-        }
-    }
-
     private IntrospectionHelper ih;
 
     void setIntrospectionHelper( IntrospectionHelper ih ) {
         this.ih=ih;
     }
 
-    IntrospectionHelper getIntrospectionHelper() {
+    IntrospectionHelper getIntrospectionHelper()
+    {
         if( ih==null ) {
             ih = IntrospectionHelper.getHelper(target.getClass());
         }
         return ih;
     }
+
+    public void setDynamicAttribute(String name, String value)
+            throws BuildException
+    {
+        setAttribute( name, value );
+    }
+
+    public Object createDynamicElement(String name) throws BuildException
+    {
+        return null;
+    }
+
     
     /** Experimental, non-public method for better 'adaptation'
      *
@@ -174,7 +142,7 @@ public class TaskAdapter2 extends Task {
                 setProjectM.invoke(proxy, new Object[] {project});
             }
         } catch (NoSuchMethodException e) {
-            // ignore this if the class being used as a task does not have
+             // ignore this if the class being used as a task does not have
             // a set project method.
         } catch( Exception ex ) {
             log("Error setting project in " + proxy.getClass(), 
