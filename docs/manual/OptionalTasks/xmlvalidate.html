@@ -9,14 +9,17 @@
 <h2><a name="xmlvalidate">XMLValidate</a></h2>
 <h3>Description</h3>
 
-<p>This task checks xml files are valid (or only well formed). The
+<p>This task checks XML files are valid (or only well formed). The
 task uses the SAX2 parser implementation provided by JAXP by default
-(probably the one that is used by Ant itself), but one can specify any
-SAX1/2 parser if needed.</p>
+(usually the one that is used by Ant itself), but one can specify any
+SAX1/2 parser if needed. Ant ships with Xerces, which is also what is built in
+to Java 1.4: XML parsers built into the runtime override Ant's choice.</p>
 
-<p>This task supports the use of nested <a
-href="../CoreTypes/xmlcatalog.html">xmlcatalog</a> elements and/or nested
-<tt>&lt;dtd&gt;</tt> elements which are used to resolve DTDs and entities.</p>
+<p>This task supports the use of nested
+  <li/><a href="../CoreTypes/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a> elements
+  <li/><tt>&lt;dtd&gt;</tt> elements which are used to resolve DTDs and other entities.
+  <li/><tt>&lt;feature&gt;</tt> elements which are used to set features. These can be any number of <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">http://xml.org/sax/features/</a>
+</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -62,7 +65,7 @@ href="../CoreTypes/xmlcatalog.html">xmlcatalog</a> elements and/or nested
 
 <h3><a name="nested">Nested Elements</a></h3>
 <h4>dtd</h4>
-&lt;dtd&gt; is used to specify different locations for DTD resolution.
+&lt;dtd&gt; is used to specify different locations for DTD and entity resolution.
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
@@ -84,10 +87,17 @@ href="../CoreTypes/xmlcatalog.html">xmlcatalog</a> elements and/or nested
 <h4>xmlcatalog</h4>
 <p>The <a href="../CoreTypes/xmlcatalog.html">xmlcatalog</a>
 element is used to perform Entity resolution.</p>
+<h4>feature</h4>
+<p>The feature element is used to set SAX Parser features.
+A feature essentialy changes the mode of the parser.
+There can  be an arbitrary amount of features set as defined here:
+ <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">http://xml.org/sax/features/</a>
+
+</p>
 
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;xmlvalidate file="toto.xml"/&gt;
 
 &lt;xmlvalidate failonerror="no" lenient="yes" warn="yes"
@@ -95,16 +105,28 @@ element is used to perform Entity resolution.</p>
              classpath="lib/xerces.jar"&gt;
   &lt;fileset dir="src" includes="style/*.xsl"/&gt;
 &lt;/xmlvalidate&gt;
+</pre>
+Validate all .xsl files in src/style, but only warn if there is an error, rather than
+halt the build.
 
+<pre>
 &lt;xmlvalidate file="struts-config.xml" warn="false"&gt;
   &lt;dtd publicId="-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
        location="struts-config_1_0.dtd"/&gt;
 &lt;/xmlvalidate&gt;
+</pre>
+
+Validate a struts configuration, using a local copy of the DTD. 
+<pre>
 
 &lt;xmlvalidate failonerror="no"&gt;
   &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
   &lt;xmlcatalog refid="mycatalog"/&gt;
 &lt;/xmlvalidate&gt;
+</pre>
+
+Scan all XML files in the project, using a predefined catalog to map URIs to local files.
+<pre>
 
 &lt;xmlvalidate failonerror="no"&gt;
   &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
@@ -114,7 +136,23 @@ element is used to perform Entity resolution.</p>
          location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
   &lt;/xmlcatalog&gt;
 &lt;/xmlvalidate&gt;
-</pre></blockquote>
+</pre>
+
+Scan all XML files in the project, using the catalog defined inline.
+
+<pre>
+
+&lt;xmlvalidate failonerror="yes" lenient="no" warn="yes"&gt;
+
+  &lt;fileset dir="xml" includes="**/*.xml"/&gt;
+  &lt;feature name="http://xml.org/sax/features/validation" value="true"/&gt;
+  &lt;feature name="http://apache.org/xml/features/validation/schema"  value="true"/&gt;
+
+&lt;/xmlvalidate&gt;
+</pre>
+
+Validate the XML files using XML Schema validation.
+
 <hr>
 
 <p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights

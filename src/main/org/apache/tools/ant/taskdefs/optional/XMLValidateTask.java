@@ -58,9 +58,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
+import java.util.List;
+import java.util.LinkedList;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -89,6 +90,8 @@ import org.xml.sax.helpers.ParserAdapter;
  * (probably the one that is used by Ant itself), but one can specify any
  * SAX1/2 parser if needed
  * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">raphael.pierquin@agisphere.com</a>
+ * @author <a href="mailto:nick.pellow@mindmatics.de">Nick Pellow</a>
+ * Added support for setting features.
  */
 public class XMLValidateTask extends Task {
 
@@ -106,8 +109,7 @@ public class XMLValidateTask extends Task {
     protected Vector filesets = new Vector(); // sets of file to be validated
     protected Path classpath;
 
-
-    /**
+   /**
      * the parser is viewed as a SAX2 XMLReader. If a SAX1 parser is specified,
      * it's wrapped in an adapter that make it behave as a XMLReader.
      * a more 'standard' way of doing this would be to use the JAXP1.1 SAXParser
@@ -116,7 +118,8 @@ public class XMLValidateTask extends Task {
     protected XMLReader xmlReader = null; // XMLReader used to validation process
     protected ValidatorErrorHandler errorHandler
         = new ValidatorErrorHandler(); // to report sax parsing errors
-    protected Hashtable features = new Hashtable();
+
+    private List featureList = new LinkedList();
 
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
@@ -220,6 +223,17 @@ public class XMLValidateTask extends Task {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+
+    /**
+     * add a feature nested element
+     * @since ant1.6
+     */
+    public Feature createFeature() {
+        final Feature feature = new Feature();
+        featureList.add(feature);
+        return feature;
     }
 
     public void init() throws BuildException {
@@ -347,18 +361,18 @@ public class XMLValidateTask extends Task {
                                              + " doesn't provide validation");
                 }
             }
-            // set other features
-            Enumeration enum = features.keys();
-            while (enum.hasMoreElements()) {
-                String featureId = (String) enum.nextElement();
-                setFeature(featureId, ((Boolean) features.get(featureId)).booleanValue(), true);
+            // set the feature from the feature list
+            for (int i = 0; i < featureList.size(); i++) {
+                Feature feature = (Feature) featureList.get(i);
+                setFeature(feature.getFeatureName(),
+                        feature.getFeatureValue(),
+                        true);
             }
         }
     }
 
     /**
-     * set a feature on the parser.
-     * @todo find a way to set any feature from build.xml
+     * Set a feature on the parser.
      */
     private boolean setFeature(String feature, boolean value, boolean warn) {
 
@@ -480,6 +494,55 @@ public class XMLValidateTask extends Task {
                 }
             }
             return e.getMessage();
+        }
+    }
+
+    /**
+     * The class to create to set a feature of the parser.
+     * @since ant1.6
+     * @author <a href="mailto:nick.pellow@mindmatics.de">Nick Pellow</a>
+     */
+    public class Feature {
+        /** The name of the feature to set.
+         *
+         * Valid features <a href=http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include.</a>
+         */
+        private String featureName = null;
+        
+        /** 
+         * The value of the feature. 
+         **/
+        private boolean featureValue;
+        
+        /**
+         * Set the feature name.
+         * @param name the name to set
+         */
+        public void setName(String name) {
+            featureName = name;
+        }
+        /**
+         * Set the feature value to true or false. 
+         * @param value
+         */
+        public void setValue(boolean value) {
+            featureValue = value;
+        }
+
+        /**
+         * Gets the feature name.
+         * @return the feature name
+         */
+        public String getFeatureName() {
+            return featureName;
+        }
+
+        /**
+         * Gets the feature value.
+         * @return the featuree value
+         */
+        public boolean getFeatureValue() {
+            return featureValue;
         }
     }
 }
