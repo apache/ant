@@ -22,14 +22,10 @@ import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
 
 /**
  * Very limited test class for Project. Waiting to be extended.
@@ -191,21 +187,8 @@ public class ProjectTest extends TestCase {
 
         assertTaskDefFails(DummyTaskPrivate.class,   DummyTaskPrivate.class   + " is not public");
 
-        try {
-            assertTaskDefFails(DummyTaskProtected.class,
-                               DummyTaskProtected.class + " is not public");
-        } catch (AssertionFailedError e) {
-            /*
-             * I don't understand this, but this is what happens with
-             * > java -fullversion
-             * java full version "Linux_JDK_1.1.8_v3_green_threads"
-             * from time to time
-             */
-            assertTrue(JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
-            assertTaskDefFails(DummyTaskProtected.class,
-                               "No public no-arg constructor in "
-                               + DummyTaskProtected.class);
-        }
+        assertTaskDefFails(DummyTaskProtected.class,
+                           DummyTaskProtected.class + " is not public");
 
         assertTaskDefFails(DummyTaskPackage.class,   DummyTaskPackage.class   + " is not public");
 

@@ -649,20 +649,15 @@ public class Path extends DataType implements Cloneable {
         }
 
         if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
+            // XXX is this code still necessary? is there any 1.2+ port?
             // Pull in *.zip from packages directory
             FileSet msZipFiles = new FileSet();
             msZipFiles.setDir(new File(System.getProperty("java.home")
                 + File.separator + "Packages"));
             msZipFiles.setIncludes("*.ZIP");
             addFileset(msZipFiles);
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            addExisting(new Path(null,
-                                 System.getProperty("java.home")
-                                 + File.separator + "lib"
-                                 + File.separator
-                                 + "classes.zip"));
         } else {
-            // JDK > 1.1 seems to set java.home to the JRE directory.
+            // JDK 1.2+ seems to set java.home to the JRE directory.
             addExisting(new Path(null,
                                  System.getProperty("java.home")
                                  + File.separator + "lib"

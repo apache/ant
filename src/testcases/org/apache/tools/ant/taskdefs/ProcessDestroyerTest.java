@@ -39,8 +39,7 @@ public class ProcessDestroyerTest extends TestCase {
     }
 
     public void testProcessDestroyer(){
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
             return;
         }
 

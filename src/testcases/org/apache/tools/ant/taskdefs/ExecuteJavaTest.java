@@ -23,8 +23,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
 /**
@@ -128,14 +126,6 @@ public class ExecuteJavaTest extends TestCase {
         if (classpath == null) {
             System.err.println("WARNING: 'build.tests' property is not available !");
             classpath = System.getProperty("java.class.path");
-        }
-
-        // JDK 1.1 needs classes.zip in -classpath argument
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            classpath +=   File.pathSeparator
-                + System.getProperty("java.home")
-                + File.separator + "lib"
-                + File.separator + "classes.zip";
         }
 
         return classpath;

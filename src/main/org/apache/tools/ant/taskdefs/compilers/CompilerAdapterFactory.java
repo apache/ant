@@ -62,8 +62,7 @@ public class CompilerAdapterFactory {
         throws BuildException {
             boolean isClassicCompilerSupported = true;
             //as new versions of java come out, add them to this test
-            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
-                && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
                 && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
                 isClassicCompilerSupported = false;
             }

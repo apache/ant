@@ -332,12 +332,10 @@ public class Coverage extends CovBase {
         // check for info, do your best to select the java executable.
         // JProbe 3.0 fails if there is no javaexe option. So
         if (javaExe == null && (vm == null || "java2".equals(vm))) {
-            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-                if (vm == null) {
-                    vm = "java2";
-                }
-                javaExe = new File(JavaEnvUtils.getJreExecutable("java"));
+            if (vm == null) {
+                vm = "java2";
             }
+            javaExe = new File(JavaEnvUtils.getJreExecutable("java"));
         }
     }
 

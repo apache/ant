@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
-import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.Javac12;
 import org.apache.tools.ant.taskdefs.compilers.Javac13;
 import org.apache.tools.ant.taskdefs.compilers.JavacExternal;
@@ -189,8 +188,7 @@ public class JavacTest extends TestCase {
     }
 
     public void testCompilerAdapter() {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
             javac.setCompiler("javac1.1");
         } else {
@@ -201,8 +199,7 @@ public class JavacTest extends TestCase {
         CompilerAdapter adapter =
             CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
 
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
             assertTrue(adapter instanceof Javac12);
         } else {

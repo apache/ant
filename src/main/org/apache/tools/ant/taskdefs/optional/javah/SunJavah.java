@@ -24,7 +24,7 @@ import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.optional.Javah;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.JavaEnvUtils;
+
 
 /**
  * Adapter to com.sun.tools.javah.oldjavah.Main or com.sun.tools.javah.Main.
@@ -83,25 +83,18 @@ public class SunJavah implements JavahAdapter {
             cmd.createArgument().setPath(javah.getClasspath());
         }
 
-        // JDK1.1 is rather simpler than JDK1.2
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            if (javah.getVerbose()) {
-                cmd.createArgument().setValue("-v");
-            }
-        } else {
-            if (javah.getVerbose()) {
-                cmd.createArgument().setValue("-verbose");
-            }
-            if (javah.getOld()) {
-                cmd.createArgument().setValue("-old");
-            }
-            if (javah.getForce()) {
-                cmd.createArgument().setValue("-force");
-            }
-            if (javah.getStubs() && !javah.getOld()) {
-                throw new BuildException("stubs only available in old mode.", 
-                                         javah.getLocation());
-            }
+        if (javah.getVerbose()) {
+            cmd.createArgument().setValue("-verbose");
+        }
+        if (javah.getOld()) {
+            cmd.createArgument().setValue("-old");
+        }
+        if (javah.getForce()) {
+            cmd.createArgument().setValue("-force");
+        }
+        if (javah.getStubs() && !javah.getOld()) {
+            throw new BuildException("stubs only available in old mode.", 
+                                     javah.getLocation());
         }
 
         if (javah.getStubs()) {

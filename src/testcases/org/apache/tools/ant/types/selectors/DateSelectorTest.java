@@ -19,16 +19,12 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.text.SimpleDateFormat;
 import java.text.ParsePosition;
 import java.util.Date;
 
-import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
 
 /**
  * Tests Date Selectors.
@@ -170,47 +166,45 @@ public class DateSelectorTest extends BaseSelectorTest {
             results = selectionString(s);
             assertEquals("TTTTTTTTTTTT", results);
 
-            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-                s = (DateSelector)getInstance();
-                s.setDatetime("11/21/2001 4:54 AM");
-                s.setWhen(before);
-                results = selectionString(s);
-                assertEquals("TFTFFFFFFFFT", results);
+            s = (DateSelector)getInstance();
+            s.setDatetime("11/21/2001 4:54 AM");
+            s.setWhen(before);
+            results = selectionString(s);
+            assertEquals("TFTFFFFFFFFT", results);
 
-                s = (DateSelector)getInstance();
-                s.setDatetime("11/21/2001 4:55 AM");
-                SimpleDateFormat formatter = new SimpleDateFormat();
-                Date d = formatter.parse("11/21/2001 4:55 AM",new ParsePosition(0));
+            s = (DateSelector)getInstance();
+            s.setDatetime("11/21/2001 4:55 AM");
+            SimpleDateFormat formatter = new SimpleDateFormat();
+            Date d = formatter.parse("11/21/2001 4:55 AM",new ParsePosition(0));
 
-                long milliseconds = s.getMillis();
-                s.setWhen(equal);
-                results = selectionString(s);
-                assertEquals("TTFFTFFFTTTT", results);
+            long milliseconds = s.getMillis();
+            s.setWhen(equal);
+            results = selectionString(s);
+            assertEquals("TTFFTFFFTTTT", results);
 
-                s = (DateSelector)getInstance();
-                s.setMillis(milliseconds);
-                s.setWhen(equal);
-                results = selectionString(s);
-                assertEquals("TTFFTFFFTTTT", results);
+            s = (DateSelector)getInstance();
+            s.setMillis(milliseconds);
+            s.setWhen(equal);
+            results = selectionString(s);
+            assertEquals("TTFFTFFFTTTT", results);
 
-                s = (DateSelector)getInstance();
-                s.setDatetime("11/21/2001 4:56 AM");
-                s.setWhen(after);
-                results = selectionString(s);
-                assertEquals("TFFTFTTTFFFT", results);
+            s = (DateSelector)getInstance();
+            s.setDatetime("11/21/2001 4:56 AM");
+            s.setWhen(after);
+            results = selectionString(s);
+            assertEquals("TFFTFTTTFFFT", results);
 
-                s = (DateSelector)getInstance();
-                Parameter param1 = new Parameter();
-                Parameter param2 = new Parameter();
-                param1.setName("datetime");
-                param1.setValue("11/21/2001 4:56 AM");
-                param2.setName("when");
-                param2.setValue("after");
-                Parameter[] params = {param1,param2};
-                s.setParameters(params);
-                results = selectionString(s);
-                assertEquals("TFFTFTTTFFFT", results);
-            }
+            s = (DateSelector)getInstance();
+            Parameter param1 = new Parameter();
+            Parameter param2 = new Parameter();
+            param1.setName("datetime");
+            param1.setValue("11/21/2001 4:56 AM");
+            param2.setName("when");
+            param2.setValue("after");
+            Parameter[] params = {param1,param2};
+            s.setParameters(params);
+            results = selectionString(s);
+            assertEquals("TFFTFTTTFFFT", results);
             try {
                 makeMirror();
 

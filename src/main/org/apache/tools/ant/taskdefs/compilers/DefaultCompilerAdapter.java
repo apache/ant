@@ -529,11 +529,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * @since Ant 1.5
      */
     protected boolean assumeJava11() {
-        return "javac1.1".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
+        return "javac1.1".equals(attributes.getCompilerVersion());
     }
 
     /**

@@ -69,15 +69,8 @@ public class JavaEnvUtilsTest extends TestCase {
                     FILE_UTILS.normalize(javaHome+"/..").getAbsolutePath();
                 assertTrue(j+" is normalized and in the JDK dir",
                            j.startsWith(javaHomeParent));
-
-                if (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_0 ||
-                    JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1) {
-                    assertTrue(j+" is normalized and in the JRE dir",
-                               j.startsWith(javaHome));
-                } else {
-                    assertTrue(j+" is normalized and not in the JRE dir",
-                               !j.startsWith(javaHome));
-                }
+                assertTrue(j+" is normalized and not in the JRE dir",
+                           !j.startsWith(javaHome));
 
             } catch (AssertionFailedError e) {
                 // java.home is bogus
@@ -117,9 +110,7 @@ public class JavaEnvUtilsTest extends TestCase {
             assertTrue(j+" is normalized and in the JDK dir",
                        j.startsWith(javaHomeParent));
 
-            if (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_0 ||
-                JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1 ||
-                Os.isFamily("mac")) {
+            if (Os.isFamily("mac")) {
                 assertTrue(j+" is normalized and in the JRE dir",
                            j.startsWith(javaHome));
             } else {

@@ -31,8 +31,7 @@ import org.apache.commons.net.ftp.FTPClient;
 
 public class FTPTest extends BuildFileTest{
     // keep track of what operating systems are supported here.
-    private boolean supportsSymlinks = Os.isFamily("unix")
-        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
+    private boolean supportsSymlinks = Os.isFamily("unix");
 
     private FTPClient ftp;
     private boolean connectionSucceeded = true;
