@@ -172,7 +172,7 @@ public class SelectSelector extends BaseSelectorContainer {
         int cnt = selectorCount();
         if (cnt < 0 || cnt > 1) {
             setError("Only one selector is allowed within the " +
-                    "<select> tag");
+                     "<selector> tag");
         }
     }
 
@@ -181,14 +181,14 @@ public class SelectSelector extends BaseSelectorContainer {
      * on it with <code>if</code> and <code>unless</code>.
      */
     public boolean passesConditions() {
-            if (ifProperty != null &&
-                    getProject().getProperty(ifProperty) == null) {
-                return false;
-            } else if (unlessProperty != null &&
-                    getProject().getProperty(unlessProperty) != null) {
-                return false;
-            }
-            return true;
+        if (ifProperty != null &&
+            getProject().getProperty(ifProperty) == null) {
+            return false;
+        } else if (unlessProperty != null &&
+                   getProject().getProperty(unlessProperty) != null) {
+            return false;
+        }
+        return true;
     }
 
     /**
