@@ -161,6 +161,9 @@ Other changes:
 
 * added a new mapper <filtermapper>
 
+* The jikes compiler adapter now supports -bootclasspath.  Bugzilla
+  Report 32609.
+
 Fixed bugs:
 -----------
 
