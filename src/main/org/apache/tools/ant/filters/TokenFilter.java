@@ -355,7 +355,7 @@ public class TokenFilter
          */
         
         public void setIncludeDelims(boolean includeDelims) {
-            this.includeDelims = true;
+            this.includeDelims = includeDelims;
         }
         
         public String getToken(Reader in)
