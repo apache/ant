@@ -60,36 +60,65 @@ import java.util.*;
 
 /**
  * Replaces all the occurrences of the given string token with the given
- * string value of the indicated file.
+ * string value of the indicated files.
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
-public class Replace extends Task {
+public class Replace extends MatchingTask {
     
     private File src = null;
-    private File dest = null;
     private String token = null;
     private String value = "";
+
+    private File dir = null;
     
     /**
      * Do the execution.
      */
     public void execute() throws BuildException {
         
+        if (token == null) {
+            throw new BuildException("replace token must not be null");
+        }
+
+        if (src == null && dir == null) {
+            throw new BuildException("Either the file or the dir attribute must be specified");
+        }
+        
         project.log("Replacing " + token + " --> " + value);
-        
-        if (src == null || token == null ) {
-            project.log("File and token must not be null");
-            return;            
+
+        if (src != null) {
+            processFile(src);
         }
         
-        if (dest == null) {
-            throw new BuildException("Error creating temp file.");
+        if (dir != null) {
+	    DirectoryScanner ds = super.getDirectoryScanner(dir);
+            String[] srcs = ds.getIncludedFiles();
+
+            for(int i=0; i<srcs.length; i++) {
+                File file = new File(dir,srcs[i]); 
+                processFile(file);
+            }
         }
-                
+    }
+
+    /**
+     * Perform the replacement on the given file.
+     *
+     * The replacement is performed on a temporary file which then replaces the original file.
+     *
+     * @param src the source file
+     */
+    private void processFile(File src) throws BuildException {
+        File temp = new File(src.getPath() + ".temp");
+
+        if (temp.exists()) {
+            throw new BuildException("Replace: temporary file " + temp.getPath() + " already exists");
+        }
+
         try {
             BufferedReader br = new BufferedReader(new FileReader(src));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(dest));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
 
             String line;
             
@@ -105,18 +134,26 @@ public class Replace extends Task {
             br.close();
             
             src.delete();
-            dest.renameTo(src);
+            temp.renameTo(src);
         } catch (IOException ioe) {
             ioe.printStackTrace();
+            throw new BuildException(ioe);
         }       
     }
-    
+
+
     /**
      * Set the source file.
      */
     public void setFile(String file) {
         this.src = project.resolveFile(file);
-        this.dest = project.resolveFile(file + ".temp");
+    }
+
+    /**
+     * Set the source files path when using matching tasks.
+     */
+    public void setDir(String dirName) {
+        dir = project.resolveFile(dirName);
     }
 
     /**
