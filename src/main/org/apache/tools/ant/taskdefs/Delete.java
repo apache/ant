@@ -459,7 +459,7 @@ public class Delete extends MatchingTask {
                 } else {
                     log("Deleting: " + file.getAbsolutePath());
 
-                    if (!file.delete()) {
+                    if (!delete(file)) {
                         String message = "Unable to delete file "
                             + file.getAbsolutePath();
                         if (failonerror) {
@@ -534,7 +534,23 @@ public class Delete extends MatchingTask {
 //************************************************************************
 //  protected and private methods
 //************************************************************************
-
+    /**
+     * Attempt to fix possible race condition when deleting
+     * files on WinXP. If the delete does not work,
+     * wait a little and try again.
+     */
+    private boolean delete(File f) {
+        if (! f.delete()) {
+            try {
+                Thread.sleep(10);
+                return f.delete();
+            } catch (InterruptedException ex) {
+                return f.delete();
+            }
+        }
+        return true;
+    }
+    
     protected void removeDir(File d) {
         String[] list = d.list();
         if (list == null) {
@@ -547,7 +563,7 @@ public class Delete extends MatchingTask {
                 removeDir(f);
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!f.delete()) {
+                if (!delete(f)) {
                     String message = "Unable to delete file "
                         + f.getAbsolutePath();
                     if (failonerror) {
@@ -560,7 +576,7 @@ public class Delete extends MatchingTask {
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
-        if (!d.delete()) {
+        if (!delete(d)) {
             String message = "Unable to delete directory "
                 + dir.getAbsolutePath();
             if (failonerror) {
@@ -586,7 +602,7 @@ public class Delete extends MatchingTask {
             for (int j = 0; j < files.length; j++) {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!f.delete()) {
+                if (!delete(f)) {
                     String message = "Unable to delete file "
                         + f.getAbsolutePath();
                     if (failonerror) {
@@ -606,7 +622,7 @@ public class Delete extends MatchingTask {
                 String[] dirFiles = dir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
                     log("Deleting " + dir.getAbsolutePath(), verbosity);
-                    if (!dir.delete()) {
+                    if (!delete(dir)) {
                         String message = "Unable to delete directory "
                                 + dir.getAbsolutePath();
                         if (failonerror) {
