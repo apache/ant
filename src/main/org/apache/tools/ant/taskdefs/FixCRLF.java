@@ -60,12 +60,18 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
-import java.io.File;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -84,6 +90,7 @@ import java.util.NoSuchElementException;
  * <li>eol
  * <li>tab
  * <li>eof
+ * <li>encoding
  * </ul>
  * Of these arguments, only <b>sourcedir</b> is required.
  * <p>
@@ -149,6 +156,11 @@ public class FixCRLF extends MatchingTask {
     private File destDir = null;
 
     private FileUtils fileUtils = FileUtils.newFileUtils();
+
+    /**
+     * Encoding to assume for the files
+     */
+    private String encoding = null;
 
     /**
      * Defaults the properties based on the system type.
@@ -316,6 +328,15 @@ public class FixCRLF extends MatchingTask {
             ctrlz = ADD;
         }
     }
+
+    /**
+     * Specifies the encoding Ant expects the files to be in -
+     * defaults to the platforms default encoding.
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
     /**
      * Executes the task.
      */
@@ -346,7 +367,8 @@ public class FixCRLF extends MatchingTask {
             (eol==ASIS ? "asis" : eol==CR ? "cr" : eol==LF ? "lf" : "crlf") +
             " tab=" + (tabs==TABS ? "add" : tabs==ASIS ? "asis" : "remove") +
             " eof=" + (ctrlz==ADD ? "add" : ctrlz==ASIS ? "asis" : "remove") +
-            " tablength=" + tablength,
+            " tablength=" + tablength +
+            " encoding=" + (encoding == null ? "default" : encoding),
             Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
@@ -356,6 +378,16 @@ public class FixCRLF extends MatchingTask {
             processFile(files[i]);
         }
     }
+
+    /**
+     * Creates a Reader reading from a given file an taking the user
+     * defined encoding into account.
+     */
+    private Reader getReader(File f) throws IOException {
+        return (encoding == null) ? new FileReader(f)
+            : new InputStreamReader(new FileInputStream(f), encoding);    
+    }
+
 
     /**
      * Checks for the inequality of two files
@@ -373,9 +405,9 @@ public class FixCRLF extends MatchingTask {
         
         try {
              reader1 = new BufferedReader
-                     (new FileReader(file1), INBUFLEN);
+                     (getReader(file1), INBUFLEN);
              reader2 = new BufferedReader
-                     (new FileReader(file2), INBUFLEN);
+                     (getReader(file2), INBUFLEN);
              while ((buflen = reader1.read(buf1, 0, INBUFLEN)) != -1 ) {
                  reader2.read(buf2, 0, INBUFLEN);
                  // Compare the contents of the buffers
@@ -414,7 +446,8 @@ public class FixCRLF extends MatchingTask {
             // Set up the output Writer
             try {
                 tmpFile = fileUtils.createTempFile("fixcrlf", "", destD);
-                FileWriter writer = new FileWriter(tmpFile);
+                Writer writer = (encoding == null) ? new FileWriter(tmpFile)
+                    : new OutputStreamWriter(new FileOutputStream(tmpFile), encoding);    
                 outWriter = new BufferedWriter(writer);
             } catch (IOException e) {
                 throw new BuildException(e);
@@ -820,7 +853,7 @@ public class FixCRLF extends MatchingTask {
         {
             try {
                 reader = new BufferedReader
-                        (new FileReader(srcFile), INBUFLEN);
+                        (getReader(srcFile), INBUFLEN);
                 nextLine();
             } catch (IOException e) {
                 throw new BuildException(e);

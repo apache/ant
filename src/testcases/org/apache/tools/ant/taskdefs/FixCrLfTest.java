@@ -159,6 +159,12 @@ public class FixCrLfTest extends TaskdefsTest {
         assertEquals(modTime, result.lastModified());
     }
 
+    public void testEncoding() throws IOException { 
+        executeTarget("testEncoding");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/input.lf.utf16"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/input.crlf.utf16"));
+    }
+    
     public void assertEqualContent(File expect, File result) 
         throws AssertionFailedError, IOException {
         if (!result.exists()) {
