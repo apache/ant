@@ -71,17 +71,18 @@ public abstract class BaseFilterReader
     /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
-    /** The Ant project */
+    /** The Ant project this filter is part of. */
     private Project project = null;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor used by Ant's introspection mechanism.
+     * The original filter reader is only used for chaining
+     * purposes, never for filtering purposes (and indeed
+     * it would be useless for filtering purposes, as it has
+     * no real data to filter). ChainedReaderHelper uses
+     * this placeholder instance to create a chain of real filters.
      */
     public BaseFilterReader() {
-        // Dummy constructor to be invoked by Ant's Introspector
         super(new StringReader(new String()));
         try {
             close();
