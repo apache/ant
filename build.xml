@@ -27,6 +27,7 @@
   <property name="chmod.fail" value="true" />
   <property name="deprecation" value="false" />
   <property name="optimize" value="true" />
+  <property name="javac.target" value="1.1" />
   <property name="junit.fork" value="false" />
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
@@ -560,6 +561,7 @@
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
+           target="${javac.target}"
            optimize="${optimize}" >
       <classpath refid="classpath" />
 
@@ -1154,6 +1156,7 @@
     <javac srcdir="${tests.dir}"
            destdir="${build.tests}"
            debug="${debug}"
+           target="${javac.target}"
            deprecation="${deprecation}" >
       <classpath refid="tests-classpath" />
 
