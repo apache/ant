@@ -43,6 +43,8 @@ import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.components.workspace.Workspace;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * The class to kick the tires and light the fires.
@@ -54,6 +56,9 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class CLIMain
     extends AbstractLoggable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( CLIMain.class );
+
     //defines for the Command Line options
     private static final int       HELP_OPT                  = 'h';
     private static final int       QUIET_OPT                 = 'q';
@@ -112,7 +117,9 @@ public class CLIMain
         try { main.execute( args ); }
         catch( final Throwable throwable )
         {
-            System.err.println( "Error: " + ExceptionUtil.printStackTrace( throwable ) );
+            final String message = 
+                REZ.getString( "error-message", ExceptionUtil.printStackTrace( throwable ) );
+            System.err.println( message ); 
             System.exit( -1 );
         }
 
@@ -137,89 +144,78 @@ public class CLIMain
     {
         //TODO: localise
         final CLOptionDescriptor[] options = new CLOptionDescriptor[ 13 ];
-
         options[0] =
             new CLOptionDescriptor( "help",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     HELP_OPT,
-                                    "display this help message",
+                                    REZ.getString( "help.opt" ),
                                     INFO_OPT_INCOMPAT );
-
         options[1] =
             new CLOptionDescriptor( "file",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     FILE_OPT,
-                                    "the build file." );
-
+                                    REZ.getString( "file.opt" ) );
         options[2] =
             new CLOptionDescriptor( "log-level",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LOG_LEVEL_OPT,
-                                    "the verbosity level at which to log messages. " +
-                                    "(DEBUG|INFO|WARN|ERROR|FATAL_ERROR)",
+                                    REZ.getString( "log-level.opt" ),
                                     LOG_OPT_INCOMPAT );
-
         options[3] =
             new CLOptionDescriptor( "quiet",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     QUIET_OPT,
-                                    "equivelent to --log-level=FATAL_ERROR",
+                                    REZ.getString( "quiet.opt" ),
                                     LOG_OPT_INCOMPAT );
-
         options[4] =
             new CLOptionDescriptor( "verbose",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     VERBOSE_OPT,
-                                    "equivelent to --log-level=INFO",
+                                    REZ.getString( "verbose.opt" ),
                                     LOG_OPT_INCOMPAT );
-
         options[5] =
             new CLOptionDescriptor( "listener",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LISTENER_OPT,
-                                    "the listener for log events." );
-
+                                    REZ.getString( "listener.opt" ) );
         options[6] =
             new CLOptionDescriptor( "version",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     VERSION_OPT,
-                                    "display version",
+                                    REZ.getString( "version.opt" ),
                                     INFO_OPT_INCOMPAT );
 
         options[7] =
             new CLOptionDescriptor( "task-lib-dir",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     TASKLIB_DIR_OPT,
-                                    "the task lib directory to scan for .tsk files." );
+                                    REZ.getString( "tasklib.opt" ) );
         options[8] =
             new CLOptionDescriptor( "incremental",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     INCREMENTAL_OPT,
-                                    "Run in incremental mode" );
+                                    REZ.getString( "incremental.opt" ) );
         options[9] =
             new CLOptionDescriptor( "myrmidon-home",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     HOME_DIR_OPT,
-                                    "Specify myrmidon home directory" );
+                                    REZ.getString( "home.opt" ) );
         options[10] =
             new CLOptionDescriptor( "define",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     DEFINE_OPT,
-                                    "Define a variable (ie -Dfoo=var)",
+                                    REZ.getString( "define.opt" ),
                                     new int[ 0 ] );
-
         options[11] =
             new CLOptionDescriptor( "builder-parameter",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     BUILDER_PARAM_OPT,
-                                    "Define a builder parameter (ie -Bfoo=var)" );
-
+                                    REZ.getString( "build.opt" ) );
         options[12] =
             new CLOptionDescriptor( "dry-run",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     DRY_RUN_OPT,
-                                    "Do not execute tasks - just print them out" );
-
+                                    REZ.getString( "dry-run.opt" ) );
         return options;
     }
 
@@ -230,7 +226,8 @@ public class CLIMain
 
         if( null != parser.getErrorString() )
         {
-            System.err.println( "Error: " + parser.getErrorString() );
+            final String message = REZ.getString( "error-message", parser.getErrorString() );
+            System.err.println( message );
             return false;
         }
 
@@ -306,22 +303,33 @@ public class CLIMain
         final File homeDir = (new File( home )).getAbsoluteFile();
         if( !homeDir.isDirectory() )
         {
-            throw new Exception( "myrmidon-home (" + homeDir + ") is not a directory" );
+            final String message = REZ.getString( "home-not-dir.error", homeDir );
+            throw new Exception( message );
         }
 
         final String filename = m_parameters.getParameter( "filename", null );
         final File buildFile = (new File( filename )).getCanonicalFile();
         if( !buildFile.isFile() )
         {
-            throw new Exception( "File " + buildFile + " is not a file or doesn't exist" );
+            final String message = REZ.getString( "bad-file.error", buildFile );
+            throw new Exception( message );
         }
 
         //handle listener..
         final String listenerName = m_parameters.getParameter( "listener", null );
         final ProjectListener listener = createListener( listenerName );
 
-        getLogger().warn( "Ant Build File: " + buildFile );
-        getLogger().info( "Ant Home Directory: " + homeDir );
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = REZ.getString( "buildfile.notice", buildFile );
+            getLogger().warn( message );
+        }
+
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = REZ.getString( "homedir.notice", homeDir );
+            getLogger().info( message );
+        }
         //getLogger().info( "Ant Bin Directory: " + m_binDir );
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
@@ -356,7 +364,8 @@ public class CLIMain
 
             if( !incremental ) break;
 
-            System.out.println( "Continue ? (Enter no to stop)" );
+            final String message = REZ.getString( "repeat.notice" );
+            System.out.println( message );
 
             if( null == reader )
             {
@@ -403,8 +412,9 @@ public class CLIMain
         }
         catch( final TaskException ae )
         {
-            getLogger().error( "BUILD FAILED" );
-            getLogger().error( "Reason:\n" + ExceptionUtil.printStackTrace( ae, 5, true ) );
+            final String message = 
+                REZ.getString( "build-failed.error", ExceptionUtil.printStackTrace( ae, 5, true ) );
+            getLogger().error( message );
         }
     }
 
@@ -423,7 +433,8 @@ public class CLIMain
 
         if( !priority.getName().equals( logLevelCapitalized ) )
         {
-            throw new Exception( "Unknown log level - " + logLevel );
+            final String message = REZ.getString( "bad-loglevel.error", logLevel );
+            throw new Exception( message );
         }
 
         final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
@@ -448,8 +459,11 @@ public class CLIMain
         try { return (ProjectListener)Class.forName( listener ).newInstance(); }
         catch( final Throwable t )
         {
-            throw new Exception( "Error creating the listener " + listener +
-                                 " due to " + ExceptionUtil.printStackTrace( t, 5, true ) );
+            final String message = 
+                REZ.getString( "bad-listener.error", 
+                               listener, 
+                               ExceptionUtil.printStackTrace( t, 5, true ) );
+            throw new Exception( message );
         }
     }
 
