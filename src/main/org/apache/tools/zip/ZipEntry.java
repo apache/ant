@@ -234,6 +234,15 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
+     * Unix permission.
+     *
+     * @since Ant 1.6
+     */
+    public int getUnixMode() {
+        return (int) ((getExternalAttributes() >> 16) & 0xFFFF);
+    }
+
+    /**
      * Platform specification to put into the &quot;version made
      * by&quot; part of the central file header.
      *
@@ -402,6 +411,13 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public String getName() {
         return name == null ? super.getName() : name;
+    }
+
+    /**
+     * @since 1.10
+     */
+    public boolean isDirectory() {
+	return getName().endsWith("/");
     }
 
     protected void setName(String name) {
