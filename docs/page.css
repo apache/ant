@@ -11,7 +11,20 @@ a:visited { color: #009999; }
 a:active { color: #000066; }
 a:hover { color: #000066; }
 
-.menu { background-color: #4C6C8F; margin: 0px; padding: 3px 8px 5px 3px;  font-size : 90%;  }
+.menucontainer {
+    float: left; 
+    background-color: #4C6C8F; 
+    margin: 0px 5px; 
+    width: 250px; 
+}
+
+.menu {
+    font-size : 90%; 
+    padding: 3px 8px 5px 3px; 
+    border-right: 1px solid #294563;
+    border-left: 1px solid #294563;
+}
+
 .menu a:link { color: #FFFFFF;  text-decoration : none;  }
 .menu a:visited { color: #FFFFFF; text-decoration : none; }
 .menu a:hover { color: #FFCC00; text-decoration : none; }
@@ -31,7 +44,13 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 .pre { white-space: pre;}
 .nowrap { white-space: nowrap;}
 
-.content { padding: 5px 5px 5px 10px; font : small Verdana, Helvetica, sans-serif;  font-size : 90%; }
+.content { 
+    padding: 5px 5px 5px 10px; 
+    font : small Verdana, Helvetica, sans-serif;  
+    font-size : 90%; 
+    margin-left: 280px;
+}
+
 .content .ForrestTable { width: 100%; background-color: #7099C5; color: #ffffff; font-size : 90%;}
 .content .ForrestTable caption { text-align: left; color: black; font-weight: bold; }
 .content .ForrestTable th { text-align: center; }
@@ -114,6 +133,14 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
     text-align: center;
     margin: 0px;
     border-top: thin solid #4C6C8F; 
+}
+
+.bluebar {
+    padding: 5px 5px 5px 10px; 
+    background-color: #CFDCED;
+    margin: 0px;
+    border-top: 1px solid #294563; 
+    border-bottom: 1px solid #294563;
 }
 
 

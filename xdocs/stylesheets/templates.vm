@@ -215,25 +215,32 @@
 #end
 
 #macro (makeProject $menus)
-  <div class="menu"><ul>
-  #foreach ( $menu in $menus )
-    <li><font color="$blue1">$menu.getAttributeValue("name")</font>
+
+  <div class="menucontainer">
+    <div class="menu">
       <ul>
-    #foreach ( $item in $menu.getChildren() )
-      #set ($name = $item.getAttributeValue("name"))
-      #set ($current = $root.getChild("properties").getChild("title").getText() )
-        <li>
-      #if ( $current.trim().equals( $name ) )
-        <span class="sel"><font color="$active">$name</font></span>
-      #else
-        #projectanchor($name $item.getAttributeValue("href"))
-      #end
+      #foreach ( $menu in $menus )
+        <li><font color="$blue1">$menu.getAttributeValue("name")</font>
+          <ul>
+            #foreach ( $item in $menu.getChildren() )
+              #set ($name = $item.getAttributeValue("name"))
+              #set ($current = $root.getChild("properties").getChild("title").getText() )
+                <li>
+              #if ( $current.trim().equals( $name ) )
+                <span class="sel"><font color="$active">$name</font></span>
+              #else
+                #projectanchor($name $item.getAttributeValue("href"))
+              #end
+                </li>
+            #end
+          </ul>
         </li>
-    #end
+      #end
       </ul>
-    </li>
-  #end
-  </ul></div>
+    </div>
+    <img style="float: left" height="10" width="10" border="0" alt="" src="$relativePath/images/menu-left.gif">
+    <img style="float: right" height="10" width="10" border="0" alt="" src="$relativePath/images/menu-right.gif">
+  </div>  
 #end
 
 #macro (header)
@@ -294,80 +301,11 @@
         </tr>
       </table>
 
-      <table summary="page content" bgcolor="$lightbg" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td valign="top">
-            <table summary="menu" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td rowspan="3" valign="top">
-                  <table summary="blue line" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="$blue1"><font color="$blue2" size="4" face="Arial, Helvetica, Sans-serif">&nbsp;</font></td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-                    </tr>
-                  </table>
-                </td>
-                <td bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-                <td valign="bottom" bgcolor="$blue2"><img width="10" height="10" alt="" src="$relativePath/images/spacer.gif"></td>
-                <td nowrap="nowrap" valign="top" bgcolor="$blue2">
-                    #makeMainNavigation()
-                </td>
-                <td valign="bottom" bgcolor="$blue2"><img width="10" height="10" alt="" src="$relativePath/images/spacer.gif"></td>
-                <td bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-              </tr>
-              <tr>
-                <td valign="bottom" align="left" colspan="2" rowspan="2" bgcolor="$blue2">
-                    <img height="10" width="10" border="0" alt="" src="$relativePath/images/menu-left.gif">
-                </td>
-                <td bgcolor="$blue2"><img height="10" width="10" border="0" alt="" src="$relativePath/images/spacer.gif"></td>
-                <td valign="bottom" align="right" colspan="2" rowspan="2" bgcolor="$blue2">
-                    <img height="10" width="10" border="0" alt="" src="$relativePath/images/menu-right.gif">
-                </td>
-              </tr>
-              <tr>
-                <td height="1" bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-              </tr>
-            </table>
-          </td><td valign="top" width="100%">
-            <table summary="content" width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <td colspan="4" bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-              </tr>
-              <tr>
-                <td align="left" width="10" bgcolor="$blue1"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-                <td align="left" width="50%" bgcolor="$blue1"><font color="$blue2" size="3" face="Arial, Helvetica, Sans-serif">
-                &nbsp;
-                </font><img width="10" height="8" alt="" src="$relativePath/images/spacer.gif"></td>
-                <td align="right" width="50%" bgcolor="$blue1">
-                    <font color="$blue2" size="3" face="Arial, Helvetica, Sans-serif">
-                        &nbsp;
-                    </font>
-                    <img width="10" height="8" alt="" src="$relativePath/images/spacer.gif">
-                </td>
-                <td width="10" bgcolor="$blue1"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-              </tr>
-              <tr>
-                <td colspan="4" bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
-              </tr>
-              <tr>
-                <td align="left" width="10"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td><td align="left" width="100%">
-                  <div class="content">
+      #makeMainNavigation()
+      <div class="bluebar">&nbsp;</div>
 #end
 
 #macro (footer)
-                  </div>
-                </td><td width="10"><img width="10" height="4" alt="" src="$relativePath/images/spacer.gif"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-      
       <p class="copyright">
         Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.
         <script type="text/javascript" language="JavaScript"><!--

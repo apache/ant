@@ -150,6 +150,7 @@
 
 #macro (document)
   #header()
+  <div class="content">
     <h1 class="title">$root.getChild("properties").getChild("title").getText()</h1>
   #set ($allSections = $root.getChild("body").getChildren("section"))
   #foreach ( $section in $allSections )
@@ -168,6 +169,7 @@
       #answers ($faqSection)
     #end
   #end
+  </div>
 
   #footer()
 #end
