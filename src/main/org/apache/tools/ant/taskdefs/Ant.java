@@ -24,9 +24,11 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.Set;
 import java.util.HashSet;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
@@ -147,10 +149,9 @@ public class Ant extends Task {
     private void initializeProject() {
         newProject.setInputHandler(getProject().getInputHandler());
 
-        Vector listeners = getProject().getBuildListeners();
-        final int count = listeners.size();
-        for (int i = 0; i < count; i++) {
-            newProject.addBuildListener((BuildListener) listeners.elementAt(i));
+        Iterator iter = getBuildListeners();
+        while (iter.hasNext()) {
+            newProject.addBuildListener((BuildListener) iter.next());
         }
 
         if (output != null) {
@@ -390,6 +391,20 @@ public class Ant extends Task {
             }
         } finally {
             // help the gc
+            Iterator iter = getBuildListeners();
+            while (iter.hasNext()) {
+                newProject.removeBuildListener((BuildListener) iter.next());
+            }
+            iter = newProject.getBuildListeners().iterator();
+            while (iter.hasNext()) {
+                Object o = iter.next();
+                if (o instanceof RecorderEntry) {
+                    ((RecorderEntry) o).close();
+                } else if (o instanceof AntClassLoader) {
+                    ((AntClassLoader) o).cleanup();
+                }
+            }
+            
             newProject = null;
             Enumeration e = properties.elements();
             while (e.hasMoreElements()) {
@@ -644,6 +659,13 @@ public class Ant extends Task {
      */
     public void addPropertyset(PropertySet ps) {
         propertySets.addElement(ps);
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    private Iterator getBuildListeners() {
+        return getProject().getBuildListeners().iterator();
     }
 
     /**

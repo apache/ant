@@ -99,8 +99,7 @@ public class RecorderEntry implements BuildLogger {
                  + StringUtils.LINE_SEP);
             error.printStackTrace(out);
         }
-        out.flush();
-        out.close();
+        close();
     }
 
 
@@ -207,6 +206,14 @@ public class RecorderEntry implements BuildLogger {
                  + (seconds % 60 == 1 ? "" : "s");
         }
 
+    }
+
+    /**
+     * @since 1.6.2
+     */
+    public void close() {
+        out.flush();
+        out.close();
     }
 }
 
