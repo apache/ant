@@ -72,8 +72,6 @@ public class FilterSetTest extends TaskdefsTest {
 
     static private final int BUF_SIZE = 32768;
     
-    private Project project;
-
     public FilterSetTest(String name) {
         super(name);
     }
