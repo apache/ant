@@ -16,22 +16,24 @@ Library Dependencies</a> for more information.</p>
 <h3>Requirements</h3>
 
 <p>The task needs Apache <a
-href="http://xml.apache.org/xalan-j/">Xalan 2.x or Xalan XSLTC</a>
+href="http://xml.apache.org/xalan-j/">Xalan 2.4.1+ or Xalan XSLTC</a>
 (JDK 1.4 contains a version of Xalan-J 2.x while JDK 1.5 ships with a
-version of XSLTC).  Versions prior to Ant 1.6.2 worked with Apache <a
-href="http://archive.apache.org/dist/xml/xalan-j/">Xalan
-1.2.2</a>, but as Xalan1 is no longer supported, we do not recommend
-this.  With Ant 1.6.2 we had to decide between supporting Xalan-J 1
-and XSLTC, since there was no way to support both at the same
-time.</p>
+version of XSLTC). Starting from JDK 1.4.2-01 it ships with a bundled
+Xalan-J 2.4.1+, meaning that JDK version prior to 1.4.2-01 won't work
+out of the box. The table below summarize the compatibility status. 
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr><th>Xalan</th><th>Sun JDK Bundle</th><th>Status<th></tr> 
+<tr><td>2.4.1+</td><td>JDK 1.4.2-01+</td><td>OK</td></tr>
+<tr><td>XSLTC</td><td>JDK 1.5.x</td><td>OK</td></tr>
+<tr><td>2.x</td><td>JDK 1.4.x</td><td>DEPRECATED<br /><i>Use ${ant.home}/etc/junit-frames-xalan1.xsl
+<br /> Upgrade Xalan using the JDK endorsement mechanism</i></td></tr>
+<tr><td>1.2</td><td>N/A</td><td>DEPRECATED<br /><i>Use ${ant.home}/etc/junit-frames-xalan1.xsl</i><td></tr> 
+</table>
 
-<p>If you want to use Xalan 1.2.2, the noframes report is still
-supposed to work.  If you want the frames support, copy the file
-junit-frames-xalan1.xsl from the Ant distribution's etc directory to a
-new directory, change its name to junit-frames.xsl and use the task's
-styledir attribute to point to it.  You will also need a compatible
-(older) version of Xerces.  as well as BSF(bsf.jar). Again, using
-Xalan 2 is simpler and supported.</p>
+<p>With Ant 1.6.2 we had to decide between supporting Xalan-J 1/Xalan J 2.4.1-
+and Xalan 2.4.1+/XSLTC, since there was no way to support both couples at the same
+time.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
