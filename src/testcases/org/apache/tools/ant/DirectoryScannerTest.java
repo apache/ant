@@ -115,6 +115,35 @@ public class DirectoryScannerTest extends BuildFileTest {
                                    "alpha/beta/gamma"});
     }
 
+    public void testFullPathMatchesCaseSensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/beta/gamma/GAMMA.XML"});
+        ds.scan();
+        compareFiles(ds, new String[] {}, new String[] {});
+    }
+
+    public void testFullPathMatchesCaseInsensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setCaseSensitive(false);
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/beta/gamma/GAMMA.XML"});
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                     new String[] {});
+    }
+
+    public void test2ButCaseInsesitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"ALPHA/"});
+        ds.setCaseSensitive(false);
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+
     // father and child pattern test
     public void testOrderOfIncludePatternsIrrelevant() {
         String [] expectedFiles = {"alpha/beta/beta.xml", 
