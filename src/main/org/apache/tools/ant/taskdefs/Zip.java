@@ -812,6 +812,10 @@ public class Zip extends MatchingTask {
                                                      initialResources[i],
                                                      myMapper,
                                                      getZipScanner());
+            if (doFilesonly) {
+                newerResources[i] = selectFileResources(newerResources[i]);
+            }
+            
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
@@ -1114,6 +1118,34 @@ public class Zip extends MatchingTask {
             }
         }
         return true;
+    }
+
+    /**
+     * Drops all non-file resources from the given array.
+     *
+     * @since Ant 1.6
+     */
+    protected Resource[] selectFileResources(Resource[] orig) {
+        if (orig.length == 0) {
+            return orig;
+        }
+        
+        Vector v = new Vector(orig.length);
+        for (int i = 0; i < orig.length; i++) {
+            if (!orig[i].isDirectory()) {
+                v.addElement(orig[i]);
+            } else {
+                log("Ignoring directory " + orig[i].getName() 
+                    + " as only files will be added.", Project.MSG_VERBOSE);
+            }
+        }
+
+        if (v.size() != orig.length) {
+            Resource[] r = new Resource[v.size()];
+            v.copyInto(r);
+            return r;
+        }
+        return orig;
     }
 
     /**

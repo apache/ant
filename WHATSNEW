@@ -112,6 +112,9 @@ Fixed bugs:
 * file names that include spaces need to be quoted inside the @argfile
   argument using forked <javac> and JDK 1.4.  Bugzilla Report 10499.
 
+* Setting filesonly to true in <zip> and related tasks would cause the
+  archives to be always recreated.  Bugzilla Report 19449.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
