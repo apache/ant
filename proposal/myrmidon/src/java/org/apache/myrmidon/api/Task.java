@@ -25,6 +25,8 @@ package org.apache.myrmidon.api;
  */
 public interface Task
 {
+    String ROLE = "org.apache.myrmidon.api.Task";
+
     /**
      * Execute task. 
      * This method is called to perform actual work associated with task.

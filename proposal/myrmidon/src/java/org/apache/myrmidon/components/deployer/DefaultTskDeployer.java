@@ -35,7 +35,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.components.type.ComponentFactory;
+import org.apache.myrmidon.components.type.DefaultComponentFactory;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -52,13 +56,13 @@ public class DefaultTskDeployer
     private Registry              m_taskRegistry;
     private Registry              m_converterRegistry;
     private ConverterRegistry     m_converterInfoRegistry;
+    private TypeManager           m_typeManager;
 
     /**
      * Default constructor.
      */
     public DefaultTskDeployer()
     {
-        super();
         m_autoUndeploy = true;
         m_type = "Task";
     }
@@ -86,6 +90,8 @@ public class DefaultTskDeployer
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
 
         m_dataTypeRegistry = dataTypeEngine.getRegistry();
+
+        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
     /**
@@ -124,12 +130,15 @@ public class DefaultTskDeployer
     {
         final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
 
+        final DefaultComponentFactory factory = 
+            new DefaultComponentFactory( new URL[] { url } );
+
         try
         {
             final Configuration[] tasks = taskdefs.getChildren( "task" );
             for( int i = 0; i < tasks.length; i++ )
             {
-                handleTask( tasks[ i ], url );
+                handleTask( tasks[ i ], url, factory );
             }
 
             final Configuration[] converters = taskdefs.getChildren( "converter" );
@@ -141,7 +150,7 @@ public class DefaultTskDeployer
             final Configuration[] datatypes = taskdefs.getChildren( "datatype" );
             for( int i = 0; i < datatypes.length; i++ )
             {
-                handleDataType( datatypes[ i ], url );
+                handleDataType( datatypes[ i ], url, factory );
             }
         }
         catch( final ConfigurationException ce )
@@ -190,7 +199,9 @@ public class DefaultTskDeployer
             {
                 if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    handleDataType( datatypes[ i ], url );
+                    final DefaultComponentFactory factory = 
+                        new DefaultComponentFactory( new URL[] { url } );
+                    handleDataType( datatypes[ i ], url, factory );
                     break;
                 }
             }
@@ -215,7 +226,9 @@ public class DefaultTskDeployer
             {
                 if( tasks[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    handleTask( tasks[ i ], url );
+                    final DefaultComponentFactory factory = 
+                        new DefaultComponentFactory( new URL[] { url } );
+                    handleTask( tasks[ i ], url, factory );
                     break;
                 }
             }
@@ -257,13 +270,15 @@ public class DefaultTskDeployer
                            source + " to " + destination );
     }
 
-    private void handleTask( final Configuration task, final URL url )
+    private void handleTask( final Configuration task, 
+                             final URL url, 
+                             final DefaultComponentFactory factory )
         throws DeploymentException, ConfigurationException
     {
         final String name = task.getAttribute( "name" );
-        final String classname = task.getAttribute( "classname" );
+        final String className = task.getAttribute( "classname" );
 
-        final DefaultLocator info = new DefaultLocator( classname, url );
+        final DefaultLocator info = new DefaultLocator( className, url );
 
         try { m_taskRegistry.register( name, info ); }
         catch( final RegistryException re )
@@ -272,16 +287,26 @@ public class DefaultTskDeployer
                                            re );
         }
 
-        getLogger().debug( "Registered task " + name + " as " + classname );
+        factory.addNameClassMapping( name, className );
+        
+        try { m_typeManager.registerType( Task.ROLE, name, factory ); }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Error registering " + name + " due to " + e, e );
+        }
+        
+        getLogger().debug( "Registered task " + name + " as " + className );
     }
 
-    private void handleDataType( final Configuration datatype, final URL url )
+    private void handleDataType( final Configuration datatype, 
+                                 final URL url, 
+                                 final DefaultComponentFactory factory )
         throws DeploymentException, ConfigurationException
     {
         final String name = datatype.getAttribute( "name" );
-        final String classname = datatype.getAttribute( "classname" );
+        final String className = datatype.getAttribute( "classname" );
 
-        final DefaultLocator info = new DefaultLocator( classname, url );
+        final DefaultLocator info = new DefaultLocator( className, url );
 
         try { m_dataTypeRegistry.register( name, info ); }
         catch( final RegistryException re )
@@ -290,6 +315,13 @@ public class DefaultTskDeployer
                                            re );
         }
 
-        getLogger().debug( "Registered datatype " + name + " as " + classname );
+        factory.addNameClassMapping( name, className );
+        try { m_typeManager.registerType( Task.ROLE, name, factory ); }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Error registering " + name + " due to " + e, e );
+        }
+
+        getLogger().debug( "Registered datatype " + name + " as " + className );
     }
 }

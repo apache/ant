@@ -7,6 +7,7 @@
  */
 package org.apache.myrmidon.components.type;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 
 /**
@@ -15,7 +16,7 @@ import org.apache.avalon.framework.component.ComponentManager;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TypeManager
-    extends ComponentManager
+    extends Component, ComponentManager
 {
     String ROLE = "org.apache.myrmidon.components.type.TypeManager";
 

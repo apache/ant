@@ -26,6 +26,11 @@ public class DefaultTypeManager
     ///Maps role to TypedComponentSelector.
     private final HashMap      m_roleMap      = new HashMap();
 
+    public DefaultTypeManager()
+    {
+        this( null );
+    }
+
     public DefaultTypeManager( final TypeManager parent )
     {
         m_parent = parent;

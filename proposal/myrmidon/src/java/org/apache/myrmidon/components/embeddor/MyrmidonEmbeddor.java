@@ -26,6 +26,7 @@ import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.deployer.TskDeployer;
 
@@ -39,14 +40,17 @@ public class MyrmidonEmbeddor
     extends AbstractLoggable
     implements Embeddor
 {
-    private ConverterEngine          m_converterEngine;
-    private DataTypeEngine           m_dataTypeEngine;
-    private Executor                 m_executor;
     private ProjectManager           m_projectManager;
-
     private ProjectBuilder           m_builder;
     private TskDeployer              m_deployer;
+
+    private DataTypeEngine           m_dataTypeEngine;
+    private TypeManager              m_typeManager;
+    private ConverterEngine          m_converterEngine;
+
+    private Executor                 m_executor;
     private Configurer               m_configurer;
+    
 
     private Factory                  m_factory;
 
@@ -170,6 +174,9 @@ public class MyrmidonEmbeddor
                                "org.apache.ant.convert.engine.DefaultConverterEngine" );
         defaults.setParameter( "org.apache.ant.tasklet.engine.DataTypeEngine",
                                "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
+
+        defaults.setParameter( TypeManager.ROLE,
+                               "org.apache.myrmidon.components.type.DefaultTypeManager" );
         defaults.setParameter( Executor.ROLE,
                                "org.apache.myrmidon.components.executor.DefaultExecutor" );
         defaults.setParameter( ProjectManager.ROLE,
@@ -206,6 +213,9 @@ public class MyrmidonEmbeddor
         //Following components required when Myrmidon allows user deployment of tasks etal.
         componentManager.put( TskDeployer.ROLE, m_deployer );
 
+        //Following components used when want to types (ie tasks/mappers etc)
+        componentManager.put( TypeManager.ROLE, m_typeManager );
+
         //Following components required when allowing Container tasks
         componentManager.put( Configurer.ROLE, m_configurer );
         componentManager.put( Executor.ROLE, m_executor );
@@ -228,6 +238,9 @@ public class MyrmidonEmbeddor
 
         component = getParameter( "org.apache.ant.tasklet.engine.DataTypeEngine" );
         m_dataTypeEngine = (DataTypeEngine)createComponent( component, DataTypeEngine.class );
+
+        component = getParameter( TypeManager.ROLE );
+        m_typeManager = (TypeManager)createComponent( component, TypeManager.class );
 
         component = getParameter( Executor.ROLE );
         m_executor = (Executor)createComponent( component, Executor.class );
