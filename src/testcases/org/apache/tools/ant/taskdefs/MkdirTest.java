@@ -72,9 +72,7 @@ public class MkdirTest extends TaskdefsTest {
     }
 
     public void test2() {
-        executeTarget("test2");
-        String log = getLog();
-        assert(log.indexOf("Warning: Specified directory is a file: ") > -1);
+        expectBuildException("test2", "directory already exists as a file");
     }
 
     public void test3() { 

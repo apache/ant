@@ -213,6 +213,7 @@ public abstract class TaskdefsTest extends TestCase {
          */
         public void messageLogged(BuildEvent event) {
             if (event.getPriority() == Project.MSG_INFO ||
+                event.getPriority() == Project.MSG_WARN ||
                 event.getPriority() == Project.MSG_ERR)
             {
                 logBuffer.append(event.getMessage());

@@ -69,21 +69,21 @@ public class EchoTest extends TaskdefsTest {
     
     // Output an empty String
     public void test1() { 
-        expectOutput("test1", "\n");
+        expectLog("test1", "");
     }
 
     // Output 'OUTPUT OF ECHO'
     public void test2() { 
-        expectOutput("test2", "OUTPUT OF ECHO\n");
+        expectLog("test2", "OUTPUT OF ECHO");
     }
     
     public void test3() { 
-        expectOutput("test3", "\n"+
+        expectLog("test3", "\n"+
                               "    This \n"+
                               "    is\n"+
                               "    a \n"+
                               "    multiline\n"+
                               "    message\n"+
-                              "    \n");
+                              "    ");
     }
 }
