@@ -65,15 +65,7 @@ import org.xml.sax.helpers.AttributeListImpl;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * The new XML processor will use this interface to support
- * dynamic properties.
- *
- * Any task/type that implements this interface will be registered
- * and will receive notification of each property get operations
- * executed by the processor.
- *
- * XXX In ant1.6+, tasks implementing the interface will also
- * receive notification when a property is set. 
+ * Support for dynamic properties. 
  *
  * @author Costin Manolache
  */
@@ -83,13 +75,18 @@ public interface PropertyInterceptor {
      * Called for each ${} property. If the result is null the
      * next PropertyInterceptor will be called. If all interceptors
      * return null, the properties stored in Project are used.
+     *
+     * @param context Execution context. ( for example the project ). 
+     * @praam ns Namespace of the property
+     * @param name name of the property
+     * @return Value of the property or null if this interceptor can't find the property.
      */
-    public Object getProperty( Project p, String ns, String name );
+    public Object getProperty( Object context, String ns, String name );
 
     /**
      *  Called when a property/reference is recorded.
-     *  XXX Not implemented yet.
+     *
      */
-    //    public boolean setProperty( String ns, String name, Object value );
+    public boolean setProperty( Object context, String ns, String name, Object value );
 
 }
