@@ -36,11 +36,16 @@ only reflect the relative paths of files <i>within</i> each fileset. The Zip tas
 <p>The Zip task also supports the merging of multiple zip files into the zip file. 
 This is possible through either the <i>src</i> attribute of any nested filesets 
 or by using the special nested fileset <i>zipgroupfileset</i>.</p>
-<p>The <code>update</code> parameter controls what happens if the
-ZIP file already exists. When set to <code>yes</code>, the ZIP file is
+
+<p>The <code>update</code> parameter controls what happens if the ZIP
+file already exists. When set to <code>yes</code>, the ZIP file is
 updated with the files specified. (New files are added; old files are
 replaced with the new versions.) When set to <code>no</code> (the
-default) the ZIP file is overwritten.</p>
+default) the ZIP file is overwritten.  Please note that ZIP files
+store file modification times with a granularity of two seconds.  If a
+file is less than two seconds newer than the entry in the archive, Ant
+will not consider it newer.</p>
+
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
 If <code>fail</code>, the ZIP is not created and the build is halted with an error.
@@ -275,7 +280,7 @@ The code
 <p>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
