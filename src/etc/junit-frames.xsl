@@ -245,7 +245,7 @@ h6 {
       <div class="Properties">
         <a>
           <xsl:attribute name="href">javascript:displayProperties('<xsl:value-of select="@package"/>.<xsl:value-of select="@name"/>');</xsl:attribute>
-          Properties &gt;&gt;
+          Properties &#187;
         </a>
       </div>
 		</body>
