@@ -62,6 +62,7 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.util.Hashtable;
 import java.util.Stack;
+import java.util.Enumeration;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.util.DOMElementWriter;
@@ -311,11 +312,11 @@ public class XmlLogger implements BuildLogger {
      *              Will not be <code>null</code>.
      */
     public void taskStarted(BuildEvent event) {
-        Task task = event.getTask();
         TimedElement taskElement = new TimedElement();
         taskElement.startTime = System.currentTimeMillis();
         taskElement.element = doc.createElement(TASK_TAG);
 
+        Task task = event.getTask();
         String name = event.getTask().getTaskName();
         taskElement.element.setAttribute(NAME_ATTR, name);
         taskElement.element.setAttribute(LOCATION_ATTR,
@@ -360,6 +361,31 @@ public class XmlLogger implements BuildLogger {
         }
     }
 
+
+    /**
+     * Get the TimedElement associated with a task.
+     *
+     * Where the task is not found directly, search for unknown elements which
+     * may be hiding the real task
+     */
+    private TimedElement getTaskElement(Task task) {
+        TimedElement element = (TimedElement) tasks.get(task);
+        if (element != null) {
+            return element;
+        }
+
+        for (Enumeration e = tasks.keys(); e.hasMoreElements();) {
+            Task key = (Task) e.nextElement();
+            if (key instanceof UnknownElement) {
+                if (((UnknownElement) key).getTask() == task) {
+                    return (TimedElement) tasks.get(key);
+                }
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Fired when a message is logged, this adds a message element to the
      * most appropriate parent element (task, target or build) and records
@@ -401,12 +427,13 @@ public class XmlLogger implements BuildLogger {
 
         Target target = event.getTarget();
         if (task != null) {
-            parentElement = (TimedElement) tasks.get(task);
+            parentElement = getTaskElement(task);
         }
         if (parentElement == null && target != null) {
             parentElement = (TimedElement) targets.get(target);
         }
 
+        /*
         if (parentElement == null) {
             Stack threadStack
                     = (Stack) threadStacks.get(Thread.currentThread());
@@ -416,6 +443,7 @@ public class XmlLogger implements BuildLogger {
                 }
             }
         }
+        */
 
         if (parentElement != null) {
             parentElement.element.appendChild(messageElement);
@@ -429,8 +457,8 @@ public class XmlLogger implements BuildLogger {
     /**
      * Set the logging level when using this as a Logger
      *
-     * @param level the logging level - 
-     *        see {@link org.apache.tools.ant.Project#MSG_ERR Project} 
+     * @param level the logging level -
+     *        see {@link org.apache.tools.ant.Project#MSG_ERR Project}
      *        class for level definitions
      */
     public void setMessageOutputLevel(int level) {
@@ -438,7 +466,7 @@ public class XmlLogger implements BuildLogger {
     }
 
     /**
-     * Set the output stream to which logging output is sent when operating 
+     * Set the output stream to which logging output is sent when operating
      * as a logger.
      *
      * @param output the output PrintStream.
