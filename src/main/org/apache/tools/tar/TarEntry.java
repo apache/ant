@@ -206,10 +206,10 @@ public class TarEntry implements TarConstants {
         
             // Strip off drive letters!
             // REVIEW Would a better check be "(File.separator == '\')"?
-            String Win32Prefix = "Windows";
-            String prefix = osname.substring(0, Win32Prefix.length());
+            String win32Prefix = "Windows";
+            String prefix = osname.substring(0, win32Prefix.length());
         
-            if (prefix.equalsIgnoreCase(Win32Prefix)) {
+            if (prefix.equalsIgnoreCase(win32Prefix)) {
                 if (name.length() > 2) {
                     char ch1 = name.charAt(0);
                     char ch2 = name.charAt(1);
@@ -221,6 +221,12 @@ public class TarEntry implements TarConstants {
                     } 
                 } 
             } 
+            else if (osname.toLowerCase().indexOf("netware") > -1) {
+                int colon = name.indexOf(':');
+                if (colon != -1) {
+                    name=name.substring(colon+1);
+                }
+            }
         } 
         
         name = name.replace(File.separatorChar, '/');
