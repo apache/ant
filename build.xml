@@ -521,7 +521,7 @@
        ===================================================================
   -->
   <target name="install" if="ant.install">
-    <antcall target="dist">
+    <antcall target="internal_dist">
       <param name="dist.dir" value="${ant.install}" />
     </antcall>
   </target>

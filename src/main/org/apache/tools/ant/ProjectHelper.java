@@ -195,7 +195,7 @@ public class ProjectHelper {
 
         /**
          * Called when this element and all elements nested into it have been
-         * handeled.
+         * handled.
          */
         protected void finished() {}
 
