@@ -190,6 +190,8 @@ public class Jikes extends DefaultCompilerAdapter {
             if (source.equals("1.1") || source.equals("1.2")) {
                 // support for -source 1.1 and -source 1.2 has been
                 // added with JDK 1.4.2, Jikes doesn't like it
+                attributes.log("Jikes doesn't support '-source "
+                               + source + "', will use '-source 1.3' instead");
                 cmd.createArgument().setValue("1.3");
             } else {
                 cmd.createArgument().setValue(source);
