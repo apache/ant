@@ -66,6 +66,8 @@ public class FileUtils {
 
     private static boolean onNetWare = Os.isFamily("netware");
     private static boolean onDos = Os.isFamily("dos");
+    private static boolean onWin9x = Os.isFamily("win9x");
+    private static boolean onWindows = Os.isFamily("windows");
 
     private static final int BUF_SIZE = 8192;
 
@@ -84,6 +86,12 @@ public class FileUtils {
      */
     public static final long UNIX_FILE_TIMESTAMP_GRANULARITY = 1000;
 
+    /**
+     * The granularity of timestamps under the NT File System.
+     * NTFS has a granularity of 100 nanoseconds, which is less
+     * than 1 millisecond, so we set this to 0.
+     */
+    public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 0;
 
     // stolen from FilePathToURI of the Xerces-J team
     static {
@@ -1339,13 +1347,19 @@ public class FileUtils {
      * Get the granularity of file timestamps.
      * The choice is made based on OS, which is incorrect--it should really be
      * by filesystem. We do not have an easy way to probe for file systems,
-     * however.
+     * however, so this heuristic gives us a decent default.
      * @return the difference, in milliseconds, which two file timestamps must have
-     * in order for the two files to be given a creation order.
+     * in order for the two files to be considered to have different timestamps.
      */
     public long getFileTimestampGranularity() {
-        return onDos
-            ? FAT_FILE_TIMESTAMP_GRANULARITY : UNIX_FILE_TIMESTAMP_GRANULARITY;
+        if (onWin9x) {
+            return FAT_FILE_TIMESTAMP_GRANULARITY;
+        } else if (onWindows) {
+            return NTFS_FILE_TIMESTAMP_GRANULARITY;
+        } else if (onDos) {
+            return FAT_FILE_TIMESTAMP_GRANULARITY;
+        }
+        return UNIX_FILE_TIMESTAMP_GRANULARITY;
     }
 
     /**
