@@ -119,6 +119,16 @@ public class Main {
     private boolean projectHelp = false;
 
     /**
+     * Prints the message of the Throwable if it's not null.
+     */
+    private static void printMessage(Throwable t) {
+        String message = t.getMessage();
+        if (message != null) {
+            System.err.println(message);
+        }
+    }
+
+    /**
      * Command line entry point. This method kicks off the building
      * of a project object and executes a build using either a given
      * target or the default target.
@@ -126,15 +136,25 @@ public class Main {
      * @param args Command line args.
      */
     public static void main(String[] args) {
+        Main m = null;
+
         try {
-            new Main(args).runBuild();
-            System.exit(0);
+            m = new Main(args);
+        } catch(Throwable exc) {
+            printMessage(exc);
+            System.exit(1);
         }
-        catch(Throwable exc) {
-            String message = exc.getMessage();
-            if (message != null) {
-                System.err.println(message);
+
+        try {
+            m.runBuild();
+            System.exit(0);
+        } catch (BuildException be) {
+            if (m.err != System.err) {
+                printMessage(be);
             }
+            System.exit(1);
+        } catch(Throwable exc) {
+            printMessage(exc);
             System.exit(1);
         }
     }
