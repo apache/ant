@@ -17,7 +17,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.deployer.DeploymentException;
-import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.type.DefaultTypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
@@ -35,14 +35,14 @@ public class RegisterConverter
     private String              m_destinationType;
     private String              m_lib;
     private String              m_classname;
-    private TskDeployer         m_tskDeployer;
+    private Deployer            m_deployer;
     private ConverterRegistry   m_converterRegistry;
     private TypeManager         m_typeManager;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
+        m_deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
 
         m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
@@ -99,7 +99,7 @@ public class RegisterConverter
         {
             try
             {
-                m_tskDeployer.deployConverter( m_classname, file );
+                m_deployer.deployConverter( m_classname, file );
             }
             catch( final DeploymentException de )
             {

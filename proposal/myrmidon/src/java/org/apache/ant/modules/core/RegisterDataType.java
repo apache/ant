@@ -29,7 +29,7 @@ public class RegisterDataType
     {
         if( null == className )
         {
-            try { getDeployer().deployDataType( name, file ); }
+            try { getDeployer().deployType( DataType.ROLE, name, file ); }
             catch( final DeploymentException de )
             {
                 throw new TaskException( "Failed deploying " + name + " from " + file, de );

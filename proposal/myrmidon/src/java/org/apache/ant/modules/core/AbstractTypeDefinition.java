@@ -13,7 +13,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.type.TypeManager;
 
@@ -29,14 +29,14 @@ public abstract class AbstractTypeDefinition
     private String              m_lib;
     private String              m_name;
     private String              m_classname;
-    private TskDeployer         m_tskDeployer;
+    private Deployer            m_deployer;
     private TypeManager         m_typeManager;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
+        m_deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
     }
 
     public void setLib( final String lib )
@@ -72,9 +72,9 @@ public abstract class AbstractTypeDefinition
         registerResource( m_name, m_classname, file );
     }
 
-    protected final TskDeployer getDeployer()
+    protected final Deployer getDeployer()
     {
-        return m_tskDeployer;
+        return m_deployer;
     }
 
     protected final TypeManager getTypeManager()

@@ -16,7 +16,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.deployer.DeploymentException;
-import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.deployer.Deployer;
 
 /**
  * Method to register a tasklib.
@@ -28,12 +28,12 @@ public class RegisterTasklib
     implements Composable
 {
     protected String              m_lib;
-    protected TskDeployer         m_tskDeployer;
+    protected Deployer            m_deployer;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
+        m_deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
     }
 
     public void setLib( final String lib )
@@ -55,7 +55,7 @@ public class RegisterTasklib
 
         try
         {
-            m_tskDeployer.deploy( file );
+            m_deployer.deploy( file );
         }
         catch( final DeploymentException de )
         {

@@ -8,6 +8,9 @@
 package org.apache.myrmidon.components.deployer;
 
 import java.util.HashMap;
+import org.apache.myrmidon.api.DataType;
+import org.apache.myrmidon.api.Task;
+import org.apache.avalon.framework.activity.Initializable;
 
 /**
  * Interface to manage roles and mapping to shorthand names.
@@ -19,7 +22,7 @@ import java.util.HashMap;
  * @version CVS $Revision$ $Date$
  */
 public class DefaultRoleManager
-    implements RoleManager
+    implements RoleManager, Initializable
 {
     /** Parent <code>RoleManager</code> for nested resolution */
     private final RoleManager  m_parent;
@@ -47,6 +50,16 @@ public class DefaultRoleManager
     public DefaultRoleManager( final RoleManager parent )
     {
         m_parent = parent;
+    }
+
+    public void initialize()
+        throws Exception
+    {
+        ///UGLY HACK!!!!!!!!!!!!!!!!!!!!!!!
+        addNameRoleMapping( "task", Task.ROLE );
+        addNameRoleMapping( "data-type", DataType.ROLE );
+
+        //getClass().getClassLoader().getResources( "META-INF/ant-types.xml" );
     }
 
     /**

@@ -29,7 +29,7 @@ public interface RoleManager
      * @param shorthandName the shorthand name
      * @return the role
      */
-    String getRoleForName( String shorthandName );
+    String getRoleForName( String name );
 
     /**
      * Find name based on role.

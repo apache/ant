@@ -15,10 +15,10 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface TskDeployer
+public interface Deployer
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.components.deployer.TskDeployer";
+    String ROLE = "org.apache.myrmidon.components.deployer.Deployer";
 
     /**
      * Deploy a library.
@@ -32,10 +32,7 @@ public interface TskDeployer
     void deployConverter( String name, File file )
         throws DeploymentException;
 
-    void deployDataType( String name, File file )
-        throws DeploymentException;
-
-    void deployTask( String name, File file )
+    void deployType( String role, String name, File file )
         throws DeploymentException;
 }
 

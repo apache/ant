@@ -13,13 +13,10 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Resolvable;
-import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.api.DataType;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.converter.MasterConverter;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.components.type.TypeException;
 import org.apache.myrmidon.components.type.TypeFactory;
@@ -30,29 +27,25 @@ import org.apache.myrmidon.components.type.TypeFactory;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Property
-    extends AbstractTask
-    implements Configurable, Composable
+    extends AbstractContainerTask
+    implements Configurable
 {
     private String              m_name;
     private Object              m_value;
     private boolean             m_localScope     = true;
     private TypeFactory         m_factory;
-    private MasterConverter     m_converter;
-    private Configurer          m_configurer;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
+        super.compose( componentManager );
+
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        
         try { m_factory = typeManager.getFactory( DataType.ROLE ); }
         catch( final TypeException te )
         {
             throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
         }
-
-        m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
     }
 
     public void configure( final Configuration configuration )
@@ -65,32 +58,12 @@ public class Property
             final String name = attributes[ i ];
             final String value = configuration.getAttribute( name );
 
-
-            Object object = null;
-
-            try { object = getContext().resolveValue( value ); }
-            catch( final TaskException te )
-            {
-                throw new ConfigurationException( "Error resolving value: " + value, te );
-            }
-
-            if( null == object )
-            {
-                throw new ConfigurationException( "Value for attribute " + name + "resolved to null" );
-            }
+            final Object object = resolve( value );
 
             if( name.equals( "name" ) )
             {
-                try
-                {
-                    final String convertedValue =
-                        (String)m_converter.convert( String.class, object, getContext() );
-                    setName( convertedValue );
-                }
-                catch( final Exception e )
-                {
-                    throw new ConfigurationException( "Error converting value", e );
-                }
+                final String convertedValue = (String)convert( String.class, object );
+                setName( convertedValue );
             }
             else if( name.equals( "value" ) )
             {
@@ -102,16 +75,8 @@ public class Property
             }
             else if( name.equals( "local-scope" ) )
             {
-                try
-                {
-                    final Boolean localScope =
-                        (Boolean)m_converter.convert( Boolean.class, object, getContext() );
-                    setLocalScope( Boolean.TRUE == localScope );
-                }
-                catch( final Exception e )
-                {
-                    throw new ConfigurationException( "Error converting value", e );
-                }
+                final Boolean localScope = (Boolean)convert( Boolean.class, object );
+                setLocalScope( Boolean.TRUE == localScope );
             }
             else
             {
@@ -128,8 +93,8 @@ public class Property
             try
             {
                 final DataType value = (DataType)m_factory.create( child.getName() );
+                configure( value, child );
                 setValue( value );
-                m_configurer.configure( value, child, getContext() );
             }
             catch( final Exception e )
             {
@@ -172,27 +137,13 @@ public class Property
             throw new TaskException( "Value must be specified" );
         }
 
-        final TaskContext context = getContext();
-
-        Object value = m_value;
-
-        if( value instanceof String )
-        {
-            value = context.resolveValue( (String)value );
-        }
-
-        while( null != value && value instanceof Resolvable )
-        {
-            value = ((Resolvable)value).resolve( context );
-        }
-
         if( m_localScope )
         {
-            context.setProperty( m_name, value );
+            getContext().setProperty( m_name, m_value );
         }
         else
         {
-            context.setProperty( m_name, value, TaskContext.PARENT );
+            getContext().setProperty( m_name, m_value, TaskContext.PARENT );
         }
     }
 }

@@ -23,7 +23,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.executor.Executor;
@@ -42,7 +42,7 @@ public class MyrmidonEmbeddor
 {
     private ProjectManager           m_projectManager;
     private ProjectBuilder           m_builder;
-    private TskDeployer              m_deployer;
+    private Deployer                 m_deployer;
     private RoleManager              m_roleManager;
 
     private TypeManager              m_typeManager;
@@ -182,8 +182,8 @@ public class MyrmidonEmbeddor
                                "org.apache.myrmidon.components.manager.DefaultProjectManager" );
         defaults.setParameter( ProjectBuilder.ROLE,
                                "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
-        defaults.setParameter( TskDeployer.ROLE,
-                               "org.apache.myrmidon.components.deployer.DefaultTskDeployer" );
+        defaults.setParameter( Deployer.ROLE,
+                               "org.apache.myrmidon.components.deployer.DefaultDeployer" );
         defaults.setParameter( Configurer.ROLE,
                                "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
 
@@ -207,7 +207,7 @@ public class MyrmidonEmbeddor
 
         //Following components required when Myrmidon allows user deployment of tasks etal.
         componentManager.put( RoleManager.ROLE, m_roleManager );
-        componentManager.put( TskDeployer.ROLE, m_deployer );
+        componentManager.put( Deployer.ROLE, m_deployer );
 
         //Following components used when want to types (ie tasks/mappers etc)
         componentManager.put( TypeManager.ROLE, m_typeManager );
@@ -245,8 +245,8 @@ public class MyrmidonEmbeddor
         component = getParameter( RoleManager.ROLE );
         m_roleManager = (RoleManager)createComponent( component, RoleManager.class );
 
-        component = getParameter( TskDeployer.ROLE );
-        m_deployer = (TskDeployer)createComponent( component, TskDeployer.class );
+        component = getParameter( Deployer.ROLE );
+        m_deployer = (Deployer)createComponent( component, Deployer.class );
 
         component = getParameter( Executor.ROLE );
         m_executor = (Executor)createComponent( component, Executor.class );
@@ -433,7 +433,7 @@ public class MyrmidonEmbeddor
     }
 
 
-    private void deployFromDirectory( final TskDeployer deployer, 
+    private void deployFromDirectory( final Deployer deployer, 
                                       final File directory,
                                       final FilenameFilter filter )
         throws DeploymentException                                         
@@ -446,7 +446,7 @@ public class MyrmidonEmbeddor
         }
     }
 
-    private void deployFiles( final TskDeployer deployer, final File[] files )
+    private void deployFiles( final Deployer deployer, final File[] files )
         throws DeploymentException
     {
         for( int i = 0; i < files.length; i++ )

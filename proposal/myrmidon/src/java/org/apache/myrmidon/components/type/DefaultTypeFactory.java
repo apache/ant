@@ -32,6 +32,11 @@ public class DefaultTypeFactory
     ///The parent classLoader (if any)
     private ClassLoader          m_classLoader;
 
+    public DefaultTypeFactory( final URL url )
+    {
+        this( new URL[] { url } );
+    }
+
     public DefaultTypeFactory( final URL[] urls )
     {
         this( urls, Thread.currentThread().getContextClassLoader() );

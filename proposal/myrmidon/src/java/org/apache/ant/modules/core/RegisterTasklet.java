@@ -29,7 +29,7 @@ public class RegisterTasklet
     {
         if( null == className )
         {
-            try { getDeployer().deployTask( name, file ); }
+            try { getDeployer().deployType( Task.ROLE, name, file ); }
             catch( final DeploymentException de )
             {
                 throw new TaskException( "Failed deploying " + name + " from " + file, de );
