@@ -657,6 +657,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         try {
             log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
             liaison.setStylesheet(stylesheet);
+            if (outputtype != null) {
+                liaison.setOutputtype(outputtype);
+            }
             for (Enumeration e = params.elements(); e.hasMoreElements();) {
                 Param p = (Param) e.nextElement();
                 liaison.addParam(p.getName(), p.getExpression());

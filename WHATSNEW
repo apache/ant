@@ -20,6 +20,8 @@ Fixed bugs:
 * Nested <property>'s inside <ant> can now be overriden by subsequent
   <ant> and <antcall> tasks.
 
+* <xslt>'s outputtype attribute wouldn't do anything.
+
 Other changes:
 --------------
 
