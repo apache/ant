@@ -89,6 +89,29 @@ public class Ant extends Task {
 
     public void init() {
         p1 = new Project();
+        p1.detectJavaVersion();
+        p1.addTaskDefinition("property", 
+                             (Class)project.getTaskDefinitions().get("property"));
+    }
+
+    private void reinit() {
+        init();
+        for (int i=0; i<properties.size(); i++) {
+            Property p = (Property) properties.elementAt(i);
+            Property newP = (Property) p1.createTask("property");
+            newP.setName(p.getName());
+            if (p.getValue() != null) {
+                newP.setValue(p.getValue());
+            } else if (p.getFile() != null) {
+                newP.setFile(p.getFile());
+            } else if (p.getResource() != null) {
+                newP.setResource(p.getResource());
+            }
+            properties.setElementAt(newP, i);
+        }
+    }
+
+    private void initializeProject() {
         Vector listeners = project.getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             p1.addBuildListener((BuildListener)listeners.elementAt(i));
@@ -103,8 +126,6 @@ public class Ant extends Task {
                 log( "Ant: Can't set output to " + output );
             }
         }
-
-        p1.init();
 
         Hashtable taskdefs = project.getTaskDefinitions();
         Enumeration et = taskdefs.keys();
@@ -128,29 +149,39 @@ public class Ant extends Task {
      * Do the execution.
      */
     public void execute() throws BuildException {
-        if( dir==null) dir=".";
+        try {
+            if (p1 == null) {
+                reinit();
+            }
+        
+            if( dir==null) dir=".";
 
-        p1.setBasedir(dir);
-        p1.setUserProperty("basedir" , dir);
+            initializeProject();
 
-        // Override with local-defined properties
-        Enumeration e = properties.elements();
-        while (e.hasMoreElements()) {
-            Property p=(Property) e.nextElement();
-            //	    System.out.println("Setting " + p.getName()+ " " + p.getValue());
-            p.init();
+            p1.setBasedir(dir);
+            p1.setUserProperty("basedir" , dir);
+            
+            // Override with local-defined properties
+            Enumeration e = properties.elements();
+            while (e.hasMoreElements()) {
+                Property p=(Property) e.nextElement();
+                p.init();
+            }
+            
+            if (antFile == null) antFile = dir + "/build.xml";
+
+            p1.setUserProperty( "ant.file" , antFile );
+            ProjectHelper.configureProject(p1, new File(antFile));
+            
+            if (target == null) {
+                target = p1.getDefaultTarget();
+            }
+
+            p1.executeTarget(target);
+        } finally {
+            // help the gc
+            p1 = null;
         }
-
-        if (antFile == null) antFile = dir + "/build.xml";
-
-        p1.setUserProperty( "ant.file" , antFile );
-        ProjectHelper.configureProject(p1, new File(antFile));
-
-        if (target == null) {
-            target = p1.getDefaultTarget();
-        }
-
-        p1.executeTarget(target);
     }
 
     public void setDir(String d) {
@@ -169,8 +200,11 @@ public class Ant extends Task {
         this.output = s;
     }
 
-    // XXX replace with createProperty!!
     public Property createProperty() {
+        if (p1 == null) {
+            reinit();
+        }
+
 	Property p=(Property)p1.createTask("property");
 	p.setUserProperty(true);
 	properties.addElement( p );

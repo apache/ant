@@ -281,7 +281,7 @@ public class Project {
         return javaVersion;
     }
 
-    private void detectJavaVersion() {
+    public void detectJavaVersion() {
 
         // Determine the Java version by looking at available classes
         // java.lang.StrictMath was introduced in JDK 1.3

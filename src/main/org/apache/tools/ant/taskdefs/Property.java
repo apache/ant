@@ -95,8 +95,16 @@ public class Property extends Task {
         this.file = file;
     }
 
+    public String getFile() {
+        return file;
+    }
+
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    public String getResource() {
+        return resource;
     }
 
     public void init() throws BuildException {
