@@ -333,4 +333,23 @@ Legal:
         </jarlib-display>
     </target>
 
+    <!--
+    -->
+
+    <target name="manifest-test">
+        <jarlib-manifest
+            destfile="../../generated-manifest.txt"
+            extension-name="org.realityforge.dve"
+            specification-version="1.0"
+            specification-vendor="Peter Donald"
+            >
+            <depends dir="../../">
+                <include name="src/ant1compat/jar/*.jar"/>
+            </depends>
+            <depends dir="../../">
+                <include name="lib/*.jar"/>
+            </depends>
+        </jarlib-manifest>
+    </target>
+
 </project>

@@ -427,9 +427,9 @@ public class DefaultConfigurer
         else
         {
             // Set the value
-            PropertyConfigurer propConfigurer =
+            final PropertyConfigurer property =
                 getConfigurerFromName( state.getConfigurer(), name, false, false );
-            setValue( propConfigurer, state, value, context );
+            setValue( property, state, value, context );
         }
     }
 
