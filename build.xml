@@ -27,7 +27,7 @@
   <property name="junit.fork" value="false" />
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
-
+  
   <!--
        ===================================================================
          Set the properties related to the source tree
@@ -285,6 +285,9 @@
   </patternset>
   <patternset id="needs.jdepend">
     <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
+  </patternset>
+  <patternset id="onlinetests">
+    <exclude name="**/GetTest.java" if="offline" />
   </patternset>
 
   <!--
@@ -1126,6 +1129,9 @@
           <patternset refid="needs.xalan1" />
           <patternset refid="needs.xslp" />
 
+          <!-- tests excluded if the test is run in offline mode -->
+          <patternset refid="onlinetests"/>
+          
           <!-- runtime dependencies that are different from compile
                time dependencies -->
           <exclude name="${optional.package}/ReplaceRegExpTest.java"
