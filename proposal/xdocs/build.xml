@@ -451,7 +451,24 @@
     <ant dir="dvsl"/>
   </target>
 
-  <target name="docs-from-scratch" depends="clean,gen,docs"/>
+  <target name="compile" depends="init">
+    <mkdir dir="${build.dir}/classes"/>
+    <javac destdir="${build.dir}/classes"
+           srcdir="src"
+           debug="true"
+           includes="**/IndexGen.java"
+    />
+  </target>
+
+  <target name="indexgen" depends="compile">
+    <taskdef name="indexgen"
+             classpath="${build.dir}/classes"
+             classname="org.apache.tools.ant.xdoclet.IndexGen"
+    />
+    <indexgen rootdir="${build.dir}/docs/manual" destdir="${build.dir}/docs/manual"/>
+  </target>
+
+  <target name="docs-from-scratch" depends="clean,gen,docs,indexgen"/>
 
   <target name="default" depends="gen"/>
 
