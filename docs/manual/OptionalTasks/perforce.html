@@ -7,6 +7,7 @@
 <p>by</p>
 <ul>
     <li>Les Hughes (<a href="mailto:leslie.hughes@rubus.com">leslie.hughes@rubus.com</a>)</li>
+    <li>Kirk Wylie (<a href="mailto:kirk@radik.com">kirk@radik.com</a>)</li>
 </ul>
 <p>Version 1.1 - 2001/01/09</p>
 <hr>
@@ -25,9 +26,9 @@ However, the addition of new p4 commands is a pretty simple task (see the source
 Although it is possible to use these commands on the desktop, 
 they were primarily intended to be used by automated build systems.</p>
 
-<p><b>Note:</b> These tasks require the <a href="http://jakarta.apache.org/oro" target="_top">oro 2.0</a> regular
-expression package. Simply download this package and copy the jakarta-oro-2.0.jar file into Ant's lib directory.
-You will also need the perforce client executable (p4 or p4.exe but not p4win.exe) in your path.
+<p><b>Note:</b> These tasks require the <a href="http://jakarta.apache.org/oro" target="_top">oro 2.0.XXX</a> regular
+expression package. Simply download this package and copy the jakarta-oro-2.0.XXX.jar file into Ant's lib directory.
+You will also need the Perforce client executable (p4 or p4.exe but not p4win.exe) in your path.
 </p>
 
 
@@ -37,11 +38,11 @@ You will also need the perforce client executable (p4 or p4.exe but not p4win.ex
 <table border="0" cellspacing="0" cellpadding="3">
     <tr>
         <td><a href="#p4sync">P4Sync</a></td>
-        <td>Synchronise a workspce to a depot</td>
+        <td>Synchronise a workspace to a depot</td>
     </tr>
     <tr>
         <td><a href="#p4change">P4Change</a></td>
-        <td>Request a new changelist from the perforce server</td>
+        <td>Request a new changelist from the Perforce server</td>
     </tr>
     <tr>
         <td><a href="#p4edit">P4Edit</a></td>
@@ -49,7 +50,7 @@ You will also need the perforce client executable (p4 or p4.exe but not p4win.ex
     </tr>
     <tr>
         <td><a href="#p4submit">P4Submit</a></td>
-        <td>Submit a changelist to the perforce server (checkin)</td>
+        <td>Submit a changelist to the Perforce server (checkin)</td>
     </tr>
     <tr>
         <td><a href="#p4have">P4Have</a></td>
@@ -108,7 +109,7 @@ or environment variables. These are
 
 </table>
 <p>
-Your local  installation of perforce may require other settings (e.g. P4PASSWD, P4CONFIG). At the moment, these can only be set outside of Ant, as environment variables.
+Your local installation of Perforce may require other settings (e.g. P4PASSWD, P4CONFIG). At the moment, these can only be set outside of Ant, as environment variables.
 </p>
 
 <h3>Examples</h3>
@@ -184,7 +185,7 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 
 <h2><a name="p4change">P4Change</a></h2>
 <h3>Description:</h3>
-<p>Request a new changelist from the perforce server. 
+<p>Request a new changelist from the Perforce server. 
 This task sets the ${p4.change} property which can then be passed to P4Submit or P4Edit.
 </p>
 <h3>Parameters</h3>
