@@ -109,13 +109,6 @@
   <redirect:write file="{$output.dir}/all-cycles.html">
     <xsl:apply-templates select="Cycles" mode="all.cycles"/>
   </redirect:write>
-
-   <!-- process all packages -->
-  <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
-    <xsl:call-template name="package">
-      <xsl:with-param name="name" select="@package"/>
-    </xsl:call-template>
-  </xsl:for-each>
 </xsl:template>
 
 
@@ -198,8 +191,7 @@
 <xsl:template match="JDepend" mode="overview.packages">
    <html>
       <head>
-         <xsl:call-template name="create.stylesheet.link">
-         </xsl:call-template>
+         <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
       </head>
       <body>
          <xsl:call-template name="pageHeader"/>
@@ -262,8 +254,7 @@
 <xsl:template match="JDepend" mode="packages.details">
    <html>
       <head>
-         <xsl:call-template name="create.stylesheet.link">
-         </xsl:call-template>
+          <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
       </head>
       <body>
          <xsl:call-template name="pageHeader"/>
@@ -352,8 +343,7 @@
 <xsl:template match="JDepend" mode="cycles.details">
    <html>
       <head>
-         <xsl:call-template name="create.stylesheet.link">
-         </xsl:call-template>
+         <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
       </head>
       <body>
          <xsl:call-template name="pageHeader"/>
@@ -395,8 +385,7 @@
 <xsl:template match="JDepend" mode="explanations">
    <html>
       <head>
-         <xsl:call-template name="create.stylesheet.link">
-         </xsl:call-template>
+         <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
       </head>
       <body>
          <xsl:call-template name="pageHeader"/>
@@ -440,8 +429,7 @@ Creates an html file that contains a link to all package links in overview-packa
 <xsl:template match="JDepend/Packages" mode="all.packages">
   <html>
     <head>
-      <xsl:call-template name="create.stylesheet.link">
-      </xsl:call-template>
+      <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
     </head>
     <body>
   <table width="100%"><tr align="left"><td></td><td nowrap="nowrap" align="right">
@@ -493,8 +481,7 @@ Creates an html file that contains a link to all package links in overview-cycle
 <xsl:template match="JDepend/Cycles" mode="all.cycles">
   <html>
     <head>
-      <xsl:call-template name="create.stylesheet.link">
-      </xsl:call-template>
+      <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
     </head>
     <body>
   <table width="100%"><tr align="left"><td></td><td nowrap="nowrap" align="right">
@@ -521,11 +508,6 @@ Creates an html file that contains a link to all package links in overview-cycle
   </tr>
 </xsl:template>
     
-<!-- create the link to the stylesheet based on the package name -->
-<xsl:template name="create.stylesheet.link">
-  <link rel="stylesheet" type="text/css" title="Style"><xsl:attribute name="href">stylesheet.css</xsl:attribute></link>
-</xsl:template>
-
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
    <h1>JDepend Analysis</h1>
