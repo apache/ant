@@ -452,10 +452,10 @@ public class Project {
             String msg = "   +Task: " + taskType;
             log (msg, MSG_DEBUG);
             return task;
-        } catch (Exception e) {
+        } catch (Throwable t) {
             String msg = "Could not create task of type: "
-                 + taskType + " due to " + e;
-            throw new BuildException(msg);
+                 + taskType + " due to " + t;
+            throw new BuildException(msg, t);
         }
     }
 

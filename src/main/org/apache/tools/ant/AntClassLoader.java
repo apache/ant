@@ -115,7 +115,7 @@ public class AntClassLoader  extends ClassLoader {
     /**
      * Create a classloader for the given project using the classpath given.
      *
-     * @param project the project to ehich this classloader is to belong.
+     * @param project the project to which this classloader is to belong.
      * @param classpath the classpath to use to load the classes.
      */
     public AntClassLoader(Project project, Path classpath, boolean systemFirst) {
@@ -129,7 +129,7 @@ public class AntClassLoader  extends ClassLoader {
      *
      * All subpackages are also included.
      *
-     * @param packageRoot the root of akll packages to be included.
+     * @param packageRoot the root of all packages to be included.
      */
     public void addSystemPackageRoot(String packageRoot) {
         systemPackages.addElement(packageRoot + ".");

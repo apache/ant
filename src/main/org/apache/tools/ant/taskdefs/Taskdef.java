@@ -95,7 +95,14 @@ public class Taskdef extends Task {
 	    try {
                 ClassLoader loader = null;
                 if (classpath != null) {
-                    loader = new AntClassLoader(project, classpath, false);
+                    AntClassLoader al = new AntClassLoader(project, classpath,
+                                                           false);
+                    al.addSystemPackageRoot("org.apache.tools.ant");
+                    if (project.getJavaVersion().startsWith("1.1")) {
+                        // JDK > 1.1 adds these by default
+                        al.addSystemPackageRoot("java");
+                    }
+                    loader = al;
                 } else {
                     loader = this.getClass().getClassLoader();
                 }
@@ -110,7 +117,11 @@ public class Taskdef extends Task {
 	    } catch (ClassNotFoundException cnfe) {
 		String msg = "taskdef class " + value +
 		    " cannot be found";
-		throw new BuildException(msg, location);
+		throw new BuildException(msg, cnfe, location);
+	    } catch (NoClassDefFoundError ncdfe) {
+		String msg = "taskdef class " + value +
+		    " cannot be found";
+		throw new BuildException(msg, ncdfe, location);
 	    }
     }
     
