@@ -12,7 +12,10 @@
 <p>Runs the rmic compiler for a certain class.</p>
 <p>Rmic can be run on a single class (as specified with the classname
 attribute) or a number of classes at once (all classes below base that
-are neither _Stub nor _Skel classes).</p>
+are neither _Stub nor _Skel classes).  If you want to rmic a single
+class and this class is a class nested into another class, you have to
+specify the classname in the form <code>Outer$$Inner</code> instead of
+<code>Outer.Inner</code>.</p>
 <p>It is possible to refine the set of files that are being rmiced. This can be
 done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
 attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
