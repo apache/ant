@@ -22,7 +22,9 @@
         </or>
     </condition>
 
-    <target name="createpatch" if="cvs.found">
+    <target name="createpatch">
+        <fail unless="cvs.found"
+              message="You need a version of cvs to create the patch"/>
         <cvs command="-q diff -u" output="${patch.file}"/>
     </target>
 
