@@ -18,8 +18,19 @@ These tasks make use of functions from the StarTeam API.  As a result
 they are only available to licensed users of StarTeam.  You must have
 <CODE>starteam-sdk.jar</CODE> in your classpath to run these tasks.
 For more information about the StarTeam API and how to license it, see
-the <a href="http://www.starbase.com">StarBase</a> web site.</p>
-
+the <a href="http://www.borland.com/starteam/">Borland</a> web site.</p>
+<h3>Important Note on Installation and Licensing:</h3>
+<p>
+<b>On Windows machines, the mere presence of <CODE>starteam-sdk.jar</CODE> on the classpath 
+is not sufficient for getting these tasks to work properly.</b>  These tasks also require a 
+fully-installed and fully-licensed version of the StarGate Runtime.  This is part 
+of a StarTeam client installation or may be installed separately.  The full client
+install is not required.
+</p><p>
+Earlier versions of Ant (prior to 1.5.2) did not have this restriction because they
+were not as dependent on the StarTeam runtime - which the newer versions use to access
+StarTeam file status information.  The older versions lacked this important capability.
+</p>
 <hr></hr>
 
 <a name="common-params">
