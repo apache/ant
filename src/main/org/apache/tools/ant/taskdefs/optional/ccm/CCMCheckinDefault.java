@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,12 +24,14 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
  */
 public class CCMCheckinDefault extends CCMCheck {
 
+    /** Constructor for CCMCheckinDefault. */
     public CCMCheckinDefault() {
         super();
         setCcmAction(COMMAND_CHECKIN);
         setTask(DEFAULT_TASK);
     }
 
+    /** The default task */
     public static final String DEFAULT_TASK = "default";
 }
 

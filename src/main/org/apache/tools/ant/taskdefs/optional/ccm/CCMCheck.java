@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class CCMCheck extends Continuus {
 
     protected Vector filesets = new Vector();
 
+    /** Constructor for CCMCheck. */
     public CCMCheck() {
         super();
     }
@@ -98,6 +99,7 @@ public class CCMCheck extends Continuus {
 
     /**
      * Adds a set of files to copy.
+     * @param set the set of files
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -110,6 +112,7 @@ public class CCMCheck extends Continuus {
      * Builds a command line to execute ccm and then calls Exec's run method
      * to execute the command line.
      * </p>
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -84,6 +84,12 @@ public abstract class Continuus extends Task {
     }
 
 
+    /**
+     * Run the command.
+     * @param cmd the command line
+     * @param handler an execute stream handler
+     * @return the exit status of the command
+     */
     protected int run(Commandline cmd, ExecuteStreamHandler handler) {
         try {
             Execute exe = new Execute(handler);
@@ -96,6 +102,11 @@ public abstract class Continuus extends Task {
         }
     }
 
+    /**
+     * Run the command.
+     * @param cmd the command line
+     * @return the exit status of the command
+     */
     protected int run(Commandline cmd) {
         return run(cmd, new LogStreamHandler(this, Project.MSG_VERBOSE, Project.MSG_WARN));
     }
