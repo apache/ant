@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xxx-test" basedir="." default="test1">
+<project name="zip-test" basedir="." default="test1">
 
   <target name="test1">
     <zip/>
@@ -10,4 +10,13 @@
     <zip zipfile="zip.tmp"/>
   </target>
 
+  <target name="test3">
+    <touch file="test3.zip"/>
+    <tar zipfile="test3.zip"
+         basedir="."/>
+  </target>
+  
+  <target name="cleanup"> 
+    <delete file="test3.zip"/>
+  </target>
 </project>

@@ -334,6 +334,12 @@ public class Zip extends MatchingTask {
                 return true;
             }
         } else {
+            for (int i = 0; i < files.length; ++i) {
+                if (files[i].equals(zipFile)) {
+                    throw new BuildException("A zip file cannot include itself", location);
+                }
+            }
+
             if (!zipFile.exists()) return false;
 
             SourceFileScanner sfs = new SourceFileScanner(this);

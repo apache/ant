@@ -74,4 +74,13 @@ public class ZipTest extends TaskdefsTest {
     public void test2() { 
         expectBuildException("test2", "required argument not specified");
     }
+    
+    public void test3() { 
+        expectBuildException("test3", "zip cannot include itself");
+    }
+    
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+    
 }
