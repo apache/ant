@@ -506,7 +506,7 @@ public class Rmic extends MatchingTask
             getLogger().info( "Verify has been turned on." );
         }
 
-        String compiler = getProject().getProperty( "build.rmic" );
+        String compiler = getProperty( "build.rmic" ).toString();
         RmicAdapter adapter = RmicAdapterFactory.getRmic( compiler, this );
 
         // now we need to populate the compiler adapter
