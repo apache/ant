@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -185,8 +185,6 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     }
 
     private void playClip(Clip clip, long duration) {
-
-        long currentTime = System.currentTimeMillis();
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         try {
             Thread.sleep(duration);

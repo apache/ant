@@ -175,7 +175,6 @@ public class AggregateTransformer {
         checkOptions();
         final long t0 = System.currentTimeMillis();
         try {
-            Element root = document.getDocumentElement();
             XalanExecutor executor = XalanExecutor.newInstance(this);
             executor.execute();
         } catch (Exception e){
