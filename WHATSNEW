@@ -28,6 +28,9 @@ some conditons, but 1.1 doesn't support this feature.  Ant will no
 longer try this, but you may run into problems with the length of the
 command line now.
 
+* the refid attribute for <property>s nested into <ant> or <param>s
+nested into <antcall> didn't work.
+
 Other changes:
 --------------
 

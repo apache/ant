@@ -88,18 +88,27 @@ public class Property extends Task {
     protected String env;
     protected Reference ref;
     protected String prefix;
+    private Project fallback;
 
     protected boolean userProperty; // set read-only properties
 
     public Property() {
-        super();
+        this(false);
     }
 
     /**
      * @since Ant 1.5
      */
     protected Property(boolean userProperty) {
+        this(userProperty, null);
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    protected Property(boolean userProperty, Project fallback) {
         this.userProperty = userProperty;
+        this.fallback = fallback;
     }
 
     public void setName(String name) {
@@ -250,10 +259,17 @@ public class Property extends Task {
         }
 
         if ((name != null) && (ref != null)) {
-            Object obj = ref.getReferencedObject(getProject());
-            if (obj != null) {
-                addProperty(name, obj.toString());
-            }
+            try {
+                addProperty(name, 
+                            ref.getReferencedObject(getProject()).toString());
+            } catch (BuildException be) {
+                if (fallback != null) {
+                    addProperty(name, 
+                                ref.getReferencedObject(fallback).toString());
+                } else {
+                    throw be;
+                }
+            }                
         }
     }
 

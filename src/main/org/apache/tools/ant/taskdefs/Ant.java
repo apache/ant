@@ -527,7 +527,7 @@ public class Ant extends Task {
         if (newProject == null) {
             reinit();
         }
-        Property p = new Property(true);
+        Property p = new Property(true, getProject());
         p.setProject(newProject);
         p.setTaskName("property");
         properties.addElement(p);
