@@ -127,7 +127,7 @@
     </move>
   </xsl:template>
 
-  <!-- execon is replaced by apply -->
+  <!-- javadoc2 is replaced by javadoc -->
   <xsl:template match="javadoc2">
     <javadoc>
       <xsl:apply-templates select="@*|node()"/>
