@@ -72,17 +72,17 @@ public class DOMElementWriterTest extends TestCase {
     }
 
     public void testIsReference() {
-        assert("&#20;", w.isReference("&#20;"));
-        assert("&#x20;", w.isReference("&#x20;"));
-        assert("&#xA0;", w.isReference("&#xA0;"));
-        assert("&#A0;", !w.isReference("&#A0;"));
-        assert("20;", !w.isReference("20;"));
-        assert("&#20", !w.isReference("&#20"));
-        assert("&quot;", w.isReference("&quot;"));
-        assert("&apos;", w.isReference("&apos;"));
-        assert("&gt;", w.isReference("&gt;"));
-        assert("&lt;", w.isReference("&lt;"));
-        assert("&amp;", w.isReference("&amp;"));
+        assertTrue("&#20;", w.isReference("&#20;"));
+        assertTrue("&#x20;", w.isReference("&#x20;"));
+        assertTrue("&#xA0;", w.isReference("&#xA0;"));
+        assertTrue("&#A0;", !w.isReference("&#A0;"));
+        assertTrue("20;", !w.isReference("20;"));
+        assertTrue("&#20", !w.isReference("&#20"));
+        assertTrue("&quot;", w.isReference("&quot;"));
+        assertTrue("&apos;", w.isReference("&apos;"));
+        assertTrue("&gt;", w.isReference("&gt;"));
+        assertTrue("&lt;", w.isReference("&lt;"));
+        assertTrue("&amp;", w.isReference("&amp;"));
     }
 
     public void testEncode() {

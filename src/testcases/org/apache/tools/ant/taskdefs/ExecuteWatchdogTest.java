@@ -138,7 +138,7 @@ public class ExecuteWatchdogTest extends TestCase {
 		Process process = getProcess(TIME_OUT/2);
 		watchdog.start(process);
 		int retCode = waitForEnd(process);
-		assert("process should not have been killed", !watchdog.killedProcess());
+		assertTrue("process should not have been killed", !watchdog.killedProcess());
 		assertEquals(0, retCode);
 	}
 
@@ -149,10 +149,10 @@ public class ExecuteWatchdogTest extends TestCase {
 		watchdog.start(process);
 		int retCode = process.waitFor();
 		long elapsed = System.currentTimeMillis() - now;
-		assert("process should have been killed", watchdog.killedProcess());
-                //		assert("return code is invalid: " + retCode, retCode!=0);
-		assert("elapse time is less than timeout value", elapsed > TIME_OUT);
-		assert("elapse time is greater than run value", elapsed < TIME_OUT*2);
+		assertTrue("process should have been killed", watchdog.killedProcess());
+                //		assertTrue("return code is invalid: " + retCode, retCode!=0);
+		assertTrue("elapse time is less than timeout value", elapsed > TIME_OUT);
+		assertTrue("elapse time is greater than run value", elapsed < TIME_OUT*2);
 	}
 
 	// test a process that runs and failed
@@ -160,8 +160,8 @@ public class ExecuteWatchdogTest extends TestCase {
 		Process process = getProcess(-1); // process should abort
 		watchdog.start(process);
 		int retCode = process.waitFor();
-		assert("process should not have been killed", !watchdog.killedProcess());
-		assert("return code is invalid: " + retCode, retCode!=0);
+		assertTrue("process should not have been killed", !watchdog.killedProcess());
+		assertTrue("return code is invalid: " + retCode, retCode!=0);
 	}
 
 	public void testManualStop() throws Exception {
@@ -192,7 +192,7 @@ public class ExecuteWatchdogTest extends TestCase {
 
 		// process should be dead and well finished
 		assertEquals(0, process.exitValue());
-		assert("process should not have been killed", !watchdog.killedProcess());
+		assertTrue("process should not have been killed", !watchdog.killedProcess());
 	}
 
 	public static class TimeProcess {

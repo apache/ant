@@ -76,14 +76,14 @@ public class EnumeratedAttributeTest extends TestCase {
     public void testContains() {
         EnumeratedAttribute t1 = new TestNormal();
         for (int i=0; i<expected.length; i++) {
-            assert(expected[i]+" is in TestNormal",
+            assertTrue(expected[i]+" is in TestNormal",
                    t1.containsValue(expected[i]));
-            assert(expected[i].toUpperCase()+" is in TestNormal",
+            assertTrue(expected[i].toUpperCase()+" is in TestNormal",
                    !t1.containsValue(expected[i].toUpperCase()));
         }
-        assert("TestNormal doesn\'t have \"d\" attribute",
+        assertTrue("TestNormal doesn\'t have \"d\" attribute",
                !t1.containsValue("d"));
-        assert("TestNull doesn\'t have \"d\" attribute and doesn\'t die",
+        assertTrue("TestNull doesn\'t have \"d\" attribute and doesn\'t die",
                !(new TestNull()).containsValue("d"));
     }
 

@@ -106,7 +106,7 @@ public class CVSPassTest extends TaskdefsTest {
         executeTarget("test3");
         File f = new File(getProjectDir(), "testpassfile.tmp");
 
-        assert( "Passfile "+f+" not created", f.exists());
+        assertTrue( "Passfile "+f+" not created", f.exists());
 
         assertEquals(JAKARTA_URL+EOL, readFile(f));
 
@@ -116,7 +116,7 @@ public class CVSPassTest extends TaskdefsTest {
         executeTarget("test4");
         File f = new File(getProjectDir(), "testpassfile.tmp");
 
-        assert( "Passfile "+f+" not created", f.exists());
+        assertTrue( "Passfile "+f+" not created", f.exists());
 
         assertEquals(
             JAKARTA_URL+ EOL+
@@ -128,7 +128,7 @@ public class CVSPassTest extends TaskdefsTest {
         executeTarget("test5");
         File f = new File(getProjectDir(), "testpassfile.tmp");
 
-        assert( "Passfile "+f+" not created", f.exists());
+        assertTrue( "Passfile "+f+" not created", f.exists());
 
         assertEquals(
             JAKARTA_URL+ EOL+

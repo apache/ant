@@ -78,7 +78,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test1");
         timer.stop();
         if(TRACE) System.out.println(" test1 elapsed time="+timer.time());
-        assert(timer.time()>=0);
+        assertTrue(timer.time()>=0);
     }
 
     public void test2() {
@@ -86,7 +86,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test2");
         timer.stop();
         if(TRACE) System.out.println(" test2 elapsed time="+timer.time());
-        assert(timer.time()>=0);
+        assertTrue(timer.time()>=0);
     }
 
     public void test3() {
@@ -94,7 +94,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test3");
         timer.stop();
         if(TRACE) System.out.println(" test3 elapsed time="+timer.time());
-        assert(timer.time()>=(2000-ERROR_RANGE));
+        assertTrue(timer.time()>=(2000-ERROR_RANGE));
     }
 
     public void test4() {
@@ -102,7 +102,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test3");
         timer.stop();
         if(TRACE) System.out.println(" test4 elapsed time="+timer.time());
-        assert(timer.time()>=(2000-ERROR_RANGE) && timer.time()<60000);
+        assertTrue(timer.time()>=(2000-ERROR_RANGE) && timer.time()<60000);
     }
 
     public void test5() {
@@ -115,7 +115,7 @@ public class SleepTest extends TaskdefsTest {
         executeTarget("test6");
         timer.stop();
         if(TRACE) System.out.println(" test6 elapsed time="+timer.time());
-        assert(timer.time()<2000);
+        assertTrue(timer.time()<2000);
     }
 
 

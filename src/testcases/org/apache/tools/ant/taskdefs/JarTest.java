@@ -88,7 +88,7 @@ public class JarTest extends TaskdefsTest {
     public void test4() {
         executeTarget("test4");
         File jarFile = new File(getProjectDir(), tempJar);
-        assert(jarFile.exists());
+        assertTrue(jarFile.exists());
         jarModifiedDate = jarFile.lastModified();
     }
 

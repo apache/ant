@@ -87,10 +87,10 @@ public class ProjectTest extends TestCase {
                    p.createDataType("dummy"));
         Object o = p.createDataType("fileset");
         assertNotNull("fileset is a known type", o);
-        assert("fileset creates FileSet", o instanceof FileSet);
-        assert("PatternSet", 
+        assertTrue("fileset creates FileSet", o instanceof FileSet);
+        assertTrue("PatternSet", 
                p.createDataType("patternset") instanceof PatternSet);
-        assert("Path", p.createDataType("path") instanceof Path);
+        assertTrue("Path", p.createDataType("path") instanceof Path);
     }
 
     /**

@@ -76,28 +76,28 @@ public abstract class RegexpMatcherTest extends TestCase {
     public void testMatches() {
         RegexpMatcher reg = getImplementation();
         reg.setPattern("aaaa");
-        assert("aaaa should match itself", reg.matches("aaaa"));
-        assert("aaaa should match xaaaa", reg.matches("xaaaa"));
-        assert("aaaa shouldn\'t match xaaa", !reg.matches("xaaa"));
+        assertTrue("aaaa should match itself", reg.matches("aaaa"));
+        assertTrue("aaaa should match xaaaa", reg.matches("xaaaa"));
+        assertTrue("aaaa shouldn\'t match xaaa", !reg.matches("xaaa"));
         reg.setPattern("^aaaa");
-        assert("^aaaa shouldn\'t match xaaaa", !reg.matches("xaaaa"));
-        assert("^aaaa should match aaaax", reg.matches("aaaax"));
+        assertTrue("^aaaa shouldn\'t match xaaaa", !reg.matches("xaaaa"));
+        assertTrue("^aaaa should match aaaax", reg.matches("aaaax"));
         reg.setPattern("aaaa$");
-        assert("aaaa$ shouldn\'t match aaaax", !reg.matches("aaaax"));
-        assert("aaaa$ should match xaaaa", reg.matches("xaaaa"));
+        assertTrue("aaaa$ shouldn\'t match aaaax", !reg.matches("aaaax"));
+        assertTrue("aaaa$ should match xaaaa", reg.matches("xaaaa"));
         reg.setPattern("[0-9]+");
-        assert("[0-9]+ should match 123", reg.matches("123"));
-        assert("[0-9]+ should match 1", reg.matches("1"));
-        assert("[0-9]+ shouldn\'t match \'\'", !reg.matches(""));
-        assert("[0-9]+ shouldn\'t match a", !reg.matches("a"));
+        assertTrue("[0-9]+ should match 123", reg.matches("123"));
+        assertTrue("[0-9]+ should match 1", reg.matches("1"));
+        assertTrue("[0-9]+ shouldn\'t match \'\'", !reg.matches(""));
+        assertTrue("[0-9]+ shouldn\'t match a", !reg.matches("a"));
         reg.setPattern("[0-9]*");
-        assert("[0-9]* should match 123", reg.matches("123"));
-        assert("[0-9]* should match 1", reg.matches("1"));
-        assert("[0-9]* should match \'\'", reg.matches(""));
-        assert("[0-9]* should match a", reg.matches("a"));
+        assertTrue("[0-9]* should match 123", reg.matches("123"));
+        assertTrue("[0-9]* should match 1", reg.matches("1"));
+        assertTrue("[0-9]* should match \'\'", reg.matches(""));
+        assertTrue("[0-9]* should match a", reg.matches("a"));
         reg.setPattern("([0-9]+)=\\1");
-        assert("([0-9]+)=\\1 should match 1=1", reg.matches("1=1"));
-        assert("([0-9]+)=\\1 shouldn\'t match 1=2", !reg.matches("1=2"));
+        assertTrue("([0-9]+)=\\1 should match 1=1", reg.matches("1=1"));
+        assertTrue("([0-9]+)=\\1 shouldn\'t match 1=2", !reg.matches("1=2"));
     }
 
     public void testGroups() {

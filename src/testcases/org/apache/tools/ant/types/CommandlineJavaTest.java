@@ -93,7 +93,7 @@ public class CommandlineJavaTest extends TestCase {
          * here without using the same logic as applied in the class
          * itself.
          *
-         * assert("no classpath", "java", s[0]);
+         * assertTrue("no classpath", "java", s[0]);
          */
         assertEquals("no classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("no classpath", "junit.textui.TestRunner", s[2]);
@@ -112,9 +112,9 @@ public class CommandlineJavaTest extends TestCase {
         //        assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
-        assert("junit.jar contained", 
+        assertTrue("junit.jar contained", 
                s[3].indexOf("junit.jar"+java.io.File.pathSeparator) >= 0);
-        assert("ant.jar contained", s[3].endsWith("ant.jar"));
+        assertTrue("ant.jar contained", s[3].endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
         assertEquals("with classpath", 
                      "org.apache.tools.ant.CommandlineJavaTest", s[5]);

@@ -101,10 +101,10 @@ public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
     public void testParse() throws Exception {
         ZipExtraField[] ze = ExtraFieldUtils.parse(data);
         assertEquals("number of fields", 2, ze.length);
-        assert("type field 1", ze[0] instanceof AsiExtraField);
+        assertTrue("type field 1", ze[0] instanceof AsiExtraField);
         assertEquals("mode field 1", 040755,
                      ((AsiExtraField) ze[0]).getMode());
-        assert("type field 2", ze[1] instanceof UnrecognizedExtraField);
+        assertTrue("type field 2", ze[1] instanceof UnrecognizedExtraField);
         assertEquals("data length field 2", 0, 
                      ze[1].getLocalFileDataLength().getValue());
 

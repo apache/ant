@@ -87,8 +87,8 @@ public class DirectoryScannerTest extends TestCase {
                 haveTaskdefsPackage = true;
             }
         }
-        assert("(1) zip package included", haveZipPackage);
-        assert("(1) taskdefs package not included", !haveTaskdefsPackage);
+        assertTrue("(1) zip package included", haveZipPackage);
+        assertTrue("(1) taskdefs package not included", !haveTaskdefsPackage);
 
         ds = new DirectoryScanner();
         ds.setBasedir(dir);
@@ -103,8 +103,8 @@ public class DirectoryScannerTest extends TestCase {
                 haveTaskdefsPackage = true;
             }
         }
-        assert("(2) zip package included", haveZipPackage);
-        assert("(2) taskdefs package included", haveTaskdefsPackage);
+        assertTrue("(2) zip package included", haveZipPackage);
+        assertTrue("(2) taskdefs package included", haveTaskdefsPackage);
 
     }
 

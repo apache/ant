@@ -17,6 +17,9 @@ Other changes:
 * Added a new condition <isset> that test for the existence of a
   property to the condition task.
 
+* Ant's testcases require JUnit 3.7 or above as they now use the new
+  assertTrue method instead of assert.
+
 Fixed bugs:
 -----------
 

@@ -85,7 +85,7 @@ public class AvailableTest extends TaskdefsTest {
     // file doesn't exist -> property 'test' == null
     public void test4() { 
         executeTarget("test4");
-        assert(project.getProperty("test") == null);
+        assertTrue(project.getProperty("test") == null);
     }
 
     // file does exist -> property 'test' == 'true'
@@ -97,7 +97,7 @@ public class AvailableTest extends TaskdefsTest {
     // resource doesn't exist -> property 'test' == null
     public void test6() { 
         executeTarget("test6");
-        assert(project.getProperty("test") == null);
+        assertTrue(project.getProperty("test") == null);
     }
 
     // resource does exist -> property 'test' == 'true'
@@ -109,7 +109,7 @@ public class AvailableTest extends TaskdefsTest {
     // class doesn't exist -> property 'test' == null
     public void test8() { 
         executeTarget("test8");
-        assert(project.getProperty("test") == null);
+        assertTrue(project.getProperty("test") == null);
     }
 
     // class does exist -> property 'test' == 'true'

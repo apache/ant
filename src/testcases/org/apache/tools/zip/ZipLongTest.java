@@ -97,15 +97,15 @@ public class ZipLongTest extends TestCase {
         ZipLong zl2 = new ZipLong(0x12345678);
         ZipLong zl3 = new ZipLong(0x87654321);
 
-        assert("reflexive", zl.equals(zl));
+        assertTrue("reflexive", zl.equals(zl));
 
-        assert("works", zl.equals(zl2));
-        assert("works, part two", !zl.equals(zl3));
+        assertTrue("works", zl.equals(zl2));
+        assertTrue("works, part two", !zl.equals(zl3));
 
-        assert("symmetric", zl2.equals(zl));
+        assertTrue("symmetric", zl2.equals(zl));
 
-        assert("null handling", !zl.equals(null));
-        assert("non ZipLong handling", !zl.equals(new Integer(0x1234)));
+        assertTrue("null handling", !zl.equals(null));
+        assertTrue("non ZipLong handling", !zl.equals(new Integer(0x1234)));
     }
 
     /**

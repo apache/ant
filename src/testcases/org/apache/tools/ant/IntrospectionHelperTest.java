@@ -94,15 +94,15 @@ public class IntrospectionHelperTest extends TestCase {
             ih.addText(p, this, "test2");
             fail("test2 shouldn\'t be equal to test");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
     }
 
     public void testSupportsCharacters() {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(java.lang.String.class);
-        assert("String doesn\'t support addText", !ih.supportsCharacters());
+        assertTrue("String doesn\'t support addText", !ih.supportsCharacters());
         ih = IntrospectionHelper.getHelper(getClass());
-        assert("IntrospectionHelperTest supports addText", 
+        assertTrue("IntrospectionHelperTest supports addText", 
                ih.supportsCharacters());
     }
 
@@ -177,14 +177,14 @@ public class IntrospectionHelperTest extends TestCase {
             ih.createElement(p, this, "fourteen");
             fail("fourteen throws NullPointerException");
         } catch (BuildException be) {
-            assert(be.getException() instanceof NullPointerException);
+            assertTrue(be.getException() instanceof NullPointerException);
         }
 
         try {
             ih.createElement(p, this, "fourteen");
             fail("fifteen throws NullPointerException");
         } catch (BuildException be) {
-            assert(be.getException() instanceof NullPointerException);
+            assertTrue(be.getException() instanceof NullPointerException);
         }
     }
     
@@ -204,7 +204,7 @@ public class IntrospectionHelperTest extends TestCase {
             assertEquals("Return type of "+name, expect, ih.getElementType(name));
             h.remove(name);
         }
-        assert("Found all", h.isEmpty());
+        assertTrue("Found all", h.isEmpty());
     }
 
     public Object createTwo(String s) {
@@ -288,76 +288,76 @@ public class IntrospectionHelperTest extends TestCase {
             ih.setAttribute(p, this, "seven", "3");
             fail("2 shouldn't be equals to three");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "eight", "2");
         try {
             ih.setAttribute(p, this, "eight", "3");
             fail("2 shouldn't be equals to three - as int");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "nine", "2");
         try {
             ih.setAttribute(p, this, "nine", "3");
             fail("2 shouldn't be equals to three - as Integer");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "ten", "2");
         try {
             ih.setAttribute(p, this, "ten", "3");
             fail("/tmp/2 shouldn't be equals to /tmp/3");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "eleven", "2");
         try {
             ih.setAttribute(p, this, "eleven", "on");
             fail("on shouldn't be false");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "twelve", "2");
         try {
             ih.setAttribute(p, this, "twelve", "on");
             fail("on shouldn't be false");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.Project");
         try {
             ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.ProjectHelper");
             fail("org.apache.tools.ant.Project shouldn't be equal to org.apache.tools.ant.ProjectHelper");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         try {
             ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.Project2");
             fail("org.apache.tools.ant.Project2 doesn't exist");
         } catch (BuildException be) {
-            assert(be.getException() instanceof ClassNotFoundException);
+            assertTrue(be.getException() instanceof ClassNotFoundException);
         }
         ih.setAttribute(p, this, "fourteen", "2");
         try {
             ih.setAttribute(p, this, "fourteen", "on");
             fail("2 shouldn't be equals to three - as StringBuffer");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "fifteen", "abcd");
         try {
             ih.setAttribute(p, this, "fifteen", "on");
             fail("o shouldn't be equal to a");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
         ih.setAttribute(p, this, "sixteen", "abcd");
         try {
             ih.setAttribute(p, this, "sixteen", "on");
             fail("o shouldn't be equal to a");
         } catch (BuildException be) {
-            assert(be.getException() instanceof AssertionFailedError);
+            assertTrue(be.getException() instanceof AssertionFailedError);
         }
     }
 
@@ -394,7 +394,7 @@ public class IntrospectionHelperTest extends TestCase {
             h.remove(name);
         }
         h.remove("name");
-        assert("Found all", h.isEmpty());
+        assertTrue("Found all", h.isEmpty());
     }
 
     public int setTwo(String s) {
@@ -432,11 +432,11 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void setEleven(boolean b) {
-        assert(!b);
+        assertTrue(!b);
     }
 
     public void setTwelve(Boolean b) {
-        assert(!b.booleanValue());
+        assertTrue(!b.booleanValue());
     }
 
     public void setThirteen(Class c) {

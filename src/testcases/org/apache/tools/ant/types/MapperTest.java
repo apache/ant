@@ -170,7 +170,7 @@ public class MapperTest extends TestCase {
         m3.setFrom("*.java");
         m3.setTo("*.class");
         FileNameMapper fmm = m1.getImplementation();
-        assert("should be glob", fmm instanceof GlobPatternMapper);
+        assertTrue("should be glob", fmm instanceof GlobPatternMapper);
         String[] result = fmm.mapFileName("a.java");
         assertEquals("a.java should match", 1, result.length);
         assertEquals("a.class", result[0]);

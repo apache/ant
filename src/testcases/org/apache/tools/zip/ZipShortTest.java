@@ -95,15 +95,15 @@ public class ZipShortTest extends TestCase {
         ZipShort zs2 = new ZipShort(0x1234);
         ZipShort zs3 = new ZipShort(0x5678);
 
-        assert("reflexive", zs.equals(zs));
+        assertTrue("reflexive", zs.equals(zs));
 
-        assert("works", zs.equals(zs2));
-        assert("works, part two", !zs.equals(zs3));
+        assertTrue("works", zs.equals(zs2));
+        assertTrue("works, part two", !zs.equals(zs3));
 
-        assert("symmetric", zs2.equals(zs));
+        assertTrue("symmetric", zs2.equals(zs));
 
-        assert("null handling", !zs.equals(null));
-        assert("non ZipShort handling", !zs.equals(new Integer(0x1234)));
+        assertTrue("null handling", !zs.equals(null));
+        assertTrue("non ZipShort handling", !zs.equals(new Integer(0x1234)));
     }
 
     /**
