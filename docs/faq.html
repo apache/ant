@@ -423,6 +423,9 @@
       for Cygwin if <code>ANT_HOME</code> is set to a Windows style
       path.
       </a></li>
+                <li><a href="#1.5.2-zip-broken">
+  <code>&lt;zip&gt;</code> is broken in Ant 1.5.2.
+      </a></li>
             </ul>
     
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
@@ -1724,9 +1727,31 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </table>
                   <p>This problem has been reported only hours after Ant 1.5 has
         been released, see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
-        10664</a> and all it's duplicates.</p>
+        10664</a> and all its duplicates.</p>
                         <p>A fixed version of the wrapper script can be found <a href="http://ant.apache.org/old-releases/v1.5/errata/">here</a>.
         Simply replace your script with this version.</p>
+                    <br/>
+      <a name="1.5.2-zip-broken"></a>
+      <table border="0" cellspacing="0" cellpadding="2" width="100%">
+        <tr><td bgcolor="#4C6C8F">
+          <font color="#ffffff" face="arial,helvetica,sanserif">
+            <strong>
+              <code>&lt;zip&gt;</code> is broken in Ant 1.5.2.
+            </strong>
+          </font>
+        </td></tr>
+      </table>
+                  <p>Yes, it is.</p>
+                        <p>The problem reported by most people - see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17648">Bug
+        17648</a> and all its duplicates - is that Ant creates
+        archives that a partially unreadable by WinZIP.  Luckily
+        <code>jar</code> deals with the archives and so the generated
+        jars/wars/ears will most likely work for you anyway.</p>
+                        <p>There are additional problems, see bugs <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17780">Bug
+        17780</a>, <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17871">Bug
+        17871</a> and <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18403">Bug
+        18403</a>.  All of them are supposed to be fixed with Ant
+        1.5.3 (and only 18403 should exist in 1.5.3beta1).</p>
                   
                     </div>
                 </td><td width="10"><img width="10" height="4" alt="" src="./images/spacer.gif"></td>
