@@ -54,7 +54,7 @@ for example, and a target for creating a distributable. You can only build a
 distributable when you have compiled first, so the distribute target
 <i>depends on</i> the compile target. Ant resolves these dependencies.</p>
 <p>It should be noted, however, that Ant's <code>depends</code> attribute
-only specifies the <i>order</i> in which targets should be executed &#150; it
+only specifies the <i>order</i> in which targets should be executed - it
 does not affect whether the target that specifies the dependency(s) gets
 executed if the dependent target(s) did not (need to) run.
 </p>
@@ -265,7 +265,7 @@ programming and scripting languages, as well as with documentation systems.</p>
 is found in a file, but no
 filter is associated with that token, no changes take place;
 therefore, no escaping
-method is available &#150; but as long as you choose appropriate names for your
+method is available - but as long as you choose appropriate names for your
 tokens, this should not cause problems.</p>
 <p><b>Warning:</b> If you copy binary files with filtering turned on, you can corrupt the
 files. This feature should be used with text files <em>only</em>.</p>
@@ -289,7 +289,7 @@ be used. This takes the general form of:</p>
 directory relative to the project's base directory (or an absolute
 filename), while the <code>path</code> attribute accepts colon-
 or semicolon-separated lists of locations. The <code>path</code>
-attribute is intended to be used with predefined paths &#150; in any other
+attribute is intended to be used with predefined paths - in any other
 case, multiple elements with <code>location</code> attributes should be
 preferred.</p>
 <p>As a shortcut, the <code>&lt;classpath&gt;</code> tag
@@ -323,7 +323,7 @@ by the <code>classes</code> directory.</p>
 <p>If you want to use the same path-like structure for several tasks,
 you can define them with a <code>&lt;path&gt;</code> element at the
 same level as <i>target</i>s, and reference them via their
-<i>id</i> attribute &#150; see <a href="#references">References</a> for an
+<i>id</i> attribute - see <a href="#references">References</a> for an
 example.</p>
 <p>A path-like structure can include a reference to another path-like
 structure via nested <code>&lt;path&gt;</code> elements:</p>
@@ -405,7 +405,7 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
 <h3><a name="references">References</a></h3>
 <p>The <code>id</code> attribute of the buildfile's elements can be
 used to refer to them. This can useful if you are going to replicate
-the same snippet of XML over and over again &#150; using a
+the same snippet of XML over and over again - using a
 <code>&lt;classpath&gt;</code> structure more than once for
 example.</p>
 <p>The following example:</p>

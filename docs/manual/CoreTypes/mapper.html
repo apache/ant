@@ -11,16 +11,16 @@
 <p>Some tasks take source files and create target files. Depending on
 the task, it may be quite obvious which name a target file will have
 (using <a href="../CoreTasks/javac.html">javac</a>, you know there will be
-<code>.class</code> files for your <code>.java</code> files) &#150; in
+<code>.class</code> files for your <code>.java</code> files) - in
 other cases you may want to specify the target files, either to help
 Ant or to get an extra bit of functionality.</p>
 <p>While source files are usually specified as <a
-href="fileset.html">fileset</a>s, you don't specify target files directly &#150;
+href="fileset.html">fileset</a>s, you don't specify target files directly -
 instead, you tell Ant how to find the target file(s) for one source file. An
 instance of <code>org.apache.tools.ant.util.FileNameMapper</code> is
 responsible for this. It constructs target file names based on rules
 that can be parameterized with <code>from</code> and <code>to</code>
-attributes &#150; the exact meaning of which is implementation-dependent.</p>
+attributes - the exact meaning of which is implementation-dependent.</p>
 <p>These instances are defined in <code>&lt;mapper&gt;</code> elements
 with the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -64,7 +64,7 @@ with the following attributes:</p>
   </tr>
 </table>
 <p>The classpath can be specified via a nested
-<code>&lt;classpath&gt;</code>, as well &#150; that is,
+<code>&lt;classpath&gt;</code>, as well - that is,
 a <a href="../using.html#path">path</a>-like structure.</p>
 <p>The built-in mapper types are:</p>
 <h4><a name="identity-mapper">identity</a></h4>
@@ -128,7 +128,7 @@ leading directory information stripped off. Both <code>to</code> and
 </table>
 <h4><a name="merge-mapper">merge</a></h4>
 <p>The target file name will always be the same, as defined by
-<code>to</code> &#150; <code>from</code> will be ignored.</p>
+<code>to</code> - <code>from</code> will be ignored.</p>
 <h5>Examples:</h5>
 <blockquote><pre>
 &lt;mapper type=&quot;merge&quot; to=&quot;archive.tar&quot;/&gt;
