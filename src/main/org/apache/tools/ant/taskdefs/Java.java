@@ -149,6 +149,11 @@ public class Java extends Task {
                     + "JVM is used.", Project.MSG_WARN);
             }
 
+            if (cmdl.getBootclasspath() != null) {
+                log("bootclasspath ignored when same JVM is used.", 
+                    Project.MSG_WARN);
+            }
+
             log("Running in same VM " + cmdl.describeJavaCommand(), 
                 Project.MSG_VERBOSE);
         }
@@ -195,6 +200,14 @@ public class Java extends Task {
      */
     public Path createClasspath() {
         return cmdl.createClasspath(getProject()).createPath();
+    }
+
+    /**
+     * Adds a path to the bootclasspath.
+     * @since Ant 1.6
+     */
+    public Path createBootclasspath() {
+        return cmdl.createBootclasspath(getProject()).createPath();
     }
 
     /**

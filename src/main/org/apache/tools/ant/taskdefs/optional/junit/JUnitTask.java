@@ -426,6 +426,14 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Adds a path to the bootclasspath.
+     * @since Ant 1.6
+     */
+    public Path createBootclasspath() {
+        return commandline.createBootclasspath(getProject()).createPath();
+    }
+
+    /**
      * Adds an environment variable; used when forking.
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
@@ -823,6 +831,11 @@ public class JUnitTask extends Task {
         if (newEnvironment || null != env.getVariables()) {
             log("Changes to environment variables are ignored if running in "
                 + "the same VM.", Project.MSG_WARN);
+        }
+
+        if (commandline.getBootclasspath() != null) {
+            log("bootclasspath is ignored if running in the same VM.", 
+                Project.MSG_WARN);
         }
 
         CommandlineJava.SysProperties sysProperties =

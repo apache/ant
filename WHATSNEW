@@ -375,6 +375,9 @@ Other changes:
 * new selector <type/> allowing to select only files or only directories.
   Bugzilla Report 20222.
 
+* <java> and <junit> now support a nested <bootclasspath> element that
+  will be ignored if not forking a new VM.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

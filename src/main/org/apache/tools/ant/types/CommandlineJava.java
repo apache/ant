@@ -85,6 +85,7 @@ public class CommandlineJava implements Cloneable {
      */
     private SysProperties sysProperties = new SysProperties();
     private Path classpath = null;
+    private Path bootclasspath = null;
     private String vmVersion;
     private String maxMemory = null;
 
@@ -270,6 +271,16 @@ public class CommandlineJava implements Cloneable {
         return classpath;
     }
 
+    /**
+     * @since Ant 1.6
+     */
+    public Path createBootclasspath(Project p) {
+        if (bootclasspath == null) {
+            bootclasspath = new Path(p);
+        }
+        return bootclasspath;
+    }
+
     public String getVmversion() {
         return vmVersion;
     }
@@ -294,11 +305,16 @@ public class CommandlineJava implements Cloneable {
                              result, pos, sysProperties.size());
             pos += sysProperties.size();
         }
-        // classpath is a vm option too..
-        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
-        if (fullClasspath != null && fullClasspath.toString().trim().length() > 0) {
+
+        // classpath and bootclasspath are vm options too..
+        if (haveBootclasspath(false)) {
+            result[pos++] = "-Xbootclasspath:" + bootclasspath.toString();
+        }
+
+        if (haveClasspath()) {
             result[pos++] = "-classpath";
-            result[pos++] = fullClasspath.toString();
+            result[pos++] = 
+                classpath.concatSystemClasspath("ignore").toString();
         }
 
         // JDK usage command line says that -jar must be the first option, as there is
@@ -377,9 +393,12 @@ public class CommandlineJava implements Cloneable {
     public int size() {
         int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
-        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
-        if (fullClasspath != null && fullClasspath.toString().trim().length() > 0) {
+        if (haveClasspath()) {
             size += 2;
+        }
+        // bootclasspath is "-Xbootclasspath:<classpath>" -> 1 arg
+        if (haveBootclasspath(true)) {
+            size++;
         }
         // jar execution requires an additional -jar option
         if (executeJar){
@@ -398,6 +417,10 @@ public class CommandlineJava implements Cloneable {
 
     public Path getClasspath() {
         return classpath;
+    }
+
+    public Path getBootclasspath() {
+        return bootclasspath;
     }
 
     public void setSystemProperties() throws BuildException {
@@ -425,6 +448,9 @@ public class CommandlineJava implements Cloneable {
         if (classpath != null) {
             c.classpath = (Path) classpath.clone();
         }
+        if (bootclasspath != null) {
+            c.bootclasspath = (Path) bootclasspath.clone();
+        }
         c.vmVersion = vmVersion;
         c.executeJar = executeJar;
         return c;
@@ -435,6 +461,56 @@ public class CommandlineJava implements Cloneable {
      */
     public void clearJavaArgs() {
         javaCommand.clearArgs();
+    }
+
+    /**
+     * Has the classpath been specified and shall it really be used or
+     * will build.sysclasspath null it?
+     *
+     * @since Ant 1.6
+     */
+    private boolean haveClasspath() {
+        Path fullClasspath = classpath != null 
+            ? classpath.concatSystemClasspath("ignore") : null;
+        return fullClasspath != null 
+            && fullClasspath.toString().trim().length() > 0;
+    }
+
+    /**
+     * Has the bootclasspath been specified and shall it really be
+     * used (build.sysclasspath could be set or the VM may not support
+     * it)?
+     *
+     * @param log whether to log a warning if a bootclasspath has been
+     * specified but will be ignored.
+     *
+     * @since Ant 1.6
+     */
+    private boolean haveBootclasspath(boolean log) {
+        if (bootclasspath != null 
+            && bootclasspath.toString().trim().length() > 0) {
+
+            /*
+             * XXX - need to log something, but there is no ProjectComponent
+             *       around to log to.
+             */
+            if (!bootclasspath.toString()
+                .equals(bootclasspath.concatSystemClasspath("ignore")
+                        .toString())) {
+                if (log) {
+                    System.out.println("Ignoring bootclasspath as "
+                                       + "build.sysclasspath has been set.");
+                }
+            } else if (vmVersion.startsWith("1.1")) {
+                if (log) {
+                    System.out.println("Ignoring bootclasspath as "
+                                       + "the target VM doesn't support it.");
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

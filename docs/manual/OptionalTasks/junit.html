@@ -228,6 +228,15 @@ description in the <a href="../CoreTasks/exec.html#env">exec</a> task.</p>
 
 <p>Settings will be ignored if <code>fork</code> is disabled.</p>
 
+<h4>bootclasspath</h4>
+
+<p>The location of bootstrap class files can be specified using this
+<a href="../using.html#path">PATH like structure</a> - will be ignored
+if <i>fork</i> is not <code>true</code> or the target VM doesn't
+support it (i.e. Java 1.1).</p>
+
+<p><em>since Ant 1.6</em>.</p>
+
 <h4>formatter</h4>
 
 <p>The results of the tests can be printed in different

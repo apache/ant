@@ -189,6 +189,16 @@ with <a href="../CoreTypes/propertyset.html">syspropertyset</a>s.</p>
 <p><code>Java</code>'s <i>classpath</i> attribute is a <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
 <i>classpath</i> element.</p>
+
+<h4>bootclasspath</h4>
+
+<p>The location of bootstrap class files can be specified using this
+<a href="../using.html#path">PATH like structure</a> - will be ignored
+if <i>fork</i> is not <code>true</code> or the target VM doesn't
+support it (i.e. Java 1.1).</p>
+
+<p><em>since Ant 1.6</em>.</p>
+
 <h4>env</h4>
 <p>It is possible to specify environment variables to pass to the
 forked VM via nested <i>env</i> elements. See the description in the
