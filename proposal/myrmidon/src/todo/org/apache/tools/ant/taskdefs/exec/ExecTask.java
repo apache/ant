@@ -67,8 +67,6 @@ public class ExecTask
 
     /**
      * The command to execute.
-     *
-     * @param value The new Executable value
      */
     public void setExecutable( final String value )
         throws TaskException
@@ -78,8 +76,6 @@ public class ExecTask
 
     /**
      * Use a completely new environment
-     *
-     * @param newenv The new Newenvironment value
      */
     public void setNewenvironment( final boolean newEnvironment )
     {
