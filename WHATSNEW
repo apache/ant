@@ -375,3 +375,7 @@ cases.
 * Corrupt Zip- and Jar-files ar now deleted if the task fails.
 
 * many more fixes we've forgotten to document here ...
+
+* The packagelistloc attribute of <javadoc>'s <link> child will be
+  resolved as a file (i.e. it is either absolute or relative to 
+  basedir).

@@ -546,7 +546,7 @@ public class Javadoc extends Task {
             if (!tok.hasMoreTokens()) {
                 throw new BuildException(linkOfflineError);
             }                                        
-            le.setPackagelistLoc(tok.nextToken());
+            le.setPackagelistLoc(project.resolveFile(tok.nextToken()));
         }
     }
     public void setGroup(String src) {
@@ -607,7 +607,7 @@ public class Javadoc extends Task {
     public class LinkArgument {
         private String href;
         private boolean offline = false;
-        private String packagelistLoc;
+        private File packagelistLoc;
         
         public LinkArgument() {
         }
@@ -620,12 +620,12 @@ public class Javadoc extends Task {
             return href;
         }
         
-        public void setPackagelistLoc(String src) {
+        public void setPackagelistLoc(File src) {
             packagelistLoc = src;
         }
         
         public String getPackagelistLoc() {
-            return packagelistLoc;
+            return packagelistLoc.getAbsolutePath();
         }
         
         public void setOffline(boolean offline) {
