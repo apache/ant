@@ -400,7 +400,14 @@ public class JspC extends MatchingTask {
      */
     public void execute()
         throws BuildException {
-        if (destDir != null && !destDir.isDirectory()) {
+
+        // make sure that we've got a destdir
+        if (destDir == null) {
+            throw new BuildException("destdir attribute must be set!",
+                                     getLocation());
+        }
+
+        if (!destDir.isDirectory()) {
             throw new
                 BuildException("destination directory \"" + destDir +
                                "\" does not exist or is not a directory",
