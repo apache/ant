@@ -317,7 +317,7 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Handles an error line by logging it with the ERR priority.
+     * Handles an error line by logging it with the WARN priority.
      *
      * @param output The error output to log. Should not be <code>null</code>.
      *
