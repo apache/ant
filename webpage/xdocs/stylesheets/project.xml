@@ -15,8 +15,10 @@
               href="/antnews.html"/>
         <item name="Documentation"            
               href="/manual/"/>
-        <item name="External Resources"
+        <item name="External Tools and Tasks"
               href="/external.html"/>
+        <item name="Resources"
+              href="/resources.html"/>
         <item name="Ant FAQ"
               href="/faq.html"/>
     </menu>

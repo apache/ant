@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="bodewig@apache.org">Stefan Bodewig</author>
+    <title>Resources</title>
+  </properties>
+
+  <body>
+    
+    <section name="Articles">
+      <ul>
+        <li>Incremental development with Ant and JUnit 
+          <a href="http://www-106.ibm.com/developerworks/library/j-ant/?dwzone=java">http://www-106.ibm.com/developerworks/library/j-ant/?dwzone=java</a>.</li>
+
+        <li>Automate your build process using Java and Ant
+          <a href="http://www.javaworld.com/javaworld/jw-10-2000/jw-1020-ant.html">http://www.javaworld.com/javaworld/jw-10-2000/jw-1020-ant.html</a>.</li>
+
+        <li>Short tutorial in Cactus&apos; (formerly J2EEUnit)
+          documentation
+          <a href="http://jakarta.apache.org/commons/cactus/ant.html">http://jakarta.apache.org/commons/cactus/ant.html</a>.</li>
+
+        <li>Developing custom Ant tasks with Visual Age for Java
+          <a href="http://www7.software.ibm.com/vad.nsf/data/document2366?OpenDocument&amp;p=1&amp;BCT=1&amp;Footer=1">http://www7.software.ibm.com/vad.nsf/data/document2366?OpenDocument&amp;p=1&amp;BCT=1&amp;Footer=1</a>.</li>
+      </ul>
+    </section>
+
+    <section name="Presentations">
+      <ul>
+        <li>There is a powerpoint presentation on Ant 1.2 by 
+          <a href="mailto:chanezon@netscape.com">Patrick Chanezon</a> here:
+          <a href="http://people.netscape.com/chanezon/tech/ant/ant_preso.ppt">http://people.netscape.com/chanezon/tech/ant/ant_preso.ppt</a></li>
+
+        <li>An Ant presentation, made at the St. Louis Java Users Group
+          meeting in March 2001 (PowerPoint): 
+          <a href="http://www.ociweb.com/javasig/knowledgebase/March2001/index.html">http://www.ociweb.com/javasig/knowledgebase/March2001/index.html</a></li>
+
+        <li>A presentation by 
+          <a href="mailto:steve_l@iseran.com">Steve Loughran</a>
+          on software develpoment processes that briefly covers Ant is here
+          <a href="http://www.iseran.com/Steve/modern_development_processes.html">http://www.iseran.com/Steve/modern_development_processes.html</a>.</li>
+      </ul>
+    </section>
+  </body>
+</document>

@@ -3,12 +3,12 @@
 
   <properties>
     <author email="bodewig@apache.org">Stefan Bodewig</author>
-    <title>External Resources</title>
+    <title>External Tools and Tasks</title>
   </properties>
 
   <body>
     
-    <section name="External Resources for Ant">
+    <section name="External Tools and Tasks">
 
       <p>This page lists external resources for Ant: tasks, IDE
       integration tools, loggers, you name it. If you've written
