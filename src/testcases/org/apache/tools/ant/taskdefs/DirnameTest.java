@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  */
@@ -45,6 +46,9 @@ public class DirnameTest extends BuildFileTest {
     }
 
     public void test4() {
+        if (Os.isFamily("netware") || Os.isFamily("dos")) {
+            return;
+        }
         executeTarget("test4");
         String filesep = System.getProperty("file.separator");
         String expected = filesep + "usr" + filesep + "local";

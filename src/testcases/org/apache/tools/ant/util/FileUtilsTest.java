@@ -101,15 +101,19 @@ public class FileUtilsTest extends TestCase {
     }
 
     public void testResolveFile() {
-        /*
-         * Start with simple absolute file names.
-         */
-        assertEquals(File.separator,
-                     FILE_UTILS.resolveFile(null, "/").getPath());
-        assertEquals(File.separator,
-                     FILE_UTILS.resolveFile(null, "\\").getPath());
-
-        if (Os.isFamily("dos")) {
+        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+            /*
+             * Start with simple absolute file names.
+             */
+            assertEquals(File.separator,
+                         FILE_UTILS.resolveFile(null, "/").getPath());
+            assertEquals(File.separator,
+                         FILE_UTILS.resolveFile(null, "\\").getPath());
+        } else {
+            assertEqualsIgnoreDriveCase(localize(File.separator),
+                FILE_UTILS.resolveFile(null, "/").getPath());
+            assertEqualsIgnoreDriveCase(localize(File.separator),
+                FILE_UTILS.resolveFile(null, "\\").getPath());
             /*
              * throw in drive letters
              */
@@ -130,7 +134,8 @@ public class FileUtilsTest extends TestCase {
                          FILE_UTILS.resolveFile(null, driveSpec + "/////").getPath());
             assertEquals(driveSpec + "\\",
                          FILE_UTILS.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
-        } else if (Os.isFamily("netware")) {
+        }
+        if (Os.isFamily("netware")) {
             /*
              * throw in NetWare volume names
              */
@@ -151,19 +156,20 @@ public class FileUtilsTest extends TestCase {
                          FILE_UTILS.resolveFile(null, driveSpec + "/////").getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
-        } else {
+        } else if (!(Os.isFamily("dos"))) {
             /*
              * drive letters must be considered just normal filenames.
              */
             String driveSpec = "C:";
-            assertEquals(driveSpec,
+            String udir = System.getProperty("user.dir");
+            assertEquals(udir + File.separator + driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "/").getPath());
-            assertEquals(driveSpec,
+            assertEquals(udir + File.separator + driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "\\").getPath());
             String driveSpecLower = "c:";
-            assertEquals(driveSpecLower,
+            assertEquals(udir + File.separator + driveSpecLower,
                          FILE_UTILS.resolveFile(null, driveSpecLower + "/").getPath());
-            assertEquals(driveSpecLower,
+            assertEquals(udir + File.separator + driveSpecLower,
                          FILE_UTILS.resolveFile(null, driveSpecLower + "\\").getPath());
         }
 
@@ -197,21 +203,37 @@ public class FileUtilsTest extends TestCase {
     }
 
     public void testNormalize() {
-        /*
-         * Start with simple absolute file names.
-         */
-        assertEquals(File.separator,
-                     FILE_UTILS.normalize("/").getPath());
-        assertEquals(File.separator,
-                     FILE_UTILS.normalize("\\").getPath());
+        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+            /*
+             * Start with simple absolute file names.
+             */
+            assertEquals(File.separator,
+                         FILE_UTILS.normalize("/").getPath());
+            assertEquals(File.separator,
+                         FILE_UTILS.normalize("\\").getPath());
+        } else {
+            try {
+                 FILE_UTILS.normalize("/").getPath();
+                 fail("normalized \"/\" on dos or netware");
+            } catch (Exception e) {
+            }
+            try {
+                 FILE_UTILS.normalize("\\").getPath();
+                 fail("normalized \"\\\" on dos or netware");
+            } catch (Exception e) {
+            }
+        }
 
         if (Os.isFamily("dos")) {
             /*
              * throw in drive letters
              */
             String driveSpec = "C:";
-            assertEquals(driveSpec,
-                         FILE_UTILS.normalize(driveSpec).getPath());
+            try {
+                 FILE_UTILS.normalize(driveSpec).getPath();
+                 fail(driveSpec + " is not an absolute path");
+            } catch (Exception e) {
+            }
             assertEquals(driveSpec + "\\",
                          FILE_UTILS.normalize(driveSpec + "/").getPath());
             assertEquals(driveSpec + "\\",
@@ -313,7 +335,7 @@ public class FileUtilsTest extends TestCase {
         }
 
         File f = FILE_UTILS.resolveFile(null, "a");
-        assertEquals(f, new File("a"));
+        assertEquals(f, new File("a").getAbsoluteFile());
     }
 
     /**
@@ -390,10 +412,12 @@ public class FileUtilsTest extends TestCase {
                                                  new File("c:\\foo\\bar")));
         assertEquals("bar", FILE_UTILS.removeLeadingPath(new File("c:\\foo\\"),
                                                  new File("c:\\foo\\bar")));
-        assertEqualsIgnoreDriveCase(FILE_UTILS.normalize("/bar").getAbsolutePath(),
-                     FILE_UTILS.removeLeadingPath(new File("/foo"), new File("/bar")));
-        assertEqualsIgnoreDriveCase(FILE_UTILS.normalize("/foobar").getAbsolutePath(),
-                     FILE_UTILS.removeLeadingPath(new File("/foo"), new File("/foobar")));
+        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+            assertEquals(FILE_UTILS.normalize("/bar").getAbsolutePath(),
+                         FILE_UTILS.removeLeadingPath(new File("/foo"), new File("/bar")));
+            assertEquals(FILE_UTILS.normalize("/foobar").getAbsolutePath(),
+                         FILE_UTILS.removeLeadingPath(new File("/foo"), new File("/foobar")));
+        }
         // bugzilla report 19979
         assertEquals("", FILE_UTILS.removeLeadingPath(new File("/foo/bar"),
                                               new File("/foo/bar")));
@@ -419,8 +443,9 @@ public class FileUtilsTest extends TestCase {
      */
     public void testToURI() {
         String dosRoot = null;
-        if (Os.isFamily("dos")) {
-            dosRoot = System.getProperty("user.dir").charAt(0) + ":/";
+        if (Os.isFamily("dos") || Os.isFamily("netware")) {
+            dosRoot = Character.toUpperCase(
+                System.getProperty("user.dir").charAt(0)) + ":/";
         }
         else
         {
@@ -457,11 +482,11 @@ public class FileUtilsTest extends TestCase {
         if (Os.isFamily("dos")) {
             assertEqualsIgnoreDriveCase("C:\\foo", FILE_UTILS.fromURI("file:///c:/foo"));
         }
-        assertEqualsIgnoreDriveCase(localize("/foo"), FILE_UTILS.fromURI("file:///foo"));
+        assertEqualsIgnoreDriveCase(File.separator + "foo", FILE_UTILS.fromURI("file:///foo"));
         assertEquals("." + File.separator + "foo",
                      FILE_UTILS.fromURI("file:./foo"));
-        assertEqualsIgnoreDriveCase(localize("/foo bar"), FILE_UTILS.fromURI("file:///foo%20bar"));
-        assertEqualsIgnoreDriveCase(localize("/foo#bar"), FILE_UTILS.fromURI("file:///foo%23bar"));
+        assertEquals(File.separator + "foo bar", FILE_UTILS.fromURI("file:///foo%20bar"));
+        assertEquals(File.separator + "foo#bar", FILE_UTILS.fromURI("file:///foo%23bar"));
     }
 
     public void testModificationTests() {
@@ -493,6 +518,7 @@ public class FileUtilsTest extends TestCase {
         path = root + path.substring(1);
         return path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
     }
+
     /**
      * convenience method
      * normalize brings the drive in uppercase
@@ -500,14 +526,15 @@ public class FileUtilsTest extends TestCase {
      * calling this method allows tests where normalize is called to pass under cygwin
      */
     private void assertEqualsIgnoreDriveCase(String s1, String s2) {
-        if (Os.isFamily("dos") && s1.length()>=1 && s2.length()>=1) {
-            StringBuffer sb1= new StringBuffer(s1);
-            StringBuffer sb2= new StringBuffer(s2);
-            sb1.setCharAt(0,Character.toUpperCase(s1.charAt(0)));
-            sb2.setCharAt(0,Character.toUpperCase(s2.charAt(0)));
-            assertEquals(sb1.toString(),sb2.toString());
-        }   else {
-            assertEquals(s1,s2);
+        if ((Os.isFamily("dos") || Os.isFamily("netware"))
+            && s1.length() > 0 && s2.length() > 0) {
+            StringBuffer sb1 = new StringBuffer(s1);
+            StringBuffer sb2 = new StringBuffer(s2);
+            sb1.setCharAt(0, Character.toUpperCase(s1.charAt(0)));
+            sb2.setCharAt(0, Character.toUpperCase(s2.charAt(0)));
+            assertEquals(sb1.toString(), sb2.toString());
+        } else {
+            assertEquals(s1, s2);
         }
     }
 }

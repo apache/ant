@@ -18,8 +18,15 @@ Changes that could break older environments:
 
 * The Reference class now has a project field that will get
   used (if set) in preference to the passed in project, when
-  dereferencing the reference.
-  Bugzilla Report 25777.
+  dereferencing the reference. Bugzilla Report 25777.
+
+* On DOS and Netware, filenames beginning with a drive letter
+  and followed by a colon but with no directory separator following
+  the colon are no longer (incorrectly) accepted as absolute pathnames
+  by FileUtils.normalize() and FileUtils.isAbsolutePath().  Netware
+  volumes can still be specified without an intervening separator.
+  UNC pathnames on Windows must include a server and share name, i.e.
+  "\\a\b" to be considered valid absolute paths.
 
 Fixed bugs:
 -----------
@@ -46,6 +53,9 @@ Fixed bugs:
 
 * Create signjar's helper ExecTask instance directly rather than by
   typedef discovery mechanisms. Bugzilla report 33433.
+
+* FileUtils.resolveFile() promised to return absolute files but
+  did not always do so.
 
 Other changes:
 --------------

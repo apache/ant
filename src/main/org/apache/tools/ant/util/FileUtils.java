@@ -664,71 +664,99 @@ public class FileUtils {
     /**
      * Interpret the filename as a file relative to the given file
      * unless the filename already represents an absolute filename.
+     * Differs from <code>new File(file, filename)</code> in that
+     * the resulting File's path will always be a normalized,
+     * absolute pathname.  Also, if it is determined that
+     * <code>filename</code> is context-relative, <code>file</code>
+     * will be discarded and the reference will be resolved using
+     * available context/state information about the filesystem.
      *
      * @param file the "reference" file for relative paths. This
      * instance must be an absolute file and must not contain
      * &quot;./&quot; or &quot;../&quot; sequences (same for \ instead
      * of /).  If it is null, this call is equivalent to
-     * <code>new java.io.File(filename)</code>.
+     * <code>new java.io.File(filename).getAbsoluteFile()</code>.
      *
      * @param filename a file name.
      *
-     * @return an absolute file that doesn't contain &quot;./&quot; or
-     * &quot;../&quot; sequences and uses the correct separator for
-     * the current platform.
+     * @return an absolute file.
+     * @throws java.lang.NullPointerException if filename is null.
      */
     public File resolveFile(File file, String filename) {
-        filename = filename.replace('/', File.separatorChar)
-            .replace('\\', File.separatorChar);
-
-        // deal with absolute files
-        if (isAbsolutePath(filename)) {
-            return normalize(filename);
-        }
-        if (file == null) {
-            return new File(filename);
-        }
-        File helpFile = new File(file.getAbsolutePath());
-        StringTokenizer tok = new StringTokenizer(filename, File.separator);
-        while (tok.hasMoreTokens()) {
-            String part = tok.nextToken();
-            if (part.equals("..")) {
-                helpFile = helpFile.getParentFile();
-                if (helpFile == null) {
-                    String msg = "The file or path you specified ("
-                        + filename + ") is invalid relative to "
-                        + file.getPath();
-                    throw new BuildException(msg);
+        if (!isAbsolutePath(filename)) {
+            char sep = File.separatorChar;
+            filename = filename.replace('/', sep).replace('\\', sep);
+            if (isContextRelativePath(filename)) {
+                file = null;
+                // on cygwin, our current directory can be a UNC;
+                // assume user.dir is absolute or all hell breaks loose...
+                String udir = System.getProperty("user.dir");
+                if (filename.charAt(0) == sep && udir.charAt(0) == sep) {
+                    filename = dissect(udir)[0] + filename.substring(1);
                 }
-            } else if (part.equals(".")) {
-                // Do nothing here
-            } else {
-                helpFile = new File(helpFile, part);
             }
+            filename = new File(file, filename).getAbsolutePath();
         }
-        return new File(helpFile.getAbsolutePath());
+        return normalize(filename);
+    }
+
+    /**
+     * On DOS and NetWare, the evaluation of certain file
+     * specifications is context-dependent.  These are filenames
+     * beginning with a single separator (relative to current root directory)
+     * and filenames with a drive specification and no intervening separator
+     * (relative to current directory of the specified root).
+     * @param filename the filename to evaluate.
+     * @return true if the filename is relative to system context.
+     * @throws java.lang.NullPointerException if filename is null.
+     * @since Ant 1.7
+     */
+    public static boolean isContextRelativePath(String filename) {
+        if (!(onDos || onNetWare) || filename.length() == 0) {
+            return false;
+        }
+        char sep = File.separatorChar;
+        filename = filename.replace('/', sep).replace('\\', sep);
+        char c = filename.charAt(0);
+        int len = filename.length();
+        return (c == sep && (len == 1 || filename.charAt(1) != sep))
+            || (Character.isLetter(c) && len > 1
+            && filename.indexOf(':') == 1
+            && (len == 2 || filename.charAt(2) != sep));
     }
 
     /**
      * Verifies that the specified filename represents an absolute path.
+     * Differs from new java.io.File("filename").isAbsolute() in that a path
+     * beginning with a double file separator--signifying a Windows UNC--must
+     * at minimum match "\\a\b" to be considered an absolute path.
      * @param filename the filename to be checked.
      * @return true if the filename represents an absolute path.
+     * @throws java.lang.NullPointerException if filename is null.
+     * @since Ant 1.6.3
      */
     public static boolean isAbsolutePath(String filename) {
-        if (filename.startsWith(File.separator)) {
-            // common for all os
-            return true;
+        int len = filename.length();
+        if (len == 0) {
+            return false;
         }
-        if (onDos && filename.length() >= 2
-            && Character.isLetter(filename.charAt(0))
-            && filename.charAt(1) == ':') {
-            // Actually on windows the : must be followed by a \ for
-            // the path to be absolute, else the path is relative
-            // to the current working directory on that drive.
-            // (Every drive may have another current working directory)
-            return true;
+        char sep = File.separatorChar;
+        filename = filename.replace('/', sep).replace('\\', sep);
+        char c = filename.charAt(0);
+        if (!(onDos || onNetWare)) {
+            return (c == sep);
         }
-        return (onNetWare && filename.indexOf(":") > -1);
+        if (c == sep) {
+            if (!(onDos && len > 4 && filename.charAt(1) == sep)) {
+                return false;
+            }
+            int nextsep = filename.indexOf(sep, 2);
+            return nextsep > 2 && nextsep + 1 < len;
+        }
+        int colon = filename.indexOf(':');
+        return (Character.isLetter(c) && colon == 1
+            && filename.length() > 2 && filename.charAt(2) == sep)
+            || (onNetWare && colon > 0);
     }
 
     /**
@@ -748,78 +776,23 @@ public class FileUtils {
      * @param path the path to be normalized.
      * @return the normalized version of the path.
      *
-     * @throws java.lang.NullPointerException if the file path is
-     * equal to null.
+     * @throws java.lang.NullPointerException if path is null.
      */
-    public File normalize(String path) {
-        String orig = path;
-
-        path = path.replace('/', File.separatorChar)
-            .replace('\\', File.separatorChar);
-
-        // make sure we are dealing with an absolute path
-        int colon = path.indexOf(":");
-
-        if (!isAbsolutePath(path)) {
-            String msg = path + " is not an absolute path";
-            throw new BuildException(msg);
-        }
-        boolean dosWithDrive = false;
-        String root = null;
-        // Eliminate consecutive slashes after the drive spec
-        if ((onDos && path.length() >= 2
-                && Character.isLetter(path.charAt(0))
-                && path.charAt(1) == ':')
-            || (onNetWare && colon > -1)) {
-
-            dosWithDrive = true;
-
-            char[] ca = path.replace('/', '\\').toCharArray();
-            StringBuffer sbRoot = new StringBuffer();
-            for (int i = 0; i < colon; i++) {
-                sbRoot.append(Character.toUpperCase(ca[i]));
-            }
-            sbRoot.append(':');
-            if (colon + 1 < path.length()) {
-                sbRoot.append(File.separatorChar);
-            }
-            root = sbRoot.toString();
-
-            // Eliminate consecutive slashes after the drive spec
-            StringBuffer sbPath = new StringBuffer();
-            for (int i = colon + 1; i < ca.length; i++) {
-                if ((ca[i] != '\\')
-                    || (ca[i] == '\\' && ca[i - 1] != '\\')) {
-                    sbPath.append(ca[i]);
-                }
-            }
-            path = sbPath.toString().replace('\\', File.separatorChar);
-        } else {
-            if (path.length() == 1) {
-                root = File.separator;
-                path = "";
-            } else if (path.charAt(1) == File.separatorChar) {
-                // UNC drive
-                root = File.separator + File.separator;
-                path = path.substring(2);
-            } else {
-                root = File.separator;
-                path = path.substring(1);
-            }
-        }
+    public File normalize(final String path) {
         Stack s = new Stack();
-        s.push(root);
-        StringTokenizer tok = new StringTokenizer(path, File.separator);
+        String[] dissect = dissect(path);
+        s.push(dissect[0]);
+
+        StringTokenizer tok = new StringTokenizer(dissect[1], File.separator);
         while (tok.hasMoreTokens()) {
             String thisToken = tok.nextToken();
             if (".".equals(thisToken)) {
                 continue;
             } else if ("..".equals(thisToken)) {
                 if (s.size() < 2) {
-                    throw new BuildException("Cannot resolve path " + orig);
-                } else {
-                    s.pop();
+                    throw new BuildException("Cannot resolve path " + path);
                 }
+                s.pop();
             } else { // plain component
                 s.push(thisToken);
             }
@@ -833,11 +806,53 @@ public class FileUtils {
             }
             sb.append(s.elementAt(i));
         }
-        path = sb.toString();
-        if (dosWithDrive) {
-            path = path.replace('/', '\\');
+        return new File(sb.toString());
+    }
+
+    /**
+     * Dissect the specified absolute path.
+     * @param path the path to dissect.
+     * @return String[] {root, remaining path}.
+     * @throws java.lang.NullPointerException if path is null.
+     */
+    public String[] dissect(String path) {
+        char sep = File.separatorChar;
+        path = path.replace('/', sep).replace('\\', sep);
+
+        // make sure we are dealing with an absolute path
+        if (!isAbsolutePath(path)) {
+            throw new BuildException(path + " is not an absolute path");
         }
-        return new File(path);
+        String root = null;
+        int colon = path.indexOf(':');
+        if (colon > 0 && (onDos || onNetWare)) {
+
+            int next = colon + 1;
+            root = path.substring(0, next).toUpperCase();
+            char[] ca = path.toCharArray();
+            root += sep;
+            //remove the initial separator; the root has it.
+            next = (ca[next] == sep) ? next + 1 : next;
+
+            StringBuffer sbPath = new StringBuffer();
+            // Eliminate consecutive slashes after the drive spec:
+            for (int i = next; i < ca.length; i++) {
+                if (ca[i] != sep || ca[i - 1] != sep) {
+                    sbPath.append(ca[i]);
+                }
+            }
+            path = sbPath.toString();
+        } else if (path.length() > 1 && path.charAt(1) == sep) {
+            // UNC drive
+            int nextsep = path.indexOf(sep, 2);
+            nextsep = path.indexOf(sep, nextsep + 1);
+            root = (nextsep > 2) ? path.substring(0, nextsep + 1) : path;
+            path = path.substring(root.length());
+        } else {
+            root = File.separator;
+            path = path.substring(1);
+        }
+        return new String[] {root, path};
     }
 
     /**
@@ -1213,22 +1228,16 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String toURI(String path) {
-        boolean isDir = (new File(path)).isDirectory();
+        boolean isDir = new File(path).isDirectory();
 
         StringBuffer sb = new StringBuffer("file:");
 
-        // catch exception if normalize thinks this is not an absolute path
-        try {
-            path = normalize(path).getAbsolutePath();
-            sb.append("//");
-            // add an extra slash for filesystems with drive-specifiers
-            if (!path.startsWith(File.separator)) {
-                sb.append("/");
-            }
-        } catch (BuildException e) {
-            // relative path
+        path = resolveFile(null, path).getPath();
+        sb.append("//");
+        // add an extra slash for filesystems with drive-specifiers
+        if (!path.startsWith(File.separator)) {
+            sb.append("/");
         }
-
         path = path.replace('\\', '/');
 
         CharacterIterator iter = new StringCharacterIterator(path);

@@ -60,8 +60,9 @@ public class PathTest extends TestCase {
             assertEquals("\\a", l[0]);
             assertEquals("\\b", l[1]);
         } else {
-            assertEquals(":\\a", l[0].substring(1));
-            assertEquals(":\\b", l[1].substring(1));
+            String base = new File(File.separator).getAbsolutePath().toUpperCase();
+            assertEquals(base + "a", l[0]);
+            assertEquals(base + "b", l[1]);
         }
     }
 
@@ -99,8 +100,9 @@ public class PathTest extends TestCase {
             assertEquals("\\a", l[0]);
             assertEquals("\\b", l[1]);
         } else {
-            assertEquals(":\\a", l[0].substring(1));
-            assertEquals(":\\b", l[1].substring(1));
+            String base = new File(File.separator).getAbsolutePath().toUpperCase();
+            assertEquals(base + "a", l[0]);
+            assertEquals(base + "b", l[1]);
         }
 
         p = new Path(project, "c:\\test");
@@ -307,9 +309,10 @@ public class PathTest extends TestCase {
             assertEquals("\\b", l[1]);
             assertEquals("\\c", l[2]);
         } else {
-            assertEquals(":\\a", l[0].substring(1));
-            assertEquals(":\\b", l[1].substring(1));
-            assertEquals(":\\c", l[2].substring(1));
+            String base = new File(File.separator).getAbsolutePath().toUpperCase();
+            assertEquals(base + "a", l[0]);
+            assertEquals(base + "b", l[1]);
+            assertEquals(base + "c", l[2]);
         }
     }
 
@@ -366,7 +369,8 @@ public class PathTest extends TestCase {
         Path p = new Path(project, "/a:/a");
         String[] l = p.list();
         assertEquals("1 after construction", 1, l.length);
-        p.setLocation(new File(File.separatorChar+"a"));
+        String base = new File(File.separator).getAbsolutePath().toUpperCase();
+        p.setLocation(new File(base, "a"));
         l = p.list();
         assertEquals("1 after setLocation", 1, l.length);
         p.setPath("\\a;/a");
