@@ -81,19 +81,25 @@ Options:
   -help                  print this message
   -projecthelp           print project help information
   -version               print the version information and exit
-  -quiet                 be extra quiet
-  -verbose               be extra verbose
+  -diagnostics           print information that might be helpful to
+                         diagnose or report problems.
+  -quiet, -q             be extra quiet
+  -verbose, -v           be extra verbose
   -debug                 print debugging information
   -emacs                 produce logging information without adornments
-  -logfile &lt;file&gt;        write logging output to given file
-  -logger &lt;classname&gt;    the class that is to perform logging
-  -listener &lt;classname&gt;  add an instance of <i>classname</i> as a project listener
-  -buildfile &lt;file&gt;      use given build file
-  -D&lt;property&gt;=&lt;value&gt;   use value for given property
-  -propertyfile &lt;file&gt;   load all properties from <i>file</i> (with -D taking precedence)
-  -inputhandler &lt;class&gt;  the class that will handle input requests
-  -find [&lt;file&gt;]         search for build.xml, or <i>file</i>, towards the root of the
-                         filesystem
+  -logfile &lt;file&gt;        use given file for log
+    -l     &lt;file&gt;                ''
+  -logger &lt;classname&gt;    the class which is to perform logging
+  -listener &lt;classname&gt;  add an instance of class as a project listener
+  -buildfile &lt;file&gt;      use given buildfile
+    -file    &lt;file&gt;              ''
+    -f       &lt;file&gt;              ''
+  -D&lt;property>=&lt;value&gt;   use value for given property
+  -propertyfile &lt;name&gt;   load all properties from file with -D
+                         properties taking precedence
+  -inputhandler &lt;class&gt;  the class which will handle input requests
+  -find &lt;file&gt;           search for buildfile towards the root of the
+                         filesystem and use it
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
