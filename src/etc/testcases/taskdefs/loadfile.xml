@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="loadfile-test" basedir="." default="testLoadAFile">
 
- 
+
   <target name="init">
   </target>
 
   <target name="testNoSourcefileDefined" depends="init">
     <loadfile property="foo" />
   </target>
- 
+
   <target name="testNoPropertyDefined"
     depends="init">
     <loadfile srcFile="somefile" />
   </target>
-  
+
 
   <target name="testNoSourcefilefound"
     depends="init">
@@ -22,15 +22,15 @@
 
   <target name="testFailOnError"
     depends="init">
-    <loadfile 
-      property="testFailOnError" 
-      srcFile="somefile" 
+    <loadfile
+      property="testFailOnError"
+      srcFile="somefile"
       failonerror="false"/>
-  </target>  
-  
+  </target>
+
   <target name="testLoadAFile"
     depends="init">
-    <echo 
+    <echo
       message="What's it going to be then, eh?"
       file="loadfile1.tmp"
       />
@@ -44,9 +44,38 @@
       srcFile="loadfile.xml"
       encoding="ISO-8859-1"/>
   </target>
-  
-  <target name="cleanup"> 
+
+  <target name="testEvalProps"
+    depends="init">
+    <property name="weather" value="rain" />
+    <echo
+      message="All these moments will be lost in time, like teardrops in the ${weather}"
+      file="loadfile1.tmp"
+      />
+    <loadfile property="testEvalProps"
+        srcFile="loadfile1.tmp"
+        evaluateProperties="true"
+        />
+    <echo>${testLoadAFile}</echo>
+  </target>
+
+
+  <target name="testOneLine"
+    depends="init">
+    <echo
+      message="1,&#10;2,&#13;3,&#13;&#10;4"
+      file="loadfile1.tmp"
+      />
+    <loadfile property="testOneLine"
+        srcFile="loadfile1.tmp"
+        makeOneLine="true"
+        />
+    <echo>${testLoadAFile}</echo>
+  </target>
+
+
+  <target name="cleanup">
     <delete file="loadfile1.tmp"/>
   </target>
-  
+
   </project>

@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2001 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -124,10 +124,7 @@ public class LoadFileTest extends BuildFileTest {
      */
     public void testFailOnError()
             throws BuildException {
-        executeTarget("testFailOnError");
-        if(project.getProperty("testFailOnError")!=null) {
-            fail("property should not have been defined");
-        }
+        expectPropertyUnset("testFailOnError","testFailOnError");
     }
 
 
@@ -152,9 +149,27 @@ public class LoadFileTest extends BuildFileTest {
         if(project.getProperty("testLoadAFileEnc")==null) {
             fail("file load failed");
         }
-
     }
 
+        /**
+     * A unit test for JUnit
+     */
+    public void testEvalProps()
+            throws BuildException {
+        executeTarget("testEvalProps");
+        if(project.getProperty("testEvalProps").indexOf("rain")<0) {
+            fail("property eval broken");
+        }
+    }
+
+        /**
+     * A unit test for JUnit
+     */
+    public void testOneLine()
+            throws BuildException {
+            expectPropertySet("testOneLine","testOneLine","1,2,3,4");
+
+    }
 }
 
 

@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2001 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -56,14 +56,10 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectHelper;
 
 
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.BufferedInputStream;
+import java.io.*;
 
 /**
  * Load a file into a property
@@ -94,6 +90,16 @@ public class LoadFile extends Task {
      */
     private String property = null;
 
+
+    /** flag to control if we flatten the file or no'
+     *
+     */
+    private boolean makeOneLine=false;
+
+    /**
+     * flag to control whether props get evaluated or not
+     */
+    private boolean evaluateProperties=false;
 
     /**
      * Encoding to use for filenames, defaults to the platform's default
@@ -140,6 +146,22 @@ public class LoadFile extends Task {
         failOnError = fail;
     }
 
+    /**
+     * setter to flatten the file to a single line
+     * @since 1.6
+     */
+    public void setMakeOneLine(boolean makeOneLine) {
+        this.makeOneLine=makeOneLine;
+    }
+
+    /**
+     * setter to eval properties.
+     * @since 1.6
+     */
+    public void setEvaluateProperties(boolean evaluateProperties) {
+        this.evaluateProperties=evaluateProperties;
+    }
+
 
     /**
      * read in a source file to a property
@@ -157,7 +179,7 @@ public class LoadFile extends Task {
         }
         FileInputStream fis = null;
         BufferedInputStream bis = null;
-        InputStreamReader instream = null;
+        Reader instream = null;
         log("loading "+srcFile+" into property "+property,Project.MSG_VERBOSE);
         try {
             long len = srcFile.length();
@@ -179,6 +201,12 @@ public class LoadFile extends Task {
             }
             instream.read(buffer);
             String text = new String(buffer);
+            if (makeOneLine) {
+                text=stripLineBreaks(text);
+            }
+            if(evaluateProperties) {
+                text=ProjectHelper.replaceProperties(project,text);
+            }
             project.setNewProperty(property, text);
             log("loaded "+buffer.length+" characters",Project.MSG_VERBOSE);
             log(property+" := "+text,Project.MSG_DEBUG);
@@ -199,6 +227,29 @@ public class LoadFile extends Task {
             } catch (IOException ioex) {
             }
         }
+    }
+
+    /**
+     * strip out all line breaks from a string.
+     * @param source source
+     * This implementation always duplicates the string; it is nominally possible to probe
+     * the string first looking for any line breaks before bothering to do a copy. But we assume if
+     * the option is requested, then line breaks are probably in the source string.
+     */
+    protected String stripLineBreaks(String source) {
+        //Linebreaks. What do to on funny IBM mainframes with odd line endings?
+        String linebreaks="\r\n";
+        int len=source.length();
+
+        StringBuffer dest=new StringBuffer(len);
+        for(int i=0;i<len;++i) {
+            char ch=source.charAt(i);
+            if(linebreaks.indexOf(ch)==-1) {
+                dest.append(ch);
+            }
+        }
+        return new String(dest);
+
     }
 
 //end class

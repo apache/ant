@@ -5,50 +5,75 @@
 
 <body>
 
+
 <h2><a name="loadfile">LoadFile</a></h2>
 <h3>Description</h3>
 <p>
  Load a text file into a single property. Unless an encoding is specified,
  the encoding of the current locale is used. There is no explicit limit
  upon the size of the file which can be loaded, but loading very large
- files is not something anyone has yet explored. 
- 
+ files is not something anyone has yet explored. Because the file is
+ converted to text
+
 </p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
-  <tr> 
+  <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">srcFile</td>
     <td valign="top">source file</td>
     <td valign="top" align="center">Yes</td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">property</td>
     <td valign="top">property to save to</td>
     <td valign="top" align="center">Yes</td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">encoding</td>
     <td valign="top">encoding to use when loading the file</td>
     <td align="center" valign="top">No</td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">failonerror</td>
     <td valign="top">Whether to halt the build on failure</td>
     <td align="center" valign="top">No, default "true"</td>
   </tr>
+  <tr>
+    <td valign="top">evaluateProperties</td>
+    <td valign="top">flag to enable property evalation in the file</td>
+    <td align="center" valign="top">No, default "false"</td>
+  </tr>
+  <tr>
+    <td valign="top">makeOneLine</td>
+    <td valign="top">flag to strip out newlines (but not spaces or
+        tabs) from the file</td>
+    <td align="center" valign="top">No, default "false"</td>
+  </tr>
 </table>
+<p>
+The <tt>makeOneLine</tt> parameter enables you to use a file as an
+input to task parameters which expect single line input. It flattens
+the file by removing all carriage return and line feed characters,
+so that the file
+<pre>a
+b
+c
+</pre>would become "abc": you need spaces or
+commas at the end/start of line to stop alphanumeric characters
+being merged together.
 
 <h3>Examples</h3>
-<pre>    &lt;loadfile property="mail.recipients"
-      srcFile="recipients.txt" / &gt;
+<pre>    &lt;loadfile property="message"
+      srcFile="message.txt" / &gt;
 </pre>
-Load file recipients.txt into property "mail.recipients"
+Load file message.txt into property "message"; an <tt>&lt;echo&gt;</tt>
+can print this.
 
 <pre>    &lt;loadfile property="encoded-file"
       srcFile="loadfile.xml"
@@ -56,16 +81,35 @@ Load file recipients.txt into property "mail.recipients"
 </pre>
 Load a file using the latin-1 encoding
 
-<pre>    &lt;loadfile 
-      property="optional.value" 
-      srcFile="optional.txt" 
+<pre>    &lt;loadfile
+      property="optional.value"
+      srcFile="optional.txt"
       failonerror="false" /&gt;
 </pre>
-Load a file, don't fail if it is missing (a message is printed, though) 
+Load a file, don't fail if it is missing (a message is printed, though)
+
+<pre>    &lt;loadfile
+      property="mail.recipients"
+      srcFile="recipientlist.txt"
+      makeOneLine="true" /&gt;
+</pre>
+
+load a property which can be used as a parameter for another task (in this case mail),
+merging lines to ensure this happens.
+
+<pre>    &lt;loadfile
+      property="system.configuration.xml"
+      srcFile="configuration.xml"
+      evaluateProperties="true" /&gt;
+</pre>
+
+load an XML file into a property, expanding all properties declared
+in the file in the process.
+
 
 <hr>
 
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
