@@ -73,8 +73,6 @@ public class CBZip2InputStream
 
     private InputStream m_input;
 
-    private int m_bytesIn;
-    private int m_bytesOut;
     private int m_computedBlockCRC;
     private int m_computedCombinedCRC;
 
@@ -95,9 +93,9 @@ public class CBZip2InputStream
     private int m_storedCombinedCRC;
     private int[] m_tt;
 
-    public CBZip2InputStream( final InputStream zStream )
+    public CBZip2InputStream( final InputStream input )
     {
-        bsSetStream( zStream );
+        bsSetStream( input );
         initialize();
         initBlock();
         setupBlock();
@@ -672,8 +670,6 @@ public class CBZip2InputStream
         m_input = input;
         m_bsLive = 0;
         m_bsBuff = 0;
-        m_bytesOut = 0;
-        m_bytesIn = 0;
     }
 
     private void complete()
