@@ -237,7 +237,7 @@
 #end
 
 #macro (header)
-  <html>
+  <html lang="en">
     <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
     <head>
       <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -249,15 +249,10 @@
   #end
     </head>
 
-    <body text="$darkfg" bgcolor="$lightbg">
-      <table summary="navigation path" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td nowrap="nowrap" valign="middle" bgcolor="$blue1" height="20"><img height="1" width="5" alt="" border="0" src="$relativePath/images/spacer.gif"><font size="2" face="Arial, Helvetica, Sans-serif"><script src="$relativePath/breadcrumbs.js" language="JavaScript" type="text/javascript"></script></font></td>
-        </tr>
-        <tr>
-          <td bgcolor="$blue2" height="2"><img height="2" width="2" alt="" border="0" src="$relativePath/images/spacer.gif"></td>
-        </tr>
-      </table>
+    <body>
+      <p class="navpath">
+        <script src="$relativePath/breadcrumbs.js" language="JavaScript" type="text/javascript"></script>
+      </p>
 
       <table summary="header with logos" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -293,6 +288,7 @@
           <td bgcolor="$blue2" colspan="4"><img width="1" height="10" alt="" src="$relativePath/images/spacer.gif"></td>
         </tr>
       </table>
+
       <table summary="page content" bgcolor="$lightbg" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td valign="top">

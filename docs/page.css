@@ -1,4 +1,10 @@
-body {  background-color: #FFFFFF; margin: 0px 0px 0px 0px; font-family: Verdana, Helvetica, sans-serif;  font-size : 90%;  }
+body {  
+    background-color: #FFFFFF;
+    color: #000000;
+    margin: 0px 0px 0px 0px; 
+    font-family: Verdana, Helvetica, sans-serif;  
+    font-size : 90%;  
+}
 
 a:link { color: #0F3660; }
 a:visited { color: #009999; }
@@ -54,6 +60,47 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 
 .dtdTag {    color: #990000; text-transform : uppercase;  font-style : normal;  font-size : 120%;  font-weight : bold; }
 
+.section {
+    font-family: Verdana, Helvetica, sans-serif;
+    background-color: #294563;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 2px;
+    margin-top: 20px;
+}
+
+.subsection {
+    font-family: arial,helvetica,sanserif;
+    background-color: #4C6C8F;
+    color: #ffffff;
+    font-weight: bold; 
+    padding: 2px;
+}
+
+.toc {
+    font-family: arial,helvetica,sanserif;
+    background-color: #4C6C8F;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.faq {
+    font-family: arial,helvetica,sanserif;
+    background-color: #4C6C8F;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.navpath {
+    font-family: arial,helvetica,sanserif;
+    background-color: #CFDCED;
+    padding: 2px 6px;
+    margin: 0px 0px 0px 0px;
+    font-size: 90%;
+    border-bottom: 2px solid #4C6C8F;
+}
 
 @media print {
    .menu {

@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-        <html>
+        <html lang="en">
     <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
     <head>
       <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -13,15 +13,10 @@
   <meta name="email" content="christoph.wilhelms@t-online.de">
       </head>
 
-    <body text="#000000" bgcolor="#ffffff">
-      <table summary="navigation path" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td nowrap="nowrap" valign="middle" bgcolor="#CFDCED" height="20"><img height="1" width="5" alt="" border="0" src="../../images/spacer.gif"><font size="2" face="Arial, Helvetica, Sans-serif"><script src="../../breadcrumbs.js" language="JavaScript" type="text/javascript"></script></font></td>
-        </tr>
-        <tr>
-          <td bgcolor="#4C6C8F" height="2"><img height="2" width="2" alt="" border="0" src="../../images/spacer.gif"></td>
-        </tr>
-      </table>
+    <body>
+      <p class="navpath">
+        <script src="../../breadcrumbs.js" language="JavaScript" type="text/javascript"></script>
+      </p>
 
       <table summary="header with logos" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -76,6 +71,7 @@
           <td bgcolor="#4C6C8F" colspan="4"><img width="1" height="10" alt="" src="../../images/spacer.gif"></td>
         </tr>
       </table>
+
       <table summary="page content" bgcolor="#ffffff" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td valign="top">
@@ -150,10 +146,10 @@
           </td>
         </tr>
       </table>
-          <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Introduction"><strong>Introduction</strong></a></font></td></tr>
-  </table>
+            <h3 class="section">
+      <a name="Introduction"></a>
+      Introduction
+    </h3>
                         <p>The purpose of this document is to communicate the overall
     structure and design patters used in Antidote, the GUI for
     Ant. This document is a work in progress, as well as a living
@@ -161,10 +157,10 @@
     the source code. Therefore, if there is any doubt, view the source
     ;-)
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Overview"><strong>Overview</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Overview"></a>
+      Overview
+    </h3>
                         <p>The Antidote architecture design aims to provide a high level
     of modularity and extensibility. Ideally the components of
     Antidote will be able to be assembled in different configurations
@@ -187,10 +183,10 @@
     application's structure. As the application grows, new components
     will be plugged in to what will be described as the <code>EventBus</code>
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Antidote Component Architecture/Event Bus"><strong>Antidote Component Architecture/Event Bus</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Antidote Component Architecture/Event Bus"></a>
+      Antidote Component Architecture/Event Bus
+    </h3>
                         <pre class="code">
    +---------------+ +----------------+ +-------------+ +-------------+
    |               | |                | |             | |             |
@@ -269,10 +265,10 @@
     follows the constraint <code>MONITORING &lt;= interruptLevel &lt;=
     MAX_INTERRUPT</code>.
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Actions and ActionManager"><strong>Actions and ActionManager</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Actions and ActionManager"></a>
+      Actions and ActionManager
+    </h3>
                         <p>Extensive use of the <code>javax.swing.Action</code> interface is
     made for defining the set of menu and tool bar options that are
     available. The configuration file <code>action.properties</code>
@@ -287,10 +283,10 @@
     and then the code to respond to it is added to the
     <code>EventResponder</code> (see below).
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Commands and EventResponder"><strong>Commands and EventResponder</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Commands and EventResponder"></a>
+      Commands and EventResponder
+    </h3>
                         <p>At some point in the stages of event processing, an event may
     require the data model to be modified, or some other task be
     performed. The <code>Command</code> interface is defined to classify
@@ -326,10 +322,10 @@
     to a request may change, as well as who services it. This
     design approach facilitates that.
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Data Model and Views"><strong>Data Model and Views</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Data Model and Views"></a>
+      Data Model and Views
+    </h3>
                         <p><i>NB: This part of the architecture is not fleshed out very well. There
     needs to be a discussion of the degree to which the Antidote development
     should be able to impose changes on the Ant data model, and to what level
@@ -340,10 +336,10 @@
     model. Right now the data model is encapsulated in the package
     <code>org.apache.tools.ant.gui.acs</code> (where "<code>acs</code>" stands for "Ant Construction Set").</i>
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Application Context"><strong>Application Context</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Application Context"></a>
+      Application Context
+    </h3>
                         <p>In order to keep the coupling among application modules to a
     minimum, a single point of reference is needed for coordination
     and data sharing. The class <code>AppContext</code> is the catch-all
@@ -356,10 +352,10 @@
     Antidote could conceivably share an <code>AppContext</code> instance
     through RMI, allowing remote interaction/collaboration.)
     </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Configuration and ResourceManager"><strong>Configuration and ResourceManager</strong></a></font></td></tr>
-  </table>
+                        <h3 class="section">
+      <a name="Configuration and ResourceManager"></a>
+      Configuration and ResourceManager
+    </h3>
                         <p>Full "i18n" support should be assumed in modern applications,
     and all user viewable strings should be defined in a configuration
     file. For Antidote this configuration file is
