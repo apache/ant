@@ -28,6 +28,10 @@ and is not intended as a replacement to the manual.
 <h2>Tasks</h2>
 <table border="0" cellspacing="0" cellpadding="3">
     <tr>
+      <td><b>Task</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
         <td><a href="#jpcoverage">JPCoverage</a></td>
         <td>Measure coverage of Java code.</td>
     </tr>
@@ -249,7 +253,8 @@ with a <tt>name</tt> attribute.
 
 <h3>Example of filters</h3>
 <blockquote>
-  <pre>&lt;filters&gt;
+  <pre>
+&lt;filters&gt;
     &lt;include class=&quot;com.mycompany.*&quot; method=&quot;*&quot;/&gt;
     &lt;exclude class=&quot;com.mycompany.MyClass&quot; method=&quot;test*&quot;/&gt;
 &lt;/filters&gt;</pre>
@@ -485,13 +490,14 @@ with a <tt>class </tt>and&nbsp; <tt>method </tt>attribute.
 
 <h3>Example of report</h3>
 <blockquote>
-<pre>&lt;jpcovreport home=&quot;c:\jprobe&quot; snapshot=&quot;merge.jpc&quot; format=&quot;xml&quot; tofile=&quot;result.xml&quot;&gt;
-  &lt;sourcepath path=&quot;./src&quot;/&gt;
+<pre>
+&lt;jpcovreport home="c:\jprobe" snapshot="merge.jpc" format="xml" tofile="result.xml"&gt;
+  &lt;sourcepath path="./src"/&gt;
   &lt;reference&gt;
-    &lt;classpath path=&quot;./bin/classes&quot;/&gt;
+    &lt;classpath path="./bin/classes"/&gt;
     &lt;filters&gt;
-      &lt;include class=&quot;com.mycompany.*&quot;/&gt;
-      &lt;exclude class=&quot;com.mycompany.MyClass&quot; method=&quot;test*&quot;/&gt;
+      &lt;include class="com.mycompany.*"/&gt;
+      &lt;exclude class="com.mycompany.MyClass" method="test*"/&gt;
     &lt;/filters&gt;
   &lt;/reference&gt;
 &lt;/jpcovreport&gt;
@@ -510,7 +516,7 @@ say bin/classes and test/classes. You should mostly end up with a reference such
 as:</p>
 <blockquote>
 <pre>&lt;reference&gt;
-&nbsp;&nbsp;&nbsp; &lt;classpath path=&quot;./bin/classes&quot;/&gt;
+&nbsp;&nbsp;&nbsp; &lt;classpath path="./bin/classes"/&gt;
 &lt;/reference&gt;</pre>
 </blockquote>
 <p>With such a reference, your XML report will be cleaned up against parasite
@@ -522,14 +528,14 @@ This file can be used to generate a framed report a la javadoc similar to the
 one for JUnit. It needs either Xalan 1.2.2 or Xalan 2.x.</p>
 <p>Xalan 1.2.2 (you must have xalan.jar and bsf.jar in your classpath)
 </p>
-<pre>&lt;style processor=&quot;xalan&quot; in=&quot;./reports/xml/results.xml&quot; out=&quot;./reports/html/dummy.file&quot;
- style=&quot;${ant.home}/etc/coverage-frames.xsl&quot;&gt;
-    &lt;param name=&quot;output.dir&quot; expression=&quot;'${basedir}/reports/html'&quot;/&gt;
+<pre>&lt;style processor="xalan" in="./reports/xml/results.xml" out="./reports/html/dummy.file"
+ style="${ant.home}/etc/coverage-frames.xsl"&gt;
+    &lt;param name="output.dir" expression="'${basedir}/reports/html'"/&gt;
 &lt;/style&gt;</pre>
 <p>Xalan 2.x (note the parameter without single quote)</p>
-<pre>&lt;style processor=&quot;trax&quot; in=&quot;./reports/xml/results.xml&quot; out=&quot;./reports/html/dummy.file&quot;
- style=&quot;${ant.home}/etc/coverage-frames.xsl&quot;&gt;
-&nbsp; &lt;param name=&quot;output.dir&quot; expression=&quot;${basedir}/reports/html&quot;/&gt;
+<pre>&lt;style processor="trax" in="./reports/xml/results.xml" out="./reports/html/dummy.file"
+ style="${ant.home}/etc/coverage-frames.xsl"&gt;
+&nbsp; &lt;param name="output.dir" expression="${basedir}/reports/html"/&gt;
 &lt;/style&gt;</pre>
 
 <hr>

@@ -77,27 +77,28 @@ nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and
 
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;chown file=&quot;${dist}/start.sh&quot; owner=&quot;coderjoe&quot;/&gt;</code></p>
+<blockquote><pre>
+&lt;chown file="${dist}/start.sh" owner="coderjoe"/&gt;
+</pre>
 </blockquote>
-<p>makes the &quot;start.sh&quot; file belong to coderjoe on a
+<p>makes the "start.sh" file belong to coderjoe on a
 UNIX system.</p>
 <blockquote>
 <pre>
-    &lt;chown owner=&quot;coderjoe&quot;&gt;
-      &lt;fileset dir=&quot;${dist}/bin&quot; includes=&quot;**/*.sh&quot;/&gt;
+    &lt;chown owner="coderjoe"&gt;
+      &lt;fileset dir="${dist}/bin" includes="**/*.sh"/&gt;
     &lt;/chown&gt;
 </pre>
 </blockquote>
-<p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
+<p>makes all ".sh" files below <code>${dist}/bin</code>
 belong to coderjoe on a UNIX system.</p>
 <blockquote>
 <pre>
-&lt;chown owner=&quot;coderjoe&quot;&gt;
-  &lt;fileset dir=&quot;shared/sources1&quot;&gt;
-    &lt;exclude name=&quot;**/trial/**&quot;/&gt;
+&lt;chown owner="coderjoe"&gt;
+  &lt;fileset dir="shared/sources1"&gt;
+    &lt;exclude name="**/trial/**"/&gt;
   &lt;/fileset&gt;
-  &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
+  &lt;fileset refid="other.shared.sources"/&gt;
 &lt;/chown&gt;
 </pre>
 </blockquote>
@@ -109,13 +110,13 @@ owner.</p>
 
 <blockquote>
 <pre>
-&lt;chown owner=&quot;webadmin&quot; type=&quot;file&quot;&gt;
-  &lt;fileset dir=&quot;/web&quot;&gt;
-    &lt;include name=&quot;**/*.cgi&quot;/&gt;
-    &lt;include name=&quot;**/*.old&quot;/&gt;
+&lt;chown owner="webadmin" type="file"&gt;
+  &lt;fileset dir="/web"&gt;
+    &lt;include name="**/*.cgi"/&gt;
+    &lt;include name="**/*.old"/&gt;
   &lt;/fileset&gt;
-  &lt;dirset dir=&quot;/web&quot;&gt;
-    &lt;include name=&quot;**/private_*&quot;/&gt;
+  &lt;dirset dir="/web"&gt;
+    &lt;include name="**/private_*"/&gt;
   &lt;/dirset&gt;
 &lt;/chmod&gt;
 </pre>

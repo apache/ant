@@ -107,7 +107,8 @@ is based on the standard Ant include and exclude selection mechanisms.
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>&lt;ddcreator descriptors=&quot;${dd.dir}&quot;
+<pre>
+&lt;ddcreator descriptors=&quot;${dd.dir}&quot;
            dest=&quot;${gen.classes}&quot;
            classpath=&quot;${descriptorbuild.classpath}&quot;&gt;
   &lt;include name=&quot;*.txt&quot;/&gt;
@@ -177,7 +178,8 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>&lt;ejbc descriptors=&quot;${gen.classes}&quot;
+<pre>
+&lt;ejbc descriptors=&quot;${gen.classes}&quot;
            src=&quot;${src.dir}&quot;
            dest=&quot;${gen.classes}&quot;
            manifest=&quot;${build.manifest}&quot;
@@ -291,7 +293,8 @@ directory. If omitted, the ejbc utility must be on the user's system path. </td>
 <h3>
 Examples</h3>
 
-<pre>&lt;iplanet-ejbc ejbdescriptor="ejb-jar.xml"
+<pre>
+&lt;iplanet-ejbc ejbdescriptor="ejb-jar.xml"
               iasdescriptor="ias-ejb-jar.xml"
               dest="${build.classesdir}"
               classpath="${ias.ejbc.cpath}"/&gt;
@@ -1361,8 +1364,8 @@ the classpath of the ejbdeploy tool and set the <i>websphere.home</i> property (
 in the descriptor dir:</p>
 
 <pre>
-     &lt;property name=&quot;webpshere.home&quot; value=&quot;${was4.home}&quot;/&gt;
-     &lt;ejbjar srcdir="${build.class}" descriptordir="etc/ejb"&gt;
+    &lt;property name=&quot;webpshere.home&quot; value=&quot;${was4.home}&quot;/&gt;
+    &lt;ejbjar srcdir="${build.class}" descriptordir="etc/ejb"&gt;
       &lt;include name="*-ejb-jar.xml"/&gt;
       &lt;websphere dbvendor="DB2UDBOS390_V6"
                  ejbdeploy="true"
@@ -1377,9 +1380,9 @@ in the descriptor dir:</p>
           &lt;pathelement location="${was4.home}/lib/j2ee.jar"/&gt;
           &lt;pathelement location="${was4.home}/lib/vaprt.jar"/&gt;
         &lt;/wasclasspath&gt;
-      &lt;classpath&gt;
-        &lt;path refid="build.classpath"/&gt;
-      &lt;/classpath&gt;
+        &lt;classpath&gt;
+          &lt;path refid="build.classpath"/&gt;
+        &lt;/classpath&gt;
       &lt;/websphere&gt;
       &lt;dtd publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN"
            location="${lib}/dtd/ejb-jar_1_1.dtd"/&gt;
@@ -1491,7 +1494,8 @@ This example demonstrates the typical use of the <code>&lt;iplanet&gt;</code> ne
 It will name each EJB-JAR using the "basename" prepended to each standard
 EJB descriptor.  For example, if the descriptor named "Account-ejb-jar.xml"
 is processed, the EJB-JAR will be named "Account.jar"
-<pre>    &lt;ejbjar srcdir="${build.classesdir}"
+<pre>
+    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"&gt;
 
             &lt;iplanet destdir="${assemble.ejbjar}"
@@ -1502,7 +1506,8 @@ is processed, the EJB-JAR will be named "Account.jar"
 
 This example demonstrates the use of a nested classpath element as well
 as some of the other optional attributes.
-<pre>    &lt;ejbjar srcdir="${build.classesdir}"
+<pre>
+    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"&gt;
 
             &lt;iplanet destdir="${assemble.ejbjar}"
@@ -1522,7 +1527,8 @@ This example demonstrates the use of basejarname attribute.  In this
 case, the completed EJB-JAR will be named "HelloWorld.jar"  If multiple
 EJB descriptors might be found, care must be taken to ensure that the completed
 JAR files don't overwrite each other.
-<pre>    &lt;ejbjar srcdir="${build.classesdir}"
+<pre>
+    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"
             basejarname="HelloWorld"&gt;
 
@@ -1536,7 +1542,8 @@ copies of the DTDs are included in the classpath, they will be automatically
 referenced without the nested elements.  In iAS 6.0 SP2, these local DTDs are
 found in the [iAS-install-directory]/APPS directory.  In iAS 6.0 SP3, these
 local DTDs are found in the [iAS-install-directory]/dtd directory.
-<pre>    &lt;ejbjar srcdir="${build.classesdir}"
+<pre>
+    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"&gt;
             &lt;iplanet destdir="${assemble.ejbjar}"&gt;
                      classpath="${ias.ejbc.cpath}"/&gt;

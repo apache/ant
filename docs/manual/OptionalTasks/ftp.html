@@ -291,8 +291,7 @@ to the default directory for that user.</p>
        remotedir=&quot;incoming&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot;
-       depends=&quot;yes&quot;
-  &gt;
+       depends=&quot;yes&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
   &lt;/ftp&gt;</pre>
 <p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
@@ -305,8 +304,7 @@ for <code>anonymous</code>.</p>
        userid=&quot;coder&quot;
        password=&quot;java1&quot;
        depends=&quot;yes&quot;
-       binary=&quot;no&quot;
-  &gt;
+       binary=&quot;no&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
       &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
@@ -320,13 +318,11 @@ changed HTML files in the <code>htdocs/manual</code> directory to the
        userid=&quot;coder&quot;
        password=&quot;java1&quot;
        separator=&quot;\&quot;
-       verbose=&quot;yes&quot;</pre>
-<PRE>
-  &gt;
+       verbose=&quot;yes&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
       &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
-  &lt;/ftp&gt;</PRE><p>Logs in to the Windows-based <code>ftp.nt.org</code> as 
+  &lt;/ftp&gt;</pre><p>Logs in to the Windows-based <code>ftp.nt.org</code> as 
 <code>coder</code> with password <code>java1</code> and uploads all 
 HTML files in the <code>htdocs/manual</code> directory to the 
 <code>c:\uploads</code> directory.  Progress messages are displayed as each
