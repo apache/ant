@@ -35,6 +35,7 @@
     <concat destfile="TESTDEST" append="true">
       <filelist dir="${basedir}" files="thisfiledoesnotexist"/>
     </concat>
+    <delete file="TESTDEST"/>
   </target>
 
 </project>
