@@ -65,7 +65,7 @@ import java.io.FileWriter;
 
 
 /**
- * TestCases fuer <style> / <xslt> task.
+ * TestCases for <style> / <xslt> task.
  * @author Jan Materne
  * @version 2003-08-05
  */
