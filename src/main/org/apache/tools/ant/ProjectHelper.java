@@ -127,7 +127,7 @@ public class ProjectHelper {
             throw new BuildException(exc.getMessage(), t);
         }
         catch(FileNotFoundException exc) {
-            throw new BuildException("File \"" + buildFile.toString() + "\" not found");
+            throw new BuildException(exc);
         }
         catch(IOException exc) {
             throw new BuildException("Error reading project file", exc);
