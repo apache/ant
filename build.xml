@@ -1355,7 +1355,7 @@
 
       <selector refid="conditional-patterns"/>
     </javac>
-    
+
     <!-- Used by AntlibTest.testAntlibResource: -->
     <jar jarfile="${build.tests}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
         <zipfileset dir="${tests.etc.dir}" fullpath="taskdefs/test.antlib.xml">
@@ -1409,9 +1409,9 @@
          Run testcase
        ===================================================================
   -->
-  <target name="test" depends="run-tests" description="--> run JUnit tests"/>
+  <target name="test" depends="run-tests,run-single-test" description="--> run JUnit tests"/>
 
-  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present">
+  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present" unless="testcase">
 
     <condition property="run.junitreport">
       <or>
