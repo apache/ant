@@ -375,6 +375,19 @@ task attributes. This is done by placing the property name between
 <p>If there is a property called &quot;builddir&quot; with the value
 &quot;build&quot;, then this could be used in an attribute like this: &quot;${builddir}/classes&quot;.
 This is resolved as &quot;build/classes&quot;.</p>
+<h3>Built in Properties</h3>
+<p>Ant provides access to all system properties as if they had been
+defined using a property task, for example ${os.name} expands to the
+name of the operating system.</p>
+<p>In addition Ant knows some built in properties:</p>
+<ul>
+  <li>basedir - the absolute path of the project's basedir (as set
+    with the basedir attribute of &lt;project&gt;.</li>
+  <li>ant.file - the absolute path of the build file.</li>
+  <li>ant.java.version - the JVM version Ant detected. Currently it
+    can hold the values &quot;1.1&quot;, &quot;1.2&quot; and
+    &quot;1.3&quot;.</li>
+</ul>
 <h3>Example</h3>
 <blockquote>
   <pre>
