@@ -36,6 +36,11 @@ Fixed bugs:
 * <manifest> was not printing warnings about invalid manifest elements.
   Bugzilla report 32190
 
+* <replace> got out of memory on large files (part of report 32566). 
+  <replace> can now handle files as long as there is enough disk space
+  is available.
+
+
 Other changes:
 --------------
 
