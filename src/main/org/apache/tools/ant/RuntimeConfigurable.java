@@ -61,9 +61,7 @@ import java.util.Hashtable;
 import java.io.Serializable;
 
 import org.xml.sax.AttributeList;
-import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributeListImpl;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Wrapper class that holds the attributes of an element, its children, and
@@ -76,15 +74,19 @@ public class RuntimeConfigurable implements Serializable {
 
     /** Name of the element to configure. */
     private String elementTag = null;
+    
     /** List of child element wrappers. */
     private Vector children = new Vector();
+    
     /** The element to configure. It is only used during
      * maybeConfigure.
      */
     private transient Object wrappedObject = null;
 
-    /** @@deprecated
-     * XML attributes for the element. */
+    /** 
+     * @deprecated
+     * XML attributes for the element. 
+     */
     private transient AttributeList attributes;
 
     /** Attribute names and values. While the XML spec doesn't require
@@ -93,12 +95,14 @@ public class RuntimeConfigurable implements Serializable {
      *  We could also just use SAX2 Attributes and convert to SAX1 ( DOM
      *  attribute Nodes can also be stored in SAX2 Attributges )
      */
-    private Vector attNames=new Vector();
-    private Vector attValues=new Vector();
-    private Hashtable attMap=new Hashtable();
+    private Vector attributeNames = new Vector();
+    
+    /** Map of attribute names to values */
+    private Hashtable attributeMap = new Hashtable();
 
     /** Text appearing within the element. */
     private StringBuffer characters = new StringBuffer();
+    
     /** Indicates if the wrapped object has been configured */
     private boolean proxyConfigured = false;
 
@@ -114,8 +118,9 @@ public class RuntimeConfigurable implements Serializable {
         this.elementTag = elementTag;
         proxyConfigured = false;
         // Most likely an UnknownElement
-        if( proxy instanceof Task )
-            ((Task)proxy).setRuntimeConfigurableWrapper( this );
+        if (proxy instanceof Task) {
+            ((Task) proxy).setRuntimeConfigurableWrapper(this);
+        }
     }
 
     /**
@@ -142,14 +147,13 @@ public class RuntimeConfigurable implements Serializable {
     public void setAttributes(AttributeList attributes) {
         this.attributes = new AttributeListImpl(attributes);
         for (int i = 0; i < attributes.getLength(); i++) {
-            this.setAttribute( attributes.getName(i), attributes.getValue(i));
+            setAttribute(attributes.getName(i), attributes.getValue(i));
         }
     }
 
-    public void setAttribute( String name, String value ) {
-        attNames.addElement( name );
-        attValues.addElement( value );
-        attMap.put( name, value );
+    public void setAttribute(String name, String value) {
+        attributeNames.addElement(name);
+        attributeMap.put(name, value);
     }
 
     /** Return the attribute map.
@@ -157,7 +161,7 @@ public class RuntimeConfigurable implements Serializable {
      * @return Attribute name to attribute value map
      */
     public Hashtable getAttributeMap() {
-        return attMap;
+        return attributeMap;
     }
 
     /**
@@ -286,8 +290,7 @@ public class RuntimeConfigurable implements Serializable {
      *            an element which doesn't accept it.
      */
     public void maybeConfigure(Project p, boolean configureChildren)
-        throws BuildException
-    {
+        throws BuildException {
         String id = null;
 
         if (proxyConfigured) {
@@ -295,16 +298,16 @@ public class RuntimeConfigurable implements Serializable {
         }
 
         // Configure the object
-        Object target=(wrappedObject instanceof TaskAdapter) ?
-                ((TaskAdapter)wrappedObject).getProxy() : wrappedObject;
+        Object target = (wrappedObject instanceof TaskAdapter) ?
+                ((TaskAdapter) wrappedObject).getProxy() : wrappedObject;
 
         //PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper(p, target.getClass());
 
-        for( int i=0; i< attNames.size(); i++ ) {
-            String name=(String) attNames.elementAt(i);
-            String value=(String) attValues.elementAt(i);
+        for (int i = 0; i < attributeNames.size(); i++) {
+            String name = (String) attributeNames.elementAt(i);
+            String value = (String) attributeMap.get(name);
 
             // reflect these into the target
             value = p.replaceProperties(value);
@@ -318,7 +321,7 @@ public class RuntimeConfigurable implements Serializable {
                 }
             }
         }
-        id = (String)attMap.get("id");
+        id = (String) attributeMap.get("id");
 
         if (characters.length() != 0) {
             ProjectHelper.addText(p, wrappedObject, characters.toString());

@@ -74,7 +74,7 @@ import org.apache.tools.ant.ProjectComponent;
  */
 public abstract class DataType extends ProjectComponent {
     /**
-     * The descriptin the user has set.
+     * The description the user has set.
      *
      * @deprecated The user should not be directly referencing
      *   variable. Please use {@link #setDescription} or
