@@ -233,10 +233,11 @@ public class ProjectHelper {
             if (project.getProperty("basedir") != null) {
                 project.setBasedir(project.getProperty("basedir"));
             } else {
+                String buildFileParent = (new File(buildFile.getAbsolutePath())).getParent();
                 if (baseDir == null) {
-                    project.setBasedir((new File(buildFile.getParent())).getAbsolutePath());
+                    project.setBasedir((new File(buildFileParent)).getAbsolutePath());
                 } else {
-                    project.setBasedir((new File(buildFile.getParent(), baseDir)).getAbsolutePath());
+                    project.setBasedir((new File(buildFileParent, baseDir)).getAbsolutePath());
                 }
             }
 
