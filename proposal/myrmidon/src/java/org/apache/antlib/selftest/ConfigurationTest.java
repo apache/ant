@@ -10,8 +10,8 @@ package org.apache.antlib.selftest;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.AbstractContainerTask;
 
 /**
  * This is to test self interpretation of configuration.
@@ -19,7 +19,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ConfigurationTest
-    extends AbstractContainerTask
+    extends AbstractTask
     implements Configurable
 {
     private String m_message;
@@ -28,7 +28,15 @@ public class ConfigurationTest
         throws ConfigurationException
     {
         final String message = configuration.getAttribute( "message" );
-        final Object object = resolve( message );
+        final Object object;
+        try
+        {
+            object = resolveValue( message );
+        }
+        catch( final TaskException te )
+        {
+            throw new ConfigurationException( te.getMessage(), te );
+        }
 
         if( object instanceof String )
         {
