@@ -34,6 +34,14 @@ directory</a> or, preferably, its <a href="[preferred]/ant/">mirror</a>.</p>
 
 </section>
 
+<section name="Downloading Ant 1.6beta">
+
+<p>Beta releases are not mirrored, you can find our latest beta
+release at <a
+href="http://cvs.apache.org/dist/ant/">http://cvs.apache.org/dist/ant/</a>.</p>
+
+</section>
+
 <section name="Mirror">
 
 <p>You are currently using <b>[preferred]</b>.  If you encounter a
