@@ -22,6 +22,9 @@
   </target>
 
   <target name="testLogInputString" depends="cat-check" if="can-cat">
+    <echo>
+        testLogInputString can-cat
+    </echo>
     <exec executable="cat">
       <redirector inputstring="foo" loginputstring="false" />
     </exec>

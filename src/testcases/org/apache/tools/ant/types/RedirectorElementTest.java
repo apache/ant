@@ -51,6 +51,8 @@ public class RedirectorElementTest extends BuildFileTest {
 
     public void testLogInputString() {
         executeTarget("testLogInputString");
-        assertDebuglogContaining("Using input string");
+        if (super.getLog().indexOf("testLogInputString can-cat") >=0 ) {
+            assertDebuglogContaining("Using input string");
+        }
     }
 }
