@@ -19,6 +19,9 @@
   <property name="endpoint.wsdl" 
     value="http://nagoya.apache.org:5049/Axis/StockQuoteService.jws?wsdl" />
   
+  <property name="vb.references" 
+    value="System.Web.dll,System.xml.dll,System.dll,System.Web.Services.dll"/>
+    
   <target name="init" depends="validate">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${cache.dir}"/>
@@ -148,7 +151,10 @@
       srcDir="${src.dir}"
       destFile="${out.app}"
       targetType="${out.type}"
-      />
+      references="${vb.references}"
+      >
+      
+      </vbc>
     <available property="app.created" file="${out.app}"/>
     <fail unless="app.created">No app created</fail>
   </target>
@@ -167,6 +173,7 @@
       optionExplicit="true"
       optionStrict="false"
       optionCompare="text"
+      references="${vb.references}"
       />
     <available property="app.created" file="${out.app}"/>
     <fail unless="app.created">No app created</fail>
