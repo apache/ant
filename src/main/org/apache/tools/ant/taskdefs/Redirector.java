@@ -269,10 +269,10 @@ public class Redirector {
             errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
         } else {
             if (out != null)  {
-                    outputStream
-                        = new DelayedFileOutputStream(out, append);
-                    managingTask.log("Output redirected to " + out,
-                                     Project.MSG_VERBOSE);
+                outputStream
+                    = new DelayedFileOutputStream(out, append);
+                managingTask.log("Output redirected to " + out,
+                                 Project.MSG_VERBOSE);
             }
 
             if (outputProperty != null) {
@@ -296,10 +296,10 @@ public class Redirector {
         }
 
         if (error != null)  {
-                errorStream
-                    = new DelayedFileOutputStream(error, append);
-                managingTask.log("Error redirected to " + error,
-                    Project.MSG_VERBOSE);
+            errorStream
+                = new DelayedFileOutputStream(error, append);
+            managingTask.log("Error redirected to " + error,
+                             Project.MSG_VERBOSE);
         }
 
         if (errorProperty != null) {

@@ -206,12 +206,10 @@ public class Scp extends SSHBase {
                 }
             }
             if (!list.isEmpty()) {
-            session = openSession();
-            ScpToMessage message = new ScpToMessage(session,
-                                                     list,
-                                                     file);
-            message.setLogListener(this);
-            message.execute();
+                session = openSession();
+                ScpToMessage message = new ScpToMessage(session, list, file);
+                message.setLogListener(this);
+                message.execute();
             }
         } finally {
             if (session != null) {
@@ -281,21 +279,21 @@ public class Scp extends SSHBase {
         Directory root = new Directory(scanner.getBasedir());
         String[] files = scanner.getIncludedFiles();
         if (files.length != 0) {
-        for (int j = 0; j < files.length; j++) {
-            String[] path = Directory.getPath(files[j]);
-            Directory current = root;
-            File currentParent = scanner.getBasedir();
-            for (int i = 0; i < path.length; i++) {
-                File file = new File(currentParent, path[i]);
-                if (file.isDirectory()) {
-                    current.addDirectory(new Directory(file));
-                    current = current.getChild(file);
-                    currentParent = current.getDirectory();
-                } else if (file.isFile()) {
-                    current.addFile(file);
+            for (int j = 0; j < files.length; j++) {
+                String[] path = Directory.getPath(files[j]);
+                Directory current = root;
+                File currentParent = scanner.getBasedir();
+                for (int i = 0; i < path.length; i++) {
+                    File file = new File(currentParent, path[i]);
+                    if (file.isDirectory()) {
+                        current.addDirectory(new Directory(file));
+                        current = current.getChild(file);
+                        currentParent = current.getDirectory();
+                    } else if (file.isFile()) {
+                        current.addFile(file);
+                    }
                 }
             }
-        }
         } else {
             // skip
             root = null;
