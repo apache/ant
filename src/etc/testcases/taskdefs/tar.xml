@@ -16,19 +16,19 @@
 
   <target name="test4">
     <touch file="test4.tar"/>
-    <tar tarfile="test4.tar"
+    <tar destfile="test4.tar"
          basedir="."/>
   </target>
 
   <target name="test5">
     <mkdir dir="test5dir"/>
-    <tar tarfile="test5.tar"
+    <tar destfile="test5.tar"
          basedir="."
          includes="test5dir"/>
   </target>
 
   <target name="test6">
-    <tar tarfile="blah" longfile="Foo"/>
+    <tar destfile="blah" longfile="Foo"/>
   </target>
 
   <target name="cleanup"> 
@@ -39,7 +39,7 @@
   </target>
 
   <target name="feather">
-    <tar tarfile="asf-logo.gif.tar" 
+    <tar destfile="asf-logo.gif.tar"
          basedir=".."
          includes="asf-logo.gif" />
   </target>

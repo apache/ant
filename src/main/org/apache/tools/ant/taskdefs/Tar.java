@@ -129,9 +129,20 @@ public class Tar extends MatchingTask {
 
     /**
      * This is the name/location of where to create the tar file.
+     * @deprecated for consistency with other tasks, please use setDestFile()
      */
     public void setTarfile(File tarFile) {
+        //log("DEPRECATED - The tarfile attribute is deprecated. Please use the destfile attribute instead.");
         this.tarFile = tarFile;
+    }
+
+    /**
+     * Sets the destfile attribute.
+     * @since 1.22 ant 1.5
+     * @param destFile The output of the tar
+     */
+    public void setDestFile(File destFile) {
+       this.tarFile = destFile;
     }
 
     /**

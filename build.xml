@@ -604,7 +604,7 @@
          basedir="${dist.name}/.."
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
-         tarfile="${dist.base}/bin/${dist.name}-bin.tar">
+         destfile="${dist.base}/bin/${dist.name}-bin.tar">
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
@@ -634,7 +634,7 @@
          basedir="${dist.name}/.."
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
-         tarfile="${dist.base}/src/${dist.name}-src.tar" >
+         destfile="${dist.base}/src/${dist.name}-src.tar" >
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>

@@ -52,7 +52,7 @@ the limit.</p>
     <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">tarfile</td>
+    <td valign="top">destfile</td>
     <td valign="top">the tar-file to create.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
@@ -138,7 +138,7 @@ attributes
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code>  directory, then applies the gzip task to compress
 it.</p>
-<pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot;
+<pre>  &lt;tar destfile=&quot;${dist}/manual.tar&quot;
        basedir=&quot;htdocs/manual&quot;
        excludes=&quot;mydocs/**, **/todo.html&quot;
   /&gt;</pre>
@@ -147,7 +147,7 @@ in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code
 or files with the name <code>todo.html</code> are excluded.</p>
 
 <pre>&lt;tar longfile=&quot;gnu&quot;
-     tarfile=&quot;${dist.base}/${dist.name}-src.tar&quot; &gt;
+     destfile=&quot;${dist.base}/${dist.name}-src.tar&quot; &gt;
   &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
