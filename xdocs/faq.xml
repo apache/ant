@@ -808,6 +808,14 @@ shell-prompt> m4 foo.m4 > foo
           that include an embedded copy of ant classes.
           An example of this is some copies of weblogic.jar.
         </p>
+        <p>
+        One can check if this is the case by doing (on unix/sh):
+        <code><pre>
+        unset CLASSPATH
+        ant -version
+        </pre>
+        </code>
+        </p>
       </answer>
     </faq>
 

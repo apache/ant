@@ -1130,6 +1130,14 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
           that include an embedded copy of ant classes.
           An example of this is some copies of weblogic.jar.
         </p>
+                        <p>
+        One can check if this is the case by doing (on unix/sh):
+        <code><pre>
+        unset CLASSPATH
+        ant -version
+        </pre>
+        </code>
+        </p>
                     <p class="faq">
       <a name="NoClassDefFoundError"></a>
       I installed Ant 1.6.x and now get
