@@ -42,10 +42,16 @@ symposiums</a> as well as other venues.  Erik is the President of
 </p>
 
             <p>
-                <b>Donald Leslie</b><br/>
+                <b>Antoine Levy-Lambert</b> (levylambert at tiscali-dsl.de)
+<br/>
+Antoine is an IT consultant specialized in financial IT and
+in application management/configuration management. He has experience with
+conceiving, building and managing distributed applications. His consultancy
+is called <a href="http://www.antbuild.com">antbuild</a>.
+
             </p>
 
-            <p>
+             <p>
                 <b>Steve Loughran</b><br/>
             </p>
 
@@ -74,6 +80,10 @@ sponsor for the <a href="http://xml.apache.org/soap">xml-soap</a> subproject
 and convener of <a href="http://www.ecma.ch">ECMA</a> TC39 TG3.  He is
 also serving as the Chairman of the Jakarta PMC.
 </p>
+
+            <p>
+                <b>Peter Reilly</b><br/>
+            </p>
 
             <p>
                 <b>Magesh Umasankar</b> (umagesh at apache.org)
@@ -110,6 +120,10 @@ Project a reality and served as the first Chairman of the Jakarta PMC.
 
             <p>
                 <b>Diane Holt</b><br/>
+            </p>
+
+            <p>
+                <b>Donald Leslie</b><br/>
             </p>
 
             <p>
@@ -179,16 +193,6 @@ platform (J2EE, XML, ...).
 </p>
 
             <p>
-                <b>Antoine Levy-Lambert</b> (levylambert at tiscali-dsl.de)
-<br/>
-Antoine is an IT consultant specialized in financial IT and
-in application management/configuration management. He has experience with
-conceiving, building and managing distributed applications. His consultancy
-is called <a href="http://www.antbuild.com">antbuild</a>.
-
-            </p>
-
-            <p>
                 <b>Jan Matèrne</b> (jhm at apache.org)
 <br/>
 Jan is consultant for OOA/D in the computer centre of the government
@@ -211,10 +215,6 @@ for implementing security in the J2EE Reference Implementation
 implementations from Tomcat into the J2EE RI. These days, he hacks PHP
 code during the day.
 </p>
-
-            <p>
-                <b>Peter Reilly</b><br/>
-            </p>
 
             <p>
                 <b>Nico Seessle</b><br/>
@@ -301,6 +301,15 @@ Glenn McAllister is a software developer at SOMA Networks, was formerly
 the same at IBM (plus tech writer plus build guy), and does some writing
 on the side for the VADD Technical Journal.
 </p>
+
+           <p>
+                <b>Craig McClanahan</b> (Craig.McClanahan at eng.sun.com)
+<br/>
+Craig was involved in the Apache JServ project, focused on implementing
+a next generation architecture and feature set for the core servlet
+engine.  He has recently joined Sun as technical lead for the servlet
+and JSP reference implementation.
+          </p>
       </subsection>
     </section>
 
