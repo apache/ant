@@ -1,3 +1,28 @@
+Changes from Ant 1.5.2 to Ant 1.5.3
+===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* The <zip> task and friends have again changed a method signature
+  (sorry, was necessary to fix bug 17780).  The return type of
+  getResourcesToAdd has changed.
+
+Fixed bugs:
+-----------
+
+* <zipfileset>'s filemode would get ignored and the dirmode was used
+  for the included files as well.  As a side effect, WinZIP was unable
+  to extract or display the files, so they seemed to be missing from
+  the archive.  Bugzilla Report 17648.
+
+* <ftp> could use the wrong path separator when trying to change the
+  remote working directory.  Bugzilla Report 17735.
+
+* <jar update="true"> would loose all original files if you didn't
+  specify any nested <(zip)fileset>s and the manifest had changed.
+  Bugzilla Report 17780.
+
 Changes from Ant 1.5.1 to Ant 1.5.2
 ===================================
 
