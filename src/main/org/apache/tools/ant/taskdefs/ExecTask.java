@@ -132,6 +132,7 @@ public class ExecTask extends Task {
      */
     public void setExecutable(String value) {
         this.executable = value;
+        cmdl.setExecutable(value);
     }
 
     /**
