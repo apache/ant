@@ -68,18 +68,18 @@ import java.text.StringCharacterIterator;
 /**
  * This object represents a path as used by CLASSPATH or PATH
  * environment variable.
- *
+ * <p>
  * <code>
  * &lt;sometask&gt;<br>
- * &nbsp;&nbsp;&lt;somepath&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file.jar" /&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file3.jar" /&gt;
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file4.jar" /&gt;
- * &nbsp;&nbsp;&lt;/somepath&gt;
+ * &nbsp;&nbsp;&lt;somepath&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file.jar" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file3.jar" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file4.jar" /&gt;<br>
+ * &nbsp;&nbsp;&lt;/somepath&gt;<br>
  * &lt;/sometask&gt;<br>
  * </code>
- *
+ * <p>
  * The object implemention <code>sometask</code> must provide a method called
  * <code>createSomepath</code> which returns an instance of <code>Path</code>.
  * Nested path definitions are handled by the Path object and must be labeled

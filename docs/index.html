@@ -1158,6 +1158,7 @@ systems.</p>
 <p>Unzips a zip- or jarfile.</p>
 <p>For JDK 1.1 "last modified time" field is set to current time instead of being 
 carried from zipfile.</p>
+<p>File permissions will not be restored on extracted files.</a>
 <p>DEPRECATION: the expand task simply points to the unzip task and it's
 there for back compatibility reasons.</p>
 <h3>Parameters</h3>
@@ -1589,6 +1590,7 @@ subdir is a directory).</p>
 <h3>Description</h3>
 <p>Jars a set of files.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to jar.</p>
+<p>Note that file permissions will not be stored in the resulting jarfile.</p>
 <p>It is possible to refine the set of files that are being jarred. This can be
 done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
 attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
@@ -3164,6 +3166,7 @@ carried from tarfile.</p>
 <h3>Description</h3>
 <p>Creates a zipfile.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to zip.</p>
+<p>Note that file permissions will not be stored in the resulting zipfile.</p>
 <p>It is possible to refine the set of files that are being zipped. This can be
 done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
 attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
