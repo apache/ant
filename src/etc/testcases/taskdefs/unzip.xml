@@ -68,4 +68,14 @@
     <mkdir dir="unziptestout"/>
     <unzip dest="unziptestout" src="zip/test.exe"/>
   </target>
+
+  <!-- Bugzilla Report 20969 -->
+  <target name="testPatternSetSlashOnly" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="2/"/>
+      </patternset>
+    </unzip>
+  </target>
+
 </project>
