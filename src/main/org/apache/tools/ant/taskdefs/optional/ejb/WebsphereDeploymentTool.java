@@ -54,37 +54,23 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-
-import java.io.IOException;
-
 import java.io.FileOutputStream;
-
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.jar.JarFile;
-
-import java.util.jar.JarOutputStream;
-
-import java.util.jar.JarEntry;
-import java.util.Iterator;
-
-import java.util.Hashtable;
-
 import java.util.Enumeration;
-
-
-import org.apache.tools.ant.Project;
-
-import org.apache.tools.ant.BuildException;
-
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
-import org.apache.tools.ant.types.Path;
-
-import org.apache.tools.ant.types.Environment;
-
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
@@ -309,6 +295,14 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.trace = trace;
     }
 
+    /**
+     * Set the rmic options.
+     *
+     * @param options
+     */
+    public void setRmicoptions(String options) { 
+        this.rmicOptions = options; 
+    }
 
     /**
      * Flag to use the WebSphere 3.5 compatible mapping rules ; optional, default false.
