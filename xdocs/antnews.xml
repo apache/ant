@@ -9,10 +9,10 @@
   </properties>
 
 <body>
-   <section name="Ant 1.6beta1">
-    <h3>September 30, 2003 - Ant 1.6beta1 Available</h3>
-    <p>Apache Ant 1.6beta1 is now available for <a
-    href="http://cvs.apache.org/dist/ant/v1.6beta1/">download</a>.  As
+   <section name="Ant 1.6beta2">
+    <h3>October 17, 2003 - Ant 1.6beta2 Available</h3>
+    <p>Apache Ant 1.6beta2 is now available for <a
+    href="http://cvs.apache.org/dist/ant/v1.6beta2/">download</a>.  As
     we've already said in the announcements of Ant 1.5.4, this release
     requires JDK 1.2 or later to run.</p>
 
@@ -25,6 +25,13 @@
     makes use of namespaces to avoid name clashes of custom tasks.
     For a longer list of fixed bugs and new features see the release
     notes.</p>
+    
+    <p>The manual of Ant 1.6 is available on line 
+    <a href="manual-1.6beta/"> here</a>.</p>
+
+    <p>If you find anything that hasn't been covered in the manual (I bet you
+did) or could be explained better, feel free to help us out in the
+<a href="http://nagoya.apache.org/wiki/apachewiki.cgi?NewAntFeaturesInDetail">Wiki </a>.</p>
 
    </section>
 
