@@ -28,10 +28,11 @@ This task does not currently use the proxy information set by the
 <a href="setproxy.html">&lt;setproxy&gt;</a> task, and cannot go through
 a firewall via socks. 
 <p>
-<b>Warning: </b> for the get and delete actions to work properly 
-with a Windows 2000 ftp server, it needs to be configured to generate
-Unix style listings, and not the default MS-DOS listing. Or someone needs to write
-the code to parse MS-DOS listings -any takers?
+<b>Warning: </b> there have been problems reported concerning the ftp get with newer attribute.
+Problems might be due to format of ls -l differing from what is expected by commons-net,
+for instance due to specificities of langage used by the ftp server in the directory listing.
+If you encounter such a problem, please send an email including a sample directory listing
+coming from your ftp server (ls -l on the ftp prompt).
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -62,8 +63,10 @@ the code to parse MS-DOS listings -any takers?
   </tr>
   <tr>
     <td valign="top">remotedir</td>
-    <td valign="top">the directory to which to upload files on the 
-                     ftp server.</td>
+    <td valign="top">remote directory on the
+                     ftp server
+                     see table below for detailed usage
+                     </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -150,7 +153,91 @@ the code to parse MS-DOS listings -any takers?
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
 </table>
-<h3>Parameters specified as nested elements</h3>
+<h3>Note about remotedir attribute</h3>
+<table  border="1" cellpadding="2" cellspacing="0"
+ >
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;" width="20%">Action<br>
+      </td>
+      <td style="vertical-align: top;" width="40%">meaning of <code>remotedir</code><br>
+      </td>
+      <td style="vertical-align: top;">use of nested <code>fileset</code>
+(s)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">send/put<br>
+      </td>
+      <td style="vertical-align: top;" width="40%">base directory to
+which the files are sent<br>
+      </td>
+      <td style="vertical-align: top;">they are used normally and
+evaluated on the local machine<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">recv/get<br>
+      </td>
+      <td style="vertical-align: top;" width="40%">base directory from
+which the files are retrieved<br>
+      </td>
+      <td style="vertical-align: top;">the remote files located under
+the <code>remotedir </code>matching the include/exclude patterns of
+the <code>fileset&nbsp;</code></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">del/delete<br>
+      </td>
+      <td style="vertical-align: top;" width="40%">base directory from
+which files get deleted<br>
+      </td>
+      <td style="vertical-align: top;">the remote files located under
+the <code>remotedir </code>matching the include/exclude patterns of
+the <code>fileset <br>
+      </code></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">list<br>
+      </td>
+      <td style="vertical-align: top;" width="40%">base directory from
+which files are listed<br>
+      </td>
+      <td style="vertical-align: top;">the remote files located under
+the <code>remotedir </code>matching the include/exclude patterns of
+the <code>fileset <br>
+      </code></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">mkdir</td>
+      <td style="vertical-align: top;" width="40%">directory to create<br>
+      </td>
+      <td style="vertical-align: top;">not used<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">chmod</td>
+      <td style="vertical-align: top;" width="40%">base directory from
+which the mode of files get changed<br>
+      </td>
+      <td style="vertical-align: top;">the remote files located under
+the <code>remotedir </code>matching the include/exclude patterns of
+the <code>fileset <br>
+      </code></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" width="20%">rmdir<br>
+      </td>
+      <td style="vertical-align: top;" width="40%">base directory from
+which directories get removed<br>
+      </td>
+      <td style="vertical-align: top;">the remote directories located
+under the <code>remotedir </code>matching the include/exclude
+patterns of the <code>fileset <br>
+      </code></td>
+    </tr>
+  </tbody>
+</table><h3>Parameters specified as nested elements</h3>
 <h4>fileset</h4>
 <p>The ftp task supports any number of nested <a
 href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a> elements to specify
@@ -337,7 +424,7 @@ selected for remove, so if you need to remove it, specify its parent in
 <code>&lt;fileset&gt;</code> pattern, like <code>&quot;somedir/**&quot;</code>.
 </p>
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
