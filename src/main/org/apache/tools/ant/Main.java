@@ -385,6 +385,7 @@ public class Main {
 
             project.fireBuildStarted();
             project.init();
+            project.setUserProperty("ant.version", getAntVersion());
 
             // set user-define properties
             Enumeration e = definedProps.keys();
@@ -394,7 +395,7 @@ public class Main {
                 project.setUserProperty(arg, value);
             }
 
-            project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
+            project.setUserProperty("ant.file" , buildFile.getAbsolutePath() );
 
             // first use the ProjectHelper to create the project object
             // from the given build file.
@@ -513,27 +514,32 @@ public class Main {
         System.out.println(getAntVersion());
     }
 
-    public static String getAntVersion() throws BuildException {
-        try {
-            Properties props = new Properties();
-            InputStream in =
-                Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
-            props.load(in);
-            in.close();
+    private static String antVersion = null;
 
-            String lSep = System.getProperty("line.separator");
-            StringBuffer msg = new StringBuffer();
-            msg.append("Ant version ");
-            msg.append(props.getProperty("VERSION"));
-            msg.append(" compiled on ");
-            msg.append(props.getProperty("DATE"));
-            return msg.toString();
-        } catch (IOException ioe) {
-            throw new BuildException("Could not load the version information:"
-                                     + ioe.getMessage());
-        } catch (NullPointerException npe) {
-            throw new BuildException("Could not load the version information.");
+    public synchronized static String getAntVersion() throws BuildException {
+        if (antVersion == null) {
+            try {
+                Properties props = new Properties();
+                InputStream in =
+                    Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
+                props.load(in);
+                in.close();
+                
+                String lSep = System.getProperty("line.separator");
+                StringBuffer msg = new StringBuffer();
+                msg.append("Ant version ");
+                msg.append(props.getProperty("VERSION"));
+                msg.append(" compiled on ");
+                msg.append(props.getProperty("DATE"));
+                antVersion = msg.toString();
+            } catch (IOException ioe) {
+                throw new BuildException("Could not load the version information:"
+                                         + ioe.getMessage());
+            } catch (NullPointerException npe) {
+                throw new BuildException("Could not load the version information.");
+            }
         }
+        return antVersion;
     }
 
     /**
