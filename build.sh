@@ -55,6 +55,8 @@ export CLASSPATH
 
 if [ "$REALANTHOME" != "" ] ; then
   ANT_INSTALL="-Dant.install=$REALANTHOME"
+else
+  ANT_INSTALL="-emacs"
 fi
 
 bootstrap/bin/ant -emacs "$ANT_INSTALL" $*
