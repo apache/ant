@@ -621,6 +621,13 @@ public class Execute {
      * @return the patched environment
      */
     private String[] patchEnvironment() {
+        // On OpenVMS Runtime#exec() doesn't support the environment array,
+        // so we only return the new values which then will be set in
+        // the generated DCL script, inheriting the parent process environment
+        if (Os.isFamily("openvms")) {
+                return env;
+        }
+
         Vector osEnv = (Vector) getProcEnvironment().clone();
         for (int i = 0; i < env.length; i++) {
             int pos = env[i].indexOf('=');
@@ -1119,7 +1126,7 @@ public class Execute {
          */
         public Process exec(Project project, String[] cmd, String[] env)
             throws IOException {
-            String[] vmsCmd = {createCommandFile(cmd).getPath()};
+            String[] vmsCmd = {createCommandFile(cmd, env).getPath()};
             return super.exec(project, vmsCmd, env);
         }
 
@@ -1131,7 +1138,7 @@ public class Execute {
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
-            String[] vmsCmd = {createCommandFile(cmd).getPath()};
+            String[] vmsCmd = {createCommandFile(cmd, env).getPath()};
             return super.exec(project, vmsCmd, env, workingDir);
         }
 
@@ -1139,17 +1146,34 @@ public class Execute {
          * Writes the command into a temporary DCL script and returns the
          * corresponding File object.  The script will be deleted on exit.
          */
-        private File createCommandFile(String[] cmd) throws IOException {
+        private File createCommandFile(String[] cmd, String[] env)
+            throws IOException {
             File script = File.createTempFile("ANT", ".COM");
             script.deleteOnExit();
             PrintWriter out = null;
             try {
                 out = new PrintWriter(new FileWriter(script));
-                StringBuffer dclCmd = new StringBuffer("$");
-                for (int i = 0; i < cmd.length; i++) {
-                    dclCmd.append(' ').append(cmd[i]);
+
+                // add the environment as logicals to the DCL script
+                if (env != null) {
+                    int eqIndex;
+                    for (int i = 1; i < env.length ; i++) {
+                        eqIndex = env[i].indexOf('=');
+                        if (eqIndex != -1) {
+                            out.print("$ DEFINE/NOLOG ");
+                            out.print(env[i].substring(0, eqIndex));
+                            out.print(" \"");
+                            out.print(env[i].substring(eqIndex + 1));
+                            out.println('\"');
+                        }
+                    }
                 }
-                out.println(dclCmd.toString());
+
+                out.print("$ " + cmd[0]);
+                for (int i = 1; i < cmd.length ; i++) {
+                    out.println(" -");
+                    out.print(cmd[i]);
+                }
             } finally {
                 if (out != null) {
                     out.close();
