@@ -1,0 +1,94 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Chown Task</title>
+</head>
+
+<body>
+
+<h2><a name="Chown">Chown</a></h2>
+<h3>Description</h3>
+
+<p>Changes the owner of a file or all files inside specified
+directories. Right now it has effect only under Unix.  The owner
+atribute is equivalent to the coresponding argument for the chown
+command.</p>
+
+<p><a href="../CoreTypes/fileset.html">FileSet</a> can be specified
+using nested <code>&lt;fileset&gt;</code> elements.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file of which the owner must be changed.</td>
+    <td valign="top" valign="middle" rowspan="2">one of the two or
+      nested <code>&lt;fileset&gt;</code> elements.</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory of which the owner must be changed.</td>
+  </tr>
+  <tr>
+    <td valign="top">owner</td>
+    <td valign="top">the new owner.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">parallel</td>
+    <td valign="top">process all specified files using a single
+      <code>chown</code> command. Defaults to true.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">One of <i>file</i>, <i>dir</i> or
+      <i>both</i>. If set to <i>file</i>, only the owner of
+      plain files are going to be changed. If set to <i>dir</i>, only
+      the directories are considered.</td>
+    <td align="center" valign="top">No, default is <i>file</i></td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;chown file=&quot;${dist}/start.sh&quot; owner=&quot;coderjoe&quot;/&gt;</code></p>
+</blockquote>
+<p>makes the &quot;start.sh&quot; file belong to coderjoe on a
+UNIX system.</p>
+<blockquote>
+<pre>
+    &lt;chown owner=&quot;coderjoe&quot;&gt;
+      &lt;fileset dir=&quot;${dist}/bin&quot; includes=&quot;**/*.sh&quot;/&gt;
+    &lt;/chown&gt;
+</pre>
+</blockquote>
+<p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
+belong to coderjoe on a UNIX system.</p>
+<blockquote>
+<pre>
+&lt;chown owner=&quot;coderjoe&quot;&gt;
+  &lt;fileset dir=&quot;shared/sources1&quot;&gt;
+    &lt;exclude name=&quot;**/trial/**&quot;/&gt;
+  &lt;/fileset&gt;
+  &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
+&lt;/chown&gt;
+</pre>
+</blockquote>
+<p>makes all files below <code>shared/sources1</code> (except those
+below any directory named trial) belong to coderjoe on a UNIX 
+system. In addition all files belonging to a FileSet
+with <code>id</code> <code>other.shared.sources</code> get the same
+owner.</p>
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software
+Foundation. All rights Reserved.</p>
+
+</body>
+</html>
+

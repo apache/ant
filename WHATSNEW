@@ -89,6 +89,8 @@ Other changes:
 
 * new task <symlink> that creates and maintains symbolic links.
 
+* new tasks <chown> and <chgrp> which are wrappers of the Unix commands.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
