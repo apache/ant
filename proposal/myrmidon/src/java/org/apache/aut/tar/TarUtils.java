@@ -85,13 +85,13 @@ public class TarUtils
      *
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
-     * @param value Description of Parameter
-     * @param buf Description of Parameter
      * @return The integer value of the octal bytes.
      */
-    public static int getOctalBytes( long value, byte[] buf, int offset, int length )
+    public static int getOctalBytes( final long value,
+                                     final byte[] buf,
+                                     final int offset,
+                                     final int length )
     {
-        byte[] result = new byte[ length ];
         int idx = length - 1;
 
         buf[ offset + idx ] = 0;
