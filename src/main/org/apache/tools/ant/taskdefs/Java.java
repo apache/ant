@@ -157,7 +157,7 @@ public class Java extends Task {
                 log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
-            if (perm == null && failOnError == true) {
+            if (perm == null && failOnError) {
                 perm = new Permissions(true);
                 log("running " + this.cmdl.getClassname()
                     + " with default permissions (exit forbidden)", Project.MSG_VERBOSE);
@@ -309,7 +309,7 @@ public class Java extends Task {
      * a bootclaspath.
      *
      * <p>Doesn't have any effect unless fork is true.</p>
-     *
+     * @param cloneVm if true copy system properties.
      * @since Ant 1.7
      */
     public void setCloneVm(boolean cloneVm) {
@@ -702,7 +702,8 @@ public class Java extends Task {
         }
         if (!spawn && input == null && inputString == null) {
             // #24918: send standard input to the process by default.
-            redirector.setInputStream(new KeepAliveInputStream(getProject().getDefaultInputStream()));
+            redirector.setInputStream(
+                new KeepAliveInputStream(getProject().getDefaultInputStream()));
         }
     }
 
