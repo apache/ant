@@ -50,7 +50,7 @@ classname in the &quot;build.compiler&quot; property.
   </tr>
   <tr>
     <td valign="top">srcdir</td>
-    <td valign="top">location of the java files.</td>
+    <td valign="top">location of the java files. (See Notes at the end)</td>
     <td align="center" valign="top">Yes, unless nested <code>&lt;src&gt;</code> elements are present.</td>
   </tr>
   <tr>
@@ -240,6 +240,11 @@ the property <code>src2</code>. This can also be represented using nested
 <p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
 for every use of an external compiler, this may be a problem of the JDK you are using.
 This problem may occur with all JDKs &lt; 1.2.</p>
+
+<p><b>Note:</b> If you wish to compile only source-files located in some packages below a
+common root you should not include these packages in the srcdir-attribute. Use include/exclude-attributes
+or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute 
+(or nested src-elements) Ant will start to recompile your sources everytime you call it.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
