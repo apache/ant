@@ -290,6 +290,16 @@ public class Copy extends Task {
     }
 
     /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
+
+    /**
      * Sets the character encoding
      * @param encoding the character encoding
      * @since 1.32, Ant 1.5
