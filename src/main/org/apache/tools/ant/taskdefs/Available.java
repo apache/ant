@@ -54,9 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
 import java.io.*;
 import java.util.*;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 /**
  * Will set the given property if the requested resource is available at runtime.
@@ -70,7 +71,28 @@ public class Available extends Task {
     private String classname;
     private File file;
     private String resource;
+    private Path classpath;
+    private AntClassLoader loader;
     private String value = "true";
+
+    public void setClasspath(Path classpath) {
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(project);
+        }
+        return this.classpath.createPath();
+    }
+
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
 
     public void setProperty(String property) {
         this.property = property;
@@ -93,6 +115,10 @@ public class Available extends Task {
     }
 
     public void execute() throws BuildException {
+        if (classpath != null) {
+            this.loader = new AntClassLoader(project, classpath, false);
+        }
+
         if ((classname != null) && !checkClass(classname)) return;
         if ((file != null) && !checkFile(file)) return;
         if ((resource != null) && !checkResource(resource)) return;
@@ -105,15 +131,23 @@ public class Available extends Task {
     }
 
     private boolean checkResource(String resource) {
-        return (ClassLoader.getSystemResource(resource) != null);
+        if (loader != null) {
+            return (loader.getResourceAsStream(resource) != null);
+        } else {
+            return (this.getClass().getResourceAsStream(resource) != null);
+        }
     }
 
     private boolean checkClass(String classname) {
         try {
-            Class.forName(classname);
+            if (loader != null) {
+                loader.loadClass(classname);
+            } else {
+                this.getClass().getClassLoader().loadClass(classname);
+            }
             return true;
-        } catch (Throwable t) {
-            log(t.toString(), Project.MSG_VERBOSE);
+        } catch (ClassNotFoundException e) {
+            log(e.toString(), Project.MSG_VERBOSE);
             return false;
         }
     }
