@@ -173,17 +173,13 @@ public class ProjectHandler extends ModelElementHandler {
             } catch (ModelException e) {
                 throw new SAXParseException(e.getMessage(), getLocator(), e);
             }
-        } else if (localName != null) {
+        } else {
             // everything else is a task
             BuildElementHandler buildElementHandler = new BuildElementHandler();
             buildElementHandler.start(getParseContext(), getXMLReader(),
                 this, getLocator(), attributes, getElementSource(),
                 qualifiedName);
             project.addTask(buildElementHandler.getBuildElement());
-        } else {
-          // ignore namespaced elements
-          throw new SAXParseException("namespace support is not "
-            + "currently recognized (" + qualifiedName + ")", getLocator());
         }
     }
 

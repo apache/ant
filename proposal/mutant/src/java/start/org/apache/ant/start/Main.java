@@ -135,7 +135,7 @@ public class Main {
     public void start(String frontend, String defaultClass, String[] args)
          throws InitException {
         try {             
-            InitConfig config = new InitConfig();
+            InitConfig config = new InitConfig(getClass());
     
             URL frontendJar = new URL(config.getLibraryURL(),
                 "frontend/" + frontend + ".jar");
@@ -149,8 +149,8 @@ public class Main {
             if (frontendJar.getProtocol().equals("file")) {
                 File jarFile = new File(frontendJar.getFile());
                 if (!jarFile.exists()) {
-                    throw new InitException("Could not jar for frontend \"" 
-                        + frontend + "\"");
+                    throw new InitException("Could not find jar for frontend \""
+                        + frontend + "\" - expected at " + frontendJar);
                 }
             }
             String mainClass = getMainClass(frontendJar);

@@ -116,11 +116,12 @@ public class InitConfig {
     /**
      * Constructor for the Initialization configuration
      *
+     * @param libraryClass - a class loaded from the Ant library area.
      * @exception InitException if the configuration cannot be initialized
      */
-    public InitConfig() throws InitException {
+    public InitConfig(Class libraryClass) throws InitException {
         try {
-            URL antLibURL = getAntLibURL();
+            URL antLibURL = getAntLibURL(libraryClass);
             setLibraryURL(antLibURL);
 
             URL antHome = new URL(antLibURL, "..");
@@ -331,12 +332,13 @@ public class InitConfig {
     /**
      * Get a URL to the Ant Library directory.
      *
+     * @param libraryClass - a class loaded from the Ant library area.
      * @return the URL for the Ant library directory
      * @throws MalformedURLException if there is a problem constructing the 
      *      library URL
      */
-    private URL getAntLibURL() throws MalformedURLException {
-        URL initClassURL = ClassLocator.getClassLocationURL(getClass());
+    private URL getAntLibURL(Class libraryClass) throws MalformedURLException {
+        URL initClassURL = ClassLocator.getClassLocationURL(libraryClass);
 
         String initURLString = initClassURL.toString();
         int index = initURLString.lastIndexOf("/");
