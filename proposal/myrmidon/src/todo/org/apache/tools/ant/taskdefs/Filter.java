@@ -8,8 +8,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FilterSet;
 
 /**
  * This task sets a token filter that is used by the file copy methods of the
@@ -22,7 +23,7 @@ import org.apache.tools.ant.Task;
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  */
 public class Filter
-    extends Task
+    extends AbstractTask
 {
     private File filtersFile;
 
@@ -57,7 +58,7 @@ public class Filter
 
         if( isSingleFilter )
         {
-            getProject().getGlobalFilterSet().addFilter( token, value );
+            getGlobalFilterSet().addFilter( token, value );
         }
 
         if( isFiltersFromFile )
@@ -70,6 +71,12 @@ public class Filter
         throws TaskException
     {
         getLogger().debug( "Reading filters from " + filtersFile );
-        getProject().getGlobalFilterSet().readFiltersFromFile( filtersFile );
+        getGlobalFilterSet().readFiltersFromFile( filtersFile );
+    }
+
+    private FilterSet getGlobalFilterSet()
+    {
+        //Get filterset from a well known propety and replace it there
+        return null;
     }
 }
