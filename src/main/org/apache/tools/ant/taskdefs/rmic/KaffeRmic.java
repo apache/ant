@@ -80,7 +80,6 @@ public class KaffeRmic extends DefaultRmicAdapter {
             Constructor cons = c.getConstructor(new Class[] { String[].class });
             Object rmic = cons.newInstance(new Object[] { cmd.getArguments() });
             Method doRmic = c.getMethod("run", null);
-            String str[] = cmd.getArguments();
             Boolean ok = (Boolean)doRmic.invoke(rmic, null);
 
             return ok.booleanValue();
