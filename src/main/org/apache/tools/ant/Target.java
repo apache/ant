@@ -363,13 +363,15 @@ public class Target implements TaskContainer {
      * @see #execute()
      */
     public final void performTasks() {
+        RuntimeException thrown = null;
+        project.fireTargetStarted(this);
         try {
-            project.fireTargetStarted(this);
             execute();
-            project.fireTargetFinished(this, null);
         } catch (RuntimeException exc) {
-            project.fireTargetFinished(this, exc);
+            thrown = exc;
             throw exc;
+        } finally {
+            project.fireTargetFinished(this, thrown);
         }
     }
 
