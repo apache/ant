@@ -16,7 +16,8 @@ import java.io.OutputStream;
  *
  * @author thomas.haas@softwired-inc.com
  */
-public class StreamPumper implements Runnable
+class StreamPumper
+    implements Runnable
 {
 
     // TODO: make SIZE and SLEEP instance variables.
@@ -24,8 +25,8 @@ public class StreamPumper implements Runnable
 
     private final static int SLEEP = 5;
     private final static int SIZE = 128;
-    private InputStream is;
-    private OutputStream os;
+    private InputStream m_input;
+    private OutputStream m_output;
 
     /**
      * Create a new stream pumper.
@@ -33,10 +34,11 @@ public class StreamPumper implements Runnable
      * @param is input stream to read data from
      * @param os output stream to write data to.
      */
-    public StreamPumper( InputStream is, OutputStream os )
+    public StreamPumper( final InputStream input,
+                         final OutputStream output )
     {
-        this.is = is;
-        this.os = os;
+        m_input = input;
+        m_output = output;
     }
 
     /**
@@ -50,9 +52,9 @@ public class StreamPumper implements Runnable
         int length;
         try
         {
-            while( ( length = is.read( buf ) ) > 0 )
+            while( ( length = m_input.read( buf ) ) > 0 )
             {
-                os.write( buf, 0, length );
+                m_output.write( buf, 0, length );
                 try
                 {
                     Thread.sleep( SLEEP );
