@@ -297,7 +297,8 @@ public class Main {
         if (buildFile == null) {
             // but -find then search for it
             if (searchForThis != null) {
-                buildFile = findBuildFile(".", searchForThis);
+                buildFile = findBuildFile(System.getProperty("user.dir"), 
+                                          searchForThis);
             } else {
                 buildFile = new File(DEFAULT_BUILD_FILENAME);
             }
