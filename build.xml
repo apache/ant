@@ -20,12 +20,12 @@
     <property name="build.dir" value="build"/>
     <property name="build.classes" value="build/classes"/>
     <property name="build.javadocs" value="build/javadocs"/>
-    <property name="dist.dir" value="../dist/ant"/>
-   
+    <property name="dist.dir" value="dist"/>
+
     <property name="classpath" value="lib/xml.jar"/>
     <property name="packages" value="org.apache.tools.*"/>
     <property name="manifest" value="src/etc/manifest"/>
-  
+
     <property name="build.compiler" value="classic"/>
   </target>
 
@@ -41,11 +41,12 @@
   <!-- =================================================================== -->
   <target name="compile" depends="prepare">
     <mkdir dir="${build.classes}"/>
-    <javac srcdir="${src.dir}" 
-           destdir="${build.classes}" 
+    <javac srcdir="${src.dir}"
+           destdir="${build.classes}"
            classpath="${classpath}"
-           debug="on" 
+           debug="on"
            deprecation="on"
+           optimize="on"
     />
   </target>
 
@@ -53,9 +54,9 @@
   <!-- Creates the jar archive                                             -->
   <!-- =================================================================== -->
   <target name="jar" depends="compile">
-    <jar jarfile="${lib.dir}/${name}.jar" 
-         basedir="${build.classes}" 
-         includes="org/**" 
+    <jar jarfile="${lib.dir}/${name}.jar"
+         basedir="${build.classes}"
+         includes="org/**"
          manifest="${manifest}"
     />
   </target>
@@ -69,7 +70,7 @@
      <chmod perm="+x" src="${bin.dir}/ant"/>
      <chmod perm="+x" src="${bin.dir}/antRun"/>
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
@@ -99,7 +100,7 @@
 
      <copydir src="${src.dir}" dest="${dist.dir}/src"/>
      <copydir src="${lib.dir}" dest="${dist.dir}/lib"/>
-     
+
      <copyfile src="build.xml" dest="${dist.dir}/lib/build.xml"/>
      <copydir src="src/bin" dest="${dist.dir}/bin"/>
      <copydir src="${docs.dir}" dest="${dist.dir}/docs"/>
@@ -107,7 +108,7 @@
 
      <chmod perm="+x" src="${dist.dir}/bin/ant"/>
      <chmod perm="+x" src="${dist.dir}/bin/antRun"/>
-     
+
      <copyfile src="README" dest="${dist.dir}/README"/>
      <copyfile src="TODO" dest="${dist.dir}/TODO"/>
      <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
@@ -127,7 +128,7 @@
     <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/>
     <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
@@ -142,7 +143,9 @@
   <target name="total-clean" depends="clean">
     <deltree dir="${bin.dir}"/>
     <delete file="${lib.dir}/${name}.jar"/>
-    <delete file="${name}.jar"/>
+    <delete file="${Name}-${version}.zip"/>
+    <delete file="${Name}-${version}.tar"/>
+    <delete file="${Name}-${version}.tar.gz"/>
   </target>
 
   <!-- in progress ! (may not work) -->
@@ -151,13 +154,13 @@
     <get src="http://jakarta.apache.org/build/tmp/ant/ant.src.zip" dest="ant-src.zip" />
     <expand src="ant-src.zip" dest="." />
   </target>
-  
+
   <target name="make.snapshot">
     <cvs cvsRoot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
          package="jakarta-ant"
          dest="."  />
     <zip zipfile="/www/jakarta.apache.org/builds/tmp/ant/ant.src.zip" basedir="." includes="jakarta-ant/**"/>
   </target>
-  
+
 </project>
 

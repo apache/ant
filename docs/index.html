@@ -2,8 +2,6 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Ant</title>
 </head>
 
@@ -17,7 +15,7 @@
   <li>Arnout J. Kuiper (<a href="mailto:(ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:(stefano@apache.org">stefano@apache.org</a>)</li>
 </ul>
-<p>Version 1.0.3 - 2000/02/06</p>
+<p>Version 1.0.4 - 2000/02/10</p>
 <hr>
 <h2>Table of Contents</h2>
 <ul>
@@ -228,10 +226,12 @@ the compile target. Ant resolves all these dependencies.</p>
 <p>Ant tries to execute the targets in the <i>depends</i> attribute in the order
 they appear (from left to right). Keep in mind that it is possible that a target
 can get executed earlier when an earlier target depends on it:</p>
+<blockquote>
 <pre>&lt;target name=&quot;A&quot;/&gt;
 &lt;target name=&quot;B&quot; depends=&quot;A&quot;/&gt;
 &lt;target name=&quot;C&quot; depends=&quot;B&quot;/&gt;
 &lt;target name=&quot;D&quot; depends=&quot;C,B,A&quot;/&gt;</pre>
+</blockquote>
 <p>Suppose we want to execute target D. From its <i>depends</i> attribute, you
 might think that first target C, then B and then A is executed. Wrong! C depends
 on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
@@ -239,6 +239,15 @@ on B, and B depends on A, so first A is executed, then B, then C, and finally D.
 targets in the <i>depends</i> attributes.</p>
 <p>A target gets executed only once. Even when more targets depend on it (see
 the previous example).</p>
+<p>A target has also the ability to perform its execution if a property has been
+set. This allows, for example, better control on the building process depending
+on the state of the system (java version, OS, command line properties, etc...).
+To make target <i>sense</i> this property you should add the <i>if</i> attribute
+with the name of the property that the target should react to, for example</p>
+<blockquote>
+  <pre>&lt;target name=&quot;build-module-A&quot; if=&quot;module-A-present&quot;/&gt;</pre>
+</blockquote>
+<p>If no <i>if</i> attribute is present, the target will always be executed.</p>
 <p>A target has the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -255,6 +264,12 @@ the previous example).</p>
     <td valign="top">depends</td>
     <td valign="top">a comma separated list of names of targets on which this
       target depends.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">if</td>
+    <td valign="top">the name of the property that must be set in order for this
+      target to execute.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -403,6 +418,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
 <h2><a name="tasks">Built in tasks</a></h2>
 <ul>
   <li><a href="#ant">Ant</a></li>
+  <li><a href="#available">Available</a></li>
   <li><a href="#chmod">Chmod</a></li>
   <li><a href="#copydir">Copydir</a></li>
   <li><a href="#copyfile">Copyfile</a></li>
@@ -423,6 +439,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
   <li><a href="#property">Property</a></li>
   <li><a href="#replace">Replace</a></li>
   <li><a href="#rmic">Rmic</a></li>
+  <li><a href="#tar">Tar</a></li>
   <li><a href="#taskdef">Taskdef</a></li>
   <li><a href="#tstamp">Tstamp</a></li>
   <li><a href="#zip">Zip</a></li>
@@ -467,6 +484,45 @@ These properties will override the properties that are set in the new project.
   target=&quot;compile&quot; /&gt;</code></p>
   <p><code>&lt;ant dir=&quot;subproject&quot; /&gt;</code></p>
 </blockquote>
+<hr>
+<h2><a name="available">Available</a></h2>
+<h3>Description</h3>
+<p>Sets a property is a resource is available at runtime. This resource can be a
+file resource, a class in classpath or a JVM system resource.</p>
+<p>The value part of the properties being set is <i>true</i> if the resource is
+present, otherwise, the property is not set.</p>
+<p>Normally, this task is used to set properties that are useful to avoid target
+execution depending on system parameters.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the property to set.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">class</td>
+    <td valign="top">the class to look for in classpath.</td>
+    <td valign="middle" align="center" rowspan="3">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">the resource to look for in the JVM</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file to look for.</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;available class=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot; /&gt;</pre>
+<p>sets the property <code><i>Myclass.present</i></code> to the value &quot;true&quot;
+if the <i>org.whatever.Myclass</i> is found in Ant's classpath.</p>
 <hr>
 <h2><a name="chmod">Chmod</a></h2>
 <h3>Description</h3>
@@ -1504,22 +1560,20 @@ This also holds for properties loaded from a property file.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">the name of the property to set.</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">value</td>
     <td valign="top">the value of the property.</td>
-    <td valign="top" align="center">No</td>
+    <td valign="middle" align="center" rowspan="3">Yes</td>
   </tr>
   <tr>
     <td valign="top">resource</td>
     <td valign="top">the resource name of the property file.</td>
-    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the filename of the property file .</td>
-    <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -1587,6 +1641,83 @@ This also holds for properties loaded from a property file.</p>
 <pre>  &lt;rmic class=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The
 compiled files will be stored in the directory <code>${build}/classes</code>.</p>
+<hr>
+<h2><a name="tar">Tar</a></h2>
+<h3>Description</h3>
+<p>Creates a tar archive.</p>
+<p>The <i>basedir</i> attribute is the reference directory from where to tar.</p>
+<p>It is possible to refine the set of files that are being tarred. This can be
+done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns. The patterns are
+relative to the <i>basedir</i> directory.</p>
+<p>The <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i> attributes
+replace the <i>items</i> and <i>ignore</i> attributes. The following explains
+how the deprecated <i>items</i> and <i>ignore</i> attribute behave.</p>
+<p>When &quot;*&quot; is used for <i>items</i>, all files in the basedir, and
+its subdirectories, will be tarred. Otherwise all the files and directories
+mentioned in the items list will tarred. When a directory is specified, then all
+files within it are also tarred.</p>
+<p>With the <i>ignore</i> attribute, you can specify files or directories to
+ignore. These files will not be tarred. The items in the <i>ignore</i> attribute
+override the items in the <i>items</i> attribute. The names specified in the <i>ignore</i>
+attribute are just names, they do not contain any path information!</p>
+<p>Note that this task does not perform compression. You might want to use the <a href="#gzip">GZip</a>
+task to come up with a .tar.gz package.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">tarfile</td>
+    <td valign="top">the tar-file to create.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory from which to zip the files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot; /&gt;
+  &lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot; /&gt;</pre>
+<p>tars all files in the <code>htdocs/manual</code> directory in a file called <code>manual.tar</code>
+in the <code>${dist}</code>  directory, then applies the gzip task to compress
+it.</p>
+<pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot;
+       basedir=&quot;htdocs/manual&quot;
+       excludes=&quot;mydocs/**, **/todo.html&quot;
+  /&gt;</pre>
+<p>tars all files in the <code>htdocs/manual</code> directory in a file called <code>manual.tar</code>
+in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
+or files with the name <code>todo.html</code> are excluded.</p>
 <hr>
 <h2><a name="taskdef">Taskdef</a></h2>
 <h3>Description</h3>
