@@ -210,6 +210,16 @@ Other changes:
 * <replaceregexp> now has an optional encoding attribute to support
   replacing in files that are in a different encoding than the
   platform's default.
+  
+* The <exec> task may now have its input redirected from either a file or
+  a string from the build file. The error output can be separated to a different
+  file when outut is redirected. standard error may be logged to the Ant log
+  when redirecting output to a file
+  
+* The <java> task also supports the input redirection and separate error streams
+  introduced to the <exec> task. In addition, it is now possible to save the 
+  output into a property for use within the build file as was possible with <exec>
+  in Ant 1.5
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================

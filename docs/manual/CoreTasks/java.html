@@ -91,13 +91,56 @@ JVM.
   </tr>
   <tr>
     <td valign="top">output</td>
-    <td valign="top">Name of a file to write the output to.</td>
+    <td valign="top">Name of a file to which to write the output. If the error stream 
+      is not also redirected to a file or property, it will appear in this output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">error</td>
+    <td valign="top">The file to which the standard error of the command should be
+      redirected. </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">logError</td>
+    <td valign="top">This attribute is used when you wish to see error output in Ant's
+                     log and you are redirecting output to a file/property. The error 
+                     output will not be included in the output file/property. If you 
+                     redirect error with the &quot;error&quot; or &quot;errorProperty&quot;
+                     attributes, this will have no effect.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">append</td>
-    <td valign="top">whether output should be appended to or overwrite
-    an existing file.  Defaults to false.</td>
+    <td valign="top">Whether output and error files should be appended to or overwritten.
+    Defaults to false.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">outputproperty</td>
+    <td valign="top">The name of a property in which the output of the 
+      command should be stored. Unless the error stream is redirected to a separate
+      file or stream, this property will include the error output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">errorproperty</td>
+    <td valign="top">The name of a property in which the standard error of the 
+      command should be stored.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">input</td>
+    <td valign="top">A file from which the executed command's standard input
+                     is taken. This attribute is mutually exclusive with the
+                     inputstring attribute</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">inputstring</td>
+    <td valign="top">A string which serves as the input stream for the 
+                     executed command. This attribute is mutually exclusive with the
+                     inputstring attribute.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

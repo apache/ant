@@ -53,14 +53,13 @@ Windows executable and is not aware of Cygwin conventions.
   </tr>
   <tr>
     <td valign="top">output</td>
-    <td valign="top">the file to which the output of the command should be
-      redirected. If the error stream is not also redirected to a file
-      or poerperty, it will appear in the output</td>
+    <td valign="top">Name of a file to which to write the output. If the error stream 
+      is not also redirected to a file or property, it will appear in this output.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">error</td>
-    <td valign="top">the file to which the standard error of the command should be
+    <td valign="top">The file to which the standard error of the command should be
       redirected. </td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -75,21 +74,35 @@ Windows executable and is not aware of Cygwin conventions.
   </tr>
   <tr>
     <td valign="top">append</td>
-    <td valign="top">whether output and error files should be appended to or overwritten.
+    <td valign="top">Whether output and error files should be appended to or overwritten.
     Defaults to false.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
-    <td valign="top">the name of a property in which the output of the 
+    <td valign="top">The name of a property in which the output of the 
       command should be stored. Unless the error stream is redirected to a separate
       file or stream, this property will include the error output.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">errorproperty</td>
-    <td valign="top">the name of a property in which the standard error of the 
+    <td valign="top">The name of a property in which the standard error of the 
       command should be stored.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">input</td>
+    <td valign="top">A file from which the executed command's standard input
+                     is taken. This attribute is mutually exclusive with the
+                     inputstring attribute</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">inputstring</td>
+    <td valign="top">A string which serves as the input stream for the 
+                     executed command. This attribute is mutually exclusive with the
+                     inputstring attribute.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
