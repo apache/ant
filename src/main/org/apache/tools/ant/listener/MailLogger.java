@@ -73,15 +73,16 @@ import org.apache.tools.mail.MailMessage;
  *  results. The following Project properties are used to send the mail.
  *  <ul>
  *    <li> MailLogger.mailhost [default: localhost] - Mail server to use</li>
+ *
  *    <li> MailLogger.from [required] - Mail "from" address</li>
  *    <li> MailLogger.failure.notify [default: true] - Send build failure
  *    e-mails?</li>
  *    <li> MailLogger.success.notify [default: true] - Send build success
  *    e-mails?</li>
- *    <li> MailLogger.failure.to [required if build failed] - Address to send
- *    failure messages to</li>
- *    <li> MailLogger.success.to [required if build failed] - Address to send
- *    success messages to</li>
+ *    <li> MailLogger.failure.to [required if failure mail to be sent] - Address
+ *    to send failure messages to</li>
+ *    <li> MailLogger.success.to [required if success mail to be sent] - Address
+ *    to send success messages to</li>
  *    <li> MailLogger.failure.subject [default: "Build Failure"] - Subject of
  *    failed build</li>
  *    <li> MailLogger.success.subject [default: "Build Success"] - Subject of
@@ -89,16 +90,18 @@ import org.apache.tools.mail.MailMessage;
  *  </ul>
  *  These properties are set using standard Ant property setting mechanisms
  *  (&lt;property&gt;, command-line -D, etc). Ant properties can be overridden
- *  by specifying the filename of a properties file in the
- *  <i>MailLogger.properties.file property</i>. Any properties defined in that file
- *  will override Ant properties.
+ *  by specifying the filename of a properties file in the <i>
+ *  MailLogger.properties.file property</i> . Any properties defined in that
+ *  file will override Ant properties.
  *
- *@author     Erik Hatcher <a href="mailto:erik@hatcher.net">erik@hatcher.net</a>
+ *@author     Erik Hatcher <a href="mailto:erik@hatcher.net">erik@hatcher.net
+ *      </a>
  *@created    December 12, 2001
  */
 public class MailLogger extends DefaultLogger {
-  
+
   private StringBuffer buffer = new StringBuffer();
+
 
   /**
    *  Sends an e-mail with the log results.
@@ -125,11 +128,14 @@ public class MailLogger extends DefaultLogger {
       }
       catch (IOException ioe) {
         // ignore because properties file is not required
-      } finally {
+      }
+      finally {
         if (is != null) {
           try {
             is.close();
-          } catch (IOException e) {}
+          }
+          catch (IOException e) {
+          }
         }
       }
     }
@@ -143,15 +149,15 @@ public class MailLogger extends DefaultLogger {
     String prefix = success ? "success" : "failure";
 
     try {
-      String mailhost = getValue(properties, "mailhost", "localhost");
-      String from = getValue(properties, "from", null);
-
       boolean notify = Project.toBoolean(getValue(properties,
           prefix + ".notify", "on"));
 
       if (!notify) {
         return;
       }
+
+      String mailhost = getValue(properties, "mailhost", "localhost");
+      String from = getValue(properties, "from", null);
 
       String toList = getValue(properties, prefix + ".to", null);
       String subject = getValue(properties, prefix + ".subject",
@@ -180,14 +186,13 @@ public class MailLogger extends DefaultLogger {
    *  Gets the value of a property.
    *
    *@param  properties     Properties to obtain value from
-   *@param  name           suffix of property name. "MailLogger."
-   will be prepended internally.
-   *@param  defaultValue   value returned if not present in the
-   properties. Set to null to make required.
-   *@return                The value of the property, or default
-   value.
-   *@exception  Exception  thrown if no default value is specified
-   and the property is not present in properties.
+   *@param  name           suffix of property name. "MailLogger." will be
+   *      prepended internally.
+   *@param  defaultValue   value returned if not present in the properties. Set
+   *      to null to make required.
+   *@return                The value of the property, or default value.
+   *@exception  Exception  thrown if no default value is specified and the
+   *      property is not present in properties.
    */
   private String getValue(Hashtable properties, String name, String defaultValue)
        throws Exception {

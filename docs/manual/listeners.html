@@ -1,0 +1,216 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Apache Ant User Manual</title>
+</head>
+
+<body>
+<h1>Listeners &amp; Loggers</h1>
+
+<h2><a name="Overview">Overview</a></h2>
+
+<p>Ant has two related features to allow the build process to be monitored: 
+listeners and loggers.</p>
+
+<h3><a name="Listeners">Listeners</a></h3>
+
+<p>A listener is alerted of the following events:</p>
+
+<ul>
+  <li>build started</li>
+  <li>build finished</li>
+  <li>target started</li>
+  <li>target finished</li>
+  <li>task started</li>
+  <li>task finished</li>
+  <li>message logged</li>
+</ul>
+
+<h3><a name="Loggers">Loggers</a></h3>
+
+<p>Loggers extend the capabilities of listeners and add the following features:</p>
+
+<ul>
+  <li>Receives a handle to the standard output and error print streams and 
+  therefore can log information to the console or the -logfile specified file.</li>
+  <li>Logging level (-quiet, -verbose, -debug) aware</li>
+  <li>Emacs-mode aware</li>
+</ul>
+
+<h2><a name="builtin">Built-in Listeners/Loggers</a></h2>
+
+<table border="1" cellspacing="1" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="33%">Classname</td>
+    <td width="33%">Description</td>
+    <td width="34%">Type</td>
+  </tr>
+  <tr>
+    <td width="33%"><code><a href="#DefaultLogger">org.apache.tools.ant.DefaultLogger</a></code></td>
+    <td width="33%">The logger used implicitly unless overridden with the 
+    <code>-logger</code> command-line switch.</td>
+    <td width="34%">BuildLogger</td>
+  </tr>
+  <tr>
+    <td width="33%"><code><a href="#NoBannerLogger">
+    org.apache.tools.ant.NoBannerLogger</a></code></td>
+    <td width="33%">This logger omits output of empty target output.</td>
+    <td width="34%">BuildLogger</td>
+  </tr>
+  <tr>
+    <td width="33%"><code><a href="#MailLogger">
+    org.apache.tools.ant.listener.MailLogger</a></code></td>
+    <td width="33%">Extends DefaultLogger such that output is still generated 
+    the same, and when the build is finished an e-mail can be sent.</td>
+    <td width="34%">BuildLogger</td>
+  </tr>
+  <tr>
+    <td width="33%"><code><a href="#Log4jListener">
+    org.apache.tools.ant.listener.Log4jListener</a></code></td>
+    <td width="33%">Passes events to Log4j for highly customizable logging.</td>
+    <td width="34%">BuildListener</td>
+  </tr>
+  <tr>
+    <td width="33%"><code><a href="#XmlLogger">org.apache.tools.ant.XmlLogger</a></code></td>
+    <td width="33%">Writes the build information to an XML file.</td>
+    <td width="34%">BuildListener</td>
+  </tr>
+</table>
+<h3><a name="DefaultLogger">DefaultLogger</a></h3>
+
+<p>Simply run Ant normally, or:</p>
+
+<blockquote>
+
+<p><code>ant -logger org.apache.tools.ant.DefaultLogger</code></p>
+
+</blockquote>
+
+<h3><a name="NoBannerLogger">NoBannerLogger</a></h3>
+
+<p>Removes output of empty target output.</p>
+
+<blockquote>
+
+<p><code>ant -logger org.apache.tools.ant.NoBannerLogger</code></p>
+
+</blockquote>
+
+<h3><a name="MailLogger">MailLogger</a></h3>
+
+<p>The MailLogger captures all output logged through DefaultLogger (standard Ant 
+output) and will send success and failure messages to unique e-mail lists, with 
+control for turning off success or failure messages individually.</p>
+<p>Properties controlling the operation of MailLogger:</p>
+<table border="1" cellspacing="1" width="100%" id="AutoNumber2">
+  <tr>
+    <th width="337">Property</th>
+    <th width="63%">Description</th>
+    <th width="63%">Required</th>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.mailhost </td>
+    <td width="63%">Mail server to use</td>
+    <td width="63%">No, default &quot;localhost&quot;</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.from</td>
+    <td width="63%">Mail &quot;from&quot; address</td>
+    <td width="63%">Yes, if mail needs to be sent</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.failure.notify </td>
+    <td width="63%">Send build failure e-mails?</td>
+    <td width="63%">No, default &quot;true&quot;</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.success.notify </td>
+    <td width="63%">Send build success e-mails?</td>
+    <td width="63%">No, default &quot;true&quot;</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.failure.to </td>
+    <td width="63%">Address(es) to send failure messages to, comma-separated</td>
+    <td width="63%">Yes, if failure mail is to be sent</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.success.to </td>
+    <td width="63%">Address(es) to send success messages to, comma-separated</td>
+    <td width="63%">Yes, if success mail is to be sent</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.failure.subject </td>
+    <td width="63%">Subject of failed build</td>
+    <td width="63%">No, default &quot;Build Failure&quot;</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.success.subject </td>
+    <td width="63%">Subject of successful build</td>
+    <td width="63%">No, default &quot;Build Success&quot;</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.properties.file </td>
+    <td width="63%">Filename of properties file that will override other values.</td>
+    <td width="63%">No</td>
+  </tr>
+</table>
+<blockquote>
+
+<p><code>ant -logger org.apache.tools.ant.MailLogger</code></p>
+
+</blockquote>
+
+<h3><a name="Log4jListener">Log4jListener</a></h3>
+
+<p>Passes build events to Log4j, using the full classname's of the generator of 
+each build event as the category:</p>
+
+<ul>
+  <li>build started / build finished - org.apache.tools.ant.Project</li>
+  <li>target started / target finished - org.apache.tools.ant.Target</li>
+  <li>task started / task finished - the fully qualified classname of the task</li>
+  <li>message logged - the classname of one of the above, so if a task logs a 
+  message, its classname is the category used, and so on.</li>
+</ul>
+
+<p>All start events are logged as INFO.&nbsp; Finish events are either logged as 
+INFO or ERROR depending on whether the build failed during that stage. Message 
+events are logged according to their Ant logging level, mapping directly to a 
+corresponding Log4j level.</p>
+
+<blockquote>
+
+<p><code>ant -listener org.apache.tools.ant.listener.Log4jListener</code></p>
+
+</blockquote>
+
+<h3><a name="XmlLogger">XmlLogger</a></h3>
+
+<p>Writes all build information out to an XML file named log.xml, or the value 
+of the XmlLogger.file property if present.</p>
+
+<blockquote>
+
+<p><code>ant -listener org.apache.tools.ant.XmlLogger</code></p>
+
+</blockquote>
+
+<h2><a name="dev">Writing your own</a></h2>
+
+<p>See the <a href="develop.html#buildevents">Build Events</a> section for 
+developers.</p>
+
+<p>Notes:</p>
+
+<ul>
+  <li>A listener or logger should not write to standard output or error - Ant 
+  captures these internally and may cause an infinite loop.</li>
+</ul>
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
