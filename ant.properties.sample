@@ -12,6 +12,3 @@
 # If you want to use non-standard jars then edit following lines
 # jar.junit=/path/to/my/junit.jar
 
-# Next line only needs to be given if jar.parser does not contain jaxp.jar files
-# jar.jaxp=/path/to/my/jaxp.jar
-# jar.parser=/path/to/my/xerces.jar
