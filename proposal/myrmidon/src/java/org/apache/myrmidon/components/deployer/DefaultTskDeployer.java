@@ -52,8 +52,8 @@ public class DefaultTskDeployer
 {
     private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
-    private Registry              m_dataTypeRegistry;
-    private Registry              m_taskRegistry;
+    //private Registry              m_dataTypeRegistry;
+    //private Registry              m_taskRegistry;
     private Registry              m_converterRegistry;
     private ConverterRegistry     m_converterInfoRegistry;
     private TypeManager           m_typeManager;
@@ -77,8 +77,8 @@ public class DefaultTskDeployer
         throws ComponentException
     {
         //UGLY HACK alert !!!
-        final Executor executor = (Executor)componentManager.lookup( Executor.ROLE );
-        m_taskRegistry = executor.getRegistry();
+        //final Executor executor = (Executor)componentManager.lookup( Executor.ROLE );
+        //m_taskRegistry = executor.getRegistry();
 
         final ConverterEngine converterEngine = (ConverterEngine)componentManager.
             lookup( "org.apache.ant.convert.engine.ConverterEngine" );
@@ -86,10 +86,9 @@ public class DefaultTskDeployer
         m_converterInfoRegistry = converterEngine.getInfoRegistry();
         m_converterRegistry = converterEngine.getRegistry();
 
-        final DataTypeEngine dataTypeEngine = (DataTypeEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
-
-        m_dataTypeRegistry = dataTypeEngine.getRegistry();
+        //final DataTypeEngine dataTypeEngine = (DataTypeEngine)componentManager.
+        //lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
+        //m_dataTypeRegistry = dataTypeEngine.getRegistry();
 
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
@@ -277,7 +276,7 @@ public class DefaultTskDeployer
     {
         final String name = task.getAttribute( "name" );
         final String className = task.getAttribute( "classname" );
-
+        /*
         final DefaultLocator info = new DefaultLocator( className, url );
 
         try { m_taskRegistry.register( name, info ); }
@@ -286,7 +285,7 @@ public class DefaultTskDeployer
             throw new DeploymentException( "Error registering " + name + " due to " + re,
                                            re );
         }
-
+        */
         factory.addNameClassMapping( name, className );
         
         try { m_typeManager.registerType( Task.ROLE, name, factory ); }
@@ -305,7 +304,7 @@ public class DefaultTskDeployer
     {
         final String name = datatype.getAttribute( "name" );
         final String className = datatype.getAttribute( "classname" );
-
+/*
         final DefaultLocator info = new DefaultLocator( className, url );
 
         try { m_dataTypeRegistry.register( name, info ); }
@@ -314,9 +313,9 @@ public class DefaultTskDeployer
             throw new DeploymentException( "Error registering " + name + " due to " + re,
                                            re );
         }
-
+*/
         factory.addNameClassMapping( name, className );
-        try { m_typeManager.registerType( Task.ROLE, name, factory ); }
+        try { m_typeManager.registerType( "org.apache.ant.tasklet.DataType", name, factory ); }
         catch( final Exception e )
         {
             throw new DeploymentException( "Error registering " + name + " due to " + e, e );

@@ -236,11 +236,17 @@ public class MyrmidonEmbeddor
         component = getParameter( "org.apache.ant.convert.engine.ConverterEngine" );
         m_converterEngine = (ConverterEngine)createComponent( component, ConverterEngine.class );
 
+        component = getParameter( Configurer.ROLE );
+        m_configurer = (Configurer)createComponent( component, Configurer.class );
+
         component = getParameter( "org.apache.ant.tasklet.engine.DataTypeEngine" );
         m_dataTypeEngine = (DataTypeEngine)createComponent( component, DataTypeEngine.class );
 
         component = getParameter( TypeManager.ROLE );
         m_typeManager = (TypeManager)createComponent( component, TypeManager.class );
+
+        component = getParameter( TskDeployer.ROLE );
+        m_deployer = (TskDeployer)createComponent( component, TskDeployer.class );
 
         component = getParameter( Executor.ROLE );
         m_executor = (Executor)createComponent( component, Executor.class );
@@ -250,12 +256,6 @@ public class MyrmidonEmbeddor
 
         component = getParameter( ProjectBuilder.ROLE );
         m_builder =(ProjectBuilder)createComponent( component, ProjectBuilder.class );
-
-        component = getParameter( TskDeployer.ROLE );
-        m_deployer = (TskDeployer)createComponent( component, TskDeployer.class );
-
-        component = getParameter( Configurer.ROLE );
-        m_configurer = (Configurer)createComponent( component, Configurer.class );
     }
 
     /**

@@ -8,10 +8,9 @@
 package org.apache.ant.modules.core;
 
 import java.net.URL;
-import org.apache.avalon.framework.camelot.DefaultLocator;
 import org.apache.avalon.framework.camelot.DeploymentException;
-import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.type.DefaultComponentFactory;
 
 /**
  * Method to register a single datatype.
@@ -19,16 +18,16 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class RegisterDataType
-    extends AbstractResourceRegisterer
+    extends AbstractTypeDefinition
 {
     protected void registerResource( final String name,
-                                     final String classname,
+                                     final String className,
                                      final URL url )
-        throws TaskException, RegistryException
+        throws TaskException
     {
-        if( null == classname )
+        if( null == className )
         {
-            try { m_tskDeployer.deployDataType( name, url.toString(), url ); }
+            try { getDeployer().deployDataType( name, url.toString(), url ); }
             catch( final DeploymentException de )
             {
                 throw new TaskException( "Failed deploying " + name + " from " + url, de );
@@ -36,8 +35,14 @@ public class RegisterDataType
         }
         else
         {
-            final DefaultLocator locator = new DefaultLocator( classname, url );
-            m_dataTypeEngine.getRegistry().register( name, locator );
+            final DefaultComponentFactory factory = 
+                new DefaultComponentFactory( new URL[] { url } );
+            factory.addNameClassMapping( name, className );
+            try { getTypeManager().registerType( "org.apache.ant.tasklet.DataType", name, factory ); }
+            catch( final Exception e )
+            {
+                throw new TaskException( "Failed registering " + name + " from " + url, e );
+            }
         }
     }
 }

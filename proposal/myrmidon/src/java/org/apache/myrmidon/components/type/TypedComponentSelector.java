@@ -64,7 +64,7 @@ public class TypedComponentSelector
 
         if( null != component )
         {
-            if( m_type.isInstance( component ) )
+            if( !m_type.isInstance( component ) )
             {
                 throw new ComponentException( "Implementation of " + name + " is not of " +
                                               "correct type (" + m_type.getClass().getName() + ")" );

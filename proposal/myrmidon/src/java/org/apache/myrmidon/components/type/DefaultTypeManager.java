@@ -39,10 +39,9 @@ public class DefaultTypeManager
     public Component lookup( final String role )
         throws ComponentException
     {
-        final ComponentSelector selector = (ComponentSelector)m_roleMap.get( role );
-        if( null != selector )
+        if( role.endsWith( "Selector" ) )
         {
-            return selector;
+           return createSelector( role );
         }
         else
         {
@@ -60,7 +59,7 @@ public class DefaultTypeManager
                               final ComponentFactory factory ) 
         throws Exception
     {
-        final TypedComponentSelector selector = createSelector( role );
+        final TypedComponentSelector selector = createSelector( role + "Selector" );
         selector.register( shorthandName, factory );
     }
 
@@ -77,7 +76,10 @@ public class DefaultTypeManager
         throws ComponentException
     {
         TypedComponentSelector selector = (TypedComponentSelector)m_roleMap.get( role );
-        if( null != selector ) return selector;
+        if( null != selector ) 
+        {
+            return selector;
+        }
 
         if( null != m_parent )
         {
@@ -92,10 +94,14 @@ public class DefaultTypeManager
         ///If we haven't goa selector try to create a new one
         if( null == selector )
         {
+            //Precondition that role.endsWith( "Selector" )
+            final int length = role.length() - 8;
+            final String workInterface = role.substring( 0, length );
+
             try
             {
                 //TODO: Should we use ContextClassLoader here ??? Or perhaps try that on failure??
-                final Class clazz = Class.forName( role );
+                final Class clazz = Class.forName( workInterface );
                 selector = new TypedComponentSelector( clazz );
             }
             catch( final Exception e )

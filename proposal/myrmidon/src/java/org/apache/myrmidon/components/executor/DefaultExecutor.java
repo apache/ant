@@ -20,6 +20,7 @@ import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -34,20 +35,22 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.configurer.Configurer;
+import org.apache.myrmidon.components.type.TypeManager;
 
 public class DefaultExecutor
     extends AbstractLoggable
     implements Executor, Composable
 {
-    private Factory              m_factory;
-    private Registry             m_registry   = new DefaultRegistry( Locator.class );
+    //private Factory              m_factory;
+    //private Registry             m_registry   = new DefaultRegistry( Locator.class );
     private Configurer           m_configurer;
+    private ComponentSelector    m_selector;
 
     private ComponentManager     m_componentManager;
 
     public Registry getRegistry()
     {
-        return m_registry;
+        return null;//m_registry;
     }
 
     /**
@@ -61,10 +64,12 @@ public class DefaultExecutor
     {
         //cache CM so it can be used while executing tasks
         m_componentManager = componentManager;
-
-        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
+        //m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
 
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
+
+        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        m_selector = (ComponentSelector)typeManager.lookup( Task.ROLE + "Selector" );
     }
 
     public void execute( final Configuration taskData, final TaskContext context )
@@ -99,17 +104,20 @@ public class DefaultExecutor
     {
         try
         {
-            final Locator locator = (Locator)m_registry.getInfo( name, Locator.class );
-            return (Task)m_factory.create( locator, Task.class );
+            return (Task)m_selector.select( name );
+            //final Locator locator = (Locator)m_registry.getInfo( name, Locator.class );
+            //return (Task)m_factory.create( locator, Task.class );
         }
-        catch( final RegistryException re )
+        catch( final ComponentException ce )
+        {
+            throw new TaskException( "Unable to create task " + name, ce );
+        }
+/*        catch( final RegistryException re )
         {
             throw new TaskException( "Unable to locate task " + name, re );
         }
         catch( final FactoryException fe )
-        {
-            throw new TaskException( "Unable to create task " + name, fe );
-        }
+*/
     }
 
     private void doConfigure( final Task task,

@@ -11,9 +11,9 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
-import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -22,6 +22,7 @@ import org.apache.avalon.framework.context.Resolvable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.configurer.Configurer;
+import org.apache.myrmidon.components.type.TypeManager;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
@@ -35,7 +36,7 @@ public class Property
     protected String              m_name;
     protected Object              m_value;
     protected boolean             m_localScope     = true;
-    protected DataTypeEngine      m_engine;
+    protected ComponentSelector   m_selector;
     protected Converter           m_converter;
     protected Configurer          m_configurer;
 
@@ -43,9 +44,9 @@ public class Property
         throws ComponentException
     {
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
-
-        m_engine = (DataTypeEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
+        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        m_selector = 
+            (ComponentSelector)typeManager.lookup( "org.apache.ant.tasklet.DataTypeSelector" );
 
         m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
     }
@@ -122,7 +123,7 @@ public class Property
 
             try
             {
-                final DataType value = m_engine.createDataType( child.getName() );
+                final DataType value = (DataType)m_selector.select( child.getName() );
                 setValue( value );
                 m_configurer.configure( value, child, getContext() );
             }

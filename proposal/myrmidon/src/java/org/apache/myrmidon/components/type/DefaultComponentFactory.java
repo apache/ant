@@ -36,7 +36,7 @@ public class DefaultComponentFactory
 
     public DefaultComponentFactory( final URL[] urls )
     {
-        this( urls, null );
+        this( urls, Thread.currentThread().getContextClassLoader() );
     }
 
     public DefaultComponentFactory( final URL[] urls, final ClassLoader parent )
