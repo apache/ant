@@ -200,7 +200,8 @@ public abstract class BaseFilterReader
      * @return the line read, or <code>null</code> if the end of the stream
      * has already been reached
      * 
-     * @throws IOException if the underlying reader throws one during reading
+     * @exception IOException if the underlying reader throws one during 
+     *                        reading
      */
     protected final String readLine() throws IOException {
         int ch = in.read();
@@ -226,7 +227,8 @@ public abstract class BaseFilterReader
      * 
      * @return the remaining contents of the reader, as a String
      * 
-     * @throws IOException if the underlying reader throws one during reading
+     * @exception IOException if the underlying reader throws one during 
+     *            reading
      */
     protected final String readFully() throws IOException {
         return FileUtils.readFully(in, 8192);
