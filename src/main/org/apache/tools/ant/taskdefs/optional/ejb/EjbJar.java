@@ -203,6 +203,17 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * Setter used to store the value of generateweblogic.
+     * @param inValue a string, either 'true' or 'false'.
+     */
+    public void setGenerateweblogic(String inValue) {
+        log("The syntax for using ejbjar with Weblogic has changed.", Project.MSG_ERR);
+        log("Please refer to the ejbjar documentation" +
+            " for information on the using the <weblogic> nested element", Project.MSG_ERR);
+        throw new BuildException("generateweblogic not supported - use nested <weblogic> element");
+    }
+
+    /**
      * Invoked by Ant after the task is prepared, when it is ready to execute
      * this task.  Parses the XML deployment descriptor to acquire the list of
      * files, then constructs the destination jar file (first deleting it if it
