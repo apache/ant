@@ -77,7 +77,7 @@ import java.io.IOException;
  *
  * @since Ant 1.2
  *
- * @ant.task category="control" name="execon" name="apply"
+ * @ant.task category="control" name="apply"
  */
 public class ExecuteOn extends ExecTask {
 
@@ -98,14 +98,17 @@ public class ExecuteOn extends ExecTask {
     protected boolean srcIsFirst = true;
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Source files to operate upon.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Should filenames be returned as relative path names?
+     * Whether the filenames should be passed on the command line as
+     * absolute or relative pathnames. Paths are relative to the base
+     * directory of the corresponding fileset for source files or the
+     * dest attribute for target files.
      */
     public void setRelative(boolean relative) {
         this.relative = relative;
@@ -113,7 +116,8 @@ public class ExecuteOn extends ExecTask {
 
 
     /**
-     * Shall the command work on all specified files in parallel?
+     * If true, run the command only once, appending all files as arguments.
+     * If false, command will be executed once for every file. Defaults to false.
      */
     public void setParallel(boolean parallel) {
         this.parallel = parallel;
@@ -127,14 +131,15 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Should empty filesets be ignored?
+     * If no source files have been found or are newer than their
+     * corresponding target files, do not run the command.
      */
     public void setSkipEmptyFilesets(boolean skip) {
         skipEmpty = skip;
     }
 
     /**
-     * Set the destination directory.
+     * The directory where target files are to be placed.
      */
     public void setDest(File destDir) {
         this.destDir = destDir;
@@ -168,7 +173,7 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Defines the FileNameMapper to use (nested mapper element).
+     * Mapper to use for mapping source files to target files.
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
