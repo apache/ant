@@ -252,12 +252,21 @@ public class Javac extends MatchingTask {
      */
 
     private void scanDir(File srcDir, File destDir, String files[]) {
+
+        long now = (new Date()).getTime();
+
         for (int i = 0; i < files.length; i++) {
             File srcFile = new File(srcDir, files[i]);
             if (files[i].endsWith(".java")) {
                 File classFile = new File(destDir, files[i].substring(0,
                         files[i].indexOf(".java"))
                                                     + ".class");
+
+                    if (srcFile.lastModified() > now) {
+                        project.log("Warning: file modified in the future: " + 
+                            files[i], project.MSG_WARN);
+                    }
+
                     if (srcFile.lastModified() > classFile.lastModified()) {
                         compileList.addElement(srcFile.getAbsolutePath());
                     }
