@@ -13,6 +13,8 @@ Changes that could break older environments:
 Other changes:
 --------------
 
+* New tasks: ear, p4counter
+
 * Ant now uses JAXP 1.1
 
 * rmic now supports Kaffe's and Weblogic's version of rmic.

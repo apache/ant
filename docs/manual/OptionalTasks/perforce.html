@@ -59,6 +59,10 @@ You will also need the perforce client executable (p4 or p4.exe but not p4win.ex
         <td><a href="#p4label">P4Label</a></td>
         <td>Create a label reflecting files in the current workspace</td>
     </tr>
+    <tr>
+        <td><a href="#p4counter">P4Counter</a></td>
+        <td>Obtain or set the value of a counter</td>
+    </tr>
 </table>
 
 <h3>General P4 Properties</h3>
@@ -142,6 +146,7 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
     &lt;taskdef name=&quot;p4submit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Submit&quot; /&gt;
     &lt;taskdef name=&quot;p4have&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Have&quot; /&gt;
     &lt;taskdef name=&quot;p4label&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Label&quot; /&gt;
+    &lt;taskdef name=&quot;p4counter&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Counter&quot; /&gt;
 </pre>
 
 <hr>
@@ -322,13 +327,43 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 
 
 </table>
-
 <h3>Examples</h3>
 <pre>
 &lt;p4label
 	name=&quot;NightlyBuild:${DSTAMP}:${TSTAMP}&quot; 
 	desc=&quot;Auto Nightly Build&quot;
 /&gt;
+</pre>
+<hr>
+
+
+<h2><a name="p4counter">P4Counter</a></h2>
+<h3>Description:</h3>
+<p>Obtain or set the value of a counter
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the counter</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The new value for the counter</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<pre>
+&lt;p4counter name=&quot;last-clean-build&quot; /&gt;
+&lt;p4counter name=&quot;last-clean-build&quot; value=&quot;${TSTAMP}&quot; /&gt;
 </pre>
 <hr>
 
