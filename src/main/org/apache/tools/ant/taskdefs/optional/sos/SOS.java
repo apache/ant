@@ -54,7 +54,10 @@
 package org.apache.tools.ant.taskdefs.optional.sos;
 
 import java.io.File;
-import org.apache.tools.ant.*;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -141,7 +144,7 @@ public abstract class SOS extends Task {
      * @param  dir  The new sosCmd value
      */
     public final void setSosCmd(String dir) {
-        sosCmdDir = project.translatePath(dir);
+        sosCmdDir = Project.translatePath(dir);
     }
 
 

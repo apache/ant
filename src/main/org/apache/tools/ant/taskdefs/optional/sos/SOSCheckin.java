@@ -53,9 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sos;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
 
 /**
  * Task to commit and unlock file(s) in Visual Source Safe via a SourceOffSite server.
