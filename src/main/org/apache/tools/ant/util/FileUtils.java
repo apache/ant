@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,11 +58,14 @@ import org.apache.tools.ant.launch.Locator;
  */
 
 public class FileUtils {
+    
+    private static final FileUtils PRIMARY_INSTANCE = new FileUtils();
+    
     //get some non-crypto-grade randomness from various places.
     private static Random rand = new Random(System.currentTimeMillis()
             + Runtime.getRuntime().freeMemory());
 
-    private boolean onNetWare = Os.isFamily("netware");
+    private static boolean onNetWare = Os.isFamily("netware");
 
     // for toURI
     private static boolean[] isSpecial = new boolean[256];
@@ -106,9 +109,19 @@ public class FileUtils {
      * Factory method.
      *
      * @return a new instance of FileUtils.
+     * @deprecated Use getFileUtils instead, FileUtils do not have state.
      */
     public static FileUtils newFileUtils() {
         return new FileUtils();
+    }
+
+    /**
+     * Method to retrieve The FileUtils, which is shared by all users of this
+     * method.
+     * @return an instance of FileUtils.
+     */
+    public static FileUtils getFileUtils() {
+        return PRIMARY_INSTANCE;
     }
 
     /**
@@ -1355,7 +1368,6 @@ public class FileUtils {
     public boolean isUpToDate(long sourceTime, long destTime) {
         return isUpToDate(sourceTime, destTime, getFileTimestampGranularity());
     }
-
 
     /**
      * close a writer without throwing any exception if something went wrong.

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Selector that chooses files based on their last modified date.
@@ -38,7 +39,7 @@ public class DateSelector extends BaseExtendSelector {
     private long millis = -1;
     private String dateTime = null;
     private boolean includeDirs = false;
-    private int granularity = 0;
+    private long granularity = 0;
     private int cmp = 2;
     private String pattern;
     /** Key to used for parameterized custom selector */
@@ -59,9 +60,7 @@ public class DateSelector extends BaseExtendSelector {
      *
      */
     public DateSelector() {
-        if (Os.isFamily("dos")) {
-            granularity = 2000;
-        }
+        granularity = FileUtils.getFileUtils().getFileTimestampGranularity();
     }
 
     /**
