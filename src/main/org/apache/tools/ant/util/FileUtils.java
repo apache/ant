@@ -1122,5 +1122,43 @@ public class FileUtils {
             .equals(normalize(f2.getAbsolutePath()));
     }
 
+    /**
+     * Renames a file, even if that involves crossing file system boundaries.
+     *
+     * <p>This will remove <code>to</code> (if it exists), ensure that
+     * <code>to</code>'s parent directory exists and move
+     * <code>from</code>, which involves deleting <code>from</code> as
+     * well.</p>
+     *
+     * @throws IOException if anything bad happens during this
+     * process.  Note that <code>to</code> may have been deleted
+     * already when this happens.
+     *
+     * @param from the file to move
+     * @param to the new file name
+     *
+     * @since Ant 1.6
+     */
+    public void rename(File from, File to) throws IOException {
+        if (to.exists() && !to.delete()) {
+            throw new IOException("Failed to delete " + to 
+                                  + " while trying to rename " + from);
+        }
+        
+        File parent = getParentFile(to);
+        if (!parent.exists() && !parent.mkdirs()) {
+            throw new IOException("Failed to create directory " + parent
+                                  + " while trying to rename " + from);
+        }
+
+        if (!from.renameTo(to)) {
+            copyFile(from, to);
+            if (!from.delete()) {
+                throw new IOException("Failed to delete " + from 
+                                      + " while trying to rename it.");
+            }
+        }
+    }
+
 }
 

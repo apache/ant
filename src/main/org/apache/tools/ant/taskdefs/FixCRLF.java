@@ -552,50 +552,24 @@ public class FixCRLF extends MatchingTask {
 
             File destFile = new File(destD, file);
 
+            boolean destIsWrong = true;
             if (destFile.exists()) {
                 // Compare the destination with the temp file
                 log("destFile exists", Project.MSG_DEBUG);
                 if (!fileUtils.contentEquals(destFile, tmpFile)) {
                     log(destFile + " is being written", Project.MSG_DEBUG);
-                    if (!destFile.delete()) {
-                        throw new BuildException("Unable to delete "
-                                                 + destFile);
-                    }
-                    if (!tmpFile.renameTo(destFile)) {
-                        throw new BuildException(
-                                "Failed to transform " + srcFile
-                                + " to " + destFile
-                                + ". Couldn't rename temporary file: "
-                                + tmpFile);
-                    }
-
-                } else { // destination is equal to temp file
+                } else {
                     log(destFile +
                         " is not written, as the contents are identical",
                         Project.MSG_DEBUG);
-                    if (!tmpFile.delete()) {
-                        throw new BuildException("Unable to delete "
-                                                 + tmpFile);
-                    }
-                }
-            } else { // destFile does not exist - write the temp file
-                log("destFile does not exist", Project.MSG_DEBUG);
-
-                File parent = fileUtils.getParentFile(destFile);
-                if (!parent.exists()) {
-                    parent.mkdirs();
-                }
-
-                if (!tmpFile.renameTo(destFile)) {
-                    throw new BuildException(
-                            "Failed to transform " + srcFile
-                            + " to " + destFile
-                            + ". Couldn't rename temporary file: "
-                            + tmpFile);
+                    destIsWrong = false;
                 }
             }
 
-            tmpFile = null;
+            if (destIsWrong) {
+                fileUtils.rename(tmpFile, destFile);
+                tmpFile = null;
+            }
 
         } catch (IOException e) {
             throw new BuildException(e);
