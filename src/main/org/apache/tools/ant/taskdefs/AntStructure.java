@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -253,21 +253,22 @@ public class AntStructure extends Task {
 
         Enumeration enum = ih.getNestedElements();
         while (enum.hasMoreElements()) {
-            v.addElement((String) enum.nextElement());
+            v.addElement(enum.nextElement());
         }
 
         if (v.isEmpty()) {
             sb.append("EMPTY");
         } else {
             sb.append("(");
-            for (int i=0; i<v.size(); i++) {
+            final int count = v.size();
+            for (int i = 0; i < count; i++) {
                 if (i != 0) {
                     sb.append(" | ");
                 }
                 sb.append(v.elementAt(i));
             }
             sb.append(")");
-            if (v.size() > 1 || !v.elementAt(0).equals("#PCDATA")) {
+            if (count > 1 || !v.elementAt(0).equals("#PCDATA")) {
                 sb.append("*");
             }
         }
@@ -324,7 +325,8 @@ public class AntStructure extends Task {
         sb.append(">").append(lSep);
         out.println(sb);
 
-        for (int i=0; i<v.size(); i++) {
+        final int count = v.size();
+        for (int i = 0; i < count; i++) {
             String nestedName = (String) v.elementAt(i);
             if (!"#PCDATA".equals(nestedName) &&
                 !TASKS.equals(nestedName) &&
@@ -341,7 +343,8 @@ public class AntStructure extends Task {
      * Does this String match the XML-NMTOKEN production?
      */
     protected boolean isNmtoken(String s) {
-        for (int i = 0; i < s.length(); i++) {
+        final int length = s.length();
+        for (int i = 0; i < length; i++) {
             char c = s.charAt(i);
             // XXX - we are ommitting CombiningChar and Extender here
             if (!Character.isLetterOrDigit(c) &&

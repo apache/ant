@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -146,7 +146,8 @@ public class Ant extends Task {
 
     private void reinit() {
         init();
-        for (int i=0; i<properties.size(); i++) {
+        final int count = properties.size();
+        for (int i = 0; i < count; i++) {
             Property p = (Property) properties.elementAt(i);
             Property newP = (Property) newProject.createTask("property");
             newP.setName(p.getName());
@@ -165,7 +166,8 @@ public class Ant extends Task {
 
     private void initializeProject() {
         Vector listeners = project.getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        final int count = properties.size();
+        for (int i = 0; i < count; i++) {
             newProject.addBuildListener((BuildListener)listeners.elementAt(i));
         }
 
@@ -205,10 +207,9 @@ public class Ant extends Task {
 
         // set user-defined or all properties from calling project
         Hashtable prop1;
-        if (inheritAll == true) {
+        if (inheritAll) {
            prop1 = project.getProperties();
-        }
-        else {
+        } else {
            prop1 = project.getUserProperties();
 
            // set Java built-in properties separately,
@@ -225,7 +226,7 @@ public class Ant extends Task {
             }
             
             String value = (String) prop1.get(arg);
-            if (inheritAll == true){
+            if (inheritAll){
                newProject.setProperty(arg, value);
             } else {
                newProject.setUserProperty(arg, value);
@@ -236,8 +237,7 @@ public class Ant extends Task {
     protected void handleOutput(String line) {
         if (newProject != null) {
             newProject.demuxOutput(line, false);
-        }
-        else {
+        } else {
             super.handleOutput(line);
         }
     }
@@ -245,8 +245,7 @@ public class Ant extends Task {
     protected void handleErrorOutput(String line) {
         if (newProject != null) {
             newProject.demuxOutput(line, true);
-        }
-        else {
+        } else {
             super.handleErrorOutput(line);
         }
     }
@@ -260,7 +259,7 @@ public class Ant extends Task {
                 reinit();
             }
         
-            if ( (dir == null) && (inheritAll == true) ) {
+            if ( (dir == null) && (inheritAll) ) {
                 dir = project.getBaseDir();
             }
 
@@ -344,7 +343,7 @@ public class Ant extends Task {
                     continue;
                 }
 
-                Object o = thisReferences.remove(refid);
+                thisReferences.remove(refid);
                 String toRefid = ref.getToRefid();
                 if (toRefid == null) {
                     toRefid = refid;

@@ -262,7 +262,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             String[] pathElements = actualClasspath.list();
             for (int i = 0; i < pathElements.length; ++i) {
                 try {
-                    addPathElement((String)pathElements[i]);
+                    addPathElement(pathElements[i]);
                 }
                 catch (BuildException e) {
                     // ignore path elements which are invalid relative to the project
