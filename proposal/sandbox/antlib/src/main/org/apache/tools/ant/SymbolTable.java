@@ -95,7 +95,7 @@ public class SymbolTable {
     /**
      * Create a symbol table inheriting the definitions
      * from that defined in the calling Project.
-     * @param p the calling project
+     * @param st the calling project
      */
     public SymbolTable(SymbolTable st) {
         parentTable = st;
@@ -389,7 +389,7 @@ public class SymbolTable {
     public static interface Factory {
         /**
          * Creates an object for the Role
-         * @param the project in which it is created
+         * @param p the project in which it is created
          * @return the instantiated object with a proxy if necessary
          */
         public Object create(Project p);
