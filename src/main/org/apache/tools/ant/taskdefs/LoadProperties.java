@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
@@ -41,7 +40,7 @@ import org.apache.tools.ant.types.FilterChain;
  * @since Ant 1.5
  * @ant.task category="utility"
  */
-public final class LoadProperties extends Task {
+public class LoadProperties extends Task {
 
     /**
      * Source file
@@ -115,6 +114,7 @@ public final class LoadProperties extends Task {
 
     /**
      * Add a classpath to use when looking up a resource.
+     * @return The classpath to be configured
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -126,6 +126,7 @@ public final class LoadProperties extends Task {
     /**
      * Set the classpath to use when looking up a resource,
      * given as reference to a &lt;path&gt; defined elsewhere
+     * @param r The reference value
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -133,6 +134,7 @@ public final class LoadProperties extends Task {
 
     /**
      * get the classpath used by this <CODE>LoadProperties</CODE>.
+     * @return The classpath
      */
     public Path getClasspath() {
         return classpath;
@@ -245,6 +247,7 @@ public final class LoadProperties extends Task {
 
     /**
      * Adds a FilterChain.
+     * @param filter the filter to add
      */
     public final void addFilterChain(FilterChain filter) {
         filterChains.addElement(filter);
