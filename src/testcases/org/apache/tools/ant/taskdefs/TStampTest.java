@@ -100,4 +100,37 @@ public class TStampTest extends TestCase {
         assertEquals(expected, today);
     }
 
+    /**
+     * verifies that custom props have priority over the
+     * originals
+     * @throws Exception
+     */
+    public void testWriteOrder() throws Exception {
+        Tstamp.CustomFormat format = tstamp.createFormat();
+        format.setProperty("TODAY");
+        format.setPattern("HH:mm:ss z");
+        format.setTimezone("GMT");
+        Date date = Calendar.getInstance().getTime();
+        format.execute(project, date, location);
+        String today = project.getProperty("TODAY");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss z");
+        sdf.setTimeZone( TimeZone.getTimeZone("GMT") );
+        String expected = sdf.format(date);
+
+        assertEquals(expected, today);
+
+    }
+    /**
+     * verifies that custom props have priority over the
+     * originals
+     * @throws Exception
+     */
+    public void testPrefix() throws Exception {
+        tstamp.setPrefix("prefix");
+        tstamp.execute();
+        String prop= project.getProperty("prefix.DSTAMP");
+        assertNotNull(prop);
+    }
+
 }
