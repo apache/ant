@@ -1,11 +1,14 @@
 Changes from Ant 1.1 to the current sources
 
-Changes that could break older buildfiles:
-------------------------------------------
+Changes that could break older environments:
+--------------------------------------------
 
 * copying of support files in <javac> has been removed.
 
 * the command line switches _not_ starting with - have been removed.
+
+* Path and EnumeratedAttribute have been moved from
+org.apache.tools.ant to org.apache.tools.ant.types.
 
 Other changes:
 --------------
@@ -19,16 +22,13 @@ specified.
 * <style> will create the necessary target directories and reprocess
 all files if the stylesheet changes.
 
-* Path and EnumeratedAttribute moved to a new package
-org.apache.tools.ant.types.
-
 * New data types fileset and patternset - expected to get a broader
 use, pending documentation.
 
 * You can specify environment variables to the exec task - pending
 documentation.
 
-* Get can check wether a remote file is actually newer than a local
+* Get can check whether a remote file is actually newer than a local
 copy before it starts a download (HTTP only).
 
 * Added a -logger option to allow the class which performs logging to be 
