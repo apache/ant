@@ -1,0 +1,56 @@
+Ant's current CVS version contains an <input> task that gathers user
+input by reading from System.in - this is not too nice for people
+embedding Ant in IDEs. 8-)
+
+<input> also supports an undocumented testinput attribute that is used
+by Ant's test cases to allow them to run without user interaction, but
+could also be used to provide predefined answers to unattended builds.
+
+This proposal tries to define a very basic input framework for Ant
+that would allow Ant to be easily embedded into IDEs via
+implementations of the org.apache.tools.ant.input.InputHandler
+interface.  At the same time an implementation of the interface is
+provided that allows the input to be specified via an external
+property file.
+
+There are three implementations of the InputHandler interface,
+DefaultInputHandler which reads form System.in just like the <input>
+task originally did, PropertyFileInputHandler for non-interactive
+builds and SwingInputHandler which is nothing more than a proof of
+concept.
+
+Input requests get encapsulated in instances of the
+org.apache.tools.ant.input.InputRequest class - or subclasses thereof
+- which provide a method to also validate the input, moving this
+responsibility from the <input> task to the InputRequest itself.
+
+There are two types of InputRequests ATM, InputRequest encapsulates a
+request for a simple unrestricted text input,
+MultipleChoiceInputRequest is a request where valid inputs are
+restricted to a given set of values.
+
+If you run ant on the build file in this directory, a version of
+ant.jar will be created in the build subdirectory that is identical to
+the main trunk of Ant except for the input task itself and two minor
+changes to Project and Main, that allow InputHandlers to be plugged in
+programmatically or via a commandline switch -inputhandler.
+
+With this version of Ant, run the build file in proposals/testcases,
+Ant should behave the same way the input task for the main branch does
+- except that it won't allow you to enter invalid input in the multi
+target.
+
+If you invoke Ant like this:
+
+ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.tools.ant.input.SwingInputHandler
+
+You'll get the ugliest dialog you've ever seen, but it works ;-)
+
+Finally, use 
+
+ANT_OPTS=-Dinput.properties=proposal/sandbox/input/src/testcases/works.properties
+ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.tools.ant.input.PropertyFileInputHandler
+
+to see the non-interactive build process in action.  fails.properties
+provides a sample of possible input failures.
+

@@ -1,0 +1,26 @@
+<project name="input-sandbox" default="main" basedir=".">
+
+  <target name="setup">
+    <property name="main.ant" location="../../.." />
+    <property name="classes.dir" value="build/classes" />
+    <mkdir dir="${classes.dir}" />
+    <ant dir="${main.ant}" inheritall="false" target="build" />
+    <copy toDir="${classes.dir}" preservelastmodified="true" >
+      <fileset dir="${main.ant}/${classes.dir}">
+        <include name='**' />
+	<exclude name='org/apache/tools/ant/Project.class' />
+	<exclude name='org/apache/tools/ant/Main.class' />
+	<exclude name='org/apache/tools/ant/taskdefs/Input.class' />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="main" depends="setup">
+    <javac srcdir="src/main" destdir="${classes.dir}" />
+    <jar destfile="build/ant.jar">
+      <fileset dir="${classes.dir}">
+        <exclude name="**/optional/*" />
+      </fileset>
+    </jar>
+  </target>
+</project>
