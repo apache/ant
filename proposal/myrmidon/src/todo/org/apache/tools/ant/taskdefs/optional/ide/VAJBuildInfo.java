@@ -17,7 +17,6 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Target;
 
 /**
@@ -439,7 +438,9 @@ class VAJBuildInfo implements Runnable
             project.init();
             File buildFile = new File( getBuildFileName() );
             project.setUserProperty( "ant.file", buildFile.getAbsolutePath() );
-            ProjectHelper.configureProject( project, buildFile );
+
+            //FIXME: Need to convert to Myrmidon style
+            //ProjectHelper.configureProject( project, buildFile );
             setProjectInitialized( true );
         }
         catch( RuntimeException exc )
