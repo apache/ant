@@ -166,10 +166,10 @@ public class Chmod extends ExecuteOn {
     }
 
     public void execute() throws BuildException {
-        if (defaultSetDefined) {
+        if (defaultSetDefined || defaultSet.getDir(project) == null) {
             super.execute();
         }
-        else if (!defaultSetDefined && defaultSet.getDir(project) != null) {
+        else {
             // we are chmodding the given directory
             createArg().setValue(defaultSet.getDir(project).getPath());
             Execute execute = prepareExec();
