@@ -1262,10 +1262,6 @@
         </and>
       </or>
     </condition>
-    <echo>run.junitreport: ${run.junitreport}</echo>
-    <echo>xalan2.present: ${xalan2.present}</echo>
-    <echo>xalan.present: ${xalan.present}</echo>
-    <echo>bsf.present: ${bsf.present}</echo>
 
     <junit printsummary="${junit.summary}" haltonfailure="yes"
            filtertrace="${junit.filtertrace}"
