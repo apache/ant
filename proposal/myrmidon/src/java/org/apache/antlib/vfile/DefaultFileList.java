@@ -18,7 +18,9 @@ import org.apache.myrmidon.api.TaskException;
  * A compound file list, which is made up of several other file lists.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ *
  * @ant:data-type name="v-path"
+ * @ant:type type="v-path" name="v-path"
  */
 public class DefaultFileList implements FileList
 {

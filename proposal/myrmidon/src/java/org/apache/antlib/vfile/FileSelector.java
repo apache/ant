@@ -13,23 +13,24 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
 
 /**
- * An ordered list of files.
+ * Accepts files as part of a set.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  *
- * @ant:role shorthand="v-path"
+ * @ant:role shorthand="v-file-selector"
  */
-public interface FileList
+public interface FileSelector
     extends DataType
 {
     /**
-     * Returns the files in the list.
+     * Accepts a file.
      *
-     * @param context
-     *      The context to use to build the list of files.
-     *
-     * @throws TaskException
-     *      On error building the list of files.
+     * @param path The virtual path associated with the file.  May be null
+     *             if such a path is not available.
+     * @param file The file to select.
+     * @param context The context to perform the selection in.
      */
-    FileObject[] listFiles( TaskContext context ) throws TaskException;
+    boolean accept( FileObject file, String path, TaskContext context )
+        throws TaskException;
 }

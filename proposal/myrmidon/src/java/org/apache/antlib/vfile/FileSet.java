@@ -16,6 +16,7 @@ import org.apache.myrmidon.framework.DataType;
  * with it.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ *
  * @ant:role shorthand="v-fileset"
  */
 public interface FileSet
@@ -30,5 +31,6 @@ public interface FileSet
      * @throws TaskException
      *      On error building the set.
      */
-    FileSetResult getResult( TaskContext context ) throws TaskException;
+    FileSetResult getResult( TaskContext context )
+        throws TaskException;
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
+import org.apache.aut.vfs.FileType;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
@@ -22,6 +23,7 @@ import org.apache.myrmidon.api.TaskException;
  * A task that copies files.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ *
  * @ant:task name="v-copy"
  */
 public class CopyFilesTask
@@ -120,6 +122,12 @@ public class CopyFilesTask
                     final String path = paths[ i ];
 
                     // TODO - map destination name
+
+                    // TODO - maybe include empty dirs
+                    if( srcFile.getType() != FileType.FILE )
+                    {
+                        continue;
+                    }
 
                     // TODO - use scope here, to make sure that the result
                     // is a descendent of the dest dir

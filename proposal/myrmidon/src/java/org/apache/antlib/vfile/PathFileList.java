@@ -48,7 +48,7 @@ public class PathFileList implements FileList
             String element = elements[ i ];
             try
             {
-                result[ i ] = fileSystemManager.resolveFile( element );
+                result[ i ] = fileSystemManager.resolveFile( context.getBaseDirectory(), element );
             }
             catch( FileSystemException e )
             {

@@ -15,9 +15,12 @@ import org.apache.myrmidon.api.TaskException;
  * A file list that contains a single file.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ *
  * @ant:data-type name="v-file"
+ * @ant:type type="v-path" name="v-file"
  */
-public class SingletonFileList implements FileList
+public class SingletonFileList
+    implements FileList
 {
     private FileObject m_file;
 

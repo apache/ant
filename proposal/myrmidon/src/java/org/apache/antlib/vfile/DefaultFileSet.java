@@ -15,23 +15,24 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.AbstractFileSet;
 
 /**
  * A file set, that contains those files under a directory that match
- * a set of patterns.
+ * a set of selectors.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ *
  * @ant:data-type name="v-fileset"
+ * @ant:type type="v-fileset" name="v-fileset"
  */
-public class PatternFileSet
-    extends AbstractFileSet
+public class DefaultFileSet
     implements FileSet
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( PatternFileSet.class );
+        ResourceManager.getPackageResources( DefaultFileSet.class );
 
     private FileObject m_dir;
+    private final AndFileSelector m_selector = new AndFileSelector();
 
     /**
      * Sets the root directory.
@@ -39,6 +40,14 @@ public class PatternFileSet
     public void setDir( final FileObject dir )
     {
         m_dir = dir;
+    }
+
+    /**
+     * Adds a selector.
+     */
+    public void add( final FileSelector selector )
+    {
+        m_selector.add( selector );
     }
 
     /**
@@ -59,7 +68,7 @@ public class PatternFileSet
             final ArrayList stack = new ArrayList();
             final ArrayList pathStack = new ArrayList();
             stack.add( m_dir );
-            pathStack.add( "." );
+            pathStack.add( "" );
 
             while( stack.size() > 0 )
             {
@@ -72,17 +81,19 @@ public class PatternFileSet
                 for( int i = 0; i < children.length; i++ )
                 {
                     FileObject child = children[ i ];
-                    String childPath = path + '/' + child.getName().getBaseName();
-                    if( child.getType() == FileType.FILE )
+                    String childPath = path + child.getName().getBaseName();
+
+                    // Check whether to include the file in the result
+                    if( m_selector.accept( child, childPath, context ) )
                     {
-                        // A regular file - add it straight to the result
                         result.addElement( child, childPath );
                     }
-                    else
+
+                    if( child.getType() == FileType.FOLDER )
                     {
                         // A folder - push it on to the stack
                         stack.add( 0, child );
-                        pathStack.add( 0, childPath );
+                        pathStack.add( 0, childPath + '/' );
                     }
                 }
             }

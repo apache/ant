@@ -12,36 +12,37 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 
 /**
- * A debug task, which prints out the files in a file list.
+ * A debug task, that lists the contents of a {@link FileSet}.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:task name="v-list-path"
+ * @ant:task name="v-list-fileset"
  */
-public class ListFilesTask
+public class ListFileSetTask
     extends AbstractTask
 {
-    private final DefaultFileList m_files = new DefaultFileList();
+    private FileSet m_fileSet;
 
-    public void add( final FileList files )
+    public void set( final FileSet fileSet )
     {
-        m_files.add( files );
+        m_fileSet = fileSet;
     }
 
     /**
      * Execute task.
-     *
-     * @exception TaskException if an error occurs
      */
     public void execute()
         throws TaskException
     {
-        final FileObject[] files = m_files.listFiles( getContext() );
+        FileSetResult result = m_fileSet.getResult( getContext() );
+        final FileObject[] files = result.getFiles();
+        final String[] paths = result.getPaths();
         for( int i = 0; i < files.length; i++ )
         {
-            FileObject file = files[i ];
-            getLogger().info( file.toString() );
+            final FileObject file = files[ i ];
+            final String path = paths[ i ];
+            getLogger().info( path + " = " + file );
         }
     }
 }
