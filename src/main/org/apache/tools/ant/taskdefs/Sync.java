@@ -174,7 +174,6 @@ public class Sync extends Task {
             // but we need to find all that we want to delete - so the
             // meaning of all patterns and selectors must be inverted
             PatternSet ps = syncTarget.mergePatterns(getProject());
-            String[] excludes = ps.getExcludePatterns(getProject());
             fs.appendExcludes(ps.getIncludePatterns(getProject()));
             fs.appendIncludes(ps.getExcludePatterns(getProject()));
             fs.setDefaultexcludes(!syncTarget.getDefaultexcludes());
