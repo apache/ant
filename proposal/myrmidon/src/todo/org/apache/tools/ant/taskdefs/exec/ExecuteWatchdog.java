@@ -24,34 +24,34 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @see Execute
  */
-public class ExecuteWatchdog implements Runnable
+public class ExecuteWatchdog
+    implements Runnable
 {
-
     /**
      * say whether or not the watchog is currently monitoring a process
      */
-    private boolean watch = false;
+    private boolean m_watch;
 
     /**
      * exception that might be thrown during the process execution
      */
-    private Exception caught = null;
+    private Exception m_caught;
 
     /**
      * say whether or not the process was killed due to running overtime
      */
-    private boolean killedProcess = false;
+    private boolean m_killedProcess;
 
     /**
      * the process to execute and watch for duration
      */
-    private Process process;
+    private Process m_process;
 
     /**
      * timeout duration. Once the process running time exceeds this it should be
      * killed
      */
-    private int timeout;
+    private int m_timeout;
 
     /**
      * Creates a new watchdog with a given timeout.
@@ -65,7 +65,7 @@ public class ExecuteWatchdog implements Runnable
         {
             throw new IllegalArgumentException( "timeout lesser than 1." );
         }
-        this.timeout = timeout;
+        this.m_timeout = timeout;
     }
 
     /**
@@ -76,7 +76,7 @@ public class ExecuteWatchdog implements Runnable
      */
     public boolean isWatching()
     {
-        return watch;
+        return m_watch;
     }
 
     /**
@@ -91,10 +91,10 @@ public class ExecuteWatchdog implements Runnable
     public void checkException()
         throws TaskException
     {
-        if( caught != null )
+        if( m_caught != null )
         {
             throw new TaskException( "Exception in ExecuteWatchdog.run: "
-                                     + caught.getMessage(), caught );
+                                     + m_caught.getMessage(), m_caught );
         }
     }
 
@@ -106,7 +106,7 @@ public class ExecuteWatchdog implements Runnable
      */
     public boolean killedProcess()
     {
-        return killedProcess;
+        return m_killedProcess;
     }
 
     /**
@@ -118,9 +118,9 @@ public class ExecuteWatchdog implements Runnable
         {
             // This isn't a Task, don't have a Project object to log.
             // project.log("ExecuteWatchdog: timeout = "+timeout+" msec",  Project.MSG_VERBOSE);
-            final long until = System.currentTimeMillis() + timeout;
+            final long until = System.currentTimeMillis() + m_timeout;
             long now;
-            while( watch && until > ( now = System.currentTimeMillis() ) )
+            while( m_watch && until > ( now = System.currentTimeMillis() ) )
             {
                 try
                 {
@@ -138,22 +138,22 @@ public class ExecuteWatchdog implements Runnable
             {
                 // We must check if the process was not stopped
                 // before being here
-                process.exitValue();
+                m_process.exitValue();
             }
             catch( IllegalThreadStateException e )
             {
                 // the process is not terminated, if this is really
                 // a timeout and not a manual stop then kill it.
-                if( watch )
+                if( m_watch )
                 {
-                    killedProcess = true;
-                    process.destroy();
+                    m_killedProcess = true;
+                    m_process.destroy();
                 }
             }
         }
         catch( Exception e )
         {
-            caught = e;
+            m_caught = e;
         }
         finally
         {
@@ -175,14 +175,14 @@ public class ExecuteWatchdog implements Runnable
         {
             throw new NullPointerException( "process is null." );
         }
-        if( this.process != null )
+        if( this.m_process != null )
         {
             throw new IllegalStateException( "Already running." );
         }
-        this.caught = null;
-        this.killedProcess = false;
-        this.watch = true;
-        this.process = process;
+        this.m_caught = null;
+        this.m_killedProcess = false;
+        this.m_watch = true;
+        this.m_process = process;
         final Thread thread = new Thread( this, "WATCHDOG" );
         thread.setDaemon( true );
         thread.start();
@@ -194,7 +194,7 @@ public class ExecuteWatchdog implements Runnable
      */
     public synchronized void stop()
     {
-        watch = false;
+        m_watch = false;
         notifyAll();
     }
 
@@ -203,8 +203,8 @@ public class ExecuteWatchdog implements Runnable
      */
     protected void cleanUp()
     {
-        watch = false;
-        process = null;
+        m_watch = false;
+        m_process = null;
     }
 }
 

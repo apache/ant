@@ -19,18 +19,20 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author thomas.haas@softwired-inc.com
  */
-public class PumpStreamHandler implements ExecuteStreamHandler
+public class PumpStreamHandler
+    implements ExecuteStreamHandler
 {
-    private Thread errorThread;
+    private Thread m_errorThread;
+    private Thread m_inputThread;
 
-    private Thread inputThread;
+    private OutputStream m_output;
+    private OutputStream m_error;
 
-    private OutputStream out, err;
-
-    public PumpStreamHandler( OutputStream out, OutputStream err )
+    public PumpStreamHandler( final OutputStream output,
+                              final OutputStream error )
     {
-        this.out = out;
-        this.err = err;
+        m_output = output;
+        m_error = error;
     }
 
     public PumpStreamHandler( OutputStream outAndErr )
@@ -45,7 +47,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler
 
     public void setProcessErrorStream( InputStream is )
     {
-        createProcessErrorPump( is, err );
+        createProcessErrorPump( is, m_error );
     }
 
     public void setProcessInputStream( OutputStream os )
@@ -54,13 +56,13 @@ public class PumpStreamHandler implements ExecuteStreamHandler
 
     public void setProcessOutputStream( InputStream is )
     {
-        createProcessOutputPump( is, out );
+        createProcessOutputPump( is, m_output );
     }
 
     public void start()
     {
-        inputThread.start();
-        errorThread.start();
+        m_inputThread.start();
+        m_errorThread.start();
     }
 
     public void stop()
@@ -68,28 +70,28 @@ public class PumpStreamHandler implements ExecuteStreamHandler
     {
         try
         {
-            inputThread.join();
+            m_inputThread.join();
         }
         catch( InterruptedException e )
         {
         }
         try
         {
-            errorThread.join();
+            m_errorThread.join();
         }
         catch( InterruptedException e )
         {
         }
         try
         {
-            err.flush();
+            m_error.flush();
         }
         catch( IOException e )
         {
         }
         try
         {
-            out.flush();
+            m_output.flush();
         }
         catch( IOException e )
         {
@@ -98,22 +100,22 @@ public class PumpStreamHandler implements ExecuteStreamHandler
 
     protected OutputStream getErr()
     {
-        return err;
+        return m_error;
     }
 
     protected OutputStream getOut()
     {
-        return out;
+        return m_output;
     }
 
     protected void createProcessErrorPump( InputStream is, OutputStream os )
     {
-        errorThread = createPump( is, os );
+        m_errorThread = createPump( is, os );
     }
 
     protected void createProcessOutputPump( InputStream is, OutputStream os )
     {
-        inputThread = createPump( is, os );
+        m_inputThread = createPump( is, os );
     }
 
     /**
@@ -124,11 +126,11 @@ public class PumpStreamHandler implements ExecuteStreamHandler
      * @param os Description of Parameter
      * @return Description of the Returned Value
      */
-    protected Thread createPump( InputStream is, OutputStream os )
+    protected Thread createPump( final InputStream input,
+                                 final OutputStream output )
     {
-        final Thread result = new Thread( new StreamPumper( is, os ) );
+        final Thread result = new Thread( new StreamPumper( input, output ) );
         result.setDaemon( true );
         return result;
     }
-
 }
