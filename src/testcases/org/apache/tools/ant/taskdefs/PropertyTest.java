@@ -60,25 +60,25 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Conor MacNeill
  */
-public class PropertyTest extends BuildFileTest { 
-    
-    public PropertyTest(String name) { 
+public class PropertyTest extends BuildFileTest {
+
+    public PropertyTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/property.xml");
     }
 
-    public void test1() { 
+    public void test1() {
         // should get no output at all
         expectOutputAndError("test1", "", "");
     }
 
-    public void test2() { 
+    public void test2() {
         expectLog("test2", "testprop1=aa, testprop3=xxyy, testprop4=aazz");
     }
-    
+
     public void test3() {
         try {
             executeTarget("test3");
@@ -86,15 +86,19 @@ public class PropertyTest extends BuildFileTest {
         catch (BuildException e) {
             assertEquals("Circular definition not detected - ", true,
                      e.getMessage().indexOf("was circularly defined") != -1);
-            return;                     
+            return;
         }
-        fail("Did not throw exception on circular exception");                     
+        fail("Did not throw exception on circular exception");
     }
 
-    public void test4() { 
+    public void test4() {
         expectLog("test4", "http.url is http://localhost:999");
     }
-    
+
+    public void test5() {
+        expectLog("test5", "http.url is http://localhost:999");
+    }
+
     public void testPrefixSuccess() {
         executeTarget("prefix.success");
         assertEquals("80", project.getProperty("server1.http.port"));
@@ -107,9 +111,9 @@ public class PropertyTest extends BuildFileTest {
         catch (BuildException e) {
             assertEquals("Prefix allowed on non-resource/file load - ", true,
                      e.getMessage().indexOf("Prefix is only valid") != -1);
-            return;                     
+            return;
         }
         fail("Did not throw exception on invalid use of prefix");
     }
-    
+
 }

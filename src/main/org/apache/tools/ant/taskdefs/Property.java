@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
@@ -108,6 +109,7 @@ public class Property extends Task {
     protected String name;
     protected String value;
     protected File file;
+    protected URL url;
     protected String resource;
     protected Path classpath;
     protected String env;
@@ -188,6 +190,20 @@ public class Property extends Task {
 
     public File getFile() {
         return file;
+    }
+
+    /**
+     * The url from which to load properties.
+     * @param url url string
+     *
+     * @ant.attribute group="noname"
+     */
+    public void setUrl(URL url) {
+        this.url = url;
+    }
+
+    public URL getUrl() {
+        return url;
     }
 
     /**
@@ -345,16 +361,16 @@ public class Property extends Task {
                                          getLocation());
             }
         } else {
-            if (file == null && resource == null && env == null) {
-                throw new BuildException("You must specify file, resource or "
+            if (url == null && file == null && resource == null && env == null) {
+                throw new BuildException("You must specify url, file, resource or "
                                          + "environment when not using the "
                                          + "name attribute", getLocation());
             }
         }
 
-        if (file == null && resource == null && prefix != null) {
+        if (url == null && file == null && resource == null && prefix != null) {
             throw new BuildException("Prefix is only valid when loading from "
-                                     + "a file or resource", getLocation());
+                                     + "a url, file or resource", getLocation());
         }
 
         if ((name != null) && (value != null)) {
@@ -363,6 +379,10 @@ public class Property extends Task {
 
         if (file != null) {
             loadFile(file);
+        }
+
+        if (url != null) {
+            loadUrl(url);
         }
 
         if (resource != null) {
@@ -387,6 +407,29 @@ public class Property extends Task {
             }
         }
     }
+
+    /**
+     * load properties from a url
+     * @param url url to load from
+     */
+    protected void loadUrl(URL url) throws BuildException {
+        Properties props = new Properties();
+        log("Loading " + url, Project.MSG_VERBOSE);
+        try {
+            InputStream is = url.openStream();
+            try {
+                props.load(is);
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+            addProperties(props);
+        } catch (IOException ex) {
+            throw new BuildException(ex, getLocation());
+        }
+    }
+
 
     /**
      * load properties from a file

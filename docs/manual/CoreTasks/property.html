@@ -12,14 +12,17 @@
 <p>Sets a property (by name and value), or set of properties (from file or
 resource) in the project.  Properties are case sensitive.</p>
  Properties are immutable: whoever sets a property first freezes it for the
- rest of the build; they are most definately not variable. 
-<p>There are five ways to set properties:</p>
+ rest of the build; they are most definately not variable.
+<p>There are six ways to set properties:</p>
 <ul>
   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
   <li>By setting the <i>file</i> attribute with the filename of the property
     file to load. This property file has the format as defined by the file used
     in the class java.util.Properties.</li>
+  <li>By setting the <i>url</i> attribute with the url from which to load the
+    properties. This url must be directed to a file that has the format as defined
+    by the file used in the class java.util.Properties.</li>
   <li>By setting the <i>resource</i> attribute with the resource name of the
     property file to load. This property file has the format as defined by the
     file used in the class java.util.Properties.</li>
@@ -70,7 +73,7 @@ href="../using.html#built-in-props">here</a>.</p>
   <tr>
     <td valign="top">resource</td>
     <td valign="top">the resource name of the property file.</td>
-    <td valign="middle" align="center" rowspan="3">One of these, when
+    <td valign="middle" align="center" rowspan="4">One of these, when
       <b>not</b> using the name attribute</td>
   </tr>
   <tr>
@@ -78,14 +81,18 @@ href="../using.html#built-in-props">here</a>.</p>
     <td valign="top">the filename of the property file .</td>
   </tr>
   <tr>
+    <td valign="top">url</td>
+    <td valign="top">the url from which to read properties.</td>
+  </tr>
+  <tr>
     <td valign="top">environment</td>
     <td valign="top">the prefix to use when retrieving environment variables. Thus
-    if you specify environment=&quot;myenv&quot; you will be able to access OS-specific 
-    environment variables via property names &quot;myenv.PATH&quot; or 
-    &quot;myenv.TERM&quot;. Note that if you supply a property name with a final 
-    &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still 
-    allow access of environment variables through &quot;myenv.PATH&quot; and 
-    &quot;myenv.TERM&quot;. This functionality is currently only implemented 
+    if you specify environment=&quot;myenv&quot; you will be able to access OS-specific
+    environment variables via property names &quot;myenv.PATH&quot; or
+    &quot;myenv.TERM&quot;. Note that if you supply a property name with a final
+    &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still
+    allow access of environment variables through &quot;myenv.PATH&quot; and
+    &quot;myenv.TERM&quot;. This functionality is currently only implemented
     on select platforms. Feel free to send patches to increase the number of platforms
     this functionality is supported on ;).<br>
     Note also that properties are case sensitive, even if the
@@ -94,19 +101,19 @@ href="../using.html#built-in-props">here</a>.</p>
 
   </tr>
   <tr>
-    <td valign="top">classpath</td> 
+    <td valign="top">classpath</td>
     <td valign="top">the classpath to use when looking up a resource.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">classpathref</td> 
+    <td valign="top">classpathref</td>
     <td valign="top">the classpath to use when looking up a resource,
       given as <a href="../using.html#references">reference</a> to a &lt;path&gt; defined
       elsewhere..</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">prefix</td> 
+    <td valign="top">prefix</td>
     <td valign="top">Prefix to apply to properties loaded using <code>file</code>
     or <code>resource</code>. A "." is appended to the prefix if not specified.</td>
     <td align="center" valign="top">No</td>
@@ -122,6 +129,8 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 <p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
 <pre>  &lt;property file=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
+<pre>  &lt;property url=&quot;http://www.mysite.com/bla/props/foo.properties&quot;/&gt;</pre>
+<p>reads a set of properties from the address &quot;http://www.mysite.com/bla/props/foo.properties&quot;.</p>
 <pre>  &lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
 <p>Note that you can reference a global properties file for all of your Ant
@@ -132,7 +141,7 @@ to be your home directory.  Where the &quot;user.home&quot; property resolves to
 the file system depends on the operating system version and the JVM implementation.
 On Unix based systems, this will map to the user's home directory. On modern Windows
 variants, this will most likely resolve to the user's directory in the &quot;Documents
-and Settings&quot; folder. Older windows variants such as Windows 98/ME are less 
+and Settings&quot; folder. Older windows variants such as Windows 98/ME are less
 predictable, as are other operating system/JVM combinations.</p>
 
 <pre>
@@ -142,8 +151,8 @@ predictable, as are other operating system/JVM combinations.</p>
 </pre>
 <p>reads the system environment variables and stores them in properties, prefixed with &quot;env&quot;.
 Note that this only works on <em>select</em> operating systems.
-Two of the values are shown being echoed. 
-</p> 
+Two of the values are shown being echoed.
+</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
