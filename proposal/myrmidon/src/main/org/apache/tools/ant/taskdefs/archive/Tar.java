@@ -232,32 +232,33 @@ public class Tar
 
     private void tarFile( final File file,
                           final TarOutputStream output,
-                          String path,
+                          final String path,
                           final TarFileSet tarFileSet )
         throws IOException, TaskException
     {
+        String storedPath = path;
         // don't add "" to the archive
-        if( path.length() <= 0 )
+        if( storedPath.length() <= 0 )
         {
             return;
         }
 
-        if( file.isDirectory() && !path.endsWith( "/" ) )
+        if( file.isDirectory() && !storedPath.endsWith( "/" ) )
         {
-            path += "/";
+            storedPath += "/";
         }
 
-        if( path.length() >= TarEntry.NAMELEN )
+        if( storedPath.length() >= TarEntry.NAMELEN )
         {
             if( longFileMode.isOmitMode() )
             {
-                final String message = "Omitting: " + path;
+                final String message = "Omitting: " + storedPath;
                 getLogger().info( message );
                 return;
             }
             else if( longFileMode.isWarnMode() )
             {
-                final String message = "Entry: " + path + " longer than " +
+                final String message = "Entry: " + storedPath + " longer than " +
                     TarEntry.NAMELEN + " characters.";
                 getLogger().warn( message );
                 if( !longWarningGiven )
@@ -270,7 +271,7 @@ public class Tar
             }
             else if( longFileMode.isFailMode() )
             {
-                final String message = "Entry: " + path + " longer than " +
+                final String message = "Entry: " + storedPath + " longer than " +
                     TarEntry.NAMELEN + "characters.";
                 throw new TaskException( message );
             }
@@ -279,7 +280,7 @@ public class Tar
         FileInputStream input = null;
         try
         {
-            final TarEntry entry = new TarEntry( path );
+            final TarEntry entry = new TarEntry( storedPath );
             entry.setModTime( file.lastModified() );
             if( !file.isDirectory() )
             {
