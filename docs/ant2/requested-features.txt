@@ -214,6 +214,11 @@ decide between several possible options.
   This includes asking the user whether he wants to use optional tasks
   and downloads the required libs. Automatic upgrades and so on.
 
+  Self-extracting jar installer: java -jar jakarta-ant-1.3-bin.jar. 
+  Prompts for destination directory, extracts archive, fixes all 
+  text files with fixCRLF task; on UNIX, makes scripts executable.  
+  Could also modify ant scripts with the location of ANT_HOME.
+
 * Logo for Ant.
 
 * detach Ant from System.err/.in/.out.
