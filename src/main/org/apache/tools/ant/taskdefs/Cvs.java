@@ -69,6 +69,7 @@ public class Cvs extends Exec {
     private String cvsRoot;
     private String pack;
     private String tag;
+    private String date;
     private String command = "checkout";
     private boolean quiet = false;
     private boolean noexec = false;
@@ -90,6 +91,9 @@ public class Cvs extends Exec {
 		
 	if (tag!=null)
             sb.append("-r ").append(tag).append(" ");
+
+       if (date!=null)
+            sb.append("-D ").append(date).append(" ");
 
 	if (pack != null) {
             sb.append(pack);
@@ -125,6 +129,13 @@ public class Cvs extends Exec {
 
         this.tag = p; 
     } 
+
+    
+    public void setDate(String p) {
+       if( p != null && p.trim().length()==0 )
+               p = null;
+       this.date = p;
+    }
 
     public void setCommand(String c) {
 	this.command = c;
