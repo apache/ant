@@ -72,6 +72,8 @@ import junit.framework.TestCase;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
+ *
+ * @see FormatterElement 
  */
 
 public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstants {

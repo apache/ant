@@ -64,10 +64,17 @@ import java.util.Properties;
 import java.util.Vector;
 
 /**
+ * <p> Run a single JUnit test.
+ *
+ * <p> The JUnit test is actually run by {@link JUnitTestRunner}.
+ * So read the doc comments for that class :)
  *
  * @author Thomas Haas
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>,
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ *
+ * @see JUnitTask
+ * @see JUnitTestRunner
  */
 public class JUnitTest extends BaseTest {
     
@@ -99,19 +106,30 @@ public class JUnitTest extends BaseTest {
         this.haltOnFail = haltOnFail;
     }
 
+    /** 
+     * Set the name of the test class.
+     */
     public void setName(String value) {
         name = value;
     }
 
+    /**
+     * Set the name of the output file.
+     */
     public void setOutfile(String value) {
         outfile = value;
     }
 
+    /** 
+     * Get the name of the test class.
+     */
     public String getName() {
         return name;
     }
 
     /**
+     * Get the name of the output file
+     * 
      * @return the name of the output file.
      */
     public String getOutfile() {

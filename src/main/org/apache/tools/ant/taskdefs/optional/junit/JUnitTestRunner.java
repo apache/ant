@@ -70,12 +70,15 @@ import java.util.Vector;
  *
  * <p>This TestRunner expects a name of a TestCase class as its
  * argument. If this class provides a static suite() method it will be
- * called and the resulting Test will be run.
+ * called and the resulting Test will be run. So, the signature should be 
+ * <pre><code>
+ *     public static junit.framework.Test suite()
+ * </code></pre>
  *
- * <p>Otherwise all public methods starting with "test" and taking no
- * argument will be run.
+ * <p> If no such method exists, all public methods starting with "test" and taking no
+ * argument will be run. 
  *
- * <p>Summary output is generated at the end.
+ * <p> Summary output is generated at the end. 
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>

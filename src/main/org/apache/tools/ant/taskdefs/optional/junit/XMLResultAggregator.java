@@ -79,11 +79,11 @@ import org.apache.tools.ant.util.DOMElementWriter;
 
 
 /**
- * This is an helper class that will aggregate all testsuites under a specific
+ * <p> This is an helper class that will aggregate all testsuites under a specific
  * directory and create a new single document. It is not particulary clean but
  * should be helpful while I am thinking about another technique.
  *
- * The main problem is due to the fact that a JVM can be forked for a testcase
+ * <p> The main problem is due to the fact that a JVM can be forked for a testcase
  * thus making it impossible to aggregate all testcases since the listener is
  * (obviously) in the forked JVM. A solution could be to write a
  * TestListener that will receive events from the TestRunner via sockets. This
@@ -119,7 +119,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     
     /**
      * Set the name of the file aggregating the results. It must be relative
-     * from the <tt>todir</tt> attribute. If not set it will use {@link DEFAULT_FILENAME}
+     * from the <tt>todir</tt> attribute. If not set it will use {@link #DEFAULT_FILENAME}
      * @param  value   the name of the file.
      * @see #setTodir(File)
      */
@@ -129,7 +129,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     
     /**
      * Set the destination directory where the results should be written. If not
-     * set if will use {@link DEFAULT_DIR}. When given a relative directory
+     * set if will use {@link #DEFAULT_DIR}. When given a relative directory
      * it will resolve it from the project directory.
      * @param value    the directory where to write the results, absolute or
      * relative.
@@ -172,7 +172,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
     
     /**
-     * get the full destination file where to write the result. It is made of
+     * Get the full destination file where to write the result. It is made of
      * the <tt>todir</tt> and <tt>tofile</tt> attributes.
      * @return the destination file where should be written the result file.
      */
@@ -187,6 +187,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
     
     /**
+     * Get all <code>.xml</code> files in the fileset.
+     *
      * @return all files in the fileset that end with a '.xml'.
      */
     protected File[] getFiles() {
@@ -234,7 +236,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
     
     /**
-     * Create a DOM tree with firstchild as 'testsuites' and aggregates all
+     * <p> Create a DOM tree. 
+     * Has 'testsuites' as firstchild and aggregates all
      * testsuite results that exists in the base directory.
      * @return	the root element of DOM tree that aggregates all testsuites.
      */
@@ -277,9 +280,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
     
     /**
-     * Add a new testsuite node to the document, the main difference is that it
+     * <p> Add a new testsuite node to the document.
+     * The main difference is that it
      * split the previous fully qualified name into a package and a name.
-     * For example: <tt>org.apache.Whatever</tt> will be splitted in
+     * <p> For example: <tt>org.apache.Whatever</tt> will be split into
      * <tt>org.apache</tt> and <tt>Whatever</tt>.
      * @param root the root element to which the <tt>testsuite</tt> node should
      *        be appended.

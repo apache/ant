@@ -64,7 +64,12 @@ import java.util.*;
 import java.io.File;
 
 /**
- * Create JUnitTests from a list of files.
+ * <p> Create then run <code>JUnitTest</code>'s based on the list of files given by the fileset attribute.
+ *
+ * <p> Every <code>.java</code> or <code>.class</code> file in the fileset is 
+ * assumed to be a testcase. 
+ * A <code>JUnitTest</code> is created for each of these named classes with basic setup
+ * inherited from the parent <code>BatchTest</code>.
  *
  * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
@@ -99,10 +104,9 @@ public final class BatchTest extends BaseTest {
     }
 
     /**
-     * return all <tt>JUnitTest</tt> instances obtain by applying the fileset rules.
+     * Return all <tt>JUnitTest</tt> instances obtain by applying the fileset rules.
      * @return  an enumeration of all elements of this batchtest that are
      * a <tt>JUnitTest</tt> instance.
-     * @see addTestsTo(Vector)
      */
     public final Enumeration elements(){
         JUnitTest[] tests = createAllJUnitTest();
@@ -142,7 +146,7 @@ public final class BatchTest extends BaseTest {
      * Iterate over all filesets and return the filename of all files
      * that end with <tt>.java</tt> or <tt>.class</tt>. This is to avoid
      * wrapping a <tt>JUnitTest</tt> over an xml file for example. A Testcase
-     * is obviouslly a java file (compiled or not).
+     * is obviously a java file (compiled or not).
      * @return an array of filenames without their extension. As they should
      * normally be taken from their root, filenames should match their fully
      * qualified class name (If it is not the case it will fail when running the test).
@@ -172,7 +176,7 @@ public final class BatchTest extends BaseTest {
     }
 
     /**
-     * convenient method to convert a pathname without extension to a
+     * Convenient method to convert a pathname without extension to a
      * fully qualified classname. For example <tt>org/apache/Whatever</tt> will
      * be converted to <tt>org.apache.Whatever</tt>
      * @param filename the filename to "convert" to a classname.
