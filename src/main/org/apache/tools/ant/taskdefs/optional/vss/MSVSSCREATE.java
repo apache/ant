@@ -108,6 +108,7 @@ import org.apache.tools.ant.types.Commandline;
  * </table>
  *
  * @author Gary S. Weaver
+ * @ant.task name="vsscreate" category="scm"
  */
 public class MSVSSCREATE extends MSVSS {
 

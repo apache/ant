@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.Path;
  * Based on the VSS Checkin code by Martin Poeschl
  *
  * @author Nigel Magnay
+ * @ant.task name="vssadd" category="scm"
  */
 public class MSVSSADD extends MSVSS {
 
