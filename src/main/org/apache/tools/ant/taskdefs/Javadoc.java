@@ -285,7 +285,7 @@ public class Javadoc extends Task {
      *                           shouldn't be used.
      */
     public void setDefaultexcludes(boolean useDefaultExcludes) {
-       this.useDefaultExcludes = useDefaultExcludes;
+        this.useDefaultExcludes = useDefaultExcludes;
     }
 
     public void setMaxmemory(String max){
@@ -734,7 +734,7 @@ public class Javadoc extends Task {
         }
 
         Commandline toExecute = (Commandline)cmd.clone();
-	toExecute.setExecutable( getJavadocExecutableName() );
+        toExecute.setExecutable( getJavadocExecutableName() );
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
@@ -1063,7 +1063,7 @@ public class Javadoc extends Task {
                                 if (name.endsWith(".java")) {
                                     return true;
                                 }
-                                return false;	// ignore dirs
+                                return false;        // ignore dirs
                             }
                         });
                     
@@ -1155,23 +1155,23 @@ public class Javadoc extends Task {
         // besides the extension, we may need to revisit this code.
         String extension =  dosBased? ".exe" : "";
 
-	// Look for javadoc in the java.home/../bin directory.  Unfortunately
-	// on Windows java.home doesn't always refer to the correct location, 
-	// so we need to fall back to assuming javadoc is somewhere on the
-	// PATH.
-	File jdocExecutable = new File( System.getProperty("java.home") +
-		"/../bin/javadoc" + extension );
+        // Look for javadoc in the java.home/../bin directory.  Unfortunately
+        // on Windows java.home doesn't always refer to the correct location,
+        // so we need to fall back to assuming javadoc is somewhere on the
+        // PATH.
+        File jdocExecutable = new File( System.getProperty("java.home") +
+                                        "/../bin/javadoc" + extension );
 
-	if (jdocExecutable.exists())
-	{
-	    return jdocExecutable.getAbsolutePath();
-	}
-	else
-	{
-	    log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
-		    ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
-	    return "javadoc";
-	}
+        if (jdocExecutable.exists())
+        {
+            return jdocExecutable.getAbsolutePath();
+        }
+        else
+        {
+            log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
+                 ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
+            return "javadoc";
+        }
     }
-    
+
 }
