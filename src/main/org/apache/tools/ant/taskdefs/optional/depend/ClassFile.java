@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -97,7 +97,8 @@ public class ClassFile {
                 ClassCPInfo classEntry = (ClassCPInfo) entry;
 
                 if (!classEntry.getClassName().equals(className)) {
-                    classRefs.addElement(ClassFileUtils.convertSlashName(classEntry.getClassName()));
+                    classRefs.addElement(
+                        ClassFileUtils.convertSlashName(classEntry.getClassName()));
                 }
             }
         }

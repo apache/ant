@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -162,9 +162,9 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * flag to set to true if you want dependency issues with RMI
+     * Flag to set to true if you want dependency issues with RMI
      * stubs to appear at warning level.
-     * @param warnOnRmiStubs
+     * @param warnOnRmiStubs if true set dependency issues to appear at warning level.
      * @since Ant1.7
      */
     public void setWarnOnRmiStubs(boolean warnOnRmiStubs) {
@@ -710,7 +710,7 @@ public class Depend extends MatchingTask {
      * @param files the names of the files in the source dir which are to be
      *      checked.
      */
-    protected void scanDir(File srcDir, String files[]) {
+    protected void scanDir(File srcDir, String[] files) {
 
         for (int i = 0; i < files.length; i++) {
             File srcFile = new File(srcDir, files[i]);
