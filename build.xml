@@ -1568,7 +1568,7 @@
   <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
     description="--> runs the single unit test defined in the testcase property"/>
 
-  <target name="run-single-test-only"
+  <target name="run-single-test-only" if="testcase"
     description="--> runs the single unit test defined in the testcase property">
 
 
