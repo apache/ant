@@ -429,9 +429,8 @@
          Cleans up build and distribution directories
        ===================================================================
   -->
-  <target name="clean" depends="setup-distproperties">
+  <target name="clean">
     <delete dir="${build.dir}" />
-    <delete dir="${dist.dir}" />
     <delete dir="${dist.base}" />
     <delete> 
       <fileset dir="." includes="**/*~" defaultexcludes="no"/>
