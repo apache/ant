@@ -1261,6 +1261,8 @@ an explanation of scripts and dependencies.
 <p>
 The script is provided with an object <i>self</i> that has
 getToken() and setToken(String) methods.
+The getToken() method returns the current token. The setToken(String)
+method replaces the current token.
 </p>
 
 This filter may be used directly within a filterchain.<p>
@@ -1287,15 +1289,29 @@ Must be a supported Apache BSF language</TD>
 
 <H4>Examples:</H4>
 
-Convert to uppercase.
+Convert to uppercase:
 <BLOCKQUOTE><PRE>
 &lt;tokenfilter&gt;
     &lt;scriptfilter language="javascript"&gt;
         self.setToken(self.getToken().toUpperCase());
     &lt;/scriptfilter&gt;
 &lt;/tokenfilter&gt;
-
 </PRE></BLOCKQUOTE>
+
+Remove lines containing the string "bad" while
+copying text files:
+  <blockquote>
+    <pre>
+&lt;copy todir="dist"&gt;
+  &lt;fileset dir="src" includes="**/*.txt"/&gt;
+  &lt;scriptfilter language="beanshell"&gt;
+      if (self.getToken().indexOf("bad") != -1) {
+          self.setToken(null);
+      }
+  &lt;/scriptfilter&gt;
+&lt;/copy&gt;
+    </pre>
+  </blockquote>
 
 <H4>Custom tokenizers and string filters</H4>
 
