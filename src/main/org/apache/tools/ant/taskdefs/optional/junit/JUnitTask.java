@@ -91,6 +91,7 @@ public class JUnitTask extends Task {
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
     private Vector formatters = new Vector();
+    private File dir = null;
 
     private Integer timeout = null;
     private boolean summary = false;
@@ -162,6 +163,15 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * The directory to invoke the VM in.
+     *
+     * <p>Ignored if fork=false.
+     */
+    public void setDir(File dir) {
+        this.dir = dir;
+    }
+
+    /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      */
     public JUnitTask() throws Exception {
@@ -201,6 +211,12 @@ public class JUnitTask extends Task {
             int exitValue = JUnitTestRunner.ERRORS;
             
             if (!test.getFork()) {
+
+                if (dir != null) {
+                    log("dir attribute ignored if running in the same VM",
+                        Project.MSG_WARN);
+                }
+
                 JUnitTestRunner runner = 
                     new JUnitTestRunner(test, test.getHaltonerror(),
                                         test.getHaltonfailure());
@@ -283,6 +299,10 @@ public class JUnitTask extends Task {
 
                 Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), createWatchdog());
                 execute.setCommandline(cmd.getCommandline());
+                if (dir != null) {
+                    execute.setWorkingDirectory(dir);
+                }
+                
                 log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
                 try {
                     exitValue = execute.execute();
