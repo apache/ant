@@ -12,6 +12,11 @@ Fixed bugs:
   string, unless the new 'setonempty' attribute is set to false|no|off
   (default is "true").
 
+Other changes:
+--------------
+
+* added **/.svn and **/.svn/** to the default excludes
+
 Changes from Ant 1.5beta2 to Ant 1.5beta3
 =========================================
 

@@ -169,7 +169,9 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
         "**/.cvsignore",
         "**/SCCS",
         "**/SCCS/**",
-        "**/vssver.scc"
+        "**/vssver.scc",
+        "**/.svn",
+        "**/.svn/**"
     };
 
     /** The base directory to be scanned. */
