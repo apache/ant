@@ -178,7 +178,7 @@ public class Property extends Task {
         }
     }
 
-    protected void loadFile (File file) throws BuildException {
+    protected void loadFile(File file) throws BuildException {
         Properties props = new Properties();
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
@@ -201,7 +201,7 @@ public class Property extends Task {
         }
     }
 
-    protected void loadResource( String name ) {
+    protected void loadResource(String name) {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
         try {
@@ -300,12 +300,15 @@ public class Property extends Task {
                             if (propertyName.equals(name)) {
                                 throw new BuildException("Property " + name + " was circularly defined.");
                             }
-                            if (props.containsKey(propertyName)) {
-                                fragment = props.getProperty(propertyName);
-                                resolved = false;
-                            }
-                            else {
-                                fragment = "${" + propertyName + "}";
+                            fragment = getProject().getProperty(propertyName);
+                            if (fragment == null) {
+                                if (props.containsKey(propertyName)) {
+                                    fragment = props.getProperty(propertyName);
+                                    resolved = false;
+                                }
+                                else {
+                                    fragment = "${" + propertyName + "}";
+                                }
                             }
                         }
                         sb.append(fragment);

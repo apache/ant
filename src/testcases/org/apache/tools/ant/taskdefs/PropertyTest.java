@@ -90,4 +90,8 @@ public class PropertyTest extends TaskdefsTest {
         fail("Did not throw exception on circular exception");                     
     }
 
+    public void test4() { 
+        expectLog("test4", "http.url is http://localhost:999");
+    }
+    
 }

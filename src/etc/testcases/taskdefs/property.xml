@@ -16,4 +16,9 @@
     <property file="property2.properties"/>
   </target>
 
+  <target name="test4">
+    <property name="http.port" value="999" />
+    <property file="property3.properties"/>
+    <echo message="http.url is ${http.url}"/>
+  </target>
 </project>
