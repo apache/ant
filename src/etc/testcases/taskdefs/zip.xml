@@ -168,6 +168,7 @@
   </target>
 
   <target name="cleanup">
+    <delete file="testLevel.zip"/>
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
     <delete file="test5.zip"/>
