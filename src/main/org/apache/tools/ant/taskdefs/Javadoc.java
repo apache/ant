@@ -942,7 +942,14 @@ public class Javadoc extends Task {
         JavadocOutputStream err = new JavadocOutputStream(Project.MSG_WARN);
         Execute exe = new Execute(new PumpStreamHandler(out, err));
         exe.setAntRun(project);
-        exe.setWorkingDirectory(project.getBaseDir());
+        
+        /*
+         * No reason to change the working directory as all filenames and
+         * path components have been resolved already.
+         *
+         * Avoid problems with command line length in some environments.
+         */
+        exe.setWorkingDirectory(null);
         try {
             exe.setCommandline(toExecute.getCommandline());
             int ret = exe.execute();
