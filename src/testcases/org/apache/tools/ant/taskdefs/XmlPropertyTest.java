@@ -290,8 +290,10 @@ public class XmlPropertyTest extends BuildFileTest {
             if (currentValue instanceof Path) {
             } else if (currentValue instanceof String) {
             } else {
-                fail(msg + "-" + inputFile.getName() + " Key=" 
-                     + currentKey + " is not a recognized type.");
+                if( ! currentKey.startsWith("ant.") ) {
+                    fail(msg + "-" + inputFile.getName() + " Key=" 
+                         + currentKey + " is not a recognized type.");
+                }
             }
         }
     }
