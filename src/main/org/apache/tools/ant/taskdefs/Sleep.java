@@ -177,7 +177,8 @@ public class Sleep extends Task {
      *
      * @throws BuildException if something is invalid
      */
-    public void validate() {
+    public void validate() 
+        throws BuildException {
         long sleepTime = getSleepTime();
         if (getSleepTime() < 0) {
             throw new BuildException("Negative sleep periods are not supported");
