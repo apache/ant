@@ -642,8 +642,6 @@ public abstract class DotnetCompile
     }
 
 
-
-
     /**
      * add a define to the list of definitions
      * @param define

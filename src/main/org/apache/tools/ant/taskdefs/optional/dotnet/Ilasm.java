@@ -82,7 +82,7 @@ import org.apache.tools.ant.types.FileSet;
  *  /out:file ... /verbose is used some places; /quiet here in ildasm... etc.]
  *  It would be nice if someone made all the command line tools consistent (and
  *  not as brittle as the java cmdline tools) <p>
- *
+ *  <p>
  *  The task is a directory based task, so attributes like <b>includes="*.il"
  *  </b> and <b>excludes="broken.il"</b> can be used to control the files pulled
  *  in. You can also use nested &lt;src&gt filesets to refer to source.

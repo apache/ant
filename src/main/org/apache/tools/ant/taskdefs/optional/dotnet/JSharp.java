@@ -58,9 +58,11 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Compile J# source down to a managed .NET application.
+ * <p>
  * J# is not Java. But it is the language closest to Java in the .NET framework.
  * This task compiles jsharp source (assumes a .jsl extension, incidentally), and
  * generates a .NET managed exe or dll.
+ * <p>
  * See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp
  * for vjc command options in glory detail.
  * @author Steve Loughran
