@@ -709,6 +709,33 @@
         </table>
       </subsection>
 
+      <subsection name="SerialVer">
+
+	<p>SerialVer adds the Java serialver functionality to Apache
+	Ant.  This project adds Tasks and FilterReaders to get, to
+	insert and to modify the serialVersionUID in the source code
+	of a serializable class.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://serialver.sourceforge.net/">http://serialver.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="https://lists.sourceforge.net/lists/listinfo/serialver-development">developer mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
