@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Created-By: Apache Ant Project
-Extension-Name: aut
-Specification-Title: Ant Utility API
-Specification-Version: 0.01
-Specification-Vendor: Jakarta Apache
-Implementation-Vendor-Id: org.apache.jakarta
-Implementation-Vendor: Jakarta Apache Project
-Implementation-Version: 0.01

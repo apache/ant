@@ -1,4 +1,0 @@
-<services version="1.0">
-    <exec-manager factory="org.apache.myrmidon.framework.factories.ExecManagerFactory"/>
-    <file-system-manager factory="org.apache.myrmidon.framework.factories.VfsManagerFactory"/>
-</services>
