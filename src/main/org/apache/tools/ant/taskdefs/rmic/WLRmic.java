@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,13 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.rmic;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.types.Commandline;
-
-
-
 
 import java.lang.reflect.Method;
 
@@ -75,9 +73,18 @@ public class WLRmic extends DefaultRmicAdapter {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand(new String[] {"-noexit"});
 
+        AntClassLoader loader = null;
         try {
             // Create an instance of the rmic
-            Class c = Class.forName("weblogic.rmic");
+            Class c = null;
+            if (getRmic().getClasspath() == null) {
+                c = Class.forName("weblogic.rmic");
+            } else {
+                loader = new AntClassLoader(getRmic().getProject(), 
+                                            getRmic().getClasspath());
+                c = loader.loadClass("weblogic.rmic");
+                AntClassLoader.initializeClass(c);
+            }
             Method doRmic = c.getMethod("main",
                                         new Class [] { String[].class });
             doRmic.invoke(null, new Object[] {cmd.getArguments()  });
@@ -92,6 +99,10 @@ public class WLRmic extends DefaultRmicAdapter {
                 throw (BuildException) ex;
             } else {
                 throw new BuildException("Error starting WebLogic rmic: ", ex, getRmic().getLocation());
+            }
+        } finally {
+            if (loader != null) {
+                loader.cleanup();
             }
         }
     }
