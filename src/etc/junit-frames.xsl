@@ -96,12 +96,12 @@
         </redirect:write>
         <xsl:if test="string-length(./system-out)!=0">
             <redirect:write file="{$output.dir}/{$package.dir}/{@name}-out.txt">
-                <xsl:value-of select="./system-out" />
+                <xsl:value-of disable-output-escaping="yes" select="./system-out" />
             </redirect:write>
         </xsl:if>
         <xsl:if test="string-length(./system-err)!=0">
             <redirect:write file="{$output.dir}/{$package.dir}/{@name}-err.txt">
-                <xsl:value-of select="./system-err" />
+                <xsl:value-of disable-output-escaping="yes" select="./system-err" />
             </redirect:write>
         </xsl:if>
     </xsl:for-each>
