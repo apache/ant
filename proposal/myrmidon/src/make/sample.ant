@@ -18,101 +18,77 @@ Legal:
 
   <property name="year" value="2000"/>
 
-  <target name="main" depends="property-test" />
+  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test" />
 
-  <target name="no-test-target" unless="no-do-tests">
-    <echo message="No tests done here"/>
-  </target>
-
-  <target name="test-target" depends="no-test-target" if="no-do-tests">
-
-    <echo message="Tests away"/>
-
-    <prim-test
-        integer="1"
-        integer2="2"
-        short="3"
-        short2="4"
-        long="5"
-        long2="6"
-        byte="7"
-        byte2="8"
-        string="aString"
-        float="1.0"
-        float2="2.0"
-        double="3.0"
-        double2="4.0"
-     />
-
-    <sub-elements-test>
-<!--
-      <create-beep message="Evaluation of ant.install.dir=${ant.install.dir}" />
-          <add-beep message="Evaluation of ant.install.lib=${ant.install.lib}" />
--->
-    </sub-elements-test>
-
-<!--    <conf-test message="Test of configuration=${ant.install.lib}" /> -->
-    
-    <content-test>123</content-test>
-    
-  </target>
-
-  <target name="property-test" depends="test-target">
-    <property name="blah" value="fred" />
-    <property name="${blah}" value="barney" />
-
-    <register-tasklet lib="../../dist/lib/core.tsk" 
-                      name="echo2" 
-                      classname="org.apache.ant.modules.basic.Echo" />
+  <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test" />
 
 <!--    
     <register-tasklib lib="../../dist/lib/core.tsk" />
-    <register-converter classname="org.apache.ant.modules.basic.StringToClassConverter"
-                        source-type="java.lang.String"
-                        destination-type="java.lang.Class"
-                        lib="../../dist/lib/core.tsk" />
 -->
 
-    <echo message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
-    <echo2 message="Luke to Echo base. Can you hear me?"/>
+  <target name="property-test">
+    <property name="blah" value="fred" />
+    <property name="${blah}" value="barney" />
 
-    <ant-call target="property-test2">
+    <echo message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
+  </target>
+
+  <target name="typedef-test">
+    <typedef name="echo2" 
+             type="task" 
+             classname="org.apache.ant.modules.basic.Echo" 
+             lib="../../dist/lib/core.tsk" />
+
+    <echo2 message="Luke to Echo base. Can you hear me?"/>
+  </target>
+
+  <target name="converterdef-test">
+    <converterdef classname="org.apache.ant.modules.basic.StringToClassConverter"
+                  source-type="java.lang.String"
+                  destination-type="java.lang.Class"
+                  lib="../../dist/lib/core.tsk" />
+  </target> 
+
+  <target name="ant-call-test">
+    <ant-call target="ant-call-test-target">
       <param name="blah" value="blah-value" />
     </ant-call>
+  </target>
 
+  <target name="ant-call-test-target">
+    <echo message="This should fail ...."/>
+    <echo message="${blah}"/>
+    <echo message="Whoa - it no fail. You used ant-call to call me and set param blah!"/>
+  </target>
+
+  <target name="datatype-test">
     <property name="foo">
       <pattern name="*.java"/>
     </property>
 
+    <pattern id="foo2" name="*.java" if="..." />
+
     <echo message="foo=${foo}" />
-
-    <register-datatype lib="../../dist/lib/core.tsk" 
-                       name="pattern2"
-                       classname="org.apache.ant.modules.basic.Pattern" />
-
-    <property name="foo2">
-      <pattern2 name="*.java"/>
-    </property>
-
     <echo message="foo2=${foo2}" />
-
-    <pattern id="foo3" name="*.java" if="foo" />
-
-    <echo message="foo3=${foo3}" />
-
   </target>
 
-  <target name="property-test2">
-    <echo message="This should fail ...."/>
-    <echo message="${blah}"/>
-    <echo message="Whoa - it no fail. Did you use ant-call to call me and set param blah?"/>
+  <target name="namespace-test">
 
+    <!-- ant and doc are built in namespaces -->
     <echo ant:fail-on-error="true" message="Some random message">
       <doc:description>
         Test case for aspects
       </doc:description>
       <ant:some-element some-attribute="blah"/>
     </echo>
+
+    <!-- load facility for blee: namespace -->
+    <facility namespace="blee">
+      <noop/>
+    </facility>
+
+    <echo blee:some-param="blah" message="Blee namespace test successful!"/>
+
   </target>
 
 </project>
