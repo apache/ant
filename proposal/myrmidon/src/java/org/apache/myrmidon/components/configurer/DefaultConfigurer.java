@@ -70,16 +70,7 @@ public class DefaultConfigurer
                            final Context context )
         throws ConfigurationException
     {
-        try
-        {
-            configureObject( object, configuration, context );
-        }
-        catch( InvocationTargetException ite )
-        {
-            // A configuration exception thrown from a nested object.  Unpack
-            // and re-throw
-            throw (ConfigurationException)ite.getTargetException();
-        }
+        configureObject( object, configuration, context );
     }
 
     /**
@@ -88,7 +79,7 @@ public class DefaultConfigurer
     private void configureObject( final Object object,
                                   final Configuration configuration,
                                   final Context context )
-        throws ConfigurationException, InvocationTargetException
+        throws ConfigurationException
     {
         if( object instanceof Configurable )
         {
@@ -122,6 +113,11 @@ public class DefaultConfigurer
                         REZ.getString( "no-such-attribute.error", elemName, name );
                     throw new ConfigurationException( message, nspe );
                 }
+                catch( final ConfigurationException ce )
+                {
+                    ce.fillInStackTrace();
+                    throw ce;
+                }
                 catch( final CascadingException ce )
                 {
                     final String message =
@@ -146,6 +142,11 @@ public class DefaultConfigurer
                         REZ.getString( "no-content.error", elemName );
                     throw new ConfigurationException( message, nspe );
                 }
+                catch( final ConfigurationException ce )
+                {
+                    ce.fillInStackTrace();
+                    throw ce;
+                }
                 catch( final CascadingException ce )
                 {
                     final String message =
@@ -169,6 +170,11 @@ public class DefaultConfigurer
                     final String message =
                         REZ.getString( "no-such-element.error", elemName, name );
                     throw new ConfigurationException( message, nspe );
+                }
+                catch( final ConfigurationException ce )
+                {
+                    ce.fillInStackTrace();
+                    throw ce;
                 }
                 catch( final CascadingException ce )
                 {
@@ -230,7 +236,7 @@ public class DefaultConfigurer
     private void configureElement( final ConfigurationState state,
                                    final Configuration element,
                                    final Context context )
-        throws CascadingException, InvocationTargetException
+        throws CascadingException
     {
         final String elementName = element.getName();
         if( elementName.toLowerCase().endsWith( "-ref" ) )
@@ -251,46 +257,92 @@ public class DefaultConfigurer
     private void configureInline( final ConfigurationState state,
                                   final Configuration element,
                                   final Context context )
-        throws CascadingException, InvocationTargetException
+        throws CascadingException
     {
-        final String elementName = element.getName();
+        final String name = element.getName();
 
         // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer = state.getConfigurer().getProperty( elementName );
+        final PropertyConfigurer childConfigurer = state.getConfigurer().getProperty( name );
 
-        // Create the child element
-        Object child = childConfigurer.createValue( state );
-        if( child == null )
-        {
-            // Create an instance using the default constructor
-            try
-            {
-                child = childConfigurer.getType().newInstance();
-            }
-            catch( final Exception e )
-            {
-                final String message =
-                    REZ.getString( "create-object.error",
-                                   childConfigurer.getType().getName() );
-                throw new ConfigurationException( message, e );
-            }
-        }
-
-        // Configure the child element
-        try
-        {
-            configureObject( child, element, context );
-        }
-        catch( final ConfigurationException ce )
-        {
-            // Nasty hack-o-rama, used to get this exception up through
-            // the stack of doConfigure() calls.  This is unpacked by the
-            // top-most configure() call, and rethrown.
-            throw new InvocationTargetException( ce );
-        }
+        // Create & configure the child element
+        final Object child =
+            setupChild( state, element, context, childConfigurer );
 
         // Set the child element
         childConfigurer.addValue( state, child );
+    }
+
+    private Object setupChild( final ConfigurationState state,
+                               final Configuration element,
+                               final Context context,
+                               final PropertyConfigurer childConfigurer )
+        throws ConfigurationException
+    {
+        final String name = element.getName();
+        final Class type = childConfigurer.getType();
+        Object child = childConfigurer.createValue( state );
+
+        if( null == child && Configuration.class == type )
+        {
+            //special case where you have add(Configuration)
+            return element;
+        }
+        else if( null == child )
+        {
+            // Create an instance using the default constructor
+            if( type.isInterface() )
+            {
+                child = createdTypedObject( name, type );
+                configureObject( child, element, context );
+            }
+            else
+            {
+                child = createObject( type );
+                configureObject( child, element, context );
+            }
+        }
+        configureObject( child, element, context );
+        return child;
+    }
+
+    /**
+     * Utility method to create an instance of the
+     * specified type that satisfied supplied interface.
+     */
+    private Object createdTypedObject( final String name,
+                                       final Class type )
+        throws ConfigurationException
+    {
+        try
+        {
+            return type.newInstance();
+        }
+        catch( final Exception e )
+        {
+            final String message =
+                REZ.getString( "create-object.error",
+                               type.getName() );
+            throw new ConfigurationException( message, e );
+        }
+    }
+
+    /**
+     * Utility method to instantiate an instance of the specified class.
+     */
+    private Object createObject( final Class type )
+        throws ConfigurationException
+    {
+        try
+        {
+            return type.newInstance();
+        }
+        catch( final Exception e )
+        {
+            final String message =
+                REZ.getString( "create-object.error",
+                               type.getName() );
+            throw new ConfigurationException( message, e );
+        }
     }
 
     /**
