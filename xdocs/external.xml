@@ -11,7 +11,7 @@
     <section name="External Tools and Tasks">
 
       <p>This page lists external resources for Apache Ant: <a
-      href="#Tasks">tasks</a>, <a
+      href="#Tasks">Tasks</a>, <a
       href="#Compiler%20Implementations">Compiler Implementations</a>,
       <a href="#IDE%20and%20Editor%20Integration">IDE integration
       tools</a>, loggers, you name it. If you've written
@@ -351,6 +351,33 @@
         </table>
       </subsection>
 
+      <subsection name="FMPP">
+        <p>FMPP is a general-purpose text file preprocessor tool that
+        uses FreeMarker templates. It is particularly designed for
+        HTML preprocessor, for the generation of complete (static)
+        homepages: directory structure that contains HTML-s, image
+        files, etc. But of course it can be used to generate source
+        code or whatever text files. FMPP is extendable with Java
+        classes to pull data from any data sources (XML file,
+        database, etc.) and embed the data into the generated
+        files.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://fmpp.sourceforge.net/">http://fmpp.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="GenJar">
         <p>Builds a JAR file based on class dependencies rather than simply the contents of a directory</p>
 
@@ -400,6 +427,35 @@
           <tr>
             <th>License:</th>
             <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="GroboUtils CodeCoverage">
+
+        <p>The CodeCoverage sub-project of GroboUtils provides a 100%
+        pure Java code coverage tool.  It uses pre-execution class file
+        recompilation, and generates XML files containing the coverage
+        statistics.  It does not require any advanced VM setup to generate
+        coverage numbers.
+        </p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://groboutils.sourceforge.net/codecoverage/">http://groboutils.sourceforge.net/codecoverage/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/mail/?group_id=22594">project mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>MIT License</td>
           </tr>
         </table>
       </subsection>
