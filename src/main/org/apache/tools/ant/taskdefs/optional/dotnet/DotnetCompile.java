@@ -720,19 +720,23 @@ public abstract class DotnetCompile
     protected String getDefinitionsParameter() throws BuildException {
         StringBuffer defines = new StringBuffer();
         Enumeration defEnum = definitionList.elements();
+        boolean firstDefinition = true;
         while (defEnum.hasMoreElements()) {
             //loop through all definitions
             DotnetDefine define = (DotnetDefine) defEnum.nextElement();
             if (define.isSet(this)) {
                 //add those that are set, and a delimiter
+                if (!firstDefinition) {
+                    defines.append(getDefinitionsDelimiter());
+                }
                 defines.append(define.getValue(this));
-                defines.append(getDefinitionsDelimiter());
+                firstDefinition = false;
             }
         }
         if (defines.length() == 0) {
             return null;
         } else {
-            return "/D:" + defines;
+            return "/d:" + defines;
         }
     }
 
