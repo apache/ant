@@ -32,6 +32,9 @@ Fixed bugs:
 
 * Incorrect task name with invalid "javac" task after a "presetdef.
   Bugzilla reports 31389 and 29499.
+  
+* <manifest> was not printing warnings about invalid manifest elements.
+  Bugzilla report 32190
 
 Other changes:
 --------------
