@@ -51,91 +51,48 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.event.*;
-import javax.swing.*;
-import java.awt.GridLayout;
-import java.awt.Dimension;
-import java.util.EventObject;
+package org.apache.tools.ant.gui.event;
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.gui.command.Command;
+import org.apache.tools.ant.gui.command.NoOpCmd;
+import org.apache.tools.ant.gui.AppContext;
 
 /**
- * AntEditor for displaying the project target in a 
+ * Event indicating that the current set of selected targets has changed.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-class ProjectNavigator extends AntEditor {
+public class TargetSelectionEvent extends AntEvent {
 
-    /** Navigation via a tree widget. */
-    private JTree _tree = null;
+    /** New set of selected targets. */
+    private Target[] _selectedTargets = null;
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context.
+	 * @param context application context.
 	 */
-	public ProjectNavigator(AppContext context) {
+    public TargetSelectionEvent(AppContext context, Target[] selectedTargets) {
         super(context);
-        context.getEventBus().addMember(EventBus.MONITORING, new Handler());
-
-        setLayout(new GridLayout(1,1));
-
-        _tree = new JTree();
-        _tree.setModel(null);
-        JScrollPane scroller = new JScrollPane(_tree);
-        add(scroller);
-
-        setPreferredSize(new Dimension(150, 100));
-
-	}
-
-    /** Class for handling project events. */
-    private class Handler implements BusMember {
-        private final Filter _filter = new Filter();
-
-        /** 
-         * Get the filter to that is used to determine if an event should
-         * to to the member.
-         * 
-         * @return Filter to use.
-         */
-        public BusFilter getBusFilter() {
-            return _filter;
-        }
-        
-        /** 
-         * Called when an event is to be posed to the member.
-         * 
-         * @param event Event to post.
-         */
-        public void eventPosted(EventObject event) {
-            ProjectProxy project = getAppContext().getProject();
-
-            if(project == null) {
-                // The project has been closed.
-                // XXX this needs to be tested against 
-                // different version of Swing...
-                _tree.setModel(null);
-                _tree.setSelectionModel(null);
-            }
-            else {
-                _tree.setModel(project.getTreeModel());
-                _tree.setSelectionModel(project.getTreeSelectionModel());
-            }
-        }
+        _selectedTargets = selectedTargets;
     }
 
-    /** Class providing filtering for project events. */
-    private static class Filter implements BusFilter {
-        /** 
-         * Determines if the given event should be accepted.
-         * 
-         * @param event Event to test.
-         * @return True if event should be given to BusMember, false otherwise.
-         */
-        public boolean accept(EventObject event) {
-            return event instanceof NewProjectEvent;
-        }
+	/** 
+	 * Current set of selected targets.
+	 * 
+     * @return selected target set.
+	 */
+    public Target[] getSelectedTargets() {
+        return _selectedTargets;
     }
 
+	/** 
+	 * Create the appropriate default response command to this event.
+	 * 
+	 * @return Command representing an appropriate response to this event.
+	 */
+    public Command createDefaultCmd() {
+        return new NoOpCmd();
+    }
 }

@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -82,7 +83,7 @@ public class Console extends AntEditor {
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
 
-        _text = new JTextPane();
+        _text = new NoWrapTextPane();
         _text.setEditable(false);
         JScrollPane scroller = new JScrollPane(_text);
         scroller.setVerticalScrollBarPolicy(
@@ -162,7 +163,6 @@ public class Console extends AntEditor {
             }
         }
     }
-
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
         /** 
@@ -173,6 +173,22 @@ public class Console extends AntEditor {
          */
         public boolean accept(EventObject event) {
             return event instanceof AntBuildEvent;
+        }
+    }
+
+    /** Specialization of JTextPane to provide proper wrapping behavior. */
+    private static class NoWrapTextPane extends JTextPane {
+        /** 
+         * Overridden to ensure that the JTextPane is only
+         * forced to match the viewport if it is smaller than
+         * the viewport.
+         * 
+         * @return True if smaller than viewport, false otherwise.
+         */
+        public boolean getScrollableTracksViewportWidth() {
+            ComponentUI ui = getUI();
+            return getParent() != null ? ui.getPreferredSize(this).width <=
+                getParent().getSize().width : true;
         }
     }
 

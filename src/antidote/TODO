@@ -1,0 +1,36 @@
+TODO List:
+    * Need Ant API access to:
+        - Tasks within a Target
+        - The topo sorted task list to get flattened dependencies
+        - The build setup code to recduce code replication.
+        - Normalize the Ant data model to represent a more consistent
+          tree structure, and more bean-like API.
+
+    * Cause console to clear when a project is closed.
+
+    * Better define the data model architecture, and how it interfaces
+      with the Ant data model.
+
+    * Define a list of proposed changes for the Ant datamodel,
+      specifically the Project class and the ability to stop running builds,
+      and reduction of code duplication in launching builds.
+
+    * Project navigator (currently stubbed out in the ProjectNavigator class).
+
+    * Implement a ListSelectionModel that is backed by a set of selected 
+      targets. 
+
+    * Project properties viewer, including the ability to view
+      dependencies (local and cascading).
+
+    * Acquire or implement a logging facility.
+
+    * Build launching capability.
+
+    * Build monitoring console.
+
+    * Get some icons!
+
+    * Create a listener for the ActionManager that knows how to change
+      the enanbled state of the various actions based on the
+      application state.

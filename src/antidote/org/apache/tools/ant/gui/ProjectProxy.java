@@ -52,17 +52,17 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.*;
 import org.apache.tools.ant.gui.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.tree.TreeModel;
 import javax.swing.text.Document;
+import javax.swing.tree.TreeSelectionModel;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * This class provides the gateway interface to the data model for
@@ -81,8 +81,10 @@ public class ProjectProxy {
     private File _file = null;
     /** The real Ant Project instance. */
     private Project _project = null;
-    /** Private the current thread executing a build. */
+    /** The current thread executing a build. */
     private Thread _buildThread = null;
+    /** The selection model for selected targets. */
+    private TargetSelectionModel _selections = null;
 
 	/** 
 	 * File loading ctor.
@@ -101,6 +103,8 @@ public class ProjectProxy {
 	 */
     private void loadProject() throws IOException {
         _project = new Project();
+        _selections = new TargetSelectionModel();
+        _selections.addTreeSelectionListener(new SelectionForwarder());
         synchronized(_project) {
             _project.init();
 
@@ -116,6 +120,15 @@ public class ProjectProxy {
             ProjectHelper.configureProject(_project, _file);
         }
     }
+
+	/** 
+	 * Called to indicate that the project is no longer going to be used
+     * by the GUI, and that any cleanup should occur.
+	 * 
+	 */
+    //public void close() {
+    //
+    //}
 
 	/** 
 	 * Build the project with the current target (or the default target
@@ -150,6 +163,15 @@ public class ProjectProxy {
             return new ProjectTreeModel(_project);
         }
         return null;
+    }
+
+	/** 
+	 * Get the tree selection model for selected targets.
+	 * 
+	 * @return Selection model.
+	 */
+    public TreeSelectionModel getTreeSelectionModel() {
+        return _selections;
     }
 
 	/** 
@@ -197,10 +219,23 @@ public class ProjectProxy {
                 try {
                     fireBuildEvent(new BuildEvent(
                         _project), BuildEventType.BUILD_STARTED);
-                    // XXX add code to indicate target execution
-                    // on the targets that are selected.
-                    _project.executeTarget(
-                        _project.getDefaultTarget());
+
+                    // Generate list of targets to execute.
+                    Target[] targets = _selections.getSelectedTargets();
+                    Vector targetNames = new Vector();
+                    if(targets.length == 0) {
+                        targetNames.add(_project.getDefaultTarget());
+                    }
+                    else {
+                        for(int i = 0; i < targets.length; i++) {
+                            targetNames.add(targets[i].getName());
+                        }
+                    }
+
+                    // Execute build on selected targets. XXX It would be 
+                    // nice if the Project API supported passing in target 
+                    // objects rather than String names.
+                    _project.executeTargets(targetNames);
                 }
                 catch(BuildException ex) {
                     BuildEvent errorEvent = new BuildEvent(_project);
@@ -215,6 +250,14 @@ public class ProjectProxy {
                     _buildThread = null;
                 }
             }
+        }
+    }
+
+    /** Forwards selection events to the event bus. */
+    private class SelectionForwarder implements TreeSelectionListener {
+        public void valueChanged(TreeSelectionEvent e) {
+            _context.getEventBus().postEvent(new TargetSelectionEvent(
+                _context, _selections.getSelectedTargets()));
         }
     }
 
