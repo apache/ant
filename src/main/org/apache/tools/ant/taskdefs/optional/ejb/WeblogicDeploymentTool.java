@@ -90,6 +90,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     protected static final String DEFAULT_WL60_DTD_LOCATION 
         = "/weblogic/ejb20/dd/xml/weblogic600-ejb-jar.dtd";
 
+    protected static final String DEFAULT_COMPILER = "default"; 
+    
     protected static final String WL_DD = "weblogic-ejb-jar.xml";
     protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
 
@@ -421,9 +423,20 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             if (keepgenerated) {
                 javaTask.createArg().setValue("-keepgenerated");
             }
-            if (compiler != null) {
-                javaTask.createArg().setValue("-compiler");
-                javaTask.createArg().setValue(compiler);
+            if (compiler == null) {
+                // try to use the compiler specified by build.compiler. Right now we are just going
+                // to allow Jikes
+                String buildCompiler = getTask().getProject().getProperty("build.compiler");
+                if (buildCompiler.equals("jikes")) {
+                    javaTask.createArg().setValue("-compiler");
+                    javaTask.createArg().setValue("jikes");
+                }
+            }
+            else {
+                if (!compiler.equals(DEFAULT_COMPILER)) {
+                    javaTask.createArg().setValue("-compiler");
+                    javaTask.createArg().setValue(compiler);
+                }
             }
             javaTask.createArg().setValue(sourceJar.getPath());
             javaTask.createArg().setValue(destJar.getPath());

@@ -777,7 +777,11 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
     <td valign="top">This allows for the selection of a different compiler
                      to be used for the compilation of the generated Java
                      files. This could be set, for example, to Jikes to 
-                     compile with the Jikes compiler.</td>
+                     compile with the Jikes compiler. If this is not set
+                     and the <code>build.compiler</code> property is set
+                     to jikes, the Jikes compiler will be used. If this
+                     is not desired, the value &quot;<code>default</code>&quot; 
+                     may be given to use the default compiler</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
