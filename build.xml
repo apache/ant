@@ -1541,6 +1541,8 @@
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
+          <exclude name="${ant.package}/DirectoryScannerTest.java"
+                   unless="tests.and.ant.share.classloader"/>
           <exclude name="${ant.package}/taskdefs/SQLExecTest.java"
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/sos/SOSTest.java"
@@ -1567,6 +1569,11 @@
 
           <!-- test needs special setup -->
           <exclude name="${optional.package}/ssh/ScpTest.java"/>
+
+          <!-- test fails if build/classes and ant.jar are using the same
+               classloader -->
+          <exclude name="${ant.package}/util/ClasspathUtilsTest.java"
+            if="tests.and.ant.share.classloader"/>
         </fileset>
       </batchtest>
     </junit>

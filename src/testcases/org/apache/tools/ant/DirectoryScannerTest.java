@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,12 +19,14 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.Iterator;
 
@@ -37,8 +39,7 @@ public class DirectoryScannerTest extends BuildFileTest {
     public DirectoryScannerTest(String name) {super(name);}
 
     // keep track of what operating systems are supported here.
-    private boolean supportsSymlinks = Os.isFamily("unix")
-        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
+    private boolean supportsSymlinks = Os.isFamily("unix");
 
     public void setUp() {
         configureProject("src/etc/testcases/core/directoryscanner.xml");
@@ -220,18 +221,20 @@ public class DirectoryScannerTest extends BuildFileTest {
     }
 
     /**
-     * Test case for setFollowLinks() and associated funtionality.
-     * Only supports test on linux, at the moment because Java has
+     * Test case for setFollowLinks() and associated functionality.
+     * Only supports test on Linux at the moment because Java has
      * no real notion of symlinks built in, so an os-specfic call
      * to Runtime.exec() must be made to create a link to test against.
      */
-
-    public void testSetFollowLinks() {
+    public void testSetFollowLinks() throws IOException {
         if (supportsSymlinks) {
+            File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
+            System.err.println("link exists pre-test? " + linkFile.exists());
+            
             try {
                 // add conditions and more commands as soon as the need arises
                 String[] command = new String[] {
-                    "ln", "-s", "ant", "src/main/org/apache/tools/ThisIsALink"
+                    "ln", "-s", "ant", linkFile.getAbsolutePath()
                 };
                 try {
                     Runtime.getRuntime().exec(command);
@@ -244,7 +247,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                 } catch (InterruptedException ie) {
                 }
 
-                File dir = new File("src/main/org/apache/tools");
+                File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
+                System.err.println("link exists after exec? " + linkFile.exists());
+                System.err.println("Ant knows it is a link? " + FileUtils.getFileUtils().isSymbolicLink(dir, "ThisIsALink"));
+
                 DirectoryScanner ds = new DirectoryScanner();
 
                 // followLinks should be true by default, but if this ever
@@ -301,13 +307,15 @@ public class DirectoryScannerTest extends BuildFileTest {
                            !haveTaskdefsPackage);
 
             } finally {
-                File f = new File("src/main/org/apache/tools/ThisIsALink");
-                if (!f.delete()) {
-                    throw new RuntimeException("Failed to delete " + f);
+                System.err.println("link exists pre-delete? " + linkFile.exists());
+                if (!linkFile.delete()) {
+                    throw new RuntimeException("Failed to delete " + linkFile);
                 }
+                System.err.println("link exists post-delete? " + linkFile.exists());
             }
         }
     }
+
     public void testExcludeOneFile() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -321,6 +329,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
                      new String[] {});
     }
+
     public void testExcludeHasPrecedence() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -335,6 +344,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
 
     }
+
     public void testAlternateIncludeExclude() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -350,6 +360,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha"});
 
     }
+
     public void testAlternateExcludeInclude() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -365,6 +376,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
 
     }
+
     /**
      * Test inspired by Bug#1415.
      */
@@ -388,6 +400,19 @@ public class DirectoryScannerTest extends BuildFileTest {
                                         "delta/delta.xml"},
                      new String[] {"", "alpha/beta", "alpha/beta/gamma", "delta"});
 
+    }
+
+    public void testIsExcludedDirectoryScanned() {
+        getProject().executeTarget("children-of-excluded-dir-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setExcludes(new String[] {"**/gamma/**"});
+        ds.setFollowSymlinks(false);
+        ds.scan();
+        Set set = ds.getScannedDirs();
+        assertFalse("empty set", set.isEmpty());
+        String s = "alpha/beta/gamma/".replace('/', File.separatorChar);
+        assertFalse("scanned " + s, set.contains(s));
     }
 
     private void compareFiles(DirectoryScanner ds, String[] expectedFiles,
