@@ -177,10 +177,10 @@ public class Scp extends SSHBase {
         Session session = null;
         try {
             session = openSession();
-            ScpFromMessage message = new ScpFromMessage(session,
-                                                         file,
-                                                         new File(toPath),
-                                                         fromSshUri.endsWith("*"));
+            ScpFromMessage message = 
+                new ScpFromMessage(session, file, 
+                                   getProject().resolveFile(toPath),
+                                   fromSshUri.endsWith("*"));
             log("Receiving file: " + file);
             message.setLogListener(this);
             message.execute();
@@ -222,9 +222,9 @@ public class Scp extends SSHBase {
         Session session = null;
         try {
             session = openSession();
-            ScpToMessage message = new ScpToMessage(session,
-                                                     new File(fromPath),
-                                                     file);
+            ScpToMessage message = 
+                new ScpToMessage(session, getProject().resolveFile(fromPath),
+                                 file);
             message.setLogListener(this);
             message.execute();
         } finally {
