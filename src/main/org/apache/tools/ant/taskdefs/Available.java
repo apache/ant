@@ -74,7 +74,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @ant.task category="control"
  */
-
 public class Available extends Task implements Condition {
 
     private String property;
@@ -349,22 +348,29 @@ public class Available extends Task implements Condition {
 
     private boolean checkClass(String classname) {
         try {
+            Class requiredClass = null;
             if (loader != null) {
-                loader.loadClass(classname);
+                requiredClass = loader.loadClass(classname);
             } else {
                 ClassLoader l = this.getClass().getClassLoader();
                 // Can return null to represent the bootstrap class loader.
                 // see API docs of Class.getClassLoader.
                 if (l != null) {
-                    l.loadClass(classname);
+                    requiredClass = l.loadClass(classname);
                 } else {
-                    Class.forName(classname);
+                    requiredClass = Class.forName(classname);
                 }
             }
+            AntClassLoader.initializeClass(requiredClass);
             return true;
         } catch (ClassNotFoundException e) {
+            log("class \"" + classname + "\" was not found", 
+                Project.MSG_DEBUG);
             return false;
         } catch (NoClassDefFoundError e) {
+            log("Could not load dependent class \"" + e.getMessage() 
+                + "\" for class \"" + classname + "\"", 
+                Project.MSG_DEBUG);
             return false;
         }
     }
