@@ -323,7 +323,6 @@ public class FTP
      * @since ant 1.6
      */
     private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file) {
-        String testDirectory =  dir + remoteFileSep + file.getName();
         boolean result = false;
         String currentWorkingDir = null;
         if (file.isDirectory()) {
