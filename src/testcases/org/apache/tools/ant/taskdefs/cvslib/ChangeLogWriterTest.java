@@ -41,9 +41,9 @@ public class ChangeLogWriterTest extends TestCase {
     private ChangeLogWriter writer = new ChangeLogWriter();
 
     public void testNonUTF8Characters() throws Exception {
-        CVSEntry entry = new CVSEntry(new Date(), "Señorita", "2003 < 2004 && 3 > 5");
+        CVSEntry entry = new CVSEntry(new Date(), "Se\u00f1orita", "2003 < 2004 && 3 > 5");
         entry.addFile("Medicare & review.doc", "1.1");
-        entry.addFile("Eléments de style", "1.2");
+        entry.addFile("El\u00e8ments de style", "1.2");
         CVSEntry[] entries = { entry };
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
