@@ -51,8 +51,12 @@ public class ImportTest extends BuildFileTest {
 
     public void testSerial() {
         configureProject("src/etc/testcases/taskdefs/import/subdir/serial.xml");
-        assertLogContaining(
-            "Unnamed2.xmlUnnamed1.xmlSkipped already imported file");
+        assertLogContaining("Unnamed2.xmlUnnamed1.xml");
+        String fullLog = getFullLog();
+        String substring = "Skipped already imported file";
+        assertTrue("expecting full log to contain \"" + substring
+            + "\" full log was \"" + fullLog + "\"",
+            fullLog.indexOf(substring) >= 0);
     }
 
     // allow this as imported in targets are only tested when a target is run

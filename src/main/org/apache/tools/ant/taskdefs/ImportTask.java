@@ -136,7 +136,7 @@ public class ImportTask extends Task {
         if (importStack.contains(importedFile)) {
             getProject().log(
                 "Skipped already imported file:\n   "
-                + importedFile + "\n", Project.MSG_WARN);
+                + importedFile + "\n", Project.MSG_VERBOSE);
             return;
         }
 
