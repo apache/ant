@@ -445,7 +445,7 @@ public class Execute {
      */
     public int execute() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
-            throw new BuildException(workingDirectory + " doesn't exists.");
+            throw new BuildException(workingDirectory + " doesn't exist.");
         }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
@@ -497,7 +497,7 @@ public class Execute {
      */
     public void spawn() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
-            throw new BuildException(workingDirectory + " doesn't exists.");
+            throw new BuildException(workingDirectory + " doesn't exist.");
         }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
