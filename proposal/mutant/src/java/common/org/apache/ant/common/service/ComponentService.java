@@ -95,7 +95,7 @@ public interface ComponentService {
     void addLibPath(String libraryId, URL libPath) throws ExecutionException;
 
     /**
-     * Experimental - define a new type
+     * Define a new type
      *
      * @param typeName the name by which this type will be referred
      * @param factory the library factory object to create the type

@@ -943,7 +943,7 @@ public class Frame {
                 throw new ExecutionException("The given ant:refid value '"
                      + refId + "' is not defined", model.getLocation());
             }
-        } else {
+        } else if (nestedType != null) {
             // We need to create an instance of the class expected by the nested
             // element's adder method if that is possible
             if (nestedType.isInterface()) {
@@ -954,6 +954,12 @@ public class Frame {
             }
 
             typeInstance = createTypeInstance(nestedType, factory, model, null);
+        } else {
+            throw new ExecutionException("The type of the <" 
+                + nestedElementName + "> nested element is not known. "
+                + "Please specify by the type using the \"ant:type\" " 
+                + "attribute or provide a reference to an instance with " 
+                + "the \"ant:id\" attribute");
         }
 
         // is the typeInstance compatible with the type expected

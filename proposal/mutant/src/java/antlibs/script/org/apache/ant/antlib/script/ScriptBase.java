@@ -120,9 +120,12 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
 
         try {
             BSFManager manager = new BSFManager();
-
+            manager.declareBean("self", this, getClass());
+            manager.declareBean("context", getContext, AntContext.class);
+            
             // execute the script
             BSFEngine engine = manager.loadScriptingEngine(language);
+            
             engine.exec(scriptName, 0, 0, script);
             for (Iterator i = attributes.keySet().iterator(); i.hasNext(); ) {
                 String attributeName = (String)i.next();
@@ -131,6 +134,17 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
                 setter.setCharAt(0, Character.toUpperCase(setter.charAt(0)));
                 engine.call(null, "set" + setter, new Object[]{value});
             }
+            
+            Iterator i = nestedElementNames.iterator();
+            Iterator j = nestedElements.iterator();
+            while (i.hasNext()) {
+                String nestedName = (String)i.next();
+                Object nestedElement = j.next();
+                StringBuffer adder = new StringBuffer(nestedName);
+                adder.setCharAt(0, Character.toUpperCase(adder.charAt(0)));
+                engine.call(null, "add" + adder, new Object[]{nestedElement});
+            }
+            
             engine.call(null, "execute", new Object[]{});
         } catch (BSFException e) {
             Throwable t = e;
