@@ -111,5 +111,12 @@ public class XmlValidateTest extends BuildFileTest {
     public void testDeepValidate() throws Exception {
          executeTarget("testDeepValidate");
     }
+
+    /**
+     *
+     */
+    public void testXmlCatalog() {
+        executeTarget("xmlcatalog");
+    }
 }
 
