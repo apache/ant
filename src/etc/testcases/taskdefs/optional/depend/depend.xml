@@ -6,7 +6,7 @@
   <property name="src3.dir" value="src3"/>
   <property name="src4.dir" value="src4"/>
   <property name="src5.dir" value="src5"/>
-  
+
   <property name="tempsrc.dir" value="working"/>
   <property name="cache.dir" value="working"/>
   <property name="classes.dir" value="classes"/>
@@ -17,13 +17,13 @@
   <target name="basesetup" depends="clean">
     <mkdir dir="${tempsrc.dir}"/>
   </target>
-  
+
   <target name="src1setup" depends="basesetup">
     <copy todir="${tempsrc.dir}">
       <fileset dir="${src1.dir}"/>
     </copy>
   </target>
-  
+
   <target name="src2setup" depends="basesetup">
     <copy todir="${tempsrc.dir}">
       <fileset dir="${src2.dir}"/>
@@ -52,7 +52,7 @@
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
   </target>
-  
+
   <target name="clean">
     <delete dir="${classes.dir}"/>
     <delete dir="${tempsrc.dir}"/>
@@ -87,7 +87,7 @@
       <include name="**/C.class"/>
     </classfileset>
   </target>
-  
+
   <target name="testbyreference" depends="src1setup, compile">
     <classfileset id="classSet" dir="${classes.dir}" rootclass="A">
       <include name="**/C.class"/>
@@ -96,11 +96,11 @@
       <fileset refid="classSet"/>
     </jar>
   </target>
-  
+
   <target name="testmethodparam" depends="src1setup, compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="E"/>
   </target>
-  
+
   <target name="testinner" depends="src2setup, compile">
     <sleep seconds="3"/>
     <delete file="${tempsrc.dir}/B.java"/>
@@ -116,11 +116,11 @@
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
     <fileset id="result" dir="${classes.dir}"/>
   </target>
-  
+
   <target name="testmethodparaminner" depends="src4setup, compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="test.MethodParam"/>
   </target>  
-  
+
   <target name="testnosource" depends="src1setup, compile">
     <depend destdir="${classes.dir}" closure="yes"/>
   </target>
@@ -137,15 +137,15 @@
 
     <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"
            classpathref="path.compile"/>
-    
+
     <sleep seconds="3"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" 
             closure="yes" dump="yes"
             classpathref="path.compile"/>
-           
+
     <fileset id="result" dir="${classes.dir}"/>
   </target>
-  
+
   <target name="testcache" depends="src1setup, compile">
     <depend cache="${cache.dir}" srcdir="${tempsrc.dir}" 
             destdir="${classes.dir}" closure="yes"/>
