@@ -47,8 +47,66 @@ or the following attributes.</p>
       exclude file by using a nested excludesfile elements.</td>
   </tr>
 </table>
-
-<h4>Examples</h4>
+<h3>Parameters specified as nested elements</h3>
+<h4><code>include</code> and <code>exclude</code></h4>
+<p>Each such element defines a single pattern for files to include or
+exclude.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the <a href=="../dirtasks.html#patterns">pattern</a>
+      to in/exclude.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">if</td>
+    <td valign="top">Only use this pattern if the named property is set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td>
+    <td valign="top">Only use this pattern if the named property is
+       <b>not</b> set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h4><code>includesfile</code> and <code>excludesfile</code></h4>
+<p>If you want to list the files to include or exclude external to
+your build file, you should use the includesfile/excludesfile
+attributes or elements.  Using the attribute, you can only specify a
+single file of each type, while the nested elements can be specified
+more than once - the nested elements also support if/unless attributes
+you can use to test the existance of a property.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the file holding the patterns to
+      in/exclude.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">if</td>
+    <td valign="top">Only read this file if the named property is set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td>
+    <td valign="top">Only read this file if the named property is
+      <b>not</b> set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
 <blockquote><pre>
 &lt;patternset id=&quot;non.test.sources&quot; &gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
@@ -78,12 +136,7 @@ that it should be used only if a property is not set.</p>
 </pre></blockquote>
 <p>will only include the files in the sub-directory <em>prof</em> if the property
 <em>professional</em> is set to some value.</p>
-<p>If you want to list the files to include or exclude external to
-your build file, you should use the includesfile/excludesfile
-attributes or elements.  Using the attribute, you can only specify a
-single file of each type, while the nested elements can be specified
-more than once - the nested elements also support if/unless attributes
-you can use to test the existance of a property. For example:</p>
+<p>The two sets</p>
 <blockquote><pre>
 &lt;patternset includesfile=&quot;some-file&quot; /&gt;
 </pre></blockquote>
