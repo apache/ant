@@ -19,7 +19,7 @@ import java.util.Iterator;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ProcessDestroyer
+class ProcessDestroyer
     extends Thread
 {
     private ArrayList m_processes = new ArrayList();

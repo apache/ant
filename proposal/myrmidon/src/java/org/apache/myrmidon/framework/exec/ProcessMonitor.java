@@ -22,7 +22,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ProcessMonitor
+class ProcessMonitor
     extends AbstractLogEnabled
     implements Runnable
 {
