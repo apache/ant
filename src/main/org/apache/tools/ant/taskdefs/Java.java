@@ -188,8 +188,16 @@ public class Java extends Exec {
      */
     protected void run(String classname, Vector args) throws BuildException {
         try {
+            Class c = null;
+            if (classpath == null) {
+                c = Class.forName(classname);
+            } 
+            else {
+                AntClassLoader loader = new AntClassLoader(project, classpath);
+                c = loader.forceLoadClass(classname);
+            }
+        
             Class[] param = { Class.forName("[Ljava.lang.String;") };
-            Class c = Class.forName(classname);
             Method main = c.getMethod("main", param);
             Object[] a = { array(args) };
             main.invoke(null, a);
