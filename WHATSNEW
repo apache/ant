@@ -4,6 +4,9 @@ Changes from Ant 1.6.0 to current cvs version
 Changes that could break older environments:
 --------------------------------------------
 
+* License is now Apache Software License 2.0
+  see http://www.apache.org/licenses/ for more information
+
 Fixed bugs:
 -----------
 * Remove a recursive template call in the junit xsls that could trigger a stack
@@ -44,8 +47,6 @@ Fixed bugs:
 Other changes:
 --------------
 * Shipped XML parser is now Xerces-J 2.6.1
-
-* License is now Apache Software License 2.0
 
 * Translate task logs a debug message specifying the number of files
   that it processed.  Bugzilla Report 13938.
