@@ -44,8 +44,8 @@ public class Mkdir
 
         if( !m_dir.exists() )
         {
-            boolean result = m_dir.mkdirs();
-            if( result == false )
+            final boolean result = m_dir.mkdirs();
+            if( !result )
             {
                 final String message = "Directory " + m_dir.getAbsolutePath() + " creation was not " +
                     "successful for an unknown reason";
