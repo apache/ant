@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,6 @@ import java.util.Vector;
 import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Stack;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
@@ -70,8 +69,10 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.LazyHashtable;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Antlib;
+import org.apache.tools.ant.input.InputHandler;
 
 /**
  *  Central representation of an Ant project. This class defines a Ant project
@@ -165,13 +166,16 @@ public class Project {
 
     private String name;
     private String description;
+    /** Map of references within the project (paths etc) (String to Object). */
 
     private Hashtable properties = new Hashtable();
     private Hashtable userProperties = new Hashtable();
-    private Hashtable references = new Hashtable();
+    private Hashtable references = new AntRefTable(this);
     private String defaultTarget;
-    //    private Hashtable dataClassDefinitions = new Hashtable();
-    //    private Hashtable taskClassDefinitions = new Hashtable();
+    /** Map from data type names to implementing classes (String to Class). */
+    private Hashtable dataClassDefinitions = new AntTaskTable(this, false);
+    /** Map from task names to implementing classes (String to Class). */
+    private Hashtable taskClassDefinitions = new AntTaskTable(this, true);
     private Hashtable createdTasks = new Hashtable();
     private Hashtable targets = new Hashtable();
     private FilterSet globalFilterSet = new FilterSet();
@@ -185,10 +189,12 @@ public class Project {
      */
     private ClassLoader coreLoader = null;
 
-    /**
-     *  Records the latest task on a thread
-     */
+    /** Records the latest task to be executed on a thread (Thread to Task). */
     private Hashtable threadTasks = new Hashtable();
+
+    /** Records the latest task to be executed on a thread Group. */
+    private Hashtable threadGroupTasks = new Hashtable();
+
 
     /**
      *  Store symbol tables
@@ -217,6 +223,48 @@ public class Project {
             // swallow as we've hit the max class version that
             // we have
         }
+    }
+
+    /**
+     * Called to handle any input requests.
+     */
+    private InputHandler inputHandler = null;
+
+    /**
+     * The default input stream used to read any input
+     */
+    private InputStream defaultInputStream = null;
+
+    /**
+     * Sets the input handler
+     *
+     * @param handler the InputHandler instance to use for gathering input.
+     */
+    public void setInputHandler(InputHandler handler) {
+        inputHandler = handler;
+    }
+
+    /**
+     * Set the default System input stream. Normally this stream is set to
+     * System.in. This inputStream is used when no task inptu redirection is
+     * being performed.
+     *
+     * @param defaultInputStream the default input stream to use when input
+     *        is reuested.
+     * @since Ant 1.6
+     */
+    public void setDefaultInputStream(InputStream defaultInputStream) {
+        this.defaultInputStream = defaultInputStream;
+    }
+
+    /**
+     * Retrieves the current input handler.
+     *
+     * @return the InputHandler instance currently in place for the project
+     *         instance.
+     */
+    public InputHandler getInputHandler() {
+        return inputHandler;
     }
 
     private FileUtils fileUtils;
@@ -302,12 +350,17 @@ public class Project {
 
     private void autoLoadDefinitions() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProperty("ant.home"),"autolib"));
-        ds.scan();
-        String dirs[] = ds.getIncludedDirectories();
-        for (int i = 0; i < dirs.length; i++) {
-            autoLoad(ds.getBasedir(), dirs[i]);
-        }
+        try {
+            File autolib=new File(getProperty("ant.home"),"autolib");
+            log("scanning the autolib directory "+autolib.toString(),MSG_DEBUG);
+            ds.setBasedir(autolib);
+            ds.scan();
+            String dirs[] = ds.getIncludedDirectories();
+            for (int i = 0; i < dirs.length; i++) {
+                autoLoad(ds.getBasedir(), dirs[i]);
+            }
+        } catch (Exception e) {}
+
     }
 
     private void autoLoad(File base, String dir) {
@@ -343,19 +396,57 @@ public class Project {
 
 
     /**
-     *  Initialise the project. This involves setting the default task
-     *  definitions and loading the system properties.
+     * Initialises the project.
      *
-     *@exception  BuildException  Description of the Exception
+     * This involves setting the default task definitions and loading the
+     * system properties.
+     *
+     * @exception BuildException if the default task list cannot be loaded
      */
     public void init() throws BuildException {
         setJavaVersionProperty();
-        setSystemProperties();
         if (!isRoleDefined(TASK_ROLE)) {
             // Top project, need to load the core definitions
             loadDefinitions();
         }
+        String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
+
+        try {
+            Properties props = new Properties();
+            InputStream in = this.getClass().getResourceAsStream(defs);
+            if (in == null) {
+                throw new BuildException("Can't load default task list");
+            }
+            props.load(in);
+            in.close();
+            ((AntTaskTable) taskClassDefinitions).addDefinitions(props);
+
+
+        } catch (IOException ioe) {
+            throw new BuildException("Can't load default task list");
+        }
+
+        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
+
+        try {
+            Properties props = new Properties();
+            InputStream in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException("Can't load default datatype list");
+            }
+            props.load(in);
+            in.close();
+
+            ((AntTaskTable) dataClassDefinitions).addDefinitions(props);
+
+
+        } catch (IOException ioe) {
+            throw new BuildException("Can't load default datatype list");
+        }
+
+        setSystemProperties();
     }
+
 
 
     /**
@@ -1223,13 +1314,16 @@ public class Project {
 
 
     /**
-     *  Description of the Method
+     * Demultiplexes output so that each task receives the appropriate
+     * messages. If the current thread is not currently executing a task,
+     * the message is logged directly.
      *
-     *@param  line     Description of the Parameter
-     *@param  isError  Description of the Parameter
+     * @param line Message to handle. Should not be <code>null</code>.
+     * @param isError Whether the text represents an error (<code>true</code>)
+     *        or information (<code>false</code>).
      */
     public void demuxOutput(String line, boolean isError) {
-        Task task = (Task) threadTasks.get(Thread.currentThread());
+        Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
         } else {
@@ -1240,6 +1334,75 @@ public class Project {
             }
         }
     }
+
+    /**
+     * Read data from the default input stream. If no default has been
+     * specified, System.in is used.
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     *
+     * @exception IOException if the data cannot be read
+     * @since Ant 1.6
+     */
+    public int defaultInput(byte[] buffer, int offset, int length)
+        throws IOException {
+        if (defaultInputStream != null) {
+            return defaultInputStream.read(buffer, offset, length);
+        } else {
+            return System.in.read(buffer, offset, length);
+        }
+    }
+
+    /**
+     * Demux an input request to the correct task.
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     *
+     * @exception IOException if the data cannot be read
+     * @since Ant 1.6
+     */
+    public int demuxInput(byte[] buffer, int offset, int length)
+        throws IOException {
+        Task task = getThreadTask(Thread.currentThread());
+        if (task == null) {
+            return defaultInput(buffer, offset, length);
+        } else {
+            return task.handleInput(buffer, offset, length);
+        }
+    }
+
+    /**
+     * Demultiplexes flush operation so that each task receives the appropriate
+     * messages. If the current thread is not currently executing a task,
+     * the message is logged directly.
+     *
+     * @since Ant 1.5.2
+     *
+     * @param line Message to handle. Should not be <code>null</code>.
+     * @param isError Whether the text represents an error (<code>true</code>)
+     *        or information (<code>false</code>).
+     */
+    public void demuxFlush(String line, boolean isError) {
+        Task task = getThreadTask(Thread.currentThread());
+        if (task == null) {
+            fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
+        } else {
+            if (isError) {
+                task.handleErrorFlush(line);
+            } else {
+                task.handleFlush(line);
+            }
+        }
+    }
+
 
 
     /**
@@ -1646,21 +1809,35 @@ public class Project {
 
 
     /**
-     *  Adds a feature to the Reference attribute of the Project object
+     * Adds a reference to the project.
      *
-     *@param  name   The feature to be added to the Reference attribute
-     *@param  value  The feature to be added to the Reference attribute
+     * @param name The name of the reference. Must not be <code>null</code>.
+     * @param value The value of the reference. Must not be <code>null</code>.
      */
     public void addReference(String name, Object value) {
-        Object o = references.get(name);
-        if (null != o && o != value
-                 && (!(o instanceof RoleAdapter)
-                 || ((RoleAdapter) o).getProxy() != value)) {
-            log("Overriding previous definition of reference to " + name,
+        synchronized (references) {
+            Object old = ((AntRefTable) references).getReal(name);
+            if (old == value) {
+                // no warning, this is not changing anything
+                return;
+            }
+            if (old != null && !(old instanceof UnknownElement)) {
+                log("Overriding previous definition of reference to " + name,
                     MSG_WARN);
+            }
+
+            String valueAsString = "";
+            try {
+                valueAsString = value.toString();
+            } catch (Throwable t) {
+                log("Caught exception (" + t.getClass().getName() + ")"
+                    + " while expanding " + name + ": " + t.getMessage(),
+                    MSG_WARN);
+            }
+            log("Adding reference: " + name + " -> " + valueAsString,
+                MSG_DEBUG);
+            references.put(name, value);
         }
-        log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
-        references.put(name, value);
     }
 
 
@@ -1682,6 +1859,45 @@ public class Project {
         return references.get(key);
     }
 
+
+    /**
+     * Returns a description of the type of the given element, with
+     * special handling for instances of tasks and data types.
+     * <p>
+     * This is useful for logging purposes.
+     *
+     * @param element The element to describe.
+     *                Must not be <code>null</code>.
+     *
+     * @return a description of the element type
+     *
+     * @since 1.95, Ant 1.5
+     */
+    public String getElementName(Object element) {
+        Hashtable elements = taskClassDefinitions;
+        Class elementClass = element.getClass();
+        String typeName = "task";
+        if (!elements.contains(elementClass)) {
+            elements = dataClassDefinitions;
+            typeName = "data type";
+            if (!elements.contains(elementClass)) {
+                elements = null;
+            }
+        }
+
+        if (elements != null) {
+            Enumeration e = elements.keys();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                Class clazz = (Class) elements.get(name);
+                if (elementClass.equals(clazz)) {
+                    return "The <" + name + "> " + typeName;
+                }
+            }
+        }
+
+        return "Class " + elementClass.getName();
+    }
 
     /**
      *  send build started event to the listeners
@@ -1827,6 +2043,166 @@ public class Project {
     protected void fireMessageLogged(Task task, String message, int priority) {
         BuildEvent event = new BuildEvent(task);
         fireMessageLoggedEvent(event, message, priority);
+    }
+    /**
+     * Register a task as the current task for a thread.
+     * If the task is null, the thread's entry is removed.
+     *
+     * @param thread the thread on which the task is registered.
+     * @param task the task to be registered.
+     * @since Ant 1.5
+     */
+    public synchronized void registerThreadTask(Thread thread, Task task) {
+        if (task != null) {
+            threadTasks.put(thread, task);
+            threadGroupTasks.put(thread.getThreadGroup(), task);
+        } else {
+            threadTasks.remove(thread);
+            threadGroupTasks.remove(thread.getThreadGroup());
+        }
+    }
+
+    /**
+     * Get the current task assopciated with a thread, if any
+     *
+     * @param thread the thread for which the task is required.
+     * @return the task which is currently registered for the given thread or
+     *         null if no task is registered.
+     */
+    public Task getThreadTask(Thread thread) {
+        Task task = (Task) threadTasks.get(thread);
+        if (task == null) {
+            ThreadGroup group = thread.getThreadGroup();
+            while (task == null && group != null) {
+                task = (Task) threadGroupTasks.get(group);
+                group = group.getParent();
+            }
+        }
+        return task;
+    }
+
+
+    // Should move to a separate public class - and have API to add
+    // listeners, etc.
+    private static class AntRefTable extends Hashtable {
+        Project project;
+        public AntRefTable(Project project) {
+            super();
+            this.project = project;
+        }
+
+        /** Returns the unmodified original object.
+         * This method should be called internally to
+         * get the 'real' object.
+         * The normal get method will do the replacement
+         * of UnknownElement ( this is similar with the JDNI
+         * refs behavior )
+         */
+        public Object getReal(Object key) {
+            return super.get(key);
+        }
+
+        /** Get method for the reference table.
+         *  It can be used to hook dynamic references and to modify
+         * some references on the fly - for example for delayed
+         * evaluation.
+         *
+         * It is important to make sure that the processing that is
+         * done inside is not calling get indirectly.
+         *
+         * @param key
+         * @return
+         */
+        public Object get(Object key) {
+            //System.out.println("AntRefTable.get " + key);
+            Object o = super.get(key);
+            if (o instanceof UnknownElement) {
+                // Make sure that
+                ((UnknownElement) o).maybeConfigure();
+                o = ((UnknownElement) o).getTask();
+            }
+            return o;
+        }
+    }
+
+    private static class AntTaskTable extends LazyHashtable {
+        Project project;
+        Properties props;
+        boolean tasks = false;
+
+        public AntTaskTable(Project p, boolean tasks) {
+            this.project = p;
+            this.tasks = tasks;
+        }
+
+        public void addDefinitions(Properties props) {
+            this.props = props;
+        }
+
+        protected void initAll() {
+            if (initAllDone ) return;
+            project.log("InitAll", Project.MSG_DEBUG);
+            if (props==null ) return;
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String key = (String) enum.nextElement();
+                Class taskClass=getTask( key );
+                if (taskClass!=null ) {
+                    // This will call a get() and a put()
+                    if (tasks )
+                        project.addTaskDefinition(key, taskClass);
+                    else
+                        project.addDataTypeDefinition(key, taskClass );
+                }
+            }
+            initAllDone=true;
+        }
+
+        protected Class getTask(String key) {
+            if (props==null ) return null; // for tasks loaded before init()
+            String value=props.getProperty(key);
+            if (value==null) {
+                //project.log( "No class name for " + key, Project.MSG_VERBOSE );
+                return null;
+            }
+            try {
+                Class taskClass=null;
+                if (project.getCoreLoader() != null &&
+                    !("only".equals(project.getProperty("build.sysclasspath")))) {
+                    try {
+                        taskClass=project.getCoreLoader().loadClass(value);
+                        if (taskClass != null ) return taskClass;
+                    } catch( Exception ex ) {
+                    }
+                }
+                taskClass = Class.forName(value);
+                return taskClass;
+            } catch (NoClassDefFoundError ncdfe) {
+                project.log("Could not load a dependent class ("
+                        + ncdfe.getMessage() + ") for task " + key, Project.MSG_DEBUG);
+            } catch (ClassNotFoundException cnfe) {
+                project.log("Could not load class (" + value
+                        + ") for task " + key, Project.MSG_DEBUG);
+            }
+            return null;
+        }
+
+        // Hashtable implementation
+        public Object get( Object key ) {
+            Object orig=super.get( key );
+            if (orig!= null ) return orig;
+            if (! (key instanceof String) ) return null;
+            project.log("Get task " + key, Project.MSG_DEBUG );
+            Object taskClass=getTask( (String) key);
+            if (taskClass != null)
+                super.put( key, taskClass );
+            return taskClass;
+        }
+
+        public boolean containsKey(Object key) {
+            return get(key) != null;
+        }
+
     }
 
 }
