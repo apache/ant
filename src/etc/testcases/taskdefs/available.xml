@@ -152,4 +152,14 @@
     <available file="pvcs.xml" filepath="..:optional"
                property="test" />
   </target>
+
+  <target name="testDoubleBasedir">
+    <echo>testing ${basedir}${file.separator}${ant.file}</echo>
+    <fail>
+      <condition>
+        <available file="${basedir}${file.separator}${ant.file}" />
+      </condition>
+    </fail>
+  </target>
+
 </project>

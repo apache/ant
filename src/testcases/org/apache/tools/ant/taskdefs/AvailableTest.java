@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002, 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
+ * JUnit test for the Available task/condition.
  */
 public class AvailableTest extends BuildFileTest {
 
@@ -164,25 +165,25 @@ public class AvailableTest extends BuildFileTest {
     // Core class that exists in system classpath is ignored, but found in specified classpath
     public void test21() {
         executeTarget("test21");
-        assertEquals("true",project.getProperty("test"));
+        assertEquals("true", project.getProperty("test"));
     }
 
     // Core class that exists in system classpath is not ignored with ignoresystemclass="false"
     public void test22() {
         executeTarget("test22");
-        assertEquals("true",project.getProperty("test"));
+        assertEquals("true", project.getProperty("test"));
     }
 
     // Core class that exists in system classpath is not ignored with default ignoresystemclasses value
     public void test23() {
         executeTarget("test23");
-        assertEquals("true",project.getProperty("test"));
+        assertEquals("true", project.getProperty("test"));
     }
 
     // Class is found in specified classpath
     public void test24() {
         executeTarget("test24");
-        assertEquals("true",project.getProperty("test"));
+        assertEquals("true", project.getProperty("test"));
     }
 
     // File is not found in specified filepath
@@ -194,6 +195,11 @@ public class AvailableTest extends BuildFileTest {
     // File is not found in specified filepath
     public void testSearchInPathIsThere() {
         executeTarget("searchInPathIsThere");
-        assertEquals("true",project.getProperty("test"));
+        assertEquals("true", project.getProperty("test"));
+    }
+
+    // test when file begins with basedir twice
+    public void testDoubleBasedir() {
+        executeTarget("testDoubleBasedir");
     }
 }
