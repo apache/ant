@@ -18,7 +18,6 @@
 # the code is not included. 
 #
 # created:         2000-8-24
-# last modified:   $Date$
 # author:          Steve Loughran steve_l@sourceforge.net
 #######################################################################
 #
