@@ -55,8 +55,10 @@
 package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -120,6 +122,7 @@ public class JavaCC extends Task {
     protected static final String COM_JJDOC_CLASS = "jjdoc.JJDocMain";
 
     protected static final String ORG_PACKAGE = "org.netbeans.javacc.";
+    protected static final String ORG_JAVACC_PACKAGE = "org.javacc.";
     protected static final String ORG_JAVACC_CLASS = "parser.Main";
     protected static final String ORG_JJTREE_CLASS = COM_JJTREE_CLASS;
     protected static final String ORG_JJDOC_CLASS = COM_JJDOC_CLASS;
@@ -313,7 +316,7 @@ public class JavaCC extends Task {
             throw new BuildException("Outputdir not a directory.");
         }
         cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
-            + outputDirectory.getAbsolutePath());
+                                       + outputDirectory.getAbsolutePath());
 
         // determine if the generated java file is up-to-date
         final File javaFile = getOutputJavaFile(outputDirectory, target);
@@ -368,50 +371,76 @@ public class JavaCC extends Task {
         String mainClass = null;
 
         switch (majorVersion) {
-            case 1:
-            case 2:
-                packagePrefix = COM_PACKAGE;
+        case 1:
+        case 2:
+            packagePrefix = COM_PACKAGE;
 
-                switch (type) {
-                    case TASKDEF_TYPE_JAVACC:
-                        mainClass = COM_JAVACC_CLASS;
-
-                        break;
-
-                    case TASKDEF_TYPE_JJTREE:
-                        mainClass = COM_JJTREE_CLASS;
-
-                        break;
-
-                    case TASKDEF_TYPE_JJDOC:
-                        mainClass = COM_JJDOC_CLASS;
-
-                        break;
-                }
+            switch (type) {
+            case TASKDEF_TYPE_JAVACC:
+                mainClass = COM_JAVACC_CLASS;
 
                 break;
 
-            case 3:
-                packagePrefix = ORG_PACKAGE;
-
-                switch (type) {
-                    case TASKDEF_TYPE_JAVACC:
-                        mainClass = ORG_JAVACC_CLASS;
-
-                        break;
-
-                    case TASKDEF_TYPE_JJTREE:
-                        mainClass = ORG_JJTREE_CLASS;
-
-                        break;
-
-                    case TASKDEF_TYPE_JJDOC:
-                        mainClass = ORG_JJDOC_CLASS;
-
-                        break;
-                }
+            case TASKDEF_TYPE_JJTREE:
+                mainClass = COM_JJTREE_CLASS;
 
                 break;
+
+            case TASKDEF_TYPE_JJDOC:
+                mainClass = COM_JJDOC_CLASS;
+
+                break;
+            }
+
+            break;
+
+        case 3:
+            /* 
+             * This is where the fun starts, JavaCC 3.0 uses
+             * org.netbeans.javacc, 3.1 uses org.javacc - I wonder
+             * which version is going to use net.java.javacc.
+             *
+             * Look into to the archive to pick up the best
+             * package.
+             */
+            ZipFile zf = null;
+            try {
+                zf = new ZipFile(getArchiveFile(home));
+                if (zf.getEntry(ORG_PACKAGE.replace('.', '/')) != null) {
+                    packagePrefix = ORG_PACKAGE;
+                } else {
+                    packagePrefix = ORG_JAVACC_PACKAGE;
+                }
+            } catch (IOException e) {
+                throw new BuildException("Error reading javacc.jar", e);
+            } finally {
+                if (zf != null) {
+                    try {
+                        zf.close();
+                    } catch (IOException e) {
+                        throw new BuildException(e);
+                    }
+                }
+            }
+
+            switch (type) {
+            case TASKDEF_TYPE_JAVACC:
+                mainClass = ORG_JAVACC_CLASS;
+
+                break;
+
+            case TASKDEF_TYPE_JJTREE:
+                mainClass = ORG_JJTREE_CLASS;
+
+                break;
+
+            case TASKDEF_TYPE_JJDOC:
+                mainClass = ORG_JJDOC_CLASS;
+
+                break;
+            }
+
+            break;
         }
 
         return packagePrefix + mainClass;
