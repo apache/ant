@@ -9,11 +9,10 @@ package org.apache.myrmidon.framework;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.property.PropertyException;
-import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class representing a condition.
@@ -45,35 +44,39 @@ public class Condition
         return m_isIfCondition;
     }
 
-    public boolean evaluate( final Context context )
+    public boolean evaluate( final TaskContext context )
         throws ContextException
     {
         boolean result = false;
 
         try
         {
-            final Object resolved =
-                PropertyUtil.resolveProperty( getCondition(), context, false );
-
+            final Object resolved = context.resolveValue( getCondition() );
             if( null != resolved )
             {
                 final Object object = context.get( resolved );
-                //TODO: Do more than just check for presence????????????
-
-                //true as object present
-                result = true;
+                final String string = object.toString();
+                if( null == string || string.equals( "false" ) )
+                {
+                    result = false;
+                }
+                else
+                {
+                    result = true;
+                }
             }
         }
-        catch( final ContextException ce )
+        catch( final TaskException te )
         {
             result = false;
         }
-        catch( final PropertyException pe )
-        {
-            final String message = REZ.getString( "condition.no-resolve.error", m_condition );
-            throw new ContextException( message, pe );
-        }
-
+        /*
+                catch( final PropertyException pe )
+                {
+                    final String message = REZ.getString( "condition.no-resolve.error", m_condition );
+                    throw new ContextException( message, pe );
+                }
+        */
         if( !m_isIfCondition )
         {
             result = !result;
