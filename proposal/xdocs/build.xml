@@ -54,7 +54,7 @@
               destdir="${gen.dir}"
               classpathref="xdoclet.classpath">
       <fileset dir="${src.dir}">
-        <include name="*.java" unless="class.name"/>
+        <include name="**/*.java" unless="class.name"/>
         <include name="${class.name}.java" if="class.name"/>
       </fileset>
       <template subTaskClassName="org.apache.tools.ant.xdoclet.AntSubTask"
