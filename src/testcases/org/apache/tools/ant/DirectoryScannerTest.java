@@ -120,7 +120,11 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/beta/gamma/GAMMA.XML"});
         ds.scan();
-        compareFiles(ds, new String[] {}, new String[] {});
+        if (Os.isFamily("dos")) {
+            compareFiles(ds, new String[] {"alpha/beta/gamma/GAMMA.XML"}, new String[] {});
+        } else {
+            compareFiles(ds, new String[] {}, new String[] {});
+        }
     }
 
     public void testFullPathMatchesCaseInsensitive() {
@@ -129,8 +133,13 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/beta/gamma/GAMMA.XML"});
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
-                     new String[] {});
+        if (Os.isFamily("dos")) {
+            compareFiles(ds, new String[] {"alpha/beta/gamma/GAMMA.XML"},
+                         new String[] {});
+        } else {
+            compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                         new String[] {});
+        }
     }
 
     public void test2ButCaseInsesitive() {
@@ -139,9 +148,15 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setIncludes(new String[] {"ALPHA/"});
         ds.setCaseSensitive(false);
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        if (Os.isFamily("dos")) {
+            compareFiles(ds, new String[] {"ALPHA/beta/beta.xml",
+                                           "ALPHA/beta/gamma/gamma.xml"},
+                         new String[] {"ALPHA", "ALPHA/beta", "ALPHA/beta/gamma"});
+        }  else {
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+        }
     }
 
     public void testAllowSymlinks() {
