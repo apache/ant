@@ -72,6 +72,9 @@ Fixed bugs:
 * Target location is not set for default target.
   Bugzilla report 32267.
 
+* Incorrect classloader parent in junittask when using with ant-junit.jar and junit.jar
+  not in the project classloader. Bugzilla report 28474.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

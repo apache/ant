@@ -1272,6 +1272,10 @@ public class JUnitTask extends Task {
                     classpath.append(antRuntimeClasses);
                 }
                 classLoader = getProject().createClassLoader(classpath);
+                if (getClass().getClassLoader() != null
+                    && getClass().getClassLoader() != Project.class.getClassLoader()) {
+                    classLoader.setParent(getClass().getClassLoader());
+                }
                 classLoader.setParentFirst(false);
                 classLoader.addJavaLibraries();
                 log("Using CLASSPATH " + classLoader.getClasspath(), 
