@@ -437,7 +437,13 @@ public class Jar extends Zip {
                 Project.MSG_VERBOSE);
 
             try {
-                Manifest newManifest = getManifest(new InputStreamReader(is));
+                Manifest newManifest = null;
+                if (is != null) {
+                    newManifest = getManifest(new InputStreamReader(is));
+                } else {
+                    newManifest = getManifest(file);
+                }
+
                 if (filesetManifest == null) {
                     filesetManifest = newManifest;
                 } else {

@@ -92,7 +92,7 @@ public class CollectionUtils {
             }
         }
         
-        // don't need to check e2.hasMoreElements as the Vectors
+        // don't need to check e2.hasMoreElements as the Vectors have
         // same size.
 
         return true;
