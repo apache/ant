@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<project>
+    <target name="once">
+        <echo>once</echo>
+    </target>
+
+    <target name="twice">
+        <echo>twice-a</echo>
+    </target>
+
+    <target name="twice">
+        <echo>twice-b</echo>
+    </target>
+</project>

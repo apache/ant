@@ -34,7 +34,8 @@ import junit.framework.TestSuite;
  * Very limited test class for Project. Waiting to be extended.
  *
  * @author Stefan Bodewig
- */
+ * @author Jan Matèrne
+*/
 public class ProjectTest extends TestCase {
 
     private Project p;
@@ -203,6 +204,13 @@ public class ProjectTest extends TestCase {
         assertTrue(p.getTaskDefinitions().contains(org.apache.tools.ant.taskdefs.Echo.class));
     }
 
+    // Bug in Ant 1.6/1.7 found by Dominique: there must no multiple
+    // targets with the same name in a project.
+    public void testDuplicateTargets() {
+        BFT bft = new BFT("", "core/duplicate-target.xml");
+        bft.expectBuildException("twice", "Duplicate target");
+    }
+
     private class DummyTaskPrivate extends Task {
         public DummyTaskPrivate() {}
         public void execute() {}
@@ -212,6 +220,39 @@ public class ProjectTest extends TestCase {
         public DummyTaskProtected() {}
         public void execute() {}
     }
+
+    private class BFT extends org.apache.tools.ant.BuildFileTest {
+        BFT(String name, String buildfile) {
+            super(name);
+            this.buildfile = buildfile;
+            setUp();
+        }
+
+        // avoid multiple configurations
+        boolean isConfigured = false;
+
+        // the buildfile to use
+        String buildfile = "";
+
+        public void setUp() {
+            if (!isConfigured) {
+                configureProject("src/etc/testcases/"+buildfile);
+                isConfigured = true;
+            }
+        }
+
+        public void tearDown() { }
+
+        // call a target
+        public void doTarget(String target) {
+            if (!isConfigured) setUp();
+            executeTarget(target);
+        }
+
+        public org.apache.tools.ant.Project getProject() {
+            return super.getProject();
+        }
+    }//class-BFT
 
 }
 
