@@ -490,7 +490,7 @@ public class ProjectHelper {
                 fragments.addElement(value.substring(pos + 1, pos + 2));
                 prev = pos + 2;
                 */
-                if(value.charAt(pos + 1) == '$') {
+                if (value.charAt(pos + 1) == '$') {
                     //backwards compatibility two $ map to one mode
                     fragments.addElement("$");
                     prev = pos + 2;

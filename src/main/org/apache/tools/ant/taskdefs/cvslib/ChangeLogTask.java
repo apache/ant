@@ -302,7 +302,7 @@ public class ChangeLogTask extends Task {
             final CVSEntry[] entrySet = parser.getEntrySetAsArray();
             final CVSEntry[] filteredEntrySet = filterEntrySet(entrySet);
 
-            replaceAuthorIdWithName(userList,filteredEntrySet);
+            replaceAuthorIdWithName(userList, filteredEntrySet);
 
             writeChangeLog(filteredEntrySet);
 
@@ -393,7 +393,7 @@ public class ChangeLogTask extends Task {
      */
     private void replaceAuthorIdWithName(final Properties userList,
                                          final CVSEntry[] entrySet) {
-        for (int i = 0; i < entrySet.length; i++ ) {
+        for (int i = 0; i < entrySet.length; i++) {
 
             final CVSEntry entry = entrySet[ i ];
             if (userList.containsKey(entry.getAuthor())) {

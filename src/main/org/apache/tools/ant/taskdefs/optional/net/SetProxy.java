@@ -96,7 +96,7 @@ public class SetProxy extends Task {
     /**
      * list of non proxy hosts
      */ 
-    private String nonProxyHosts=null;
+    private String nonProxyHosts = null;
 
     /**
      * set a proxy host. the port should be defined too
@@ -155,14 +155,14 @@ public class SetProxy extends Task {
      */
 
     public void applyWebProxySettings() {
-        boolean settingsChanged=false;
-        boolean enablingProxy=false;
+        boolean settingsChanged = false;
+        boolean enablingProxy = false;
         Properties sysprops = System.getProperties();
-        if(proxyHost!=null) {
-            settingsChanged=true;
-            if (proxyHost.length()!=0) {
+        if (proxyHost != null) {
+            settingsChanged = true;
+            if (proxyHost.length() != 0) {
                 traceSettingInfo();
-                enablingProxy=true;
+                enablingProxy = true;
                 sysprops.put("http.proxyHost", proxyHost);
                 String portString = Integer.toString(proxyPort);
                 sysprops.put("http.proxyPort", portString);
@@ -170,12 +170,12 @@ public class SetProxy extends Task {
                 sysprops.put("https.proxyPort", portString);
                 sysprops.put("ftp.proxyHost", proxyHost);
                 sysprops.put("ftp.proxyPort", portString);
-                if(nonProxyHosts!=null) {
+                if (nonProxyHosts != null) {
                     sysprops.put("http.nonProxyHosts", nonProxyHosts);
                     sysprops.put("ftp.nonProxyHosts", nonProxyHosts);
                 }                    
             } else {
-                log("resetting http proxy",Project.MSG_VERBOSE);
+                log("resetting http proxy", Project.MSG_VERBOSE);
                 sysprops.remove("http.proxyPort");
                 sysprops.remove("https.proxyHost");
                 sysprops.remove("https.proxyPort");
@@ -186,13 +186,13 @@ public class SetProxy extends Task {
 
         //socks
         if (socksProxyHost != null) {
-            settingsChanged=true;
-            if(socksProxyHost.length()!=0) {
-                enablingProxy=true;
+            settingsChanged = true;
+            if (socksProxyHost.length() != 0) {
+                enablingProxy = true;
                 sysprops.put("socksProxyHost", socksProxyHost);
                 sysprops.put("socksProxyPort", Integer.toString(socksProxyPort));
             } else {
-                log("resetting socks proxy",Project.MSG_VERBOSE);
+                log("resetting socks proxy", Project.MSG_VERBOSE);
                 sysprops.remove("socksProxyHost");
                 sysprops.remove("socksProxyPort");
             }
@@ -200,7 +200,7 @@ public class SetProxy extends Task {
         
 
         //for Java1.1 we need to tell the system that the settings are new
-        if(settingsChanged && project.getJavaVersion() == Project.JAVA_1_1) {
+        if (settingsChanged && project.getJavaVersion() == Project.JAVA_1_1) {
             legacyResetProxySettingsCall(enablingProxy);
         }
     }
@@ -210,7 +210,7 @@ public class SetProxy extends Task {
      */ 
     private void traceSettingInfo() {
         log("Setting proxy to " 
-                + (proxyHost!=null?proxyHost:"''") 
+                + (proxyHost != null ? proxyHost : "''") 
                 + ":" + proxyPort,
                 Project.MSG_VERBOSE);
     }
