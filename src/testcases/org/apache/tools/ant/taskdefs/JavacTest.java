@@ -143,18 +143,28 @@ public class JavacTest extends TestCase {
         assertEquals("both are jikes", 1, args.length);
         assertEquals(testArg, args[0]);
 
-        project.unsetProperty("build.compiler");
-        arg.setImplementation("extJavac");
-        javac.setFork("true");
-        args = javac.getCurrentCompilerArgs();
-        assertEquals("both are forked javac", 1, args.length);
-        assertEquals(testArg, args[0]);
-
         arg.setLine(testArg);
         args = javac.getCurrentCompilerArgs();
         assertEquals("split at space", 2, args.length);
         assertEquals(ford, args[0]);
         assertEquals(prefect, args[1]);
+    }
+
+    /**
+     * Test nested compiler args in the fork="true" and
+     * implementation="extJavac" case.
+     */
+    public void testCompilerArgForForkAndExtJavac() {
+        Javac.ImplementationSpecificArgument arg = javac.createCompilerArg();
+        String ford = "Ford";
+        String prefect = "Prefect";
+        String testArg = ford + " " + prefect;
+        arg.setValue(testArg);
+        arg.setImplementation("extJavac");
+        javac.setFork("true");
+        String[] args = javac.getCurrentCompilerArgs();
+        assertEquals("both are forked javac", 1, args.length);
+        assertEquals(testArg, args[0]);
     }
 
 }
