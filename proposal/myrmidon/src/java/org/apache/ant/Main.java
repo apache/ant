@@ -20,21 +20,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.ant.project.LogTargetToListenerAdapter;
-import org.apache.myrmidon.model.Project;
-import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
-import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.components.embeddor.Embeddor;
-import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
-import org.apache.myrmidon.api.JavaVersion;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
-import org.apache.avalon.excalibur.cli.CLUtil;
 import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
+import org.apache.avalon.excalibur.cli.CLUtil;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.activity.Disposable;
@@ -45,9 +36,17 @@ import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Hierarchy;
-import org.apache.log.Logger;
 import org.apache.log.LogTarget;
+import org.apache.log.Logger;
 import org.apache.log.Priority;
+import org.apache.myrmidon.api.DefaultTaskContext;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.components.builder.ProjectBuilder;
+import org.apache.myrmidon.components.embeddor.Embeddor;
+import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
+import org.apache.myrmidon.launcher.LauncherClassLoader;
+import org.apache.myrmidon.listeners.ProjectListener;
+import org.apache.myrmidon.model.Project;
 
 /**
  * The class to kick the tires and light the fires.
@@ -227,7 +226,7 @@ public class Main
             System.err.println( "Error: " + parser.getErrorString() );
             return;
         }
-        
+
         final List clOptions = parser.getArguments();
         final int size = clOptions.size();
         final ArrayList targets = new ArrayList();
@@ -408,11 +407,11 @@ public class Main
             throw new AntException( "Unknown log level - " + logLevel );
         }
 
-        final Logger logger = 
+        final Logger logger =
             Hierarchy.getDefaultHierarchy().getLoggerFor( "ant" );
 
         logger.setPriority( priority );
-        
+
         return logger;
     }
 

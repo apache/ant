@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.io.IOException;

@@ -5,12 +5,10 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
-
+package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.ExceptionUtil;
@@ -110,9 +108,7 @@ public class DefaultProjectBuilder
         //get project-level attributes
         final String baseDirectoryName = configuration.getAttribute( "basedir" );
         final String defaultTarget = configuration.getAttribute( "default" );
-
-        //Ignore Project name in the future ok??
-        //final String projectName = configuration.getAttribute( "name" );
+        //final String name = configuration.getAttribute( "name" );
 
         //determine base directory for project
         final File baseDirectory =
@@ -124,6 +120,7 @@ public class DefaultProjectBuilder
         final DefaultProject project = new DefaultProject();
         project.setDefaultTargetName( defaultTarget );
         project.setBaseDirectory( baseDirectory );
+        //project.setName( name );
 
         //build using all top-level attributes
         buildTopLevelProject( project, configuration );

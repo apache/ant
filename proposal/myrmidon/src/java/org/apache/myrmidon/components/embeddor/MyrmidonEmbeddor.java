@@ -10,7 +10,6 @@ package org.apache.myrmidon.components.embeddor;
 import java.io.File;
 import org.apache.ant.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.tasklet.engine.TskDeployer;
@@ -27,6 +26,7 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
+import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.executor.Executor;
 
@@ -159,19 +159,19 @@ public class MyrmidonEmbeddor
 
         //create all the default properties for components
         defaults.setParameter( "ant.comp.converter",
-                              "org.apache.ant.convert.engine.DefaultConverterEngine" );
+                               "org.apache.ant.convert.engine.DefaultConverterEngine" );
         defaults.setParameter( "ant.comp.datatype",
-                              "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
+                               "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
         defaults.setParameter( "ant.comp.task",
-                              "org.apache.myrmidon.components.executor.DefaultExecutor" );
+                               "org.apache.myrmidon.components.executor.DefaultExecutor" );
         defaults.setParameter( "ant.comp.project",
-                              "org.apache.ant.project.DefaultProjectEngine" );
+                               "org.apache.ant.project.DefaultProjectEngine" );
         defaults.setParameter( "ant.comp.builder",
-                              "org.apache.ant.project.DefaultProjectBuilder" );
+                               "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
         defaults.setParameter( "ant.comp.deployer",
-                              "org.apache.ant.tasklet.engine.DefaultTskDeployer" );
+                               "org.apache.ant.tasklet.engine.DefaultTskDeployer" );
         defaults.setParameter( "ant.comp.configurer",
-                              "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
+                               "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
 
         return defaults;
     }
@@ -190,7 +190,7 @@ public class MyrmidonEmbeddor
                               m_converterEngine );
         componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
         componentManager.put( "org.apache.ant.tasklet.engine.DataTypeEngine", m_dataTypeEngine );
-        componentManager.put( "org.apache.ant.project.ProjectBuilder", m_builder );
+        componentManager.put( "org.apache.myrmidon.components.builder.ProjectBuilder", m_builder );
         componentManager.put( "org.apache.ant.tasklet.engine.TskDeployer", m_deployer );
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
 
