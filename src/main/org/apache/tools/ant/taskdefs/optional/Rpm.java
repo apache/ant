@@ -172,15 +172,7 @@ public class Rpm extends Task {
             streamhandler = new PumpStreamHandler(outputstream, errorstream);
         }
 
-        Execute exe = new Execute(streamhandler, null);
-
-        exe.setAntRun(getProject());
-        if (topDir == null) {
-            topDir = getProject().getBaseDir();
-        }
-        exe.setWorkingDirectory(topDir);
-
-        exe.setCommandline(toExecute.getCommandline());
+        Execute exe = getExecute(toExecute, streamhandler);
         try {
             log("Building the RPM based on the " + specFile + " file");
             int returncode = exe.execute();
@@ -335,5 +327,22 @@ public class Rpm extends Task {
         }
 
         return "rpm";
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    protected Execute getExecute(Commandline toExecute,
+                                 ExecuteStreamHandler streamhandler) {
+        Execute exe = new Execute(streamhandler, null);
+
+        exe.setAntRun(getProject());
+        if (topDir == null) {
+            topDir = getProject().getBaseDir();
+        }
+        exe.setWorkingDirectory(topDir);
+
+        exe.setCommandline(toExecute.getCommandline());
+        return exe;
     }
 }
