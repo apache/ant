@@ -1639,7 +1639,12 @@ public class Project {
      * @param value The value of the reference. Must not be <code>null</code>.
      */
     public void addReference(String name, Object value) {
-        if (null != references.get(name)) {
+        Object old = references.get(name);
+        if (old == value) {
+            // no warning, this is not changing anything
+            return;
+        }
+        if (old != null) {
             log("Overriding previous definition of reference to " + name, 
                 MSG_WARN);
         }
