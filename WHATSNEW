@@ -38,6 +38,11 @@ Fixed bugs:
 * <java> swallowed the stack trace of exceptions thrown by the
   executed program if run in the same VM.
 
+* If <javac> uses gcj and any of the nested <compilerarg>s implies
+  compilation to native code (like -o or --main), Ant will not pass
+  the -C switch to gcj.  This means you can now compile to native code
+  with gcj which has been impossible in Ant < 1.6.2.
+
 Other changes:
 --------------
 

@@ -102,11 +102,42 @@ public class Gcj extends DefaultCompilerAdapter {
 
         /**
          *  gcj should be set for generate class.
+         * ... if no 'compile to native' argument is passed
          */
-        cmd.createArgument().setValue("-C");
+        if (!isNativeBuild()) {
+            cmd.createArgument().setValue("-C");
+        }
 
         addCurrentCompilerArgs(cmd);
 
         return cmd;
     }
+
+    /**
+     * Whether any of the arguments given via &lt;compilerarg&gt;
+     * implies that compilation to native code is requested.
+     *
+     * @since Ant 1.6.2
+     */
+    public boolean isNativeBuild() {
+        boolean nativeBuild = false;
+        String[] additionalArguments = getJavac().getCurrentCompilerArgs();
+        int argsLength=0;
+        while (!nativeBuild && argsLength < additionalArguments.length) {
+            int conflictLength = 0;
+            while (!nativeBuild 
+                   && conflictLength < CONFLICT_WITH_DASH_C.length) {
+                nativeBuild = (additionalArguments[argsLength].startsWith
+                               (CONFLICT_WITH_DASH_C[conflictLength]));
+                conflictLength++;
+            }
+            argsLength++;
+        }
+        return nativeBuild;
+    }
+
+    private static final String [] CONFLICT_WITH_DASH_C = { 
+        "-o" , "--main=", "-D", "-fjni", "-L" 
+    };
+
 }
