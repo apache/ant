@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- Content Stylesheet for Site -->
+
+    
+<!-- start the processing -->
+    <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  
+                      <meta name="author" value="Adam Murdoch">
+  <meta name="email" value="adammurdoch@apache.org">
+        
+      <title>Apache Myrmidon - Get Involved</title>
+    </head>
+  
+    <body bgcolor="#ffffff" text="#000000" link="#525D76">    
+      <table border="0" width="100%" cellspacing="0">
+        <!-- TOP IMAGE -->
+        <tr>
+                <td colspan="2">
+    <a href="http://jakarta.apache.org"><img src="http://jakarta.apache.org/images/jakarta-logo.gif" align="left" border="0"/></a>
+    </td>
+          </tr>
+      </table>
+      <table border="0" width="100%" cellspacing="4">
+        <tr><td colspan="2">
+          <hr noshade="" size="1"/>
+        </td></tr>
+        
+        <tr>
+          <!-- LEFT SIDE NAVIGATION -->
+          <td valign="top" nowrap="true">
+                <p><strong>Myrmidon</strong></p>
+    <ul>
+          <li>      <a href="./index.html">Introduction</a>
+  </li>
+          <li>      <a href="./user.html">User Guide</a>
+  </li>
+          <li>      <a href="./todo.html">Get Involved</a>
+  </li>
+          <li>      <a href="./todo.html#Todo List">Todo List</a>
+  </li>
+        </ul>
+            </td>
+          <td align="left" valign="top">
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Get Involved"><strong>Get Involved</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>There are plenty of things you can do to help out with Myrmidon.  The Todo
+list below describes items which still need to be done.  Of course, since
+this is an open-source project, there's plenty of scope for experimentation,
+and you can pretty much make up your own items to work on.</p>
+                                <p>Some things that are worth reading if you do want to get involved:</p>
+                                <ul>
+<li>The <a href="http://jakarta.apache.org/ant/ant2/">Ant 2</a> goals and requirements.</li>
+<li>The <a href="http://jakarta.apache.org/ant/ant2/actionlist.html">Ant 1.9 Action List</a>.</li>
+<li>The Jakarta Project's <a href="http://jakarta.apache.org/site/getinvolved.html">Get Involved</a> page.</li>
+</ul>
+                                <p>There is no Ant 2 or Myrmidon mailing list yet, so direct any questions
+or comments you have to the ant-dev mailing list.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Todo List"><strong>Todo List</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>The broad goal is to grow Myrmidon from a prototype task engine into a fully
+fledged build system, that can serve as the basis for Ant 2.  The following
+sections describe some of the many things which still need to be done to
+achieve that goal.  This list is currently under construction.</p>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Self Hosting"><strong>Self Hosting</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Myrmidon must be able to build itself.  Currently, it is built using
+Ant 1.x.  Ultimately, Myrmidon should be able to build itself from exactly the
+same build file.  To start with, however, there is no need for Myrmidon to be
+able to do this.  Myrmidon should also be able to be bootstrapped (that is, be
+able to be built from scratch, without using Ant 1.x at all).</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Ant 1.x Compatibility"><strong>Ant 1.x Compatibility</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>There are 2 parts to this broad topic:  Allow Ant 1.x build scripts to be
+executed by Myrmidon, and allow Ant 1.x tasks to be executed unmodified
+by Myrmidon.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Virtual File System"><strong>Virtual File System</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>The VFS needs plenty of work:</p>
+                                <ul>
+    <li>Move and copy files/folders.</li>
+    <li>Search through a file hierarchy, using Ant-style wildcards.</li>
+    <li>Search through a file hierarchy, using a Selector interface.</li>
+    <li>The in-memory caching mechanism is pretty rudimentary at this stage.
+    It needs work to make it size capped.  In addition, some mechanism needs
+    to be provided to release and refresh cached info.
+    </li>
+    <li>Capabilities discovery.</li>
+    <li>Attributes and attribute schema.</li>
+    <li>File system layering.  That is, the ability for a file system to
+    sit on top of another file system, or a file from another file system
+    (e.g. Zip/Jar/Tar file systems, gzip/encoding file systems, virtual file
+    systems).
+    </li>
+</ul>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Command-line and Configuration Files"><strong>Command-line and Configuration Files</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>One of the goals of Ant 2 is to allow the user to easily customise and
+extend Ant.  The command-line and local configuration files, are two places
+where this would be done.  Currently, Myrmidon some customisation from the
+command-line, but does not support configuration files.</p>
+                                <ul>
+
+<li>Load configuration from system (from $ANT_HOME) and user (from $HOME)
+configuration files.</li>
+
+<li>Allow the following via config files:
+    <ul>
+        <li>Add (or override) the <code>lib</code> and <code>ext</code> directories.</li>
+        <li>Enable more than one listener, and configure the listeners from
+        the conents of the config file.</li>
+        <li>Import libraries, and set properties.</li>
+        <li>Execute tasks.</li>
+        <li>Install and configure runtime services.</li>
+    </ul>
+</li>
+
+</ul>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Documentation"><strong>Documentation</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Everyone loves writing documentation, and so a goal for Ant 2 is to
+generate a lot of reference documentation for tasks and other types directly
+from the source.  Unfortunately, there's still plenty of tutorial material
+to write.  In particular we need these:</p>
+                                <ul>
+<li>User documentation - describing things like the build file format,
+how properties work, how to use references, how sub-builds work, how to customise
+Myrmidon, and so on.</li>
+
+<li>Task writer documentation - describing things like an overview the task API,
+how configuration works, task lifecycle, how to assemble an antlib, a catalog
+of the runtime services, and so on.</li>
+
+<li>Myrmidon developer documentation - a broad outline of the architecture,
+how to build, how to test, and so on.  Also, this todo list needs plenty
+of filling out.</li>
+
+</ul>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Miscellaneous"><strong>Miscellaneous</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A completely unordered list of items, big and small:</p>
+                                <ul>
+<li>Search through the code for 'TODO' items and fix them.</li>
+<li>Add a custom task to the build to generate antlib descriptors from source.
+It would wrap XDoclet, and replace <code>antlib.xml</code>.</li>
+<li>Tidy-up CLIMain so that it calls System.exit() with a non-zero exit code,
+if the build fails.</li>
+<li>Tidy-up the 'build failed' message, so that the stack trace is only
+printed out if the log level is verbose/debug.</li>
+<li>Allow service factories to be configured from the contents of the
+<code>ant-services.xml</code> descriptor.</li>
+<li>Route external process stdout and stderr through the logger.</li>
+<li>Add verbosity level to ProjectListener LogEvent</li>
+<li>Fire ProjectListener events taskFinished(), targetFinished() and
+projectFinished() events on build failure, adding indicator methods to
+ProjectEvent.</li>
+<li>Fire ProjectListener events projectStarted() and projectFinished()
+events on start and finish of referenced projects, adding indicator methods
+to ProjectEvent.</li>
+<li>Convert PropertyUtil to a non-static PropertyResolver service.</li>
+<li>Validate project and target names in DefaultProjectBuilder - reject dodgy
+names like "," or "", or "  ".  Probably want to exclude names that start or
+end with white-space (though internal whitespace is probably fine).</li>
+<li>Detect duplicate type names.</li>
+<li>Add fully qualified type names, based on antlib name and type shorthand name.
+Allow these to be used in build files in addition to the shorthand names.</li>
+<li>Unit tests.</li>
+</ul>
+                    </blockquote>
+    </td></tr>
+  </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+              </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr><td colspan="2">
+          <hr noshade="" size="1"/>
+        </td></tr>
+        <tr><td colspan="2">
+          <div align="center"><font color="#525D76" size="-1"><em>
+          Copyright &#169; 2000-2002, Apache Software Foundation
+          </em></font></div>
+        </td></tr>
+      </table>
+    </body>
+  </html>
+<!-- end the processing -->
+
+
+
+

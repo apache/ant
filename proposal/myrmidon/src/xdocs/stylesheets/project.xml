@@ -5,6 +5,9 @@
     <body>
         <menu name="Myrmidon">
             <item name="Introduction" href="/index.html"/>
+            <item name="User Guide" href="/user.html"/>
+            <item name="Get Involved" href="/todo.html"/>
+            <item name="Todo List" href="/todo.html#Todo List"/>
         </menu>
     </body>
 

@@ -1,0 +1,346 @@
+<document>
+
+<properties>
+<author email="adammurdoch@apache.org">Adam Murdoch</author>
+<title>User Guide</title>
+</properties>
+
+<body>
+
+<section name="Building Myrmidon">
+
+<p>
+First, you will need to fetch the Myrmidon source from CVS.  The source
+can be source in the <code>proposal/myrmidon</code> directory of the
+Ant source tree.  You should check out the <code>jakarta-ant</code> CVS
+module, as described
+<a href="http://jakarta.apache.org/site/cvsindex.html">here</a>.
+</p>
+
+<p>
+To build Myrmidon, use the <code>build.xml</code> build script.  You will need
+to use Ant 1.4.1 or later.  The default target builds the Myrmidon distribution
+into the <code>dist</code> directory.  The distribution is a ready-to-run
+installation of Myrmidon.
+</p>
+
+</section>
+
+<section name="Running Myrmidon">
+
+<p>
+To run Myrmidon, use one of the following methods:
+</p>
+
+<subsection name="Launcher Script">
+
+<p>
+On Windows and Unix platforms, you can use the <code>ant</code> script
+in the distribution's <code>bin</code> directory.  The following environment
+variables can be used, but are not required (except on Windows 9x - see below).
+</p>
+
+<p>
+
+</p>
+
+<table>
+    <tr><th>Variable</th><th>Description</th></tr>
+    <tr>
+        <td>JAVA_HOME</td>
+        <td>The directory that the JDK is installed in.</td>
+    </tr>
+    <tr>
+        <td>JAVACMD</td>
+        <td>The command to use to start the JVM.  Defaults to <code>java</code>.</td>
+    </tr>
+    <tr>
+        <td>ANT_HOME</td>
+        <td>
+            The directory containing the Myrmidon distribution.  This must be
+            set when running on Windows 95, 98 or Me.
+        </td>
+    </tr>
+</table>
+
+</subsection>
+
+<subsection name="Executable Jar File">
+
+<p>
+The Myrmidon distribution includes an executable Jar file, which can be used
+to run Myrmidon.  Use the following command:
+</p>
+<pre>
+prompt> <i>java</i> -jar <i>ant-home</i>/bin/myrmidon-launcher.jar <i>options</i>
+</pre>
+
+</subsection>
+
+<p>When started, Myrmidon looks for a project file called <code>build.ant</code>
+in the current directory.  A different project file can be specified using the
+<code>-f</code> command-line option.  Myrmidon executes the targets given on
+the command-line, or the default target if none is given.  For example, the
+following executes the targets <code>clean</code> and <code>build</code> from
+the project file <code>my-project.xml</code>:</p>
+
+<pre>
+prompt> ant -f my-project.xml clean build
+</pre>
+
+<p>
+Run Myrmidon with the <code>-h</code> command-line option for a list of
+the command-line options that are available.
+</p>
+
+</section>
+
+<section name="Project File">
+
+<p>
+The project file format is very similar to that of Ant 1.  The root element of
+the project file must be a <code>&lt;project&gt;</code> element.  It can
+take the following attributes:
+</p>
+
+<table>
+    <tr><th>Attribute</th><th>Description</th><th>Default Value</th></tr>
+    <tr>
+        <td>name</td>
+        <td>The project name.</td>
+        <td>The base-name of the project file, with the extension removed.</td>
+    </tr>
+    <tr>
+        <td>basedir</td>
+        <td>The base directory for the project.  The base directory is used
+        to resolve all relative file names used in the project file.
+        </td>
+        <td>The directory containing the project file.</td>
+    </tr>
+    <tr>
+        <td>default</td>
+        <td>The name of the default target.</td>
+        <td><code>main</code></td>
+    </tr>
+    <tr>
+        <td>version</td>
+        <td>The project file version that the project is written for.</td>
+        <td>None, must be <code>2.0</code></td>
+    </tr>
+</table>
+
+<p>
+A <code>&lt;project&gt;</code> element can contain the following elements,
+in the order given below:
+</p>
+
+<ul>
+<li><a href="#Project References"><code>&lt;projectref&gt;</code></a></li>
+<li><a href="#Library Imports"><code>&lt;import&gt;</code></a></li>
+<li><a href="#Implicit Tasks">Implicit tasks</a></li>
+<li><a href="#Targets"><code>&lt;target&gt;</code></a></li>
+</ul>
+
+<subsection name="Project References">
+
+<p>Project references allow the project to import, or reference, other projects.
+A <code>&lt;projectref&gt;</code> element takes the following attributes:</p>
+
+<table>
+    <tr><th>Attribute</th><th>Description</th><th>Default Value</th></tr>
+    <tr>
+        <td>name</td>
+        <td>The name to use to identify the referenced project.</td>
+        <td>Required</td>
+    </tr>
+    <tr>
+        <td>location</td>
+        <td>The path to the project file to reference.</td>
+        <td>Required</td>
+    </tr>
+</table>
+
+<p>
+The targets of a referenced project can be used in the <code>depends</code> list
+of a target in the referencing project, using the following syntax:
+<code><i>project-name</i>-><i>target-name</i></code>.  Here is a simple example:</p>
+
+<source><![CDATA[
+
+<project version="2.0">
+    <!-- Reference another project -->
+    <projectref name="subproject" location="subproject/build.xml"/>
+
+    <!-- Use the "compile" target from the referenced project -->
+    <target name="main" depends="subproject->compile">
+        .. do some stuff ..
+    </target>
+</project>
+]]></source>
+
+</subsection>
+
+<subsection name="Library Imports">
+
+<p>Library imports allow the project to import the tasks and data-types from an
+antlib.  An <code>&lt;import&gt;</code> element takes the following attributes:</p>
+
+<table>
+    <tr><th>Attribute</th><th>Description</th><th>Default Value</th></tr>
+    <tr>
+        <td>library</td>
+        <td>The name of the library to import.  The <code>ext</code> directory
+        of the Myrmidon distribution is searched for a library file with
+        the given name, and an <code>atl</code> extension.</td>
+        <td>Required</td>
+    </tr>
+    <tr>
+        <td>type</td>
+        <td>The type of definition to import.  Values include <code>task</code>,
+        and <code>data-type</code>.</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>The name of the type to import.</td>
+        <td>None</td>
+    </tr>
+</table>
+
+<p>
+If the <code>type</code> and <code>name</code> attributes are not provided,
+the entire contents of the antlib are imported.
+</p>
+
+<p>The following example import the <code>&lt;my-task&gt;</code> task from
+the <code>my-tasks</code> antlib.</p>
+
+<source><![CDATA[
+
+<project version="2.0">
+  <!-- Import task <my-task> from the 'my-tasks' antlib. -->
+  <import library="my-tasks" type="task" name="my-task"/>
+
+  <target name="main">
+     <my-task some-prop=".."/>
+  </target>
+</project>
+]]></source>
+
+</subsection>
+
+<subsection name="Implicit Tasks">
+
+<p>Implicit tasks are run before any of the project's targets are run.  Any task
+can be used, including <code>&lt;property&gt;</code> and data-type instances.
+Implicit tasks can be used to initialise the project.  For example:</p>
+
+<source><![CDATA[
+
+<project version="2.0">
+
+  <property name="some-property" value="some value"/>
+  <path id="classpath">
+    <fileset dir="lib"/>
+  </path>
+  <log>Set classpath to ${classpath}</log>
+
+  <target name="main">
+    .. do some stuff ..
+  </target>
+
+</project>
+]]></source>
+
+</subsection>
+
+<subsection name="Targets">
+
+<p>Targets have the same format as in Ant 1.x, though some of the behaviour
+is different.  A <code>&lt;target&gt;</code> element takes the following
+attributes:</p>
+
+<table>
+    <tr><th>Attribute</th><th>Description</th><th>Default Value</th></tr>
+    <tr>
+        <td>name</td>
+        <td>The name of the target.</td>
+        <td>Required</td>
+    </tr>
+    <tr>
+        <td>depends</td>
+        <td>A comma-separated list of targets that this target depends on.
+        This list can contain targets from referenced projects.</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <td>if</td>
+        <td>Only execute this target if the specified property is set, and not
+        equal to <code>false</code>.</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <td>unless</td>
+        <td>Do not execute this target if the specified property is set, and not
+        equal to <code>false</code>.</td>
+        <td>None</td>
+    </tr>
+</table>
+
+</subsection>
+
+</section>
+
+<section name="Tasks">
+
+<p>
+The following table lists some of the current set of tasks.  You can find
+example usages of these tasks in the sample project file
+<code>src/make/sample.ant</code>.
+</p>
+
+<table>
+    <tr><th>Task</th><th>Description</th></tr>
+    <tr>
+        <td>fail</td>
+        <td>Causes the build to fail.</td>
+    </tr>
+    <tr>
+        <td>if</td>
+        <td>Conditionally executes a set of tasks.</td>
+    </tr>
+    <tr>
+        <td>load-properties</td>
+        <td>Loads a set of properties from a file.</td>
+    </tr>
+    <tr>
+        <td>log</td>
+        <td>Writes a log message.</td>
+    </tr>
+    <tr>
+        <td>property</td>
+        <td>Sets a property.</td>
+    </tr>
+    <tr>
+        <td>try-catch</td>
+        <td>Runs a set of tasks, with a provided error and clean-up handler.</td>
+    </tr>
+    <tr>
+        <td>converter-def</td>
+        <td>Register a type converter.  These are used when configuring a task
+        or data-type from attributes.</td>
+    </tr>
+    <tr>
+        <td>type-def</td>
+        <td>Register a task or data-type.</td>
+    </tr>
+    <tr>
+        <td>import</td>
+        <td>Register the contents of an antlib.</td>
+    </tr>
+</table>
+
+</section>
+</body>
+
+</document>
