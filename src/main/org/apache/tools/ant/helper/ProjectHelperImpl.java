@@ -502,24 +502,20 @@ public class ProjectHelperImpl extends ProjectHelper {
          *            or a data type definition
          */
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            if (name.equals("taskdef")) {
-                handleTaskdef(name, attrs);
-            } else if (name.equals("typedef")) {
-                handleTypedef(name, attrs);
-            } else if (name.equals("property")) {
-                handleProperty(name, attrs);
-            } else if (name.equals("target")) {
+            if (name.equals("target")) {
                 handleTarget(name, attrs);
             } else if (helperImpl.project.getDataTypeDefinitions().get(name) != null) {
                 handleDataType(name, attrs);
+            } else if (helperImpl.project.getTaskDefinitions().get(name) != null) {
+                handleTask(name, attrs);
             } else {
                 throw new SAXParseException("Unexpected element \"" + name + "\"", helperImpl.locator);
             }
         }
 
         /**
-         * Handles a task defintion element by creating a task handler
-         * and initialising is with the details of the element.
+         * Handles a task by creating a task handler and initialising
+         * is with the details of the element.
          *
          * @param name The name of the element to be handled.
          *            Will not be <code>null</code>.
@@ -530,39 +526,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          *                              the task handler
          *
          */
-        private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
-            (new TaskHandler(helperImpl, this, null, null, null)).init(name, attrs);
-        }
-
-        /**
-         * Handles a type defintion element by creating a task handler
-         * and initialising is with the details of the element.
-         *
-         * @param name The name of the element to be handled.
-         *            Will not be <code>null</code>.
-         * @param attrs Attributes of the element to be handled.
-         *              Will not be <code>null</code>.
-         *
-         * @exception SAXParseException if an error occurs initialising the
-         *                              handler
-         */
-        private void handleTypedef(String name, AttributeList attrs) throws SAXParseException {
-            (new TaskHandler(helperImpl, this, null, null, null)).init(name, attrs);
-        }
-
-        /**
-         * Handles a property defintion element by creating a task handler
-         * and initialising is with the details of the element.
-         *
-         * @param name The name of the element to be handled.
-         *            Will not be <code>null</code>.
-         * @param attrs Attributes of the element to be handled.
-         *              Will not be <code>null</code>.
-         *
-         * @exception SAXParseException if an error occurs initialising
-         *                              the handler
-         */
-        private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
+        private void handleTask(String name, AttributeList attrs) throws SAXParseException {
             (new TaskHandler(helperImpl, this, null, null, null)).init(name, attrs);
         }
 
