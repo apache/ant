@@ -13,6 +13,10 @@ Changes that could break older environments:
 * <pvcs> default filenameformat has been different from Ant 1.4.1.
   Now it is different from 1.5beta1 and 1.5beta2.
 
+* Some messages that are printed during startup will not be
+  written to the logfile specified via -logfile as they might destroy
+  the format of the file for special BuildLoggers (like XmlLogger).
+
 Fixed bugs:
 -----------
 

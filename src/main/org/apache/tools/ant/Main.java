@@ -250,6 +250,7 @@ public class Main {
     protected Main(String[] args) throws BuildException {
 
         String searchForThis = null;
+        PrintStream logTo = null;
 
         // cycle through given args
 
@@ -274,10 +275,7 @@ public class Main {
                 try {
                     File logFile = new File(args[i + 1]);
                     i++;
-                    out = new PrintStream(new FileOutputStream(logFile));
-                    err = out;
-                    System.setOut(out);
-                    System.setErr(out);
+                    logTo = new PrintStream(new FileOutputStream(logFile));
                     isLogFileUsed = true;
                 } catch (IOException ioe) {
                     String msg = "Cannot write on the specified log file. "
@@ -436,12 +434,12 @@ public class Main {
                 System.out.println("Could not load property file "
                    + filename + ": " + e.getMessage());
             } finally {
-                if (fis != null){
+                if (fis != null) {
                     try {
                         fis.close();
                     } catch (IOException e){
+                    }
                 }
-              }
             }
 
             // ensure that -D properties take precedence
@@ -454,6 +452,15 @@ public class Main {
             }
         }
 
+        if (msgOutputLevel >= Project.MSG_INFO) {
+            System.out.println("Buildfile: " + buildFile);
+        }
+
+        if (logTo != null) {
+            out = err = logTo;
+            System.setOut(out);
+            System.setErr(out);
+        }
         readyToRun = true;
     }
 
@@ -536,12 +543,6 @@ public class Main {
 
         if (!readyToRun) {
             return;
-        }
-
-        // track when we started
-
-        if (msgOutputLevel >= Project.MSG_INFO) {
-            System.out.println("Buildfile: " + buildFile);
         }
 
         final Project project = new Project();
