@@ -16,6 +16,8 @@ Fixed bugs:
 
 * Fix jboss element of ejb task (introduced in ant 1.6.0).
 
+* <whichresource> failed to load classes correctly.
+
 Other changes:
 --------------
 * Translate task logs a debug message specifying the number of files
@@ -30,8 +32,6 @@ Other changes:
 * <touch> has filelist support. 
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
-
-* <whichresource> failed to load classes correctly.
 
 Changes from Ant 1.5.4 to Ant 1.6
 =================================
