@@ -52,7 +52,7 @@ if [ "$JAVA_HOME" != "" ] ; then
     LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
 else
-  echo "Warning: JAVA_HOME environment variable not set."
+  echo "Warning: JAVA_HOME environment variable is not set."
   echo "  If build fails because sun.* classes could not be found"
   echo "  you will need to set the JAVA_HOME environment variable"
   echo "  to the installation directory of java."
