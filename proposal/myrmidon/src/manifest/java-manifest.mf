@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-List: tools
+tools-Extension-Name: com.sun.tools
+tools-Specification-Version: 1.0
