@@ -16,9 +16,10 @@ import java.io.InputStream;
  *
  * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  */
-public class CBZip2InputStream extends InputStream implements BZip2Constants
+public class CBZip2InputStream
+    extends InputStream
+    implements BZip2Constants
 {
-
     private final static int START_BLOCK_STATE = 1;
     private final static int RAND_PART_A_STATE = 2;
     private final static int RAND_PART_B_STATE = 3;
@@ -26,94 +27,83 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
     private final static int NO_RAND_PART_A_STATE = 5;
     private final static int NO_RAND_PART_B_STATE = 6;
     private final static int NO_RAND_PART_C_STATE = 7;
-    private CRC mCrc = new CRC();
 
-    private boolean inUse[] = new boolean[ 256 ];
-
-    private char seqToUnseq[] = new char[ 256 ];
-    private char unseqToSeq[] = new char[ 256 ];
-
-    private char selector[] = new char[ MAX_SELECTORS ];
-    private char selectorMtf[] = new char[ MAX_SELECTORS ];
+    private CRC m_crc = new CRC();
+    private boolean m_inUse[] = new boolean[ 256 ];
+    private char m_seqToUnseq[] = new char[ 256 ];
+    private char m_unseqToSeq[] = new char[ 256 ];
+    private char m_selector[] = new char[ MAX_SELECTORS ];
+    private char m_selectorMtf[] = new char[ MAX_SELECTORS ];
 
     /*
      * freq table collected to save a pass over the data
      * during decompression.
      */
-    private int unzftab[] = new int[ 256 ];
+    private int m_unzftab[] = new int[ 256 ];
 
-    private int limit[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-    private int base[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-    private int perm[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-    private int minLens[] = new int[ N_GROUPS ];
+    private int m_limit[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+    private int m_base[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+    private int m_perm[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+    private int m_minLens[] = new int[ N_GROUPS ];
 
-    private boolean streamEnd = false;
+    private boolean m_streamEnd;
+    private int m_currentChar = -1;
 
-    private int currentChar = -1;
+    private int m_currentState = START_BLOCK_STATE;
+    private int m_rNToGo;
+    private int m_rTPos;
+    private int m_tPos;
 
-    private int currentState = START_BLOCK_STATE;
-    int rNToGo = 0;
-    int rTPos = 0;
-    int i, tPos;
+    private int i2;
+    private int count;
+    private int chPrev;
+    private int ch2;
+    private int j2;
+    private char z;
 
-    int i2, count, chPrev, ch2;
-    int j2;
-    char z;
-
-    private boolean blockRandomised;
+    private boolean m_blockRandomised;
 
     /*
      * always: in the range 0 .. 9.
      * The current block size is 100000 * this number.
      */
-    private int blockSize100k;
-    private int bsBuff;
-    private int bsLive;
+    private int m_blockSize100k;
+    private int m_bsBuff;
+    private int m_bsLive;
 
-    private InputStream bsStream;
+    private InputStream m_input;
 
-    private int bytesIn;
-    private int bytesOut;
-    private int computedBlockCRC, computedCombinedCRC;
+    private int m_bytesIn;
+    private int m_bytesOut;
+    private int m_computedBlockCRC;
+    private int m_computedCombinedCRC;
 
     /*
      * index of the last char in the block, so
      * the block size == last + 1.
      */
-    private int last;
-    private char[] ll8;
-    private int nInUse;
+    private int m_last;
+    private char[] m_ll8;
+    private int m_nInUse;
 
     /*
      * index in zptr[] of original string after sorting.
      */
-    private int origPtr;
+    private int m_origPtr;
 
-    private int storedBlockCRC, storedCombinedCRC;
+    private int m_storedBlockCRC;
+    private int m_storedCombinedCRC;
+    private int[] m_tt;
 
-    private int[] tt;
-
-    public CBZip2InputStream( InputStream zStream )
+    public CBZip2InputStream( final InputStream zStream )
     {
-        ll8 = null;
-        tt = null;
         bsSetStream( zStream );
         initialize();
         initBlock();
         setupBlock();
     }
 
-    private static void badBGLengths()
-    {
-        cadvise();
-    }
-
     private static void badBlockHeader()
-    {
-        cadvise();
-    }
-
-    private static void bitStreamEOF()
     {
         cadvise();
     }
@@ -141,14 +131,14 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
 
     public int read()
     {
-        if( streamEnd )
+        if( m_streamEnd )
         {
             return -1;
         }
         else
         {
-            int retChar = currentChar;
-            switch( currentState )
+            int retChar = m_currentChar;
+            switch( m_currentState )
             {
                 case START_BLOCK_STATE:
                     break;
@@ -177,20 +167,20 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
 
     private void setDecompressStructureSizes( int newSize100k )
     {
-        if( !( 0 <= newSize100k && newSize100k <= 9 && 0 <= blockSize100k
-            && blockSize100k <= 9 ) )
+        if( !( 0 <= newSize100k && newSize100k <= 9 && 0 <= m_blockSize100k
+            && m_blockSize100k <= 9 ) )
         {
             // throw new IOException("Invalid block size");
         }
 
-        blockSize100k = newSize100k;
+        m_blockSize100k = newSize100k;
 
         if( newSize100k == 0 )
             return;
 
         int n = BASE_BLOCK_SIZE * newSize100k;
-        ll8 = new char[ n ];
-        tt = new int[ n ];
+        m_ll8 = new char[ n ];
+        m_tt = new int[ n ];
     }
 
     private void setupBlock()
@@ -199,20 +189,24 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
         char ch;
 
         cftab[ 0 ] = 0;
-        for( i = 1; i <= 256; i++ )
-            cftab[ i ] = unzftab[ i - 1 ];
-        for( i = 1; i <= 256; i++ )
-            cftab[ i ] += cftab[ i - 1 ];
-
-        for( i = 0; i <= last; i++ )
+        for( int i = 1; i <= 256; i++ )
         {
-            ch = (char)ll8[ i ];
-            tt[ cftab[ ch ] ] = i;
+            cftab[ i ] = m_unzftab[ i - 1 ];
+        }
+        for( int i = 1; i <= 256; i++ )
+        {
+            cftab[ i ] += cftab[ i - 1 ];
+        }
+
+        for( int i = 0; i <= m_last; i++ )
+        {
+            ch = (char)m_ll8[ i ];
+            m_tt[ cftab[ ch ] ] = i;
             cftab[ ch ]++;
         }
         cftab = null;
 
-        tPos = tt[ origPtr ];
+        m_tPos = m_tt[ m_origPtr ];
 
         count = 0;
         i2 = 0;
@@ -220,10 +214,10 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
         /*
          * not a char and not EOF
          */
-        if( blockRandomised )
+        if( m_blockRandomised )
         {
-            rNToGo = 0;
-            rTPos = 0;
+            m_rNToGo = 0;
+            m_rTPos = 0;
             setupRandPartA();
         }
         else
@@ -234,16 +228,16 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
 
     private void setupNoRandPartA()
     {
-        if( i2 <= last )
+        if( i2 <= m_last )
         {
             chPrev = ch2;
-            ch2 = ll8[ tPos ];
-            tPos = tt[ tPos ];
+            ch2 = m_ll8[ m_tPos ];
+            m_tPos = m_tt[ m_tPos ];
             i2++;
 
-            currentChar = ch2;
-            currentState = NO_RAND_PART_B_STATE;
-            mCrc.updateCRC( ch2 );
+            m_currentChar = ch2;
+            m_currentState = NO_RAND_PART_B_STATE;
+            m_crc.updateCRC( ch2 );
         }
         else
         {
@@ -257,7 +251,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
     {
         if( ch2 != chPrev )
         {
-            currentState = NO_RAND_PART_A_STATE;
+            m_currentState = NO_RAND_PART_A_STATE;
             count = 1;
             setupNoRandPartA();
         }
@@ -266,15 +260,15 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
             count++;
             if( count >= 4 )
             {
-                z = ll8[ tPos ];
-                tPos = tt[ tPos ];
-                currentState = NO_RAND_PART_C_STATE;
+                z = m_ll8[ m_tPos ];
+                m_tPos = m_tt[ m_tPos ];
+                m_currentState = NO_RAND_PART_C_STATE;
                 j2 = 0;
                 setupNoRandPartC();
             }
             else
             {
-                currentState = NO_RAND_PART_A_STATE;
+                m_currentState = NO_RAND_PART_A_STATE;
                 setupNoRandPartA();
             }
         }
@@ -284,13 +278,13 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
     {
         if( j2 < (int)z )
         {
-            currentChar = ch2;
-            mCrc.updateCRC( ch2 );
+            m_currentChar = ch2;
+            m_crc.updateCRC( ch2 );
             j2++;
         }
         else
         {
-            currentState = NO_RAND_PART_A_STATE;
+            m_currentState = NO_RAND_PART_A_STATE;
             i2++;
             count = 0;
             setupNoRandPartA();
@@ -299,25 +293,25 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
 
     private void setupRandPartA()
     {
-        if( i2 <= last )
+        if( i2 <= m_last )
         {
             chPrev = ch2;
-            ch2 = ll8[ tPos ];
-            tPos = tt[ tPos ];
-            if( rNToGo == 0 )
+            ch2 = m_ll8[ m_tPos ];
+            m_tPos = m_tt[ m_tPos ];
+            if( m_rNToGo == 0 )
             {
-                rNToGo = RAND_NUMS[ rTPos ];
-                rTPos++;
-                if( rTPos == 512 )
-                    rTPos = 0;
+                m_rNToGo = RAND_NUMS[ m_rTPos ];
+                m_rTPos++;
+                if( m_rTPos == 512 )
+                    m_rTPos = 0;
             }
-            rNToGo--;
-            ch2 ^= (int)( ( rNToGo == 1 ) ? 1 : 0 );
+            m_rNToGo--;
+            ch2 ^= (int)( ( m_rNToGo == 1 ) ? 1 : 0 );
             i2++;
 
-            currentChar = ch2;
-            currentState = RAND_PART_B_STATE;
-            mCrc.updateCRC( ch2 );
+            m_currentChar = ch2;
+            m_currentState = RAND_PART_B_STATE;
+            m_crc.updateCRC( ch2 );
         }
         else
         {
@@ -331,7 +325,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
     {
         if( ch2 != chPrev )
         {
-            currentState = RAND_PART_A_STATE;
+            m_currentState = RAND_PART_A_STATE;
             count = 1;
             setupRandPartA();
         }
@@ -340,24 +334,24 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
             count++;
             if( count >= 4 )
             {
-                z = ll8[ tPos ];
-                tPos = tt[ tPos ];
-                if( rNToGo == 0 )
+                z = m_ll8[ m_tPos ];
+                m_tPos = m_tt[ m_tPos ];
+                if( m_rNToGo == 0 )
                 {
-                    rNToGo = RAND_NUMS[ rTPos ];
-                    rTPos++;
-                    if( rTPos == 512 )
-                        rTPos = 0;
+                    m_rNToGo = RAND_NUMS[ m_rTPos ];
+                    m_rTPos++;
+                    if( m_rTPos == 512 )
+                        m_rTPos = 0;
                 }
-                rNToGo--;
-                z ^= ( ( rNToGo == 1 ) ? 1 : 0 );
+                m_rNToGo--;
+                z ^= ( ( m_rNToGo == 1 ) ? 1 : 0 );
                 j2 = 0;
-                currentState = RAND_PART_C_STATE;
+                m_currentState = RAND_PART_C_STATE;
                 setupRandPartC();
             }
             else
             {
-                currentState = RAND_PART_A_STATE;
+                m_currentState = RAND_PART_A_STATE;
                 setupRandPartA();
             }
         }
@@ -367,13 +361,13 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
     {
         if( j2 < (int)z )
         {
-            currentChar = ch2;
-            mCrc.updateCRC( ch2 );
+            m_currentChar = ch2;
+            m_crc.updateCRC( ch2 );
             j2++;
         }
         else
         {
-            currentState = RAND_PART_A_STATE;
+            m_currentState = RAND_PART_A_STATE;
             i2++;
             count = 0;
             setupRandPartA();
@@ -382,22 +376,15 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
 
     private void getAndMoveToFrontDecode()
     {
-        char yy[] = new char[ 256 ];
-        int i;
-        int j;
         int nextSym;
-        int limitLast;
-        int EOB;
-        int groupNo;
-        int groupPos;
 
-        limitLast = BASE_BLOCK_SIZE * blockSize100k;
-        origPtr = bsGetIntVS( 24 );
+        int limitLast = BASE_BLOCK_SIZE * m_blockSize100k;
+        m_origPtr = readVariableSizedInt( 24 );
 
         recvDecodingTables();
-        EOB = nInUse + 1;
-        groupNo = -1;
-        groupPos = 0;
+        int EOB = m_nInUse + 1;
+        int groupNo = -1;
+        int groupPos = 0;
 
         /*
          * Setting up the unzftab entries here is not strictly
@@ -405,66 +392,70 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
          * in a separate pass, and so saves a block's worth of
          * cache misses.
          */
-        for( i = 0; i <= 255; i++ )
-            unzftab[ i ] = 0;
-
-        for( i = 0; i <= 255; i++ )
-            yy[ i ] = (char)i;
-
-        last = -1;
+        for( int i = 0; i <= 255; i++ )
         {
-            int zt;
-            int zn;
-            int zvec;
-            int zj;
-            if( groupPos == 0 )
-            {
-                groupNo++;
-                groupPos = G_SIZE;
-            }
-            groupPos--;
-            zt = selector[ groupNo ];
-            zn = minLens[ zt ];
-            zvec = bsR( zn );
-            while( zvec > limit[ zt ][ zn ] )
-            {
-                zn++;
-                {
-                    {
-                        while( bsLive < 1 )
-                        {
-                            int zzi;
-                            char thech = 0;
-                            try
-                            {
-                                thech = (char)bsStream.read();
-                            }
-                            catch( IOException e )
-                            {
-                                compressedStreamEOF();
-                            }
-                            if( thech == -1 )
-                            {
-                                compressedStreamEOF();
-                            }
-                            zzi = thech;
-                            bsBuff = ( bsBuff << 8 ) | ( zzi & 0xff );
-                            bsLive += 8;
-                        }
-                    }
-                    zj = ( bsBuff >> ( bsLive - 1 ) ) & 1;
-                    bsLive--;
-                }
-                zvec = ( zvec << 1 ) | zj;
-            }
-            nextSym = perm[ zt ][ zvec - base[ zt ][ zn ] ];
+            m_unzftab[ i ] = 0;
         }
+
+        final char yy[] = new char[ 256 ];
+        for( int i = 0; i <= 255; i++ )
+        {
+            yy[ i ] = (char)i;
+        }
+
+        m_last = -1;
+        int zt;
+        int zn;
+        int zvec;
+        int zj;
+        if( groupPos == 0 )
+        {
+            groupNo++;
+            groupPos = G_SIZE;
+        }
+        groupPos--;
+
+        zt = m_selector[ groupNo ];
+        zn = m_minLens[ zt ];
+        zvec = bsR( zn );
+        while( zvec > m_limit[ zt ][ zn ] )
+        {
+            zn++;
+
+            while( m_bsLive < 1 )
+            {
+                int zzi;
+                char thech = 0;
+                try
+                {
+                    thech = (char)m_input.read();
+                }
+                catch( IOException e )
+                {
+                    compressedStreamEOF();
+                }
+                if( thech == -1 )
+                {
+                    compressedStreamEOF();
+                }
+                zzi = thech;
+                m_bsBuff = ( m_bsBuff << 8 ) | ( zzi & 0xff );
+                m_bsLive += 8;
+            }
+
+            zj = ( m_bsBuff >> ( m_bsLive - 1 ) ) & 1;
+            m_bsLive--;
+
+            zvec = ( zvec << 1 ) | zj;
+        }
+        nextSym = m_perm[ zt ][ zvec - m_base[ zt ][ zn ] ];
 
         while( true )
         {
-
             if( nextSym == EOB )
+            {
                 break;
+            }
 
             if( nextSym == RUNA || nextSym == RUNB )
             {
@@ -478,89 +469,86 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
                     else if( nextSym == RUNB )
                         s = s + ( 1 + 1 ) * N;
                     N = N * 2;
+
+                    if( groupPos == 0 )
                     {
-                        int zt;
-                        int zn;
-                        int zvec;
-                        int zj;
-                        if( groupPos == 0 )
-                        {
-                            groupNo++;
-                            groupPos = G_SIZE;
-                        }
-                        groupPos--;
-                        zt = selector[ groupNo ];
-                        zn = minLens[ zt ];
-                        zvec = bsR( zn );
-                        while( zvec > limit[ zt ][ zn ] )
-                        {
-                            zn++;
-                            {
-                                {
-                                    while( bsLive < 1 )
-                                    {
-                                        int zzi;
-                                        char thech = 0;
-                                        try
-                                        {
-                                            thech = (char)bsStream.read();
-                                        }
-                                        catch( IOException e )
-                                        {
-                                            compressedStreamEOF();
-                                        }
-                                        if( thech == -1 )
-                                        {
-                                            compressedStreamEOF();
-                                        }
-                                        zzi = thech;
-                                        bsBuff = ( bsBuff << 8 ) | ( zzi & 0xff );
-                                        bsLive += 8;
-                                    }
-                                }
-                                zj = ( bsBuff >> ( bsLive - 1 ) ) & 1;
-                                bsLive--;
-                            }
-                            zvec = ( zvec << 1 ) | zj;
-                        }
-                        ;
-                        nextSym = perm[ zt ][ zvec - base[ zt ][ zn ] ];
+                        groupNo++;
+                        groupPos = G_SIZE;
                     }
+                    groupPos--;
+                    zt = m_selector[ groupNo ];
+                    zn = m_minLens[ zt ];
+                    zvec = bsR( zn );
+                    while( zvec > m_limit[ zt ][ zn ] )
+                    {
+                        zn++;
+
+                        while( m_bsLive < 1 )
+                        {
+                            int zzi;
+                            char thech = 0;
+                            try
+                            {
+                                thech = (char)m_input.read();
+                            }
+                            catch( IOException e )
+                            {
+                                compressedStreamEOF();
+                            }
+                            if( thech == -1 )
+                            {
+                                compressedStreamEOF();
+                            }
+                            zzi = thech;
+                            m_bsBuff = ( m_bsBuff << 8 ) | ( zzi & 0xff );
+                            m_bsLive += 8;
+                        }
+
+                        zj = ( m_bsBuff >> ( m_bsLive - 1 ) ) & 1;
+                        m_bsLive--;
+                        zvec = ( zvec << 1 ) | zj;
+                    }
+
+                    nextSym = m_perm[ zt ][ zvec - m_base[ zt ][ zn ] ];
+
                 } while( nextSym == RUNA || nextSym == RUNB );
 
                 s++;
-                ch = seqToUnseq[ yy[ 0 ] ];
-                unzftab[ ch ] += s;
+                ch = m_seqToUnseq[ yy[ 0 ] ];
+                m_unzftab[ ch ] += s;
 
                 while( s > 0 )
                 {
-                    last++;
-                    ll8[ last ] = ch;
+                    m_last++;
+                    m_ll8[ m_last ] = ch;
                     s--;
                 }
-                ;
 
-                if( last >= limitLast )
+                if( m_last >= limitLast )
+                {
                     blockOverrun();
+                }
                 continue;
             }
             else
             {
                 char tmp;
-                last++;
-                if( last >= limitLast )
+                m_last++;
+                if( m_last >= limitLast )
+                {
                     blockOverrun();
+                }
 
                 tmp = yy[ nextSym - 1 ];
-                unzftab[ seqToUnseq[ tmp ] ]++;
-                ll8[ last ] = seqToUnseq[ tmp ];
+                m_unzftab[ m_seqToUnseq[ tmp ] ]++;
+                m_ll8[ m_last ] = m_seqToUnseq[ tmp ];
 
                 /*
                  * This loop is hammered during decompression,
                  * hence the unrolling.
                  * for (j = nextSym-1; j > 0; j--) yy[j] = yy[j-1];
                  */
-                j = nextSym - 1;
+                int j = nextSym - 1;
                 for( ; j > 3; j -= 4 )
                 {
                     yy[ j ] = yy[ j - 1 ];
@@ -569,53 +557,48 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
                     yy[ j - 3 ] = yy[ j - 4 ];
                 }
                 for( ; j > 0; j-- )
+                {
                     yy[ j ] = yy[ j - 1 ];
+                }
 
                 yy[ 0 ] = tmp;
+
+                if( groupPos == 0 )
                 {
-                    int zt;
-                    int zn;
-                    int zvec;
-                    int zj;
-                    if( groupPos == 0 )
-                    {
-                        groupNo++;
-                        groupPos = G_SIZE;
-                    }
-                    groupPos--;
-                    zt = selector[ groupNo ];
-                    zn = minLens[ zt ];
-                    zvec = bsR( zn );
-                    while( zvec > limit[ zt ][ zn ] )
-                    {
-                        zn++;
-                        {
-                            {
-                                while( bsLive < 1 )
-                                {
-                                    int zzi;
-                                    char thech = 0;
-                                    try
-                                    {
-                                        thech = (char)bsStream.read();
-                                    }
-                                    catch( IOException e )
-                                    {
-                                        compressedStreamEOF();
-                                    }
-                                    zzi = thech;
-                                    bsBuff = ( bsBuff << 8 ) | ( zzi & 0xff );
-                                    bsLive += 8;
-                                }
-                            }
-                            zj = ( bsBuff >> ( bsLive - 1 ) ) & 1;
-                            bsLive--;
-                        }
-                        zvec = ( zvec << 1 ) | zj;
-                    }
-                    ;
-                    nextSym = perm[ zt ][ zvec - base[ zt ][ zn ] ];
+                    groupNo++;
+                    groupPos = G_SIZE;
                 }
+                groupPos--;
+                zt = m_selector[ groupNo ];
+                zn = m_minLens[ zt ];
+                zvec = bsR( zn );
+                while( zvec > m_limit[ zt ][ zn ] )
+                {
+                    zn++;
+
+                    while( m_bsLive < 1 )
+                    {
+                        char ch = 0;
+                        try
+                        {
+                            ch = (char)m_input.read();
+                        }
+                        catch( IOException e )
+                        {
+                            compressedStreamEOF();
+                        }
+
+                        m_bsBuff = ( m_bsBuff << 8 ) | ( ch & 0xff );
+                        m_bsLive += 8;
+                    }
+
+                    zj = ( m_bsBuff >> ( m_bsLive - 1 ) ) & 1;
+                    m_bsLive--;
+
+                    zvec = ( zvec << 1 ) | zj;
+                }
+                nextSym = m_perm[ zt ][ zvec - m_base[ zt ][ zn ] ];
+
                 continue;
             }
         }
@@ -623,25 +606,20 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
 
     private void bsFinishedWithStream()
     {
-        bsStream = null;
+        m_input = null;
     }
 
-    private int bsGetInt32()
-    {
-        return (int)bsGetint();
-    }
-
-    private int bsGetIntVS( int numBits )
+    private int readVariableSizedInt( final int numBits )
     {
         return (int)bsR( numBits );
     }
 
-    private char bsGetUChar()
+    private char readUnsignedChar()
     {
         return (char)bsR( 8 );
     }
 
-    private int bsGetint()
+    private int readInt()
     {
         int u = 0;
         u = ( u << 8 ) | bsR( 8 );
@@ -651,291 +629,323 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants
         return u;
     }
 
-    private int bsR( int n )
+    private int bsR( final int n )
     {
-        int v;
+        while( m_bsLive < n )
         {
-            while( bsLive < n )
+            char ch = 0;
+            try
             {
-                int zzi;
-                char thech = 0;
-                try
-                {
-                    thech = (char)bsStream.read();
-                }
-                catch( IOException e )
-                {
-                    compressedStreamEOF();
-                }
-                if( thech == -1 )
-                {
-                    compressedStreamEOF();
-                }
-                zzi = thech;
-                bsBuff = ( bsBuff << 8 ) | ( zzi & 0xff );
-                bsLive += 8;
+                ch = (char)m_input.read();
             }
+            catch( final IOException ioe )
+            {
+                compressedStreamEOF();
+            }
+
+            if( ch == -1 )
+            {
+                compressedStreamEOF();
+            }
+
+            m_bsBuff = ( m_bsBuff << 8 ) | ( ch & 0xff );
+            m_bsLive += 8;
         }
 
-        v = ( bsBuff >> ( bsLive - n ) ) & ( ( 1 << n ) - 1 );
-        bsLive -= n;
-        return v;
+        final int result = ( m_bsBuff >> ( m_bsLive - n ) ) & ( ( 1 << n ) - 1 );
+        m_bsLive -= n;
+        return result;
     }
 
-    private void bsSetStream( InputStream f )
+    private void bsSetStream( final InputStream input )
     {
-        bsStream = f;
-        bsLive = 0;
-        bsBuff = 0;
-        bytesOut = 0;
-        bytesIn = 0;
+        m_input = input;
+        m_bsLive = 0;
+        m_bsBuff = 0;
+        m_bytesOut = 0;
+        m_bytesIn = 0;
     }
 
     private void complete()
     {
-        storedCombinedCRC = bsGetInt32();
-        if( storedCombinedCRC != computedCombinedCRC )
+        m_storedCombinedCRC = readInt();
+        if( m_storedCombinedCRC != m_computedCombinedCRC )
+        {
             crcError();
+        }
 
         bsFinishedWithStream();
-        streamEnd = true;
+        m_streamEnd = true;
     }
 
     private void endBlock()
     {
-        computedBlockCRC = mCrc.getFinalCRC();
+        m_computedBlockCRC = m_crc.getFinalCRC();
         /*
          * A bad CRC is considered a fatal error.
          */
-        if( storedBlockCRC != computedBlockCRC )
+        if( m_storedBlockCRC != m_computedBlockCRC )
+        {
             crcError();
+        }
 
-        computedCombinedCRC = ( computedCombinedCRC << 1 )
-            | ( computedCombinedCRC >>> 31 );
-        computedCombinedCRC ^= computedBlockCRC;
+        m_computedCombinedCRC = ( m_computedCombinedCRC << 1 )
+            | ( m_computedCombinedCRC >>> 31 );
+        m_computedCombinedCRC ^= m_computedBlockCRC;
     }
 
-    private void hbCreateDecodeTables( int[] limit, int[] base,
-                                       int[] perm, char[] length,
-                                       int minLen, int maxLen, int alphaSize )
+    private void hbCreateDecodeTables( final int[] limit,
+                                       final int[] base,
+                                       final int[] perm,
+                                       final char[] length,
+                                       final int minLen,
+                                       final int maxLen,
+                                       final int alphaSize )
     {
-        int pp;
-        int i;
-        int j;
-        int vec;
-
-        pp = 0;
-        for( i = minLen; i <= maxLen; i++ )
-            for( j = 0; j < alphaSize; j++ )
+        int pp = 0;
+        for( int i = minLen; i <= maxLen; i++ )
+        {
+            for( int j = 0; j < alphaSize; j++ )
+            {
                 if( length[ j ] == i )
                 {
                     perm[ pp ] = j;
                     pp++;
                 }
-        ;
+            }
+        }
 
-        for( i = 0; i < MAX_CODE_LEN; i++ )
+        for( int i = 0; i < MAX_CODE_LEN; i++ )
+        {
             base[ i ] = 0;
-        for( i = 0; i < alphaSize; i++ )
+        }
+
+        for( int i = 0; i < alphaSize; i++ )
+        {
             base[ length[ i ] + 1 ]++;
+        }
 
-        for( i = 1; i < MAX_CODE_LEN; i++ )
+        for( int i = 1; i < MAX_CODE_LEN; i++ )
+        {
             base[ i ] += base[ i - 1 ];
+        }
 
-        for( i = 0; i < MAX_CODE_LEN; i++ )
+        for( int i = 0; i < MAX_CODE_LEN; i++ )
+        {
             limit[ i ] = 0;
-        vec = 0;
+        }
 
-        for( i = minLen; i <= maxLen; i++ )
+        int vec = 0;
+        for( int i = minLen; i <= maxLen; i++ )
         {
             vec += ( base[ i + 1 ] - base[ i ] );
             limit[ i ] = vec - 1;
             vec <<= 1;
         }
-        for( i = minLen + 1; i <= maxLen; i++ )
+
+        for( int i = minLen + 1; i <= maxLen; i++ )
+        {
             base[ i ] = ( ( limit[ i - 1 ] + 1 ) << 1 ) - base[ i ];
+        }
     }
 
     private void initBlock()
     {
-        char magic1;
-        char magic2;
-        char magic3;
-        char magic4;
-        char magic5;
-        char magic6;
-        magic1 = bsGetUChar();
-        magic2 = bsGetUChar();
-        magic3 = bsGetUChar();
-        magic4 = bsGetUChar();
-        magic5 = bsGetUChar();
-        magic6 = bsGetUChar();
-        if( magic1 == 0x17 && magic2 == 0x72 && magic3 == 0x45
-            && magic4 == 0x38 && magic5 == 0x50 && magic6 == 0x90 )
+        final char magic1 = readUnsignedChar();
+        final char magic2 = readUnsignedChar();
+        final char magic3 = readUnsignedChar();
+        final char magic4 = readUnsignedChar();
+        final char magic5 = readUnsignedChar();
+        final char magic6 = readUnsignedChar();
+        if( magic1 == 0x17 && magic2 == 0x72 && magic3 == 0x45 &&
+            magic4 == 0x38 && magic5 == 0x50 && magic6 == 0x90 )
         {
             complete();
             return;
         }
 
-        if( magic1 != 0x31 || magic2 != 0x41 || magic3 != 0x59
-            || magic4 != 0x26 || magic5 != 0x53 || magic6 != 0x59 )
+        if( magic1 != 0x31 || magic2 != 0x41 || magic3 != 0x59 ||
+            magic4 != 0x26 || magic5 != 0x53 || magic6 != 0x59 )
         {
             badBlockHeader();
-            streamEnd = true;
+            m_streamEnd = true;
             return;
         }
 
-        storedBlockCRC = bsGetInt32();
+        m_storedBlockCRC = readInt();
 
         if( bsR( 1 ) == 1 )
-            blockRandomised = true;
+        {
+            m_blockRandomised = true;
+        }
         else
-            blockRandomised = false;
+        {
+            m_blockRandomised = false;
+        }
 
         //        currBlockNo++;
         getAndMoveToFrontDecode();
 
-        mCrc.initialiseCRC();
-        currentState = START_BLOCK_STATE;
+        m_crc.initialiseCRC();
+        m_currentState = START_BLOCK_STATE;
     }
 
     private void initialize()
     {
-        char magic3;
-        char magic4;
-        magic3 = bsGetUChar();
-        magic4 = bsGetUChar();
+        final char magic3 = readUnsignedChar();
+        final char magic4 = readUnsignedChar();
         if( magic3 != 'h' || magic4 < '1' || magic4 > '9' )
         {
             bsFinishedWithStream();
-            streamEnd = true;
+            m_streamEnd = true;
             return;
         }
 
         setDecompressStructureSizes( magic4 - '0' );
-        computedCombinedCRC = 0;
+        m_computedCombinedCRC = 0;
     }
 
     private void makeMaps()
     {
-        int i;
-        nInUse = 0;
-        for( i = 0; i < 256; i++ )
-            if( inUse[ i ] )
+        m_nInUse = 0;
+        for( int i = 0; i < 256; i++ )
+        {
+            if( m_inUse[ i ] )
             {
-                seqToUnseq[ nInUse ] = (char)i;
-                unseqToSeq[ i ] = (char)nInUse;
-                nInUse++;
+                m_seqToUnseq[ m_nInUse ] = (char)i;
+                m_unseqToSeq[ i ] = (char)m_nInUse;
+                m_nInUse++;
             }
+        }
     }
 
     private void recvDecodingTables()
     {
-        char len[][] = new char[ N_GROUPS ][ MAX_ALPHA_SIZE ];
-        int i;
-        int j;
-        int t;
-        int nGroups;
-        int nSelectors;
-        int alphaSize;
-        int minLen;
-        int maxLen;
-        boolean inUse16[] = new boolean[ 16 ];
-
-        /*
-         * Receive the mapping table
-         */
-        for( i = 0; i < 16; i++ )
-            if( bsR( 1 ) == 1 )
-                inUse16[ i ] = true;
-            else
-                inUse16[ i ] = false;
-
-        for( i = 0; i < 256; i++ )
-            inUse[ i ] = false;
-
-        for( i = 0; i < 16; i++ )
-            if( inUse16[ i ] )
-                for( j = 0; j < 16; j++ )
-                    if( bsR( 1 ) == 1 )
-                        inUse[ i * 16 + j ] = true;
-
+        buildInUseTable();
         makeMaps();
-        alphaSize = nInUse + 2;
+        final int alphaSize = m_nInUse + 2;
 
         /*
          * Now the selectors
          */
-        nGroups = bsR( 3 );
-        nSelectors = bsR( 15 );
-        for( i = 0; i < nSelectors; i++ )
+        final int groupCount = bsR( 3 );
+        final int selectorCount = bsR( 15 );
+        for( int i = 0; i < selectorCount; i++ )
         {
-            j = 0;
+            int run = 0;
             while( bsR( 1 ) == 1 )
-                j++;
-            selectorMtf[ i ] = (char)j;
-        }
-        {
-            /*
-             * Undo the MTF values for the selectors.
-             */
-            char pos[] = new char[ N_GROUPS ];
-            char tmp;
-            char v;
-            for( v = 0; v < nGroups; v++ )
-                pos[ v ] = v;
-
-            for( i = 0; i < nSelectors; i++ )
             {
-                v = selectorMtf[ i ];
-                tmp = pos[ v ];
-                while( v > 0 )
-                {
-                    pos[ v ] = pos[ v - 1 ];
-                    v--;
-                }
-                pos[ 0 ] = tmp;
-                selector[ i ] = tmp;
+                run++;
             }
+            m_selectorMtf[ i ] = (char)run;
         }
 
         /*
+         * Undo the MTF values for the selectors.
+         */
+        final char pos[] = new char[ N_GROUPS ];
+        for( char v = 0; v < groupCount; v++ )
+        {
+            pos[ v ] = v;
+        }
+
+        for( int i = 0; i < selectorCount; i++ )
+        {
+            int v = m_selectorMtf[ i ];
+            final char tmp = pos[ v ];
+            while( v > 0 )
+            {
+                pos[ v ] = pos[ v - 1 ];
+                v--;
+            }
+            pos[ 0 ] = tmp;
+            m_selector[ i ] = tmp;
+        }
+
+        final char len[][] = new char[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+        /*
          * Now the coding tables
          */
-        for( t = 0; t < nGroups; t++ )
+        for( int i = 0; i < groupCount; i++ )
         {
             int curr = bsR( 5 );
-            for( i = 0; i < alphaSize; i++ )
+            for( int j = 0; j < alphaSize; j++ )
             {
                 while( bsR( 1 ) == 1 )
                 {
                     if( bsR( 1 ) == 0 )
+                    {
                         curr++;
+                    }
                     else
+                    {
                         curr--;
+                    }
                 }
-                len[ t ][ i ] = (char)curr;
+                len[ i ][ j ] = (char)curr;
             }
         }
 
         /*
          * Create the Huffman decoding tables
          */
-        for( t = 0; t < nGroups; t++ )
+        for( int k = 0; k < groupCount; k++ )
         {
-            minLen = 32;
-            maxLen = 0;
-            for( i = 0; i < alphaSize; i++ )
+            int minLen = 32;
+            int maxLen = 0;
+            for( int i = 0; i < alphaSize; i++ )
             {
-                if( len[ t ][ i ] > maxLen )
-                    maxLen = len[ t ][ i ];
-                if( len[ t ][ i ] < minLen )
-                    minLen = len[ t ][ i ];
+                if( len[ k ][ i ] > maxLen )
+                {
+                    maxLen = len[ k ][ i ];
+                }
+                if( len[ k ][ i ] < minLen )
+                {
+                    minLen = len[ k ][ i ];
+                }
             }
-            hbCreateDecodeTables( limit[ t ], base[ t ], perm[ t ], len[ t ], minLen,
+            hbCreateDecodeTables( m_limit[ k ], m_base[ k ], m_perm[ k ], len[ k ], minLen,
                                   maxLen, alphaSize );
-            minLens[ t ] = minLen;
+            m_minLens[ k ] = minLen;
+        }
+    }
+
+    private void buildInUseTable()
+    {
+        final boolean inUse16[] = new boolean[ 16 ];
+
+        /*
+         * Receive the mapping table
+         */
+        for( int i = 0; i < 16; i++ )
+        {
+            if( bsR( 1 ) == 1 )
+            {
+                inUse16[ i ] = true;
+            }
+            else
+            {
+                inUse16[ i ] = false;
+            }
+        }
+
+        for( int i = 0; i < 256; i++ )
+        {
+            m_inUse[ i ] = false;
+        }
+
+        for( int i = 0; i < 16; i++ )
+        {
+            if( inUse16[ i ] )
+            {
+                for( int j = 0; j < 16; j++ )
+                {
+                    if( bsR( 1 ) == 1 )
+                    {
+                        m_inUse[ i * 16 + j ] = true;
+                    }
+                }
+            }
         }
     }
 }
-
