@@ -69,7 +69,7 @@ public class TouchTest extends BuildFileTest {
      * verify that the millis test sets things up
      */
     public void testMillis() {
-        touchFile("testMillis", 1234567);
+        touchFile("testMillis", 662256000000L);
     }
 
     /**
@@ -84,22 +84,22 @@ public class TouchTest extends BuildFileTest {
     /**
      * verify that the millis test sets things up
      */
-    public void test1970() {
-        touchFile("test1970", 0);
+    public void test2000() {
+        touchFile("test2000", 946080000000L);
     }
 
     /**
      * test the file list
      */
     public void testFilelist() {
-        touchFile("testFilelist", 100000);
+        touchFile("testFilelist", 662256000000L);
     }
 
     /**
      * test the file set
      */
     public void testFileset() {
-        touchFile("testFileset", 200000);
+        touchFile("testFileset", 946080000000L);
     }
 
     /**

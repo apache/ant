@@ -18,21 +18,29 @@
   </target>
   
   <target name="testMillis">
-    <touch file="touchtest" millis="1234567" />
+    <!-- this one is about 21 years after the epoch -->
+    <!-- less than 20 years after the epoch, test does not pass on my Win2K/FAT -->
+    <!-- Antoine February 8, 2004 -->
+    <!-- see http://developer.java.sun.com/developer/bugParade/bugs/4177432.html -->
+    <!-- and http://developer.java.sun.com/developer/bugParade/bugs/4697792.html -->
+    <!-- not sure why -->
+    <touch file="touchtest" millis="662256000000" />
   </target>
   
-  <target name="test1970">
-    <touch file="touchtest" millis="0" />
+  <target name="test2000">
+    <!-- this number of milliseconds is 30 * 365 * 24 * 3600 * 1000 -->
+    <!-- so the corresponding time is at the end of 1999 -->
+    <touch file="touchtest" millis="946080000000" />
   </target>
   
   <target name="testFilelist">
-    <touch millis="100000" >
+    <touch millis="662256000000" >
       <filelist dir="." files="touchtest"/>
     </touch>
   </target>
 
   <target name="testFileset" depends="testNow">
-    <touch millis="200000" >
+    <touch millis="946080000000" >
       <fileset dir="." includes="touchtest"/>
     </touch>
   </target>
