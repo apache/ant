@@ -136,6 +136,34 @@
         </table>
       </subsection>
 
+      <subsection name="ChownTask">
+
+        <p>ChownTask is an Ant task to change ownership of files on
+        Unix.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3 and up</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://sourceforge.net/projects/chowntask/">http://sourceforge.net/projects/chowntask/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:chowntask-users@lists.sourceforge.net">Wilfred Springer</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="CleanImports">
         <p>Removes unneeded imports. Formats your import
         sections. Flags ambiguous imports.</p>
