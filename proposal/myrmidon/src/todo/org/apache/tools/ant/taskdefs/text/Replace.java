@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.avalon.excalibur.util.StringUtil;
 
 /**

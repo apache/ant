@@ -94,12 +94,12 @@ class VAJWorkspaceScanner extends DirectoryScanner
      */
     public void addDefaultExcludes()
     {
-        int excludesLength = excludes == null ? 0 : excludes.length;
+        int excludesLength = getExcludes() == null ? 0 : getExcludes().length;
         String[] newExcludes;
         newExcludes = new String[ excludesLength + DEFAULTEXCLUDES.length ];
         if( excludesLength > 0 )
         {
-            System.arraycopy( excludes, 0, newExcludes, 0, excludesLength );
+            System.arraycopy( getExcludes(), 0, newExcludes, 0, excludesLength );
         }
         for( int i = 0; i < DEFAULTEXCLUDES.length; i++ )
         {
@@ -107,7 +107,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
                 replace( '/', File.separatorChar ).
                 replace( '\\', File.separatorChar );
         }
-        excludes = newExcludes;
+        setExcludes( newExcludes );
     }
 
     /**
@@ -125,10 +125,10 @@ class VAJWorkspaceScanner extends DirectoryScanner
         for( int i = 0; i < projects.length; i++ )
         {
             Project project = projects[ i ];
-            for( int j = 0; j < includes.length && !allProjectsMatch; j++ )
+            for( int j = 0; j < getIncludes().length && !allProjectsMatch; j++ )
             {
                 StringTokenizer tok =
-                    new StringTokenizer( includes[ j ], File.separator );
+                    new StringTokenizer( getIncludes()[ j ], File.separator );
                 String projectNamePattern = tok.nextToken();
                 if( projectNamePattern.equals( "**" ) )
                 {
@@ -162,15 +162,15 @@ class VAJWorkspaceScanner extends DirectoryScanner
      */
     public void scan()
     {
-        if( includes == null )
+        if( getIncludes() == null )
         {
             // No includes supplied, so set it to 'matches all'
-            includes = new String[ 1 ];
-            includes[ 0 ] = "**";
+            setIncludes( new String[ 1 ] );
+            getIncludes()[ 0 ] = "**";
         }
-        if( excludes == null )
+        if( getExcludes() == null )
         {
-            excludes = new String[ 0 ];
+            setExcludes( new String[ 0 ] );
         }
 
         // only scan projects which are included in at least one include pattern

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -70,9 +71,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @version $Revision$ $Name$
  */
 
-public class FixCRLF extends MatchingTask
+public class FixCRLF
+    extends MatchingTask
 {
-
     private final static int UNDEF = -1;
     private final static int NOTJAVA = 0;
     private final static int LOOKING = 1;
@@ -125,7 +126,7 @@ public class FixCRLF extends MatchingTask
     public FixCRLF()
     {
         tabs = ASIS;
-        if( System.getProperty( "path.separator" ).equals( ":" ) )
+        if( File.pathSeparator.equals( ":" ) )
         {
             ctrlz = REMOVE;
             if( System.getProperty( "os.name" ).indexOf( "Mac" ) > -1 )

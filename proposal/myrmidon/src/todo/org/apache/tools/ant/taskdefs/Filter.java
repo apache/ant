@@ -21,7 +21,8 @@ import org.apache.tools.ant.Task;
  * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  */
-public class Filter extends Task
+public class Filter
+    extends Task
 {
     private File filtersFile;
 

@@ -962,23 +962,23 @@ public class FTP
 
         public void scan()
         {
-            if( includes == null )
+            if( getIncludes() == null )
             {
                 // No includes supplied, so set it to 'matches all'
-                includes = new String[ 1 ];
-                includes[ 0 ] = "**";
+                setIncludes( new String[ 1 ] );
+                getIncludes()[ 0 ] = "**";
             }
-            if( excludes == null )
+            if( getExcludes() == null )
             {
-                excludes = new String[ 0 ];
+                setExcludes( new String[ 0 ] );
             }
 
-            filesIncluded = new ArrayList();
-            filesNotIncluded = new ArrayList();
-            filesExcluded = new ArrayList();
-            dirsIncluded = new ArrayList();
-            dirsNotIncluded = new ArrayList();
-            dirsExcluded = new ArrayList();
+            setFilesIncluded( new ArrayList() );
+            setFilesNotIncluded( new ArrayList() );
+            setFilesExcluded( new ArrayList() );
+            setDirsIncluded( new ArrayList() );
+            setDirsNotIncluded( new ArrayList() );
+            setDirsExcluded( new ArrayList() );
 
             try
             {
@@ -1020,7 +1020,7 @@ public class FTP
                             {
                                 if( !isExcluded( name ) )
                                 {
-                                    dirsIncluded.add( name );
+                                    getDirsIncluded().add( name );
                                     if( fast )
                                     {
                                         scandir( name, vpath + name + File.separator, fast );
@@ -1028,12 +1028,12 @@ public class FTP
                                 }
                                 else
                                 {
-                                    dirsExcluded.add( name );
+                                    getDirsExcluded().add( name );
                                 }
                             }
                             else
                             {
-                                dirsNotIncluded.add( name );
+                                getDirsNotIncluded().add( name );
                                 if( fast && couldHoldIncluded( name ) )
                                 {
                                     scandir( name, vpath + name + File.separator, fast );
@@ -1053,16 +1053,16 @@ public class FTP
                                 {
                                     if( !isExcluded( name ) )
                                     {
-                                        filesIncluded.add( name );
+                                        getFilesIncluded().add( name );
                                     }
                                     else
                                     {
-                                        filesExcluded.add( name );
+                                        getFilesExcluded().add( name );
                                     }
                                 }
                                 else
                                 {
-                                    filesNotIncluded.add( name );
+                                    getFilesNotIncluded().add( name );
                                 }
                             }
                         }
