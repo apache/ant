@@ -371,14 +371,18 @@ public class Zip extends MatchingTask {
 
             log(action + archiveType + ": " + zipFile.getAbsolutePath());
 
-            ZipOutputStream zOut =
-                new ZipOutputStream(new FileOutputStream(zipFile));
-            zOut.setEncoding(encoding);
+            ZipOutputStream zOut = null;
             try {
-                if (doCompress) {
-                    zOut.setMethod(ZipOutputStream.DEFLATED);
-                } else {
-                    zOut.setMethod(ZipOutputStream.STORED);
+
+                if (! skipWriting) {
+                    zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+
+                    zOut.setEncoding(encoding);
+                    if (doCompress) {
+                        zOut.setMethod(ZipOutputStream.DEFLATED);
+                    } else {
+                        zOut.setMethod(ZipOutputStream.STORED);
+                    }
                 }
                 initZipOutputStream(zOut);
 
