@@ -1,0 +1,8 @@
+<project basedir="." default="empty">
+
+  <target name="empty"/>
+
+  <target name="echo">
+    <echo message="foo is ${foo}"/>
+  </target>
+</project>

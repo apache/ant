@@ -1,0 +1,8 @@
+<Project DefaultTargets="empty">
+
+  <Target Name="empty"/>
+
+  <Target Name="echo">
+    <Task Name="Echo" Message="foo is ${foo}"/>
+  </Target>
+</Project>

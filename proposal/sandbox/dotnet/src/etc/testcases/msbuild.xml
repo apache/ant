@@ -1,0 +1,21 @@
+<project name="msbuild" basedir="." default="echo"
+  xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet">
+
+  <taskdef 
+    uri="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+    resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml">
+    <classpath>
+      <pathelement location="../../../build/lib/dotnet.jar"/>
+    </classpath>
+  </taskdef>
+
+  <target name="echo">
+    <msbuild 
+      buildfile="src/msbuild.proj" 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <target name="echo"/>
+      <property name="foo" value="bar"/>
+    </msbuild>
+  </target>
+</project>

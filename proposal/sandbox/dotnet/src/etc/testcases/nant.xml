@@ -1,0 +1,21 @@
+<project name="nant" basedir="." default="echo"
+  xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet">
+
+  <taskdef 
+    uri="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+    resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml">
+    <classpath>
+      <pathelement location="../../../build/lib/dotnet.jar"/>
+    </classpath>
+  </taskdef>
+
+  <target name="echo">
+    <nant 
+      buildfile="src/nant.build" 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <target name="echo"/>
+      <property name="foo" value="bar"/>
+    </nant>
+  </target>
+</project>

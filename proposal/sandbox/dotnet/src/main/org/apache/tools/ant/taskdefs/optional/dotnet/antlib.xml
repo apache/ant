@@ -3,4 +3,12 @@
     name="dotnetexec"
     classname="org.apache.tools.ant.taskdefs.optional.dotnet.DotNetExecTask"
     />
+  <taskdef
+    name="msbuild"
+    classname="org.apache.tools.ant.taskdefs.optional.dotnet.MSBuildTask"
+    />
+  <taskdef
+    name="nant"
+    classname="org.apache.tools.ant.taskdefs.optional.dotnet.NAntTask"
+    />
 </antlib>
