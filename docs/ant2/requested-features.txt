@@ -13,6 +13,9 @@ enhancements of existing tasks.
 
 * make facade tasks for things like javac (JikesImpl, ModernImpl etc)
 
+  One candidate is rmic with implementations for Kaffee and Weblogic
+  for example.
+
 * unify multiple similar tasks to use similar forms (ie all the javacc
   type tools)
 
@@ -151,6 +154,14 @@ decide between several possible options.
 
   Do build.compiler and build.sysclasspath cover everything or do we
   need to add more stuff like this?
+
+* Task to prompt for user input.
+
+  Does affect core as we need a means to request input from the Frontend.
+
+* Add cvs login feature.
+
+  Requires handling of user input.
 
 V. Things we probably don't agree on. 
 ======================================================================
