@@ -1,16 +1,20 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
 <html>
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>JavaCC Task</title>
+<title>MParse Task</title>
 </head>
 
 <body>
 
-<h2><a name="javacc">MParse</a></h2>
+<h2><a name="mparse">MParse</a></h2>
+<p>by</p>
+<ul>
+  <li>Stephane Bailliez (<a href="mailto:sbailliez@imediation.com">sbailliez@imediation.com</a>)</li>
+</ul>
 <h3>Requirements</h3>
-<p>This task requires Metamata Development environment 1.1. It does not work as
-is with the latest 2.0 version freely available at <a href="http://www.metamata.com">Metamata</a>.</p>
+<p>This task requires Metamata Development environment 2.0 freely available at <a href="http://www.metamata.com">Metamata</a>.</p>
 <h3>Description</h3> 
 <p>
   Invokes the Metamata <a HREF="http://www.metamata.com/parse.html">MParse</a> compiler 
@@ -51,32 +55,62 @@ is with the latest 2.0 version freely available at <a href="http://www.metamata.
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
-    <td valign="top">workingdir</td>
+    <td valign="top">verbose</td>
     <td valign="top">
-      The temporary directory used by MParse.
+      Enable all messages
     </td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td valign="top">cleanuphack</td>
-    <td valign="top">Remove the stale file as well as the intermediate Sun
+    <td valign="top">debugparser</td>
+    <td valign="top">
+      Enables parser debugging
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">debugscanner</td>
+    <td valign="top">
+      Enables scanner debugging
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">cleanup</td>
+    <td valign="top">Remove the intermediate Sun
       JavaCC file created during the transformation of the grammar file.</td>
-    <td valign="top" align="center">No. Default to false.</td>
+    <td valign="top" align="center">No. Default to false</td>
+  </tr>
+  <tr>
+    <td valign="top">maxmemory</td>
+    <td valign="top">Set the maximum memory for the JVM. this is a convenient
+      way to set the -mx or -Xmx argument.</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Nested elements</h3>
-<h4>userclasspath</h4>
-<p>&nbsp;The <tt>userclasspath</tt> element is required and represents a <a href="index.html#path">PATH like
+<h4>jvmarg</h4>
+<p>Additional parameters may be passed to the VM via nested <code>&lt;jvmarg&gt;</code>
+attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="index.html#arg">Command
+line arguments</a>.</p>
+<h4>classpath</h4>
+<p>Sets class path (also source path unless one explicitly set). Overrides
+METAPATH/CLASSPATH environment variables. &nbsp;The <tt>classpath</tt> element represents a <a href="index.html#path">PATH like
+structure</a>.</p>
+<h4>sourcepath</h4>
+<p>Sets source path. Overrides the SOURCEPATH environment variable.&nbsp;The <tt>sourcepath</tt> element represents a <a href="index.html#path">PATH like
 structure</a>.</p>
 <h3>Example</h3>
-<pre>  &lt;mparse target=&quot;src/Parser.jj&quot; metamatahome=&quot;c:/metamata&quot; workingdir=&quot;c:/tmp&quot;&gt;
-    &lt;userclasspath&gt;
-      &lt;pathelement location=&quot;./lib/dependency.jar&quot;/&gt;
-    &lt;/userclasspath&gt;
+<pre>  &lt;mparse target=&quot;c:/metamata/examples/parseexamples/javagrammars/singlefile/JavaParser.jj&quot;
+          metamatahome=&quot;c:/metamata&quot; cleanup=&quot;true&quot;&gt;
+    &lt;classpath&gt;
+      &lt;pathelement location=&quot;c:/metamata/examples/&quot;/&gt;
+    &lt;/classpath&gt;
   &lt;/mparse&gt;</pre>
 <p>
-  This invokes Metamata MParse installed in <tt>c:/metamata</tt> on a grammar file <tt>src/Parser.jj</tt>
-with a working directory in <tt>c:/tmp</tt> and a specific classpath
+  This invokes Metamata MParse installed in <tt>c:/metamata</tt> on one of the grammar file
+example <tt>(JavaParser.jj)</tt>
+ and cleans up the intermediate Sun JavaCC file.
 </p>
 <hr>
 
