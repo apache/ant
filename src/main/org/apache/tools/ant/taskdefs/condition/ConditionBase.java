@@ -253,6 +253,13 @@ public abstract class ConditionBase extends ProjectComponent {
     }
 
     /**
+     * Add an &lt;typefound&gt; condition.
+     * @param test
+     */
+    public void addTypeFound(TypeFound test) {
+        conditions.addElement(test);
+    }
+    /**
      * Add an arbitrary condition
      * @param c a  condition
      * @since Ant 1.6

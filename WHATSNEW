@@ -55,6 +55,12 @@ Other changes:
  - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
   Bugzilla Report 26253.
 
+* New condition <typefound> that can be used to probe for the declaration 
+  and implementation of a task, type, preset, macro, scriptdef, whatever. 
+  As it tests for the implementation, it can be used to check for optional
+  tasks being available. 
+
+  
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
 
