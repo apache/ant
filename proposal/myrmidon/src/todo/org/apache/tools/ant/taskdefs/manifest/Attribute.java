@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.manifest;
 
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.util.jar.Attributes;
 
 /**
  * Class to hold manifest attributes
@@ -110,10 +111,11 @@ public class Attribute
         }
 
         final Attribute other = (Attribute)object;
+        final String name = other.m_name;
         return
-            ( null != m_name && null != other.m_name &&
-            m_name.toLowerCase().equals( other.m_name.toLowerCase() ) &&
-            m_value != null && m_value.equals( other.m_value ) );
+            ( null != m_name && null != name &&
+            m_name.toLowerCase().equals( name.toLowerCase() ) &&
+            null != m_value && m_value.equals( other.m_value ) );
     }
 
 }

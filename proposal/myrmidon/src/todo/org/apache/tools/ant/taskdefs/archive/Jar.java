@@ -18,12 +18,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.zip.ZipFile;
 import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.manifest.Manifest;
 import org.apache.tools.ant.taskdefs.manifest.ManifestException;
+import org.apache.tools.ant.taskdefs.manifest.ManifestUtil;
 import org.apache.tools.ant.types.FileScanner;
 
 /**
@@ -89,10 +89,10 @@ public class Jar
         try
         {
             r = new FileReader( manifestFile );
-            Manifest newManifest = new Manifest( r );
+            Manifest newManifest = ManifestUtil.buildManifest( r );
             if( m_manifest == null )
             {
-                m_manifest = Manifest.getDefaultManifest();
+                m_manifest = ManifestUtil.getDefaultManifest();
             }
             m_manifest.merge( newManifest );
         }
@@ -134,7 +134,7 @@ public class Jar
     {
         if( m_manifest == null )
         {
-            m_manifest = Manifest.getDefaultManifest();
+            m_manifest = ManifestUtil.getDefaultManifest();
         }
         m_manifest.merge( newManifest );
         buildFileManifest = true;
@@ -172,10 +172,10 @@ public class Jar
                     getLogger().debug( "Updating jar since the current jar has no manifest" );
                     return false;
                 }
-                Manifest currentManifest = new Manifest( new InputStreamReader( theZipFile.getInputStream( entry ) ) );
+                Manifest currentManifest = ManifestUtil.buildManifest( new InputStreamReader( theZipFile.getInputStream( entry ) ) );
                 if( m_manifest == null )
                 {
-                    m_manifest = Manifest.getDefaultManifest();
+                    m_manifest = ManifestUtil.getDefaultManifest();
                 }
                 if( !currentManifest.equals( m_manifest ) )
                 {
@@ -231,22 +231,25 @@ public class Jar
     {
         try
         {
-            m_execManifest = Manifest.getDefaultManifest();
+            m_execManifest = ManifestUtil.getDefaultManifest();
 
             if( m_manifest != null )
             {
                 m_execManifest.merge( m_manifest );
             }
+            /*
             for( Iterator e = m_execManifest.getWarnings(); e.hasNext(); )
             {
                 getLogger().warn( "Manifest warning: " + (String)e.next() );
             }
+            */
 
             zipDir( null, zOut, "META-INF/" );
             // time to write the manifest
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PrintWriter writer = new PrintWriter( baos );
-            m_execManifest.write( writer );
+            Manifest manifest = m_execManifest;
+            ManifestUtil.write( manifest, writer );
             writer.flush();
 
             ByteArrayInputStream bais = new ByteArrayInputStream( baos.toByteArray() );
@@ -375,11 +378,12 @@ public class Jar
         {
             if( m_execManifest == null )
             {
-                m_execManifest = new Manifest( new InputStreamReader( is ) );
+                m_execManifest = ManifestUtil.buildManifest( new InputStreamReader( is ) );
             }
             else if( isAddingNewFiles() )
             {
-                m_execManifest.merge( new Manifest( new InputStreamReader( is ) ) );
+                final Manifest other = ManifestUtil.buildManifest( new InputStreamReader( is ) );
+                m_execManifest.merge( other );
             }
         }
         catch( ManifestException e )

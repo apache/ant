@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class to represent an individual section in the Manifest. A section
@@ -28,26 +27,26 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class Section
 {
-    private ArrayList warnings = new ArrayList();
+    private final ArrayList m_warnings = new ArrayList();
 
     /**
      * The section's name if any. The main section in a manifest is unnamed.
      */
-    private String name = null;
+    private String m_name;
 
     /**
      * The section's attributes.
      */
-    private Hashtable attributes = new Hashtable();
+    private final Hashtable m_attributes = new Hashtable();
 
     /**
      * Set the Section's name
      *
      * @param name the section's name
      */
-    public void setName( String name )
+    public void setName( final String name )
     {
-        this.name = name;
+        m_name = name;
     }
 
     /**
@@ -57,23 +56,26 @@ public class Section
      * @return the attribute's value or null if the attribute does not exist
      *      in the section
      */
-    public String getAttributeValue( String attributeName )
+    public String getAttributeValue( final String attributeName )
     {
-        Object attribute = attributes.get( attributeName.toLowerCase() );
-        if( attribute == null )
+        final Object attributeObject = m_attributes.get( attributeName.toLowerCase() );
+        if( null == attributeObject )
         {
             return null;
         }
-        if( attribute instanceof Attribute )
+        else if( attributeObject instanceof Attribute )
         {
-            return ( (Attribute)attribute ).getValue();
+            final Attribute attribute = (Attribute)attributeObject;
+            return attribute.getValue();
         }
         else
         {
             String value = "";
-            for( Iterator e = ( (ArrayList)attribute ).iterator(); e.hasNext(); )
+            final ArrayList attributes = (ArrayList)attributeObject;
+            Iterator e = attributes.iterator();
+            while( e.hasNext() )
             {
-                Attribute classpathAttribute = (Attribute)e.next();
+                final Attribute classpathAttribute = (Attribute)e.next();
                 value += classpathAttribute.getValue() + " ";
             }
             return value.trim();
@@ -87,12 +89,12 @@ public class Section
      */
     public String getName()
     {
-        return name;
+        return m_name;
     }
 
     public Iterator getWarnings()
     {
-        return warnings.iterator();
+        return m_warnings.iterator();
     }
 
     /**
@@ -105,59 +107,59 @@ public class Section
      *      section.
      */
     public String addAttributeAndCheck( Attribute attribute )
-        throws ManifestException, TaskException
+        throws ManifestException
     {
         if( attribute.getName() == null || attribute.getValue() == null )
         {
-            throw new TaskException( "Attributes must have name and value" );
+            throw new ManifestException( "Attributes must have name and value" );
         }
-        if( attribute.getName().equalsIgnoreCase( Manifest.ATTRIBUTE_NAME ) )
+        if( attribute.getName().equalsIgnoreCase( ManifestUtil.ATTRIBUTE_NAME ) )
         {
-            warnings.add( "\"" + Manifest.ATTRIBUTE_NAME + "\" attributes should not occur in the " +
+            m_warnings.add( "\"" + ManifestUtil.ATTRIBUTE_NAME + "\" attributes should not occur in the " +
                           "main section and must be the first element in all " +
                           "other sections: \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
             return attribute.getValue();
         }
 
-        if( attribute.getName().toLowerCase().startsWith( Manifest.ATTRIBUTE_FROM.toLowerCase() ) )
+        if( attribute.getName().toLowerCase().startsWith( ManifestUtil.ATTRIBUTE_FROM.toLowerCase() ) )
         {
-            warnings.add( "Manifest attributes should not start with \"" +
-                          Manifest.ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
+            m_warnings.add( "Manifest attributes should not start with \"" +
+                          ManifestUtil.ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
         }
         else
         {
             // classpath attributes go into a vector
             String attributeName = attribute.getName().toLowerCase();
-            if( attributeName.equals( Manifest.ATTRIBUTE_CLASSPATH ) )
+            if( attributeName.equals( ManifestUtil.ATTRIBUTE_CLASSPATH ) )
             {
-                ArrayList classpathAttrs = (ArrayList)attributes.get( attributeName );
+                ArrayList classpathAttrs = (ArrayList)m_attributes.get( attributeName );
                 if( classpathAttrs == null )
                 {
                     classpathAttrs = new ArrayList();
-                    attributes.put( attributeName, classpathAttrs );
+                    m_attributes.put( attributeName, classpathAttrs );
                 }
                 classpathAttrs.add( attribute );
             }
-            else if( attributes.containsKey( attributeName ) )
+            else if( m_attributes.containsKey( attributeName ) )
             {
                 throw new ManifestException( "The attribute \"" + attribute.getName() + "\" may not " +
                                              "occur more than once in the same section" );
             }
             else
             {
-                attributes.put( attributeName, attribute );
+                m_attributes.put( attributeName, attribute );
             }
         }
         return null;
     }
 
-    public void addAttribute( Attribute attribute )
-        throws ManifestException, TaskException
+    public void addAttribute( final Attribute attribute )
+        throws ManifestException
     {
         String check = addAttributeAndCheck( attribute );
         if( check != null )
         {
-            throw new TaskException( "Specify the section name using the \"name\" attribute of the <section> element rather " +
+            throw new ManifestException( "Specify the section name using the \"name\" attribute of the <section> element rather " +
                                      "than using a \"Name\" manifest attribute" );
         }
     }
@@ -170,15 +172,15 @@ public class Section
         }
 
         Section rhsSection = (Section)rhs;
-        if( attributes.size() != rhsSection.attributes.size() )
+        if( m_attributes.size() != rhsSection.m_attributes.size() )
         {
             return false;
         }
 
-        for( Enumeration e = attributes.elements(); e.hasMoreElements(); )
+        for( Enumeration e = m_attributes.elements(); e.hasMoreElements(); )
         {
             Attribute attribute = (Attribute)e.nextElement();
-            Attribute rshAttribute = (Attribute)rhsSection.attributes.get( attribute.getName().toLowerCase() );
+            Attribute rshAttribute = (Attribute)rhsSection.m_attributes.get( attribute.getName().toLowerCase() );
             if( !attribute.equals( rshAttribute ) )
             {
                 return false;
@@ -197,21 +199,21 @@ public class Section
     public void merge( Section section )
         throws ManifestException
     {
-        if( name == null && section.getName() != null ||
-            name != null && !( name.equalsIgnoreCase( section.getName() ) ) )
+        if( m_name == null && section.getName() != null ||
+            m_name != null && !( m_name.equalsIgnoreCase( section.getName() ) ) )
         {
             throw new ManifestException( "Unable to merge sections with different names" );
         }
 
-        for( Enumeration e = section.attributes.keys(); e.hasMoreElements(); )
+        for( Enumeration e = section.m_attributes.keys(); e.hasMoreElements(); )
         {
             String attributeName = (String)e.nextElement();
-            if( attributeName.equals( Manifest.ATTRIBUTE_CLASSPATH ) &&
-                attributes.containsKey( attributeName ) )
+            if( attributeName.equals( ManifestUtil.ATTRIBUTE_CLASSPATH ) &&
+                m_attributes.containsKey( attributeName ) )
             {
                 // classpath entries are vetors which are merged
-                ArrayList classpathAttrs = (ArrayList)section.attributes.get( attributeName );
-                ArrayList ourClasspathAttrs = (ArrayList)attributes.get( attributeName );
+                ArrayList classpathAttrs = (ArrayList)section.m_attributes.get( attributeName );
+                ArrayList ourClasspathAttrs = (ArrayList)m_attributes.get( attributeName );
                 for( Iterator e2 = classpathAttrs.iterator(); e2.hasNext(); )
                 {
                     ourClasspathAttrs.add( e2.next() );
@@ -220,14 +222,14 @@ public class Section
             else
             {
                 // the merge file always wins
-                attributes.put( attributeName, section.attributes.get( attributeName ) );
+                m_attributes.put( attributeName, section.m_attributes.get( attributeName ) );
             }
         }
 
         // add in the warnings
-        for( Iterator e = section.warnings.iterator(); e.hasNext(); )
+        for( Iterator e = section.m_warnings.iterator(); e.hasNext(); )
         {
-            warnings.add( e.next() );
+            m_warnings.add( e.next() );
         }
     }
 
@@ -242,7 +244,7 @@ public class Section
      * @throws IOException if the section cannot be read from the reader.
      */
     public String read( BufferedReader reader )
-        throws ManifestException, IOException, TaskException
+        throws ManifestException, IOException
     {
         Attribute attribute = null;
         while( true )
@@ -257,11 +259,11 @@ public class Section
                 // continuation line
                 if( attribute == null )
                 {
-                    if( name != null )
+                    if( m_name != null )
                     {
                         // a continuation on the first line is a continuation of the name - concatenate
                         // this line and the name
-                        name += line.substring( 1 );
+                        m_name += line.substring( 1 );
                     }
                     else
                     {
@@ -292,7 +294,7 @@ public class Section
      */
     public void removeAttribute( String attributeName )
     {
-        attributes.remove( attributeName.toLowerCase() );
+        m_attributes.remove( attributeName.toLowerCase() );
     }
 
     /**
@@ -304,12 +306,12 @@ public class Section
     public void write( PrintWriter writer )
         throws IOException
     {
-        if( name != null )
+        if( m_name != null )
         {
-            Attribute nameAttr = new Attribute( Manifest.ATTRIBUTE_NAME, name );
+            Attribute nameAttr = new Attribute( ManifestUtil.ATTRIBUTE_NAME, m_name );
             ManifestUtil.write( nameAttr, writer );
         }
-        for( Enumeration e = attributes.elements(); e.hasMoreElements(); )
+        for( Enumeration e = m_attributes.elements(); e.hasMoreElements(); )
         {
             Object object = e.nextElement();
             if( object instanceof Attribute )

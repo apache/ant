@@ -7,23 +7,11 @@
  */
 package org.apache.tools.ant.taskdefs.manifest;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.jar.Attributes;
-import org.apache.myrmidon.api.AbstractTask;
+import java.util.Set;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -35,42 +23,11 @@ import org.apache.myrmidon.api.TaskException;
  * @version $Revision$ $Date$
  */
 public class Manifest
-    extends AbstractTask
 {
-    /**
-     * The standard Signature Version header
-     */
-    public final static String ATTRIBUTE_SIGNATURE_VERSION = Attributes.Name.SIGNATURE_VERSION.toString();
-
-    /**
-     * The Name Attribute is the first in a named section
-     */
-    public final static String ATTRIBUTE_NAME = "Name";
-
-    /**
-     * The From Header is disallowed in a Manifest
-     */
-    public final static String ATTRIBUTE_FROM = "From";
-
-    /**
-     * The Class-Path Header is special - it can be duplicated
-     */
-    public final static String ATTRIBUTE_CLASSPATH = Attributes.Name.CLASS_PATH.toString();
-
-    /**
-     * Default Manifest version if one is not specified
-     */
-    public final static String DEFAULT_MANIFEST_VERSION = "1.0";
-
-    /**
-     * The max length of a line in a Manifest
-     */
-    public final static int MAX_LINE_LENGTH = 70;
-
     /**
      * The version of this manifest
      */
-    private String m_manifestVersion = DEFAULT_MANIFEST_VERSION;
+    private String m_manifestVersion = ManifestUtil.DEFAULT_MANIFEST_VERSION;
 
     /**
      * The main section of this manifest
@@ -82,293 +39,58 @@ public class Manifest
      */
     private Hashtable m_sections = new Hashtable();
 
-    private File m_manifestFile;
-
-    private ManifestMode m_mode;
-
-    /**
-     * Construct an empty manifest
-     */
-    public Manifest()
-        throws TaskException
+    public void setManifestVersion( final String manifestVersion )
     {
-        m_mode = new ManifestMode();
-        m_mode.setValue( "replace" );
-        m_manifestVersion = null;
+        m_manifestVersion = manifestVersion;
     }
 
-    /**
-     * Read a manifest file from the given reader
-     *
-     * @param r Description of Parameter
-     * @exception ManifestException Description of Exception
-     * @exception IOException Description of Exception
-     * @throws ManifestException if the manifest is not valid according to the
-     *      JAR spec
-     * @throws IOException if the manifest cannot be read from the reader.
-     */
-    public Manifest( Reader r )
-        throws ManifestException, TaskException, IOException
+    public void setMainSection( final Section mainSection )
     {
-        BufferedReader reader = new BufferedReader( r );
-        // This should be the manifest version
-        String nextSectionName = m_mainSection.read( reader );
-        String readManifestVersion = m_mainSection.getAttributeValue( Attributes.Name.MANIFEST_VERSION.toString() );
-        if( readManifestVersion != null )
-        {
-            m_manifestVersion = readManifestVersion;
-            m_mainSection.removeAttribute( Attributes.Name.MANIFEST_VERSION.toString() );
-        }
-
-        String line = null;
-        while( ( line = reader.readLine() ) != null )
-        {
-            if( line.length() == 0 )
-            {
-                continue;
-            }
-
-            Section section = new Section();
-            if( nextSectionName == null )
-            {
-                Attribute sectionName = ManifestUtil.buildAttribute( line );
-                if( !sectionName.getName().equalsIgnoreCase( ATTRIBUTE_NAME ) )
-                {
-                    throw new ManifestException( "Manifest sections should start with a \"" + ATTRIBUTE_NAME +
-                                                 "\" attribute and not \"" + sectionName.getName() + "\"" );
-                }
-                nextSectionName = sectionName.getValue();
-            }
-            else
-            {
-                // we have already started reading this section
-                // this line is the first attribute. set it and then let the normal
-                // read handle the rest
-                Attribute firstAttribute = ManifestUtil.buildAttribute( line );
-                section.addAttributeAndCheck( firstAttribute );
-            }
-
-            section.setName( nextSectionName );
-            nextSectionName = section.read( reader );
-            addSection( section );
-        }
-    }
-
-    /**
-     * Construct a manifest from Ant's default manifest file.
-     *
-     * @return The DefaultManifest value
-     * @exception TaskException Description of Exception
-     */
-    public static Manifest getDefaultManifest()
-        throws TaskException
-    {
-        try
-        {
-            String s = "/org/apache/tools/ant/defaultManifest.mf";
-            InputStream in = Manifest.class.getResourceAsStream( s );
-            if( in == null )
-            {
-                throw new TaskException( "Could not find default manifest: " + s );
-            }
-            try
-            {
-                return new Manifest( new InputStreamReader( in, "ASCII" ) );
-            }
-            catch( UnsupportedEncodingException e )
-            {
-                return new Manifest( new InputStreamReader( in ) );
-            }
-        }
-        catch( ManifestException e )
-        {
-            throw new TaskException( "Default manifest is invalid !!" );
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Unable to read default manifest", e );
-        }
-    }
-
-    /**
-     * The name of the manifest file to write (if used as a task).
-     *
-     * @param f The new File value
-     */
-    public void setFile( File f )
-    {
-        m_manifestFile = f;
-    }
-
-    /**
-     * Shall we update or replace an existing manifest?
-     *
-     * @param m The new ManifestMode value
-     */
-    public void setMode( ManifestMode m )
-    {
-        m_mode = m;
-    }
-
-    /**
-     * Get the warnings for this manifest.
-     *
-     * @return an enumeration of warning strings
-     */
-    public Iterator getWarnings()
-    {
-        ArrayList warnings = new ArrayList();
-
-        for( Iterator e2 = m_mainSection.getWarnings(); e2.hasNext(); )
-        {
-            warnings.add( e2.next() );
-        }
-
-        // create a vector and add in the warnings for all the sections
-        for( Enumeration e = m_sections.elements(); e.hasMoreElements(); )
-        {
-            Section section = (Section)e.nextElement();
-            for( Iterator e2 = section.getWarnings(); e2.hasNext(); )
-            {
-                warnings.add( e2.next() );
-            }
-        }
-
-        return warnings.iterator();
+        m_mainSection = mainSection;
     }
 
     public void addAttribute( final Attribute attribute )
-        throws ManifestException, TaskException
+        throws ManifestException
     {
         m_mainSection.addAttribute( attribute );
     }
 
     public void addSection( final Section section )
-        throws ManifestException, TaskException
+        throws ManifestException
     {
         if( section.getName() == null )
         {
-            throw new TaskException( "Sections must have a name" );
+            final String message = "Sections must have a name";
+            throw new ManifestException( message );
         }
         m_sections.put( section.getName().toLowerCase(), section );
     }
 
-    public boolean equals( Object rhs )
+    public String[] getSectionNames( final Manifest other )
     {
-        if( !( rhs instanceof Manifest ) )
-        {
-            return false;
-        }
-
-        Manifest rhsManifest = (Manifest)rhs;
-        if( m_manifestVersion == null )
-        {
-            if( rhsManifest.m_manifestVersion != null )
-            {
-                return false;
-            }
-        }
-        else if( !m_manifestVersion.equals( rhsManifest.m_manifestVersion ) )
-        {
-            return false;
-        }
-        if( m_sections.size() != rhsManifest.m_sections.size() )
-        {
-            return false;
-        }
-
-        if( !m_mainSection.equals( rhsManifest.m_mainSection ) )
-        {
-            return false;
-        }
-
-        for( Enumeration e = m_sections.elements(); e.hasMoreElements(); )
-        {
-            Section section = (Section)e.nextElement();
-            Section rhsSection = (Section)rhsManifest.m_sections.get( section.getName().toLowerCase() );
-            if( !section.equals( rhsSection ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
+        final Set keys = other.m_sections.keySet();
+        return (String[])keys.toArray( new String[ keys.size() ] );
     }
 
-    /**
-     * Create or update the Manifest when used as a task.
-     *
-     * @exception TaskException Description of Exception
-     */
-    public void execute()
-        throws TaskException
+    public String getManifestVersion()
     {
-        if( m_manifestFile == null )
-        {
-            throw new TaskException( "the file attribute is required" );
-        }
+        return m_manifestVersion;
+    }
 
-        Manifest toWrite = getDefaultManifest();
+    public Section getMainSection()
+    {
+        return m_mainSection;
+    }
 
-        if( m_mode.getValue().equals( "update" ) && m_manifestFile.exists() )
-        {
-            FileReader f = null;
-            try
-            {
-                f = new FileReader( m_manifestFile );
-                toWrite.merge( new Manifest( f ) );
-            }
-            catch( ManifestException m )
-            {
-                throw new TaskException( "Existing manifest " + m_manifestFile
-                                         + " is invalid", m );
-            }
-            catch( IOException e )
-            {
-                throw new
-                    TaskException( "Failed to read " + m_manifestFile, e );
-            }
-            finally
-            {
-                if( f != null )
-                {
-                    try
-                    {
-                        f.close();
-                    }
-                    catch( IOException e )
-                    {
-                    }
-                }
-            }
-        }
+    public Section getSection( final String name )
+    {
+        return (Section)m_sections.get( name );
+    }
 
-        try
-        {
-            toWrite.merge( this );
-        }
-        catch( ManifestException m )
-        {
-            throw new TaskException( "Manifest is invalid", m );
-        }
-
-        PrintWriter w = null;
-        try
-        {
-            w = new PrintWriter( new FileWriter( m_manifestFile ) );
-            toWrite.write( w );
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Failed to write " + m_manifestFile, e );
-        }
-        finally
-        {
-            if( w != null )
-            {
-                w.close();
-            }
-        }
+    public Section[] getSections()
+    {
+        final Collection sections = m_sections.values();
+        return (Section[])sections.toArray( new Section[ sections.size() ] );
     }
 
     /**
@@ -378,7 +100,7 @@ public class Manifest
      * @throws ManifestException if there is a problem merging the manfest
      *      according to the Manifest spec.
      */
-    public void merge( Manifest other )
+    public void merge( final Manifest other )
         throws ManifestException
     {
         if( other.m_manifestVersion != null )
@@ -386,77 +108,68 @@ public class Manifest
             m_manifestVersion = other.m_manifestVersion;
         }
         m_mainSection.merge( other.m_mainSection );
-        for( Enumeration e = other.m_sections.keys(); e.hasMoreElements(); )
+
+        mergeSections( other );
+    }
+
+    public boolean equals( final Object object )
+    {
+        if( !( object instanceof Manifest ) )
         {
-            String sectionName = (String)e.nextElement();
-            Section ourSection = (Section)m_sections.get( sectionName );
-            Section otherSection = (Section)other.m_sections.get( sectionName );
-            if( ourSection == null )
+            return false;
+        }
+
+        final Manifest other = (Manifest)object;
+        if( m_manifestVersion == null && other.m_manifestVersion != null )
+        {
+            return false;
+        }
+        else if( !m_manifestVersion.equals( other.m_manifestVersion ) )
+        {
+            return false;
+        }
+        if( m_sections.size() != other.m_sections.size() )
+        {
+            return false;
+        }
+
+        if( !m_mainSection.equals( other.m_mainSection ) )
+        {
+            return false;
+        }
+
+        final Iterator e = m_sections.values().iterator();
+        while( e.hasNext() )
+        {
+            final Section section = (Section)e.next();
+            final String key = section.getName().toLowerCase();
+            final Section otherSection = (Section)other.m_sections.get( key );
+            if( !section.equals( otherSection ) )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void mergeSections( final Manifest other )
+        throws ManifestException
+    {
+        final String[] sections = getSectionNames( other );
+        for( int i = 0; i < sections.length; i++ )
+        {
+            final String sectionName = sections[ i ];
+            final Section section = getSection( sectionName );
+            final Section otherSection = other.getSection( sectionName );
+            if( section == null )
             {
                 m_sections.put( sectionName.toLowerCase(), otherSection );
             }
             else
             {
-                ourSection.merge( otherSection );
+                section.merge( otherSection );
             }
         }
-
     }
-
-    /**
-     * Convert the manifest to its string representation
-     *
-     * @return a multiline string with the Manifest as it appears in a Manifest
-     *      file.
-     */
-    public String toString()
-    {
-        StringWriter sw = new StringWriter();
-        try
-        {
-            write( new PrintWriter( sw ) );
-        }
-        catch( Exception e )
-        {
-            return null;
-        }
-        return sw.toString();
-    }
-
-    /**
-     * Write the manifest out to a print writer.
-     *
-     * @param writer the Writer to which the manifest is written
-     * @throws IOException if the manifest cannot be written
-     */
-    public void write( PrintWriter writer )
-        throws IOException, TaskException
-    {
-        writer.println( Attributes.Name.MANIFEST_VERSION + ": " + m_manifestVersion );
-        String signatureVersion = m_mainSection.getAttributeValue( ATTRIBUTE_SIGNATURE_VERSION );
-        if( signatureVersion != null )
-        {
-            writer.println( ATTRIBUTE_SIGNATURE_VERSION + ": " + signatureVersion );
-            m_mainSection.removeAttribute( ATTRIBUTE_SIGNATURE_VERSION );
-        }
-        m_mainSection.write( writer );
-        if( signatureVersion != null )
-        {
-            try
-            {
-                m_mainSection.addAttribute( new Attribute( ATTRIBUTE_SIGNATURE_VERSION, signatureVersion ) );
-            }
-            catch( ManifestException e )
-            {
-                // shouldn't happen - ignore
-            }
-        }
-
-        for( Enumeration e = m_sections.elements(); e.hasMoreElements(); )
-        {
-            Section section = (Section)e.nextElement();
-            section.write( writer );
-        }
-    }
-
 }
