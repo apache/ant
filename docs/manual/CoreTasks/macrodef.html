@@ -1,5 +1,5 @@
 <html>
-  
+
   <head>
     <meta http-equiv="Content-Language" content="en-us"></meta>
     <title>MacroDef Task</title>
@@ -9,17 +9,22 @@
            -->
     </style>
   </head>
-    
+
   <body>
-      
+
     <h2><a name="macrodef">MacroDef</a></h2>
     <h3>Description</h3>
     <p>
-      This defines a new task using a &lt;sequential&gt; 
+      This defines a new task using a &lt;sequential&gt;
       nested task as a template. Nested elements &lt;attribute&gt; and
       &lt;element&gt; are used to specify attributes and elements of
       the new task. These get substituted into the  &lt;sequential&gt;
       task when the new task is run.
+    </p>
+    <h3>Note</h3>
+    <p>
+      You can also use <i>prior defined</i> attributes for default-values in
+      other attributes. See the examples.
     </p>
     <p>
       <em>since Ant 1.6</em>
@@ -183,7 +188,7 @@
         <td valign="top" align="center">No</td>
       </tr>
     </table>
-    
+
     <h3>Examples</h3>
     <p>
       The following example defined a task called testing and
@@ -266,10 +271,29 @@
 &lt;/echotest&gt;
 </pre>
     </blockquote>
+    <p>
+      The following uses a prior defined attribut for setting the
+      default value of another. The output would be
+      <tt>one=test two=test</tt>. If you change the order of lines
+      *1 and *2 the output would be <tt>one=test two=@{one}</tt>,
+      because while processing the <i>two</i>-line the value for
+      <i>one</i> is not set.
+    </p>
+    <blockquote>
+<pre class="code">
+&lt;macrodef name="test"/&gt;
+   &lt;attribute name="one"/&gt;                     <b>*1</b>
+   &lt;attribute name="two" default="@{one}"/&gt;    <b>*2</b>
+   &lt;sequential&gt;
+      &lt;echo&gt;one=@{one}   two=@{two}&lt;/echo&gt;
+   &lt;/sequential&gt;
+&lt;/macrodef/&gt;
+&lt;test one="test"/&gt;
+</pre>
+    </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2003-2004 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>
 </html>
-
