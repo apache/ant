@@ -231,6 +231,31 @@
         </table>
       </subsection>
 
+      <subsection name="Jalopy">
+        
+        <p>An Ant Plug-in for the Java Source Code Formatter
+        Jalopy.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jalopy.sourceforge.net">http://jalopy.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jalopy@hunsicker.de">jalopy@hunsicker.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Javamake">
 
         <p>A task to compile Java sources and manage class file
