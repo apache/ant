@@ -143,6 +143,18 @@ public class ContainsSelectorTest extends BaseSelectorTest {
             results = selectionString(s);
             assertEquals("TFFFTFFFFFFT", results);
 
+            s = (ContainsSelector)getInstance();
+            s.setText("ApacheAnt");
+            s.setIgnorewhitespace(true);
+            results = selectionString(s);
+            assertEquals("TFFFTFFFFFFT", results);
+
+            s = (ContainsSelector)getInstance();
+            s.setText("A p a c h e    A n t");
+            s.setIgnorewhitespace(true);
+            results = selectionString(s);
+            assertEquals("TFFFTFFFFFFT", results);
+
         }
         finally {
             cleanupBed();

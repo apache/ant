@@ -14,18 +14,18 @@
 
     <h3>How to use a Selector</h3>
 
-    <p>A selector is an element of FileSet, and appears within it. It can 
+    <p>A selector is an element of FileSet, and appears within it. It can
     also be defined outside of any target by using the &lt;selector&gt; tag
     and then using it as a reference.
     </p>
 
     <p>Different selectors have different attributes. Some selectors can
-    contain other selectors, and these are called 
-    <a href="#selectcontainers"><code>Selector Containers</code></a>. 
+    contain other selectors, and these are called
+    <a href="#selectcontainers"><code>Selector Containers</code></a>.
     There is also a category of selectors that allow
     user-defined extensions, called
     <a href="#customselect"><code>Custom Selectors</code></a>.
-    The ones built in to Ant are called 
+    The ones built in to Ant are called
     <a href="#coreselect"><code>Core Selectors</code></a>.
     </p>
 
@@ -85,6 +85,14 @@
         <td valign="top">Whether to pay attention to case when looking
           for the string in the <code>text</code> attribute. Default is
           true.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">ignorewhitespace</td>
+        <td valign="top">Whether to eliminate whitespace before checking
+          for the string in the <code>text</code> attribute. Default is
+          false.
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -164,11 +172,11 @@
     <p>The <code>&lt;depend&gt;</code> tag selects files
     whose last modified date is later than another, equivalent file in
     another location.</p>
-    
+
     <p>The <code>&lt;depend&gt;</code> tag supports the use of a
-    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element 
-    to define the location of the file to be compared against. If no 
-    <code>&lt;mapper&gt;</code> element is specified, the 
+    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element
+    to define the location of the file to be compared against. If no
+    <code>&lt;mapper&gt;</code> element is specified, the
     <code>identity</code> type mapper is used.</p>
 
     <table border="1" cellpadding="2" cellspacing="0">
@@ -204,7 +212,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the Java source files which were modified in the 
+    <p>Selects all the Java source files which were modified in the
       1.5 release.
     </p>
 
@@ -385,11 +393,11 @@
 
     <p>The <code>&lt;present&gt;</code> tag selects files
     that have an equivalent file in another directory tree.</p>
-    
+
     <p>The <code>&lt;present&gt;</code> tag supports the use of a
-    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element 
-    to define the location of the file to be tested against. If no 
-    <code>&lt;mapper&gt;</code> element is specified, the 
+    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element
+    to define the location of the file to be tested against. If no
+    <code>&lt;mapper&gt;</code> element is specified, the
     <code>identity</code> type mapper is used.</p>
 
     <table border="1" cellpadding="2" cellspacing="0">
@@ -408,18 +416,18 @@
       </tr>
       <tr>
         <td valign="top">present</td>
-        <td valign="top">Whether we are requiring that a file is present in 
+        <td valign="top">Whether we are requiring that a file is present in
           the src directory tree only, or in both the src and the target
           directory tree. Valid values are:
           <ul>
-            <li>srconly - select files only if they are in the src 
+            <li>srconly - select files only if they are in the src
               directory tree but not in the target directory tree
             <li>both - select files only if they are present both in the
               src and target directory trees
           </ul>
           Default is both. Setting this attribute to &quot;srconly&quot;
-	  is equivalent to wrapping the selector in the &lt;not&gt;
-	  selector container.
+          is equivalent to wrapping the selector in the &lt;not&gt;
+          selector container.
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -433,7 +441,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the Java source files which are new in the 
+    <p>Selects all the Java source files which are new in the
       1.5 release.
     </p>
 
@@ -560,7 +568,7 @@
     soon as it finds a selector that does not select the file,
     so it is not guaranteed to check every selector.
     </p>
-    
+
     <p>Here is an example of how to use the And Selector:</p>
 
     <blockquote><pre>
@@ -614,8 +622,8 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the HTML files which contain at least two of the three 
-    phrases "project", "taskdef", and "IntrospectionHelper" (this last phrase must 
+    <p>Selects all the HTML files which contain at least two of the three
+    phrases "project", "taskdef", and "IntrospectionHelper" (this last phrase must
     match case exactly).
     </p>
 
@@ -628,7 +636,7 @@
     soon as it finds a selector that selects the file,
     so it is not guaranteed to check every selector.
     </p>
-    
+
     <p>Here is an example of how to use the None Selector:</p>
 
     <blockquote><pre>
@@ -642,7 +650,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects only Java files which do not have equivalent java or 
+    <p>Selects only Java files which do not have equivalent java or
     class files in the dest directory.
     </p>
 
@@ -653,7 +661,7 @@
     <p>The <code>&lt;not&gt;</code> tag reverses the meaning of the
     single selector it contains.
     </p>
-    
+
     <p>Here is an example of how to use the Not Selector:</p>
 
     <blockquote><pre>
@@ -677,7 +685,7 @@
     soon as it finds a selector that selects the file,
     so it is not guaranteed to check every selector.
     </p>
-    
+
     <p>Here is an example of how to use the Or Selector:</p>
 
     <blockquote><pre>
@@ -691,7 +699,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the files in the top directory along with all the 
+    <p>Selects all the files in the top directory along with all the
     image files below it.
     </p>
 

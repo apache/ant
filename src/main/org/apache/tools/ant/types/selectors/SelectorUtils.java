@@ -555,5 +555,24 @@ strLoop:
         return false;
     }
 
+   /**
+     * "Flattens" a string by removing all whitespace (space, tab, linefeed,
+     * carriage return, and formfeed). This uses StringTokenizer and the
+     * default set of tokens as documented in the single arguement constructor.
+     *
+     * @param input a String to remove all whitespace.
+     * @return a String that has had all whitespace removed.
+     */
+    public static String removeWhitespace(String input) {
+        StringBuffer result = new StringBuffer();
+        if (input != null) {
+           StringTokenizer st = new StringTokenizer(input);
+           while (st.hasMoreTokens()){
+              result.append(st.nextToken());
+           }
+        }
+        return result.toString();
+    }
+
 }
 

@@ -74,8 +74,10 @@ public class ContainsSelector extends BaseExtendSelector {
 
     private String contains = null;
     private boolean casesensitive = true;
+    private boolean ignorewhitespace = false;
     public final static String CONTAINS_KEY = "text";
     public final static String CASE_KEY = "casesensitive";
+    public final static String WHITESPACE_KEY = "ignorewhitespace";
 
 
     public ContainsSelector() {
@@ -86,6 +88,12 @@ public class ContainsSelector extends BaseExtendSelector {
         buf.append(contains);
         buf.append(" casesensitive: ");
         if (casesensitive) {
+            buf.append("true");
+        } else {
+            buf.append("false");
+        }
+        buf.append(" ignorewhitespace: ");
+        if (ignorewhitespace) {
             buf.append("true");
         } else {
             buf.append("false");
@@ -113,6 +121,15 @@ public class ContainsSelector extends BaseExtendSelector {
     }
 
     /**
+     * Whether to ignore whitespace in the string being searched.
+     *
+     * @param whitespace whether to ignore any whitespace (spaces, tabs, etc.) in the searchstring
+     */
+    public void setIgnorewhitespace(boolean ignorewhitespace) {
+        this.ignorewhitespace = ignorewhitespace;
+    }
+
+    /**
      * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
@@ -128,6 +145,10 @@ public class ContainsSelector extends BaseExtendSelector {
                 }
                 else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
+                        parameters[i].getValue()));
+                }
+                else if (WHITESPACE_KEY.equalsIgnoreCase(paramname)) {
+                    setIgnorewhitespace(Project.toBoolean(
                         parameters[i].getValue()));
                 }
                 else {
@@ -170,6 +191,9 @@ public class ContainsSelector extends BaseExtendSelector {
         if (!casesensitive) {
             userstr = contains.toLowerCase();
         }
+        if (ignorewhitespace) {
+            userstr = SelectorUtils.removeWhitespace(userstr);
+        }
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(
@@ -178,6 +202,9 @@ public class ContainsSelector extends BaseExtendSelector {
             while (teststr != null) {
                 if (!casesensitive) {
                     teststr = teststr.toLowerCase();
+                }
+                if (ignorewhitespace) {
+                    teststr = SelectorUtils.removeWhitespace(teststr);
                 }
                 if (teststr.indexOf(userstr) > -1) {
                     return true;
