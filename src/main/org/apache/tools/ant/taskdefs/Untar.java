@@ -76,7 +76,8 @@ public class Untar extends Expand {
 
     /**
      * No encoding support in Untar.
-     *
+     * @param encoding not used
+     * @throws BuildException always
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
@@ -85,6 +86,9 @@ public class Untar extends Expand {
                                  + " attribute", getLocation());
     }
 
+    /**
+     * @see Expand#expandFile(FileUtils, File, File)
+     */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         TarInputStream tis = null;
         try {
