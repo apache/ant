@@ -4,14 +4,16 @@ Changes from Ant 1.2 to the current sources
 Other changes:
 --------------
 
-* New tasks: propertyfile
+* New tasks: propertyfile, depend
+
+* Added output attribute to <java>.
 
 Fixed bugs:
 -----------
 
 * <signjar> doesn't use deprectated methods anymore.
 
-* documentation of javadoc has been corrected.
+* javadoc's failonerror attribute works again
 
 Changes from Ant 1.1 to Ant 1.2
 ===============================

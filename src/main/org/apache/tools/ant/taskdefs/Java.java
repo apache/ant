@@ -60,8 +60,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -70,12 +69,14 @@ import java.util.*;
  * for the called application thus resulting in much faster operation.
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Java extends Task {
 
     private CommandlineJava cmdl = new CommandlineJava();
     private boolean fork = false;
     private File dir = null;
+    private File out;
     private boolean failOnError = false;
     
     /**
@@ -222,6 +223,13 @@ public class Java extends Task {
     }
 
     /**
+     * File the output of the process is redirected to.
+     */
+    public void setOutput(File out) {
+        this.out = out;
+    }
+
+    /**
      * -mx or -Xmx depending on VM version
      */
     public void setMaxmemory(String max){
@@ -241,6 +249,13 @@ public class Java extends Task {
         exe.setJavaCommand(command.getJavaCommand());
         exe.setClasspath(command.getClasspath());
         exe.setSystemProperties(command.getSystemProperties());
+        if (out != null) {
+            try {
+                exe.setOutput(new PrintStream(new FileOutputStream(out)));
+            } catch (IOException io) {
+                throw new BuildException(io, location);
+            }
+        }
         
         exe.execute(project);
     }
@@ -249,27 +264,41 @@ public class Java extends Task {
      * Executes the given classname with the given arguments in a separate VM.
      */
     private int run(String[] command) throws BuildException {
-        Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
+        FileOutputStream fos = null;
+        try {
+            Execute exe = null;
+            if (out == null) {
+                exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
                                   null);
-        
-        
-        exe.setAntRun(project);
-
-        if (dir == null) {
-            dir = project.getBaseDir();
-        } else if (!dir.exists() || !dir.isDirectory()) {
-            throw new BuildException(dir.getAbsolutePath()+" is not a valid directory",
-                                     location);
-        }
-
-        exe.setWorkingDirectory(dir);
-
-        exe.setCommandline(command);
-        try {
-            return exe.execute();
-        } catch (IOException e) {
-            throw new BuildException(e, location);
+            } else {
+                fos = new FileOutputStream(out);
+                exe = new Execute(new PumpStreamHandler(fos), null);
+            }
+            
+            exe.setAntRun(project);
+            
+            if (dir == null) {
+                dir = project.getBaseDir();
+            } else if (!dir.exists() || !dir.isDirectory()) {
+                throw new BuildException(dir.getAbsolutePath()+" is not a valid directory",
+                                         location);
+            }
+            
+            exe.setWorkingDirectory(dir);
+            
+            exe.setCommandline(command);
+            try {
+                return exe.execute();
+            } catch (IOException e) {
+                throw new BuildException(e, location);
+            }
+        } catch (IOException io) {
+            throw new BuildException(io, location);
+        } finally {
+            if (fos != null) {
+                try {fos.close();} catch (IOException io) {}
+            }
         }
     }
 
