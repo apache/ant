@@ -178,6 +178,15 @@ EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
     recommended to use this feature only if fork is enabled.</strong></td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">clonevm</td>
+    <td valign="top">If set to true true, then all system properties
+      and the bootclasspath of the forked Java Virtual Machine will be
+      the same as those of the Java VM running Ant.  Default is
+      &quot;false&quot; (ignored if fork is disabled).
+      <em>since Ant 1.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>arg and jvmarg</h4>
