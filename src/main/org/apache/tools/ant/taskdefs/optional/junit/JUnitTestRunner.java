@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -180,6 +180,9 @@ public class JUnitTestRunner implements TestListener {
     /** Error output during the test */
     private PrintStream systemOut;    
     
+    /** is this runner running in forked mode? */
+    private boolean forked = false;
+
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.  
@@ -261,9 +264,27 @@ public class JUnitTestRunner implements TestListener {
             ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
             systemOut = new PrintStream(outStrm);
 
+            PrintStream savedOut = null;
+            PrintStream savedErr = null;
+
+            if (forked) {
+                savedOut = System.out;
+                System.setOut(systemOut);
+                savedErr = System.err;
+                System.setErr(systemError);
+            }
+            
+
             try {
                 suite.run(res);
             } finally {
+                if (savedOut != null) {
+                    System.setOut(savedOut);
+                }
+                if (savedErr != null) {
+                    System.setErr(savedOut);
+                }
+                
                 systemError.close();
                 systemError = null;
                 systemOut.close();
@@ -442,6 +463,7 @@ public class JUnitTestRunner implements TestListener {
         t.setProperties(props);
 
         JUnitTestRunner runner = new JUnitTestRunner(t, haltError, stackfilter, haltFail);
+        runner.forked = true;
         transferFormatters(runner);
         runner.run();
         System.exit(runner.getRetCode());
