@@ -287,6 +287,9 @@ Other changes:
 * <java> now supports a timeout attribute analog to <exec> - it is 
   highly recommended to only use it together with fork="true".
 
+* <javadoc> now supports a source attribute to enable javadoc to
+  handle assertions present in JDK 1.4 source code.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -281,6 +281,7 @@ public class Javadoc extends Task {
     private boolean useExternalFile = false;
     private File tmpList = null;
     private FileUtils fileUtils = FileUtils.newFileUtils();
+    private String source = null;
 
     /**
      * Work around command line length limit by using an external file
@@ -431,7 +432,17 @@ public class Javadoc extends Task {
     }
     
     public void setOld(boolean b) {
-        add12ArgIf(b, "-1.1");
+        if (b) {
+            if (javadoc1) {
+                log("Javadoc 1.1 doesn't support the -1.1 switch", 
+                    Project.MSG_WARN);
+            } else if (javadoc4) {
+                log("Javadoc 1.4 doesn't support the -1.1 switch anymore", 
+                    Project.MSG_WARN);
+            } else {
+                cmd.createArgument().setValue("-1.1");
+            }
+        }
     }
     public void setClasspath(Path src) {
         if (classpath == null) {
@@ -896,6 +907,17 @@ public class Javadoc extends Task {
         failOnError = b;
     }
 
+    /**
+     * Enables the -source switch, will be ignored if javadoc is not
+     * the 1.4 version or a different doclet than the standard doclet
+     * is used.
+     *
+     * @since 1.86, Ant 1.5
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     public void execute() throws BuildException {
         if ("javadoc2".equals(taskType)) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
@@ -1094,6 +1116,16 @@ public class Javadoc extends Task {
                                 toExecute.createArgument().setPath(tagletPath);
                             }
                         }
+                    }
+                }
+
+                if (source != null) {
+                    if (doclet != null) {
+                        log("ignoring source option for custom doclet",
+                            Project.MSG_WARN);
+                    } else {
+                        toExecute.createArgument().setValue("-source");
+                        toExecute.createArgument().setValue(source);
                     }
                 }
             }
