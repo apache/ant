@@ -108,6 +108,9 @@ public class Main {
     /** File names of property files to load on startup. */
     private Vector propertyFiles = new Vector(5);
 
+    /** Indicates whether this build is to support interactive input */
+    private boolean allowInput = true;
+    
     /**
      * The Ant logger class. There may be only one logger. It will have
      * the right to use the 'out' PrintStream. The class must implements the
@@ -280,6 +283,8 @@ public class Main {
             } else if (arg.equals("-debug")) {
                 printVersion();
                 msgOutputLevel = Project.MSG_DEBUG;
+            } else if (arg.equals("-noinput")) {
+                allowInput = false;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
                     File logFile = new File(args[i + 1]);
@@ -571,7 +576,9 @@ public class Main {
                 //System.setSecurityManager(new NoExitSecurityManager());
             }
             try {
-                project.setDefaultInputStream(System.in);
+                if (allowInput) { 
+                    project.setDefaultInputStream(System.in);
+                }
                 System.setIn(new DemuxInputStream(project));
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
                 System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
@@ -751,6 +758,7 @@ public class Main {
         msg.append("    -l     <file>                ''" + lSep);
         msg.append("  -logger <classname>    the class which is to perform logging" + lSep);
         msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
+        msg.append("  -noinput               do not allow interactive input" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("    -file    <file>              ''" + lSep);
         msg.append("    -f       <file>              ''" + lSep);

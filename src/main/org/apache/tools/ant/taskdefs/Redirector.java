@@ -399,6 +399,7 @@ public class Redirector {
             outPrintStream = new PrintStream(outputStream);
         }
         outPrintStream.print(line);
+        outPrintStream.flush();
     }
     
     /**
