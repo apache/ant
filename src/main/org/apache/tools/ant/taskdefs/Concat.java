@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -480,7 +480,7 @@ public class Concat extends Task {
             + " files to " + destinationFile);
         FileOutputStream out = null;
         FileInputStream in = null;
-        byte[] buffer = new byte[8 * 1024];
+        byte[] buffer = new byte[BUFFER_SIZE];
         try {
             try {
                 out = new FileOutputStream(destinationFile);
@@ -713,7 +713,7 @@ public class Concat extends Task {
          * @throws BuildException if the file does not exist, or cannot be
          *                        read
          */
-        public void setFile(File file) {
+        public void setFile(File file) throws BuildException {
             // non-existing files are not allowed
             if (!file.exists()) {
                 throw new BuildException("File " + file + " does not exist.");

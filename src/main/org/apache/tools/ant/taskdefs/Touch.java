@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -34,7 +33,6 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Touch a file and/or fileset(s) and/or filelist(s);
@@ -174,12 +172,13 @@ public class Touch extends Task {
 
     /**
      * Add a <code>FileNameMapper</code>.
-     * @param mapper the <code>FileNameMapper</code> to add.
+     * @param fileNameMapper the <code>FileNameMapper</code> to add.
      * @since Ant 1.6.3
+     * @throws BuildException if multiple mappers are added.
      */
-    public void add(FileNameMapper fileNameMapper) {
+    public void add(FileNameMapper fileNameMapper) throws BuildException {
         if (this.fileNameMapper != null) {
-            throw new BuildException( "Only one mapper may be added to the "
+            throw new BuildException("Only one mapper may be added to the "
                 + getTaskName() + " task.");
         }
         this.fileNameMapper = fileNameMapper;
@@ -203,10 +202,10 @@ public class Touch extends Task {
 
     /**
      * Check that this task has been configured properly.
-     * @throws <code>BuildException</code> if configuration errors are detected.
+     * @throws BuildException if configuration errors are detected.
      * @since Ant 1.6.3
      */
-    protected synchronized void checkConfiguration() {
+    protected synchronized void checkConfiguration() throws BuildException {
         if (file == null && filesets.size() + filelists.size() == 0) {
             throw new BuildException("Specify at least one source"
                                    + "--a file, filelist or a fileset.");
@@ -253,22 +252,22 @@ public class Touch extends Task {
 
     /**
      * Execute the touch operation.
-     * @throws <code>BuildException</code> if an error occurs.
+     * @throws BuildException if an error occurs.
      */
-    public void execute() {
+    public void execute() throws BuildException {
         checkConfiguration();
         touch();
     }
 
     /**
      * Does the actual work; assumes everything has been checked by now.
-     * @throws <code>BuildException</code> if an error occurs.
+     * @throws BuildException if an error occurs.
      */
-    protected void touch() {
+    protected void touch() throws BuildException {
         long defaultTimestamp = getTimestamp();
 
         if (file != null) {
-            touch(fileUtils.getParentFile(file), file.getName(), defaultTimestamp);
+            touch(file.getParentFile(), file.getName(), defaultTimestamp);
         }
         // deal with the filesets
         for (int i = 0; i < filesets.size(); i++) {
@@ -323,7 +322,7 @@ public class Touch extends Task {
             String[] mapped = fileNameMapper.mapFileName(filename);
             if (mapped != null && mapped.length > 0) {
                 long modTime = (f.exists()) ? f.lastModified() : defaultTimestamp;
-                for (int i = 0; i < mapped.length ; i++) {
+                for (int i = 0; i < mapped.length; i++) {
                     touch(getProject().resolveFile(mapped[i]), modTime);
                 }
             }
