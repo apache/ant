@@ -494,10 +494,11 @@ public class Manifest extends Task {
                 return false;
             }
 
-            for (Enumeration e = attributes.elements(); e.hasMoreElements();) {
-                Attribute attribute  = (Attribute)e.nextElement();
-                Attribute rshAttribute = (Attribute)rhsSection.attributes.get(attribute.getName().toLowerCase());
-                if (!attribute.equals(rshAttribute)) {
+            for (Enumeration e = attributes.keys(); e.hasMoreElements();) {
+                String attributeName = (String)e.nextElement();
+                Object attributeValue  = attributes.get(attributeName);
+                Object rshAttributeValue = rhsSection.attributes.get(attributeName);
+                if (!attributeValue.equals(rshAttributeValue)) {
                     return false;
                 }
             }
