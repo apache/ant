@@ -51,107 +51,113 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.BuildEvent;
+package org.apache.tools.ant.gui.modules;
 
 /**
- * BuildListener for forwarding events to the EventBus.
+ * Enumeration class of the different log levels.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class BuildEventForwarder implements BuildListener {
+public class LogLevelEnum {
+    /** Enum value. */
+    private int _value = 0;
 
-    /** Application context. */
-    private AppContext _context = null;
-
-    public BuildEventForwarder(AppContext context) {
-        _context = context;
-    }
-
-    /**
-     *  Fired before any targets are started.
-     */
-    public void buildStarted(BuildEvent event){
-        postEvent(event, BuildEventType.BUILD_STARTED);
-        // We doubly post this event.
-        _context.getEventBus().postEvent(
-            new BuildStartedEvent(_context, event));
-    }
-
-    /**
-     *  Fired after the last target has finished. This event
-     *  will still be thrown if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void buildFinished(BuildEvent event) {
-        postEvent(event, BuildEventType.BUILD_FINISHED);
-        // We doubly post this event.
-        _context.getEventBus().postEvent(
-            new BuildFinishedEvent(_context, event));
-    }
-
-    /**
-     *  Fired when a target is started.
-     *
-     *  @see BuildEvent#getTarget()
-     */
-    public void targetStarted(BuildEvent event) {
-        postEvent(event, BuildEventType.TARGET_STARTED);
-    }
-
-    /**
-     *  Fired when a target has finished. This event will
-     *  still be thrown if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void targetFinished(BuildEvent event) {
-        postEvent(event, BuildEventType.TARGET_FINISHED);
-    }
-
-    /**
-     *  Fired when a task is started.
-     *
-     *  @see BuildEvent#getTask()
-     */
-    public void taskStarted(BuildEvent event) {
-        postEvent(event, BuildEventType.TASK_STARTED);
-    }
-
-    /**
-     *  Fired when a task has finished. This event will still
-     *  be throw if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void taskFinished(BuildEvent event) {
-        postEvent(event, BuildEventType.TASK_FINISHED);
-    }
-
-    /**
-     *  Fired whenever a message is logged.
-     *
-     *  @see BuildEvent#getMessage()
-     *  @see BuildEvent#getPriority()
-     */
-    public void messageLogged(BuildEvent event) {
-        postEvent(event, BuildEventType.MESSAGE_LOGGED);
+	/** 
+	 * Standard ctor.
+	 * 
+	 * @param value Index value.
+	 */
+    private LogLevelEnum(int value) {
+        _value = value;
     }
 
 	/** 
-	 * Forward the event.
+	 * Get the enumeration value.
 	 * 
-	 * @param event Event to forward.
-	 * @param type Description of how the event came in.
+	 * @return 
 	 */
-    private void postEvent(BuildEvent event, BuildEventType type) {
-        _context.getEventBus().postEvent(
-            new AntBuildEvent(_context, event, type));
+    public int getValue() {
+        return _value;
     }
 
+	/** 
+	 * Get the enumeration value with the given index value.
+	 * 
+	 * @param value Index value.
+	 * @return Enumeration value.
+	 */
+    public static LogLevelEnum fromInt(int value) {
+        return _objectMap[value];
+    }
+
+	/** 
+	 * Get the set of enumeration values.
+	 * 
+	 * @return Value set.
+	 */
+    public static LogLevelEnum[] getValues() {
+        return _objectMap;
+    }
+
+	/** 
+	 * Determine if the given object is logically equal to this one.
+	 * 
+	 * @param o Object to compare to 
+	 * @return True if equal, false otherwise.
+	 */
+    public boolean equals(Object o) {
+        if(o instanceof LogLevelEnum) {
+            return ((LogLevelEnum)o)._value == _value;
+        }
+        return false;
+    }
+	/** 
+	 * Generate a hash value.
+	 * 
+	 * @return Hash value.
+	 */
+    public int hashValue() {
+        return _value;
+    }
+
+	/** 
+	 * Provide a string representation of this. 
+	 * 
+	 * @return String representation.
+	 */
+    public String toString() {
+        return _stringMap[_value];
+    }
+
+
+    /* Index values. */ 
+    public static final int ERROR_VAL = 0;
+    public static final int WARNING_VAL = 1;
+    public static final int INFO_VAL = 2;
+    public static final int VERBOSE_VAL = 3;
+    public static final int DEBUG_VAL = 4;
+
+    /* Enumeration values. */ 
+    public static final LogLevelEnum ERROR = 
+      new LogLevelEnum(ERROR_VAL);
+    public static final LogLevelEnum WARNING = 
+      new LogLevelEnum(WARNING_VAL);
+    public static final LogLevelEnum INFO = 
+      new LogLevelEnum(INFO_VAL);
+    public static final LogLevelEnum VERBOSE = 
+      new LogLevelEnum(VERBOSE_VAL);
+    public static final LogLevelEnum DEBUG = 
+      new LogLevelEnum(DEBUG_VAL);
+
+    /** Index to object mapping. */
+    private static final LogLevelEnum[] _objectMap = {
+        ERROR, WARNING, INFO, VERBOSE, DEBUG
+    };
+
+    /** String map. XXX needs to be localized. */
+    private static final String[] _stringMap = {
+        "Error", "Warning", "Info", "Verbose", "Debug"
+    };
 
 }

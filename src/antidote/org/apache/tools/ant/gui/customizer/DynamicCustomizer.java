@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.gui.customizer;
 
-import org.apache.tools.ant.gui.LabelFieldGBC;
+import org.apache.tools.ant.gui.util.LabelFieldGBC;
 import java.lang.reflect.*;
 import java.beans.*;
 import javax.swing.*;

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.acs.ACSElement;
-import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.core.AppContext;
 
 /**
  * Event fired when one or more tasks are selected.

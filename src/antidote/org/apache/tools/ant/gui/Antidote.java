@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-
+import org.apache.tools.ant.gui.core.*;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -56,7 +56,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.gui.util.StackFrame;
 import org.apache.tools.ant.gui.command.Command;
 import org.apache.tools.ant.gui.command.NoOpCmd;
-import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.core.AppContext;
 import java.util.EventObject;
 
 /**
@@ -78,7 +78,7 @@ public class AntBuildEvent extends AntEvent {
 	 * @param context application context.
 	 */
     public AntBuildEvent(AppContext context, 
-                            BuildEvent buildEvent, BuildEventType type) {
+                         BuildEvent buildEvent, BuildEventType type) {
         super(context);
         _buildEvent = buildEvent;
         _type = type;

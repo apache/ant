@@ -51,36 +51,41 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.modules.edit;
+
+import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
+import org.apache.tools.ant.gui.core.*;
+import org.apache.tools.ant.gui.acs.*;
 import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.text.Document;
+import java.util.*;
+import java.beans.*;
+import java.io.StringReader;
+import java.io.IOException;
 import java.awt.BorderLayout;
-import java.awt.Insets;
-import java.awt.Dimension;
-import java.util.EventObject;
+import java.awt.Component;
+import java.awt.Point;
 
 /**
- * A widget for displaying the currently selected targets.
- * 
+ * Stub for a property editor.
+ *
  * @version $Revision$ 
- * @author Simeon Fitch 
+ * @author Simeon H.K. Fitch 
  */
-public class TargetMonitor extends AntModule {
-        
-    /** Place to display selected targets. */
-    private JLabel _text = null;
+public class PropertyEditor extends AntModule {
 
-    /** Default text. */
-    private String _defText = null;
+    /** The editor for current bean.*/
+    private Customizer _customizer = null;
+    /** Container for the customizer. */
+    private JPanel _container = null;
+    /** Scroll area containing contents. */
+    private JScrollPane _scroller = null;
 
     /** 
      * Default ctor.
      * 
      */
-    public TargetMonitor() {
+    public PropertyEditor() {
     }
 
     /** 
@@ -90,26 +95,38 @@ public class TargetMonitor extends AntModule {
      */
     public void contextualize(AppContext context) {
         setContext(context);
-        context.getEventBus().addMember(EventBus.RESPONDING, new Handler());
-
+        context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
-
-        _text = new JLabel();
-        _text.setForeground(UIManager.getColor("TextField.foreground"));
-        add(BorderLayout.NORTH, _text);
-
-
-        _defText = context.getResources().getString(getClass(), "defText");
-        setText(_defText);
+        _container = new JPanel(new BorderLayout());
+        add(_scroller = new JScrollPane(_container));
     }
 
     /** 
-     * Set the displayed text. 
+     * Update the display for the current items. 
      * 
-     * @param text Text to display.
+     * @param items Current items to display.
      */
-    private void setText(String text) {
-        _text.setText("<html>&nbsp;&nbsp;" + text + "</html>");
+    private void updateDisplay(ACSElement[] items) {
+        if(_customizer != null) {
+            _container.remove((Component)_customizer);
+            _customizer = null;
+        }
+
+        if(items != null && items.length == 1) {
+            try {
+                BeanInfo info = Introspector.getBeanInfo(items[0].getClass());
+                _customizer = (Customizer) info.getBeanDescriptor().
+                    getCustomizerClass().newInstance();
+                _customizer.setObject(items[0]);
+                _container.add(BorderLayout.CENTER, (Component) _customizer);
+            }
+            catch(Exception ex) {
+                // XXX log me.
+                ex.printStackTrace();
+            }
+        }
+
+        _container.revalidate();
     }
 
 
@@ -126,40 +143,22 @@ public class TargetMonitor extends AntModule {
         public BusFilter getBusFilter() {
             return _filter;
         }
-        
+
         /** 
-         * Called when an event is to be posed to the member.
+         * Called when an event is to be posted to the member.
          * 
          * @param event Event to post.
          * @return true if event should be propogated, false if
          * it should be cancelled.
          */
-        public boolean eventPosted(EventObject event) {
+        public boolean  eventPosted(EventObject event) {
             ElementSelectionEvent e = (ElementSelectionEvent) event;
-            String text = _defText;
-
-            ProjectProxy p =  getContext().getProject();
-            if(p != null) {
-                ElementSelectionModel selections = p.getTreeSelectionModel();
-                ACSTargetElement[] targets = selections.getSelectedTargets();
-                if(targets != null && targets.length > 0) {
-                    StringBuffer buf = new StringBuffer();
-                    for(int i = 0; i < targets.length; i++) {
-                        buf.append(targets[i].getName());
-                        if(i < targets.length - 1) {
-                            buf.append(", ");
-                        }
-                    }
-                    text = buf.toString();
-                }
-            }
-
-            setText(text);
-
+            ACSElement[] elements = e.getSelectedElements();
+            updateDisplay(elements);
             return true;
         }
-    }
 
+    }
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
         /** 
@@ -172,5 +171,4 @@ public class TargetMonitor extends AntModule {
             return event instanceof ElementSelectionEvent;
         }
     }
-
 }

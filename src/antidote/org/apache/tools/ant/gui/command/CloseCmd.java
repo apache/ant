@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.command;
-import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.core.AppContext;
 import org.apache.tools.ant.gui.event.ProjectClosedEvent;
 
 

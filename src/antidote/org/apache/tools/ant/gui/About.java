@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.util.WindowUtils;
 
+import org.apache.tools.ant.gui.core.AppContext;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.*;

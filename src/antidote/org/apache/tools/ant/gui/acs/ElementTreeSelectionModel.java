@@ -51,44 +51,73 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.Project;
-import javax.swing.text.DefaultStyledDocument;
-import java.io.*;
+package org.apache.tools.ant.gui.acs;
+import org.apache.tools.ant.gui.acs.ACSElement;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
+
+import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreePath;
+import java.util.*;
 
 /**
- * Provides a Document view on the Project XML source.
- * NB: This class currently looks nothing like it should.
- * Rather than just rendering a copy of the build file contents,
- * this class should implement a true document model, representing
- * the true XML sturcture of the build file. This is just a temporary 
- * implementation. 
+ * Selection model for the currently selected targets.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ProjectDocument extends DefaultStyledDocument {
+public class ElementTreeSelectionModel extends DefaultTreeSelectionModel {
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    public ElementTreeSelectionModel() {
+        setSelectionMode(DISCONTIGUOUS_TREE_SELECTION);
+    }
 
-    // This is what the real constructor needs to look like...
-    //public ProjectDocument(Project project) {
-    //}
-
-    public ProjectDocument(File f) {
-        // XXX stubbed method. will go away.
-        try {
-            // XXX hack hack hack....
-            Reader reader = new BufferedReader(new FileReader(f));
-			char[] buf = new char[1024];
-			int num = 0;
-            while((num = reader.read(buf)) >= 0) {
-                insertString(getLength(), new String(buf, 0, num), null);
+	/** 
+	 * Convenience method for providing the set of currently selected
+     * elements.
+	 * 
+     * @return the currently selected elements.
+	 */
+    public ACSElement[] getSelectedElements() {
+        TreePath[] path = getSelectionPaths();
+        List values = new LinkedList();
+        for(int i = 0; path != null && i < path.length; i++) {
+            Object val = path[i].getLastPathComponent();
+            if(val instanceof ACSElement) {
+                values.add(val);
             }
+        }
 
+        ACSElement[] retval = new ACSElement[values.size()];
+        values.toArray(retval);
+        return retval;
+    }
+
+	/** 
+	 * Get the set of selected tagets. A target is included if one of its
+     * child nodes is selected.
+	 * 
+     * @return the currently selected targets, and indirectly selected targets.
+	 */
+    public ACSTargetElement[] getSelectedTargets() {
+        TreePath[] path = getSelectionPaths();
+        List values = new LinkedList();
+        for(int i = 0; path != null && i < path.length; i++) {
+            TreePath curr = path[i];
+            for(int j = 0; j < curr.getPathCount(); j++) {
+                Object item = curr.getPathComponent(j);
+                if(item instanceof ACSTargetElement) {
+                    values.add(item);
+                }
+            }
         }
-        catch(Exception ex) {
-			// XXX log me.
-            ex.printStackTrace();
-        }
+
+        ACSTargetElement[] retval = new ACSTargetElement[values.size()];
+        values.toArray(retval);
+        return retval;
+
     }
 
 }

@@ -51,52 +51,50 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.modules.edit;
 
-import javax.swing.filechooser.FileFilter;
-import java.io.File;
+import org.apache.tools.ant.gui.acs.ACSElement;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.JTree;
+import javax.swing.ImageIcon;
+import java.awt.Component;
+import java.awt.Image;
+import java.beans.*;
 
 /**
- * FileFilter for showing only XML files.
+ * Cell renderer for displaying the Ant XML file in a JTree.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class XMLFileFilter extends FileFilter {
+public class ElementTreeCellRenderer extends DefaultTreeCellRenderer {
 
-    /** Text description of filter. */
-    private String _description = null;
+    public Component getTreeCellRendererComponent(JTree tree,
+                                                  Object value,
+                                                  boolean sel,
+                                                  boolean expanded,
+                                                  boolean leaf,
+                                                  int row,
+                                                  boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, sel, expanded,
+                                           leaf, row, hasFocus);
 
+        try {
+            BeanInfo info = Introspector.getBeanInfo(value.getClass());
+            Image icon = info.getIcon(BeanInfo.ICON_COLOR_16x16);
+            setIcon(new ImageIcon(icon));
+            if(value instanceof ACSElement) {
+                setText(((ACSElement)value).getDisplayName());
+            }
+            else {
+               setText(info.getBeanDescriptor().getDisplayName());
+            }
+        }
+        catch(IntrospectionException ex) {
+            // XXX log me.
+            ex.printStackTrace();
+        }
 
-    /** 
-     * Standard constructor.
-     * 
-     * @param resources Access to text resources.
-     */
-    public XMLFileFilter(ResourceManager resources) {
-        _description = resources.getString(getClass(), "description");
+        return this;
     }
-
-    /** 
-     * Accept files that end with ".xml".
-     * 
-     * @param f File to test.
-     * @return True if accepted, false otherwise.
-     */
-    public boolean accept(File f) {
-        if(f.isDirectory()) return true;
-
-        String name = f.getName().toLowerCase();
-        return name.endsWith(".xml");
-    }
-
-    /** 
-     * Human readable description of filter.
-     * 
-     * @return Description.
-     */
-    public String getDescription() {
-        return _description;
-    }
-
 }

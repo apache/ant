@@ -51,58 +51,48 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.core;
+
 import org.apache.tools.ant.gui.event.*;
-import javax.swing.*;
-import java.awt.GridLayout;
-import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import org.apache.tools.ant.gui.command.*;
 import java.util.EventObject;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 /**
- * AntEditor for displaying the project target in a 
+ * The purpose of this class is to watch for events that require some sort
+ * of action, like opening a file.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-class ProjectNavigator extends AntModule {
+public class EventResponder {
 
-    /** Navigation via a tree widget. */
-    private JTree _tree = null;
-
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-	public ProjectNavigator() {
-    }
+    /** The application context. */
+    private AppContext _context = null;
 
 	/** 
-	 * Using the given AppContext, initialize the display.
+	 * Standard constructor. 
 	 * 
 	 * @param context Application context.
 	 */
-    public void contextualize(AppContext context) {
-        setContext(context);
-        context.getEventBus().addMember(EventBus.MONITORING, new Handler());
+    public EventResponder(AppContext context) {
+        _context = context;
 
-        setLayout(new GridLayout(1,1));
+        // XXX This needs to be changed, along with the event bus,
+        // to allow the EventResponder to be the last listener
+        // to receive the event. This will allow the addition
+        // of event filters to yank an event out of the bus, sort of 
+        // like an interrupt level.
+        _context.getEventBus().addMember(
+			EventBus.RESPONDING, new ActionResponder());
+        _context.getEventBus().addMember(
+			EventBus.RESPONDING, new AntResponder());
+    }
 
-        _tree = new JTree();
-        _tree.setModel(null);
-        _tree.setCellRenderer(new AntTreeCellRenderer());
-        _tree.addMouseListener(new PopupHandler());
-        JScrollPane scroller = new JScrollPane(_tree);
-        add(scroller);
-
-        setPreferredSize(new Dimension(200, 100));
-        setMinimumSize(new Dimension(200, 100));
-	}
-
-    /** Class for handling project events. */
-    private class Handler implements BusMember {
-        private final Filter _filter = new Filter();
+    /** Handler for bus events. */
+    private class ActionResponder implements BusMember {
+        private final ActionFilter _filter = new ActionFilter();
 
         /** 
          * Get the filter to that is used to determine if an event should
@@ -122,56 +112,68 @@ class ProjectNavigator extends AntModule {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            ProjectProxy project = getContext().getProject();
+            String command = ((ActionEvent)event).getActionCommand();
 
-            if(project == null) {
-                // The project has been closed.
-                // XXX this needs to be tested against 
-                // different version of Swing...
-                _tree.setModel(null);
-                _tree.setSelectionModel(null);
+            Command cmd = 
+                _context.getActions().getActionCommand(command, _context);
+            if(cmd != null) {
+                cmd.run();
+                return false;
             }
             else {
-                _tree.setModel(project.getTreeModel());
-                _tree.setSelectionModel(project.getTreeSelectionModel());
+				// XXX log me.
+                System.err.println("Unhandled action: " + command);
+                // XXX temporary.
+                new DisplayErrorCmd(
+                    _context, 
+                    "Sorry. \"" + command + 
+                    "\" not implemented yet. Care to help out?").run();
+                return true;
             }
-            return true;
         }
     }
 
-    /** Class providing filtering for project events. */
-    private static class Filter implements BusFilter {
-        /** 
-         * Determines if the given event should be accepted.
-         * 
-         * @param event Event to test.
-         * @return True if event should be given to BusMember, false otherwise.
-         */
+    /** Filter for action events. */
+    private static class ActionFilter implements BusFilter {
         public boolean accept(EventObject event) {
-            return event instanceof NewProjectEvent;
+            return event instanceof ActionEvent;
         }
     }
 
-    /** Mouse listener for showing popup menu. */
-    private class PopupHandler extends MouseAdapter {
-        private void handle(MouseEvent e) {
-            if(e.isPopupTrigger()) {
-                ActionManager mgr = getContext().getActions();
-                JPopupMenu menu = mgr.createPopup(
-                    getContext().getResources().getStringArray(
-                        ProjectNavigator.class, "popupActions"));
-                menu.show((JComponent)e.getSource(), e.getX(), e.getY());
-            }
-        }
+    /** Handler for bus events. */
+    private class AntResponder implements BusMember {
+        private final AntFilter _filter = new AntFilter();
 
-        public void mousePressed(MouseEvent e) {
-            handle(e);
+        /** 
+         * Get the filter to that is used to determine if an event should
+         * to to the member.
+         * 
+         * @return Filter to use.
+         */
+        public BusFilter getBusFilter() {
+            return _filter;
         }
-        public void mouseReleased(MouseEvent e) {
-            handle(e);
-        }
-        public void mouseClicked(MouseEvent e) {
-            handle(e);
+        
+        /** 
+         * Called when an event is to be posed to the member.
+         * 
+         * @param event Event to post.
+         * @return true if event should be propogated, false if
+         * it should be cancelled.
+         */
+        public boolean eventPosted(EventObject event) {
+            AntEvent e = (AntEvent) event;
+            Command cmd = e.createDefaultCmd();
+            cmd.run();
+            return cmd instanceof NoOpCmd;
         }
     }
+
+    /** Filter for ant events. */
+    private static class AntFilter implements BusFilter {
+        public boolean accept(EventObject event) {
+            return event instanceof AntEvent;
+        }
+    }
+
 }

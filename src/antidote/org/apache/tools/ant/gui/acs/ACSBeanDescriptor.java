@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-import org.apache.tools.ant.gui.ResourceManager;
+import org.apache.tools.ant.gui.core.ResourceManager;
 import java.beans.*;
 
 /**

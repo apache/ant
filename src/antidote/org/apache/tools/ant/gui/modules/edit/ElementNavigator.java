@@ -51,83 +51,55 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-
-import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
-import org.apache.tools.ant.gui.acs.*;
+package org.apache.tools.ant.gui.modules.edit;
+import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
-import java.util.*;
-import java.beans.*;
-import java.io.StringReader;
-import java.io.IOException;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Point;
+import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 
 /**
- * Stub for a property editor.
- *
+ * Module for navigating build file elemenets.
+ * 
  * @version $Revision$ 
- * @author Simeon H.K. Fitch 
+ * @author Simeon Fitch 
  */
-public class PropertyEditor extends AntModule {
+public class ElementNavigator extends AntModule {
 
-    /** The editor for current bean.*/
-    private Customizer _customizer = null;
-    /** Container for the customizer. */
-    private JPanel _container = null;
-    /** Scroll area containing contents. */
-    private JScrollPane _scroller = null;
+    /** Navigation via a tree widget. */
+    private JTree _tree = null;
 
-    /** 
-     * Default ctor.
-     * 
-     */
-    public PropertyEditor() {
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+	public ElementNavigator() {
     }
 
-    /** 
-     * Using the given AppContext, initialize the display.
-     * 
-     * @param context Application context.
-     */
+	/** 
+	 * Using the given AppContext, initialize the display.
+	 * 
+	 * @param context Application context.
+	 */
     public void contextualize(AppContext context) {
         setContext(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
-        setLayout(new BorderLayout());
-        _container = new JPanel(new BorderLayout());
-        add(_scroller = new JScrollPane(_container));
-    }
 
-    /** 
-     * Update the display for the current items. 
-     * 
-     * @param items Current items to display.
-     */
-    private void updateDisplay(ACSElement[] items) {
-        if(_customizer != null) {
-            _container.remove((Component)_customizer);
-            _customizer = null;
-        }
+        setLayout(new GridLayout(1,1));
 
-        if(items != null && items.length == 1) {
-            try {
-                BeanInfo info = Introspector.getBeanInfo(items[0].getClass());
-                _customizer = (Customizer) info.getBeanDescriptor().
-                    getCustomizerClass().newInstance();
-                _customizer.setObject(items[0]);
-                _container.add(BorderLayout.CENTER, (Component) _customizer);
-            }
-            catch(Exception ex) {
-                // XXX log me.
-                ex.printStackTrace();
-            }
-        }
+        _tree = new JTree();
+        _tree.setModel(null);
+        _tree.setCellRenderer(new ElementTreeCellRenderer());
+        _tree.addMouseListener(new PopupHandler());
+        JScrollPane scroller = new JScrollPane(_tree);
+        add(scroller);
 
-        _container.revalidate();
-    }
-
+        setPreferredSize(new Dimension(200, 100));
+        setMinimumSize(new Dimension(200, 100));
+	}
 
     /** Class for handling project events. */
     private class Handler implements BusMember {
@@ -142,22 +114,32 @@ public class PropertyEditor extends AntModule {
         public BusFilter getBusFilter() {
             return _filter;
         }
-
+        
         /** 
-         * Called when an event is to be posted to the member.
+         * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
          * @return true if event should be propogated, false if
          * it should be cancelled.
          */
-        public boolean  eventPosted(EventObject event) {
-            ElementSelectionEvent e = (ElementSelectionEvent) event;
-            ACSElement[] elements = e.getSelectedElements();
-            updateDisplay(elements);
+        public boolean eventPosted(EventObject event) {
+            ProjectProxy project = getContext().getProject();
+
+            if(project == null) {
+                // The project has been closed.
+                // XXX this needs to be tested against 
+                // different version of Swing...
+                _tree.setModel(null);
+                _tree.setSelectionModel(null);
+            }
+            else {
+                _tree.setModel(project.getTreeModel());
+                _tree.setSelectionModel(project.getTreeSelectionModel());
+            }
             return true;
         }
-
     }
+
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
         /** 
@@ -167,7 +149,30 @@ public class PropertyEditor extends AntModule {
          * @return True if event should be given to BusMember, false otherwise.
          */
         public boolean accept(EventObject event) {
-            return event instanceof ElementSelectionEvent;
+            return event instanceof NewProjectEvent;
+        }
+    }
+
+    /** Mouse listener for showing popup menu. */
+    private class PopupHandler extends MouseAdapter {
+        private void handle(MouseEvent e) {
+            if(e.isPopupTrigger()) {
+                ActionManager mgr = getContext().getActions();
+                JPopupMenu menu = mgr.createPopup(
+                    getContext().getResources().getStringArray(
+                        ElementNavigator.class, "popupActions"));
+                menu.show((JComponent)e.getSource(), e.getX(), e.getY());
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+            handle(e);
+        }
+        public void mouseReleased(MouseEvent e) {
+            handle(e);
+        }
+        public void mouseClicked(MouseEvent e) {
+            handle(e);
         }
     }
 }

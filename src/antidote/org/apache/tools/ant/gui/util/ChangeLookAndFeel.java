@@ -51,8 +51,10 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
 
+package org.apache.tools.ant.gui.util;
+
+import org.apache.tools.ant.gui.core.AppContext;
 import org.apache.tools.ant.gui.event.ErrorEvent;
 import org.apache.tools.ant.gui.util.WindowUtils;
 

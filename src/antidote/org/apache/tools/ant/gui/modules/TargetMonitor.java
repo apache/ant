@@ -51,48 +51,73 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-
+package org.apache.tools.ant.gui.modules;
+import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.gui.command.*;
-import java.util.EventObject;
-import java.awt.event.ActionEvent;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
+import org.apache.tools.ant.gui.acs.ElementTreeSelectionModel;
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Insets;
+import java.awt.Dimension;
+import java.util.EventObject;
 
 /**
- * The purpose of this class is to watch for events that require some sort
- * of action, like opening a file.
+ * A widget for displaying the currently selected targets.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-class EventResponder {
+public class TargetMonitor extends AntModule {
+        
+    /** Place to display selected targets. */
+    private JLabel _text = null;
 
-    /** The application context. */
-    private AppContext _context = null;
+    /** Default text. */
+    private String _defText = null;
 
-	/** 
-	 * Standard constructor. 
-	 * 
-	 * @param context Application context.
-	 */
-    public EventResponder(AppContext context) {
-        _context = context;
-
-        // XXX This needs to be changed, along with the event bus,
-        // to allow the EventResponder to be the last listener
-        // to receive the event. This will allow the addition
-        // of event filters to yank an event out of the bus, sort of 
-        // like an interrupt level.
-        _context.getEventBus().addMember(
-			EventBus.RESPONDING, new ActionResponder());
-        _context.getEventBus().addMember(
-			EventBus.RESPONDING, new AntResponder());
+    /** 
+     * Default ctor.
+     * 
+     */
+    public TargetMonitor() {
     }
 
-    /** Handler for bus events. */
-    private class ActionResponder implements BusMember {
-        private final ActionFilter _filter = new ActionFilter();
+    /** 
+     * Using the given AppContext, initialize the display.
+     * 
+     * @param context Application context.
+     */
+    public void contextualize(AppContext context) {
+        setContext(context);
+        context.getEventBus().addMember(EventBus.RESPONDING, new Handler());
+
+        setLayout(new BorderLayout());
+
+        _text = new JLabel();
+        _text.setForeground(UIManager.getColor("TextField.foreground"));
+        add(BorderLayout.NORTH, _text);
+
+
+        _defText = context.getResources().getString(getClass(), "defText");
+        setText(_defText);
+    }
+
+    /** 
+     * Set the displayed text. 
+     * 
+     * @param text Text to display.
+     */
+    private void setText(String text) {
+        _text.setText("<html>&nbsp;&nbsp;" + text + "</html>");
+    }
+
+
+    /** Class for handling project events. */
+    private class Handler implements BusMember {
+        private final Filter _filter = new Filter();
 
         /** 
          * Get the filter to that is used to determine if an event should
@@ -112,67 +137,42 @@ class EventResponder {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            String command = ((ActionEvent)event).getActionCommand();
+            ElementSelectionEvent e = (ElementSelectionEvent) event;
+            String text = _defText;
 
-            Command cmd = 
-                _context.getActions().getActionCommand(command, _context);
-            if(cmd != null) {
-                cmd.run();
-                return false;
+            ProjectProxy p =  getContext().getProject();
+            if(p != null) {
+                ElementTreeSelectionModel selections = 
+                    p.getTreeSelectionModel();
+                ACSTargetElement[] targets = selections.getSelectedTargets();
+                if(targets != null && targets.length > 0) {
+                    StringBuffer buf = new StringBuffer();
+                    for(int i = 0; i < targets.length; i++) {
+                        buf.append(targets[i].getName());
+                        if(i < targets.length - 1) {
+                            buf.append(", ");
+                        }
+                    }
+                    text = buf.toString();
+                }
             }
-            else {
-				// XXX log me.
-                System.err.println("Unhandled action: " + command);
-                // XXX temporary.
-                new DisplayErrorCmd(
-                    _context, 
-                    "Sorry. \"" + command + 
-                    "\" not implemented yet. Care to help out?").run();
-                return true;
-            }
+
+            setText(text);
+
+            return true;
         }
     }
 
-    /** Filter for action events. */
-    private static class ActionFilter implements BusFilter {
-        public boolean accept(EventObject event) {
-            return event instanceof ActionEvent;
-        }
-    }
-
-    /** Handler for bus events. */
-    private class AntResponder implements BusMember {
-        private final AntFilter _filter = new AntFilter();
-
+    /** Class providing filtering for project events. */
+    private static class Filter implements BusFilter {
         /** 
-         * Get the filter to that is used to determine if an event should
-         * to to the member.
+         * Determines if the given event should be accepted.
          * 
-         * @return Filter to use.
+         * @param event Event to test.
+         * @return True if event should be given to BusMember, false otherwise.
          */
-        public BusFilter getBusFilter() {
-            return _filter;
-        }
-        
-        /** 
-         * Called when an event is to be posed to the member.
-         * 
-         * @param event Event to post.
-         * @return true if event should be propogated, false if
-         * it should be cancelled.
-         */
-        public boolean eventPosted(EventObject event) {
-            AntEvent e = (AntEvent) event;
-            Command cmd = e.createDefaultCmd();
-            cmd.run();
-            return cmd instanceof NoOpCmd;
-        }
-    }
-
-    /** Filter for ant events. */
-    private static class AntFilter implements BusFilter {
         public boolean accept(EventObject event) {
-            return event instanceof AntEvent;
+            return event instanceof ElementSelectionEvent;
         }
     }
 

@@ -51,7 +51,10 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.modules;
+
+import org.apache.tools.ant.gui.core.AntModule;
+import org.apache.tools.ant.gui.core.AppContext;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -68,7 +71,7 @@ import java.util.EventObject;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Console extends AntModule {
+public class BuildConsole extends AntModule {
     /** Area where messages are printed. */
     private JTextPane _text = null;
     /** Selection of logging levels. */
@@ -79,7 +82,7 @@ public class Console extends AntModule {
 	/** 
 	 * Default ctor.
 	 */
-    public Console() {
+    public BuildConsole() {
     }
 
 

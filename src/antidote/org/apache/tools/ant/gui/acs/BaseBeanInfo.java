@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-import org.apache.tools.ant.gui.ResourceManager;
+import org.apache.tools.ant.gui.core.ResourceManager;
 import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
 import java.beans.*;
 import javax.swing.ImageIcon;

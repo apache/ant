@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.core.AppContext;
 
 
 /**

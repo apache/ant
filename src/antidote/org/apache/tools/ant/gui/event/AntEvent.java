@@ -54,7 +54,7 @@
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.command.Command;
 import org.apache.tools.ant.gui.command.NoOpCmd;
-import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.core.AppContext;
 import java.util.EventObject;
 
 /**

@@ -52,13 +52,13 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.command;
-import org.apache.tools.ant.gui.AppContext;
-import org.apache.tools.ant.gui.ProjectProxy;
+import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.core.ProjectProxy;
 import org.apache.tools.ant.gui.event.ErrorEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.apache.tools.ant.gui.XMLFileFilter;
+import org.apache.tools.ant.gui.core.XMLFileFilter;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.JOptionPane;

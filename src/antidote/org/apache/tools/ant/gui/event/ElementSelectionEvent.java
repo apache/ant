@@ -55,7 +55,7 @@ package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.acs.*;
 import org.apache.tools.ant.gui.command.Command;
 import org.apache.tools.ant.gui.command.DisplayErrorCmd;
-import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.core.AppContext;
 
 /**
  * Event indicating that the current set of selected targets has changed.

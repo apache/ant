@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.core;
 
 import java.util.*;
 import java.text.MessageFormat;
@@ -67,6 +67,18 @@ import java.io.File;
  * @author Simeon H.K. Fitch 
  */
 public class ResourceManager {
+
+    /** Path to default resources. */
+    private static final String RESOURCE_PKG = 
+        "org.apache.tools.ant.gui.resources";
+    /** Path to default resources. */
+    private static final String DEF_PROPERTIES = 
+        RESOURCE_PKG + ".antidote";
+
+    /** Image path. */
+    private static final String IMG_PATH = 
+        "/" + RESOURCE_PKG.replace('.', '/');
+
     /** Resources to reference. */
     private ResourceBundle _resources = null;
 
@@ -75,7 +87,7 @@ public class ResourceManager {
      * 
      */
     public ResourceManager() {
-        this("org.apache.tools.ant.gui.resources.antidote");
+        this(DEF_PROPERTIES);
     }
 
     /** 
@@ -186,7 +198,7 @@ public class ResourceManager {
 
         ImageIcon icon = null;
 
-        URL location = getClass().getResource("resources/" + fileName);
+        URL location = getClass().getResource(IMG_PATH + "/" + fileName);
 
         if(location != null) {
             icon = new ImageIcon(location);

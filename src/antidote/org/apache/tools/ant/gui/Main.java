@@ -52,6 +52,8 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
+import org.apache.tools.ant.gui.core.*;
+import org.apache.tools.ant.gui.util.XMLHelper;
 import org.apache.tools.ant.gui.command.LoadFileCmd;
 import javax.swing.*;
 import java.awt.BorderLayout;

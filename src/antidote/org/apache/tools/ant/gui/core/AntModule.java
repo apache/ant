@@ -51,21 +51,72 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.core;
 
-
-import javax.swing.tree.DefaultTreeModel;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-
+import javax.swing.JComponent;
+import javax.swing.BorderFactory;
 
 /**
- * Provides a tree model view of the Project class. XXX This
- * is a major hack right now that needs to be cleaned up.
- *
+ * Abstract base class for a "module", which is really anything that
+ * can send or receive events, or edit or view the model.
+ * 
  * @version $Revision$ 
- * @author Simeon H.K. Fitch */
-public class ProjectTreeModel extends DefaultTreeModel {
-    public ProjectTreeModel(ACSProjectElement root) {
-        super(root);
+ * @author Simeon Fitch 
+ */
+public abstract class AntModule extends JComponent {
+
+    /** The application context. */
+    private AppContext _context = null;
+
+    /** 
+     * Default constructor.
+     */
+    protected AntModule() {
+        // Create a dummy border so that the widget will at least have a
+        // minimal display in a bean environment.
+        setBorder(BorderFactory.createTitledBorder(getClass().getName()));
+    }
+
+    /** 
+     * This method is called after instantiation when the application context
+     * is available for constructing the class' display. Think of this in
+     * a similar manner to Applet.init() or Servlet.init(). It should 
+     * immediately call #setContext() with the given parameter.
+     * 
+     * @param context Valid application context providing
+     *                all required resources.  
+     */
+    public abstract void contextualize(AppContext context);
+
+    /** 
+     * Set the application context.
+     * 
+     * @param context Application context.
+     */
+    protected void setContext(AppContext context) {
+        _context = context;
+        setBorder(_context == null ? null : 
+                  BorderFactory.createTitledBorder(getName()));
+    }
+
+    /** 
+     * Get the application context.
+     * 
+     * @return Application context.
+     */
+    public AppContext getContext() {
+        if(_context == null) {
+            throw new IllegalStateException(
+                "The AppContext has not been set.");
+        }
+        return _context;
+    }
+    /** 
+     * Get the name of the editor.
+     * 
+     * @return Editor's name.
+     */
+    public String getName() {
+        return getContext().getResources().getString(getClass(), "name");
     }
 }

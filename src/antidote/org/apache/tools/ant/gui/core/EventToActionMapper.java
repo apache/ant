@@ -51,24 +51,95 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.core;
+import java.util.*;
 
 /**
- * Placeholder for XML related duties.
+ * The purpose of this class is to manage the 
+ * mappings between event type and action enabled state.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class XMLHelper {
-    public static void init() {
-        try {
-            Class.forName("javax.xml.parsers.SAXParserFactory");
-        } 
-        catch(Exception ex) {
-            System.err.println("No JAXP compliant XML parser found. " +
-                               "See http://java.sun.com/xml for the\n" +
-                               "reference implementation.");
-            ex.printStackTrace();
-        } 
+class EventToActionMapper {
+
+    /** Lookup for enable(true) events. Key is event type, value is
+     *  a list of actions that are changed by the event. */
+    private Map _enableOn = new HashMap();
+    /** Lookup for enable(false) events. Key is event type, value is
+     *  a list of actions that are changed by the event. */
+    private Map _disableOn = new HashMap();
+
+
+	/** 
+	 * Defaul ctor.
+	 * 
+	 */
+    public EventToActionMapper() {
+    }
+
+	/** 
+	 * Add an action.
+	 * 
+	 * @param action Action to add.
+	 */
+    public void addAction(AntAction action) {
+        putAction(action, action.getEnableOnEvents(), _enableOn);
+        putAction(action, action.getDisableOnEvents(), _disableOn);
+    }
+
+	/** 
+	 * For the given action store it in the event type mapping
+     * for each of the given types.
+	 * 
+	 * @param action Action to store.
+	 * @param clazzes Array of types to store it under.
+	 * @param storage The place to store the association.
+	 */
+    private void putAction(AntAction action, Class[] clazzes, Map storage) {
+        if(clazzes == null) return;
+
+        for(int i = 0; i < clazzes.length; i++) {
+            List values = (List) storage.get(clazzes[i]);
+            if(values == null) {
+                values = new ArrayList(1);
+                storage.put(clazzes[i], values);
+            }
+
+            values.add(action);
+        }
+    }
+	/** 
+	 * For the given event change the state of any actions that 
+     * have been registered as needing a transition as a result of
+     * the event.
+	 * 
+	 * @param event The event to apply.
+	 */
+    public void applyEvent(EventObject event) {
+        if(event == null) return;
+
+        List vals = null;
+
+        vals = (List) _enableOn.get(event.getClass());
+        changeState(vals, true);
+
+        vals = (List) _disableOn.get(event.getClass());
+        changeState(vals, false);
+    }
+
+	/** 
+	 * Set the enabled state of the given actions.
+	 * 
+	 * @param actions List of AntActions to set state for.
+	 * @param state The state to set them to.
+	 */
+    private void changeState(List actions, boolean state) {
+        if(actions == null) return;
+
+        for(int i = 0, len = actions.size(); i < len; i++) {
+            AntAction action = (AntAction) actions.get(i);
+            action.setEnabled(state);
+        }
     }
 }

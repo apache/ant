@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.core;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.gui.event.*;
 import java.awt.Frame;
@@ -80,7 +80,6 @@ public class AppContext {
 
     /** The current data model. */
     private ProjectProxy _project = null;
-
 
     public AppContext(Frame parent) {
         _parentFrame = parent;

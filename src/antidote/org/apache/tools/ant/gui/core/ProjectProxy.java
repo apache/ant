@@ -51,9 +51,12 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.core;
+
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.gui.*;
 import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.acs.ElementTreeSelectionModel;
 import org.apache.tools.ant.gui.acs.*;
 import java.io.File;
 import java.io.Writer;
@@ -86,7 +89,7 @@ public class ProjectProxy {
     /** The current thread executing a build. */
     private Thread _buildThread = null;
     /** The selection model for selected targets. */
-    private ElementSelectionModel _selections = null;
+    private ElementTreeSelectionModel _selections = null;
 
 	/** 
 	 * File loading ctor.
@@ -106,7 +109,7 @@ public class ProjectProxy {
 	 */
     private void loadProject() throws IOException, SAXException {
         _project = ACSFactory.getInstance().load(_file);
-        _selections = new ElementSelectionModel();
+        _selections = new ElementTreeSelectionModel();
         _selections.addTreeSelectionListener(new SelectionForwarder());
     }
 
@@ -174,7 +177,7 @@ public class ProjectProxy {
 	 */
     public TreeModel getTreeModel() {
         if(_project != null) {
-            return new ProjectTreeModel(_project);
+            return new ElementTreeModel(_project);
         }
         return null;
     }
@@ -184,7 +187,7 @@ public class ProjectProxy {
 	 * 
 	 * @return Selection model.
 	 */
-    public ElementSelectionModel getTreeSelectionModel() {
+    public ElementTreeSelectionModel getTreeSelectionModel() {
         return _selections;
     }
 
