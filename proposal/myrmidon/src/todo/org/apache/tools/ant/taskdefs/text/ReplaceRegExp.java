@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.ant.taskdefs.text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,7 +21,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RegularExpression;
-import org.apache.tools.ant.types.Substitution;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**

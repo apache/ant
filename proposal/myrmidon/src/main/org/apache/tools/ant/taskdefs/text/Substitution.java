@@ -5,11 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.types;
+package org.apache.tools.ant.taskdefs.text;
 
 import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.DataType;
 
 /**
  * A regular expression substitution datatype. It is an expression that is meant
