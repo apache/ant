@@ -54,6 +54,11 @@ Changes that could break older environments:
 
 * <translate> will now preserve line endings.
 
+* <ftp> followsymlinks="false" in nested fileset definitions is explicitly
+  required in order to exclude remote symbolic links (when doing a get, chmod,
+  delete, rmdir).
+
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla
@@ -211,6 +216,8 @@ Fixed bugs:
 
 * ftp was not able to download files when they were pointed to by symbolic links
   Bugzilla Report 14063.
+
+* ftp is able to download also directories pointed to by symbolic links.
 
 * replace would change \r\n into \r\r\n under Windows.
 
