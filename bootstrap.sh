@@ -17,12 +17,6 @@ else
   echo "  to the installation directory of java."
 fi
 
-if [ ! -f "$JAVA_HOME/bin/java" ] ; then
-  echo "Error: JAVA_HOME is not defined correctly."
-  echo "  We were unable to locate JAVA_HOME/bin/java"
-  exit
-fi
-
 if [ ! -x "$JAVA_HOME/bin/java" ] ; then
   echo "Error: JAVA_HOME is not defined correctly."
   echo "  We cannot execute JAVA_HOME/bin/java"
@@ -83,12 +77,18 @@ mkdir -p ${CLASSDIR}
 
 echo ... Compiling Ant Classes
 
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java ${TOOLS}/ant/util/regexp/RegexpMatcher.java ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java ${TOOLS}/ant/*.java ${TOOLS}/ant/taskdefs/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java \
+    ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
+    ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
+    ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java \
+    ${TOOLS}/ant/*.java ${TOOLS}/ant/taskdefs/*.java
 
 echo ... Copying Required Files
 
-cp src/main/org/apache/tools/ant/taskdefs/defaults.properties ${CLASSDIR}/org/apache/tools/ant/taskdefs
-cp src/main/org/apache/tools/ant/types/defaults.properties ${CLASSDIR}/org/apache/tools/ant/types
+cp src/main/org/apache/tools/ant/taskdefs/defaults.properties \
+    ${CLASSDIR}/org/apache/tools/ant/taskdefs
+cp src/main/org/apache/tools/ant/types/defaults.properties \
+    ${CLASSDIR}/org/apache/tools/ant/types
 
 echo ... Building Ant Distribution
 
