@@ -246,7 +246,8 @@ instead.</i></p>
   </tr>
   <tr>
     <td valign="top">group</td>
-    <td valign="top">Group specified packages together in overview page</td>
+    <td valign="top">Group specified packages together in overview
+      page.  The format is as described <a href="#groupattribute">below</a>.</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -352,7 +353,33 @@ instead.</i></p>
     <td align="center" valign="top">all</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">excludepackagenames</td>
+    <td valign="top">comma separated list of packages you don't want
+      docs for.</td>
+    <td align="center" valign="top">all</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used
+      (<code>yes</code> | <code>no</code>); default excludes are used when omitted.</td>
+    <td align="center" valign="top">all</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
+
+<h4><a name="groupattribute">Format of the group attribute</a></h4>
+<p>The arguments are comma-delimited. Each single argument is 2
+space-delimited strings, where the first one is the group's title and
+the second one a colon delimited list of packages.</p>
+<p>If you need to specify more than one group, or a group whose title
+contains a comma or a space character, using <a
+href="#groupelement">nested group elements</a> is highly
+recommended.</p>
+<p>E.g., 
+<pre>    group=&quot;XSLT_Packages org.apache.xalan.xslt*,XPath_Packages org.apache.xalan.xpath*&quot;
+</pre></p>
 
 <h3>Parameters specified as nested elements</h3>
 <h4>link</h4>
@@ -387,7 +414,7 @@ specify multiple occurrences of the arguments.</p>
   </tr>
 </table>
   
-<h4>groups</h4> 
+<h4><a name="groupelement">group</a></h4> 
 <p>Separates packages on the overview page into whatever groups you
 specify, one group per table. This performs the same role as the group
 attribute. You can use either syntax (or both at once), but with the
@@ -444,6 +471,8 @@ respectively.</p>
 <h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
            sourcepath=&quot;src&quot;
+           excludepackagenames=&quot;com.dummy.test.doc-files.*&quot;
+           defaultexcludes=&quot;yes&quot;
            destdir=&quot;docs/api&quot;
            author=&quot;true&quot;
            version=&quot;true&quot;
@@ -452,7 +481,7 @@ respectively.</p>
            doctitle=&quot;&lt;h1&gt;Test&lt;/h1&gt;&quot;
            bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;&gt;
     &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
-    &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*&quot;/&gt;
+    &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
     &lt;link href=&quot;http://developer.java.sun.com/developer/products/xml/docs/api/&quot;/&gt;
   &lt/javadoc&gt;</pre>
