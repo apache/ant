@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant.types;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
@@ -188,7 +188,7 @@ public class CommandlineJava implements Cloneable
         return vmVersion;
     }
 
-    public void addSysproperty( Environment.Variable sysp )
+    public void addSysproperty( EnvironmentData.Variable sysp )
     {
         sysProperties.addVariable( sysp );
     }
@@ -323,11 +323,11 @@ public class CommandlineJava implements Cloneable
     }
 
     /**
-     * Specialized Environment class for System properties
+     * Specialized EnvironmentData class for System properties
      *
      * @author RT
      */
-    public static class SysProperties extends Environment implements Cloneable
+    public static class SysProperties extends EnvironmentData implements Cloneable
     {
         Properties sys = null;
 
@@ -340,7 +340,7 @@ public class CommandlineJava implements Cloneable
 
                 for( Iterator e = variables.iterator(); e.hasNext(); )
                 {
-                    Environment.Variable v = (Environment.Variable)e.next();
+                    EnvironmentData.Variable v = (EnvironmentData.Variable)e.next();
                     p.put( v.getKey(), v.getValue() );
                 }
                 System.setProperties( p );

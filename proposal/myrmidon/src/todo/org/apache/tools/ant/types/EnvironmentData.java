@@ -15,11 +15,11 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class Environment
+public class EnvironmentData
 {
     protected ArrayList variables;
 
-    public Environment()
+    public EnvironmentData()
     {
         variables = new ArrayList();
     }
