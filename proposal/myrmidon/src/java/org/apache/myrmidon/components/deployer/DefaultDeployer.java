@@ -25,7 +25,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.api.Task;
-import org.apache.myrmidon.components.type.DefaultTypeFactory;
+import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;

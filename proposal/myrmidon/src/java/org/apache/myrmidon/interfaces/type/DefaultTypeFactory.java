@@ -5,15 +5,15 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.type;
+package org.apache.myrmidon.interfaces.type;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.net.URLClassLoader;
+import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
 
 /**
  * Create a type instance based on name.
@@ -99,7 +99,7 @@ public class DefaultTypeFactory
             final String message = REZ.getString( "no-mapping.error", name );
             throw new TypeException( message );
         }
-        
+
         return className;
     }
 
@@ -109,7 +109,7 @@ public class DefaultTypeFactory
         {
             m_classLoader = new URLClassLoader( m_urls, m_parent );
         }
-        
+
         return m_classLoader;
     }
 }
