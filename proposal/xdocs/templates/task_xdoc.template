@@ -1,0 +1,42 @@
+<XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.AntTagsHandler"/>
+
+<task name="<XDtAnt:taskName/>" classname="<XDtClass:fullClassName/>">
+
+  <short-description><![CDATA[<XDtClass:firstSentenceDescription/>]]></short-description>
+  <long-description>
+    <![CDATA[<XDtClass:classComment no-comment-signs="true"/>]]>
+  </long-description>
+
+  <structure>
+
+    <XDtAnt:forAllAttributes>
+      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+        <description><![CDATA[
+          <XDtMethod:methodComment no-comment-signs="true"/>
+        ]]></description>
+      </attribute>
+    </XDtAnt:forAllAttributes>
+
+    <XDtAnt:forAllElements>
+      <element name="<XDtAnt:elementName/>">
+        <description><![CDATA[
+          <XDtMethod:methodComment no-comment-signs="true"/>
+        ]]></description>
+      </element>
+    </XDtAnt:forAllElements>
+
+    <!-- @todo: wrap setCurrentMethod inside AntTagsHandler -->
+    <XDtMethod:setCurrentMethod name="addText" parameters="java.lang.String">
+      <body>
+        <description><![CDATA[
+          <XDtMethod:methodComment no-comment-signs="true"/>
+        ]]></description>
+      </body>
+    </XDtMethod:setCurrentMethod>
+
+  </structure>
+
+    <!-- merge point for samples? -->
+</task>
+
+
