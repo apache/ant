@@ -21,7 +21,7 @@ import org.apache.tools.ant.BuildException;
 import java.util.Enumeration;
 
 /**
- * <tt>Xor</tt> task to exclusive or operations.
+ * The <tt>Xor</tt> condition type to exclusive or operations.
  * This does not shortcut stuff.
  */
 public class Xor extends ConditionBase implements Condition {
