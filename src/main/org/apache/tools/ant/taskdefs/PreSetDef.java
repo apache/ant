@@ -163,8 +163,8 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
     }
 
     private static class MyAntTypeDefinition extends AntTypeDefinition {
-        AntTypeDefinition parent;
-        UnknownElement    element;
+        private AntTypeDefinition parent;
+        private UnknownElement    element;
 
         public MyAntTypeDefinition(AntTypeDefinition parent, UnknownElement el) {
             this.parent = parent;
