@@ -9,6 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.Project;
 
 /**
@@ -103,16 +104,16 @@ public class ZipFileSet
     {
         if( srcFile != null )
         {
-            ZipScanner zs = new ZipScanner();
+            final ZipScanner zs = new ZipScanner();
             zs.setSrc( srcFile );
             super.setDir( p.getBaseDir() );
-            setupDirectoryScanner( zs );
+            ScannerUtil.setupDirectoryScanner( this, zs, null );
             zs.init();
             return zs;
         }
         else
         {
-            return super.getDirectoryScanner();
+            return ScannerUtil.getDirectoryScanner( this );
         }
     }
 

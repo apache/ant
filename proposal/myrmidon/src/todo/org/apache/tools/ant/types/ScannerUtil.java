@@ -10,6 +10,9 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.PatternUtil;
 
 /**
  *
@@ -523,5 +526,58 @@ public class ScannerUtil
             // this will generate false positives but we can live with that.
             return true;
         }
+    }
+
+    public static void setupDirectoryScanner( final FileSet set,
+                                              final FileScanner scanner,
+                                              final TaskContext context )
+        throws TaskException
+    {
+        if( null == scanner )
+        {
+            final String message = "ds cannot be null";
+            throw new IllegalArgumentException( message );
+        }
+
+        scanner.setBasedir( set.getDir() );
+
+        final String message = "FileSet: Setup file scanner in dir " +
+            set.getDir() + " with " + set.getPatternSet();
+        //getLogger().debug( message );
+
+        scanner.setIncludes( PatternUtil.getIncludePatterns( set.getPatternSet(), context ) );
+        scanner.setExcludes( PatternUtil.getExcludePatterns( set.getPatternSet(), context ) );
+        if( set.useDefaultExcludes() )
+        {
+            scanner.addDefaultExcludes();
+        }
+        scanner.setCaseSensitive( set.isCaseSensitive() );
+    }
+
+    public static DirectoryScanner getDirectoryScanner( final FileSet set )
+        throws TaskException
+    {
+        final File dir = set.getDir();
+        if( null == dir )
+        {
+            final String message = "No directory specified for fileset.";
+            throw new TaskException( message );
+        }
+
+        if( !dir.exists() )
+        {
+            final String message = dir.getAbsolutePath() + " not found.";
+            throw new TaskException( message );
+        }
+        if( !dir.isDirectory() )
+        {
+            final String message = dir.getAbsolutePath() + " is not a directory.";
+            throw new TaskException( message );
+        }
+
+        final DirectoryScanner scanner = new DirectoryScanner();
+        setupDirectoryScanner( set, scanner, null );
+        scanner.scan();
+        return scanner;
     }
 }

@@ -8,11 +8,9 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.myrmidon.framework.PatternSet;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Moved out of MatchingTask to make it a standalone object that could be
@@ -27,14 +25,11 @@ import org.apache.tools.ant.ProjectComponent;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class FileSet
-    extends ProjectComponent
-    implements Cloneable
 {
-    private PatternSet m_defaultPatterns = new PatternSet();
-    private ArrayList m_additionalPatterns = new ArrayList();
+    private File m_dir;
+    private PatternSet m_patternSet = new PatternSet();
     private boolean m_useDefaultExcludes = true;
     private boolean m_isCaseSensitive = true;
-    private File m_dir;
 
     /**
      * Sets case sensitivity of the file system
@@ -66,7 +61,28 @@ public class FileSet
      */
     public void setExcludes( final String excludes )
     {
-        m_defaultPatterns.setExcludes( excludes );
+        m_patternSet.setExcludes( excludes );
+    }
+
+    /**
+     * add a name entry on the exclude list
+     */
+    public void addExclude( final Pattern pattern )
+    {
+        m_patternSet.addExclude( pattern );
+    }
+
+    /**
+     * add a name entry on the include list
+     */
+    public void addInclude( final Pattern pattern )
+    {
+        m_patternSet.addInclude( pattern );
+    }
+
+    public void addPatternSet( final PatternSet set )
+    {
+        m_patternSet.append( set );
     }
 
     /**
@@ -77,91 +93,26 @@ public class FileSet
      */
     public void setIncludes( final String includes )
     {
-        m_defaultPatterns.setIncludes( includes );
+        m_patternSet.setIncludes( includes );
     }
 
-    public void setupDirectoryScanner( final FileScanner ds )
-        throws TaskException
+    public final PatternSet getPatternSet()
     {
-        if( null == ds )
-        {
-            final String message = "ds cannot be null";
-            throw new IllegalArgumentException( message );
-        }
+        return m_patternSet;
+    }
 
-        ds.setBasedir( m_dir );
+    public boolean isCaseSensitive()
+    {
+        return m_isCaseSensitive;
+    }
 
-        final int size = m_additionalPatterns.size();
-        for( int i = 0; i < size; i++ )
-        {
-            final Object o = m_additionalPatterns.get( i );
-            m_defaultPatterns.append( (PatternSet)o );
-        }
-
-        final String message = "FileSet: Setup file scanner in dir " +
-            m_dir + " with " + m_defaultPatterns;
-        getLogger().debug( message );
-
-        ds.setIncludes( m_defaultPatterns.getIncludePatterns( getContext() ) );
-        ds.setExcludes( m_defaultPatterns.getExcludePatterns( getContext() ) );
-        if( m_useDefaultExcludes )
-        {
-            ds.addDefaultExcludes();
-        }
-        ds.setCaseSensitive( m_isCaseSensitive );
+    public boolean useDefaultExcludes()
+    {
+        return m_useDefaultExcludes;
     }
 
     public File getDir()
     {
         return m_dir;
-    }
-
-    /**
-     * Returns the directory scanner needed to access the files to process.
-     */
-    public DirectoryScanner getDirectoryScanner()
-        throws TaskException
-    {
-        if( m_dir == null )
-        {
-            throw new TaskException( "No directory specified for fileset." );
-        }
-
-        if( !m_dir.exists() )
-        {
-            throw new TaskException( m_dir.getAbsolutePath() + " not found." );
-        }
-        if( !m_dir.isDirectory() )
-        {
-            throw new TaskException( m_dir.getAbsolutePath() + " is not a directory." );
-        }
-
-        final DirectoryScanner scanner = new DirectoryScanner();
-        setupDirectoryScanner( scanner );
-        scanner.scan();
-        return scanner;
-    }
-
-    /**
-     * add a name entry on the exclude list
-     */
-    public void addExclude( final Pattern pattern )
-    {
-        m_defaultPatterns.addExclude( pattern );
-    }
-
-    /**
-     * add a name entry on the include list
-     */
-    public void addInclude( final Pattern pattern )
-    {
-        m_defaultPatterns.addInclude( pattern );
-    }
-
-    public PatternSet createPatternSet()
-    {
-        final PatternSet patterns = new PatternSet();
-        m_additionalPatterns.add( patterns );
-        return patterns;
     }
 }

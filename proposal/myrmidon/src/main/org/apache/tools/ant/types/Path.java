@@ -205,7 +205,7 @@ public class Path
             else if( o instanceof FileSet )
             {
                 final FileSet fs = (FileSet)o;
-                final DirectoryScanner ds = fs.getDirectoryScanner();
+                final DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 final String[] s = ds.getIncludedFiles();
                 final File dir = fs.getDir();
                 for( int j = 0; j < s.length; j++ )
