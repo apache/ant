@@ -502,12 +502,17 @@
           </tr>
         </table>
 
-        <p>With Antenna, you can compile, preverify, package, and
-        obfuscate your MIDP applications, as well as convert them to
-        PRC files designed to run on MIDP for PalmOS. The tasks are
-        mostly built around the Wireless Toolkit and the free
-        RetroGuard obfuscator, with some additional gimmicks like
-        automatic version numbering.</p>
+        <p>Antenna provides a set of Ant tasks suitable for developing
+        wireless Java applications targeted at the Mobile Information
+        Device Profile (MIDP). With Antenna, you can compile,
+        preverify, package, obfuscate, and run your MIDP applications
+        (aka MIDlets), manipulate Java Application Descriptor (JAD)
+        files, as well as convert JAR files to PRC files designed to
+        run on MIDP for Palm OS. Deployment is supported via a
+        deployment task and a corresponding HTTP servlet for
+        Over-the-Air (OTA) provisioning. A small preprocessor allows
+        to generate different variants of a MIDlet from a single
+        source.</p>
 
         <table>
           <tr>
