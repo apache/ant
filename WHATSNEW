@@ -216,6 +216,8 @@ Other changes:
   <exclude> elements can be used to exclude certain packages from
   being parsed.  Bugzilla Report 17134.
 
+* The JProbe tasks now also work with JProbe 4.x.  Bugzilla Report 14849.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

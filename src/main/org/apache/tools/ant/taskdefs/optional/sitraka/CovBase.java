@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.io.File;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -68,6 +69,8 @@ import org.apache.tools.ant.util.FileUtils;
 public abstract class CovBase extends Task {
     private File home;
     private static FileUtils fu = FileUtils.newFileUtils();
+    private boolean isJProbe4 = false;
+    private static boolean isDos = Os.isFamily("dos");
 
     /**
      * The directory where JProbe is installed.
@@ -80,12 +83,43 @@ public abstract class CovBase extends Task {
         return home;
     }
 
-    protected File findJar(String relativePath) {
-        return fu.resolveFile(home, relativePath);
+    protected File findCoverageJar() {
+        File loc = null;
+        if (isJProbe4) {
+            loc = fu.resolveFile(home, "lib/coverage.jar");
+        } else {
+            loc = fu.resolveFile(home, "coverage/coverage.jar");
+            if (!loc.canRead()) {
+                File newLoc = fu.resolveFile(home, "lib/coverage.jar");
+                if (newLoc.canRead()) {
+                    isJProbe4 = true;
+                    loc = newLoc;
+                }
+            }
+        }
+        
+        return loc;
     }
 
     protected String findExecutable(String relativePath) {
-        return fu.resolveFile(home, relativePath).getAbsolutePath();
+        if (isDos) {
+            relativePath += ".exe";
+        }
+
+        File loc = null;
+        if (isJProbe4) {
+            loc = fu.resolveFile(home, "bin/" + relativePath);
+        } else {
+            loc = fu.resolveFile(home, relativePath);
+            if (!loc.canRead()) {
+                File newLoc = fu.resolveFile(home, "bin/" + relativePath);
+                if (newLoc.canRead()) {
+                    isJProbe4 = true;
+                    loc = newLoc;
+                }
+            }
+        }
+        return loc.getAbsolutePath();
     }
 
     protected File createTempFile(String prefix) {
@@ -93,6 +127,6 @@ public abstract class CovBase extends Task {
     }
 
     protected String getParamFileArgument() {
-        return "-jp_paramfile=";
+        return (!isJProbe4 ? "-jp_" : "") + "paramfile=";
     }
 }

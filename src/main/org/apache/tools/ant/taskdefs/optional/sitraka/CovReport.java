@@ -271,7 +271,7 @@ public class CovReport extends CovBase {
         if (getHome() == null) {
             throw new BuildException("'home' attribute must be set to JProbe home directory");
         }
-        File jar = findJar("coverage/coverage.jar");
+        File jar = findCoverageJar();
         if (!jar.exists()) {
             throw new BuildException("Cannot find Coverage directory: " + getHome());
         }

@@ -154,7 +154,7 @@ public class CovMerge extends CovBase {
         if (getHome() == null || !getHome().isDirectory()) {
             throw new BuildException("Invalid home directory. Must point to JProbe home directory");
         }
-        File jar = findJar("coverage/coverage.jar");
+        File jar = findCoverageJar();
         if (!jar.exists()) {
             throw new BuildException("Cannot find Coverage directory: " + getHome());
         }
