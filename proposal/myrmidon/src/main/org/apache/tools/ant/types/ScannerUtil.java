@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.PatternUtil;
+import org.apache.myrmidon.framework.PatternSet;
 
 /**
  *
@@ -542,12 +543,12 @@ public class ScannerUtil
         scanner.setBasedir( set.getDir() );
 
         final String message = "FileSet: Setup file scanner in dir " +
-            set.getDir() + " with " + set.getPatternSet();
+            set.getDir() + " with " + set;
         //getLogger().debug( message );
 
-        scanner.setIncludes( PatternUtil.getIncludePatterns( set.getPatternSet(), context ) );
-        scanner.setExcludes( PatternUtil.getExcludePatterns( set.getPatternSet(), context ) );
-        if( set.useDefaultExcludes() )
+        scanner.setIncludes( PatternUtil.getIncludePatterns( set, context ) );
+        scanner.setExcludes( PatternUtil.getExcludePatterns( set, context ) );
+        if( set.includeDefaultExcludes() )
         {
             scanner.addDefaultExcludes();
         }
@@ -579,5 +580,31 @@ public class ScannerUtil
         setupDirectoryScanner( set, scanner, null );
         scanner.scan();
         return scanner;
+    }
+
+    public static DirectoryScanner getZipScanner( final ZipFileSet set )
+        throws TaskException
+    {
+        final File dir = set.getDir();
+        final File src = set.getSrc();
+
+        if( null != dir && null != src )
+        {
+            throw new TaskException( "Cannot set both dir and src attributes" );
+        }
+
+        if( null != src )
+        {
+            final ZipScanner scanner = new ZipScanner();
+            scanner.setSrc( src );
+            set.setDir( null  );
+            setupDirectoryScanner( set, scanner, null );
+            scanner.init();
+            return scanner;
+        }
+        else
+        {
+            return getDirectoryScanner( set );
+        }
     }
 }
