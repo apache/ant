@@ -56,12 +56,14 @@ package org.apache.tools.ant.filters.util;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.filters.BaseFilterReader;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -84,18 +86,35 @@ public final class ChainReaderHelper {
     /**
      * The size of the buffer to be used.
      */
-    public int bufferSize = 4096;
+    public int bufferSize = 8192;
 
     /**
      * Chain of filters
      */
     public Vector filterChains = new Vector();
 
+    /** The Ant project */
+    private Project project = null;
+
     /**
      * Sets the primary reader
      */
     public final void setPrimaryReader(Reader rdr) {
         primaryReader = rdr;
+    }
+
+    /**
+     * Set the project to work with
+     */
+    public final void setProject(final Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Get the project
+     */
+    public final Project getProject() {
+        return project;
     }
 
     /**
@@ -194,6 +213,9 @@ public final class ChainReaderHelper {
                     }
                 } else if (o instanceof ChainableReader &&
                            o instanceof Reader) {
+                    if (project != null && o instanceof BaseFilterReader) {
+                        ((BaseFilterReader) o).setProject(project);
+                    }
                     instream = ((ChainableReader) o).chain(instream);
                 }
             }
@@ -207,25 +229,6 @@ public final class ChainReaderHelper {
      */
     public final String readFully(Reader rdr)
         throws IOException {
-
-        final char[] buffer = new char[bufferSize];
-        int bufferLength = 0;
-        String text = null;
-        StringBuffer textBuffer = null;
-        while (bufferLength != -1) {
-            bufferLength = rdr.read(buffer);
-            if (bufferLength != -1) {
-                if (textBuffer == null) {
-                    textBuffer = new StringBuffer(
-                                    new String(buffer, 0, bufferLength));
-                } else {
-                    textBuffer.append(new String(buffer, 0, bufferLength));
-                }
-            }
-        }
-        if (textBuffer != null) {
-            text = textBuffer.toString();
-        }
-        return text;
+        return FileUtils.readFully(rdr, bufferSize);
     }
 }

@@ -41,11 +41,6 @@
     <td valign="top">Whether to halt the build on failure</td>
     <td align="center" valign="top">No, default "true"</td>
   </tr>
-  <tr>
-    <td valign="top">evaluateProperties</td>
-    <td valign="top">flag to enable property evalation in the file</td>
-    <td align="center" valign="top">No, default "false"</td>
-  </tr>
 </table>
 <p>
 The LoadFile task supports nested <a href="../CoreTypes/filterreaderset.html">
@@ -75,7 +70,7 @@ Load a file, don't fail if it is missing (a message is printed, though)
       property="mail.recipients"
       srcFile="recipientlist.txt"&gt;
       &lt;filterchain&gt;
-        &lt;filterreader classname="org.apache.tools.ant.filters.<a href="../CoreTypes/filterchain.html#StripLineBreaks">StripLineBreaks</a>" /&gt;
+        &lt;<a href="../CoreTypes/filterchain.html#striplinebreaks">striplinebreaks</a>/&gt;
       &lt;/filterchaint&gt;
     &lt;/loadfile&gt;
 </pre>
@@ -84,8 +79,9 @@ merging lines to ensure this happens.
 
 <pre>    &lt;loadfile
       property="system.configuration.xml"
-      srcFile="configuration.xml"
-      evaluateProperties="true" /&gt;
+      srcFile="configuration.xml"&gt;
+        &lt;<a href="../CoreTypes/filterchain.html#expandproperties">expandproperties</a>/&gt;
+    &lt;/loadfile&gt;
 </pre>
 Load an XML file into a property, expanding all properties declared
 in the file in the process.

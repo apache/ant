@@ -58,6 +58,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
+
 /**
  * Base class for core filter readers.
  *
@@ -68,6 +71,9 @@ public abstract class BaseFilterReader
 {
     /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
+
+    /** The Ant project */
+    private Project project = null;
 
     /**
      * This constructor is a dummy constructor and is
@@ -163,6 +169,20 @@ public abstract class BaseFilterReader
     }
 
     /**
+     * Set the project to work with
+     */
+    public final void setProject(final Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Get the project
+     */
+    protected final Project getProject() {
+        return project;
+    }
+
+    /**
      * Read till EOL
      */
     protected final String readLine() throws IOException {
@@ -176,5 +196,12 @@ public abstract class BaseFilterReader
             ch = in.read();
         }
         return line;
+    }
+
+    /**
+     * Read till EOF
+     */
+    protected final String readFully() throws IOException {
+        return FileUtils.readFully(in, 8192);
     }
 }

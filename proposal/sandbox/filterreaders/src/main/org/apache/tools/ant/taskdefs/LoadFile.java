@@ -93,11 +93,6 @@ public final class LoadFile extends Task {
     private String property = null;
 
     /**
-     * flag to control whether props get evaluated or not
-     */
-    private boolean evaluateProperties=false;
-
-    /**
      * Holds FilterChains
      */
     private final Vector filterChains = new Vector();
@@ -149,15 +144,6 @@ public final class LoadFile extends Task {
 
 
     /**
-     * setter to eval properties.
-     * @since 1.6
-     */
-    public final void setEvaluateProperties(final boolean evaluateProperties) {
-        this.evaluateProperties=evaluateProperties;
-    }
-
-
-    /**
      * read in a source file to a property
      *
      * @exception BuildException if something goes wrong with the build
@@ -194,14 +180,12 @@ public final class LoadFile extends Task {
             crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
+            crh.setProject(project);
             instream = crh.getAssembledReader();
 
             String text = crh.readFully(instream);
 
             if (text != null) {
-                if(evaluateProperties) {
-                    text = project.replaceProperties(text);
-                }
                 project.setNewProperty(property, text);
                 log("loaded " + text.length() + " characters",Project.MSG_VERBOSE);
                 log(property+" := "+text,Project.MSG_DEBUG);

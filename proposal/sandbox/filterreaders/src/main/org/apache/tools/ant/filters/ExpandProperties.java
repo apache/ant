@@ -51,78 +51,92 @@
  *  information on the Apache Software Foundation, please see
  *  <http://www.apache.org/>.
  */
-package org.apache.tools.ant.types;
+package org.apache.tools.ant.filters;
 
-import java.util.Vector;
+import java.io.IOException;
+import java.io.Reader;
 
-import org.apache.tools.ant.filters.ExpandProperties;
-import org.apache.tools.ant.filters.HeadFilter;
-import org.apache.tools.ant.filters.LineContains;
-import org.apache.tools.ant.filters.PrefixLines;
-import org.apache.tools.ant.filters.ReplaceTokens;
-import org.apache.tools.ant.filters.StripJavaComments;
-import org.apache.tools.ant.filters.StripLineBreaks;
-import org.apache.tools.ant.filters.StripLineComments;
-import org.apache.tools.ant.filters.TabsToSpaces;
-import org.apache.tools.ant.filters.TailFilter;
+import org.apache.tools.ant.Project;
 
 /**
- * FilterChain may contain a chained set of filter readers.
+ * Attach a prefix to every line
+ *
+ * Example:
+ * =======
+ *
+ * &lt;prefixlines prefix=&quot;Foo&quot;/&gt;
+ *
+ * Or:
+ *
+ * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
+ *    &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
+ * &lt;/filterreader&gt;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class FilterChain {
+public final class ExpandProperties
+    extends BaseFilterReader
+    implements ChainableReader
+{
+    /** Data that must be read from, if not null. */
+    private String queuedData = null;
 
-    private final Vector filterReaders = new Vector();
-
-    public final void addFilterReader(final AntFilterReader filterReader) {
-        filterReaders.addElement(filterReader);
+    /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public ExpandProperties() {
+        super();
     }
 
-    public final Vector getFilterReaders() {
-        return filterReaders;
+    /**
+     * Create a new filtered reader.
+     *
+     * @param in  a Reader object providing the underlying stream.
+     */
+    public ExpandProperties(final Reader in) {
+        super(in);
     }
 
-    public final void addExpandProperties(final ExpandProperties expandProperties) {
-        filterReaders.addElement(expandProperties);
+    /**
+     * Prefix lines with user defined prefix.
+     */
+    public final int read() throws IOException {
+
+        int ch = -1;
+
+        if (queuedData != null && queuedData.length() == 0) {
+            queuedData = null;
+        }
+
+        if (queuedData != null) {
+            ch = queuedData.charAt(0);
+            queuedData = queuedData.substring(1);
+            if (queuedData.length() == 0) {
+                queuedData = null;
+            }
+        } else {
+            queuedData = readFully();
+            if (queuedData == null) {
+                ch = -1;
+            } else {
+                Project project = getProject();
+                queuedData = project.replaceProperties(queuedData);
+                return read();
+            }
+        }
+        return ch;
     }
 
-    public final void addHeadFilter(final HeadFilter headFilter) {
-        filterReaders.addElement(headFilter);
-    }
-
-    public final void addLineContains(final LineContains lineContains) {
-        filterReaders.addElement(lineContains);
-    }
-
-    public final void addPrefixLines(final PrefixLines prefixLines) {
-        filterReaders.addElement(prefixLines);
-    }
-
-    public final void addReplaceTokens(final ReplaceTokens replaceTokens) {
-        filterReaders.addElement(replaceTokens);
-    }
-
-    public final void addStripJavaComments(final StripJavaComments
-                                                stripJavaComments) {
-        filterReaders.addElement(stripJavaComments);
-    }
-
-    public final void addStripLineBreaks(final StripLineBreaks
-                                                stripLineBreaks) {
-        filterReaders.addElement(stripLineBreaks);
-    }
-
-    public final void addStripLineComments(final StripLineComments
-                                                stripLineComments) {
-        filterReaders.addElement(stripLineComments);
-    }
-
-    public final void addTabsToSpaces(final TabsToSpaces tabsToSpaces) {
-        filterReaders.addElement(tabsToSpaces);
-    }
-
-    public final void addTailFilter(final TailFilter tailFilter) {
-        filterReaders.addElement(tailFilter);
+    /**
+     * Create a new PrefixLines using the passed in
+     * Reader for instantiation.
+     */
+    public final Reader chain(final Reader rdr) {
+        ExpandProperties newFilter = new ExpandProperties(rdr);
+        newFilter.setProject(getProject());
+        return newFilter;
     }
 }
