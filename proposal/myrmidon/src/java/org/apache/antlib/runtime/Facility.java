@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.runtime;
+package org.apache.antlib.runtime;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -82,7 +82,7 @@ public class Facility
             }
             catch( final Exception e )
             {
-                final String message = 
+                final String message =
                     REZ.getString( "facility.no-create.error", children[ 0 ].getName() );
                 throw new ConfigurationException( message, e );
             }
