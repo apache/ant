@@ -653,6 +653,32 @@
         </table>
       </subsection>
 
+      <subsection name="Purge">
+
+	<p>Purge deletes all but the most recent few files from a fileset. 
+	For example: if you have generated files (logs, .ear, .war, .jar 
+	etc) accumulating in a directory, the purge task will allow you
+	to delete the older files, keeping just the most recent ones.</p>
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 or above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.dallaway.com/ant/">http://www.dallaway.com/ant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:purge@dallaway.com">Richard Dallaway</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
