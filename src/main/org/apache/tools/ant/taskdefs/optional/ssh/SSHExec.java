@@ -80,7 +80,7 @@ import com.jcraft.jsch.Session;
 public class SSHExec extends SSHBase {
 
     private String command = null;   // the command to execute via ssh
-    private int maxwait = 0;   // units are milliseconds, default is 0=infinite
+    private long maxwait = 0;   // units are milliseconds, default is 0=infinite
     private Thread thread = null;   // for waiting for the command to finish
 
     private String output_property = null;   // like <exec>
@@ -110,14 +110,14 @@ public class SSHExec extends SSHBase {
      *
      * @param timeout  The new timeout value in seconds
      */
-    public void setTimeout(int timeout) {
-        maxwait = timeout * 1000;
+    public void setTimeout(long timeout) {
+        maxwait = timeout;
     }
 
     /**
      * If used, stores the output of the command to the given file.
      *
-     * @param maxwait  The new maxwait value
+     * @param output  The file to write to.
      */
     public void setOutput(File output) {
         output_file = output;
