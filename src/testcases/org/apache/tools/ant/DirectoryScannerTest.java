@@ -133,7 +133,7 @@ public class DirectoryScannerTest extends BuildFileTest {
             new String[] {});
     }
 
-    public void test2ButCaseInsesitive() {
+    public void test2ButCaseInsensitive() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"ALPHA/"});
