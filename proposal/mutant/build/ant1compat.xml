@@ -32,8 +32,6 @@
   <patternset id="converted">
     <exclude name="org/apache/tools/ant/taskdefs/Ant.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/CallTarget.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Parallel.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Sequential.java"/>
   </patternset>
 
   <fileset id="ant1src" dir="../../src/main">
@@ -68,6 +66,7 @@
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
     <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
     <pathelement location="${distlib.dir}/common/common.jar"/>
+    <pathelement location="${distlib.dir}/antlibs/system.tsk"/>
   </path>
 
   <target name="check_for_optional_packages">

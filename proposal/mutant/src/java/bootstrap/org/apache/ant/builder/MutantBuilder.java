@@ -10,7 +10,8 @@ public class MutantBuilder {
         helper.setProperty("distlib.dir", "${dist.dir}/lib");
         helper.setProperty("debug", "true");
         helper.createPath("classpath.parser");
-        helper.addFileSetToPath("classpath.parser", "${lib.dir}/parser", "*.jar");
+        helper.addFileSetToPath("classpath.parser", 
+                        "${lib.dir}/parser", "*.jar");
         helper.createPath("classpath.common");
         helper.addPathElementToPath("classpath.common", "${distlib.dir}/init.jar");
         helper.createPath("classpath.antcore");
@@ -60,6 +61,8 @@ public class MutantBuilder {
         helper.javac("${java.dir}/start", "${bin.dir}/start", "classpath.start");
         helper.jar("${bin.dir}/start", "${distlib.dir}/start.jar",
                    null, null);
+        helper.jar("${bin.dir}/start", "${distlib.dir}/ant.jar",
+                   null, null);
     }
     protected void ant1compat(BuildHelper helper) {
     }
@@ -86,9 +89,6 @@ public class MutantBuilder {
     protected void main(BuildHelper helper) {
     }
     protected void checkstyle(BuildHelper helper) {
-        helper.setProperty("checkstyle.bin", "../checkstyle");
-        helper.createPath("checkstyle.path");
-        helper.addFileSetToPath("checkstyle.path", "${checkstyle.bin}", null);
         helper.mkdir("${bin.dir}/check");
     }
     protected void javadocs(BuildHelper helper) {

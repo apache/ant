@@ -870,24 +870,59 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @return the created task instance
      */
     public Task createTask(String taskType) {
-        // we piggy back the task onto the current context
         Task task = null;
-        Class c = (Class)taskClassDefinitions.get(taskType);
+        Class taskClass = (Class)taskClassDefinitions.get(taskType);
 
-        if (c == null) {
+        if (taskClass == null) {
             return null;
         }
 
         try {
-            task = (Task)c.newInstance();
-            task.setProject(this);
-            task.init(context, taskType);
+            Object taskObject = componentService.createComponent(factory, 
+                context.getClassLoader(), taskClass, false, taskType);
+            if (taskObject instanceof Task) {
+                task = (Task)taskObject;
+            } else {
+                TaskAdapter adapter = new TaskAdapter();
+                adapter.setProxy(taskObject);
+                task = adapter;
+            }
+            task.setTaskType(taskType);
+            task.setTaskName(taskType);
             return task;
         } catch (Throwable e) {
             throw new BuildException(e);
         }
     }
 
+    /**
+     * Creates a new instance of a data type.
+     * 
+     * @param typeName The name of the data type to create an instance of.
+     *                 Must not be <code>null</code>.
+     * 
+     * @return an instance of the specified data type, or <code>null</code> if
+     *         the data type name is not recognised.
+     * 
+     * @exception BuildException if the data type name is recognised but 
+     *                           instance creation fails.
+     */
+    public Object createDataType(String typeName) throws BuildException {
+        Class typeClass = (Class)dataClassDefinitions.get(typeName);
+
+        if (typeClass == null) {
+            return null;
+        }
+
+        try {
+            Object dataInstance = componentService.createComponent(factory, 
+                context.getClassLoader(), typeClass, false, typeName);
+            return dataInstance;
+        } catch (Throwable e) {
+            throw new BuildException(e);
+        }
+    }
+    
     /** send build started event to the listeners */
     protected void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);

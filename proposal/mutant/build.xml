@@ -35,7 +35,8 @@
   </path>
 
   <target name="buildsetup">
-    <available file="../checkstyle" property="checkstyle.available"/>
+    <available classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" 
+               property="checkstyle.available"/>
     <mkdir dir="${bin.dir}"/>
     <mkdir dir="${distlib.dir}"/>
     <copy todir="${distlib.dir}/parser">
@@ -99,6 +100,14 @@
         <attribute name="Main-Class" value="org.apache.ant.start.Main"/>
         <attribute name="Class-Path" value="init.jar"/>
       </manifest>
+      <include name="org/apache/ant/**/*"/>
+    </jar>
+    <jar basedir="${bin.dir}/start" jarfile="${distlib.dir}/ant.jar">
+      <manifest>
+        <attribute name="Main-Class" value="org.apache.tools.ant.Main"/>
+        <attribute name="Class-Path" value="start.jar"/>
+      </manifest>
+      <include name="org/apache/tools/ant/**/*"/>
     </jar>
   </target>
 
@@ -155,14 +164,8 @@
   <target name="main" depends="cli, antlibs, ant1compat, remote, checkstyle"/> 
   
   <target name="checkstyle" if="checkstyle.available">
-    <property name="checkstyle.bin" value="../checkstyle"/>
-    <path id="checkstyle.path">
-      <fileset dir="${checkstyle.bin}"/>
-    </path>
     <taskdef name="checkstyle"
-             classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
-        <classpath refid="checkstyle.path"/>
-    </taskdef>
+             classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
     <mkdir dir="${bin.dir}/check"/>
     <checkstyle maxlinelen="80"
                 memberpattern="[a-z].*"

@@ -160,11 +160,11 @@ public class ExecutionContext implements AntContext {
     }
 
     /**
-     * Gets the loader for this task
+     * Gets the loader for this context
      *
-     * @return the task's loader
+     * @return the context's loader
      */
-    protected ClassLoader getLoader() {
+    public ClassLoader getClassLoader() {
         return loader;
     }
 

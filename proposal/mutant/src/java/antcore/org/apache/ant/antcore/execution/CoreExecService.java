@@ -154,7 +154,7 @@ public class CoreExecService implements ExecService {
         Throwable failureCause = null;
         try {
             ClassLoader currentLoader 
-                = LoaderUtils.setContextLoader(execContext.getLoader());
+                = LoaderUtils.setContextLoader(execContext.getClassLoader());
             task.execute();
             LoaderUtils.setContextLoader(currentLoader);
         } catch (Throwable e) {

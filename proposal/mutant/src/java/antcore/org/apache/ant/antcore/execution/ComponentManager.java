@@ -317,9 +317,32 @@ public class ComponentManager implements ComponentService {
      *      on the component type.
      * @exception ExecutionException if the component cannot be created
      */
-    public Object createComponent(String componentName) 
-        throws ExecutionException {
+    public Object createComponent(String componentName)
+         throws ExecutionException {
         return createComponent(componentName, null);
+    }
+
+    /**
+     * Create a component given its class. The component will have a context
+     * but will not be configured. It should be configured using the
+     * appropriate set methods and then validated before being used.
+     *
+     * @param componentClass the component's class
+     * @param factory the factory to create the component
+     * @param loader the classloader associated with the component
+     * @param addTaskAdapter whenther the returned component should be a
+     *      task, potentially being wrapped in an adapter
+     * @param componentName the name of the component type
+     * @return the created component. The return type of this method depends
+     *      on the component type.
+     * @exception ExecutionException if the component cannot be created
+     */
+    public Object createComponent(AntLibFactory factory, ClassLoader loader,
+                                  Class componentClass, boolean addTaskAdapter,
+                                  String componentName)
+         throws ExecutionException {
+        return createComponent(loader, factory, componentClass,
+            componentName, componentName, addTaskAdapter, null);
     }
 
     /**
@@ -421,82 +444,39 @@ public class ComponentManager implements ComponentService {
     protected Object createComponent(String componentName, BuildElement model)
          throws ExecutionException {
 
+        Location location = Location.UNKNOWN_LOCATION;
+        if (model != null) {
+            location = model.getLocation();
+        }
         ImportInfo definition = getDefinition(componentName);
         if (definition == null) {
             throw new ExecutionException("There is no definition of the <"
-                + componentName + "> component");
+                 + componentName + "> component");
         }
         String className = definition.getClassName();
-            
+
         ComponentLibrary componentLibrary
              = definition.getComponentLibrary();
+        boolean isTask = definition.getDefinitionType() == AntLibrary.TASKDEF;
         String localName = definition.getLocalName();
         try {
             ClassLoader componentLoader = componentLibrary.getClassLoader();
             Class componentClass
                  = Class.forName(className, true, componentLoader);
             AntLibFactory libFactory = getLibFactory(componentLibrary);
-            Location location = Location.UNKNOWN_LOCATION;
-            if (model != null) {
-                location = model.getLocation();
-            }
-
-            Object component
-                 = libFactory.createComponent(componentClass, localName);
-
-            ExecutionComponent execComponent = null;
-            if (definition.getDefinitionType() == AntLibrary.TASKDEF) {
-                if (component instanceof Task) {
-                    execComponent = (Task)component;
-                } else {
-                    execComponent = new TaskAdapter(componentName, component);
-                }
-            } else if (component instanceof ExecutionComponent) {
-                execComponent = (ExecutionComponent)component;
-            }
-
-            ExecutionContext context
-                 = new ExecutionContext(frame, execComponent, location);
-            context.setClassLoader(componentLoader);
-            ClassLoader currentLoader
-                 = LoaderUtils.setContextLoader(componentLoader);
-            if (execComponent != null) {
-                execComponent.init(context, componentName);
-            }
-            if (model != null) {
-                configureElement(libFactory, component, model);
-                if (execComponent != null) {
-                    execComponent.validateComponent();
-                }
-            }
-            LoaderUtils.setContextLoader(currentLoader);
-            if (execComponent != null) {
-                return execComponent;
-            }
-
-            return component;
+            return createComponent(componentLoader, libFactory, componentClass,
+                componentName, localName, isTask, model);
         } catch (ClassNotFoundException e) {
             throw new ExecutionException("Class " + className
                  + " for component <" + componentName + "> was not found", e,
-                model.getLocation());
+                location);
         } catch (NoClassDefFoundError e) {
             throw new ExecutionException("Could not load a dependent class ("
                  + e.getMessage() + ") for component " + componentName,
-                e, model.getLocation());
-        } catch (InstantiationException e) {
-            throw new ExecutionException("Unable to instantiate component "
-                 + "class " + className + " for component <" + componentName
-                 + ">", e, model.getLocation());
-        } catch (IllegalAccessException e) {
-            throw new ExecutionException("Unable to access task class "
-                 + className + " for component <" + componentName + ">",
-                e, model.getLocation());
+                e, location);
         } catch (ExecutionException e) {
             e.setLocation(model.getLocation(), false);
             throw e;
-        } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, model.getLocation());
         }
     }
 
@@ -543,6 +523,100 @@ public class ComponentManager implements ComponentService {
 
         setters.put(c, setter);
         return setter;
+    }
+
+    /**
+     * Create a component - handles all the variations
+     *
+     * @param loader the component's classloader
+     * @param componentClass The class of the component.
+     * @param componentName The component's name in the global context
+     * @param addTaskAdapter whether the component should add a Task adapter
+     *      to make this component a Task.
+     * @param localName The name of the component within its library
+     * @param model the BuildElement model of the component's configuration
+     * @param factory the facrtory object used to create the component
+     * @return the required component potentially wrapped in a wrapper
+     *      object.
+     * @exception ExecutionException if the component cannot be created
+     */
+    private Object createComponent(ClassLoader loader, AntLibFactory factory,
+                                   Class componentClass, String componentName,
+                                   String localName, boolean addTaskAdapter,
+                                   BuildElement model)
+         throws ExecutionException {
+        // set the location to unknown unless we have a build model to use
+        Location location = Location.UNKNOWN_LOCATION;
+        if (model != null) {
+            location = model.getLocation();
+        }
+
+        try {
+            // create the component using the factory
+            Object component
+                 = factory.createComponent(componentClass, localName);
+
+            // wrap the component in an adapter if required.
+            ExecutionComponent execComponent = null;
+            if (addTaskAdapter) {
+                if (component instanceof Task) {
+                    execComponent = (Task)component;
+                } else {
+                    execComponent = new TaskAdapter(componentName, component);
+                }
+            } else if (component instanceof ExecutionComponent) {
+                execComponent = (ExecutionComponent)component;
+            }
+
+            // set the context loader to that for the component
+            ClassLoader currentLoader
+                 = LoaderUtils.setContextLoader(loader);
+
+            // if the component is an execution component create a context and
+            // initialise the component with it.
+            if (execComponent != null) {
+                ExecutionContext context
+                     = new ExecutionContext(frame, execComponent, location);
+                context.setClassLoader(loader);
+                execComponent.init(context, componentName);
+            }
+
+            // if we have a model, use it to configure the component. Otherwise
+            // the caller is expected to configure thre object
+            if (model != null) {
+                configureElement(factory, component, model);
+                // if the component is an execution component and we have a
+                // model, validate it
+                if (execComponent != null) {
+                    execComponent.validateComponent();
+                }
+            }
+
+            // reset the loader
+            LoaderUtils.setContextLoader(currentLoader);
+
+            // if we have an execution component, potentially a wrapper,
+            // return it otherwise the component directly
+            if (execComponent != null) {
+                return execComponent;
+            } else {
+                return component;
+            }
+        } catch (InstantiationException e) {
+            throw new ExecutionException("Unable to instantiate component "
+                 + "class " + componentClass.getName() + " for component <"
+                 + componentName + ">", e, location);
+        } catch (IllegalAccessException e) {
+            throw new ExecutionException("Unable to access task class "
+                 + componentClass.getName() + " for component <"
+                 + componentName + ">", e, location);
+        } catch (ExecutionException e) {
+            e.setLocation(location, false);
+            throw e;
+        } catch (RuntimeException e) {
+            throw new ExecutionException(e.getClass().getName() + ": "
+                 + e.getMessage(), e, location);
+        }
     }
 
     /**

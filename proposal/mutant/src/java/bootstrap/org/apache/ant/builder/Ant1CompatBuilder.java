@@ -1,5 +1,4 @@
 package org.apache.ant.builder;
-
 public class Ant1CompatBuilder {
     protected void _init(BuildHelper helper) {
         helper.setProperty("src.dir", "src");
@@ -16,10 +15,13 @@ public class Ant1CompatBuilder {
         helper.setProperty("util.package", "${ant.package}/util");
         helper.setProperty("regexp.package", "${util.package}/regexp");
         helper.createPath("classpath");
-        helper.addFileSetToPath("classpath", "${lib.dir}/parser", "*.jar");
-        helper.addFileSetToPath("classpath", "${lib.dir}/ant1compat", "*.jar");
+        helper.addFileSetToPath("classpath", 
+                        "${lib.dir}/parser", "*.jar");
+        helper.addFileSetToPath("classpath", 
+                        "${lib.dir}/ant1compat", "*.jar");
         helper.addPathElementToPath("classpath", "${distlib.dir}/init.jar");
         helper.addPathElementToPath("classpath", "${distlib.dir}/common/common.jar");
+        helper.addPathElementToPath("classpath", "${distlib.dir}/antlibs/system.tsk");
     }
     protected void check_for_optional_packages(BuildHelper helper) {
     }

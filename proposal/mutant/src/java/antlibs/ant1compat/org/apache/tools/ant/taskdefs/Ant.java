@@ -51,60 +51,14 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.antlib;
-import java.io.File;
-import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.Location;
+package org.apache.tools.ant;
 
 /**
- * The AntContext is the interface through which the Ant container and the
- * Ant components communicate. Common operations are provided directly in
- * this interface. Other core services are available through the generic
- * service objects supported by the core.
+ * Ant facade over system version of Ant
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 14 January 2002
+ * @created 31 January 2002
  */
-public interface AntContext {
-    /**
-     * Log a message
-     *
-     * @param message the message to be logged
-     * @param level the priority level of the message
-     */
-    void log(String message, int level);
-
-    /**
-     * Get a instance of the specified service interface with which to
-     * interact with the core.
-     *
-     * @param serviceInterfaceClass the class object for the required
-     *      interface
-     * @return an instance of the requested interface
-     * @exception ExecutionException if the core service is not supported
-     */
-    Object getCoreService(Class serviceInterfaceClass)
-         throws ExecutionException;
-
-    /**
-     * Get the basedir for the current execution
-     *
-     * @return the base directory for this execution of Ant
-     */
-    File getBaseDir();
-
-    /**
-     * Gets the location associated witj the AntContext
-     *
-     * @return the location
-     */
-    Location getLocation();
-    
-    /**
-     * Get the classloader associated with this context
-     *
-     * @return a classloader instance.
-     */
-    ClassLoader getClassLoader();
+public class Ant extends org.apache.ant.antlib.system.Ant {
 }
 

@@ -133,7 +133,7 @@ public abstract class Task extends ProjectComponent
 
 
     /**
-     * Add a nested task to this Ant1 task. 
+     * Add a nested task to this Ant1 task.
      *
      * @param task The task to be added
      * @exception ExecutionException if the task cannot be added.
@@ -172,6 +172,10 @@ public abstract class Task extends ProjectComponent
         taskName = componentType;
     }
 
+
+    /** Initialise this task */
+    public void init() {
+    }
 
     /** Validate this component */
     public void validateComponent() {

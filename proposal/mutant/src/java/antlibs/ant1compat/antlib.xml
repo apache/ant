@@ -1,14 +1,13 @@
 <antlib libid="ant.ant1compat" 
         home="http://jakarta.apache.org/ant"
-        reqxml="true" reqtools="true">
+        reqxml="true" reqtools="true"
+        extends="ant.system">
 
   <factory classname="org.apache.tools.ant.Ant1Factory"/>
           
   <converter classname="org.apache.tools.ant.Ant1Converter"/>          
 
   <!-- typedefs -->  
-  <taskdef name="ant" classname="org.apache.tools.ant.taskdefs.Ant"/>
-  <taskdef name="antcall" classname="org.apache.tools.ant.taskdefs.CallTarget"/>
   <taskdef name="antlr" classname="org.apache.tools.ant.taskdefs.optional.ANTLR"/>
   <taskdef name="antstructure" classname="org.apache.tools.ant.taskdefs.AntStructure"/>
   <taskdef name="apply" classname="org.apache.tools.ant.taskdefs.Transform"/>
@@ -89,7 +88,6 @@
   <taskdef name="p4label" classname="org.apache.tools.ant.taskdefs.optional.perforce.P4Label"/>
   <taskdef name="p4submit" classname="org.apache.tools.ant.taskdefs.optional.perforce.P4Submit"/>
   <taskdef name="p4sync" classname="org.apache.tools.ant.taskdefs.optional.perforce.P4Sync"/>
-  <taskdef name="parallel" classname="org.apache.tools.ant.taskdefs.Parallel"/>
   <taskdef name="patch" classname="org.apache.tools.ant.taskdefs.Patch"/>
   <taskdef name="pathconvert" classname="org.apache.tools.ant.taskdefs.PathConvert"/>
   <taskdef name="property" classname="org.apache.tools.ant.taskdefs.Property"/>
@@ -102,7 +100,6 @@
   <taskdef name="rmic" classname="org.apache.tools.ant.taskdefs.Rmic"/>
   <taskdef name="rpm" classname="org.apache.tools.ant.taskdefs.optional.Rpm"/>
   <taskdef name="script" classname="org.apache.tools.ant.taskdefs.optional.Script"/>
-  <taskdef name="sequential" classname="org.apache.tools.ant.taskdefs.Sequential"/>
   <taskdef name="signjar" classname="org.apache.tools.ant.taskdefs.SignJar"/>
   <taskdef name="sleep" classname="org.apache.tools.ant.taskdefs.Sleep"/>
   <taskdef name="soscheckin" classname="org.apache.tools.ant.taskdefs.optional.sos.SOSCheckin"/>
