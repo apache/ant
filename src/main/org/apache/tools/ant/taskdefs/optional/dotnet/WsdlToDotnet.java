@@ -498,7 +498,7 @@ public class WsdlToDotnet extends Task  {
         String[][] extraCompilerArgs = {
             {},
             {},
-            {EXE_WSDL}
+            {EXE_WSDL+".exe"}
         };
 
         boolean[] absoluteFiles = {
