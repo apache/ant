@@ -84,6 +84,9 @@ Fixed bugs:
 
 * <jar index="on"> could include multiple index lists.  Bugzilla 10262.
 
+* The index created by <jar> didn't conform to the spec as it didn't
+  include the top-level entries.  Bugzilla Report 16972.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces 2.4.0

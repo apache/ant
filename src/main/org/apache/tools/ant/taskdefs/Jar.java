@@ -67,6 +67,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Enumeration;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
@@ -145,12 +146,24 @@ public class Jar extends Zip {
      */
     private boolean createEmpty = false;
 
+    /**
+     * Stores all files that are in the root of the archive (i.e. that
+     * have a name that doesn't contain a slash) so they can get
+     * listed in the index.
+     *
+     * Will not be filled unless the user has asked for an index.
+     *
+     * @since Ant 1.6
+     */
+    private Vector rootEntries;
+
     /** constructor */
     public Jar() {
         super();
         archiveType = "jar";
         emptyBehavior = "create";
         setEncoding("UTF8");
+        rootEntries = new Vector();
     }
 
     /**
@@ -458,6 +471,11 @@ public class Jar extends Zip {
             writer.println(dir);
         }
 
+        enum = rootEntries.elements();
+        while (enum.hasMoreElements()) {
+            writer.println(enum.nextElement());
+        }
+
         writer.flush();
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
@@ -480,6 +498,9 @@ public class Jar extends Zip {
                 + " files include a META-INF/INDEX.LIST which will"
                 + " be replaced by a newly generated one.", Project.MSG_WARN);
         } else {
+            if (index && vPath.indexOf("/") == -1) {
+                rootEntries.addElement(vPath);
+            }
             super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode);
         }
     }
@@ -663,13 +684,13 @@ public class Jar extends Zip {
         super.cleanUp();
 
         // we want to save this info if we are going to make another pass
-        if (! doubleFilePass || (doubleFilePass && ! skipWriting))
-            {
-                manifest = null;
-                configuredManifest = savedConfiguredManifest;
-                filesetManifest = null;
-                originalManifest = null;
-            }
+        if (! doubleFilePass || (doubleFilePass && ! skipWriting)) {
+            manifest = null;
+            configuredManifest = savedConfiguredManifest;
+            filesetManifest = null;
+            originalManifest = null;
+        }
+        rootEntries.removeAllElements();
     }
 
     /**
