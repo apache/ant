@@ -221,12 +221,11 @@ public class DirectoryScannerTest extends BuildFileTest {
     }
 
     /**
-     * Test case for setFollowLinks() and associated funtionality.
-     * Only supports test on linux, at the moment because Java has
+     * Test case for setFollowLinks() and associated functionality.
+     * Only supports test on Linux at the moment because Java has
      * no real notion of symlinks built in, so an os-specfic call
      * to Runtime.exec() must be made to create a link to test against.
      */
-
     public void testSetFollowLinks() throws IOException {
         if (supportsSymlinks) {
             File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
@@ -316,6 +315,7 @@ public class DirectoryScannerTest extends BuildFileTest {
             }
         }
     }
+
     public void testExcludeOneFile() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -329,6 +329,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
                      new String[] {});
     }
+
     public void testExcludeHasPrecedence() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -343,6 +344,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
 
     }
+
     public void testAlternateIncludeExclude() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -358,6 +360,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha"});
 
     }
+
     public void testAlternateExcludeInclude() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -373,6 +376,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
 
     }
+
     /**
      * Test inspired by Bug#1415.
      */
