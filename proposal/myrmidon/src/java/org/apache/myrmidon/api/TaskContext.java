@@ -69,16 +69,6 @@ public interface TaskContext
         throws TaskException;
 
     /**
-     * Resolve property.
-     * This evaluates all property substitutions based on current context.
-     *
-     * @param property the property to resolve
-     * @return the resolved property
-     */
-    Object resolveValue( String property )
-        throws TaskException;
-
-    /**
      * Retrieve property for name.
      *
      * @param name the name of property

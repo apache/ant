@@ -23,7 +23,13 @@ public class DefaultTaskContext
     extends DefaultContext
     implements TaskContext
 {
-    private File     m_baseDirectory;
+    /**
+     * Constructor for Context with no parent contexts.
+     */
+    public DefaultTaskContext( final Map contextData )
+    {
+        this( contextData );
+    }
 
     /**
      * Constructor for Context with no parent contexts.
@@ -32,17 +38,13 @@ public class DefaultTaskContext
     {
         this( null );
     }
+
     /**
      * Constructor.
      */
     public DefaultTaskContext( final TaskContext parent )
     {
         super( parent );
-
-        if( null != parent )
-        {
-            m_baseDirectory = (File)parent.getBaseDirectory();
-        }
     }
 
     /**
@@ -52,10 +54,7 @@ public class DefaultTaskContext
      */
     public JavaVersion getJavaVersion()
     {
-        try
-        {
-            return (JavaVersion)get( JAVA_VERSION );
-        }
+        try { return (JavaVersion)get( JAVA_VERSION ); }
         catch( final ContextException ce )
         {
             throw new IllegalStateException( "No JavaVersion in Context" );
@@ -70,10 +69,7 @@ public class DefaultTaskContext
      */
     public String getName()
     {
-        try
-        {
-            return (String)get( NAME );
-        }
+        try { return (String)get( NAME ); }
         catch( final ContextException ce )
         {
             throw new IllegalStateException( "No Name in Context" );
@@ -87,7 +83,11 @@ public class DefaultTaskContext
      */
     public File getBaseDirectory()
     {
-        return m_baseDirectory;
+        try { return (File)get( BASE_DIRECTORY ); }
+        catch( final ContextException ce )
+        {
+            throw new IllegalStateException( "No Base Directory in Context" );
+        }
     }
 
     /**
@@ -102,27 +102,7 @@ public class DefaultTaskContext
      */
     public File resolveFile( final String filename )
     {
-        final File result = FileUtil.resolveFile( m_baseDirectory, filename );
-        if( null != result ) return result;
-        else return null;
-    }
-
-    /**
-     * Resolve property.
-     * This evaluates all property substitutions based on current context.
-     *
-     * @param property the property to resolve
-     * @return the resolved property
-     */
-    public Object resolveValue( final String property )
-        throws TaskException
-    {
-        try { return PropertyUtil.resolveProperty( property, this, false ); }
-        catch( final PropertyException pe )
-        {
-            throw new TaskException( "Error resolving " + property + " due to " + pe.getMessage(),
-                                     pe );
-        }
+        return FileUtil.resolveFile( getBaseDirectory(), filename );
     }
 
     /**
@@ -157,7 +137,7 @@ public class DefaultTaskContext
      *
      * @param property the property
      */
-    public void setProperty(  final String name, final Object value, final ScopeEnum scope )
+    public void setProperty( final String name, final Object value, final ScopeEnum scope )
         throws TaskException
     {
         checkPropertyValid( name, value );
@@ -168,11 +148,11 @@ public class DefaultTaskContext
             if( null == getParent() )
             {
                 throw new TaskException( "Can't set a property with parent scope when context " +
-                                        " has no parent" );
+                                         " has no parent" );
             }
             else
             {
-                ((DefaultTaskContext)getParent()).put( name, value );
+                ((TaskContext)getParent()).setProperty( name, value );
             }
         }
         else if( TOP_LEVEL == scope )
@@ -184,37 +164,12 @@ public class DefaultTaskContext
                 context = (DefaultTaskContext)context.getParent();
             }
 
-            context.putValue( name, value );
+            context.put( name, value );
         }
         else
         {
-            throw new TaskException( "Can't set a property with an unknown " +
-                                    "property context! (" + scope + ")" );
+            throw new IllegalStateException( "Unknown property scope! (" + scope + ")" );
         }
-    }
-
-    /**
-     * put a value in context.
-     * This put method is overidden so new baseDirectory can be saved
-     * in member variable.
-     *
-     * @param key the key
-     * @param value the value
-     */
-    public void putValue( final Object key, final Object value  )
-        throws TaskException
-    {
-        if( key.equals( BASE_DIRECTORY ) )
-        {
-            try { m_baseDirectory = (File)value; }
-            catch( final ClassCastException cce )
-            {
-                throw new TaskException( "Can not set baseDirectory to a non-file value.",
-                                        cce );
-            }
-        }
-
-        put( key, value );
     }
 
     /**
@@ -241,7 +196,7 @@ public class DefaultTaskContext
         }
         else if( JAVA_VERSION.equals( name ) && !( value instanceof JavaVersion ) )
         {
-            throw new TaskException( "property " + JAVA_VERSION +
+            throw new TaskException( "Property " + JAVA_VERSION +
                                      " must have a value of type " +
                                      JavaVersion.class.getName() );
         }
