@@ -98,7 +98,7 @@ public class Java extends Task {
     private Redirector redirector = new Redirector(this);
     private String resultProperty;
     private Permissions perm = null;
-    
+
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
     /**
@@ -271,7 +271,7 @@ public class Java extends Task {
         }
         return perm;
     }
-    
+
     /**
      * Classpath to use, by reference.
      *
@@ -589,7 +589,7 @@ public class Java extends Task {
     /**
      *  assertions to enable in this program (if fork=true)
      * @since Ant 1.6
-     * @param asserts assertion set 
+     * @param asserts assertion set
      */
     public void setAssertions(Assertions asserts) {
         cmdl.setAssertions(asserts);
@@ -647,7 +647,7 @@ public class Java extends Task {
     }
 
     /**
-     * Pass output sent to System.err to specified output file.
+     * Handle output sent to System.err
      *
      * @param output string of stderr
      *
@@ -662,7 +662,7 @@ public class Java extends Task {
     }
 
     /**
-     * Pass output sent to System.err to specified output file.
+     * Handle output sent to System.err and flush the stream.
      *
      * @param output string of stderr
      *

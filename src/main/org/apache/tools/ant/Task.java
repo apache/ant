@@ -344,7 +344,7 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Handles an error output by logging it with the INFO priority.
+     * Handles an error output by logging it with the ERR priority.
      *
      * @param output The error output to log. Should not be <code>null</code>.
      */
@@ -353,7 +353,7 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Handles an error line by logging it with the INFO priority.
+     * Handles an error line by logging it with the ERR priority.
      *
      * @param output The error output to log. Should not be <code>null</code>.
      *

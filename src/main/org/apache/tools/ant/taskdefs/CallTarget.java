@@ -239,7 +239,7 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Pass output sent to System.err to the new project.
+     * Pass output sent to System.err to the new project and flush stream.
      *
      * @since Ant 1.5.2
      */

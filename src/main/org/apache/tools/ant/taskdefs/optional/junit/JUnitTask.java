@@ -566,7 +566,7 @@ public class JUnitTask extends Task {
     /**
      * Assertions to enable in this program (if fork=true)
      * @since Ant 1.6
-     * @param asserts assertion set 
+     * @param asserts assertion set
      */
     public void setAssertions(Assertions asserts) {
         commandline.setAssertions(asserts);
@@ -865,7 +865,7 @@ public class JUnitTask extends Task {
 
     /**
      * Pass output sent to System.err to the TestRunner so it can
-     * collect ot for the formatters.
+     * collect it for the formatters.
      *
      * @param output output coming from System.err
      * @since Ant 1.5
@@ -884,7 +884,7 @@ public class JUnitTask extends Task {
 
     /**
      * Pass output sent to System.err to the TestRunner so it can
-     * collect ot for the formatters.
+     * collect it for the formatters.
      *
      * @param output coming from System.err
      * @since Ant 1.5.2
@@ -953,7 +953,7 @@ public class JUnitTask extends Task {
                 f.setOutput(getDefaultOutput());
                 runner.addFormatter(f);
             }
-            
+
             runner.setPermissions(perm);
 
             final FormatterElement[] feArray = mergeFormatters(test);
