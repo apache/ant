@@ -155,7 +155,6 @@ public class JUnitTask extends Task {
     private Integer timeout = null;
     private boolean summary = false;
     private String summaryValue = "";
-    private boolean filtertrace = true;
     private JUnitTestRunner runner = null;
 
     /**
@@ -432,8 +431,8 @@ public class JUnitTask extends Task {
         boolean errorOccurredHere = exitValue == JUnitTestRunner.ERRORS;
         boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
         if (errorOccurredHere || failureOccurredHere) {
-            if (errorOccurredHere && test.getHaltonerror()
-                || failureOccurredHere && test.getHaltonfailure()) {
+            if ((errorOccurredHere && test.getHaltonerror())
+                || (failureOccurredHere && test.getHaltonfailure())) {
                 throw new BuildException("Test "+test.getName()+" failed"
                                          +(wasKilled ? " (timeout)" : ""),
                                          location);
@@ -631,8 +630,9 @@ public class JUnitTask extends Task {
      * and return an enumeration over all <tt>JUnitTest</tt>.
      */
     protected Enumeration getIndividualTests(){
-        Enumeration[] enums = new Enumeration[ batchTests.size() + 1];
-        for (int i = 0; i < batchTests.size(); i++) {
+        final int count = batchTests.size();
+        final Enumeration[] enums = new Enumeration[ count + 1];
+        for (int i = 0; i < count; i++) {
             BatchTest batchtest = (BatchTest)batchTests.elementAt(i);
             enums[i] = batchtest.elements();
         }
