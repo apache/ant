@@ -1,0 +1,128 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>SSHEXEC Task</title>
+</head>
+
+<body>
+
+<h2><a name="sshexec">SSHEXEC</a></h2>
+<h3>Description</h3>
+<p>Runs a command on a remote machine running SSH daemon.
+</p>
+
+<p><b>Note:</b> This task depends on external libraries not included
+in the Ant distribution.  See <a
+href="../install.html#librarydependencies">Library Dependencies</a>
+for more information.  This task has been tested with jsch-0.1.2.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The username on the remote host to which you are connecting.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">command</td>
+    <td valign="top">The command to run on the remote host.</td>
+    <td valian="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">port</td>
+    <td valign="top">The port to connect to on the remote host.</td>
+    <td valian="top" align="center">No, defaults to 22.</td>
+  </tr>
+  <tr>
+    <td valign="top">trust</td>
+    <td valign="top">This trusts all unknown hosts if set to yes/true.</td>
+    <td valian="top" align="center">No, defaults to No.</td>
+  </tr>
+  <tr>
+    <td valign="top">knownhosts</td>
+    <td valign="top">This sets the known hosts file to use to validate
+    the identity of the remote host.  This must be a SSH2 format file.
+    SSH1 format is not supported.</td>
+    <td valian="top" align="center">No, defaults to
+    ${user.home}/.ssh/known_hosts.</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+     <td valign="top">Log a warning message, but do not stop the build,
+       when the transfer does not work.
+     </td>
+     <td valign="top" align="center">No; defaults to true.</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+     <td valign="top">The password.</td>
+     <td valign="top" align="center">Not if you are using key based
+     authentication or the password has been given in the file or
+     todir attribute.</td>
+  </tr>
+  <tr>
+    <td valign="top">keyfile</td>
+     <td valign="top">Location of the file holding the private key.</td>
+     <td valign="top" align="center">Yes, if you are using key based
+     authentication.</td>
+  </tr>
+  <tr>
+    <td valign="top">passphrase</td>
+     <td valign="top">Passphrase for your private key.</td>
+     <td valign="top" align="center">No, defaults to an empty string.</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<p><b>Run a command on a remote machine using password authentication</b></p>
+<pre>
+  &lt;sshexec host=&quot;somehost&quot;
+	username=&quot;dude&quot;
+	password=&quot;yo&quot;
+	command=&quot;touch somefile&quot;/&gt;
+</pre>
+
+<p><b>Run a command on a remote machine using key authentication</b></p>
+<pre>
+  &lt;sshexec host=&quot;somehost&quot;
+	username=&quot;dude&quot;
+	keyfile=&quot;${user.home}/.ssh/id_dsa&quot;
+	passphrase=&quot;yo its a secret&quot;
+	command=&quot;touch somefile&quot;/&gt;
+</pre>
+
+<p><b>Run a command on a remote machine using key authentication with no passphrase</b></p>
+<pre>
+  &lt;sshexec host=&quot;somehost&quot;
+	username=&quot;dude&quot;
+	keyfile=&quot;${user.home}/.ssh/id_dsa&quot;
+	command=&quot;touch somefile&quot;/&gt;
+</pre>
+
+<p><strong>Security Note:</strong>  Hard coding passwords and/or usernames
+in sshexec task can be a serious security hole.  Consider using variable
+substituion and include the password on the command line.  For example:<br>
+<pre>
+  &lt;sshexec host=&quot;somehost&quot;
+	username=&quot;${username}&quot;
+	password=&quot;${password}&quot;
+	command=&quot;touch somefile&quot;/&gt;
+</pre>
+Invoke ant with the following command line:
+<pre>
+    ant -Dusername=me -Dpassword=mypassword target1 target2
+</pre>
+</p>
+
+<hr><p align="center">Copyright &copy; 2003 Apache Software Foundation.
+All rights Reserved.</p>
+
+</body>
+</html>
+
