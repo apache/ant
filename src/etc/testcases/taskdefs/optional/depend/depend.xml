@@ -4,13 +4,15 @@
   <property name="src1.dir" value="src1"/>
   <property name="src2.dir" value="src2"/>
   <property name="src3.dir" value="src3"/>
+  <property name="src4.dir" value="src4"/>
+  
   <property name="tempsrc.dir" value="working"/>
   <property name="classes.dir" value="classes"/>
   <target name="help">
     <echo>This buildfile is used as part of Ant's test suite.</echo>
   </target>
 
-  <target name="basesetup">
+  <target name="basesetup" depends="clean">
     <mkdir dir="${tempsrc.dir}"/>
   </target>
   
@@ -29,6 +31,12 @@
   <target name="src3setup" depends="basesetup">
     <copy todir="${tempsrc.dir}">
       <fileset dir="${src3.dir}"/>
+    </copy>
+  </target>
+
+  <target name="src4setup" depends="basesetup">
+    <copy todir="${tempsrc.dir}">
+      <fileset dir="${src4.dir}"/>
     </copy>
   </target>
 
@@ -94,6 +102,31 @@
     <delete file="${tempsrc.dir}/B.java"/>
     <copy file="${src3.dir}/B.java" tofile="${tempsrc.dir}/B.java"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
+    <fileset id="result" dir="${classes.dir}"/>
+  </target>
+  
+  <target name="testnosource" depends="src1setup, compile">
+    <depend destdir="${classes.dir}" closure="yes"/>
+  </target>
+
+  <target name="testemptysource" depends="src1setup, compile">
+    <depend srcdir="" destdir="${classes.dir}" closure="yes"/>
+  </target>
+
+  <target name="testinnerclosure" depends="src4setup">
+    <mkdir dir="${classes.dir}"/>
+    <path id="path.compile">
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"
+           classpathref="path.compile"/>
+    
+    <sleep seconds="3"/>
+    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" 
+            closure="yes" dump="yes"
+            classpathref="path.compile"/>
+           
     <fileset id="result" dir="${classes.dir}"/>
   </target>
 </project>

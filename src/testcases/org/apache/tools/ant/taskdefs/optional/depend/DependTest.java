@@ -92,13 +92,7 @@ public class DependTest extends BuildFileTest {
     public void testDirect() {
         Project project = getProject();
         executeTarget("testdirect");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (int i = 0; i < scannedFiles.length; ++i) {
-            files.put(scannedFiles[i], scannedFiles[i]);
-        }
+        Hashtable files = getResultFiles();
         assertEquals("Depend did not leave correct number of files", 2, 
             files.size());
         assertTrue("Result did not contain A.class", 
@@ -113,13 +107,7 @@ public class DependTest extends BuildFileTest {
     public void testClosure() {
         Project project = getProject();
         executeTarget("testclosure");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (int i = 0; i < scannedFiles.length; ++i) {
-            files.put(scannedFiles[i], scannedFiles[i]);
-        }
+        Hashtable files = getResultFiles();
         assertEquals("Depend did not leave correct number of files", 1, 
             files.size());
         assertTrue("Result did not contain D.class", 
@@ -132,15 +120,8 @@ public class DependTest extends BuildFileTest {
     public void testInner() {
         Project project = getProject();
         executeTarget("testinner");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (int i = 0; i < scannedFiles.length; ++i) {
-            files.put(scannedFiles[i], scannedFiles[i]);
-        }
         assertEquals("Depend did not leave correct number of files", 0, 
-            files.size());
+            getResultFiles().size());
     }
 
     /**
@@ -150,6 +131,27 @@ public class DependTest extends BuildFileTest {
     public void testInnerInner() {
         Project project = getProject();
         executeTarget("testinnerinner");
+        assertEquals("Depend did not leave correct number of files", 0, 
+            getResultFiles().size());
+    }
+    
+    /**
+     * Test that an exception is thrown when there is no source 
+     */
+    public void testNoSource() {
+        expectBuildExceptionContaining("testnosource", 
+            "No source specified", "srcdir attribute must be set");
+    }
+        
+    /**
+     * Test that an exception is thrown when the source attribute is empty
+     */
+    public void testEmptySource() {
+        expectBuildExceptionContaining("testemptysource", 
+            "No source specified", "srcdir attribute must be non-empty");
+    }
+
+    private Hashtable getResultFiles() {
         FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
         String[] scannedFiles = scanner.getIncludedFiles();
@@ -157,7 +159,18 @@ public class DependTest extends BuildFileTest {
         for (int i = 0; i < scannedFiles.length; ++i) {
             files.put(scannedFiles[i], scannedFiles[i]);
         }
-        assertEquals("Depend did not leave correct number of files", 0, 
-            files.size());
+        return files;
+    }
+    
+    
+    /**
+     * Test mutual dependency between inner and outer do not cause both to be
+     * deleted
+     */
+    public void testInnerClosure() {
+        Project project = getProject();
+        executeTarget("testinnerclosure");
+        assertEquals("Depend did not leave correct number of files", 2, 
+            getResultFiles().size());
     }
 }

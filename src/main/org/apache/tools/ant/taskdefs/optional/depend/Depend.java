@@ -79,6 +79,11 @@ import org.apache.tools.ant.types.Reference;
  * @author Conor MacNeill
  */
 public class Depend extends MatchingTask {
+    /** Tolerance on time checks to take into account inner to outer class dependencies when
+     * the classes are written at slightly different times 
+     */
+    static private final int TIME_TOLERANCE = 100; 
+
     /**
      * A class (struct) user to manage information about a class
      *
@@ -484,9 +489,14 @@ public class Depend extends MatchingTask {
     public void execute() throws BuildException {
         try {
             long start = System.currentTimeMillis();
+            if (srcPath == null) {
+                throw new BuildException("srcdir attribute must be set", 
+                    location);
+            }
+
             String[] srcPathList = srcPath.list();
             if (srcPathList.length == 0) {
-                throw new BuildException("srcdir attribute must be set!", 
+                throw new BuildException("srcdir attribute must be non-empty", 
                     location);
             }
 
@@ -559,7 +569,8 @@ public class Depend extends MatchingTask {
                             Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
                             for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements(); ) {
                                 File classpathFile = (File)e2.nextElement();
-                                if (classpathFile.lastModified() > info.absoluteFile.lastModified()) {
+                                if (classpathFile.lastModified() 
+                                    > (info.absoluteFile.lastModified() + TIME_TOLERANCE)) {
                                     log("Class " + className +
                                         " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
                                     outOfDateClasses.put(className, className);
@@ -607,7 +618,8 @@ public class Depend extends MatchingTask {
                     // there was no class file. add this class to the list
                     outOfDateClasses.put(className, className);
                 } else {
-                    if (srcFile.lastModified() > info.absoluteFile.lastModified()) {
+                    if (srcFile.lastModified() 
+                        > (info.absoluteFile.lastModified() + TIME_TOLERANCE)) {
                         outOfDateClasses.put(className, className);
                     }
                 }
