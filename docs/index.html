@@ -4264,6 +4264,11 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">propertyFile</td>
+    <td valign="top">valid property file from which properties specified using nested <code>&lt;replacefilter&gt;</code> elements are drawn.</td>
+    <td valign="top" align="center">Yes only if <i>property</i> attribute of <code>&lt;replacefilter&gt;</code> is used.</td>
+  </tr>
+  <tr>
     <td valign="top">includes</td>
     <td valign="top">comma separated list of patterns of files that must be
       included. All files are included when omitted.</td>
@@ -4307,7 +4312,7 @@ nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 cross line boundaries, you can use nested elements to specify
 them.</p>
 <h3>Examples</h3>
-<blockquote><pre>  
+<blockquote><pre>
 &lt;replace dir=&quot;${src}&quot; value=&quot;wombat&quot;&gt;
   &lt;include name=&quot;**/*.html&quot;/&gt;
   &lt;replacetoken&gt;&lt;![CDATA[multi line
@@ -4318,7 +4323,7 @@ token]]>&lt;/replacetoken&gt;
 line<i>\n</i>token&quot; with the string &quot;wombat&quot;, in all
 HTML files in the directory <code>${src}</code>.Where <i>\n</i> is
 the platform specific line separator.</p>
-<blockquote><pre>  
+<blockquote><pre>
 &lt;replace file=&quot;${src}/index.html&quot;&gt;
   &lt;replacetoken&gt;&lt;![CDATA[two line
 token]]>&lt;/replacetoken&gt;
@@ -4326,6 +4331,51 @@ token]]>&lt;/replacetoken&gt;
 token]]>&lt;/replacevalue&gt;
 &lt;/replace&gt;
 </pre></blockquote>
+<h4>replacefilter</h4>
+<p>In addition to allowing for multiple replacements, optional nested <code>&lt;replacefilter&gt;</code> elements allow replacement values to be extracted from a property file. The name of this file is specified using the <code>&lt;replace&gt;</code> attribute <i>propertyFile</i>.
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">token</td>
+    <td valign="top">The string to search for.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The replacement string.</td>
+    <td align="center" rowspan="2">Either may be specified, but not both. Both can be omitted, if desired.</td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">Name of the property whose value is to serve as the replacement value.</td>
+  </tr>
+</table>
+<p>If neither <i>value</i> nor <i>property</i> is used, the value provided using the <code>&lt;replace&gt;</code> attribute <i>value</i> and/or the <code>&lt;replacevalue&gt;</code> element is used. If no value was specified using either of these options, the token is replaced with an empty string.
+</p>
+<h3>Examples</h3>
+<blockquote><pre>
+&lt;replace 
+    file=&quot;configure.sh&quot;
+    value=&quot;defaultvalue&quot;
+    propertyFile=&quot;source/name.properties&quot; &gt;
+  &lt;replacefilter 
+    token=&quot;@token1@&quot; /&gt;
+  &lt;replacefilter 
+    token=&quot;@token2@&quot; 
+    value=&quot;value2&quot;/&gt;
+  &lt;replacefilter 
+    token=&quot;@token3@&quot; 
+    property=&quot;property.key&quot;/&gt;
+&lt;/replace&gt;
+</pre></blockquote>
+<p>In file <code>configure.sh</code>, replace all instances of &quot;@token1@&quot; with &quot;defaultvalue&quot;, all instances of &quot;@token2@&quot; with &quot;value2&quot;, and all instances of &quot;@token3@&quot; with the value of the property &quot;property.key&quot;, as it appears in property file <code>src/name.properties</code>.</p>
+<p><b>Note:</b> It is possible to use either the <i>token</i>/<code>&lt;replacetoken&gt;</code> and <i>value</i>/<code>&lt;replacevalue&gt;</code> attributes/elements, the nested replacefilter elements, or both in the same operation.
+</p>
 <hr>
 <h2><a name="rmic">Rmic</a></h2>
 <h3>Description</h3>
