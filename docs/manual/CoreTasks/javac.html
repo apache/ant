@@ -194,8 +194,13 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">debug</td>
-    <td valign="top">Indicates whether source should be compiled with debug
-      information; defaults to <code>off</code>.</td>
+    <td valign="top">Indicates whether source should be compiled with
+    debug information; defaults to <code>off</code>.  If set to
+    <code>off</code>, <code>-g:none</code> will be passed on the
+    command line for compilers that support it (for other compilers, no
+    command line argument will be used).  If set to <code>true</code>,
+    the value of the <code>debuglevel</code> attribute determines the
+    command line argument.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -207,7 +212,7 @@ invoking the compiler.</p>
       following keywords:
       <code>lines</code>, <code>vars</code>, and <code>source</code>.
       If <code>debuglevel</code> is not specified, by default,
-      <code>:none</code> will be
+      nothing will be
       appended to <code>-g</code>.  If <code>debug</code> is not turned on,
       this attribute will be ignored.
     </td>
