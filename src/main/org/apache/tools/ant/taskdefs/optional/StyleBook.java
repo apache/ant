@@ -60,8 +60,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
 
 /**
- * Basic task for apache stylebook.
- *
+ * This executes the apache Stylebook documentation generator. 
+ * Unlike the commandline version of this tool, all three arguments
+ * are required to run stylebook.
+ * <p>
+ * Being extended from &lt;Java&gt;, all the parent's attributes
+ * and options are available. Do not set any apart from the <tt>classpath</tt>
+ * as they are not guaranteed to be there in future.
+ * @todo stop extending from Java.
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:marcus.boerger@post.rwth-aachen.de">Marcus
  *      B&ouml;rger</a>
@@ -80,27 +86,44 @@ public class StyleBook
         setFailonerror(true);
     }
 
-
+    /**
+     * The book xml file that the documentation generation starts from; 
+     * required.
+     */
+     
     public void setBook(final File book) {
         m_book = book;
     }
 
 
+    /**
+     * the directory that contains the stylebook skin;
+     * required.
+     */
     public void setSkinDirectory(final File skinDirectory) {
         m_skinDirectory = skinDirectory;
     }
 
 
+    /**
+     * the destination directory where the documentation is generated;
+     * required.
+     */
     public void setTargetDirectory(final File targetDirectory) {
         m_targetDirectory = targetDirectory;
     }
 
-
+    /**
+     * A loader configuration to send to stylebook; optional.
+     */
     public void setLoaderConfig(final String loaderConfig) {
         m_loaderConfig = loaderConfig;
     }
 
 
+    /**
+     * call the program
+     */
     public void execute()
          throws BuildException {
 

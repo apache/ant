@@ -58,6 +58,8 @@ import org.apache.tools.ant.taskdefs.Java;
 import java.util.Vector;
 
 /**
+ * This is a primitive task to execute a unit test in the org.apache.testlet framework.
+ * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Test extends Java {
@@ -65,11 +67,15 @@ public class Test extends Java {
     protected Vector m_tests = new Vector();
 
 
+    /**
+     * testlet to run
+     */
     protected static final class TestletEntry {
 
         protected String m_testname = "";
 
 
+        /** name of test. No property expansion takes place here */
         public void addText(final String testname) {
             m_testname += testname;
         }
@@ -86,6 +92,9 @@ public class Test extends Java {
     }
 
 
+    /**
+     * add a declaration of a testlet to run
+     */
     public TestletEntry createTestlet() {
         final TestletEntry entry = new TestletEntry();
 
@@ -94,16 +103,29 @@ public class Test extends Java {
     }
 
 
+    /**
+     * a boolean value indicating whether tests should display a 
+     * message on success; optional
+     */
+    
     public void setShowSuccess(final boolean showSuccess) {
         createArg().setValue("-s=" + showSuccess);
     }
 
 
+    /**
+     * a boolean value indicating whether a banner should be displayed 
+     * when starting testlet engine; optional.
+     */
     public void setShowBanner(final String showBanner) {
         createArg().setValue("-b=" + showBanner);
     }
 
 
+    /**
+     * a boolean indicating that a stack trace is displayed on 
+     * error (but not normal failure); optional.
+     */
     public void setShowTrace(final boolean showTrace) {
         createArg().setValue("-t=" + showTrace);
     }
