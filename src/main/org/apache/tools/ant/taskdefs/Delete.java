@@ -79,6 +79,7 @@ public class Delete extends MatchingTask {
     protected File dir = null;
     protected Vector filesets = new Vector();
     protected boolean usedMatchingTask = false;
+    protected boolean includeEmpty = false;	// by default, remove matching empty dirs
 
     private int verbosity = Project.MSG_VERBOSE;
     private boolean quiet = false;
@@ -128,6 +129,13 @@ public class Delete extends MatchingTask {
     } 
 
     /**
+     * Used to delete empty directories.
+     */
+    public void setIncludeEmptyDirs(boolean includeEmpty) {
+        this.includeEmpty = includeEmpty;
+    }
+
+   /**
      * Adds a set of files (nested fileset attribute).
      */
     public void addFileset(FileSet set) {
@@ -234,7 +242,7 @@ public class Delete extends MatchingTask {
                 } else {
                     log("Deleting: " + file.getAbsolutePath());
   
-                    if (!quiet && !file.delete()) {
+                    if (!file.delete() && !quiet) {
                         throw new BuildException("Unable to delete file " + file.getAbsolutePath());
                     } 
                 } 
@@ -245,7 +253,15 @@ public class Delete extends MatchingTask {
 
         // delete the directory
         if (dir != null && dir.exists() && dir.isDirectory() && !usedMatchingTask) {
-            log("Deleting directory " + dir.getAbsolutePath());
+            /*
+               If verbosity is MSG_VERBOSE, that mean we are doing regular logging
+               (backwards as that sounds).  In that case, we want to print one 
+               message about deleting the top of the directory tree.  Otherwise, 
+               the removeDir method will handle messages for _all_ directories.
+             */
+            if (verbosity == Project.MSG_VERBOSE) {
+                log("Deleting directory " + dir.getAbsolutePath());
+            }
             removeDir(dir);
         }
 
@@ -254,14 +270,16 @@ public class Delete extends MatchingTask {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             String[] files = ds.getIncludedFiles();
-            removeFiles(fs.getDir(project), files);
+            String[] dirs = ds.getIncludedDirectories();
+            removeFiles(fs.getDir(project), files, dirs);
         }
 
         // delete the files from the default fileset
         if (usedMatchingTask && dir != null) {
             DirectoryScanner ds = super.getDirectoryScanner(dir);
-            String [] files = ds.getIncludedFiles();
-            removeFiles(dir, files);
+            String[] files = ds.getIncludedFiles();
+            String[] dirs = ds.getIncludedDirectories();
+            removeFiles(dir, files, dirs);
         }
     } 
 
@@ -279,26 +297,48 @@ public class Delete extends MatchingTask {
                 removeDir(f);
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!quiet && !f.delete()) {
+                if (!f.delete() && !quiet) {
                     throw new BuildException("Unable to delete file " + f.getAbsolutePath());
                 }
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
-        if (!quiet && !d.delete()) {
+        if (!d.delete() && !quiet) {
             throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
         }
     }
 
-    protected void removeFiles(File d, String[] files) {
+    protected void removeFiles(File d, String[] files, String[] dirs) {
         if (files.length > 0) {
             log("Deleting " + files.length + " files from " + d.getAbsolutePath());
             for (int j=0; j<files.length; j++) {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!quiet && !f.delete()) {
+                if (!f.delete() && !quiet) {
                     throw new BuildException("Unable to delete file " + f.getAbsolutePath());
                 }
+            }
+        }
+
+        if (dirs.length > 0 && includeEmpty) {
+            int dirCount = 0;
+            for (int j=0; j<dirs.length; j++) {
+                File dir = new File(d, dirs[j]);
+                String[] dirFiles = dir.list();
+                if (dirFiles == null || dirFiles.length == 0) {
+                    log("Deleting " + dir.getAbsolutePath(), verbosity);
+                    if (!dir.delete() && !quiet) {
+                        throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+                    } else {
+                        dirCount++;
+                    }
+                }
+            }
+
+            if (dirCount > 0) {
+                log("Deleted " + dirCount + " director" + 
+                    (dirCount==1 ? "y" : "ies") + 
+                    " from " + d.getAbsolutePath());
             }
         }
     }
