@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -197,6 +197,20 @@ public class DemuxOutputStream extends OutputStream {
     }
 
     /**
+     * Converts the buffer to a string and sends it to the project.
+     *
+     * @param buffer the ByteArrayOutputStream used to collect the output
+     * until a line separator is seen.
+     * 
+     * @see Project#demuxOutput(String,boolean)
+     */
+    protected void processFlush(ByteArrayOutputStream buffer) {
+        String output = buffer.toString();
+        project.demuxFlush(output, isErrorStream);
+        resetBufferInfo();
+    }
+
+    /**
      * Equivalent to flushing the stream.
      *
      * @exception IOException if there is a problem closing the stream.
@@ -217,7 +231,7 @@ public class DemuxOutputStream extends OutputStream {
     public void flush() throws IOException {
         BufferInfo bufferInfo = getBufferInfo();
         if (bufferInfo.buffer.size() > 0) {
-            processBuffer(bufferInfo.buffer);
+            processFlush(bufferInfo.buffer);
         }
     }
 }

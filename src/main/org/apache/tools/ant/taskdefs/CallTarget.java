@@ -186,6 +186,19 @@ public class CallTarget extends Task {
     }
     
     /**
+     * Pass output sent to System.out to the new project.
+     *
+     * @since Ant 1.5.2
+     */
+    public void handleFlush(String line) {
+        if (callee != null) {
+            callee.handleFlush(line);
+        } else {
+            super.handleFlush(line);
+        }
+    }
+    
+    /**
      * Pass output sent to System.err to the new project.
      *
      * @since Ant 1.5
@@ -198,4 +211,16 @@ public class CallTarget extends Task {
         }
     }
     
+    /**
+     * Pass output sent to System.err to the new project.
+     *
+     * @since Ant 1.5.2
+     */
+    public void handleErrorFlush(String line) {
+        if (callee != null) {
+            callee.handleErrorFlush(line);
+        } else {
+            super.handleErrorFlush(line);
+        }
+    }
 }

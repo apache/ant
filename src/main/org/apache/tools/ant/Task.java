@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -271,8 +271,19 @@ public abstract class Task extends ProjectComponent {
     protected void handleOutput(String line) {
         log(line, Project.MSG_INFO);
     }
-    
-    /** 
+
+    /**
+     * Handles a line of output by logging it with the INFO priority.
+     *
+     * @param line The line of output to log. Should not be <code>null</code>.
+     *
+     * @since Ant 1.5.2
+     */
+    protected void handleFlush(String line) {
+        handleOutput(line);
+    }
+
+    /**
      * Handles an error line by logging it with the INFO priority.
      * 
      * @param line The error line to log. Should not be <code>null</code>.
@@ -280,10 +291,21 @@ public abstract class Task extends ProjectComponent {
     protected void handleErrorOutput(String line) {
         log(line, Project.MSG_ERR);
     }
-        
-    /**   
-     * Logs a message with the default (INFO) priority.   
-     *   
+
+    /**
+     * Handles an error line by logging it with the INFO priority.
+     *
+     * @param line The error line to log. Should not be <code>null</code>.
+     *
+     * @since Ant 1.5.2
+     */
+    protected void handleErrorFlush(String line) {
+        handleErrorOutput(line);
+    }
+
+    /**
+     * Logs a message with the default (INFO) priority.
+     *
      * @param msg The message to be logged. Should not be <code>null</code>.
      */   
     public void log(String msg) {   

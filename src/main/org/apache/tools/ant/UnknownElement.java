@@ -138,6 +138,19 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * Handles output sent to System.out by this task or its real task.
+     *
+     * @param line The line of output to log. Should not be <code>null</code>.
+     */
+    protected void handleFlush(String line) {
+        if (realThing instanceof Task) {
+            ((Task) realThing).handleFlush(line);
+        } else {
+            super.handleFlush(line);
+        }
+    }
+
+    /**
      * Handles error output sent to System.err by this task or its real task.
      *
      * @param line The error line to log. Should not be <code>null</code>.
@@ -150,6 +163,20 @@ public class UnknownElement extends Task {
         }
     }
 
+
+    /**
+     * Handles error output sent to System.err by this task or its real task.
+     *
+     * @param line The error line to log. Should not be <code>null</code>.
+     */
+    protected void handleErrorFlush(String line) {
+        if (realThing instanceof Task) {
+            ((Task) realThing).handleErrorOutput(line);
+        } else {
+            super.handleErrorOutput(line);
+        }
+    }
+    
     /**
      * Executes the real object if it's a task. If it's not a task
      * (e.g. a data type) then this method does nothing.

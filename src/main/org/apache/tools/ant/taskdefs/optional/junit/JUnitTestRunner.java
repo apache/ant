@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -415,6 +415,18 @@ public class JUnitTestRunner implements TestListener {
     protected void handleErrorOutput(String line) {
         if (systemError != null) {
             systemError.println(line);
+        }
+    }
+    
+    protected void handleFlush(String line) {
+        if (systemOut != null) {
+            systemOut.print(line);
+        }
+    }
+    
+    protected void handleErrorFlush(String line) {
+        if (systemError != null) {
+            systemError.print(line);
         }
     }
     

@@ -718,12 +718,29 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Pass output sent to System.out to the TestRunner so it can
+     * collect ot for the formatters.
+     *
+     * @since Ant 1.5.2
+     */
+    protected void handleFlush(String line) {
+        if (runner != null) {
+            runner.handleFlush(line);
+            if (showOutput) {
+                super.handleFlush(line);
+            }
+        } else {
+            super.handleFlush(line);
+        }
+    }
+
+    /**
      * Pass output sent to System.err to the TestRunner so it can
      * collect ot for the formatters.
      *
      * @since Ant 1.5
      */
-    protected void handleErrorOutput(String line) {
+    public void handleErrorOutput(String line) {
         if (runner != null) {
             runner.handleErrorOutput(line);
             if (showOutput) {
@@ -731,6 +748,24 @@ public class JUnitTask extends Task {
             }
         } else {
             super.handleErrorOutput(line);
+        }
+    }
+
+
+    /**
+     * Pass output sent to System.err to the TestRunner so it can
+     * collect ot for the formatters.
+     *
+     * @since Ant 1.5.2
+     */
+    public void handleErrorFlush(String line) {
+        if (runner != null) {
+            runner.handleErrorFlush(line);
+            if (showOutput) {
+                super.handleErrorFlush(line);
+            }
+        } else {
+            super.handleErrorFlush(line);
         }
     }
 

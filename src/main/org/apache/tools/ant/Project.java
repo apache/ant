@@ -1274,6 +1274,34 @@ public class Project {
     }
 
     /**
+     * Demultiplexes flush operation so that each task receives the appropriate
+     * messages. If the current thread is not currently executing a task,
+     * the message is logged directly.
+     *
+     * @since Ant 1.5.2
+     *
+     * @param line Message to handle. Should not be <code>null</code>.
+     * @param isError Whether the text represents an error (<code>true</code>)
+     *        or information (<code>false</code>).
+     * @param terminated true if this line should be terminated with an 
+     *        end-of-line marker
+     */
+    public void demuxFlush(String line, boolean isError) {
+        Task task = (Task) threadTasks.get(Thread.currentThread());
+        if (task == null) {
+            fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
+        } else {
+            if (isError) {
+                task.handleErrorFlush(line);
+            } else {
+                task.handleFlush(line);
+            }
+        }
+    }
+
+    
+    
+    /**
      * Executes the specified target and any targets it depends on.
      *
      * @param targetName The name of the target to execute.
