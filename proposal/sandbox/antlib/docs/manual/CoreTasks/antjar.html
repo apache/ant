@@ -12,41 +12,50 @@
 <p>An extension of the <a href="jar.html">Jar</a> task with special
 treatment for the library descriptor file that should end up in the
 <code>META-INF</code> directory of the Ant Archive.</p>
-<p>This task validates the provided library descriptor making certain
-it specifies the following SYSTEM ID: 
-<b>&quot;http://jakarta.apache.org/ant/AntlibV1_0.dtd&quot;</b>. 
-This DTD is defined as follows:</p>
+<p>
+Descriptors must follow the following rules, although there is no fix DTD
+for them:
 <pre>
-&lt;?xml version='1.0' encoding="UTF8" ?&gt;
-
-&lt;!-- 
-This file defines the XML format for ANT library descriptors.
-Descriptors must especify a DOCTYPE of 
-"http://jakarta.apache.org/ant/Antlib-V1_0.dtd"
-as the SystemId for the document.
---&gt;
 
 &lt;!-- Root element for the Antlib descriptor.                 --&gt;
-&lt;!ELEMENT antlib (task | type)* &gt;
-&lt;!ATTLIST antlib
-          version  CDATA #IMPLIED
-&gt;
+&lt;!ELEMENT antlib (role | <i>rolename</i>)* &gt;
 
-&lt;!-- Declaration of tasks contained in the library.          --&gt;
-&lt;!ELEMENT task EMPTY&gt;
-&lt;!ATTLIST task 
+&lt;!-- Declaration of roles contained in the library.          --&gt;
+&lt;!ELEMENT role EMPTY&gt;
+&lt;!ATTLIST role 
           name     CDATA #REQUIRED
           class    CDATA #REQUIRED
+          proxy    CDATA #IMPLIED
 &gt;
 
 &lt;!-- Declaration of datatypes contained in the library       --&gt;
-&lt;!ELEMENT type EMPTY&gt;
-&lt;!ATTLIST type 
+&lt;!ELEMENT <i>rolename</i> EMPTY&gt;
+&lt;!ATTLIST <i>rolename</i> 
           name     CDATA #REQUIRED
           class    CDATA #REQUIRED
 &gt;
 
 </pre>
+There are two predefined roles: <i><b>task</b></i> and <i><b>datatype</b></i>.
+<p>
+<h4>Role definition</h4>
+The <b>name</b> of the role. This name is used when specifying 
+elements for this role.
+<p>
+The <b>class</b> defining a role must be an interface containing a 
+unique void method with only one argument whose type is the that of 
+elements declared on the role.
+<p>
+The <b>proxy</b> defined in a role specifies a class that can be used 
+to bridge between the type expected by the role and the type of 
+elements declared for that role.
+<h4>Element definition</h4>
+Any element whose name is that of a role declares an element for that role.
+<p>
+The <b>name</b> defined the name of the element to use in the buildfile 
+to specify the element being declared.
+<p>
+The <b>class</b> the class defining the element.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -78,7 +87,6 @@ in <code>META-INF/antlib.xml</code>.</p>
 <p>Here is a sample <code>META-INF/antlib.xml</code>:</p>
 <pre>
 &lt;?xml version="1.0" encoding="UTF8" ?&gt;
-&lt;!DOCTYPE antlib  SYSTEM "http://jakarta.apache.org/ant/Antlib-V1_0.dtd" &gt;
 
 &lt;antlib version="1.0" &gt;
   &lt;task name="case" class="org.apache.ant.contrib.Case" /&gt;

@@ -76,9 +76,11 @@ import java.io.*;
  * @since ant1.5
  */
 public class Antlib extends Task {
-    /*
-     *  implements DeclaringTask
+    /**
+     * The named classloader to use.
+     * Defaults to the default classLoader.
      */
+    private String loaderId = "";
 
     /**
      * library attribute
@@ -177,6 +179,15 @@ public class Antlib extends Task {
         this.file = file;
     }
 
+    /**
+     * Set the ClassLoader to use for this library.
+     *
+     * @param id the id for the ClassLoader to use, 
+     *           if other than the default.
+     */
+    public void setLoaderid(String id) {
+	this.loaderId = id;
+    }
 
     /**
      * Set whether to override any existing definitions.
@@ -189,8 +200,9 @@ public class Antlib extends Task {
 
 
     /**
-     * Set whether to use a new classloader or not. Default is <code>false</code>
-     * . This property is mostly used by the core when loading core tasks.
+     * Set whether to use a new classloader or not. 
+     * Default is <code>false</code>.
+     * This property is mostly used by the core when loading core tasks.
      *
      * @param useCurrentClassloader if true the current classloader will
      *      be used to load the definitions.
@@ -264,7 +276,7 @@ public class Antlib extends Task {
                 String msg = "You cannot specify both file and library.";
                 throw new BuildException(msg, location);
             }
-            // For the time being libraries live in $ANT_HOME/lib.
+            // For the time being libraries live in $ANT_HOME/antlib.
             // The idea being that we would not load all the jars there anymore
             String home = project.getProperty("ant.home");
 
@@ -272,7 +284,7 @@ public class Antlib extends Task {
                 throw new BuildException("ANT_HOME not set as required.");
             }
 
-            realFile = new File(new File(home, "lib"), library);
+            realFile = new File(new File(home, "antlib"), library);
         }
         else if (file == null) {
             String msg = "Must specify either library or file attribute.";
@@ -406,8 +418,7 @@ public class Antlib extends Task {
         if (classpath != null) {
             clspath.append(classpath);
         }
-        AntClassLoader al = new AntClassLoader(project, clspath, true);
-        return al;
+	return project.getSymbols().addToLoader(loaderId, clspath);
     }
 
 
@@ -474,30 +485,6 @@ public class Antlib extends Task {
 
 
     /**
-     * get a DTD URI from url, prefix and extension
-     *
-     * @return URI for this dtd version
-     */
-    public static String dtdVersion() {
-        return ANTLIB_DTD_URL + ANTLIB_DTD_PREFIX +
-                ANTLIB_DTD_VERSION + ANTLIB_DTD_EXT;
-    }
-
-
-    /**
-     * compare system ID with the dtd string
-     * -ignoring any version number
-     * @param systemId Description of Parameter
-     * @return true if this is a an ant library descriptor
-     */
-    public static boolean matchDtdId(String systemId) {
-        return (systemId != null &&
-                systemId.startsWith(ANTLIB_DTD_URL + ANTLIB_DTD_PREFIX) &&
-                systemId.endsWith(ANTLIB_DTD_EXT));
-    }
-
-
-    /**
      * Parses the document describing the content of the 
      * library. An inner class for access to Project.log 
      */
@@ -516,6 +503,14 @@ public class Antlib extends Task {
          */
         private Locator locator = null;
 
+	private int level = 0;
+
+	private SymbolTable symbols = null;
+
+	private String name = null;
+	private String className = null;
+	private String adapter = null;
+
         /**
          * Constructor for the AntLibraryHandler object
          *
@@ -525,8 +520,8 @@ public class Antlib extends Task {
         AntLibraryHandler(ClassLoader classloader, Properties als) {
             this.classloader = classloader;
             this.aliasMap = als;
+	    this.symbols = project.getSymbols();
         }
-
 
         /**
          * Sets the DocumentLocator attribute of the AntLibraryHandler
@@ -538,6 +533,35 @@ public class Antlib extends Task {
             this.locator = locator;
         }
 
+	private void parseAttributes(String tag, AttributeList attrs) 
+	    throws SAXParseException {
+	    name = null;
+	    className = null;
+	    adapter = null;
+	    
+	    for (int i = 0, last = attrs.getLength(); i < last; i++) {
+		String key = attrs.getName(i);
+		String value = attrs.getValue(i);
+		
+		if (key.equals("name")) {
+		    name = value;
+		}
+		else if (key.equals("class")) {
+		    className = value;
+		}
+		else if ("role".equals(tag) && key.equals("adapter")) {
+		    adapter = value;
+		}
+		else {
+		    throw new SAXParseException("Unexpected attribute \""
+						+ key + "\"", locator);
+		}
+	    }
+	    if (name == null || className == null) {
+		String msg = "Underspecified " + tag + " declaration.";
+		throw new SAXParseException(msg, locator);
+	    }
+	}
 
         /**
          * SAX callback handler
@@ -548,121 +572,105 @@ public class Antlib extends Task {
          */
         public void startElement(String tag, AttributeList attrs)
             throws SAXParseException {
+	    level ++;
             if ("antlib".equals(tag)) {
+		if (level > 1) {
+		    throw new SAXParseException("Unexpected element: " + tag,
+						locator);
+		}
                 // No attributes to worry about
                 return;
             }
-            if ("task".equals(tag) || "type".equals(tag)) {
-                String name = null;
-                String className = null;
+	    if (level == 1) {
+		throw new SAXParseException("Missing antlib root element",
+					    locator);
+	    }
 
-                for (int i = 0, last = attrs.getLength(); i < last; i++) {
-                    String key = attrs.getName(i);
-                    String value = attrs.getValue(i);
+	    // Must have the two attributes declared
+	    parseAttributes(tag, attrs);
 
-                    if (key.equals("name")) {
-                        name = value;
-                    }
-                    else if (key.equals("class")) {
-                        className = value;
-                    }
-                    else {
-                        throw new SAXParseException("Unexpected attribute \""
-                                 + key + "\"", locator);
-                    }
-                }
-                if (name == null || className == null) {
-                    String msg = "Underspecified " + tag + " declaration.";
-                    throw new SAXParseException(msg, locator);
-                }
+	    try {
+		if ("role".equals(tag)) {
+		    if (isRoleInUse(name)) {
+			String msg = "Cannot override role: " + name;
+			log(msg, Project.MSG_WARN);
+			return;			
+		    }
+		    // Defining a new role
+		    symbols.addRole(name, loadClass(className),
+				    (adapter == null? 
+				     null : loadClass(adapter))); 
+		    return;
+		}
 
-                try {
-                    //check for name alias
-                    String alias = aliasMap.getProperty(name);
-                    if (alias != null) {
-                        name = alias;
-                    }
-                    //catch an attempted override of an existing name
-                    if (!override && inUse(name)) {
-                        String msg = "Cannot override " + tag + ": " + name;
-                        log(msg, Project.MSG_WARN);
-                        return;
-                    }
-
-                    //load the named class
-                    Class cls;
-                    if(classloader==null) {
-                        cls=Class.forName(className);
-                    }
-                    else {
-                        cls=classloader.loadClass(className);
-                    }
-
-                    //register it as a task or a datatype
-                    if (tag.equals("task")) {
-                        project.addTaskDefinition(name, cls);
-                    }
-                    else {
-                        project.addDataTypeDefinition(name, cls);
-                    }
-                }
-                catch (ClassNotFoundException cnfe) {
-                    String msg = "Class " + className +
-                            " cannot be found";
-                    throw new SAXParseException(msg, locator, cnfe);
-                }
-                catch (NoClassDefFoundError ncdfe) {
-                    String msg = "Class " + className +
-                            " cannot be found";
-                    throw new SAXParseException(msg, locator);
-                }
-            }
-            else {
-                throw new SAXParseException("Unexpected element \"" +
-                        tag + "\"",
-                        locator);
-            }
+		// Defining a new element kind
+		//check for name alias
+		String alias = aliasMap.getProperty(name);
+		if (alias != null) {
+		    name = alias;
+		}
+		//catch an attempted override of an existing name
+		if (!override && isInUse(tag, name)) {
+		    String msg = "Cannot override " + tag + ": " + name;
+		    log(msg, Project.MSG_WARN);
+		    return;
+		}
+		symbols.add(tag, name, loadClass(className));
+	    }
+	    catch(BuildException be) {
+		throw new SAXParseException(be.getMessage(), locator, be);
+	    }
         }
 
+	public void endElement(String tag) {
+	    level--;
+	}
+
+	private Class loadClass(String className)
+	    throws SAXParseException {
+	    try {
+		//load the named class
+		Class cls;
+		if(classloader==null) {
+		    cls=Class.forName(className);
+		}
+		else {
+		    cls=classloader.loadClass(className);
+		}
+		return cls;
+	    }
+	    catch (ClassNotFoundException cnfe) {
+		String msg = "Class " + className +
+		    " cannot be found";
+		throw new SAXParseException(msg, locator, cnfe);
+	    }
+	    catch (NoClassDefFoundError ncdfe) {
+		String msg = "Class " + className +
+		    " cannot be found";
+		throw new SAXParseException(msg, locator);
+	    }
+	}
 
         /**
-         * test for a name being in use already
+         * test for a name being in use already on this role
          *
          * @param name the name to test
          * @return true if it is a task or a datatype
          */
-        private boolean inUse(String name) {
-            return (project.getTaskDefinitions().get(name) != null ||
-                    project.getDataTypeDefinitions().get(name) != null);
+        private boolean isInUse(String role, String name) {
+            return (symbols.get(role, name) != null);
         }
-
 
         /**
-         * Recognizes the DTD declaration for antlib and returns the corresponding
-         * DTD definition from a resource. <P>
+         * test for a role name being in use already
          *
-         * To allow for future versions of the DTD format it will search
-         * for any DTDs of the form "Antlib-V.*\.dtd".
-         *
-         * @param publicId public ID (ignored)
-         * @param systemId system ID (matched against)
-         * @return local DTD instance 
+         * @param name the name to test
+         * @return true if it is a task or a datatype
          */
-        public InputSource resolveEntity(String publicId,
-                String systemId) {
-
-            log("Looking for entiry with PublicID=" + publicId +
-                    " and SystemId=" + systemId, Project.MSG_VERBOSE);
-            if (matchDtdId(systemId)) {
-                String resId = systemId.substring(ANTLIB_DTD_URL.length());
-                InputSource is =
-                        new InputSource(this.getClass().getResourceAsStream(resId));
-
-                is.setSystemId(systemId);
-                return is;
-            }
-            return null;
+        private boolean isRoleInUse(String name) {
+            return (symbols.getRole(name) != null);
         }
+
     //end inner class AntLibraryHandler
     }
 

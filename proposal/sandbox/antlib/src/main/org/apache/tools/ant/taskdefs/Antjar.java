@@ -107,9 +107,6 @@ public class Antjar extends Jar {
             throw new BuildException("Deployment descriptor: " + libraryDescriptor + " does not exist.");
         }
 
-        //check 
-        validateDescriptor();
-
         // Create a ZipFileSet for this file, and pass it up.
         ZipFileSet fs = new ZipFileSet();
         fs.setDir(new File(libraryDescriptor.getParent()));
@@ -130,7 +127,7 @@ public class Antjar extends Jar {
         throws IOException, BuildException {
         // If no antxml file is specified, it's an error.
         if (libraryDescriptor == null) {
-            throw new BuildException("webxml attribute is required", location);
+            throw new BuildException("antxml attribute is required", location);
         }
 
         super.initZipOutputStream(zOut);
@@ -177,140 +174,4 @@ public class Antjar extends Jar {
         super.cleanUp();
     }
 
-
-    /**
-     * validate the descriptor against the DTD
-     *
-     * @exception BuildException failure to validate
-     */
-    protected void validateDescriptor()
-        throws BuildException {
-        SAXParserFactory saxFactory = SAXParserFactory.newInstance();
-        saxFactory.setValidating(true);
-        InputStream is = null;
-        try {
-            SAXParser saxParser = saxFactory.newSAXParser();
-            Parser parser = saxParser.getParser();
-            is = new FileInputStream(libraryDescriptor);
-            InputSource inputSource = new InputSource(is);
-            inputSource.setSystemId("file:" + libraryDescriptor);
-            project.log("Validating library descriptor: " + libraryDescriptor,
-                    Project.MSG_VERBOSE);
-            saxParser.parse(inputSource, new AntLibraryValidator());
-        }
-        catch (ParserConfigurationException exc) {
-            throw new BuildException("Parser has not been configured correctly", exc);
-        }
-        catch (SAXParseException exc) {
-            Location location =
-                    new Location(libraryDescriptor.toString(),
-                    exc.getLineNumber(), exc.getColumnNumber());
-
-            Throwable t = exc.getException();
-            if (t instanceof BuildException) {
-                BuildException be = (BuildException) t;
-                if (be.getLocation() == Location.UNKNOWN_LOCATION) {
-                    be.setLocation(location);
-                }
-                throw be;
-            }
-
-            throw new BuildException(exc.getMessage(), t, location);
-        }
-        catch (SAXException exc) {
-            Throwable t = exc.getException();
-            if (t instanceof BuildException) {
-                throw (BuildException) t;
-            }
-            throw new BuildException(exc.getMessage(), t);
-        }
-        catch (IOException exc) {
-            throw new BuildException("Error reading library descriptor", exc);
-        }
-        finally {
-            if (is != null) {
-                try {
-                    is.close();
-                }
-                catch (IOException ioe) {
-                    // ignore this
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Parses the document describing the content of the library.
-     */
-    private class AntLibraryValidator extends HandlerBase {
-
-        /**
-         * flag to track whether the DOCTYPE was hit in the prolog
-         */
-        private boolean doctypePresent = false;
-
-        /**
-         * doc locator
-         */
-        private Locator locator = null;
-
-        /**
-         * Sets the DocumentLocator attribute of the AntLibraryValidator
-         * object
-         *
-         * @param locator The new DocumentLocator value
-         */
-        public void setDocumentLocator(Locator locator) {
-            this.locator = locator;
-        }
-
-        /**
-         * SAX callback handler
-         *
-         * @param tag XML tag
-         * @param attrs attributes
-         * @exception SAXParseException parse trouble
-         */
-        public void startElement(String tag, AttributeList attrs)
-            throws SAXParseException {
-            // By the time an element is found
-            // the DOCTYPE should have been found.
-            if (!doctypePresent) {
-                String msg = "Missing DOCTYPE declaration or wrong SYSTEM ID";
-                throw new SAXParseException(msg, locator);
-            }
-        }
-
-        /**
-         * Recognizes the DTD declaration for antlib and returns the corresponding
-         * DTD definition from a resource. <P>
-         *
-         * To allow for future versions of the DTD format it will search
-         * for any DTDs of the form "Antlib-V.*\.dtd".
-         *
-         * @param publicId public ID (ignored)
-         * @param systemId system ID (matched against)
-         * @return local DTD instance 
-         */
-        public InputSource resolveEntity(String publicId,
-                String systemId) {
-
-            log("Looking for entity with PublicID=" + publicId +
-                    " and SystemId=" + systemId, Project.MSG_VERBOSE);
-            if (Antlib.matchDtdId(systemId)) {
-                String resId =
-                        systemId.substring(Antlib.ANTLIB_DTD_URL.length());
-                InputSource is =
-                        new InputSource(this.getClass().getResourceAsStream(resId));
-
-                is.setSystemId(systemId);
-                doctypePresent = true;
-                return is;
-            }
-            return null;
-        }
-    //end inner class AntLibraryValidator
-    }
 }
-

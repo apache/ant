@@ -1,0 +1,60 @@
+<?xml version='1.0' ?>
+<project name="antlib" default="all">
+  <property name='orig' location='../../..' />
+  <property name='orig-build' location='${orig}/build' />
+  <property name='orig-classes' location='${orig-build}/classes' />
+  <property name='build' location='build' />
+  <property name='dist' location='dist' />
+  <property name='classes' location='${build}/classes' />
+
+  <property name="debug" value="true" />
+  <property name="deprecation" value="false" />
+  <property name="optimize" value="true" />
+  
+  
+  <target name='init'>
+    <ant target='build' dir='${orig}' inheritAll='false' />
+    <mkdir dir='${classes}' />
+    <copy toDir='${classes}' preservelastmodified='true' >
+      <fileset dir='${orig-classes}'>
+        <include name='**' />
+	<exclude name='org/apache/tools/ant/Project.class' />
+	<exclude name='org/apache/tools/ant/TaskAdapter.class' />
+	<exclude name='org/apache/tools/ant/taskdefs/Ant.class' />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name='all' depends='init, build' />
+
+  <target name='fullbuild' depends='init, compile'>
+    <ant target='internal_dist' dir='${orig}'>
+      <property name="build.dir" value="${build}"/>
+      <property name="dist.dir" value="${dist}"/>
+    </ant>
+  </target>
+
+  <target name='build' depends='init, compile'>
+    <ant target='dist-lite' dir='${orig}'>
+      <property name="build.dir" value="${build}"/>
+      <property name="dist.dir" value="${dist}"/>
+    </ant>
+  </target>
+
+  <target name='compile'>
+    <javac srcdir='src/main' destdir='${classes}'
+           debug="${debug}"
+           deprecation="${deprecation}"
+           optimize="${optimize}">
+      <include name='**/*.java'/>
+    </javac>
+  </target>
+
+  <target name='clean'>
+    <delete dir='${build}' />
+  </target>
+
+  <target name='cleanall' depends='clean'>
+    <delete dir='${dist}' />
+  </target>
+</project>
