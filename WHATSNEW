@@ -66,6 +66,8 @@ Other changes:
 * Allow the SQL Delimiter to be set in the so that Oracle stored procs may be
   entered  
 
+* <execon> and <apply> can now optionally skip empty filesets.
+
 Fixed bugs:
 -----------
 
