@@ -66,8 +66,8 @@ import java.util.Vector;
  * <p>
  * Task to import another build file into the current project.
  * <p>
- * It must be 'top level'. On execution it'll read another file
- * into the same Project.
+ * It must be 'top level'. On execution it will read another Ant file
+ * into the same Project. 
  * <p>
  * <b>Important</b>: there is one limitation related to the top level
  * elements in the imported files. The current implementation will
@@ -77,11 +77,24 @@ import java.util.Vector;
  * <b>Important</b>: we have not finalized how relative file references
  * will be resolved in deep/complex build hierarchies -such as what happens
  * when an imported file imports another file. Use absolute references for
- * enhanced build file stability. 
+ * enhanced build file stability, especially in the imported files. 
+ *
+ * Examples
+ * <pre>
+ * &lt;import file="../common-targets.xml" /&gt;
+ * </pre>
+ * Import targets from a file in a parent directory.
+ *<p>
+ * <pre>
+ * &lt;import file="${deploy-platform}.xml" /&gt;
+ * </pre>
+ * Import the project defined by the property deploy-platform
  *
  * @author Nicola Ken Barozzi nicolaken@apache.org
  * @author Dominique Devienne DDevienne@lgc.com
  * @author Costin Manolache
+ * @since Ant1.6
+ * @ant.task category="control"
  */
 public class ImportTask extends Task {
     String file;
