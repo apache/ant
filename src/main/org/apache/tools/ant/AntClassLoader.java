@@ -518,10 +518,10 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             if (cons.length > 0 && cons[0] != null) {
                 final String[] strs = new String[NUMBER_OF_STRINGS];
                 try {
-                    cons[0].newInstance((Object[]) strs);
+                    cons[0].newInstance(strs);
                     // Expecting an exception to be thrown by this call:
                     // IllegalArgumentException: wrong number of Arguments
-                } catch (Throwable t) {
+                } catch (Exception e) {
                     // Ignore - we are interested only in the side
                     // effect - that of getting the static initializers
                     // invoked.  As we do not want to call a valid
@@ -1225,6 +1225,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param event the buildStarted event
      */
     public void buildStarted(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
@@ -1260,6 +1261,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @since Ant 1.6.2
      */
     public void subBuildStarted(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
@@ -1268,6 +1270,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param event the targetStarted event
      */
     public void targetStarted(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
@@ -1276,6 +1279,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param event the targetFinished event
      */
     public void targetFinished(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
@@ -1284,6 +1288,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param event the taskStarted event
      */
     public void taskStarted(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
@@ -1292,6 +1297,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param event the taskFinished event
      */
     public void taskFinished(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
@@ -1300,6 +1306,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param event the messageLogged event
      */
     public void messageLogged(BuildEvent event) {
+        // Not significant for the class loader.
     }
 
     /**
