@@ -49,6 +49,8 @@
         elsewhere
       <li><a href="#depthselect">&lt;depth&gt;</a> - Select files
         that appear so many directories down in a directory tree
+      <li><a href="#differentselect">&lt;different&gt;</a> - Select files
+        that are different from those elsewhere
       <li><a href="#filenameselect">&lt;filename&gt;</a> - Select
         files whose name matches a particular pattern. Equivalent to
         the include and exclude elements of a patternset.
@@ -57,7 +59,6 @@
       <li><a href="#sizeselect">&lt;size&gt;</a> - Select files
         that are larger or smaller than a particular number of bytes.
     </ul>
-
 
     <a name="containsselect"></a>
     <h4>Contains Selector</h4>
@@ -189,7 +190,7 @@
         <td valign="top">The number of milliseconds leeway to give before
           deciding a file is out of date. This is needed because not every
           file system supports tracking the last modified time to the
-          millisecond level. Default is 0 milliseconds.
+          millisecond level. Default is 0 milliseconds, or 2 seconds on DOS systems.
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -250,6 +251,83 @@
     <p>Selects all files in the base directory and one directory below
     that.</p>
 
+    <a name="differentselect">
+    <h4>Different Selector</h4>
+
+    <p>The <code>&lt;different&gt;</code> tag selects files
+    who are deemed to be 'different' from another, equivalent file in
+    another location. The rules for determining difference between two
+    files are as follows:
+    <ol>
+    <li> If there is no 'other' file, it's different.
+    <li> Files with different lengths are different.
+    <li> Files with the same timestamp are the same, unless <tt>ignoreFileTimes</tt>
+         is set. This feature is useful to keep the selection fast.
+    <li> Finally a byte-for-byte check is run against the two files
+    </ol>
+
+    This is a useful selector to work with programs and tasks that don't handle
+    dependency checking properly; Even if a predecessor task always creates its
+    output files, followup tasks can be driven off copies made with a different selector,
+    so their dependencies are driven on the absolute state of the files, not just
+    a timestamp. For example: anything fetched from a web site, or the output of
+    some program. To reduce the amount of checking, when using this task inside
+    a &lt;copy&gt; task, set the <tt>preservelastmodified</tt> to propagate the timestamp
+    from source file to destintaion file.
+
+
+    <p>
+
+    The <code>&lt;different&gt;</code> tag supports the use of a
+    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element
+    to define the location of the file to be compared against. If no
+    <code>&lt;mapper&gt;</code> element is specified, the
+    <code>identity</code> type mapper is used.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">targetdir</td>
+        <td valign="top">The base directory to look for the files to compare
+          against. The precise location depends on a combination of this
+          attribute and the <code>&lt;mapper&gt;</code> element, if any.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">granularity</td>
+        <td valign="top">The number of milliseconds leeway to give before
+          deciding a file is out of date. This is needed because not every
+          file system supports tracking the last modified time to the
+          millisecond level. Default is 0 milliseconds, or 2 seconds on DOS systems.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">ignoreFileTimes</td>
+        <td valign="top">Whether to use file times in the comparison or not.
+        Default is true.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Different Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
+    &lt;different targetdir=&quot;${ant.1.4.1}/src/main&quot;
+        ignoreFileTimes="true"/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Compares all the Java source files between the 1.4.1 and the 1.5 release
+    and selects those who are different, disregarding file times.
+    </p>
 
     <a name="filenameselect"></a>
     <h4>Filename Selector</h4>
