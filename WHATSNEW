@@ -60,6 +60,9 @@ Fixed bugs:
 * Concat task instance could not be run twice.
   Bugzilla report 31814.
 
+* NPE using XmlLogger and antlib.
+  Bugzilla report 31840.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

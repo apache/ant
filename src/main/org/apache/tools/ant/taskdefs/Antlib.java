@@ -83,6 +83,7 @@ public class Antlib extends Task implements TaskContainer {
             Antlib antlib = new Antlib();
             antlib.setProject(project);
             antlib.setLocation(ue.getLocation());
+            antlib.setTaskName("antlib");
             antlib.init();
             ue.configure(antlib);
             return antlib;
