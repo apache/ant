@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,108 +57,165 @@ package org.apache.tools.ant;
 /**
  * Base class for all tasks.
  *
- * <p>Use {@link Project#createTask Project.createTask} to create a new Task.
+ * Use Project.createTask to create a new task instance rather than
+ * using this class directly for construction.
+ * 
+ * @see Project#createTask
  */
 
 public abstract class Task extends ProjectComponent {
-
+    /** Target this task belongs to, if any. */
     protected Target target = null;
+    /** Description of this task, if any. */
     protected String description=null;
+    /** Location within the build file of this task definition. */
     protected Location location = Location.UNKNOWN_LOCATION;
+    /** 
+     * Name of this task to be used for logging purposes. 
+     * This defaults to the same as the type, but may be
+     * overridden by the user. For instance, the name "java"
+     * isn't terribly descriptive for a task used within
+     * another task - the outer task code can probably
+     * provide a better one.
+     */
     protected String taskName = null;
+    /** Type of this task. */
     protected String taskType = null;
+    /** Wrapper for this object, used to configure it at runtime. */
     protected RuntimeConfigurable wrapper;
+    /** 
+     * Whether or not this task is invalid. A task becomes invalid
+     * if a conflicting class is specified as the implementation for
+     * its type.
+     */
     private boolean invalid = false;
 
+    /** Sole constructor. */
+    public Task() {
+    }
+
     /**
-     * Sets the target object of this task.
+     * Sets the target container of this task.
      *
      * @param target Target in whose scope this task belongs.
+     *               May be <code>null</code>, indicating a top-level task.
      */
     public void setOwningTarget(Target target) {
         this.target = target;
     }
 
     /**
-     * Get the Target to which this task belongs
+     * Returns the container target of this task.
      *
-     * @return the task's target.
+     * @return The target containing this task, or <code>null</code> if
+     *         this task is a top-level task.
      */
     public Target getOwningTarget() {
         return target;
     }
     
     /**
-     * Set the name to use in logging messages.
+     * Sets the name to use in logging messages.
      *
-     * @param name the name to use in logging messages.
+     * @param name The name to use in logging messages.
+     *             Should not be <code>null</code>.
      */
     public void setTaskName(String name) {
         this.taskName = name;
     }
 
     /**
-     * Get the name to use in logging messages.
+     * Returns the name to use in logging messages.
      *
-     * @return the name to use in logging messages.
+     * @return the name to use in logging messages. 
      */
     public String getTaskName() {
         return taskName;
     }
 
     /**
-     * Set the name with which the task has been invoked.
+     * Sets the name with which the task has been invoked.
      *
-     * @param type the name the task has been invoked as.
+     * @param type The name the task has been invoked as.
+     *             Should not be <code>null</code>.
      */
     void setTaskType(String type) {
         this.taskType = type;
     }
 
-    /** Sets a description of the current action. It will be usefull in commenting
-     *  what we are doing.
+    /** 
+     * Sets a description of the current action. This may be used for logging
+     * purposes.
+     * 
+     * @param desc Description of the current action. 
+     *             May be <code>null</code>, indicating that no description is
+     *             available.
+     *             
      */
     public void setDescription( String desc ) {
         description=desc;
     }
 
+    /**
+     * Returns the description of the current action.
+     * 
+     * @return the description of the current action, or <code>null</code> if
+     *         no description is available.
+     */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Called by the project to let the task initialize properly. 
+     * Called by the project to let the task initialize properly.
+     * The default implementation is a no-op.
      *
-     * @throws BuildException if someting goes wrong with the build
+     * @exception BuildException if someting goes wrong with the build
      */
     public void init() throws BuildException {}
 
     /**
-     * Called by the project to let the task do it's work. This method may be 
+     * Called by the project to let the task do its work. This method may be 
      * called more than once, if the task is invoked more than once. For example, 
      * if target1 and target2 both depend on target3, then running 
      * "ant target1 target2" will run all tasks in target3 twice.
      *
-     * @throws BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {}
 
     /**
-     * Returns the file location where this task was defined.
+     * Returns the file/location where this task was defined.
+     * 
+     * @return the file/location where this task was defined. 
+     *         Should not return <code>null</code>. Location.UNKNOWN_LOCATION
+     *         is used for unknown locations.
+     * 
+     * @see Location#UNKNOWN_LOCATION
      */
     public Location getLocation() {
         return location;
     }
 
     /**
-     * Sets the file location where this task was defined.
+     * Sets the file/location where this task was defined.
+     * 
+     * @param location The file/location where this task was defined.
+     *                 Should not be <code>null</code> - use
+     *                 Location.UNKNOWN_LOCATION if the location isn't known.
+     * 
+     * @see Location#UNKNOWN_LOCATION
      */
     public void setLocation(Location location) {
         this.location = location;
     }
 
     /**
-     * Returns the wrapper class for runtime configuration.
+     * Returns the wrapper used for runtime configuration.
+     * 
+     * @return the wrapper used for runtime configuration. This
+     *         method will generate a new wrapper (and cache it)
+     *         if one isn't set already.
      */
     public RuntimeConfigurable getRuntimeConfigurableWrapper() {
         if (wrapper == null) {
@@ -167,12 +224,26 @@ public abstract class Task extends ProjectComponent {
         return wrapper;
     }
 
+    /**
+     * Sets the wrapper to be used for runtime configuration.
+     * 
+     * @param wrapper The wrapper to be used for runtime configuration.
+     *                May be <code>null</code>, in which case the next call
+     *                to getRuntimeConfigurableWrapper will generate a new
+     *                wrapper.
+     */
     protected void setRuntimeConfigurableWrapper(RuntimeConfigurable wrapper) {
         this.wrapper = wrapper;
     }
 
+    // XXX: (Jon Skeet) The comment "if it hasn't been done already" may
+    // not be strictly true. wrapper.maybeConfigure() won't configure the same
+    // attributes/text more than once, but it may well add the children again,
+    // unless I've missed something.
     /**
-     * Configure this task - if it hasn't been done already.
+     * Configures this task - if it hasn't been done already.
+     * If the task has been invalidated, it is replaced with an 
+     * UnknownElement task which uses the new definition in the project.
      */
     public void maybeConfigure() throws BuildException {
         if (!invalid) {
@@ -184,36 +255,53 @@ public abstract class Task extends ProjectComponent {
         }
     }
 
+    /** 
+     * Handles a line of output by logging it with the INFO priority.
+     * 
+     * @param line The line of output to log. Should not be <code>null</code>.
+     */
     protected void handleOutput(String line) {
         log(line, Project.MSG_INFO);
     }
     
+    /** 
+     * Handles an error line by logging it with the INFO priority.
+     * 
+     * @param line The error line to log. Should not be <code>null</code>.
+     */
     protected void handleErrorOutput(String line) {
         log(line, Project.MSG_ERR);
     }
-    
-    
+        
     /**   
-     * Log a message with the default (INFO) priority.   
+     * Logs a message with the default (INFO) priority.   
      *   
-     * @param the message to be logged.   
+     * @param msg The message to be logged. Should not be <code>null</code>.
      */   
     public void log(String msg) {   
         log(msg, Project.MSG_INFO);   
     }   
     
     /**   
-     * Log a mesage with the give priority.   
+     * Logs a mesage with the given priority. This delegates
+     * the actual logging to the project.
      *   
-     * @param the message to be logged.   
-     * @param msgLevel the message priority at which this message is to be logged.   
+     * @param msg The message to be logged. Should not be <code>null</code>.
+     * @param msgLevel The message priority at which this message is to 
+     *                 be logged.
      */   
     public void log(String msg, int msgLevel) {   
         project.log(this, msg, msgLevel);   
     }   
     
     /**
-     * Perform this task
+     * Performs this task if it's still valid, or gets a replacement
+     * version and performs that otherwise.
+     * 
+     * Performing a task consists of firing a task started event,
+     * configuring the task, executing it, and then firing task finished
+     * event. If a runtime exception is thrown, the task finished event
+     * is still fired, but with the exception as the cause.
      */
     public final void perform() {
         if (!invalid) {
@@ -241,16 +329,22 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Mark this task as invalid.
+     * Marks this task as invalid. Any further use of this task
+     * will go through a replacement with the updated definition.
      */
     final void markInvalid() {
         invalid = true;
     }
 
+    /**
+     * Replacement element used if this task is invalidated.
+     */
     private UnknownElement replacement;
 
     /**
-     * Create an UnknownElement that can be used to replace this task.
+     * Creates an UnknownElement that can be used to replace this task.
+     * Once this has been created once, it is cached and returned by
+     * future calls.
      */
     private UnknownElement getReplacement() {
         if (replacement == null) {
@@ -268,4 +362,3 @@ public abstract class Task extends ProjectComponent {
         return replacement;
     }
 }
-
