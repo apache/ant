@@ -70,9 +70,24 @@ one mapper.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">append</td>
+    <td valign="top">whether output should be appended to or overwrite
+      an existing file.  Defaults to false.  If you set parallel to
+      false, you will probably want to set this one to true.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">outputproperty</td>
     <td valign="top">the name of a property in which the output of the 
       command should be stored.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">resultproperty</td>
+    <td valign="top">the name of a property in which the return code
+      of the command should be stored. Only of interest if
+      failonerror=false. If you set parallel to false, only the result
+      of the first execution will be stored.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -85,6 +100,12 @@ one mapper.</p>
     <td valign="top">failonerror</td>
     <td valign="top">Stop the buildprocess if the command exits with a
       returncode other than 0.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failifexecutionfails</td>
+    <td valign="top">Stop the build if we can't start the program.
+      Defaults to true. </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
