@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.FileList;
 
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.io.File;
 
@@ -267,8 +268,10 @@ public class PathConvert extends Task {
                       (osname.indexOf("netware") >= 0)  );
 
         // Determine the from/to char mappings for dir sep
-        char fromDirSep = onWindows ? '\\' : '/';
-        char toDirSep   = dirSep.charAt(0);
+//        char fromDirSep = onWindows ? '\\' : '/';
+//        char toDirSep   = dirSep.charAt(0);
+
+        String fromDirSep = onWindows ? "\\" : "/";
 
         StringBuffer rslt = new StringBuffer( 100 );
 
@@ -280,15 +283,30 @@ public class PathConvert extends Task {
 
             elem = mapElement( elem );      // Apply the path prefix map
 
+
             // Now convert the path and file separator characters from the
             // current os to the target os.
 
-            elem = elem.replace( fromDirSep, toDirSep );
+//            elem = elem.replace( fromDirSep, toDirSep );
 
             if( i != 0 ) {
               rslt.append( pathSep );
             }
-            rslt.append( elem );
+//            rslt.append( elem );
+
+            StringTokenizer stDirectory = new StringTokenizer(elem, fromDirSep, true);
+            String token = null;
+
+            while ( stDirectory.hasMoreTokens() ) {
+              token = stDirectory.nextToken();
+
+              if (fromDirSep.equals(token)) {
+                rslt.append( dirSep ); 
+              }
+              else {
+                rslt.append( token );
+              }
+            }
         }
 
         // Place the result into the specified property
