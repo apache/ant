@@ -53,18 +53,33 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.selectors.*;
-import org.apache.tools.ant.util.FileUtils;
-
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.FileScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.types.selectors.AndSelector;
+import org.apache.tools.ant.types.selectors.ContainsSelector;
+import org.apache.tools.ant.types.selectors.DateSelector;
+import org.apache.tools.ant.types.selectors.DependSelector;
+import org.apache.tools.ant.types.selectors.DepthSelector;
+import org.apache.tools.ant.types.selectors.ExtendSelector;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.FilenameSelector;
+import org.apache.tools.ant.types.selectors.MajoritySelector;
+import org.apache.tools.ant.types.selectors.NoneSelector;
+import org.apache.tools.ant.types.selectors.NotSelector;
+import org.apache.tools.ant.types.selectors.OrSelector;
+import org.apache.tools.ant.types.selectors.PresentSelector;
+import org.apache.tools.ant.types.selectors.SelectSelector;
+import org.apache.tools.ant.types.selectors.SelectorContainer;
+import org.apache.tools.ant.types.selectors.SelectorScanner;
+import org.apache.tools.ant.types.selectors.SizeSelector;
 
 /**
  * Class that holds an implicit patternset and supports nested
@@ -190,6 +205,16 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * add a name entry on the include files list
+     */
+    public PatternSet.NameEntry createExcludesFile() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        return defaultPatterns.createExcludesFile();
+    }
+
+    /**
      * Creates a single file fileset.
      */
     public void setFile(File file) {
@@ -201,16 +226,6 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
         PatternSet.NameEntry include = createInclude();
         include.setName(file.getName());
-    }
-    
-    /**
-     * add a name entry on the include files list
-     */
-    public PatternSet.NameEntry createExcludesFile() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createExcludesFile();
     }
 
     /**
@@ -293,6 +308,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      *                           sensitive, "false"|"off"|"no" when not.
      */
     public void setCaseSensitive(boolean isCaseSensitive) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
         this.isCaseSensitive = isCaseSensitive;
     }
 
@@ -302,6 +320,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @param followSymlinks whether or not symbolic links should be followed
      */
     public void setFollowSymlinks(boolean followSymlinks) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
         this.followSymlinks = followSymlinks;
     }
 
@@ -360,6 +381,11 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     public void setupDirectoryScanner(FileScanner ds, Project p) {
+        if (isReference()) {
+            getRef(p).setupDirectoryScanner(ds, p);
+            return;
+        }
+
         if (ds == null) {
             throw new IllegalArgumentException("ds cannot be null");
         }
@@ -417,6 +443,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return whether any selectors are in this container
      */
     public boolean hasSelectors() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).hasSelectors();
+        }
         return !(selectors.isEmpty());
     }
 
@@ -426,6 +455,10 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return whether any patterns are in this container
      */
     public boolean hasPatterns() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).hasPatterns();
+        }
+
         if (defaultPatterns.hasPatterns(getProject())) {
             return true;
         }
@@ -447,6 +480,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return the number of selectors in this container
      */
     public int selectorCount() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).selectorCount();
+        }
         return selectors.size();
     }
 
@@ -471,6 +507,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return an enumerator that goes through each of the selectors
      */
     public Enumeration selectorElements() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).selectorElements();
+        }
         return selectors.elements();
     }
 
