@@ -80,6 +80,10 @@ public class BuildEvent extends EventObject {
     public static final int TASK_FINISHED = 6;
     /** message event type */
     public static final int MESSAGE = 7;
+    /** Project started event type */
+    public static final int PROJECT_STARTED = 8;
+    /** Project finished event type */
+    public static final int PROJECT_FINISHED = 9;
 
     /** The type of this event */
     private int eventType;

@@ -96,6 +96,8 @@
     <exclude name="org/apache/tools/ant/taskdefs/JavaTest.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/JavacTest.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/TStampTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/TaskdefTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/TypedefTest.java"/>
   </patternset>
 
   <fileset id="ant1src_tocopy" dir="${ant1java.dir}">

@@ -57,7 +57,7 @@ import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.service.EventService;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.init.LoaderUtils;
-
+import java.lang.reflect.InvocationTargetException;
 /**
  * The factory object for the Ant1 compatability Ant library
  *
@@ -132,7 +132,7 @@ public class Ant1Factory extends StandardLibFactory {
                 ((ProjectComponent) component).setProject(project);
             }
             return component;
-        } catch (java.lang.reflect.InvocationTargetException ite) {
+        } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
             String msg = "Could not create component of type: "
                  + componentClass.getName() + " due to " + t;

@@ -175,7 +175,7 @@ public class ExecutionContext implements AntContext {
      *
      * @return the build model or null if there is no build model.
      */
-    protected BuildElement getModel() {
+    public BuildElement getModel() {
         return model;
     }
 }

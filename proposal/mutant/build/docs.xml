@@ -1,4 +1,4 @@
-<project name="build-site" default="docs" basedir=".">
+<project name="build-site" default="docs" basedir="..">
 
     <!-- Initialization properties -->
     <property name="project.name" value="mutant"/>
@@ -15,8 +15,8 @@
         </fileset>
     </path>
 
-    <target name="prepare">    
-        <available classname="org.apache.velocity.anakia.AnakiaTask" 
+    <target name="prepare">
+        <available classname="org.apache.velocity.anakia.AnakiaTask"
                    property="AnakiaTask.present">
             <classpath refid="anakia.classpath"/>
         </available>
@@ -24,7 +24,7 @@
 
     <target depends="prepare" name="prepare-error" unless="AnakiaTask.present">
         <echo>
-            AnakiaTask is not present! Please check to make sure that 
+            AnakiaTask is not present! Please check to make sure that
             velocity.jar is in your classpath.
         </echo>
     </target>
@@ -33,7 +33,7 @@
         <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask">
             <classpath refid="anakia.classpath"/>
         </taskdef>
-        
+
         <anakia basedir="${docs.src}" destdir="${docs.dest}/"
              extension=".html" style="./site.vsl"
              projectFile="${project.file}"
@@ -44,6 +44,6 @@
              velocityPropertiesFile="${velocity.props}">
         </anakia>
     </target>
-    
+
     <target name="all" depends="docs"/>
 </project>

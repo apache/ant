@@ -435,37 +435,18 @@ public class ComponentManager implements ComponentService {
     private Object createComponent(String componentName, BuildElement model)
          throws AntException {
 
-        Object component = null;
-        if (model != null) {
-            for (Iterator i = aspects.iterator(); i.hasNext();) {
-                Aspect aspect = (Aspect) i.next();
-                component = aspect.preCreateComponent(component, model);
-            }
+        ImportInfo importInfo = getImport(componentName);
+        if (importInfo == null) {
+            throw new ExecutionException("There is no definition of the <"
+            + componentName + "> component");
         }
+        String className = importInfo.getClassName();
 
-        if (component == null) {
-            ImportInfo importInfo = getImport(componentName);
-            if (importInfo == null) {
-                throw new ExecutionException("There is no definition of the <"
-                + componentName + "> component");
-            }
-            String className = importInfo.getClassName();
-
-            ComponentLibrary componentLibrary
+        ComponentLibrary componentLibrary
             = importInfo.getComponentLibrary();
 
-            component = createComponentFromDef(componentName, componentLibrary,
-                importInfo.getDefinition(), model);
-        }
-
-        if (model != null) {
-            for (Iterator i = aspects.iterator(); i.hasNext();) {
-                Aspect aspect = (Aspect) i.next();
-                component = aspect.postCreateComponent(component, model);
-            }
-        }
-
-        return component;
+        return createComponentFromDef(componentName, componentLibrary,
+            importInfo.getDefinition(), model);
     }
 
     /**
@@ -486,22 +467,36 @@ public class ComponentManager implements ComponentService {
          throws AntException {
 
         Location location = Location.UNKNOWN_LOCATION;
-        if (model != null) {
-            location = model.getLocation();
-        }
-
-        boolean isTask
-             = libDefinition.getDefinitionType() == AntLibrary.TASKDEF;
-        String localName = libDefinition.getDefinitionName();
-        String className = libDefinition.getClassName();
+        String className = null;
         try {
-            ClassLoader componentLoader = componentLibrary.getClassLoader();
-            Class componentClass
-                 = Class.forName(className, true, componentLoader);
+            boolean isTask
+                 = libDefinition.getDefinitionType() == AntLibrary.TASKDEF;
+
+
+            Object component = null;
+            if (model != null) {
+                location = model.getLocation();
+                for (Iterator i = aspects.iterator(); i.hasNext();) {
+                    Aspect aspect = (Aspect) i.next();
+                    component = aspect.preCreateComponent(component, model);
+                }
+            }
+
             AntLibFactory libFactory = getLibFactory(componentLibrary);
-            // create the component using the factory
-            Object component
-                 = libFactory.createComponent(componentClass, localName);
+            ClassLoader componentLoader = null;
+            if (component == null) {
+                String localName = libDefinition.getDefinitionName();
+                className = libDefinition.getClassName();
+                componentLoader = componentLibrary.getClassLoader();
+                Class componentClass
+                    = Class.forName(className, true, componentLoader);
+                // create the component using the factory
+                component
+                    = libFactory.createComponent(componentClass, localName);
+            } else {
+                className = component.getClass().getName();
+                componentLoader = component.getClass().getClassLoader();
+            }
 
             // wrap the component in an adapter if required.
             ExecutionComponent execComponent = null;
@@ -522,10 +517,13 @@ public class ComponentManager implements ComponentService {
             // if the component is an execution component create a context and
             // initialise the component with it.
             if (execComponent != null) {
-                ExecutionContext context
-                     = new ExecutionContext(frame, execComponent, model);
-                context.setClassLoader(componentLoader);
-                execComponent.init(context, componentName);
+                // give it a context unless it already has one
+                if (execComponent.getAntContext() == null) {
+                    ExecutionContext context
+                         = new ExecutionContext(frame, execComponent, model);
+                    context.setClassLoader(componentLoader);
+                    execComponent.init(context, componentName);
+                }
             }
 
             // if we have a model, use it to configure the component. Otherwise
@@ -536,6 +534,10 @@ public class ComponentManager implements ComponentService {
                 // model, validate it
                 if (execComponent != null) {
                     execComponent.validateComponent();
+                }
+                for (Iterator i = aspects.iterator(); i.hasNext();) {
+                    Aspect aspect = (Aspect) i.next();
+                    component = aspect.postCreateComponent(component, model);
                 }
             }
 

@@ -54,6 +54,7 @@
 package org.apache.ant.common.antlib;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
+import org.apache.ant.common.model.BuildElement;
 
 /**
  * The AntContext is the interface through which the Ant container and the
@@ -91,5 +92,13 @@ public interface AntContext {
      * @return the location which may be the unknown location
      */
     Location getLocation();
+
+    /**
+     * Get the build model associated with this context if any
+     *
+     * @return the build model which may be null if there is no associated
+     *         model
+     */
+    BuildElement getModel();
 }
 

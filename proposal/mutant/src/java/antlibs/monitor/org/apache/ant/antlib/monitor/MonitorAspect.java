@@ -55,6 +55,7 @@ package org.apache.ant.antlib.monitor;
 
 import org.apache.ant.common.antlib.AbstractAspect;
 import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.AspectValueCollection;
 import org.apache.ant.common.util.AntException;
@@ -71,70 +72,25 @@ import java.io.IOException;
  * @author Conor MacNeill
  */
 public class MonitorAspect extends AbstractAspect {
+    /** The log into which monitoring info is written */
     private static PrintStream monitorLog;
-    private static long lastMessageTime;
+
+    /**
+     * Create a monitoring aspect instance. There will be one instance per
+     * active frame but they all share the same log output.
+     */
     public MonitorAspect() {
-        if (monitorLog == null) {
-            try {
-                monitorLog
-                    = new PrintStream(new FileOutputStream("monitor.log"));
-                monitorLog.println("Logging started at " + new Date());
-                lastMessageTime = System.currentTimeMillis();
-            } catch (IOException e) {
-                log("Unable to open monitor log", MessageLevel.MSG_WARN);
+        synchronized (MonitorAspect.class) {
+            if (monitorLog == null) {
+                try {
+                    monitorLog
+                        = new PrintStream(new FileOutputStream("monitor.log"));
+                    monitorLog.println("Logging started at " + new Date());
+                } catch (IOException e) {
+                    log("Unable to open monitor log", MessageLevel.MSG_WARN);
+                }
             }
         }
-    }
-
-    private void monitor(String message) {
-        Runtime rt = Runtime.getRuntime();
-        synchronized (monitorLog) {
-            long now = System.currentTimeMillis();
-            long diff = now - lastMessageTime;
-            lastMessageTime = now;
-            long freeMem = rt.freeMemory();
-            long usedMem = rt.totalMemory() - freeMem;
-            monitorLog.println("+" + diff + " (" + usedMem + "/"
-                + freeMem + "): " + message);
-        }
-    }
-
-    /**
-     * This join point is activated before a component is to be created.
-     * The aspect can return an object to be used rather than the core creating
-     * the object.
-     *
-     * @param component the component that has been created. This will be null
-     *                  unless another aspect has created the component
-     * @param model the Build model that applies to the component
-     *
-     * @return a component to use.
-     * @exception AntException if the aspect cannot process the component.
-     */
-    public Object preCreateComponent(Object component, BuildElement model)
-         throws AntException {
-        monitor("Creating component " + "from <" + model.getType() + ">");
-        return component;
-    }
-
-    /**
-     * This join point is activated after a component has been created and
-     * configured. If the aspect wishes, an object can be returned in place
-     * of the one created by Ant.
-     *
-     * @param component the component that has been created.
-     * @param model the Build model used to create the component.
-     *
-     * @return a replacement for the component if desired. If null is returned
-     *         the current component is used.
-     * @exception AntException if the aspect cannot process the component.
-     */
-    public Object postCreateComponent(Object component, BuildElement model)
-         throws AntException {
-        monitor("Created component "
-            + component.getClass().getName()
-            + " from <" + model.getType() + ">");
-        return component;
     }
 
     /**
@@ -152,9 +108,12 @@ public class MonitorAspect extends AbstractAspect {
      */
     public Object preExecuteTask(Task task, AspectValueCollection aspectValues)
          throws AntException {
-        String taskName = task.getClass().getName();
-        MonitorRecord record = new MonitorRecord(taskName);
-        return record;
+        System.gc();
+        AntContext taskContext = task.getAntContext();
+        BuildElement model = taskContext.getModel();
+        String name = (model == null) ? task.getClass().getName()
+            : model.getType();
+        return new MonitorRecord(name, taskContext.getLocation());
     }
 
     /**
@@ -167,10 +126,9 @@ public class MonitorAspect extends AbstractAspect {
      * @return a new failure reason or null if the task is not to fail.
      */
     public Throwable postExecuteTask(Object context, Throwable failureCause) {
-        MonitorRecord record = (MonitorRecord)context;
-        record.print(monitorLog);
+        MonitorRecord record = (MonitorRecord) context;
         System.gc();
+        record.print(monitorLog);
         return failureCause;
     }
-
 }

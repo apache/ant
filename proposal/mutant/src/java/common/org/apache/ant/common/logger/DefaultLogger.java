@@ -57,6 +57,7 @@ import java.io.PrintStream;
 import org.apache.ant.common.antlib.ExecutionComponent;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.event.BuildEvent;
+import org.apache.ant.common.event.BuildListenerAdapter;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.Target;
 import org.apache.ant.common.util.AntException;
@@ -69,7 +70,7 @@ import org.apache.ant.common.util.Location;
  * @author Conor MacNeill
  * @created 15 January 2002
  */
-public class DefaultLogger implements BuildLogger {
+public class DefaultLogger extends BuildListenerAdapter implements BuildLogger {
 
     /** Standard field separator */
     private static String lSep = System.getProperty("line.separator");

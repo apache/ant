@@ -53,6 +53,7 @@
  */
 package org.apache.ant.antcore.antlib;
 import java.io.FileNotFoundException;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -248,7 +249,6 @@ public class AntLibManager {
      */
     public void addLibPath(String libraryId, URL libPath)
          throws AntLibException {
-        System.out.println("Adding path " + libPath + " for " + libraryId);
         if (!libPath.getProtocol().equals("file")
              && !remoteAllowed) {
             throw new AntLibException("Remote libpaths are not"
@@ -260,11 +260,31 @@ public class AntLibManager {
             libPaths = new ArrayList();
             libPathsMap.put(libraryId, libPaths);
         }
-        libPaths.add(libPath);
+
+        List newPaths = new ArrayList();
+        newPaths.add(libPath);
+        if (libPath.getProtocol().equals("file")) {
+            File dir = new File(libPath.getFile());
+            if (dir.isDirectory()) {
+                try {
+                    URL[] pathURLs = LoaderUtils.getLocationURLs(libPath,
+                        null, ANTLIB_EXTENSIONS);
+                    for (int i = 0; i < pathURLs.length; ++i) {
+                        newPaths.add(pathURLs[i]);
+                    }
+                } catch (MalformedURLException e) {
+                    // ignore and just use what we were given
+                }
+            }
+        }
 
         AntLibrary antLibrary = getLibrary(libraryId);
-        if (antLibrary != null) {
-            antLibrary.addLibraryURL(libPath);
+        for (Iterator i = newPaths.iterator(); i.hasNext();) {
+            URL newPath = (URL) i.next();
+            libPaths.add(newPath);
+            if (antLibrary != null) {
+                antLibrary.addLibraryURL(newPath);
+            }
         }
     }
 

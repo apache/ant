@@ -53,16 +53,8 @@
  */
 package org.apache.ant.antlib.monitor;
 
-import org.apache.ant.common.antlib.AbstractAspect;
-import org.apache.ant.common.antlib.Task;
-import org.apache.ant.common.model.BuildElement;
-import org.apache.ant.common.model.AspectValueCollection;
-import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.event.MessageLevel;
-import java.util.Date;
+import org.apache.ant.common.util.Location;
 import java.io.PrintStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * A record of some performance values at a particular time
@@ -70,25 +62,51 @@ import java.io.IOException;
  * @author Conor MacNeill
  */
 public class MonitorRecord {
-    private String recordName;
+    /** The element name being monitored */
+    private String elementName;
+
+    /** The location in the build file */
+    private Location location;
+
+    /** System clock when task started */
     private long startMillis;
+
+    /** Starting memory when task started */
     private long startMemory;
 
+    /**
+     * Get the current used memory from the runtime
+     *
+     * @return the amount of memory in use.
+     */
     private long getMemoryUsage() {
         Runtime rt = Runtime.getRuntime();
         return rt.totalMemory() - rt.freeMemory();
     }
 
-    public MonitorRecord(String recordName) {
-        this.recordName = recordName;
+    /**
+     * Create a monitoring record.
+     *
+     * @param elementName the name of the element.
+     * @param location the build file location of the element.
+     */
+    public MonitorRecord(String elementName, Location location) {
+        this.elementName = elementName;
+        this.location = location;
         startMillis = System.currentTimeMillis();
         startMemory = getMemoryUsage();
     }
 
+    /**
+     * Print a summary of the monitor
+     *
+     * @param stream the stream onto which the summary is printed.
+     */
     public void print(PrintStream stream) {
         long timeDiff = System.currentTimeMillis() - startMillis;
         long memDiff = getMemoryUsage() - startMemory;
-        stream.println(recordName + " took " + timeDiff
-            + " milliseconds and memory used changed by " + memDiff);
+        stream.println(location + elementName + " took " + timeDiff
+            + " milliseconds, memory used at start " + startMemory
+            + " which changed by " + memDiff);
     }
 }

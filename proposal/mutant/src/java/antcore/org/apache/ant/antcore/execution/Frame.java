@@ -973,14 +973,15 @@ public class Frame implements DemuxOutputReceiver {
             failureCause
                 = aspect.postExecuteTask(aspectContext, failureCause);
         }
+
         eventSupport.fireTaskFinished(task, failureCause);
         if (aspectContexts.size() != 0) {
             aspectContextsMap.remove(task);
         }
 
         if (failureCause != null) {
-            if (failureCause instanceof ExecutionException) {
-                throw (ExecutionException) failureCause;
+            if (failureCause instanceof AntException) {
+                throw (AntException) failureCause;
             }
             throw new ExecutionException(failureCause);
         }
@@ -1156,7 +1157,8 @@ public class Frame implements DemuxOutputReceiver {
             // load system ant lib
             URL systemLibs
                 = new URL(initConfig.getLibraryURL(), "syslibs/");
-            componentManager.loadLib(systemLibs, true);
+            componentManager.loadLib(systemLibs, false);
+            importStandardComponents();
 
             executeTasks(config.getGlobalTasks());
 
@@ -1164,12 +1166,12 @@ public class Frame implements DemuxOutputReceiver {
             URL antLibs = new URL(initConfig.getLibraryURL(), "antlibs/");
             componentManager.loadLib(antLibs, false);
 
-        } catch (MalformedURLException e) {
-            throw new ExecutionException("Unable to initialize antlibs", e);
-        }
-
-        try {
             runBuild(targets);
+        } catch (MalformedURLException e) {
+            ExecutionException ee =
+                new ExecutionException("Unable to initialize antlibs", e);
+            buildFailureCause = ee;
+            throw ee;
         } catch (RuntimeException e) {
             buildFailureCause = e;
             throw e;
