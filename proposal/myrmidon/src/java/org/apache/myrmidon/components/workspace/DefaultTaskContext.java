@@ -194,7 +194,13 @@ public class DefaultTaskContext
      */
     public Map getProperties()
     {
-        return new HashMap( m_contextData );
+        Map props = new HashMap();
+        if( m_parent != null )
+        {
+            props.putAll( m_parent.getProperties() );
+        }
+        props.putAll( m_contextData );
+        return props;
     }
 
     /**
