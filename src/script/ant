@@ -128,11 +128,10 @@ fi
 
 # supply JIKESPATH to Ant as jikes.class.path
 if [ -n "$JIKESPATH" ] ; then
-  if [ -n "$ANT_OPTS" ] ; then
-    ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
-  else
-    ANT_OPTS=-Djikes.class.path=$JIKESPATH
+  if $cygwin ; then
+    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
   fi
+  ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
 fi
 
 # For Cygwin, switch paths to Windows format before running java
