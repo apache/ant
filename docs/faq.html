@@ -107,6 +107,10 @@
                     <li><a href="#adding-faqs">
   How can I contribute to this FAQ?
   </a></li>
+                    <li><a href="#creating-faq">
+  How do you create the HTML version of this
+        FAQ?
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -321,6 +325,33 @@
                                         <p>If you don't know how to create a patch, see the patches
           section of <a href="http://jakarta.apache.org/site/source.html">this
           page</a>.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="creating-faq">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          How do you create the HTML version of this
+        FAQ?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>We use 
+        <a href="http://jakarta.apache.org/velocity/anakia.html">Anakia</a>
+        to render the HTML version from the original XML file.</p>
+                                        <p>The Velocity stylesheets used to process the XML files can
+        be found in the <code>xdocs/stylesheets</code> subdirectory of
+        Ant's CVS repository - the build file <code>docs.xml</code> is
+        used to drive Anakia.  This file assumes that you have the
+        <code>jakarta-site2</code> module checked out from CVS as
+        well, but if you follow the instruction from Anakia's
+        homepage, you should get it to work without that.  Just make
+        sure all required jars are in the task's classpath.</p>
                         </blockquote>
     </td></tr>
   </table>
