@@ -39,6 +39,7 @@
     <include name="**/*.mf"/>
     <include name="org/apache/tools/ant/taskdefs/**/*.java"/>
     <include name="org/apache/tools/ant/types/**/*.java"/>
+    <include name="org/apache/tools/ant/filters/**/*.java"/>
     <exclude name="org/apache/tools/ant/types/DataType.java"/>
     <include name="org/apache/tools/ant/util/**/*.java"/>
     <include name="org/apache/tools/zip/**/*.java"/>
@@ -69,6 +70,198 @@
     <pathelement location="${distlib.dir}/antlibs/system.jar"/>
   </path>
 
+  <!--
+       ===================================================================
+         Set up patternsets to be used by javac and junit to exclude
+         files that have dependencies that are not available
+       ===================================================================
+  -->
+  <!-- depends on JDK version -->
+  <patternset id="needs.jdk1.2+">
+    <exclude name="${util.package}/optional/NoExitSecurityManager.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/Javah.java" 
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/metamata/*.java" 
+             unless="jdk1.2+" />
+    <exclude name="${optional.type.package}/depend/*.java"
+             unless="jdk1.2+" />
+    <exclude name="${util.package}/depend/*.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/ejb/EjbJar.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/ejb/*DeploymentTool.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/ejb/IPlanet*.java"
+             unless="jdk1.2+" />
+    <!-- uses the context classloader -->
+    <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
+             />
+  </patternset>
+  <patternset id="needs.jdk1.3+">
+    <exclude name="${ant.package}/taskdefs/TestProcess.java"
+             unless="jdk1.3+" />
+  </patternset>
+  <patternset id="needs.jdk1.4+">
+    <exclude name="${regexp.package}/Jdk14Regexp*.java"
+             unless="jdk1.4+" />
+  </patternset>
+
+  <!-- classes that should be present in Sun based JVMs, but not in
+  Kaffe for example -->
+  <patternset id="needs.sun.tools">
+    <exclude name="${optional.package}/Native2Ascii.java"
+             unless="sun.tools.present" />
+    <exclude name="${optional.package}/Javah.java"
+             unless="sun.tools.present" />
+  </patternset>
+  <patternset id="needs.sun.uue">
+    <exclude name="${ant.package}/taskdefs/email/UUMailer.java"
+             unless="sunuue.present" />
+  </patternset>
+  <patternset id="needs.sun.b64">
+    <exclude name="${ant.package}/taskdefs/Get.java"
+             unless="base64.present" />
+  </patternset>
+
+  <!-- depends on external libraries -->
+  <patternset id="needs.trax">
+    <exclude name="${optional.package}/TraXLiaison*.java"
+             unless="trax.present" />
+    <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+             unless="trax.present" />
+    <exclude name="${optional.package}/junit/AggregateTransformer.java"
+             unless="trax.present" />
+    <exclude name="${optional.package}/sitraka/**" 
+             unless="trax.present"/>
+    <exclude name="${optional.package}/metamata/MMetrics*" 
+             unless="trax.present"/>
+  </patternset>
+  <patternset id="needs.xalan1">
+    <exclude name="${optional.package}/XalanLiaison*.java"
+             unless="xalan.present" />
+    <exclude name="${optional.package}/junit/Xalan1Executor.java"
+             unless="xalan.present" />
+  </patternset>
+  <patternset id="needs.xalan2">
+    <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+             unless="xalan2.present" />
+    <exclude name="${optional.package}/junit/AggregateTransformer.java"
+             unless="xalan2.present" />
+    <exclude name="${optional.package}/junit/XalanExecutor.java"
+             unless="xalan2.present" />
+    <exclude name="${optional.package}/junit/Xalan2Executor.java"
+             unless="xalan2.present" />
+  </patternset>
+  <patternset id="needs.xslp">
+    <exclude name="${optional.package}/XslpLiaison*.java" 
+             unless="xslp.present" />
+  </patternset>
+  <patternset id="needs.junit">
+    <exclude name="${optional.package}/junit/*.java" unless="junit.present" />
+  </patternset>
+  <patternset id="needs.jakarta.regexp">
+    <exclude name="${regexp.package}/JakartaRegexp*.java"
+             unless="jakarta.regexp.present" />
+  </patternset>
+  <patternset id="needs.jakarta.oro">
+    <exclude name="${regexp.package}/JakartaOro*.java" 
+             unless="jakarta.oro.present" />
+    <exclude name="${optional.package}/perforce/*.java" 
+             unless="jakarta.oro.present" />
+    <exclude name="${optional.package}/metamata/MAudit*.java" 
+             unless="jakarta.oro.present"/>
+  </patternset>
+  <patternset id="needs.jakarta.bcel">
+    <exclude name="${ant.package}/filters/util/JavaClassHelper.java" 
+             unless="bcel.present" />
+    <exclude name="${optional.type.package}/depend/*.java" 
+             unless="bcel.present" />
+    <exclude name="${util.package}/depend/*.java"
+             unless="bcel.present" />
+    <exclude name="${optional.package}/ejb/EjbJar.java"
+             unless="bcel.present" />
+    <exclude name="${optional.package}/ejb/*DeploymentTool.java"
+             unless="bcel.present" />
+    <exclude name="${optional.package}/ejb/IPlanet*.java"
+             unless="bcel.present" />
+  </patternset>
+  <patternset id="needs.jakarta.log4j">
+    <exclude name="${ant.package}/listener/Log4jListener.java"
+             unless="log4j.present" />
+  </patternset>
+  <patternset id="needs.bsf">
+    <exclude name="${optional.package}/Script.java" 
+             unless="bsf.present" />
+  </patternset>
+  <patternset id="needs.stylebook">
+    <exclude name="${optional.package}/StyleBook.java" 
+             unless="stylebook.present" />
+  </patternset>
+  <patternset id="needs.javamail">
+    <exclude name="${ant.package}/taskdefs/email/MimeMailer.java"
+             unless="javamail.complete" />
+  </patternset>
+  <patternset id="needs.icontract">
+    <exclude name="${optional.package}/IContract.java"
+             unless="icontract.present" />
+  </patternset>
+  <patternset id="needs.netrexx">
+    <exclude name="${optional.package}/NetRexxC.java"
+             unless="netrexx.present" />
+  </patternset>
+  <patternset id="needs.weblogic.ejbc">
+    <exclude name="${optional.package}/ejb/Ejbc*.java" 
+             unless="ejb.ejbc.present" />
+  </patternset>
+  <patternset id="needs.weblogic.ddcreator">
+    <exclude name="${optional.package}/ejb/DDCreator*.java"
+             unless="ejb.DDCreator.present" />
+  </patternset>
+  <patternset id="needs.weblogic.server">
+    <exclude name="${optional.package}/ejb/WLRun.java"
+             unless="ejb.wls.present" />
+    <exclude name="${optional.package}/ejb/WLStop.java" 
+             unless="ejb.wls.present" />
+  </patternset>
+  <patternset id="needs.netcomponents">
+    <exclude name="${optional.package}/net/FTP.java"
+             unless="netcomp.present" />
+    <exclude name="${optional.package}/net/TelnetTask.java"
+             unless="netcomp.present" />
+  </patternset>
+  <patternset id="needs.starteam">
+    <exclude name="${optional.package}/scm/AntStarTeam*.java"
+             unless="starteam.present" />
+    <exclude name="${optional.package}/starteam/*.java"
+             unless="starteam.present" />
+  </patternset>
+  <patternset id="needs.vaj">
+    <exclude name="${optional.package}/ide/VAJ*.java" 
+             unless="vaj.present" />
+  </patternset>
+  <patternset id="needs.antlr">
+    <exclude name="${optional.package}/ANTLR*.java" unless="antlr.present" />
+  </patternset>
+  <patternset id="needs.servletapi">
+    <exclude name="${optional.package}/ide/VAJ*Servlet.java"
+             unless="servlet.present" />
+  </patternset>
+  <patternset id="needs.jmf">
+    <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
+  </patternset>
+  <patternset id="needs.jdepend">
+    <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
+  </patternset>
+  <patternset id="onlinetests">
+    <exclude name="**/GetTest.java" if="offline" />
+  </patternset>
+
+  <!--
+       ===================================================================
+         Check to see what optional dependencies are available
+       ===================================================================
+  -->
   <target name="check_for_optional_packages">
     <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
@@ -178,12 +371,15 @@
       </or>
     </condition>
     
-    <condition property="ejbjar.support">
+    <condition property="sun.tools.present">
       <and>
-        <isset property="bcel.present" />
-        <isset property="jdk1.2+" />
+        <available classname="sun.tools.native2ascii.Main" />
+        <available classname="com.sun.tools.javah.Main" />
       </and>
     </condition>
+
+    <available property="base64.present" classname="sun.misc.BASE64Encoder" />
+
   </target>
 
   <target name="ant1compat" depends="check_for_optional_packages">
@@ -199,78 +395,37 @@
            srcdir="${bin.dir}/ant1src:${java.dir}/antlibs/ant1compat"
            debug="${debug}">
       <classpath refid="classpath"/>
-      <exclude name="${regexp.package}/JakartaRegexp*.java"
-               unless="jakarta.regexp.present" />
-      <exclude name="${regexp.package}/JakartaOro*.java"
-               unless="jakarta.oro.present" />
-      <exclude name="${regexp.package}/Jdk14Regexp*.java"
-               unless="jdk1.4+" />
-      <exclude name="${ant.package}/AntSecurityManager.java"
-               unless="jdk1.2+" />
-      <exclude name="${ant.package}/util/optional/NoExitSecurityManager.java"
-               unless="jdk1.2+" />
-      <exclude name="${ant.package}/listener/Log4jListener.java"
-               unless="log4j.present" />
+      <patternset refid="needs.jdk1.2+" />
+      <patternset refid="needs.jdk1.4+" />
 
-      <exclude name="${ant.package}/taskdefs/email/UUMailer.java" unless="sunuue.present" />
-      <exclude name="${ant.package}/taskdefs/email/MimeMailer.java" unless="javamail.complete" />
-
-      <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
-      <exclude name="${optional.package}/Script.java" unless="bsf.present" />
-      <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
-      <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
-      <exclude name="${optional.package}/TraXLiaison.java"
-               unless="trax.present" />
-      <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
-      <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
-      <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
-      <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
-      <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
-      <exclude name="${optional.package}/ejb/WLStop.java" unless="ejb.wls.present" />
-      <exclude name="${optional.package}/ejb/EjbJar.java" unless="ejbjar.support" />
-      <exclude name="${optional.package}/ejb/*DeploymentTool.java" unless="ejbjar.support" />
-      <exclude name="${optional.package}/ejb/IPlanet*.java" unless="ejbjar.support" />
-      <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
-      <exclude name="${optional.package}/junit/*" unless="junit.present" />
-      <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
-      <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
-      <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />
-      <exclude name="${optional.package}/starteam/*.java" unless="starteam.present" />
-      <exclude name="${optional.package}/ANTLR.java" unless="antlr.present" />
-      <exclude name="${optional.package}/ide/VAJ*.java" unless="vaj.present" />
-      <exclude name="${optional.package}/ide/VAJ*Servlet.java"
-               unless="servlet.present" />
-      <exclude name="${optional.package}/perforce/*.java" unless="jakarta.oro.present" />
-      <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
-      <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-               unless="trax.present" />
-      <exclude name="${optional.package}/junit/AggregateTransformer.java"
-               unless="trax.present" />
-      <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-               unless="xalan2.present" />
-      <exclude name="${optional.package}/junit/AggregateTransformer.java"
-               unless="xalan2.present" />
-      <exclude name="${optional.package}/junit/XalanExecutor.java"
-               unless="xalan2.present" />
-      <exclude name="${optional.package}/junit/Xalan2Executor.java"
-               unless="xalan2.present" />
-      <exclude name="${optional.package}/junit/Xalan1Executor.java"
-               unless="xalan.present" />
-      <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
-      <exclude name="${optional.package}/sitraka/**" unless="some.regexp.support"/>
-      <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
-      <exclude name="${optional.package}/metamata/MMetrics*"
-               unless="trax.present"/>
-      <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
-      <exclude name="${optional.type.package}/depend/*.java"
-               unless="bcel.present" />
-      <exclude name="${util.package}/depend/*.java"
-               unless="bcel.present" />
-      <exclude name="${optional.type.package}/depend/*.java"
-               unless="jdk1.2+" />
-      <exclude name="${util.package}/depend/*.java"
-               unless="jdk1.2+" />
-    </javac>
+      <patternset refid="needs.jakarta.regexp" />
+      <patternset refid="needs.jakarta.oro" />
+      <patternset refid="needs.jakarta.log4j" />
+      <patternset refid="needs.sun.uue" />
+      <patternset refid="needs.javamail" />
+      <patternset refid="needs.icontract" />
+      <patternset refid="needs.bsf" />
+      <patternset refid="needs.stylebook" />
+      <patternset refid="needs.netrexx" />
+      <patternset refid="needs.trax" />
+      <patternset refid="needs.xslp" />
+      <patternset refid="needs.xalan1" />
+      <patternset refid="needs.weblogic.ejbc" />
+      <patternset refid="needs.weblogic.ddcreator" />
+      <patternset refid="needs.weblogic.server" />
+      <patternset refid="needs.junit" />
+      <patternset refid="needs.netcomponents" />
+      <patternset refid="needs.starteam" />
+      <patternset refid="needs.antlr" />
+      <patternset refid="needs.vaj" />
+      <patternset refid="needs.servletapi" />
+      <patternset refid="needs.jmf" />
+      <patternset refid="needs.xalan2" />
+      <patternset refid="needs.jdepend" />
+      <patternset refid="needs.sun.tools" />
+      <patternset refid="needs.sun.b64" />
+      <patternset refid="needs.jakarta.bcel" />
+     </javac>
     <copy todir="${bin.dir}/ant1compat">
       <fileset dir="${bin.dir}/ant1src" excludes="**/*.java"/>
     </copy>

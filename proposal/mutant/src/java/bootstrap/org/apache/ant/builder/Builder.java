@@ -76,7 +76,14 @@ public class Builder {
     /** the taskdefs root */
     private static final File TASKDEFS_ROOT
          = new File(PACKAGE_ROOT, "taskdefs");
-
+    /** the types root */
+    private static final File TYPES_ROOT
+         = new File(PACKAGE_ROOT, "types");
+    /** the filters root */
+    private static final File FILTERS_ROOT
+         = new File(PACKAGE_ROOT, "filters");
+         
+         
     /** the root forthe depend task's support classes */
     private static final File DEPEND_ROOT
          = new File(TASKDEFS_ROOT, "optional/depend");
@@ -99,23 +106,31 @@ public class Builder {
      */
     private File[] getAnt1Files() {
         List files = new ArrayList();
-        files.add(new File(PACKAGE_ROOT, "types/EnumeratedAttribute.java"));
-        files.add(new File(PACKAGE_ROOT, "types/Path.java"));
-        files.add(new File(PACKAGE_ROOT, "types/FileSet.java"));
-        files.add(new File(PACKAGE_ROOT, "types/PatternSet.java"));
-        files.add(new File(PACKAGE_ROOT, "types/Reference.java"));
-        files.add(new File(PACKAGE_ROOT, "types/FilterSet.java"));
-        files.add(new File(PACKAGE_ROOT, "types/FilterSetCollection.java"));
-        files.add(new File(PACKAGE_ROOT, "types/Mapper.java"));
-        files.add(new File(PACKAGE_ROOT, "types/ZipFileSet.java"));
-        files.add(new File(PACKAGE_ROOT, "types/ZipScanner.java"));
+        files.add(new File(TYPES_ROOT, "EnumeratedAttribute.java"));
+        files.add(new File(TYPES_ROOT, "Path.java"));
+        files.add(new File(TYPES_ROOT, "FileSet.java"));
+        files.add(new File(TYPES_ROOT, "PatternSet.java"));
+        files.add(new File(TYPES_ROOT, "Reference.java"));
+        files.add(new File(TYPES_ROOT, "FilterSet.java"));
+        files.add(new File(TYPES_ROOT, "FilterSetCollection.java"));
+        files.add(new File(TYPES_ROOT, "Mapper.java"));
+        files.add(new File(TYPES_ROOT, "ZipFileSet.java"));
+        files.add(new File(TYPES_ROOT, "ZipScanner.java"));
+        files.add(new File(TYPES_ROOT, "FilterChain.java"));
+        files.add(new File(TYPES_ROOT, "Parameter.java"));
+        files.add(new File(TYPES_ROOT, "Parameterizable.java"));
+        files.add(new File(TYPES_ROOT, "RegularExpression.java"));
         files.add(new File(PACKAGE_ROOT, "util/FileNameMapper.java"));
         files.add(new File(PACKAGE_ROOT, "util/FlatFileNameMapper.java"));
         files.add(new File(PACKAGE_ROOT, "util/SourceFileScanner.java"));
         files.add(new File(PACKAGE_ROOT, "util/IdentityMapper.java"));
         files.add(new File(PACKAGE_ROOT, "util/MergingMapper.java"));
         files.add(new File(PACKAGE_ROOT, "util/GlobPatternMapper.java"));
-        files.add(new File(PACKAGE_ROOT, "types/Commandline.java"));
+        files.add(new File(PACKAGE_ROOT, "util/regexp/Regexp.java"));
+        files.add(new File(PACKAGE_ROOT, "util/regexp/RegexpMatcher.java"));
+        files.add(new File(PACKAGE_ROOT, "util/regexp/RegexpFactory.java"));
+        files.add(new File(PACKAGE_ROOT, "util/regexp/RegexpMatcherFactory.java"));
+        files.add(new File(TYPES_ROOT, "Commandline.java"));
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));
         files.add(new File(PACKAGE_ROOT, "AntClassLoader.java"));
@@ -129,7 +144,7 @@ public class Builder {
         files.add(new File(PACKAGE_ROOT, "util/FileUtils.java"));
         files.add(new File(PACKAGE_ROOT, "defaultManifest.mf"));
         files.add(new File(TASKDEFS_ROOT, "defaults.properties"));
-        files.add(new File(PACKAGE_ROOT, "types/defaults.properties"));
+        files.add(new File(TYPES_ROOT, "defaults.properties"));
         files.add(new File(TASKDEFS_ROOT, "Property.java"));
         files.add(new File(TASKDEFS_ROOT, "Execute.java"));
         files.add(new File(TASKDEFS_ROOT, "ExecuteStreamHandler.java"));
@@ -207,6 +222,25 @@ public class Builder {
         files.add(new File(TASKDEFS_ROOT, "condition/FilesMatch.java"));
         files.add(new File(TASKDEFS_ROOT, "Taskdef.java"));
         files.add(new File(TASKDEFS_ROOT, "Definer.java"));
+        
+        files.add(new File(FILTERS_ROOT, "util/ChainReaderHelper.java"));
+        files.add(new File(FILTERS_ROOT, "ClassConstants.java"));
+        files.add(new File(FILTERS_ROOT, "ExpandProperties.java"));
+        files.add(new File(FILTERS_ROOT, "HeadFilter.java"));
+        files.add(new File(FILTERS_ROOT, "LineContains.java"));
+        files.add(new File(FILTERS_ROOT, "LineContainsRegExp.java"));
+        files.add(new File(FILTERS_ROOT, "PrefixLines.java"));
+        files.add(new File(FILTERS_ROOT, "ReplaceTokens.java"));
+        files.add(new File(FILTERS_ROOT, "StripJavaComments.java"));
+        files.add(new File(FILTERS_ROOT, "StripLineBreaks.java"));
+        files.add(new File(FILTERS_ROOT, "StripLineComments.java"));
+        files.add(new File(FILTERS_ROOT, "TabsToSpaces.java"));
+        files.add(new File(FILTERS_ROOT, "TailFilter.java"));
+        files.add(new File(FILTERS_ROOT, "BaseFilterReader.java"));
+        files.add(new File(FILTERS_ROOT, "ChainableReader.java"));
+        files.add(new File(TYPES_ROOT, "AntFilterReader.java"));
+        files.add(new File(FILTERS_ROOT, "BaseParamFilterReader.java"));
+        files.add(new File(FILTERS_ROOT, ".java"));
         return (File[])files.toArray(new File[0]);
     }
 
