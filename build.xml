@@ -560,7 +560,7 @@
           description="--> creates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="org.apache.*"
-             useexternalfile="no"
+             useexternalfile="yes"
              sourcepath="${java.dir}"
              destdir="${build.javadocs}"
              author="true"
