@@ -410,6 +410,9 @@ Bugzilla Report 19180.
 * <pvcs> config attribute added to set the location of a specific PVCS .cfg file
   Bugzilla Report 9752
 
+* <mapper> has an "unpackage" mapper
+  Bugzilla Report 18908
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -262,11 +262,13 @@ public class Mapper extends DataType implements Cloneable {
                                 "org.apache.tools.ant.util.RegexpPatternMapper");
             implementations.put("package",
                                 "org.apache.tools.ant.util.PackageNameMapper");
+            implementations.put("unpackage",
+                                "org.apache.tools.ant.util.UnPackageNameMapper");
         }
 
         public String[] getValues() {
             return new String[] {"identity", "flatten", "glob",
-                                 "merge", "regexp", "package"};
+                                 "merge", "regexp", "package", "unpackage"};
         }
 
         public String getImplementation() {
