@@ -11,6 +11,8 @@ Fixed bugs:
 
 * <signjar> doesn't use deprectated methods anymore.
 
+* documentation of javadoc has been corrected.
+
 Changes from Ant 1.1 to Ant 1.2
 ===============================
 
