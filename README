@@ -22,12 +22,6 @@ TODO List:
     and "destfile" setter methods and whose execute method calls a
     "updateNeeded" method.
 
-  * CVS task to checkout a cvs tree from a particular server into a
-    given location. 
-
-  * Javadoc task -- ability to dance between 1.1 and 1.2 javadoc as
-    well as using other doclets like cocoons? 
-
   * Transform task -- XSLT 
 
   * Output logs in XML -- this would be a global option of the project
