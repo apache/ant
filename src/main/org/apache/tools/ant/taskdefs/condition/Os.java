@@ -61,7 +61,7 @@ import java.util.Locale;
 /**
  * Condition that tests the OS type.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class Os implements Condition {

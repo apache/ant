@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Interface for conditions to use inside the &lt;condition&gt; task.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public interface Condition {

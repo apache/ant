@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
  * Evaluates to true if the single condition nested into it is false
  * and vice versa.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class Not extends ConditionBase implements Condition {

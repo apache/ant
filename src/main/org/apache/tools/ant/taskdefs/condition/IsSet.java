@@ -60,7 +60,7 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Condition that tests whether a given property has been set.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class IsSet extends ProjectComponent implements Condition {

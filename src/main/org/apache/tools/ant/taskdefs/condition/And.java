@@ -64,7 +64,7 @@ import org.apache.tools.ant.BuildException;
  * <p>Iterates over all conditions and returns false as soon as one
  * evaluates to false.</p>
  * 
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class And extends ConditionBase implements Condition {

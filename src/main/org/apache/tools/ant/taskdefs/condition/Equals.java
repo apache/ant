@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Simple String comparison condition.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class Equals implements Condition {
