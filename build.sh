@@ -15,6 +15,10 @@ if test -f $JAVA_HOME/lib/tools.jar ; then
   LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
 fi
 
+if test -f $JAVA_HOME/lib/classes.zip ; then
+  LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
+fi
+
 echo
 echo Building with classpath: $LOCALCLASSPATH
 echo

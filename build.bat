@@ -6,6 +6,7 @@ if "%ANT_HOME%" == "" set ANT_HOME=.
 set LOCALCLASSPATH=%CLASSPATH%
 for %%i in (%ANT_HOME%\lib\*.jar) do call lcp.bat %%i
 if exist %JAVA_HOME%\lib\tools.jar call lcp.bat %JAVA_HOME%\lib\tools.jar
+if exist %JAVA_HOME%\lib\classes.zip call lcp.bat %JAVA_HOME%\lib\classes.zip
 
 echo.
 echo Building with classpath: %LOCALCLASSPATH%
