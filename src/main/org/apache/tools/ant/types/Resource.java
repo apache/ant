@@ -79,6 +79,9 @@ public class Resource implements Cloneable {
      * only sets the name.
      *
      * <p>This is a dummy, used for not existing resources.</p>
+     *
+     * @param name relative path of the resource.  Expects
+     * &quot;/&quot; to be used as the directory separator.
      */
     public Resource(String name) {
         this(name, false, 0, false);
@@ -86,11 +89,18 @@ public class Resource implements Cloneable {
 
     /**
      * sets the name, lastmodified flag, and exists flag
+     *
+     * @param name relative path of the resource.  Expects
+     * &quot;/&quot; to be used as the directory separator.
      */
     public Resource(String name, boolean exists, long lastmodified) {
         this(name, exists, lastmodified, false);
     }
 
+    /**
+     * @param name relative path of the resource.  Expects
+     * &quot;/&quot; to be used as the directory separator.
+     */
     public Resource(String name, boolean exists, long lastmodified,
                     boolean directory) {
         this.name = name;
@@ -107,11 +117,17 @@ public class Resource implements Cloneable {
      * <p>example for a file with fullpath /var/opt/adm/resource.txt
      * in a file set with root dir /var/opt it will be
      * adm/resource.txt.</p>
+     *
+     * <p>&quot;/&quot; will be used as the directory separator.</p>
      */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name relative path of the resource.  Expects
+     * &quot;/&quot; to be used as the directory separator.
+     */
     public void setName(String name) {
         this.name = name;
     }

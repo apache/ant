@@ -59,6 +59,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -111,14 +112,16 @@ public class SourceSelector {
             }
 
             String[] targetnames = 
-                mapper.mapFileName(source[counter].getName());
+                mapper.mapFileName(source[counter].getName()
+                                   .replace('/', File.separatorChar));
             if (targetnames != null) {
                 boolean added = false;
                 targetList.setLength(0);
                 for (int ctarget = 0; !added && ctarget < targetnames.length; 
                      ctarget++) {
                     Resource atarget = 
-                        targets.getResource(targetnames[ctarget]);
+                        targets.getResource(targetnames[ctarget]
+                                            .replace(File.separatorChar, '/'));
                     // if the target does not exist, or exists and
                     // is older than the source, then we want to
                     // add the resource to what needs to be copied
