@@ -51,6 +51,7 @@
   <!-- =================================================================== -->
   <target name="compile" depends="prepare,check_for_optional_packages">
     <mkdir dir="${build.classes}"/>
+
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            classpath="${classpath}"
@@ -60,6 +61,11 @@
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
     </javac>
+ 
+    <copydir src="${src.dir}" dest="${build.classes}">
+      <include name="**/defaultManifest.mf" />
+      <include name="**/*.properties" />
+    </copydir>
   </target>
 
   <!-- =================================================================== -->
