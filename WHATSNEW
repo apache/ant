@@ -10,6 +10,10 @@ Fixed bugs:
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
+* Wrapper scripts did not detect WINNT value of dynamic OS environment
+  variable when logged into workstations using Novell authentication.
+  Bugzilla Report 30366.
+
 Other changes:
 --------------
 
