@@ -853,6 +853,36 @@
         </table>
       </subsection>
 
+      <subsection name="JMX4Ant">
+
+        <p>JMX4Ant provides tasks for integration with JMX (Java Management
+        Extensions). It provides tasks for getting and setting attributes
+        of MBeans, invoking their methods and much more.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://jmx4ant.sourceforge.net/">http://jmx4ant.sourceforge.net/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:bdueck@yahoo.com">Brian Dueck</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License 1.1</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="JNI">
 
         <p>
