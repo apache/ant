@@ -119,10 +119,10 @@ if <code>/usr/local/bin/testit</code> is newer than
   </p>
   <pre>
     &lt;uptodate property="checkUptodate.uptodate"&gt;
-      &lt;srcfiles dir="src" includes="*" /&gt;
+      &lt;srcfiles dir="src" includes="*"/&gt;
       &lt;mapper type="merge" to="../dest/output.done"/&gt;
     &lt;/uptodate&gt;
-    &lt;echo message="checkUptodate result: ${checkUptodate.uptodate}" /&gt;
+    &lt;echo message="checkUptodate result: ${checkUptodate.uptodate}"/&gt;
   </pre>
   <p>
     The previous example can be a bit confusing, so it may be better to
@@ -131,7 +131,7 @@ if <code>/usr/local/bin/testit</code> is newer than
   <pre>
     &lt;property name="dest.dir" location="dest"/&gt;
     &lt;uptodate property="checkUptodate.uptodate"&gt;
-      &lt;srcfiles dir="src" includes="*" /&gt;
+      &lt;srcfiles dir="src" includes="*"/&gt;
       &lt;mapper type="merge" to="${dest.dir}/output.done"/&gt;
     &lt;/uptodate&gt;
   </pre>

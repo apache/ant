@@ -117,7 +117,7 @@ name. Otherwise a message is logged.</p>
 
 <p><i>(by the way: a short word to ants "namespaces" (don´t
 be confused with xml namespaces which will be also introduces in the future (1.6 or 1.7):
-an &lt;antcall&gt; creates a new space for property names. All properties from the caller
+an <code>&lt;antcall&gt;</code> creates a new space for property names. All properties from the caller
 are passed to the callee, but the callee can set its own properties without notice by the
 caller.)</i></p>
 
@@ -312,7 +312,7 @@ whithout being complex :-)</p>
 <p>The test case uses the ant property <i>ant.home</i> as reference. This property is set by the
 <tt>Launcher</tt> class which starts ant. We can use that property in our buildfiles as a
 <a href="using.html#built-in-props">build-in property [3]</a>. But if we create a new ant
-environment we have to set that value for our own. And we use the &lt;junit&gt; task in fork-mode.
+environment we have to set that value for our own. And we use the <code>&lt;junit&gt;</code> task in fork-mode.
 Therefore we have do modify our buildfile:
 <pre class="code">
     &lt;target name="junit" description="Runs the unit tests" depends="jar"&gt;
@@ -333,12 +333,12 @@ Therefore we have do modify our buildfile:
 <a name="path"/>
 <h2>Using nested paths</h2>
 <p>A task providing support for filesets is a very comfortable one. But there is another
-possibility of bundling files: the &lt;path&gt;. Fileset are easy if the files are all under
+possibility of bundling files: the <code>&lt;path&gt;</code>. Fileset are easy if the files are all under
 a common base directory. But if this is not the case you have a problem. Another disadvantage
 is its speed: if you have only a few files in a huge directory structure, why not use a
-&lt;filelist&gt; instead? &lt;path&gt;s combines these datatypes in that way that a path contains
+<code>&lt;filelist&gt;</code> instead? <code>&lt;path&gt;</code>s combines these datatypes in that way that a path contains
 other paths, filesets, dirsets and filelists. This is why <a href="http://ant-contrib.sourceforge.net/">
-Ant-Contribs [4]</a> &lt;foreach&gt; task is modified to support paths instead of filesets. So we want that,
+Ant-Contribs [4]</a> <code>&lt;foreach&gt;</code> task is modified to support paths instead of filesets. So we want that,
 too.</p>
 
 <p>Changing from fileset to path support is very easy:</p>
@@ -414,7 +414,7 @@ And would it be good to get all of them? - It depends on ...<p>
 
 <p>In this section we will extend that task to support returning a list of all files.
 Lists as property values are not supported by Ant natively. So we have to see how other
-tasks use lists. The most famous task using lists is Ant-Contribs &lt;foreach&gt;. All list
+tasks use lists. The most famous task using lists is Ant-Contribs <code>&lt;foreach&gt;</code>. All list
 elements are concatenated and separated with a customizable separator (default ',').</p>
 
 <p>So we do the following:</p>
@@ -799,8 +799,8 @@ failures of our own test (<b>//1 + 2</b>).</p>
 
 <p>And ... oh, all tests fail: <i>Ant could not find the task or a class this task relies upon.</i></p>
 
-<p>Ok: in the earlier steps we told Ant to use the Find class for the &lt;find&gt; task (remember the
-&lt;taskdef&gt; statement in the "use.init" target). But now we want to introduce that task as
+<p>Ok: in the earlier steps we told Ant to use the Find class for the <code>&lt;find&gt;</code> task (remember the
+<code>&lt;taskdef&gt;</code> statement in the "use.init" target). But now we want to introduce that task as
 a core task. And nobody wants to taskdef the javac, echo, ... So what to do? The answer is the
 src/main/.../taskdefs/default.properties. Here is the mapping between taskname and implementing
 class done. So we add a <tt>find=org.apache.tools.ant.taskdefs.Find</tt> as the last core
@@ -900,7 +900,7 @@ entry. For both we need some information:</p>
 <tr>
   <th>body</th>
   <td><i>more details about the path</i></td>
-  <td>This new task looks inside a nested &lt;path/&gt; for occurrences of a file and stores
+  <td>This new task looks inside a nested <code>&lt;path/&gt;</code> for occurrences of a file and stores
       all locations as a property. See the included manual for details.</td>
 </tr>
 <tr>

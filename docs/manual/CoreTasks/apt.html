@@ -23,13 +23,13 @@
   <tr>
     <td valign="top">compile</td>
     <td valign="top">After running the Apt, should the code be compiled.  (see the
-                     "-nocompile" flag on the Apt executable)</td>
+                     <code>-nocompile</code> flag on the Apt executable)</td>
     <td align="center" valign="top">No, defaults to false.</td>
   </tr>
   <tr>
     <td valign="top">factory</td>
     <td valign="top">The fully qualified classname of the AnnotationProcessFactory to be used
-                     to construct annotation processors.  This represents the "-factory"
+                     to construct annotation processors.  This represents the <code>-factory</code>
                      command line flag of the Apt executable.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -37,13 +37,13 @@
     <td valign="top">factorypathref</td>
     <td valign="top">The reference id of the path used to find the classes needed by the
                      AnnotationProcessorFactory (and the location of the factory itself).
-                     This represents the "-factorypath" flag on the Apt executable.</td>
+                     This represents the <code>-factorypath</code> flag on the Apt executable.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">preprocessdir</td>
     <td valign="top">The directory used for preprocessing.  This is the directory where the
-                     generated source code will be place.  This represents the "-s" flag on
+                     generated source code will be place.  This represents the <code>-s</code> flag on
                      the Apt executable.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -56,13 +56,13 @@
 
 <p>You can specify the path used to find the classes needed by the AnnotationProcessorFactory
    at runtime, using this element.  It is represents as a generic path like structure.  This
-   represents the "-factorypath" flag on the Apt executable.</p>
+   represents the <code>-factorypath</code> flag on the Apt executable.</p>
 
 
 <h4>option</h4>
 
-<p>Used to represent a generic option to pass to Apt.  This represents the "-A" flag on the
-   Apt executable.  You can specify zero or more &lt;option&gt; elements.</p>
+<p>Used to represent a generic option to pass to Apt.  This represents the <code>-A</code> flag on the
+   Apt executable.  You can specify zero or more <code>&lt;option&gt;</code> elements.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
 <tbody><tr>
@@ -128,19 +128,19 @@ The "compiler" attribute is ignored, as it is forced to use the Apt compiler
     &lt;javac srcdir="${src}"
          destdir="${build}"
          classpath="xyz.jar"
-         debug="on" /&gt;
+         debug="on"/&gt;
 
     &lt;javac srcdir="${preprocess.dir}"
          destdir="${build}"
          classpath="xyz.jar"
-         debug="true" /&gt;
+         debug="true"/&gt;
 </pre>
 
 This may involve more build file coding, but the speedup gained from switching
 to jikes may justify the effort.
 <p>
 </p><hr>
-<p align="center">Copyright © 2004 The Apache Software Foundation.
+<p align="center">Copyright &copy; 2004 The Apache Software Foundation.
 All rights Reserved.</p>
 
 </body></html>

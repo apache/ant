@@ -19,7 +19,7 @@ accessible from the script, using either their <code>name</code> or
 valid Java identifiers, that is).
 The name "project" is a pre-defined reference to the Project, which can be
 used instead of the project name. The name "self" is a pre-defined reference to the actual
-&lt;script&gt;-Task instance.<br/>From these objects you have access to the Ant Java API, see the
+<code>&lt;script&gt;</code>-Task instance.<br/>From these objects you have access to the Ant Java API, see the
 <a href="../api/index.html">JavaDoc</a> (especially for
 <a href="../api/org/apache/tools/ant/Project.html">Project</a> and
 <a href="../api/org/apache/tools/ant/taskdefs/optional/Script.html">Script</a>) for more information.</p>
@@ -187,7 +187,7 @@ BUILD SUCCESSFUL
 </pre></blockquote>
 
 <p>Now a more complex example using the Java API and the Ant API. The goal is to list the
-filesizes of all files a &lt;fileset/&gt; caught.</p>
+filesizes of all files a <code>&lt;fileset/&gt;</code> caught.</p>
 <blockquote><pre>
 
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -209,7 +209,7 @@ filesizes of all files a &lt;fileset/&gt; caught.</p>
       includes = <font color=blue>MyProject</font>.getProperty("fs.includes");
       excludes = <font color=blue>self.getProject()</font>  .<font color=blue>getProperty("fs.excludes")</font>;
 
-      // Create a &lt;fileset dir="" includes="" /&gt;
+      // Create a &lt;fileset dir="" includes=""/&gt;
       fs = project.<font color=blue>createDataType("fileset")</font>;
       fs.setDir( new File(dir) );
       <font color=blue>fs.setIncludes(includes)</font>;
@@ -245,16 +245,16 @@ For other packages you have to prefix the full classified name with <i>Package</
 For example ant´s <i>FileUtil</i> class can be imported with
 <code>importClass(<b>Package</b>.org.apache.tools.ant.util.FileUtils)</code>
 <br>
-The &lt;script&gt; task populates the Project instance under
+The <code>&lt;script&gt;</code> task populates the Project instance under
 the name <i>project</i>, so we can use that reference. Another way is to use its given name
 or getting its reference from the task itself.<br>
 The Project provides methods for accessing and setting properties, creating DataTypes and
 Tasks and much more.<br>
 After creating a FileSet object we initialize that by calling its set-methods. Then we can
-use that object like a normal Ant task (&lt;copy&gt; for example).<br>
+use that object like a normal Ant task (<code>&lt;copy&gt;</code> for example).<br>
 For getting the size of a file we instantiate a <code>java.io.File</code>. So we are using
 normal Java API here.<br>
-Finally we use the &lt;echo&gt; task for producing the output. The task is not executed by
+Finally we use the <code>&lt;echo&gt;</code> task for producing the output. The task is not executed by
 its execute() method, because the perform() method (implemented in Task itself) does the
 appropriate logging before and after invoking execute().
 </p>

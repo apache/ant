@@ -32,18 +32,18 @@ See details in the documentation of the <a href="../CoreTypes/regexp.html#implem
   <tr>
     <td valign="top">file</td>
     <td valign="top">file for which the regular expression should be replaced.</td>
-    <td align="center">Yes if no nested &lt;fileset&gt; is used</td>
+    <td align="center">Yes if no nested <code>&lt;fileset&gt;</code> is used</td>
   </tr>
   <tr>
     <td valign="top">match</td>
     <td valign="top">The regular expression pattern to match in the file(s)</td>
-    <td align="center">Yes, if no nested &lt;regexp&gt; is used</td>
+    <td align="center">Yes, if no nested <code>&lt;regexp&gt;</code> is used</td>
   </tr>
   <tr>
     <td valign="top">replace</td>
     <td valign="top">The substitution pattern to place in the file(s) in place
                      of the regular expression.</td>
-    <td align="center">Yes, if no nested &lt;substitution&gt; is used</td>
+    <td align="center">Yes, if no nested <code>&lt;substitution&gt;</code> is used</td>
   </tr>
   <tr>
     <td valign="top">flags</td>
@@ -115,7 +115,7 @@ value, in all files ending in <code>.properties</code> in the current directory<
 
 <blockquote>
 <pre>&lt;replaceregexp match="\s+" replace=" " flags="g" byline="true"&gt;
-    &lt;fileset dir="${html.dir}" includes="**/*.html" /&gt;
+    &lt;fileset dir="${html.dir}" includes="**/*.html"/&gt;
 &lt;/replaceregexp&gt;
 </pre></blockquote>
 <p>replaces all whitespaces (blanks, tabs, etc) by one blank remaining the

@@ -16,8 +16,8 @@ to a file 'bar' - you would do something like<P>
 cat foo|head -n10|grep blee &gt; bar
 </code><P>
 Ant was not flexible enough.  There was no way for the
-&lt;copy&gt; task to do something similar.  If you wanted
-the &lt;copy&gt; task to get the first 10 lines, you would have
+<code>&lt;copy&gt;</code> task to do something similar.  If you wanted
+the <code>&lt;copy&gt;</code> task to get the first 10 lines, you would have
 had to create special attributes:<P>
 <code>
 &lt;copy file=&quot;foo&quot; tofile=&quot;bar&quot; head=&quot;10&quot; contains=&quot;blee&quot;/&gt;
@@ -37,7 +37,7 @@ tasks to support FilterChains.  A FilterChain is a group of
 ordered FilterReaders.  Users can define their own FilterReaders
 by just extending the java.io.FilterReader class.  Such custom
 FilterReaders can be easily plugged in as nested elements of
-&lt;filterchain&gt; by using &lt;filterreader&gt; elements.
+<code>&lt;filterchain&gt;</code> by using <code>&lt;filterreader&gt;</code> elements.
 <P>
 Example:
 <BLOCKQUOTE><PRE>
@@ -79,7 +79,7 @@ is equivalent to:
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-The following built-in tasks support nested &lt;filterchain&gt; elements.<BR>
+The following built-in tasks support nested <code>&lt;filterchain&gt;</code> elements.<BR>
 <a href="../CoreTasks/concat.html">Concat</a>,<BR>
 <a href="../CoreTasks/copy.html">Copy</a>,<BR>
 <a href="../CoreTasks/loadfile.html">LoadFile</a>,<BR>
@@ -135,8 +135,8 @@ org.apache.tools.type.Parameterizable.
 
 <P>
 <H4>Nested Elements:</H4>
-&lt;filterreader&gt; supports &lt;classpath&gt; and &lt;param&gt;
-as nested elements.  Each &lt;param&gt; element may take in the following
+<code>&lt;filterreader&gt;</code> supports <code>&lt;classpath&gt;</code> and <code>&lt;param&gt;</code>
+as nested elements.  Each <code>&lt;param&gt;</code> element may take in the following
 attributes - name, type and value.
 <P>
 The following FilterReaders are supplied with the default
@@ -209,7 +209,7 @@ This results in the property modifiedmessage holding the value
   message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
   file=&quot;loadfile1.tmp&quot;
   /&gt;
-&lt;property name=&quot;weather&quot; value=&quot;rain&quot; /&gt;
+&lt;property name=&quot;weather&quot; value=&quot;rain&quot;/&gt;
 &lt;loadfile property=&quot;modifiedmessage&quot; srcFile=&quot;loadfile1.tmp&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;
@@ -223,7 +223,7 @@ Convenience method:
   message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
   file=&quot;loadfile1.tmp&quot;
   /&gt;
-&lt;property name=&quot;weather&quot; value=&quot;rain&quot; /&gt;
+&lt;property name=&quot;weather&quot; value=&quot;rain&quot;/&gt;
 &lt;loadfile property=&quot;modifiedmessage&quot; srcFile=&quot;loadfile1.tmp&quot;&gt;
   &lt;filterchain&gt;
     &lt;expandproperties/&gt;
@@ -1308,7 +1308,7 @@ Custom string filters and tokenizers may be plugged in by
 extending the interfaces org.apache.tools.ant.filters.TokenFilter.Filter
 and org.apache.tools.ant.util.Tokenizer respectly.
 
-They are defined the build file using &lt;typedef/&gt;. For
+They are defined the build file using <code>&lt;typedef/&gt;</code>. For
 example a string filter that capitalizes words may be declared as:
 <blockquote><pre>
 package my.customant;

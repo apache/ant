@@ -210,7 +210,7 @@ the implementation of your Java virtual machine.</p>
 
   <h3><a name="nestedtype">Nested Types</a></h3>
 If your task needs to nest an arbitary type that has been defined
-  using &lt;typedef&gt; you have two options.
+  using <code>&lt;typedef&gt;</code> you have two options.
   <ol>
     <li><code>public void add(Type type)</code></li>
     <li><code>public void addConfigured(Type type)</code></li>
@@ -435,9 +435,9 @@ for the following events</P>
 </ul>
 
 <p>If the build file invokes another build file via <a
-href="CoreTasks/ant.html">&lt;ant&gt;</a> or <a
-href="CoreTasks/subant.html">&lt;subant&gt;</a> or uses <a
-href="CoreTasks/antcall.html">&lt;antcall&gt;</a>, you are creating a
+href="CoreTasks/ant.html"><code>&lt;ant&gt;</code></a> or <a
+href="CoreTasks/subant.html"><code>&lt;subant&gt;</code></a> or uses <a
+href="CoreTasks/antcall.html"><code>&lt;antcall&gt;</code></a>, you are creating a
 new Ant "project" that will send target and task level events of its
 own but never sends build started/finished events.  Ant 1.6.2
 introduces an extension of the BuildListener interface named

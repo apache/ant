@@ -254,8 +254,8 @@ means any VM of at least version 1.2.</p>
   </tr>
   <tr>
     <td valign="top">linkoffline</td>
-    <td valign="top">Link to docs at &lt;url&gt; using package list at
-    &lt;url2&gt; - separate the URLs by using a space character -- see
+    <td valign="top">Link to docs at <code>&lt;url&gt;</code> using package list at
+    <code>&lt;url2&gt;</code> - separate the URLs by using a space character -- see
     also the nested <code>link</code> element.</td>
     <td align="center" valign="top">1.2+</td>
     <td align="center" valign="top">No</td>
@@ -694,7 +694,7 @@ only available with Java 1.4.</p>
     <td valign="top">path</td>
     <td valign="top">A path specifying the search path for the taglet class
             (e.g. <code>/home/taglets</code>).
-            The path may also be specified by a nested &lt;path&gt; element</td>
+            The path may also be specified by a nested <code>&lt;path&gt;</code> element</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -724,7 +724,7 @@ arguments</a>. <em>Since Ant 1.6</em></p>
            windowtitle=&quot;Test API&quot;&gt;
     &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
     &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;]]&gt;&lt;/bottom&gt;
-    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot; /&gt;
+    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot;/&gt;
     &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
     &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
@@ -741,13 +741,13 @@ arguments</a>. <em>Since Ant 1.6</em></p>
            windowtitle=&quot;Test API&quot;&gt;
 
     &lt;packageset dir=&quot;src&quot; defaultexcludes=&quot;yes&quot;&gt;
-      &lt;include name=&quot;com/dummy/test/**&quot; /&gt;
+      &lt;include name=&quot;com/dummy/test/**&quot;/&gt;
       &lt;exclude name=&quot;com/dummy/test/doc-files/**&quot;/&gt;
     &lt;/packageset&gt;
 
     &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
     &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;]]&gt;&lt;/bottom&gt;
-    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot; /&gt;
+    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot;/&gt;
     &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
     &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
@@ -764,13 +764,13 @@ arguments</a>. <em>Since Ant 1.6</em></p>
            windowtitle=&quot;Test API&quot;&gt;
 
     &lt;fileset dir=&quot;src&quot; defaultexcludes=&quot;yes&quot;&gt;
-      &lt;include name=&quot;com/dummy/test/**&quot; /&gt;
+      &lt;include name=&quot;com/dummy/test/**&quot;/&gt;
       &lt;exclude name=&quot;com/dummy/test/doc-files/**&quot;/&gt;
     &lt;/fileset&gt;
 
     &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
     &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;]]&gt;&lt;/bottom&gt;
-    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot; /&gt;
+    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot;/&gt;
     &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
     &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;

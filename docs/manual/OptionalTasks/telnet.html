@@ -69,7 +69,7 @@ attribute, which is an alternative to specifying the string as
 a text element.
 </p>
 <i>Always declare an opening and closing
-&lt;read&gt; element to ensure that statements are not sent before
+<code>&lt;read&gt;</code> element to ensure that statements are not sent before
 the connection is ready, and that the connection is not broken before
 the final command has completed.
 </i>
@@ -105,7 +105,7 @@ This task can be rewritten as:
 &lt;/telnet&gt;
 </pre></blockquote>
 
-A timeout can be specified at the &lt;telnet&gt; level or at the &lt;read&gt; level. 
+A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at the <code>&lt;read&gt;</code> level. 
 This will connect, issue a sleep command that is suppressed from displaying and wait 
 10 seconds before quitting.
 <blockquote><pre>
