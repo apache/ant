@@ -130,7 +130,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private String outputtype = null;
     
     /** for resolving entities such as dtds */
-    private XMLCatalog xmlCatalog;
+    private XMLCatalog xmlCatalog = new XMLCatalog();
     
     /** Name of the TRAX Liason class */
     private static final String TRAX_LIAISON_CLASS =
@@ -251,7 +251,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             stylesheetLoaded = false;
             baseDir = savedBaseDir;
         }
-    } //-- execute
+    }
     
     /**
      * Set whether to check dependencies, or always generate.
@@ -260,7 +260,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setForce(boolean force) {
         this.force = force;
-    } //-- setForce
+    }
     
     /**
      * Set the base directory.
@@ -269,7 +269,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      **/
     public void setBasedir(File dir) {
         baseDir = dir;
-    } //-- setSourceDir
+    }
     
     /**
      * Set the destination directory into which the XSL result
@@ -278,7 +278,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      **/
     public void setDestdir(File dir) {
         destDir = dir;
-    } //-- setDestDir
+    }
     
     /**
      * Set the desired file extension to be used for the target
@@ -286,7 +286,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      **/
     public void setExtension(String name) {
         targetExtension = name;
-    } //-- setDestDir
+    }
     
     /**
      * Sets the file to use for styling relative to the base directory
@@ -340,12 +340,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * store the xml catalog for resolving entities
+     * Add the catalog to our internal catalog
      * 
      * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
      */
-    public void addXMLcatalog(XMLCatalog xmlCatalog) {
-        this.xmlCatalog = xmlCatalog;
+    public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog) {
+        this.xmlCatalog.addConfiguredXMLCatalog(xmlCatalog);
     }
     
     /**
@@ -632,7 +632,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setOutputtype(String type) {
         this.outputtype = type;
     }
-    
+
+    /**
+     * Initialize internal instance of XMLCatalog
+     */
+    public void init() throws BuildException {
+        super.init();
+
+        xmlCatalog.setProject(project);
+    }
+
     /**
      * Loads the stylesheet and set xsl:param parameters.
      *
