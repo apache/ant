@@ -10,11 +10,11 @@ package org.apache.myrmidon.components.configurer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -197,10 +197,10 @@ class DefaultObjectConfigurer
     /**
      * Locate all methods whose name starts with a particular
      * prefix, and which are non-static, return void, and take a single
-     * parameter.  If there are more than one matching methods of a given
-     * name, the method that takes a String parameter (if any) is ignored.
-     * If after that there are more than one matching methods of a given
-     * name, an exception is thrown.
+     * non-array parameter.  If there are more than one matching methods of
+     * a given name, the method that takes a String parameter (if any) is
+     * ignored.  If after that there are more than one matching methods of
+     * a given name, an exception is thrown.
      *
      * @return Map from property name -> Method object for that property.
      */
@@ -217,7 +217,8 @@ class DefaultObjectConfigurer
             final Method method = (Method)iterator.next();
             final String methodName = method.getName();
             if( Void.TYPE != method.getReturnType() ||
-                1 != method.getParameterTypes().length )
+                1 != method.getParameterTypes().length ||
+                method.getParameterTypes()[ 0 ].isArray() )
             {
                 continue;
             }
