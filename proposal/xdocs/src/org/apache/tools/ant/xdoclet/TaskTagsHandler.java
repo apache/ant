@@ -486,6 +486,9 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 if (isDeprecated(method)) {
                   continue;
                 }
+                if (shouldIgnore(method)) {
+                    continue;
+                }
                 String methodName = method.name();
                 if (method.containingClass() == cur_class) {
                     if (already.containsKey(methodName) == false) {
@@ -504,10 +507,29 @@ public class TaskTagsHandler extends XDocletTagSupport {
     private boolean isDeprecated (MethodDoc method) {
         Tag[] tags = method.tags();
         for (int i=0; i < tags.length; i++) {
-            System.out.println("tag = " + tags[i].name());
             if (tags[i].name().equals("@deprecated")) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * For now, lump attributes and elements together since we won't
+     * have those tags on the same method.
+     */
+    private boolean shouldIgnore (MethodDoc method) throws XDocletException {
+        String value = getTagValue(method, "ant:attribute", "ignore", -1,
+                null, null, null, null,
+                null, false, XDocletTagSupport.FOR_METHOD, false);
+        if ("true".equals(value)) {
+            return true;
+        }
+        value = getTagValue(method, "ant:element", "ignore", -1,
+                null, null, null, null,
+                null, false, XDocletTagSupport.FOR_METHOD, false);
+        if ("true".equals(value)) {
+            return true;
         }
         return false;
     }
