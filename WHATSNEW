@@ -47,6 +47,9 @@ Changes that could break older environments:
 * Ant's testcases now require JUnit 3.7 or above, as they now use the new
   assertTrue method instead of assert.
 
+* To make <javac> more consistent, <compilerarg>'s "implementation" attribute
+  has been renamed to "compiler".
+
 Fixed bugs:
 -----------
 * Fixed bug where <move> ignored <filterset>s.
