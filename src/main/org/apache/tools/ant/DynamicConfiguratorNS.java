@@ -21,31 +21,6 @@ package org.apache.tools.ant;
  *
  * @since Ant 1.7
  */
-public interface DynamicConfiguratorNS {
-
-    /**
-     * Set a named attribute to the given value
-     *
-     * @param uri The namespace uri for this attribute, "" is
-     *            used if there is no namespace uri.
-     * @param localName The localname of this attribute.
-     * @param qName The qualified name for this attribute
-     * @param value The value of this attribute.
-     * @throws BuildException when any error occurs
-     */
-    void setDynamicAttribute(
-        String uri, String localName, String qName, String value)
-            throws BuildException;
-
-    /**
-     * Create an element with the given name
-     *
-     * @param uri The namespace uri for this attribute.
-     * @param localName The localname of this attribute.
-     * @param qName The qualified name for this element.
-     * @throws BuildException when any error occurs
-     * @return the element created for this element.
-     */
-    Object createDynamicElement(
-        String uri, String localName, String qName) throws BuildException;
+public interface DynamicConfiguratorNS
+    extends DynamicAttributeNS, DynamicElementNS {
 }
