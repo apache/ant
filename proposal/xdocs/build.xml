@@ -185,6 +185,9 @@
   <selector id="needs.swing">
     <filename name="${optional.package}/splash/*"/>
   </selector>
+  <selector id="needs.jsch">
+    <filename name="${optional.package}/ssh/*"/>
+  </selector>
 
     <available property="jdk1.2+" classname="java.lang.ThreadLocal"/>
     <available property="jdk1.3+" classname="java.lang.StrictMath"/>
@@ -357,6 +360,9 @@
     <available property="beanshell.present"
                classname="bsh.StringUtil"
                classpathref="classpath"/>
+    <available property="jsch.present"
+               classname="com.jcraft.jsch.Session"
+               classpathref="classpath"/>
 
   <path id="xdoclet.classpath">
     <path>
@@ -428,6 +434,7 @@
             <selector refid="needs.jai" unless="jai.present"/>
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing"  unless="swing.present"/>
+            <selector refid="needs.jsch" unless="jsch.present"/>
           </or>
         </not>
       </selector>
