@@ -314,7 +314,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (attributes.getSource() != null && !assumeJava13()) {
             cmd.createArgument().setValue("-source");
             String source = attributes.getSource();
-            if (source.equals("1.1") || source.equals("1.2")) {
+            if ((assumeJava14() || assumeJava15())
+                && (source.equals("1.1") || source.equals("1.2"))) {
                 // support for -source 1.1 and -source 1.2 has been
                 // added with JDK 1.4.2 - and isn't present in 1.5.0 either
                 cmd.createArgument().setValue("1.3");
@@ -328,7 +329,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 String s = t;
                 if (t.equals("1.1")) {
                     // 1.5.0 doesn't support -source 1.1
-                    s = "1.3";
+                    s = "1.2";
                 }
                 attributes.log("", Project.MSG_WARN);
                 attributes.log("          WARNING", Project.MSG_WARN);
