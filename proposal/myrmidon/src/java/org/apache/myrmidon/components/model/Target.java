@@ -7,39 +7,71 @@
  */
 package org.apache.myrmidon.components.model;
 
-import org.apache.avalon.framework.component.Component;
+import java.util.ArrayList;
 import org.apache.avalon.framework.configuration.Configuration;
 
 /**
- * Interface to represent targets in build file.
+ * Targets in build file.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface Target
-    extends Component
+public class Target
 {
-    String ROLE = "org.apache.myrmidon.components.model.Target";
+    private final ArrayList   m_dependencies     = new ArrayList();
+    private final ArrayList   m_tasks            = new ArrayList();
+    private final Condition   m_condition;
 
     /**
-     * Get dependencies of target
+     * Constructor taking condition for target.
      *
-     * @return the dependency list
+     * @param condition the condition
      */
-    String[] getDependencies();
+    public Target( final Condition condition, 
+                   final Configuration[] tasks, 
+                   final String[] dependencies )
+    {
+        m_condition = condition;
 
-    /**
-     * Get tasks in target
-     *
-     * @return the target list
-     */
-    Configuration[] getTasks();
+        for( int i = 0; i < tasks.length; i++ )
+        {
+            m_tasks.add( tasks[ i ] );
+        }
+
+        if( null != dependencies )
+        {
+            for( int i = 0; i < dependencies.length; i++ )
+            {
+                m_dependencies.add( dependencies[ i ] );
+            }
+        }
+    }
 
     /**
      * Get condition under which target is executed.
      *
      * @return the condition for target or null
      */
-    Condition getCondition();
+    public final Condition getCondition()
+    {
+        return m_condition;
+    }
+    /**
+     * Get dependencies of target
+     *
+     * @return the dependency list
+     */
+    public final String[] getDependencies()
+    {
+        return (String[])m_dependencies.toArray( new String[ 0 ] );
+    }
+
+    /**
+     * Get tasks in target
+     *
+     * @return the target list
+     */
+    public final Configuration[] getTasks()
+    {
+        return (Configuration[])m_tasks.toArray( new Configuration[ 0 ] );
+    }
 }
-
-
