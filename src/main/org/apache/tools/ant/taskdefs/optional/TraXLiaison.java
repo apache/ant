@@ -93,7 +93,13 @@ public class TraXLiaison implements XSLTLiaison {
     };
 
     public void transform(String infile, String outfile) throws Exception {
-        transformer.transform(new StreamSource(normalize(infile)), new StreamResult(new FileOutputStream(outfile)));
+        FileOutputStream out = new FileOutputStream(outfile);
+        try {
+            transformer.transform(new StreamSource(normalize(infile)), 
+                                  new StreamResult(out));
+        } finally {
+            out.close();
+        }
     }
 
     protected String normalize(String fileName) {

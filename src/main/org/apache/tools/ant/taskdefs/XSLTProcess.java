@@ -61,6 +61,8 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 
 /**
@@ -102,8 +104,12 @@ public class XSLTProcess extends MatchingTask {
  
     private File outFile = null;
 
+    private String processor;
+    private Path classpath = null;
     private XSLTLiaison liaison;
     private boolean stylesheetLoaded = false;
+
+    private boolean force = false;
 
     /**
      * Creates a new XSLTProcess Task.
@@ -179,6 +185,13 @@ public class XSLTProcess extends MatchingTask {
     } //-- execute
 
     /**
+     * Set whether to check dependencies, or always generate.
+     **/
+    public void setForce(boolean force) {
+        this.force = force;
+    } //-- setForce
+
+    /**
      * Set the base directory.
      **/
     public void setBasedir(File dir) {
@@ -210,24 +223,72 @@ public class XSLTProcess extends MatchingTask {
         this.xslFile = xslFile;
     }
 
-    public void setProcessor(String processor) throws Exception {
+    /**
+     * Set the classpath to load the Processor through (attribute).
+     */
+    public void setClasspath(Path classpath) {
+        createClasspath().append(classpath);
+    }
 
-        if (processor.equals("trax")) {
+    /**
+     * Set the classpath to load the Processor through (nested element).
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(project);
+        }
+        return classpath.createPath();
+    }
+
+    /**
+     * Set the classpath to load the Processor through via reference
+     * (attribute).
+     */
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
+
+
+    public void setProcessor(String processor) {
+        this.processor = processor;
+    }
+
+    /**
+     * Load processor here instead of in setProcessor - this will be
+     * called from within execute, so we have access to the latest
+     * classpath.
+     */
+    private void resolveProcessor(String proc) throws Exception {
+        if (proc.equals("trax")) {
             final Class clazz = 
-                Class.forName("org.apache.tools.ant.taskdefs.optional.TraXLiaison");
+                loadClass("org.apache.tools.ant.taskdefs.optional.TraXLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
-        } else if (processor.equals("xslp")) {
+        } else if (proc.equals("xslp")) {
             final Class clazz = 
-                Class.forName("org.apache.tools.ant.taskdefs.optional.XslpLiaison");
+                loadClass("org.apache.tools.ant.taskdefs.optional.XslpLiaison");
             liaison = (XSLTLiaison) clazz.newInstance();
-        } else if (processor.equals("xalan")) {
+        } else if (proc.equals("xalan")) {
             final Class clazz = 
-                Class.forName("org.apache.tools.ant.taskdefs.optional.XalanLiaison");
+                loadClass("org.apache.tools.ant.taskdefs.optional.XalanLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
         } else {
-            liaison = (XSLTLiaison) Class.forName(processor).newInstance();
+            liaison = (XSLTLiaison) loadClass(proc).newInstance();
         }
+    }
 
+    /**
+     * Load named class either via the system classloader or a given
+     * custom classloader.
+     */
+    private Class loadClass(String classname) throws Exception {
+        if (classpath == null) {
+            return Class.forName(classname);
+        } else {
+            AntClassLoader al = new AntClassLoader(project, classpath);
+            Class c = al.loadClass(classname);
+            AntClassLoader.initializeClass(c);
+            return c;
+        }
     }
 
     /**
@@ -265,7 +326,8 @@ public class XSLTProcess extends MatchingTask {
             }else{
                 outFile = new File(destDir,xmlFile+fileExt);
             }
-            if (inFile.lastModified() > outFile.lastModified() ||
+            if (force ||
+                inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor( outFile );
                 log("Transforming into "+destDir);
@@ -293,7 +355,8 @@ public class XSLTProcess extends MatchingTask {
             log("In file "+inFile+" time: " + inFile.lastModified() , Project.MSG_DEBUG);
             log("Out file "+outFile+" time: " + outFile.lastModified() , Project.MSG_DEBUG);
             log("Style file "+xslFile+" time: " + styleSheetLastModified , Project.MSG_DEBUG);
-            if (inFile.lastModified() > outFile.lastModified() ||
+            if (force ||
+                inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor( outFile );
                 log("Processing " + inFile + " to " + outFile, Project.MSG_INFO);
@@ -321,18 +384,26 @@ public class XSLTProcess extends MatchingTask {
         // if processor wasn't specified, see if TraX is available.  If not,
         // default it to xslp or xalan, depending on which is in the classpath
         if (liaison == null) {
-            try {
-                setProcessor("trax");
-            } catch (Throwable e1) {
+            if (processor != null) {
                 try {
-                    setProcessor("xslp");
-                } catch (Throwable e2) {
+                    resolveProcessor(processor);
+                } catch (Exception e) {
+                    throw new BuildException(e);
+                }
+            } else {
+                try {
+                    resolveProcessor("trax");
+                } catch (Throwable e1) {
                     try {
-                        setProcessor("xalan");
-                    } catch (Throwable e3) {
-                        e2.printStackTrace();
-                        e3.printStackTrace();
-                        throw new BuildException(e1);
+                        resolveProcessor("xslp");
+                    } catch (Throwable e2) {
+                        try {
+                            resolveProcessor("xalan");
+                        } catch (Throwable e3) {
+                            e3.printStackTrace();
+                            e2.printStackTrace();
+                            throw new BuildException(e1);
+                        }
                     }
                 }
             }

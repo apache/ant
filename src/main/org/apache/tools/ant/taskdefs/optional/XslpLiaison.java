@@ -82,7 +82,12 @@ public class XslpLiaison implements XSLTLiaison {
     };
 
     public void transform(String infile, String outfile) throws Exception {
-      processor.process(infile, xslSheet, new FileWriter(outfile));
+        FileWriter out = new FileWriter(outfile);
+        try {
+            processor.process(infile, xslSheet, out);
+        } finally {
+            out.close();
+        }
     }
 
     public void addParam(String name, String expression){
