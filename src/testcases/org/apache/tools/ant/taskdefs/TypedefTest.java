@@ -73,4 +73,16 @@ public class TypedefTest extends BuildFileTest {
     public void testDoubleNotPresent() {
         expectLogContaining("double-notpresent", "hi");
     }
+    
+    public void testNoResourceOnErrorFailAll(){
+    		this.expectBuildExceptionContaining("noresourcefailall","the requested resource does not exist","Could not load definitions from resource ");
+    }
+    
+    public void testNoResourceOnErrorFail(){
+		expectLogContaining("noresourcefail","Could not load definitions from resource ");
+    }
+    
+    public void testNoResourceOnErrorNotFail(){
+    		expectLogContaining("noresourcenotfail","Could not load definitions from resource ");
+    }
 }

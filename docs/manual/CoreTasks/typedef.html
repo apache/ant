@@ -116,9 +116,13 @@
     <td valign="top">onerror</td>
     <td valign="top">The action to take if there was a failure in defining the
       type. The values are <i>fail</i> - cause a build exception, <i>report</i>,
-      output a warning, but continue, <i>ignore</i>, do nothing. The default
-      is <i>fail</i>.
+      output a warning, but continue, <i>ignore</i>, do nothing.
       (introduced in ant1.6)
+      An additional value is <i>failall</i> - causes all behavior of fail but also
+      causes a build exception for the resource or file attribute
+      if the resource or file is not found.
+      (introduced in ant1.7) 
+      The default is <i>fail</i>.
     </td>
     <td valign="top" align="center">No</td>
   </tr>

@@ -65,6 +65,9 @@ Other changes:
 
 * Added revision and userid attributes to <pvcs> documentation.
 
+* Added a new "failall" value for the onerror attribute of <typedef>.
+  Bugzilla report 31685.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

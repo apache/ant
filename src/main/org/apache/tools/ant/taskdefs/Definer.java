@@ -73,7 +73,7 @@ public abstract class Definer extends DefBase {
      */
     public static class OnError extends EnumeratedAttribute {
         /** Enumerated values */
-        public static final int  FAIL = 0, REPORT = 1, IGNORE = 2;
+        public static final int  FAIL = 0, REPORT = 1, IGNORE = 2, FAIL_ALL = 3;
         /**
          * Constructor
          */
@@ -94,7 +94,7 @@ public abstract class Definer extends DefBase {
          * @return an array of the allowed values for this attribute.
          */
         public String[] getValues() {
-            return new String[] {"fail", "report", "ignore"};
+            return new String[] {"fail", "report", "ignore", "failall"};
         }
     }
 
@@ -244,21 +244,38 @@ public abstract class Definer extends DefBase {
     }
 
     private URL fileToURL() {
+        String message = null;
         if (!(file.exists())) {
-            log("File " + file + " does not exist", Project.MSG_WARN);
-            return null;
+            message = "File " + file + " does not exist";
         }
-        if (!(file.isFile())) {
-            log("File " + file + " is not a file", Project.MSG_WARN);
-            return null;
+        if (message == null && !(file.isFile())) {
+            message = "File " + file + " is not a file";
         }
         try {
-            return file.toURL();
+            if (message == null) {
+                return file.toURL();
+            }
         } catch (Exception ex) {
-            log("File " + file + " cannot use as URL: "
-                + ex.toString(), Project.MSG_WARN);
-            return null;
+            message =
+                "File " + file + " cannot use as URL: "
+                + ex.toString();
         }
+        // Here if there is an error
+        switch (onError) {
+            case OnError.FAIL_ALL:
+                throw new BuildException(message);
+            case OnError.FAIL:
+                // Fall Through
+            case OnError.REPORT:
+                log(message, Project.MSG_WARN);
+                break;
+            case OnError.IGNORE:
+                // Fall Through
+            default:
+                // Ignore the problem
+                break;
+        }
+        return null;
     }
 
     private Enumeration/*<URL>*/ resourceToURLs(ClassLoader classLoader) {
@@ -271,10 +288,20 @@ public abstract class Definer extends DefBase {
                 e, getLocation());
         }
         if (!ret.hasMoreElements()) {
-            if (onError != OnError.IGNORE) {
-                log("Could not load definitions from resource "
-                    + resource + ". It could not be found.",
-                    Project.MSG_WARN);
+            String message = "Could not load definitions from resource "
+                + resource + ". It could not be found.";
+            switch (onError) {
+                case OnError.FAIL_ALL:
+                    throw new BuildException(message);
+                case OnError.FAIL:
+                case OnError.REPORT:
+                    log(message, Project.MSG_WARN);
+                    break;
+                case OnError.IGNORE:
+                    // Fall Through
+                default:
+                    // Ignore the problem
+                    break;
             }
         }
         return ret;
@@ -488,6 +515,7 @@ public abstract class Definer extends DefBase {
             }
         } catch (BuildException ex) {
             switch (onError) {
+                case OnError.FAIL_ALL:
                 case OnError.FAIL:
                     throw ex;
                 case OnError.REPORT:

@@ -53,4 +53,16 @@
              onerror="ignore"/>
     <mytask>hi</mytask>
   </target>
+  
+  <target name="noresourcefailall">
+  	<typedef resource="somenotpresentfile.properties" onerror="failall"/>
+  </target>
+  
+  <target name="noresourcefail">
+  	<typedef resource="somenotpresentfile.properties" onerror="fail"/>
+  </target>
+  
+  <target name="noresourcenotfail">
+  	<typedef resource="somenotpresentfile.properties" />
+  </target>
 </project>
