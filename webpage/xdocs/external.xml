@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="bodewig@apache.org">Stefan Bodewig</author>
+    <title>External Resources</title>
+  </properties>
+
+  <body>
+    
+    <section name="External Resources for Ant">
+
+      <p>This page lists external resources for Ant: tasks, IDE
+      integration tools, loggers, you name it. If you've written
+      something that should be included, please post all relevant
+      information to one of the mailing lists.</p>
+
+    </section>
+
+    <section name="Tasks">
+      <p>Not available</p>
+    </section>
+
+    <section name="IDE/Editor Integration">
+
+      <subsection name="AntRunner">
+
+        <p>An OpenTool that integrates Ant into the JBuilder IDE.</p>
+
+        <p><strong>URL</strong>: <a href="http://www.dieter-bogdoll.de/java/AntRunner/">http://www.dieter-bogdoll.de/java/AntRunner/</a>.</p>
+
+        <p><strong>License:</strong> GNU General Public License</p>
+
+      </subsection>
+
+      <subsection name="AntWork">
+
+        <p>A plugin that integrates Ant into the Jext editor.</p>
+
+        <p><strong>URL</strong>: <a href="ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip">ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip</a>.</p>
+
+        <p><strong>License:</strong> GNU General Public License</p>
+
+      </subsection>
+
+      <subsection name="Forte module for Ant">
+
+        <p>A module that integrates Ant into the Forte IDE.</p>
+
+        <p><strong>URL</strong>: <a href="http://ant.netbeans.org">http://ant.netbeans.org</a>.</p>
+
+        <p><strong>License:</strong> Sun Public License</p>
+
+      </subsection>
+    </section>
+
+    <section name="Other">
+      <p>Not available</p>
+    </section>
+
+  </body>
+</document>
