@@ -190,6 +190,52 @@ public class DirectoryScannerTest extends BuildFileTest {
         compareFiles(ds, expectedFiles, expectedDirectories);
     }
 
+    public void testPatternsDifferInCaseScanningSensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/", "ALPHA/"});
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+
+    public void testPatternsDifferInCaseScanningInsensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/", "ALPHA/"});
+        ds.setCaseSensitive(false);
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+
+    public void testFullpathDiffersInCaseScanningSensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {
+            "alpha/beta/gamma/gamma.xml",
+            "alpha/beta/gamma/GAMMA.XML"
+        });
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                     new String[] {});
+    }
+
+    public void testFullpathDiffersInCaseScanningInsensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {
+            "alpha/beta/gamma/gamma.XML",
+            "alpha/beta/gamma/GAMMA.XML"
+        });
+        ds.setCaseSensitive(false);
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                     new String[] {});
+    }
+
     /**
      * Test case for setFollowLinks() and associated funtionality.
      * Only supports test on linux, at the moment because Java has
