@@ -10,9 +10,9 @@
 <h2><a name="antcall">AntCall</a></h2>
 <h3>Description</h3>
 
-<p>Call another target within the same build-file optionally
-specifying some properties (param's in this context).  <strong>This
-task must no be used outside of a <code>target</code>.</strong></p>
+<p>Call another target within the same buildfile optionally
+specifying some properties (params in this context).  <strong>This
+task must not be used outside of a <code>target</code>.</strong></p>
 
 <p>By default, all of the properties of the current project will be
 available in the new project.   Alternatively, you can
@@ -41,7 +41,7 @@ also be called within the context of any new parameters. For example. if
 the target &quot;doSomethingElse&quot; depended on the target &quot;init&quot;, then the
 <i>antcall</i> of &quot;doSomethingElse&quot; will call &quot;init&quot; during the call.
 Of course, any properties defined in the antcall task or inherited from the calling target
-will be fixed and not overridable in the init task -or indeed in the &quot;doSomethingElse&quot; task.
+will be fixed and not overridable in the init task--or indeed in the &quot;doSomethingElse&quot; task.
 </p>
 
 <p>If the build file changes after you've started the build, the
