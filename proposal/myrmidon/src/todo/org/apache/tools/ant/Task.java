@@ -13,7 +13,7 @@ public abstract class Task
     extends ProjectComponent
     implements org.apache.myrmidon.api.Task
 {
-    protected String description;
+    private String description;
 
     /**
      * Sets a description of the current action. It will be usefull in
