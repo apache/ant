@@ -67,6 +67,7 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  *  Invokes the ANTLR Translator generator on a grammar file.
@@ -110,7 +111,7 @@ public class ANTLR extends Task {
     private File workingdir = null;
 
     public ANTLR() {
-        commandline.setVm("java");
+        commandline.setVm(JavaEnvUtils.getJdkExecutable("java"));
         commandline.setClassname("antlr.Tool");
     }
 
