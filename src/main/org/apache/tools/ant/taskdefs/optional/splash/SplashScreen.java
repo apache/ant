@@ -38,8 +38,8 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
     private JLabel text;
     private JProgressBar pb;
     private int total;
-    private final int min = 0;
-    private final int max = 200;
+    private static final int min = 0;
+    private static final int max = 200;
 
     public SplashScreen(String msg) {
         init(null);
