@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,11 @@ public class JavacExternal extends DefaultCompilerAdapter {
 
         Commandline cmd = new Commandline();
         cmd.setExecutable(getJavac().getJavacExecutable());
-        setupModernJavacCommandlineSwitches(cmd);
+        if (!assumeJava11() && !assumeJava12()) {
+            setupModernJavacCommandlineSwitches(cmd);
+        } else {
+            setupJavacCommandlineSwitches(cmd, true);
+        }
         int firstFileName = assumeJava11() ? -1 : cmd.size();
         logAndAddFilesToCompile(cmd);
         //On VMS platform, we need to create a special java options file

@@ -239,7 +239,10 @@ Fixed bugs:
   Bugzilla report 32667
 
 * untar would go into infinite loop for some invalid tar files.
-  Bugzill report 29877
+  Bugzilla report 29877
+
+* forked <javac> won't pass -source to a JDK 1.1 or 1.2 javac anymore.
+  Bugzilla report 32948
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
