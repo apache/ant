@@ -49,7 +49,7 @@ public class Reference {
      * Create a reference to a named ID in a particular project.
      * @param p the project this reference is associated with
      * @param id the name of this reference
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public Reference(Project p, String id) {
         setRefId(id);
@@ -77,7 +77,7 @@ public class Reference {
      * Set the associated project. Should not normally be necessary;
      * use {@link Reference#Reference(Project,String)}.
      * @param p the project to use
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public void setProject(Project p) {
         this.project = p;
@@ -86,7 +86,7 @@ public class Reference {
     /**
      * Get the associated project, if any; may be null.
      * @return the associated project
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public Project getProject() {
         return project;
@@ -117,7 +117,7 @@ public class Reference {
      * @see Project#getReference
      * @return the dereferenced object.
      * @throws BuildException if the project is null or the reference cannot be dereferenced
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public Object getReferencedObject() throws BuildException {
         if (project == null) {
