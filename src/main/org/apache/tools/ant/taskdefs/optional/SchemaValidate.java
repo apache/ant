@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -50,7 +51,7 @@ import java.net.MalformedURLException;
 
 public class SchemaValidate extends XMLValidateTask {
 
-    private List schemaLocations= new ArrayList();
+    private HashMap schemaLocations= new HashMap();
 
     /** full checking of a schema */
     private boolean fullChecking=true;
@@ -66,6 +67,8 @@ public class SchemaValidate extends XMLValidateTask {
     public static final String ERROR_TOO_MANY_DEFAULT_SCHEMAS =
             "Only one of defaultSchemaFile and defaultSchemaURL allowed";
     public static final String ERROR_PARSER_CREATION_FAILURE = "Could not create parser";
+    public static final String MESSAGE_ADDING_SCHEMA = "Adding schema ";
+    public static final String ERROR_DUPLICATE_SCHEMA = "Duplicate declaration of schema ";
 
     /**
      * Called by the project to let the task initialize properly. The default
@@ -121,8 +124,21 @@ public class SchemaValidate extends XMLValidateTask {
         return true;
     }
 
-    public void addSchema(SchemaLocation location) {
-        schemaLocations.add(location);
+    /**
+     * add the schema
+     * @param location
+     * @throws BuildException if there is no namespace, or if there already
+     * is a declaration of this schema with a different value
+     */
+    public void addConfiguredSchema(SchemaLocation location) {
+        log("adding schema "+location,Project.MSG_DEBUG);
+        location.validateNamespace();
+        SchemaLocation old=(SchemaLocation) schemaLocations.get(
+                location.getNamespace());
+        if(old!=null && !old.equals(location)) {
+            throw new BuildException(ERROR_DUPLICATE_SCHEMA+location);
+        }
+        schemaLocations.put(location.getNamespace(), location);
     }
 
     /**
@@ -221,7 +237,7 @@ public class SchemaValidate extends XMLValidateTask {
      * property.
      */
     protected void addSchemaLocations() {
-        Iterator it = schemaLocations.iterator();
+        Iterator it = schemaLocations.values().iterator();
         StringBuffer buffer = new StringBuffer();
         int count = 0;
         while (it.hasNext()) {
@@ -231,6 +247,7 @@ public class SchemaValidate extends XMLValidateTask {
             SchemaLocation schemaLocation = (SchemaLocation) it.next();
             String tuple = schemaLocation.getURIandLocation();
             buffer.append(tuple);
+            log("Adding schema "+tuple,Project.MSG_VERBOSE);
             count++;
         }
         if (count > 0) {
@@ -276,8 +293,8 @@ public class SchemaValidate extends XMLValidateTask {
         private File file;
         private String url;
 
-        public static final String ERROR_NO_URI = "No URI";
-        private static final String ERROR_TWO_LOCATIONS =
+        public static final String ERROR_NO_URI = "No namespace URI";
+        public static final String ERROR_TWO_LOCATIONS =
                 "Both URL and File were given for schema ";
         public static final String ERROR_NO_FILE = "File not found: ";
         public static final String ERROR_NO_URL_REPRESENTATION = "Cannot make a URL of ";
@@ -291,6 +308,10 @@ public class SchemaValidate extends XMLValidateTask {
             return namespace;
         }
 
+        /**
+         * set the namespace of this schema. Any URI
+         * @param namespace
+         */
         public void setNamespace(String namespace) {
             this.namespace = namespace;
         }
@@ -299,6 +320,11 @@ public class SchemaValidate extends XMLValidateTask {
             return file;
         }
 
+        /**
+         * identify a file that contains this namespace's schema.
+         * The file must exist.
+         * @param file
+         */
         public void setFile(File file) {
             this.file = file;
         }
@@ -307,10 +333,19 @@ public class SchemaValidate extends XMLValidateTask {
             return url;
         }
 
+        /**
+         * identify a URL that hosts the schema.
+         * @param url
+         */
         public void setUrl(String url) {
             this.url = url;
         }
 
+        /**
+         * get the URL of the schema
+         * @return a URL to the schema
+         * @throws BuildException if not
+         */
         public String getSchemaLocationURL() {
             boolean hasFile = file != null;
             boolean hasURL = isSet(url);
@@ -344,9 +379,7 @@ public class SchemaValidate extends XMLValidateTask {
          * @throws BuildException
          */
         public String getURIandLocation() throws BuildException {
-            if (!isSet(getNamespace())) {
-                throw new BuildException(ERROR_NO_URI);
-            }
+            validateNamespace();
             StringBuffer buffer = new StringBuffer();
             buffer.append(namespace);
             buffer.append(' ');
@@ -354,8 +387,84 @@ public class SchemaValidate extends XMLValidateTask {
             return new String(buffer);
         }
 
+        /**
+         * assert that a namespace is valid
+         * @throws BuildException if not
+         */
+        public void validateNamespace() {
+            if (!isSet(getNamespace())) {
+                throw new BuildException(ERROR_NO_URI);
+            }
+        }
+
+        /**
+         * check that a property is set
+         * @param property string to check
+         * @return true if it is not null or empty
+         */
         private boolean isSet(String property) {
             return property != null && property.length() != 0;
+        }
+
+        /**
+         * equality test checks namespace, location and filename. All must match,
+         * @param o object to compare against
+         * @return true iff the objects are considered equal in value
+         */
+
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof SchemaLocation)) {
+                return false;
+            }
+
+            final SchemaLocation schemaLocation = (SchemaLocation) o;
+
+            if (file != null ?
+                    !file.equals(schemaLocation.file) :
+                    schemaLocation.file != null) {
+                return false;
+            }
+            if (namespace != null ?
+                    !namespace.equals(schemaLocation.namespace) :
+                    schemaLocation.namespace != null) {
+                return false;
+            }
+            if (url != null ?
+                    !url.equals(schemaLocation.url) :
+                    schemaLocation.url != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * hashcode function
+         * @return
+         */
+        public int hashCode() {
+            int result;
+            result = (namespace != null ? namespace.hashCode() : 0);
+            result = 29 * result + (file != null ? file.hashCode() : 0);
+            result = 29 * result + (url != null ? url.hashCode() : 0);
+            return result;
+        }
+
+        /**
+         * Returns a string representation of the object for error messages
+         * and the like
+         * @return a string representation of the object.
+         */
+        public String toString() {
+            StringBuffer buffer=new StringBuffer();
+            buffer.append(namespace!=null?namespace:"(anonymous)");
+            buffer.append(' ');
+            buffer.append(url!=null?(url+" "):"");
+            buffer.append(file!=null?file.getAbsolutePath():"");
+            return buffer.toString();
         }
     } //SchemaLocation
 }

@@ -24,6 +24,50 @@
     </schemavalidate>
   </target>
 
+  <target name="testNoEmptySchemaNamespace">
+    <schemavalidate
+      file="${endpiece-ns-no-location.xml}">
+      <schema namespace="" file="${doc-in-ns.xsd}" />
+    </schemavalidate>
+  </target>
+
+  <target name="testNoEmptySchemaLocation">
+    <schemavalidate
+      file="${endpiece-ns-no-location.xml}">
+      <schema namespace="${namespace}" />
+    </schemavalidate>
+  </target>
+  
+  <target name="testNoFile">
+    <schemavalidate
+      file="${endpiece-ns-no-location.xml}">
+      <schema namespace="${namespace}" file="${namespace}" />
+    </schemavalidate>
+  </target>  
+  
+  <target name="testNoDoubleSchemaLocation">
+    <schemavalidate
+      file="${endpiece-ns-no-location.xml}">
+      <schema namespace="${namespace}" file="${doc-in-ns.xsd}" url="${namespace}"/>
+    </schemavalidate>
+  </target>
+
+  <target name="testNoDuplicateSchema">
+    <schemavalidate
+      file="${endpiece-ns-no-location.xml}">
+      <schema namespace="${namespace}" file="${doc-in-ns.xsd}" />
+      <schema namespace="${namespace}" 
+        url="http://ant.apache.org/" />
+    </schemavalidate>
+  </target>  
+
+  <target name="testEqualsSchemasOK">
+    <schemavalidate
+      file="${endpiece-ns-no-location.xml}">
+      <schema namespace="${namespace}" file="${doc-in-ns.xsd}" />
+      <schema namespace="${namespace}" file="${doc-in-ns.xsd}" />
+    </schemavalidate>
+  </target>  
   
   
   <target name="default" depends="testNoNamespace,testNSMapping" />
