@@ -17,10 +17,6 @@ Changes that could break older environments:
 * The <script> task now requires Apache BSF instead of the older IBM
   version.  See <http://jakarta.apache.org/bsf/>
 
-* The signjar keystore attribute has been reverted to a String allowing
-  it to once again accept URLs. This should not affect current FIle based usage
-  unless you are extending the Signjar task.
-
 * <xmlproperty> will no longer fail if the file to be loaded doesn't exist.
 
 Fixed bugs:
