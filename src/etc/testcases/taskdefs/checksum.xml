@@ -20,18 +20,22 @@
 
   <target name="createMd5">
     <checksum file="../asf-logo.gif" fileext=".MD5" />
+    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.MD5" />
   </target>
 
   <target name="createMD5SUMformat">
     <checksum file="../asf-logo.gif" format="MD5SUM" fileext=".MD5SUM" />
+    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.MD5SUM" />
   </target>
 
   <target name="createSVFformat">
     <checksum file="../asf-logo.gif" format="SVF" fileext=".SVF" />
+    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.SVF" />
   </target>
 
   <target name="createPattern">
     <checksum file="../asf-logo.gif" pattern="foo{0}bar" fileext=".PATTERN" />
+    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.PATTERN" />
   </target>
 
   <target name="setProperty">
