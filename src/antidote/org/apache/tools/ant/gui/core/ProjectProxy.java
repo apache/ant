@@ -191,19 +191,6 @@ public class ProjectProxy {
         return _selections;
     }
 
-	/** 
-	 * Get the Document perspective on the data.
-	 * 
-	 * @return Document view on project.
-	 */
-    public Document getDocument() {
-        // This is what the call should look like
-        //return new ProjectDocument(_project);
-        if(_file != null) {
-            return new ProjectDocument(_file);
-        }
-        return null;
-    }
 
     /** Class for executing the build in a separate thread. */
     private class BuildRunner implements Runnable {
