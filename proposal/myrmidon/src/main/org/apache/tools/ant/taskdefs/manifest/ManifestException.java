@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.aut.manifest;
+package org.apache.tools.ant.taskdefs.manifest;
 
 /**
  * ManifestException is thrown when there is a problem parsing, generating or

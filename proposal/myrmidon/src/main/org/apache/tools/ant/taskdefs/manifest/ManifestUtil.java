@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.aut.manifest;
+package org.apache.tools.ant.taskdefs.manifest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +15,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.jar.Attributes;
-import org.apache.tools.ant.taskdefs.manifest.Manifest;
-import org.apache.tools.ant.taskdefs.manifest.Section;
 
 /**
  * Utility methods for manifest stuff.
