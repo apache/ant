@@ -78,15 +78,23 @@ public class TypeFoundTest extends BuildFileTest {
     public void testUndefined() {
         expectBuildExceptionContaining("testUndefined","left out the name attribute", "No type specified");
     }
+
+    public void testTaskThatIsntDefined() {
+        expectPropertyUnset("testTaskThatIsntDefined", "testTaskThatIsntDefined");
+    }
+
     public void testTaskThatDoesntReallyExist() {
         expectPropertyUnset("testTaskThatDoesntReallyExist", "testTaskThatDoesntReallyExist");
     }
+
     public void testType() {
         expectPropertySet("testType", "testType");
     }
+
     public void testPreset() {
         expectPropertySet("testPreset", "testPreset");
     }
+
     public void testMacro() {
         expectPropertySet("testMacro", "testMacro");
     }
