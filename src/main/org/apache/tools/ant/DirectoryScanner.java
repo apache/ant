@@ -145,7 +145,7 @@ public class DirectoryScanner implements FileScanner {
         "**/#*#",
         "**/%*%",
         "**/CVS",
-        "**/CVS/*",
+        "**/CVS/**",
         "**/.cvsignore"
     };
 
