@@ -9,16 +9,14 @@ package org.apache.tools.todo.taskdefs.rmic;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.rmi.Remote;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SourceFileScanner;
 
@@ -485,8 +483,7 @@ public class Rmic extends MatchingTask
         adapter.setRmic( this );
 
         Path classpath = adapter.getClasspath();
-        final URL[] urls = PathUtil.toURLs( classpath, getContext() );
-        loader = new URLClassLoader( urls );
+        loader = PathUtil.createClassLoader( classpath, getContext() );
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given

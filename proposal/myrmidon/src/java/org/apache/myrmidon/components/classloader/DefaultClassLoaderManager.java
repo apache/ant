@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.jar.Manifest;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.extension.OptionalPackage;
@@ -28,11 +29,13 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
- * A default implementation of a classloader manager.
+ * A default implementation of a ClassLoader manager.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
@@ -49,23 +52,14 @@ public class DefaultClassLoaderManager
     private final Map m_fileDeployers = new HashMap();
 
     private PackageManager m_packageManager;
-    private ClassLoader m_baseClassLoader;
+    private ClassLoader m_commonClassLoader;
 
     public void initialize() throws Exception
     {
-        if( null == m_baseClassLoader )
+        if( null == m_commonClassLoader )
         {
-            m_baseClassLoader = Thread.currentThread().getContextClassLoader();
+            m_commonClassLoader = Thread.currentThread().getContextClassLoader();
         }
-    }
-
-    /**
-     * Sets the ClassLoader to use as the parent for all classloaders
-     * created by this ClassLoader manager.
-     */
-    public void setBaseClassLoader( final ClassLoader classLoader )
-    {
-        m_baseClassLoader = classLoader;
     }
 
     /**
@@ -80,47 +74,94 @@ public class DefaultClassLoaderManager
     }
 
     /**
+     * Sets the ClassLoader to use as the parent for all classloaders
+     * created by this ClassLoader manager.
+     */
+    public void setCommonClassLoader( final ClassLoader classLoader )
+    {
+        m_commonClassLoader = classLoader;
+    }
+
+    /**
+     * Returns the common ClassLoader.  This is the parent of all classloaders
+     * built by this ClassLoaderManager.
+     */
+    public ClassLoader getCommonClassLoader()
+    {
+        return m_commonClassLoader;
+    }
+
+    /**
      * Creates a class loader for a Jar file.
      */
-    public ClassLoader createClassLoader( File file ) throws DeploymentException
+    public ClassLoader createClassLoader( final File file ) throws ClassLoaderException
+    {
+        return createClassLoader( new File[] { file } );
+    }
+
+    /**
+     * Creates a class loader for a set of Jar files.
+     */
+    public ClassLoader createClassLoader( final File[] files ) throws ClassLoaderException
     {
         try
         {
-            final File canonFile = file.getCanonicalFile();
+            // Build a list of canonical file names
+            final ArrayList canonFiles = new ArrayList( files.length );
+            for( int i = 0; i < files.length; i++ )
+            {
+                canonFiles.add( files[ i ].getCanonicalFile() );
+            }
 
             // Locate cached classloader, creating it if necessary
-            URLClassLoader classLoader = (URLClassLoader)m_fileDeployers.get( canonFile );
+            ClassLoader classLoader = (ClassLoader)m_fileDeployers.get( canonFiles );
             if( classLoader == null )
             {
-                checkFile( canonFile );
-                final File[] extensions = getOptionalPackagesFor( canonFile );
-                final URL[] urls = buildClasspath( canonFile, extensions );
-                classLoader = new URLClassLoader( urls, m_baseClassLoader );
-                m_fileDeployers.put( canonFile, classLoader );
+                classLoader = buildClassLoader( canonFiles );
+                m_fileDeployers.put( canonFiles, classLoader );
             }
             return classLoader;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
-            final String message = REZ.getString( "create-classloader-for-file.error", file );
-            throw new DeploymentException( message );
+            final String fileNames = PathUtil.formatPath( files );
+            final String message = REZ.getString( "create-classloader-for-file.error", fileNames );
+            throw new ClassLoaderException( message, e );
         }
+    }
+
+    /**
+     * Builds the classloader for a set of files.
+     */
+    private ClassLoader buildClassLoader( final ArrayList files )
+        throws Exception
+    {
+        final ArrayList allFiles = new ArrayList( files );
+        final int count = files.size();
+        for( int i = 0; i < count; i++ )
+        {
+            final File file = (File)files.get(i );
+            checkFile( file );
+            getOptionalPackagesFor( file, allFiles );
+        }
+
+        final URL[] urls = buildClasspath( allFiles );
+        return new URLClassLoader( urls, m_commonClassLoader );
     }
 
     /**
      * Assembles a set of files into a URL classpath.
      */
-    private URL[] buildClasspath( final File file, final File[] dependencies )
+    private URL[] buildClasspath( final ArrayList files )
         throws MalformedURLException
     {
-        final URL[] urls = new URL[ dependencies.length + 1 ];
-
-        for( int i = 0; i < dependencies.length; i++ )
+        final URL[] urls = new URL[ files.size() + 1 ];
+        final int count = files.size();
+        for( int i = 0; i < count; i++ )
         {
-            urls[ i ] = dependencies[ i ].toURL();
+            final File file = (File)files.get( i );
+            urls[ i ] = file.toURL();
         }
-
-        urls[ dependencies.length ] = file.toURL();
 
         return urls;
     }
@@ -129,13 +170,13 @@ public class DefaultClassLoaderManager
      * Retrieve the files for the optional packages required by
      * the specified typeLibrary jar.
      *
-     * @param typeLibrary the typeLibrary
-     * @return the files that need to be added to ClassLoader
+     * @param jarFile the typeLibrary
+     * @param packages used to return the files that need to be added to ClassLoader.
      */
-    private File[] getOptionalPackagesFor( final File typeLibrary )
+    private void getOptionalPackagesFor( final File jarFile, final List packages )
         throws Exception
     {
-        final URL url = new URL( "jar:" + typeLibrary.getCanonicalFile().toURL() + "!/" );
+        final URL url = new URL( "jar:" + jarFile.getCanonicalFile().toURL() + "!/" );
         final JarURLConnection connection = (JarURLConnection)url.openConnection();
         final Manifest manifest = connection.getManifest();
         final Extension[] available = Extension.getAvailable( manifest );
@@ -166,9 +207,12 @@ public class DefaultClassLoaderManager
             throw new Exception( message );
         }
 
-        final OptionalPackage[] packages =
-            (OptionalPackage[])dependencies.toArray( new OptionalPackage[ 0 ] );
-        return OptionalPackage.toFiles( packages );
+        final int count = dependencies.size();
+        for( int i = 0; i < count; i++ )
+        {
+            final OptionalPackage optionalPackage = (OptionalPackage)dependencies.get(i );
+            packages.add( optionalPackage.getFile() );
+        }
     }
 
     /**

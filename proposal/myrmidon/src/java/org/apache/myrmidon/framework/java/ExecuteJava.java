@@ -10,20 +10,18 @@ package org.apache.myrmidon.framework.java;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import org.apache.aut.nativelib.Os;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnvironmentData;
-import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SysProperties;
 import org.apache.tools.todo.util.FileUtils;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A utility class that takes care of executing a Java application.  This
@@ -236,16 +234,8 @@ public class ExecuteJava
         final Class target;
         try
         {
-            final URL[] urls = PathUtil.toURLs( m_classPath, context );
-            if( urls.length == 0 )
-            {
-                target = Class.forName( m_className );
-            }
-            else
-            {
-                final URLClassLoader classLoader = new URLClassLoader( urls );
-                target = classLoader.loadClass( m_className );
-            }
+            final ClassLoader classLoader = PathUtil.createClassLoader( m_classPath, context );
+            target = classLoader.loadClass( m_className );
         }
         catch( final Exception e )
         {

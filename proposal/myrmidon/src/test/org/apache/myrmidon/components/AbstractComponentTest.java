@@ -94,7 +94,7 @@ public abstract class AbstractComponentTest
             components.add( component );
 
             final DefaultClassLoaderManager classLoaderMgr = new DefaultClassLoaderManager();
-            classLoaderMgr.setBaseClassLoader( getClass().getClassLoader() );
+            classLoaderMgr.setCommonClassLoader( getClass().getClassLoader() );
             m_serviceManager.put( ClassLoaderManager.ROLE, classLoaderMgr );
             components.add( classLoaderMgr );
 

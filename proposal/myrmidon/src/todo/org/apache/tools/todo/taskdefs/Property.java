@@ -10,8 +10,6 @@ package org.apache.tools.todo.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.AbstractTask;
@@ -30,23 +28,16 @@ import org.apache.tools.todo.types.PathUtil;
 public class Property
     extends AbstractTask
 {
-    private Path m_classpath;
+    private Path m_classpath = new Path();
 
     private String m_name;
     private String m_resource;
     private String m_value;
 
-    public void addClasspath( Path classpath )
+    public void addClasspath( final Path classpath )
         throws TaskException
     {
-        if( m_classpath == null )
-        {
-            m_classpath = classpath;
-        }
-        else
-        {
-            m_classpath.add( classpath );
-        }
+        m_classpath.add( classpath );
     }
 
     public void setLocation( File location )
@@ -129,17 +120,7 @@ public class Property
         getContext().debug( "Resource Loading " + name );
         try
         {
-            ClassLoader classLoader = null;
-
-            if( m_classpath != null )
-            {
-                final URL[] urls = PathUtil.toURLs( m_classpath, getContext() );
-                classLoader = new URLClassLoader( urls );
-            }
-            else
-            {
-                classLoader = ClassLoader.getSystemClassLoader();
-            }
+            final ClassLoader classLoader = PathUtil.createClassLoader( m_classpath, getContext() );
             final InputStream is = classLoader.getResourceAsStream( name );
 
             if( is != null )

@@ -10,16 +10,14 @@ package org.apache.antlib.xml;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileSet;
-import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.ScannerUtil;
 import org.xml.sax.EntityResolver;
@@ -76,7 +74,7 @@ public class XMLValidateTask
      * The list of configured DTD locations
      */
     private ArrayList m_dtdLocations = new ArrayList();// sets of file to be validated
-    private Path m_classpath;
+    private Path m_classpath = new Path();
 
     /**
      * Specify the class name of the SAX parser to be used. (optional)
@@ -100,17 +98,10 @@ public class XMLValidateTask
     /**
      * Specify the classpath to be searched to load the parser (optional)
      */
-    public void setClasspath( final Path classpath )
+    public void setClasspath( final String classpath )
         throws TaskException
     {
-        if( m_classpath == null )
-        {
-            m_classpath = classpath;
-        }
-        else
-        {
-            m_classpath.add( classpath );
-        }
+        m_classpath.add( classpath );
     }
 
     /**
@@ -161,17 +152,10 @@ public class XMLValidateTask
     /**
      * @see #setClasspath
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
         throws TaskException
     {
-        if( m_classpath == null )
-        {
-            m_classpath = new Path();
-        }
-        Path path1 = m_classpath;
-        final Path path = new Path();
-        path1.add( path );
-        return path;
+        m_classpath.add( path );
     }
 
     /**
@@ -327,17 +311,8 @@ public class XMLValidateTask
         {
             // load the parser class
             // with JAXP, we would use a SAXParser factory
-            Class readerClass = null;
-            if( m_classpath != null )
-            {
-                final URL[] urls = PathUtil.toURLs( m_classpath, getContext() );
-                final ClassLoader classLoader = new URLClassLoader( urls );
-                readerClass = classLoader.loadClass( m_readerClassName );
-            }
-            else
-            {
-                readerClass = Class.forName( m_readerClassName );
-            }
+            final ClassLoader classLoader = PathUtil.createClassLoader( m_classpath, getContext() );
+            final Class readerClass = classLoader.loadClass( m_readerClassName );
 
             // then check it implements XMLReader
             if( XMLReader.class.isAssignableFrom( readerClass ) )

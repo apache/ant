@@ -18,8 +18,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -34,10 +32,10 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.FileSet;
-import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.ScannerUtil;
 
@@ -152,7 +150,7 @@ public class SQLExec
      */
     private String encoding;
 
-    private Path classpath;
+    private Path classpath = new Path();
 
     /**
      * Set the autocommit flag for the DB connection.
@@ -169,17 +167,10 @@ public class SQLExec
      *
      * @param classpath The new Classpath value
      */
-    public void addClasspath( Path classpath )
+    public void addClasspath( final Path classpath )
         throws TaskException
     {
-        if( this.classpath == null )
-        {
-            this.classpath = classpath;
-        }
-        else
-        {
-            this.classpath.add( classpath );
-        }
+        this.classpath.add( classpath );
     }
 
     /**
@@ -426,20 +417,8 @@ public class SQLExec
         // Load the driver using the
         try
         {
-            Class dc;
-            if( classpath != null )
-            {
-                getContext().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
-
-                final URL[] urls = PathUtil.toURLs( classpath, getContext() );
-                final ClassLoader classLoader = new URLClassLoader( urls );
-                dc = classLoader.loadClass( driver );
-            }
-            else
-            {
-                getContext().debug( "Loading " + driver + " using system loader." );
-                dc = Class.forName( driver );
-            }
+            final ClassLoader classLoader = PathUtil.createClassLoader( classpath, getContext() );
+            final Class dc = classLoader.loadClass( driver );
             driverInstance = (Driver)dc.newInstance();
         }
         catch( ClassNotFoundException e )

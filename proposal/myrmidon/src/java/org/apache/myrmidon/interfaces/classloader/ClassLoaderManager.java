@@ -8,7 +8,6 @@
 package org.apache.myrmidon.interfaces.classloader;
 
 import java.io.File;
-import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 
 /**
  * Manages a classloader hierarchy.
@@ -20,7 +19,21 @@ public interface ClassLoaderManager
     String ROLE = ClassLoaderManager.class.getName();
 
     /**
-     * Builds the ClassLoader for a Jar file.
+     * Builds the ClassLoader for a Jar file, resolving dependencies.
      */
-    ClassLoader createClassLoader( File jar ) throws DeploymentException;
+    ClassLoader createClassLoader( File jar ) throws ClassLoaderException;
+
+    /**
+     * Builds the ClassLoader for a set of files, resolving dependencies.
+     *
+     * @param jars The Jar/zip files to create the classloader for.  Use null
+     *             or an empty array to use the common classloader.
+     */
+    ClassLoader createClassLoader( File[] jars ) throws ClassLoaderException;
+
+    /**
+     * Returns the common ClassLoader.  This is the parent of all classloaders
+     * built by this ClassLoaderManager.
+     */
+    ClassLoader getCommonClassLoader();
 }

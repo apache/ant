@@ -7,8 +7,6 @@
  */
 package org.apache.antlib.core;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.Condition;
@@ -30,8 +28,15 @@ public abstract class AbstractAvailableCondition
     /**
      * Adds a classpath element.
      */
+    public void setClasspath( final Path classpath )
+    {
+        m_classpath.add( classpath );
+    }
+
+    /**
+     * Adds a classpath element.
+     */
     public void addClasspath( final Path classpath )
-        throws TaskException
     {
         m_classpath.add( classpath );
     }
@@ -41,19 +46,6 @@ public abstract class AbstractAvailableCondition
      */
     protected ClassLoader buildClassLoader( final TaskContext context ) throws TaskException
     {
-        final URL[] urls = PathUtil.toURLs( m_classpath, context );
-        final ClassLoader classLoader;
-        if( urls.length > 0 )
-        {
-            classLoader = new URLClassLoader( urls );
-        }
-        else
-        {
-            // TODO - using system classloader is kinda useless now, because
-            // the system classpath contains almost nothing.  Should be using
-            // the 'common' classloader instead
-            classLoader = ClassLoader.getSystemClassLoader();
-        }
-        return classLoader;
+        return PathUtil.createClassLoader( m_classpath, context );
     }
 }
