@@ -76,9 +76,17 @@ public class FailTest extends BuildFileTest {
     }
 
     public void test2() { 
-        expectBuildException("test2", "it is required to fail :-)");
+        expectSpecificBuildException("test2", 
+            "it is required to fail :-)",
+            "test2");
     }
-
+    
+    public void testText() { 
+        expectSpecificBuildException("testText",
+            "it is required to fail :-)",
+            "testText");
+    }
+    
     public void testIf() {
         try {
             executeTarget("testIf");
