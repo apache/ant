@@ -106,6 +106,7 @@ public class Copy extends Task {
     protected boolean flatten = false;
     protected int verbosity = Project.MSG_VERBOSE;
     protected boolean includeEmpty = true;
+    private boolean failonerror = true;
 
     protected Hashtable fileCopyMap = new Hashtable();
     protected Hashtable dirCopyMap = new Hashtable();
@@ -251,6 +252,14 @@ public class Copy extends Task {
     }
 
     /**
+     * Note errors to the output, but keep going
+     * @param failonerror true or false
+     */
+     public void setFailOnError(boolean failonerror) {
+         this.failonerror=failonerror;
+     }
+
+    /**
      * Adds a set of files (nested fileset attribute).
      */
     public void addFileset(FileSet set) {
@@ -309,10 +318,13 @@ public class Copy extends Task {
                         Project.MSG_VERBOSE);
                 }
             } else {
-                String message = "Could not find file "
+                String message = "Warning: Could not find file "
                                  + file.getAbsolutePath() + " to copy.";
-                log(message);
-                throw new BuildException(message);
+                if(!failonerror) {
+                    log(message);
+                } else {
+                    throw new BuildException(message);
+                }
             }
         }
 
