@@ -83,9 +83,19 @@ public class Ant extends Task {
     private String antFile = null;
     private String target = null;
     private String output = null;
+    private boolean inheritAll = true;
 
-    Vector properties=new Vector();
+    Vector properties = new Vector();
     Project p1;
+
+    /**
+     * If true, inherit all properties from parent Project
+     * If false, inherit only userProperties and those defined
+     * inside the ant call itself
+     **/
+    public void setInheritAll(boolean inherit) {
+       inheritAll = inherit;
+    } //-- setInheritAll
 
     public void init() {
         p1 = new Project();
@@ -149,13 +159,23 @@ public class Ant extends Task {
             p1.addDataTypeDefinition(typeName, typeClass);
         }
 
-        // set user-define properties
-        Hashtable prop1 = project.getProperties();
+        // set user-defined or all properties from calling project
+        Hashtable prop1;
+        if (inheritAll == true) {
+           prop1 = project.getProperties();
+        }
+        else {
+           prop1 = project.getUserProperties();
+        }
+        
         e = prop1.keys();
         while (e.hasMoreElements()) {
             String arg = (String) e.nextElement();
             String value = (String) prop1.get(arg);
-            p1.setProperty(arg, value);
+            if (inheritAll == true)
+               p1.setProperty(arg, value);
+            else
+               p1.setUserProperty(arg, value);
         }
     }
 
