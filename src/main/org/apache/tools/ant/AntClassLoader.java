@@ -1061,13 +1061,12 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
-                        // System.out.println("Found " + classFilename + "  in " + pathComponent );
                         return getClassFromStream(stream, name);
                     }
                 } catch (SecurityException se) {
                     throw se;
                 } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                    // ioe.printStackTrace();
                     log("Exception reading component " + pathComponent ,
                         Project.MSG_VERBOSE);
                 }
