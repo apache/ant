@@ -71,7 +71,7 @@ public class SleepTask
     {
         try
         {
-            Thread.currentThread().sleep( millis );
+            Thread.sleep( millis );
         }
         catch( InterruptedException ie )
         {
