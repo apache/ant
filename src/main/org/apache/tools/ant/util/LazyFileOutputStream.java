@@ -93,7 +93,7 @@ public class LazyFileOutputStream extends OutputStream {
     }
 
     public synchronized void close() throws IOException {
-        if (alwaysCreate) {
+        if (alwaysCreate && !closed) {
             ensureOpened();
         }
         if (opened) {
