@@ -70,22 +70,24 @@ public abstract class EnumeratedAttribute {
     /**
      * The selected value in this enumeration.
      */
-    protected String value;
+    private String value;
 
     /**
      * the index of the selected value in the array.
      */
-    protected int index;
+    private int index;
 
     /**
      * This is the only method a subclass needs to implement.
      *
      * @return an array holding all possible values of the enumeration.
+     * The order of elements must be fixed so that <tt>indexOfValue(String)</tt>
+     * always return the same index for the same value.
      */
     public abstract String[] getValues();
 
     /** bean constructor */
-    public EnumeratedAttribute(){
+    protected EnumeratedAttribute(){
     }
 
     /**

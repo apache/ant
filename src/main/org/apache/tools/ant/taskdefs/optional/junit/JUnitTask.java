@@ -88,7 +88,7 @@ import java.net.URL;
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
  * href="http://www.junit.org">http://www.junit.org</a>.
  *
- * <p> <code>JUnitTask</code> can run a single specific <code>JUnitTest</code> using the <code>test</code> element. 
+ * <p> <code>JUnitTask</code> can run a single specific <code>JUnitTest</code> using the <code>test</code> element.
  * For example, the following target <code><pre>
  *   &lt;target name="test-int-chars" depends="jar-test"&gt;
  *       &lt;echo message="testing international characters"/&gt;
@@ -98,13 +98,13 @@ import java.net.URL;
  *           &lt;test name="org.apache.ecs.InternationalCharTest" /&gt;
  *       &lt;/junit&gt;
  *   &lt;/target&gt;
- * </pre></code> runs a single junit test (<code>org.apache.ecs.InternationalCharTest</code>) 
- * in the current VM using the path with id <code>classpath</code> as classpath 
+ * </pre></code> runs a single junit test (<code>org.apache.ecs.InternationalCharTest</code>)
+ * in the current VM using the path with id <code>classpath</code> as classpath
  * and presents the results formatted using the standard <code>plain</code> formatter on the command line.
  *
- * <p> This task can also run batches of tests. 
- * The <code>batchtest</code> element creates a <code>BatchTest</code> based on a fileset. 
- * This allows, for example, all classes found in directory to be run as testcases. 
+ * <p> This task can also run batches of tests.
+ * The <code>batchtest</code> element creates a <code>BatchTest</code> based on a fileset.
+ * This allows, for example, all classes found in directory to be run as testcases.
  * For example, <code><pre>
  * &lt;target name="run-tests" depends="dump-info,compile-tests" if="junit.present"&gt;
  *   &lt;junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"&gt;
@@ -123,17 +123,17 @@ import java.net.URL;
  * (under the top <code>${tests.dir}</code>, of course) and creates <code>JUnitTest</code>'s for each one.
  *
  * <p> Of course, <code>&lt;junit&gt;</code> and <code>&lt;batch&gt;</code> elements can be combined
- * for more complex tests. For an example, see the ant <code>build.xml</code> target <code>run-tests</code> 
+ * for more complex tests. For an example, see the ant <code>build.xml</code> target <code>run-tests</code>
  * (the second example is an edited version).
- * 
+ *
  * <p> To spawn a new Java VM to prevent interferences between
- * different testcases, you need to enable <code>fork</code>. 
+ * different testcases, you need to enable <code>fork</code>.
  * A number of attributes and elements allow you to set up how this JVM runs.
  * <ul>
  * <li>{@link #setTimeout} property sets the maximum time allowed before a test is 'timed out'
  * <li>{@link #setMaxmemory} property sets memory assignment for the forked jvm
  * <li>{@link #setJvm} property allows the jvm to be specified
- * <li>The <code>&lt;jvmarg&gt;</code> element sets arguements to be passed to the forked jvm 
+ * <li>The <code>&lt;jvmarg&gt;</code> element sets arguements to be passed to the forked jvm
  * </ul>
  * @author Thomas Haas
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
@@ -157,11 +157,11 @@ public class JUnitTask extends Task {
     private String summaryValue = "";
     private boolean filtertrace = true;
     private JUnitTestRunner runner = null;
-     
+
     /**
-     * Tells this task whether to smartly filter the stack frames of JUnit testcase 
-     * errors and failures before reporting them.  This property is applied on all 
-     * BatchTest (batchtest) and JUnitTest (test) however it can possibly be 
+     * Tells this task whether to smartly filter the stack frames of JUnit testcase
+     * errors and failures before reporting them.  This property is applied on all
+     * BatchTest (batchtest) and JUnitTest (test) however it can possibly be
      * overridden by their own properties.
      * @param   value   <tt>false</tt> if it should not filter, otherwise <tt>true<tt>
      */
@@ -172,7 +172,7 @@ public class JUnitTask extends Task {
             test.setFiltertrace(value);
         }
     }
-    
+
     /**
      * Tells this task to halt when there is an error in a test.
      * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
@@ -257,16 +257,17 @@ public class JUnitTask extends Task {
         summary = value.asBoolean();
     }
 
-    /** 
+    /**
      * Print summary enumeration values.
      */
     public static class SummaryAttribute extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] {"true", "yes", "false", "no", 
+            return new String[] {"true", "yes", "false", "no",
                                  "on", "off", "withOutAndErr"};
         }
 
         public boolean asBoolean() {
+            String value = getValue();
             return "true".equals(value)
                 || "on".equals(value)
                 || "yes".equals(value)
@@ -332,7 +333,7 @@ public class JUnitTask extends Task {
     public void addSysproperty(Environment.Variable sysp) {
         commandline.addSysproperty(sysp);
     }
-    
+
     /**
      * <code>&lt;classpath&gt;</code> allows classpath to be set for tests.
      */
@@ -437,7 +438,7 @@ public class JUnitTask extends Task {
                                          +(wasKilled ? " (timeout)" : ""),
                                          location);
             } else {
-                log("TEST "+test.getName()+" FAILED" 
+                log("TEST "+test.getName()+" FAILED"
                     + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
                 if (errorOccurredHere && test.getErrorProperty() != null) {
                     project.setProperty(test.getErrorProperty(), "true");
@@ -489,7 +490,7 @@ public class JUnitTask extends Task {
         // Create a temporary file to pass the Ant properties to the forked test
         File propsFile = new File("junit" + (new Random(System.currentTimeMillis())).nextLong() + ".properties");
         cmd.createArgument().setValue("propsfile=" + propsFile.getAbsolutePath());
-        Hashtable p = project.getProperties(); 
+        Hashtable p = project.getProperties();
         Properties props = new Properties();
         for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
             Object key = enum.nextElement();
@@ -511,7 +512,7 @@ public class JUnitTask extends Task {
         }
 
         log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
-        int retVal; 
+        int retVal;
         try {
             retVal = execute.execute();
         } catch (IOException e) {
@@ -526,7 +527,7 @@ public class JUnitTask extends Task {
     // in VM is not very nice since it could probably hang the
     // whole build. IMHO this method should be avoided and it would be best
     // to remove it in future versions. TBD. (SBa)
-        
+
 
     protected void handleOutput(String line) {
         if (runner != null) {
@@ -536,7 +537,7 @@ public class JUnitTask extends Task {
             super.handleOutput(line);
         }
     }
-    
+
     protected void handleErrorOutput(String line) {
         if (runner != null) {
             runner.handleErrorOutput(line);
@@ -545,7 +546,7 @@ public class JUnitTask extends Task {
             super.handleErrorOutput(line);
         }
     }
-    
+
     /**
      * Execute inside VM.
      */
@@ -565,7 +566,7 @@ public class JUnitTask extends Task {
             Path classpath = commandline.getClasspath();
             if (classpath != null) {
                 cl = new AntClassLoader(null, project, classpath, false);
-                log("Using CLASSPATH " + cl.getClasspath(), 
+                log("Using CLASSPATH " + cl.getClasspath(),
                     Project.MSG_VERBOSE);
 
                 // make sure the test will be accepted as a TestCase
@@ -577,7 +578,7 @@ public class JUnitTask extends Task {
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);
 
-                SummaryJUnitResultFormatter f = 
+                SummaryJUnitResultFormatter f =
                   new SummaryJUnitResultFormatter();
                 f.setWithOutAndErr( "withoutanderr".equalsIgnoreCase( summaryValue ));
                 f.setOutput( getDefaultOutput() );
@@ -675,17 +676,17 @@ public class JUnitTask extends Task {
             if (u.startsWith("jar:file:")) {
                 int pling = u.indexOf("!");
                 String jarName = u.substring(9, pling);
-                log("Implicitly adding "+jarName+" to classpath", 
+                log("Implicitly adding "+jarName+" to classpath",
                     Project.MSG_DEBUG);
                 createClasspath().setLocation(new File((new File(jarName)).getAbsolutePath()));
             } else if (u.startsWith("file:")) {
                 int tail = u.indexOf(resource);
                 String dirName = u.substring(5, tail);
-                log("Implicitly adding "+dirName+" to classpath", 
+                log("Implicitly adding "+dirName+" to classpath",
                     Project.MSG_DEBUG);
                 createClasspath().setLocation(new File((new File(dirName)).getAbsolutePath()));
             } else {
-                log("Don\'t know how to handle resource URL "+u, 
+                log("Don\'t know how to handle resource URL "+u,
                     Project.MSG_DEBUG);
             }
         } else {
