@@ -7,6 +7,8 @@ I. Things that don't affect the core but are requests for new tasks or
 enhancements of existing tasks.
 ======================================================================
 
+* Add a new datatype filterset to group token-filters 
+
 * make usage of particular filters/filtersets explicit in copy tasks
 
 * make facade tasks for things like javac (JikesImpl, ModernImpl etc)
