@@ -249,6 +249,7 @@ public abstract class Definer extends DefBase {
 
                 if (format == Format.PROPERTIES) {
                     loadProperties(al, url);
+                    break;
                 } else {
                     loadAntlib(al, url);
                 }
