@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
@@ -43,15 +43,15 @@ public class AspectAwareExecutor
     /**
      * Retrieve relevent services.
      *
-     * @param componentManager the ComponentManager
-     * @exception ComponentException if an error occurs
+     * @param serviceManager the ServiceManager
+     * @exception ServiceException if an error occurs
      */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
-        super.compose( componentManager );
+        super.service( serviceManager );
 
-        m_aspectManager = (AspectManager)componentManager.lookup( AspectManager.ROLE );
+        m_aspectManager = (AspectManager)serviceManager.lookup( AspectManager.ROLE );
     }
 
     public void execute( final Configuration taskModel, final ExecutionFrame frame )

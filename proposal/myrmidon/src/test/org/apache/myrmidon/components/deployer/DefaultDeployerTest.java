@@ -49,11 +49,11 @@ public class DefaultDeployerTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        m_deployer = (Deployer)getComponentManager().lookup( Deployer.ROLE );
-        m_converter = (MasterConverter)getComponentManager().lookup( MasterConverter.ROLE );
+        m_deployer = (Deployer)getServiceManager().lookup( Deployer.ROLE );
+        m_converter = (MasterConverter)getServiceManager().lookup( MasterConverter.ROLE );
 
         // Add some core roles
-        m_roleManager = (RoleManager)getComponentManager().lookup( RoleManager.ROLE );
+        m_roleManager = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
         m_roleManager.addNameRoleMapping( DATA_TYPE_ROLE, DataType.ROLE );
         m_roleManager.addNameRoleMapping( "converter", Converter.ROLE );
     }

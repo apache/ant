@@ -12,7 +12,7 @@ import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.impl.DefaultExecManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.myrmidon.interfaces.service.AntServiceException;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
 
 /**
@@ -31,7 +31,7 @@ public class ExecManagerFactory
      * Create the ExecManager Service.
      */
     public Object createService()
-        throws ServiceException
+        throws AntServiceException
     {
         final File home = getHomeDirectory();
         try
@@ -40,7 +40,7 @@ public class ExecManagerFactory
         }
         catch( final ExecException ee )
         {
-            throw new ServiceException( ee.getMessage(), ee );
+            throw new AntServiceException( ee.getMessage(), ee );
         }
     }
 
@@ -48,13 +48,13 @@ public class ExecManagerFactory
      * Utility method to retrieve home directory.
      */
     private static File getHomeDirectory()
-        throws ServiceException
+        throws AntServiceException
     {
         final String home = System.getProperty( "myrmidon.home" );
         if( null == home )
         {
             final String message = REZ.getString( "missing-home-dir.error" );
-            throw new ServiceException( message );
+            throw new AntServiceException( message );
         }
 
         return new File( home );

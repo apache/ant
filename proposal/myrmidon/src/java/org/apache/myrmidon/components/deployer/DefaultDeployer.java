@@ -11,13 +11,13 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.aut.converter.Converter;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.aut.converter.Converter;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
@@ -25,8 +25,8 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
-import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -39,7 +39,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public class DefaultDeployer
     extends AbstractLogEnabled
-    implements Deployer, Composable
+    implements Deployer, Serviceable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultDeployer.class );
@@ -52,33 +52,33 @@ public class DefaultDeployer
 
     /** Map from ClassLoader to the deployer for that class loader. */
     private final Map m_classLoaderDeployers = new HashMap();
-    private ServiceManager m_ServiceManager;
+    private AntServiceManager m_serviceManager;
 
     /**
      * Retrieve relevent services needed to deploy.
      *
-     * @param componentManager the ComponentManager
-     * @exception ComponentException if an error occurs
+     * @param serviceManager the ServiceManager
+     * @exception ServiceException if an error occurs
      */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
-        m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
-        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
-        m_classLoaderManager = (ClassLoaderManager)componentManager.lookup( ClassLoaderManager.ROLE );
-        m_ServiceManager = (ServiceManager)componentManager.lookup( ServiceManager.ROLE );
+        m_converterRegistry = (ConverterRegistry)serviceManager.lookup( ConverterRegistry.ROLE );
+        m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
+        m_roleManager = (RoleManager)serviceManager.lookup( RoleManager.ROLE );
+        m_classLoaderManager = (ClassLoaderManager)serviceManager.lookup( ClassLoaderManager.ROLE );
+        m_serviceManager = (AntServiceManager)serviceManager.lookup( AntServiceManager.ROLE );
     }
 
     /**
      * Creates a child deployer.
      */
-    public Deployer createChildDeployer( ComponentManager componentManager )
-        throws ComponentException
+    public Deployer createChildDeployer( final ServiceManager componentManager )
+        throws ServiceException
     {
         final DefaultDeployer child = new DefaultDeployer();
         setupLogger( child );
-        child.compose( componentManager );
+        child.service( componentManager );
         return child;
     }
 

@@ -7,15 +7,14 @@
  */
 package org.apache.myrmidon.components.converter;
 
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.type.TypeException;
@@ -30,7 +29,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public class DefaultMasterConverter
     extends AbstractLogEnabled
-    implements MasterConverter, Composable
+    implements MasterConverter, Serviceable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultMasterConverter.class );
@@ -43,15 +42,15 @@ public class DefaultMasterConverter
     /**
      * Retrieve relevent services needed to deploy.
      *
-     * @param componentManager the ComponentManager
-     * @exception ComponentException if an error occurs
+     * @param serviceManager the ServiceManager
+     * @exception ServiceException if an error occurs
      */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
-        m_registry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
+        m_registry = (ConverterRegistry)serviceManager.lookup( ConverterRegistry.ROLE );
 
-        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        final TypeManager typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
         try
         {
             m_factory = typeManager.getFactory( Converter.class );
@@ -59,7 +58,7 @@ public class DefaultMasterConverter
         catch( final TypeException te )
         {
             final String message = REZ.getString( "no-converter-factory.error" );
-            throw new ComponentException( message, te );
+            throw new ServiceException( message, te );
         }
     }
 

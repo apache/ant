@@ -11,17 +11,17 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Resolvable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
@@ -38,7 +38,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public class DefaultConfigurer
     extends AbstractLogEnabled
-    implements Configurer, Composable, LogEnabled
+    implements Configurer, Serviceable, LogEnabled
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurer.class );
@@ -56,12 +56,12 @@ public class DefaultConfigurer
     ///ObjectConfigurer for that class.
     private Map m_configurerCache = new HashMap();
 
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
-        m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
-        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
+        m_converter = (MasterConverter)serviceManager.lookup( MasterConverter.ROLE );
+        m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
+        m_roleManager = (RoleManager)serviceManager.lookup( RoleManager.ROLE );
     }
 
     /**
@@ -391,8 +391,14 @@ public class DefaultConfigurer
         Object objValue = PropertyUtil.resolveProperty( value, context, false );
 
         // Convert the value to the appropriate type
+
+        Object converterContext = context;
+        if( context instanceof Resolvable )
+        {
+            converterContext = ( (Resolvable)context ).resolve( context );
+        }
         final Class clazz = setter.getType();
-        objValue = m_converter.convert( clazz, objValue, context );
+        objValue = m_converter.convert( clazz, objValue, converterContext );
 
         // Set the value
         setter.addValue( state, objValue );

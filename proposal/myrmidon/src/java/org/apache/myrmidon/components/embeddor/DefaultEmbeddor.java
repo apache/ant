@@ -18,12 +18,11 @@ import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.components.deployer.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
@@ -38,7 +37,7 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.service.ServiceManager;
+import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
@@ -65,7 +64,7 @@ public class DefaultEmbeddor
     private TypeManager m_typeManager;
 
     private List m_components = new ArrayList();
-    private DefaultComponentManager m_componentManager = new DefaultComponentManager();
+    private DefaultServiceManager m_serviceManager = new DefaultServiceManager();
     private Parameters m_parameters;
     private Parameters m_defaults;
 
@@ -123,7 +122,7 @@ public class DefaultEmbeddor
     {
         final String component = getParameter( Workspace.ROLE );
         final Workspace workspace =
-            (Workspace)createComponent( component, Workspace.class );
+            (Workspace)createService( component, Workspace.class );
         setupObject( workspace, parameters );
         return workspace;
     }
@@ -158,8 +157,8 @@ public class DefaultEmbeddor
         //setup the components
         setupComponents();
 
-        m_deployer = (Deployer)m_componentManager.lookup( Deployer.ROLE );
-        m_typeManager = (TypeManager)m_componentManager.lookup( TypeManager.ROLE );
+        m_deployer = (Deployer)m_serviceManager.lookup( Deployer.ROLE );
+        m_typeManager = (TypeManager)m_serviceManager.lookup( TypeManager.ROLE );
 
         setupFiles();
     }
@@ -193,17 +192,18 @@ public class DefaultEmbeddor
         // Dispose any disposable components
         for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
         {
-            Component component = (Component)iterator.next();
+            Object component = iterator.next();
             if( component instanceof Disposable )
             {
-                ( (Disposable)component ).dispose();
+                final Disposable disposable = (Disposable)component;
+                disposable.dispose();
             }
         }
 
         // Ditch everything
         m_components = null;
         m_deployer = null;
-        m_componentManager = null;
+        m_serviceManager = null;
         m_parameters = null;
         m_defaults = null;
         m_homeDir = null;
@@ -246,7 +246,7 @@ public class DefaultEmbeddor
         createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
         createComponent( ClassLoaderManager.class, PREFIX + "deployer.DefaultClassLoaderManager" );
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
-        createComponent( ServiceManager.class, PREFIX + "service.DefaultServiceManager" );
+        createComponent( AntServiceManager.class, PREFIX + "service.DefaultAntServiceManager" );
     }
 
     /**
@@ -257,8 +257,8 @@ public class DefaultEmbeddor
     {
         final String role = roleType.getName();
         final String className = m_parameters.getParameter( role, defaultImpl );
-        final Component component = createComponent( className, roleType );
-        m_componentManager.put( role, component );
+        final Object component = createService( className, roleType );
+        m_serviceManager.put( role, component );
         m_components.add( component );
     }
 
@@ -272,7 +272,7 @@ public class DefaultEmbeddor
     {
         for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
         {
-            final Component component = (Component)iterator.next();
+            final Object component = iterator.next();
             setupObject( component, m_parameters );
         }
     }
@@ -359,7 +359,7 @@ public class DefaultEmbeddor
      * @return the created object
      * @exception Exception if an error occurs
      */
-    private Component createComponent( final String component, final Class clazz )
+    private Object createService( final String component, final Class clazz )
         throws Exception
     {
         try
@@ -371,13 +371,8 @@ public class DefaultEmbeddor
                 final String message = REZ.getString( "bad-type.error", component, clazz.getName() );
                 throw new Exception( message );
             }
-            if( !( object instanceof Component ) )
-            {
-                final String message = REZ.getString( "bad-type.error", component, Component.class.getName() );
-                throw new Exception( message );
-            }
 
-            return (Component)object;
+            return object;
         }
         catch( final IllegalAccessException iae )
         {
@@ -408,9 +403,9 @@ public class DefaultEmbeddor
     {
         setupLogger( object );
 
-        if( object instanceof Composable )
+        if( object instanceof Serviceable )
         {
-            ( (Composable)object ).compose( m_componentManager );
+            ( (Serviceable)object ).service( m_serviceManager );
         }
 
         if( object instanceof Parameterizable )

@@ -10,7 +10,6 @@ package org.apache.myrmidon.interfaces.embeddor;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.interfaces.model.Project;
@@ -24,7 +23,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * @version $Revision$ $Date$
  */
 public interface Embeddor
-    extends Component, Parameterizable, Initializable, Startable, Disposable
+    extends Parameterizable, Initializable, Startable, Disposable
 {
     String ROLE = Embeddor.class.getName();
 

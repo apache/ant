@@ -10,13 +10,12 @@ package org.apache.myrmidon.components;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 import org.apache.myrmidon.components.converter.DefaultConverterRegistry;
@@ -26,7 +25,6 @@ import org.apache.myrmidon.components.deployer.DefaultClassLoaderManager;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
-import org.apache.myrmidon.components.service.DefaultServiceManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
 import org.apache.aut.converter.Converter;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -35,7 +33,6 @@ import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeManager;
@@ -48,7 +45,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public abstract class AbstractComponentTest
     extends AbstractMyrmidonTest
 {
-    private DefaultComponentManager m_componentManager;
+    private DefaultServiceManager m_serviceManager;
     private Logger m_logger;
 
     public AbstractComponentTest( final String name )
@@ -59,17 +56,18 @@ public abstract class AbstractComponentTest
     /**
      * Returns the component manager containing the components to test.
      */
-    protected ComponentManager getComponentManager()
+    protected ServiceManager getServiceManager()
     {
-        return m_componentManager;
+        return m_serviceManager;
     }
 
     /**
      * Returns the type manager.
      */
-    protected TypeManager getTypeManager() throws ComponentException
+    protected TypeManager getTypeManager()
+        throws ServiceException
     {
-        return (TypeManager)getComponentManager().lookup( TypeManager.ROLE );
+        return (TypeManager)getServiceManager().lookup( TypeManager.ROLE );
     }
 
     /**
@@ -81,44 +79,44 @@ public abstract class AbstractComponentTest
         m_logger = createLogger();
 
         // Create the components
-        m_componentManager = new DefaultComponentManager();
+        m_serviceManager = new DefaultServiceManager();
         List components = new ArrayList();
 
-        Component component = new DefaultMasterConverter();
-        m_componentManager.put( MasterConverter.ROLE, component );
+        Object component = new DefaultMasterConverter();
+        m_serviceManager.put( MasterConverter.ROLE, component );
         components.add( component );
 
         component = new DefaultConverterRegistry();
-        m_componentManager.put( ConverterRegistry.ROLE, component );
+        m_serviceManager.put( ConverterRegistry.ROLE, component );
         components.add( component );
 
         component = new DefaultTypeManager();
-        m_componentManager.put( TypeManager.ROLE, component );
+        m_serviceManager.put( TypeManager.ROLE, component );
         components.add( component );
 
         component = new DefaultConfigurer();
-        m_componentManager.put( Configurer.ROLE, component );
+        m_serviceManager.put( Configurer.ROLE, component );
         components.add( component );
 
         component = new DefaultDeployer();
-        m_componentManager.put( Deployer.ROLE, component );
+        m_serviceManager.put( Deployer.ROLE, component );
         components.add( component );
 
         final DefaultClassLoaderManager classLoaderMgr = new DefaultClassLoaderManager();
         classLoaderMgr.setBaseClassLoader( getClass().getClassLoader() );
-        m_componentManager.put( ClassLoaderManager.ROLE, classLoaderMgr );
+        m_serviceManager.put( ClassLoaderManager.ROLE, classLoaderMgr );
         components.add( classLoaderMgr );
 
         component = new DefaultExtensionManager();
-        m_componentManager.put( ExtensionManager.ROLE, component );
+        m_serviceManager.put( ExtensionManager.ROLE, component );
         components.add( component );
 
         component = new DefaultRoleManager();
-        m_componentManager.put( RoleManager.ROLE, component );
+        m_serviceManager.put( RoleManager.ROLE, component );
         components.add( component );
 
         component = new DefaultServiceManager();
-        m_componentManager.put( ServiceManager.ROLE, component );
+        m_serviceManager.put( ServiceManager.ROLE, component );
         components.add( component );
 
         // Log enable the components
@@ -136,10 +134,10 @@ public abstract class AbstractComponentTest
         for( Iterator iterator = components.iterator(); iterator.hasNext(); )
         {
             Object obj = iterator.next();
-            if( obj instanceof Composable )
+            if( obj instanceof Serviceable )
             {
-                final Composable composable = (Composable)obj;
-                composable.compose( m_componentManager );
+                final Serviceable serviceable = (Serviceable)obj;
+                serviceable.service( m_serviceManager );
             }
         }
     }
@@ -151,9 +149,9 @@ public abstract class AbstractComponentTest
     protected void registerConverter( final Class converterClass,
                                       final Class sourceClass,
                                       final Class destClass )
-        throws ComponentException, TypeException
+        throws ServiceException, TypeException
     {
-        ConverterRegistry converterRegistry = (ConverterRegistry)getComponentManager().lookup( ConverterRegistry.ROLE );
+        ConverterRegistry converterRegistry = (ConverterRegistry)getServiceManager().lookup( ConverterRegistry.ROLE );
         converterRegistry.registerConverter( converterClass.getName(), sourceClass.getName(), destClass.getName() );
         DefaultTypeFactory factory = new DefaultTypeFactory( getClass().getClassLoader() );
         factory.addNameClassMapping( converterClass.getName(), converterClass.getName() );

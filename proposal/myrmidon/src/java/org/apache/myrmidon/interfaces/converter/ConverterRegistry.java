@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.converter;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * Interface for registry for ConverterInfos.
  *
@@ -16,7 +14,6 @@ import org.apache.avalon.framework.component.Component;
  * @version $Revision$ $Date$
  */
 public interface ConverterRegistry
-    extends Component
 {
     String ROLE = ConverterRegistry.class.getName();
 

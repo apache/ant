@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.converter;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.aut.converter.Converter;
 
 /**
@@ -17,7 +16,7 @@ import org.apache.aut.converter.Converter;
  * @version $Revision$ $Date$
  */
 public interface MasterConverter
-    extends Component, Converter
+    extends Converter
 {
     String ROLE = MasterConverter.class.getName();
 }

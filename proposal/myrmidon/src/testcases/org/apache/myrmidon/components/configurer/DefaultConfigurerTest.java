@@ -49,7 +49,7 @@ public class DefaultConfigurerTest
         super.setUp();
 
         // Find the configurer
-        m_configurer = (Configurer)getComponentManager().lookup( Configurer.ROLE );
+        m_configurer = (Configurer)getServiceManager().lookup( Configurer.ROLE );
 
         // Setup a context
         m_context = new DefaultTaskContext();
@@ -434,7 +434,7 @@ public class DefaultConfigurerTest
         config.setAttribute( "my-role1", "some value" );
 
         // Set up the converter and role
-        RoleManager roleMgr = (RoleManager)getComponentManager().lookup( RoleManager.ROLE );
+        RoleManager roleMgr = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
         roleMgr.addNameRoleMapping( "my-role1", MyRole1.ROLE );
         registerConverter( StringToMyRole1Converter.class, String.class, MyRole1.class );
 
@@ -611,7 +611,7 @@ public class DefaultConfigurerTest
         config.addChild( child );
 
         // Add role mapping, and add to reference to context
-        final RoleManager roleMgr = (RoleManager)getComponentManager().lookup( RoleManager.ROLE );
+        final RoleManager roleMgr = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
         roleMgr.addNameRoleMapping( "my-role1", MyRole1.class.getName() );
         m_context.setProperty( "id", new MyType1() );
         m_context.setProperty( "id2", new MyType2() );

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.type;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * The interface that is used to manage types.
  *
@@ -16,7 +14,6 @@ import org.apache.avalon.framework.component.Component;
  * @version $Revision$ $Date$
  */
 public interface TypeManager
-    extends Component
 {
     String ROLE = TypeManager.class.getName();
 

@@ -11,7 +11,7 @@ import org.apache.aut.vfs.FileSystemManager;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.myrmidon.interfaces.service.AntServiceException;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
 
 /**
@@ -30,7 +30,7 @@ public class VfsManagerFactory
      * Create a service that coresponds to this factory.
      */
     public Object createService()
-        throws ServiceException
+        throws AntServiceException
     {
         try
         {
@@ -39,7 +39,7 @@ public class VfsManagerFactory
         catch( Exception e )
         {
             final String message = REZ.getString( "create-vfs-manager.error" );
-            throw new ServiceException( message );
+            throw new AntServiceException( message );
         }
     }
 }

@@ -19,8 +19,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.configurer.PropertyUtil;
 import org.apache.myrmidon.components.configurer.PropertyException;
 import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
-import org.apache.myrmidon.interfaces.service.ServiceException;
-import org.apache.myrmidon.interfaces.service.ServiceManager;
+import org.apache.myrmidon.interfaces.service.AntServiceException;
+import org.apache.myrmidon.interfaces.service.AntServiceManager;
 
 /**
  * Default implementation of TaskContext.
@@ -36,7 +36,7 @@ public class DefaultTaskContext
 
     private final Map m_contextData = new Hashtable();
     private final TaskContext m_parent;
-    private ServiceManager m_serviceManager;
+    private AntServiceManager m_serviceManager;
 
     /**
      * Constructor for Context with no parent contexts.
@@ -57,7 +57,7 @@ public class DefaultTaskContext
     /**
      * Constructor that specifies the service directory for context.
      */
-    public DefaultTaskContext( final ServiceManager serviceManager )
+    public DefaultTaskContext( final AntServiceManager serviceManager )
     {
         this( null, serviceManager );
     }
@@ -66,7 +66,7 @@ public class DefaultTaskContext
      * Constructor that takes both parent context and a service directory.
      */
     public DefaultTaskContext( final TaskContext parent,
-                               final ServiceManager serviceManager )
+                               final AntServiceManager serviceManager )
     {
         m_parent = parent;
         m_serviceManager = serviceManager;
@@ -159,7 +159,7 @@ public class DefaultTaskContext
             {
                 return m_serviceManager.getService( serviceClass );
             }
-            catch( final ServiceException se )
+            catch( final AntServiceException se )
             {
                 throw new TaskException( se.getMessage(), se );
             }

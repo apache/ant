@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.builder;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.interfaces.model.Project;
 
 /**
@@ -18,7 +17,6 @@ import org.apache.myrmidon.interfaces.model.Project;
  * @ant:role shorthand="project-builder"
  */
 public interface ProjectBuilder
-    extends Component
 {
     String ROLE = ProjectBuilder.class.getName();
 
@@ -27,8 +25,7 @@ public interface ProjectBuilder
      *
      * @param source the source
      * @return the constructed Project
-     * @exception IOException if an error occurs
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      */
     Project build( String source )
         throws Exception;

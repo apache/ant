@@ -8,7 +8,6 @@
 package org.apache.myrmidon.interfaces.model;
 
 import java.io.File;
-import org.apache.avalon.framework.component.Component;
 
 /**
  * Abstraction used to interact with projects.
@@ -18,7 +17,6 @@ import org.apache.avalon.framework.component.Component;
  * @version $Revision$ $Date$
  */
 public interface Project
-    extends Component
 {
     String ROLE = Project.class.getName();
 

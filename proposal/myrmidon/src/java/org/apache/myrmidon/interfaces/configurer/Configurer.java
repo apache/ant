@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.configurer;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
@@ -19,7 +18,6 @@ import org.apache.avalon.framework.context.Context;
  * @version $Revision$ $Date$
  */
 public interface Configurer
-    extends Component
 {
     String ROLE = Configurer.class.getName();
 

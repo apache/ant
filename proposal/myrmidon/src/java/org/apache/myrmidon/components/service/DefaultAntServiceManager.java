@@ -13,12 +13,12 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.myrmidon.interfaces.service.AntServiceException;
+import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
-import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
@@ -34,11 +34,11 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public class DefaultServiceManager
-    implements ServiceManager, Composable, Disposable
+public class DefaultAntServiceManager
+    implements AntServiceManager, Serviceable, Disposable
 {
-    private final static Resources REZ
-        = ResourceManager.getPackageResources( DefaultServiceManager.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( DefaultAntServiceManager.class );
 
     /** Map from service class -> service object. */
     private Map m_services = new HashMap();
@@ -46,18 +46,25 @@ public class DefaultServiceManager
     private TypeFactory m_typeFactory;
 
     /**
-     * Locate the components used by this service manager.
+     * Pass the <code>ServiceManager</code> to the <code>servicable</code>.
+     * The <code>Servicable</code> implementation should use the specified
+     * <code>ServiceManager</code> to acquire the components it needs for
+     * execution.
+     *
+     * @param manager The <code>ServiceManager</code> which this
+     *                <code>Servicable</code> uses.
      */
-    public void compose( final ComponentManager componentManager ) throws ComponentException
+    public void service( ServiceManager manager )
+        throws ServiceException
     {
-        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        final TypeManager typeManager = (TypeManager)manager.lookup( TypeManager.ROLE );
         try
         {
             m_typeFactory = typeManager.getFactory( ServiceFactory.class );
         }
         catch( final TypeException e )
         {
-            throw new ComponentException( e.getMessage(), e );
+            throw new ServiceException( e.getMessage(), e );
         }
     }
 
@@ -104,7 +111,7 @@ public class DefaultServiceManager
      * Locates a service instance.
      */
     public Object getService( Class serviceType )
-        throws ServiceException
+        throws AntServiceException
     {
         Object service = m_services.get( serviceType );
         if( service == null )
@@ -120,7 +127,7 @@ public class DefaultServiceManager
     /**
      * Creates the service object for a service class.
      */
-    private Object createService( Class serviceType ) throws ServiceException
+    private Object createService( Class serviceType ) throws AntServiceException
     {
         try
         {
@@ -131,14 +138,14 @@ public class DefaultServiceManager
             if( !serviceType.isInstance( service ) )
             {
                 final String message = REZ.getString( "mismatched-service-type.error", serviceType.getName(), service.getClass().getName() );
-                throw new ServiceException( message );
+                throw new AntServiceException( message );
             }
             return service;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
             final String message = REZ.getString( "create-service.error", serviceType.getName() );
-            throw new ServiceException( message, e );
+            throw new AntServiceException( message, e );
         }
     }
 }

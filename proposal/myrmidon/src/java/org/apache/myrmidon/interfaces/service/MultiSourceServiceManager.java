@@ -13,13 +13,13 @@ import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A service manager that aggregates services from several
- * {@link ServiceManager} objects.
+ * {@link AntServiceManager} objects.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
 public class MultiSourceServiceManager
-    implements ServiceManager
+    implements AntServiceManager
 {
     private final static Resources REZ
         = ResourceManager.getPackageResources( MultiSourceServiceManager.class );
@@ -30,7 +30,7 @@ public class MultiSourceServiceManager
     /**
      * Adds a service manager to the end of the source list.
      */
-    public void add( final ServiceManager mgr )
+    public void add( final AntServiceManager mgr )
     {
         m_sources.add( mgr );
     }
@@ -45,7 +45,7 @@ public class MultiSourceServiceManager
         final int size = m_sources.size();
         for( int i = 0; i < size; i++ )
         {
-            final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
+            final AntServiceManager serviceManager = (AntServiceManager)m_sources.get( i );
             if( serviceManager.hasService( serviceType ) )
             {
                 return true;
@@ -60,15 +60,15 @@ public class MultiSourceServiceManager
      * @param serviceType The service interface.
      * @return The service instance.  The returned object is guaranteed to
      *         implement the service interface.
-     * @throws ServiceException If the service does not exist.
+     * @throws AntServiceException If the service does not exist.
      */
     public Object getService( final Class serviceType )
-        throws ServiceException
+        throws AntServiceException
     {
         final int size = m_sources.size();
         for( int i = 0; i < size; i++ )
         {
-            final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
+            final AntServiceManager serviceManager = (AntServiceManager)m_sources.get( i );
             if( serviceManager.hasService( serviceType ) )
             {
                 return serviceManager.getService( serviceType );
@@ -76,6 +76,6 @@ public class MultiSourceServiceManager
         }
 
         final String message = REZ.getString( "unknown-service.error", serviceType.getName() );
-        throw new ServiceException( message );
+        throw new AntServiceException( message );
     }
 }

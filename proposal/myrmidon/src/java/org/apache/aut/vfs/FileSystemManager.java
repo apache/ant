@@ -7,7 +7,6 @@
  */
 package org.apache.aut.vfs;
 
-import org.apache.avalon.framework.component.Component;
 import java.io.File;
 
 /**
@@ -53,7 +52,6 @@ import java.io.File;
  * @author Adam Murdoch
  */
 public interface FileSystemManager
-    extends Component
 {
     String ROLE = FileSystemManager.class.getName();
 
@@ -107,5 +105,5 @@ public interface FileSystemManager
      *          On error parsing the file name.
      *
      */
-    FileObject resolveFile ( File baseFile, String name ) throws FileSystemException;
+    FileObject resolveFile( File baseFile, String name ) throws FileSystemException;
 }

@@ -16,13 +16,13 @@ import org.apache.avalon.framework.CascadingException;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ServiceException
+public class AntServiceException
     extends CascadingException
 {
     /**
      * Basic constructor for exception that does not specify a message
      */
-    public ServiceException()
+    public AntServiceException()
     {
         this( "", null );
     }
@@ -32,7 +32,7 @@ public class ServiceException
      *
      * @param message the message
      */
-    public ServiceException( final String message )
+    public AntServiceException( final String message )
     {
         this( message, null );
     }
@@ -43,7 +43,7 @@ public class ServiceException
      * @param message the message
      * @param throwable the throwable
      */
-    public ServiceException( final String message, final Throwable throwable )
+    public AntServiceException( final String message, final Throwable throwable )
     {
         super( message, throwable );
     }

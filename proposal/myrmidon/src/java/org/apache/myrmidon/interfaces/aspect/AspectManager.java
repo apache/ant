@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.aspect;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.TaskException;
@@ -20,7 +19,7 @@ import org.apache.myrmidon.aspects.AspectHandler;
  * @version $Revision$ $Date$
  */
 public interface AspectManager
-    extends Component, AspectHandler
+    extends AspectHandler
 {
     String ROLE = AspectManager.class.getName();
 

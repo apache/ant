@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
-import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 
 /**
@@ -17,7 +16,6 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
 public interface ClassLoaderManager
-    extends Component
 {
     String ROLE = ClassLoaderManager.class.getName();
 

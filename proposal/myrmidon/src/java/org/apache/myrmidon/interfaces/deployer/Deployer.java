@@ -8,9 +8,8 @@
 package org.apache.myrmidon.interfaces.deployer;
 
 import java.io.File;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 /**
  * This class deploys type libraries into a registry.
@@ -19,7 +18,6 @@ import org.apache.avalon.framework.component.ComponentManager;
  * @version $Revision$ $Date$
  */
 public interface Deployer
-    extends Component
 {
     String ROLE = Deployer.class.getName();
 
@@ -46,6 +44,6 @@ public interface Deployer
     /**
      * Creates a child deployer.
      */
-    Deployer createChildDeployer( ComponentManager componentManager )
-        throws ComponentException;
+    Deployer createChildDeployer( ServiceManager componentManager )
+        throws ServiceException;
 }

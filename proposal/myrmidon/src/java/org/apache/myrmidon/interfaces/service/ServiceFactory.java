@@ -25,5 +25,5 @@ public interface ServiceFactory
      * prepared and configured as appropriate.
      */
     Object createService()
-        throws ServiceException;
+        throws AntServiceException;
 }

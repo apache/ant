@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.workspace;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -19,7 +18,6 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * @version $Revision$ $Date$
  */
 public interface Workspace
-    extends Component
 {
     String ROLE = Workspace.class.getName();
 

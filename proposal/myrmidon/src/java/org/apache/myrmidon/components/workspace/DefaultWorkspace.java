@@ -14,10 +14,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
@@ -25,6 +21,10 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.log.Hierarchy;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -38,7 +38,7 @@ import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
 import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
-import org.apache.myrmidon.interfaces.service.ServiceManager;
+import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -51,14 +51,14 @@ import org.apache.myrmidon.listeners.ProjectListener;
  */
 public class DefaultWorkspace
     extends AbstractLogEnabled
-    implements Workspace, Composable, Parameterizable, Initializable
+    implements Workspace, Serviceable, Parameterizable, Initializable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultWorkspace.class );
 
     private Executor m_executor;
     private ProjectListenerSupport m_listenerSupport = new ProjectListenerSupport();
-    private ComponentManager m_componentManager;
+    private ServiceManager m_serviceManager;
     private Parameters m_parameters;
     private TaskContext m_baseContext;
     private HashMap m_entrys = new HashMap();
@@ -90,16 +90,16 @@ public class DefaultWorkspace
     /**
      * Retrieve relevent services needed for engine.
      *
-     * @param componentManager the ComponentManager
-     * @exception ComponentException if an error occurs
+     * @param serviceManager the ServiceManager
+     * @exception ServiceException if an error occurs
      */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
-        m_componentManager = componentManager;
-        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_executor = (Executor)componentManager.lookup( Executor.ROLE );
-        m_deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
+        m_serviceManager = serviceManager;
+        m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
+        m_executor = (Executor)serviceManager.lookup( Executor.ROLE );
+        m_deployer = (Deployer)serviceManager.lookup( Deployer.ROLE );
     }
 
     public void parameterize( final Parameters parameters )
@@ -226,48 +226,47 @@ public class DefaultWorkspace
      * Creates an execution frame for a project.
      */
     private ExecutionFrame createExecutionFrame( final Project project )
-        throws TaskException, ComponentException
+        throws TaskException, ServiceException
     {
         //Create per frame ComponentManager
-        final DefaultComponentManager componentManager =
-            new DefaultComponentManager( m_componentManager );
+        final DefaultServiceManager serviceManager =
+            new DefaultServiceManager( m_serviceManager );
 
         //Add in child type manager so each frame can register different
         //sets of tasks etc
         final TypeManager typeManager = m_typeManager.createChildTypeManager();
-        componentManager.put( TypeManager.ROLE, typeManager );
+        serviceManager.put( TypeManager.ROLE, typeManager );
 
         //We need to create a new deployer so that it deploys
         //to project specific TypeManager
-        final Deployer deployer;
-        deployer = m_deployer.createChildDeployer( componentManager );
-        componentManager.put( Deployer.ROLE, deployer );
+        final Deployer deployer = m_deployer.createChildDeployer( serviceManager );
+        serviceManager.put( Deployer.ROLE, deployer );
 
         // Deploy the imported typelibs
         deployTypeLib( deployer, project );
 
         //We need to place projects and ProjectManager
         //in ComponentManager so as to support project-local call()
-        componentManager.put( Workspace.ROLE, this );
-        componentManager.put( Project.ROLE, project );
+        serviceManager.put( Workspace.ROLE, this );
+        serviceManager.put( Project.ROLE, project );
 
         final String[] names = project.getProjectNames();
         for( int i = 0; i < names.length; i++ )
         {
             final String name = names[ i ];
             final Project other = project.getProject( name );
-            componentManager.put( Project.ROLE + "/" + name, other );
+            serviceManager.put( Project.ROLE + "/" + name, other );
         }
 
         // Create a service manager that aggregates the contents of the context's
         // component manager, and service manager
-        final MultiSourceServiceManager serviceManager = new MultiSourceServiceManager();
-        serviceManager.add( (ServiceManager)componentManager.lookup( ServiceManager.ROLE ) );
-        serviceManager.add( new ComponentManagerAdaptor( componentManager ) );
+        final MultiSourceServiceManager msServiceManager = new MultiSourceServiceManager();
+        msServiceManager.add( (AntServiceManager)serviceManager.lookup( AntServiceManager.ROLE ) );
+        msServiceManager.add( new ServiceManagerAdaptor( serviceManager ) );
 
         // Create and configure the context
         final DefaultTaskContext context =
-            new DefaultTaskContext( m_baseContext, serviceManager );
+            new DefaultTaskContext( m_baseContext, msServiceManager );
         context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
         // Create a logger
@@ -280,7 +279,7 @@ public class DefaultWorkspace
         /**
          *  @todo Should no occur but done for the time being to simplify evolution.
          */
-        componentManager.put( ExecutionFrame.ROLE, frame );
+        serviceManager.put( ExecutionFrame.ROLE, frame );
 
         return frame;
     }

@@ -23,10 +23,10 @@ import org.apache.avalon.excalibur.extension.PackageManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 
@@ -37,7 +37,7 @@ import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
  */
 public class DefaultClassLoaderManager
     extends AbstractLogEnabled
-    implements ClassLoaderManager, Composable, Initializable
+    implements ClassLoaderManager, Serviceable, Initializable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultClassLoaderManager.class );
@@ -52,7 +52,7 @@ public class DefaultClassLoaderManager
 
     public void initialize() throws Exception
     {
-        if( m_baseClassLoader == null )
+        if( null == m_baseClassLoader )
         {
             m_baseClassLoader = Thread.currentThread().getContextClassLoader();
         }
@@ -70,11 +70,11 @@ public class DefaultClassLoaderManager
     /**
      * Retrieve relevent services needed to deploy.
      */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
         final ExtensionManager extensionManager =
-            (ExtensionManager)componentManager.lookup( ExtensionManager.ROLE );
+            (ExtensionManager)serviceManager.lookup( ExtensionManager.ROLE );
         m_packageManager = new PackageManager( extensionManager );
     }
 

@@ -8,7 +8,6 @@
 package org.apache.myrmidon.interfaces.extensions;
 
 import org.apache.avalon.excalibur.extension.PackageRepository;
-import org.apache.avalon.framework.component.Component;
 
 /**
  * PackageRepository
@@ -17,7 +16,7 @@ import org.apache.avalon.framework.component.Component;
  * @version $Revision$ $Date$
  */
 public interface ExtensionManager
-    extends PackageRepository, Component
+    extends PackageRepository
 {
     String ROLE = ExtensionManager.class.getName();
 }

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.role;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * Interface to manage roles and mapping to shorthand names.
  *
@@ -19,7 +17,6 @@ import org.apache.avalon.framework.component.Component;
  * @version CVS $Revision$ $Date$
  */
 public interface RoleManager
-    extends Component
 {
     String ROLE = RoleManager.class.getName();
 

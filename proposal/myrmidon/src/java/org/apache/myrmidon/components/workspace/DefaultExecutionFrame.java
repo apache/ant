@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.components.workspace;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
@@ -20,7 +19,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @version $Revision$ $Date$
  */
 class DefaultExecutionFrame
-    implements ExecutionFrame, Component
+    implements ExecutionFrame
 {
     private final Logger m_logger;
     private final TaskContext m_context;

@@ -7,18 +7,15 @@
  */
 package org.apache.myrmidon.interfaces.service;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * Manages a set of services.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public interface ServiceManager
-    extends Component
+public interface AntServiceManager
 {
-    String ROLE = ServiceManager.class.getName();
+    String ROLE = AntServiceManager.class.getName();
 
     /**
      * Determines if this service manager contains a particular service.
@@ -33,8 +30,8 @@ public interface ServiceManager
      * @param serviceType The service interface.
      * @return The service instance.  The returned object is guaranteed to
      *         implement the service interface.
-     * @throws ServiceException If the service does not exist.
+     * @throws AntServiceException If the service does not exist.
      */
     Object getService( Class serviceType )
-        throws ServiceException;
+        throws AntServiceException;
 }

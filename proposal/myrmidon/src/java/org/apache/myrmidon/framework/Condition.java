@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.framework;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
@@ -18,7 +17,6 @@ import org.apache.myrmidon.api.TaskException;
  * @version $Revision$ $Date$
  */
 public class Condition
-    implements Component
 {
     private String m_condition;
     private boolean m_isIfCondition;

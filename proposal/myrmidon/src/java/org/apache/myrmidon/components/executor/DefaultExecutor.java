@@ -9,13 +9,13 @@ package org.apache.myrmidon.components.executor;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -34,7 +34,7 @@ import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
  */
 public class DefaultExecutor
     extends AbstractLogEnabled
-    implements Executor, Composable
+    implements Executor, Serviceable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
@@ -44,13 +44,13 @@ public class DefaultExecutor
     /**
      * Retrieve relevent services needed to deploy.
      *
-     * @param componentManager the ComponentManager
-     * @exception ComponentException if an error occurs
+     * @param serviceManager the ServiceManager
+     * @exception ServiceException if an error occurs
      */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
     {
-        m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
+        m_configurer = (Configurer)serviceManager.lookup( Configurer.ROLE );
     }
 
     public void execute( final Configuration taskModel, final ExecutionFrame frame )
