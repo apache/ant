@@ -11,9 +11,11 @@
 <h3>Description</h3>
 <p>The cab task creates Microsoft cab archive files.  It is invoked
 similar to the <a href="../CoreTasks/jar.html">jar</a> or <a href="../CoreTasks/zip.html">zip</a> tasks.
-This task will only work on Windows, and will be silently ignored on
-other platforms.  You must have the Microsoft cabarc tool available in
-your executable path.</p>
+This task will work on Windows using the external cabarc tool (provided by Microsoft)
+which must be located in your executable path.</p>
+<p>To use this task on other platforms you need to download and compile libcabinet from 
+<a href="http://trill.cis.fordham.edu/~barbacha/cabinet_library/">
+http://trill.cis.fordham.edu/~barbacha/cabinet_library/</a>.</p>
 <p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based
 tasks</a>, on how the inclusion/exclusion of files works, and how to
 write patterns.</p>
@@ -114,7 +116,7 @@ or files with the name todo.html are excluded.</p>
      verbose=&quot;yes&quot;
   /&gt;
 </pre></blockquote>
-<p>cab all files in the htdocs/manual directory into a file called
+<p>Cab all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Only html files under the
 directory api are archived, and files with the name todo.html are
 excluded. Output from the cabarc tool is displayed in the build
