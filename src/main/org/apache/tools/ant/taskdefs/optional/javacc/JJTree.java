@@ -72,7 +72,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * Runs the JJTree compiler compiler.
  *
  * @author thomas.haas@softwired-inc.com
- * @author Michael Saunders 
+ * @author Michael Saunders
  *         <a href="mailto:michael@amtec.com">michael@amtec.com</a>
  */
 public class JJTree extends Task {
@@ -232,9 +232,9 @@ public class JJTree extends Task {
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
-        
+
         if (outputFile != null) {
-            cmdl.createArgument().setValue("-" + OUTPUT_FILE + ":" 
+            cmdl.createArgument().setValue("-" + OUTPUT_FILE + ":"
                                            + outputFile.replace('\\', '/'));
         }
 
@@ -242,21 +242,21 @@ public class JJTree extends Task {
 
         // use the directory containing the target as the output directory
         if (outputDirectory == null) {
-            javaFile = new File(createOutputFileName(target, outputFile, 
+            javaFile = new File(createOutputFileName(target, outputFile,
                                                      null));
         } else {
             if (!outputDirectory.isDirectory()) {
                 throw new BuildException("'outputdirectory' " + outputDirectory
                                          + " is not a directory.");
             }
- 
+
             // convert backslashes to slashes, otherwise jjtree will
             // put this as comments and this seems to confuse javacc
             cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
                                            + outputDirectory.getAbsolutePath()
                                              .replace('\\', '/'));
- 
-            javaFile = new File(createOutputFileName(target, outputFile, 
+
+            javaFile = new File(createOutputFileName(target, outputFile,
                                                      outputDirectory
                                                      .getPath()));
         }
@@ -269,7 +269,7 @@ public class JJTree extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        cmdl.setClassname(JavaCC.getMainClass(javaccHome, 
+        cmdl.setClassname(JavaCC.getMainClass(javaccHome,
                                               JavaCC.TASKDEF_TYPE_JJTREE));
 
         final Path classpath = cmdl.createClasspath(getProject());
@@ -319,15 +319,24 @@ public class JJTree extends Task {
                 if (currentSuffix.equals(DEFAULT_SUFFIX)) {
                     optionalOutputFile = jjtreeFile + DEFAULT_SUFFIX;
                 } else {
-                    optionalOutputFile = jjtreeFile.substring(0, suffixPos) 
+                    optionalOutputFile = jjtreeFile.substring(0, suffixPos)
                         + DEFAULT_SUFFIX;
                 }
             }
         }
 
         if ((outputDirectory == null) || outputDirectory.equals("")) {
-            outputDirectory = getProject().getBaseDir().getAbsolutePath();
+            if (isAbsolute(optionalOutputFile)) {
+                return optionalOutputFile.replace('\\','/');
+            } else {
+                outputDirectory = getProject().getBaseDir().getAbsolutePath();
+            }
         }
+
         return (outputDirectory + "/" + optionalOutputFile).replace('\\', '/');
+    }
+
+    private boolean isAbsolute(String fileName) {
+        return (fileName.startsWith("/") || (new File(fileName).isAbsolute()));
     }
 }
