@@ -8,7 +8,6 @@
 package org.apache.myrmidon.framework;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Condition;
 
 /**
  * Basic data type for holding patterns.
@@ -18,17 +17,17 @@ import org.apache.myrmidon.framework.Condition;
 public class Pattern
     implements DataType
 {
-    private String         m_name;
+    private String         m_value;
     private Condition      m_condition;
 
     /**
-     * Retrieve name (aka value) of pattern.
+     * Retrieve value of pattern.
      *
-     * @return the name/value of pattern
+     * @return the value of pattern
      */
-    public String getName()
+    public String getValue()
     {
-        return m_name;
+        return m_value;
     }
 
     /**
@@ -42,14 +41,14 @@ public class Pattern
     }
 
     /**
-     * Setter method for name/value of pattern.
+     * Setter method for value of pattern.
      * Conforms to setter patterns
      *
-     * @param name the value
+     * @param value the value
      */
-    public void setName( final String name )
+    public void setValue( final String value )
     {
-        m_name = name;
+        m_value = value;
     }
 
     /**
@@ -80,7 +79,7 @@ public class Pattern
 
     public String toString()
     {
-        String result = "Pattern['" + m_name + "',";
+        String result = "Pattern['" + m_value + "',";
         if( null != m_condition ) result = result + m_condition;
         return result + "]";
     }
