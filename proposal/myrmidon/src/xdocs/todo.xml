@@ -15,6 +15,24 @@
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
 
+            <!--
+            <subsection name="">
+            </subsection>
+            -->
+
+            <subsection name="Integrate XDocs proposal">
+                <p>Integrate with the XDocs proposal that generates XML documentation for
+                tasks. Rework that proposal so that it knows about the myrmidon specific
+                patterns and features. Also rework it so that it can support reading
+                documentation and examples from side-by-side the task.</p>
+            </subsection>
+
+            <subsection name="TaskInfo">
+                <p>Consider allowing task writers to write their own TaskInfo objects
+                (or at least have them generated from XDoclet directives). This would
+                encompass both documentation and perhaps introspection of the types.</p>
+            </subsection>
+
             <subsection name="XML Catalog to load XML Fragments">
                 <p>
                   When including fragments of XML we are currently forced to use relative paths.
@@ -89,14 +107,6 @@ File[] files = cm.getOutOfDate();
                 for the XML catalog, the template fragments for templates, images for
                 documentation system and so forth.</p>
             </subsection>
-
-            <!--
-            <subsection name="">
-            </subsection>
-
-            <subsection name="">
-            </subsection>
-            -->
 
             <subsection name="Coloring API">
                 <p>
