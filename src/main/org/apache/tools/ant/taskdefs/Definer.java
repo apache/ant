@@ -234,9 +234,9 @@ public abstract class Definer extends Task {
                 + " cannot be found";
             throw new BuildException(msg, cnfe, getLocation());
         } catch (NoClassDefFoundError ncdfe) {
-            String msg = getTaskName() + " class " + value
-                + " cannot be found";
-            throw new BuildException(msg, ncdfe, getLocation());
+            String msg = getTaskName() + "A class needed on loading by class "
+                + value + " cannot be found: " + ncdfe.getMessage();
+            throw new BuildException(msg, ncdfe, location);
         }
     }
 
@@ -318,7 +318,7 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * Returns the classname of the object we are defining. 
+     * Returns the classname of the object we are defining.
      * May be <code>null</code>.
      */
     public String getClassname() {
