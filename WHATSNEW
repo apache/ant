@@ -65,7 +65,10 @@ Fixed bugs:
 
 * Impossible to use implicit classpath for <taskdef>
   when Ant core loader != Java application loader and Path.systemClassPath taken from ${java.class.path}
-  Bugzilla 30161.  
+  Bugzilla 30161.
+
+* MacroInstance did not clean up nested elements correctly in the execute method, causing
+  multiple use of the same marco instance with nested elements to fail.
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================

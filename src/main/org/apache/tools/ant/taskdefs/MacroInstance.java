@@ -48,8 +48,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
     private MacroDef macroDef;
     private Map      map = new HashMap();
     private Map      nsElements = null;
-    private Map      presentElements = new HashMap();
-    private Hashtable localProperties = new Hashtable();
+    private Map      presentElements;
+    private Hashtable localProperties;
     private String    text = null;
     private String    implicitTag =     null;
     private List      unknownElements = new ArrayList();
@@ -321,6 +321,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      *
      */
     public void execute() {
+        presentElements = new HashMap();
         getNsElements();
         processTasks();
         localProperties = new Hashtable();
@@ -379,5 +380,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
         }
+        presentElements = null;
+        localProperties = null;
     }
 }
