@@ -68,7 +68,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * a java command line.
  *
  * @author thomas.haas@softwired-inc.com
- * @author <a href="sbailliez@apache.org>Stephane Bailliez</a>
+ * @author <a href="sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CommandlineJava implements Cloneable {
 

@@ -336,7 +336,7 @@ public class Coverage extends Task {
 
     /**
      * return the command line parameters. Parameters can either be passed
-     * to the command line and stored to a file (then use the -jp_input=<filename>)
+     * to the command line and stored to a file (then use the -jp_input=&lt;filename&gt;)
      * if they are too numerous.
      */
     protected String[] getParameters() {

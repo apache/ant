@@ -68,7 +68,7 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  * <p>This task does not extend Task to take advantage of
  * ConditionBase.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class ConditionTask extends ConditionBase {
