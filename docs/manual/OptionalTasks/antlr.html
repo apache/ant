@@ -24,6 +24,15 @@
   This task only invokes ANTLR if the grammar file is newer than the generated
   files.
 </p>
+<p>
+<i>
+  To successfully run ANTLR, your best option is probably to build the whole
+  jar with the provided script <b>mkalljar</b> and drop the resulting jar (about 300KB)
+  into ${ant.home}/lib. Dropping the default jar (70KB) is probably not enough
+  for most needs and your only option will be to add ANTLR home directory
+  to your classpath as described in ANTLR <tt>install.html</tt> document.
+</i>
+</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
