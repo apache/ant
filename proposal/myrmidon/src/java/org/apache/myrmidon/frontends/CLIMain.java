@@ -34,7 +34,6 @@ import org.apache.log.Logger;
 import org.apache.log.Priority;
 import org.apache.log.output.DefaultOutputLogTarget;
 import org.apache.myrmidon.Constants;
-import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
