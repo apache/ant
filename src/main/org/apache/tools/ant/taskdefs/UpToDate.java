@@ -83,26 +83,27 @@ public class UpToDate extends MatchingTask implements Condition {
 
     private String _property;
     private String _value;
+    private File _sourceFile;
     private File _targetFile;
     private Vector sourceFileSets = new Vector();
 
     protected Mapper mapperElement = null;
 
     /**
-     * The property to set if the target file is more up to date than each of
-     * the source files.
+     * The property to set if the target file is more up-to-date than
+     * (each of) the source file(s).
      *
-     * @param property the name of the property to set if Target is up to date.
+     * @param property the name of the property to set if Target is up-to-date.
      */
     public void setProperty(String property) {
         _property = property;
     }
 
     /**
-     * The value to set the named property to if the target file is more up to
-     * date than each of the source files. Defaults to 'true'.
+     * The value to set the named property to if the target file is more
+     * up-to-date than (each of) the source file(s). Defaults to 'true'.
      *
-     * @param value the value to set the property to if Target is up to date
+     * @param value the value to set the property to if Target is up-to-date
      */
     public void setValue(String value) {
         _value = value;
@@ -116,13 +117,23 @@ public class UpToDate extends MatchingTask implements Condition {
     } 
 
     /**
-     * The file which must be more up to date than each of the source files
+     * The file which must be more up-to-date than (each of) the source file(s)
      * if the property is to be set.
      *
-     * @param file the file which we are checking against.
+     * @param file the file we are checking against.
      */
     public void setTargetFile(File file) {
         _targetFile = file;
+    }
+
+    /**
+     * The file that must be older than the target file
+     * if the property is to be set.
+     *
+     * @param file the file we are checking against the target file.
+     */
+    public void setSrcfile(File file) {
+        _sourceFile = file;
     }
 
     /**
@@ -145,20 +156,34 @@ public class UpToDate extends MatchingTask implements Condition {
     }
 
     /**
-     * Evaluate all target and source files, see if the targets are up-to-date.
+     * Evaluate (all) target and source file(s) to
+     * see if the target(s) is/are up-to-date.
      */
     public boolean eval() {
-        if (sourceFileSets.size() == 0) {
-          throw new BuildException("At least one <srcfiles> element must be set");
+        if (sourceFileSets.size() == 0 && _sourceFile == null) {
+          throw new BuildException("At least one srcfile or a nested <srcfiles> element must be set.");
+        }
+
+        if (sourceFileSets.size() > 0 && _sourceFile != null) {
+          throw new BuildException("Cannot specify both the srcfile attribute and a nested <srcfiles> element.");
         }
 
         if (_targetFile == null && mapperElement == null) {
-          throw new BuildException("The targetfile attribute or a nested mapper element must be set");
+          throw new BuildException("The targetfile attribute or a nested mapper element must be set.");
         }
 
-        // if not there then it can't be up to date
+        if (_sourceFile != null && mapperElement != null) {
+          throw new BuildException("Cannot specify both the srcfile attribute and a nested mapper element.");
+        }
+
+        // if the target file is not there, then it can't be up-to-date
         if (_targetFile != null && !_targetFile.exists()) {
           return false;
+        } 
+
+        // if the source file isn't there, throw an exception
+        if (_sourceFile != null && !_sourceFile.exists()) {
+          throw new BuildException(_sourceFile.getAbsolutePath() + " not found.");
         } 
 
         Enumeration enum = sourceFileSets.elements();
@@ -166,26 +191,31 @@ public class UpToDate extends MatchingTask implements Condition {
         while (upToDate && enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
             DirectoryScanner ds = fs.getDirectoryScanner(project);
-            upToDate = upToDate && scanDir(fs.getDir(project), 
-                                           ds.getIncludedFiles());
+                upToDate = upToDate && scanDir(fs.getDir(project), 
+                                               ds.getIncludedFiles());
+        }
+        if (_sourceFile != null) {
+            File srcfile = new File(_sourceFile.getAbsolutePath());
+            File tgtfile = new File(_targetFile.getAbsolutePath());
+            upToDate = (tgtfile.lastModified() > srcfile.lastModified());
         }
         return upToDate;
     }
 
 
     /**
-     * Sets property to true if target files have a more recent timestamp than
-     * each of the corresponding source files.
+     * Sets property to true if target file(s) have a more recent timestamp
+     * than (each of) the corresponding source file(s).
      */
     public void execute() throws BuildException {
         boolean upToDate = eval();
         if (upToDate) {
             this.project.setProperty(_property, this.getValue());
             if (mapperElement == null) {
-                log("File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",
+                log("File \"" + _targetFile.getAbsolutePath() + "\" is up-to-date.",
                     Project.MSG_VERBOSE);
             } else {
-                log("All target files have been up to date.",
+                log("All target files are up-to-date.",
                     Project.MSG_VERBOSE);
             }
         }
