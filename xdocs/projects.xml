@@ -22,7 +22,7 @@
   </properties>
 
   <body>
-    
+
     <section name="Related Projects">
 
       <p>Nothing listed here is directly supported by the Ant
@@ -99,11 +99,11 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Tested extensively with Ant 1.5.x.</td>
+            <td>Ant 1.5 and higher.</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://antelope.sourceforge.net/">http://antelope.sourceforge.net/</a></td>
+            <td><a href="http://antelope.tigris.org/">http://antelope.tigris.org/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
@@ -240,7 +240,7 @@
           </tr>
         </table>
       </subsection>
-      
+
       <subsection name="NAnt">
 
         <p>NAnt is a .NET based build tool. In theory it is kind of
