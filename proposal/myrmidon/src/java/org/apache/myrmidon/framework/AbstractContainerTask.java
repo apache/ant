@@ -22,6 +22,7 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -90,7 +91,8 @@ public abstract class AbstractContainerTask
     protected final void configure( final Object object, final Configuration element )
         throws ConfigurationException
     {
-        getConfigurer().configure( object, element, getContext() );
+        final TaskContextAdapter context = new TaskContextAdapter( getContext() );
+        getConfigurer().configure( object, element, context );
     }
 
     /**
@@ -104,7 +106,8 @@ public abstract class AbstractContainerTask
     protected final void configure( final Object object, final String name, final String value )
         throws ConfigurationException
     {
-        getConfigurer().configure( object, name, value, getContext() );
+        final TaskContextAdapter context = new TaskContextAdapter( getContext() );
+        getConfigurer().configure( object, name, value, context );
     }
 
     /**
