@@ -29,6 +29,10 @@ public class DefaultTypeFactory
     ///The parent classLoader (if any)
     private ClassLoader m_classLoader;
 
+    /**
+     * Construct a factory that uses specified ClassLoader to load
+     * types from.
+     */
     public DefaultTypeFactory( final ClassLoader classLoader )
     {
         if( null == classLoader )
@@ -39,6 +43,16 @@ public class DefaultTypeFactory
         m_classLoader = classLoader;
     }
 
+    /**
+     * No arg constructor used by subclasses who wish to overide getClassLoader().
+     */
+    protected DefaultTypeFactory()
+    {
+    }
+
+    /**
+     * Map a name to the fully qualified name of the Class that implements type.
+     */
     public void addNameClassMapping( final String name, final String className )
     {
         m_classNames.put( name, className );
@@ -81,7 +95,7 @@ public class DefaultTypeFactory
         return className;
     }
 
-    private ClassLoader getClassLoader()
+    protected ClassLoader getClassLoader()
     {
         return m_classLoader;
     }
