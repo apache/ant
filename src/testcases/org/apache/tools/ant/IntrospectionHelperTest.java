@@ -58,6 +58,7 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 import java.io.File;
 import java.util.*;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.IntrospectionHelper.
@@ -68,8 +69,7 @@ import java.util.*;
 public class IntrospectionHelperTest extends TestCase {
 
     private Project p;
-
-    public static boolean isUnixStyle = File.pathSeparatorChar == ':';
+    private static final String projectBasedir = File.separator;
 
     public IntrospectionHelperTest(String name) {
         super(name);
@@ -77,7 +77,7 @@ public class IntrospectionHelperTest extends TestCase {
     
     public void setUp() {
         p = new Project();
-        p.setBasedir("/tmp");
+        p.setBasedir(projectBasedir);
     }
 
     public void testAddText() throws BuildException {
@@ -307,7 +307,7 @@ public class IntrospectionHelperTest extends TestCase {
         ih.setAttribute(p, this, "ten", "2");
         try {
             ih.setAttribute(p, this, "ten", "3");
-            fail("/tmp/2 shouldn't be equals to /tmp/3");
+            fail(projectBasedir+"2 shouldn't be equals to "+projectBasedir+"3");
         } catch (BuildException be) {
             assertTrue(be.getException() instanceof AssertionFailedError);
         }
@@ -422,12 +422,12 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void setTen(File f) {
-        if (isUnixStyle) { 
-            assertEquals("/tmp/2", f.getAbsolutePath());
-        } else if (System.getProperty("os.name").toLowerCase(Locale.US).equals("netware")) {
-            assertEquals("\\tmp\\2", f.getAbsolutePath().toLowerCase(Locale.US));
+        if (Os.isFamily("unix")) { 
+            assertEquals(projectBasedir+"2", f.getAbsolutePath());
+        } else if (Os.isFamily("netware")) {
+            assertEquals(projectBasedir+"2", f.getAbsolutePath().toLowerCase(Locale.US));
         } else {
-            assertEquals(":\\tmp\\2", f.getAbsolutePath().toLowerCase(Locale.US).substring(1));
+            assertEquals(":"+projectBasedir+"2", f.getAbsolutePath().toLowerCase(Locale.US).substring(1));
         }
     }
 
