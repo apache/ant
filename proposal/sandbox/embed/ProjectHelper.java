@@ -69,7 +69,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.xml.sax.AttributeList;
-
+import org.apache.tools.ant.helper.ProjectHelperImpl;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
@@ -90,48 +90,42 @@ import org.xml.sax.AttributeList;
  *
  * @author duncan@x180.com
  */
-public /*abstract*/ class ProjectHelper {
+public class ProjectHelper {
 
     /**
-     * Configures the Project with the contents of the specified XML file.
-     * ( should it be deprecated ? Using getProjectHelper(), parse()
-     * is cleaner )
+     * Configures the project with the contents of the specified XML file.
+     * 
+     * @param project The project to configure. Must not be <code>null</code>.
+     * @param buildFile An XML file giving the project's configuration.
+     *                  Must not be <code>null</code>.
+     * 
+     * @exception BuildException if the configuration is invalid or cannot 
+     *                           be read
      */
-    public static void configureProject(Project project, File buildFile)
-        throws BuildException
-    {
+    public static void configureProject(Project project, File buildFile) throws BuildException {
         ProjectHelper helper=ProjectHelper.getProjectHelper();
         helper.parse(project, buildFile);
     }
 
     public ProjectHelper() {
     }
-    
-    /**
-     * Constructs a new Ant parser for the specified XML file.
-     * @deprecated Use the plugin mechanism instead.
-     */
-    private ProjectHelper(Project project, File buildFile) {
-        //  this.project = project;
-        //  this.buildFile = new File(buildFile.getAbsolutePath());
-        //  buildFileParent = new File(this.buildFile.getParent());
-    }
 
-    public Project createProject(ClassLoader coreLoader) {
-        return new Project();
-    }
-    
     /**
-     * Process an input source for the project.
+     * Parses the project file, configuring the project as it goes.
      *
-     * All processors must support at least File sources. It is usefull to also support
-     * InputSource - this allows the input to come from a non-filesystem source
-     * (like input stream of a POST, or a soap body ).
+     * @param project The project for the resulting ProjectHelper to configure. 
+     *                Must not be <code>null</code>.
+     * @param source The source for XML configuration. A helper must support
+     *               at least File, for backward compatibility. Helpers may
+     *               support URL, InputStream, etc or specialized types.
+     *
+     * @since Ant1.5
+     * @exception BuildException if the configuration is invalid or cannot 
+     *                           be read
      */
-    public /*abstract*/ void parse(Project project, Object source)
-        throws BuildException
-    {
-        throw new BuildException("You must use a real ProjectHelper implementation"); 
+    public void parse(Project project, Object source) throws BuildException {
+        throw new BuildException("ProjectHelper.parse() must be implemented in a helper plugin "
+                                 + this.getClass().getName());
     }
 
     /* -------------------- Helper discovery -------------------- */
@@ -142,21 +136,22 @@ public /*abstract*/ class ProjectHelper {
         "/META-INF/services/org.apache.tools.ant.ProjectHelper";
 
     
-    /** Discover a project helper instance.
+    /** Discover a project helper instance. Uses the same patterns
+     *  as JAXP, commons-logging, etc: a system property, a JDK1.3
+     *  service discovery, default.
      */
     public static ProjectHelper getProjectHelper()
         throws BuildException
     {
         // Identify the class loader we will be using. Ant may be
         // in a webapp or embeded in a different app
-        ClassLoader classLoader = getContextClassLoader();
         ProjectHelper helper=null;
         
         // First, try the system property
         try {
             String helperClass = System.getProperty(HELPER_PROPERTY);
             if (helperClass != null) {
-                helper = newHelper(helperClass, classLoader);
+                helper = newHelper(helperClass);
             }
         } catch (SecurityException e) {
             // It's ok, we'll try next option
@@ -167,13 +162,15 @@ public /*abstract*/ class ProjectHelper {
         // automatically if in CLASSPATH, with the right META-INF/services.
         if( helper==null ) {
             try {
+                ClassLoader classLoader=getContextClassLoader();
                 InputStream is=null;
-                if (classLoader == null) {
-                    is=ClassLoader.getSystemResourceAsStream( SERVICE_ID );
-                } else {
+                if (classLoader != null) {
                     is=classLoader.getResourceAsStream( SERVICE_ID );
                 }
-
+                if( is==null ) {
+                    is=ClassLoader.getSystemResourceAsStream( SERVICE_ID );
+                }
+                
                 if( is != null ) {
                     // This code is needed by EBCDIC and other strange systems.
                     // It's a fix for bugs reported in xerces
@@ -190,7 +187,7 @@ public /*abstract*/ class ProjectHelper {
                     if (helperClassName != null &&
                         ! "".equals(helperClassName)) {
                         
-                        helper= newHelper( helperClassName, classLoader );
+                        helper= newHelper( helperClassName );
                     }
                 }
             } catch( Exception ex ) {
@@ -202,17 +199,25 @@ public /*abstract*/ class ProjectHelper {
         return new ProjectHelperImpl();
     }
 
-    private static ProjectHelper newHelper(String helperClass,
-                                           ClassLoader classLoader)
+    /** Create a new helper. It'll first try the thread class loader,
+     *  then Class.forName() will load from the same loader that
+     *  loaded this class.
+     */
+    private static ProjectHelper newHelper(String helperClass)
         throws BuildException
     {
-
+        ClassLoader classLoader = getContextClassLoader();
         try {
             Class clazz = null;
-            if (classLoader == null) {
+            if (classLoader != null) {
+                try {
+                    clazz = classLoader.loadClass(helperClass);
+                } catch( ClassNotFoundException ex ) {
+                    // try next method
+                }
+            }
+            if( clazz==null ) {
                 clazz = Class.forName(helperClass);
-            } else {
-                clazz = classLoader.loadClass(helperClass);
             }
             return ((ProjectHelper) clazz.newInstance());
         } catch (Exception e) {
@@ -220,7 +225,9 @@ public /*abstract*/ class ProjectHelper {
         }
     }
 
-    /** 
+    /**
+     *  JDK1.1 compatible access to the context class loader.
+     *  Cut&paste from Jaxp.
      */
     public static ClassLoader getContextClassLoader()
         throws BuildException
@@ -251,42 +258,42 @@ public /*abstract*/ class ProjectHelper {
         return (classLoader);
     }
 
-    
-    /* -------------------- Common utilities and wrappers -------------------- */
+    // -------------------- Static utils, used by most helpers -------------------- 
 
-    /** Configure a java object using ant's rules.
+    /**
+     * Configures an object using an introspection handler.
+     * 
+     * @param target The target object to be configured.
+     *               Must not be <code>null</code>.
+     * @param attrs  A list of attributes to configure within the target.
+     *               Must not be <code>null</code>.
+     * @param project The project containing the target. 
+     *                Must not be <code>null</code>.
+     * 
+     * @exception BuildException if any of the attributes can't be handled by
+     *                           the target
      */
     public static void configure(Object target, AttributeList attrs, 
                                  Project project) throws BuildException {
-        TaskAdapter adapter=null;
         if( target instanceof TaskAdapter ) {
-            adapter=(TaskAdapter)target;
-            target=adapter.getProxy();
+            target=((TaskAdapter)target).getProxy();
         }
 
         IntrospectionHelper ih = 
             IntrospectionHelper.getHelper(target.getClass());
-        if( adapter != null )
-            adapter.setIntrospectionHelper( ih );
 
-        // XXX What's that ?
         project.addBuildListener(ih);
 
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
             String value=replaceProperties(project, attrs.getValue(i), 
                                            project.getProperties() );
-            String name=attrs.getName(i).toLowerCase(Locale.US);
             try {
-                if (adapter!=null ) {
-                    adapter.setAttribute( name, value );
-                } else {
-                    ih.setAttribute(project, target, 
-                                    name, value);
-                }
+                ih.setAttribute(project, target, 
+                                attrs.getName(i).toLowerCase(Locale.US), value);
+
             } catch (BuildException be) {
                 // id attribute must be set externally
-                // XXX Shuldn't it be 'name' ( i.e. lower-cased ) ?
                 if (!attrs.getName(i).equals("id")) {
                     throw be;
                 }
@@ -296,14 +303,35 @@ public /*abstract*/ class ProjectHelper {
 
     /**
      * Adds the content of #PCDATA sections to an element.
+     * 
+     * @param project The project containing the target. 
+     *                Must not be <code>null</code>.
+     * @param target  The target object to be configured.
+     *                Must not be <code>null</code>.
+     * @param buf A character array of the text within the element.
+     *            Will not be <code>null</code>.
+     * @param start The start element in the array.
+     * @param count The number of characters to read from the array.
+     * 
+     * @exception BuildException if the target object doesn't accept text
      */
-    public static void addText(Project project, Object target, char[] buf, int start, int end)
+    public static void addText(Project project, Object target, char[] buf, int start, int count)
         throws BuildException {
-        addText(project, target, new String(buf, start, end));
+        addText(project, target, new String(buf, start, count));
     }
 
     /**
      * Adds the content of #PCDATA sections to an element.
+     * 
+     * @param project The project containing the target. 
+     *                Must not be <code>null</code>.
+     * @param target  The target object to be configured.
+     *                Must not be <code>null</code>.
+     * @param text    Text to add to the target.
+     *                May be <code>null</code>, in which case this
+     *                method call is a no-op.
+     * 
+     * @exception BuildException if the target object doesn't accept text
      */
     public static void addText(Project project, Object target, String text)
         throws BuildException {
@@ -320,7 +348,17 @@ public /*abstract*/ class ProjectHelper {
     }
 
     /**
-     * Stores a configured child element into its parent object 
+     * Stores a configured child element within its parent object.
+     * 
+     * @param project Project containing the objects.
+     *                May be <code>null</code>.
+     * @param parent  Parent object to add child to.
+     *                Must not be <code>null</code>.
+     * @param child   Child object to store in parent.
+     *                Should not be <code>null</code>.
+     * @param tag     Name of element which generated the child.
+     *                May be <code>null</code>, in which case
+     *                the child is not stored.
      */
     public static void storeChild(Project project, Object parent, Object child, String tag) {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parent.getClass());
@@ -328,10 +366,18 @@ public /*abstract*/ class ProjectHelper {
     }
 
     /**
-     * Replace ${} style constructions in the given value with the string value of
-     * the corresponding data types.
+     * Replaces <code>${xxx}</code> style constructions in the given value with 
+     * the string value of the corresponding properties.
      *
-     * @param value the string to be scanned for property references.
+     * @param value The string to be scanned for property references.
+     *              May be <code>null</code>.
+     *
+     * @exception BuildException if the string contains an opening 
+     *                           <code>${</code> without a closing 
+     *                           <code>}</code>
+     * @return the original string with the properties replaced, or
+     *         <code>null</code> if the original string is <code>null</code>.
+     * 
      * @since 1.5
      */
      public static String replaceProperties(Project project, String value)
@@ -340,10 +386,22 @@ public /*abstract*/ class ProjectHelper {
      }
 
     /**
-     * Replace ${} style constructions in the given value with the string value of
-     * the corresponding data types.
+     * Replaces <code>${xxx}</code> style constructions in the given value 
+     * with the string value of the corresponding data types.
      *
-     * @param value the string to be scanned for property references.
+     * @param project The container project. This is used solely for
+     *                logging purposes. Must not be <code>null</code>.
+     * @param value The string to be scanned for property references.
+     *              May be <code>null</code>, in which case this
+     *              method returns immediately with no effect.
+     * @param keys  Mapping (String to String) of property names to their 
+     *              values. Must not be <code>null</code>.
+     * 
+     * @exception BuildException if the string contains an opening 
+     *                           <code>${</code> without a closing 
+     *                           <code>}</code>
+     * @return the original string with the properties replaced, or
+     *         <code>null</code> if the original string is <code>null</code>.
      */
      public static String replaceProperties(Project project, String value, Hashtable keys)
             throws BuildException {
@@ -375,11 +433,21 @@ public /*abstract*/ class ProjectHelper {
     }
 
     /**
-     * This method will parse a string containing ${value} style 
-     * property values into two lists. The first list is a collection
-     * of text fragments, while the other is a set of string property names
-     * null entries in the first list indicate a property reference from the
-     * second list.
+     * Parses a string containing <code>${xxx}</code> style property
+     * references into two lists. The first list is a collection
+     * of text fragments, while the other is a set of string property names.
+     * <code>null</code> entries in the first list indicate a property 
+     * reference from the second list.
+     * 
+     * @param value     Text to parse. Must not be <code>null</code>.
+     * @param fragments List to add text fragments to. 
+     *                  Must not be <code>null</code>.
+     * @param propertyRefs List to add property names to.
+     *                     Must not be <code>null</code>.
+     * 
+     * @exception BuildException if the string contains an opening 
+     *                           <code>${</code> without a closing 
+     *                           <code>}</code>
      */
     public static void parsePropertyString(String value, Vector fragments, Vector propertyRefs) 
         throws BuildException {
@@ -414,5 +482,4 @@ public /*abstract*/ class ProjectHelper {
             fragments.addElement(value.substring(prev));
         }
     }
-
 }
