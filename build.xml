@@ -366,8 +366,14 @@
           depends="build"
           description="--> creates the Apache Ant jars">
 
-    <copy file="LICENSE" tofile="${build.dir}/LICENSE.txt"/>
-    
+    <copy todir="${build.dir}">
+      <fileset dir=".">
+        <include name="LICENSE" />
+        <include name="LICENSE.crimson" />
+      </fileset>
+      <mapper type="glob" from="*" to="*.txt" />
+    </copy>
+
     <jar destfile="${build.lib}/${name}.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
@@ -475,6 +481,7 @@
       <fileset dir=".">
         <include name="README"/>
         <include name="LICENSE"/>
+        <include name="LICENSE.crimson"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
@@ -553,6 +560,7 @@
       <fileset dir=".">
         <include name="README"/>
         <include name="LICENSE"/>
+        <include name="LICENSE.crimson"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
