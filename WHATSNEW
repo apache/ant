@@ -33,6 +33,9 @@ Fixed bugs:
   declaration time but will created before the fileset gets used for the
   first time.
 
+* If the quiet attribute has been set, <delete> will handle <fileset>s
+  with non-existing directories gracefully.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 

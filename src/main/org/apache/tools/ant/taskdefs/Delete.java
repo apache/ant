@@ -268,18 +268,36 @@ public class Delete extends MatchingTask {
         // delete the files in the filesets
         for (int i=0; i<filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            String[] files = ds.getIncludedFiles();
-            String[] dirs = ds.getIncludedDirectories();
-            removeFiles(fs.getDir(project), files, dirs);
+            try {
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                String[] files = ds.getIncludedFiles();
+                String[] dirs = ds.getIncludedDirectories();
+                removeFiles(fs.getDir(project), files, dirs);
+            } catch (BuildException be) {
+                // directory doesn't exist or is not readable
+                if (!quiet) {
+                    throw be;
+                } else {
+                    log(be.getMessage(), Project.MSG_VERBOSE);
+                }
+            }
         }
 
         // delete the files from the default fileset
         if (usedMatchingTask && dir != null) {
-            DirectoryScanner ds = super.getDirectoryScanner(dir);
-            String[] files = ds.getIncludedFiles();
-            String[] dirs = ds.getIncludedDirectories();
-            removeFiles(dir, files, dirs);
+            try {
+                DirectoryScanner ds = super.getDirectoryScanner(dir);
+                String[] files = ds.getIncludedFiles();
+                String[] dirs = ds.getIncludedDirectories();
+                removeFiles(dir, files, dirs);
+            } catch (BuildException be) {
+                // directory doesn't exist or is not readable
+                if (!quiet) {
+                    throw be;
+                } else {
+                    log(be.getMessage(), Project.MSG_VERBOSE);
+                }
+            }
         }
     } 
 
