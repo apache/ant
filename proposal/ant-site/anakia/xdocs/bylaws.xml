@@ -26,7 +26,7 @@
     <p>
       Ant is typical of Apache projects in that it operates under a set of 
       principles, known collectively as the &quot;Apache Way&quot;. If you are 
-      new to Apache, please refer to the 
+      new to Apache development, please refer to the 
       <a href="http://incubator.apache.org">Incubator project</a> 
       for more information on how Apache projects operate. <b>Note:</b> the 
       incubator project has only been recently set up and does not yet explain 
@@ -94,11 +94,14 @@
         Committer access is by invitation only and must be approved by lazy 
         consensus of the active PMC members. A Committer is considered emeritus 
         by their own declaration or by not contributing in any form to the 
-        project for over four months. An emeritus committer may request 
+        project for over six months. An emeritus committer may request 
         reinstatement of commit access fromt he PMC. Such reinstatement is
-        subject to lazy consensus of active PMC members. Commit access can be 
-        revoked by a unanimous vote of all the active PMC members (except the 
-        committer in question if they are also a PMC member).
+        subject to lazy consensus of active PMC members. 
+      </p>
+      
+      <p>
+        Commit access can be revoked by a unanimous vote of all the active 
+        PMC members (except the committer in question if they are also a PMC member).
       </p>
 
       <p>
@@ -110,7 +113,9 @@
 
       <p>
         A committer who makes a sustained contibution to the project may be 
-        invited to become a member of the PMC.
+        invited to become a member of the PMC. The form of contribution is 
+        not limited to code. It can also include code review, helping out 
+        users on the mailing lists, documentation, etc.
       </p>
     </subsection>
     <subsection name="Project Management Committee">
@@ -143,7 +148,7 @@
         Membership of the PMC is by invitation only and must be approved by a 
         lazy consensus of active PMC members. A PMC member is considered 
         &quot;emeritus&quot; by their own declaration or by not contributing in 
-        any form to the project for over four months. An emeritus member may 
+        any form to the project for over six months. An emeritus member may 
         request reinstatement to the PMC. Such reinstatement is subject to lazy 
         consensus of the active PMC members. Membership of the PMC can be 
         revoked by an unanimous vote of all the active PMC members other than 
@@ -158,8 +163,8 @@
         reports to the board quarterly on developments within the Ant project. 
         The PMC may consider the position of PMC chair annually and if 
         supported by 3/4 Majority may recommend a new chair to the board. 
-        Ultimately, however, it is the board's responsibility who to appoint as 
-        the PMC chair.
+        Ultimately, however, it is the board's responsibility who it chooses
+        to appoint as the PMC chair.
       </p>
     </subsection>
   </section>
@@ -179,10 +184,10 @@
         Decisions regarding the project are made by votes on the primary project 
         development mailing list (ant-dev@jakarta.apache.org). Where necessary, 
         PMC voting may take place on the private Ant PMC mailing list. 
-        Votes are indicated by subject line starting with [VOTE]. Votes
-        may contain multiple items for approval and these should be clearly 
-        separated. Voting is carried out by replying to the vote mail. Voting 
-        may take four flavours
+        Votes are clearly indicated by subject line starting with [VOTE] or 
+        [PMC-VOTE]. Votes may contain multiple items for approval and these 
+        should be clearly separated. Voting is carried out by replying to the 
+        vote mail. Voting may take four flavours
       </p>
 
       <table>
@@ -217,9 +222,10 @@
           <td><strong>-1</strong></td>
           <td>
             This is a negative vote. On issues where consensus is required, 
-            this vote counts as a <strong>veto</strong>. All vetos must 
-            contain an explanation of why the veto is appropriate. Vetos with 
-            no explanation are void. 
+            this vote counts as a <strong>veto</strong>. All vetoes must 
+            contain an explanation of why the veto is appropriate. Vetoes with 
+            no explanation are void. IT may also be appropriate for a -1 vote
+            to include an alternative course of action.
           </td>
         </tr>
       </table>
@@ -228,9 +234,9 @@
         All participants in the Ant project are encouraged to show their
         agreement with or against a particular action by voting. For technical
         decisions, only the votes of active committers are binding. Non binding
-        votes are still useful for Committers to understand the perception of an
-        action in the wider Ant community. For PMC decisions, only the votes of
-        PMC members are binding.
+        votes are still useful for those with binding votes to understand the 
+        perception of an action in the wider Ant community. For PMC decisions, 
+        only the votes of PMC members are binding.
       </p>
       
       <p>
@@ -251,7 +257,7 @@
           <td><strong>Consensus</strong></td> 
           <td>
             For this to pass, all voters with binding votes must vote and there 
-            can be no binding vetos (-1). Consensus votes are rarely required 
+            can be no binding vetoes (-1). Consensus votes are rarely required 
             due to the impracticality of getting all eligible voters to cast a 
             vote.
           </td>
@@ -260,7 +266,7 @@
         <tr>
           <td><strong>Lazy Consensus</strong></td> 
           <td>
-            Lazy consensus requires 3 binding +1 votes and no binding vetos. 
+            Lazy consensus requires 3 binding +1 votes and no binding vetoes. 
           </td>
         </tr>
       
@@ -280,19 +286,34 @@
             Lazy Majority or Lazy consensus approval must be obtained.
           </td>
         </tr>
+
+        <tr>
+          <td><strong>2/3 Majority</strong></td> 
+          <td>
+            Some actions require a 2/3 majority of active committers or PMC 
+            members to pass. Such actions typically affect the foundation 
+            of the project (e.g. adopting a new codebase to replace an existing 
+            product). The higher threshold is designed to ensure such changes 
+            are stronly supported. To pass this vote requires at least 2/3 of 
+            binding vote holders to vote +1
+          </td>
+        </tr>
       </table>
     </subsection>
     
-    <subsection name="Vetos">
+    <subsection name="Vetoes">
       <p>
         A valid, binding veto cannot be overruled. If a veto is cast, it must be
         accompanied by a valid reason explaining the reasons for the veto. The 
         validity of a veto, if challeneged, can be confirmed by anyone who has 
         a binding vote. This does not necessarily  signify agreement with the
-        veto - merely that the veto is valid. If you disagree with a veto, you 
-        must lobby the person casting the veto to withdraw their veto. If a veto
-        is not withdrawn, the action that has been vetoed bust be reversed in a
-        timely manner.
+        veto - merely that the veto is valid. 
+      </p>
+      
+      <p>
+        If you disagree with a valid veto, you must lobby the person casting 
+        the veto to withdraw their veto. If a veto is not withdrawn, the action 
+        that has been vetoed bust be reversed in a timely manner.
       </p>
     </subsection>
     
@@ -311,9 +332,9 @@
           <th>Binding Votes</th>
         </tr>
         <tr>
-          <td><strong>Codebase Change</strong></td>
+          <td><strong>Code Change</strong></td>
           <td>
-            A change made to the main codebase of the project and committed
+            A change made to a codebase of the project and committed
             by a committer. This includes source code, documentation, website
             content, etc.
           </td>
@@ -352,6 +373,24 @@
           </td>
         </tr>
         <tr>
+          <td><strong>Adoption of new codebase</strong></td>
+          <td>
+            When the codebase for an existing, released product is to be 
+            replaced with an alternative codebase.  Alternative codebases 
+            may be developed in the project's source code reposity according 
+            to the 
+            <a href="http://incubator.apache.org/rules-for-revolutionaries.html">
+            Rules for Revolutionaries</a>. If such a vote fails to gain approval, 
+            the existing code base will continue.
+          </td>
+          <td>
+            2/3 Majority
+          </td>
+          <td>
+            Active committers
+          </td>
+        </tr>
+        <tr>
           <td><strong>New Committer</strong></td>
           <td>
             When a new committer is proposed for the project
@@ -375,7 +414,43 @@
             Active PMC members
           </td>
         </tr>
+        <tr>
+          <td><strong>Committer Removal</strong></td>
+          <td>
+            <p>When removal of commit privileges is sought.</p>
+            <p><b>Note: </b> Such actions will also be referred to the ASF 
+            board by the PMC chair</p>
+          </td>
+          <td>
+            Consensus
+          </td>
+          <td>
+            Active PMC members (excluding the committer in question if a 
+            member of the PMC).
+          </td>
+        </tr>
+        <tr>
+          <td><strong>PMC member Removal</strong></td>
+          <td>
+            <p>When removal of a PMC member is sought.</p>
+            <p><b>Note: </b> Such actions will also be referred to the 
+            ASF board by the PMC chair</p>
+          </td>
+          <td>
+            Consensus
+          </td>
+          <td>
+            Active PMC members (excluding the member in question).
+          </td>
+        </tr>
       </table>        
+    </subsection>
+    <subsection name="Voting Timeframes">
+      <p>
+        Votes are open for a period of 1 week to allow all active voters 
+        time to consider the vote. Votes relating to code changes are not 
+        subject to a strict timetable but should be made as timely as possible.
+      </p>
     </subsection>
   </section>
 </body>
