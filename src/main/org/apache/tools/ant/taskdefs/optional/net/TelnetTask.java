@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import com.oroinc.net.telnet.TelnetClient;
+import org.apache.commons.net.telnet.TelnetClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -305,8 +305,9 @@ public class TelnetTask extends Task {
 
     /**
      *  This class handles the abstraction of the telnet protocol.
-     *  Currently it is a wrapper around <a href="www.oroinc.com">ORO</a>'s
-     *  NetComponents
+     *  Currently it is a wrapper around <a
+     *  href="http://jakarta.apache.org/commons/net/index.html">Jakarta
+     *  Commons Net</a>.
      */
     public class AntTelnetClient extends TelnetClient {
         /**

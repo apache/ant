@@ -31,6 +31,10 @@ Changes that could break older environments:
   compile against the current code base.  If it still compiles, it will
   probably not work as in Ant 1.5.1.
 
+* The <ftp> and <telnet> tasks now require Jakarta Commons Net instead
+  of the older ORO Netcomponents version.  See
+  <http://jakarta.apache.org/commons/net/index.html>.
+
 Fixed bugs:
 -----------
 * <translate> was not ignoring comment lines.

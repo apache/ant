@@ -53,9 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import com.oroinc.net.ftp.FTPClient;
-import com.oroinc.net.ftp.FTPFile;
-import com.oroinc.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -1052,7 +1052,7 @@ public class FTP
             log("login succeeded", Project.MSG_VERBOSE);
 
             if (binary) {
-                ftp.setFileType(com.oroinc.net.ftp.FTP.IMAGE_FILE_TYPE);
+                ftp.setFileType(org.apache.commons.net.ftp.FTP.IMAGE_FILE_TYPE);
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                     throw new BuildException("could not set transfer type: " +
                         ftp.getReplyString());

@@ -253,7 +253,7 @@
       <filename name="${optional.package}/ejb/WLStop*"/>
     </or>
   </selector>
-  <selector id="needs.netcomponents">
+  <selector id="needs.commons.net">
     <or>
       <filename name="${optional.package}/net/FTP*"/>
       <filename name="${optional.package}/net/TelnetTask*"/>
@@ -381,8 +381,8 @@
     <available property="junit.present"
                classname="junit.framework.TestCase"
                classpathref="classpath"/>
-    <available property="netcomp.present"
-               classname="com.oroinc.net.ftp.FTPClient"
+    <available property="commons.net.present"
+               classname="org.apache.commons.net.ftp.FTPClient"
                classpathref="classpath"/>
     <available property="starteam.present"
                classname="com.starbase.util.Platform"
@@ -616,7 +616,7 @@
             <selector refid="needs.weblogic.ddcreator"
                       unless="ejb.DDCreator.present"/>
             <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
-            <selector refid="needs.netcomponents" unless="netcomp.present"/>
+            <selector refid="needs.commons.net" unless="commons.net.present"/>
             <selector refid="needs.starteam" unless="starteam.present"/>
             <selector refid="needs.vaj" unless="vaj.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
@@ -783,7 +783,7 @@
             <selector refid="needs.weblogic.ejbc"/>
             <selector refid="needs.weblogic.ddcreator"/>
             <selector refid="needs.weblogic.server"/>
-            <selector refid="needs.netcomponents"/>
+            <selector refid="needs.commons.net"/>
             <selector refid="needs.starteam"/>
             <selector refid="needs.vaj"/>
             <selector refid="needs.antlr"/>
@@ -892,10 +892,10 @@
       <selector refid="needs.netrexx"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-netcomp.jar"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-commons-net.jar"
          basedir="${build.classes}"
          manifest="${manifest.tmp}">
-      <selector refid="needs.netcomponents"/>
+      <selector refid="needs.commons.net"/>
     </jar>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-starteam.jar"
