@@ -65,7 +65,7 @@ import org.apache.tools.ant.Project;
  */
 public class CompilerAdapterFactory {
 
-    /** This is a singlton -- can't create instances!! */
+    /** This is a singleton -- can't create instances!! */
     private CompilerAdapterFactory() {
     }
 
@@ -94,9 +94,12 @@ public class CompilerAdapterFactory {
      */
     public static CompilerAdapter getCompiler(String compilerType, Task task) 
         throws BuildException {
-            /* If I've done things right, this should be the extent of the
-             * conditional statements required.
-             */
+            boolean isClassicCompilerSupported=true;
+            //as new versions of java come out, add them to this test
+            if(Project.getJavaVersion()==Project.JAVA_1_4) {
+                 isClassicCompilerSupported=false;
+             }
+
             if (compilerType.equalsIgnoreCase("jikes")) {
                 return new Jikes();
             }
@@ -106,20 +109,36 @@ public class CompilerAdapterFactory {
             if (compilerType.equalsIgnoreCase("classic") ||
                     compilerType.equalsIgnoreCase("javac1.1") ||
                     compilerType.equalsIgnoreCase("javac1.2")) {
-                return new Javac12();
+                if(isClassicCompilerSupported) {
+                    return new Javac12();
+                }
+                else {
+                    throw new BuildException("This version of java does "
+                                             +"not support the classic compiler");
+                }
+
             }
+            //on java<=1.3 the modern falls back to classic if it is not found
+            //but on java>=1.4 we just bail out early
             if (compilerType.equalsIgnoreCase("modern") ||
                     compilerType.equalsIgnoreCase("javac1.3") ||
                     compilerType.equalsIgnoreCase("javac1.4")) {
                 // does the modern compiler exist?
-                try {
-                    Class.forName("com.sun.tools.javac.Main");
-                } catch (ClassNotFoundException cnfe) {
-                    task.log("Modern compiler is not available - using "
-                            + "classic compiler", Project.MSG_WARN);
-                    return new Javac12();
+                if(doesModernCompilerExist()) {
+                    return new Javac13();
+                } else {
+                    if(isClassicCompilerSupported) {
+                        task.log("Modern compiler not found - looking for "
+                                + "classic compiler", Project.MSG_WARN);
+                        return new Javac12();
+                    }
+                    else {
+                        throw new BuildException("Unable to find a javac compiler;\n"
+                                                 +"com.sun.tools.javac.Main is not on the classpath.\n"
+                                                 +"Perhaps JAVA_HOME does not point to the JDK");
+                    }
                 }
-                return new Javac13();
+                
             }
             if (compilerType.equalsIgnoreCase("jvc") ||
                     compilerType.equalsIgnoreCase("microsoft")) {
@@ -138,6 +157,19 @@ public class CompilerAdapterFactory {
             return resolveClassName(compilerType);
         }
 
+    /**
+     * query for the Modern compiler existing
+     * @return true iff classic os on the classpath
+     */ 
+    private static boolean doesModernCompilerExist() {
+        try {
+            Class.forName("com.sun.tools.javac.Main");
+            return true;
+        } catch (ClassNotFoundException cnfe) {
+            return false;
+        }
+    }
+    
     /**
      * Tries to resolve the given classname into a compiler adapter.
      * Throws a fit if it can't.
