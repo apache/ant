@@ -106,21 +106,17 @@ Antidote Component Architecture
     to see an event before others, and in the case of <TT>AntEvent</TT
     objects, keep the event from propogating onward. The
     <TT>EventBus</TT> class defines the interrupt level constants
-    <TT>MONITORING=1</TT>, <TT>VETOING=5</TT>, and <TT>RESPONDING=10</TT> to
+    <TT>VETOING=1</TT>, <TT>MONITORING=5</TT>, and <TT>RESPONDING=10</TT> to
     help define categories of members. The implied purpose being that:
     <UL>
-
-      <LI><TT>MONITORING</TT>: Just listens for events, like a logger
-      or status monitor.</LI>
 
       <LI><TT>VETOING</TT>: Listens for certain types of events, and
       may process them in a non-default manner to determine if the
       event should be cancelled before being dispatched to the
-      <TT>RESPONDING</TT> group. An example of this might be to handle
-      a <I>SaveAs</I> event, whereby a <TT>VETOING</TT> member will
-      check to see if the file exists, and ask the user if they are
-      sure they want to overwrite the existing file. The <I>SaveAs</I>
-      event could then be cancelled before the operation is executed.</LI>
+      <TT>RESPONDING</TT> group. 
+
+      <LI><TT>MONITORING</TT>: Just listens for events, like a logger
+      or status monitor.</LI>
 
       <LI><TT>RESPONDING</TT>: Process events in a default manner,
       knowing that the event has passed any <TT>VETOING</TT> members.</LI>
@@ -190,30 +186,16 @@ Antidote Component Architecture
 
     <H2>Data Model and Views</H2>
 
-    <P>The data model is mainly defined by the Ant application,
-    primarily through the <TT>Project</TT>, <TT>Target</TT>, and
-    <TT>Task</TT> classes.<P> However, Antidote defines the class
-    <TT>ProjectProxy</TT> to act not only as a proxy to the real
-    <TT>Project</TT> class, but also as creator of GUI <I>views</I> of
-    the <TT>Project</TT>. A <I>view</I> is essentially a flyweight or
-    data proxy; it provides an orgainizational perspective on the actual
-    <TT>Project</TT> structure. For example, to render a
-    <TT>JTree</TT> version of the <TT>Project</TT>, one would call the
-    method <TT>ProjectProxy.getTreeModel()</TT>. Similarly, to get a
-    <TT>Document</TT> version of the <TT>Project</TT>, the
-    <TT>ProjectProxy,getDocument()</TT> method is used.</P>
-
-    <P><I>NB: This part of the architecture is not fleshed out very
-    well. There needs to be a discussion of the degree to which the
-    Antidote development should be able to impose changes on the Ant
-    data model, and to what level that model should be mirrored in the
-    Antidote code base. The coupling between them should be kept low,
-    and at the same time changes to one should affect the other
-    minimally. Still, features like property change events and bean
-    introspection (or BeanInfo) may be needed to be added to the Ant
-    data model. Having each view into the data go to the ProjectProxy
-    for its data model may not be the best approach. In other words,
-    lots of thought needs to occur here.</I></P>
+    <P><I>NB: This part of the architecture is not fleshed out very well. There
+    needs to be a discussion of the degree to which the Antidote development
+    should be able to impose changes on the Ant data model, and to what level
+    that model should be mirrored in the Antidote code base. The coupling
+    between them should be kept low, and at the same time changes to one should
+    affect the other minimally. Still, features like property change events and
+    bean introspection (or BeanInfo) may be needed to be added to the Ant data
+    model. Right now the data model is encapsulated in the package
+    <TT>org.apache.tools.ant.gui.acs</TT> (where "<TT>acs</TT>" stands for "Ant
+    Construction Set").</I></P>
 
     <H2>Application Context</H2>
 
