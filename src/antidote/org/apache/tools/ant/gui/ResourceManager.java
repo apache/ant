@@ -70,30 +70,30 @@ public class ResourceManager {
     /** Resources to reference. */
     private ResourceBundle _resources = null;
 
-	/** 
-	 * Default ctor. Uses the default properties file for antidote.
-	 * 
-	 */
+    /** 
+     * Default ctor. Uses the default properties file for antidote.
+     * 
+     */
     public ResourceManager() {
         this("org.apache.tools.ant.gui.resources.antidote");
     }
 
-	/** 
-	 * Standard ctor.
-	 * 
-	 * @param propName Fully qualified name of the resources to use.
-	 */
+    /** 
+     * Standard ctor.
+     * 
+     * @param propName Fully qualified name of the resources to use.
+     */
     public ResourceManager(String propName) {
         _resources = ResourceBundle.getBundle(propName);
     }
 
-	/** 
-	 * Get a string resource for the given class.
-	 * 
-	 * @param clazz Class to get resource for.
-	 * @param name Name of the string resource.
-	 * @return String resource for the given class.
-	 */
+    /** 
+     * Get a string resource for the given class.
+     * 
+     * @param clazz Class to get resource for.
+     * @param name Name of the string resource.
+     * @return String resource for the given class.
+     */
     public String getString(Class clazz, String name) {
         if(clazz == null || name == null) {
             return null;
@@ -102,13 +102,13 @@ public class ResourceManager {
         return _resources.getString(getKey(clazz, name));
     }
 
-	/** 
-	 * Get an array of string resources for the given class.
-	 * 
-	 * @param clazz Class to get resource for.
-	 * @param name Name of the string resource.
-	 * @return Array of string resources for the given class.
-	 */
+    /** 
+     * Get an array of string resources for the given class.
+     * 
+     * @param clazz Class to get resource for.
+     * @param name Name of the string resource.
+     * @return Array of string resources for the given class.
+     */
     public String[] getStringArray(Class clazz, String name) {
         if(clazz == null || name == null) {
             return null;
@@ -137,50 +137,50 @@ public class ResourceManager {
         }
     }
 
-	/** 
-	 * Generate a composit key from the given class and key name.
-	 * 
-	 * @param clazz Class to find resource for.
-	 * @param name Name of the resource.
-	 * @return Composite key.
-	 */
+    /** 
+     * Generate a composit key from the given class and key name.
+     * 
+     * @param clazz Class to find resource for.
+     * @param name Name of the resource.
+     * @return Composite key.
+     */
     private String getKey(Class clazz, String name) {
         return clazz.getName() + "." + name;
     }
 
-	/** 
-	 * Generate a localized message using the given set of arguments to 
+    /** 
+     * Generate a localized message using the given set of arguments to 
      * format the message with.
-	 * 
-	 * @param clazz Class to get message resource for.
-	 * @param name 
-	 * @param arguments 
-	 * @return 
-	 */
+     * 
+     * @param clazz Class to get message resource for.
+     * @param name 
+     * @param arguments 
+     * @return 
+     */
     public String getMessage(Class clazz, String name, Object[] arguments) {
         String format = getString(clazz, name);
         return MessageFormat.format(format, arguments);
     }
 
-	/** 
-	 * Get the image as an ImageIcon assigned to the given class with the
+    /** 
+     * Get the image as an ImageIcon assigned to the given class with the
      * given key.
-	 * 
+     * 
      * @param clazz The class to load icon for.
      * @param key The key for looking up the icon.
-	 * @return Image as an ImageIcon, or null if not found.
-	 */
+     * @return Image as an ImageIcon, or null if not found.
+     */
     public ImageIcon getImageIcon(Class clazz, String key) {
         return getImageIcon(getString(clazz, key));
     }
 
-	/** 
-	 * Get the image as an ImageIcon with the given file name. 
+    /** 
+     * Get the image as an ImageIcon with the given file name. 
      * For example "open.gif". The image is loaded from the resources package.
-	 * 
-	 * @param fileName Image file to load.
-	 * @return Image as an ImageIcon, or null if not found.
-	 */
+     * 
+     * @param fileName Image file to load.
+     * @return Image as an ImageIcon, or null if not found.
+     */
     public ImageIcon getImageIcon(String fileName) {
         if(fileName == null) return null;
 

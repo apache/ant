@@ -80,31 +80,31 @@ public class PropertyEditor extends AntModule {
     /** Scroll area containing contents. */
     private JScrollPane _scroller = null;
 
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-	public PropertyEditor() {
+    /** 
+     * Default ctor.
+     * 
+     */
+    public PropertyEditor() {
     }
 
-	/** 
-	 * Using the given AppContext, initialize the display.
-	 * 
-	 * @param context Application context.
-	 */
+    /** 
+     * Using the given AppContext, initialize the display.
+     * 
+     * @param context Application context.
+     */
     public void contextualize(AppContext context) {
         setContext(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
         _container = new JPanel(new BorderLayout());
         add(_scroller = new JScrollPane(_container));
-	}
+    }
 
-	/** 
-	 * Update the display for the current items. 
-	 * 
-	 * @param items Current items to display.
-	 */
+    /** 
+     * Update the display for the current items. 
+     * 
+     * @param items Current items to display.
+     */
     private void updateDisplay(ACSElement[] items) {
         if(_customizer != null) {
             _container.remove((Component)_customizer);

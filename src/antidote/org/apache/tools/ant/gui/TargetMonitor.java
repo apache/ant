@@ -76,18 +76,18 @@ public class TargetMonitor extends AntModule {
     /** Default text. */
     private String _defText = null;
 
-	/** 
-	 * Default ctor.
-	 * 
-	 */
+    /** 
+     * Default ctor.
+     * 
+     */
     public TargetMonitor() {
     }
 
-	/** 
-	 * Using the given AppContext, initialize the display.
-	 * 
-	 * @param context Application context.
-	 */
+    /** 
+     * Using the given AppContext, initialize the display.
+     * 
+     * @param context Application context.
+     */
     public void contextualize(AppContext context) {
         setContext(context);
         context.getEventBus().addMember(EventBus.RESPONDING, new Handler());
@@ -103,11 +103,11 @@ public class TargetMonitor extends AntModule {
         setText(_defText);
     }
 
-	/** 
-	 * Set the displayed text. 
-	 * 
-	 * @param text Text to display.
-	 */
+    /** 
+     * Set the displayed text. 
+     * 
+     * @param text Text to display.
+     */
     private void setText(String text) {
         _text.setText("<html>&nbsp;&nbsp;" + text + "</html>");
     }

@@ -68,21 +68,21 @@ public class XMLFileFilter extends FileFilter {
     private String _description = null;
 
 
-	/** 
-	 * Standard constructor.
-	 * 
-	 * @param resources Access to text resources.
-	 */
+    /** 
+     * Standard constructor.
+     * 
+     * @param resources Access to text resources.
+     */
     public XMLFileFilter(ResourceManager resources) {
         _description = resources.getString(getClass(), "description");
     }
 
-	/** 
-	 * Accept files that end with ".xml".
-	 * 
-	 * @param f File to test.
-	 * @return True if accepted, false otherwise.
-	 */
+    /** 
+     * Accept files that end with ".xml".
+     * 
+     * @param f File to test.
+     * @return True if accepted, false otherwise.
+     */
     public boolean accept(File f) {
         if(f.isDirectory()) return true;
 
@@ -90,11 +90,11 @@ public class XMLFileFilter extends FileFilter {
         return name.endsWith(".xml");
     }
 
-	/** 
-	 * Human readable description of filter.
-	 * 
-	 * @return Description.
-	 */
+    /** 
+     * Human readable description of filter.
+     * 
+     * @return Description.
+     */
     public String getDescription() {
         return _description;
     }

@@ -68,42 +68,42 @@ public abstract class AntModule extends JComponent {
     /** The application context. */
     private AppContext _context = null;
 
-	/** 
-	 * Default constructor.
-	 */
-	protected AntModule() {
+    /** 
+     * Default constructor.
+     */
+    protected AntModule() {
         // Create a dummy border so that the widget will at least have a
         // minimal display in a bean environment.
         setBorder(BorderFactory.createTitledBorder(getClass().getName()));
-	}
+    }
 
-	/** 
-	 * This method is called after instantiation when the application context
+    /** 
+     * This method is called after instantiation when the application context
      * is available for constructing the class' display. Think of this in
      * a similar manner to Applet.init() or Servlet.init(). It should 
      * immediately call #setContext() with the given parameter.
-	 * 
-	 * @param context Valid application context providing
-	 *                all required resources.  
+     * 
+     * @param context Valid application context providing
+     *                all required resources.  
      */
     public abstract void contextualize(AppContext context);
 
-	/** 
-	 * Set the application context.
-	 * 
-	 * @param context Application context.
-	 */
+    /** 
+     * Set the application context.
+     * 
+     * @param context Application context.
+     */
     protected void setContext(AppContext context) {
         _context = context;
         setBorder(_context == null ? null : 
                   BorderFactory.createTitledBorder(getName()));
     }
 
-	/** 
-	 * Get the application context.
-	 * 
-	 * @return Application context.
-	 */
+    /** 
+     * Get the application context.
+     * 
+     * @return Application context.
+     */
     public AppContext getContext() {
         if(_context == null) {
             throw new IllegalStateException(
@@ -111,11 +111,11 @@ public abstract class AntModule extends JComponent {
         }
         return _context;
     }
-	/** 
-	 * Get the name of the editor.
-	 * 
-	 * @return Editor's name.
-	 */
+    /** 
+     * Get the name of the editor.
+     * 
+     * @return Editor's name.
+     */
     public String getName() {
         return getContext().getResources().getString(getClass(), "name");
     }
