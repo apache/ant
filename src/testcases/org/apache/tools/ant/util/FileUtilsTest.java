@@ -83,9 +83,6 @@ public class FileUtilsTest extends TestCase {
         long secondModTime = removeThis.lastModified();
         assertTrue(secondModTime > modTime);
 
-        //check that the isUpToDate logic works
-        assertFalse(fu.isUpToDate(modTime,secondModTime));
-
         // number of milliseconds in a day
         final int millisperday=24 * 3600 * 1000;
         // in a previous version, the date of the file was set to 123456
@@ -436,6 +433,28 @@ public class FileUtilsTest extends TestCase {
                      fu.fromURI("file:./foo"));
         assertEqualsIgnoreDriveCase(localize("/foo bar"), fu.fromURI("file:///foo%20bar"));
         assertEqualsIgnoreDriveCase(localize("/foo#bar"), fu.fromURI("file:///foo%23bar"));
+    }
+
+    public void testModificationTests() {
+
+        //get a time
+        long firstTime=System.currentTimeMillis();
+        //add some time. We assume no OS has a granularity this bad
+        long secondTime=firstTime+60000;
+/*
+        assertTrue("same timestamp is up to date",
+                fu.isUpToDate(firstTime, firstTime));
+                */
+
+        //check that older is up to date with a newer dest
+        assertTrue("older source files are up to date",
+                fu.isUpToDate(firstTime,secondTime));
+        //check that older is up to date with a newer dest
+        assertFalse("newer source files are no up to date",
+                fu.isUpToDate(secondTime, firstTime));
+
+        assertTrue("-1 dest timestamp implies nonexistence",
+                !fu.isUpToDate(firstTime,-1L));
     }
 
     /**
