@@ -184,6 +184,18 @@ public class Ant extends Task {
             if (p.getResource() != null) {
                 newP.setResource(p.getResource());
             }
+            if (p.getPrefix() != null) {
+                newP.setPrefix(p.getPrefix());
+            }
+            if (p.getRefid() != null) {
+                newP.setRefid(p.getRefid());
+            }
+            if (p.getEnvironment() != null) {
+                newP.setEnvironment(p.getEnvironment());
+            }
+            if (p.getClasspath() != null) {
+                newP.setClasspath(p.getClasspath());
+            }
             properties.setElementAt(newP, i);
         }
     }

@@ -130,11 +130,21 @@ public class Property extends Task {
         return file;
     }
     
+    /**
+     * @since Ant 1.5
+     */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         if (!prefix.endsWith(".")) {
             this.prefix += ".";
         }
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    public String getPrefix() {
+        return prefix;
     }
 
     public void setRefid(Reference ref) {
@@ -157,6 +167,9 @@ public class Property extends Task {
         this.env = env;
     }
 
+    /**
+     * @since Ant 1.5
+     */
     public String getEnvironment() {
         return env;
     }
@@ -178,6 +191,13 @@ public class Property extends Task {
 
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    public Path getClasspath() {
+        return classpath;
     }
 
     /**
