@@ -20,7 +20,7 @@ remote machine.</p>
 in the Ant distribution.  See <a
 href="../install.html#librarydependencies">Library Dependencies</a>
 for more information.  This task has been tested with jsch-0.1.2 to
-jsch-0.1.9.</p>
+jsch-0.1.14.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -34,17 +34,52 @@ jsch-0.1.9.</p>
     <td valign="top">The file to copy.  This can be a local path or a
     remote path of the form <i>user[:password]@host:/directory/path</i>.
     <i>:password</i> can be ommitted if you use key based
-    authentication or specify the password attribute.</td>
+    authentication or specify the password attribute.  The way remote
+    path is recognized is whether it contains @ character or not. This
+    will not work if your localPath contains @ character.</td>
     <td valign="top" align="center">Yes, unless a nested
     <code>&lt;fileset&gt;</code> element is used.</td>
+  </tr>
+  <tr>
+    <td valign="top">localFile</td>
+    <td valign="top">This is an alternative to the file attribute. But
+    this must always point to a local file. The reason this was added
+    was that when you give file attribute it is treated as remote if
+    it contains @ character. This character can exist also in local
+    paths.  <em>since Ant 1.6.2</em></td>
+    <td valign="top" align="center">Alternative to file attribute.</td>
+  </tr>
+  <tr>
+    <td valign="top">remoteFile</td>
+    <td valign="top">This is an alternative to the file attribute. But
+    this must always point to a remote file.  <em>since Ant 1.6.2</em></td>
+    <td valign="top" align="center">Alternative to file attribute.</td>
   </tr>
   <tr>
     <td valign="top">todir</td>
     <td valign="top">The directory to copy to.  This can be a local path
     or a remote path of the form <i>user[:password]@host:/directory/path</i>.
     <i>:password</i> can be ommitted if you use key based
-    authentication or specify the password attribute.</td>
+    authentication or specify the password attribute.  The way remote
+    path is recognized is whether it contains @ character or not. This
+    will not work if your localPath contains @ character.</td>
     <td valian="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">localTodir</td>
+    <td valign="top">This is an alternative to the todir
+    attribute. But this must always point to a local directory. The
+    reason this was added was that when you give todir attribute it is
+    treated as remote if it contains @ character. This character can
+    exist also in local paths.  <em>since Ant 1.6.2</em></td>
+    <td valian="top" align="center">Alternative to todir attribute.</td>
+  </tr>
+  <tr>
+    <td valign="top">remoteTodir</td>
+    <td valign="top">This is an alternative to the todir
+    attribute. But this must always point to a remote directory.
+    <em>since Ant 1.6.2</em></td>
+    <td valian="top" align="center">Alternative to todir attribute.</td>
   </tr>
   <tr>
     <td valign="top">port</td>
@@ -91,6 +126,13 @@ jsch-0.1.9.</p>
      <td valign="top">Passphrase for your private key.</td>
      <td valign="top" align="center">Yes, if you are using key based
      authentication.</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">Determines whether SCP outputs verbosely to the
+    user. Currently this means outputting dots/stars showing the
+    progress of a file transfer.  <em>since Ant 1.6.2</em></td>
+    <td valign="top" align="center">No; defaults to false.</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>

@@ -43,6 +43,7 @@ public class Scp extends SSHBase {
     private String fromUri;
     private String toUri;
     private List fileSets = null;
+    private boolean isFromRemote, isToRemote;
 
     /**
      * Sets the file to be transferred.  This can either be a remote
@@ -55,6 +56,7 @@ public class Scp extends SSHBase {
      */
     public void setFile(String aFromUri) {
         this.fromUri = aFromUri;
+        this.isFromRemote = isRemoteUri(this.fromUri);
     }
 
     /**
@@ -68,9 +70,50 @@ public class Scp extends SSHBase {
      */
     public void setTodir(String aToUri) {
         this.toUri = aToUri;
+        this.isToRemote = isRemoteUri(this.toUri);
     }
 
+    /**
+     * Similiar to {@link #setFile setFile} but explicitly states that
+     * the file is a local file.  This is the only way to specify a
+     * local file with a @ character.
+     * @since Ant 1.6.2
+     */
+    public void setLocalFile(String aFromUri) {
+        this.fromUri = aFromUri;
+        this.isFromRemote = false;
+    }
 
+    /**
+     * Similiar to {@link #setFile setFile} but explicitly states that
+     * the file is a remote file.
+     * @since Ant 1.6.2
+     */
+    public void setRemoteFile(String aFromUri) {
+        this.fromUri = aFromUri;
+        this.isFromRemote = true;
+     }
+
+    /**
+     * Similiar to {@link #setTodir setTodir} but explicitly states
+     * that the directory is a local.  This is the only way to specify
+     * a local directory with a @ character.
+     * @since Ant 1.6.2
+     */
+    public void setLocalTodir(String aToUri) {
+        this.toUri = aToUri;
+        this.isToRemote = false;
+    }
+
+    /**
+     * Similiar to {@link #setTodir setTodir} but explicitly states
+     * that the directory is a remote.
+     * @since Ant 1.6.2
+     */
+    public void setRemoteTodir(String aToUri) {
+        this.toUri = aToUri;
+        this.isToRemote = true;
+    }
 
     /**
      * Adds a FileSet tranfer to remote host.  NOTE: Either
@@ -102,11 +145,6 @@ public class Scp extends SSHBase {
                 + "FileSet is required.");
         }
 
-        boolean isFromRemote = false;
-        if (fromUri != null) {
-            isFromRemote = isRemoteUri(fromUri);
-        }
-        boolean isToRemote = isRemoteUri(toUri);
         try {
             if (isFromRemote && !isToRemote) {
                 download(fromUri, toUri);
