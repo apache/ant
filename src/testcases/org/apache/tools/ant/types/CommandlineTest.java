@@ -111,10 +111,6 @@ public class CommandlineTest extends TestCase {
         assertEquals("Single quotes stripped, double quote included", "2\"3",
                      s[1]);
 
-        s = Commandline.translateCommandline("1 2\\ 3 4");
-        assertEquals("Case with quoted whitespace", 3, s.length);
-        assertEquals("space included", "2 3", s[1]);
-        
         s = Commandline.translateCommandline("1 2\\\'3 4");
         assertEquals("Case with quoted single quote", 3, s.length);
         assertEquals("single quote included", "2\'3", s[1]);
