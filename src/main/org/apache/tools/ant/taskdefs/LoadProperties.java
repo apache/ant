@@ -137,18 +137,12 @@ public final class LoadProperties extends Task {
             throw new BuildException("Source file is not a file.");
         }
 
-        // Check if the source file is empty
-        if (srcFile.length() == 0) {
-            return;
-        }
-        
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         Reader instream = null;
 
         try {
             final long len = srcFile.length();
-            final int size = (int) len;
 
             //open up the file
             fis = new FileInputStream(srcFile);
@@ -160,7 +154,6 @@ public final class LoadProperties extends Task {
             }
 
             ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
             crh.setProject(getProject());
