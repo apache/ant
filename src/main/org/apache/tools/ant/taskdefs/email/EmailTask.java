@@ -77,7 +77,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author Magesh Umasankar
  * @author glenn_twiggs@bmc.com
  * @author steve_l@iseran.com steve loughran
- * @author erik@hatcher.net Erik Hatcher
+ * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @author roxspring@yahoo.com Rob Oxspring
  * @created 10 Dec 2001
