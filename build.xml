@@ -339,6 +339,7 @@
     <!-- an unless-attribute on each exclude-element.                      -->
     <exclude unless="run.failing.tests" name="${optional.package}/BeanShellScriptTest.java"/>
     <exclude unless="run.failing.tests" name="${optional.package}/jdepend/JDependTest.java"/>
+    <exclude unless="run.failing.tests" name="${optional.package}/DotnetTest.java"/>
   </patternset>
 
   <!--
