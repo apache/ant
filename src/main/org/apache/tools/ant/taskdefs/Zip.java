@@ -114,7 +114,6 @@ public class Zip extends MatchingTask {
      * This is the name/location of where to 
      * create the .zip file.
      *
-     * @deprecated Use setFile() instead
      */
     public void setFile(File file) {
         this.zipFile = file;
