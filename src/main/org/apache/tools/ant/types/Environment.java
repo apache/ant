@@ -76,9 +76,15 @@ public class Environment {
         public void setKey(String key) {
             this.key = key;
         }
+        
         public void setValue(String value) {
             this.value = value;
         }
+        
+        public void setPath(Path path) {
+            this.value = path.toString();
+        }
+
         public String getContent() throws BuildException {
             if (key == null || value == null) {
                 throw new BuildException("key and value must be specified for environment variables.");
