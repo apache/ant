@@ -214,7 +214,7 @@ public class Javac extends MatchingTask {
      */
     public Path createSrc() {
         if (src == null) {
-            src = new Path(project);
+            src = new Path(getProject());
         }
         return src.createPath();
     }
@@ -282,7 +282,7 @@ public class Javac extends MatchingTask {
      */
     public Path createSourcepath() {
         if (compileSourcepath == null) {
-            compileSourcepath = new Path(project);
+            compileSourcepath = new Path(getProject());
         }
         return compileSourcepath.createPath();
     }
@@ -317,7 +317,7 @@ public class Javac extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+            compileClasspath = new Path(getProject());
         }
         return compileClasspath.createPath();
     }
@@ -354,7 +354,7 @@ public class Javac extends MatchingTask {
      */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
-            bootclasspath = new Path(project);
+            bootclasspath = new Path(getProject());
         }
         return bootclasspath.createPath();
     }
@@ -391,7 +391,7 @@ public class Javac extends MatchingTask {
      */
     public Path createExtdirs() {
         if (extdirs == null) {
-            extdirs = new Path(project);
+            extdirs = new Path(getProject());
         }
         return extdirs.createPath();
     }
@@ -666,7 +666,7 @@ public class Javac extends MatchingTask {
         // compile lists
         String[] list = src.list();
         for (int i = 0; i < list.length; i++) {
-            File srcDir = project.resolveFile(list[i]);
+            File srcDir = getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \""
                                          + srcDir.getPath()

@@ -195,12 +195,12 @@ public class DependSet extends MatchingTask {
                continue;
            }
 
-           DirectoryScanner targetDS = targetFS.getDirectoryScanner(project);
+           DirectoryScanner targetDS = targetFS.getDirectoryScanner(getProject());
            String[] targetFiles      = targetDS.getIncludedFiles();
 
            for (int i = 0; i < targetFiles.length; i++) {
 
-              File dest = new File(targetFS.getDir(project), targetFiles[i]);
+              File dest = new File(targetFS.getDir(getProject()), targetFiles[i]);
               allTargets.addElement(dest);
 
               if (dest.lastModified() > now) {
@@ -224,11 +224,11 @@ public class DependSet extends MatchingTask {
         while (enumTargetLists.hasMoreElements()) {
 
            FileList targetFL    = (FileList) enumTargetLists.nextElement();
-           String[] targetFiles = targetFL.getFiles(project);
+           String[] targetFiles = targetFL.getFiles(getProject());
 
            for (int i = 0; i < targetFiles.length; i++) {
 
-              File dest = new File(targetFL.getDir(project), targetFiles[i]);
+              File dest = new File(targetFL.getDir(getProject()), targetFiles[i]);
               if (!dest.exists()) {
                  log(targetFiles[i] + " does not exist.", Project.MSG_VERBOSE);
                  upToDate = false;
@@ -264,10 +264,10 @@ public class DependSet extends MatchingTask {
            while (upToDate && enumSourceLists.hasMoreElements()) {
 
               FileList sourceFL    = (FileList) enumSourceLists.nextElement();
-              String[] sourceFiles = sourceFL.getFiles(project);
+              String[] sourceFiles = sourceFL.getFiles(getProject());
 
               for (int i = 0; upToDate && i < sourceFiles.length; i++) {
-                 File src = new File(sourceFL.getDir(project), sourceFiles[i]);
+                 File src = new File(sourceFL.getDir(getProject()), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
                     log("Warning: " + sourceFiles[i]
@@ -298,11 +298,11 @@ public class DependSet extends MatchingTask {
            while (upToDate && enumSourceSets.hasMoreElements()) {
 
               FileSet sourceFS         = (FileSet) enumSourceSets.nextElement();
-              DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
+              DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(getProject());
               String[] sourceFiles      = sourceDS.getIncludedFiles();
 
               for (int i = 0; upToDate && i < sourceFiles.length; i++) {
-                 File src = new File(sourceFS.getDir(project), sourceFiles[i]);
+                 File src = new File(sourceFS.getDir(getProject()), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
                     log("Warning: " + sourceFiles[i]

@@ -77,11 +77,11 @@ public class Description extends DataType {
      * Adds descriptive text to the project.
      */
     public void addText(String text) {
-        String currentDescription = project.getDescription();
+        String currentDescription = getProject().getDescription();
         if (currentDescription == null) {
-            project.setDescription(text);
+            getProject().setDescription(text);
         } else {
-            project.setDescription(currentDescription + text);
+            getProject().setDescription(currentDescription + text);
         }
     }
 }

@@ -282,7 +282,7 @@ public class Copy extends Task {
             throw new BuildException("Cannot define more than one mapper",
                                      location);
         }
-        mapperElement = new Mapper(project);
+        mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 
@@ -351,8 +351,8 @@ public class Copy extends Task {
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                File fromDir = fs.getDir(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                File fromDir = fs.getDir(getProject());
 
                 String[] srcFiles = ds.getIncludedFiles();
                 String[] srcDirs = ds.getIncludedDirectories();
@@ -416,7 +416,7 @@ public class Copy extends Task {
                     "Cannot concatenate multiple files into a single file.");
             } else {
                 FileSet fs = (FileSet) filesets.elementAt(0);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 String[] srcFiles = ds.getIncludedFiles();
 
                 if (srcFiles.length == 0) {
@@ -517,7 +517,7 @@ public class Copy extends Task {
                         new FilterSetCollection();
                     if (filtering) {
                         executionFilters
-                            .addFilterSet(project.getGlobalFilterSet());
+                            .addFilterSet(getProject().getGlobalFilterSet());
                     }
                     for (Enumeration filterEnum = filterSets.elements();
                          filterEnum.hasMoreElements();) {
@@ -527,7 +527,7 @@ public class Copy extends Task {
                     fileUtils.copyFile(fromFile, toFile, executionFilters,
                                        filterChains, forceOverwrite,
                                        preserveLastModified, encoding,
-                                       project);
+                                       getProject());
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

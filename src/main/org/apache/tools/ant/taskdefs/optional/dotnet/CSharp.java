@@ -316,12 +316,6 @@ public class CSharp
     private File srcDir;
 
     /**
-     *  destination directory (null means use the source directory) NB: this is
-     *  currently not used
-     */
-    private File destDir;
-
-    /**
      *  type of target. Should be one of exe|library|module|winexe|(null)
      *  default is exe; the actual value (if not null) is fed to the command
      *  line. <br>
@@ -389,7 +383,7 @@ public class CSharp
     public void setReferenceFiles(Path path) {
         //demand create pathlist
         if (referenceFiles == null) {
-            referenceFiles = new Path(this.project);
+            referenceFiles = new Path(this.getProject());
         }
         referenceFiles.append(path);
     }
@@ -734,7 +728,7 @@ public class CSharp
      *@param  dirName  The new DestDir value
      */
     public void setDestDir(File dirName) {
-        this.destDir = dirName;
+        log( "DestDir currently unused", Project.MSG_WARN );
     }
 
 
@@ -1021,7 +1015,6 @@ public class CSharp
         targetType = null;
         win32icon = null;
         srcDir = null;
-        destDir = null;
         mainClass = null;
         unsafe = false;
         warnLevel = 3;
@@ -1069,7 +1062,7 @@ public class CSharp
     public void execute()
              throws BuildException {
         if (srcDir == null) {
-            srcDir = project.resolveFile(".");
+            srcDir = getProject().resolveFile(".");
         }
         log("CSC working from source directory " + srcDir, Project.MSG_VERBOSE);
         validate();
@@ -1113,7 +1106,6 @@ public class CSharp
         DirectoryScanner scanner = super.getDirectoryScanner(srcDir);
         String[] dependencies = scanner.getIncludedFiles();
         log("compiling " + dependencies.length + " file" + ((dependencies.length == 1) ? "" : "s"));
-        String baseDir = scanner.getBasedir().toString();
         File base = scanner.getBasedir();
         //add to the command
         for (int i = 0; i < dependencies.length; i++) {

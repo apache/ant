@@ -149,7 +149,7 @@ public class WLRun extends Task {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -159,7 +159,7 @@ public class WLRun extends Task {
      */
     public Path createWLClasspath() {
         if (weblogicClasspath == null) {
-            weblogicClasspath = new Path(project);
+            weblogicClasspath = new Path(getProject());
         }
         return weblogicClasspath.createPath();
     }
@@ -200,7 +200,7 @@ public class WLRun extends Task {
         // If an explicit securityPolicy file was specified, it maybe an
         // absolute path.  Use the project to resolve it.
         if (this.securityPolicy != null && !securityPolicyFile.exists()) {
-            securityPolicyFile = project.resolveFile(securityPolicy);
+            securityPolicyFile = getProject().resolveFile(securityPolicy);
         }
         // If we still can't find it, complain
         if (!securityPolicyFile.exists()) {
@@ -229,7 +229,7 @@ public class WLRun extends Task {
             throw new BuildException("You must supply a management password to start the server");
         }
 
-        Java weblogicServer = (Java) project.createTask("java");
+        Java weblogicServer = (Java) getProject().createTask("java");
         weblogicServer.setTaskName(getTaskName());
         weblogicServer.setFork(true);
         weblogicServer.setDir(weblogicSystemHome);
@@ -275,7 +275,7 @@ public class WLRun extends Task {
         propertiesFile = new File(weblogicSystemHome, weblogicPropertiesFile);
         if (!propertiesFile.exists()) {
             // OK, properties file may be absolute
-            propertiesFile = project.resolveFile(weblogicPropertiesFile);
+            propertiesFile = getProject().resolveFile(weblogicPropertiesFile);
             if (!propertiesFile.exists()) {
                 throw new BuildException("Properties file " + weblogicPropertiesFile +
                                          " not found in weblogic home " + weblogicSystemHome +
@@ -283,7 +283,7 @@ public class WLRun extends Task {
             }
         }
 
-        Java weblogicServer = (Java) project.createTask("java");
+        Java weblogicServer = (Java) getProject().createTask("java");
         weblogicServer.setTaskName(getTaskName());
         weblogicServer.setFork(true);
         weblogicServer.setClassname(weblogicMainClass);

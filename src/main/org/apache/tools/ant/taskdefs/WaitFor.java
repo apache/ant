@@ -164,7 +164,7 @@ public class WaitFor extends ConditionBase {
             }
 
             if (timeoutProperty != null) {
-                project.setNewProperty(timeoutProperty, "true");
+                getProject().setNewProperty(timeoutProperty, "true");
             }
         } finally {
             maxWaitMillis = savedMaxWaitMillis;
@@ -175,7 +175,7 @@ public class WaitFor extends ConditionBase {
     /**
      * The enumeration of units: 
      * millisecond, second, minute, hour, day, week
-     * @todo: we use timestamps in many places, why not factor this out 
+     * @todo we use timestamps in many places, why not factor this out
      */
     public static class Unit extends EnumeratedAttribute {
 

@@ -536,7 +536,7 @@ public class IContract extends MatchingTask {
             // Prepare the directories for iContract. iContract will make them if they
             // don't exist, but for some reason I don't know, it will complain about the REP files
             // afterwards
-            Mkdir mkdir = (Mkdir) project.createTask("mkdir");
+            Mkdir mkdir = (Mkdir) getProject().createTask("mkdir");
 
             mkdir.setDir(instrumentDir);
             mkdir.execute();
@@ -549,7 +549,7 @@ public class IContract extends MatchingTask {
             Path baseClasspath = createClasspath();
 
             // Might need to add the core classes if we're not using Sun's Javac (like Jikes)
-            String compiler = project.getProperty("build.compiler");
+            String compiler = getProject().getProperty("build.compiler");
             ClasspathHelper classpathHelper = new ClasspathHelper(compiler);
 
             classpathHelper.modify(baseClasspath);
@@ -586,7 +586,7 @@ public class IContract extends MatchingTask {
             iContractClasspath.append(new Path(getProject(), buildDir.getAbsolutePath()));
 
             // Create a forked java process
-            Java iContract = (Java) project.createTask("java");
+            Java iContract = (Java) getProject().createTask("java");
 
             iContract.setTaskName(getTaskName());
             iContract.setFork(true);

@@ -243,7 +243,7 @@ public class EchoProperties extends Task {
         use Ant's properties */
         if(inFile == null) {
             // add ant properties
-            CollectionUtils.putAll(allProps, project.getProperties());
+            CollectionUtils.putAll(allProps, getProject().getProperties());
         } else {
             if (inFile.exists() && inFile.isDirectory()) {
                 String message = "srcfile is a directory!";

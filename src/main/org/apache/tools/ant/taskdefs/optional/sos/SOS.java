@@ -455,10 +455,10 @@ public abstract class SOS extends Task {
      */
     public String getLocalPath() {
         if (localPath == null) {
-            return project.getBaseDir().getAbsolutePath();
+            return getProject().getBaseDir().getAbsolutePath();
         } else {
             // make sure localDir exists, create it if it doesn't
-            File dir = project.resolveFile(localPath);
+            File dir = getProject().resolveFile(localPath);
             if (!dir.exists()) {
                 boolean done = dir.mkdirs();
                 if (!done) {
@@ -466,7 +466,7 @@ public abstract class SOS extends Task {
                             "successful for an unknown reason";
                     throw new BuildException(msg, location);
                 }
-                project.log("Created dir: " + dir.getAbsolutePath());
+                getProject().log("Created dir: " + dir.getAbsolutePath());
             }
             return dir.getAbsolutePath();
         }
@@ -486,8 +486,8 @@ public abstract class SOS extends Task {
                     Project.MSG_INFO,
                     Project.MSG_WARN));
 
-            exe.setAntRun(project);
-            exe.setWorkingDirectory(project.getBaseDir());
+            exe.setAntRun(getProject());
+            exe.setWorkingDirectory(getProject().getBaseDir());
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
         } catch (java.io.IOException e) {

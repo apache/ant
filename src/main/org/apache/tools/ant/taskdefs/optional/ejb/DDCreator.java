@@ -125,14 +125,14 @@ public class DDCreator extends MatchingTask {
         }
             
         String systemClassPath = System.getProperty("java.class.path");
-        String execClassPath = project.translatePath(systemClassPath + ":" + classpath);
-        Java ddCreatorTask = (Java) project.createTask("java");
+        String execClassPath = getProject().translatePath(systemClassPath + ":" + classpath);
+        Java ddCreatorTask = (Java) getProject().createTask("java");
         ddCreatorTask.setTaskName(getTaskName());
         ddCreatorTask.setFork(true);
         ddCreatorTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper");
         Commandline.Argument arguments = ddCreatorTask.createArg();
         arguments.setLine(args);
-        ddCreatorTask.setClasspath(new Path(project, execClassPath));                         
+        ddCreatorTask.setClasspath(new Path(getProject(), execClassPath));
         if (ddCreatorTask.executeJava() != 0) {                         
             throw new BuildException("Execution of ddcreator helper failed");
         }
@@ -165,6 +165,6 @@ public class DDCreator extends MatchingTask {
      * @param s the classpath to use for the ddcreator tool.
      */
     public void setClasspath(String s) {
-        this.classpath = project.translatePath(s);
+        this.classpath = getProject().translatePath(s);
     }
 }

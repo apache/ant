@@ -353,7 +353,7 @@ public class EmailTask
         StringTokenizer t = new StringTokenizer(filenames, ", ");
 
         while (t.hasMoreTokens()) {
-            files.addElement(project.resolveFile(t.nextToken()));
+            files.addElement(getProject().resolveFile(t.nextToken()));
         }
     }
 
@@ -475,7 +475,7 @@ public class EmailTask
             while (e.hasMoreElements()) {
                 FileSet fs = (FileSet) e.nextElement();
 
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 String[] includedFiles = ds.getIncludedFiles();
                 File baseDir = ds.getBasedir();
 

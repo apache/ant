@@ -151,7 +151,7 @@ public class RenameExtensions extends MatchingTask {
         log("using the same patterns on <fileset> as you\'ve used here", 
             Project.MSG_INFO);
 
-        Move move = (Move) project.createTask("move");
+        Move move = (Move) getProject().createTask("move");
         move.setOwningTarget(target);
         move.setTaskName(getTaskName());
         move.setLocation(getLocation());

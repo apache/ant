@@ -62,7 +62,6 @@ import java.util.zip.ZipFile;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.JavaEnvUtils;
@@ -235,10 +234,10 @@ public class SignJar extends Task {
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 String[] jarFiles = ds.getIncludedFiles();
                 for (int j = 0; j < jarFiles.length; j++) {
-                    doOneJar(new File(fs.getDir(project), jarFiles[j]), null);
+                    doOneJar(new File(fs.getDir(getProject()), jarFiles[j]), null);
                 }
             }
         }
@@ -266,7 +265,7 @@ public class SignJar extends Task {
           return;
         }
 
-        final ExecTask cmd = (ExecTask) project.createTask("exec");
+        final ExecTask cmd = (ExecTask) getProject().createTask("exec");
         cmd.setExecutable("jarsigner");
 
         if (null != keystore) {

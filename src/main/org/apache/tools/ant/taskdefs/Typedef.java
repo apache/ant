@@ -84,6 +84,6 @@ public class Typedef extends Definer {
      * implement abstract callback of parent class 
      */
     protected void addDefinition(String name, Class c) throws BuildException {
-        project.addDataTypeDefinition(name, c);
+        getProject().addDataTypeDefinition(name, c);
     }
 }

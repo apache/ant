@@ -134,13 +134,6 @@ public class JspC extends MatchingTask {
     protected boolean failOnError = true;
 
     /**
-     *  -uribase &lt;dir&gt; The uri directory compilations should be relative to
-     *  (Default is "/")
-     */
-
-    private File uribase;
-
-    /**
      *  -uriroot &lt;dir&gt; The root directory that uri files should be resolved
      *  against,
      */
@@ -258,7 +251,7 @@ public class JspC extends MatchingTask {
      * @param  uribase  The new Uribase value
      */
     public void setUribase(File uribase) {
-        this.uribase = uribase;
+        log( "Uribase is currently an unused parameter", Project.MSG_WARN);
     }
 
     public File getUribase() {
@@ -297,7 +290,7 @@ public class JspC extends MatchingTask {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -336,7 +329,7 @@ public class JspC extends MatchingTask {
      */
     public Path createCompilerclasspath() {
         if (compilerClasspath == null) {
-            compilerClasspath = new Path(project);
+            compilerClasspath = new Path(getProject());
         }
         return compilerClasspath.createPath();
     }
@@ -445,7 +438,7 @@ public class JspC extends MatchingTask {
         resetFileLists();
         int filecount = 0;
         for (int i = 0; i < list.length; i++) {
-            File srcDir = (File) project.resolveFile(list[i]);
+            File srcDir = (File) getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \"" + srcDir.getPath() +
                                          "\" does not exist!", location);
@@ -599,7 +592,6 @@ public class JspC extends MatchingTask {
         }
         String javaFileName = mangler.mapJspToJavaName(srcFile);
 //        String srcFileDir=srcFile.getParent();
-        String packageNameIn = srcFile.getAbsolutePath();
         return new File(dest, javaFileName);
     }
 

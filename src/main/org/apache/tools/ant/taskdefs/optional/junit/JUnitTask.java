@@ -406,7 +406,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public Path createClasspath() {
-        return commandline.createClasspath(project).createPath();
+        return commandline.createClasspath(getProject()).createPath();
     }
 
     /**
@@ -451,7 +451,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public BatchTest createBatchTest() {
-        BatchTest test = new BatchTest(project);
+        BatchTest test = new BatchTest(getProject());
         batchTests.addElement(test);
         return test;
     }
@@ -523,7 +523,7 @@ public class JUnitTask extends Task {
         Enumeration list = getIndividualTests();
         while (list.hasMoreElements()) {
             JUnitTest test = (JUnitTest) list.nextElement();
-            if (test.shouldRun(project)) {
+            if (test.shouldRun(getProject())) {
                 execute(test);
             }
         }
@@ -537,7 +537,7 @@ public class JUnitTask extends Task {
         // set the default values if not specified
         //@todo should be moved to the test class instead.
         if (test.getTodir() == null) {
-            test.setTodir(project.resolveFile("."));
+            test.setTodir(getProject().resolveFile("."));
         }
 
         if (test.getOutfile() == null) {
@@ -571,10 +571,10 @@ public class JUnitTask extends Task {
                 log("TEST " + test.getName() + " FAILED"
                     + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
                 if (errorOccurredHere && test.getErrorProperty() != null) {
-                    project.setNewProperty(test.getErrorProperty(), "true");
+                    getProject().setNewProperty(test.getErrorProperty(), "true");
                 }
                 if (failureOccurredHere && test.getFailureProperty() != null) {
-                    project.setNewProperty(test.getFailureProperty(), "true");
+                    getProject().setNewProperty(test.getFailureProperty(), "true");
                 }
             }
         }
@@ -635,10 +635,10 @@ public class JUnitTask extends Task {
         // forked test
         File propsFile = 
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
-                                                    project.getBaseDir());
+                                                    getProject().getBaseDir());
         cmd.createArgument().setValue("propsfile=" 
                                       + propsFile.getAbsolutePath());
-        Hashtable p = project.getProperties();
+        Hashtable p = getProject().getProperties();
         Properties props = new Properties();
         for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
             Object key = enum.nextElement();
@@ -659,7 +659,7 @@ public class JUnitTask extends Task {
                                                            Project.MSG_WARN),
                                       watchdog);
         execute.setCommandline(cmd.getCommandline());
-        execute.setAntRun(project);
+        execute.setAntRun(getProject());
         if (dir != null) {
             execute.setWorkingDirectory(dir);
         }
@@ -734,7 +734,7 @@ public class JUnitTask extends Task {
      */
     private int executeInVM(JUnitTest arg) throws BuildException {
         JUnitTest test = (JUnitTest) arg.clone();
-        test.setProperties(project.getProperties());
+        test.setProperties(getProject().getProperties());
         if (dir != null) {
             log("dir attribute ignored if running in the same VM", 
                 Project.MSG_WARN);
@@ -765,7 +765,7 @@ public class JUnitTask extends Task {
                     classpath.append(antRuntimeClasses);
                 }
 
-                cl = new AntClassLoader(null, project, classpath, false);
+                cl = new AntClassLoader(null, getProject(), classpath, false);
                 log("Using CLASSPATH " + cl.getClasspath(),
                     Project.MSG_VERBOSE);
 
@@ -882,7 +882,7 @@ public class JUnitTask extends Task {
             String filename = test.getOutfile() + fe.getExtension();
             File destFile = new File(test.getTodir(), filename);
             String absFilename = destFile.getAbsolutePath();
-            return project.resolveFile(absFilename);
+            return getProject().resolveFile(absFilename);
         }
         return null;
     }

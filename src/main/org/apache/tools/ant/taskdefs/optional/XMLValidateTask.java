@@ -56,9 +56,6 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
@@ -163,7 +160,7 @@ public class XMLValidateTask extends Task {
      * or SAX2 <code>org.xml.sax.Parser</code>.
      * <p> if className is an implementation of <code>org.xml.sax.Parser</code>, {@link #setLenient(boolean)},
      * will be ignored.
-     * <p> if not set, the default {@link #DEFAULT_XML_READER_CLASSNAME} will be used.
+     * <p> if not set, the default will be used.
      * @see org.xml.sax.XMLReader
      * @see org.xml.sax.Parser
      */
@@ -190,7 +187,7 @@ public class XMLValidateTask extends Task {
      */
     public Path createClasspath() {
         if (this.classpath == null) {
-            this.classpath = new Path(project);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -226,7 +223,7 @@ public class XMLValidateTask extends Task {
 
     public void init() throws BuildException {
         super.init();
-        xmlCatalog.setProject(project);
+        xmlCatalog.setProject(getProject());
     }
 
     /**
@@ -270,11 +267,11 @@ public class XMLValidateTask extends Task {
         for (int i = 0; i < filesets.size(); i++) {
 
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] files = ds.getIncludedFiles();
 
             for (int j = 0; j < files.length ; j++)  {
-                File srcFile = new File(fs.getDir(project), files[j]);
+                File srcFile = new File(fs.getDir(getProject()), files[j]);
                 doValidate(srcFile);
                 fileProcessed++;
             }
@@ -301,7 +298,7 @@ public class XMLValidateTask extends Task {
             try {
                 // load the parser class
                 if (classpath != null) {
-                    AntClassLoader loader = new AntClassLoader(project, classpath);
+                    AntClassLoader loader = new AntClassLoader(getProject(), classpath);
                     readerClass = loader.loadClass(readerClassName);
                     AntClassLoader.initializeClass(readerClass);
                 } else {

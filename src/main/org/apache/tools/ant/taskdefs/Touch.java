@@ -210,8 +210,8 @@ public class Touch extends Task {
         // deal with the filesets
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            File fromDir = fs.getDir(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+            File fromDir = fs.getDir(getProject());
 
             String[] srcFiles = ds.getIncludedFiles();
             String[] srcDirs = ds.getIncludedDirectories();

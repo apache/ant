@@ -144,7 +144,7 @@ public class MParse extends AbstractMetamataTask {
 
         // set the classpath as the jar files
         File[] jars = getMetamataLibs();
-        final Path classPath = cmdl.createClasspath(project);
+        final Path classPath = cmdl.createClasspath(getProject());
         for (int i = 0; i < jars.length; i++){
             classPath.createPathElement().setLocation(jars[i]);
         }
@@ -175,7 +175,7 @@ public class MParse extends AbstractMetamataTask {
         pathname = pathname.substring(0, pos) + ".java";
         File javaFile = new File(pathname);
         if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
-            project.log("Target is already build - skipping (" + target + ")");
+            getProject().log("Target is already build - skipping (" + target + ")");
             return;
         }
 
@@ -203,7 +203,7 @@ public class MParse extends AbstractMetamataTask {
             name = "__jj" + name.substring(0, pos) + ".sunjj";
             final File sunjj = new File(target.getParent(), name);
             if (sunjj.exists()) {
-                project.log("Removing stale file: " + sunjj.getName());
+                getProject().log("Removing stale file: " + sunjj.getName());
                 sunjj.delete();
             }
         }
@@ -236,7 +236,7 @@ public class MParse extends AbstractMetamataTask {
         if (metamataHome == null || !metamataHome.exists()){
             throw new BuildException("'metamatahome' must point to Metamata home directory.");
         }
-        metamataHome = project.resolveFile(metamataHome.getPath());
+        metamataHome = getProject().resolveFile(metamataHome.getPath());
 
         // check that the needed jar exists.
         File[] jars = getMetamataLibs();
@@ -252,7 +252,7 @@ public class MParse extends AbstractMetamataTask {
             || !target.getName().endsWith(".jj")) {
             throw new BuildException("Invalid target: " + target);
         }
-        target = project.resolveFile(target.getPath());
+        target = getProject().resolveFile(target.getPath());
     }
 
     /**

@@ -132,10 +132,6 @@ public class Translate extends MatchingTask {
      */
     private Hashtable resourceMap = new Hashtable();
     /**
-     * Generated locale based on user attributes
-     */
-    private Locale locale;
-    /**
      * Used to resolve file names.
      */
     private FileUtils fileUtils = FileUtils.newFileUtils();
@@ -285,8 +281,6 @@ public class Translate extends MatchingTask {
         if (bundleCountry == null) {
             bundleCountry = Locale.getDefault().getCountry();
         }
-
-        locale = new Locale(bundleLanguage, bundleCountry);
 
         if (bundleVariant == null) {
             Locale l = new Locale(bundleLanguage, bundleCountry);
@@ -488,7 +482,7 @@ public class Translate extends MatchingTask {
     private void translate() throws BuildException {
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] srcFiles = ds.getIncludedFiles();
             for (int j = 0; j < srcFiles.length; j++) {
                 try {

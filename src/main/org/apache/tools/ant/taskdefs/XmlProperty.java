@@ -63,13 +63,11 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Vector;
 
 /**
  * Loads property values from a valid XML file,
@@ -91,7 +89,6 @@ import java.util.Vector;
  * </pre>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Erik Hatcher
- * @created 14 January 2002
  * @ant.task name="xmlproperty" category="xml"
  */
 
@@ -201,7 +198,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
                 String attributeValue = attributeNode.getNodeValue();
                 log(attributeName + ":" + attributeValue, Project.MSG_DEBUG);
-                project.setNewProperty(attributeName, attributeValue);
+                getProject().setNewProperty(attributeName, attributeValue);
             }
         }
 
@@ -209,7 +206,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             String nodeText = node.getNodeValue();
             if (nodeText.trim().length() != 0) {
                 log(prefix + ":" + nodeText, Project.MSG_DEBUG);
-                 project.setNewProperty(prefix, nodeText);
+                 getProject().setNewProperty(prefix, nodeText);
             }
         }
 

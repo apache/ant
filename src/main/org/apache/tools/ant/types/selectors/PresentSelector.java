@@ -56,7 +56,6 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -123,7 +122,7 @@ public class PresentSelector extends BaseSelector {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper");
         }
-        mapperElement = new Mapper(project);
+        mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 

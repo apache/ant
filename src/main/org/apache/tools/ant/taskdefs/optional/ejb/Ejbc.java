@@ -131,14 +131,14 @@ public class Ejbc extends MatchingTask {
         }
 
         String systemClassPath = System.getProperty("java.class.path");
-        String execClassPath = project.translatePath(systemClassPath + ":" + classpath +
+        String execClassPath = getProject().translatePath(systemClassPath + ":" + classpath +
                                                          ":" + generatedFilesDirectory);
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner(descriptorDirectory);
 
         String[] files = ds.getIncludedFiles();
 
-        Java helperTask = (Java) project.createTask("java");
+        Java helperTask = (Java) getProject().createTask("java");
         helperTask.setTaskName(getTaskName());
         helperTask.setFork(true);
         helperTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.EjbcHelper");
@@ -155,7 +155,7 @@ public class Ejbc extends MatchingTask {
 
         Commandline.Argument arguments = helperTask.createArg();
         arguments.setLine(args);
-        helperTask.setClasspath(new Path(project, execClassPath));
+        helperTask.setClasspath(new Path(getProject(), execClassPath));
         if (helperTask.executeJava() != 0) {
             throw new BuildException("Execution of ejbc helper failed");
         }
@@ -210,7 +210,7 @@ public class Ejbc extends MatchingTask {
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(String s) {
-        this.classpath = project.translatePath(s);
+        this.classpath = getProject().translatePath(s);
     }
 
     /**

@@ -246,10 +246,10 @@ public class Concat extends Task {
                     // determine the files from the set which need to be
                     // concatenated.
                     DirectoryScanner scanner = 
-                        fileSet.getDirectoryScanner(project);
+                        fileSet.getDirectoryScanner(getProject());
                     
                     // Determine the root path.
-                    fileSetBase = fileSet.getDir(project);
+                    fileSetBase = fileSet.getDir(getProject());
                     
                     // Get the list of files.
                     srcFiles = scanner.getIncludedFiles();
@@ -259,10 +259,10 @@ public class Concat extends Task {
                     FileList fileList = (FileList) next;
                     
                     // Determine the root path.
-                    fileSetBase = fileList.getDir(project);
+                    fileSetBase = fileList.getDir(getProject());
                     
                     // Get the list of files.
-                    srcFiles = fileList.getFiles(project);
+                    srcFiles = fileList.getFiles(getProject());
                     
                 }
 
@@ -455,8 +455,8 @@ public class Concat extends Task {
         String text = textBuffer.toString();
 
         // Replace ${property} strings.
-        text = ProjectHelper.replaceProperties(project, text, 
-                                               project.getProperties());
+        text = ProjectHelper.replaceProperties(getProject(), text,
+                                               getProject().getProperties());
 
         // Set up a writer if necessary.
         FileWriter writer = null;

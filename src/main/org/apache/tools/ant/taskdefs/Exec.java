@@ -87,8 +87,6 @@ public class Exec extends Task {
     protected PrintWriter fos = null;
     private boolean failOnError = false;
 
-    private static final int BUFFER_SIZE = 512;
-
     public Exec() {
         System.err.println("As of Ant 1.2 released in October 2000, " 
             + "the Exec class");
@@ -116,31 +114,31 @@ public class Exec extends Task {
 
         // default directory to the project's base directory
         if (dir == null) {
-          dir = project.getBaseDir();
+          dir = getProject().getBaseDir();
         }
 
         if (myos.toLowerCase().indexOf("windows") >= 0) {
-            if (!dir.equals(project.resolveFile("."))) {
+            if (!dir.equals(getProject().resolveFile("."))) {
                 if (myos.toLowerCase().indexOf("nt") >= 0) {
                     command = "cmd /c cd " + dir + " && " + command;
                 } else {
-                    String ant = project.getProperty("ant.home");
+                    String ant = getProject().getProperty("ant.home");
                     if (ant == null) {
                         throw new BuildException("Property 'ant.home' not " 
                             + "found", location);
                     }
                 
-                    String antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
+                    String antRun = getProject().resolveFile(ant + "/bin/antRun.bat").toString();
                     command = antRun + " " + dir + " " + command;
                 }
             }
         } else {
-            String ant = project.getProperty("ant.home");
+            String ant = getProject().getProperty("ant.home");
             if (ant == null) {
               throw new BuildException("Property 'ant.home' not found", 
                 location);
             }
-            String antRun = project.resolveFile(ant + "/bin/antRun").toString();
+            String antRun = getProject().resolveFile(ant + "/bin/antRun").toString();
 
             command = antRun + " " + dir + " " + command;
         }
@@ -159,9 +157,9 @@ public class Exec extends Task {
 
             // copy input and error to the output stream
             StreamPumper inputPumper =
-                new StreamPumper(proc.getInputStream(), Project.MSG_INFO, this);
+                new StreamPumper(proc.getInputStream(), Project.MSG_INFO);
             StreamPumper errorPumper =
-                new StreamPumper(proc.getErrorStream(), Project.MSG_WARN, this);
+                new StreamPumper(proc.getErrorStream(), Project.MSG_WARN);
 
             // starts pumping away the generated output/error
             inputPumper.start();
@@ -193,7 +191,7 @@ public class Exec extends Task {
     }
 
     public void setDir(String d) {
-        this.dir = project.resolveFile(d);
+        this.dir = getProject().resolveFile(d);
     }
 
     public void setOs(String os) {
@@ -233,16 +231,13 @@ public class Exec extends Task {
         private int messageLevel;
         private boolean endOfStream = false;
         private int SLEEP_TIME = 5;
-        private Exec parent;
 
-        public StreamPumper(InputStream is, int messageLevel, Exec parent) {
+        public StreamPumper(InputStream is, int messageLevel) {
             this.din = new BufferedReader(new InputStreamReader(is));
             this.messageLevel = messageLevel;
-            this.parent = parent;
         }
 
         public void pumpStream() throws IOException {
-            byte[] buf = new byte[BUFFER_SIZE];
             if (!endOfStream) {
                 String line = din.readLine();
 

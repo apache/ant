@@ -159,7 +159,7 @@ public class Cab extends MatchingTask {
      * it appears in the logs to be the same task as this one.
      */
     protected ExecTask createExec() throws BuildException {
-        ExecTask exec = (ExecTask) project.createTask("exec");
+        ExecTask exec = (ExecTask) getProject().createTask("exec");
         exec.setOwningTarget(this.getOwningTarget());
         exec.setTaskName(this.getTaskName());
         exec.setDescription(this.getDescription());
@@ -253,7 +253,7 @@ public class Cab extends MatchingTask {
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 if (fs != null) {
-                    appendFiles(files, fs.getDirectoryScanner(project));
+                    appendFiles(files, fs.getDirectoryScanner(getProject()));
                 }
             }
         }

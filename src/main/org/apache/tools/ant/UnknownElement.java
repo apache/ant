@@ -121,7 +121,7 @@ public class UnknownElement extends Task {
 
         handleChildren(realThing, wrapper);
 
-        wrapper.maybeConfigure(project);
+        wrapper.maybeConfigure(getProject());
     }
 
     /**
@@ -209,7 +209,7 @@ public class UnknownElement extends Task {
                 realChild = makeTask(child, childWrapper, false);
                 ((TaskContainer) parent).addTask((Task) realChild);
             } else {
-                realChild = ih.createElement(project, parent, child.getTag());
+                realChild = ih.createElement(getProject(), parent, child.getTag());
             }
 
             childWrapper.setProxy(realChild);
@@ -238,7 +238,7 @@ public class UnknownElement extends Task {
     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
         Object o = makeTask(ue, w, true);
         if (o == null) {
-            o = project.createDataType(ue.getTag());
+            o = getProject().createDataType(ue.getTag());
         }
         if (o == null) {
             throw getNotFoundException("task or type", ue.getTag());
@@ -263,7 +263,7 @@ public class UnknownElement extends Task {
      */
     protected Task makeTask(UnknownElement ue, RuntimeConfigurable w,
                             boolean onTopLevel) {
-        Task task = project.createTask(ue.getTag());
+        Task task = getProject().createTask(ue.getTag());
         if (task == null && !onTopLevel) {
             throw getNotFoundException("task", ue.getTag());
         }

@@ -115,7 +115,7 @@ public class Exit extends Task {
         if (message == null) {
             message = "";
         }
-        message += project.replaceProperties(msg);
+        message += getProject().replaceProperties(msg);
     }
 
     private boolean testIfCondition() {
@@ -123,14 +123,14 @@ public class Exit extends Task {
             return true;
         }
 
-        return project.getProperty(ifCondition) != null;
+        return getProject().getProperty(ifCondition) != null;
     }
 
     private boolean testUnlessCondition() {
         if (unlessCondition == null || "".equals(unlessCondition)) {
             return true;
         }
-        return project.getProperty(unlessCondition) == null;
+        return getProject().getProperty(unlessCondition) == null;
     }
 
 }

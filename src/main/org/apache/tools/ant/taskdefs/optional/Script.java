@@ -111,10 +111,10 @@ public class Script extends Task {
      */
     public void execute() throws BuildException {
         try {
-            addBeans(project.getProperties());
-            addBeans(project.getUserProperties());
-            addBeans(project.getTargets());
-            addBeans(project.getReferences());
+            addBeans(getProject().getProperties());
+            addBeans(getProject().getUserProperties());
+            addBeans(getProject().getTargets());
+            addBeans(getProject().getReferences());
 
             beans.put("project", getProject());
 

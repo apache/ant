@@ -122,7 +122,7 @@ public abstract class MSVSS extends Task {
     }
 
     /**
-     * @return the appropriate login command if the 'login' attribute was specified, otherwise an empty string
+     * the appropriate login command if the 'login' attribute was specified, otherwise an empty string
      */
     public void getLoginCommand(Commandline cmd) {
         if (m_vssLogin == null) {
@@ -187,8 +187,8 @@ public abstract class MSVSS extends Task {
                 exe.setEnvironment(newEnv);
             }
             
-            exe.setAntRun(project);
-            exe.setWorkingDirectory(project.getBaseDir());
+            exe.setAntRun(getProject());
+            exe.setWorkingDirectory(getProject().getBaseDir());
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
         } catch (java.io.IOException e) {

@@ -87,7 +87,7 @@ public class P4Change extends P4Base {
         if (emptyChangeList == null) {
             emptyChangeList = getEmptyChangeList();
         }
-        final Project myProj = project;
+        final Project myProj = getProject();
 
         P4Handler handler = new P4HandlerAdapter() {
             public void process(String line) {

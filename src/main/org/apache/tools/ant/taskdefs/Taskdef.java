@@ -79,6 +79,6 @@ public class Taskdef extends Definer {
      * execution.
      */
     protected void addDefinition(String name, Class c) throws BuildException {
-        project.addTaskDefinition(name, c);
+        getProject().addTaskDefinition(name, c);
     }
 }

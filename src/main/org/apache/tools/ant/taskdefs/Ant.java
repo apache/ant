@@ -152,7 +152,7 @@ public class Ant extends Task {
         newProject = new Project();
         newProject.setJavaVersionProperty();
         newProject.addTaskDefinition("property",
-                                     (Class) project.getTaskDefinitions()
+                                     (Class) getProject().getTaskDefinitions()
                                              .get("property"));
     }
 
@@ -208,7 +208,7 @@ public class Ant extends Task {
     private void initializeProject() {
         newProject.setInputHandler(getProject().getInputHandler());
 
-        Vector listeners = project.getBuildListeners();
+        Vector listeners = getProject().getBuildListeners();
         final int count = listeners.size();
         for (int i = 0; i < count; i++) {
             newProject.addBuildListener((BuildListener) listeners.elementAt(i));
@@ -233,7 +233,7 @@ public class Ant extends Task {
             }
         }
 
-        Hashtable taskdefs = project.getTaskDefinitions();
+        Hashtable taskdefs = getProject().getTaskDefinitions();
         Enumeration et = taskdefs.keys();
         while (et.hasMoreElements()) {
             String taskName = (String) et.nextElement();
@@ -245,7 +245,7 @@ public class Ant extends Task {
             newProject.addTaskDefinition(taskName, taskClass);
         }
 
-        Hashtable typedefs = project.getDataTypeDefinitions();
+        Hashtable typedefs = getProject().getDataTypeDefinitions();
         Enumeration e = typedefs.keys();
         while (e.hasMoreElements()) {
             String typeName = (String) e.nextElement();
@@ -322,7 +322,7 @@ public class Ant extends Task {
             }
 
             if ((dir == null) && (inheritAll)) {
-                dir = project.getBaseDir();
+                dir = getProject().getBaseDir();
             }
 
             initializeProject();
@@ -334,7 +334,7 @@ public class Ant extends Task {
                                                     dir.getAbsolutePath());
                 }
             } else {
-                dir = project.getBaseDir();
+                dir = getProject().getBaseDir();
             }
 
             overrideProperties();
@@ -358,8 +358,8 @@ public class Ant extends Task {
 
             // Are we trying to call the target in which we are defined (or 
             // the build file if this is a top level task)?
-            if (newProject.getBaseDir().equals(project.getBaseDir()) &&
-                newProject.getProperty("ant.file").equals(project.getProperty("ant.file"))
+            if (newProject.getBaseDir().equals(getProject().getBaseDir()) &&
+                newProject.getProperty("ant.file").equals(getProject().getProperty("ant.file"))
                 && getOwningTarget() != null
                 && (getOwningTarget().getName().equals("") ||
                     getOwningTarget().getName().equals(target))) {
@@ -411,7 +411,7 @@ public class Ant extends Task {
      * requested.
      */
     private void addReferences() throws BuildException {
-        Hashtable thisReferences = (Hashtable) project.getReferences().clone();
+        Hashtable thisReferences = (Hashtable) getProject().getReferences().clone();
         Hashtable newReferences = newProject.getReferences();
         Enumeration e;
         if (references.size() > 0) {
@@ -460,7 +460,7 @@ public class Ant extends Task {
      * keep our fingers crossed.</p>
      */
     private void copyReference(String oldKey, String newKey) {
-        Object orig = project.getReference(oldKey);
+        Object orig = getProject().getReference(oldKey);
         Class c = orig.getClass();
         Object copy = orig;
         try {

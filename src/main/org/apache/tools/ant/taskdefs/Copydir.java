@@ -137,7 +137,7 @@ public class Copydir extends MatchingTask {
                     String fromFile = (String) enum.nextElement();
                     String toFile = (String) filecopyList.get(fromFile);
                     try {
-                        project.copyFile(fromFile, toFile, filtering, 
+                        getProject().copyFile(fromFile, toFile, filtering,
                                          forceOverwrite);
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromFile + " to " 

@@ -262,7 +262,7 @@ public class ChangeLogTask extends Task {
                 while (e.hasMoreElements()) {
                     final FileSet fileSet = (FileSet) e.nextElement();
                     final DirectoryScanner scanner =
-                        fileSet.getDirectoryScanner(project);
+                        fileSet.getDirectoryScanner(getProject());
                     final String[] files = scanner.getIncludedFiles();
 
                     for (int i = 0; i < files.length; i++) {

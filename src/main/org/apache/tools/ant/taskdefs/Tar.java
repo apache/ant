@@ -265,14 +265,14 @@ public class Tar extends MatchingTask {
             boolean upToDate = true;
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
                 TarFileSet fs = (TarFileSet) e.nextElement();
-                String[] files = fs.getFiles(project);
+                String[] files = fs.getFiles(getProject());
 
                 if (!archiveIsUpToDate(files)) {
                     upToDate = false;
                 }
 
                 for (int i = 0; i < files.length; ++i) {
-                    if (tarFile.equals(new File(fs.getDir(project),
+                    if (tarFile.equals(new File(fs.getDir(getProject()),
                                                 files[i]))) {
                         throw new BuildException("A tar file cannot include "
                                                  + "itself", location);
@@ -309,7 +309,7 @@ public class Tar extends MatchingTask {
                 for (Enumeration e = filesets.elements();
                      e.hasMoreElements();) {
                     TarFileSet fs = (TarFileSet) e.nextElement();
-                    String[] files = fs.getFiles(project);
+                    String[] files = fs.getFiles(getProject());
                     if (files.length > 1 && fs.getFullpath().length() > 0) {
                         throw new BuildException("fullpath attribute may only "
                                                  + "be specified for "
@@ -317,7 +317,7 @@ public class Tar extends MatchingTask {
                                                  + "single file.");
                     }
                     for (int i = 0; i < files.length; i++) {
-                        File f = new File(fs.getDir(project), files[i]);
+                        File f = new File(fs.getDir(getProject()), files[i]);
                         String name = files[i].replace(File.separatorChar, '/');
                         tarFile(f, tOut, name, fs);
                     }

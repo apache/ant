@@ -309,7 +309,7 @@ public class JavaCC extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        final Path classpath = cmdl.createClasspath(project);
+        final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
         classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
         classpath.addJavaRuntime();

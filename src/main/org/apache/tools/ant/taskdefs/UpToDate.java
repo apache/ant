@@ -156,7 +156,7 @@ public class UpToDate extends Task implements Condition {
             throw new BuildException("Cannot define more than one mapper",
                                      location);
         }
-        mapperElement = new Mapper(project);
+        mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 
@@ -196,8 +196,8 @@ public class UpToDate extends Task implements Condition {
         boolean upToDate = true;
         while (upToDate && enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            upToDate = upToDate && scanDir(fs.getDir(project), 
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+            upToDate = upToDate && scanDir(fs.getDir(getProject()),
                                            ds.getIncludedFiles());
         }
 
@@ -229,7 +229,7 @@ public class UpToDate extends Task implements Condition {
         }
         boolean upToDate = eval();
         if (upToDate) {
-            this.project.setNewProperty(_property, getValue());
+            this.getProject().setNewProperty(_property, getValue());
             if (mapperElement == null) {
                 log("File \"" + _targetFile.getAbsolutePath() 
                     + "\" is up-to-date.", Project.MSG_VERBOSE);

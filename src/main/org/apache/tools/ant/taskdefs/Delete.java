@@ -331,10 +331,10 @@ public class Delete extends MatchingTask {
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             try {
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 String[] files = ds.getIncludedFiles();
                 String[] dirs = ds.getIncludedDirectories();
-                removeFiles(fs.getDir(project), files, dirs);
+                removeFiles(fs.getDir(getProject()), files, dirs);
             } catch (BuildException be) {
                 // directory doesn't exist or is not readable
                 if (failonerror) {

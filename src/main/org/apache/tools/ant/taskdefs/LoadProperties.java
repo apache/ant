@@ -158,7 +158,7 @@ public final class LoadProperties extends Task {
             crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
-            crh.setProject(project);
+            crh.setProject(getProject());
             instream = crh.getAssembledReader();
 
             String text = crh.readFully(instream);
@@ -182,7 +182,7 @@ public final class LoadProperties extends Task {
                     final String value = props.getProperty(key);
                     if (key != null && value != null
                             && value.trim().length() > 0) {
-                        project.setNewProperty(key, value);
+                        getProject().setNewProperty(key, value);
                     }
                 }
                 tis.close();

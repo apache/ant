@@ -138,7 +138,7 @@ public class MSVSSCHECKIN extends MSVSS {
             return;
         } else {
             // make sure m_LocalDir exists, create it if it doesn't
-            File dir = project.resolveFile(m_LocalPath);
+            File dir = getProject().resolveFile(m_LocalPath);
             if (!dir.exists()) {
                 boolean done = dir.mkdirs();
                 if (!done) {
@@ -147,7 +147,7 @@ public class MSVSSCHECKIN extends MSVSS {
                         + "succesful for an unknown reason";
                     throw new BuildException(msg, location);
                 }
-                project.log("Created dir: " + dir.getAbsolutePath());
+                getProject().log("Created dir: " + dir.getAbsolutePath());
             }
 
             cmd.createArgument().setValue(FLAG_OVERRIDE_WORKING_DIR 
@@ -164,7 +164,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
+     * the 'recursive' command if the attribute was 'true', otherwise an empty string
      */
     public void getRecursiveCommand(Commandline cmd) {
         if (!m_Recursive) {
@@ -182,7 +182,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * @return the 'make writable' command if the attribute was 'true', otherwise an empty string
+     * the 'make writable' command if the attribute was 'true', otherwise an empty string
      */
     public void getWritableCommand(Commandline cmd) {
         if (!m_Writable) {

@@ -89,9 +89,6 @@ public class ANTLR extends Task {
     /** an optional super grammar file */
     private String superGrammar;
 
-    /** optional flag to enable parseView debugging */
-    private boolean debug;
-
     /** optional flag to enable html output */
     private boolean html;
 
@@ -109,9 +106,6 @@ public class ANTLR extends Task {
 
     /** optional flag to add trace methods to the tree walker only */
     private boolean traceTreeWalker;
-
-    /** should fork ? */
-    private final boolean fork = true;
 
     /** working directory */
     private File workingdir = null;
@@ -148,7 +142,7 @@ public class ANTLR extends Task {
      * Sets a flag to enable ParseView debugging
      */
     public void setDebug(boolean enable) {
-        debug = enable;
+        log( "debug attribute is never used", Project.MSG_WARN);
     }
 
     /**
@@ -216,7 +210,7 @@ public class ANTLR extends Task {
      * because a directory might be given for Antlr debug.
      */
     public Path createClasspath() {
-        return commandline.createClasspath(project).createPath();
+        return commandline.createClasspath(getProject()).createPath();
     }
 
     /**
@@ -329,7 +323,6 @@ public class ANTLR extends Task {
 
         // if no output directory is specified, used the target's directory
         if (outputDirectory == null) {
-            String fileName = target.toString();
             setOutputdirectory(new File(target.getParent()));
         }
         if (!outputDirectory.isDirectory()) {
@@ -363,7 +356,7 @@ public class ANTLR extends Task {
     private int run(String[] command) throws BuildException {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                 Project.MSG_WARN), null);
-        exe.setAntRun(project);
+        exe.setAntRun(getProject());
         if (workingdir != null) {
             exe.setWorkingDirectory(workingdir);
         }

@@ -142,19 +142,18 @@ public class Native2Ascii extends MatchingTask {
             throw new BuildException("Cannot define more than one mapper",
                                      location);
         }
-        mapper = new Mapper(project);
+        mapper = new Mapper(getProject());
         return mapper;
     }
 
     public void execute() throws BuildException {
 
-        Commandline baseCmd = null;      // the common portion of our cmd line
         DirectoryScanner scanner = null; // Scanner to find our inputs
         String[] files;                  // list of files to process
 
         // default srcDir to basedir
         if (srcDir == null){
-            srcDir = project.resolveFile(".");
+            srcDir = getProject().resolveFile(".");
         }
 
         // Require destDir

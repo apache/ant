@@ -117,7 +117,7 @@ public abstract class Definer extends Task {
      */
     public Path createClasspath() {
         if (this.classpath == null) {
-            this.classpath = new Path(project);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -246,7 +246,7 @@ public abstract class Definer extends Task {
      */
     private AntClassLoader createLoader() {
         // magic property
-        if (project.getProperty(REUSE_LOADER_REF) != null) {
+        if (getProject().getProperty(REUSE_LOADER_REF) != null) {
             // Generate the 'reuse' name automatically from the reference.
             // This allows <taskdefs> that work on both ant1.4 and ant1.5.
             // ( in 1.4 it'll require the task/type to be in classpath if they
@@ -258,7 +258,7 @@ public abstract class Definer extends Task {
 
         // If a loader has been set ( either by loaderRef or magic property )
         if (loaderId != null) {
-            Object reusedLoader = project.getReference(loaderId);
+            Object reusedLoader = getProject().getReference(loaderId);
             if (reusedLoader != null) {
                 if (reusedLoader instanceof AntClassLoader) {
                     return (AntClassLoader)reusedLoader;
@@ -272,9 +272,9 @@ public abstract class Definer extends Task {
 
         AntClassLoader al = null;
         if (classpath != null) {
-            al = new AntClassLoader(project, classpath, !reverseLoader);
+            al = new AntClassLoader(getProject(), classpath, !reverseLoader);
         } else {
-            al = new AntClassLoader(project, Path.systemClasspath,
+            al = new AntClassLoader(getProject(), Path.systemClasspath,
                                     !reverseLoader);
         }
         // need to load Task via system classloader or the new
@@ -286,8 +286,8 @@ public abstract class Definer extends Task {
         // If the loader is new, record it for future uses by other
         // task/typedefs
         if (loaderId != null) {
-            if (project.getReference(loaderId) == null) {
-                project.addReference(loaderId, al);
+            if (getProject().getReference(loaderId) == null) {
+                getProject().addReference(loaderId, al);
             }
         }
 

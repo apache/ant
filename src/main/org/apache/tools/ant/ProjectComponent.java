@@ -60,11 +60,15 @@ package org.apache.tools.ant;
  *
  * @author Conor MacNeill
  */
-
 public abstract class ProjectComponent {
 
-    /** Project object of this component. */
-    protected Project project = null;
+    /**
+     * Project object of this component.
+     * @deprecated You should not be directly accessing this variable
+     *   directly. You should access project object via the getProject()
+     *   or setProject() accessor/mutators.
+     */
+    protected Project project;
 
     /** Sole constructor. */
     public ProjectComponent() {

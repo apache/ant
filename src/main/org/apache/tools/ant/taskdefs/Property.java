@@ -276,7 +276,7 @@ public class Property extends Task {
      */
     public Path createClasspath() {
         if (this.classpath == null) {
-            this.classpath = new Path(project);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -408,7 +408,7 @@ public class Property extends Task {
             ClassLoader cL = null;
 
             if (classpath != null) {
-                cL = new AntClassLoader(project, classpath);
+                cL = new AntClassLoader(getProject(), classpath);
             } else {
                 cL = this.getClass().getClassLoader();
             }
@@ -472,7 +472,7 @@ public class Property extends Task {
             String name = (String) e.nextElement();
             String value = props.getProperty(name);
 
-            String v = project.replaceProperties(value);
+            String v = getProject().replaceProperties(value);
 
             if (prefix != null) {
                 name = prefix + name;
@@ -489,13 +489,13 @@ public class Property extends Task {
      */
     protected void addProperty(String n, String v) {
         if (userProperty) {
-            if (project.getUserProperty(n) == null) {
-                project.setInheritedProperty(n, v);
+            if (getProject().getUserProperty(n) == null) {
+                getProject().setInheritedProperty(n, v);
             } else {
                 log("Override ignored for " + n, Project.MSG_VERBOSE);
             }
         } else {
-            project.setNewProperty(n, v);
+            getProject().setNewProperty(n, v);
         }
     }
 

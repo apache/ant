@@ -184,7 +184,7 @@ public class CovMerge extends Task {
             for (int j = 0; j < f.length; j++) {
                 String pathname = f[j];
                 File file = new File(ds.getBasedir(), pathname);
-                file = project.resolveFile(file.getPath());
+                file = getProject().resolveFile(file.getPath());
                 v.addElement(file);
             }
         }
@@ -210,7 +210,7 @@ public class CovMerge extends Task {
                 pw.println(snapshots[i].getAbsolutePath());
             }
             // last file is the output snapshot
-            pw.println(project.resolveFile(tofile.getPath()));
+            pw.println(getProject().resolveFile(tofile.getPath()));
             pw.flush();
         } catch (IOException e) {
             throw new BuildException("I/O error while writing to " + file, e);

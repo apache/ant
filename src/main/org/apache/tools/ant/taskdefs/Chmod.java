@@ -193,7 +193,7 @@ public class Chmod extends ExecuteOn {
                     location);
         }
 
-        if (defaultSetDefined && defaultSet.getDir(project) != null) {
+        if (defaultSetDefined && defaultSet.getDir(getProject()) != null) {
             addFileset(defaultSet);
         }
         super.checkConfiguration();
@@ -206,11 +206,11 @@ public class Chmod extends ExecuteOn {
          * second branch of the if statement below catches for backwards
          * compatibility.
          */
-        if (defaultSetDefined || defaultSet.getDir(project) == null) {
+        if (defaultSetDefined || defaultSet.getDir(getProject()) == null) {
             try {
                 super.execute();
             } finally {
-                if (defaultSetDefined && defaultSet.getDir(project) != null) {
+                if (defaultSetDefined && defaultSet.getDir(getProject()) != null) {
                     filesets.removeElement(defaultSet);
                 }
             }
@@ -218,7 +218,7 @@ public class Chmod extends ExecuteOn {
             // we are chmodding the given directory
             Execute execute = prepareExec();
             Commandline cloned = (Commandline) cmdl.clone();
-            cloned.createArgument().setValue(defaultSet.getDir(project)
+            cloned.createArgument().setValue(defaultSet.getDir(getProject())
                                              .getPath());
             try {
                 execute.setCommandline(cloned.getCommandline());

@@ -170,7 +170,7 @@ public class JDependTask extends Task {
      */
     public Path createSourcespath() {
         if (_sourcesPath == null) {
-            _sourcesPath = new Path(project);
+            _sourcesPath = new Path(getProject());
         }
         return _sourcesPath.createPath();
     }
@@ -214,7 +214,7 @@ public class JDependTask extends Task {
      */
     public Path createClasspath() {
         if (_compileClasspath == null) {
-            _compileClasspath = new Path(project);
+            _compileClasspath = new Path(getProject());
         }
         return _compileClasspath.createPath();
     }
@@ -284,7 +284,6 @@ public class JDependTask extends Task {
 
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
-        boolean wasKilled = false;
         if (!getFork()) {
             exitValue = executeInVM(commandline);
         } else {
@@ -417,7 +416,7 @@ public class JDependTask extends Task {
         execute.setCommandline(commandline.getCommandline());
         if (getDir() != null) {
             execute.setWorkingDirectory(getDir());
-            execute.setAntRun(project);
+            execute.setAntRun(getProject());
         }
 
         if (getOutputFile() != null) {

@@ -209,7 +209,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     protected DirectoryScanner getDirectoryScanner(File baseDir) {
         fileset.setDir(baseDir);
         fileset.setDefaultexcludes(useDefaultExcludes);
-        return fileset.getDirectoryScanner(project);
+        return fileset.getDirectoryScanner(getProject());
     }
 
     /**
@@ -291,7 +291,6 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * Add a new selector into this container.
      *
      * @param selector the new selector to add
-     * @return the selector that was added
      */
     public void appendSelector(FileSelector selector) {
         fileset.appendSelector(selector);

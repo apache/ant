@@ -165,13 +165,13 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
         //Get default P4 settings from environment - Mark would have done something cool with
         //introspection here.....:-)
         String tmpprop;
-        if ((tmpprop = project.getProperty("p4.port")) != null) {
+        if ((tmpprop = getProject().getProperty("p4.port")) != null) {
             setPort(tmpprop);
         }
-        if ((tmpprop = project.getProperty("p4.client")) != null) {
+        if ((tmpprop = getProject().getProperty("p4.client")) != null) {
             setClient(tmpprop);
         }
-        if ((tmpprop = project.getProperty("p4.user")) != null) {
+        if ((tmpprop = getProject().getProperty("p4.user")) != null) {
             setUser(tmpprop);
         }
     }
@@ -182,7 +182,6 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
     /** Execute P4 command assembled by subclasses.
      @param command The command to run
-     @param p4input Input to be fed to command on stdin
      @param handler A P4Handler to process any input and output
      */
     protected void execP4Command(String command, P4Handler handler) throws BuildException {
@@ -203,13 +202,6 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             }
             commandline.createArgument().setLine(command);
 
-
-            String[] cmdline = commandline.getCommandline();
-            String cmdl = "";
-            for (int i = 0; i < cmdline.length; i++) {
-                cmdl += cmdline[i] + " ";
-            }
-
             log(commandline.describeCommand(), Project.MSG_VERBOSE);
 
             if (handler == null) {
@@ -218,7 +210,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
             Execute exe = new Execute(handler, null);
 
-            exe.setAntRun(project);
+            exe.setAntRun(getProject());
 
             exe.setCommandline(commandline.getCommandline());
 

@@ -228,7 +228,7 @@ public class CovReport extends Task {
      */
     public Path createSourcepath() {
         if (sourcePath == null) {
-            sourcePath = new Path(project);
+            sourcePath = new Path(getProject());
         }
         return sourcePath.createPath();
     }
@@ -253,7 +253,7 @@ public class CovReport extends Task {
      */
     public Path createCoveragepath() {
         if (coveragePath == null) {
-            coveragePath = new Path(project);
+            coveragePath = new Path(getProject());
         }
         return coveragePath.createPath();
     }
@@ -342,12 +342,12 @@ public class CovReport extends Task {
         if (filters != null) {
             v.addElement("-filters=" + filters);
         }
-        v.addElement("-output=" + project.resolveFile(tofile.getPath()));
-        v.addElement("-snapshot=" + project.resolveFile(snapshot.getPath()));
+        v.addElement("-output=" + getProject().resolveFile(tofile.getPath()));
+        v.addElement("-snapshot=" + getProject().resolveFile(snapshot.getPath()));
         // as a default -sourcepath use . in JProbe, so use project .
         if (sourcePath == null) {
-            sourcePath = new Path(project);
-            sourcePath.createPath().setLocation(project.resolveFile("."));
+            sourcePath = new Path(getProject());
+            sourcePath.createPath().setLocation(getProject().resolveFile("."));
         }
         v.addElement("-sourcepath=" + sourcePath);
 

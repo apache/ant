@@ -131,7 +131,7 @@ public class Echo extends Task {
      * Set a multiline message.
      */
     public void addText(String msg) {
-        message += project.replaceProperties(msg);
+        message += getProject().replaceProperties(msg);
     }
 
     /**

@@ -196,7 +196,7 @@ public class Java extends Task {
      * Adds a path to the classpath.
      */
     public Path createClasspath() {
-        return cmdl.createClasspath(project).createPath();
+        return cmdl.createClasspath(getProject()).createPath();
     }
 
     /**
@@ -403,7 +403,7 @@ public class Java extends Task {
                 outStream = 
                     new PrintStream(new FileOutputStream(out.getAbsolutePath(),
                                                          append));
-                exe.execute(project);
+                exe.execute(getProject());
             } catch (IOException io) {
                 throw new BuildException(io, location);
             } finally {
@@ -412,7 +412,7 @@ public class Java extends Task {
                 }
             }
         } else {
-            exe.execute(project);
+            exe.execute(getProject());
         }
     }
 
@@ -433,10 +433,10 @@ public class Java extends Task {
                                   createWatchdog());
             }
             
-            exe.setAntRun(project);
+            exe.setAntRun(getProject());
             
             if (dir == null) {
-                dir = project.getBaseDir();
+                dir = getProject().getBaseDir();
             } else if (!dir.exists() || !dir.isDirectory()) {
                 throw new BuildException(dir.getAbsolutePath()
                                          + " is not a valid directory",

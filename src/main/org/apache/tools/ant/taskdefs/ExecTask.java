@@ -216,7 +216,7 @@ public class ExecTask extends Task {
     protected void maybeSetResultPropertyValue(int result) {
         String res = Integer.toString(result);
         if (resultProperty != null) {
-            project.setNewProperty(resultProperty, res);
+            getProject().setNewProperty(resultProperty, res);
         }
     }
 
@@ -301,7 +301,7 @@ public class ExecTask extends Task {
     protected Execute prepareExec() throws BuildException {
         // default directory to the project's base directory
         if (dir == null) {
-            dir = project.getBaseDir();
+            dir = getProject().getBaseDir();
         }
         Execute exe = new Execute(createHandler(), createWatchdog());
         exe.setAntRun(getProject());
@@ -351,7 +351,7 @@ public class ExecTask extends Task {
                 }
                 val.append(line);
             }
-            project.setNewProperty(outputprop, val.toString());
+            getProject().setNewProperty(outputprop, val.toString());
         }
     }
 

@@ -134,7 +134,7 @@ public class P4Add extends P4Base {
 
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             //File fromDir = fs.getDir(project);
 
             String[] srcFiles = ds.getIncludedFiles();

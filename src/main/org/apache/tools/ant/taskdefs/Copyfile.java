@@ -120,7 +120,7 @@ public class Copyfile extends Task {
         if (forceOverwrite 
             || srcFile.lastModified() > destFile.lastModified()) {
             try {
-                project.copyFile(srcFile, destFile, filtering, forceOverwrite);
+                getProject().copyFile(srcFile, destFile, filtering, forceOverwrite);
             } catch (IOException ioe) {
                 String msg = "Error copying file: " + srcFile.getAbsolutePath()
                     + " due to " + ioe.getMessage();

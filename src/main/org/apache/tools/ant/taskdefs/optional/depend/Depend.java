@@ -179,7 +179,7 @@ public class Depend extends MatchingTask {
      */
     public Path createClasspath() {
         if (dependClasspath == null) {
-            dependClasspath = new Path(project);
+            dependClasspath = new Path(getProject());
         }
         return dependClasspath.createPath();
     }
@@ -588,7 +588,7 @@ public class Depend extends MatchingTask {
     private void determineOutOfDateClasses() {
         outOfDateClasses = new Hashtable();
         for (int i = 0; i < srcPathList.length; i++) {
-            File srcDir = (File) project.resolveFile(srcPathList[i]);
+            File srcDir = (File) getProject().resolveFile(srcPathList[i]);
             if (srcDir.exists()) {
                 DirectoryScanner ds = this.getDirectoryScanner(srcDir);
                 String[] files = ds.getIncludedFiles();

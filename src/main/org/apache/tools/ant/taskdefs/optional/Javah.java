@@ -104,8 +104,6 @@ import java.util.Enumeration;
 
 public class Javah extends Task {
 
-    private static final String FAIL_MSG = "Compile failed, messages should have been provided.";
-
     private Vector classes = new Vector(2);
     private String cls;
     private File destDir;
@@ -175,7 +173,7 @@ public class Javah extends Task {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -204,7 +202,7 @@ public class Javah extends Task {
      */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
-            bootclasspath = new Path(project);
+            bootclasspath = new Path(getProject());
         }
         return bootclasspath.createPath();
     }
@@ -305,7 +303,7 @@ public class Javah extends Task {
             classpath = Path.systemClasspath;
         }
 
-        String compiler = project.getProperty("build.compiler");
+        String compiler = getProject().getProperty("build.compiler");
         if (compiler == null) {
             if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) &&
                 !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {

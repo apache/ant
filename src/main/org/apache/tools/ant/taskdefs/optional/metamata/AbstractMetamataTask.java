@@ -144,7 +144,7 @@ public abstract class AbstractMetamataTask extends Task {
      */
     public Path createClasspath() {
         if (classPath == null) {
-            classPath = new Path(project);
+            classPath = new Path(getProject());
         }
         return classPath;
     }
@@ -155,7 +155,7 @@ public abstract class AbstractMetamataTask extends Task {
      */
     public Path createSourcepath() {
         if (sourcePath == null) {
-            sourcePath = new Path(project);
+            sourcePath = new Path(getProject());
         }
         return sourcePath;
     }
@@ -212,7 +212,7 @@ public abstract class AbstractMetamataTask extends Task {
 
         // set the classpath as the jar file
         File jar = getMetamataJar(metamataHome);
-        final Path classPath = cmdl.createClasspath(project);
+        final Path classPath = cmdl.createClasspath(getProject());
         classPath.createPathElement().setLocation(jar);
 
         // set the metamata.home property
@@ -332,7 +332,7 @@ public abstract class AbstractMetamataTask extends Task {
         Hashtable files = new Hashtable();
         for (int i = 0; i < fileSets.size(); i++) {
             FileSet fs = (FileSet) fileSets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             ds.scan();
             String[] f = ds.getIncludedFiles();
             log(i + ") Adding " + f.length + " files from directory " + ds.getBasedir(), Project.MSG_VERBOSE);

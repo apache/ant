@@ -309,9 +309,9 @@ public abstract class AbstractCvsTask extends Task {
         //
         Execute exe = new Execute(getExecuteStreamHandler(), null);
 
-        exe.setAntRun(project);
+        exe.setAntRun(getProject());
         if (dest == null) {
-            dest = project.getBaseDir();
+            dest = getProject().getBaseDir();
         }
 
         if (!dest.exists()) {

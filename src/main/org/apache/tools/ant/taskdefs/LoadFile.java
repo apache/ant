@@ -188,7 +188,7 @@ public final class LoadFile extends Task {
                 crh.setBufferSize(size);
                 crh.setPrimaryReader(instream);
                 crh.setFilterChains(filterChains);
-                crh.setProject(project);
+                crh.setProject(getProject());
                 instream = crh.getAssembledReader();
     
                 text = crh.readFully(instream);
@@ -196,7 +196,7 @@ public final class LoadFile extends Task {
 
             if (text != null) {
                 if (text.length() > 0) {
-                    project.setNewProperty(property, text);
+                    getProject().setNewProperty(property, text);
                     log("loaded " + text.length() + " characters",
                         Project.MSG_VERBOSE);
                     log(property + " := " + text, Project.MSG_DEBUG);

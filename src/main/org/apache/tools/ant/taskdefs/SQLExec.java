@@ -338,8 +338,8 @@ public class SQLExec extends JDBCTask {
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                File srcDir = fs.getDir(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                File srcDir = fs.getDir(getProject());
 
                 String[] srcFiles = ds.getIncludedFiles();
 
@@ -435,7 +435,7 @@ public class SQLExec extends JDBCTask {
 
         while ((line = in.readLine()) != null){
             line = line.trim();
-            line = project.replaceProperties(line);
+            line = getProject().replaceProperties(line);
             if (line.startsWith("//")) {
                 continue;
             }

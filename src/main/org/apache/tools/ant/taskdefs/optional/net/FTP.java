@@ -471,10 +471,10 @@ public class FTP
         FileScanner ds;
 
         if (action == SEND_FILES) {
-            ds = fs.getDirectoryScanner(project);
+            ds = fs.getDirectoryScanner(getProject());
         } else {
             ds = new FTPDirectoryScanner(ftp);
-            fs.setupDirectoryScanner(ds, project);
+            fs.setupDirectoryScanner(ds, getProject());
             ds.scan();
         }
 
@@ -704,7 +704,7 @@ public class FTP
 
         try {
             // XXX - why not simply new File(dir, filename)?
-            File file = project.resolveFile(new File(dir, filename).getPath());
+            File file = getProject().resolveFile(new File(dir, filename).getPath());
 
             if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {
                 return;
@@ -790,7 +790,7 @@ public class FTP
         OutputStream outstream = null;
 
         try {
-            File file = project.resolveFile(new File(dir, filename).getPath());
+            File file = getProject().resolveFile(new File(dir, filename).getPath());
 
             if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {
                 return;

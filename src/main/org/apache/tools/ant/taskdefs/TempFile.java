@@ -54,10 +54,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
@@ -155,10 +151,10 @@ public class TempFile extends Task {
             throw new BuildException("no property specified");
         }
         if (destDir == null) {
-            destDir = project.resolveFile(".");
+            destDir = getProject().resolveFile(".");
         }
         FileUtils utils = FileUtils.newFileUtils();
         File tfile = utils.createTempFile(prefix, suffix, destDir);
-        project.setNewProperty(property, tfile.toString());
+        getProject().setNewProperty(property, tfile.toString());
     }
 }

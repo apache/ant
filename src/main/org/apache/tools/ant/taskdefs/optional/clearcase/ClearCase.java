@@ -87,7 +87,7 @@ public abstract class ClearCase extends Task {
      * @param dir the directory containing the cleartool executable
      */
     public final void setClearToolDir(String dir) {
-        m_ClearToolDir = project.translatePath(dir);
+        m_ClearToolDir = getProject().translatePath(dir);
     }
 
     /**

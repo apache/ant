@@ -103,7 +103,7 @@ public abstract class Continuus extends Task {
      * @param dir the directory containing the ccm executable
      */
     public final void setCcmDir(String dir) {
-        ccmDir = project.translatePath(dir);
+        ccmDir = getProject().translatePath(dir);
     }
 
     /**

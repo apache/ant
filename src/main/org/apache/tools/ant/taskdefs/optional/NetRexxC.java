@@ -140,7 +140,6 @@ public class NetRexxC extends MatchingTask {
     private boolean diag;
     private boolean explicit;
     private boolean format;
-    private boolean java;
     private boolean keep;
     private boolean logo = true;
     private boolean replace;
@@ -174,8 +173,6 @@ public class NetRexxC extends MatchingTask {
     // other implementation variables
     private Vector compileList = new Vector();
     private Hashtable filecopyList = new Hashtable();
-    private String oldClasspath = System.getProperty("java.class.path");
-
 
     /**
      * Set whether literals are treated as binary, rather than NetRexx types
@@ -294,7 +291,7 @@ public class NetRexxC extends MatchingTask {
      * false.
      */
     public void setJava(boolean java) {
-        this.java = java;
+        log( "The attribute java is currently unused.", Project.MSG_WARN );
     }
 
 
@@ -535,103 +532,103 @@ public class NetRexxC extends MatchingTask {
     public void init() {
         String p;
 
-        if ((p = project.getProperty("ant.netrexxc.binary")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.binary")) != null) {
             this.binary = Project.toBoolean(p);
         }
         // classpath makes no sense
-        if ((p = project.getProperty("ant.netrexxc.comments")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.comments")) != null) {
             this.comments = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.compact")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.compact")) != null) {
             this.compact = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.compile")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.compile")) != null) {
             this.compile = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.console")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.console")) != null) {
             this.console = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.crossref")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.crossref")) != null) {
             this.crossref = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.decimal")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.decimal")) != null) {
             this.decimal = Project.toBoolean(p);
             // destDir
         }
-        if ((p = project.getProperty("ant.netrexxc.diag")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.diag")) != null) {
             this.diag = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.explicit")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.explicit")) != null) {
             this.explicit = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.format")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.format")) != null) {
             this.format = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.java")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.java")) != null) {
             this.java = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.keep")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.keep")) != null) {
             this.keep = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.logo")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.logo")) != null) {
             this.logo = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.replace")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.replace")) != null) {
             this.replace = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.savelog")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.savelog")) != null) {
             this.savelog = Project.toBoolean(p);
             // srcDir
         }
-        if ((p = project.getProperty("ant.netrexxc.sourcedir")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.sourcedir")) != null) {
             this.sourcedir = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.strictargs")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.strictargs")) != null) {
             this.strictargs = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.strictassign")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.strictassign")) != null) {
             this.strictassign = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.strictcase")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.strictcase")) != null) {
             this.strictcase = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.strictimport")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.strictimport")) != null) {
             this.strictimport = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.strictprops")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.strictprops")) != null) {
             this.strictprops = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.strictsignal")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.strictsignal")) != null) {
             this.strictsignal = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.symbols")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.symbols")) != null) {
             this.symbols = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.time")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.time")) != null) {
             this.time = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.trace")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.trace")) != null) {
             setTrace(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.utf8")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.utf8")) != null) {
             this.utf8 = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.verbose")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.verbose")) != null) {
             setVerbose(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.suppressMethodArgumentNotUsed")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.suppressMethodArgumentNotUsed")) != null) {
             this.suppressMethodArgumentNotUsed = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.suppressPrivatePropertyNotUsed")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.suppressPrivatePropertyNotUsed")) != null) {
             this.suppressPrivatePropertyNotUsed = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.suppressVariableNotUsed")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.suppressVariableNotUsed")) != null) {
             this.suppressVariableNotUsed = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.suppressExceptionNotSignalled")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.suppressExceptionNotSignalled")) != null) {
             this.suppressExceptionNotSignalled = Project.toBoolean(p);
         }
-        if ((p = project.getProperty("ant.netrexxc.suppressDeprecation")) != null) {
+        if ((p = getProject().getProperty("ant.netrexxc.suppressDeprecation")) != null) {
             this.suppressDeprecation = Project.toBoolean(p);
         }
     }
@@ -712,7 +709,7 @@ public class NetRexxC extends MatchingTask {
                 String toFile = (String) filecopyList.get(fromFile);
 
                 try {
-                    project.copyFile(fromFile, toFile);
+                    getProject().copyFile(fromFile, toFile);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                          + " due to " + ioe.getMessage();
@@ -730,7 +727,6 @@ public class NetRexxC extends MatchingTask {
 
         String classpath = getCompileClasspath();
         StringBuffer compileOptions = new StringBuffer();
-        StringBuffer fileList = new StringBuffer();
 
         // create an array of strings for input to the compiler: one array
         // comes from the compile options, the other from the compileList
@@ -904,7 +900,7 @@ public class NetRexxC extends MatchingTask {
             System.getProperty("path.separator"), false);
 
         while (tok.hasMoreTokens()) {
-            File f = project.resolveFile(tok.nextToken());
+            File f = getProject().resolveFile(tok.nextToken());
 
             if (f.exists()) {
                 target.append(File.pathSeparator);

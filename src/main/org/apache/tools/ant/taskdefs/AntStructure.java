@@ -127,26 +127,24 @@ public class AntStructure extends Task {
                 out = new PrintWriter(new FileWriter(output));
             }
 
-            printHead(out, project.getTaskDefinitions().keys(),
-                      project.getDataTypeDefinitions().keys());
+            printHead(out, getProject().getTaskDefinitions().keys(),
+                      getProject().getDataTypeDefinitions().keys());
 
             printTargetDecl(out);
 
-            Enumeration dataTypes = project.getDataTypeDefinitions().keys();
+            Enumeration dataTypes = getProject().getDataTypeDefinitions().keys();
             while (dataTypes.hasMoreElements()) {
                 String typeName = (String) dataTypes.nextElement();
                 printElementDecl(out, typeName,
-                                 (Class) project.getDataTypeDefinitions().get(typeName));
+                                 (Class) getProject().getDataTypeDefinitions().get(typeName));
             }
 
-            Enumeration tasks = project.getTaskDefinitions().keys();
+            Enumeration tasks = getProject().getTaskDefinitions().keys();
             while (tasks.hasMoreElements()) {
                 String taskName = (String) tasks.nextElement();
                 printElementDecl(out, taskName,
-                                 (Class) project.getTaskDefinitions().get(taskName));
+                                 (Class) getProject().getTaskDefinitions().get(taskName));
             }
-
-            printTail(out);
 
         } catch (IOException ioe) {
             throw new BuildException("Error writing " 
@@ -358,8 +356,6 @@ public class AntStructure extends Task {
             }
         }
     }
-
-    private void printTail(PrintWriter out) {}
 
     /**
      * Does this String match the XML-NMTOKEN production?

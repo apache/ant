@@ -298,7 +298,7 @@ public class Zip extends MatchingTask {
 
             log("Processing groupfileset ", Project.MSG_VERBOSE);
             FileSet fs = (FileSet) groupfilesets.elementAt(i);
-            FileScanner scanner = fs.getDirectoryScanner(project);
+            FileScanner scanner = fs.getDirectoryScanner(getProject());
             String[] files = scanner.getIncludedFiles();
             File basedir = scanner.getBasedir();
             for (int j = 0; j < files.length; j++) {
@@ -319,7 +319,7 @@ public class Zip extends MatchingTask {
         }
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            dss.addElement (fs.getDirectoryScanner(project));
+            dss.addElement (fs.getDirectoryScanner(getProject()));
         }
         int dssSize = dss.size();
         FileScanner[] scanners = new FileScanner[dssSize];
@@ -845,7 +845,7 @@ public class Zip extends MatchingTask {
         // Add each fileset in the Vector.
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
             String prefix = "";
             String fullpath = "";

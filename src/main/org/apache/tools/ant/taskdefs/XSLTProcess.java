@@ -193,7 +193,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         try {
             if (baseDir == null) {
-                baseDir = project.resolveFile(".");
+                baseDir = getProject().resolveFile(".");
             }
 
             liaison = getLiaison();
@@ -205,7 +205,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
             log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
 
-            File stylesheet = project.resolveFile(xslFile);
+            File stylesheet = getProject().resolveFile(xslFile);
             if (!stylesheet.exists()) {
                 stylesheet = fileUtils.resolveFile(baseDir, xslFile);
                 /*
@@ -326,7 +326,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -398,7 +398,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         if (classpath == null) {
             return Class.forName(classname);
         } else {
-            AntClassLoader al = new AntClassLoader(project, classpath);
+            AntClassLoader al = new AntClassLoader(getProject(), classpath);
             Class c = al.loadClass(classname);
             AntClassLoader.initializeClass(c);
             return c;
@@ -702,7 +702,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void init() throws BuildException {
         super.init();
-        xmlCatalog.setProject(project);
+        xmlCatalog.setProject(getProject());
     }
 
     /**
@@ -810,7 +810,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /**
          * Create an instance of a factory attribute.
-         * @return the newly created factory attribute
+         * the newly created factory attribute
          */
         public void addAttribute(Attribute attr) {
             attributes.addElement(attr);

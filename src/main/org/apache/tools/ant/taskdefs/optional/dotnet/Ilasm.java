@@ -492,7 +492,7 @@ public class Ilasm
     public void execute()
              throws BuildException {
         if (srcDir == null) {
-            srcDir = project.resolveFile(".");
+            srcDir = getProject().resolveFile(".");
         }
 
         //get dependencies list.

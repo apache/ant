@@ -297,7 +297,7 @@ public class Coverage extends Task {
      * classpath to run the files.
      */
     public Path createClasspath() {
-        return cmdlJava.createClasspath(project).createPath();
+        return cmdlJava.createClasspath(getProject()).createPath();
     }
 
     /**
@@ -370,14 +370,14 @@ public class Coverage extends Task {
         if (snapshotDir == null) {
             snapshotDir = new File(".");
         }
-        snapshotDir = project.resolveFile(snapshotDir.getPath());
+        snapshotDir = getProject().resolveFile(snapshotDir.getPath());
         if (!snapshotDir.isDirectory() || !snapshotDir.exists()) {
             throw new BuildException("Snapshot directory does not exists :" + snapshotDir);
         }
         if (workingDir == null) {
             workingDir = new File(".");
         }
-        workingDir = project.resolveFile(workingDir.getPath());
+        workingDir = getProject().resolveFile(workingDir.getPath());
 
         // check for info, do your best to select the java executable.
         // JProbe 3.0 fails if there is no javaexe option. So
@@ -409,7 +409,7 @@ public class Coverage extends Task {
             params.addElement("-jp_vm=" + vm);
         }
         if (javaExe != null) {
-            params.addElement("-jp_java_exe=" + project.resolveFile(javaExe.getPath()));
+            params.addElement("-jp_java_exe=" + getProject().resolveFile(javaExe.getPath()));
         }
         params.addElement("-jp_working_dir=" + workingDir.getPath());
         params.addElement("-jp_snapshot_dir=" + snapshotDir.getPath());

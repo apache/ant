@@ -130,8 +130,8 @@ public class Expand extends Task {
         if (filesets.size() > 0) {
             for (int j = 0; j < filesets.size(); j++) {
                 FileSet fs = (FileSet) filesets.elementAt(j);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                File fromDir = fs.getDir(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                File fromDir = fs.getDir(getProject());
 
                 String[] files = ds.getIncludedFiles();
                 for (int i = 0; i < files.length; ++i) {
@@ -183,7 +183,7 @@ public class Expand extends Task {
             boolean included = false;
             for (int v = 0; v < patternsets.size(); v++) {
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
-                String[] incls = p.getIncludePatterns(project);
+                String[] incls = p.getIncludePatterns(getProject());
                 if (incls != null) {
                     for (int w = 0; w < incls.length; w++) {
                         boolean isIncl = 
@@ -194,7 +194,7 @@ public class Expand extends Task {
                         }
                     }
                 }
-                String[] excls = p.getExcludePatterns(project);
+                String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {
                     for (int w = 0; w < excls.length; w++) {
                         boolean isExcl = 

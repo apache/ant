@@ -143,16 +143,14 @@ public class WLJspc extends MatchingTask {
         }
         
         
-        String systemClassPath = System.getProperty("java.class.path");
-        
-        pathToPackage 
+        pathToPackage
             = this.destinationPackage.replace('.', File.separatorChar);
         // get all the files in the sourceDirectory
         DirectoryScanner ds = super.getDirectoryScanner(sourceDirectory);
 
         //use the systemclasspath as well, to include the ant jar
         if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+            compileClasspath = new Path(getProject());
         }
         
         compileClasspath.append(Path.systemClasspath);
@@ -162,7 +160,7 @@ public class WLJspc extends MatchingTask {
         // Therefore, takes loads of time 
         // Can pass directories at a time (*.jsp) but easily runs out of memory on hefty dirs 
         // (even on  a Sun)
-        Java helperTask = (Java) project.createTask("java");
+        Java helperTask = (Java) getProject().createTask("java");
         helperTask.setFork(true);
         helperTask.setClassname("weblogic.jspc");
         helperTask.setTaskName(getTaskName());
@@ -245,7 +243,7 @@ public class WLJspc extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+            compileClasspath = new Path(getProject());
         }
         return compileClasspath;
     }
@@ -297,8 +295,7 @@ public class WLJspc extends MatchingTask {
             // Can be written better... this is too hacky!
             jspFile = new File(files[i]);
             parents = jspFile.getParent();
-            int loc = 0;
-            
+
             if ((parents != null)  && (!("").equals(parents))) {
                 parents =  this.replaceString(parents, File.separator, "_/");
                 pack = pathToPackage + File.separator + "_" + parents;

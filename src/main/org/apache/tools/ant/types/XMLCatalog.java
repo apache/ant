@@ -349,7 +349,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         log("resolveEntity: '" + publicId + "': '" + systemId + "'",
             Project.MSG_DEBUG);
 
-        InputSource inputSource = resolveEntityImpl(publicId, systemId);
+        InputSource inputSource = resolveEntityImpl(publicId );
 
         if (inputSource == null) {
             log("No matching catalog entry found, parser will use: '" +
@@ -478,11 +478,9 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
      */
     private String removeFragment(String uri) {
         String result = uri;
-        String fragment = null;
         int hashPos = uri.indexOf("#");
         if (hashPos >= 0) {
             result = uri.substring(0, hashPos);
-            fragment = uri.substring(hashPos+1);
         }
         return result;
     }
@@ -502,7 +500,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         // location attribute.  This is resolved using the appropriate
         // base.
         //
-        File resFile = project.resolveFile(uri);
+        File resFile = getProject().resolveFile(uri);
         InputSource source = null;
 
         if (resFile.exists() && resFile.canRead()) {
@@ -537,9 +535,9 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
 
         AntClassLoader loader = null;
         if (classpath != null) {
-            loader = new AntClassLoader(project, classpath);
+            loader = new AntClassLoader(getProject(), classpath);
         } else {
-            loader = new AntClassLoader(project, Path.systemClasspath);
+            loader = new AntClassLoader(getProject(), Path.systemClasspath);
         }
 
         //
@@ -606,8 +604,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     /**
      * Implements the guts of the resolveEntity() lookup strategy.
      */
-    private InputSource resolveEntityImpl(String publicId,
-                                          String systemId) {
+    private InputSource resolveEntityImpl(String publicId) {
 
         InputSource result = null;
 
@@ -636,8 +633,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     /**
      * Implements the guts of the resolve() lookup strategy.
      */
-    private SAXSource resolveImpl(String href, String base)
-        throws TransformerException {
+    private SAXSource resolveImpl(String href, String base) {
 
         SAXSource result = null;
         InputSource source = null;

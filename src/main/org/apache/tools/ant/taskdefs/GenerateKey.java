@@ -400,7 +400,7 @@ public class GenerateKey extends Task {
         } 
 
         log("Generating Key for " + alias);
-        final ExecTask cmd = (ExecTask) project.createTask("exec");
+        final ExecTask cmd = (ExecTask) getProject().createTask("exec");
         cmd.setExecutable("keytool");
         Commandline.Argument arg = cmd.createArg();
         arg.setLine(sb.toString());

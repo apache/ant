@@ -160,7 +160,7 @@ public class Move extends Copy {
                                 new FilterSetCollection();
                             if (filtering) {
                                 executionFilters
-                                    .addFilterSet(project.getGlobalFilterSet());
+                                    .addFilterSet(getProject().getGlobalFilterSet());
                             }
                             for (Enumeration filterEnum =
                                      getFilterSets().elements();
@@ -173,7 +173,7 @@ public class Move extends Copy {
                                                     getFilterChains(),
                                                     forceOverwrite,
                                                     getPreserveLastModified(),
-                                                    getEncoding(), project);
+                                                    getEncoding(), getProject());
 
                             f = new File(fromFile);
                             if (!f.delete()) {
@@ -217,7 +217,7 @@ public class Move extends Copy {
             Enumeration e = filesets.elements();
             while (e.hasMoreElements()) {
                 FileSet fs = (FileSet) e.nextElement();
-                File dir = fs.getDir(project);
+                File dir = fs.getDir(getProject());
 
                 if (okToDelete(dir)) {
                     deleteDir(dir);

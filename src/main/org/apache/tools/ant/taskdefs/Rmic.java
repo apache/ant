@@ -259,7 +259,7 @@ public class Rmic extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+            compileClasspath = new Path(getProject());
         }
         return compileClasspath.createPath();
     }
@@ -414,7 +414,7 @@ public class Rmic extends MatchingTask {
      */
     public Path createExtdirs() {
         if (extdirs == null) {
-            extdirs = new Path(project);
+            extdirs = new Path(getProject());
         }
         return extdirs.createPath();
     }
@@ -493,7 +493,7 @@ public class Rmic extends MatchingTask {
         adapter.setRmic(this);
 
         Path classpath = adapter.getClasspath();
-        loader = new AntClassLoader(project, classpath);
+        loader = new AntClassLoader(getProject(), classpath);
 
         try {
             // scan base dirs to build up compile lists only if a

@@ -204,7 +204,7 @@ public abstract class JDBCTask extends Task {
      */
     public Path createClasspath() {
         if (this.classpath == null) {
-            this.classpath = new Path(project);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -383,7 +383,7 @@ public abstract class JDBCTask extends Task {
                         log(
                                 "Loading " + driver + " using AntClassLoader with classpath " + classpath,
                                 Project.MSG_VERBOSE);
-                        loader = new AntClassLoader(project, classpath);
+                        loader = new AntClassLoader(getProject(), classpath);
                         if (caching) {
                             loaderMap.put(driver, loader);
                         }

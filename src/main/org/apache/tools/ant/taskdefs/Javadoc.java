@@ -535,7 +535,7 @@ public class Javadoc extends Task {
      */
     public Path createSourcepath() {
         if (sourcePath == null) {
-            sourcePath = new Path(project);
+            sourcePath = new Path(getProject());
         }
         return sourcePath.createPath();
     }
@@ -570,7 +570,7 @@ public class Javadoc extends Task {
         while (tok.hasMoreTokens()) {
             String f = tok.nextToken();
             SourceFile sf = new SourceFile();
-            sf.setFile(project.resolveFile(f));
+            sf.setFile(getProject().resolveFile(f));
             addSource(sf);
         }
     }
@@ -806,7 +806,7 @@ public class Javadoc extends Task {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -840,7 +840,7 @@ public class Javadoc extends Task {
      */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
-            bootclasspath = new Path(project);
+            bootclasspath = new Path(getProject());
         }
         return bootclasspath.createPath();
     }
@@ -1067,7 +1067,7 @@ public class Javadoc extends Task {
             if (!tok.hasMoreTokens()) {
                 throw new BuildException(linkOfflineError);
             }
-            le.setPackagelistLoc(project.resolveFile(tok.nextToken()));
+            le.setPackagelistLoc(getProject().resolveFile(tok.nextToken()));
         }
     }
 
@@ -1823,7 +1823,7 @@ public class Javadoc extends Task {
         JavadocOutputStream out = new JavadocOutputStream(Project.MSG_INFO);
         JavadocOutputStream err = new JavadocOutputStream(Project.MSG_WARN);
         Execute exe = new Execute(new PumpStreamHandler(out, err));
-        exe.setAntRun(project);
+        exe.setAntRun(getProject());
 
         /*
          * No reason to change the working directory as all filenames and
@@ -2012,7 +2012,7 @@ public class Javadoc extends Task {
      * Convenience method to expand properties.
      */
     protected String expand(String content) {
-        return project.replaceProperties(content);
+        return getProject().replaceProperties(content);
     }
 
 }
