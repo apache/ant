@@ -102,6 +102,8 @@ Other changes:
 * Pathconvert no longer requires that one of (targetos|pathsep|dirsep)
   be set; platform defaults are used when this is the case.
 
+* Added isfileselected condition.
+
 Fixed bugs:
 -----------
 
