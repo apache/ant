@@ -18,10 +18,10 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-if     "%OS%" == "Windows_NT" if exist bootstrap rmdir/s/q bootstrap
-if not "%OS%" == "Windows_NT" if exist bootstrap deltree/y bootstrap
-if     "%OS%" == "Windows_NT" if exist build\classes rmdir/s/q build\classes
-if not "%OS%" == "Windows_NT" if exist build\classes deltree/y build\classes
+if     "%OS%" == "Windows_NT" if exist bootstrap\nul rmdir/s/q bootstrap
+if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
+if     "%OS%" == "Windows_NT" if exist build\classes\nul rmdir/s/q build\classes
+if not "%OS%" == "Windows_NT" if exist build\classes\nul deltree/y build\classes
 
 SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;lib\optional\junit.jar
 
@@ -41,9 +41,9 @@ echo CLASSPATH=%CLASSPATH%
 if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
 if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
 
-if not exist %CLASSDIR% mkdir %CLASSDIR%
-if not exist build mkdir build
-if not exist build\classes mkdir build\classes
+if not exist %CLASSDIR%\nul mkdir %CLASSDIR%
+if not exist build\nul mkdir build
+if not exist build\classes\nul mkdir build\classes
 
 echo.
 echo ... Compiling Ant Classes

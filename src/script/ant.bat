@@ -52,8 +52,14 @@ goto checkJava
 
 :checkSystemDrive
 rem check for ant in root directory of system drive
-if not exist "%SystemDrive%\ant" goto noAntHome
+if not exist %SystemDrive%\ant\nul goto checkCDrive
 set ANT_HOME=%SystemDrive%\ant
+goto checkJava
+
+:checkCDrive
+rem check for ant in C:\ant for Win9X users
+if not exist C:\ant\nul goto noAntHome
+set ANT_HOME=C:\ant
 goto checkJava
 
 :noAntHome
