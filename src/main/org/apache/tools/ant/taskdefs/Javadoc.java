@@ -365,8 +365,17 @@ public class Javadoc extends Task {
         if (!javadoc1) {
             LinkArgument le = createLink();
             le.setOffline(true);
+            String linkOfflineError = "The linkoffline attribute must include a URL and " + 
+                                      "a package-list file location separated by a space";
+            if (src.trim().length() == 0) {
+                throw new BuildException(linkOfflineError);
+            }                
             StringTokenizer tok = new StringTokenizer(src, " ", false);
             le.setHref(tok.nextToken());
+
+            if (!tok.hasMoreTokens()) {
+                throw new BuildException(linkOfflineError);
+            }                                        
             le.setPackagelistLoc(tok.nextToken());
         }
     }
@@ -661,7 +670,7 @@ public class Javadoc extends Task {
          if (packageList != null) {
             cmd.createArgument().setValue("@" + packageList);
         }
-        log("Javadoc args: " + cmd.getArguments(), Project.MSG_VERBOSE);
+        log("Javadoc args: " + cmd, Project.MSG_VERBOSE);
 
         log("Javadoc execution", Project.MSG_INFO);
 
