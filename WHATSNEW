@@ -44,13 +44,19 @@ behavior has been dropped.
 Custom tasks that rely on Project.createTask("exec") to return an
 instance of this class are going to fail.
 
+* nested <include> and <exclude> elements expect the value of their
+name attribute to be a single pattern, they don't accept multiple
+patterns anymore. Split them into multiple elements of the same type.
+
 Other changes:
 --------------
 
 * New tasks: antstructure, cab, execon, fail, ftp, genkey, jlink,
-junit, sql, javacc, jjtree, starteam, war, unwar, uptodate, native2ascii.
+junit, sql, javacc, jjtree, starteam, war, unwar, uptodate,
+native2ascii, copy, move, mparse.
 
-* New tasks mparse pending documentation.
+* copydir, copyfile, deltree and rename are now deprecated. They
+should be replaced with the new copy, delete and move tasks.
 
 * <java> uses ClassLoader of its own in no-fork mode if a classpath is
 specified.
