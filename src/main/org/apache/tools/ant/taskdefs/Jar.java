@@ -136,6 +136,11 @@ public class Jar extends Zip {
         setEncoding("UTF8");
     }
 
+    /**
+     * Not supported.
+     *
+     * @param we
+     */
     public void setWhenempty(WhenEmpty we) {
         log("JARs are never empty, they contain at least a manifest file",
             Project.MSG_WARN);
@@ -149,13 +154,20 @@ public class Jar extends Zip {
     }
 
     /**
-     * Set whether or not to create an index list for classes
-     * to speed up classloading.
+     * Set whether or not to create an index list for classes.
+     * This may speed up classloading in some cases.
      */
     public void setIndex(boolean flag){
         index = flag;
     }
 
+    /**
+     * Allows the manifest for the archive file to be provided inline
+     * in the build file rather than in an external file.
+     *
+     * @param newManifest
+     * @throws ManifestException
+     */
     public void addConfiguredManifest(Manifest newManifest)
         throws ManifestException {
         if (configuredManifest == null) {
@@ -166,6 +178,13 @@ public class Jar extends Zip {
         savedConfiguredManifest = configuredManifest;
     }
 
+    /**
+     * The manifest file to use. This can be either the location of a manifest,
+     * or the name of a jar added through a fileset. If its the name of an added
+     * jar, the task expects the manifest to be in the jar at META-INF/MANIFEST.MF.
+     *
+     * @param manifestFile
+     */
     public void setManifest(File manifestFile) {
         if (!manifestFile.exists()) {
             throw new BuildException("Manifest file: " + manifestFile +
@@ -214,11 +233,29 @@ public class Jar extends Zip {
         return newManifest;
     }
 
+    /**
+     * Behavior when a Manifest is found in a zipfileset or zipgroupfileset file.
+     * Valid values are "skip", "merge", and "mergewithoutmain".
+     * "merge" will merge all of manifests together, and merge this into any
+     * other specified manifests.
+     * "mergewithoutmain" merges everything but the Main section of the manifests.
+     * Default value is "skip".
+     *
+     * Note: if this attribute's value is not "skip", the created jar will not
+     * be readable by using java.util.jar.JarInputStream
+     *
+     * @param config
+     */
     public void setFilesetmanifest(FilesetManifestConfig config) {
         filesetManifestConfig = config;
         mergeManifestsMain = "merge".equals(config.getValue());
     }
 
+    /**
+     * Adds a zipfileset to include in the META-INF directory.
+     *
+     * @param fs
+     */
     public void addMetainf(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("META-INF/");

@@ -93,7 +93,7 @@ public class Ear extends Jar {
     }
 
     /**
-     * set the application XML file
+     * File to incorporate as application.xml.
      */
     public void setAppxml(File descr) {
         deploymentDescriptor = descr;
@@ -112,6 +112,11 @@ public class Ear extends Jar {
     }
 
 
+    /**
+     * Adds zipfileset.
+     *
+     * @param fs
+     */
     public void addArchives(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         // Do we need to do this? LH

@@ -150,7 +150,7 @@ public class Zip extends MatchingTask {
 
 
     /**
-     * Sets the destfile attribute.
+     * Archive file to create.
      * @since Ant 1.5
      * @param destFile The new destination File
      */
@@ -160,30 +160,28 @@ public class Zip extends MatchingTask {
 
 
     /**
-     * This is the base directory to look in for
-     * things to zip.
+     * Directory from which to archive files.
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
     }
 
     /**
-     * Sets whether we want to compress the files or only store them.
+     * Whether we want to compress the files or only store them.
      */
     public void setCompress(boolean c) {
         doCompress = c;
     }
 
     /**
-     * Emulate Sun's jar utility by not adding parent dirs
+     * If true, emulate Sun's jar utility by not adding parent directories.
      */
     public void setFilesonly(boolean f) {
         doFilesonly = f;
     }
 
     /**
-     * Sets whether we want to update the file (if it exists)
-     * or create a new one.
+     * If true, updates an existing file, otherwise create a new one.
      */
     public void setUpdate(boolean c) {
         doUpdate = c;
@@ -198,14 +196,14 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Adds a set of files (nested zipfileset attribute) that can be
+     * Adds a set of files that can be
      * read from an archive and be given a prefix/fullpath.
      */
     public void addZipfileset(ZipFileSet set) {
@@ -213,14 +211,14 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Adds a group of zip files (a group of nested filesets).
+     * Adds a group of zip files.
      */
     public void addZipGroupFileset(FileSet set) {
         groupfilesets.addElement(set);
     }
 
     /**
-     * Sets behavior for when a duplicate file is about to be added
+     * Sets behavior for when a duplicate file is about to be added.
      * Possible values are: <code>keep</code> (keep both
      * of the files); <code>skip</code> (keep the first version
      * of the file found); <code>overwrite</code> overwrite the file
