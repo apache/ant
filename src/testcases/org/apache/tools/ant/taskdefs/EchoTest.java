@@ -78,10 +78,12 @@ public class EchoTest extends TaskdefsTest {
     }
     
     public void test3() { 
-        expectOutput("test3", "This \n"+
+        expectOutput("test3", "\n"+
+                              "    This \n"+
                               "    is\n"+
                               "    a \n"+
                               "    multiline\n"+
-                              "    message\n");
+                              "    message\n"+
+                              "    \n");
     }
 }

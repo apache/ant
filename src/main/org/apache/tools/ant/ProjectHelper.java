@@ -423,7 +423,11 @@ public class ProjectHelper {
                                     RuntimeConfigurable parentWrapper) {
             super(parentHandler);
 
-            this.target = target;
+            if (target instanceof TaskAdapter) {
+                this.target = ((TaskAdapter) target).getProxy();
+            } else {
+                this.target = target;
+            }
             this.parentWrapper = parentWrapper;
         }
 
@@ -538,7 +542,7 @@ public class ProjectHelper {
      */
     public static void addText(Object target, char[] buf, int start, int end)
         throws BuildException {
-        addText(target, new String(buf, start, end).trim());
+        addText(target, new String(buf, start, end));
     }
 
     /**
@@ -547,7 +551,7 @@ public class ProjectHelper {
     public static void addText(Object target, String text)
         throws BuildException {
 
-        if (text == null || text.length() == 0) {
+        if (text == null || text.trim().length() == 0) {
             return;
         }
 

@@ -123,7 +123,7 @@ public class RuntimeConfigurable {
      * Add characters from #PCDATA areas to the wrapped element.
      */
     public void addText(char[] buf, int start, int end) {
-        addText(new String(buf, start, end).trim());
+        addText(new String(buf, start, end));
     }
 
     /**
