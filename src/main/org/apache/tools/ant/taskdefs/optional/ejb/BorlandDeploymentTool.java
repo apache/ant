@@ -73,18 +73,17 @@ import org.apache.tools.ant.types.Commandline.Argument;
 import org.xml.sax.*;
 
 /**
- * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5
+ * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and 4.5.1
  * This task generates and compiles the stubs and skeletons for all ejb described into the
  * Deployement Descriptor, builds the jar file including the support files and verify
  * whether the produced jar is valid or not.
  * The supported options are:
  * <ul>
- * <li>debug  (boolean) : turn on the debug mode for generation of stubs and skeletons (default:false)</li>
- * <li>verify (boolean) : turn on the verification at the end of the jar production    (default:true) </li>
+ * <li>debug  (boolean)    : turn on the debug mode for generation of stubs and skeletons (default:false)</li>
+ * <li>verify (boolean)    : turn on the verification at the end of the jar production    (default:true) </li>
  * <li>verifyargs (String) : add optional argument to verify command (see vbj com.inprise.ejb.util.Verify)</li>
- * <li>ejbdtd (String)  : location of the SUN DTD </li>
- * <li>basdtd (String)  : location of the BAS DTD </li>
- * <li>generatelclient  (boolean) : turn on the client jar file generation </li>
+ * <li>basdtd (String)     : location of the BAS DTD </li>
+ * <li>generateclient (boolean) : turn on the client jar file generation </li>
  * </ul>
  *
  *<PRE>
@@ -105,11 +104,6 @@ import org.xml.sax.*;
  */
 public class BorlandDeploymentTool extends GenericDeploymentTool 
 {
-    public static final String PUBLICID_EJB11
-    = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
-    public static final String PUBLICID_EJB20
-    = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
-
     public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
@@ -132,9 +126,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
     /** Instance variable that stores the location of the borland DTD file. */
     private String borlandDTD;
-
-    /** Instance variable that stores the location of the ejb 1.1 DTD file. */
-    private String ejb11DTD;
         
 
     /** Instance variable that determines whether the debug mode is on */
@@ -147,14 +138,14 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     private String  verifyArgs = "";
 
     /** 
-     * set the debug mode for java2iiop
+     * set the debug mode for java2iiop (default false)
      **/
     public void setDebug(boolean debug) {
         this.java2iiopdebug = debug;
     }
 
     /** 
-     * set the verify  mode for the produced jar
+     * set the verify  mode for the produced jar (default true)
      **/
     public void setVerify(boolean verify) {
         this.verify = verify;
@@ -177,8 +168,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     public void setVerifyArgs(String args) {
         this.verifyArgs = args;
     }
-    
-    
+        
     /**
      * Setter used to store the location of the borland DTD. This can be a file on the system 
      * or a resource on the classpath. 
@@ -188,14 +178,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         this.borlandDTD = inString;
     }
 
-    /**
-     * Setter used to store the location of the Sun's Generic EJB DTD. 
-     * This can be a file on the system or a resource on the classpath. 
-     * @param inString the string to use as the DTD location.
-     */
-    public void setEJBdtd(String inString) {
-        this.ejb11DTD = inString;
-    }
         
     /**
      * setter used to store whether the task will include the generate client task.
@@ -205,10 +187,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         this.generateclient = b;
     }
 
-
-    protected void registerKnownDTDs(DescriptorHandler handler) {
-        handler.registerDTD(PUBLICID_EJB11, DEFAULT_BAS45_EJB11_DTD_LOCATION);
-    }
 
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
@@ -336,7 +314,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      */
     private void buildBorlandStubs(Iterator ithomes,Hashtable files ) {
         org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-        //File java2iiopOut = new File("java2iiop.log");
         File java2iiopOut = null;
         try {
             java2iiopOut = File.createTempFile("java2iiop","log");
@@ -455,11 +432,4 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         return classfile;
     }
 
-    /**
-     * Called to validate that the tool parameters have been configured.
-     *
-     */
-    public void validateConfigured() throws BuildException {
-        super.validateConfigured();
-    }
 }
