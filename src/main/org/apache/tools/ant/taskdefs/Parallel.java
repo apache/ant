@@ -56,9 +56,10 @@ public class Parallel extends Task
         /**
          * Add a nested task to execute parallel (asynchron).
          * <p>
-         * @param nestedTask  Nested task to be executed in parallel
+         * @param nestedTask  Nested task to be executed in parallel.
+         *                    must not be null.
          */
-        public void addTask(Task nestedTask) throws BuildException {
+        public void addTask(Task nestedTask) {
             tasks.add(nestedTask);
         }
     }
@@ -107,6 +108,7 @@ public class Parallel extends Task
 
     /**
      * Add a group of daemon threads
+     * @param daemonTasks The tasks to be executed as daemon.
      */
     public void addDaemons(TaskList daemonTasks) {
         if (this.daemonTasks != null) {
@@ -266,6 +268,14 @@ public class Parallel extends Task
         }
 
         synchronized (semaphore) {
+            // When we leave this block we can be sure all data is really
+            // stored in main memory before the new threads start, the new
+            // threads will for sure load the data from main memory.
+            //
+            // This probably is slightly paranoid.
+        }
+
+        synchronized (semaphore) {
             // start any daemon threads
             if (daemons != null) {
                 for (int i = 0; i < daemons.length; ++i) {
@@ -307,7 +317,7 @@ public class Parallel extends Task
             outer:
             while (threadNumber < numTasks && stillRunning) {
                 for (int i = 0; i < maxRunning; i++) {
-                    if (running[i] == null || running[i].finished) {
+                    if (running[i] == null || running[i].isFinished()) {
                         running[i] = runnables[threadNumber++];
                         Thread thread =  new Thread(group, running[i]);
                         thread.start();
@@ -332,7 +342,7 @@ public class Parallel extends Task
             outer2:
             while (stillRunning) {
                 for (int i = 0; i < maxRunning; ++i) {
-                    if (running[i] != null && !running[i].finished) {
+                    if (running[i] != null && !running[i].isFinished()) {
                         //System.out.println("Thread " + i + " is still alive ");
                         // still running - wait for it
                         try {
@@ -397,7 +407,7 @@ public class Parallel extends Task
     private class TaskRunnable implements Runnable {
         private Throwable exception;
         private Task task;
-        boolean finished;
+        private boolean finished;
 
         /**
          * Construct a new TaskRunnable.<p>
@@ -434,6 +444,14 @@ public class Parallel extends Task
          */
         public Throwable getException() {
             return exception;
+        }
+
+        /**
+         * Provides the indicator that the task has been finished.
+         * @return Returns true when the task is finished.
+         */
+        boolean isFinished() {
+            return finished;
         }
     }
 
