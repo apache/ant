@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,33 +63,24 @@ import org.apache.tools.ant.types.Path;
  * Based on the VSS Checkin code by Martin Poeschl
  *
  * @author Nigel Magnay
+ * @author Jesse Stockall
+ *
  * @ant.task name="vssadd" category="scm"
  */
 public class MSVSSADD extends MSVSS {
 
-    private String m_LocalPath = null;
-    private boolean m_Recursive = false;
-    private boolean m_Writable = false;
-    private String m_AutoResponse = null;
-    private String m_Comment = "-";
-
     /**
-     * Executes the task.
-     * <p>
-     * Builds a command line to execute ss and then calls Exec's run method
-     * to execute the command line.
+     * Builds a command line to execute ss.
+     * @return     The constructed commandline.
      */
-    public void execute() throws BuildException {
+    protected Commandline buildCmdLine() {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
-         // first off, make sure that we've got a command and a localPath ...
-        if (getLocalPath() == null) {
+        // first off, make sure that we've got a command and a localPath ...
+        if (getLocalpath() == null) {
             String msg = "localPath attribute must be set!";
             throw new BuildException(msg, getLocation());
         }
-
-        // now look for illegal combinations of things ...
 
         // build the command line from what we got the format is
         // ss Add VSS items [-B] [-C] [-D-] [-H] [-I-] [-K] [-N] [-O] [-R] [-W] [-Y] [-?]
@@ -98,126 +89,76 @@ public class MSVSSADD extends MSVSS {
         commandLine.createArgument().setValue(COMMAND_ADD);
 
         // VSS items
-        commandLine.createArgument().setValue(getLocalPath());        
+        commandLine.createArgument().setValue(getLocalpath());
         // -I- or -I-Y or -I-N
-        getAutoresponse(commandLine);
+        commandLine.createArgument().setValue(getAutoresponse());
         // -R
-        getRecursiveCommand(commandLine);
+        commandLine.createArgument().setValue(getRecursive());
         // -W
-        getWritableCommand(commandLine);
+        commandLine.createArgument().setValue(getWritable());
         // -Y
-        getLoginCommand(commandLine);
+        commandLine.createArgument().setValue(getLogin());
         // -C
-        commandLine.createArgument().setValue("-C" + getComment());
+        commandLine.createArgument().setValue(getComment());
 
-        result = run(commandLine);
-        if (result != 0) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
-        }
+        return commandLine;
     }
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Returns the local path without the flag.; required
+     * @todo See why this returns the local path without the flag.
+     * @return The local path value.
+     */
+    protected String getLocalpath() {
+        return m_LocalPath;
+    }
+
+    /**
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
+     * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
         m_Recursive = recursive;
     }
 
     /**
-     * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
-     */
-    public void getRecursiveCommand(Commandline cmd) {
-        if (!m_Recursive) {
-            return;
-        } else {
-            cmd.createArgument().setValue(FLAG_RECURSION);
-        }
-    }
-
-    /**
-     * Whether or not to leave added files writable.
-     * Default is <code>false</code>.
+     * Leave checked in files writable? Default: false.
+     * @param   argWritable The boolean value for writable.
      */
     public final void setWritable(boolean argWritable) {
         m_Writable = argWritable;
     }
 
     /**
-     * The 'make writable' command if the attribute was <code>true</code>, 
-     * otherwise an empty string.
+     * Set the autoresponce behaviour; optional.
+     * <p>
+     * Valid options are Y and N.
+     * @param response The auto response value.
      */
-    public void getWritableCommand(Commandline cmd) {
-        if (!m_Writable) {
-            return;
-        } else {
-            cmd.createArgument().setValue(FLAG_WRITABLE);
-        }
-    }
-
-    /**
-     * What to respond with (sets the -I option). By default, -I- is
-     * used; values of Y or N will be appended to this.
-     */      
     public void setAutoresponse(String response){
-        if (response.equals("") || response.equals("null")) {
-            m_AutoResponse = null;
-        } else {
-            m_AutoResponse = response;
-        }
+        m_AutoResponse = response;
     }
 
     /**
-     * Checks the value set for the autoResponse.
-     * if it equals "Y" then we return -I-Y
-     * if it equals "N" then we return -I-N
-     * otherwise we return -I
-     */
-    public void getAutoresponse(Commandline cmd) {
-
-        if (m_AutoResponse == null) {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
-
-        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
-        } else {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } // end of else
-
-    }
-
-    /**
-     * Sets the comment to apply; optional.
+     * Set the comment to apply; optional.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.
+     * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
-        if (comment.equals("") || comment.equals("null")) {
-            m_Comment = "-";
-        } else {
-            m_Comment = comment;
-        }
+        m_Comment = comment;
     }
 
     /**
-     * Gets the comment to be applied.
-     * @return the comment to be applied.
-     */
-    public String getComment() {
-        return m_Comment;
-    }
-
-    /**
-     * Set the local path.
+     * Set the local path; optional.
+     * <p>
+     * This is the path to override the project
+     * working directory.
+     * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {
         m_LocalPath = localPath.toString();
-    }
-
-    public String getLocalPath() {
-        return m_LocalPath;
     }
 }

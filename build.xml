@@ -1600,6 +1600,8 @@
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/sos/SOSTest.java"
                    unless="tests.and.ant.share.classloader"/>
+          <exclude name="${optional.package}/vss/MSVSSTest.java"
+                   unless="tests.and.ant.share.classloader"/>         
           <exclude name="${optional.package}/TraXLiaisonTest.java"
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/metamata/MAuditParserTest.java"

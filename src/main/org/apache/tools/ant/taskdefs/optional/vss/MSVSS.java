@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
-
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -77,35 +83,71 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Craig Cottingham
  * @author Andrew Everitt
+ * @author Jesse Stockall
  */
-public abstract class MSVSS extends Task {
+public abstract class MSVSS extends Task implements MSVSSConstants {
 
-    private String m_SSDir = "";
+    private String m_SSDir = null;
     private String m_vssLogin = null;
     private String m_vssPath = null;
     private String m_serverPath = null;
 
+    /**  Version */
+    protected String m_Version = null;
+    /**  Date */
+    protected String m_Date = null;
+    /**  Label */
+    protected String m_Label = null;
+    /**  Auto response */
+    protected String m_AutoResponse = null;
+    /**  Local path */
+    protected String m_LocalPath = null;
+    /**  Comment */
+    protected String m_Comment = null;
+    /**  From label */
+    protected String m_FromLabel = null;
+    /**  To label */
+    protected String m_ToLabel = null;
+    /**  Output file name */
+    protected String m_OutputFileName = null;
+    /**  User */
+    protected String m_User = null;
+    /**  From date */
+    protected String m_FromDate = null;
+    /**  To date */
+    protected String m_ToDate = null;
+    /**  History style */
+    protected String m_Style = null;
+    /**  Quiet defaults to false */
+    protected boolean m_Quiet = false;
+    /**  Recursive defaults to false */
+    protected boolean m_Recursive = false;
+    /**  Writable defaults to false */
+    protected boolean m_Writable = false;
+    /**  Fail on error defaults to true */
+    protected boolean m_FailOnError = true;
+    /**  Number of days offset for History */
+    protected int m_NumDays = Integer.MIN_VALUE;
+    /**  Date format for History */
+    protected DateFormat m_DateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+
     /**
-     * directory where <code>ss.exe</code> resides; optional.
+     * Each sub-class must implemnt this method and return the constructed
+     * command line to be executed. It is up to the sub-task to determine the
+     * required attrubutes and their order.
+     *
+     * @return    The Constructed command line.
+     */
+    abstract Commandline buildCmdLine();
+
+    /**
+     * Directory where <code>ss.exe</code> resides; optional.
      * By default the task expects it to be in the PATH.
      *
-     * @param dir the directory containing ss.exe
+     * @param  dir  The directory containing ss.exe.
      */
     public final void setSsdir(String dir) {
         m_SSDir = Project.translatePath(dir);
-    }
-    
-    /**
-     * Builds and returns the command string to execute ss.exe
-     */
-    public final String getSSCommand() {
-        String toReturn = m_SSDir;
-        if (!toReturn.equals("") && !toReturn.endsWith("\\")) {
-            toReturn += "\\";
-        }
-        toReturn += SS_EXE;
-        
-        return toReturn;
     }
 
     /**
@@ -115,32 +157,20 @@ public abstract class MSVSS extends Task {
      * You can omit the password if your database is not password protected.
      *  if you have a password and omit it, Ant/VSS will hang.
      *
-     * @param login the login string to use
+     * @param  login  The login string to use.
      */
     public final void setLogin(String login) {
         m_vssLogin = login;
     }
 
     /**
-     * the appropriate login command if the 'login' attribute was specified, otherwise an empty string
-     */
-    public void getLoginCommand(Commandline cmd) {
-        if (m_vssLogin == null) {
-            return;
-        } else {
-            cmd.createArgument().setValue(FLAG_LOGIN + m_vssLogin);
-        }
-    }
-
-    /**
-     * SourceSafe path which specifies the project/file(s) you wish to 
-     * perform the action on; required. You should not specify the leading dollar-sign - 
-     * it is prepended by Ant automatically.
-     * <p>
-     * Ant can't cope with a '$' sign in an attribute so we have to add it here.
-     * Also we strip off any 'vss://' prefix which is an XMS special and should probably be removed!
-     * @todo dont add a $ prefix if it has one
-     * @param vssPath
+     * SourceSafe path which specifies the project/file(s) you wish to perform
+     * the action on; required.<p>
+     *
+     * Also we strip off any 'vss://' prefix which is an XMS special and should
+     * probably be removed!
+     *
+     * @param  vssPath  The VSS project path.
      */
     public final void setVsspath(String vssPath) {
         String projectPath;
@@ -158,27 +188,273 @@ public abstract class MSVSS extends Task {
     }
 
     /**
-     * @return m_vssPath
-     */
-    public String getVsspath() {
-        return m_vssPath;
-    }
-
-    /**
      * Set the directory where <code>srssafe.ini</code> resides; optional.
-     * @param serverPath
+     *
+     * @param  serverPath  The path to the VSS server.
      */
     public final void setServerpath(String serverPath) {
         m_serverPath = serverPath;
     }
 
-    protected int run(Commandline cmd) {
-        try {
-            Execute exe = new Execute(new LogStreamHandler(this, 
-                                                           Project.MSG_INFO,
-                                                           Project.MSG_WARN));
+    /**
+     * Executes the task. <br>
+     * Builds a command line to execute ss.exe and then calls Exec's run method
+     * to execute the command line.
+     * @throws BuildException
+     */
+    public void execute()
+        throws BuildException {
+        int result = 0;
+        Commandline commandLine = buildCmdLine();
+        result = run(commandLine);
+        if (result != 0 && getFailOnError()) {
+            String msg = "Failed executing: " + commandLine.toString()
+                     + " With a return code of " + result;
+            throw new BuildException(msg, getLocation());
+        }
+    }
 
-            // If location of ss.ini is specified we need to set the 
+    /**
+     * Gets the sscommand string. "ss" or "c:\path\to\ss"
+     *
+     * @return    The path to ss.exe or just ss if sscommand is not set.
+     */
+    public String getSSCommand() {
+        if (m_SSDir == null) {
+            return SS_EXE;
+        }
+        return m_SSDir.endsWith(File.separator) ? m_SSDir + SS_EXE : m_SSDir
+                 + File.separator + SS_EXE;
+    }
+
+    /**
+     * Gets the vssserverpath string.
+     *
+     * @return    null if vssserverpath is not set.
+     */
+    protected String getVsspath() {
+        return m_vssPath;
+    }
+
+    /**
+     *  Gets the quiet string. -O-
+     *
+     * @return    An empty string if quiet is not set or is false.
+     */
+    protected String getQuiet() {
+        return m_Quiet ? FLAG_QUIET : "";
+    }
+
+    /**
+     *  Gets the recursive string. "-R"
+     *
+     * @return    An empty string if recursive is not set or is false.
+     */
+    protected String getRecursive() {
+        return m_Recursive ? FLAG_RECURSION : "";
+    }
+
+    /**
+     *  Gets the writable string. "-W"
+     *
+     * @return    An empty string if writable is not set or is false.
+     */
+    protected String getWritable() {
+        return m_Writable ? FLAG_WRITABLE : "";
+    }
+
+    /**
+     *  Gets the label string. "-Lbuild1"
+     *
+     * @return    An empty string if label is not set.
+     */
+    protected String getLabel() {
+        return m_Label != null ? FLAG_LABEL + m_Label : "";
+    }
+
+    /**
+     *  Gets the style string. "-Lbuild1"
+     *
+     * @return    An empty string if label is not set.
+     */
+    protected String getStyle() {
+        return m_Style != null ? m_Style : "";
+    }
+
+    /**
+     *  Gets the version string. Returns the first specified of version "-V1.0",
+     *  date "-Vd01.01.01", label "-Vlbuild1".
+     *
+     * @return    An empty string if a version is not set.
+     */
+    protected String getVersion() {
+        if (m_Version != null) {
+            return FLAG_VERSION + m_Version;
+        } else if (m_Date != null) {
+            return FLAG_VERSION_DATE + m_Date;
+        } else if (m_Label != null) {
+            return FLAG_VERSION_LABEL + m_Label;
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     *  Gets the localpath string. "-GLc:\source" <p>
+     *
+     *  The localpath is created if it didn't exist.
+     *
+     * @return    An empty string if localpath is not set.
+     */
+    protected String getLocalpath() {
+        if (m_LocalPath == null) {
+            return "";
+        } else {
+            // make sure m_LocalDir exists, create it if it doesn't
+            File dir = getProject().resolveFile(m_LocalPath);
+            if (! dir.exists()) {
+                boolean done = dir.mkdirs();
+                if (! done) {
+                    String msg = "Directory " + m_LocalPath + " creation was not "
+                            + "successful for an unknown reason";
+                    throw new BuildException(msg, getLocation());
+                }
+                getProject().log("Created dir: " + dir.getAbsolutePath());
+            }
+            return FLAG_OVERRIDE_WORKING_DIR + m_LocalPath;
+        }
+    }
+
+    /**
+     *  Gets the comment string. "-Ccomment text"
+     *
+     * @return    A comment of "-" if comment is not set.
+     */
+    protected String getComment() {
+        return m_Comment != null ? FLAG_COMMENT + m_Comment : FLAG_COMMENT + "-";
+    }
+
+    /**
+     *  Gets the auto response string. This can be Y "-I-Y" or N "-I-N".
+     *
+     * @return    The default value "-I-" if autoresponse is not set.
+     */
+    protected String getAutoresponse() {
+        if (m_AutoResponse == null) {
+            return FLAG_AUTORESPONSE_DEF;
+        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
+            return FLAG_AUTORESPONSE_YES;
+        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
+            return FLAG_AUTORESPONSE_NO;
+        } else {
+            return FLAG_AUTORESPONSE_DEF;
+        }
+    }
+
+    /**
+     *  Gets the login string. This can be user and password, "-Yuser,password"
+     *  or just user "-Yuser".
+     *
+     * @return    An empty string if login is not set.
+     */
+    protected String getLogin() {
+        return m_vssLogin != null ? FLAG_LOGIN + m_vssLogin : "";
+    }
+
+    /**
+     *  Gets the output file string. "-Ooutput.file"
+     *
+     * @return    An empty string if user is not set.
+     */
+    protected String getOutput() {
+        return m_OutputFileName != null ? FLAG_OUTPUT + m_OutputFileName : "";
+    }
+
+    /**
+     *  Gets the user string. "-Uusername"
+     *
+     * @return    An empty string if user is not set.
+     */
+    protected String getUser() {
+        return m_User != null ? FLAG_USER + m_User : "";
+    }
+
+    /**
+     *  Gets the version string. This can be to-from "-VLbuild2~Lbuild1", from
+     *  "~Lbuild1" or to "-VLbuild2".
+     *
+     * @return    An empty string if neither tolabel or fromlabel are set.
+     */
+    protected String getVersionLabel() {
+        if (m_FromLabel == null && m_ToLabel == null) {
+            return "";
+        }
+        if (m_FromLabel != null && m_ToLabel != null) {
+            return FLAG_VERSION_LABEL + m_ToLabel + VALUE_FROMLABEL + m_FromLabel;
+        } else if (m_FromLabel != null) {
+            return FLAG_VERSION + VALUE_FROMLABEL + m_FromLabel;
+        } else {
+            return FLAG_VERSION_LABEL + m_ToLabel;
+        }
+    }
+
+    /**
+     * Gets the Version date string.
+     * @return An empty string is neither Todate or from date are set.
+     * @throws BuildException
+     */
+    protected String getVersionDate() throws BuildException {
+        if (m_FromDate == null && m_ToDate == null
+            && m_NumDays == Integer.MIN_VALUE) {
+            return "";
+        }
+        if (m_FromDate != null && m_ToDate != null) {
+            return FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + m_FromDate;
+        } else if (m_ToDate != null && m_NumDays != Integer.MIN_VALUE) {
+            try {
+                return FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE
+                        + calcDate(m_ToDate, m_NumDays);
+            } catch (ParseException ex) {
+                String msg = "Error parsing date: " + m_ToDate;
+                throw new BuildException(msg, getLocation());
+            }
+        } else if (m_FromDate != null && m_NumDays != Integer.MIN_VALUE) {
+            try {
+                return FLAG_VERSION_DATE + calcDate(m_FromDate, m_NumDays)
+                        + VALUE_FROMDATE + m_FromDate;
+            } catch (ParseException ex) {
+                String msg = "Error parsing date: " + m_FromDate;
+                throw new BuildException(msg, getLocation());
+            }
+        } else {
+            return m_FromDate != null ? FLAG_VERSION + VALUE_FROMDATE
+                    + m_FromDate : FLAG_VERSION_DATE + m_ToDate;
+        }
+    }
+
+    /**
+     *  Gets the value of the fail on error flag. This is only used by execute
+     *  when checking the return code.
+     *
+     * @return    True if the FailOnError flag has been set.
+     */
+    private boolean getFailOnError() {
+        return m_FailOnError;
+    }
+
+    /**
+     *  Sets up the required environment and executes the command line.
+     *
+     * @param  cmd  The command line to execute.
+     * @return      The return code from the exec'd process.
+     */
+    private int run(Commandline cmd) {
+        try {
+            Execute exe = new Execute(new LogStreamHandler(this,
+                    Project.MSG_INFO,
+                    Project.MSG_WARN));
+
+            // If location of ss.ini is specified we need to set the
             // environment-variable SSDIR to this value
             if (m_serverPath != null) {
                 String[] env = exe.getEnvironment();
@@ -186,89 +462,40 @@ public abstract class MSVSS extends Task {
                     env = new String[0];
                 }
                 String[] newEnv = new String[env.length + 1];
-                for (int i = 0; i < env.length ; i++) {
+                for (int i = 0; i < env.length; i++) {
                     newEnv[i] = env[i];
                 }
                 newEnv[env.length] = "SSDIR=" + m_serverPath;
 
                 exe.setEnvironment(newEnv);
             }
-            
+
             exe.setAntRun(getProject());
             exe.setWorkingDirectory(getProject().getBaseDir());
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             throw new BuildException(e, getLocation());
         }
     }
 
-    /**
-     * Constant for the thing to execute
+     /**
+     * Calculates the start date for version comparison.
+     * <p>
+     * Calculates the date numDay days earlier than startdate.
+     * @param   fromDate    The start date.
+     * @param   numDays     The number of days to add.
+     * @return The calculated date.
+     * @throws ParseException
      */
-    private static final String SS_EXE = "ss";
-    /** */
-    public static final String PROJECT_PREFIX = "$";
-
-    /**
-     * The 'CP' command
-     */
-    public static final String COMMAND_CP = "CP";
-    /**
-     * The 'Add' command
-     */
-    public static final String COMMAND_ADD = "Add";
-    /**
-     * The 'Get' command
-     */
-    public static final String COMMAND_GET = "Get";
-    /**
-     * The 'Checkout' command
-     */
-    public static final String COMMAND_CHECKOUT = "Checkout";
-    /**
-     * The 'Checkin' command
-     */
-    public static final String COMMAND_CHECKIN = "Checkin";
-    /**
-     * The 'Label' command
-     */
-    public static final String COMMAND_LABEL = "Label";
-    /**
-     * The 'History' command
-     */
-    public static final String COMMAND_HISTORY = "History";
-    /** 
-     * The 'Create' command 
-     */
-    public static final String COMMAND_CREATE = "Create";
-
-
-    /** */
-    public static final String FLAG_LOGIN = "-Y";
-    /** */
-    public static final String FLAG_OVERRIDE_WORKING_DIR = "-GL";
-    /** */
-    public static final String FLAG_AUTORESPONSE_DEF = "-I-";
-    /** */
-    public static final String FLAG_AUTORESPONSE_YES = "-I-Y";
-    /** */
-    public static final String FLAG_AUTORESPONSE_NO = "-I-N";
-    /** */
-    public static final String FLAG_RECURSION = "-R";
-    /** */
-    public static final String FLAG_VERSION = "-V";
-    /** */
-    public static final String FLAG_VERSION_DATE = "-Vd";
-    /** */
-    public static final String FLAG_VERSION_LABEL = "-VL";
-    /** */
-    public static final String FLAG_WRITABLE = "-W";
-    /** */
-    public static final String VALUE_NO = "-N";
-    /** */
-    public static final String VALUE_YES = "-Y";
-    /** */
-    public static final String FLAG_QUIET = "-O-";
+    private String calcDate(String fromDate, int numDays) throws ParseException {
+        String toDate = null;
+        Date currdate = new Date();
+        Calendar calend = new GregorianCalendar();
+        currdate = m_DateFormat.parse(fromDate);
+        calend.setTime(currdate);
+        calend.add(Calendar.DATE, numDays);
+        toDate = m_DateFormat.format(calend.getTime());
+        return toDate;
+    }
 }
-

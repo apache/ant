@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,60 +51,65 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs.optional.vss;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Commandline;
-
 /**
- * Performs CP (Change Project) commands to Microsoft Visual SourceSafe.
- * <p>This task is typically used before a VssAdd in order to set the target project</p>
- * Based on the VSS Checkin code by Martin Poeschl
+ *  Holds all the constants for the VSS tasks.
  *
- * @author Nigel Magnay
- * @author Jesse Stockall
- *
- * @ant.task name="vsscp" category="scm"
+ * @author  Jesse Stockall
  */
-public class MSVSSCP extends MSVSS {
+public interface MSVSSConstants {
+    /**  Constant for the thing to execute  */
+    String SS_EXE = "ss";
+    /** Dollar Sigh to prefix the project path */
+    String PROJECT_PREFIX = "$";
 
-    /**
-     * Builds a command line to execute ss.
-     * @return     The constructed commandline.
-     */
-    protected Commandline buildCmdLine() {
-        Commandline commandLine = new Commandline();
+    /**  The 'CP' command  */
+    String COMMAND_CP = "CP";
+    /**  The 'Add' command  */
+    String COMMAND_ADD = "Add";
+    /**  The 'Get' command  */
+    String COMMAND_GET = "Get";
+    /**  The 'Checkout' command  */
+    String COMMAND_CHECKOUT = "Checkout";
+    /**  The 'Checkin' command  */
+    String COMMAND_CHECKIN = "Checkin";
+    /**  The 'Label' command  */
+    String COMMAND_LABEL = "Label";
+    /**  The 'History' command  */
+    String COMMAND_HISTORY = "History";
+    /**  The 'Create' command  */
+    String COMMAND_CREATE = "Create";
 
-        // first off, make sure that we've got a command and a vssdir ...
-        if (getVsspath() == null) {
-            String msg = "vsspath attribute must be set!";
-            throw new BuildException(msg, getLocation());
-        }
+    /**  The brief style flag  */
+    String STYLE_BRIEF = "brief";
+    /**  The codediff style flag  */
+    String STYLE_CODEDIFF = "codediff";
+    /**  The nofile style flag  */
+    String STYLE_NOFILE = "nofile";
+    /**  The default style flag  */
+    String STYLE_DEFAULT = "default";
 
-        // build the command line from what we got the format is
-        // ss CP VSS items [-H] [-I-] [-Y] [-?]
-        // as specified in the SS.EXE help
-        commandLine.setExecutable(getSSCommand());
-        commandLine.createArgument().setValue(COMMAND_CP);
-
-        // VSS items
-        commandLine.createArgument().setValue(getVsspath());
-        // -I- or -I-Y or -I-N
-        commandLine.createArgument().setValue(getAutoresponse());
-        // -Y
-        commandLine.createArgument().setValue(getLogin());
-
-        return commandLine;
-    }
-
-    /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
-     * @param response The auto response value.
-     */
-    public void setAutoresponse(String response) {
-        m_AutoResponse = response;
-    }
+    String FLAG_LOGIN = "-Y";
+    String FLAG_OVERRIDE_WORKING_DIR = "-GL";
+    String FLAG_AUTORESPONSE_DEF = "-I-";
+    String FLAG_AUTORESPONSE_YES = "-I-Y";
+    String FLAG_AUTORESPONSE_NO = "-I-N";
+    String FLAG_RECURSION = "-R";
+    String FLAG_VERSION = "-V";
+    String FLAG_VERSION_DATE = "-Vd";
+    String FLAG_VERSION_LABEL = "-VL";
+    String FLAG_WRITABLE = "-W";
+    String VALUE_NO = "-N";
+    String VALUE_YES = "-Y";
+    String FLAG_QUIET = "-O-";
+    String FLAG_COMMENT = "-C";
+    String FLAG_LABEL = "-L";
+    String VALUE_FROMDATE = "~d";
+    String VALUE_FROMLABEL = "~L";
+    String FLAG_OUTPUT = "-O";
+    String FLAG_USER = "-U";
+    String FLAG_NO_FILE = "-F-";
+    String FLAG_BRIEF = "-B";
+    String FLAG_CODEDIFF = "-D";
 }
