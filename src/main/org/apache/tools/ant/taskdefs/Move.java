@@ -194,17 +194,23 @@ public class Move extends Copy {
         }
 
         if (includeEmpty) {
-            Enumeration e = dirCopyMap.elements();
+            Enumeration e = dirCopyMap.keys();
             int count = 0;
             while (e.hasMoreElements()) {
-                File d = new File((String) e.nextElement());
-                if (!d.exists()) {
-                    if (!d.mkdirs()) {
+                String fromDirName = (String) e.nextElement();
+                String toDirName = (String) dirCopyMap.get(fromDirName);
+                File fromDir = new File(fromDirName);
+                File toDir = new File(toDirName);
+                if (!toDir.exists()) {
+                    if (!toDir.mkdirs()) {
                         log("Unable to create directory "
-                            + d.getAbsolutePath(), Project.MSG_ERR);
+                            + toDirName, Project.MSG_ERR);
                     } else {
                         count++;
                     }
+                }
+                if (okToDelete(fromDir)) {
+                    deleteDir(fromDir);
                 }
             }
 
@@ -212,6 +218,59 @@ public class Move extends Copy {
                 log("Moved " + count + " empty directories to "
                     + destDir.getAbsolutePath());
             }
+        }
+    }
+
+    /**
+     * Its only ok to delete a directory tree if there are
+     * no files in it.
+     * @return true if a deletion can go ahead
+     */
+    protected boolean okToDelete(File d) {
+        String[] list = d.list();
+        if (list == null) {
+            return false;
+        }     // maybe io error?
+
+        for (int i = 0; i < list.length; i++) {
+            String s = list[i];
+            File f = new File(d, s);
+            if (f.isDirectory()) {
+                if (!okToDelete(f)) {
+                    return false;
+                }
+            } else {
+                return false;   // found a file
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Go and delete the directory tree.
+     */
+    protected void deleteDir(File d) {
+        String[] list = d.list();
+        if (list == null) {
+            return;
+        }      // on an io error list() can return null
+
+        for (int i = 0; i < list.length; i++) {
+            String s = list[i];
+            File f = new File(d, s);
+            if (f.isDirectory()) {
+                deleteDir(f);
+            } else {
+                throw new BuildException("UNEXPECTED ERROR - The file "
+                                         + f.getAbsolutePath()
+                                         + " should not exist!");
+            }
+        }
+        log("Deleting directory " + d.getAbsolutePath(), verbosity);
+        if (!d.delete()) {
+            throw new BuildException("Unable to delete directory "
+                                     + d.getAbsolutePath());
         }
     }
 
