@@ -61,6 +61,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.tools.ant.util.CollectionUtils;
+
 /**
  * Class to implement a target object with required parameters.
  *
@@ -222,7 +224,7 @@ public class Target implements TaskContainer {
         if (dependencies != null) {
             return Collections.enumeration(dependencies);
         } else {
-            return new RuntimeConfigurable.EmptyEnumeration();
+            return new CollectionUtils.EmptyEnumeration();
         }
     }
 

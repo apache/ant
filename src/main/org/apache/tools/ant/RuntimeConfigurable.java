@@ -63,8 +63,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
+import org.apache.tools.ant.util.CollectionUtils;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
 
@@ -236,17 +236,7 @@ public class RuntimeConfigurable implements Serializable {
         if (children != null) {
             return Collections.enumeration(children);
         } else {
-            return new EmptyEnumeration();
-        }
-    }
-
-    static final class EmptyEnumeration implements Enumeration {
-        public EmptyEnumeration() {}
-        public boolean hasMoreElements() {
-            return false;
-        }
-        public Object nextElement() throws NoSuchElementException {
-            throw new NoSuchElementException();
+            return new CollectionUtils.EmptyEnumeration();
         }
     }
 

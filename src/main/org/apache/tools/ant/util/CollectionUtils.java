@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,7 @@ package org.apache.tools.ant.util;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 /**
@@ -146,4 +147,18 @@ public class CollectionUtils {
             m1.put(key, m2.get(key));
         }
     }
+
+    /**
+     * @since Ant 1.6
+     */
+    public static final class EmptyEnumeration implements Enumeration {
+        public EmptyEnumeration() {}
+        public boolean hasMoreElements() {
+            return false;
+        }
+        public Object nextElement() throws NoSuchElementException {
+            throw new NoSuchElementException();
+        }
+    }
+
 }
