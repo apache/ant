@@ -127,7 +127,7 @@ public class Project {
 
 
     /** Map of references within the project (paths etc) (String to Object). */
-    private Hashtable references = new AntRefTable(this);
+    private Hashtable references = new AntRefTable();
 
     /** Name of the project's default target. */
     private String defaultTarget;
@@ -464,15 +464,15 @@ public class Project {
     /**
      * Return the value of a property, if it is set.
      *
-     * @param name The name of the property.
+     * @param propertyName The name of the property.
      *             May be <code>null</code>, in which case
      *             the return value is also <code>null</code>.
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
      */
-    public String getProperty(String name) {
+    public String getProperty(String propertyName) {
         PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return (String) ph.getProperty(null, name);
+        return (String) ph.getProperty(null, propertyName);
     }
 
     /**
@@ -498,15 +498,15 @@ public class Project {
     /**
      * Return the value of a user property, if it is set.
      *
-     * @param name The name of the property.
+     * @param propertyName The name of the property.
      *             May be <code>null</code>, in which case
      *             the return value is also <code>null</code>.
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
      */
-     public String getUserProperty(String name) {
+     public String getUserProperty(String propertyName) {
         PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return (String) ph.getUserProperty(null, name);
+        return (String) ph.getUserProperty(null, propertyName);
     }
 
     /**
@@ -920,7 +920,7 @@ public class Project {
      *
      * @exception BuildException if the target already exists in the project
      *
-     * @see Project#addOrReplaceTarget
+     * @see Project#addOrReplaceTarget(Target)
      */
     public void addTarget(Target target) throws BuildException {
         addTarget(target.getName(), target);
@@ -936,7 +936,7 @@ public class Project {
      *
      * @exception BuildException if the target already exists in the project.
      *
-     * @see Project#addOrReplaceTarget
+     * @see Project#addOrReplaceTarget(String, Target)
      */
      public void addTarget(String targetName, Target target)
          throws BuildException {
@@ -1548,15 +1548,15 @@ public class Project {
      *             a way that the sequence of Targets up to the root
      *             target is the minimum possible such sequence.
      *             Must not be <code>null</code>.
-     * @param targets A Hashtable mapping names to Targets.
+     * @param targetTable A Hashtable mapping names to Targets.
      *                Must not be <code>null</code>.
      * @return a Vector of ALL Target objects in sorted order.
      * @exception BuildException if there is a cyclic dependency among the
      *                           targets, or if a named target does not exist.
      */
-    public final Vector topoSort(String root, Hashtable targets)
+    public final Vector topoSort(String root, Hashtable targetTable)
         throws BuildException {
-        return topoSort(new String[] {root}, targets, true);
+        return topoSort(new String[] {root}, targetTable, true);
     }
 
     /**
@@ -1567,7 +1567,7 @@ public class Project {
      *             a way that the sequence of Targets up to the root
      *             target is the minimum possible such sequence.
      *             Must not be <code>null</code>.
-     * @param targets A Hashtable mapping names to Targets.
+     * @param targetTable A Hashtable mapping names to Targets.
      *                Must not be <code>null</code>.
      * @param returnAll <code>boolean</code> indicating whether to return all
      *                  targets, or the execution sequence only.
@@ -1576,9 +1576,9 @@ public class Project {
      *                           targets, or if a named target does not exist.
      * @since Ant 1.6.3
      */
-    public final Vector topoSort(String root, Hashtable targets,
+    public final Vector topoSort(String root, Hashtable targetTable,
                                  boolean returnAll) throws BuildException {
-        return topoSort(new String[] {root}, targets, returnAll);
+        return topoSort(new String[] {root}, targetTable, returnAll);
     }
 
     /**
@@ -1589,7 +1589,7 @@ public class Project {
      *             Targets is the minimum possible such sequence to the specified
      *             root targets.
      *             Must not be <code>null</code>.
-     * @param targets A map of names to targets (String to Target).
+     * @param targetTable A map of names to targets (String to Target).
      *                Must not be <code>null</code>.
      * @param returnAll <code>boolean</code> indicating whether to return all
      *                  targets, or the execution sequence only.
@@ -1598,7 +1598,7 @@ public class Project {
      *                           targets, or if a named target does not exist.
      * @since Ant 1.6.3
      */
-    public final Vector topoSort(String[] root, Hashtable targets,
+    public final Vector topoSort(String[] root, Hashtable targetTable,
                                  boolean returnAll) throws BuildException {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
@@ -1615,7 +1615,7 @@ public class Project {
         for (int i = 0; i < root.length; i++) {
             String st = (String) (state.get(root[i]));
             if (st == null) {
-                tsort(root[i], targets, state, visiting, ret);
+                tsort(root[i], targetTable, state, visiting, ret);
             } else if (st == VISITING) {
                 throw new RuntimeException("Unexpected node in visiting state: "
                     + root[i]);
@@ -1630,11 +1630,11 @@ public class Project {
         log(buf.toString(), MSG_VERBOSE);
 
         Vector complete = (returnAll) ? ret : new Vector(ret);
-        for (Enumeration en = targets.keys(); en.hasMoreElements();) {
+        for (Enumeration en = targetTable.keys(); en.hasMoreElements();) {
             String curTarget = (String) en.nextElement();
             String st = (String) state.get(curTarget);
             if (st == null) {
-                tsort(curTarget, targets, state, visiting, complete);
+                tsort(curTarget, targetTable, state, visiting, complete);
             } else if (st == VISITING) {
                 throw new RuntimeException("Unexpected node in visiting state: "
                     + curTarget);
@@ -1669,7 +1669,7 @@ public class Project {
      *
      * @param root The current target to inspect.
      *             Must not be <code>null</code>.
-     * @param targets A mapping from names to targets (String to Target).
+     * @param targetTable A mapping from names to targets (String to Target).
      *                Must not be <code>null</code>.
      * @param state   A mapping from target names to states (String to String).
      *                The states in question are &quot;VISITING&quot; and
@@ -1684,14 +1684,14 @@ public class Project {
      * @exception BuildException if a non-existent target is specified or if
      *                           a circular dependency is detected.
      */
-    private void tsort(String root, Hashtable targets,
+    private void tsort(String root, Hashtable targetTable,
                              Hashtable state, Stack visiting,
                              Vector ret)
         throws BuildException {
         state.put(root, VISITING);
         visiting.push(root);
 
-        Target target = (Target) targets.get(root);
+        Target target = (Target) targetTable.get(root);
 
         // Make sure we exist
         if (target == null) {
@@ -1712,7 +1712,7 @@ public class Project {
             String m = (String) state.get(cur);
             if (m == null) {
                 // Not been visited
-                tsort(cur, targets, state, visiting, ret);
+                tsort(cur, targetTable, state, visiting, ret);
             } else if (m == VISITING) {
                 // Currently visiting this node, so have a cycle
                 throw makeCircularException(cur, visiting);
@@ -1751,22 +1751,22 @@ public class Project {
     /**
      * Add a reference to the project.
      *
-     * @param name The name of the reference. Must not be <code>null</code>.
+     * @param referenceName The name of the reference. Must not be <code>null</code>.
      * @param value The value of the reference. Must not be <code>null</code>.
      */
-    public void addReference(String name, Object value) {
+    public void addReference(String referenceName, Object value) {
         synchronized (references) {
-            Object old = ((AntRefTable) references).getReal(name);
+            Object old = ((AntRefTable) references).getReal(referenceName);
             if (old == value) {
                 // no warning, this is not changing anything
                 return;
             }
             if (old != null && !(old instanceof UnknownElement)) {
-                log("Overriding previous definition of reference to " + name,
+                log("Overriding previous definition of reference to " + referenceName,
                     MSG_WARN);
             }
-            log("Adding reference: " + name, MSG_DEBUG);
-            references.put(name, value);
+            log("Adding reference: " + referenceName, MSG_DEBUG);
+            references.put(referenceName, value);
         }
     }
 
@@ -2090,11 +2090,9 @@ public class Project {
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
-        private Project project;
 
-        public AntRefTable(Project project) {
+        AntRefTable() {
             super();
-            this.project = project;
         }
 
         /** Returns the unmodified original object.
@@ -2104,7 +2102,7 @@ public class Project {
          * of UnknownElement (this is similar with the JDNI
          * refs behavior).
          */
-        public Object getReal(Object key) {
+        private Object getReal(Object key) {
             return super.get(key);
         }
 
