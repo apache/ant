@@ -178,7 +178,7 @@ public class XSLTProcess
     {
         if( m_classpath == null )
         {
-            m_classpath = new Path( project );
+            m_classpath = new Path( getProject() );
         }
         return m_classpath.createPath();
     }
@@ -379,7 +379,7 @@ public class XSLTProcess
         }
         else
         {
-            AntClassLoader al = new AntClassLoader( project, m_classpath );
+            AntClassLoader al = new AntClassLoader( getProject(), m_classpath );
             Class c = al.loadClass( classname );
             AntClassLoader.initializeClass( c );
             return c;
