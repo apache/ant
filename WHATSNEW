@@ -29,6 +29,8 @@ properties files and output them instead of Ant's properties.
 
 * All tasks can be used outside of <target>s
 
+* Appendix E of Java Development with Ant (Loughran/Hatcher) contributed to the docs
+
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
 
