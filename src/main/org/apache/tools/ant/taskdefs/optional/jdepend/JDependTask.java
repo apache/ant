@@ -58,6 +58,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
@@ -104,19 +106,37 @@ public class JDependTask extends Task {
     private String format = "text";
     private PatternSet defaultPatterns = new PatternSet();
 
+    private static Constructor packageFilterC;
+    private static Method setFilter;
+
+    static {
+        try {
+            Class packageFilter = 
+                Class.forName("jdepend.framework.PackageFilter");
+            packageFilterC = 
+                packageFilter.getConstructor(new Class[] {java.util.Collection.class});
+            setFilter = 
+                jdepend.textui.JDepend.class.getDeclaredMethod("setFilter",
+                                                               new Class[] {packageFilter});
+        } catch (Throwable t) {
+            if (setFilter == null) {
+                packageFilterC = null;
+            }
+        }
+    }
+
     public JDependTask() {
-
     }
 
-/*
-    public void setTimeout(Integer value) {
-        _timeout = value;
-    }
+    /*
+      public void setTimeout(Integer value) {
+      _timeout = value;
+      }
 
-    public Integer getTimeout() {
-        return _timeout;
-    }
-*/
+      public Integer getTimeout() {
+      return _timeout;
+      }
+    */
 
     /**
      * The output file name.
@@ -305,9 +325,9 @@ public class JDependTask extends Task {
         if ("text".equals(format)) {
             commandline.setClassname("jdepend.textui.JDepend");
         } else
-        if ("xml".equals(format)) {
-            commandline.setClassname("jdepend.xmlui.JDepend");
-        }
+            if ("xml".equals(format)) {
+                commandline.setClassname("jdepend.xmlui.JDepend");
+            }
 
         if (_jvm != null) {
             commandline.setVm(_jvm);
@@ -443,11 +463,22 @@ public class JDependTask extends Task {
         // This bit turns <exclude> child tags into patters to ignore
         String[] patterns = defaultPatterns.getExcludePatterns(getProject());
         if (patterns != null && patterns.length > 0) {
-            Vector v = new Vector();
-            for (int i = 0; i < patterns.length; i++) {
-                v.addElement(patterns[i]);
+            if (setFilter != null) {
+                Vector v = new Vector();
+                for (int i = 0; i < patterns.length; i++) {
+                    v.addElement(patterns[i]);
+                }
+                try {
+                    Object o = packageFilterC.newInstance(new Object[] {v});
+                    setFilter.invoke(jdepend, new Object[] {o});
+                } catch (Throwable e) {
+                    log("excludes will be ignored as JDepend doesn't like me: "
+                        + e.getMessage(), Project.MSG_WARN);
+                }
+            } else {
+                log("Sorry, your version of JDepend doesn't support excludes",
+                    Project.MSG_WARN);
             }
-            jdepend.setFilter(new jdepend.framework.PackageFilter(v));
         }
 
         jdepend.analyze();
@@ -493,7 +524,7 @@ public class JDependTask extends Task {
             // not necessary as JDepend would fail, but why loose some time?
             if (!f.exists() || !f.isDirectory()) {
                 throw new BuildException("\"" + f.getPath() + "\" does not " 
-                    + "represent a valid directory. JDepend would fail.");
+                                         + "represent a valid directory. JDepend would fail.");
             }
             commandline.createArgument().setValue(f.getPath());
         }
@@ -505,7 +536,7 @@ public class JDependTask extends Task {
             // not necessary as JDepend would fail, but why loose some time?
             if (!f.exists() || !f.isDirectory()) {
                 throw new BuildException("\"" + f.getPath() + "\" does not "
-                        + "represent a valid directory. JDepend would fail.");
+                                         + "represent a valid directory. JDepend would fail.");
             }
             commandline.createArgument().setValue(f.getPath());
         }
