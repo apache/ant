@@ -55,7 +55,7 @@ package org.apache.tools.ant.taskdefs.cvslib;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
+import java.util.Enumeration;
 
 /**
  * Class used to generate an XML changelog.
@@ -99,10 +99,10 @@ class ChangeLogWriter
         output.println( "\t\t<time>" + c_outputTime.format( entry.getDate() ) + "</time>" );
         output.println( "\t\t<author>" + entry.getAuthor() + "</author>" );
 
-        final Iterator iterator = entry.getFiles().iterator();
-        while( iterator.hasNext() )
+        final Enumeration enumeration = entry.getFiles().elements();
+        while( enumeration.hasMoreElements() )
         {
-            final RCSFile file = (RCSFile)iterator.next();
+            final RCSFile file = (RCSFile)enumeration.nextElement();
             output.println( "\t\t<file>" );
             output.println( "\t\t\t<name>" + file.getName() + "</name>" );
             output.println( "\t\t\t<revision>" + file.getRevision() + "</revision>" );

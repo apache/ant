@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Date;
 
 /**
@@ -68,7 +68,7 @@ class CVSEntry
     private Date m_date;
     private final String m_author;
     private final String m_comment;
-    private final ArrayList m_files = new ArrayList();
+    private final Vector m_files = new Vector();
 
     public CVSEntry( Date date, String author, String comment )
     {
@@ -79,12 +79,12 @@ class CVSEntry
 
     public void addFile( String file, String revision )
     {
-        m_files.add( new RCSFile( file, revision ) );
+        m_files.addElement( new RCSFile( file, revision ) );
     }
 
     public void addFile( String file, String revision, String previousRevision )
     {
-        m_files.add( new RCSFile( file, revision, previousRevision ) );
+        m_files.addElement( new RCSFile( file, revision, previousRevision ) );
     }
 
     Date getDate()
@@ -102,7 +102,7 @@ class CVSEntry
         return m_comment;
     }
 
-    ArrayList getFiles()
+    Vector getFiles()
     {
         return m_files;
     }

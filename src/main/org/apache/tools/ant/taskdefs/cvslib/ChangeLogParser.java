@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.cvslib;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -109,8 +110,13 @@ class ChangeLogParser
      */
     CVSEntry[] getEntrySetAsArray()
     {
-        final CVSEntry[] array = new CVSEntry[ m_entries.values().size() ];
-        return (CVSEntry[])m_entries.values().toArray( array );
+        final CVSEntry[] array = new CVSEntry[ m_entries.size() ];
+        Enumeration enum = m_entries.elements();
+        int i = 0;
+        while (enum.hasMoreElements()) {
+            array[i++] = (CVSEntry) enum.nextElement();
+        }
+        return array;
     }
 
     /**

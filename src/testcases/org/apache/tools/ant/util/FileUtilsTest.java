@@ -373,6 +373,16 @@ public class FileUtilsTest extends TestCase {
     }
 
     /**
+     * Test createNewFile
+     */
+    public void testCreateNewFile() throws IOException {
+        removeThis = new File("dummy");
+        assertTrue(!removeThis.exists());
+        fu.createNewFile(removeThis);
+        assertTrue(removeThis.exists());
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {

@@ -62,8 +62,8 @@ package org.apache.tools.ant.taskdefs.cvslib;
  */
 class RCSFile
 {
-    private final String m_name;
-    private final String m_revision;
+    private String m_name;
+    private String m_revision;
     private String m_previousRevision;
 
     RCSFile( final String name, final String rev )

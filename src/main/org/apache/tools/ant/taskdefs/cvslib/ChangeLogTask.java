@@ -360,7 +360,7 @@ public class ChangeLogTask
                 //Skip dates that are too late
                 continue;
             }
-            results.add( cvsEntry );
+            results.addElement( cvsEntry );
         }
 
         final CVSEntry[] resultArray = new CVSEntry[ results.size() ];

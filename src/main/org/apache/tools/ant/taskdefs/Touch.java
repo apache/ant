@@ -168,9 +168,7 @@ public class Touch extends Task {
             if (!file.exists()) {
                 log("Creating "+file, Project.MSG_INFO);
                 try {
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(new byte[0]);
-                    fos.close();
+                    fileUtils.createNewFile(file);
                 } catch (IOException ioe) {
                     throw new BuildException("Could not create "+file, ioe, 
                                              location);

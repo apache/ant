@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.util.Properties;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This is a basic task that can be used to track build numbers.
@@ -125,7 +126,7 @@ public class BuildNumber
             output = new FileOutputStream( m_file );
 
             final String header = "Build Number for ANT. Do not edit!";
-            properties.store( output, header );
+            properties.save( output, header );
         }
         catch( final IOException ioe )
         {
@@ -230,7 +231,7 @@ public class BuildNumber
         {
             try
             {
-                m_file.createNewFile();
+                FileUtils.newFileUtils().createNewFile(m_file);
             }
             catch( final IOException ioe )
             {

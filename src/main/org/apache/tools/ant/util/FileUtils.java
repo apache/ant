@@ -810,5 +810,35 @@ public class FileUtils {
         }
         return text;
     }
+
+    /**
+     * Emulation of File.createNewFile for JDK 1.1
+     *
+     * <p>This method does <strong>not</strong> guarantee that the
+     * operation is atomic.</p>
+     *
+     * @since 1.21, Ant 1.5
+     */
+    public boolean createNewFile(File f) throws IOException {
+        if (f != null) {
+            if (f.exists()) {
+                return false;
+            }
+            
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(f);
+                fos.write(new byte[0]);
+            } finally {
+                if (fos != null) {
+                    fos.close();
+                }
+            }
+            
+            return true;
+        }
+        return false;
+    }
+
 }
 
