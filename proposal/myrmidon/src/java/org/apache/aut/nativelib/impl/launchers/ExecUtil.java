@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import org.apache.aut.nativelib.impl.Environment;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecMetaData;
 
@@ -121,23 +120,13 @@ class ExecUtil
         throws ExecException, IOException
     {
         final Properties environment = metaData.getEnvironment();
-        if( 0 == environment.size() )
+        if( null == environment || 0 == environment.size() )
         {
             return null;
         }
         else
         {
-            if( metaData.isEnvironmentAdditive() )
-            {
-                final Properties newEnvironment = new Properties();
-                newEnvironment.putAll( Environment.getNativeEnvironment() );
-                newEnvironment.putAll( environment );
-                return toNativeEnvironment( newEnvironment );
-            }
-            else
-            {
-                return toNativeEnvironment( environment );
-            }
+            return toNativeEnvironment( environment );
         }
     }
 }

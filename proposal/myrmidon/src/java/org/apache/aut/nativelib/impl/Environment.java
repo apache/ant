@@ -9,16 +9,16 @@ package org.apache.aut.nativelib.impl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
-import org.apache.avalon.excalibur.util.StringUtil;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecManager;
+import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.Os;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * This is the class that can be used to retrieve the environment
@@ -28,7 +28,7 @@ import org.apache.aut.nativelib.Os;
  * @author <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
  * @version $Revision$ $Date$
  */
-public final class Environment
+final class Environment
 {
     private final static String[] COMMAND_COM = new String[]{"command.com", "/c", "set"};
     private final static String[] CMD_EXE = new String[]{"cmd", "/c", "set"};
@@ -37,39 +37,27 @@ public final class Environment
     private final static String[] ENV_CMD = new String[]{"/usr/bin/env"};
     private final static String[] ENV_RAW = new String[]{"env"};
 
-    private static Properties c_procEnvironment;
+    /**
+     * This is a cached version of the native environment variables.
+     */
+    private Properties m_procEnvironment;
 
     /**
-     * Private constructor to block instantiation.
+     * This is the class that is used to invoke the native process
+     * to retrieve then environment variables.
      */
-    private Environment()
-    {
-    }
+    private final ExecManager m_execManager;
 
-    public static void addNativeEnvironment( final Properties environment )
-        throws ExecException, IOException
+    public Environment( final ExecManager execManager )
     {
-        final Properties nativeEnvironment = getEnvironmentVariables();
-        final Iterator nativeKeys = nativeEnvironment.keySet().iterator();
-        while( nativeKeys.hasNext() )
-        {
-            final String key = (String)nativeKeys.next();
-            if( environment.contains( key ) )
-            {
-                //Skip environment variables that are overidden
-                continue;
-            }
-
-            final String value = nativeEnvironment.getProperty( key );
-            environment.setProperty( key, value );
-        }
+        m_execManager = execManager;
     }
 
     /**
      * Retrieve a Properties object that contains the list of all
      * native EnvironmentData Variables for the current process.
      */
-    public static Properties getNativeEnvironment()
+    public Properties getNativeEnvironment()
         throws IOException, ExecException
     {
         final Properties properties = new Properties();
@@ -81,21 +69,21 @@ public final class Environment
      * Get the Property object with all environment variables and
      * attempt to load it if it has not already been loaded.
      */
-    private static synchronized Properties getEnvironmentVariables()
+    private synchronized Properties getEnvironmentVariables()
         throws IOException, ExecException
     {
-        if( null == c_procEnvironment )
+        if( null == m_procEnvironment )
         {
-            c_procEnvironment = retrieveEnvironmentVariables();
+            m_procEnvironment = retrieveEnvironmentVariables();
         }
 
-        return c_procEnvironment;
+        return m_procEnvironment;
     }
 
     /**
      * Retrieve a last of environment variables from the native OS.
      */
-    private static synchronized Properties retrieveEnvironmentVariables()
+    private synchronized Properties retrieveEnvironmentVariables()
         throws IOException, ExecException
     {
         final String data = getEnvironmentText();
@@ -137,8 +125,8 @@ public final class Environment
      * '=' character then generate an exception. After parsed data place
      * the key-value pair into the specified Properties object.
      */
-    private static void addProperty( final Properties properties,
-                                     final String data )
+    private void addProperty( final Properties properties,
+                              final String data )
         throws ExecException
     {
         final int index = data.indexOf( '=' );
@@ -161,30 +149,18 @@ public final class Environment
      * Retrieve the text of data that is the result of
      * running the environment command.
      */
-    private static String getEnvironmentText()
+    private String getEnvironmentText()
         throws IOException, ExecException
     {
+        final String[] command = getEnvCommand();
+        final File workingDirectory = new File( "." );
+        final ExecMetaData metaData = new ExecMetaData( command, null, workingDirectory, false );
+
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        final Execute exe = new Execute();
-        exe.setOutput( output );
-        exe.setError( output );
-
-        exe.setCommandline( getEnvCommand() );
-
-        // Make sure we do not recurse forever
-        exe.setNewenvironment( true );
-
-        try
+        final int retval = m_execManager.execute( metaData, null, output, output, 0 );
+        if( retval != 0 )
         {
-            final int retval = exe.execute();
-            if( retval != 0 )
-            {
-                // Just try to use what we got
-            }
-        }
-        catch( final TaskException te )
-        {
-            throw new ExecException( te.getMessage(), te );
+            // Just try to use what we got
         }
 
         return output.toString();

@@ -10,6 +10,7 @@ package org.apache.aut.nativelib;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Properties;
 
 /**
  * Interface via which clients can request that a native
@@ -30,6 +31,13 @@ import java.io.OutputStream;
  */
 public interface ExecManager
 {
+    /**
+     * Retrieve a properties object that contains a list of
+     * all the native environment variables.
+     */
+    Properties getNativeEnvironment()
+        throws ExecException;
+
     /**
      * Execute a process and wait for it to finish before
      * returning.

@@ -7,15 +7,16 @@
  */
 package org.apache.antlib.nativelib;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.nativelib.impl.Environment;
-import org.apache.aut.nativelib.ExecException;
+import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
+import org.apache.myrmidon.services.ServiceException;
 
 /**
  * This task is responsible for loading that OS-specific environment
@@ -88,15 +89,18 @@ public class LoadEnvironment
     {
         try
         {
-            return Environment.getNativeEnvironment();
+            final ExecManagerFactory factory = new ExecManagerFactory();
+            final ExecManager manager = (ExecManager)factory.createService();
+
+            return manager.getNativeEnvironment();
+        }
+        catch( final ServiceException se )
+        {
+            throw new TaskException( se.getMessage(), se );
         }
         catch( final ExecException ee )
         {
             throw new TaskException( ee.getMessage(), ee );
-        }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( ioe.getMessage(), ioe );
         }
     }
 }
