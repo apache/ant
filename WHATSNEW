@@ -1,3 +1,4 @@
+
 Changes from Ant 1.5 to current CVS version
 ===========================================
 
@@ -9,6 +10,9 @@ Fixed bugs:
 
 * The sh wrapper script could fail if you started Ant from a directory
   with whitespace in its name.
+
+* ant -diagnostics was not working properly when the task dependency
+  was missing and was just printing the missing dependency.
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
