@@ -8,23 +8,23 @@
 package org.apache.ant.modules.basic;
 
 import java.util.ArrayList;
-import org.apache.myrmidon.AntException;
-import org.apache.myrmidon.components.model.Project;
-import org.apache.myrmidon.components.manager.ProjectManager;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.DefaultTaskContext;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.DefaultTaskContext;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.model.Project;
 
 /**
  * This is abstract base class for tasklets.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class AntCall 
+public class AntCall
     extends AbstractTask
     implements Composable
 {
@@ -39,7 +39,7 @@ public class AntCall
     {
         super.contextualize( context );
         m_childContext = new DefaultTaskContext( getContext() );
-    } 
+    }
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -67,11 +67,11 @@ public class AntCall
     }
 
     public void execute()
-        throws AntException
+        throws TaskException
     {
         if( null == m_target )
         {
-            throw new AntException( "Target attribute must be specified" );
+            throw new TaskException( "Target attribute must be specified" );
         }
 
         final int size = m_properties.size();

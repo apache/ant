@@ -7,7 +7,7 @@
  */
 package org.apache.ant.util;
 
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -42,7 +42,7 @@ public class Condition
     }
     
     public boolean evaluate( final Context context )
-        throws AntException
+        throws TaskException
     {
         boolean result = false;
 
@@ -66,7 +66,7 @@ public class Condition
         }
         catch( final PropertyException pe )
         {
-            throw new AntException( "Error resolving " + m_condition, pe );
+            throw new TaskException( "Error resolving " + m_condition, pe );
         }
 
         if( !m_isIfCondition )

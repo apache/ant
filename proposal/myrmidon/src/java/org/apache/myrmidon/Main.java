@@ -34,6 +34,7 @@ import org.apache.log.Logger;
 import org.apache.log.Priority;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
@@ -107,7 +108,7 @@ public class Main
         main.setLogger( Hierarchy.getDefaultHierarchy().getLoggerFor( "default" ) );
 
         try { main.execute( args ); }
-        catch( final AntException ae )
+        catch( final TaskException ae )
         {
             main.getLogger().error( "Error: " + ae.getMessage() );
             main.getLogger().debug( "Exception..." + ExceptionUtil.printStackTrace( ae ) );
@@ -276,7 +277,7 @@ public class Main
         m_homeDir = (new File( homeDir )).getAbsoluteFile();
         if( !m_homeDir.isDirectory() )
         {
-            throw new AntException( "ant-home (" + m_homeDir + ") is not a directory" );
+            throw new TaskException( "ant-home (" + m_homeDir + ") is not a directory" );
         }
 
         final File libDir = new File( m_homeDir, "lib" );
@@ -284,7 +285,7 @@ public class Main
         final File buildFile = (new File( filename )).getCanonicalFile();
         if( !buildFile.isFile() )
         {
-            throw new AntException( "File " + buildFile + " is not a file or doesn't exist" );
+            throw new TaskException( "File " + buildFile + " is not a file or doesn't exist" );
         }
 
         //setup classloader so that it will correctly load
@@ -379,7 +380,7 @@ public class Main
                 }
             }
         }
-        catch( final AntException ae )
+        catch( final TaskException ae )
         {
             getLogger().error( "BUILD FAILED" );
             getLogger().error( "Reason:\n" + ExceptionUtil.printStackTrace( ae, 5, true ) );
@@ -391,17 +392,17 @@ public class Main
      *
      * @param logLevel the log-level
      * @return the logger
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     protected Logger createLogger( final String logLevel )
-        throws AntException
+        throws TaskException
     {
         final String logLevelCapitalized = logLevel.toUpperCase();
         final Priority priority = Priority.getPriorityForName( logLevelCapitalized );
 
         if( !priority.getName().equals( logLevelCapitalized ) )
         {
-            throw new AntException( "Unknown log level - " + logLevel );
+            throw new TaskException( "Unknown log level - " + logLevel );
         }
 
         final Logger logger =
@@ -418,14 +419,14 @@ public class Main
      * @param listenerName the name of project listener
      */
     protected ProjectListener createListener( final String listenerName )
-        throws AntException
+        throws TaskException
     {
         ProjectListener result = null;
 
         try { result = (ProjectListener)Class.forName( listenerName ).newInstance(); }
         catch( final Throwable t )
         {
-            throw new AntException( "Error creating the listener " + listenerName +
+            throw new TaskException( "Error creating the listener " + listenerName +
                                     " due to " + ExceptionUtil.printStackTrace( t, 5, true ),
                                     t );
         }
@@ -484,10 +485,10 @@ public class Main
      *
      * @param project the project
      * @param defines the defines
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     protected void setupContext( final TaskContext context, final HashMap defines )
-        throws AntException
+        throws TaskException
     {
         //put these values into defines so that they overide
         //user-defined proeprties
@@ -510,7 +511,7 @@ public class Main
      * @param map the map of names->values
      */
     protected void addToContext( final TaskContext context, final Map map )
-        throws AntException
+        throws TaskException
     {
         final Iterator keys = map.keySet().iterator();
 

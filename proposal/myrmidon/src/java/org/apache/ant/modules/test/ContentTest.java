@@ -7,7 +7,7 @@
  */
 package org.apache.ant.modules.test;
 
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 
 /**
@@ -31,7 +31,7 @@ public class ContentTest
     */
 
     public void execute()
-        throws Exception
+        throws TaskException
     {
     }
 }

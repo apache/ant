@@ -54,7 +54,7 @@ public abstract class AbstractTask
      * @exception Exception if an error occurs
      */
     public abstract void execute()
-        throws Exception;
+        throws TaskException;
 
     /**
      * This will be called after execute() method.

@@ -10,7 +10,6 @@ package org.apache.myrmidon.api;
 import java.io.File;
 import org.apache.avalon.framework.Enum;
 import org.apache.avalon.framework.context.Context;
-import org.apache.myrmidon.AntException;
 
 /**
  * This interface represents the <em>Context</em> in which Task is executed.
@@ -67,7 +66,7 @@ public interface TaskContext
      * @return the resolved file
      */
     File resolveFile( String filename )
-        throws AntException;
+        throws TaskException;
 
     /**
      * Resolve property.
@@ -77,7 +76,7 @@ public interface TaskContext
      * @return the resolved property
      */
     Object resolveValue( String property )
-        throws AntException;
+        throws TaskException;
 
     /**
      * Retrieve property for name.
@@ -94,7 +93,7 @@ public interface TaskContext
      * @param value the value of property
      */
     void setProperty( String name, Object value )
-        throws AntException;
+        throws TaskException;
 
     /**
      * Set property value.
@@ -104,7 +103,7 @@ public interface TaskContext
      * @param scope the scope at which to set property
      */
     void setProperty( String name, Object value, ScopeEnum scope )
-        throws AntException;
+        throws TaskException;
 
     /**
      * Safe wrapper class for Scope enums.

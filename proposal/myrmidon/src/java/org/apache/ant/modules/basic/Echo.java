@@ -7,7 +7,7 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 
 /**
@@ -26,7 +26,7 @@ public class Echo
     }
 
     public void execute()
-        throws AntException
+        throws TaskException
     {
         getLogger().warn( m_message );
     }

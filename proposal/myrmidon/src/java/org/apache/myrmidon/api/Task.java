@@ -20,7 +20,6 @@ package org.apache.myrmidon.api;
  * to task object.
  *
  * The Components passed in via ComponentManager are determined by container.
- * Most containers will include the Engine and Registrys.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -30,10 +29,10 @@ public interface Task
      * Execute task. 
      * This method is called to perform actual work associated with task.
      * It is called after Task has been Configured and Initialized and before
-     * beig Disposed (If task implements appropriate interfaces).
+     * being Disposed (If task implements appropriate interfaces).
      *
-     * @exception Exception if an error occurs
+     * @exception TaskException if an error occurs
      */
     void execute()
-        throws Exception;
+        throws TaskException;
 }

@@ -16,7 +16,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
-import org.apache.myrmidon.AntException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.DefaultProject;
 import org.apache.myrmidon.components.model.DefaultTarget;
@@ -47,44 +46,14 @@ public class DefaultProjectBuilder
      * @param source the source
      * @return the constructed Project
      * @exception IOException if an error occurs
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      */
     public Project build( final File projectFile )
-        throws IOException, AntException
+        throws Exception
     {
-        try
-        {
-            final String location = projectFile.getCanonicalFile().toString();
-            final Configuration configuration = buildConfiguration( location );
-            return build( projectFile, configuration );
-        }
-        catch( final ConfigurationException ce )
-        {
-            throw new AntException( "ConfigurationException: " + ce.getMessage(), ce );
-        }
-    }
-
-    /**
-     * Utility method to build a Configuration tree from a source.
-     * Overide this in sub-classes if you want to provide extra
-     * functionality (ie xslt/css).
-     *
-     * @param location the location
-     * @return the created Configuration
-     * @exception AntException if an error occurs
-     * @exception IOException if an error occurs
-     */
-    protected Configuration buildConfiguration( final String location )
-        throws AntException, IOException, ConfigurationException
-    {
-        try
-        {
-            return (Configuration)m_builder.buildFromFile( location );
-        }
-        catch( final SAXException se )
-        {
-            throw new AntException( "SAXEception: " + se.getMessage(), se );
-        }
+        final String location = projectFile.getCanonicalFile().toString();
+        final Configuration configuration = (Configuration)m_builder.buildFromFile( location );
+        return build( projectFile, configuration );
     }
 
     /**
@@ -94,15 +63,15 @@ public class DefaultProjectBuilder
      * @param configuration the configuration loaded
      * @return the created Project
      * @exception IOException if an error occurs
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      * @exception ConfigurationException if an error occurs
      */
     protected Project build( final File file, final Configuration configuration )
-        throws IOException, AntException, ConfigurationException
+        throws Exception
     {
         if( !configuration.getName().equals("project") )
         {
-            throw new AntException( "Project file must be enclosed in project element" );
+            throw new Exception( "Project file must be enclosed in project element" );
         }
 
         //get project-level attributes
@@ -133,11 +102,11 @@ public class DefaultProjectBuilder
      *
      * @param project the project
      * @param configuration the Configuration
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      */
     protected void buildTopLevelProject( final DefaultProject project,
                                          final Configuration configuration )
-        throws AntException
+        throws Exception
     {
         final Configuration[] children = configuration.getChildren();
 
@@ -151,7 +120,7 @@ public class DefaultProjectBuilder
             else if( name.equals( "property" ) ) buildImplicitTask( project, element );
             else
             {
-                throw new AntException( "Unknown top-level element " + name +
+                throw new Exception( "Unknown top-level element " + name +
                                         " at " + element.getLocation() );
             }
         }
@@ -164,7 +133,7 @@ public class DefaultProjectBuilder
      * @param task the Configuration
      */
     protected void buildTarget( final DefaultProject project, final Configuration target )
-        throws AntException
+        throws Exception
     {
         final String name = target.getAttribute( "name", null );
         final String depends = target.getAttribute( "depends", null );
@@ -173,7 +142,7 @@ public class DefaultProjectBuilder
 
         if( null == name )
         {
-            throw new AntException( "Discovered un-named target at " +
+            throw new Exception( "Discovered un-named target at " +
                                     target.getLocation() );
         }
 
@@ -181,7 +150,7 @@ public class DefaultProjectBuilder
 
         if( null != ifCondition && null != unlessCondition )
         {
-            throw new AntException( "Discovered invalid target that has both a if and " +
+            throw new Exception( "Discovered invalid target that has both a if and " +
                                     "unless condition at " + target.getLocation() );
         }
 
@@ -211,8 +180,8 @@ public class DefaultProjectBuilder
 
                 if( 0 == dependency.length() )
                 {
-                    throw new AntException( "Discovered empty dependency in target " +
-                                            target.getName() + " at " + target.getLocation() );
+                    throw new Exception( "Discovered empty dependency in target " +
+                                         target.getName() + " at " + target.getLocation() );
                 }
 
                 getLogger().debug( "Target dependency: " + dependency );

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import java.util.HashMap;
-import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -33,17 +31,19 @@ import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.configurer.Configurer;
 
 public class DefaultExecutor
     extends AbstractLoggable
     implements Executor, Composable
 {
-    protected Factory              m_factory;
-    protected Registry             m_registry   = new DefaultRegistry( Locator.class );
-    protected Configurer           m_configurer;
+    private Factory              m_factory;
+    private Registry             m_registry   = new DefaultRegistry( Locator.class );
+    private Configurer           m_configurer;
 
-    protected ComponentManager     m_componentManager;
+    private ComponentManager     m_componentManager;
 
     public Registry getRegistry()
     {
@@ -69,7 +69,7 @@ public class DefaultExecutor
     }
 
     public void execute( final Configuration taskData, final TaskContext context )
-        throws AntException
+        throws TaskException
     {
         getLogger().debug( "Creating" );
         final Task task = createTask( taskData.getName() );
@@ -89,18 +89,14 @@ public class DefaultExecutor
 
         getLogger().debug( "Running" );
 
-        try { task.execute(); }
-        catch( final Exception e )
-        {
-            throw new AntException( "Error executing task", e );
-        }
+        task.execute();
 
         getLogger().debug( "Disposing" );
         doDispose( task, taskData );
     }
 
-    protected Task createTask( final String name )
-        throws AntException
+    private Task createTask( final String name )
+        throws TaskException
     {
         try
         {
@@ -109,47 +105,47 @@ public class DefaultExecutor
         }
         catch( final RegistryException re )
         {
-            throw new AntException( "Unable to locate task " + name, re );
+            throw new TaskException( "Unable to locate task " + name, re );
         }
         catch( final FactoryException fe )
         {
-            throw new AntException( "Unable to create task " + name, fe );
+            throw new TaskException( "Unable to create task " + name, fe );
         }
     }
 
-    protected void doConfigure( final Task task,
-                                final Configuration taskData,
-                                final TaskContext context )
-        throws AntException
+    private void doConfigure( final Task task,
+                              final Configuration taskData,
+                              final TaskContext context )
+        throws TaskException
     {
         try { m_configurer.configure( task, taskData, context ); }
         catch( final Throwable throwable )
         {
-            throw new AntException( "Error configuring task " +  taskData.getName() + " at " +
-                                    taskData.getLocation() + "(Reason: " +
-                                    throwable.getMessage() + ")", throwable );
+            throw new TaskException( "Error configuring task " +  taskData.getName() + " at " +
+                                     taskData.getLocation() + "(Reason: " +
+                                     throwable.getMessage() + ")", throwable );
         }
     }
 
-    protected void doCompose( final Task task, final Configuration taskData )
-        throws AntException
+    private void doCompose( final Task task, final Configuration taskData )
+        throws TaskException
     {
         if( task instanceof Composable )
         {
             try { ((Composable)task).compose( m_componentManager ); }
             catch( final Throwable throwable )
             {
-                throw new AntException( "Error composing task " +  taskData.getName() + " at " +
-                                        taskData.getLocation() + "(Reason: " +
-                                        throwable.getMessage() + ")", throwable );
+                throw new TaskException( "Error composing task " +  taskData.getName() + " at " +
+                                         taskData.getLocation() + "(Reason: " +
+                                         throwable.getMessage() + ")", throwable );
             }
         }
     }
 
-    protected void doContextualize( final Task task,
-                                    final Configuration taskData,
-                                    final TaskContext context )
-        throws AntException
+    private void doContextualize( final Task task,
+                                  final Configuration taskData,
+                                  final TaskContext context )
+        throws TaskException
     {
         try
         {
@@ -160,38 +156,38 @@ public class DefaultExecutor
         }
         catch( final Throwable throwable )
         {
-            throw new AntException( "Error contextualizing task " +  taskData.getName() + " at " +
-                                    taskData.getLocation() + "(Reason: " +
-                                    throwable.getMessage() + ")", throwable );
+            throw new TaskException( "Error contextualizing task " +  taskData.getName() + " at " +
+                                     taskData.getLocation() + "(Reason: " +
+                                     throwable.getMessage() + ")", throwable );
         }
     }
 
-    protected void doDispose( final Task task, final Configuration taskData )
-        throws AntException
+    private void doDispose( final Task task, final Configuration taskData )
+        throws TaskException
     {
         if( task instanceof Disposable )
         {
             try { ((Disposable)task).dispose(); }
             catch( final Throwable throwable )
             {
-                throw new AntException( "Error disposing task " +  taskData.getName() + " at " +
-                                        taskData.getLocation() + "(Reason: " +
-                                        throwable.getMessage() + ")", throwable );
+                throw new TaskException( "Error disposing task " +  taskData.getName() + " at " +
+                                         taskData.getLocation() + "(Reason: " +
+                                         throwable.getMessage() + ")", throwable );
             }
         }
     }
 
-    protected void doInitialize( final Task task, final Configuration taskData )
-        throws AntException
+    private void doInitialize( final Task task, final Configuration taskData )
+        throws TaskException
     {
         if( task instanceof Initializable )
         {
             try { ((Initializable)task).initialize(); }
             catch( final Throwable throwable )
             {
-                throw new AntException( "Error initializing task " +  taskData.getName() + " at " +
-                                        taskData.getLocation() + "(Reason: " +
-                                        throwable.getMessage() + ")", throwable );
+                throw new TaskException( "Error initializing task " +  taskData.getName() + " at " +
+                                         taskData.getLocation() + "(Reason: " +
+                                         throwable.getMessage() + ")", throwable );
             }
         }
     }

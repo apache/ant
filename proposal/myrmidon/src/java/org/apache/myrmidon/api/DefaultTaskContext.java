@@ -8,7 +8,6 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.myrmidon.AntException;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
@@ -116,12 +115,12 @@ public class DefaultTaskContext
      * @return the resolved property
      */
     public Object resolveValue( final String property )
-        throws AntException
+        throws TaskException
     {
         try { return PropertyUtil.resolveProperty( property, this, false ); }
         catch( final PropertyException pe )
         {
-            throw new AntException( "Error resolving " + property + " due to " + pe.getMessage(),
+            throw new TaskException( "Error resolving " + property + " due to " + pe.getMessage(),
                                     pe );
         }
     }
@@ -148,7 +147,7 @@ public class DefaultTaskContext
      * @param value the value of property
      */
     public void setProperty( final String name, final Object value )
-        throws AntException
+        throws TaskException
     {
         setProperty( name, value, CURRENT );
     }
@@ -159,7 +158,7 @@ public class DefaultTaskContext
      * @param property the property
      */
     public void setProperty(  final String name, final Object value, final ScopeEnum scope )
-        throws AntException
+        throws TaskException
     {
         checkPropertyValid( name, value );
 
@@ -168,7 +167,7 @@ public class DefaultTaskContext
         {
             if( null == m_parent )
             {
-                throw new AntException( "Can't set a property with parent scope when context " +
+                throw new TaskException( "Can't set a property with parent scope when context " +
                                         " has no parent" );
             }
             else
@@ -189,7 +188,7 @@ public class DefaultTaskContext
         }
         else
         {
-            throw new AntException( "Can't set a property with an unknown " +
+            throw new TaskException( "Can't set a property with an unknown " +
                                     "property context! (" + scope + ")" );
         }
     }
@@ -203,14 +202,14 @@ public class DefaultTaskContext
      * @param value the value
      */
     public void putValue( final Object key, final Object value  )
-        throws AntException
+        throws TaskException
     {
         if( key.equals( BASE_DIRECTORY ) )
         {
             try { m_baseDirectory = (File)value; }
             catch( final ClassCastException cce )
             {
-                throw new AntException( "Can not set baseDirectory to a non-file value.",
+                throw new TaskException( "Can not set baseDirectory to a non-file value.",
                                         cce );
             }
         }
@@ -223,28 +222,28 @@ public class DefaultTaskContext
      *
      * @param name the name of property
      * @param value the value of proeprty
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     protected void checkPropertyValid( final String name, final Object value )
-        throws AntException
+        throws TaskException
     {
         if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
         {
-            throw new AntException( "Property " + BASE_DIRECTORY +
-                                    " must have a value of type " +
-                                    File.class.getName() );
+            throw new TaskException( "Property " + BASE_DIRECTORY +
+                                     " must have a value of type " +
+                                     File.class.getName() );
         }
         else if( NAME.equals( name ) && !( value instanceof String ) )
         {
-            throw new AntException( "Property " + NAME +
-                                    " must have a value of type " +
-                                    String.class.getName() );
+            throw new TaskException( "Property " + NAME +
+                                     " must have a value of type " +
+                                     String.class.getName() );
         }
         else if( JAVA_VERSION.equals( name ) && !( value instanceof JavaVersion ) )
         {
-            throw new AntException( "property " + JAVA_VERSION +
-                                    " must have a value of type " +
-                                    JavaVersion.class.getName() );
+            throw new TaskException( "property " + JAVA_VERSION +
+                                     " must have a value of type " +
+                                     JavaVersion.class.getName() );
         }
     }
 }

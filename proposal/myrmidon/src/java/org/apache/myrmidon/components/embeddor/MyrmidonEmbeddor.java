@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
-import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -290,7 +289,7 @@ public class MyrmidonEmbeddor
      * Setup all the files attributes.
      */
     private void setupFiles()
-        throws AntException
+        throws Exception
     {
         String filepath = null;
 
@@ -333,10 +332,10 @@ public class MyrmidonEmbeddor
      * @param dir the base directory
      * @param name the relative directory
      * @return the created File
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      */
     private File resolveDirectory( final String dir, final String name )
-        throws AntException
+        throws Exception
     {
         final File file = FileUtil.resolveFile( m_homeDir, dir );
         checkDirectory( file, name );
@@ -350,15 +349,15 @@ public class MyrmidonEmbeddor
      * @param name the name of file type (used in error messages)
      */
     private void checkDirectory( final File file, final String name )
-        throws AntException
+        throws Exception
     {
         if( !file.exists() )
         {
-            throw new AntException( name + " (" + file + ") does not exist" );
+            throw new Exception( name + " (" + file + ") does not exist" );
         }
         else if( !file.isDirectory() )
         {
-            throw new AntException( name + " (" + file + ") is not a directory" );
+            throw new Exception( name + " (" + file + ") is not a directory" );
         }
     }
 
@@ -392,10 +391,10 @@ public class MyrmidonEmbeddor
      * @param component the name of the component
      * @param clazz the name of interface/type
      * @return the created object
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      */
     private Object createComponent( final String component, final Class clazz )
-        throws AntException
+        throws Exception
     {
         try
         {
@@ -403,26 +402,24 @@ public class MyrmidonEmbeddor
 
             if( !clazz.isInstance( object ) )
             {
-                throw new AntException( "Object " + component + " is not an instance of " +
-                                        clazz );
+                throw new Exception( "Object " + component + " is not an instance of " +
+                                     clazz );
             }
 
             return object;
         }
         catch( final IllegalAccessException iae )
         {
-            throw new AntException( "Non-public constructor for " + clazz + " " + component,
-                                    iae );
+            throw new Exception( "Non-public constructor for " + clazz + " " + component );
         }
         catch( final InstantiationException ie )
         {
-            throw new AntException( "Error instantiating class for " + clazz + " " + component,
-                                    ie );
+            throw new Exception( "Error instantiating class for " + clazz + " " + component );
         }
         catch( final ClassNotFoundException cnfe )
         {
-            throw new AntException( "Could not find the class for " + clazz +
-                                    " (" + component + ")", cnfe );
+            throw new Exception( "Could not find the class for " + clazz + 
+                                 " (" + component + ")" );
         }
     }
 }

@@ -8,7 +8,7 @@
 package org.apache.ant.modules.basic;
 
 import java.util.Iterator;
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
@@ -65,9 +65,9 @@ public class Property
             Object object = null;
 
             try { object = getContext().resolveValue( value ); }
-            catch( final AntException ae )
+            catch( final TaskException te )
             {
-                throw new ConfigurationException( "Error resolving value: " + value, ae );
+                throw new ConfigurationException( "Error resolving value: " + value, te );
             }
 
             if( null == object )
@@ -91,9 +91,9 @@ public class Property
             else if( name.equals( "value" ) )
             {
                 try { setValue( object ); }
-                catch( final AntException ae )
+                catch( final TaskException te )
                 {
-                    throw new ConfigurationException( "Error setting value: " + value, ae );
+                    throw new ConfigurationException( "Error setting value: " + value, te );
                 }
             }
             else if( name.equals( "local-scope" ) )
@@ -140,11 +140,11 @@ public class Property
     }
 
     public void setValue( final Object value )
-        throws AntException
+        throws TaskException
     {
         if( null != m_value )
         {
-            throw new AntException( "Value can not be set multiple times" );
+            throw new TaskException( "Value can not be set multiple times" );
         }
 
         m_value = value;
@@ -156,16 +156,16 @@ public class Property
     }
 
     public void execute()
-        throws AntException
+        throws TaskException
     {
         if( null == m_name )
         {
-            throw new AntException( "Name must be specified" );
+            throw new TaskException( "Name must be specified" );
         }
 
         if( null == m_value )
         {
-            throw new AntException( "Value must be specified" );
+            throw new TaskException( "Value must be specified" );
         }
 
         final TaskContext context = getContext();

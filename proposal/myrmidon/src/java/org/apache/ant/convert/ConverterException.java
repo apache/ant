@@ -7,7 +7,7 @@
  */
 package org.apache.ant.convert;
 
-import org.apache.myrmidon.AntException;
+import org.apache.avalon.framework.CascadingException;
 
 /**
  * ConverterException thrown when a problem occurs during convertion etc.
@@ -15,7 +15,7 @@ import org.apache.myrmidon.AntException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class ConverterException
-    extends AntException
+    extends CascadingException
 {
     /**
      * Basic constructor with a message

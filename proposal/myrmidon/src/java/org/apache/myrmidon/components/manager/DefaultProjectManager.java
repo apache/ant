@@ -8,8 +8,6 @@
 package org.apache.myrmidon.components.manager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import org.apache.myrmidon.AntException;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -23,6 +21,7 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
@@ -81,10 +80,10 @@ public class DefaultProjectManager
      *
      * @param project the Project
      * @param target the name of the target
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     public void executeTarget( final Project project, final String target, final TaskContext context )
-        throws AntException
+        throws TaskException
     {
         //HACK: should do this a better way !!!!!!
         m_componentManager.put( "org.apache.ant.project.Project", project );
@@ -104,10 +103,10 @@ public class DefaultProjectManager
      * @param project the Project
      * @param target the name of the target
      * @param context the context
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     public void execute( Project project, String target, TaskContext context )
-        throws AntException
+        throws TaskException
     {
         execute( project, target, context, new ArrayList() );
     }
@@ -119,19 +118,19 @@ public class DefaultProjectManager
      * @param target the name of the target
      * @param context the context
      * @param done the list of targets already executed in current run
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     private void execute( final Project project,
                           final String targetName,
                           final TaskContext context,
                           final ArrayList done )
-        throws AntException
+        throws TaskException
     {
         final Target target = project.getTarget( targetName );
 
         if( null == target )
         {
-            throw new AntException( "Unable to find target " + targetName );
+            throw new TaskException( "Unable to find target " + targetName );
         }
 
         //add target to list of targets executed
@@ -156,12 +155,12 @@ public class DefaultProjectManager
      * @param targetName the name of target
      * @param target the target
      * @param context the context in which to execute
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     private void executeTarget( final String targetName,
                                 final Target target,
                                 final TaskContext context )
-        throws AntException
+        throws TaskException
     {
         //is this necessary ? I think not but ....
         // NO it isn't because you set target name and project has already been provided
@@ -192,7 +191,7 @@ public class DefaultProjectManager
     private void executeTargetWork( final String name,
                                     final Target target,
                                     final TaskContext context )
-        throws AntException
+        throws TaskException
     {
         //check the condition associated with target.
         //if it is not satisfied then skip target
@@ -222,10 +221,10 @@ public class DefaultProjectManager
      *
      * @param task the task definition
      * @param context the context
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     private void executeTask( final Configuration task, final TaskContext context )
-        throws AntException
+        throws TaskException
     {
         final String name = task.getName();
         getLogger().debug( "Executing task " + name );

@@ -9,7 +9,6 @@ package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.components.model.Project;
 
@@ -30,5 +29,5 @@ public interface ProjectBuilder
      * @exception AntException if an error occurs
      */
     Project build( File source )
-        throws IOException, AntException;
+        throws Exception;
 }

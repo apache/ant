@@ -7,9 +7,9 @@
  */
 package org.apache.myrmidon.components.manager;
 
-import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
 
@@ -42,8 +42,8 @@ public interface ProjectManager
      * @param project the Project
      * @param target the name of the target
      * @param context the context
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     void executeTarget( Project project, String target, TaskContext context )
-        throws AntException;
+        throws TaskException;
 }

@@ -5,20 +5,18 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon;
+package org.apache.myrmidon.api;
 
 import org.apache.avalon.framework.CascadingException;
 
 /**
- * AntException thrown when a problem with tasks etc.
+ * TaskException thrown when a problem with tasks etc.
  * It is cascading so that further embedded information can be contained.
- * ie ANtException was caused by IOException etc.
- * It is RuntimeException as it has to pass through a number of Java-defined
- * interfaces - ala Runnable and also to aid in ease of indicating an error.
+ * ie TaskException was caused by IOException etc.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class AntException
+public class TaskException
     extends CascadingException
 {
     /**
@@ -26,7 +24,7 @@ public class AntException
      *
      * @param message the message
      */
-    public AntException( final String message )
+    public TaskException( final String message )
     {
         this( message, null );
     }
@@ -37,7 +35,7 @@ public class AntException
      * @param message the message
      * @param throwable the throwable
      */
-    public AntException( final String message, final Throwable throwable )
+    public TaskException( final String message, final Throwable throwable )
     {
         super( message, throwable );
     }

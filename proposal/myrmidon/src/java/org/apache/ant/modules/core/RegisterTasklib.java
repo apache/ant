@@ -14,7 +14,7 @@ import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.components.deployer.TskDeployer;
 
@@ -43,11 +43,11 @@ public class RegisterTasklib
     }
 
     public void execute()
-        throws AntException
+        throws TaskException
     {
         if( null == m_lib )
         {
-            throw new AntException( "Must specify lib parameter" );
+            throw new TaskException( "Must specify lib parameter" );
         }
 
         URL url = null;
@@ -56,7 +56,7 @@ public class RegisterTasklib
         try { url = lib.toURL(); }
         catch( final MalformedURLException mue )
         {
-            throw new AntException( "Malformed task-lib parameter " + m_lib, mue );
+            throw new TaskException( "Malformed task-lib parameter " + m_lib, mue );
         }
 
         try
@@ -65,7 +65,7 @@ public class RegisterTasklib
         }
         catch( final DeploymentException de )
         {
-            throw new AntException( "Error registering resource", de );
+            throw new TaskException( "Error registering resource", de );
         }
     }
 }

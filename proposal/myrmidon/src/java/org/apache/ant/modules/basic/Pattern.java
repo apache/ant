@@ -7,7 +7,7 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.ant.tasklet.DataType;
 import org.apache.ant.util.Condition;
 
@@ -57,10 +57,10 @@ public class Pattern
      * Set if clause on pattern.
      *
      * @param condition the condition
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     public void setIf( final String condition )
-        throws AntException
+        throws TaskException
     {
         verifyConditionNull();
         m_condition = new Condition( true, condition );
@@ -70,10 +70,10 @@ public class Pattern
      * Set unless clause of pattern.
      *
      * @param condition the unless clause
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     public void setUnless( final String condition )
-        throws AntException
+        throws TaskException
     {
         verifyConditionNull();
         m_condition = new Condition( false, condition );
@@ -83,14 +83,14 @@ public class Pattern
      * Utility method to make sure condition unset.
      * Made so that it is not possible for both if and unless to be set.
      *
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     protected void verifyConditionNull()
-        throws AntException
+        throws TaskException
     {
         if( null != m_condition )
         {
-            throw new AntException( "Can only set one of if/else for pattern data type" );
+            throw new TaskException( "Can only set one of if/else for pattern data type" );
         }
     }
 }

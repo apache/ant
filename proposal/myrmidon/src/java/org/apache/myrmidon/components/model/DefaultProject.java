@@ -10,7 +10,6 @@ package org.apache.myrmidon.components.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import org.apache.myrmidon.AntException;
 
 /**
  * Default project implementation.
@@ -119,15 +118,14 @@ public class DefaultProject
      *
      * @param name the name of target
      * @param target the Target
-     * @exception AntException if an error occurs
+     * @exception IllegalArgumentException if target already exists with same name
      */
     public final void addTarget( final String name, final Target target )
-        throws AntException
     {
         if( null != m_targets.get( name ) )
         {
-            throw new AntException( "Can not have two targets in a file with the name " +
-                                    name );
+            throw new IllegalArgumentException( "Can not have two targets in a " + 
+                                                "file with the name " + name );
         }
         else
         {

@@ -8,7 +8,7 @@
 package org.apache.ant.modules.core;
 
 import java.net.URL;
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.avalon.framework.camelot.DefaultLocator;
 import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.camelot.RegistryException;
@@ -24,14 +24,14 @@ public class RegisterTasklet
     protected void registerResource( final String name, 
                                      final String classname, 
                                      final URL url )
-        throws AntException, RegistryException 
+        throws TaskException, RegistryException 
     {
         if( null == classname )
         {
             try { m_tskDeployer.deployTask( name, url.toString(), url ); }
             catch( final DeploymentException de )
             {
-                throw new AntException( "Failed deploying " + name + " from " + url, de );
+                throw new TaskException( "Failed deploying " + name + " from " + url, de );
             }
         }
         else

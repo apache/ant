@@ -10,7 +10,7 @@ package org.apache.ant.modules.core;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.myrmidon.api.AbstractTask;
@@ -69,11 +69,11 @@ public class RegisterConverter
     }
     
     public void execute()
-        throws AntException
+        throws TaskException
     {
         if( null == m_classname )
         {
-            throw new AntException( "Must specify classname parameter" );
+            throw new TaskException( "Must specify classname parameter" );
         }
         
         final URL url = getURL( m_lib );
@@ -86,13 +86,13 @@ public class RegisterConverter
         }
         else if( null == m_sourceType || null == m_destinationType )
         {
-            throw new AntException( "Must specify the source-type and destination-type " +
+            throw new TaskException( "Must specify the source-type and destination-type " +
                                     "parameters when supplying a name" );
         }
 
         if( !isFullyDefined && null == url )
         {
-            throw new AntException( "Must supply parameter if not fully specifying converter" );
+            throw new TaskException( "Must supply parameter if not fully specifying converter" );
         }
 
         if( !isFullyDefined )
@@ -103,7 +103,7 @@ public class RegisterConverter
             }
             catch( final DeploymentException de )
             {
-                throw new AntException( "Failed deploying " + m_classname + 
+                throw new TaskException( "Failed deploying " + m_classname + 
                                         " from " + url, de );
             }
         }
@@ -120,13 +120,13 @@ public class RegisterConverter
             }
             catch( final RegistryException re )
             {
-                throw new AntException( "Error registering resource", re );
+                throw new TaskException( "Error registering resource", re );
             }
         }
     }
     
     protected URL getURL( final String libName )
-        throws AntException
+        throws TaskException
     {
         if( null != libName )
         {
@@ -134,7 +134,7 @@ public class RegisterConverter
             try { return lib.toURL(); }
             catch( final MalformedURLException mue )
             {
-                throw new AntException( "Malformed task-lib parameter " + m_lib, mue );
+                throw new TaskException( "Malformed task-lib parameter " + m_lib, mue );
             }
         }
         else

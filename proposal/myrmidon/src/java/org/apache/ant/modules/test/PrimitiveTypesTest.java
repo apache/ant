@@ -8,7 +8,7 @@
  */
 package org.apache.ant.modules.test;
 
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 
 /**
@@ -85,7 +85,7 @@ public class PrimitiveTypesTest
     }
 
     public void execute()
-        throws AntException
+        throws TaskException
     {
     }
 }

@@ -7,11 +7,11 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.camelot.Registry;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
  
 /**
  * Engine inteface that should be implemented by all tasklet engines.
@@ -33,8 +33,8 @@ public interface Executor
      * execute a task.
      *
      * @param task the configruation data for task
-     * @exception AntException if an error occurs
+     * @exception TaskException if an error occurs
      */
     void execute( Configuration task, TaskContext context )
-        throws AntException;
+        throws TaskException;
 }

@@ -15,7 +15,7 @@ import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.myrmidon.AntException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.components.deployer.TskDeployer;
 import org.apache.myrmidon.components.executor.Executor;
@@ -65,15 +65,15 @@ public abstract class AbstractResourceRegisterer
     }
 
     public void execute()
-        throws AntException
+        throws TaskException
     {
         if( null == m_name )
         {
-            throw new AntException( "Must specify name parameter" );
+            throw new TaskException( "Must specify name parameter" );
         }
         else if( null == m_lib && null == m_classname )
         {
-            throw new AntException( "Must specify classname if you don't specify " +
+            throw new TaskException( "Must specify classname if you don't specify " +
                                     "lib parameter" );
         }
 
@@ -85,12 +85,12 @@ public abstract class AbstractResourceRegisterer
         }
         catch( final RegistryException re )
         {
-            throw new AntException( "Error registering resource", re );
+            throw new TaskException( "Error registering resource", re );
         }
     }
 
     protected URL getURL( final String libName )
-        throws AntException
+        throws TaskException
     {
         if( null != libName )
         {
@@ -98,7 +98,7 @@ public abstract class AbstractResourceRegisterer
             try { return lib.toURL(); }
             catch( final MalformedURLException mue )
             {
-                throw new AntException( "Malformed task-lib parameter " + m_lib, mue );
+                throw new TaskException( "Malformed task-lib parameter " + m_lib, mue );
             }
         }
         else
@@ -108,5 +108,5 @@ public abstract class AbstractResourceRegisterer
     }
 
     protected abstract void registerResource( String name, String classname, URL url )
-        throws AntException, RegistryException;
+        throws TaskException, RegistryException;
 }
