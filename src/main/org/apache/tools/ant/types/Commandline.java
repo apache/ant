@@ -105,7 +105,7 @@ public class Commandline implements Cloneable {
     /**
      * Used for nested xml command line definitions.
      */
-    public class Argument {
+    public static class Argument {
 
         private String[] parts;
 

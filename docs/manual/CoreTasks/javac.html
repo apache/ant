@@ -244,6 +244,43 @@ href="../using.html#path">path-like structures</a> and can also be set via neste
 <code>&lt;bootclasspath&gt</code> and
 <code>&lt;extdirs&gt</code> elements, respectively.</p>
 
+<h4>compilerarg</h4>
+
+<p>You can specify additional command line arguments for the compiler
+with nested <code>&lt;compilerarg&gt;</code> elements.  These elements
+are specified like <a href="../using.html#arg">Command-line
+Arguments</a> but have an additional attribute that can be used to
+enable arguments only if a given compiler implementation will be
+used.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">value</td> 
+    <td align="center" rowspan="4">See <a href="../using.html#arg">here</a></td>
+    <td align="center" rowspan="4">Exactly one of these.</td>
+  </tr>
+  <tr>
+    <td valign="top">line</td> 
+  </tr>
+  <tr>
+    <td valign="top">file</td> 
+  </tr>
+  <tr>
+    <td valign="top">path</td> 
+  </tr>
+  <tr>
+    <td valign="top">implementation</td> 
+    <td align="center">Only use this argument if the chosen
+      implementation matches this attribute.  Possible choices are the
+      same as those of the build.compiler property.</td>
+    <td align="center">No.</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;

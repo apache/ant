@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.GlobPatternMapper;
@@ -66,6 +67,8 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Task to compile Java source files. This task can take the following
@@ -124,6 +127,7 @@ public class Javac extends MatchingTask {
     private boolean nowarn = false;
     private String memoryInitialSize;
     private String memoryMaximumSize;
+    private Vector implementationSpecificArgs = new Vector();
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
@@ -504,6 +508,36 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Adds an implementation specific command line argument.
+     */
+    public ImplementationSpecificArgument createCompilerArg() {
+        ImplementationSpecificArgument arg = 
+            new ImplementationSpecificArgument();
+        implementationSpecificArgs.addElement(arg);
+        return arg;
+    }
+
+    /**
+     * Get the additional implementation specific command line arguments.
+     * @return array of command line arguments, guaranteed to be non-null.
+     */
+    public String[] getCurrentCompilerArgs() {
+        Vector args = new Vector();
+        for (Enumeration enum = implementationSpecificArgs.elements(); 
+             enum.hasMoreElements();
+             ) {
+            String[] curr = 
+                ((ImplementationSpecificArgument) enum.nextElement()).getParts();
+            for (int i=0; i<curr.length; i++) {
+                args.addElement(curr[i]);
+            }
+        }
+        String[] res = new String[args.size()];
+        args.copyInto(res);
+        return res;
+    }
+
+    /**
      * Executes the task.
      */
     public void execute() throws BuildException {
@@ -539,32 +573,7 @@ public class Javac extends MatchingTask {
 
         // compile the source files
 
-        String compiler = project.getProperty("build.compiler");
-
-        if (!"false".equals(fork)) {
-            if (compiler != null) {
-                if (isJdkCompiler(compiler)) {
-                    log("Since fork is true, ignoring build.compiler setting.",
-                        Project.MSG_WARN);
-                    compiler = "extJavac";
-                }
-                else {
-                    log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
-                }
-            }
-            else {
-                compiler = "extJavac";
-            }
-        }
-
-        if (compiler == null) {
-            if (Project.getJavaVersion() != Project.JAVA_1_1 &&
-                Project.getJavaVersion() != Project.JAVA_1_2) {
-                compiler = "modern";
-            } else {
-                compiler = "classic";
-            }
-        }
+        String compiler = determineCompiler();
 
         if (compileList.length > 0) {
 
@@ -653,4 +662,57 @@ public class Javac extends MatchingTask {
 	}
     }
     
+    private String determineCompiler() {
+        String compiler = project.getProperty("build.compiler");
+
+        if (!"false".equals(fork)) {
+            if (compiler != null) {
+                if (isJdkCompiler(compiler)) {
+                    log("Since fork is true, ignoring build.compiler setting.",
+                        Project.MSG_WARN);
+                    compiler = "extJavac";
+                }
+                else {
+                    log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
+                }
+            }
+            else {
+                compiler = "extJavac";
+            }
+        }
+
+        if (compiler == null) {
+            if (Project.getJavaVersion() != Project.JAVA_1_1 &&
+                Project.getJavaVersion() != Project.JAVA_1_2) {
+                compiler = "modern";
+            } else {
+                compiler = "classic";
+            }
+        }
+        return compiler;
+    }
+
+    /**
+     * Adds an "implementation" attribute to Commandline$Attribute
+     * used to filter command line attributes based on the current
+     * implementation.
+     */
+    public class ImplementationSpecificArgument
+        extends Commandline.Argument {
+
+        private String impl;
+
+        public void setImplementation(String impl) {
+            this.impl = impl;
+        }
+
+        public String[] getParts() {
+            if (impl == null || impl.equals(determineCompiler())) {
+                return super.getParts();
+            } else {
+                return new String[0];
+            }
+        }
+    }
+
 }

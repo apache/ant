@@ -280,6 +280,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (verbose) {
             cmd.createArgument().setValue("-verbose");
         }
+
+        addCurrentCompilerArgs(cmd);
+
         return cmd;
     }
 
@@ -432,6 +435,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             fs.setIncludes("*");
             classpath.addFileset(fs);
         }
+    }
+
+    /**
+     * Adds the command line arguments specifc to the current implementation.
+     */
+    protected void addCurrentCompilerArgs(Commandline cmd) {
+        cmd.addArguments(getJavac().getCurrentCompilerArgs());
     }
 
 }

@@ -136,6 +136,9 @@ public class Gcj extends DefaultCompilerAdapter {
          *  gcj should be set for generate class.
          */
         cmd.createArgument().setValue("-C");
+
+        addCurrentCompilerArgs(cmd);
+
         return cmd;
     }
 }

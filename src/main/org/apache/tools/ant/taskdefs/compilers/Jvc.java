@@ -130,6 +130,8 @@ public class Jvc extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("/verbose");
         }
 
+        addCurrentCompilerArgs(cmd);
+
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 

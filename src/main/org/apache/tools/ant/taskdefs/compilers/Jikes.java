@@ -210,6 +210,8 @@ public class Jikes extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("+F");
         }
 
+        addCurrentCompilerArgs(cmd);
+
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 

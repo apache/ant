@@ -156,6 +156,8 @@ public class Kjc extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("-verbose");
         }
 
+        addCurrentCompilerArgs(cmd);
+
         logAndAddFilesToCompile(cmd);
         return cmd;
     }
