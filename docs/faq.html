@@ -336,6 +336,12 @@
                 <li><a href="#1.5.2-zip-broken">
   <code>&lt;zip&gt;</code> is broken in Ant 1.5.2.
       </a></li>
+                <li><a href="#unknownelement.taskcontainer">
+  
+        Why do my custom task containers see Unknown Elements in Ant 1.6
+        - they worked in Ant 1.5?
+      
+      </a></li>
             </ul>
     
       <h3 class="section">Answers</h3>
@@ -1538,6 +1544,55 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         17871</a> and <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18403">Bug
         18403</a>.  All of them are supposed to be fixed with Ant
         1.5.3 (and only 18403 should exist in 1.5.3beta1).</p>
+                    <p class="faq">
+      <a name="unknownelement.taskcontainer"></a>
+      
+        Why do my custom task containers see Unknown Elements in Ant 1.6
+        - they worked in Ant 1.5?
+      
+    </p>
+                  <p>
+          The objects added in TaskContainer.addTask(Task task)
+          have changed from  Tasks to UnknownElements.
+        </p>
+                        <p>
+          There was a number of valid reasons for this change. But the backward
+          compatibility problems were not noticied until after Ant 1.6.0 was
+          released.
+        </p>
+                        <p>
+          Your container class will need to be modified to check if the Task
+          is an UnknownElement and call perform on it to
+          convert it to a Task and to execute it.
+          (see apache.tools.ant.taskdefs.Sequential)
+        </p>
+                        <p>
+          If you want to do more processing on the task,
+          you need to use the techniques in apache.tools.ant.taskdefs.Antlib#execute()
+          This does make use of one 1.6 method call (UE#getRealObject()),
+          you need to use UE#getTask() instread - this will
+          return null for non tasks (types like fileset id=x).
+        </p>
+                        <p>
+          So.. interate over the tasks, if they are UEs, convert them to
+          tasks, using UE#maybeConfigure and UE#getTask()
+        </p>
+                        <pre class="code">
+        for (Iterator i = tasks.iterator(); i.hasNext();) {
+           Task t = (Task) i.next();
+           if (t instanceof UnknownElement) {
+              ((UnknownElement) t).maybeConfigure();
+              t = ((UnknownElement) t).getTask();
+              if (t == null) {
+                  continue;
+              }
+           }
+           // .... original Custom code
+        }
+        </pre>
+                        <p>
+          This approach should work for ant1.5 and ant1.6.
+        </p>
                     </div>
   </div>
 
