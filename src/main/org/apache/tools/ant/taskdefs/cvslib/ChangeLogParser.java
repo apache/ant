@@ -162,7 +162,6 @@ class ChangeLogParser
             //so we can save it
             final int end = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring( 0, end );
-            m_comment = "<![CDATA[" + m_comment + "]]>";
             saveEntry();
             m_status = GET_FILE;
         }
@@ -170,7 +169,6 @@ class ChangeLogParser
         {
             final int end = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring( 0, end );
-            m_comment = "<![CDATA[" + m_comment + "]]>";
             m_status = GET_PREVIOUS_REV;
         }
         else
@@ -228,7 +226,7 @@ class ChangeLogParser
 
             if( m_userList.containsKey( m_author ) )
             {
-                m_author = "<![CDATA[" + m_userList.getProperty( m_author ) + "]]>";
+                m_author = m_userList.getProperty( m_author );
             }
 
             m_status = GET_COMMENT;
