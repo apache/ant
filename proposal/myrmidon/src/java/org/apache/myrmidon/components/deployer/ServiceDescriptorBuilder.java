@@ -45,9 +45,21 @@ class ServiceDescriptorBuilder
                 throw new DeploymentException( message );
             }
 
-            // TODO - populate the descriptor
+            // Build the descriptor
+            final ServiceDescriptor descriptor = new ServiceDescriptor( url );
 
-            return new ServiceDescriptor( url );
+            // Add the service definitions
+            final Configuration[] elements = config.getChildren();
+            for( int i = 0; i < elements.length; i++ )
+            {
+                final Configuration element = elements[ i ];
+                final String roleShorthand = element.getName();
+                final String factoryClassName = element.getAttribute( "factory" );
+                final ServiceDefinition definition = new ServiceDefinition( roleShorthand, factoryClassName, config );
+                descriptor.addDefinition( definition );
+            }
+
+            return descriptor;
         }
         catch( Exception e )
         {

@@ -136,10 +136,18 @@ class Deployment
     public void deployAll()
         throws DeploymentException
     {
+        // Deploy types
         for( int i = 0; i < m_descriptors.length; i++ )
         {
             TypeDescriptor descriptor = m_descriptors[ i ];
             deployTypes( descriptor );
+        }
+
+        // Deploy services
+        for( int i = 0; i < m_services.length; i++ )
+        {
+            final ServiceDescriptor descriptor = m_services[ i ];
+            deployServices( descriptor );
         }
     }
 
@@ -295,4 +303,30 @@ class Deployment
         }
     }
 
+    /**
+     * Deploys all services from a typelib descriptor.
+     */
+    private void deployServices( final ServiceDescriptor descriptor )
+        throws DeploymentException
+    {
+
+        try
+        {
+            final String message = REZ.getString( "url-deploy-services.notice", descriptor.getUrl() );
+            getLogger().info( message );
+
+            // Deploy the services
+            final ServiceDefinition[] definitions = descriptor.getDefinitions();
+            for( int i = 0; i < definitions.length; i++ )
+            {
+                final ServiceDefinition definition = definitions[ i ];
+                m_deployer.deployService( this, definition );
+            }
+        }
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "deploy-services.error", descriptor.getUrl() );
+            throw new DeploymentException( message, e );
+        }
+    }
 }

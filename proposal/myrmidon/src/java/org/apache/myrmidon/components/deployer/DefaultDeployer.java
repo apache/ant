@@ -25,6 +25,8 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.service.ServiceFactory;
+import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -50,6 +52,7 @@ public class DefaultDeployer
 
     /** Map from ClassLoader to the deployer for that class loader. */
     private final Map m_classLoaderDeployers = new HashMap();
+    private ServiceManager m_ServiceManager;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -64,6 +67,7 @@ public class DefaultDeployer
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
         m_classLoaderManager = (ClassLoaderManager)componentManager.lookup( ClassLoaderManager.ROLE );
+        m_ServiceManager = (ServiceManager)componentManager.lookup( ServiceManager.ROLE );
     }
 
     /**
@@ -136,6 +140,21 @@ public class DefaultDeployer
     }
 
     /**
+     * Deploys a service.
+     */
+    public void deployService( final Deployment deployment,
+                               final ServiceDefinition definition )
+        throws Exception
+    {
+        // Determine the service interface class name
+        String serviceTypeName = getRoleForName( definition.getRoleShorthand() );
+
+        // Register the service factory
+        final String factoryClassName = definition.getFactoryClass();
+        handleType( deployment, ServiceFactory.class, serviceTypeName, factoryClassName );
+    }
+
+    /**
      * Handles a type definition.
      */
     public void deployType( final Deployment deployment,
@@ -187,7 +206,16 @@ public class DefaultDeployer
             }
 
             // Deploy general-purpose type
-            handleType( deployment, roleShorthand, typeName, className );
+            final String role = getRoleForName( roleShorthand );
+            final Class roleType = deployment.getClassLoader().loadClass( role );
+            handleType( deployment, roleType, typeName, className );
+
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message =
+                    REZ.getString( "register-type.notice", roleShorthand, typeName );
+                getLogger().debug( message );
+            }
         }
     }
 
@@ -195,24 +223,15 @@ public class DefaultDeployer
      * Handles a type definition.
      */
     private void handleType( final Deployment deployment,
-                             final String roleShorthand,
+                             final Class roleType,
                              final String typeName,
                              final String className )
         throws Exception
     {
         // TODO - detect duplicates
-        final String role = getRoleForName( roleShorthand );
-        final Class roleType = deployment.getClassLoader().loadClass( role );
         final DefaultTypeFactory factory = deployment.getFactory( roleType );
         factory.addNameClassMapping( typeName, className );
         m_typeManager.registerType( roleType, typeName, factory );
-
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message =
-                REZ.getString( "register-type.notice", roleShorthand, typeName );
-            getLogger().debug( message );
-        }
     }
 
     /**
@@ -270,5 +289,4 @@ public class DefaultDeployer
 
         return role;
     }
-
 }

@@ -38,6 +38,7 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
@@ -245,6 +246,7 @@ public class DefaultEmbeddor
         createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
         createComponent( ClassLoaderManager.class, PREFIX + "deployer.DefaultClassLoaderManager" );
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
+        createComponent( ServiceManager.class, PREFIX + "service.DefaultServiceManager" );
     }
 
     /**
