@@ -55,12 +55,9 @@ package org.apache.tools.ant.taskdefs.optional.rjunit;
 
 import java.util.Enumeration;
 
-import junit.runner.TestCollector;
-
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * A test element where tests files are specified by include/exclude
@@ -74,18 +71,15 @@ import org.apache.tools.ant.ProjectComponent;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class BatchTestElement extends ProjectComponent implements TestCollector {
+public class BatchTestElement extends BaseTestElement {
 
     private ClasspathTestCollector collector = new ClasspathTestCollector();
 
-    public void setProject(Project p){
-        collector.setProject(p);
-        super.setProject(p);
-    }
-
 // Test collector implementation
 
-    public Enumeration collectTests() {
+    public Enumeration getTests() {
+        final Project project = getProject();
+        collector.setProject(project);
         return collector.collectTests();
     }
 
@@ -95,7 +89,7 @@ public class BatchTestElement extends ProjectComponent implements TestCollector 
         collector.setPath(path);
     }
 
-    public Path getPath(){
+    public Path getPath() {
         return collector.getPath();
     }
 

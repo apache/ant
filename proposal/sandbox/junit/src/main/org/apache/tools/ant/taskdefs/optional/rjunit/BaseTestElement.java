@@ -55,25 +55,60 @@ package org.apache.tools.ant.taskdefs.optional.rjunit;
 
 import java.util.Enumeration;
 
+import junit.runner.TestCollector;
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
+
 /**
- * A simple test element.
+ * Base test implementation that implements the if/unless logic.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class TestElement extends BaseTestElement {
+public abstract class BaseTestElement
+        extends ProjectComponent implements TestCollector {
 
-    /** classname of JUnit test */
-    private String name;
+    /** run the test only if this property is present */
+    private String ifProperty;
 
-//@fixme, a path is needed for a test.
+    /** run the test unless this property is present */
+    private String unlessProperty;
 
-    public Enumeration getTests() {
-        return new ArrayEnumeration(new String[]{name});
+    public final Enumeration collectTests() {
+        if (shouldRun()) {
+            return getTests();
+        }
+        return ArrayEnumeration.NULL_ENUMERATION;
     }
 
-// Ant bean setters
+    public final void setIf(final String value) {
+        ifProperty = value;
+    }
 
-    public void setName(String value) {
-        this.name = value;
+    public final void setUnless(final String value) {
+        unlessProperty = value;
+    }
+
+    /**
+     * Implementation of the test collection process
+     * @return the enumeration of fully qualified classname representing
+     * a JUnit Test.
+     */
+    protected abstract Enumeration getTests();
+
+    /**
+     * check whether this test should be run or not.
+     * @return whether or not the test should run based on
+     * the presence of <tt>if</tt> and <tt>unless</tt> properties.
+     * @see #setIf(String)
+     * @see #setUnless(String)
+     */
+    protected boolean shouldRun() {
+        final Project project = getProject();
+        if ((project.getProperty(ifProperty) == null) ||
+                (project.getProperty(unlessProperty) != null)) {
+            return false;
+        }
+        return true;
     }
 }

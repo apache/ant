@@ -62,45 +62,50 @@ import java.util.NoSuchElementException;
  */
 class ArrayEnumeration implements Enumeration {
 
-        /** object array */
-        private Object[] array;
+    /** convenient null enumeration */
+    public final static Enumeration NULL_ENUMERATION =
+            new ArrayEnumeration(new Object[0]);
 
-        /** current index */
-        private int pos;
+    /** object array */
+    private Object[] array;
 
-        /**
-         * Initialize a new enumeration that wraps an array.
-         * @param       array   the array of object to enumerate.
-         */
-        public ArrayEnumeration(Object[] array){
-                this.array = array;
-                this.pos = 0;
-        }
-        /**
-         * Tests if this enumeration contains more elements.
-         *
-         * @return  <code>true</code> if and only if this enumeration object
-         *           contains at least one more element to provide;
-         *          <code>false</code> otherwise.
-         */
-        public boolean hasMoreElements() {
-                return (pos < array.length);
-        }
+    /** current index */
+    private int pos;
 
-        /**
-         * Returns the next element of this enumeration if this enumeration
-         * object has at least one more element to provide.
-         *
-         * @return     the next element of this enumeration.
-         * @throws  NoSuchElementException  if no more elements exist.
-         */
-        public Object nextElement() throws NoSuchElementException {
-                if (hasMoreElements()) {
-                        Object o = array[pos];
-                        pos++;
-                        return o;
-                }
-                throw new NoSuchElementException();
+    /**
+     * Initialize a new enumeration that wraps an array.
+     * @param       array   the array of object to enumerate.
+     */
+    public ArrayEnumeration(Object[] array) {
+        this.array = array;
+        this.pos = 0;
+    }
+
+    /**
+     * Tests if this enumeration contains more elements.
+     *
+     * @return  <code>true</code> if and only if this enumeration object
+     *           contains at least one more element to provide;
+     *          <code>false</code> otherwise.
+     */
+    public boolean hasMoreElements() {
+        return (pos < array.length);
+    }
+
+    /**
+     * Returns the next element of this enumeration if this enumeration
+     * object has at least one more element to provide.
+     *
+     * @return     the next element of this enumeration.
+     * @throws  NoSuchElementException  if no more elements exist.
+     */
+    public Object nextElement() throws NoSuchElementException {
+        if (hasMoreElements()) {
+            Object o = array[pos];
+            pos++;
+            return o;
         }
+        throw new NoSuchElementException();
+    }
 }
 
