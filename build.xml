@@ -68,7 +68,7 @@
     <available property="ejb.DDCreator.present" classname="weblogic.ejb.utils.DDCreator" />
     <available property="ejb.wls.present" classname="weblogic.Server" />
     <available property="junit.present" classname="junit.framework.TestCase" />
-    <available property="ftp.present" classname="com.oroinc.net.ftp.FTPClient" />
+    <available property="netcomp.present" classname="com.oroinc.net.ftp.FTPClient" />
     <available property="starteam.present" classname="com.starbase.util.Platform" />
     <available property="antlr.present" classname="antlr.Tool" />
     <available property="vaj.present" classname="com.ibm.ivj.util.base.Workspace" />
@@ -106,7 +106,7 @@
       <exclude name="**/EjbJar.java" unless="jdk1.2+" />
       <exclude name="**/*DeploymentTool.java" unless="jdk1.2+" />
       <exclude name="**/junit/*" unless="junit.present" />
-      <exclude name="**/FTP*.java" unless="ftp.present" />
+      <exclude name="**/net/*.java" unless="netcomp.present" />
       <exclude name="**/AntStarTeam*.java" unless="starteam.present" />
       <exclude name="**/ANTLR.java" unless="antlr.present" />
       <exclude name="**/ide/VAJ*.java" unless="vaj.present" />
