@@ -7,6 +7,8 @@
     <echo file="result/append.txt" message="this-should-be-the-last-line${line.separator}"/>
     <copy file="input/head-tail.test" tofile="input/concatfilter.test"/>
     <fixcrlf srcDir="input" includes="concatfilter.test"/>
+    <!-- to be consistent on MacOS X.  fixcrlf uses CR while line.sep is LF -->
+    <fixcrlf srcDir="result" includes="append.txt,prepend.txt"/>
   </target>
 
   <target name="cleanup">
