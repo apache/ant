@@ -1,0 +1,6 @@
+This /used/ to be the home of Antidote, the GUI for Ant. It has moved
+(or rather, graduate) to the cvs module jakarta-ant-antidote, and must
+be retrieved separately from Ant, but can be found in the same place you found
+source version of Ant.
+
+-- The Antidote Team --
