@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,18 +55,24 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Vector;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * ZipScanner accesses the pattern matching algorithm in DirectoryScanner,
  * which are protected methods that can only be accessed by subclassing.
  *
  * This implementation of FileScanner defines getIncludedFiles to return
- * only the Zip File which is being scanned, not the matching Zip entries.
- * Arguably, it should return the matching entries, however this would
- * complicate existing code which assumes that FileScanners return a
- * set of file system files that can be accessed directly.
- * 
+ * the matching Zip entries.
+ *
  * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
  */
 public class ZipScanner extends DirectoryScanner {
@@ -75,35 +81,84 @@ public class ZipScanner extends DirectoryScanner {
      * The zip file which should be scanned.
      */
     protected File srcFile;
+    /**
+     *  The current task, used to report errors, ...
+     */
+    private Task task;
+    /**
+     * to record the last scanned zip file with its modification date
+     */
+    private Resource lastScannedResource;
+    /**
+     * record list of all zip entries
+     */
+    private Vector myentries;
 
     /**
-     * Sets the srcFile for scanning. This is the jar or zip file that is scanned
-     * for matching entries.
+     * Sets the srcFile for scanning. This is the jar or zip file that
+     * is scanned for matching entries.
      *
      * @param srcFile the (non-null) zip file name for scanning
      */
     public void setSrc(File srcFile) {
         this.srcFile = srcFile;
     }
-
     /**
-     * Returns the zip file itself, not the matching entries within the zip file.
-     * This keeps the uptodate test in the Zip task simple; otherwise we'd need
-     * to treat zip filesets specially.
+     * Sets the current task. This is used to provide proper logging
+     * for exceptions
      *
-     * @return the source file from which entries will be extracted.
+     * @param task the current task
+     *
+     * @since Ant 1.5.2
      */
-    public String[] getIncludedFiles() {
-        String[] result = new String[1];
-        result[0] = srcFile.getAbsolutePath();
-        return result;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     /**
-     * Returns an empty list of directories to create.
+     * Returns the names of the files which matched at least one of the
+     * include patterns and none of the exclude patterns.
+     * The names are relative to the base directory.
+     *
+     * @return the names of the files which matched at least one of the
+     *         include patterns and none of the exclude patterns.
+     */
+    public String[] getIncludedFiles() {
+        Vector myvector = new Vector();
+        // first check if the archive needs to be scanned again
+        scanme();
+        for (int counter = 0; counter < myentries.size(); counter++) {
+            Resource myresource= (Resource) myentries.elementAt(counter);
+            if (!myresource.isDirectory() && match(myresource.getName())) {
+                myvector.addElement(myresource.getName());
+            }
+        }
+        String[] files = new String[myvector.size()];
+        myvector.copyInto(files);
+        return files;
+    }
+
+    /**
+     * Returns the names of the directories which matched at least one of the
+     * include patterns and none of the exclude patterns.
+     * The names are relative to the base directory.
+     *
+     * @return the names of the directories which matched at least one of the
+     * include patterns and none of the exclude patterns.
      */
     public String[] getIncludedDirectories() {
-        return new String[0];
+        Vector myvector=new Vector();
+        // first check if the archive needs to be scanned again
+        scanme();
+        for (int counter = 0; counter < myentries.size(); counter++) {
+            Resource myresource = (Resource) myentries.elementAt(counter);
+            if (myresource.isDirectory() && match(myresource.getName())) {
+                myvector.addElement(myresource.getName());
+            }
+        }
+        String[] files = new String[myvector.size()];
+        myvector.copyInto(files);
+        return files;
     }
 
     /**
@@ -135,4 +190,164 @@ public class ZipScanner extends DirectoryScanner {
         return isIncluded(vpath) && !isExcluded(vpath);
     }
 
+    /**
+     * Returns the resources of the files which matched at least one of the
+     * include patterns and none of the exclude patterns.
+     * The names are relative to the base directory.
+     *
+     * @return resource information for the files which matched at
+     * least one of the include patterns and none of the exclude
+     * patterns.
+     *
+     * @since Ant 1.5.2
+     */
+    public Resource[] getIncludedFileResources() {
+        Vector myvector = new Vector();
+        // first check if the archive needs to be scanned again
+        scanme();
+        for (int counter = 0; counter < myentries.size(); counter++) {
+             Resource myresource = (Resource) myentries.elementAt(counter);
+             if (!myresource.isDirectory() && match(myresource.getName())) {
+                 myvector.addElement(myresource.clone());
+             }
+         }
+         Resource[] resources = new Resource[myvector.size()];
+         myvector.copyInto(resources);
+         return resources;
+    }
+
+    /**
+     * Returns the resources of the files which matched at least one of the
+     * include patterns and none of the exclude patterns.
+     * The names are relative to the base directory.
+     *
+     * @return resource information for the files which matched at
+     * least one of the include patterns and none of the exclude
+     * patterns.
+     *
+     * @since Ant 1.5.2
+     */
+    public Resource[] getIncludedDirectoryResources() {
+        Vector myvector = new Vector();
+         // first check if the archive needs to be scanned again
+         scanme();
+         for (int counter = 0; counter < myentries.size(); counter++) {
+             Resource myresource = (Resource) myentries.elementAt(counter);
+             if (myresource.isDirectory() && match(myresource.getName())) {
+                 myvector.add(myresource.clone());
+             }
+         }
+         Resource[] resources = new Resource[myvector.size()];
+         myvector.copyInto(resources);
+         return resources;
+    }
+
+    /**
+     * @param name path name of the file sought in the archive
+     *
+     * @since Ant 1.5.2
+     */
+    public Resource getResource(String name) {
+        // first check if the archive needs to be scanned again
+        scanme();
+        for (int counter = 0; counter < myentries.size(); counter++) {
+            Resource myresource=(Resource)myentries.elementAt(counter);
+            if (myresource.getName().equals(name)) {
+                return myresource;
+            }
+        }
+        return new Resource(name);
+    }
+
+    /**
+     * if the datetime of the archive did not change since
+     * lastScannedResource was initialized returns immediately else if
+     * the archive has not been scanned yet, then all the zip entries
+     * are put into the vector myentries as a vector of the resource
+     * type
+     */
+    private void scanme() {
+        Resource thisresource = new Resource(srcFile.getAbsolutePath(),
+                                             srcFile.exists(),
+                                             srcFile.lastModified());
+
+        // spare scanning again and again
+        if (lastScannedResource != null 
+            && lastScannedResource.getName().equals(thisresource.getName())
+            && lastScannedResource.getLastModified() 
+               == thisresource.getLastModified()) {
+            return;
+        }
+
+        Vector vResult = new Vector();
+        if (task != null) {
+            task.log("checking zip entries: " + srcFile, Project.MSG_VERBOSE);
+        }
+
+        ZipEntry entry = null;
+        ZipInputStream in = null;
+        myentries = new Vector();
+        try {
+            try {
+                in = new ZipInputStream(new FileInputStream(srcFile));
+                if (task != null) {
+                    task.log("opening input stream from " + srcFile, 
+                             Project.MSG_DEBUG);
+                }
+            } catch (IOException ex) {
+                // XXX - throw a BuildException instead ??
+                if (task != null) {
+                    task.log("problem opening "+srcFile,Project.MSG_ERR);
+                }
+            }
+            
+            while (true) {
+                try {
+                    entry = in.getNextEntry();
+                    if (entry == null) {
+                        break;
+                    }
+                    myentries.add(new Resource(entry.getName(),
+                                               true,
+                                               entry.getTime(),
+                                               entry.isDirectory()));
+                    if (task != null) {
+                        task.log("adding entry " + entry.getName() + " from "
+                                 + srcFile, Project.MSG_DEBUG);
+                    }
+                    
+                } catch (ZipException ex) {
+                    // XXX - throw a BuildException instead ??
+                    if (task != null ) {
+                        task.log("problem reading " + srcFile,
+                                 Project.MSG_ERR);
+                    }
+
+                } catch (IOException e) {
+                    // XXX - throw a BuildException instead ??
+                    if (task != null) {
+                        task.log("problem reading zip entry from " + srcFile,
+                                 Project.MSG_ERR);
+                    }
+                }
+            }
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                    if (task != null) {
+                        task.log("closing input stream from " + srcFile,
+                                 Project.MSG_DEBUG);
+                    }
+                } catch (IOException ex) {
+                    if (task != null) {
+                        task.log("problem closing input stream from "
+                                 + srcFile, Project.MSG_ERR);
+                    }
+                }
+            }
+        }
+        // record data about the last scanned resource
+        lastScannedResource = thisresource;
+    }
 }

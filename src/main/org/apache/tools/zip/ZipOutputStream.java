@@ -653,7 +653,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
             |         (time.getDate() << 16)
             |         (time.getHours() << 11)
             |         (time.getMinutes() << 5)
-            |         (time.getSeconds() >> 1);
+            |         ((time.getSeconds() + 2) >> 1);
         
         byte[] result = new byte[4];
         result[0] = (byte) ((value & 0xFF));

@@ -57,6 +57,7 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
@@ -149,7 +150,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Magesh Umasankar
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
-public class DirectoryScanner implements FileScanner, SelectorScanner {
+public class DirectoryScanner implements ResourceScanner, SelectorScanner {
 
     /**
      * Patterns which should be excluded by default.
@@ -201,6 +202,11 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
      */
     protected Vector filesIncluded;
 
+    /**
+     * the same as filesIncluded, but in terms of Resource
+     */
+    private Vector filesIncludedR;
+
     /** The files which did not match any includes or selectors. */
     protected Vector filesNotIncluded;
 
@@ -214,6 +220,10 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
      *  and were selected.
      */
     protected Vector dirsIncluded;
+    /** The directories which matched at least one include and no excludes
+     *  and were selected, as resources
+     */
+    private Vector dirsIncludedR;
 
     /** The directories which were found and did not match any includes. */
     protected Vector dirsNotIncluded;
@@ -545,10 +555,12 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
         }
 
         filesIncluded    = new Vector();
+        filesIncludedR   = new Vector();
         filesNotIncluded = new Vector();
         filesExcluded    = new Vector();
         filesDeselected  = new Vector();
         dirsIncluded     = new Vector();
+        dirsIncludedR    = new Vector();
         dirsNotIncluded  = new Vector();
         dirsExcluded     = new Vector();
         dirsDeselected   = new Vector();
@@ -557,6 +569,10 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
             if (!isExcluded("")) {
                 if (isSelected("",basedir)) {
                     dirsIncluded.addElement("");
+                    dirsIncludedR.addElement(new Resource("", true, 
+                                                          basedir
+                                                          .lastModified(),
+                                                          true));
                 } else {
                     dirsDeselected.addElement("");
                 }
@@ -675,6 +691,11 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
                     if (!isExcluded(name)) {
                         if (isSelected(name,file)) {
                             dirsIncluded.addElement(name);
+                            dirsIncludedR.addElement(new Resource(name,
+                                                                  true,
+                                                                  file
+                                                                  .lastModified(),
+                                                                  true));
                             if (fast) {
                                 scandir(file, name + File.separator, fast);
                             }
@@ -708,6 +729,11 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
                     if (!isExcluded(name)) {
                         if (isSelected(name,file)) {
                             filesIncluded.addElement(name);
+                            filesIncludedR.addElement(new Resource(name,
+                                                                   true,
+                                                                   file
+                                                                   .lastModified(),
+                                                                   false));
                         } else {
                             everythingIncluded = false;
                             filesDeselected.addElement(name);
@@ -810,6 +836,26 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
         }
         return files;
     }
+    /**
+     * Returns the resources of the files which matched at least one
+     * of the include patterns and none of the exclude patterns.  The
+     * names are relative to the base directory.
+     *
+     * @return resource information for the files which matched at
+     * least one of the include patterns and none of the exclude
+     * patterns.
+     *
+     * @since Ant 1.5.2
+     */
+    public Resource[] getIncludedFileResources() {
+        int count = filesIncludedR.size();
+        Resource[] resources = new Resource[count];
+        for (int i = 0; i < count; i++) {
+            resources[i] = 
+                (Resource) ((Resource) filesIncludedR.elementAt(i)).clone();
+        }
+        return resources;
+    }
 
     /**
      * Returns the names of the files which matched none of the include
@@ -891,6 +937,25 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     }
 
     /**
+     * Returns the resource object for the directories which matched
+     * at least one of the include patterns and none of the exclude
+     * patterns.  The names are relative to the base directory.
+     *
+     * @return the names of the directories which matched at least one of the
+     * include patterns and none of the exclude patterns.
+     *
+     * @since Ant 1.5.2
+     */
+     public Resource[] getIncludedDirectoryResources() {
+         int count = dirsIncludedR.size();
+         Resource[] directories = new Resource[count];
+         for (int i = 0; i < count; i++) {
+             directories[i] = 
+                 (Resource) ((Resource) dirsIncludedR.elementAt(i)).clone();
+         }
+         return directories;
+     }
+    /**
      * Returns the names of the directories which matched none of the include
      * patterns. The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
@@ -968,4 +1033,21 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
         }
         excludes = newExcludes;
     }
+
+    /**
+     * @param name path name of the file relative to the dir attribute.
+     *
+     * @since Ant 1.5.2
+     */
+    public Resource getResource(String name) {
+        File f = null;
+        if (basedir != null) {
+            f = new File(basedir, name);
+        } else {
+            f = new File(name);
+        }            
+        return new Resource(name, f.exists(), f.lastModified(), 
+                            f.isDirectory());
+    }
+
 }

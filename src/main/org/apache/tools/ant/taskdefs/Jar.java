@@ -68,9 +68,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ResourceScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -521,7 +522,8 @@ public class Jar extends Zip {
      *         already); false if archive creation should proceed
      * @exception BuildException if it likes
      */
-    protected boolean isUpToDate(FileScanner[] scanners, File zipFile)
+    protected boolean isUpToDate(ResourceScanner[] scanners, 
+                                 FileSet[] fss, File zipFile)
         throws BuildException {
         // need to handle manifest as a special check
         if (configuredManifest != null || manifestFile == null) {
@@ -562,7 +564,7 @@ public class Jar extends Zip {
         } else if (manifestFile.lastModified() > zipFile.lastModified()) {
             return false;
         }
-        return super.isUpToDate(scanners, zipFile);
+        return super.isUpToDate(scanners, fss, zipFile);
     }
 
     protected boolean createEmptyZip(File zipFile) {
@@ -585,6 +587,7 @@ public class Jar extends Zip {
                 manifest = null;
                 configuredManifest = savedConfiguredManifest;
                 filesetManifest = null;
+                originalManifest = null;
             }
     }
 

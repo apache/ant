@@ -119,20 +119,20 @@ public class JarTest extends BuildFileTest {
                      jarModifiedDate, jarFile.lastModified());
     }
 
-    public void XtestRecreateWithoutUpdateAdditionalFiles() {
+    public void testRecreateWithoutUpdateAdditionalFiles() {
         testRecreate("test4", "testRecreateWithoutUpdateAdditionalFiles");
     }
 
-    public void XtestRecreateWithUpdateAdditionalFiles() {
+    public void testRecreateWithUpdateAdditionalFiles() {
         testRecreate("test4", "testRecreateWithUpdateAdditionalFiles");
     }
 
-    public void XtestRecreateWithoutUpdateNewerFile() {
+    public void testRecreateWithoutUpdateNewerFile() {
         testRecreate("testRecreateNewerFileSetup",
                      "testRecreateWithoutUpdateNewerFile");
     }
 
-    public void XtestRecreateWithUpdateNewerFile() {
+    public void testRecreateWithUpdateNewerFile() {
         testRecreate("testRecreateNewerFileSetup",
                      "testRecreateWithUpdateNewerFile");
     }

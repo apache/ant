@@ -19,6 +19,9 @@ Changes that could break older environments:
 
 * <xmlproperty> will no longer fail if the file to be loaded doesn't exist.
 
+* ZipScanner#getIncludedFiles will now return the names of the ZipEntries
+  that have been matched instead of the name of the archive.
+
 Fixed bugs:
 -----------
 * <translate> was not ignoring comment lines.

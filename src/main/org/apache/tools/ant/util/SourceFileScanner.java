@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,8 @@ import java.io.File;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.ResourceFactory;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
@@ -70,11 +72,12 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class SourceFileScanner {
+public class SourceFileScanner implements ResourceFactory {
 
     protected Task task;
 
     private FileUtils fileUtils;
+    private File destDir;     // base directory of the fileset
 
     /**
      * @param task The task we should log messages through
@@ -97,71 +100,26 @@ public class SourceFileScanner {
      */
     public String[] restrict(String[] files, File srcDir, File destDir,
                              FileNameMapper mapper) {
-
-        long now = (new java.util.Date()).getTime();
-        StringBuffer targetList = new StringBuffer();
-
-        /*
-          If we're on Windows, we have to munge the time up to 2 secs to
-          be able to check file modification times.
-          (Windows has a max resolution of two secs for modification times)
-          Actually this is a feature of the FAT file system, NTFS does
-          not have it, so if we could reliably passively test for an NTFS
-          file systems we could turn this off...
-        */
-        if (Os.isFamily("windows")) {
-            now += 2000;
-        }
-
+        // record destdir for later use in getResource
+        this.destDir = destDir;
         Vector v = new Vector();
         for (int i = 0; i < files.length; i++) {
-
-            String[] targets = mapper.mapFileName(files[i]);
-            if (targets == null || targets.length == 0) {
-                task.log(files[i] + " skipped - don\'t know how to handle it",
-                         Project.MSG_VERBOSE);
-                continue;
-            }
-
             File src = fileUtils.resolveFile(srcDir, files[i]);
-
-            if (src.lastModified() > now) {
-                task.log("Warning: " + files[i] + " modified in the future.", 
-                         Project.MSG_WARN);
-            }
-
-            boolean added = false;
-            targetList.setLength(0);
-            for (int j = 0; !added && j < targets.length; j++) {
-                File dest = fileUtils.resolveFile(destDir, targets[j]);
-                
-                if (!dest.exists()) {
-                    task.log(files[i] + " added as " + dest.getAbsolutePath()
-                        + " doesn\'t exist.", Project.MSG_VERBOSE);
-                    v.addElement(files[i]);
-                    added = true;
-                } else if (src.lastModified() > dest.lastModified()) {
-                    task.log(files[i] + " added as " + dest.getAbsolutePath()
-                        + " is outdated.", Project.MSG_VERBOSE);
-                    v.addElement(files[i]);
-                    added = true;
-                } else {
-                    if (targetList.length() > 0) {
-                        targetList.append(", ");
-                    }
-                    targetList.append(dest.getAbsolutePath());
-                }
-            }
-
-            if (!added) {
-                task.log(files[i] + " omitted as " + targetList.toString()
-                         + (targets.length == 1 ? " is" : " are ")
-                         + " up to date.", Project.MSG_VERBOSE);
-            }
-            
+            v.addElement(new Resource(files[i], src.exists(),
+                                      src.lastModified(), src.isDirectory()));
         }
-        String[] result = new String[v.size()];
-        v.copyInto(result);
+        Resource[] sourceresources= new Resource[v.size()];
+        v.copyInto(sourceresources);
+
+        // build the list of sources which are out of date with
+        // respect to the target
+        Resource[] outofdate = 
+            SourceSelector.selectOutOfDateSources(task, sourceresources,
+                                                  mapper, this);
+        String[] result = new String[outofdate.length];
+        for (int counter=0; counter < outofdate.length; counter++) {
+            result[counter] = outofdate[counter].getName();
+        }
         return result;
     }
 
@@ -179,4 +137,18 @@ public class SourceFileScanner {
         }
         return result;
     }
+
+    /**
+     * returns resource information for a file at destination
+     * @param name relative path of file at destination
+     * @return data concerning a file whose relative path to destDir is name
+     *
+     * @since Ant 1.5.2
+     */
+    public Resource getResource(String name) {
+        File src = fileUtils.resolveFile(destDir, name);
+        return new Resource(name, src.exists(), src.lastModified(),
+                            src.isDirectory());
+    }
 }
+

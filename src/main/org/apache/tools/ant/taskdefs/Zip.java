@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,18 +67,25 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ResourceScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
+import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.GlobPatternMapper;
+import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.MergingMapper;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.SourceSelector;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -93,9 +100,11 @@ import org.apache.tools.zip.ZipOutputStream;
  *
  * @ant.task category="packaging"
  */
-public class Zip extends MatchingTask {
+public class Zip extends MatchingTask implements ResourceFactory {
 
     protected File zipFile;
+    // use to scan own archive
+    private ZipScanner zs;
     private File baseDir;
     protected Hashtable entries = new Hashtable();
     private Vector groupfilesets = new Vector();
@@ -117,6 +126,7 @@ public class Zip extends MatchingTask {
 
     protected boolean doubleFilePass = false;
     protected boolean skipWriting = false;
+    private FileUtils fileUtils;
 
 
     /**
@@ -331,22 +341,28 @@ public class Zip extends MatchingTask {
 
         // Create the scanners to pass to isUpToDate().
         Vector dss = new Vector();
+        Vector vfss = new Vector();
         if (baseDir != null) {
             dss.addElement(getDirectoryScanner(baseDir));
+            FileSet fs = new FileSet();
+            fs.setDir(baseDir);
+            vfss.addElement(fs);
         }
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             dss.addElement (fs.getDirectoryScanner(getProject()));
+            vfss.addElement(fs);
         }
         int dssSize = dss.size();
-        FileScanner[] scanners = new FileScanner[dssSize];
+        ResourceScanner[] scanners = new ResourceScanner[dssSize];
         dss.copyInto(scanners);
-
+        FileSet [] fss = new FileSet[dssSize];
+        vfss.copyInto(fss);
         boolean success = false;
         try {
             // quick exit if the target is up to date
             // can also handle empty archives
-            if (isUpToDate(scanners, zipFile)) {
+            if (isUpToDate(scanners, fss, zipFile)) {
                 return;
             }
 
@@ -642,6 +658,15 @@ public class Zip extends MatchingTask {
         return true;
     }
 
+    public Resource getResource(String name) {
+        if (zs==null) {
+            zs=new ZipScanner();
+            // set the task of the zip scanner so that it can log properly
+            zs.setTask(this);
+            zs.setSrc(zipFile);
+        }
+        return zs.getResource(name);
+    }
 
     /**
      * Check whether the archive is up-to-date; and handle behavior
@@ -652,8 +677,17 @@ public class Zip extends MatchingTask {
      *         already); false if archive creation should proceed
      * @exception BuildException if it likes
      */
-    protected boolean isUpToDate(FileScanner[] scanners, File zipFile)
+    protected boolean isUpToDate(ResourceScanner[] scanners, 
+                                 FileSet[] fss, File zipFile)
         throws BuildException {
+        Resource[][] resourceNames = grabResources(scanners);
+        for (int counter = 0;counter < scanners.length; counter++){
+            for (int j=0; j < resourceNames[counter].length;j++) {
+                log("resource from scanner " + counter + " " + j + " name : "
+                    + resourceNames[counter][j].getName(), Project.MSG_DEBUG);
+            }
+        }
+
         String[][] fileNames = grabFileNames(scanners);
         File[] files = grabFiles(scanners, fileNames);
         if (files.length == 0) {
@@ -681,17 +715,39 @@ public class Zip extends MatchingTask {
                 return false;
             }
 
-            SourceFileScanner sfs = new SourceFileScanner(this);
-            MergingMapper mm = new MergingMapper();
-            mm.setTo(zipFile.getAbsolutePath());
             for (int i = 0; i < scanners.length; i++) {
-                if (sfs.restrict(fileNames[i], scanners[i].getBasedir(), null,
-                                 mm).length > 0) {
-                    return false;
+                boolean result=false;
+                FileNameMapper myMapper = new IdentityMapper();
+                if (fss[i] instanceof ZipFileSet) {
+                    ZipFileSet zfs = (ZipFileSet) fss[i];
+                    if (zfs.getFullpath() != null
+                        && !zfs.getFullpath().equals("") ) {
+                        // in this case all files from origin map to
+                        // the fullPath attribute of the zipfileset at
+                        // destination
+                        MergingMapper fm = new MergingMapper();
+                        fm.setTo(zfs.getFullpath());
+                        myMapper = fm;
+
+                    } else if (zfs.getPrefix() != null 
+                               && !zfs.getPrefix().equals("")) {
+                        GlobPatternMapper gm=new GlobPatternMapper();
+                        gm.setFrom("*");
+                        gm.setTo(zfs.getPrefix() + "*");
+                        myMapper = gm;
+                    }
+                }
+                Resource[] newerSources = 
+                    SourceSelector.selectOutOfDateSources(this,
+                                                          resourceNames[i],
+                                                          myMapper, this);
+                result = (newerSources.length == 0);
+                if (!result) {
+                    return result;
                 }
             }
-            return true;
         }
+        return true;
     }
 
     protected static File[] grabFiles(FileScanner[] scanners) {
@@ -720,6 +776,24 @@ public class Zip extends MatchingTask {
             result[i] = new String[files.length + dirs.length];
             System.arraycopy(files, 0, result[i], 0, files.length);
             System.arraycopy(dirs, 0, result[i], files.length, dirs.length);
+        }
+        return result;
+    }
+    /**
+     *
+     * @param scanners here are expected ResourceScanner arguments
+     * @return double dimensional array of resources
+     */
+    protected static Resource[][] grabResources(ResourceScanner[] scanners) {
+        Resource[][] result = new Resource[scanners.length][];
+        for (int i = 0; i < scanners.length; i++) {
+            Resource[] files = scanners[i].getIncludedFileResources();
+            Resource[] directories = 
+                scanners[i].getIncludedDirectoryResources();
+            result[i] = new Resource[files.length + directories.length];
+            System.arraycopy(files, 0, result[i], 0, files.length);
+            System.arraycopy(directories, 0, result[i], files.length, 
+                             directories.length);
         }
         return result;
     }
