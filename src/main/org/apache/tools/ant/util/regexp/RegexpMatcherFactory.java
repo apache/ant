@@ -90,7 +90,7 @@ public class RegexpMatcherFactory {
         if (p == null) {
             systemDefault = System.getProperty("ant.regexp.regexpimpl");
         } else {
-            systemDefault = (String) p.getProperties().get("ant.regexp.regexpimpl");
+            systemDefault = p.getProperty("ant.regexp.regexpimpl");
         }
         
         if (systemDefault != null) {
