@@ -179,6 +179,9 @@ Fixed bugs:
 * <translate> now translate tokens that are placed close together.
   Bugzilla Report 17297
 
+* Nested websphere element for ejbjar does not support spaces in file name.
+  Bugzilla Report 21298
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
