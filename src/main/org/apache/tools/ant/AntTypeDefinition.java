@@ -352,17 +352,13 @@ public class AntTypeDefinition {
         // is the same
         ClassLoader oldLoader = other.getClassLoader();
         ClassLoader newLoader = this.getClassLoader();
-        if (oldLoader != null
-            && newLoader != null
+        return
+            newLoader != null
+            && oldLoader != null
             && oldLoader instanceof AntClassLoader
             && newLoader instanceof AntClassLoader
             && ((AntClassLoader) oldLoader).getClasspath()
-            .equals(((AntClassLoader) newLoader).getClasspath())
-            ) {
-            return true;
-        } else {
-            return false;
-        }
+            .equals(((AntClassLoader) newLoader).getClasspath());
     }
 
     private String extractClassname(Class c) {

@@ -508,7 +508,7 @@ public class ProjectHelper {
         if (index == -1) {
             return componentName;
         }
-        return componentName.substring(index+1);
+        return componentName.substring(index + 1);
     }
 
     /**
