@@ -642,28 +642,29 @@ public class FTP
     protected void createParents(FTPClient ftp, String filename)
          throws IOException, BuildException {
 
-        String cwd = ftp.printWorkingDirectory();
+        File dir = new File(filename);
+        if (dirCache.contains(dir)) {
+            return;
+        }
+
         
         Vector parents = new Vector();
-        File dir = new File(filename);
         String dirname;
 
         while ((dirname = dir.getParent()) != null) {
-            dir = new File(dirname);
+            File checkDir = new File(dirname);
+            if (dirCache.contains(checkDir)) {
+                break;
+            }
+            dir = checkDir;
             parents.addElement(dir);
         }
 
         // find first non cached dir
         int i = parents.size() - 1;
-        while (i >= 0) {
-            dir = (File) parents.elementAt(i);
-            if (!dirCache.contains(dir)) {
-                break;
-            }
-            i--;
-        }
                 
         if (i >= 0) {
+            String cwd = ftp.printWorkingDirectory();
             String parent = dir.getParent();
             if (parent != null) {
                 if (!ftp.changeWorkingDirectory(parent)) {
