@@ -102,6 +102,14 @@ public class Description extends DataType {
         }
     }
 
+    /**
+     * return the descriptions from all the targets of
+     * a project.
+     *
+     * @param project the project to get the descriptions for.
+     * @return a string containing the concatenated descriptions of
+     *         the targets.
+     */
     public static String getDescription(Project project) {
         StringBuffer description = new StringBuffer();
         Vector targets = (Vector) project.getReference("ant.targets");
