@@ -571,7 +571,7 @@
     <condition property="apache-httpclient.present">
       <and>
         <available
-          classname="org.apache.apache-httpclient.HttpClient"
+          classname="org.apache.commons.httpclient.HttpClient"
           classpathref="classpath"/>
         <isset property="commons.logging.present"/>
       </and>
