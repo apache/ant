@@ -30,10 +30,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.CharacterIterator;
@@ -1121,6 +1119,7 @@ public class FileUtils {
      *
      * @param f the file to be created
      * @return true if the file did not exist already.
+     * @throws IOException on error
      * @since Ant 1.5
      */
     public boolean createNewFile(File f) throws IOException {
@@ -1138,6 +1137,7 @@ public class FileUtils {
      * @param name the name of the file to test.
      *
      * @return true if the file is a symbolic link.
+     * @throws IOException on error
      * @since Ant 1.5
      */
     public boolean isSymbolicLink(File parent, String name)
