@@ -197,7 +197,7 @@ public class CSharp extends DotnetCompile {
      *@return    The OutputFile Parameter to CSC
      */
     protected String getFileAlignParameter() {
-        if (fileAlign != 0) {
+        if (fileAlign != 0 && !"mcs".equals(getExecutable())) {
             return "/filealign:" + fileAlign;
         } else {
             return null;
