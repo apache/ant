@@ -15,7 +15,7 @@ Other changes:
 * A GUI Frontend: Antidote
 
 * New tasks: stylebook, propertyfile, depend, antlr, telnet, csc,
-  ilasm, transform, javah
+  ilasm, transform, javah, several clearcase tasks
 
 * Added output attribute to <java>.
 
