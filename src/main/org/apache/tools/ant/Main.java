@@ -740,6 +740,7 @@ public class Main {
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
         msg.append("  -propertyfile <name>   load all properties from file with -D" + lSep);
         msg.append("                         properties taking precedence" + lSep);
+        msg.append("  -inputhandler <class>  the class which will handle input requests" + lSep);
         msg.append("  -find <file>           search for buildfile towards the root of the" + lSep);
         msg.append("                         filesystem and use it" + lSep);
         System.out.println(msg.toString());
