@@ -131,8 +131,10 @@ public class CompilerAdapterFactory {
                                 + "classic compiler", Project.MSG_WARN);
                         return new Javac12();
                     } else {
-                        throw new BuildException("Unable to find a javac compiler;\n"
-                            + "com.sun.tools.javac.Main is not on the classpath.\n"
+                        throw new BuildException("Unable to find a javac " 
+                            + "compiler;\n"
+                            + "com.sun.tools.javac.Main is not on the " 
+                            + "classpath.\n"
                             + "Perhaps JAVA_HOME does not point to the JDK");
                     }
                 }

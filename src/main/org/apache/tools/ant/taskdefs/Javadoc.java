@@ -97,8 +97,10 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <CODE>System.exit()</CODE> which would break Ant functionality.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Patrick Chanezon <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Patrick Chanezon 
+ *         <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
@@ -1077,7 +1079,8 @@ public class Javadoc extends Task {
             // Ant javadoc task rules for group attribute:
             //   Args are comma-delimited.
             //   Each arg is 2 space-delimited strings.
-            //   E.g., group="XSLT_Packages org.apache.xalan.xslt*,XPath_Packages org.apache.xalan.xpath*"
+            //   E.g., group="XSLT_Packages org.apache.xalan.xslt*,
+            //                XPath_Packages org.apache.xalan.xpath*"
             if (group != null) {
                 StringTokenizer tok = new StringTokenizer(group, ",", false);
                 while (tok.hasMoreTokens()) {

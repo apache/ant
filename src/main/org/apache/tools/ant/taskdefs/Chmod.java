@@ -68,7 +68,8 @@ import org.apache.tools.ant.types.PatternSet;
  * Chmod equivalent for unix-like environments.
  *
  * @author costin@eng.sun.com
- * @author Mariusz Nowostawski (Marni) <a href="mailto:mnowostawski@infoscience.otago.ac.nz">mnowostawski@infoscience.otago.ac.nz</a>
+ * @author Mariusz Nowostawski (Marni) 
+ *         <a href="mailto:mnowostawski@infoscience.otago.ac.nz">mnowostawski@infoscience.otago.ac.nz</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
  * @since Ant 1.1
@@ -216,15 +217,18 @@ public class Chmod extends ExecuteOn {
 
 
     public void setExecutable(String e) {
-        throw new BuildException(taskType + " doesn\'t support the executable attribute", location);
+        throw new BuildException(taskType 
+            + " doesn\'t support the executable attribute", location);
     }
 
     public void setCommand(Commandline cmdl) {
-        throw new BuildException(taskType + " doesn\'t support the command attribute", location);
+        throw new BuildException(taskType 
+            + " doesn\'t support the command attribute", location);
     }
 
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(taskType + " doesn\'t support the skipemptyfileset attribute", location);
+        throw new BuildException(taskType 
+            + " doesn\'t support the skipemptyfileset attribute", location);
     }
 
     protected boolean isValidOs() {

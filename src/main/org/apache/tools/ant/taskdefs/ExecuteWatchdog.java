@@ -97,7 +97,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /**
      * Creates a new watchdog with a given timeout.
      *
-     * @param timeout the timeout for the process in milliseconds. It must be greather than 0.
+     * @param timeout the timeout for the process in milliseconds. 
+     * It must be greather than 0.
      */
     public ExecuteWatchdog(long timeout) {
         watchdog = new Watchdog(timeout);
@@ -108,7 +109,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * Watches the given process and terminates it, if it runs for too long.
      * All information from the previous run are reset.
      * @param process the process to monitor. It cannot be <tt>null</tt>
-     * @throws IllegalStateException    thrown if a process is still being monitored.
+     * @throws IllegalStateException if a process is still being monitored.
      */
     public synchronized void start(Process process) {
         if (process == null) {
@@ -125,7 +126,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
     }
 
     /**
-     * Stops the watcher. It will notify all threads possibly waiting on this object.
+     * Stops the watcher. It will notify all threads possibly waiting 
+     * on this object.
      */
     public synchronized void stop() {
         watchdog.stop();
@@ -166,12 +168,12 @@ public class ExecuteWatchdog implements TimeoutObserver {
     }
 
     /**
-     * This method will rethrow the exception that was possibly caught during the
-     * run of the process. It will only remains valid once the process has been
-     * terminated either by 'error', timeout or manual intervention. Information
-     * will be discarded once a new process is ran.
-     * @throws  BuildException  a wrapped exception over the one that was silently
-     * swallowed and stored during the process run.
+     * This method will rethrow the exception that was possibly caught during 
+     * the run of the process. It will only remains valid once the process has 
+     * been terminated either by 'error', timeout or manual intervention. 
+     * Information will be discarded once a new process is ran.
+     * @throws  BuildException  a wrapped exception over the one that was 
+     * silently swallowed and stored during the process run.
      */
     public void checkException() throws BuildException {
         if (caught != null) {
@@ -182,7 +184,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * Indicates whether or not the watchdog is still monitoring the process.
-     * @return  <tt>true</tt> if the process is still running, otherwise <tt>false</tt>.
+     * @return  <tt>true</tt> if the process is still running, otherwise 
+     *          <tt>false</tt>.
      */
     public boolean isWatching(){
         return watch;
@@ -190,7 +193,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * Indicates whether the last process run was killed on timeout or not.
-     * @return  <tt>true</tt> if the process was killed otherwise <tt>false</tt>.
+     * @return  <tt>true</tt> if the process was killed otherwise 
+     *          <tt>false</tt>.
      */
     public boolean killedProcess(){
         return killedProcess;

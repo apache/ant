@@ -120,8 +120,10 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     protected JikesOutputParser(Task task, boolean emacsMode) {
         super();
 
-        System.err.println("As of Ant 1.2 released in October 2000, the JikesOutputParser class");
-        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("As of Ant 1.2 released in October 2000, the " 
+            + "JikesOutputParser class");
+        System.err.println("is considered to be dead code by the Ant " 
+            + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
 
         this.task = task;

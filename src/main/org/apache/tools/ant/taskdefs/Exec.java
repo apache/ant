@@ -76,7 +76,8 @@ import java.io.InputStreamReader;
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
  *
- * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute} instead.
+ * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute} 
+ *             instead.
  */
 public class Exec extends Task {
     private String os;
@@ -89,8 +90,10 @@ public class Exec extends Task {
     private static final int BUFFER_SIZE = 512;
 
     public Exec() {
-        System.err.println("As of Ant 1.2 released in October 2000, the Exec class");
-        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("As of Ant 1.2 released in October 2000, " 
+            + "the Exec class");
+        System.err.println("is considered to be dead code by the Ant " 
+            + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
     }
 
@@ -123,7 +126,8 @@ public class Exec extends Task {
                 } else {
                     String ant = project.getProperty("ant.home");
                     if (ant == null) {
-                        throw new BuildException("Property 'ant.home' not found", location);
+                        throw new BuildException("Property 'ant.home' not " 
+                            + "found", location);
                     }
                 
                     String antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
@@ -133,7 +137,8 @@ public class Exec extends Task {
         } else {
             String ant = project.getProperty("ant.home");
             if (ant == null) {
-              throw new BuildException("Property 'ant.home' not found", location);
+              throw new BuildException("Property 'ant.home' not found", 
+                location);
             }
             String antRun = project.resolveFile(ant + "/bin/antRun").toString();
 

@@ -65,7 +65,8 @@ import org.apache.tools.ant.Project;
  * of the project to do token substitution, or sets mutiple tokens by
  * reading these from a file.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  *

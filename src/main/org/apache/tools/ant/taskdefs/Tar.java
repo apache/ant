@@ -74,7 +74,8 @@ import org.apache.tools.tar.TarEntry;
 /**
  * Creates a TAR archive.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
@@ -136,7 +137,6 @@ public class Tar extends MatchingTask {
      * @deprecated for consistency with other tasks, please use setDestFile()
      */
     public void setTarfile(File tarFile) {
-        //log("DEPRECATED - The tarfile attribute is deprecated. Please use the destfile attribute instead.");
         this.tarFile = tarFile;
     }
 

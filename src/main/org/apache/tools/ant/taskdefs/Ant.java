@@ -348,7 +348,8 @@ public class Ant extends Task {
                 getOwningTarget() != null &&
                 target.equals(this.getOwningTarget().getName())) {
 
-                throw new BuildException("ant task calling its own parent target");
+                throw new BuildException("ant task calling its own parent " 
+                    + "target");
             }
 
             newProject.executeTarget(target);

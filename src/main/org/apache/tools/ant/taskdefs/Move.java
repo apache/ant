@@ -79,7 +79,8 @@ import java.util.Enumeration;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
+ * @author Glenn McAllister 
+ *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$
  *

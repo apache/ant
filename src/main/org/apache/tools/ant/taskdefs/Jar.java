@@ -78,7 +78,8 @@ import java.util.Enumeration;
  * Creates a JAR archive.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Brian Deitte <a href="mailto:bdeitte@macromedia.com">bdeitte@macromedia.com</a>
+ * @author Brian Deitte 
+ *         <a href="mailto:bdeitte@macromedia.com">bdeitte@macromedia.com</a>
  *
  * @since Ant 1.1
  *
@@ -291,8 +292,8 @@ public class Jar extends Zip {
     /**
      * Create the index list to speed up classloading.
      * This is a JDK 1.3+ specific feature and is enabled by default. See
-     * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR+Index">the
-     * JAR index specification</a> for more details.
+     * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR+Index">
+     * the JAR index specification</a> for more details.
      *
      * @param zOut the zip stream representing the jar being built.
      * @throws IOException thrown if there is an error while creating the
@@ -390,7 +391,8 @@ public class Jar extends Zip {
                     filesetManifest.merge(newManifest);
                 }
             } catch (ManifestException e) {
-                log("Manifest in file " + file + " is invalid: " + e.getMessage(), Project.MSG_ERR);
+                log("Manifest in file " + file + " is invalid: " 
+                    + e.getMessage(), Project.MSG_ERR);
                 throw new BuildException("Invalid Manifest", e, getLocation());
             }
         } else {

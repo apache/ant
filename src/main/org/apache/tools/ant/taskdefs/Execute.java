@@ -140,7 +140,8 @@ public class Execute {
                 shellLauncher = new WinNTCommandLauncher(baseLauncher);
             } else {
                 // Windows 98/95 - need to use an auxiliary script
-                shellLauncher = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
+                shellLauncher 
+                    = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
             }
         } else if (Os.isFamily("netware")) {
             // NetWare.  Need to determine which JDK we're running in
@@ -153,10 +154,12 @@ public class Execute {
                 baseLauncher = new CommandLauncher();
             }
 
-            shellLauncher = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
+            shellLauncher 
+                = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
         } else {
             // Generic
-            shellLauncher = new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
+            shellLauncher = new ScriptCommandLauncher("bin/antRun", 
+                new CommandLauncher());
         }
     }
 
@@ -272,7 +275,8 @@ public class Execute {
      * @param watchdog a watchdog for the subprocess or <code>null</code> to
      *        to disable a timeout for the subprocess.
      */
-    public Execute(ExecuteStreamHandler streamHandler, ExecuteWatchdog watchdog) {
+    public Execute(ExecuteStreamHandler streamHandler, 
+                   ExecuteWatchdog watchdog) {
         this.streamHandler = streamHandler;
         this.watchdog = watchdog;
     }
@@ -363,7 +367,8 @@ public class Execute {
      * executable with a script, etc
      *
      * @param vmLauncher true if exec should launch through thge VM,
-     *                   false if the shell should be used to launch the command.
+     *                   false if the shell should be used to launch the 
+     *                   command.
      */
     public void setVMLauncher(boolean useVMLauncher) {
         this.useVMLauncher = useVMLauncher;
@@ -383,7 +388,8 @@ public class Execute {
     public static Process launch(Project project, String[] command, 
                                  String[] env, File dir, boolean useVM)
         throws IOException {
-        CommandLauncher launcher = vmLauncher != null ? vmLauncher : shellLauncher;
+        CommandLauncher launcher 
+            = vmLauncher != null ? vmLauncher : shellLauncher;
         if (!useVM) {
             launcher = shellLauncher;
         }
@@ -498,8 +504,8 @@ public class Execute {
      *
      * @throws BuildException if the command does not return 0.
      */
-    public static void runCommand(Task task, String[] cmdline) throws BuildException
-    {
+    public static void runCommand(Task task, String[] cmdline) 
+        throws BuildException {
         try {
             task.log(Commandline.toString(cmdline), Project.MSG_VERBOSE);
             Execute exe = new Execute(new LogStreamHandler(task,
@@ -621,7 +627,8 @@ public class Execute {
                 } else if (realexc instanceof IOException) {
                     throw (IOException) realexc;
                 } else {
-                    throw new BuildException("Unable to execute command", realexc);
+                    throw new BuildException("Unable to execute command", 
+                                             realexc);
                 }
             } catch (Exception exc) {
                 // IllegalAccess, IllegalArgument, ClassCast
@@ -743,7 +750,8 @@ public class Execute {
                 if (workingDir == null) {
                     return exec(project, cmd, env);
                 }
-                throw new IOException("Cannot locate antRun script: No project provided");
+                throw new IOException("Cannot locate antRun script: " 
+                    + "No project provided");
             }
 
             // Locate the auxiliary script

@@ -69,8 +69,10 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * Sign a archive.
  *
- * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
- * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
+ * @author Peter Donald 
+ *         <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
+ * @author Nick Fortescue 
+ *         <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
  * @since Ant 1.1
  * @ant.task category="java"
  */

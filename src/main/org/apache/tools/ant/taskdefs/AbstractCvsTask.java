@@ -77,8 +77,10 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
- * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
- * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
+ * @author Wolfgang Werner 
+ *         <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
+ * @author Kevin Ross 
+ *         <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  *
  * @since Ant 1.5
  */
@@ -180,8 +182,8 @@ public abstract class AbstractCvsTask extends Task {
         super();
     }
 
-    public void setExecuteStreamHandler(ExecuteStreamHandler executeStreamHandler){
-        this.executeStreamHandler = executeStreamHandler;
+    public void setExecuteStreamHandler(ExecuteStreamHandler handler){
+        this.executeStreamHandler = handler;
     }
 
     protected ExecuteStreamHandler getExecuteStreamHandler(){
@@ -278,7 +280,8 @@ public abstract class AbstractCvsTask extends Task {
          * with a pass file.
         if(passFile == null){
 
-            File defaultPassFile = new File(System.getProperty("user.home") + File.separatorChar + ".cvspass");
+            File defaultPassFile = new File(System.getProperty("user.home") 
+                + File.separatorChar + ".cvspass");
 
             if(defaultPassFile.exists())
                 this.setPassfile(defaultPassFile);
@@ -353,10 +356,6 @@ public abstract class AbstractCvsTask extends Task {
                 log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
             }
         } finally {
-            //
-            // condition used to be if(output == null) outputStream.close().  This is
-            //      not appropriate.  Check if the stream itself is not null, then close().
-            //
             if (outputStream != null) {
                 try {
                     outputStream.close();

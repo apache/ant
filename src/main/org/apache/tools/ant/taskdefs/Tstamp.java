@@ -107,7 +107,8 @@ public class Tstamp extends Task {
             SimpleDateFormat tstamp = new SimpleDateFormat ("HHmm");
             project.setNewProperty(prefix + "TSTAMP", tstamp.format(d));
 
-            SimpleDateFormat today  = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
+            SimpleDateFormat today 
+                = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
             project.setNewProperty(prefix + "TODAY", today.format(d));
 
             Enumeration i = customFormats.elements();

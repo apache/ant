@@ -611,8 +611,8 @@ public class Zip extends MatchingTask {
         } else {
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].equals(zipFile)) {
-                    throw new BuildException("A zip file cannot include itself", 
-                                             location);
+                    throw new BuildException("A zip file cannot include " 
+                        + "itself", location);
                 }
             }
 

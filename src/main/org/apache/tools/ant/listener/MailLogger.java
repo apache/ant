@@ -94,7 +94,8 @@ import org.apache.tools.mail.MailMessage;
  *  MailLogger.properties.file property</i> . Any properties defined in that
  *  file will override Ant properties.
  *
- * @author Erik Hatcher <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
+ * @author Erik Hatcher 
+ *         <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
  */
 public class MailLogger extends DefaultLogger {
     /** Buffer in which the message is constructed prior to sending */

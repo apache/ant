@@ -101,10 +101,12 @@ public class ConditionTask extends ConditionBase {
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {
-            throw new BuildException("You must not nest more than one condition into <condition>");
+            throw new BuildException("You must not nest more than one " 
+                + "condition into <condition>");
         }
         if (countConditions() < 1) {
-            throw new BuildException("You must nest a condition into <condition>");
+            throw new BuildException("You must nest a condition into " 
+                + "<condition>");
         }
         if (property == null) {
             throw new BuildException("The property attribute is required.");

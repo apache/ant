@@ -286,8 +286,7 @@ public class ExecuteOn extends ExecTask {
                     for (int j = 0; j < subTargets.length; j++) {
                         String name = null;
                         if (!relative) {
-                            name =
-                                (new File(destDir, subTargets[j])).getAbsolutePath();
+                            name = (new File(destDir, subTargets[j])).getAbsolutePath();
                         } else {
                             name = subTargets[j];
                         }
@@ -303,7 +302,8 @@ public class ExecuteOn extends ExecTask {
         targets.copyInto(targetFiles);
         
         String[] orig = cmdl.getCommandline();
-        String[] result = new String[orig.length + srcFiles.length + targetFiles.length];
+        String[] result 
+            = new String[orig.length + srcFiles.length + targetFiles.length];
 
         int srcIndex = orig.length;
         if (srcFilePos != null) {
@@ -331,8 +331,8 @@ public class ExecuteOn extends ExecTask {
                 
                 // targetIndex --> end
                 System.arraycopy(orig, targetIndex, result, 
-                                 targetIndex + srcFiles.length + targetFiles.length,
-                                 orig.length - targetIndex);
+                    targetIndex + srcFiles.length + targetFiles.length,
+                    orig.length - targetIndex);
             } else {
                 // 0 --> targetIndex
                 System.arraycopy(orig, 0, result, 0, targetIndex);
@@ -349,8 +349,8 @@ public class ExecuteOn extends ExecTask {
                 
                 // srcIndex --> end
                 System.arraycopy(orig, srcIndex, result, 
-                                 srcIndex + srcFiles.length + targetFiles.length,
-                                 orig.length - srcIndex);
+                    srcIndex + srcFiles.length + targetFiles.length,
+                    orig.length - srcIndex);
                 srcIndex += targetFiles.length;
             }
 

@@ -128,7 +128,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (classpath == null) {
                 target = Class.forName(classname);
             } else {
-                loader = new AntClassLoader(project.getCoreLoader(), project, classpath, false);
+                loader = new AntClassLoader(project.getCoreLoader(), project, 
+                                            classpath, false);
                 loader.setIsolated(true);
                 loader.setThreadContextLoader();
                 target = loader.forceLoadClass(classname);

@@ -87,8 +87,10 @@ public class Jikes {
     protected Jikes(JikesOutputParser jop, String command, Project project) {
         super();
 
-        System.err.println("As of Ant 1.2 released in October 2000, the Jikes class");
-        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("As of Ant 1.2 released in October 2000, " 
+            + "the Jikes class");
+        System.err.println("is considered to be dead code by the Ant " 
+            + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
 
         this.jop = jop;
@@ -125,7 +127,8 @@ public class Jikes {
                     commandArray = new String[] { command, 
                                                   "@" + tmpFile.getAbsolutePath()};
                 } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file", e);
+                    throw new BuildException("Error creating temporary file", 
+                                             e);
                 } finally {
                     if (out != null) {
                         try {out.close();} catch (Throwable t) {}

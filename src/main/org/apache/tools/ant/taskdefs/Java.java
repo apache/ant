@@ -76,7 +76,8 @@ import java.util.Vector;
  * the same JVM for the called application thus resulting in much
  * faster operation.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
  * @since Ant 1.1

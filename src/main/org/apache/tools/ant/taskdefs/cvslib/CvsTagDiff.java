@@ -161,7 +161,8 @@ public class CvsTagDiff extends Task {
     
     /**
      * Initialize this task.
-     * CvsTagDiff initializes a member cvs task in init() to perform the rdiff in execute().
+     * CvsTagDiff initializes a member cvs task in init() to perform the 
+     * rdiff in execute().
      *
      * @exception BuildException if an error occurs
      */

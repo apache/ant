@@ -75,7 +75,8 @@ import java.io.IOException;
  * Currently, this is a cut-and-paste of the original javac task.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
+ * @author Robin Green 
+ *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  *
@@ -202,7 +203,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         // we cannot be using Java 1.0 when forking, so we only have to
         // distinguish between Java 1.1, and Java 1.2 and higher, as Java 1.1
         // has its own parameter format
-        boolean usingJava1_1 = Project.getJavaVersion().equals(Project.JAVA_1_1);
+        boolean usingJava1_1 
+            = Project.getJavaVersion().equals(Project.JAVA_1_1);
         String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {

@@ -244,13 +244,13 @@ public class Checksum extends MatchingTask implements Condition {
 
             if (file != null) {
                 if (filesets.size() > 0) {
-                    throw new BuildException(
-                        "Multiple files cannot be used when Property is specified");
+                    throw new BuildException("Multiple files cannot be used " 
+                        + "when Property is specified");
                 }
             } else {
                 if (filesets.size() > 1) {
-                    throw new BuildException(
-                        "Multiple files cannot be used when Property is specified");
+                    throw new BuildException("Multiple files cannot be used " 
+                        + "when Property is specified");
                 }
             }
         }
@@ -265,8 +265,8 @@ public class Checksum extends MatchingTask implements Condition {
         }
 
         if (isCondition && forceOverwrite) {
-            throw new BuildException(
-                "ForceOverwrite cannot be used when conditions are being used.");
+            throw new BuildException("ForceOverwrite cannot be used when " 
+                + "conditions are being used.");
         }
 
         messageDigest = null;
@@ -327,7 +327,8 @@ public class Checksum extends MatchingTask implements Condition {
         if (file != null) {
             if (file.exists()) {
                 if (property == null) {
-                    File dest = new File(file.getParent(), file.getName() + fileext);
+                    File dest 
+                        = new File(file.getParent(), file.getName() + fileext);
                     if (forceOverwrite || isCondition ||
                         (file.lastModified() > dest.lastModified())) {
                         includeFileMap.put(file, dest);

@@ -63,8 +63,10 @@ package org.apache.tools.ant.taskdefs;
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
- * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
- * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
+ * @author Wolfgang Werner 
+ *         <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
+ * @author Kevin Ross 
+ *         <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  *
  * @since Ant 1.1
  * 

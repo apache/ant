@@ -68,9 +68,11 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
- * Will set the given property if the requested resource is available at runtime.
+ * Will set the given property if the requested resource is available at 
+ * runtime.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
  * @since Ant 1.1

@@ -82,7 +82,8 @@ import java.util.Vector;
  * values in the indicated files. Each value can be either a string 
  * or the value of a property available in a designated property file.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:erik@desknetinc.com">Erik Langenbach</a>
  *
  * @since Ant 1.1

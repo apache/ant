@@ -81,18 +81,19 @@ import org.apache.tools.ant.types.FileList;
  * <li>targetfileset  (fileset describing the target files to examine)
  * <li>targetfilelist (filelist describing the target files to examine)
  * </ul>
- * At least one instance of either a fileset or filelist for both source and target
- * are required.
+ * At least one instance of either a fileset or filelist for both source and 
+ * target are required.
  * <p>
- * This task will examine each of the source files against each of the target files.
- * If any target files are out of date with respect to any of the source files, all targets are removed.
- * If any files named in a (src or target) filelist do not exist, all targets are removed.
- * Hint: If missing files should be ignored, specify them as include patterns in filesets,
- * rather than using filelists.
+ * This task will examine each of the source files against each of the target 
+ * files. If any target files are out of date with respect to any of the source 
+ * files, all targets are removed. If any files named in a (src or target) 
+ * filelist do not exist, all targets are removed.
+ * Hint: If missing files should be ignored, specify them as include patterns 
+ * in filesets, rather than using filelists.
  * </p><p>
- * This task attempts to optimize speed of dependency checking.  It will stop after the first
- * out of date file is found and remove all targets, rather than exhaustively checking every
- * source vs target combination unnecessarily.
+ * This task attempts to optimize speed of dependency checking.  It will stop 
+ * after the first out of date file is found and remove all targets, rather 
+ * than exhaustively checking every source vs target combination unnecessarily.
  * </p><p>
  * Example uses: 
  * <ul><li>

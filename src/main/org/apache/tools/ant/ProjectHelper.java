@@ -185,12 +185,13 @@ public class ProjectHelper {
                 if (is != null) {
                     // This code is needed by EBCDIC and other strange systems.
                     // It's a fix for bugs reported in xerces
-                    BufferedReader rd;
+                    InputStreamReader isr;
                     try {
-                        rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                        isr = new InputStreamReader(is, "UTF-8");
                     } catch (java.io.UnsupportedEncodingException e) {
-                        rd = new BufferedReader(new InputStreamReader(is));
+                        isr = new InputStreamReader(is);
                     }
+                    BufferedReader rd = new BufferedReader(isr);
                     
                     String helperClassName = rd.readLine();
                     rd.close();
@@ -435,8 +436,9 @@ public class ProjectHelper {
                     project.log("Property ${" + propertyName 
                         + "} has not been set", Project.MSG_VERBOSE);
                 }
-                fragment = (keys.containsKey(propertyName)) ? (String) keys.get(propertyName) 
-                                                            : "${" + propertyName + "}"; 
+                fragment = (keys.containsKey(propertyName)) 
+                    ? (String) keys.get(propertyName) 
+                    : "${" + propertyName + "}"; 
             }
             sb.append(fragment);
         }                        
@@ -461,7 +463,8 @@ public class ProjectHelper {
      *                           <code>${</code> without a closing 
      *                           <code>}</code>
      */
-    public static void parsePropertyString(String value, Vector fragments, Vector propertyRefs)
+    public static void parsePropertyString(String value, Vector fragments, 
+                                           Vector propertyRefs)
         throws BuildException {
         int prev = 0;
         int pos;

@@ -72,9 +72,11 @@ import java.util.Vector;
  * to provide backwards compatibility for a release.  The future position
  * is to use nested filesets exclusively.</p>
  * 
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi 
+ *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Tom Dimock <a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>
- * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
+ * @author Glenn McAllister 
+ *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
  *
  * @since Ant 1.2

@@ -73,8 +73,10 @@ import java.util.Vector;
  * Will set the given property if the specified target has a timestamp
  * greater than all of the source files.
  *
- * @author William Ferguson <a href="mailto:williamf@mincom.com">williamf@mincom.com</a> 
- * @author Hiroaki Nakamura <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
+ * @author William Ferguson 
+ *         <a href="mailto:williamf@mincom.com">williamf@mincom.com</a> 
+ * @author Hiroaki Nakamura 
+ *         <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
  * @since Ant 1.2

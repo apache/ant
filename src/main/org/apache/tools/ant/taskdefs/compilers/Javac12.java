@@ -70,7 +70,8 @@ import java.lang.reflect.Method;
  * was refactored.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
+ * @author Robin Green 
+ *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  *
