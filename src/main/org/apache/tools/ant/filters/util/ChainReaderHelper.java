@@ -185,13 +185,20 @@ public final class ChainReaderHelper {
                                 final Constructor[] constructors =
                                     clazz.getConstructors();
                                 int j = 0;
+                                boolean consPresent = false;
                                 for (; j < constructors.length; j++) {
                                     Class[] types = constructors[j]
                                                       .getParameterTypes();
                                     if (types.length == 1 &&
                                         types[0].isAssignableFrom(Reader.class)) {
+                                        consPresent = true;
                                         break;
                                     }
+                                }
+                                if ( !consPresent ) {
+                                    throw new BuildException( className +
+                                            " does not define a public constructor" +
+                                            " that takes in a Reader as its single argument.");
                                 }
                                 final Reader[] rdr = {instream};
                                 instream =
