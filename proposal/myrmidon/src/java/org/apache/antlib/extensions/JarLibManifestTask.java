@@ -53,6 +53,11 @@ public final class JarLibManifestTask
     private static final String MANIFEST_VERSION = "1.0";
 
     /**
+     * "Created-By" string used when creating manifest.
+     */
+    private static final String CREATED_BY = "Created-By";
+
+    /**
      * The library to display information about.
      */
     private File m_destfile;
@@ -180,7 +185,7 @@ public final class JarLibManifestTask
         final Attributes attributes = manifest.getMainAttributes();
 
         attributes.put( Attributes.Name.MANIFEST_VERSION, MANIFEST_VERSION );
-        attributes.putValue( "Created-By", Constants.BUILD_DESCRIPTION );
+        attributes.putValue( CREATED_BY, Constants.BUILD_DESCRIPTION );
 
         appendExtraAttributes( attributes );
 
