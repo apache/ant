@@ -292,4 +292,13 @@
     <assertequal junk="8" />
   </target>
 
+  <target name="testTabInLiteralInComment">
+    <copy file="input/tab_in_literal_in_comment" todir="result"
+          overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="remove"/>
+      </filterchain>
+    </copy>
+    <assertequal name="tab_in_literal_in_comment"/>
+  </target>
 </project>

@@ -175,6 +175,10 @@ public class FixCrLfTest extends BuildFileTest {
         executeTarget("testCannotDoubleEof");
     }
 
+    public void testTabInLiteralInComment() {
+        executeTarget("testTabInLiteralInComment");
+    }
+
     // not used, but public so theoretically must remain for BC?
     public void assertEqualContent(File expect, File result)
         throws AssertionFailedError, IOException {
