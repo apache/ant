@@ -17,6 +17,15 @@ overwrite files with the <code>overwrite</code> attribute.</p>
 set of files to copy.
 To use a <code>&lt;fileset&gt;</code>, the <code>todir</code> attribute
 must be set.</p>
+
+<p>
+<strong>Note: </strong>If you employ filters in your copy operation, you should 
+limit the copy to text files. Binary files will be corrupted by the copy operation.
+This applies whether the filters are implicitly defined by the 
+<a href="filter.html">filter</a> task or explicitly provided to the copy
+operation as <a href="../CoreTypes/filterset.html">filtersets</a>
+</p>
+ 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -186,7 +195,7 @@ the copied file takes on the case of the original. The workaround is to
 the file in the destination directory before you copy it.
 </p>
 
-<hr><p align="center">Copyright &copy; 2000-2002 Apache Software Foundation.
+<hr><p align="center">Copyright &copy; 2000-2003 Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>
