@@ -104,7 +104,8 @@ public class Jvc extends DefaultCompilerAdapter {
         }
 
         Commandline cmd = new Commandline();
-        cmd.setExecutable("jvc");
+        String exec = getJavac().getExecutable();
+        cmd.setExecutable(exec == null ? "jvc" : exec);
 
         if (destDir != null) {
             cmd.createArgument().setValue("/d");
@@ -115,10 +116,19 @@ public class Jvc extends DefaultCompilerAdapter {
         cmd.createArgument().setValue("/cp:p");
         cmd.createArgument().setPath(classpath);
 
-        // Enable MS-Extensions and ...
-        cmd.createArgument().setValue("/x-");
-        // ... do not display a Message about this.
-        cmd.createArgument().setValue("/nomessage");
+        boolean msExtensions = true;
+        String mse = getProject().getProperty("build.compiler.jvc.extensions");
+        if (mse != null) {
+            msExtensions = Project.toBoolean(mse);
+        }
+
+        if (msExtensions) {
+            // Enable MS-Extensions and ...
+            cmd.createArgument().setValue("/x-");
+            // ... do not display a Message about this.
+            cmd.createArgument().setValue("/nomessage");
+        }
+
         // Do not display Logo
         cmd.createArgument().setValue("/nologo");
 

@@ -153,6 +153,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
+     * @since Ant 1.6
+     */
+    protected Project getProject() {
+        return project;
+    }
+
+    /**
      * Builds the compilation classpath.
      *
      */
@@ -432,8 +439,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && firstFileName >= 0) {
                 PrintWriter out = null;
                 try {
-                    String userDirName = System.getProperty("user.dir");
-                    File userDir = new File(userDirName);
+                    File userDir = getJavac().getTempdir();
+                    if (userDir == null) {
+                        String userDirName = System.getProperty("user.dir");
+                        userDir = new File(userDirName);
+                    }
                     tmpFile = fileUtils.createTempFile("files", "", userDir);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {

@@ -124,7 +124,8 @@ public class Jikes extends DefaultCompilerAdapter {
         }
         
         Commandline cmd = new Commandline();
-        cmd.setExecutable("jikes");
+        String exec = getJavac().getExecutable();
+        cmd.setExecutable(exec == null ? "jikes" : exec);
 
         if (deprecation == true) {
             cmd.createArgument().setValue("-deprecation");

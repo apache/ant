@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,7 +74,8 @@ public class Sj extends DefaultCompilerAdapter {
         attributes.log("Using symantec java compiler", Project.MSG_VERBOSE);
 
         Commandline cmd = setupJavacCommand();
-        cmd.setExecutable("sj");
+        String exec = getJavac().getExecutable();
+        cmd.setExecutable(exec == null ? "sj" : exec);
 
         int firstFileName = cmd.size() - compileList.length;
 

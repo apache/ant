@@ -331,6 +331,16 @@ Other changes:
 
 * <javadoc> now supports the -noqualifier switch.  Bugzilla Report 19288.
 
+* <javac>'s executable attribute can now also be used to specify the
+  executable for jikes, jvc, sj or gcj.  Bugzilla Report 13814.
+
+* <javac> has a new attribute tempdir that can control the placement
+  of temporary files.  Bugzilla Report 19765.
+
+* A new magic property build.compiler.jvc.extensions has been added
+  that can be used to turn of Microsoft extensions while using the jvc
+  compiler.  Bugzilla Report 19826.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

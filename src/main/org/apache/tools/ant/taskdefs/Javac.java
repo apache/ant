@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -141,6 +141,7 @@ public class Javac extends MatchingTask {
 
     private String source;
     private String debugLevel;
+    private File tmpDir;
 
     /**
      * Javac task for compilation of Java files.
@@ -596,6 +597,15 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * The value of the executable attribute, if any.
+     *
+     * @since Ant 1.6
+     */
+    public String getExecutable() {
+        return forkedExecutable;
+    }
+
+    /**
      * Is this a forked invocation of JDK's javac?
      */
     public boolean isForkedJavac() {
@@ -604,6 +614,14 @@ public class Javac extends MatchingTask {
 
     /**
      * The name of the javac executable to use in fork-mode.
+     *
+     * <p>This is either the name specified with the executable
+     * attribute or the full path of the javac compiler of the VM Ant
+     * is currently running in - guessed by Ant.</p>
+     *
+     * <p>You should <strong>not</strong> invoke this method if you
+     * want to get the value of the executable command - use {@link
+     * #getExecutable getExecutable} for this.</p>
      */
     public String getJavacExecutable() {
         if (forkedExecutable == null && isForkedJavac()) {
@@ -653,6 +671,23 @@ public class Javac extends MatchingTask {
         }
     }
 
+    /**
+     * Where Ant should place temporary files.
+     *
+     * @since Ant 1.6
+     */
+    public void setTempdir(File tmpDir) {
+        this.tmpDir = tmpDir;
+    }
+
+    /**
+     * Where Ant should place temporary files.
+     *
+     * @since Ant 1.6
+     */
+    public File getTempdir() {
+        return tmpDir;
+    }
 
     /**
      * Executes the task.

@@ -276,7 +276,9 @@ invoking the compiler.</p>
     <td valign="top">Complete path to the <code>javac</code>
       executable to use in case of <code>fork=&quot;yes&quot;</code>.
       Defaults to the compiler of the Java version that is currently
-      running Ant.  Ignored if <code>fork=&quot;no&quot;</code></td>
+      running Ant.  Ignored if <code>fork=&quot;no&quot;</code>.<br>
+      Since Ant 1.6 this attribute can also be used to specify the
+      path to the executable when using jikes, jvc, gcj or sj.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -333,6 +335,13 @@ invoking the compiler.</p>
     <td valign="top">Indicates whether the source files to be compiled will
       be listed; defaults to <code>no</code>.</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tempdir</td>
+    <td valign="top">Where Ant should place temporary files.
+      <em>Since Ant 1.6</em>.</td>
+    <td align="center" valign="top">No; default is the current working
+       directory.</td>
   </tr>
 </table>
 
@@ -562,6 +571,12 @@ while all others are <code>false</code>.</p>
 	</td>
   </tr>
 </table>
+
+<h3>Jvc Notes</h3>
+
+<p>Jvc will enable Microsoft extensions unless you set the property
+<code>build.compiler.jvc.extensions</code> to false before invoking
+<code>&lt;javac&gt;</code>.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation.
