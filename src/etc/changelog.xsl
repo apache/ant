@@ -75,7 +75,7 @@
         <h1>
           <a name="top"><xsl:value-of select="$title"/></a>
         </h1>
-        <p style="text-align: right">Designed for use with <a href="http://ant.apache.org/ant/">Apache Ant</a>.</p>
+        <p style="text-align: right">Designed for use with <a href="http://ant.apache.org/">Apache Ant</a>.</p>
         <hr/>
         <table border="0" width="100%" cellspacing="1">
           
