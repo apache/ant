@@ -192,7 +192,7 @@
     <filename name="${optional.package}/XslpLiaison*"/>
   </selector>
 
-  <selector id="needs.apache.resolver">
+  <selector id="needs.apache-resolver">
     <filename name="${apache.resolver.type.package}/**"/>
   </selector>
 
@@ -200,11 +200,11 @@
     <filename name="${optional.package}/junit/**"/>
   </selector>
 
-  <selector id="needs.jakarta.regexp">
+  <selector id="needs.jakarta-regexp">
     <filename name="${regexp.package}/JakartaRegexp*"/>
   </selector>
 
-  <selector id="needs.jakarta.oro">
+  <selector id="needs.jakarta-oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
       <filename name="${optional.package}/perforce/*"/>
@@ -212,7 +212,7 @@
     </or>
   </selector>
 
-  <selector id="needs.jakarta.bcel">
+  <selector id="needs.jakarta-bcel">
     <or>
       <filename name="${ant.package}/filters/util/JavaClassHelper*"/>
       <filename name="${util.package}/depend/bcel/*"/>
@@ -220,15 +220,15 @@
     </or>
   </selector>
 
-  <selector id="needs.jakarta.log4j">
+  <selector id="needs.jakarta-log4j">
     <filename name="${ant.package}/listener/Log4jListener*"/>
   </selector>
 
-  <selector id="needs.commons.logging">
+  <selector id="needs.commons-logging">
     <filename name="${ant.package}/listener/CommonsLoggingListener*"/>
   </selector>
 
-  <selector id="needs.bsf">
+  <selector id="needs.apache-bsf">
     <or>
       <filename name="${optional.package}/Script*"/>
       <filename name="${optional.package}/script/**/*"/>
@@ -270,7 +270,7 @@
     </or>
   </selector>
 
-  <selector id="needs.commons.net">
+  <selector id="needs.commons-net">
     <or>
       <filename name="${optional.package}/net/FTP*"/>
       <filename name="${optional.package}/net/RExec*"/>
@@ -611,16 +611,16 @@
             <selector refid="needs.xalan1" unless="xalan.present"/>
             <selector refid="needs.xalan2" unless="xalan2.present"/>
             <selector refid="needs.xslp" unless="xslp.present"/>
-            <selector refid="needs.apache.resolver" unless="apache.resolver.present"/>
+            <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
-            <selector refid="needs.jakarta.regexp"
+            <selector refid="needs.jakarta-regexp"
                       unless="jakarta.regexp.present"/>
-            <selector refid="needs.jakarta.oro" unless="jakarta.oro.present"/>
-            <selector refid="needs.jakarta.bcel" unless="bcel.present"/>
-            <selector refid="needs.jakarta.log4j" unless="log4j.present"/>
-            <selector refid="needs.commons.logging"
+            <selector refid="needs.jakarta-oro" unless="jakarta.oro.present"/>
+            <selector refid="needs.jakarta-bcel" unless="bcel.present"/>
+            <selector refid="needs.jakarta-log4j" unless="log4j.present"/>
+            <selector refid="needs.commons-logging"
                       unless="commons.logging.present"/>
-            <selector refid="needs.bsf" unless="bsf.present"/>
+            <selector refid="needs.apache-bsf" unless="bsf.present"/>
             <selector refid="needs.stylebook" unless="stylebook.present"/>
             <selector refid="needs.javamail" unless="javamail.complete"/>
             <selector refid="needs.icontract" unless="icontract.present"/>
@@ -629,7 +629,7 @@
             <selector refid="needs.weblogic.ddcreator"
                       unless="ejb.DDCreator.present"/>
             <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
-            <selector refid="needs.commons.net" unless="commons.net.present"/>
+            <selector refid="needs.commons-net" unless="commons.net.present"/>
             <selector refid="needs.starteam" unless="starteam.present"/>
             <selector refid="needs.vaj" unless="vaj.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
@@ -724,10 +724,10 @@
             <filename name="${optional.type.package}/**"/>
             <filename name="${util.package}/depend/**"/>
             <filename name="${util.package}/optional/**"/>
-            <selector refid="needs.jakarta.log4j"/>
-            <selector refid="needs.commons.logging"/>
-            <selector refid="needs.jakarta.regexp"/>
-            <selector refid="needs.jakarta.oro"/>
+            <selector refid="needs.jakarta-log4j"/>
+            <selector refid="needs.commons-logging"/>
+            <selector refid="needs.jakarta-regexp"/>
+            <selector refid="needs.jakarta-oro"/>
             <selector refid="needs.jdk1.4+"/>
             <selector refid="needs.javamail"/>
             <selector refid="ant.launcher"/>
@@ -782,14 +782,14 @@
             <selector refid="needs.xalan1"/>
             <selector refid="needs.xalan2"/>
             <selector refid="needs.xslp"/>
-            <selector refid="needs.apache.resolver"/>
+            <selector refid="needs.apache-resolver"/>
             <selector refid="needs.junit"/>
-            <selector refid="needs.jakarta.regexp"/>
-            <selector refid="needs.jakarta.oro"/>
-            <selector refid="needs.jakarta.bcel"/>
-            <selector refid="needs.jakarta.log4j"/>
-            <selector refid="needs.commons.logging"/>
-            <selector refid="needs.bsf"/>
+            <selector refid="needs.jakarta-regexp"/>
+            <selector refid="needs.jakarta-oro"/>
+            <selector refid="needs.jakarta-bcel"/>
+            <selector refid="needs.jakarta-log4j"/>
+            <selector refid="needs.commons-logging"/>
+            <selector refid="needs.apache-bsf"/>
             <selector refid="needs.stylebook"/>
             <selector refid="needs.javamail"/>
             <selector refid="needs.icontract"/>
@@ -797,7 +797,7 @@
             <selector refid="needs.weblogic.ejbc"/>
             <selector refid="needs.weblogic.ddcreator"/>
             <selector refid="needs.weblogic.server"/>
-            <selector refid="needs.commons.net"/>
+            <selector refid="needs.commons-net"/>
             <selector refid="needs.starteam"/>
             <selector refid="needs.vaj"/>
             <selector refid="needs.antlr"/>
@@ -812,147 +812,41 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-trax.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.trax"/>
-    </jar>
+    <macrodef name="optional-jar">
+      <attribute name="dep"/>
+      <sequential>
+        <jar destfile="${build.lib}/${optional.jars.prefix}-${dep}.jar"
+          basedir="${build.classes}"
+          manifest="${manifest.tmp}">
+          <selector refid="needs.${dep}"/>
+        </jar>
+      </sequential>
+    </macrodef>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-xalan1.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.xalan1"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-xalan2.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.xalan2"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-xslp.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.xslp"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-apache-resolver.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.apache.resolver"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-junit.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.junit"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-jakarta-regexp.jar"
-         basedir="${build.classes}" manifest="${manifest.tmp}">
-      <selector refid="needs.jakarta.regexp"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-oro.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jakarta.oro"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-bcel.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jakarta.bcel"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-log4j.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jakarta.log4j"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-commons-logging.jar"
-         basedir="${build.classes}" manifest="${manifest.tmp}">
-      <selector refid="needs.commons.logging"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-apache-bsf.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.bsf"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-stylebook.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.stylebook"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-javamail.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.javamail"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-icontract.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.icontract"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-netrexx.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.netrexx"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-commons-net.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.commons.net"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-starteam.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.starteam"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-vaj.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.vaj"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-antlr.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.antlr"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-jmf.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jmf"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-jai.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jai"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-swing.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.swing"/>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-jdepend.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jdepend"/>
-    </jar>
+    <optional-jar dep="trax"/>
+    <optional-jar dep="xalan1"/>
+    <optional-jar dep="xalan2"/>
+    <optional-jar dep="xslp"/>
+    <optional-jar dep="apache-resolver"/>
+    <optional-jar dep="junit"/>
+    <optional-jar dep="jakarta-regexp"/>
+    <optional-jar dep="jakarta-oro"/>
+    <optional-jar dep="jakarta-bcel"/>
+    <optional-jar dep="jakarta-log4j"/>
+    <optional-jar dep="commons-logging"/>
+    <optional-jar dep="apache-bsf"/>
+    <optional-jar dep="stylebook"/>
+    <optional-jar dep="javamail"/>
+    <optional-jar dep="icontract"/>
+    <optional-jar dep="netrexx"/>
+    <optional-jar dep="commons-net"/>
+    <optional-jar dep="starteam"/>
+    <optional-jar dep="vaj"/>
+    <optional-jar dep="antlr"/>
+    <optional-jar dep="jmf"/>
+    <optional-jar dep="jai"/>
+    <optional-jar dep="swing"/>
+    <optional-jar dep="jsch"/>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
          basedir="${build.classes}"
@@ -962,12 +856,6 @@
         <selector refid="needs.weblogic.ddcreator" />
         <selector refid="needs.weblogic.server"/>
       </or>
-    </jar>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-jsch.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="needs.jsch"/>
     </jar>
 
   </target>
