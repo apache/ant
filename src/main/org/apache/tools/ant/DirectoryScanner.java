@@ -422,7 +422,7 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static void resetDefaultExcludes() {
-    defaultExcludes = new Vector();
+        defaultExcludes = new Vector();
 
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             defaultExcludes.add(DEFAULTEXCLUDES[i]);
@@ -1054,6 +1054,18 @@ public class DirectoryScanner
     }
 
     /**
+     * Return the count of included files.
+     * @return <CODE>int</CODE>.
+     * @since Ant 1.6.3
+     */
+    public int getIncludedFilesCount() {
+        if (filesIncluded == null) {
+            throw new IllegalStateException();
+        }
+        return filesIncluded.size();
+    }
+
+    /**
      * Returns the names of the files which matched none of the include
      * patterns. The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
@@ -1119,6 +1131,18 @@ public class DirectoryScanner
         dirsIncluded.copyInto(directories);
         Arrays.sort(directories);
         return directories;
+    }
+
+    /**
+     * Return the count of included directories.
+     * @return <CODE>int</CODE>.
+     * @since Ant 1.6.3
+     */
+    public int getIncludedDirsCount() {
+        if (dirsIncluded == null) {
+            throw new IllegalStateException();
+        }
+        return dirsIncluded.size();
     }
 
     /**
@@ -1203,7 +1227,7 @@ public class DirectoryScanner
     public Resource getResource(String name) {
         File f = FILE_UTILS.resolveFile(basedir, name);
         return new Resource(name, f.exists(), f.lastModified(),
-                            f.isDirectory());
+                            f.isDirectory(), f.length());
     }
 
     /**
