@@ -88,31 +88,31 @@ public class Project {
     /**
      * Version constant for Java 1.0
      *
-     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     * @deprecated Use {@link JavaEnvUtils#JAVA_1_0} instead.
      */
     public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
     /**
      * Version constant for Java 1.1
      *
-     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     * @deprecated Use {@link JavaEnvUtils#JAVA_1_1} instead.
      */
     public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
     /**
      * Version constant for Java 1.2
      *
-     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     * @deprecated Use {@link JavaEnvUtils#JAVA_1_2} instead.
      */
     public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
     /**
      * Version constant for Java 1.3
      *
-     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     * @deprecated Use {@link JavaEnvUtils#JAVA_1_3} instead.
      */
     public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
     /**
      * Version constant for Java 1.4
      *
-     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     * @deprecated Use {@link JavaEnvUtils#JAVA_1_4} instead.
      */
     public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 

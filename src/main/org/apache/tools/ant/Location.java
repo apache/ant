@@ -113,7 +113,7 @@ public class Location implements Serializable {
      * An error message can be appended easily. For unknown locations, an
      * empty string is returned.
      *
-     * @return a String of the form <code>"fileName: lineNumber: "</code>
+     * @return a String of the form <code>"fileName:lineNumber: "</code>
      *         if both file name and line number are known,
      *         <code>"fileName: "</code> if only the file name is known,
      *         and the empty string for unknown locations.
