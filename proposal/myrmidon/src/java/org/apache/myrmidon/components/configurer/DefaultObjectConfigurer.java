@@ -195,9 +195,7 @@ class DefaultObjectConfigurer
                     // Both are string, or both are not string
                     final String message =
                         REZ.getString( "multiple-typed-adder-methods-for-element.error",
-                                       m_class.getName(),
-                                       type.getName(),
-                                       currentType.getName() );
+                                       m_class.getName() );
                     throw new ConfigurationException( message );
                 }
                 else if( currentType != String.class && type == String.class )

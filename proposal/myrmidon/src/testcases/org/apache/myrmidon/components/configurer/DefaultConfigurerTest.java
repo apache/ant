@@ -409,9 +409,7 @@ public class DefaultConfigurerTest
         catch( final ConfigurationException ce )
         {
             final String message = REZ.getString( "multiple-typed-adder-methods-for-element.error",
-                                                  ConfigTest5.class.getName(),
-                                                  MyRole1.class.getName(),
-                                                  MyRole2.class.getName() );
+                                                  ConfigTest5.class.getName() );
             assertSameMessage( message, ce );
         }
     }
