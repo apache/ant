@@ -76,7 +76,7 @@ class Deployment
      * Load the descriptors.  Deploys all roles, then loads the descriptors
      * for, but does not deploy, all the types.
      */
-    public void loadDescriptors( URL jarUrl )
+    public void loadDescriptors( final URL jarUrl )
         throws Exception
     {
         final ArrayList descriptors = new ArrayList();
@@ -185,7 +185,7 @@ class Deployment
         throws DeploymentException
     {
         final String typeName = typeDef.getName();
-        final String roleShorthand = typeDef.getRoleShorthand();
+        final String roleShorthand = typeDef.getRole();
 
         final String className = typeDef.getClassname();
         if( null == className )
@@ -247,15 +247,15 @@ class Deployment
     private List locateResources( final String resource, final URL jarUrl )
         throws Exception
     {
-        ArrayList urls = new ArrayList();
-        if( jarUrl != null )
+        final ArrayList urls = new ArrayList();
+        if( null != jarUrl )
         {
             final String systemID = "jar:" + jarUrl + "!/" + resource;
             urls.add( systemID );
         }
         else
         {
-            Enumeration enum = m_classLoader.getResources( resource );
+            final Enumeration enum = m_classLoader.getResources( resource );
             while( enum.hasMoreElements() )
             {
                 urls.add( enum.nextElement().toString() );

@@ -159,7 +159,8 @@ public class DefaultDeployer
      * Creates a deployer for a ClassLoader.
      */
     private Deployment createDeployment( final ClassLoader loader,
-                                         final URL jarUrl ) throws Exception
+                                         final URL jarUrl )
+        throws Exception
     {
         // Locate cached deployer, creating it if necessary
         Deployment deployment = (Deployment)m_classLoaderDeployers.get( loader );
