@@ -51,6 +51,7 @@ public class ApacheCatalog extends Catalog {
      *  instance of itself for each external catalog file processed.
      *  That is, if two external catalog files are processed, there
      *  will be a total of two ApacheCatalog instances, and so on.</p>
+     * @return the catalog.
      */
     protected Catalog newCatalog() {
         ApacheCatalog cat = (ApacheCatalog) super.newCatalog();
@@ -58,7 +59,10 @@ public class ApacheCatalog extends Catalog {
         return cat;
     }
 
-    /** Set the resolver object to callback. */
+    /**
+     * Set the resolver object to callback.
+     * @param resolver the apache catalog resolver.
+     */
     public void setResolver(ApacheCatalogResolver resolver) {
         this.resolver = resolver;
     }

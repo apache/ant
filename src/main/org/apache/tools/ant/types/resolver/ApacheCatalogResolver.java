@@ -89,7 +89,10 @@ public class ApacheCatalogResolver extends CatalogResolver {
         // CatalogManager.getStaticManager().setVerbosity(4);
     }
 
-    /** Set the XMLCatalog object to callback. */
+    /**
+     * Set the XMLCatalog object to callback.
+     * @param xmlCatalog the XMLCatalog to use.
+     */
     public void setXMLCatalog(XMLCatalog xmlCatalog) {
         this.xmlCatalog = xmlCatalog;
     }
@@ -97,20 +100,21 @@ public class ApacheCatalogResolver extends CatalogResolver {
     /**
      * XMLCatalog calls this to add an external catalog file for each
      * file within a <code>&lt;catalogfiles&gt;</code> fileset.
+     * @param file the external catalog file.
      */
     public void parseCatalog(String file) {
 
-        Catalog _catalog = getCatalog();
-        if (!(_catalog instanceof ApacheCatalog)) {
-            throw new BuildException("Wrong catalog type found: " + _catalog.getClass().getName());
+        Catalog catalog = getCatalog();
+        if (!(catalog instanceof ApacheCatalog)) {
+            throw new BuildException("Wrong catalog type found: " + catalog.getClass().getName());
         }
-        ApacheCatalog catalog = (ApacheCatalog) _catalog;
+        ApacheCatalog apacheCatalog = (ApacheCatalog) catalog;
 
         // Pass in reference to ourselves so we can be called back.
-        catalog.setResolver(this);
+        apacheCatalog.setResolver(this);
 
         try {
-            catalog.parseCatalog(file);
+            apacheCatalog.parseCatalog(file);
         } catch (MalformedURLException ex) {
             throw new BuildException(ex);
         } catch (IOException ex) {
