@@ -83,16 +83,16 @@ public class DependencyMetricsTest
         final String name = "org.apache.myrmidon.launcher";
         final JavaPackage javaPackage = jDepend.getPackage( name );
 
-        final Collection afferentSet = javaPackage.getAfferents();
-        final Iterator afferents = afferentSet.iterator();
+        final Collection efferentSet = javaPackage.getEfferents();
+        final Iterator afferents = efferentSet.iterator();
         while( afferents.hasNext() )
         {
-            final JavaPackage afferent = (JavaPackage)afferents.next();
-            final String afferentName = afferent.getName();
-            if( !afferentName.startsWith( name ) )
+            final JavaPackage efferent = (JavaPackage)afferents.next();
+            final String efferentName = efferent.getName();
+            if( ! isSubPackage( name, efferentName ) )
             {
                 fail( "The launcher package " + name + " depends on external classes " +
-                      "contained in " + afferentName + ". No classes besides " +
+                      "contained in " + efferentName + ". No classes besides " +
                       "those in the launcher hierarchy should be referenced" );
             }
         }
@@ -113,22 +113,35 @@ public class DependencyMetricsTest
         {
             final JavaPackage javaPackage = (JavaPackage)packages.next();
             final String name = javaPackage.getName();
-            final String componentPackage = "org.apache.myrmidon.component.";
+            final String componentPackage = "org.apache.myrmidon.components.";
             if( !name.startsWith( componentPackage ) )
             {
                 continue;
             }
+
+            // Extract the component package
             final int start = componentPackage.length() + 1;
             final int end = name.indexOf( '.', start );
-            final String component = name.substring( end );
+            final String component;
+            if( end > -1 )
+            {
+                component = name.substring( end );
+            }
+            else
+            {
+                component = name;
+            }
 
+            // Make sure that all the afferent packages of this package (i.e.
+            // those that refer to this package) are sub-packages of the
+            // component package
             final Collection afferentSet = javaPackage.getAfferents();
             final Iterator afferents = afferentSet.iterator();
             while( afferents.hasNext() )
             {
                 final JavaPackage efferent = (JavaPackage)afferents.next();
                 final String efferentName = efferent.getName();
-                if( !efferentName.startsWith( component ) )
+                if( !isSubPackage( component, efferentName ) )
                 {
                     fail( "The package " + name + " is referred to by classes " +
                           "contained in " + efferentName + ". No classes besides " +
@@ -237,7 +250,7 @@ public class DependencyMetricsTest
         {
             final JavaPackage javaPackage = (JavaPackage)packages.next();
             final String name = javaPackage.getName();
-            if( !name.startsWith( packageName ) )
+            if( !isSubPackage( packageName, name ) )
             {
                 continue;
             }
@@ -251,7 +264,7 @@ public class DependencyMetricsTest
                 for( int i = 0; i < invalidEfferents.length; i++ )
                 {
                     final String other = invalidEfferents[ i ];
-                    if( efferentName.startsWith( other ) )
+                    if( isSubPackage( other, efferentName ) )
                     {
                         fail( "The package " + name + " has an unwanted dependency " +
                               "on classes contained in " + efferentName );
@@ -259,5 +272,22 @@ public class DependencyMetricsTest
                 }
             }
         }
+    }
+
+    /**
+     * Determines if a package is a sub-package of another package.
+     *
+     * @return true if <code>subpackage</code> is either the same package as
+     *         <code>basePackage</code>, or a sub-package of it.
+     */
+    private boolean isSubPackage( final String basePackage,
+                                  final String subpackage )
+    {
+        if( ! subpackage.startsWith( basePackage ) )
+        {
+            return false;
+        }
+        return ( subpackage.length() == basePackage.length()
+                 || subpackage.charAt( basePackage.length() ) == '.' );
     }
 }
