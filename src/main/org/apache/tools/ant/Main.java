@@ -66,6 +66,8 @@ import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.launch.AntMain;
+
 
 /**
  * Command line entry point into Ant. This class is entered via the
@@ -79,7 +81,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  * @author duncan@x180.com
  */
-public class Main {
+public class Main implements AntMain {
 
     /** The default build file name. */
     public static final String DEFAULT_BUILD_FILENAME = "build.xml";
@@ -175,11 +177,25 @@ public class Main {
      */
     public static void start(String[] args, Properties additionalUserProperties,
                              ClassLoader coreLoader) {
-        Main m = null;
+        Main m = new Main();
+        m.startAnt(args, additionalUserProperties, coreLoader);
+    }
+    
+    /**
+     * Start Ant
+     * @param args command line args
+     * @param additionalUserProperties properties to set beyond those that
+     *        may be specified on the args list
+     * @param coreLoader - not used
+     *
+     * @since Ant 1.6
+     */     
+    public void startAnt(String[] args, Properties additionalUserProperties,
+                         ClassLoader coreLoader) {
 
         try {
             Diagnostics.validateVersion();
-            m = new Main(args);
+            processArgs(args);
         } catch (Throwable exc) {
             handleLogfile();
             printMessage(exc);
@@ -191,17 +207,17 @@ public class Main {
                     e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 String property = additionalUserProperties.getProperty(key);
-                m.definedProps.put(key, property);
+                definedProps.put(key, property);
             }
         }
 
         // expect the worst
         int exitCode = 1;
         try {
-            m.runBuild(coreLoader);
+            runBuild(coreLoader);
             exitCode = 0;
         } catch (BuildException be) {
-            if (m.err != System.err) {
+            if (err != System.err) {
                 printMessage(be);
             }
         } catch (Throwable exc) {
@@ -249,6 +265,13 @@ public class Main {
     }
 
     /**
+     * Constructor used when creating Main for later arg processing
+     * and startup
+     */
+    public Main() {
+    }
+    
+    /**
      * Sole constructor, which parses and deals with command line
      * arguments.
      *
@@ -258,6 +281,17 @@ public class Main {
      *                           or is a directory.
      */
     protected Main(String[] args) throws BuildException {
+        processArgs(args);
+    }
+    
+    /**
+     * Process command line arguments
+     *
+     * @param args the command line arguments.
+     *
+     * @since Ant 1.6
+     */
+    private void processArgs(String[] args) {
         String searchForThis = null;
         PrintStream logTo = null;
 
@@ -656,8 +690,8 @@ public class Main {
             try {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
-                if ( project != null ) {
-                    project.setProjectReference( listener );
+                if (project != null) {
+                    project.setProjectReference(listener);
                 }
                 project.addBuildListener(listener);
             } catch (Throwable exc) {
@@ -670,6 +704,8 @@ public class Main {
     /**
      * Creates the InputHandler and adds it to the project.
      *
+     * @param project the project instance.
+     *
      * @exception BuildException if a specified InputHandler
      *                           implementation could not be loaded.
      */
@@ -681,8 +717,8 @@ public class Main {
             try {
                 handler = (InputHandler)
                     (Class.forName(inputHandlerClassname).newInstance());
-                if ( project != null ) {
-                    project.setProjectReference( handler );
+                if (project != null) {
+                    project.setProjectReference(handler);
                 }
             } catch (ClassCastException e) {
                 String msg = "The specified input handler class "
@@ -713,7 +749,8 @@ public class Main {
         BuildLogger logger = null;
         if (loggerClassname != null) {
             try {
-                logger = (BuildLogger) (Class.forName(loggerClassname).newInstance());
+                Class loggerClass = Class.forName(loggerClassname);
+                logger = (BuildLogger) (loggerClass.newInstance());
             } catch (ClassCastException e) {
                 System.err.println("The specified logger class "
                     + loggerClassname
@@ -918,6 +955,8 @@ public class Main {
      * Writes a formatted list of target names to <code>System.out</code>
      * with an optional description.
      *
+     *
+     * @param project the project instance.
      * @param names The names to be printed.
      *              Must not be <code>null</code>.
      * @param descriptions The associated target descriptions.
