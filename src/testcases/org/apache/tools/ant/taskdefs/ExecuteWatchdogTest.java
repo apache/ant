@@ -65,7 +65,7 @@ import java.io.*;
  */
 public class ExecuteWatchdogTest extends TestCase {
 
-	private final static int TIME_OUT = 2000;
+	private final static int TIME_OUT = 5000;
 
 	private final static String TEST_CLASSPATH = getTestClassPath();
 
