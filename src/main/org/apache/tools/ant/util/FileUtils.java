@@ -566,12 +566,8 @@ public class FileUtils {
                         line = lineTokenizer.getToken(in);
                     }
                 } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (in != null) {
-                        in.close();
-                    }
+                    close(out);
+                    close(in);
                 }
             } else if (filterChainsAvailable
                        || (inputEncoding != null
@@ -619,12 +615,8 @@ public class FileUtils {
                          out.write(buffer, 0, nRead);
                       }
                   } finally {
-                      if (out != null) {
-                         out.close();
-                     }
-                     if (in != null) {
-                         in.close();
-                     }
+                      close(out);
+                      close(in);
                  }
             } else {
                 FileInputStream in = null;
@@ -640,12 +632,8 @@ public class FileUtils {
                         count = in.read(buffer, 0, buffer.length);
                     } while (count != -1);
                 } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (in != null) {
-                        in.close();
-                    }
+                    close(out);
+                    close(in);
                 }
             }
 
