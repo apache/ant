@@ -415,7 +415,8 @@ public class TarInputStream
         // properly skip over bytes via the TarBuffer...
         //
         final byte[] skipBuf = new byte[ 8 * 1024 ];
-        for( int num = numToSkip; num > 0; )
+        int num = numToSkip;
+        while( num > 0 )
         {
             final int count = ( num > skipBuf.length ) ? skipBuf.length : num;
             final int numRead = read( skipBuf, 0, count );
