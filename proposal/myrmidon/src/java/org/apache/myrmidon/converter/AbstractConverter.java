@@ -22,8 +22,8 @@ public abstract class AbstractConverter
     private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractConverter.class );
 
-    private final Class         m_source;
-    private final Class         m_destination;
+    private final Class m_source;
+    private final Class m_destination;
 
     /**
      * Constructor for a converter between types source and destination

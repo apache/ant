@@ -9,7 +9,6 @@ package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
@@ -29,9 +28,9 @@ import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
-import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
@@ -51,26 +50,26 @@ public class DefaultEmbeddor
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
 
-    private Deployer                 m_deployer;
-    private RoleManager              m_roleManager;
+    private Deployer m_deployer;
+    private RoleManager m_roleManager;
 
-    private AspectManager            m_aspectManager;
-    private TypeManager              m_typeManager;
-    private MasterConverter          m_converter;
-    private ConverterRegistry        m_converterRegistry;
-    private ExtensionManager         m_extensionManager;
+    private AspectManager m_aspectManager;
+    private TypeManager m_typeManager;
+    private MasterConverter m_converter;
+    private ConverterRegistry m_converterRegistry;
+    private ExtensionManager m_extensionManager;
 
-    private Executor                 m_executor;
-    private Configurer               m_configurer;
+    private Executor m_executor;
+    private Configurer m_configurer;
 
-    private DefaultComponentManager  m_componentManager;
-    private Parameters               m_parameters;
-    private Parameters               m_defaults;
+    private DefaultComponentManager m_componentManager;
+    private Parameters m_parameters;
+    private Parameters m_defaults;
 
-    private File                     m_homeDir;
-    private File                     m_binDir;
-    private File                     m_libDir;
-    private File                     m_taskLibDir;
+    private File m_homeDir;
+    private File m_binDir;
+    private File m_libDir;
+    private File m_taskLibDir;
 
     /**
      * Setup basic properties of engine.
@@ -114,17 +113,17 @@ public class DefaultEmbeddor
 
         if( builder instanceof Composable )
         {
-            ((Composable)builder).compose( m_componentManager );
+            ( (Composable)builder ).compose( m_componentManager );
         }
 
         if( builder instanceof Parameterizable )
         {
-            ((Parameterizable)builder).parameterize( parameters );
+            ( (Parameterizable)builder ).parameterize( parameters );
         }
 
         if( builder instanceof Initializable )
         {
-            ((Initializable)builder).initialize();
+            ( (Initializable)builder ).initialize();
         }
 
         return builder;
@@ -139,20 +138,19 @@ public class DefaultEmbeddor
 
         setupLogger( workspace );
 
-
         if( workspace instanceof Composable )
         {
-            ((Composable)workspace).compose( m_componentManager );
+            ( (Composable)workspace ).compose( m_componentManager );
         }
 
         if( workspace instanceof Parameterizable )
         {
-            ((Parameterizable)workspace).parameterize( parameters );
+            ( (Parameterizable)workspace ).parameterize( parameters );
         }
 
         if( workspace instanceof Initializable )
         {
-            ((Initializable)workspace).initialize();
+            ( (Initializable)workspace ).initialize();
         }
 
         return workspace;
@@ -350,17 +348,17 @@ public class DefaultEmbeddor
 
         if( component instanceof Composable )
         {
-            ((Composable)component).compose( m_componentManager );
+            ( (Composable)component ).compose( m_componentManager );
         }
 
         if( component instanceof Parameterizable )
         {
-            ((Parameterizable)component).parameterize( m_parameters );
+            ( (Parameterizable)component ).parameterize( m_parameters );
         }
 
         if( component instanceof Initializable )
         {
-            ((Initializable)component).initialize();
+            ( (Initializable)component ).initialize();
         }
     }
 
@@ -373,7 +371,7 @@ public class DefaultEmbeddor
         String filepath = null;
 
         filepath = getParameter( "myrmidon.home" );
-        m_homeDir = (new File( filepath )).getAbsoluteFile();
+        m_homeDir = ( new File( filepath ) ).getAbsoluteFile();
         checkDirectory( m_homeDir, "home" );
 
         filepath = getParameter( "myrmidon.bin.path" );
@@ -457,7 +455,9 @@ public class DefaultEmbeddor
             Class.forName( "java.lang.StrictMath" );
             version = JavaVersion.JAVA1_3;
         }
-        catch( final ClassNotFoundException cnfe ) {}
+        catch( final ClassNotFoundException cnfe )
+        {
+        }
 
         return version;
     }

@@ -17,7 +17,7 @@ import org.apache.avalon.framework.ExceptionUtil;
 public class ClassicProjectListener
     extends AbstractProjectListener
 {
-    private String        m_prefix;
+    private String m_prefix;
 
     /**
      * Notify listener of targetStarted event.
@@ -76,8 +76,10 @@ public class ClassicProjectListener
      */
     protected void output( final String data )
     {
-        if( null != getPrefix() ) System.out.println( "\t[" + getPrefix() + "] " + data );
-        else System.out.println( data );
+        if( null != getPrefix() )
+            System.out.println( "\t[" + getPrefix() + "] " + data );
+        else
+            System.out.println( data );
     }
 
     protected final String getPrefix()

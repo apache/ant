@@ -92,7 +92,7 @@ public class DefaultConfigurer
                 getLogger().debug( "Configuring object via Configurable interface" );
             }
 
-            ((Configurable)object).configure( configuration );
+            ( (Configurable)object ).configure( configuration );
         }
         else
         {
@@ -317,14 +317,22 @@ public class DefaultConfigurer
 
     private Class getComplexTypeFor( final Class clazz )
     {
-        if( String.class == clazz ) return String.class;
-        else if( Integer.TYPE.equals( clazz ) ) return Integer.class;
-        else if( Long.TYPE.equals( clazz ) ) return Long.class;
-        else if( Short.TYPE.equals( clazz ) ) return Short.class;
-        else if( Byte.TYPE.equals( clazz ) ) return Byte.class;
-        else if( Boolean.TYPE.equals( clazz ) ) return Boolean.class;
-        else if( Float.TYPE.equals( clazz ) ) return Float.class;
-        else if( Double.TYPE.equals( clazz ) ) return Double.class;
+        if( String.class == clazz )
+            return String.class;
+        else if( Integer.TYPE.equals( clazz ) )
+            return Integer.class;
+        else if( Long.TYPE.equals( clazz ) )
+            return Long.class;
+        else if( Short.TYPE.equals( clazz ) )
+            return Short.class;
+        else if( Byte.TYPE.equals( clazz ) )
+            return Byte.class;
+        else if( Boolean.TYPE.equals( clazz ) )
+            return Boolean.class;
+        else if( Float.TYPE.equals( clazz ) )
+            return Float.class;
+        else if( Double.TYPE.equals( clazz ) )
+            return Double.class;
         else
         {
             final String message = REZ.getString( "no-complex-type.error", clazz.getName() );
@@ -341,7 +349,7 @@ public class DefaultConfigurer
         {
             final Method method = methods[ i ];
             if( methodName.equals( method.getName() ) &&
-                Method.PUBLIC == (method.getModifiers() & Method.PUBLIC) )
+                Method.PUBLIC == ( method.getModifiers() & Method.PUBLIC ) )
             {
                 if( method.getReturnType().equals( Void.TYPE ) )
                 {
@@ -366,7 +374,7 @@ public class DefaultConfigurer
         {
             final Method method = methods[ i ];
             if( methodName.equals( method.getName() ) &&
-                Method.PUBLIC == (method.getModifiers() & Method.PUBLIC) )
+                Method.PUBLIC == ( method.getModifiers() & Method.PUBLIC ) )
             {
                 final Class returnType = method.getReturnType();
                 if( !returnType.equals( Void.TYPE ) &&

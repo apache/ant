@@ -9,8 +9,8 @@ package org.apache.myrmidon.api;
 
 /**
  * This is the interface that tasks implement to be executed in Myrmidon runtime.
- * 
- * Instances can also implement the Avalon lifecycle methods 
+ *
+ * Instances can also implement the Avalon lifecycle methods
  * LogEnabled, Contextualizable, Composable, Initializable and Disposable.
  * Each of these lifecycle stages will be executed at appropriate time.
  *
@@ -28,7 +28,7 @@ public interface Task
     String ROLE = "org.apache.myrmidon.api.Task";
 
     /**
-     * Execute task. 
+     * Execute task.
      * This method is called to perform actual work associated with task.
      * It is called after Task has been Configured and Initialized and before
      * being Disposed (If task implements appropriate interfaces).

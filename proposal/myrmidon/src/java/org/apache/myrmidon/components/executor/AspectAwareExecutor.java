@@ -14,15 +14,12 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationSerializer;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.Task;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.aspects.AspectHandler;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 
@@ -32,8 +29,8 @@ public class AspectAwareExecutor
     private static final Resources REZ =
         ResourceManager.getPackageResources( AspectAwareExecutor.class );
 
-    private final static Parameters       EMPTY_PARAMETERS;
-    private final static Configuration[]  EMPTY_ELEMENTS       = new Configuration[ 0 ];
+    private final static Parameters EMPTY_PARAMETERS;
+    private final static Configuration[] EMPTY_ELEMENTS = new Configuration[ 0 ];
 
     static
     {
@@ -41,7 +38,7 @@ public class AspectAwareExecutor
         EMPTY_PARAMETERS.makeReadOnly();
     }
 
-    private AspectManager        m_aspectManager;
+    private AspectManager m_aspectManager;
 
     /**
      * Retrieve relevent services.
@@ -158,7 +155,8 @@ public class AspectAwareExecutor
             if( null == parameters ) parameters = EMPTY_PARAMETERS;
 
             Configuration[] elements = null;
-            if( null == elementList ) elements = EMPTY_ELEMENTS;
+            if( null == elementList )
+                elements = EMPTY_ELEMENTS;
             else
             {
                 elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
@@ -185,7 +183,8 @@ public class AspectAwareExecutor
 
                 Configuration[] elements = null;
 
-                if( null == elementList ) elements = EMPTY_ELEMENTS;
+                if( null == elementList )
+                    elements = EMPTY_ELEMENTS;
                 else
                 {
                     elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );

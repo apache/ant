@@ -19,7 +19,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class LogTargetToListenerAdapter
     implements LogTarget
 {
-    private final ProjectListener    m_listener;
+    private final ProjectListener m_listener;
 
     /**
      * Constructor taking listener to convert to.

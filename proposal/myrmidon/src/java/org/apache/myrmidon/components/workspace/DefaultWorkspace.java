@@ -8,13 +8,11 @@
 package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -57,15 +55,15 @@ public class DefaultWorkspace
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultWorkspace.class );
 
-    private Executor                 m_executor;
-    private ProjectListenerSupport   m_listenerSupport   = new ProjectListenerSupport();
-    private ComponentManager         m_componentManager;
-    private Parameters               m_parameters;
-    private TaskContext              m_baseContext;
-    private HashMap                  m_entrys            = new HashMap();
-    private TypeManager              m_typeManager;
-    private Hierarchy                m_hierarchy;
-    private int                      m_projectID;
+    private Executor m_executor;
+    private ProjectListenerSupport m_listenerSupport = new ProjectListenerSupport();
+    private ComponentManager m_componentManager;
+    private Parameters m_parameters;
+    private TaskContext m_baseContext;
+    private HashMap m_entrys = new HashMap();
+    private TypeManager m_typeManager;
+    private Hierarchy m_hierarchy;
+    private int m_projectID;
 
     /**
      * Add a listener to project events.
@@ -139,7 +137,6 @@ public class DefaultWorkspace
 
         m_listenerSupport.projectFinished();
     }
-
 
     private TaskContext createBaseContext()
         throws TaskException
@@ -239,7 +236,10 @@ public class DefaultWorkspace
         final DefaultDeployer deployer = new DefaultDeployer();
         deployer.enableLogging( getLogger() );
 
-        try { deployer.compose( componentManager ); }
+        try
+        {
+            deployer.compose( componentManager );
+        }
         catch( final ComponentException ce )
         {
             final String message = REZ.getString( "bad-deployer-config.error" );

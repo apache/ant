@@ -10,9 +10,9 @@ package org.apache.myrmidon.components.type;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.type.TypeException;
 
 /**
  * The interface that is used to manage types.
@@ -26,10 +26,10 @@ public class DefaultTypeManager
         ResourceManager.getPackageResources( DefaultTypeManager.class );
 
     ///Parent type manager to inherit values from.
-    private final DefaultTypeManager  m_parent;
+    private final DefaultTypeManager m_parent;
 
     ///Maps role to MultiSourceTypeFactory.
-    private final HashMap             m_roleMap      = new HashMap();
+    private final HashMap m_roleMap = new HashMap();
 
     public DefaultTypeManager()
     {
@@ -41,9 +41,9 @@ public class DefaultTypeManager
         m_parent = parent;
     }
 
-    public void registerType( final String role, 
-                              final String shorthandName, 
-                              final TypeFactory factory ) 
+    public void registerType( final String role,
+                              final String shorthandName,
+                              final TypeFactory factory )
         throws TypeException
     {
         final MultiSourceTypeFactory msFactory = createFactory( role );
@@ -72,18 +72,18 @@ public class DefaultTypeManager
      *
      * @param role the role name(must be name of work interface)
      * @return the Factory for interface
-     * @exception TypeException role does not specify accessible work interface 
+     * @exception TypeException role does not specify accessible work interface
      */
     private MultiSourceTypeFactory createFactory( final String role )
         throws TypeException
     {
         MultiSourceTypeFactory factory = (MultiSourceTypeFactory)m_roleMap.get( role );
-        if( null != factory ) 
+        if( null != factory )
         {
             return factory;
         }
 
-        final MultiSourceTypeFactory parentFactory = getParentTypedFactory( role );       
+        final MultiSourceTypeFactory parentFactory = getParentTypedFactory( role );
         if( null != parentFactory )
         {
             factory = new MultiSourceTypeFactory( parentFactory );
@@ -103,7 +103,7 @@ public class DefaultTypeManager
                 final String message = REZ.getString( "no-work-interface.error", role );
                 throw new TypeException( message );
             }
-        }        
+        }
 
         m_roleMap.put( role, factory );
 
@@ -117,7 +117,7 @@ public class DefaultTypeManager
             return m_parent.lookupFactory( role );
         }
         else
-        {       
+        {
             return null;
         }
     }

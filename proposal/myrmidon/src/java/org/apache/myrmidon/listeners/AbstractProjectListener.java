@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.listeners;
 
-import org.apache.avalon.framework.ExceptionUtil;
-
 /**
  * Abstract listener from which to extend.
  *

@@ -18,7 +18,7 @@ import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 public class DefaultConverterRegistry
     implements ConverterRegistry
 {
-    private final HashMap      m_mapping   = new HashMap();
+    private final HashMap m_mapping = new HashMap();
 
     public String getConverterName( final String source, final String destination )
     {
@@ -27,8 +27,8 @@ public class DefaultConverterRegistry
         return (String)map.get( destination );
     }
 
-    public void registerConverter( final String className, 
-                                   final String source, 
+    public void registerConverter( final String className,
+                                   final String source,
                                    final String destination )
     {
         HashMap map = (HashMap)m_mapping.get( source );

@@ -7,9 +7,9 @@
  */
 package org.apache.myrmidon.components.executor;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.avalon.framework.configuration.Configuration;
 
 public class PrintingExecutor
     extends AspectAwareExecutor
@@ -19,22 +19,21 @@ public class PrintingExecutor
     {
         final StringBuffer sb = new StringBuffer();
         printConfiguration( taskModel, 0, sb );
-        
+
         System.out.println( sb.toString() );
     }
 
-    private void printConfiguration( final Configuration taskModel, 
-                                     final int level, 
+    private void printConfiguration( final Configuration taskModel,
+                                     final int level,
                                      final StringBuffer sb )
     {
         for( int i = 0; i < level; i++ )
         {
             sb.append( ' ' );
         }
-        
+
         sb.append( '<' );
         sb.append( taskModel.getName() );
-
 
         final String[] names = taskModel.getAttributeNames();
         for( int i = 0; i < names.length; i++ )

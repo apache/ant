@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.embeddor;
 
-import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.builder;
 
-import java.io.File;
-import java.io.IOException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.interfaces.model.Project;
 

@@ -11,7 +11,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -34,10 +33,10 @@ public class TypeInstanceTask
     private static final Resources REZ =
         ResourceManager.getPackageResources( TypeInstanceTask.class );
 
-    private String              m_id;
-    private Object              m_value;
-    private boolean             m_localScope     = true;
-    private TypeFactory         m_factory;
+    private String m_id;
+    private Object m_value;
+    private boolean m_localScope = true;
+    private TypeFactory m_factory;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -45,7 +44,10 @@ public class TypeInstanceTask
         super.compose( componentManager );
 
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        try { m_factory = typeManager.getFactory( DataType.ROLE ); }
+        try
+        {
+            m_factory = typeManager.getFactory( DataType.ROLE );
+        }
         catch( final TypeException te )
         {
             final String message = REZ.getString( "type.no-factory.error" );

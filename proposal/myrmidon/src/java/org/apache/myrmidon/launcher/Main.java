@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -46,17 +45,17 @@ public final class Main
 
             final File containerLibDir = new File( installDirectory, "bin" + File.separator + "lib" );
             final URL[] containerLibUrls = buildURLList( containerLibDir );
-            final URLClassLoader classLoader = 
+            final URLClassLoader classLoader =
                 new URLClassLoader( containerLibUrls, libClassLoader );
 
             //load class and retrieve appropriate main method.
             final Class clazz = classLoader.loadClass( "org.apache.myrmidon.frontends.CLIMain" );
-            final Method method = clazz.getMethod( "main", new Class[] { args.getClass() } );
+            final Method method = clazz.getMethod( "main", new Class[]{args.getClass()} );
 
             Thread.currentThread().setContextClassLoader( classLoader );
 
             //kick the tires and light the fires....
-            method.invoke( null, new Object[] { args } );
+            method.invoke( null, new Object[]{args} );
         }
         catch( final InvocationTargetException ite )
         {
@@ -100,7 +99,7 @@ public final class Main
             }
 
             file = file.getCanonicalFile();
-            
+
             urlList.add( file.toURL() );
         }
 
@@ -123,7 +122,7 @@ public final class Main
 
             if( element.endsWith( "myrmidon-launcher.jar" ) )
             {
-                File file = (new File( element )).getAbsoluteFile();
+                File file = ( new File( element ) ).getAbsoluteFile();
                 file = file.getParentFile();
 
                 if( null != file )

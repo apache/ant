@@ -15,16 +15,16 @@ package org.apache.myrmidon.interfaces.model;
 public class TypeLib
 {
     //Name of library (this is location independent)
-    private final String    m_library;
+    private final String m_library;
 
     //Do we need this??
     //private final String    m_namespace;
 
     //The role of object to be imported
-    private final String    m_role;
+    private final String m_role;
 
     //The name of type instance
-    private final String    m_name;
+    private final String m_name;
 
     public TypeLib( final String library )
     {

@@ -20,7 +20,10 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public interface ExecutionFrame
 {
     TypeManager getTypeManager();
+
     Logger getLogger();
+
     TaskContext getContext();
+
     ComponentManager getComponentManager();
 }

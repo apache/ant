@@ -9,14 +9,14 @@ package org.apache.myrmidon;
 
 /**
  * Abstract interface to hold constants.
- * 
+ *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface Constants
 {
     //Constants to indicate the build of Myrmidon
-    String  BUILD_DATE         = "@@DATE@@";
-    String  BUILD_VERSION      = "@@VERSION@@";
+    String BUILD_DATE = "@@DATE@@";
+    String BUILD_VERSION = "@@VERSION@@";
 
-    String  BUILD_DESCRIPTION  = "Myrmidon " + BUILD_VERSION + " compiled on " + BUILD_DATE;
+    String BUILD_DESCRIPTION = "Myrmidon " + BUILD_VERSION + " compiled on " + BUILD_DATE;
 }

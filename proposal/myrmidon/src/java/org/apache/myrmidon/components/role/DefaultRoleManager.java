@@ -19,7 +19,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -37,13 +36,13 @@ public class DefaultRoleManager
     private final static String ROLE_DESCRIPTOR = "META-INF/ant-roles.xml";
 
     /** Parent <code>RoleManager</code> for nested resolution */
-    private final RoleManager  m_parent;
+    private final RoleManager m_parent;
 
     /** Map for name to role mapping */
-    private final HashMap      m_names = new HashMap();
+    private final HashMap m_names = new HashMap();
 
     /** Map for role to name mapping */
-    private final HashMap      m_roles = new HashMap();
+    private final HashMap m_roles = new HashMap();
 
     /**
      *  constructor--this RoleManager has no parent.

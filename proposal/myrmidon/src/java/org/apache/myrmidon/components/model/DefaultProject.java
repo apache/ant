@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
@@ -29,22 +28,22 @@ public class DefaultProject
         ResourceManager.getPackageResources( DefaultProject.class );
 
     ///The imports
-    private final ArrayList m_imports         = new ArrayList();
+    private final ArrayList m_imports = new ArrayList();
 
     ///The projects refferred to by this project
-    private final HashMap   m_projects        = new HashMap();
+    private final HashMap m_projects = new HashMap();
 
     ///The targets contained by this project
-    private final HashMap   m_targets         = new HashMap();
+    private final HashMap m_targets = new HashMap();
 
     ///The implicit target (not present in m_targets)
-    private Target          m_implicitTarget;
+    private Target m_implicitTarget;
 
     ///The name of the default target
-    private String          m_defaultTarget;
+    private String m_defaultTarget;
 
     ///The base directory of project
-    private File            m_baseDirectory;
+    private File m_baseDirectory;
 
     /**
      * Get the imports for project.

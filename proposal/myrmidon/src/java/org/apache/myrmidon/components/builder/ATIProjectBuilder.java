@@ -13,13 +13,8 @@ import java.util.Properties;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -41,8 +36,8 @@ public class ATIProjectBuilder
     private static final Resources REZ =
         ResourceManager.getPackageResources( ATIProjectBuilder.class );
 
-    private Parameters     m_parameters;
-    private URL            m_systemID;
+    private Parameters m_parameters;
+    private URL m_systemID;
 
     public void parameterize( final Parameters parameters )
     {
@@ -62,7 +57,10 @@ public class ATIProjectBuilder
         final ReactorPIHandler reactorHandler = new ReactorPIHandler();
         reader.setContentHandler( reactorHandler );
 
-        try { reader.parse( sourceID.toString() ); }
+        try
+        {
+            reader.parse( sourceID.toString() );
+        }
         catch( final StopParsingException spe )
         {
             //Ignore me
@@ -76,8 +74,10 @@ public class ATIProjectBuilder
             final String target = reactorHandler.getTarget( i );
             final String data = reactorHandler.getData( i );
 
-            if( target.equals( "xsl-param" ) ) handleParameter( data );
-            else if( target.equals( "xsl-params" ) ) handleParameters( data, sourceID );
+            if( target.equals( "xsl-param" ) )
+                handleParameter( data );
+            else if( target.equals( "xsl-params" ) )
+                handleParameters( data, sourceID );
             else if( target.equals( "xsl-stylesheet" ) )
             {
                 if( null != transformer )
@@ -180,7 +180,10 @@ public class ATIProjectBuilder
             throw new SAXException( message );
         }
 
-        try { return new URL( baseSource, stylesheet[ 1 ] ).toString(); }
+        try
+        {
+            return new URL( baseSource, stylesheet[ 1 ] ).toString();
+        }
         catch( final Exception e )
         {
             final String message =

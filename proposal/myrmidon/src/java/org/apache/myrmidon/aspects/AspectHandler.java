@@ -8,8 +8,8 @@
 package org.apache.myrmidon.aspects;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 

@@ -99,67 +99,88 @@ public class Os
                                  final String arch,
                                  final String version )
     {
-        boolean retValue = false;
-
         if( family != null || name != null || arch != null || version != null )
         {
-            boolean isFamily = true;
-            boolean isName = true;
-            boolean isArch = true;
-            boolean isVersion = true;
+            final boolean isFamily = familyMatches( family );
+            final boolean isName = nameMatches( name );
+            final boolean isArch = archMatches( arch );
+            final boolean isVersion = versionMatches( version );
 
-            if( family != null )
-            {
-                if( family.equals( "windows" ) )
-                {
-                    isFamily = m_osName.indexOf( "windows" ) > -1;
-                }
-                else if( family.equals( "os/2" ) )
-                {
-                    isFamily = m_osName.indexOf( "os/2" ) > -1;
-                }
-                else if( family.equals( "netware" ) )
-                {
-                    isFamily = m_osName.indexOf( "netware" ) > -1;
-                }
-                else if( family.equals( "dos" ) )
-                {
-                    isFamily = m_pathSep.equals( ";" ) && !isFamily( "netware" );
-                }
-                else if( family.equals( "mac" ) )
-                {
-                    isFamily = m_osName.indexOf( "mac" ) > -1;
-                }
-                else if( family.equals( "unix" ) )
-                {
-                    isFamily = m_pathSep.equals( ":" ) &&
-                        ( !isFamily( "mac" ) || m_osName.endsWith( "x" ) );
-                }
-                else
-                {
-                    final String message = REZ.getString( "unknown-os-family", family );
-                    throw new IllegalArgumentException( message );
-                }
-            }
-
-            if( name != null )
-            {
-                isName = name.equals( m_osName );
-            }
-
-            if( arch != null )
-            {
-                isArch = arch.equals( m_osArch );
-            }
-
-            if( version != null )
-            {
-                isVersion = version.equals( m_osVersion );
-            }
-
-            retValue = isFamily && isName && isArch && isVersion;
+            return isFamily && isName && isArch && isVersion;
         }
-        return retValue;
+        else
+        {
+            return false;
+        }
+    }
+
+    private static boolean versionMatches( final String version )
+    {
+        boolean isVersion = true;
+        if( version != null )
+        {
+            isVersion = version.equals( m_osVersion );
+        }
+        return isVersion;
+    }
+
+    private static boolean archMatches( final String arch )
+    {
+        boolean isArch = true;
+        if( arch != null )
+        {
+            isArch = arch.equals( m_osArch );
+        }
+        return isArch;
+    }
+
+    private static boolean nameMatches( final String name )
+    {
+        boolean isName = true;
+        if( name != null )
+        {
+            isName = name.equals( m_osName );
+        }
+        return isName;
+    }
+
+    private static boolean familyMatches( final String family )
+    {
+        boolean isFamily = true;
+        if( family != null )
+        {
+            if( family.equals( "windows" ) )
+            {
+                isFamily = m_osName.indexOf( "windows" ) > -1;
+            }
+            else if( family.equals( "os/2" ) )
+            {
+                isFamily = m_osName.indexOf( "os/2" ) > -1;
+            }
+            else if( family.equals( "netware" ) )
+            {
+                isFamily = m_osName.indexOf( "netware" ) > -1;
+            }
+            else if( family.equals( "dos" ) )
+            {
+                isFamily = m_pathSep.equals( ";" ) && !isFamily( "netware" );
+            }
+            else if( family.equals( "mac" ) )
+            {
+                isFamily = m_osName.indexOf( "mac" ) > -1;
+            }
+            else if( family.equals( "unix" ) )
+            {
+                isFamily = m_pathSep.equals( ":" ) &&
+                    ( !isFamily( "mac" ) || m_osName.endsWith( "x" ) );
+            }
+            else
+            {
+                final String message = REZ.getString( "unknown-os-family", family );
+                throw new IllegalArgumentException( message );
+            }
+        }
+        return isFamily;
     }
 
     /**

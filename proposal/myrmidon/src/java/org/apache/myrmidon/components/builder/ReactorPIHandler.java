@@ -22,8 +22,8 @@ import org.xml.sax.helpers.DefaultHandler;
 public class ReactorPIHandler
     extends DefaultHandler
 {
-    private ArrayList    m_targets    = new ArrayList();
-    private ArrayList    m_data       = new ArrayList();
+    private ArrayList m_targets = new ArrayList();
+    private ArrayList m_data = new ArrayList();
 
     public int getPICount()
     {
@@ -46,7 +46,7 @@ public class ReactorPIHandler
         m_targets.add( target );
         m_data.add( data );
     }
-    
+
     public void startElement( final String uri,
                               final String localName,
                               final String qName,

@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.builder;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,22 +15,16 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.log.Logger;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.DefaultProject;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -46,10 +39,10 @@ public class DefaultProjectBuilder
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultProjectBuilder.class );
 
-    private final static int    PROJECT_REFERENCES  = 0;
-    private final static int    LIBRARY_IMPORTS     = 1;
-    private final static int    IMPLICIT_TASKS      = 2;
-    private final static int    TARGETS             = 3;
+    private final static int PROJECT_REFERENCES = 0;
+    private final static int LIBRARY_IMPORTS = 1;
+    private final static int IMPLICIT_TASKS = 2;
+    private final static int TARGETS = 3;
 
     /**
      * build a project from file.
@@ -135,7 +128,7 @@ public class DefaultProjectBuilder
 
         //determine base directory for project
         final File baseDirectory =
-            (new File( file.getParentFile(), baseDirectoryName )).getAbsoluteFile();
+            ( new File( file.getParentFile(), baseDirectoryName ) ).getAbsoluteFile();
 
         if( getLogger().isDebugEnabled() )
         {
@@ -214,7 +207,8 @@ public class DefaultProjectBuilder
                 }
             }
 
-            if( name.equals( "target" ) ) buildTarget( project, element );
+            if( name.equals( "target" ) )
+                buildTarget( project, element );
             else
             {
                 final String message =
@@ -406,7 +400,9 @@ public class DefaultProjectBuilder
 
     protected boolean validName( final String name )
     {
-        if( -1 != name.indexOf( "->" ) ) return false;
-        else return true;
+        if( -1 != name.indexOf( "->" ) )
+            return false;
+        else
+            return true;
     }
 }

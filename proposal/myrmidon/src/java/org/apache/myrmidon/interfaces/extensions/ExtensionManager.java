@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.extensions;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.excalibur.extension.PackageRepository;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * PackageRepository

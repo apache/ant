@@ -10,21 +10,12 @@ package org.apache.myrmidon.components.executor;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.interfaces.aspect.AspectManager;
-import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
-import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
-import org.apache.myrmidon.interfaces.deployer.Deployer;
-import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
@@ -35,11 +26,11 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public class DefaultExecutionFrame
     implements ExecutionFrame, LogEnabled, Contextualizable, Composable
 {
-    private TypeManager              m_typeManager;
+    private TypeManager m_typeManager;
 
-    private Logger                   m_logger;
-    private TaskContext              m_context;
-    private ComponentManager         m_componentManager;
+    private Logger m_logger;
+    private TaskContext m_context;
+    private ComponentManager m_componentManager;
 
     public void enableLogging( final Logger logger )
     {

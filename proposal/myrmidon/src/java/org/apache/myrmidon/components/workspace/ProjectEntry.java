@@ -18,9 +18,9 @@ import org.apache.myrmidon.interfaces.model.Project;
  */
 public final class ProjectEntry
 {
-    private final Project         m_project;
-    private final ExecutionFrame  m_frame;
-    private final ArrayList       m_targetsCompleted   = new ArrayList();
+    private final Project m_project;
+    private final ExecutionFrame m_frame;
+    private final ArrayList m_targetsCompleted = new ArrayList();
 
     public ProjectEntry( final Project project,
                          final ExecutionFrame frame )

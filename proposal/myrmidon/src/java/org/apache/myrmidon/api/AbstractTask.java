@@ -119,8 +119,8 @@ public abstract class AbstractTask
     }
 
     protected final void setProperty( final String name,
-                             final Object value,
-                             final TaskContext.ScopeEnum scope )
+                                      final Object value,
+                                      final TaskContext.ScopeEnum scope )
         throws TaskException
     {
         getContext().setProperty( name, value, scope );

@@ -7,20 +7,20 @@
  */
 package org.apache.myrmidon.components.converter;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.converter.ConverterException;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.converter.ConverterException;
 
 /**
  * Converter engine to handle converting between types.
@@ -34,10 +34,10 @@ public class DefaultMasterConverter
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultMasterConverter.class );
 
-    private final static boolean DEBUG                = false;
+    private final static boolean DEBUG = false;
 
-    private ConverterRegistry    m_registry;
-    private TypeFactory          m_factory;
+    private ConverterRegistry m_registry;
+    private TypeFactory m_factory;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -51,7 +51,10 @@ public class DefaultMasterConverter
         m_registry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
 
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        try { m_factory = typeManager.getFactory( Converter.ROLE ); }
+        try
+        {
+            m_factory = typeManager.getFactory( Converter.ROLE );
+        }
         catch( final TypeException te )
         {
             final String message = REZ.getString( "no-converter-factory.error" );
@@ -80,9 +83,9 @@ public class DefaultMasterConverter
 
         if( DEBUG )
         {
-            final String message = 
-                REZ.getString( "converter-lookup.notice", 
-                               originalClass.getName(), 
+            final String message =
+                REZ.getString( "converter-lookup.notice",
+                               originalClass.getName(),
                                destination.getName() );
             getLogger().debug( message );
         }
@@ -93,9 +96,9 @@ public class DefaultMasterConverter
 
         if( null == name )
         {
-            final String message = 
-                REZ.getString( "no-converter.notice", 
-                               originalClass.getName(), 
+            final String message =
+                REZ.getString( "no-converter.notice",
+                               originalClass.getName(),
                                destination.getName() );
             throw new ConverterException( message );
         }

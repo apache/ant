@@ -9,14 +9,8 @@ package org.apache.myrmidon.frontends;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +18,8 @@ import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
 import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
 import org.apache.avalon.excalibur.cli.CLUtil;
-import org.apache.avalon.excalibur.io.ExtensionFileFilter;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
@@ -37,15 +32,12 @@ import org.apache.log.output.DefaultOutputLogTarget;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
-import org.apache.myrmidon.interfaces.executor.Executor;
-import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
-import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.interfaces.embeddor.Embeddor;
+import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Project;
+import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * The class to kick the tires and light the fires.
@@ -61,22 +53,22 @@ public class CLIMain
         ResourceManager.getPackageResources( CLIMain.class );
 
     //defines for the Command Line options
-    private static final int       HELP_OPT                  = 'h';
-    private static final int       QUIET_OPT                 = 'q';
-    private static final int       VERBOSE_OPT               = 'v';
-    private static final int       FILE_OPT                  = 'f';
-    private static final int       LOG_LEVEL_OPT             = 'l';
-    private static final int       DEFINE_OPT                = 'D';
-    private static final int       BUILDER_PARAM_OPT         = 'B';
-    private static final int       VERSION_OPT               = 1;
-    private static final int       LISTENER_OPT              = 2;
-    private static final int       TASKLIB_DIR_OPT           = 5;
-    private static final int       INCREMENTAL_OPT           = 6;
-    private static final int       HOME_DIR_OPT              = 7;
-    private static final int       DRY_RUN_OPT               = 8;
+    private static final int HELP_OPT = 'h';
+    private static final int QUIET_OPT = 'q';
+    private static final int VERBOSE_OPT = 'v';
+    private static final int FILE_OPT = 'f';
+    private static final int LOG_LEVEL_OPT = 'l';
+    private static final int DEFINE_OPT = 'D';
+    private static final int BUILDER_PARAM_OPT = 'B';
+    private static final int VERSION_OPT = 1;
+    private static final int LISTENER_OPT = 2;
+    private static final int TASKLIB_DIR_OPT = 5;
+    private static final int INCREMENTAL_OPT = 6;
+    private static final int HOME_DIR_OPT = 7;
+    private static final int DRY_RUN_OPT = 8;
 
     //incompatable options for info options
-    private static final int[]     INFO_OPT_INCOMPAT         = new int[]
+    private static final int[] INFO_OPT_INCOMPAT = new int[]
     {
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, VERSION_OPT, LISTENER_OPT,
@@ -84,27 +76,27 @@ public class CLIMain
     };
 
     //incompatable options for other logging options
-    private static final int[]     LOG_OPT_INCOMPAT          = new int[]
+    private static final int[] LOG_OPT_INCOMPAT = new int[]
     {
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
 
-    private ProjectListener      m_listener;
+    private ProjectListener m_listener;
 
     ///Parameters for run of myrmidon
-    private Parameters           m_parameters  = new Parameters();
+    private Parameters m_parameters = new Parameters();
 
     ///List of targets supplied on command line to execute
-    private ArrayList            m_targets     = new ArrayList();
+    private ArrayList m_targets = new ArrayList();
 
     ///List of user supplied defines
-    private Parameters           m_defines     = new Parameters();
+    private Parameters m_defines = new Parameters();
 
     ///List of user supplied parameters for builder
-    private Parameters           m_builderParameters = new Parameters();
+    private Parameters m_builderParameters = new Parameters();
 
     ///Determine whether tasks are actually executed
-    private boolean              m_dryRun      = false;
+    private boolean m_dryRun = false;
 
     /**
      * Main entry point called to run standard Myrmidon.
@@ -115,12 +107,15 @@ public class CLIMain
     {
         final CLIMain main = new CLIMain();
 
-        try { main.execute( args ); }
+        try
+        {
+            main.execute( args );
+        }
         catch( final Throwable throwable )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "error-message", ExceptionUtil.printStackTrace( throwable ) );
-            System.err.println( message ); 
+            System.err.println( message );
             System.exit( -1 );
         }
 
@@ -134,7 +129,7 @@ public class CLIMain
     private void usage( final CLOptionDescriptor[] options )
     {
         System.out.println( "java " + getClass().getName() + " [options]" );
-        System.out.println( "\tAvailable options:");
+        System.out.println( "\tAvailable options:" );
         System.out.println( CLUtil.describeOptions( options ) );
     }
 
@@ -145,74 +140,74 @@ public class CLIMain
     {
         //TODO: localise
         final CLOptionDescriptor[] options = new CLOptionDescriptor[ 13 ];
-        options[0] =
+        options[ 0 ] =
             new CLOptionDescriptor( "help",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     HELP_OPT,
                                     REZ.getString( "help.opt" ),
                                     INFO_OPT_INCOMPAT );
-        options[1] =
+        options[ 1 ] =
             new CLOptionDescriptor( "file",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     FILE_OPT,
                                     REZ.getString( "file.opt" ) );
-        options[2] =
+        options[ 2 ] =
             new CLOptionDescriptor( "log-level",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LOG_LEVEL_OPT,
                                     REZ.getString( "log-level.opt" ),
                                     LOG_OPT_INCOMPAT );
-        options[3] =
+        options[ 3 ] =
             new CLOptionDescriptor( "quiet",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     QUIET_OPT,
                                     REZ.getString( "quiet.opt" ),
                                     LOG_OPT_INCOMPAT );
-        options[4] =
+        options[ 4 ] =
             new CLOptionDescriptor( "verbose",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     VERBOSE_OPT,
                                     REZ.getString( "verbose.opt" ),
                                     LOG_OPT_INCOMPAT );
-        options[5] =
+        options[ 5 ] =
             new CLOptionDescriptor( "listener",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LISTENER_OPT,
                                     REZ.getString( "listener.opt" ) );
-        options[6] =
+        options[ 6 ] =
             new CLOptionDescriptor( "version",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     VERSION_OPT,
                                     REZ.getString( "version.opt" ),
                                     INFO_OPT_INCOMPAT );
 
-        options[7] =
+        options[ 7 ] =
             new CLOptionDescriptor( "task-lib-dir",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     TASKLIB_DIR_OPT,
                                     REZ.getString( "tasklib.opt" ) );
-        options[8] =
+        options[ 8 ] =
             new CLOptionDescriptor( "incremental",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     INCREMENTAL_OPT,
                                     REZ.getString( "incremental.opt" ) );
-        options[9] =
+        options[ 9 ] =
             new CLOptionDescriptor( "myrmidon-home",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     HOME_DIR_OPT,
                                     REZ.getString( "home.opt" ) );
-        options[10] =
+        options[ 10 ] =
             new CLOptionDescriptor( "define",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     DEFINE_OPT,
                                     REZ.getString( "define.opt" ),
                                     new int[ 0 ] );
-        options[11] =
+        options[ 11 ] =
             new CLOptionDescriptor( "builder-parameter",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     BUILDER_PARAM_OPT,
                                     REZ.getString( "build.opt" ) );
-        options[12] =
+        options[ 12 ] =
             new CLOptionDescriptor( "dry-run",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     DRY_RUN_OPT,
@@ -241,34 +236,56 @@ public class CLIMain
 
             switch( option.getId() )
             {
-            case HELP_OPT: usage( options ); return false;
-            case VERSION_OPT: System.out.println( Constants.BUILD_DESCRIPTION ); return false;
+                case HELP_OPT:
+                    usage( options );
+                    return false;
+                case VERSION_OPT:
+                    System.out.println( Constants.BUILD_DESCRIPTION );
+                    return false;
 
-            case HOME_DIR_OPT: m_parameters.setParameter( "myrmidon.home", option.getArgument() ); break;
-            case TASKLIB_DIR_OPT:
-                m_parameters.setParameter( "myrmidon.lib.path", option.getArgument() );
-                break;
+                case HOME_DIR_OPT:
+                    m_parameters.setParameter( "myrmidon.home", option.getArgument() );
+                    break;
+                case TASKLIB_DIR_OPT:
+                    m_parameters.setParameter( "myrmidon.lib.path", option.getArgument() );
+                    break;
 
-            case LOG_LEVEL_OPT: m_parameters.setParameter( "log.level", option.getArgument() ); break;
-            case VERBOSE_OPT: m_parameters.setParameter( "log.level", "INFO" ); break;
-            case QUIET_OPT: m_parameters.setParameter( "log.level", "ERROR" ); break;
+                case LOG_LEVEL_OPT:
+                    m_parameters.setParameter( "log.level", option.getArgument() );
+                    break;
+                case VERBOSE_OPT:
+                    m_parameters.setParameter( "log.level", "INFO" );
+                    break;
+                case QUIET_OPT:
+                    m_parameters.setParameter( "log.level", "ERROR" );
+                    break;
 
-            case INCREMENTAL_OPT: m_parameters.setParameter( "incremental", "true" ); break;
+                case INCREMENTAL_OPT:
+                    m_parameters.setParameter( "incremental", "true" );
+                    break;
 
-            case FILE_OPT: m_parameters.setParameter( "filename", option.getArgument() ); break;
-            case LISTENER_OPT: m_parameters.setParameter( "listener", option.getArgument() ); break;
+                case FILE_OPT:
+                    m_parameters.setParameter( "filename", option.getArgument() );
+                    break;
+                case LISTENER_OPT:
+                    m_parameters.setParameter( "listener", option.getArgument() );
+                    break;
 
-            case DEFINE_OPT:
-                m_defines.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
-                break;
+                case DEFINE_OPT:
+                    m_defines.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
+                    break;
 
-            case BUILDER_PARAM_OPT:
-                m_builderParameters.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
-                break;
+                case BUILDER_PARAM_OPT:
+                    m_builderParameters.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
+                    break;
 
-            case DRY_RUN_OPT: m_dryRun = true; break;
+                case DRY_RUN_OPT:
+                    m_dryRun = true;
+                    break;
 
-            case 0: m_targets.add( option.getArgument() ); break;
+                case 0:
+                    m_targets.add( option.getArgument() );
+                    break;
             }
         }
 
@@ -301,7 +318,7 @@ public class CLIMain
         enableLogging( new LogKitLogger( createLogger( logLevel ) ) );
 
         final String home = m_parameters.getParameter( "myrmidon.home", null );
-        final File homeDir = (new File( home )).getAbsoluteFile();
+        final File homeDir = ( new File( home ) ).getAbsoluteFile();
         if( !homeDir.isDirectory() )
         {
             final String message = REZ.getString( "home-not-dir.error", homeDir );
@@ -309,7 +326,7 @@ public class CLIMain
         }
 
         final String filename = m_parameters.getParameter( "filename", null );
-        final File buildFile = (new File( filename )).getCanonicalFile();
+        final File buildFile = ( new File( filename ) ).getCanonicalFile();
         if( !buildFile.isFile() )
         {
             final String message = REZ.getString( "bad-file.error", buildFile );
@@ -337,7 +354,7 @@ public class CLIMain
 
         if( m_dryRun )
         {
-            m_parameters.setParameter( Executor.ROLE, 
+            m_parameters.setParameter( Executor.ROLE,
                                        "org.apache.myrmidon.components.executor.PrintingExecutor" );
         }
 
@@ -348,7 +365,7 @@ public class CLIMain
         embeddor.start();
 
         //create the project
-        final Project project = 
+        final Project project =
             embeddor.createProject( buildFile.toString(), null, m_builderParameters );
 
         BufferedReader reader = null;
@@ -413,7 +430,7 @@ public class CLIMain
         }
         catch( final TaskException ae )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "build-failed.error", ExceptionUtil.printStackTrace( ae, 5, true ) );
             getLogger().error( message );
         }
@@ -442,7 +459,7 @@ public class CLIMain
 
         final DefaultOutputLogTarget target = new DefaultOutputLogTarget();
         target.setFormat( "[%8.8{category}] %{message}\\n%{throwable}" );
-        logger.setLogTargets( new LogTarget[] { target } );
+        logger.setLogTargets( new LogTarget[]{target} );
 
         logger.setPriority( priority );
 
@@ -457,12 +474,15 @@ public class CLIMain
     private ProjectListener createListener( final String listener )
         throws Exception
     {
-        try { return (ProjectListener)Class.forName( listener ).newInstance(); }
+        try
+        {
+            return (ProjectListener)Class.forName( listener ).newInstance();
+        }
         catch( final Throwable t )
         {
-            final String message = 
-                REZ.getString( "bad-listener.error", 
-                               listener, 
+            final String message =
+                REZ.getString( "bad-listener.error",
+                               listener,
                                ExceptionUtil.printStackTrace( t, 5, true ) );
             throw new Exception( message );
         }

@@ -9,7 +9,6 @@ package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -17,11 +16,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -33,17 +31,17 @@ public class Deployment
     private static final Resources REZ =
         ResourceManager.getPackageResources( Deployment.class );
 
-    public final static String   DESCRIPTOR_NAME     = "META-INF/ant-descriptor.xml";
+    public final static String DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";
 
-    private File            m_file;
+    private File m_file;
 
-    private Configuration   m_descriptor;
+    private Configuration m_descriptor;
 
     public Deployment( final File file )
     {
         m_file = file;
     }
-    
+
     public Configuration getDescriptor()
         throws DeploymentException
     {
@@ -58,7 +56,10 @@ public class Deployment
     public URL getURL()
         throws DeploymentException
     {
-        try { return m_file.getCanonicalFile().toURL(); }
+        try
+        {
+            return m_file.getCanonicalFile().toURL();
+        }
         catch( final IOException ioe )
         {
             final String message = REZ.getString( "bad-url.error", m_file );

@@ -25,7 +25,7 @@ public interface Project
     String ROLE = "org.apache.myrmidon.interfaces.model.Project";
 
     // the name of currently executing project
-    String PROJECT          = "myrmidon.project.name";
+    String PROJECT = "myrmidon.project.name";
 
     // the name of currently executing project
     //String PROJECT_FILE     = "myrmidon.project.file";

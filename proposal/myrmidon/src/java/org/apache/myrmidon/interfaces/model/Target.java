@@ -18,9 +18,9 @@ import org.apache.myrmidon.framework.Condition;
  */
 public class Target
 {
-    private final ArrayList   m_dependencies     = new ArrayList();
-    private final ArrayList   m_tasks            = new ArrayList();
-    private final Condition   m_condition;
+    private final ArrayList m_dependencies = new ArrayList();
+    private final ArrayList m_tasks = new ArrayList();
+    private final Condition m_condition;
 
     /**
      * Constructor taking condition for target.
@@ -56,6 +56,7 @@ public class Target
     {
         return m_condition;
     }
+
     /**
      * Get dependencies of target
      *

@@ -9,7 +9,6 @@ package org.apache.myrmidon.interfaces.executor;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**

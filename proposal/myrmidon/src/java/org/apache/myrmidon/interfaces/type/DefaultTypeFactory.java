@@ -12,8 +12,6 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.interfaces.type.TypeException;
-import org.apache.myrmidon.interfaces.type.TypeFactory;
 
 /**
  * Create a type instance based on name.
@@ -28,20 +26,20 @@ public class DefaultTypeFactory
         ResourceManager.getPackageResources( DefaultTypeFactory.class );
 
     ///A Map of shortnames to classnames
-    private final HashMap        m_classNames = new HashMap();
+    private final HashMap m_classNames = new HashMap();
 
     ///A list of URLs from which classLoader is constructed
-    private final URL[]          m_urls;
+    private final URL[] m_urls;
 
     ///The parent classLoader (if any)
-    private final ClassLoader    m_parent;
+    private final ClassLoader m_parent;
 
     ///The parent classLoader (if any)
-    private ClassLoader          m_classLoader;
+    private ClassLoader m_classLoader;
 
     public DefaultTypeFactory( final URL url )
     {
-        this( new URL[] { url } );
+        this( new URL[]{url} );
     }
 
     public DefaultTypeFactory( final URL[] urls )

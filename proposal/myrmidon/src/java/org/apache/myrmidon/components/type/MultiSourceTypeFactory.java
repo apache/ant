@@ -10,8 +10,8 @@ package org.apache.myrmidon.components.type;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
 
 /**
  * This factory acts as a proxy to set of object factorys.
@@ -25,13 +25,13 @@ public class MultiSourceTypeFactory
         ResourceManager.getPackageResources( MultiSourceTypeFactory.class );
 
     ///Parent Selector
-    private final MultiSourceTypeFactory  m_parent;
+    private final MultiSourceTypeFactory m_parent;
 
     ///Map of name->factory list
-    private final HashMap                 m_factorys = new HashMap();
+    private final HashMap m_factorys = new HashMap();
 
     ///Type expected to be created from factorys
-    private final Class                   m_type;
+    private final Class m_type;
 
     public MultiSourceTypeFactory( final Class type )
     {

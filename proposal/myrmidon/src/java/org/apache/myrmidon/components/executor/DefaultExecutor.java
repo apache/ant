@@ -11,14 +11,10 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
@@ -26,13 +22,11 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
 
 public class DefaultExecutor
     extends AbstractLogEnabled
@@ -41,7 +35,7 @@ public class DefaultExecutor
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
 
-    private Configurer           m_configurer;
+    private Configurer m_configurer;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -112,7 +106,10 @@ public class DefaultExecutor
                                       final TaskContext context )
         throws TaskException
     {
-        try { m_configurer.configure( task, taskModel, context ); }
+        try
+        {
+            m_configurer.configure( task, taskModel, context );
+        }
         catch( final Throwable throwable )
         {
             final String message =
@@ -131,7 +128,10 @@ public class DefaultExecutor
     {
         if( task instanceof Composable )
         {
-            try { ((Composable)task).compose( componentManager ); }
+            try
+            {
+                ( (Composable)task ).compose( componentManager );
+            }
             catch( final Throwable throwable )
             {
                 final String message =
@@ -153,7 +153,7 @@ public class DefaultExecutor
         {
             if( task instanceof Contextualizable )
             {
-                ((Contextualizable)task).contextualize( context );
+                ( (Contextualizable)task ).contextualize( context );
             }
         }
         catch( final Throwable throwable )
@@ -172,7 +172,10 @@ public class DefaultExecutor
     {
         if( task instanceof Disposable )
         {
-            try { ((Disposable)task).dispose(); }
+            try
+            {
+                ( (Disposable)task ).dispose();
+            }
             catch( final Throwable throwable )
             {
                 final String message =
@@ -192,7 +195,10 @@ public class DefaultExecutor
     {
         if( task instanceof LogEnabled )
         {
-            try { ((LogEnabled)task).enableLogging( logger ); }
+            try
+            {
+                ( (LogEnabled)task ).enableLogging( logger );
+            }
             catch( final Throwable throwable )
             {
                 final String message =
@@ -210,7 +216,10 @@ public class DefaultExecutor
     {
         if( task instanceof Initializable )
         {
-            try { ((Initializable)task).initialize(); }
+            try
+            {
+                ( (Initializable)task ).initialize();
+            }
             catch( final Throwable throwable )
             {
                 final String message =

@@ -14,7 +14,6 @@ import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class representing a condition.
@@ -27,8 +26,8 @@ public class Condition
     private static final Resources REZ =
         ResourceManager.getPackageResources( Condition.class );
 
-    private String            m_condition;
-    private boolean           m_isIfCondition;
+    private String m_condition;
+    private boolean m_isIfCondition;
 
     public Condition( final boolean isIfCondition, final String condition )
     {

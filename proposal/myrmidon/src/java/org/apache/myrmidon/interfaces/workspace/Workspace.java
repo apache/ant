@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.workspace;
 
-import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.Project;

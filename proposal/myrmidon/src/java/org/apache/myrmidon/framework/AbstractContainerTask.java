@@ -17,12 +17,11 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.converter.ConverterException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.executor.Executor;
-import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.converter.ConverterException;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -37,13 +36,13 @@ public abstract class AbstractContainerTask
         ResourceManager.getPackageResources( AbstractContainerTask.class );
 
     ///For converting own attributes
-    private MasterConverter     m_converter;
+    private MasterConverter m_converter;
 
     ///For configuring own sub-elements
-    private Configurer          m_configurer;
+    private Configurer m_configurer;
 
     ///For executing sub-elements as tasks
-    private Executor            m_executor;
+    private Executor m_executor;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -117,7 +116,6 @@ public abstract class AbstractContainerTask
     {
         getConfigurer().configure( object, element, getContext() );
     }
-
 
     /**
      * Configure an objects attribute using parameters.

@@ -17,7 +17,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class ProjectListenerSupport
     implements ProjectListener
 {
-    private ProjectListener[]   m_listeners = new ProjectListener[ 0 ];
+    private ProjectListener[] m_listeners = new ProjectListener[ 0 ];
 
     /**
      * Add an extra project listener that wants to receive notification of listener events.

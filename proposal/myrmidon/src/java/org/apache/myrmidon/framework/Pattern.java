@@ -22,8 +22,8 @@ public class Pattern
     private static final Resources REZ =
         ResourceManager.getPackageResources( Pattern.class );
 
-    private String         m_value;
-    private Condition      m_condition;
+    private String m_value;
+    private Condition m_condition;
 
     /**
      * Retrieve value of pattern.

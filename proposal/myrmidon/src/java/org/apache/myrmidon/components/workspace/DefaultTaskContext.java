@@ -12,8 +12,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.excalibur.property.PropertyException;
-import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.myrmidon.api.JavaVersion;
@@ -63,14 +61,16 @@ public class DefaultTaskContext
      */
     public JavaVersion getJavaVersion()
     {
-        try { return (JavaVersion)get( JAVA_VERSION ); }
+        try
+        {
+            return (JavaVersion)get( JAVA_VERSION );
+        }
         catch( final ContextException ce )
         {
             final String message = REZ.getString( "no-version.error" );
             throw new IllegalStateException( message );
         }
     }
-
 
     /**
      * Retrieve Name of tasklet.
@@ -79,7 +79,10 @@ public class DefaultTaskContext
      */
     public String getName()
     {
-        try { return (String)get( NAME ); }
+        try
+        {
+            return (String)get( NAME );
+        }
         catch( final ContextException ce )
         {
             final String message = REZ.getString( "no-name.error" );
@@ -94,7 +97,10 @@ public class DefaultTaskContext
      */
     public File getBaseDirectory()
     {
-        try { return (File)get( BASE_DIRECTORY ); }
+        try
+        {
+            return (File)get( BASE_DIRECTORY );
+        }
         catch( final ContextException ce )
         {
             final String message = REZ.getString( "no-dir.error" );
@@ -125,7 +131,10 @@ public class DefaultTaskContext
      */
     public Object getProperty( final String name )
     {
-        try { return get( name ); }
+        try
+        {
+            return get( name );
+        }
         catch( final ContextException ce )
         {
             return null;
@@ -154,7 +163,8 @@ public class DefaultTaskContext
     {
         checkPropertyValid( name, value );
 
-        if( CURRENT == scope ) put( name, value );
+        if( CURRENT == scope )
+            put( name, value );
         else if( PARENT == scope )
         {
             if( null == getParent() )
@@ -164,7 +174,7 @@ public class DefaultTaskContext
             }
             else
             {
-                ((TaskContext)getParent()).setProperty( name, value );
+                ( (TaskContext)getParent() ).setProperty( name, value );
             }
         }
         else if( TOP_LEVEL == scope )
@@ -217,19 +227,19 @@ public class DefaultTaskContext
     {
         if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "bad-property.error", BASE_DIRECTORY, File.class.getName() );
             throw new TaskException( message );
         }
         else if( NAME.equals( name ) && !( value instanceof String ) )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "bad-property.error", NAME, String.class.getName() );
             throw new TaskException( message );
         }
         else if( JAVA_VERSION.equals( name ) && !( value instanceof JavaVersion ) )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "bad-property.error", JAVA_VERSION, JavaVersion.class.getName() );
             throw new TaskException( message );
         }

@@ -36,11 +36,11 @@ public abstract class AbstractTypeDef
     private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractTypeDef.class );
 
-    private File                m_lib;
-    private String              m_name;
-    private String              m_className;
-    private TypeManager         m_typeManager;
-    private RoleManager         m_roleManager;
+    private File m_lib;
+    private String m_name;
+    private String m_className;
+    private TypeManager m_typeManager;
+    private RoleManager m_roleManager;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -86,7 +86,10 @@ public abstract class AbstractTypeDef
         final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
         factory.addNameClassMapping( m_name, m_className );
 
-        try { m_typeManager.registerType( role, m_name, factory ); }
+        try
+        {
+            m_typeManager.registerType( role, m_name, factory );
+        }
         catch( final TypeException te )
         {
             final String message = REZ.getString( "typedef.no-register.error" );
@@ -104,7 +107,7 @@ public abstract class AbstractTypeDef
             final ClassLoader classLoader =
                 Thread.currentThread().getContextClassLoader();
 
-            return new URLClassLoader( new URL[] { url }, classLoader );
+            return new URLClassLoader( new URL[]{url}, classLoader );
         }
         catch( final Exception e )
         {
