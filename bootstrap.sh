@@ -14,7 +14,7 @@ fi
 LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
 
 if [ "$CLASSPATH" != "" ] ; then
-  CLASSPATH=$CLASSPATH:$LOCALCLASSPATH
+  CLASSPATH=$LOCALCLASSPATH:$CLASSPATH
 else
   CLASSPATH=$LOCALCLASSPATH
 fi
@@ -37,7 +37,7 @@ fi
 TOOLS=src/main/org/apache/tools
 CLASSDIR=classes
 
-CLASSPATH=${CLASSPATH}:${CLASSDIR}:src/main
+CLASSPATH=${CLASSDIR}:src/main:${CLASSPATH}
 export CLASSPATH
 
 mkdir -p ${CLASSDIR}

@@ -29,7 +29,7 @@ if exist %JAVA_HOME%\lib\classes.zip call src\bin\lcp.bat %JAVA_HOME%\lib\classe
 set TOOLS=src\main\org\apache\tools
 set CLASSDIR=classes
 
-SET CLASSPATH=%CLASSPATH%;%LOCALCLASSPATH%;%CLASSDIR%;src\main
+SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
 
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
