@@ -112,12 +112,12 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
         util = new Perl5Util();
 
-    	//Get default P4 settings from environment - Mark would have done something cool with
-	    //introspection here.....:-)
-	    String tmpprop;
+        //Get default P4 settings from environment - Mark would have done something cool with
+            //introspection here.....:-)
+            String tmpprop;
         if((tmpprop = project.getProperty("p4.port")) != null) setPort(tmpprop);
         if((tmpprop = project.getProperty("p4.client")) != null) setClient(tmpprop);
-        if((tmpprop = project.getProperty("p4.user")) != null) setUser(tmpprop);	
+        if((tmpprop = project.getProperty("p4.user")) != null) setUser(tmpprop);        
     }
 
     protected void execP4Command(String command) throws BuildException {
@@ -125,9 +125,9 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     }
     
     /** Execute P4 command assembled by subclasses.
-	@param command The command to run
-	@param p4input Input to be fed to command on stdin
-	@param handler A P4Handler to process any input and output
+        @param command The command to run
+        @param p4input Input to be fed to command on stdin
+        @param handler A P4Handler to process any input and output
     */
     protected void execP4Command(String command, P4Handler handler) throws BuildException {
         try{
@@ -147,7 +147,14 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             }
             commandline.createArgument().setLine(command);
 
-	        log("Execing "+commandline.getCommandline(), Project.MSG_VERBOSE);
+
+            String[] cmdline = commandline.getCommandline() ;
+            String cmdl = "";
+            for (int i=0 ; i < cmdline.length ; i++) {
+                cmdl += cmdline[i] + " ";
+            }
+    
+            log("Execing "+cmdl, Project.MSG_VERBOSE);
 
             if(handler == null ) handler = new SimpleP4OutputHandler(this);
 
@@ -168,9 +175,9 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             }
 
             
-    		
-	    }catch(Exception e) {
-	        throw new BuildException("Problem exec'ing P4 command: "+e.getMessage());
-	    }
+                
+            }catch(Exception e) {
+                throw new BuildException("Problem exec'ing P4 command: "+e.getMessage());
+            }
     }
 }
