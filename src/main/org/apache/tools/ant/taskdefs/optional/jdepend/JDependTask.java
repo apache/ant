@@ -560,32 +560,39 @@ public class JDependTask extends Task {
         }
 
         if (getSourcespath() != null) {
-        // This is deprecated - use classespath in the future
-        String[] sourcesPath = getSourcespath().list();
-        for (int i = 0; i < sourcesPath.length; i++) {
-            File f = new File(sourcesPath[i]);
+            // This is deprecated - use classespath in the future
+            String[] sourcesPath = getSourcespath().list();
+            for (int i = 0; i < sourcesPath.length; i++) {
+                File f = new File(sourcesPath[i]);
 
-            // not necessary as JDepend would fail, but why loose some time?
-            if (!f.exists() || !f.isDirectory()) {
-                throw new BuildException("\"" + f.getPath() + "\" does not "
-                                         + "represent a valid directory. JDepend would fail.");
+                // not necessary as JDepend would fail, but why loose
+                // some time?
+                if (!f.exists() || !f.isDirectory()) {
+                    throw new BuildException("\"" + f.getPath() 
+                                             + "\" does not represent a valid"
+                                             + " directory. JDepend would"
+                                             + " fail.");
+                }
+                commandline.createArgument().setValue(f.getPath());
             }
-            commandline.createArgument().setValue(f.getPath());
-        }
         }
 
         if (getClassespath() != null) {
-        // This is the new way - use classespath - code is the same for now
-        String[] classesPath = getClassespath().list();
-        for (int i = 0; i < classesPath.length; i++) {
-            File f = new File(classesPath[i]);
-            // not necessary as JDepend would fail, but why loose some time?
-            if (!f.exists() || !f.isDirectory()) {
-                throw new BuildException("\"" + f.getPath() + "\" does not "
-                                         + "represent a valid directory. JDepend would fail.");
+            // This is the new way - use classespath - code is the
+            // same for now
+            String[] classesPath = getClassespath().list();
+            for (int i = 0; i < classesPath.length; i++) {
+                File f = new File(classesPath[i]);
+                // not necessary as JDepend would fail, but why loose
+                // some time?
+                if (!f.exists() || !f.isDirectory()) {
+                    throw new BuildException("\"" + f.getPath() 
+                                             + "\" does not represent a valid"
+                                             + " directory. JDepend would"
+                                             + " fail.");
+                }
+                commandline.createArgument().setValue(f.getPath());
             }
-            commandline.createArgument().setValue(f.getPath());
-        }
         }
 
         Execute execute = new Execute(new LogStreamHandler(this,
