@@ -146,7 +146,15 @@ public class Recorder extends Task {
         RecorderEntry recorder = getRecorder(filename, getProject());
         // set the values on the recorder
         recorder.setMessageOutputLevel(loglevel);
-        recorder.setRecordState(start);
+        if (start != null) {
+            if (start.booleanValue()) {
+                recorder.reopenFile();
+                recorder.setRecordState(start);
+            } else {
+                recorder.setRecordState(start);
+                recorder.closeFile();
+            }
+        }
         recorder.setEmacsMode(emacsMode);
     }
 
@@ -193,23 +201,12 @@ public class Recorder extends Task {
 
         if (o == null) {
             // create a recorder entry
-            try {
-                entry = new RecorderEntry(name);
+            entry = new RecorderEntry(name);
 
-                PrintStream out = null;
-
-                if (append == null) {
-                    out = new PrintStream(
-                        new FileOutputStream(name));
-                } else {
-                    out = new PrintStream(
-                        new FileOutputStream(name, append.booleanValue()));
-                }
-                entry.setErrorPrintStream(out);
-                entry.setOutputPrintStream(out);
-            } catch (IOException ioe) {
-                throw new BuildException("Problems creating a recorder entry",
-                    ioe);
+            if (append == null) {
+                entry.openFile(false);
+            } else {
+                entry.openFile(append.booleanValue());
             }
             entry.setProject(proj);
             recorderEntries.put(name, entry);
