@@ -97,7 +97,7 @@ public class XMLValidateTask extends Task {
     // The crimson implementation is shipped with ant.
     public static String DEFAULT_XML_READER_CLASSNAME= "org.apache.crimson.parser.XMLReaderImpl";
 
-    protected static String INIT_FAILED_MSG = "Could'nt start xml validation: ";
+    protected static String INIT_FAILED_MSG = "Could not start xml validation: ";
 
     // ant task properties
     // defaults
@@ -358,13 +358,13 @@ public class XMLValidateTask extends Task {
             toReturn = true;
         } catch (SAXNotRecognizedException e) {
             if (warn)
-                log("Could'nt set feature '"
+                log("Could not set feature '"
                     + feature
                     + "' because the parser doesn't recognize it",
                     Project.MSG_WARN);
         } catch (SAXNotSupportedException  e) {
             if (warn)
-                log("Could'nt set feature '"
+                log("Could not set feature '"
                     + feature
                     + "' because the parser doesn't support it",
                     Project.MSG_WARN);
@@ -388,9 +388,9 @@ public class XMLValidateTask extends Task {
             xmlReader.parse(is);
         } catch (SAXException ex) {
             if (failOnError)
-                throw new BuildException("Could'nt validate document " + afile);
+                throw new BuildException("Could not validate document " + afile);
         } catch (IOException ex) {
-            throw new BuildException("Could'nt validate document " + afile, ex);
+            throw new BuildException("Could not validate document " + afile, ex);
         }
 
         if (errorHandler.getFailure()) {
