@@ -9,8 +9,9 @@ package org.apache.myrmidon.framework.exec.launchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
-import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
@@ -81,10 +82,22 @@ class ExecUtil
         throws ExecException
     {
         if( null == environment )
+        {
             return null;
+        }
         else
         {
-            return Environment.toNativeFormat( environment );
+            final ArrayList newEnvironment = new ArrayList();
+
+            final Iterator keys = environment.keySet().iterator();
+            while( keys.hasNext() )
+            {
+                final String key = (String)keys.next();
+                final String value = environment.getProperty( key );
+                newEnvironment.add( key + '=' + value );
+            }
+
+            return (String[])newEnvironment.toArray( new String[ newEnvironment.size() ] );
         }
     }
 
