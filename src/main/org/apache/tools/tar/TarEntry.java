@@ -317,8 +317,16 @@ public class TarEntry implements TarConstants {
     public void setMode(int mode) {
         this.mode = mode;
     }
-    
-        
+
+    /**
+     * Get this entry's link name.
+     *
+     * @return This entry's link name.
+     */
+    public String getLinkName() {
+        return this.linkName.toString();
+    }
+
     /** 
      * Get this entry's user id.
      *  
