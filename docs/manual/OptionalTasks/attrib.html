@@ -8,6 +8,7 @@
 <body>
 
 <h2><a name="attrib">Attrib</a></h2>
+<p><em>Since Ant 1.6.</em></p>
 <h3>Description</h3>
 
 <p>Changes the attributes of a file or all files inside specified
@@ -15,8 +16,10 @@ directories.  Right now it has effect only under Windows. Each of the
 4 possible permissions has its own attribute, matching the arguments
 for the attrib command.</p>
 
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s can be specified
-using nested <code>&lt;fileset&gt;</code> elements.</p>
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s or <a
+href="../CoreTypes/filelist.html">FileList</a>s can be specified using
+nested <code>&lt;fileset&gt;</code> and <code>&lt;filelist&gt;</code>
+elements.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -30,7 +33,7 @@ using nested <code>&lt;fileset&gt;</code> elements.</p>
     <td valign="top">the file or directory of which the permissions must be
     changed.</td>
     <td valign="top" valign="middle">Yes or nested
-    <code>&lt;fileset&gt;</code> elements.</td>
+    <code>&lt;fileset/list&gt;</code> elements.</td>
   </tr>
   <tr>
     <td valign="top">readonly</td>
@@ -55,6 +58,20 @@ using nested <code>&lt;fileset&gt;</code> elements.</p>
       <i>file</i>, only the permissions of plain files are going to be changed.
       If set to <i>dir</i>, only the directories are considered.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
+  </tr>
+  <tr>
+    <td valign="top">maxparallel</td>
+    <td valign="top">Limit the amount of parallelism by passing at
+      most this many sourcefiles at once.  Set it to &lt;= 0 for
+      unlimited.  Defaults to unlimited.</td>
+    <td align="center" valign="top">No</td>
+
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">Whether to print a summary after execution or not.
+      Defaults to <code>false</code>.</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -84,7 +101,7 @@ using nested <code>&lt;fileset&gt;</code> elements.</p>
   to a FileSet with <code>id</code> <code>other.shared.sources</code> get the
   same attributes.</p>
 <hr>
-<p align="center">Copyright &copy; 2002 Apache Software
+<p align="center">Copyright &copy; 2002-2003 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>
