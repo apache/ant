@@ -658,6 +658,7 @@ public class DirectoryScanner
             dirsNotIncluded.addElement("");
         }
         checkIncludePatterns();
+        clearCaches();
     }
 
     /**
@@ -675,6 +676,12 @@ public class DirectoryScanner
             newroots.put(newpattern, includes[icounter]);
         }
 
+        if (newroots.containsKey("")) {
+            // we are going to scan everything anyway
+            scandir(basedir, "", true);
+        } else {
+            // only scan directories that can include matched files or
+            // directories
         Enumeration enum2 = newroots.keys();
 
         File canonBase = null;
@@ -750,7 +757,7 @@ public class DirectoryScanner
                 }
             }
         }
-        clearCaches();
+        }
     }
 
     /**
