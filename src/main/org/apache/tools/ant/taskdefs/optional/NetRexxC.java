@@ -549,13 +549,21 @@ public class NetRexxC extends MatchingTask {
         currentProperties.put("java.class.path", classpath);
 
         try {
+            StringWriter out = new StringWriter(); 
             int rc = COM.ibm.netrexx.process.NetRexxC.main(
-               new Rexx(compileArgs), new PrintWriter(project.getOutput()));
+               new Rexx(compileArgs), new PrintWriter(out);
 
             if (rc > 1) { // 1 is warnings from real NetRexxC
+                project.log(out.toString(), Project.MSG_ERR);
                 String msg = "Compile failed, messages should have been provided.";
                 throw new BuildException(msg);
             }
+            else if (rc == 1) {
+                project.log(out.toString(), Project.MSG_WARN);
+            }
+            else {
+                project.log(out.toString(), Project.MSG_INFO);
+            }        
         } finally {
             // need to reset java.class.path property
             // since the NetRexx compiler has no option for the classpath
