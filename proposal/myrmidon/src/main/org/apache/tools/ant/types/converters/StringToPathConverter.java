@@ -8,8 +8,8 @@
 package org.apache.tools.ant.types.converters;
 
 import org.apache.avalon.framework.context.Context;
-import org.apache.myrmidon.converter.AbstractConverter;
-import org.apache.myrmidon.converter.ConverterException;
+import org.apache.aut.converter.AbstractConverter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.tools.ant.types.Path;
 
 /**

@@ -8,7 +8,7 @@
 package org.apache.myrmidon.interfaces.converter;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.myrmidon.converter.Converter;
+import org.apache.aut.converter.Converter;
 
 /**
  * Master Converter to handle converting between types.

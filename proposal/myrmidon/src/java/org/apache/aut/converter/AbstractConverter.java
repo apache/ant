@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.converter;
+package org.apache.aut.converter;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -49,7 +49,7 @@ public abstract class AbstractConverter
     public Object convert( final Class destination,
                            final Object original,
                            final Object context )
-        throws ConverterException
+        throws org.apache.aut.converter.ConverterException
     {
         if( m_destination != destination )
         {
@@ -74,9 +74,9 @@ public abstract class AbstractConverter
      * @param original the original Object
      * @param context the context in which to convert
      * @return the converted object
-     * @exception ConverterException if an error occurs
+     * @exception org.apache.aut.converter.ConverterException if an error occurs
      */
     protected abstract Object convert( Object original, Object context )
-        throws ConverterException;
+        throws org.apache.aut.converter.ConverterException;
 }
 

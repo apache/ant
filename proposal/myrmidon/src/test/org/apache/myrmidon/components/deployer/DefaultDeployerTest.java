@@ -18,8 +18,8 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
-import org.apache.myrmidon.converter.ConverterException;
-import org.apache.myrmidon.converter.Converter;
+import org.apache.aut.converter.ConverterException;
+import org.apache.aut.converter.Converter;
 import java.io.File;
 
 /**

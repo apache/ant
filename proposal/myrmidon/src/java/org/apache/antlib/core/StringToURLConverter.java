@@ -12,8 +12,8 @@ import java.net.URL;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
-import org.apache.myrmidon.converter.AbstractConverter;
-import org.apache.myrmidon.converter.ConverterException;
+import org.apache.aut.converter.AbstractConverter;
+import org.apache.aut.converter.ConverterException;
 
 /**
  * String to url converter

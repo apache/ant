@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.converter;
+package org.apache.aut.converter;
 
 /**
  * Instances of this interface are used to convert between different types.

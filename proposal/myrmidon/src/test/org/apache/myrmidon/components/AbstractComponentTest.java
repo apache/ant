@@ -28,7 +28,7 @@ import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.service.DefaultServiceManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
-import org.apache.myrmidon.converter.Converter;
+import org.apache.aut.converter.Converter;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;

@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.components.deployer;
 
-import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.converter.ConverterException;
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.framework.context.Context;
 
 /**
