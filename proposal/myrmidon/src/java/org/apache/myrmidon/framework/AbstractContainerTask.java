@@ -27,6 +27,7 @@ import org.apache.myrmidon.components.executor.Executor;
  */
 public abstract class AbstractContainerTask
     extends AbstractTask
+    implements Composable
 {
     ///For converting own attributes
     private MasterConverter     m_converter;
@@ -95,15 +96,31 @@ public abstract class AbstractContainerTask
     }
 
     /**
-     * Configure a value using specific configuration element.
+     * Configure an object using specific configuration element.
      *
-     * @param child the child
+     * @param object the object
      * @param element the configuration element
+     * @exception ConfigurationException if an error occurs
      */
-    protected final void configure( final Object value, final Configuration element )
+    protected final void configure( final Object object, final Configuration element )
         throws ConfigurationException
     {
-        getConfigurer().configure( value, element, getContext() );
+        getConfigurer().configure( object, element, getContext() );
+    }
+
+
+    /**
+     * Configure an objects attribute using parameters.
+     *
+     * @param object the object
+     * @param name the attibute name
+     * @param value the attibute value
+     * @exception ConfigurationException if an error occurs
+     */
+    protected final void configure( final Object object, final String name, final String value )
+        throws ConfigurationException
+    {
+        getConfigurer().configure( object, name, value, getContext() );
     }
 
     /**
