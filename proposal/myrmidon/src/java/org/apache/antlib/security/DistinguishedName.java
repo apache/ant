@@ -13,8 +13,6 @@ import java.util.Iterator;
 public class DistinguishedName
 {
     private ArrayList m_params = new ArrayList();
-    private String m_name;
-    private String m_path;
 
     public Iterator getParams()
     {
