@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,6 +64,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.TestCase;
+import org.apache.tools.ant.types.Path;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -95,7 +96,9 @@ public class XMLReportTest extends TestCase {
         incl.setMethod("set*");
         filters.addInclude(incl);
         report.setReportFilters(filters);
-        Document doc = report.createDocument(new String[]{ System.getProperty("java.home") + "/lib/rt.jar"});
+        Path p = new Path(null);
+        p.addJavaRuntime();
+        Document doc = report.createDocument(p.list());
 
         Node snapshot = doc.getDocumentElement();
         assertEquals("snapshot", snapshot.getNodeName());
