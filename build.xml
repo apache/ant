@@ -223,6 +223,15 @@
         <equals arg1="${build.sysclasspath}" arg2="only" />
       </or>
     </condition>
+
+    <condition property="sun.tools.present">
+      <and>
+        <available classname="sun.tools.native2ascii.Main" />
+        <available classname="com.sun.tools.javah.Main" />
+      </and>
+    </condition>
+
+    <available property="base64.present" classname="sun.misc.BASE64Encoder" />
   </target>
 
   <!--
@@ -322,6 +331,12 @@
       <exclude name="${optional.package}/metamata/MMetrics*"
                unless="trax.present"/>
       <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
+      <exclude name="${optional.package}/Native2Ascii.java"
+               unless="sun.tools.present" />
+      <exclude name="${optional.package}/Javah.java"
+               unless="sun.tools.present" />
+      <exclude name="${ant.package}/taskdefs/Get.java"
+               unless="base64.present" />
       <exclude name="${optional.type.package}/depend/*.java"
                unless="bcel.present" />
       <exclude name="${util.package}/depend/*.java"
