@@ -1331,8 +1331,4 @@
           description="--> creates a minimum distribution in ./dist"
           depends="dist-lite" />
 
-  <target name="javacc">
-    <javacc javacchome="e:\download\thirdparty\javacc2.0"
-      target="E:\download\thirdparty\javacc2.0\examples\MailProcessing\Digest.jj"/>
-  </target>
 </project>
