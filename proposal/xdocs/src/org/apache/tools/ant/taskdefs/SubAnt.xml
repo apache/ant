@@ -1,12 +1,13 @@
 <external>
     <description>
         <p>
-            <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
-            change till Ant1.6 ships; it may even be omitted from the product.
-        </p>
-        <p>
-        Calls a given target for all defined sub-builds. This is an extension
-        of ant for bulk project execution.
+            Calls a given target for all defined sub-builds.
+            This is an extension
+            of ant for bulk project execution.
+
+            <strong>This task must no be used outside of a
+                <code>target</code> if it invokes the same build file it is
+                part of.</strong>
         </p>
         <subsection name="Use with directories">
             <p>
@@ -19,7 +20,7 @@
                     with different base directories, use the genericantfile attribute
                 </li>
                 <li>if you want to run <code>directory1/mybuild.xml</code>, <code>directory2/mybuild.xml</code>, <code>....</code>,
-                    use the antfile attribute. The subant task does not set the base directory for you in this case.<br/>                    because you can specify it in each build file.
+                    use the antfile attribute. The subant task does not set the base directory for you in this case, because you can specify it in each build file.
                 </li>
             </ul>
         </subsection>
