@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -103,26 +103,26 @@ public class SQLExecTest extends TestCase {
    // simple test to ensure that the caching does work...
     public void testDriverCaching(){
        SQLExec sql = createTask(getProperties(NULL));
-        assert(!SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
+        assertTrue(!SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         try {
             sql.execute();
         } catch (BuildException e){
-            assert(e.getException().getMessage().indexOf("No suitable Driver") != -1);
+            assertTrue(e.getException().getMessage().indexOf("No suitable Driver") != -1);
         }
-        assert(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
+        assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         assertSame(sql.getLoader(), SQLExec.getLoaderMap().get(NULL_DRIVER));
         ClassLoader loader1 = sql.getLoader();
 
         // 2nd run..
         sql = createTask(getProperties(NULL));
         // the driver must still be cached.
-        assert(sql.getLoaderMap().containsKey(NULL_DRIVER));
+        assertTrue(sql.getLoaderMap().containsKey(NULL_DRIVER));
         try {
             sql.execute();
         } catch (BuildException e){
-            assert(e.getException().getMessage().indexOf("No suitable Driver") != -1);
+            assertTrue(e.getException().getMessage().indexOf("No suitable Driver") != -1);
         }
-        assert(sql.getLoaderMap().containsKey(NULL_DRIVER));
+        assertTrue(sql.getLoaderMap().containsKey(NULL_DRIVER));
         assertSame(sql.getLoader(), sql.getLoaderMap().get(NULL_DRIVER));
         assertSame(loader1, sql.getLoader());
     }
