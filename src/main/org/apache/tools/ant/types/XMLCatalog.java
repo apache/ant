@@ -375,7 +375,6 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
        }
 
         SAXSource source = null;
-        InputSource inputSource = null;
 
         String uri = removeFragment(href);
 
@@ -497,7 +496,6 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     private InputSource filesystemLookup(DTDLocation matchingEntry) {
 
         String uri = matchingEntry.getLocation();
-        File basedir = null;
 
         //
         // The DTDLocation may specify a relative path for its
