@@ -70,9 +70,9 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.Enumeration;
-import java.util.GregorianCalendar;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -93,12 +93,10 @@ import java.text.DecimalFormat;
  *        &lt;entry key="product.version.minor" type="int"  value="0"/&gt;<br>
  *        &lt;entry key="product.build.major"   type="int"  value="0" /&gt;<br>
  *        &lt;entry key="product.build.minor"   type="int"  operation="+" /&gt;<br>
- *        &lt;entry key="product.build.date"    type="date" operation="now" /&gt;<br>
+ *        &lt;entry key="product.build.date"    type="date" value="now" /&gt;<br>
  *        &lt;entry key="intSet" type="int" operation="=" value="681"/&gt;<br>
  *        &lt;entry key="intDec" type="int" operation="-"/&gt;<br>
- *        &lt;entry key="NeverDate" type="date" operation="never"/&gt;<br>
  *        &lt;entry key="StringEquals" type="string" value="testValue"/&gt;<br>
- *        &lt;entry key="NowDate" type="date" operation="now"/&gt;<br></ul>
  *     &lt;/propertyfile&gt;<br></ul>
  *   &lt;/target&gt;</ul><p>
  *
@@ -113,7 +111,9 @@ import java.text.DecimalFormat;
  *    <ul><li>operation</li>
  *        <li>type</li>
  *        <li>value</li>
- *        <li>offset</li></ul>
+ *        <li>default</li>
+ *        <li>unit</li>
+ *    </ul>
  *
  *If type is unspecified, it defaults to string
  *
@@ -136,21 +136,17 @@ import java.text.DecimalFormat;
  *              date/time and used even if a valid date was
  *              found in the property file.</li></ul>
  *
- *    <li>offset:<br>valid for "-" or "+", the offset (default
- *    set to 1) will be added or subtracted from "int" or
- *    "date" type value.</li>
- *    </ul>
  *
  *String property types can only use the "=" operation.
- *Date property types can only use the "never" or "now" operations.
  *Int property types can only use the "=", "-" or "+" operations.<p>
  *
  *The message property is used for the property file header, with "\\" being
- *a newline delimiter charater.
+ *a newline delimiter character.
  *
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @author Jeremy Mawson <a href="mailto:jem@loftinspace.com.au">jem@loftinspace.com.au</a>
-*/
+ * @author Erik Hatcher <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
+ */
 public class PropertyFile extends Task
 {
 
@@ -168,10 +164,10 @@ public class PropertyFile extends Task
     */
 
     // Use this to prepend a message to the properties file
-    private String              m_comment;
+    private String              comment;
 
-    private Properties          m_properties;
-    private File                m_propertyfile;
+    private Properties          properties;
+    private File                propertyfile;
 
     private Vector entries = new Vector();
 
@@ -205,24 +201,24 @@ public class PropertyFile extends Task
         for (Enumeration e = entries.elements(); e.hasMoreElements(); )
         {
             Entry entry = (Entry)e.nextElement();
-            entry.executeOn(m_properties);
+            entry.executeOn(properties);
         }
     }
 
     private void readFile() throws BuildException
     {
         // Create the PropertyFile
-        m_properties = new Properties();
+        properties = new Properties();
         try
         {
-            if (m_propertyfile.exists())
+            if (propertyfile.exists())
             {
-                log("Updating property file: "+m_propertyfile.getAbsolutePath());
+                log("Updating property file: "+propertyfile.getAbsolutePath());
                 FileInputStream fis = null;
                 try {
-                    fis = new FileInputStream(m_propertyfile);
+                    fis = new FileInputStream(propertyfile);
                     BufferedInputStream bis = new BufferedInputStream(fis);
-                    m_properties.load(bis);
+                    properties.load(bis);
                 } finally {
                     if (fis != null) {
                         fis.close();
@@ -232,10 +228,10 @@ public class PropertyFile extends Task
             else
             {
                 log("Creating new property file: "+
-                    m_propertyfile.getAbsolutePath());
+                    propertyfile.getAbsolutePath());
                 FileOutputStream out = null;
                 try {
-                    out = new FileOutputStream(m_propertyfile.getAbsolutePath());
+                    out = new FileOutputStream(propertyfile.getAbsolutePath());
                     out.flush();
                 } finally {
                     if (out != null) {
@@ -252,7 +248,7 @@ public class PropertyFile extends Task
 
     private void checkParameters() throws BuildException
     {
-        if (!checkParam(m_propertyfile))
+        if (!checkParam(propertyfile))
         {
             throw new BuildException("file token must not be null.", location);
         }
@@ -260,12 +256,12 @@ public class PropertyFile extends Task
 
     public void setFile(File file)
     {
-        m_propertyfile = file;
+        propertyfile = file;
     }
 
     public void setComment(String hdr)
     {
-        m_comment = hdr;
+        comment = hdr;
     }
 
     private void writeFile() throws BuildException
@@ -273,7 +269,7 @@ public class PropertyFile extends Task
         BufferedOutputStream bos = null;
         try
         {
-            bos = new BufferedOutputStream(new FileOutputStream(m_propertyfile));
+            bos = new BufferedOutputStream(new FileOutputStream(propertyfile));
 
             // Properties.store is not available in JDK 1.1
             Method m =
@@ -282,10 +278,10 @@ public class PropertyFile extends Task
                                                OutputStream.class,
                                                String.class}
                                            );
-            m.invoke(m_properties, new Object[] {bos, m_comment});
+            m.invoke(properties, new Object[] {bos, comment});
 
         } catch (NoSuchMethodException nsme) {
-            m_properties.save(bos, m_comment);
+            properties.save(bos, comment);
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
             throw new BuildException(t, location);
@@ -325,87 +321,85 @@ public class PropertyFile extends Task
      */
     public static class Entry
     {
+        private final static int DEFAULT_INT_VALUE = 0;
+        private final static String DEFAULT_DATE_VALUE = "now";
+        private final static String DEFAULT_STRING_VALUE = "";
 
-        final static String NOW_VALUE_ =        "now";
-        final static String NULL_VALUE_ =       "never";
-
-        private final static int    DEFAULT_INT_VALUE =     1;
-        private final static GregorianCalendar
-            DEFAULT_DATE_VALUE = new GregorianCalendar();
-
-        private String              m_key = null;
-        private int                 m_type = Type.STRING_TYPE;
-        private int                 m_operation = Operation.EQUALS_OPER;
-        private String              m_value = "";
-        private String              m_default = null;
-        private String              m_pattern = null;
+        private String              key = null;
+        private int                 type = Type.STRING_TYPE;
+        private int                 operation = Operation.EQUALS_OPER;
+        private String              value = null;
+        private String              defaultValue = null;
+        private String              pattern = null;
+        private int                 field = Calendar.DATE;
 
         public void setKey(String value)
         {
-            this.m_key = value;
+            this.key = value;
         }
         public void setValue(String value)
         {
-            this.m_value = value;
+            this.value = value;
         }
         public void setOperation(Operation value)
         {
-            int newOperation = Operation.toOperation(value.getValue());
-            if (newOperation == Operation.NOW_VALUE) {
-                this.m_operation = Operation.EQUALS_OPER;
-                this.setValue(this.NOW_VALUE_);
-            }
-            else if (newOperation == Operation.NULL_VALUE) {
-                this.m_operation = Operation.EQUALS_OPER;
-                this.setValue(this.NULL_VALUE_);
-            }
-            else {
-                this.m_operation = newOperation;
-            }
+            this.operation = Operation.toOperation(value.getValue());
         }
         public void setType(Type value)
         {
-            this.m_type = Type.toType(value.getValue());
+            this.type = Type.toType(value.getValue());
         }
         public void setDefault(String value)
         {
-            this.m_default = value;
+            this.defaultValue = value;
         }
         public void setPattern(String value)
         {
-            this.m_pattern = value;
+            this.pattern = value;
+        }
+        
+        /**
+         * @since 1.15, Ant 1.5
+         */
+        public void setUnit(PropertyFile.Unit unit) {
+            field = unit.getCalendarField();
         }
 
         protected void executeOn(Properties props) throws BuildException
         {
             checkParameters();
 
-            // m_type may be null because it wasn't set
+            // type may be null because it wasn't set
+            String oldValue = (String)props.get(key);
             try {
-                if (m_type == Type.INTEGER_TYPE)
+                if (type == Type.INTEGER_TYPE)
                 {
-                    executeInteger((String)props.get(m_key));
+                    executeInteger(oldValue);
                 }
-                else if (m_type == Type.DATE_TYPE)
+                else if (type == Type.DATE_TYPE)
                 {
-                    executeDate((String)props.get(m_key));
+                    executeDate(oldValue);
                 }
-                else if (m_type == Type.STRING_TYPE)
+                else if (type == Type.STRING_TYPE)
                 {
-                    executeString((String)props.get(m_key));
+                    executeString(oldValue);
                 }
                 else
                 {
-                    throw new BuildException("Unknown operation type: "+m_type+"");
+                    throw new BuildException("Unknown operation type: "+type+"");
                 }
             } catch (NullPointerException npe) {
                 // Default to string type
                 // which means do nothing
                 npe.printStackTrace();
             }
+            
+            if (value == null) {
+                value = "";
+            }
+            
             // Insert as a string by default
-            props.put(m_key, m_value);
-
+            props.put(key, value);
         }
 
         /**
@@ -417,93 +411,43 @@ public class PropertyFile extends Task
         */
         private void executeDate(String oldValue) throws BuildException
         {
-            GregorianCalendar value = new GregorianCalendar();
-            GregorianCalendar newValue = new GregorianCalendar();
+            Calendar currentValue = Calendar.getInstance();
 
-            if (m_pattern == null) {
-              m_pattern = "yyyy/MM/dd HH:mm";
+            if (pattern == null) {
+              pattern = "yyyy/MM/dd HH:mm";
             }
-            DateFormat fmt = new SimpleDateFormat(m_pattern);
+            DateFormat fmt = new SimpleDateFormat(pattern);
 
-            // special case
-            if (m_default != null &&
-                NOW_VALUE_.equals(m_default.toLowerCase()) &&
-                (m_operation == Operation.INCREMENT_OPER ||
-                 m_operation == Operation.DECREMENT_OPER) ) {
-                 oldValue = null;
+            String currentStringValue = getCurrentValue(oldValue);
+            if (currentStringValue == null) {
+                currentStringValue = DEFAULT_DATE_VALUE;
             }
-
-            if (oldValue != null) {
+            
+            if ("now".equals(currentStringValue)) {
+                currentValue.setTime(new Date());
+            }
+            else {
                 try {
-                    value.setTime(fmt.parse(oldValue));
+                    currentValue.setTime(fmt.parse(currentStringValue));
                 }
                 catch (ParseException pe)  { /* swollow */ }
             }
-
-            if (m_value != null) {
-                if (NOW_VALUE_.equals(m_value.toLowerCase())) {
-                    value.setTime(new Date());
-                }
-                else if (NULL_VALUE_.equals(m_value.toLowerCase())) {
-                    value = null;
-                }
-                else {
-                    try {
-                        value.setTime(fmt.parse(m_value));
+            
+            if (operation != Operation.EQUALS_OPER) {
+                int offset = 0;
+                try {
+                    offset = Integer.parseInt(value);
+                    if (operation == Operation.DECREMENT_OPER) {
+                        offset = -1 * offset;
                     }
-                    catch (Exception ex) {
-                        // obviously not a date, try a simple int
-                        try {
-                            int offset = Integer.parseInt(m_value);
-                            value.clear();
-                            value.set(Calendar.DAY_OF_YEAR, offset);
-                        }
-                        catch (Exception ex_) {
-                            value.clear();
-                            value.set(Calendar.DAY_OF_YEAR, 1);
-                        }
-                    }
-
                 }
+                catch (NumberFormatException e) {
+                    throw new BuildException("Value not an integer on " + key);
+                }
+                currentValue.add(field, offset);
             }
 
-            if (m_default != null && oldValue == null) {
-                if (NOW_VALUE_.equals(m_default.toLowerCase())) {
-                    value.setTime(new Date());
-                }
-                else if (NULL_VALUE_.equals(m_default.toLowerCase())) {
-                    value = null;
-                }
-                else {
-                    try {
-                        value.setTime(fmt.parse(m_default));
-                    }
-                    catch (ParseException pe)  { /* swollow */ }
-                }
-            }
-
-
-            if (m_operation == Operation.EQUALS_OPER) {
-                newValue = value;
-            }
-            else if (m_operation == Operation.INCREMENT_OPER) {
-                newValue.add(Calendar.SECOND, value.get(Calendar.SECOND));
-                newValue.add(Calendar.MINUTE, value.get(Calendar.MINUTE));
-                newValue.add(Calendar.HOUR_OF_DAY, value.get(Calendar.HOUR_OF_DAY));
-                newValue.add(Calendar.DAY_OF_YEAR, value.get(Calendar.DAY_OF_YEAR));
-            }
-            else if (m_operation == Operation.DECREMENT_OPER) {
-                newValue.add(Calendar.SECOND, -1 * value.get(Calendar.SECOND));
-                newValue.add(Calendar.MINUTE, -1 * value.get(Calendar.MINUTE));
-                newValue.add(Calendar.HOUR_OF_DAY, -1 * value.get(Calendar.HOUR_OF_DAY));
-                newValue.add(Calendar.DAY_OF_YEAR, -1 * value.get(Calendar.DAY_OF_YEAR));
-            }
-            if (newValue != null) {
-                m_value = fmt.format(newValue.getTime());
-            }
-            else {
-                m_value = "";
-            }
+            value = fmt.format(currentValue.getTime());
         }
 
 
@@ -516,66 +460,40 @@ public class PropertyFile extends Task
         */
         private void executeInteger(String oldValue) throws BuildException
         {
-            int value = 0;          // the value given in the 'value' attr
-            int newValue  = 0;      // the new value, after the operation
-            int oldIntValue  = 0;   // the old value from the prop file
+            int currentValue = DEFAULT_INT_VALUE;
+            int newValue  = DEFAULT_INT_VALUE;
 
-            DecimalFormat fmt = (m_pattern != null) ? new DecimalFormat(m_pattern)
+
+            DecimalFormat fmt = (pattern != null) ? new DecimalFormat(pattern)
                                                     : new DecimalFormat();
+            try {
+                currentValue = fmt.parse(getCurrentValue(oldValue)).intValue();
+            }
+            catch (NumberFormatException nfe) { /* swollow */ }
+            catch (ParseException pe)  { /* swollow */ }
+            
+            if (operation == Operation.EQUALS_OPER) {
+                newValue = currentValue;
+            }
+            else {
+                int operationValue = 1;
+                try {
+                    operationValue = fmt.parse(value).intValue();
+                }
+                catch (NumberFormatException nfe) { /* swollow */ }
+                catch (ParseException pe)  { /* swollow */ }
+                
+                if (operation == Operation.INCREMENT_OPER) {
+                    newValue = currentValue + operationValue;
+                }
+                else if (operation == Operation.DECREMENT_OPER) {
+                    newValue = currentValue - operationValue;
+                }
+            }
 
-            if (oldValue != null) {
-                try {
-                    oldIntValue = fmt.parse(oldValue).intValue();
-                }
-                catch (NumberFormatException nfe) { /* swollow */ }
-                catch (ParseException pe)  { /* swollow */ }
-            }
-            if (m_value != null) {
-                try {
-                    value = fmt.parse(m_value).intValue();
-                }
-                catch (NumberFormatException nfe) { /* swollow */ }
-                catch (ParseException pe)  { /* swollow */ }
-            }
-            if (m_default != null && oldValue == null) {
-                try {
-                    oldIntValue = fmt.parse(m_default).intValue();
-                }
-                catch (NumberFormatException nfe) { /* swollow */ }
-                catch (ParseException pe)  { /* swollow */ }
-            }
-
-            if (m_operation == Operation.EQUALS_OPER) {
-                newValue = oldIntValue;
-            }
-            else if (m_operation == Operation.INCREMENT_OPER) {
-                if (m_value == "") {
-                    // No value attr was given, so just increment the
-                    // old value from the prop file (0 by assignment above,
-                    // if none).
-                    newValue = ++oldIntValue;
-                } else {
-                    // A value attr was given, so add the old value from
-                    // the prop file (0, if none) to the specified value.
-                    newValue = (oldIntValue + value) ;
-                }
-            }
-            else if (m_operation == Operation.DECREMENT_OPER) {
-                if (m_value == "") {
-                    // No value attr was given, so just decrement the
-                    // old value from the prop file (0 by assignment above,
-                    // if none).
-                    newValue = --oldIntValue;
-                } else {
-                    // A value attr was given, so subtract from the
-                    // old value from the prop file (0, if none) the
-                    // specified value.
-                    newValue = (oldIntValue - value);
-                }
-            }
-            m_value = fmt.format(newValue);
+            value = fmt.format(newValue);
         }
-
+        
         /**
         * Handle operations for type <code>string</code>.
         *
@@ -585,55 +503,89 @@ public class PropertyFile extends Task
         */
         private void executeString(String oldValue) throws BuildException
         {
-            String value = "";
-            String newValue  = "";
+            String newValue  = DEFAULT_STRING_VALUE;
 
-            // the order of events is, of course, very important here
-            // default initially to the old value
-            if (oldValue != null) {
-                value = oldValue;
-            }
-            // but if a value is specified, use it
-            if (m_value != null) {
-                value = m_value;
-            }
-            // even if value is specified, ignore it and set to the default
-            // value if it is specified and there is no previous value
-            if (m_default != null && oldValue == null) {
-                value = m_default;
+            String currentValue = getCurrentValue(oldValue);
+            
+            if (currentValue == null) {
+                currentValue = DEFAULT_STRING_VALUE;
             }
             
-            if (m_operation == Operation.EQUALS_OPER) {
-                newValue = value;
+            if (operation == Operation.EQUALS_OPER) {
+                newValue = currentValue;
             }
-            else if (m_operation == Operation.INCREMENT_OPER) {
-                newValue += value;
+            else if (operation == Operation.INCREMENT_OPER) {
+                newValue = currentValue + value;
             }
-            m_value = newValue;
+            value = newValue;
         }
         
         /**
          * Check if parameter combinations can be supported
+         * @todo make sure the 'unit' attribute is only specified on date
+         *      fields
          */
         private void checkParameters() throws BuildException {
-            if (m_type == Type.STRING_TYPE &&
-                m_operation == Operation.DECREMENT_OPER) {
-                throw new BuildException("- is not suported for string properties (key:" + m_key + ")");
+            if (type == Type.STRING_TYPE &&
+                operation == Operation.DECREMENT_OPER) {
+                throw new BuildException("- is not suported for string properties (key:" + key + ")");
             }
-            if (m_value == null && m_default == null) {
-                throw new BuildException("value and/or default must be specified (key:" + m_key + ")");
+            if (value == null && defaultValue == null) {
+                throw new BuildException("value and/or default must be specified (key:" + key + ")");
             }
-            if (m_key == null) {
+            if (key == null) {
                 throw new BuildException("key is mandatory");
             }
-            if (m_type == Type.STRING_TYPE &&
-                m_pattern != null) {
-                throw new BuildException("pattern is not suported for string properties (key:" + m_key + ")");
+            if (type == Type.STRING_TYPE &&
+                pattern != null) {
+                throw new BuildException("pattern is not suported for string properties (key:" + key + ")");
             }
         }
 
+        private String getCurrentValue(String oldValue) {
+            String ret = null;
+            if (operation == Operation.EQUALS_OPER) {
+                // If only value is specified, the property is set to it
+                // regardless of its previous value. 
+                if (value != null && defaultValue == null) {
+                    ret = value;
+                }
+                
+                // If only default is specified and the property previously
+                // existed in the property file, it is unchanged. 
+                if (value == null && defaultValue != null && oldValue != null) {
+                    ret = oldValue;
+                }
+
+                // If only default is specified and the property did not
+                // exist in the property file, the property is set to default.
+                if (value == null && defaultValue != null && oldValue == null) {
+                    ret = defaultValue;
+                }
+                
+                // If value and default are both specified and the property
+                // previously existed in the property file, the property
+                // is set to value.
+                if (value != null && defaultValue != null && oldValue != null) {
+                    ret = value;
+                }
+
+                // If value and default are both specified and the property
+                // did not exist in the property file, the property is set
+                // to default. 
+                if (value != null && defaultValue != null && oldValue == null) {
+                    ret = defaultValue;
+                }
+            }
+            else {
+                ret = (oldValue == null) ? defaultValue : oldValue;
+            }
+            
+            return ret;
+        }
+        
         /**
-         * Enumerated attribute with the values "+", "-", "=", "now" and "never".
+         * Enumerated attribute with the values "+", "-", "="
          */
         public static class Operation extends EnumeratedAttribute {
 
@@ -642,12 +594,8 @@ public class PropertyFile extends Task
             public final static int DECREMENT_OPER =   1;
             public final static int EQUALS_OPER =      2;
 
-            // Special values
-            public final static int NOW_VALUE =        3;
-            public final static int NULL_VALUE =       4;
-
             public String[] getValues() {
-                return new String[] {"+", "-", "=", NOW_VALUE_, NULL_VALUE_};
+                return new String[] {"+", "-", "="};
             }
 
             public static int toOperation(String oper) {
@@ -656,12 +604,6 @@ public class PropertyFile extends Task
                 }
                 else if ("-".equals(oper)) {
                     return DECREMENT_OPER;
-                }
-                else if (NOW_VALUE_.equals(oper)) {
-                    return NOW_VALUE;
-                }
-                else if (NULL_VALUE_.equals(oper)) {
-                    return NULL_VALUE;
                 }
                 return EQUALS_OPER;
             }
@@ -690,6 +632,58 @@ public class PropertyFile extends Task
                 }
                 return STRING_TYPE;
             }
+        }
+    }
+    
+    /**
+     * Borrowed from Tstamp
+     *
+     * @since 1.15, Ant 1.5
+     */
+    public static class Unit extends EnumeratedAttribute {
+
+        private final static String MILLISECOND = "millisecond";
+        private final static String SECOND = "second";
+        private final static String MINUTE = "minute";
+        private final static String HOUR = "hour";
+        private final static String DAY = "day";
+        private final static String WEEK = "week";
+        private final static String MONTH = "month";
+        private final static String YEAR = "year";
+
+        private final static String[] units = {
+                                                MILLISECOND,
+                                                SECOND,
+                                                MINUTE,
+                                                HOUR,
+                                                DAY,
+                                                WEEK,
+                                                MONTH,
+                                                YEAR
+                                              };
+
+        private Hashtable calendarFields = new Hashtable();
+
+        public Unit() {
+            calendarFields.put(MILLISECOND,
+                                    new Integer(Calendar.MILLISECOND));
+            calendarFields.put(SECOND, new Integer(Calendar.SECOND));
+            calendarFields.put(MINUTE, new Integer(Calendar.MINUTE));
+            calendarFields.put(HOUR, new Integer(Calendar.HOUR_OF_DAY));
+            calendarFields.put(DAY, new Integer(Calendar.DATE));
+            calendarFields.put(WEEK, new Integer(Calendar.WEEK_OF_YEAR));
+            calendarFields.put(MONTH, new Integer(Calendar.MONTH));
+            calendarFields.put(YEAR, new Integer(Calendar.YEAR));
+        }
+
+        public int getCalendarField() {
+            String key = getValue().toLowerCase();
+            Integer i = (Integer) calendarFields.get(key);
+            return i.intValue();
+        }
+
+        public String[] getValues() {
+            return units;
         }
     }
 }

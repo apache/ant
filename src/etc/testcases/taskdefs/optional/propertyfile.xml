@@ -24,5 +24,48 @@
       </propertyfile>
       
    </target>
+   
+   <target name="exercise">
+     <propertyfile file="${test.propertyfile}">
+        <entry key="existing.prop"
+               type="int"
+               default="23"/>
+        <entry key="ethans.birth"
+               value="2002/01/21 12:18"
+               type="date"/>
+        <entry key="first.birthday"
+               value="1"
+               default="2002/01/21"
+               pattern="yyyy/MM/dd"
+               unit="year"
+               type="date"
+               operation="+"/>
+        <entry key="int.with.default"
+               value="1"
+               default="2"
+               operation="+"
+               type="int"/>
+        <entry key="int.without.default"
+               value="1"
+               operation="+"
+               type="int"/>
+        <entry key="string.with.default"
+               value="&gt;"
+               default="--"
+               operation="+"/>
+        <entry key="string.without.default"
+               value="."
+               operation="+"/>
+        <entry key="olderThanAWeek"
+               type="date"
+               default="0201"
+               operation="-"
+               value="8"
+               pattern="MMdd"/>
+     </propertyfile>
+     <property file="${test.propertyfile}"/>
+   </target>
 
 </project>
+
+

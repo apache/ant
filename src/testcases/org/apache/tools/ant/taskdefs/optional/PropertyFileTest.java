@@ -121,6 +121,42 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals(NEW_DATE, afterUpdate.getProperty(DATE_KEY));
     }
 
+    public void testExerciseDefaultAndIncrement() throws Exception {
+        executeTarget("exercise");
+        assertEquals("3",project.getProperty("int.with.default"));
+        assertEquals("1",project.getProperty("int.without.default"));
+        assertEquals("-->",project.getProperty("string.with.default"));
+        assertEquals(".",project.getProperty("string.without.default"));
+        assertEquals("2002/01/21 12:18", project.getProperty("ethans.birth"));
+        assertEquals("2003/01/21", project.getProperty("first.birthday"));
+        assertEquals("0124", project.getProperty("olderThanAWeek"));
+        assertEquals("37", project.getProperty("existing.prop"));
+    }
+
+/*
+    public void testDirect() throws Exception {
+        PropertyFile pf = new PropertyFile();
+        pf.setProject(project);
+        pf.setFile(new File(testPropsFilePath));
+        PropertyFile.Entry entry = pf.createEntry();
+
+        entry.setKey("date");
+        entry.setValue("123");
+        PropertyFile.Entry.Type type = new PropertyFile.Entry.Type();
+        type.setValue("date");
+        entry.setType(type);
+
+        entry.setPattern("yyyy/MM/dd");
+        
+        PropertyFile.Entry.Operation operation = new PropertyFile.Entry.Operation();
+        operation.setValue("+");
+        pf.execute();
+
+        Properties props = getTestProperties();
+        assertEquals("yeehaw", props.getProperty("date"));
+    }
+*/
+
     private Properties getTestProperties() throws Exception {
         Properties testProps = new Properties();
         FileInputStream propsFile = new FileInputStream(testPropsFilePath);
@@ -135,6 +171,7 @@ public class PropertyFileTest extends BuildFileTest {
         testProps.put(FNAME_KEY, FNAME);
         testProps.put(LNAME_KEY, LNAME);
         testProps.put(EMAIL_KEY, EMAIL);
+        testProps.put("existing.prop", "37");
       
         FileOutputStream fos = new FileOutputStream(testPropsFilePath);
         testProps.save(fos, "defaults");

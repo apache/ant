@@ -2,12 +2,11 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>PropertyFile Task</title>
-
 </head>
 
 <body>
 
-<h1>Ant PropertyFile Task User Manual</h1>
+<h1>PropertyFile</h1>
 <p>by</p>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
@@ -15,7 +14,6 @@
   <li>Jeremy Mawson (<a href="mailto:jem@loftinspace.com.au">jem@loftinspace.com/au</a>)</li>
 </ul>
 
-<p>Version 1.1 - 2001/01/28</p>
 <hr>
 <h2>Table of Contents</h2>
 <ul>
@@ -30,7 +28,7 @@
 when wanting to make unattended modifications to configuration files for application
 servers and applications.  Currently, the task maintains a working property file with
 the ability to add properties or make changes to existing ones.  However, any comments
-are lost.  Work is being done to make this task a bit more &quot;human friendly&quot;.</p>
+are lost.</p>
 
 <hr>
 <h2><a name="proptask">PropertyFile Task</a></h2>
@@ -77,7 +75,7 @@ elements to specify actual modifications to the property file itself.</p>
     <td valign="top">default</td>
     <td valign="top">Initial value to set for a property if it is not
                      already defined in the property file.<br>
-                     For type date, two additional keywords are allowed: &quot;now&quot; or &quot;never&quot;.</td>
+                     For type date, an additional keyword is allowed: &quot;now&quot;</td>
     </tr>
   <tr>
     <td valign="top">type</td>
@@ -95,6 +93,24 @@ elements to specify actual modifications to the property file itself.</p>
     <td valign="top">For int and date type only. If present, Values will
                      be parsed and formatted accordingly.</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unit</td>
+    <td valign="top">The unit of the value to be applied to date +/- operations.
+                     Valid Values are:
+                     <ul>
+                        <li>millisecond</li>
+                        <li>second</li>
+                        <li>minute</li>
+                        <li>hour</li>
+                        <li>day (default)</li>
+                        <li>week</li>
+                        <li>month</li>
+                        <li>year</li>
+                     </ul>
+                     This only applies to date types using a +/- operation.
+    </td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <p>The rules used when setting a property value are shown below.&nbsp; The
