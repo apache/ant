@@ -32,6 +32,10 @@ Other changes:
 * XmlLogger and <antstructure> now add an encoding declaration to the
   XML files they generate.
 
+* <fileset> has a new attribute "casesensitive" to make it match
+  filenames in a case insensitive way (if you set it to false) - by
+  default filesets remain case sensitive.
+
 Changes from Ant 1.3 to Ant 1.4
 ===========================================
 

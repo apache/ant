@@ -72,6 +72,7 @@ import java.util.Vector;
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class FileSet extends DataType {
     
@@ -80,6 +81,7 @@ public class FileSet extends DataType {
 
     private File dir;
     private boolean useDefaultExcludes = true;
+    private boolean isCaseSensitive = true;
 
     public FileSet() {
         super();
@@ -90,6 +92,7 @@ public class FileSet extends DataType {
         this.defaultPatterns = fileset.defaultPatterns;
         this.additionalPatterns = fileset.additionalPatterns;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
+        this.isCaseSensitive = fileset.isCaseSensitive;
     }
     
     
@@ -245,6 +248,16 @@ public class FileSet extends DataType {
     }
 
     /**
+     * Sets case sensitivity of the file system
+     *
+     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
+     *                           sensitive, "false"|"off"|"no" when not.
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+        this.isCaseSensitive = isCaseSensitive;
+    }
+
+    /**
      * Returns the directory scanner needed to access the files to process.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
@@ -287,6 +300,7 @@ public class FileSet extends DataType {
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
         if (useDefaultExcludes) ds.addDefaultExcludes();
+        ds.setCaseSensitive(isCaseSensitive);
     }
 
     /**

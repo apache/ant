@@ -62,11 +62,17 @@ attributes.</p>
       taken to be an exclude pattern.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">casesensitive</td>
+    <td valign="top">Must the file system be treated in a case sensitive way?
+        Defaults to true.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 
 <h4>Examples</h4>
 <blockquote><pre>
-&lt;fileset dir=&quot;${server.src}&quot; &gt;
+&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot; &gt;
   &lt;patternset id=&quot;non.test.sources&quot; &gt;
     &lt;include name=&quot;**/*.java&quot;/&gt;
     &lt;exclude name=&quot;**/*Test*&quot;/&gt;
