@@ -1,0 +1,114 @@
+/*
+ * Copyright (C) The Apache Software Foundation. All rights reserved.
+ *
+ * This software is published under the terms of the Apache Software License
+ * version 1.1, a copy of which has been included with this distribution in
+ * the LICENSE file.
+ */
+package org.apache.tools.ant.taskdefs;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.bzip2.CBZip2InputStream;
+
+/**
+ * Expands a file that has been compressed with the BZIP2 algorithm. Normally
+ * used to compress non-compressed archives such as TAR files.
+ *
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ */
+
+public class BUnzip2 extends Unpack
+{
+
+    private final static String DEFAULT_EXTENSION = ".bz2";
+
+    protected String getDefaultExtension()
+    {
+        return DEFAULT_EXTENSION;
+    }
+
+    protected void extract()
+    {
+        if( source.lastModified() > dest.lastModified() )
+        {
+            log( "Expanding " + source.getAbsolutePath() + " to "
+                 + dest.getAbsolutePath() );
+
+            FileOutputStream out = null;
+            CBZip2InputStream zIn = null;
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            try
+            {
+                out = new FileOutputStream( dest );
+                fis = new FileInputStream( source );
+                bis = new BufferedInputStream( fis );
+                int b = bis.read();
+                if( b != 'B' )
+                {
+                    throw new BuildException( "Invalid bz2 file.", location );
+                }
+                b = bis.read();
+                if( b != 'Z' )
+                {
+                    throw new BuildException( "Invalid bz2 file.", location );
+                }
+                zIn = new CBZip2InputStream( bis );
+                byte[] buffer = new byte[8 * 1024];
+                int count = 0;
+                do
+                {
+                    out.write( buffer, 0, count );
+                    count = zIn.read( buffer, 0, buffer.length );
+                }while ( count != -1 );
+            }
+            catch( IOException ioe )
+            {
+                String msg = "Problem expanding bzip2 " + ioe.getMessage();
+                throw new BuildException( msg, ioe, location );
+            }
+            finally
+            {
+                if( bis != null )
+                {
+                    try
+                    {
+                        bis.close();
+                    }
+                    catch( IOException ioex )
+                    {}
+                }
+                if( fis != null )
+                {
+                    try
+                    {
+                        fis.close();
+                    }
+                    catch( IOException ioex )
+                    {}
+                }
+                if( out != null )
+                {
+                    try
+                    {
+                        out.close();
+                    }
+                    catch( IOException ioex )
+                    {}
+                }
+                if( zIn != null )
+                {
+                    try
+                    {
+                        zIn.close();
+                    }
+                    catch( IOException ioex )
+                    {}
+                }
+            }
+        }
+    }
+}
