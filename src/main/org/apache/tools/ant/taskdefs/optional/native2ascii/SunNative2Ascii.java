@@ -16,6 +16,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.native2ascii;
 
+import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
@@ -43,7 +44,24 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
 
     protected boolean run(Commandline cmd, ProjectComponent log)
         throws BuildException {
-        sun.tools.native2ascii.Main n2a = new sun.tools.native2ascii.Main();
-        return n2a.convert(cmd.getArguments());
+        try {
+            Class n2aMain = Class.forName("sun.tools.native2ascii.Main");
+            Class[] param = new Class[] {String[].class};
+            Method convert = n2aMain.getMethod("convert", param);
+            if (convert == null) {
+                throw new BuildException("Could not find convert() method in "
+                                         + "sun.tools.native2ascii.Main");
+            }
+            Object o = n2aMain.newInstance();
+            return ((Boolean) convert.invoke(o, 
+                                             new Object[] {cmd.getArguments()})
+                    ).booleanValue();
+        } catch (BuildException ex) {
+            //rethrow
+            throw ex;
+        } catch (Exception ex) {
+            //wrap
+           throw new BuildException("Error starting Sun's native2ascii: ", ex);
+        }
     }
 }

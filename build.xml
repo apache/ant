@@ -163,7 +163,6 @@
   <selector id="needs.sun.tools">
     <or>
       <filename name="${optional.package}/Javah*"/>
-      <filename name="${optional.package}/native2ascii/Sun*"/>
     </or>
   </selector>
 
