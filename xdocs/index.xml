@@ -18,6 +18,24 @@
     </p>
 </section>
 
+ <section name="Ant 1.6beta1">
+    <p>Apache Ant 1.6beta1 is now available for <a
+    href="http://cvs.apache.org/dist/ant/v1.6beta1/">download</a>.  As
+    we've already said in the announcements of Ant 1.5.4, this release
+    requires JDK 1.2 or later to run.</p>
+
+    <p>We encourage user to give this beta a release a try and report
+    any bugs found so that we get a chance to fix them before we make
+    the final release of Ant 1.6.</p>
+
+    <p>Ant 1.6 adds a lot of new features, most prominently support
+    for XML namespaces as well as a new concept of Ant libraries that
+    makes use of namespaces to avoid name clashes of custom tasks.
+    For a longer list of fixed bugs and new features see the release
+    notes.</p>
+
+ </section>
+
  <section name="Ant 1.5.4">
     <p>Apache Ant 1.5.4 is now available for
      <a href="http://ant.apache.org/bindownload.cgi">download</a>.
