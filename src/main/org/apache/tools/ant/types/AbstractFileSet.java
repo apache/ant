@@ -214,6 +214,17 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * Creates a single file fileset.
+     */
+    public void setFile(File file) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        setDir(file.getParentFile());
+        setIncludes(file.getName());
+    }
+
+    /**
      * Appends <code>includes</code> to the current list of include
      * patterns.
      *
