@@ -50,6 +50,10 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * Portions of this software are based upon public domain software
+ * originally written at the National Center for Supercomputing Applications,
+ * University of Illinois, Urbana-Champaign.
  */
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
@@ -65,17 +69,17 @@ import org.apache.tools.ant.*;
  * ToDo: Should call reopen if file is already open in one of our changelists perhaps?
  */
  
-public class P4Edit extends P4Base {
+ public class P4Edit extends P4Base {
  
-    public String change = null;
+     public String change = null;
      
-    public void setChange(String change) {
-        this.change = change;
-    }
-         
-    public void execute() throws BuildException {
-        if(change != null ) P4CmdOpts = "-c "+change;
-        if(P4View == null) throw new BuildException("No view specified to edit");
-        execP4Command("-s edit "+P4CmdOpts+" "+P4View, new SimpleP4OutputHandler(this));
-    }
+     public void setChange(String change) {
+             this.change = change;
+	 }
+	 
+     public void execute() throws BuildException {
+         if(change != null ) P4CmdOpts = "-c "+change;
+	     if(P4View == null) throw new BuildException("No view specified to edit");
+         execP4Command("-s edit "+P4CmdOpts+" "+P4View, new SimpleP4OutputHandler(this));
+	 }
 }

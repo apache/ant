@@ -50,6 +50,10 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * Portions of this software are based upon public domain software
+ * originally written at the National Center for Supercomputing Applications,
+ * University of Illinois, Urbana-Champaign.
  */
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
@@ -80,7 +84,7 @@ public class P4Sync extends P4Base {
 
     public void setLabel(String label) throws BuildException { 
         if(label == null && !label.equals(""))
-            throw new BuildException("P4Sync: Labels cannot be Null or Empty");
+                throw new BuildException("P4Sync: Labels cannot be Null or Empty");
 
         this.label = label;
 
@@ -89,20 +93,20 @@ public class P4Sync extends P4Base {
 
     public void setForce(String force) throws BuildException {
         if(force == null && !label.equals(""))
-            throw new BuildException("P4Sync: If you want to force, set force to non-null string!");
-        P4CmdOpts = "-f";
-    }
+                throw new BuildException("P4Sync: If you want to force, set force to non-null string!");
+            P4CmdOpts = "-f";
+        }
         
     public void execute() throws BuildException {
 
 
         if (P4View != null) {
-            syncCmd = P4View;
+                syncCmd = P4View;
         }
 
         
         if(label != null && !label.equals("")) {
-            syncCmd = syncCmd + "@" + label;
+                syncCmd = syncCmd + "@" + label;
         } 
 
         

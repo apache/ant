@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,49 +50,70 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * Portions of this software are based upon public domain software
- * originally written at the National Center for Supercomputing Applications,
- * University of Illinois, Urbana-Champaign.
  */
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
+import java.io.*;
 import org.apache.tools.ant.*;
 
-/** P4Submit - submit a numbered changelist to Perforce.
- *
- * <B>Note:</B> P4Submit cannot (yet) submit the default changelist. 
- * This shouldn't be a problem with the ANT API as the usual flow is 
- * P4Change to create a new numbered change followed by P4Edit then P4Submit.
- *
- * Example Usage:-<br>
- * &lt;p4submit change="${p4.change}" /&gt;
- *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- *
- */
-public class P4Submit extends P4Base {
+public abstract class P4HandlerAdapter implements P4Handler {
 
-    //ToDo: If dealing with default cl need to parse out <enter description here>    
-    public String change;
+    public abstract void process(String line);
 
-    public void setChange(String change) {
-        this.change = change;
-	}
-    public void execute() throws BuildException {
-        if(change != null) {
-	        execP4Command("submit -c "+change, new P4HandlerAdapter(){
-		            public void process(String line) {
-			            log(line, Project.MSG_VERBOSE);
-				    }
-		    });
-	
-	    } else {
-	    //here we'd parse the output from change -o into submit -i 
-	    //in order to support default change.
-	    throw new BuildException("No change specified (no support for default change yet....");
-    	}
-	}
-	
+
+    String p4input = "";
+
+    //set any data to be written to P4's stdin - messy, needs work
+    public void setOutput(String p4Input) {
+        this.p4input = p4Input;
+    }
+
+
+    public void start() throws BuildException {
+
+    try{
+        //First write any output to P4 
+        if(p4input != null && p4input.length() >0 && os != null) {
+                    os.write(p4input.getBytes());
+                    os.flush();
+                    os.close();
+            }
+
+        //Now read any input and process
+      
+        BufferedReader input = new BufferedReader(
+                                     new InputStreamReader(
+                                       new SequenceInputStream(is,es)));
+
+            String line;
+	    	while((line = input.readLine()) != null) {
+	    	   process(line);
+	    	}
+	    	
+	    	input.close();
+
+
+        }catch(Exception e) {
+            throw new BuildException(e);
+        }
+    }
+
+    OutputStream os;    //OUtput
+    InputStream is;     //Input
+    InputStream es;     //Error
+
+    public void setProcessInputStream(OutputStream os) throws IOException {
+        this.os = os;
+    }
+
+    public void setProcessErrorStream(InputStream is) throws IOException {
+        this.es = is;
+    }
+
+    public void setProcessOutputStream(InputStream is) throws IOException {
+        this.is = is;
+    }
+
+    public void stop(){}
 }

@@ -50,14 +50,20 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * Portions of this software are based upon public domain software
+ * originally written at the National Center for Supercomputing Applications,
+ * University of Illinois, Urbana-Champaign.
  */
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.*;
 import org.apache.tools.ant.*;
-//import org.apache.tools.ant.util.regexp.*;
+import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.types.*;
 import org.apache.oro.text.perl.*;
+
 
 /** Base class for Perforce (P4) ANT tasks. See individual task for example usage.
  *
@@ -84,15 +90,15 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     protected String P4Client   = "";
     /** Perforce User (eg fbloggs) */
     protected String P4User     = "";
-    /** Perforce view for commands (eg //projects/foobar/main/source/... ) */
+    /** Perforce view for commands (eg //projects/foobar/main/source/... )*/
     protected String P4View     = "";
 
     //P4 g-opts and cmd opts (rtfm)
     /** Perforce 'global' opts.
-     * Forms half of low level API */
+      * Forms half of low level API */
     protected String P4Opts     = "";
     /** Perforce command opts.
-     * Forms half of low level API */
+      * Forms half of low level API */
     protected String P4CmdOpts  = "";
 
     //Setters called by Ant
@@ -106,73 +112,59 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
         util = new Perl5Util();
 
-        // Not as comprehensive as Exec but Exec 
-        // doesn't allow stdin and stdout/stderr processing
-        
-        String myOS = System.getProperty("os.name");
-        if(myOS == null) throw new BuildException("Unable to determine OS");
-        myOS = myOS.toLowerCase();
-        
-        if( myOS.indexOf("os/2") >= 0 ) {
-            shell = "cmd /c ";
-        } else if( myOS.startsWith("windows") 
-                   && (myOS.indexOf("2000") >= 0 || myOS.indexOf("nt") >= 0 ) ) {
-            shell = "cmd /c ";
-        } else {
-            // What about Mac OS? No perforce support there?
-            shell = "/bin/sh "; //This needs testing on Unix!!!!
-        }
-        //Get default P4 settings from environment - Mark would have done something cool with
-        //introspection here.....:-)
-        String tmpprop;
+    	//Get default P4 settings from environment - Mark would have done something cool with
+	    //introspection here.....:-)
+	    String tmpprop;
         if((tmpprop = project.getProperty("p4.port")) != null) setPort(tmpprop);
         if((tmpprop = project.getProperty("p4.client")) != null) setClient(tmpprop);
-        if((tmpprop = project.getProperty("p4.user")) != null) setUser(tmpprop);        
+        if((tmpprop = project.getProperty("p4.user")) != null) setUser(tmpprop);	
     }
 
     protected void execP4Command(String command) throws BuildException {
-        execP4Command(command, null, null);
+        execP4Command(command, null);
     }
     
-    protected void execP4Command(String command, P4OutputHandler handler) throws BuildException {
-        execP4Command(command, null, handler);
-    }
     /** Execute P4 command assembled by subclasses.
-        @param command The command to run
-        @param p4input Input to be fed to command on stdin
-        @param handler A P4OutputHandler to process any output
+	@param command The command to run
+	@param p4input Input to be fed to command on stdin
+	@param handler A P4Handler to process any input and output
     */
-    protected void execP4Command(String command, String p4input, P4OutputHandler handler) throws BuildException {
+    protected void execP4Command(String command, P4Handler handler) throws BuildException {
         try{
 
-            P4Opts = P4Port+" "+P4User+" "+P4Client;
-            log("Execing "+shell+"p4 "+P4Opts+" "+command, Project.MSG_VERBOSE);
-            Process proc = Runtime.getRuntime().exec(shell+"p4 "+P4Opts+" "+command);
+            Commandline commandline = new Commandline();
+            commandline.setExecutable("p4");
 
-            if(p4input != null && p4input.length() >0) {
-                OutputStream out = proc.getOutputStream();
-                out.write(p4input.getBytes());
-                out.flush();
-                out.close();
-            }
+            //Check API for these - it's how CVS does it...
+            commandline.createArgument().setValue(P4Port);
+            commandline.createArgument().setValue(P4User);
+            commandline.createArgument().setValue(P4Client);
+            commandline.createArgument().setLine(command);
+
+	        log("Execing "+commandline.getCommandline(), Project.MSG_VERBOSE);
+
+            if(handler == null ) handler = new SimpleP4OutputHandler(this);
+
+            Execute exe = new Execute(handler, null);
+
+            exe.setAntRun(project);
             
-            //Q: Do we need to read p4 output if we're not interested?
-            
-            BufferedReader input = new BufferedReader(
-                                                      new InputStreamReader(
-                                                                            new SequenceInputStream(proc.getInputStream(),proc.getErrorStream())));
+            exe.setCommandline(commandline.getCommandline());
 
-
-            //we check for a match on the input to save time on the substitution.
-            String line;
-            while((line = input.readLine()) != null) {
-                if(handler != null) handler.process(line);
+            try{
+             exe.execute();
+            }catch(IOException e) {
+                throw new BuildException(e);
+            } finally {
+                try{
+                    handler.stop();
+                }catch(Exception e) {}
             }
-                
-            proc.waitFor();
-            input.close();
-        }catch(Exception e) {
-            throw new BuildException("Problem exec'ing P4 command: "+e.getMessage());
-        }
+
+            
+    		
+	    }catch(Exception e) {
+	        throw new BuildException("Problem exec'ing P4 command: "+e.getMessage());
+	    }
     }
 }

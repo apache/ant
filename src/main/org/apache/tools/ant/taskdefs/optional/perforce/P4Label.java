@@ -50,6 +50,10 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * Portions of this software are based upon public domain software
+ * originally written at the National Center for Supercomputing Applications,
+ * University of Illinois, Urbana-Champaign.
  */
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
@@ -112,17 +116,21 @@ public class P4Label extends P4Base {
             "Options: unlocked\n"+
             "View: "+P4View+"\n";
 
-        execP4Command("label -i", newLabel, new P4OutputHandler() {
-                public void process(String line) {
-                    log(line, Project.MSG_VERBOSE);
-                }
-            });
+        P4Handler handler = new P4HandlerAdapter() {
+            public void process(String line) {
+                log(line, Project.MSG_VERBOSE);
+            }
+        };
+
+        handler.setOutput(newLabel);
+
+        execP4Command("label -i", handler);
         
-        execP4Command("labelsync -l "+name, null, new P4OutputHandler() {
-                public void process(String line) {
-                    log(line, Project.MSG_VERBOSE);
-                }
-            });
+        execP4Command("labelsync -l "+name, new P4HandlerAdapter() {
+            public void process(String line) {
+                log(line, Project.MSG_VERBOSE);
+            }
+        });
         
         
         log("Created Label "+name+" ("+desc+")", Project.MSG_INFO);
