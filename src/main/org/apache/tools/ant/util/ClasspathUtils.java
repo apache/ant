@@ -113,8 +113,8 @@ public class ClasspathUtils {
      *
      * <p>Assumes the logical 'false' for the reverseLoader.</p>
      *
-     * @param path
-     * @param pathId
+     * @param p
+     * @param ref
      * @return
      */
     public static ClassLoader getClassLoaderForPath(
@@ -124,7 +124,7 @@ public class ClasspathUtils {
     }
 
     /**
-     * Convenience overloaded version of {@link #geClassLoader(Project, Path,
+     * Convenience overloaded version of {@link #getClassLoaderForPath(Project, Path,
      * String, boolean)}.
      *
      * <p>Delegates to the other one after extracting the referenced
