@@ -106,7 +106,6 @@ import org.apache.tools.ant.types.Reference;
  * @since 1.5
  */
 public class JspC extends MatchingTask {
-    /* ------------------------------------------------------------ */
     private Path classpath;
     private Path compilerClasspath;
     private Path src;
@@ -155,11 +154,11 @@ public class JspC extends MatchingTask {
 
     private static final String FAIL_MSG
         = "Compile failed, messages should have been provided.";
-    /* ------------------------------------------------------------ */
+
     /**
-     * Path for source JSP files.
+     * Set the path for source JSP files.
      */
-    public void setSrcdir(Path srcDir) {
+    public void setSrcDir(Path srcDir) {
         if (src == null) {
             src = srcDir;
         } else {
@@ -169,7 +168,7 @@ public class JspC extends MatchingTask {
     public Path getSrcDir(){
         return src;
     }
-    /* ------------------------------------------------------------ */
+
     /**
      * Set the destination directory into which the JSP source
      * files should be compiled.
@@ -180,7 +179,6 @@ public class JspC extends MatchingTask {
     public File getDestdir(){
         return destDir;
     }
-    /* ------------------------------------------------------------ */
 
     /**
      * Set the name of the package the compiled jsp files should be in.
@@ -193,7 +191,6 @@ public class JspC extends MatchingTask {
         return packageName;
     }
 
-    /* ------------------------------------------------------------ */
     /**
      * Set the verbose level of the compiler
      */
@@ -204,7 +201,6 @@ public class JspC extends MatchingTask {
         return verbose;
     }
 
-    /* ------------------------------------------------------------ */
     /**
      * Whether or not the build should halt if compilation fails.
      * Defaults to <code>true</code>.
@@ -218,15 +214,15 @@ public class JspC extends MatchingTask {
     public boolean getFailonerror() {
         return failOnError;
     }
-    /* ------------------------------------------------------------ */
+
     public String getIeplugin() {
         return iepluginid;
     }
     /**
      * Java Plugin CLASSID for Internet Explorer
      */
-    public void setIeplugin(String iepluginid_) {
-        iepluginid = iepluginid_;
+    public void setIeplugin(String iepluginid) {
+        this.iepluginid = iepluginid;
     }
 
     /**
@@ -237,12 +233,13 @@ public class JspC extends MatchingTask {
     public boolean isMapped() {
         return mapped;
     }
+
     /**
      * If true, generate separate write() calls for each HTML line
      * in the JSP.
      */
-    public void setMapped(boolean mapped_) {
-        mapped = mapped_;
+    public void setMapped(boolean mapped) {
+        this.mapped = mapped;
     }
 
     /**
@@ -422,23 +419,23 @@ public class JspC extends MatchingTask {
         //bind to a compiler
         JspCompilerAdapter compiler =
             JspCompilerAdapterFactory.getCompiler(compilerName, this,
-               new AntClassLoader(getProject(), compilerClasspath));
+                new AntClassLoader(getProject(), compilerClasspath));
 
         //if we are a webapp, hand off to the compiler, which had better handle it
         if(webApp!=null) {
             doCompilation(compiler);
             return;
         }
-            
-        // make sure that we've got a srcdir 
+
+        // make sure that we've got a srcdir
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                                     getLocation());
         } 
         String [] list = src.list();
         if (list.length == 0) {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                    getLocation());
         }
 
 
@@ -456,7 +453,7 @@ public class JspC extends MatchingTask {
         resetFileLists();
         int filecount = 0;
         for (int i = 0; i < list.length; i++) {
-            File srcDir = (File) getProject().resolveFile(list[i]);
+            File srcDir = getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \"" + srcDir.getPath() +
                                          "\" does not exist!", getLocation());

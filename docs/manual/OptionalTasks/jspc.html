@@ -22,10 +22,24 @@ checking compares source and destination timestamps, and does not factor
 in class or taglib dependencies, or &lt;jsp:include&gt; references.
 
 <p>
-By default the task uses the Jasper JSP compiler. This 
-means the task needs jasper.jar and jasper-runtime.jar, which come with 
-builds of Tomcat 4/Catalina from the 
-<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>
+By default the task uses the Jasper JSP compiler. This
+means the task needs jasper.jar and jasper-runtime.jar, which come with
+builds of Tomcat 4/Catalina from the
+<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>.
+We recommend Tomcat version 4.1.x for the most robust version of jasper.
+
+<p>
+There are many limitations with this task which partially stem from the
+many versions of Jasper, others from implementation 'issues' in the task
+(i.e. nobody's willingness to radically change large bits of it to work
+around jasper). Because of this and the fact that JSP pages do not have
+to be portable across implementations -or versions of implementations-
+this task is better used for validating JSP pages before deployment,
+rather than precompiling them. For that, just deploy and run your httpunit
+junit tests after deployment to compile and test your pages, all in one
+go.
+ 
+</p>
 
 
 <h3>Parameters</h3>
@@ -61,8 +75,9 @@ The Task has the following attributes:<p>
   </tr>
   <tr>
     <td valign="top">compiler</td>
-    <td valign="top">class name of a JSP compiler adapter</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top">class name of a JSP compiler adapter,
+    such as "jasper" or "jasper41"</td>
+    <td valign="top" align="center">No -defaults to "jasper"</td>
   </tr>
   <tr>
     <td valign="top">ieplugin</td>
@@ -81,7 +96,7 @@ The Task has the following attributes:<p>
     This can also be specified
     by the nested element <code>classpath</code>
     <a href="../using.html#path">Path</a>).</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">No, but it seems to work better when used</td>
   </tr>
   <tr>
     <td valign="top">classpathref</td>
@@ -108,10 +123,35 @@ The Task has the following attributes:<p>
     <td valign="top">uriroot</td>
     <td valign="top">
     The root directory that uri files should be resolved
-    against.  
+    against.
     </td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compiler</td>
+    <td valign="top">
+    Class name of jsp compiler adapter to use.  Defaults to
+    the standard adapter for Jasper.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compilerclasspath</td>
+    <td valign="top">The classpath used to find the compiler adapter specified
+    by the <code>compiler</code> attribute.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">webinc</td>
+    <td valign="top">Output file name for the fraction of web.xml that lists servlets.</td>
+    <td valign="top" align="center">No</td>
+  </tr>    
+  <tr>
+    <td valign="top">webxml</td>
+    <td valign="top">File name for web.xml to be generated</td>
+    <td valign="top" align="center">No</td>
   </tr>  
+
   </table>
 
 <P>The <tt>mapped</tt> option will, if set to true, split the JSP text content into a
@@ -181,6 +221,7 @@ When used, the task hands off all dependency checking to the compiler.
 &lt;jspc srcdir="${basedir}/src/war"
       destdir="${basedir}/gensrc"
       package="com.i3sp.jsp"
+      compiler="jasper41"
       verbose="9"&gt;
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
@@ -193,6 +234,7 @@ package heirarchy beginning with com.i3sp.jsp.
       destdir="interim"
       verbose="1"
       srcdir="src"
+      compiler="jasper41"
       package="com.i3sp.jsp"&gt;
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
@@ -214,8 +256,14 @@ java files if class dependencies indicate it is needed.
 
 <p><h4>Notes</h4>
 Using the <code>package</code> attribute it is possible to identify the resulting
-java files and thus do full dependency checking - this task only rebuilds
-java files if their jsp file has been modified.
+java files and thus do full dependency checking - this task should only rebuild
+java files if their jsp file has been modified. However, this only works
+with some versions of jasper. By default the checking supports tomcat 4.0.x
+with the "jasper" compiler, set the compiler to "jasper41" for the tomcat4.1.x
+dependency checking.
+Even when it does work, changes in
+.TLD imports or in compile time includes do not get picked up.
+
 <p>
 Jasper generates JSP pages against the JSP1.2 specification -an implementation of
 version 2.3 of the servlet specification is needed to compile or run the java code.

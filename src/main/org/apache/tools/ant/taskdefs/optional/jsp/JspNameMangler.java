@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp;
 import java.io.File;
 
 /**
- * This is a class derived from the Jasper code 
+ * This is a class derived from the Jasper code
  * (org.apache.jasper.compiler.CommandLineCompiler) to map from a JSP filename
  * to a valid Java classname.
  *
@@ -159,7 +159,7 @@ public class JspNameMangler implements JspMangler {
      * definition of the char escaping algorithm
      *
      * @param ch char to mangle
-     * @return mangled string; 5 digit hex value 
+     * @return mangled string; 5 digit hex value
      */
     private static final String mangleChar(char ch) {
 
@@ -183,7 +183,7 @@ public class JspNameMangler implements JspMangler {
     /**
      * taking in the substring representing the path relative to the source dir
      * return a new string representing the destination path
-     * @todo
+     * not supported, as jasper in tomcat4.0 doesnt either
      */
     public String mapPath(String path) {
         return null;

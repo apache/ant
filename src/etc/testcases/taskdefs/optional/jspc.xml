@@ -9,6 +9,7 @@
         <property name="jsp.dir" location="jsp"/>
         <property name="jsp.output.dir" location="${jsp.dir}/java"/>
         <property name="jsp.verbosity" value="3"/>
+        <property name="jsp.compiler" value="jasper41"/>
         <mkdir dir="${jsp.output.dir}"/>
     </target>
     
@@ -23,6 +24,7 @@
         <jspc
            destdir="${jsp.output.dir}"
            srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
            verbose="${jsp.verbosity}">
             <include
                name="missing_tld.jsp"/>
@@ -30,6 +32,7 @@
    </target>
 
    <!-- this should compile to simple.java -->
+    <!-- also, stick to the default compiler here to ensure it still works-->
    <target name="testSimple" depends="init">
         <jspc
            destdir="${jsp.output.dir}"
@@ -46,6 +49,7 @@
            destdir="${jsp.output.dir}"
            uriroot="${jsp.dir}"
            srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
            verbose="${jsp.verbosity}">
             <include
                 name="uriroot.jsp"/>
@@ -58,6 +62,7 @@
         destdir="${jsp.output.dir}"
         uriroot="${jsp.dir}"
         srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
         verbose="${jsp.verbosity}">
           <include name="xml.jsp"/>
       </jspc>
@@ -68,6 +73,7 @@
         <jspc
            destdir="${jsp.output.dir}"
            srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
            verbose="${jsp.verbosity}">
             <include
                name="default.jsp"/>
@@ -79,9 +85,32 @@
         <jspc
            destdir="${jsp.output.dir}"
            srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
            verbose="${jsp.verbosity}">
             <include
                name="1nvalid-classname.jsp"/>
+        </jspc>
+   </target>  
+
+   <!-- non jsp pages should be ignored -->
+   <target name="testNotAJspFile" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <include
+               name="wrong_type.txt"/>
+        </jspc>
+   </target>
+   
+   <!-- test for webapp compilation -->
+   <target name="testWebapp" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <webapp basedir="${jsp.dir}" />
         </jspc>
    </target>  
    

@@ -57,6 +57,12 @@ import java.io.*;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
+import org.apache.tools.ant.taskdefs.optional.jsp.Jasper41Mangler;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
+import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFactory;
+import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapter;
 
 /**
  * Tests the Jspc task.
@@ -163,7 +169,22 @@ public class JspcTest extends BuildFileTest {
     }
 
 
+    /**
+     * A unit test for JUnit
+     */
+    public void testNotAJspFile()  throws Exception {
+        executeTarget("testNotAJspFile");
+    }
 
+    /**
+     * webapp test is currently broken, because it picks up
+     * on the missing_tld file, and bails. 
+     */
+/*
+    public void testWebapp()  throws Exception {
+        executeTarget("testWebapp");
+    }
+*/
     /**
      * run a target then verify the named file gets created
      *
@@ -191,7 +212,6 @@ public class JspcTest extends BuildFileTest {
         assertTrue("file " + filename + " is empty", file.length() > 0);
     }
 
-
     /**
      * Gets the OutputFile attribute of the JspcTest object
      *
@@ -201,5 +221,48 @@ public class JspcTest extends BuildFileTest {
     protected File getOutputFile(String subpath) {
         return new File(outDir, subpath);
     }
+
+    /**
+     * verify that we select the appropriate mangler
+     */
+    public void testJasperNameManglerSelection() {
+        JspCompilerAdapter adapter=
+                JspCompilerAdapterFactory.getCompiler("jasper", null,null);
+        JspMangler mangler=adapter.createMangler();
+        assertTrue(mangler instanceof JspNameMangler);
+        adapter= JspCompilerAdapterFactory.getCompiler("jasper41", null, null);
+        mangler = adapter.createMangler();
+        assertTrue(mangler instanceof Jasper41Mangler);
+    }
+
+    public void testJasper41() {
+        JspMangler mangler = new Jasper41Mangler();
+        //java keywords are not special
+        assertMapped(mangler, "for.jsp", "for_jsp");
+        //underscores go in front of invalid start chars
+        assertMapped(mangler, "0.jsp", "_0_jsp");
+        //underscores at the front get an underscore too
+        assertMapped(mangler, "_.jsp", "___jsp");
+        //non java char at start => underscore then the the _hex value
+        assertMapped(mangler, "-.jsp", "__0002d_jsp");
+        //and paths are stripped
+        char s = File.separatorChar;
+        assertMapped(mangler, "" + s + s + "somewhere" + s + "file" + s + "index.jsp", "index_jsp");
+    }
+
+    /**
+     * assert our mapping rules
+     * @param mangler
+     * @param filename
+     * @param classname
+     */
+    protected void assertMapped(JspMangler mangler, String filename, String classname) {
+        String mappedname = mangler.mapJspToJavaName(new File(filename));
+        assertTrue(filename+" should have mapped to "+classname
+                    +" but instead mapped to "+mappedname,
+                    classname.equals(mappedname));
+    }
+
+
 }
 
