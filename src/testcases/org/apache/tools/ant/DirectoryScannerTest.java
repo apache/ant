@@ -62,13 +62,15 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 import java.io.File;
 import java.io.IOException;
+import java.util.TreeSet;
+import java.util.Iterator;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.DirectoryScanner
  *
  * @author Stefan Bodewig
  */
-public class DirectoryScannerTest extends TestCase {
+public class DirectoryScannerTest extends BuildFileTest {
 
     public DirectoryScannerTest(String name) {super(name);}
 
@@ -76,6 +78,64 @@ public class DirectoryScannerTest extends TestCase {
     private boolean supportsSymlinks = Os.isFamily("unix")
         && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
 
+    public void setUp() {
+        configureProject("src/etc/testcases/core/directoryscanner.xml");
+        getProject().executeTarget("setup");
+    }
+    private void compareFiles(DirectoryScanner ds, String[] expectedFiles, String[] expectedDirectories) {
+        String includedFiles[] = ds.getIncludedFiles();
+        String includedDirectories[] = ds.getIncludedDirectories();
+        assertTrue("expecting : " + expectedFiles.length + " files, present : " + includedFiles.length, includedFiles.length == expectedFiles.length);
+        assertTrue("expecting : " + expectedDirectories.length + " directories, present : " + includedDirectories.length, includedDirectories.length == expectedDirectories.length);
+        TreeSet files = new TreeSet();
+        for (int counter=0; counter < includedFiles.length; counter++) {
+            files.add(includedFiles[counter].replace(File.separatorChar,'/'));
+        }
+        TreeSet directories = new TreeSet();
+        for (int counter=0; counter < includedDirectories.length; counter++) {
+            directories.add(includedDirectories[counter].replace(File.separatorChar,'/'));
+        }
+        String currentfile;
+        Iterator i = files.iterator();
+        int counter = 0;
+        while (i.hasNext()) {
+            currentfile = (String) i.next();
+            assertTrue("expecting file " + expectedFiles[counter], currentfile.equals(expectedFiles[counter]));
+            counter++;
+        }
+        String currentdirectory;
+        Iterator dirit = directories.iterator();
+        counter = 0;
+        while (dirit.hasNext()) {
+            currentdirectory = (String) dirit.next();
+            assertTrue("expecting directory " + expectedDirectories[counter], currentdirectory.equals(expectedDirectories[counter]));
+            counter++;
+        }
+
+    }
+    public void test1() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha"});
+        ds.scan();
+        compareFiles(ds, new String[] {} ,new String[] {"alpha"});
+    }
+    public void test2() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/"});
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"} ,new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+    public void test3() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"} ,new String[] {"", "alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+    public void tearDown() {
+        getProject().executeTarget("cleanup");
+    }
     /**
      * Test case for setFollowLinks() and associated funtionality.
      * Only supports test on linux, at the moment because Java has

@@ -1,0 +1,14 @@
+<project name="directoryscanner-test" basedir=".">
+    <property name="tmp.dir" location="tmp"/>
+    <target name="setup">
+        <mkdir dir="${tmp.dir}"/>
+        <mkdir dir="${tmp.dir}/alpha"/>
+        <mkdir dir="${tmp.dir}/alpha/beta"/>
+        <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
+        <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+        <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
+    </target>
+    <target name="cleanup">
+        <delete dir="${tmp.dir}" quiet="true"/>
+    </target>
+</project>
