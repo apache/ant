@@ -1266,6 +1266,35 @@
         </table>
       </subsection>
 
+      <subsection name="Speech4J">
+
+        <p>A text-to-speech task and build listener, which produce
+        voice output either to speakers or .wav file (the task
+        only).</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.2. Works only on Windows platform
+            because the task uses Microsoft Speech API through
+            JNI.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.speech4j.com/">http://www.speech4j.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@speech4j.com">support@speech4j.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lite edition of Speech4j which includes both the task
+            and the listener is free.</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
