@@ -226,7 +226,7 @@ Changes that could break older environments:
 
 * The default value for build.compiler is now javac1.x with x
   depending on the JDK that is running Ant instead of classic/modern.
-
+  
 Fixed bugs:
 -----------
 * A bug existed that prevented generated log files from being deleted as
@@ -283,9 +283,13 @@ Other changes:
 
 * <ejbjar> now allows control over which additional classes and interfaces
   are added to the generated EJB jars. A new attribute "dependency" can be
-  defines which classes are added. The addition of classes now uses
+  defined which controls what classes are added. The addition of classes now uses
   the Jakarta-BCEL library rather than reflection, meaning bean classes are
-  no longer loaded into Ant's JVM.
+  no longer loaded into Ant's JVM. The default dependency analyzer is known as
+  the ancestor analyzer. It provides the same behaviour as the 1.4.1 version of
+  <ejbjar>. If the BCEL library is not present, a warning will be issued stating
+  the ancestor analyzer is not available. In this case <ejbjar> will continue
+  to function but will not add super classes to the jar.
 
 * <available> has a new attribute named ignoreSystemClasses.
 
