@@ -70,9 +70,12 @@ public class ExecTaskTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
     private static final String BUILD_FILE = BUILD_PATH + "exec.xml";
     private final int TIME_TO_WAIT = 4;
+    /** maximum time allowed for the build in milliseconds */
+    private final int MAX_BUILD_TIME = 4000;
     private final int SECURITY_MARGIN = 100; // wait 100 millis extras
     private File logFile;
     private MonitoredBuild myBuild = null;
+    volatile private boolean buildFinished = false;
     public ExecTaskTest(String name) {
         super(name);
     }
@@ -102,6 +105,30 @@ public class ExecTaskTest extends BuildFileTest {
         myBuild.setLogFile(logFile.getAbsolutePath());
         myBuild.addBuildListener(new MonitoredBuildListener());
         myBuild.start();
+        GregorianCalendar startwait = new GregorianCalendar();
+        while (!buildFinished) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                System.out.println("my sleep was interrupted");
+            }
+            GregorianCalendar now = new GregorianCalendar();
+            // security
+            if (now.getTimeInMillis() - startwait.getTimeInMillis() > MAX_BUILD_TIME) {
+                break;
+            }
+        }
+        try {
+            Thread.sleep((TIME_TO_WAIT) * 1000 + SECURITY_MARGIN);
+        } catch (InterruptedException e) {
+            System.out.println("my sleep was interrupted");
+        }
+        // time of the build in milli seconds
+        long elapsed = myBuild.getTimeElapsed();
+        assertTrue("we waited more than the process lasted", TIME_TO_WAIT * 1000 > elapsed);
+        logFile = new File(logFile.getAbsolutePath());
+        System.out.println("log file exists "+ logFile.exists());
+        assertTrue("log file found after spawn", logFile.exists());
     }
 
     private static class MonitoredBuild implements Runnable {
@@ -172,17 +199,7 @@ public class ExecTaskTest extends BuildFileTest {
         }
 
         public void buildFinished(BuildEvent event) {
-            try {
-                Thread.sleep((TIME_TO_WAIT) * 1000 + SECURITY_MARGIN);
-            } catch (InterruptedException e) {
-                System.out.println("my sleep was interrupted");
-            }
-            // time of the build in milli seconds
-            long elapsed = myBuild.getTimeElapsed();
-            assertTrue("we waited more than the process lasted", TIME_TO_WAIT * 1000 > elapsed);
-            logFile = new File(logFile.getAbsolutePath());
-            System.out.println("log file exists "+ logFile.exists());
-            assertTrue("log file found after spawn", logFile.exists());
+            buildFinished = true;
         }
 
         public void targetStarted(BuildEvent event) {
