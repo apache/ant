@@ -200,6 +200,14 @@ public abstract class MSVSS extends Task {
     public final static String PROJECT_PREFIX = "$";
 
     /**
+     * The 'CP' command
+     */
+    public final static String COMMAND_CP = "CP";
+    /**
+     * The 'Add' command
+     */
+    public final static String COMMAND_ADD = "Add";
+    /**
      * The 'Get' command
      */
     public final static String COMMAND_GET = "Get";

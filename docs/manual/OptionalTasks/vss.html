@@ -13,6 +13,7 @@
     <li>Martin Poeschl (<a href="mailto:mpoeschl@marmot.at">mpoeschl@marmot.at</a>)</li>
     <li>Phillip Wells</li>
     <li>Jon Skeet (<a href="mailto:jon.skeet@peramon.com">jon.skeet@peramon.com</a>)</li>
+    <li>Nigel Magnay (<a href="mailto:nigel.magnay@parsec.co.uk">nigel.magnay@parsec.co.uk</a>)</li>
  </ul>
 <p>2001/04/29</p>
 <hr>
@@ -52,6 +53,14 @@ they were primarily intended to be used by automated build systems.</p>
     <tr>
         <td><a href="#vsscheckout">vsscheckout</a></td>
         <td>Copies a file from the current project to the current folder, for the purpose of editing.</td>
+    </tr>
+    <tr>
+        <td><a href="#vssadd">vssadd</a></td>
+        <td>Adds a new file into the VSS Archive</td>
+    </tr>
+    <tr>
+        <td><a href="#vsscp">vsscp</a></td>
+        <td>Change the current project being used in VSS</td>
     </tr>
 </table>
 
@@ -536,7 +545,126 @@ label only one will be used in the order version, date, label.</p>
 </p>
 <hr>
 
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<!-- VSSADD -->
+
+<h2><a name="vssadd">VssAdd</a></h2>
+<h3>Description</h3>
+Task to perform ADD commands to Microsoft Visual SourceSafe.
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <th>Attribute</th>
+    <th>Values</th>
+    <th>Required</th>
+  </tr>
+  <tr>
+     <td>localpath</td>
+     <td>Specify the local file(s) to add to VSS</td>
+     <td>Yes</td>
+  </tr>
+  <tr>
+     <td>login</td>
+     <td>username[,password] - The username and password needed to get access
+         to VSS. Note that you may need to specify both (if you have a password) - 
+         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         login without a password. </td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>ssdir</td>
+     <td>directory where <code>ss.exe</code> resides. By default the
+         task expects it to be in the PATH.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>serverPath</td>
+     <td>directory where <code>srssafe.ini</code> resides.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>writable</td>
+     <td>true or false</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>recursive</td>
+     <td>true or false</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>comment</td>
+     <td>Comment to use for the files that where checked in.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>autoresponse</td>
+     <td>'Y', 'N' or empty. Specify how to reply to questions from VSS.</td>
+     <td>No</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;vssadd localpath=&quot;D:\build\build.00012.zip&quot;
+            comment=&quot;Added by automatic build&quot;/&gt;
+</pre>
+</blockquote>
+<p>Add the file named build.00012.zip into the project current working
+directory (see vsscp).</p>
+<hr>
+
+<!-- VSSCP -->
+
+<h2><a name="vsscp">VssCp</a></h2>
+<h3>Description</h3>
+<p>Task to perform CP (Change Project) commands to Microsoft Visual SourceSafe.</p>
+<p>This task is typically used before a VssAdd in order to set the target project</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <th>Attribute</th>
+    <th>Values</th>
+    <th>Required</th>
+  </tr>
+  <tr>
+     <td>vsspath</td>
+     <td>SourceSafe path which specifies the project you wish to 
+         make the current project. You should not specify the leading dollar-sign - 
+         it is prepended by Ant automatically.</td>
+     <td>Yes</td>
+  </tr>
+  <tr>
+     <td>login</td>
+     <td>username[,password] - The username and password needed to get access
+         to VSS. Note that you may need to specify both (if you have a password) - 
+         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         login without a password. </td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>ssdir</td>
+     <td>directory where <code>ss.exe</code> resides. By default the
+         task expects it to be in the PATH.</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>serverPath</td>
+     <td>directory where <code>srssafe.ini</code> resides.</td>
+     <td>No</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;vsscp vsspath=&quot;/Projects/ant&quot;/&gt;
+</pre>
+</blockquote>
+<p>Sets the current VSS project to <i>$/Projects/ant</i>.</p>
+<hr>
+
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>
