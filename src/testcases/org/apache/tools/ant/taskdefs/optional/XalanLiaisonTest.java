@@ -1,5 +1,3 @@
-package org.apache.tools.ant.taskdefs.optional;
-
 /*
  * Copyright  2001-2002,2004 The Apache Software Foundation
  *
@@ -16,6 +14,8 @@ package org.apache.tools.ant.taskdefs.optional;
  *  limitations under the License.
  *
  */
+
+package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 
