@@ -56,12 +56,12 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FilterChain;
-import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.IOException;
@@ -89,12 +89,33 @@ public final class LoadProperties extends Task {
     private final Vector filterChains = new Vector();
 
     /**
+     * Encoding to use for filenames, defaults to the platform's default
+     * encoding.
+     */
+    private String encoding = null;
+
+    /**
      * Sets the file to load.
      *
      * @param srcFile The new SrcFile value
      */
     public final void setSrcFile(final File srcFile) {
         this.srcFile = srcFile;
+    }
+
+    /**
+     * Encoding to use for input, defaults to the platform's default
+     * encoding. <p>
+     *
+     * For a list of possible values see <a href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
+     * http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html
+     * </a>.</p>
+     *
+     * @param encoding The new Encoding value
+     */
+
+    public final void setEncoding(final String encoding) {
+        this.encoding = encoding;
     }
 
     /**
@@ -127,7 +148,11 @@ public final class LoadProperties extends Task {
             //open up the file
             fis = new FileInputStream(srcFile);
             bis = new BufferedInputStream(fis);
-            instream = new InputStreamReader(bis);
+            if (encoding == null) {
+                instream = new InputStreamReader(bis);
+            } else {
+                instream = new InputStreamReader(bis, encoding);
+            }
 
             ChainReaderHelper crh = new ChainReaderHelper();
             crh.setBufferSize(size);
@@ -143,9 +168,14 @@ public final class LoadProperties extends Task {
                     text = text + "\n";
                 }
 
-                final StringInputStream sis = new StringInputStream(text);
+                ByteArrayInputStream tis = null;
+                if ( encoding == null ) {
+                    tis = new ByteArrayInputStream(text.getBytes());
+                } else {
+                    tis = new ByteArrayInputStream(text.getBytes(encoding));
+                }
                 final Properties props = new Properties();
-                props.load(sis);
+                props.load(tis);
                 final Enumeration e = props.keys();
                 while (e.hasMoreElements()) {
                     final String key = (String) e.nextElement();
@@ -155,7 +185,7 @@ public final class LoadProperties extends Task {
                         project.setNewProperty(key, value);
                     }
                 }
-                sis.close();
+                tis.close();
             }
 
         } catch (final IOException ioe) {

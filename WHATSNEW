@@ -24,6 +24,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+* <loadproperties> has a new encoding attribute.
+
 * <echoproperties> can now create XML output.
 
 * <echoproperties> has a new srcfile attribute that can make it read

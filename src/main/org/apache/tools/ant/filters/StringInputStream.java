@@ -58,8 +58,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 /**
- * Wraps a String as an InputStream. Note that data will be lost for
- * characters not in ISO Latin 1, as a simple char->byte mapping is assumed.
+ * Wraps a String as an InputStream.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
@@ -68,9 +67,15 @@ public class StringInputStream
     /** Source string, stored as a StringReader */
     private StringReader in;
 
+    private String encoding;
+
+    private byte[] slack;
+
+    private int begin;
+
     /**
      * Composes a stream from a String
-     * 
+     *
      * @param source The string to read from. Must not be <code>null</code>.
      */
     public StringInputStream(String source) {
@@ -78,32 +83,88 @@ public class StringInputStream
     }
 
     /**
-     * Reads from the Stringreader, returning the same value. Note that
-     * data will be lost for characters not in ISO Latin 1. Clients
-     * assuming a return value in the range -1 to 255 may even fail on
-     * such input.
-     * 
-     * @return the value of the next character in the StringReader
-     * 
-     * @exception IOException if the original StringReader fails to be read
+     * Composes a stream from a String with the specified encoding
+     *
+     * @param source The string to read from. Must not be <code>null</code>.
+     * @param encoding The encoding scheme.
      */
-    public int read() throws IOException {
-        return in.read();
+    public StringInputStream(String source, String encoding) {
+        in = new StringReader(source);
+        this.encoding = encoding;
     }
 
     /**
-     * Closes the Stringreader.
-     * 
-     * @exception IOException if the original StringReader fails to be closed
+     * Reads from the Stringreader, returning the same value.
+     *
+     * @return the value of the next character in the StringReader
+     *
+     * @exception IOException if the original StringReader fails to be read
      */
-    public void close() throws IOException {
-        in.close();
+    public synchronized int read() throws IOException {
+        if (in == null) {
+            throw new IOException("Stream Closed");
+        }
+
+        byte result;
+        if (slack != null && begin < slack.length) {
+            result = slack[begin];
+            if (++begin == slack.length) {
+                slack = null;
+            }
+        } else {
+            byte[] buf = new byte[1];
+            if (read(buf, 0, 1) <= 0) {
+                return -1;
+            }
+            result = buf[0];
+        }
+        if (result < 0) {
+            return 256 + result;
+        } else {
+            return result;
+        }
+    }
+
+    public synchronized int read(byte[] b, int off, int len)
+        throws IOException {
+
+        if (in == null) {
+            throw new IOException("Stream Closed");
+        }
+
+        while (slack == null) {
+            char[] buf = new char[len]; // might read too much
+            int n = in.read(buf);
+            if (n == -1) {
+                return -1;
+            }
+            if (n > 0) {
+                String s = new String(buf, 0, n);
+                if (encoding == null) {
+                    slack = s.getBytes();
+                } else {
+                    slack = s.getBytes(encoding);
+                }
+                begin = 0;
+            }
+        }
+
+        if (len > slack.length - begin) {
+            len = slack.length - begin;
+        }
+
+        System.arraycopy(slack, begin, b, off, len);
+
+        if ((begin += len) >= slack.length) {
+            slack = null;
+        }
+        return len;
     }
 
     /**
      * Marks the read limit of the StringReader.
-     * 
-     * @param limit the maximum limit of bytes that can be read before the 
+     *
+     * @param limit the maximum limit of bytes that can be read before the
      *              mark position becomes invalid
      */
     public synchronized void mark(final int limit) {
@@ -114,20 +175,46 @@ public class StringInputStream
         }
     }
 
+
+    public synchronized int available() throws IOException {
+        if (in == null) {
+            throw new IOException("Stream Closed");
+        }
+        if (slack != null) {
+            return slack.length - begin;
+        }
+        if (in.ready()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public boolean markSupported () {
+        return false;   // would be imprecise
+    }
+
     /**
      * Resets the StringReader.
-     * 
+     *
      * @exception IOException if the StringReader fails to be reset
      */
     public synchronized void reset() throws IOException {
+        if (in == null) {
+            throw new IOException("Stream Closed");
+        }
+        slack = null;
         in.reset();
     }
 
     /**
-     * @see InputStream#markSupported
+     * Closes the Stringreader.
+     *
+     * @exception IOException if the original StringReader fails to be closed
      */
-    public boolean markSupported() {
-        return in.markSupported();
+    public synchronized void close() throws IOException {
+        in.close();
+        slack = null;
+        in = null;
     }
 }
-
