@@ -357,14 +357,13 @@ public class Rmic extends MatchingTask {
         // untouched classes are on classpath
         Path classpath = new Path(project, baseFile.getAbsolutePath());
 
-        // add our classpath to the mix
-
-        if (compileClasspath != null) {
-            classpath.addExisting(compileClasspath);
+        // Combine the build classpath with the system classpath, in an 
+        // order determined by the value of build.classpath
+        if (compileClasspath == null) {
+            classpath.addExisting(Path.systemClasspath);
+        } else {
+            classpath.addExisting(compileClasspath.concatSystemClasspath());
         }
-
-        // add the system classpath
-        classpath.addExisting(Path.systemClasspath);
 
         // in jdk 1.2, the system classes are not on the visible classpath.
         if (Project.getJavaVersion().startsWith("1.2")) {

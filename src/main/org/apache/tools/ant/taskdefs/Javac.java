@@ -414,7 +414,7 @@ public class Javac extends MatchingTask {
             classpath.setLocation(destDir);
         }
 
-        // Compine the build classpath with the system classpath, in an 
+        // Combine the build classpath with the system classpath, in an 
         // order determined by the value of build.classpath
 
         if (compileClasspath == null) {
