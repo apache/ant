@@ -53,79 +53,118 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
-import org.apache.tools.ant.taskdefs.optional.junit.remote.Server;
+import org.apache.tools.ant.Task;
 
 /**
- * An element representing the server configuration.
- *
- * <pre>
- * <!ELEMENT server (formatter)*>
- * <!ATTLIST server port numeric 6666>
- * <!ATTLIST server haltonfailure (yes|no) no>
- * <!ATTLIST server haltonerror (yes|no) no>
- * </pre>
+ * The core JUnit task.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public final class ServerElement extends ProjectComponent {
+public class RJUnitTask extends Task {
 
-    /** formatters that write the tests results */
-    private Vector formatters = new Vector();
+    private final static Resources RES =
+            ResourceManager.getPackageResources(RJUnitTask.class);
 
-    /** port to run the server on. Default to 6666 */
-    private int port = 6666;
+    /** port to run the server on */
+    private int port = -1;
 
-    /** stop the client run if a failure occurs */
-    private boolean haltOnFailure = false;
+    /** timeout period in ms */
+    private long timeout = -1;
 
-    /** stop the client run if an error occurs */
-    private boolean haltOnError = false;
+    /** client configuraiton element */
+    private ClientElement client = null;
 
-    /** the parent task */
-    private RJUnitTask parent;
+    /** server configuration element */
+    private ServerElement server = null;
 
-    /** create a new server */
-    public ServerElement(RJUnitTask value) {
-        parent = value;
-    }
+// task implementation
 
-    /** start the server and block until client has finished */
     public void execute() throws BuildException {
-        // configure the server...
-        Server server = new Server(port);
-        Enumeration listeners = formatters.elements();
-        while (listeners.hasMoreElements()) {
-            server.addListener((TestRunListener) listeners.nextElement());
+        if (client == null && server == null) {
+            throw new BuildException("Invalid state: need to be server, client or both");
         }
-        // and run it. It will stop once a client has finished.
-        server.start();
+
+        // 1) server and client
+        if (server != null && client != null) {
+            ServerWorker worker = new ServerWorker();
+            worker.start();
+            client.execute();
+            Exception caught = null;
+            try {
+                worker.join();
+                caught = worker.getException();
+            } catch (InterruptedException e){
+                caught = e;
+            }
+            if (caught != null){
+                throw new BuildException(caught);
+            }
+            return;
+        }
+
+        // 2) server only (waiting for client)
+        if (server != null && client == null) {
+            server.execute();
+            return;
+        }
+
+        // 3) client only (connecting to server)
+        if (server == null && client != null) {
+            client.execute();
+            return;
+        }
     }
 
-    /** set the port to listen to */
-    public void setPort(int value) {
-        port = value;
+// Ant bean accessors
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
-//@fixme  logic problem here, should the server say to the client
-// that there it should stop or should the client do it itself ?
-
-    public void setHaltOnFailure(boolean value) {
-        haltOnFailure = value;
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
 
-    public void setHaltOnError(boolean value) {
-        haltOnError = value;
+    /**
+     * create a new client in charge of running tests and sending
+     * the results to the server that collect them.
+     */
+    public ClientElement createClient() {
+        if (client == null) {
+            client = new ClientElement(this);
+        }
+        return client;
     }
 
-    /** add a new formatter element */
-    public void addFormatter(FormatterElement fe) {
-        Formatter f = fe.createFormatter();
-        formatters.addElement(f);
+    /**
+     * create a new client in charge of running tests and sending
+     * the results to the server that collect them.
+     */
+    public ServerElement createServer() {
+        if (server == null) {
+            server = new ServerElement(this);
+        }
+        return server;
+    }
+
+
+    /** the worker to run the server on */
+    class ServerWorker extends Thread {
+        private Exception caught = null;
+
+        public void run() {
+            try {
+                server.execute();
+            } catch (Exception e) {
+                caught = e;
+            }
+        }
+
+        public Exception getException() {
+            return caught;
+        }
     }
 }

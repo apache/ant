@@ -77,7 +77,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  *
- * @see JUnitTask
+ * @see RJUnitTask
  * @see Formatter
  */
 public class FormatterElement {

@@ -105,10 +105,10 @@ public final class ClientElement extends ProjectComponent {
     private CommandlineJava cmd = new CommandlineJava();
 
     /** the parent task */
-    private JUnitTask parent;
+    private RJUnitTask parent;
 
     /** create a new client */
-    public ClientElement(JUnitTask value) {
+    public ClientElement(RJUnitTask value) {
         parent = value;
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunner");
     }
