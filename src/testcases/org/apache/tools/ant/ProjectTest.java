@@ -54,6 +54,9 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.*;
 
 import java.io.File;
@@ -219,6 +222,15 @@ public class ProjectTest extends TestCase {
         assertEquals(DummyTaskWithNonVoidExecute.class, p.getTaskDefinitions().get("NonVoidExecute"));
     }
         
+    public void testInputHandler() {
+        InputHandler ih = p.getInputHandler();
+        assertNotNull(ih);
+        assertTrue(ih instanceof DefaultInputHandler);
+        InputHandler pfih = new PropertyFileInputHandler();
+        p.setInputHandler(pfih);
+        assertSame(pfih, p.getInputHandler());
+    }
+
     private class DummyTaskPrivate extends Task {
         public DummyTaskPrivate() {}
         public void execute() {}

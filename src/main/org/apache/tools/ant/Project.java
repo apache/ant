@@ -69,6 +69,7 @@ import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection; 
 import org.apache.tools.ant.util.FileUtils; 
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 
 /**
@@ -209,6 +210,7 @@ public class Project {
      */
     public Project() {
         fileUtils = FileUtils.newFileUtils();
+        inputHandler = new DefaultInputHandler();
     }
     
     /**
@@ -1470,7 +1472,7 @@ public class Project {
      */
     public void setFileLastModified(File file, long time) 
          throws BuildException {
-        if (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             log("Cannot change the modification time of " + file
                 + " in JDK 1.1", Project.MSG_WARN);
             return;
