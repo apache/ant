@@ -300,7 +300,8 @@
     <li> Files with different lengths are different.
     <li> If <tt>ignoreFileTimes</tt> is turned off, then differing file
     timestamps will cause files to be regarded as different.
-    <li> Finally a byte-for-byte check is run against the two files
+    <li> Unless<tt>ignoreContents</tt> is set to true, a byte-for-byte check is run
+    against the two files
     </ol>
 
     This is a useful selector to work with programs and tasks that don't handle
@@ -339,6 +340,14 @@
         <td valign="top">ignoreFileTimes</td>
         <td valign="top">Whether to use file times in the comparison or not.
           Default is true (time differences are ignored).
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">ignoreContents</td>
+        <td valign="top">Whether to do a byte per byte compare.
+          Default is false (contents are compared).
+          Since ant 1.6.3
         </td>
         <td valign="top" align="center">No</td>
       </tr>

@@ -25,10 +25,14 @@ import java.io.IOException;
 
 /**
  * This selector selects files against a mapped set of target files, selecting
- * all those files which are different. A byte-by-byte comparision is performed
- * on equal length files; files with different lengths are deemed different
- * automatically; files with identical timestamps are viewed as matching by
+ * all those files which are different.
+ * Files with different lengths are deemed different
+ * automatically
+ * Files with identical timestamps are viewed as matching by
  * default, unless you specify otherwise.
+ * Contents are compared if the lengths are the same
+ * and the timestamps are ignored or the same,
+ * except if you decide to ignore contents to gain speed.
  * <p>
  * This is a useful selector to work with programs and tasks that don't handle
  * dependency checking properly; Even if a predecessor task always creates its
@@ -47,6 +51,7 @@ public class DifferentSelector extends MappingSelector {
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
     private boolean ignoreFileTimes = true;
+    private boolean ignoreContents = false;
 
 
     /**
@@ -56,7 +61,14 @@ public class DifferentSelector extends MappingSelector {
     public void setIgnoreFileTimes(boolean ignoreFileTimes) {
         this.ignoreFileTimes = ignoreFileTimes;
     }
-
+    /**
+     * This flag tells the selector to ignore contents
+     * @param ignoreContents if true ignore contents
+     * @since ant 1.6.3
+     */
+    public void setIgnoreContents(boolean ignoreContents) {
+        this.ignoreContents = ignoreContents;
+    }
     /**
      * this test is our selection test that compared the file with the destfile
      * @param srcfile the source file
@@ -86,13 +98,16 @@ public class DifferentSelector extends MappingSelector {
                 return true;
             }
         }
-
-        //here do a bulk comparison
-        try {
-            return !fileUtils.contentEquals(srcfile, destfile);
-        } catch (IOException e) {
-            throw new BuildException("while comparing " + srcfile + " and "
-                    + destfile, e);
+        if (!ignoreContents) {
+            //here do a bulk comparison
+            try {
+                return !fileUtils.contentEquals(srcfile, destfile);
+            } catch (IOException e) {
+                throw new BuildException("while comparing " + srcfile + " and "
+                        + destfile, e);
+            }
+        } else {
+            return false;
         }
     }
 }
