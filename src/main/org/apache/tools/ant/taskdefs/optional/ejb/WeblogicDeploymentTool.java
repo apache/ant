@@ -167,6 +167,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /** File utilities instance for copying jars */
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
+    private File outputDir;
 
     /**
      * Add a nested sysproperty element.
@@ -182,6 +183,13 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             wlClasspath = new Path(getTask().getProject());
         }
         return wlClasspath.createPath();
+    }
+
+    /**
+     * Output the generated jar to a directory.
+     */
+    public void setOutputDir(File outputDir) {
+        this.outputDir = outputDir;
     }
 
 
@@ -535,7 +543,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
 
             javaTask.createArg().setValue(sourceJar.getPath());
-            javaTask.createArg().setValue(destJar.getPath());
+            if (outputDir == null) {
+                javaTask.createArg().setValue(destJar.getPath());
+            } else {
+                javaTask.createArg().setValue(outputDir.getPath());
+            }
 
             Path classpath = wlClasspath;
 

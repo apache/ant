@@ -63,6 +63,8 @@ Other changes:
   jvmdebuglevel attribute which can be used to avoid warnings about
   interface classess being found on the classpath. Document the new
   <sysproperty> element which allows JVM properties to be defined.
+  Added an outputdir attribute to allow the destination to be a
+  directory into which the exploded jar is written.
 
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================
