@@ -254,7 +254,6 @@ Legal:
             <patternset refid="myrmidon-launcher.include"/>
             <patternset refid="myrmidon-api.include"/>
             <patternset refid="myrmidon-container.include"/>
-            <patternset refid="aut.include"/>
             <patternset refid="ant1.todo.include"/>
             <patternset refid="selftest.include"/>
             <patternset refid="selftest-extension1.include"/>
@@ -287,12 +286,6 @@ Legal:
             <include name="org/apache/myrmidon/frontends/**" />
             <include name="org/apache/myrmidon/*" />
             <exclude name="**/TransformingProjectBuilder.java" unless="trax.present"/>
-        </patternset>
-
-        <patternset id="aut.include">
-            <include name="org/apache/aut/**" />
-            <exclude name="org/apache/aut/vfs/provider/ftp/**" unless="netcomp.present"/>
-            <exclude name="org/apache/aut/vfs/provider/smb/**" unless="jcifs.present"/>
         </patternset>
 
         <property name="ant.package" value="org/apache/tools/todo"/>
@@ -408,14 +401,6 @@ Legal:
             </fileset>
         </antlib-descriptor>
 
-        <antlib-descriptor libName="aut"
-            destdir="${gen.dir}"
-            classpathref="project.class.path">
-            <fileset dir="${java.dir}">
-                <patternset refid="aut.include"/>
-            </fileset>
-        </antlib-descriptor>
-
         <antlib-descriptor libName="selftest"
             destdir="${gen.dir}"
             classpathref="project.class.path">
@@ -461,14 +446,6 @@ Legal:
             descriptor="${gen.dir}/builtin-ant-descriptor.xml"
             servicesDescriptor="${manifest.dir}/core-services.xml" >
             <patternset refid="myrmidon-api.include"/>
-        </antlib-jar>
-
-        <antlib-jar jarfile="${build.lib}/aut.jar"
-            basedir="${build.classes}"
-            manifest="${manifest.dir}/aut.mf"
-            rolesDescriptor="${gen.dir}/aut-ant-roles.xml"
-            descriptor="${gen.dir}/aut-ant-descriptor.xml" >
-            <patternset refid="aut.include"/>
         </antlib-jar>
 
         <antlib-jar jarfile="${build.lib}/ant1_todo.jar"
@@ -562,8 +539,6 @@ Legal:
               <path refid="tools.class.path"/>
             </classpath>
 
-            <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
-            <exclude name="**/FtpFileSystemTestCase.java" unless="netcomp.present"/>
             <exclude name="${test.classloader.pkg}/**"/>
         </javac>
 
@@ -581,17 +556,6 @@ Legal:
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-
-        <!-- Prepare the VFS tests -->
-        <property name="test.vfs.dir" location="${test.working.dir}/org/apache/aut/vfs/test"/>
-        <mkdir dir="${test.vfs.dir}/write-tests"/>
-        <mkdir dir="${test.vfs.dir}/basedir/emptydir"/>
-        <zip zipfile="${test.vfs.dir}/test.zip">
-            <fileset dir="${test.vfs.dir}" includes="basedir/**"/>
-        </zip>
-        <zip zipfile="${test.vfs.dir}/nested.zip">
-            <fileset dir="${test.vfs.dir}" includes="test.zip"/>
-        </zip>
 
         <!-- Prepare deployer tests -->
         <property name="test.deployer.dir"
