@@ -154,14 +154,14 @@ public class Rmic extends MatchingTask {
         }
         String classpath = getCompileClasspath(baseDir);
 
-        // scan base dirs to build up compile lists
-
-        DirectoryScanner ds = this.getDirectoryScanner(baseDir);
-
-        String[] files = ds.getIncludedFiles();
-
-        scanDir(baseDir, files, verify);
-
+        // scan base dirs to build up compile lists only if a
+        // specific classname is not given
+        if (classname == null) {
+            DirectoryScanner ds = this.getDirectoryScanner(baseDir);
+            String[] files = ds.getIncludedFiles();
+            scanDir(baseDir, files, verify);
+        }
+        
         // XXX
         // need to provide an input stream that we read in from!
 
@@ -187,7 +187,7 @@ public class Rmic extends MatchingTask {
         if (null != sourceBase) args[i++] = "-keepgenerated";
 
         if (classname != null) {
-            if (shouldCompile(new File(baseDir, classname.replace('.', File.separatorChar)))) {
+            if (shouldCompile(new File(baseDir, classname.replace('.', File.separatorChar) + ".class"))) {
                 args[i++] = classname;
                 compiler.compile(args);
             }
