@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,114 +51,106 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.core;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
-import java.awt.Frame;
-import java.util.*;
+package org.apache.tools.ant.gui.wizzard;
+import javax.swing.JComponent;
+
 
 /**
- * A container for the state information for the application. Provides
- * a centeralized place to gain access to resources and data.
+ * Interface for classes defining a step in a wizzard.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class AppContext {
-    /** Event bus. */
-    private EventBus _eventBus = new EventBus();
-    /** Application resources. */
-    private ResourceManager _resources = new ResourceManager();
-    /** The project manager. */
-    private ProjectManager _projectManager = new ProjectManager();
-    /** Thing that keeps track of the current selection state. */
-    private SelectionManager _selectionManager = new SelectionManager();
-
-    /** Application actions. */
-    private ActionManager _actions = 
-        new ActionManager(_eventBus, new ResourceManager(
-            "org.apache.tools.ant.gui.resources.action"));
-
-    /** Parent frame used in various operations. XXX what do we do 
-     *  in the applet context. */
-    private Frame _parentFrame = null;
-
+public interface WizzardStep {
     /** 
-     * Constructor of apps that don't have a graphical
-     * component (e.g. web based).
-     *  
-     */
-    public AppContext() {
-        this(null);
-    }
-
-    /** 
-     * Standard constructor.
+     * Set the step id. The id must be unique among steps within the wizzard.
      * 
-     * @param parent Parent frame. XXX may go away.
+     * @param id Wizzard id.
      */
-    public AppContext(Frame parent) {
-        _parentFrame = parent;
-        BuildEventForwarder handler = new BuildEventForwarder(this);
-        _projectManager.addBuildListener(handler);
-        _eventBus.addMember(EventBus.MONITORING, _selectionManager);
-    }
-
-	/** 
-	 * Get the parent frame. XXX may change...
-	 * 
-	 * @return Parent frame.
-	 */
-    public Frame getParentFrame() {
-        return _parentFrame;
-    }
-
-	/** 
-	 * Get the localized resources.
-	 * 
-	 * @return Resources.
-	 */
-    public ResourceManager getResources() {
-        return _resources;
-    }
-
-	/** 
-	 * Get the action manager.
-	 * 
-	 * @return Action manager.
-	 */
-    public ActionManager getActions() {
-        return _actions;
-    }
-
-	/** 
-	 * Get the event bus.
-	 * 
-	 * @return EventBus.
-	 */
-    public EventBus getEventBus() {
-        return _eventBus;
-    }
+    void setID(String id);
 
     /** 
-     * Get the project manager.
+     * Get the step id.
      * 
-     * @return Project manager.
+     * @return Step id.
      */
-    public ProjectManager getProjectManager() {
-        return _projectManager;
-    }
+    String getID();
 
     /** 
-     * Get the selection manager.
+     * Set the step title.
      * 
-     * @return Selection manager.
+     * @param title Step title.
      */
-    public SelectionManager getSelectionManager() {
-        return _selectionManager;
-    }
+    void setTitle(String title);
+    /** 
+     * Get the step title.
+     * 
+     * @return Step title.
+     */
+    String getTitle();
+
+    /** 
+     * Set the step description.
+     * 
+     * @param desc Step description.
+     */
+    void setDescription(String desc);
+    /** 
+     * Get the step description.
+     * 
+     * @return Step description.
+     */
+    String getDescription();
+
+    /** 
+     * Set the default id of the next step.
+     * 
+     * @param nextID ID of next step.
+     */
+    void setNext(String nextID);
+    /** 
+     * Get the id of the next step.
+     * 
+     * @return ID of next step.
+     */
+    String getNext();
+
+    /** 
+     * Set the default id of the previous step.
+     * 
+     * @param prevID ID of previous step.
+     */
+    void setPrevious(String prevID);
+
+    /** 
+     * Get the id of the previous step.
+     * 
+     * @return Previous step.
+     */
+    String getPrevious();
+
+    /** 
+     * Set the data model object that the step will edit. It is assumed 
+     * that all steps initialized within a single wizzard agree on the
+     * data model type.
+     * 
+     * @param model Data model to edit.
+     */
+    void setDataModel(Object model);
+
+    /** 
+     * Get the data model that should be passeed on to the next step.
+     * 
+     * @return Current data model.
+     */
+    Object getDataModel();
+
+    /** 
+     * Get the component that should be displayed to the user for
+     * editing the model. This component should <b>not</b> include the
+     * title and text display, which is handled by the wizzard container.
+     * 
+     * @return Editing component.
+     */
+    JComponent getEditorComponent();
 }
-
-

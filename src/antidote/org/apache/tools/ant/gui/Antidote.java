@@ -65,7 +65,7 @@ import java.lang.reflect.Constructor;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Antidote extends JPanel {
+public class Antidote extends JComponent {
     /** Source of application state data. */
     private AppContext _context = null;
 

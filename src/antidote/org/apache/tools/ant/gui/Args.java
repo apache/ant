@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,114 +51,111 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.core;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
-import java.awt.Frame;
-import java.util.*;
+
+package org.apache.tools.ant.gui;
+import org.apache.tools.ant.gui.core.ResourceManager;
 
 /**
- * A container for the state information for the application. Provides
- * a centeralized place to gain access to resources and data.
+ * Class encapsulating the parsing of command-line arguments for Antidote.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class AppContext {
-    /** Event bus. */
-    private EventBus _eventBus = new EventBus();
-    /** Application resources. */
-    private ResourceManager _resources = new ResourceManager();
-    /** The project manager. */
-    private ProjectManager _projectManager = new ProjectManager();
-    /** Thing that keeps track of the current selection state. */
-    private SelectionManager _selectionManager = new SelectionManager();
+public class Args {
 
-    /** Application actions. */
-    private ActionManager _actions = 
-        new ActionManager(_eventBus, new ResourceManager(
-            "org.apache.tools.ant.gui.resources.action"));
-
-    /** Parent frame used in various operations. XXX what do we do 
-     *  in the applet context. */
-    private Frame _parentFrame = null;
+    private ResourceManager _resources = null;
+    private boolean _wizzardMode = false;
+    private String _fileName = null;
+    private boolean _debugMode = false;
 
     /** 
-     * Constructor of apps that don't have a graphical
-     * component (e.g. web based).
-     *  
-     */
-    public AppContext() {
-        this(null);
-    }
-
-    /** 
-     * Standard constructor.
+     * Ctor for parsing command line arguments.
      * 
-     * @param parent Parent frame. XXX may go away.
+     * @param args Arguments to parse.
      */
-    public AppContext(Frame parent) {
-        _parentFrame = parent;
-        BuildEventForwarder handler = new BuildEventForwarder(this);
-        _projectManager.addBuildListener(handler);
-        _eventBus.addMember(EventBus.MONITORING, _selectionManager);
+    public Args(String[] args) {
+        for(int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if(i == args.length - 1 && !arg.startsWith("-")) {
+                _fileName = arg;
+            }
+            else if(arg.startsWith("-h")) {
+                System.out.println(getUsage());
+                System.exit(0);
+            }
+            else if(arg.equals("-wizzard")) {
+                _wizzardMode = true;
+            }
+            else if(arg.equals("-debug")) {
+                _debugMode = true;
+            }
+            else {
+                String msg = getResources().getMessage(
+                    "invalidArg", new Object[] { arg });
+                abort(msg);
+            }
+        }
     }
 
-	/** 
-	 * Get the parent frame. XXX may change...
-	 * 
-	 * @return Parent frame.
-	 */
-    public Frame getParentFrame() {
-        return _parentFrame;
-    }
-
-	/** 
-	 * Get the localized resources.
-	 * 
-	 * @return Resources.
-	 */
-    public ResourceManager getResources() {
+    /** 
+     * Get the resources, loading them if necessary.
+     * 
+     * @return Loaded resources.
+     */
+    private ResourceManager getResources() {
+        if(_resources == null) {
+            _resources = new ResourceManager(
+                "org.apache.tools.ant.gui.resources.args");
+        }
         return _resources;
     }
 
-	/** 
-	 * Get the action manager.
-	 * 
-	 * @return Action manager.
-	 */
-    public ActionManager getActions() {
-        return _actions;
-    }
-
-	/** 
-	 * Get the event bus.
-	 * 
-	 * @return EventBus.
-	 */
-    public EventBus getEventBus() {
-        return _eventBus;
+    /** 
+     * Print message and exit.
+     * 
+     * @param error Error message to print.
+     */
+    private void abort(String error) {
+        System.err.println(error);
+        System.err.println(getUsage());
+        System.exit(1);
     }
 
     /** 
-     * Get the project manager.
+     * Get the command line usage of Antidote.
      * 
-     * @return Project manager.
+     * @return Command line usage help.
      */
-    public ProjectManager getProjectManager() {
-        return _projectManager;
+    public String getUsage() {
+        return getResources().getString("usage");
     }
 
     /** 
-     * Get the selection manager.
+     * Get the build filename.
      * 
-     * @return Selection manager.
+     * @return Build file name.
      */
-    public SelectionManager getSelectionManager() {
-        return _selectionManager;
+    public String getBuildFile() {
+        return _fileName;
     }
+
+    /** 
+     * Determine if wizzard mode was requested for generating a new 
+     * build file.
+     * 
+     * @return True if wizzard mode, false otherwise.
+     */
+    public boolean isWizzardMode() {
+        return _wizzardMode;
+    }
+
+    /** 
+     * Determine if debug mode was requested.
+     * 
+     * @return True if debug mode, false otherwise.
+     */
+    public boolean isDebugMode() {
+        return _debugMode;
+    }
+
 }
-
-

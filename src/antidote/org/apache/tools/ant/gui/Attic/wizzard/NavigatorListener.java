@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,114 +51,39 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.core;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
-import java.awt.Frame;
-import java.util.*;
+package org.apache.tools.ant.gui.wizzard;
 
 /**
- * A container for the state information for the application. Provides
- * a centeralized place to gain access to resources and data.
+ * Interface for classes interested in events from the WizzardNavigator.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class AppContext {
-    /** Event bus. */
-    private EventBus _eventBus = new EventBus();
-    /** Application resources. */
-    private ResourceManager _resources = new ResourceManager();
-    /** The project manager. */
-    private ProjectManager _projectManager = new ProjectManager();
-    /** Thing that keeps track of the current selection state. */
-    private SelectionManager _selectionManager = new SelectionManager();
-
-    /** Application actions. */
-    private ActionManager _actions = 
-        new ActionManager(_eventBus, new ResourceManager(
-            "org.apache.tools.ant.gui.resources.action"));
-
-    /** Parent frame used in various operations. XXX what do we do 
-     *  in the applet context. */
-    private Frame _parentFrame = null;
-
+public interface NavigatorListener {
     /** 
-     * Constructor of apps that don't have a graphical
-     * component (e.g. web based).
-     *  
-     */
-    public AppContext() {
-        this(null);
-    }
-
-    /** 
-     * Standard constructor.
+     * Called when the wizzard should show the next step.
      * 
-     * @param parent Parent frame. XXX may go away.
      */
-    public AppContext(Frame parent) {
-        _parentFrame = parent;
-        BuildEventForwarder handler = new BuildEventForwarder(this);
-        _projectManager.addBuildListener(handler);
-        _eventBus.addMember(EventBus.MONITORING, _selectionManager);
-    }
-
-	/** 
-	 * Get the parent frame. XXX may change...
-	 * 
-	 * @return Parent frame.
-	 */
-    public Frame getParentFrame() {
-        return _parentFrame;
-    }
-
-	/** 
-	 * Get the localized resources.
-	 * 
-	 * @return Resources.
-	 */
-    public ResourceManager getResources() {
-        return _resources;
-    }
-
-	/** 
-	 * Get the action manager.
-	 * 
-	 * @return Action manager.
-	 */
-    public ActionManager getActions() {
-        return _actions;
-    }
-
-	/** 
-	 * Get the event bus.
-	 * 
-	 * @return EventBus.
-	 */
-    public EventBus getEventBus() {
-        return _eventBus;
-    }
-
+    void nextStep();
     /** 
-     * Get the project manager.
+     * Called when the wizzard should show the previous step.
      * 
-     * @return Project manager.
      */
-    public ProjectManager getProjectManager() {
-        return _projectManager;
-    }
-
+    void backStep();
     /** 
-     * Get the selection manager.
+     * Called when the wizzard should show the step with the given id.
      * 
-     * @return Selection manager.
+     * @param stepID ID of step to show.
      */
-    public SelectionManager getSelectionManager() {
-        return _selectionManager;
-    }
+    void gotoStep(String stepID);
+    /** 
+     * Called when the wizzard activity shold be cancelled.
+     * 
+     */
+    void cancel();
+    /** 
+     * Called when the wizzard is finished.
+     * 
+     */
+    void finish();
 }
-
-

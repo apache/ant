@@ -54,8 +54,11 @@
 package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.util.XMLHelper;
+import org.apache.tools.ant.gui.wizzard.Wizzard;
+import org.apache.tools.ant.gui.wizzard.WizzardListener;
 import org.apache.tools.ant.gui.command.LoadFileCmd;
 import org.apache.tools.ant.gui.event.EventBus;
+import org.apache.tools.ant.gui.acs.ACSFactory;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.io.File;
@@ -75,27 +78,62 @@ public class Main {
     public static void main(String[] args) {
         XMLHelper.init();
 
+        Args settings = new Args(args);
+
+
         try {
             JFrame f = new JFrame("Antidote");
-            AppContext context = new AppContext(f);
-            EventResponder resp = new EventResponder(context);
-            Antidote gui = new Antidote(context);
-
             f.setDefaultCloseOperation(3 /*JFrame.EXIT_ON_CLOSE*/);
-            JMenuBar menu = context.getActions().createMenuBar();
-            f.setJMenuBar(menu);
-            f.getContentPane().add(BorderLayout.CENTER, gui);
-            f.getContentPane().add(BorderLayout.NORTH, 
-                                   context.getActions().createToolBar());
+            AppContext context = new AppContext(f);
 
-            // Add the project selection menu.
-            ProjectSelectionMenu ps = new ProjectSelectionMenu(context);
-            ps.insertInto(menu);
+            if(!settings.isWizzardMode()) {
+                EventResponder resp = new EventResponder(context);
+                Antidote gui = new Antidote(context);
 
-            // Add debugging items.
-            if(context.isDebugOn()) {
-                context.getEventBus().addMember(
-                    EventBus.VETOING, new EventDebugMonitor());
+                JMenuBar menu = context.getActions().createMenuBar();
+                f.setJMenuBar(menu);
+                f.getContentPane().add(BorderLayout.CENTER, gui);
+                f.getContentPane().add(BorderLayout.NORTH, 
+                                       context.getActions().createToolBar());
+                
+                // Add the project selection menu.
+                ProjectSelectionMenu ps = new ProjectSelectionMenu(context);
+                ps.insertInto(menu);
+                
+                // Add debugging items.
+                if(settings.isDebugMode()) {
+                    context.getEventBus().addMember(
+                        EventBus.VETOING, new EventDebugMonitor());
+                }
+
+                // Load a build file if one is provided.
+                if(settings.getBuildFile() != null) {
+                    LoadFileCmd load = new LoadFileCmd(context);
+                    load.setFile(new File(settings.getBuildFile()));
+                    load.run();
+                }
+            }
+            else {
+                // We are in wizzard mode. Create it.
+                ResourceManager resources = new ResourceManager(
+                    "org.apache.tools.ant.gui.resources.buildFileWizzard");
+                Wizzard wiz = new Wizzard(
+                    resources, ACSFactory.getInstance().createProject());
+                // XXX this is temporary for testing. Eventually
+                // it will launch the regular antidote screen with the
+                // results of the wizzard.
+                wiz.addWizzardListener(new WizzardListener() {
+                        public void finished(Object model) {
+                            System.out.println(model);
+                            System.exit(0);
+                        }
+                        public void canceled() {
+                            System.exit(0);
+                        }
+
+                    });
+
+                f.getContentPane().add(BorderLayout.CENTER, wiz);
             }
 
             ImageIcon icon = 
@@ -106,17 +144,10 @@ public class Main {
             else {
                 System.out.println("Application icon not found.");
             }
-            f.pack();
 
+            f.pack();
             f.setVisible(true);
 
-            // XXX this will change once full command line argument parsing
-            // is supported.
-            if(args.length > 0) {
-                LoadFileCmd load = new LoadFileCmd(context);
-                load.setFile(new File(args[0]));
-                load.run();
-            }
         }
         catch(Exception ex) {
             ex.printStackTrace();

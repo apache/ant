@@ -100,6 +100,19 @@ public class ResourceManager {
     }
 
     /** 
+     * Generate a composit key from the given class and key name.
+     * 
+     * @param clazz Class to find resource for.
+     * @param name Name of the resource.
+     * @return Composite key.
+     */
+    private String getKey(Class clazz, String name) {
+        name = name == null ? "" : name;
+
+        return clazz == null ? name : clazz.getName() + "." + name;
+    }
+
+    /** 
      * Get non-qualified String resource.
      * 
      * @param name Name of the resource.
@@ -121,7 +134,12 @@ public class ResourceManager {
             return null;
         }
 
-        return _resources.getString(getKey(clazz, name));
+        try {
+            return _resources.getString(getKey(clazz, name));
+        }
+        catch(MissingResourceException ex) {
+            return null;
+        }
     }
 
     /** 
@@ -156,7 +174,12 @@ public class ResourceManager {
         }
 
         if(toTok == null) {
-            return _resources.getStringArray(key);
+            try {
+                return _resources.getStringArray(key);
+            }
+            catch(MissingResourceException ex) {
+                return null;
+            }
         }
         else {
             StringTokenizer tok = new StringTokenizer(toTok, ", ");
@@ -201,24 +224,44 @@ public class ResourceManager {
             value = _resources.getString(key);
         }
         catch(MissingResourceException ex) {
-            // Ignore missing resources as they imply false.
+            return false;
         }
 
         return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
     }
 
     /** 
-     * Generate a composit key from the given class and key name.
+     * Get the non-qualified Class type resource for the given key.
      * 
-     * @param clazz Class to find resource for.
-     * @param name Name of the resource.
-     * @return Composite key.
+     * @param name Name of the resourdce.
+     * @return Class associated with the key name.
      */
-    private String getKey(Class clazz, String name) {
-        name = name == null ? "" : name;
-
-        return clazz == null ? name : clazz.getName() + "." + name;
+    public Class getClass(String name) 
+        throws ClassNotFoundException {
+        return getClass(null, name);
     }
+
+    /** 
+     * Get the Class type resource for the given class and key name.
+     * 
+     * @param clazz Class requesting the resource.
+     * @param name Name of the resource.
+     * @return Class associated with the key name.
+     */
+    public Class getClass(Class clazz, String name) 
+        throws ClassNotFoundException {
+
+        String key = getKey(clazz, name);
+        try {
+            String value = _resources.getString(key);
+            return Class.forName(value);
+        }
+        catch(MissingResourceException ex) {
+            return null;
+        }
+
+    }
+
 
     /** 
      * Generate a localized message using the given set of arguments to 
