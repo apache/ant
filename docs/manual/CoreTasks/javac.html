@@ -456,6 +456,20 @@ the property <code>src2</code>. This can also be represented using nested
     &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
   &lt;/javac&gt;</pre>
 
+<p>If you want to run the javac compiler of a different JDK, you
+should tell Ant, where to find the compiler and which version of JDK
+your are using so it can choose the correct command line switches.
+The following example executes a JDK 1.1 javac in a new process and
+uses the correct command line switches even when Ant is running in a
+Java VM of a different version:</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         fork=&quot;yes&quot;
+         executable=&quot;/opt/java/jdk1.1/bin/javac&quot;
+         compiler=&quot;javac1.1&quot;
+  /&gt;</pre>
+
 <p><a name="srcdirnote"><b>Note:</b></a>
 If you wish to compile only source files located in certain packages below a
 common root, use the <code>include</code>/<code>exclude</code> attributes
