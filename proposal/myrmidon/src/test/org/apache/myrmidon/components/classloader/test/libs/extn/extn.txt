@@ -1,1 +1,0 @@
-A test resource loaded from an extension.

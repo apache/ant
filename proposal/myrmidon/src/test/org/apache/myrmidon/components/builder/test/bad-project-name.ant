@@ -1,4 +1,0 @@
-<!-- Project with an invalid name -->
-<project version="2.0" name="!badname">
-    <target name="main"/>
-</project>

@@ -1,7 +1,0 @@
-Extension-Name: test.simple
-Specification-Title: Test Simple Extension
-Specification-Version: 1.0.0
-Specification-Vendor: Jakarta Apache
-Implementation-Vendor-Id: org.apache.myrmidon
-Implementation-Vendor: Apache Myrmidon Project
-Implementation-Version: 1.0.2

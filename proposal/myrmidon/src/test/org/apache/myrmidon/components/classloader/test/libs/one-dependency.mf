@@ -1,3 +1,0 @@
-Extension-List: extension1
-extension1-Extension-Name: test.simple
-extension1-Specification-Version: 1.0

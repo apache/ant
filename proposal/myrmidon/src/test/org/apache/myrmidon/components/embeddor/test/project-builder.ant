@@ -1,6 +1,0 @@
-<project version="2.0" name="test-project" default="main-target">
-    <property name="some-prop" value="some-value"/>
-    <target name="main-target">
-        <log>A log message</log>
-    </target>
-</project>
