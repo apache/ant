@@ -15,8 +15,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
-import org.apache.myrmidon.services.ServiceException;
 
 /**
  * This task is responsible for loading that OS-specific environment
@@ -90,14 +88,8 @@ public class LoadEnvironment
     {
         try
         {
-            final ExecManagerFactory factory = new ExecManagerFactory();
-            final ExecManager manager = (ExecManager)factory.createService();
-
+            final ExecManager manager = (ExecManager)getService( ExecManager.class );
             return manager.getNativeEnvironment();
-        }
-        catch( final ServiceException se )
-        {
-            throw new TaskException( se.getMessage(), se );
         }
         catch( final ExecException ee )
         {
