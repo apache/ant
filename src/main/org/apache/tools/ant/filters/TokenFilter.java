@@ -75,10 +75,8 @@ import org.apache.tools.ant.util.regexp.Regexp;
  * @see ChainableReader
  * @see DynamicConfigurator
  */
-public class TokenFilter
-    extends BaseFilterReader
-    implements ChainableReader
-{
+public class TokenFilter extends BaseFilterReader
+    implements ChainableReader {
     /**
      * input stream tokenizers implement this interface
      */
@@ -88,15 +86,17 @@ public class TokenFilter
          * @param in the input stream
          * @return the next token, or null for the end
          *         of the stream
+         * @throws IOException if an error occurs
          */
-        public String getToken(Reader in)
+        String getToken(Reader in)
             throws IOException;
+
         /**
          * return the string between tokens, after the
          * previous token.
          * @return the intra-token string
          */
-        public String getPostToken();
+        String getPostToken();
     }
 
     /**
@@ -106,11 +106,11 @@ public class TokenFilter
         /**
          * filter and/of modify a string
          *
-         * @param filter the string to filter
+         * @param string the string to filter
          * @return the modified string or null if the
          *         string did not pass the filter
          */
-        public String filter(String string);
+        String filter(String string);
     }
 
 
@@ -158,34 +158,37 @@ public class TokenFilter
      */
 
     public int read() throws IOException {
-        if (tokenizer == null)
+        if (tokenizer == null) {
             tokenizer = new LineTokenizer();
-
+        }
         while (line == null || line.length() == 0) {
             line = tokenizer.getToken(in);
-            if (line == null)
+            if (line == null) {
                 return -1;
-            for (Enumeration e = filters.elements(); e.hasMoreElements();)
-            {
+            }
+            for (Enumeration e = filters.elements(); e.hasMoreElements();) {
                 Filter filter = (Filter) e.nextElement();
                 line = filter.filter(line);
-                if (line == null)
+                if (line == null) {
                     break;
+                }
             }
             linePos = 0;
             if (line != null) {
                 if (tokenizer.getPostToken().length() != 0) {
-                    if (delimOutput != null)
+                    if (delimOutput != null) {
                         line = line + delimOutput;
-                    else
+                    } else {
                         line = line + tokenizer.getPostToken();
+                    }
                 }
             }
         }
         int ch = line.charAt(linePos);
-        linePos ++;
-        if (linePos == line.length())
+        linePos++;
+        if (linePos == line.length()) {
             line = null;
+        }
         return ch;
     }
 
@@ -223,6 +226,7 @@ public class TokenFilter
 
     /**
      * add a line tokenizer - this is the default.
+     * @param tokenizer the line tokenizer
      */
 
     public void addLineTokenizer(LineTokenizer tokenizer) {
@@ -231,6 +235,7 @@ public class TokenFilter
 
     /**
      * add a string tokenizer
+     * @param tokenizer the string tokenizer
      */
 
     public void addStringTokenizer(StringTokenizer tokenizer) {
@@ -238,19 +243,22 @@ public class TokenFilter
     }
 
     /**
-     *  add a file tokenizer
+     * add a file tokenizer
+     * @param tokenizer the file tokenizer
      */
     public void addFileTokenizer(FileTokenizer tokenizer) {
         add(tokenizer);
     }
 
     /**
-     * add a tokenizer
+     * add an arbirarty tokenizer
+     * @param tokenizer the tokenizer to all, only one allowed
      */
 
     public void add(Tokenizer tokenizer) {
-        if (this.tokenizer != null)
+        if (this.tokenizer != null) {
             throw new BuildException("Only one tokenizer allowed");
+        }
         this.tokenizer = tokenizer;
     }
 
@@ -258,41 +266,66 @@ public class TokenFilter
     //  Predefined filters
     // -----------------------------------------
 
-    /** replace string filter */
+    /**
+     * replace string filter
+     * @param filter the replace string filter
+     */
     public void addReplaceString(ReplaceString filter) {
         filters.addElement(filter);
     }
 
-    /** contains string filter */
+    /**
+     * contains string filter
+     * @param filter the contains string filter
+     */
     public void addContainsString(ContainsString filter) {
         filters.addElement(filter);
     }
 
-    /** replace regex filter */
+    /**
+     * replace regex filter
+     * @param filter the replace regex filter
+     */
     public void addReplaceRegex(ReplaceRegex filter) {
         filters.addElement(filter);
     }
 
-    /** contains regex filter */
+    /**
+     * contains regex filter
+     * @param filter the contains regex filter
+     */
     public void addContainsRegex(ContainsRegex filter) {
         filters.addElement(filter);
     }
 
-    /** trim filter */
+    /**
+     * trim filter
+     * @param filter the trim filter
+     */
     public void addTrim(Trim filter) {
         filters.addElement(filter);
     }
 
-    /** ignore blank filter */
+    /**
+     * ignore blank filter
+     * @param filter the ignore blank filter
+     */
     public void addIgnoreBlank(IgnoreBlank filter) {
         filters.addElement(filter);
     }
 
-    /** delete chars */
+    /**
+     * delete chars
+     * @param filter the delete chaarcters filter
+     */
     public void addDeleteCharacters(DeleteCharacters filter) {
         filters.addElement(filter);
     }
 
+    /**
+     * Add an arbitary filter
+     * @param filter the filter to add
+     */
     public void add(Filter filter) {
         filters.addElement(filter);
     }
@@ -307,25 +340,21 @@ public class TokenFilter
     /**
      * class to read the complete input into a string
      */
-    public static class FileTokenizer
-        extends ProjectComponent
-        implements Tokenizer
-    {
+    public static class FileTokenizer extends ProjectComponent
+        implements Tokenizer {
         /**
          * Get the complete input as a string
-         *
+         * @param in the reader object
          * @return the complete input
+         * @throws IOException if error reading
          */
-        public String getToken(Reader in)
-            throws IOException
-        {
+        public String getToken(Reader in) throws IOException {
             return FileUtils.readFully(in);
         }
 
         /**
-         * Return an empty string
-         *
-         * @return an empty string
+         * Return the intra-token string
+         * @return an empty string always
          */
         public String getPostToken() {
             return "";
@@ -337,10 +366,8 @@ public class TokenFilter
      * class to tokenize the input as lines seperated
      * by \r (mac style), \r\n (dos/windows style) or \n (unix style)
      */
-    public static class LineTokenizer
-        extends ProjectComponent
-        implements Tokenizer
-    {
+    public static class LineTokenizer extends ProjectComponent
+        implements Tokenizer {
         private String  lineEnd = "";
         private int     pushed = -2;
         private boolean includeDelims = false;
@@ -349,22 +376,29 @@ public class TokenFilter
          * attribute includedelims - whether to include
          * the line ending with the line, or to return
          * it in the posttoken
+         * default false
+         * @param includeDelims if true include /r and /n in the line
          */
 
         public void setIncludeDelims(boolean includeDelims) {
             this.includeDelims = includeDelims;
         }
 
-        public String getToken(Reader in)
-            throws IOException
-        {
+        /**
+         * get the next line from the input
+         *
+         * @param in the input reader
+         * @return the line excluding /r or /n, unless includedelims is set
+         * @exception IOException if an error occurs reading
+         */
+        public String getToken(Reader in) throws IOException {
             int ch = -1;
             if (pushed != -2) {
                 ch = pushed;
                 pushed = -2;
-            }
-            else
+            } else {
                 ch = in.read();
+            }
             if (ch == -1) {
                 return null;
             }
@@ -377,21 +411,17 @@ public class TokenFilter
                 if (state == 0) {
                     if (ch == '\r') {
                         state = 1;
-                    }
-                    else if (ch == '\n') {
+                    } else if (ch == '\n') {
                         lineEnd = "\n";
                         break;
-                    }
-                    else {
+                    } else {
                         line.append((char) ch);
                     }
-                }
-                else {
+                } else {
                     state = 0;
                     if (ch == '\n') {
                         lineEnd = "\r\n";
-                    }
-                    else {
+                    } else {
                         pushed = ch;
                         lineEnd = "\r";
                     }
@@ -409,6 +439,9 @@ public class TokenFilter
             return line.toString();
         }
 
+        /**
+         * @return the line ending character(s) for the current line
+         */
         public String getPostToken() {
             if (includeDelims) {
                 return "";
@@ -426,10 +459,8 @@ public class TokenFilter
      * token will be an empty string (unless the treat tokens
      * as delims flag is set).
      */
-    public static class StringTokenizer
-        extends ProjectComponent
-        implements Tokenizer
-    {
+    public static class StringTokenizer extends ProjectComponent
+        implements Tokenizer {
         private String intraString = "";
         private int    pushed = -2;
         private char[] delims = null;
@@ -439,6 +470,7 @@ public class TokenFilter
 
         /**
          * attribute delims - the delimeter characters
+         * @param delims a string containing the delimiter characters
          */
         public void setDelims(String delims) {
             this.delims = resolveBackSlash(delims).toCharArray();
@@ -447,6 +479,7 @@ public class TokenFilter
         /**
          * attribute delimsaretokens - treat delimiters as
          * separate tokens.
+         * @param delimsAreTokens true if delimiters are to be separate
          */
 
         public void setDelimsAreTokens(boolean delimsAreTokens) {
@@ -455,6 +488,7 @@ public class TokenFilter
         /**
          * attribute suppressdelims - suppress delimiters.
          * default - false
+         * @param suppressDelims if true do not report delimiters
          */
         public void setSuppressDelims(boolean suppressDelims) {
             this.suppressDelims = suppressDelims;
@@ -464,21 +498,27 @@ public class TokenFilter
          * attribute includedelims - treat delimiters as part
          * of the token.
          * default - false
+         * @param includeDelims if true add deliters to the token
          */
         public void setIncludeDelims(boolean includeDelims) {
             this.includeDelims = includeDelims;
         }
 
-        public String getToken(Reader in)
-            throws IOException
-        {
+        /**
+         * find and return the next token
+         *
+         * @param in the input stream
+         * @return the token
+         * @exception IOException if an error occurs reading
+         */
+        public String getToken(Reader in) throws IOException {
             int ch = -1;
             if (pushed != -2) {
                 ch = pushed;
                 pushed = -2;
-            }
-            else
+            } else {
                 ch = in.read();
+            }
             if (ch == -1) {
                 return null;
             }
@@ -494,23 +534,20 @@ public class TokenFilter
                         if (delimsAreTokens) {
                             if (word.length() == 0) {
                                 word.append(c);
-                            }
-                            else {
+                            } else {
                                 pushed = ch;
                             }
                             break;
                         }
                         padding.append(c);
                         inToken = false;
-                    }
-                    else
+                    } else {
                         word.append(c);
-                }
-                else {
+                    }
+                } else {
                     if (isDelim) {
                         padding.append(c);
-                    }
-                    else {
+                    } else {
                         pushed = ch;
                         break;
                     }
@@ -524,18 +561,25 @@ public class TokenFilter
             return word.toString();
         }
 
+        /**
+         * @return the intratoken string
+         */
         public String getPostToken() {
-            if (suppressDelims || includeDelims)
+            if (suppressDelims || includeDelims) {
                 return "";
+            }
             return intraString;
         }
 
         private boolean isDelim(char ch) {
-            if (delims == null)
+            if (delims == null) {
                 return Character.isWhitespace(ch);
-            for (int i = 0; i < delims.length; ++i)
-                if (delims[i] == ch)
+            }
+            for (int i = 0; i < delims.length; ++i) {
+                if (delims[i] == ch) {
                     return true;
+                }
+            }
             return false;
         }
     }
@@ -546,20 +590,34 @@ public class TokenFilter
     //
     // --------------------------------------------
 
-    public static abstract class ChainableReaderFilter
-        extends ProjectComponent
-        implements ChainableReader, Filter
-    {
+    /**
+     * Abstract class that converts derived filter classes into
+     * ChainableReaderFilter's
+     */
+    public static abstract class ChainableReaderFilter extends ProjectComponent
+        implements ChainableReader, Filter {
         private boolean byLine = true;
 
+        /**
+         * set wheter to use filetokenizer or line tokenizer
+         * @param byLine if true use a linetokenizer (default) otherwise
+         *               use a filetokenizer
+         */
         public void setByLine(boolean byLine) {
             this.byLine = byLine;
         }
 
+        /**
+         * Chain a tokenfilter reader to a reader,
+         *
+         * @param reader the input reader object
+         * @return the chained reader object
+         */
         public Reader chain(Reader reader) {
             TokenFilter tokenFilter = new TokenFilter(reader);
-            if (!byLine)
+            if (!byLine) {
                 tokenFilter.add(new FileTokenizer());
+            }
             tokenFilter.add(this);
             return tokenFilter;
         }
@@ -568,25 +626,38 @@ public class TokenFilter
     /**
      * Simple replace string filter.
      */
-    public static class ReplaceString
-        extends ChainableReaderFilter
-    {
+    public static class ReplaceString extends ChainableReaderFilter {
         private String from;
         private String to;
 
+        /**
+         * the from attribute
+         *
+         * @param from the string to replace
+         */
         public void setFrom(String from) {
             this.from = from;
         }
+
+        /**
+         * the to attribute
+         *
+         * @param to the string to replace 'from' with
+         */
         public void setTo(String to) {
             this.to = to;
         }
 
         /**
-         * CAP from the Replace task
+         * Filter a string 'line' replaceing from with to
+         * (C&P from the Replace task)
+         * @param line the string to be filtered
+         * @return the filtered line
          */
         public String filter(String line) {
-            if (from == null)
+            if (from == null) {
                 throw new BuildException("Missing from in stringreplace");
+            }
             StringBuffer ret = new StringBuffer();
             int start = 0;
             int found = line.indexOf(from);
@@ -618,21 +689,32 @@ public class TokenFilter
     /**
      * Simple filter to filter lines contains strings
      */
-    public static class ContainsString
-        extends ProjectComponent
-        implements Filter
-    {
+    public static class ContainsString extends ProjectComponent
+        implements Filter {
         private String contains;
 
+        /**
+         * the contains attribute
+         * @param contains the string that the token should contain
+         */
         public void setContains(String contains) {
             this.contains = contains;
         }
 
-        public String filter(String line) {
-            if (contains == null)
+        /**
+         * Filter strings that contain the contains attribute
+         *
+         * @param string the string to be filtered
+         * @return null if the string does not contain "contains",
+         *              string otherwise
+         */
+        public String filter(String string) {
+            if (contains == null) {
                 throw new BuildException("Missing contains in containsstring");
-            if (line.indexOf(contains) > -1)
-                return line;
+            }
+            if (string.indexOf(contains) > -1) {
+                return string;
+            }
             return null;
         }
     }
@@ -640,12 +722,9 @@ public class TokenFilter
     /**
      * filter to replace regex.
      */
-    public static class ReplaceRegex
-        extends ChainableReaderFilter
-    {
+    public static class ReplaceRegex extends ChainableReaderFilter {
         private String             from;
         private String             to;
-        private Project            project;
         private RegularExpression  regularExpression;
         private Substitution       substitution;
         private boolean            initialized = false;
@@ -653,37 +732,50 @@ public class TokenFilter
         private int                options;
         private Regexp             regexp;
 
-
+        /**
+         * the from attribute
+         * @param from the regex string
+         */
         public void setPattern(String from) {
             this.from = from;
         }
+        /**
+         * the to attribute
+         * @param to the replacement string
+         */
         public void setReplace(String to) {
             this.to = to;
         }
 
-        public void setProject(Project p) {
-            this.project = p;
-        }
-
+        /**
+         * @param flags the regex flags
+         */
         public void setFlags(String flags) {
             this.flags = flags;
         }
 
         private void initialize() {
-            if (initialized)
+            if (initialized) {
                 return;
+            }
             options = convertRegexOptions(flags);
-            if (from == null)
+            if (from == null) {
                 throw new BuildException("Missing pattern in replaceregex");
+            }
             regularExpression = new RegularExpression();
             regularExpression.setPattern(from);
             regexp = regularExpression.getRegexp(project);
-            if (to == null)
+            if (to == null) {
                 to = "";
+            }
             substitution = new Substitution();
             substitution.setExpression(to);
         }
 
+        /**
+         * @param line the string to modify
+         * @return the modified string
+         */
         public String filter(String line) {
             initialize();
 
@@ -691,16 +783,14 @@ public class TokenFilter
                 return line;
             }
             return regexp.substitute(
-                line, substitution.getExpression(project), options);
+                line, substitution.getExpression(getProject()), options);
         }
     }
 
     /**
      * filter to filter tokens matching regular expressions.
      */
-    public static class ContainsRegex
-        extends ChainableReaderFilter
-    {
+    public static class ContainsRegex extends ChainableReaderFilter {
         private String             from;
         private String             to;
         private Project            project;
@@ -712,54 +802,69 @@ public class TokenFilter
         private Regexp             regexp;
 
 
+        /**
+         * @param from the regex pattern
+         */
         public void setPattern(String from) {
             this.from = from;
         }
+
+        /**
+         * @param to the replacement string
+         */
         public void setReplace(String to) {
             this.to = to;
         }
 
-        public void setProject(Project p) {
-            this.project = p;
-        }
-
+        /**
+         * @param flags the regex flags
+         */
         public void setFlags(String flags) {
             this.flags = flags;
         }
 
         private void initialize() {
-            if (initialized)
+            if (initialized) {
                 return;
+            }
             options = convertRegexOptions(flags);
-            if (from == null)
+            if (from == null) {
                 throw new BuildException("Missing from in containsregex");
+            }
             regularExpression = new RegularExpression();
             regularExpression.setPattern(from);
             regexp = regularExpression.getRegexp(project);
-            if (to == null)
+            if (to == null) {
                 return;
+            }
             substitution = new Substitution();
             substitution.setExpression(to);
-       }
+        }
 
-        public String filter(String line) {
+        /**
+         * apply regex and substitution on a string
+         * @param string the string to apply filter on
+         * @return the filtered string
+         */
+        public String filter(String string) {
             initialize();
-
-
-            if (!regexp.matches(line, options)) {
+            if (!regexp.matches(string, options)) {
                 return null;
             }
-            if (substitution == null)
-                return line;
+            if (substitution == null) {
+                return string;
+            }
             return regexp.substitute(
-                line, substitution.getExpression(project), options);
+                string, substitution.getExpression(getProject()), options);
         }
     }
 
     /** Filter to trim white space */
-    public static class Trim
-        extends ChainableReaderFilter
-    {
+    public static class Trim extends ChainableReaderFilter {
+        /**
+         * @param line the string to be trimed
+         * @return the trimmed string
+         */
         public String filter(String line) {
             return line.trim();
         }
@@ -768,12 +873,15 @@ public class TokenFilter
 
 
     /** Filter remove empty tokens */
-    public static class IgnoreBlank
-        extends ChainableReaderFilter
-    {
+    public static class IgnoreBlank extends ChainableReaderFilter {
+        /**
+         * @param line the line to modify
+         * @return the trimed line
+         */
         public String filter(String line) {
-            if (line.trim().length() == 0)
+            if (line.trim().length() == 0) {
                 return null;
+            }
             return line;
         }
     }
@@ -781,26 +889,32 @@ public class TokenFilter
     /**
      * Filter to delete characters
      */
-    public static class DeleteCharacters
-        extends ProjectComponent
-        implements Filter, ChainableReader
-    {
+    public static class DeleteCharacters extends ProjectComponent
+        implements Filter, ChainableReader {
         // Attributes
         /** the list of characters to remove from the input */
         private String deleteChars = "";
 
-        /** Set the list of characters to delete */
+        /**
+         * Set the list of characters to delete
+         * @param deleteChars the list of characters
+         */
         public void setChars(String deleteChars) {
             this.deleteChars = resolveBackSlash(deleteChars);
         }
 
-        /** remove characters from a string */
+        /**
+         * remove characters from a string
+         * @param string the string to remove the characters from
+         * @return the converted string
+         */
         public String filter(String string) {
             StringBuffer output = new StringBuffer(string.length());
             for (int i = 0; i < string.length(); ++i) {
                 char ch = string.charAt(i);
-                if (! isDeleteCharacter(ch))
+                if (!(isDeleteCharacter(ch))) {
                     output.append(ch);
+                }
             }
             return output.toString();
         }
@@ -809,18 +923,24 @@ public class TokenFilter
          * factory method to provide a reader that removes
          * the characters from a reader as part of a filter
          * chain
+         * @param reader the reader object
+         * @return the chained reader object
          */
         public Reader chain(Reader reader) {
             return new BaseFilterReader(reader) {
+                /**
+                 * @return the next non delete character
+                 */
                 public int read()
-                    throws IOException
-                {
+                    throws IOException {
                     while (true) {
                         int c = in.read();
-                        if (c == -1)
+                        if (c == -1) {
                             return c;
-                        if (! isDeleteCharacter((char) c))
+                        }
+                        if (!(isDeleteCharacter((char) c))) {
                             return c;
+                        }
                     }
                 }
             };
@@ -856,13 +976,13 @@ public class TokenFilter
         boolean backSlashSeen = false;
         for (int i = 0; i < input.length(); ++i) {
             char c = input.charAt(i);
-            if (! backSlashSeen) {
-                if (c == '\\')
+            if (!backSlashSeen) {
+                if (c == '\\') {
                     backSlashSeen = true;
-                else
+                } else {
                     b.append(c);
-            }
-            else {
+                }
+            } else {
                 switch (c) {
                     case '\\':
                         b.append((char) '\\');
@@ -899,19 +1019,26 @@ public class TokenFilter
      *   <li>m -  Regexp.MATCH_MULTILINE</li>
      *   <li>s -  Regexp.MATCH_SINGLELINE</li>
      * </dl>
+     * @param flags the string containing the flags
+     * @return the Regexp option bits
      */
     public static int convertRegexOptions(String flags) {
-        if (flags == null)
+        if (flags == null) {
             return 0;
+        }
         int options = 0;
-        if (flags.indexOf('g') != -1)
+        if (flags.indexOf('g') != -1) {
             options |= Regexp.REPLACE_ALL;
-        if (flags.indexOf('i') != -1)
+        }
+        if (flags.indexOf('i') != -1) {
             options |= Regexp.MATCH_CASE_INSENSITIVE;
-        if (flags.indexOf('m') != -1)
+        }
+        if (flags.indexOf('m') != -1) {
             options |= Regexp.MATCH_MULTILINE;
-        if (flags.indexOf('s') != -1)
+        }
+        if (flags.indexOf('s') != -1) {
             options |= Regexp.MATCH_SINGLELINE;
+        }
         return options;
     }
 }
