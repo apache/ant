@@ -213,6 +213,8 @@ public class Available extends Task implements Condition {
                         + "  Build file should not reuse the same property"
                         + " name for different values.");
                 }
+                // NB: this makes use of Project#setProperty rather than Project#setNewProperty
+                //     due to backwards compatiblity reasons
                 getProject().setProperty(property, value);
             }
         } finally {
