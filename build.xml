@@ -289,6 +289,9 @@
   <target name="clean">
     <delete dir="${build.dir}"/>
     <delete dir="${ant.dist.dir}"/>
+    <delete>
+      <fileset dir="." includes="**/*~" defaultexcludes="no"/>
+    </delete>
   </target>
 
   <!-- =================================================================== -->
