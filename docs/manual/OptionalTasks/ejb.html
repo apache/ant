@@ -657,7 +657,7 @@ classes and super interfaces of the bean classes. For this technique to work the
 classes had to be loaded into Ant's JVM. This was not always possible due to class dependencies.
 </p>
 
-<p>The ejbjar task in Ant 1.5 uses the
+<p>The ejbjar task in Ant releases 1.5 and later uses the
 <a href="http://jakarta.apache.org/bcel"> jakarta-BCEL </a> library
 to analyze the bean's class
 files directly, rather than loading them into the JVM. This also allows ejbjar to add all
@@ -1640,7 +1640,6 @@ documentation for more details.</p>
     <tr>
       <td valign="Top">verbose</td>
       <td valign="Top">Indicates whether or not to use -verbose switch. If
-
       omitted, it defaults to <code>false</code>.</td>
       <td align="Center" valign="Top">No</td>
     </tr>
