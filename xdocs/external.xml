@@ -1357,6 +1357,30 @@
         </table>
       </subsection>
 
+      <subsection name="PRes">
+        <p>PRes is short for Property Resources and will generate a Java source
+           file from name=value pair .property files which can be compiled like any
+           other class.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later (may work with earlier)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://mseries.sourceforge.net">http://mseries.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://web.ukonline.co.uk/mseries/contact.html">MSeries</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="ProGuard">
         <p><a href="http://proguard.sourceforge.net/">ProGuard</a> is
         a free Java class file shrinker and obfuscator.  It can detect
