@@ -52,7 +52,7 @@ echo.
 echo ... Building Ant Distribution
 
 SET CLASSPATH=%LOCALCLASSPATH%;build\classes
-call build.bat
+call build.bat %1 %2 %3 %4 %5 %6 %7 %8
 
 echo.
 echo ... Done Bootstrapping Ant Distribution

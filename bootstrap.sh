@@ -86,6 +86,6 @@ if $cygwin; then
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
-${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main
+${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main $*
 
 echo ... Done Bootstrapping Ant Distribution

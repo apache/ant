@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if test ! -f build\classes\org\apache\tools\ant\Main.class ; then
-  ./bootstrap.sh
+  ./bootstrap.sh $*
 fi    
 
 

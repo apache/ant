@@ -21,10 +21,10 @@
        Set the properties for source directories
        =================================================================== 
   -->
-  <property name="src.base" value="src"/>
-  <property name="manifest.dir" value="${src.base}/manifest"/>
-  <property name="java.dir" value="${src.base}/main"/>
-  <property name="script.dir" value="${src.base}/script"/>
+  <property name="src.dir" value="src"/>
+  <property name="manifest.dir" value="${src.dir}/manifest"/>
+  <property name="java.dir" value="${src.dir}/main"/>
+  <property name="script.dir" value="${src.dir}/script"/>
   <property name="lib.dir" value="lib"/>
 
   <!-- 
@@ -45,13 +45,7 @@
        Set the properties related dist target
        =================================================================== 
   -->
-  <property name="dist.name" value="${Name}-${version}"/>
-<!--   <property name="dist.dir" value="${dist.name}"/> -->
-  <property name="dist.dir" value="dist"/>
-  <property name="dist.bin" value="${dist.dir}/bin"/>
-  <property name="dist.lib" value="${dist.dir}/lib"/>
-  <property name="dist.docs" value="${dist.dir}/docs"/>
-  <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
+  <property name="dist.name" value="jakarta-${name}-${version}"/>
 
   <property name="java.dir" value="src/main"/>
   <property name="docs.dir" value="docs"/>
@@ -76,9 +70,11 @@
   <property name="packages" value="org.apache.tools.*"/>
   <property name="manifest" value="src/etc/manifest"/>
 
-  <!-- =================================================================== -->
-  <!-- Set some the defaults the user can override in .ant.properties      -->
-  <!-- =================================================================== -->
+  <!-- 
+       ===================================================================
+       Set some the defaults the user can override in .ant.properties     
+       =================================================================== 
+  -->
   <property name="build.compiler.emacs" value="on"/>
   <property name="build.compiler.warnings" value="true"/>
   <property name="build.compiler.depend" value="true"/>
@@ -89,17 +85,38 @@
   <property name="optimize" value="true" />
   <property name="junit.fork" value="false" />
 
- <!--
+  <!--
        ===================================================================
                                   Main target
        ===================================================================
   -->
   <target name="main" depends="dist-lite" />
 
-  <!-- =================================================================== -->
-  <!-- Check to see what optional dependencies are available               -->
-  <!-- =================================================================== -->
-  <target name="check_for_optional_packages">
+ <!-- 
+       ===================================================================
+       Set up dist properties
+       =================================================================== 
+  -->
+  <target name="setup-properties">
+
+    <property name="dist.dir" value="dist"/>
+    <property name="dist.bin" value="${dist.dir}/bin"/>
+    <property name="dist.lib" value="${dist.dir}/lib"/>
+    <property name="dist.docs" value="${dist.dir}/docs"/>
+    <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
+
+    <property name="src.dist.dir" value="dist-src"/>
+    <property name="src.dist.src" value="${src.dist.dir}/src"/>
+    <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
+    <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
+  </target>
+
+  <!-- 
+       ===================================================================
+       Check to see what optional dependencies are available              
+       =================================================================== 
+  -->
+  <target name="check_for_optional_packages" depends="setup-properties">
     <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
     <available property="bsf.present" 
@@ -274,9 +291,9 @@
        </fileset>
      </chmod>
 
-    <fixcrlf srcdir="${dist.dir}" cr="add" includes="**/*.bat" />
-    <fixcrlf srcdir="${dist.dir}" cr="remove" includes="**/*.sh" />
-    <fixcrlf srcdir="${dist.dir}" cr="remove" includes="ant" />
+    <fixcrlf srcdir="${dist.bin}" cr="add" includes="*.bat" />
+    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="*.sh" />
+    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="ant" />
 
   </target>
 
@@ -310,7 +327,8 @@
 
     <copy todir="${dist.lib}">
       <fileset dir="${lib.dir}">
-        <include name="*" />
+        <include name="*.jar" />
+        <include name="*.zip" />
       </fileset>
     </copy>
 
@@ -335,11 +353,91 @@
 
     <chmod dir="${dist.dir}" perm="go-rwx" />
 
-    <zip zipfile="${dist.name}.zip" basedir="${dist.dir}/.." includes="${dist.dir}/**"/>
-    <tar tarfile="${dist.name}.tar" basedir="${dist.dir}/.." includes="${dist.dir}/**"/>
-    <gzip zipfile="${dist.name}.tar.gz" src="${dist.name}.tar"/>
-    <delete file="${dist.name}.tar"/>
+    <zip zipfile="${dist.name}-bin.zip" basedir="${dist.dir}/.." includes="${dist.dir}/**"/>
+    <tar tarfile="${dist.name}-bin.tar" basedir="${dist.dir}/.." includes="${dist.dir}/**"/>
+    <gzip zipfile="${dist.name}-bin.tar.gz" src="${dist.name}-bin.tar"/>
+    <delete file="${dist.name}-bin.tar"/>
   </target>
+
+ <!--
+       ===================================================================
+                            Create the source distribution
+       ===================================================================
+  -->
+  <target name="src-dist" depends="setup-properties">
+
+    <mkdir dir="${src.dist.dir}" />
+<!--
+    <mkdir dir="${src.dist.lib}" />
+    <mkdir dir="${src.dist.src}" />
+    <mkdir dir="${src.dist.docs}" />
+-->
+    <copy todir="${src.dist.lib}">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar" />
+        <include name="*.zip" />
+      </fileset>
+    </copy>
+
+    <copy todir="${src.dist.src}">
+      <fileset dir="${src.dir}"/>
+    </copy>
+
+    <copy todir="${src.dist.docs}">
+      <fileset dir="${docs.dir}"/>
+    </copy>
+
+    <copy todir="${src.dist.dir}">
+      <fileset dir=".">
+        <include name="README"/>
+        <include name="LICENSE"/>
+        <include name="TODO"/>
+        <include name="WHATSNEW"/>
+        <include name="build.bat"/>
+        <include name="build.sh"/>
+        <include name="bootstrap.bat"/>
+        <include name="bootstrap.sh"/>
+      </fileset>
+    </copy>
+
+    <fixcrlf srcdir="${src.dist.dir}" includes="*.sh" cr="remove"/>
+    <fixcrlf srcdir="${src.dist.dir}" includes="*.bat" cr="add"/>
+    <chmod perm="+x">
+      <fileset dir="${src.dist.dir}">
+        <include name="*.sh" />
+      </fileset>
+    </chmod>
+
+    <fixcrlf srcdir="${src.dist.src}" includes="**/*.java" cr="remove"/>
+    
+    <zip zipfile="${dist.name}-src.zip" 
+         basedir="${src.dist.dir}/.." 
+         includes="${src.dist.dir}/**"/>
+    <!--
+    <tar tarfile="${dist.name}-src.tar" 
+         basedir="${src.dist.dir}/.." 
+         includes="${src.dist.dir}/**"/>
+    <gzip zipfile="${dist.name}-src.tar.gz" src="${dist.name}-src.tar"/>
+    <delete file="${dist.name}-src.tar"/>
+    -->
+    <delete dir="${src.dist.dir}" />    
+  </target>
+
+  <!--
+       ===================================================================
+                 Completely build all dists
+       ===================================================================
+  -->
+  <target name="full-dist">
+    <antcall target="src-dist">
+      <param name="src.dist.dir" value="${dist.name}" />
+    </antcall>
+
+    <antcall target="dist">
+      <param name="dist.dir" value="${dist.name}" />
+    </antcall>
+    <delete dir="${dist.name}" />
+  </target> 
 
   <!--
        ===================================================================
@@ -360,7 +458,6 @@
        ===================================================================
   -->
   <target name="real-clean" depends="clean">
-    <delete dir="${docs.dir}" />
     <delete file="${dist.name}.tar.gz" />
     <delete file="${dist.name}.zip" />
   </target>

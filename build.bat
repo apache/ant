@@ -2,7 +2,7 @@
 
 if exist build\classes\org\apache\tools\ant\Main.class goto doBuild
 
-bootstrap.bat
+bootstrap.bat %1 %2 %3 %4 %5 %6 %7 %8
 
 :doBuild
 
