@@ -9,7 +9,7 @@ package org.apache.myrmidon.components.property.test;
 
 import java.io.File;
 import java.util.Date;
-import org.apache.antlib.core.ObjectToStringConverter;
+import org.apache.aut.converter.lib.ObjectToStringConverter;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;

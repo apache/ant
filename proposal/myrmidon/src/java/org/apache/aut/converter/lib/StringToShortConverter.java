@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.core;
+package org.apache.aut.converter.lib;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
@@ -13,20 +13,20 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
- * String to long converter
+ * String to short converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant.converter source="java.lang.String" destination="java.lang.Long"
+ * @ant.converter source="java.lang.String" destination="java.lang.Short"
  */
-public class StringToLongConverter
+public class StringToShortConverter
     extends AbstractConverter
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( StringToLongConverter.class );
+        ResourceManager.getPackageResources( StringToShortConverter.class );
 
-    public StringToLongConverter()
+    public StringToShortConverter()
     {
-        super( String.class, Long.class );
+        super( String.class, Short.class );
     }
 
     public Object convert( final Object object, final Object context )
@@ -34,11 +34,11 @@ public class StringToLongConverter
     {
         try
         {
-            return new Long( (String)object );
+            return new Short( (String)object );
         }
         catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-long.error", object );
+            final String message = REZ.getString( "convert.bad-short.error", object );
             throw new ConverterException( message, nfe );
         }
     }

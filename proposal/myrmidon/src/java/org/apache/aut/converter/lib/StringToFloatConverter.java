@@ -5,31 +5,28 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.core;
+package org.apache.aut.converter.lib;
 
-import java.io.File;
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
 
 /**
- * String to file converter
+ * String to float converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant.converter source="java.lang.String" destination="java.io.File"
+ * @ant.converter source="java.lang.String" destination="java.lang.Float"
  */
-public class StringToFileConverter
+public class StringToFloatConverter
     extends AbstractConverter
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( StringToFileConverter.class );
+        ResourceManager.getPackageResources( StringToFloatConverter.class );
 
-    public StringToFileConverter()
+    public StringToFloatConverter()
     {
-        super( String.class, File.class );
+        super( String.class, Float.class );
     }
 
     public Object convert( final Object object, final Object context )
@@ -37,13 +34,12 @@ public class StringToFileConverter
     {
         try
         {
-            final TaskContext taskContext = (TaskContext)context;
-            return taskContext.resolveFile( (String)object );
+            return new Float( (String)object );
         }
-        catch( final TaskException te )
+        catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-file.error", object );
-            throw new ConverterException( message, te );
+            final String message = REZ.getString( "convert.bad-float.error", object );
+            throw new ConverterException( message, nfe );
         }
     }
 }

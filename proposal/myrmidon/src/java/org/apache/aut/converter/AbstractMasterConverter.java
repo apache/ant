@@ -35,7 +35,7 @@ import org.apache.myrmidon.components.converter.DefaultMasterConverter;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class AbstractMasterConverter
+public abstract class AbstractMasterConverter
     implements Converter
 {
     private final static Resources REZ =

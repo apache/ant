@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.core;
+package org.apache.aut.converter.lib;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;

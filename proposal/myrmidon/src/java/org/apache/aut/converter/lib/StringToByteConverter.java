@@ -5,30 +5,28 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.core;
+package org.apache.aut.converter.lib;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
- * String to url converter
+ * String to byte converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant.converter source="java.lang.String" destination="java.net.URL"
+ * @ant.converter source="java.lang.String" destination="java.lang.Byte"
  */
-public class StringToURLConverter
+public class StringToByteConverter
     extends AbstractConverter
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( StringToURLConverter.class );
+        ResourceManager.getPackageResources( StringToByteConverter.class );
 
-    public StringToURLConverter()
+    public StringToByteConverter()
     {
-        super( String.class, URL.class );
+        super( String.class, Byte.class );
     }
 
     public Object convert( final Object object, final Object context )
@@ -36,14 +34,13 @@ public class StringToURLConverter
     {
         try
         {
-            return new URL( (String)object );
+            return new Byte( (String)object );
         }
-        catch( final MalformedURLException mue )
+        catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-url.error", object );
-            throw new ConverterException( message, mue );
+            final String message = REZ.getString( "convert.bad-byte.error", object );
+            throw new ConverterException( message, nfe );
         }
-
     }
 }
 

@@ -5,28 +5,30 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.core;
+package org.apache.aut.converter.lib;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
- * String to integer converter.
+ * String to url converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant.converter source="java.lang.String" destination="java.lang.Integer"
+ * @ant.converter source="java.lang.String" destination="java.net.URL"
  */
-public class StringToIntegerConverter
+public class StringToURLConverter
     extends AbstractConverter
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( StringToFloatConverter.class );
+        ResourceManager.getPackageResources( StringToURLConverter.class );
 
-    public StringToIntegerConverter()
+    public StringToURLConverter()
     {
-        super( String.class, Integer.class );
+        super( String.class, URL.class );
     }
 
     public Object convert( final Object object, final Object context )
@@ -34,13 +36,14 @@ public class StringToIntegerConverter
     {
         try
         {
-            return new Integer( (String)object );
+            return new URL( (String)object );
         }
-        catch( final NumberFormatException nfe )
+        catch( final MalformedURLException mue )
         {
-            final String message = REZ.getString( "convert.bad-integer.error", object );
-            throw new ConverterException( message, nfe );
+            final String message = REZ.getString( "convert.bad-url.error", object );
+            throw new ConverterException( message, mue );
         }
+
     }
 }
 

@@ -8,7 +8,7 @@
 package org.apache.myrmidon.components.configurer.test;
 
 import java.io.File;
-import org.apache.antlib.core.StringToIntegerConverter;
+import org.apache.aut.converter.lib.StringToIntegerConverter;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.ConfigurationException;

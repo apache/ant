@@ -5,28 +5,29 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.core;
+package org.apache.aut.converter.lib;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
+import org.apache.aut.converter.lib.StringToFloatConverter;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
- * String to double converter
+ * String to integer converter.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant.converter source="java.lang.String" destination="java.lang.Double"
+ * @ant.converter source="java.lang.String" destination="java.lang.Integer"
  */
-public class StringToDoubleConverter
+public class StringToIntegerConverter
     extends AbstractConverter
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( StringToDoubleConverter.class );
+        ResourceManager.getPackageResources( StringToFloatConverter.class );
 
-    public StringToDoubleConverter()
+    public StringToIntegerConverter()
     {
-        super( String.class, Double.class );
+        super( String.class, Integer.class );
     }
 
     public Object convert( final Object object, final Object context )
@@ -34,11 +35,11 @@ public class StringToDoubleConverter
     {
         try
         {
-            return new Double( (String)object );
+            return new Integer( (String)object );
         }
         catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-double.error", object );
+            final String message = REZ.getString( "convert.bad-integer.error", object );
             throw new ConverterException( message, nfe );
         }
     }
