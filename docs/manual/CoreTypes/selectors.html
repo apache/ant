@@ -133,8 +133,10 @@
       </tr>
       <tr>
         <td valign="top">datetime</td>
-        <td valign="top">Specifies the date and time to test for using
-          a string of the format MM/DD/YYYY HH:MM AM_or_PM.
+        <td valign="top">Specifies the date and time to test for.
+          Should be in the format MM/DD/YYYY HH:MM AM_or_PM, or
+          an alternative pattern specified via the <i>pattern</i>
+          attribute.
         </td>
         <td valign="top" align="center" rowspan="2">At least one of the two.</td>
       </tr>
@@ -157,6 +159,23 @@
             <li>equal - select files  whose last modified date is this exact date
           </ul>
           The default is equal.
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">granularity</td>
+        <td valign="top">The number of milliseconds leeway to use when
+          comparing file modification times. This is needed because not every
+          file system supports tracking the last modified time to the
+          millisecond level. Default is 0 milliseconds, or 2 seconds on DOS systems.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">pattern</td>
+        <td valign="top">The <CODE>SimpleDateFormat</CODE>-compatible pattern
+          to use when interpreting the <i>datetime</i> attribute.
+          <i>Since Ant 1.6.2</i>
+        </td>
         <td valign="top" align="center">No</td>
       </tr>
     </table>
@@ -686,7 +705,7 @@
     </ul></p>
 
     <table border="1" cellpadding="2" cellspacing="0">
-      <tr><td colspan="2"><font size="+1"><b> Algorithm´s </b></font></td></tr>
+      <tr><td colspan="2"><font size="+1"><b> Algorithm?s </b></font></td></tr>
       <tr>
         <td valign="top"><b>Name</b></td>
         <td valign="top"><b>Description</b></td>
@@ -709,7 +728,7 @@
           </ul>
         </td>
       </tr>
-      <tr><td colspan="2"><font size="+1"><b> Cache´s </b></font></td></tr>
+      <tr><td colspan="2"><font size="+1"><b> Cache?s </b></font></td></tr>
       <tr>
         <td valign="top"> propertyfile </td>
         <td valign="top"> Use the java.util.Properties class and its possibility
@@ -721,7 +740,7 @@
           </ul>
         </td>
       </tr>
-      <tr><td colspan="2"><font size="+1"><b> Comparator´s </b></font></td></tr>
+      <tr><td colspan="2"><font size="+1"><b> Comparator?s </b></font></td></tr>
       <tr>
         <td valign="top"> equal </td>
         <td valign="top"> Very simple object comparison. </td>
