@@ -325,7 +325,37 @@ that is "true","yes", or "on"</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
-
+  <h4>issigned</h4>
+  <p>
+    Test whether a jarfile is signed.
+    If the name of the
+    signature is passed, the file is checked for presence of that
+    particular signature; otherwise the file is checked for the
+    existence of any signature
+  </p>
+  <p>
+    This condition has been added in Apache Ant 1.7.
+  </p>
+  <table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">
+      The jarfile that is to be tested for the presence
+      of a signature.
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top"> The signature name to check for.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  </table>
 <h4>typefound</h4>
 
 <p>Test whether a given type is defined, and that
