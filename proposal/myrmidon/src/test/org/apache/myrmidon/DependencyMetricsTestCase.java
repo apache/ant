@@ -22,12 +22,12 @@ import junit.framework.TestCase;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class DependencyMetricsTest
+public class DependencyMetricsTestCase
     extends TestCase
 {
     private JDepend m_jDepend;
 
-    public DependencyMetricsTest( final String name )
+    public DependencyMetricsTestCase( final String name )
     {
         super( name );
     }

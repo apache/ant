@@ -680,6 +680,7 @@ Legal:
                 <fileset dir="${test.working.dir}/dist/bin/lib" includes="**/*.jar"/>
                 <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl"/>
             </classpath>
+            <classpath refid="tools.class.path"/>
             <classpath location="${test.classes}"/>
 
             <!-- Pass config to the tests -->
