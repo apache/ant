@@ -27,6 +27,7 @@ import org.apache.tools.ant.taskdefs.DefBase;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -93,7 +94,7 @@ public class ScriptDef extends DefBase {
          * @param name the attribute name
          */
         public void setName(String name) {
-            this.name = name;
+            this.name = name.toLowerCase(Locale.US);
         }
     }
 
@@ -125,7 +126,7 @@ public class ScriptDef extends DefBase {
          * @param name the name of this nested element
          */
         public void setName(String name) {
-            this.name = name;
+            this.name = name.toLowerCase(Locale.US);
         }
 
         /**

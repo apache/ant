@@ -149,6 +149,8 @@ Fixed bugs:
 
 * failOnAny attribute for <parallel> was broken. Bugzilla Report 28122.
 
+* fixed case handling of scriptdef attributes and elements.
+
 Other changes:
 --------------
 
