@@ -160,7 +160,9 @@ public class Javadoc extends Task {
     }
 
     private Commandline cmd = new Commandline();
-    private boolean javadoc1 = true;
+    private static boolean javadoc1 = 
+        (Project.getJavaVersion() == Project.JAVA_1_1);
+
 
     private void addArgIf(boolean b, String arg) {
         if (b) {
@@ -493,11 +495,6 @@ public class Javadoc extends Task {
         }
     }
 
-    public void init() {
-        cmd.setExecutable("javadoc");
-        javadoc1 = (Project.getJavaVersion() == Project.JAVA_1_1);
-    }
-
     public void execute() throws BuildException {
         if ("javadoc2".equals(taskType)) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
@@ -509,6 +506,8 @@ public class Javadoc extends Task {
         }
 
         log("Generating Javadoc", Project.MSG_INFO);
+
+        cmd.setExecutable("javadoc");
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
