@@ -405,9 +405,8 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String message = REZ.getString( "bad-set-attribute.error",
-                                                  "test",
-                                                  "some-prop-ref" );
+            final String message = REZ.getString( "get-ref.error",
+                                                  "unknown-prop" );
             assertSameMessage( message, e );
         }
     }
@@ -434,9 +433,10 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String message = REZ.getString( "bad-set-attribute.error",
-                                                  "test",
-                                                  "some-prop-ref" );
+            final String message = REZ.getString( "mismatch-ref-types.error",
+                                                  "prop-a",
+                                                  String.class.getName(),
+                                                  ConfigTest2.class.getName() );
             assertSameMessage( message, e );
         }
     }
