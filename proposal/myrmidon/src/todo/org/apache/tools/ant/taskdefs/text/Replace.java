@@ -23,6 +23,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Properties;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -389,26 +390,8 @@ public class Replace
         }
         finally
         {
-            if( reader != null )
-            {
-                try
-                {
-                    reader.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-            if( writer != null )
-            {
-                try
-                {
-                    writer.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
+            IOUtil.shutdownReader(reader);
+            IOUtil.shutdownWriter(writer);
             if( temp != null )
             {
                 temp.delete();
@@ -435,11 +418,6 @@ public class Replace
 
     /**
      * Replace occurrences of str1 in string str with str2
-     *
-     * @param str Description of Parameter
-     * @param str1 Description of Parameter
-     * @param str2 Description of Parameter
-     * @return Description of the Returned Value
      */
     private String stringReplace( String str, String str1, String str2 )
     {
