@@ -444,31 +444,31 @@ public final class Extension {
         }
 
         // Available specification version must be >= required
-        final DeweyDecimal specificationVersion
+        final DeweyDecimal requiredSpecificationVersion
             = required.getSpecificationVersion();
-        if (null != specificationVersion) {
+        if (null != requiredSpecificationVersion) {
             if (null == specificationVersion
-                || !isCompatible(specificationVersion, specificationVersion)) {
+                || !isCompatible(specificationVersion, requiredSpecificationVersion)) {
                 return REQUIRE_SPECIFICATION_UPGRADE;
             }
         }
 
         // Implementation Vendor ID must match
-        final String implementationVendorId
+        final String requiredImplementationVendorID
             = required.getImplementationVendorID();
-        if (null != implementationVendorId) {
+        if (null != requiredImplementationVendorID) {
             if (null == implementationVendorID
-                || !implementationVendorID.equals(implementationVendorId)) {
+                || !implementationVendorID.equals(requiredImplementationVendorID)) {
                 return REQUIRE_VENDOR_SWITCH;
             }
         }
 
         // Implementation version must be >= required
-        final DeweyDecimal implementationVersion
+        final DeweyDecimal requiredImplementationVersion
             = required.getImplementationVersion();
-        if (null != implementationVersion) {
+        if (null != requiredImplementationVersion) {
             if (null == implementationVersion
-                || !isCompatible(implementationVersion, implementationVersion)) {
+                || !isCompatible(implementationVersion, requiredImplementationVersion)) {
                 return REQUIRE_IMPLEMENTATION_UPGRADE;
             }
         }
