@@ -65,15 +65,15 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 
 /**
- * An analyzer which uses the depend task's bytecode classes to analyze 
- * dependencies 
+ * An analyzer which uses the depend task's bytecode classes to analyze
+ * dependencies
  *
  * @author Conor MacNeill
  */
 public class AntAnalyzer extends AbstractAnalyzer {
     public AntAnalyzer() {
     }
-    
+
     /**
      * Determine the dependencies of the configured root classes.
      *
@@ -93,7 +93,6 @@ public class AntAnalyzer extends AbstractAnalyzer {
             toAnalyze.put(classname, classname);
         }
 
-        System.out.println("Analyze size = " + toAnalyze.size());
         int count = 0;
         int maxCount = isClosureRequired() ? MAX_LOOPS : 1;
         Hashtable analyzedDeps = null;
@@ -116,11 +115,11 @@ public class AntAnalyzer extends AbstractAnalyzer {
                             inStream = new FileInputStream(container.getPath());
                         } else {
                             zipFile = new ZipFile(container.getPath());
-                            String entryName 
+                            String entryName
                                 = classname.replace('.', '/') + ".class";
-                            ZipEntry entry = new ZipEntry(entryName);                                
-                            inStream 
-                                = zipFile.getInputStream(entry);                                 
+                            ZipEntry entry = new ZipEntry(entryName);
+                            inStream
+                                = zipFile.getInputStream(entry);
                         }
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
@@ -161,7 +160,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
             String className = (String) depsEnum.nextElement();
             dependencies.put(className, className);
         }
-        
+
         files.removeAllElements();
         for (Enumeration e = containers.keys(); e.hasMoreElements();) {
             files.addElement((File) e.nextElement());
