@@ -123,7 +123,7 @@ public class Zip extends MatchingTask {
     /**
      * This is the name/location of where to
      * create the .zip file.
-     *
+     * @param zipFile the path of the zipFile
      * @deprecated Use setDestFile(File) instead.
      * @ant.attribute ignore="true"
      */
@@ -134,6 +134,7 @@ public class Zip extends MatchingTask {
     /**
      * This is the name/location of where to
      * create the file.
+     * @param file the path of the zipFile
      * @since Ant 1.5
      * @deprecated Use setDestFile(File) instead
      * @ant.attribute ignore="true"
@@ -154,6 +155,7 @@ public class Zip extends MatchingTask {
 
     /**
      * The file to create.
+     * @return the destination file
      * @since Ant 1.5.2
      */
     public File getDestFile() {
@@ -163,6 +165,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Directory from which to archive files; optional.
+     * @param baseDir the base directory
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
@@ -171,6 +174,7 @@ public class Zip extends MatchingTask {
     /**
      * Whether we want to compress the files or only store them;
      * optional, default=true;
+     * @param c if true, compress the files
      */
     public void setCompress(boolean c) {
         doCompress = c;
@@ -178,7 +182,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether we want to compress the files or only store them;
-     *
+     * @return true if the files are to be compressed
      * @since Ant 1.5.2
      */
     public boolean isCompress() {
@@ -188,6 +192,7 @@ public class Zip extends MatchingTask {
     /**
      * If true, emulate Sun's jar utility by not adding parent directories;
      * optional, defaults to false.
+     * @param f if true, emulate sun's jar by not adding parent directories
      */
     public void setFilesonly(boolean f) {
         doFilesonly = f;
@@ -196,6 +201,7 @@ public class Zip extends MatchingTask {
     /**
      * If true, updates an existing file, otherwise overwrite
      * any existing one; optional defaults to false.
+     * @param c if true, updates an existing zip file
      */
     public void setUpdate(boolean c) {
         doUpdate = c;
@@ -204,6 +210,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Are we updating an existing archive?
+     * @return true if updating an existing archive
      */
     public boolean isInUpdateMode() {
         return doUpdate;
@@ -211,6 +218,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Adds a set of files.
+     * @param set the fileset to add
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -219,6 +227,7 @@ public class Zip extends MatchingTask {
     /**
      * Adds a set of files that can be
      * read from an archive and be given a prefix/fullpath.
+     * @param set the zipfileset to add
      */
     public void addZipfileset(ZipFileSet set) {
         filesets.addElement(set);
@@ -226,6 +235,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Adds a group of zip files.
+     * @param set the group (a fileset) to add
      */
     public void addZipGroupFileset(FileSet set) {
         groupfilesets.addElement(set);
@@ -239,6 +249,7 @@ public class Zip extends MatchingTask {
      * of the file found); <code>overwrite</code> overwrite the file
      * with the new file
      * Default for zip tasks is <code>keep</code>
+     * @param df a <code>Duplicate</code> enumerated value
      */
     public void setDuplicate(Duplicate df) {
         duplicate = df.getValue();
@@ -249,6 +260,10 @@ public class Zip extends MatchingTask {
      * "fail", "skip", or "create".
      */
     public static class WhenEmpty extends EnumeratedAttribute {
+        /**
+         * The string values for the enumerated value
+         * @return the values
+         */
         public String[] getValues() {
             return new String[] {"fail", "skip", "create"};
         }
@@ -262,6 +277,7 @@ public class Zip extends MatchingTask {
      * (make an archive with no entries).
      * Default for zip tasks is <code>skip</code>;
      * for jar tasks, <code>create</code>.
+     * @param we a <code>WhenEmpty</code> enumerated value
      */
     public void setWhenempty(WhenEmpty we) {
         emptyBehavior = we.getValue();
@@ -273,6 +289,7 @@ public class Zip extends MatchingTask {
      *
      * <p>For a list of possible values see <a
      * href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.</p>
+     * @param encoding the encoding name
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -280,7 +297,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Encoding to use for filenames.
-     *
+     * @return the name of the encoding to use
      * @since Ant 1.5.2
      */
     public String getEncoding() {
@@ -290,13 +307,14 @@ public class Zip extends MatchingTask {
     /**
      * Whether the original compression of entries coming from a ZIP
      * archive should be kept (for example when updating an archive).
-     *
+     * Default is false.
+     * @param keep if true, keep the original compression
      * @since Ant 1.6
      */
     public void setKeepCompression(boolean keep) {
         keepCompression = keep;
     }
-    
+
     /**
      * Comment to use for archive.
      *
@@ -328,7 +346,7 @@ public class Zip extends MatchingTask {
      * up.  Rounding up may lead to a different type of problems like
      * JSPs inside a web archive that seem to be slightly more recent
      * than precompiled pages, rendering precompilation useless.</p>
-     *
+     * @param r a <code>boolean</code> value
      * @since Ant 1.6.2
      */
     public void setRoundUp(boolean r) {
@@ -337,6 +355,7 @@ public class Zip extends MatchingTask {
 
     /**
      * validate and build
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
 
@@ -350,6 +369,11 @@ public class Zip extends MatchingTask {
         }
     }
 
+    /**
+     * Build the zip file.
+     * This is called twice if doubleFilePass is true.
+     * @throws BuildException on error
+     */
     public void executeMain() throws BuildException {
 
         if (baseDir == null && filesets.size() == 0
@@ -571,6 +595,7 @@ public class Zip extends MatchingTask {
     /**
      * Indicates if the task is adding new files into the archive as opposed to
      * copying back unchanged files from the backup copy
+     * @return true if adding new files
      */
     protected final boolean isAddingNewFiles() {
         return addingNewFiles;
@@ -583,6 +608,7 @@ public class Zip extends MatchingTask {
      * permissions.
      * @param resources the resources to add
      * @param zOut the stream to write to
+     * @throws IOException on error
      *
      * @since Ant 1.5.2
      */
@@ -699,6 +725,9 @@ public class Zip extends MatchingTask {
 
     /**
      * method for subclasses to override
+     * @param zOut the zip output stream
+     * @throws IOException on output error
+     * @throws BuildException on other errors
      */
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
@@ -706,6 +735,9 @@ public class Zip extends MatchingTask {
 
     /**
      * method for subclasses to override
+     * @param zOut the zip output stream
+     * @throws IOException on output error
+     * @throws BuildException on other errors
      */
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
@@ -713,8 +745,9 @@ public class Zip extends MatchingTask {
 
     /**
      * Create an empty zip file
-     *
+     * @param zipFile the zip file
      * @return true for historic reasons
+     * @throws BuildException on error
      */
     protected boolean createEmptyZip(File zipFile) throws BuildException {
         // In this case using java.util.zip will not work
@@ -926,7 +959,8 @@ public class Zip extends MatchingTask {
      * Fetch all included and not excluded resources from the sets.
      *
      * <p>Included directories will precede included files.</p>
-     *
+     * @param filesets an array of filesets
+     * @return the resources included
      * @since Ant 1.5.2
      */
     protected Resource[][] grabResources(FileSet[] filesets) {
@@ -964,6 +998,12 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Add a directory to the zip stream.
+     * @param dir  the directort to add to the archive
+     * @param zOut the stream to write to
+     * @param vPath the name this entry shall have in the archive
+     * @param mode the Unix permissions to set.
+     * @throws IOException on error
      * @since Ant 1.5.2
      */
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
@@ -1009,6 +1049,7 @@ public class Zip extends MatchingTask {
      * @param mode the Unix permissions to set.
      *
      * @since Ant 1.5.2
+     * @throws IOException on error
      */
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)
@@ -1101,6 +1142,7 @@ public class Zip extends MatchingTask {
      * @param zOut the stream to write to
      * @param vPath the name this entry shall have in the archive
      * @param mode the Unix permissions to set.
+     * @throws IOException on error
      *
      * @since Ant 1.5.2
      */
@@ -1125,7 +1167,12 @@ public class Zip extends MatchingTask {
 
     /**
      * Ensure all parent dirs of a given entry have been added.
-     *
+     * @param baseDir the base directory to use (may be null)
+     * @param entry   the entry name to create directories from
+     * @param zOut    the stream to write to
+     * @param prefix  a prefix to place on the created entries
+     * @param dirMode the directory mode
+     * @throws IOException on error
      * @since Ant 1.5.2
      */
     protected final void addParentDirs(File baseDir, String entry,
@@ -1208,6 +1255,8 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Check is the resource arrays are empty.
+     * @param r the arrays to check
      * @return true if all individual arrays are empty
      *
      * @since Ant 1.5.2
@@ -1223,7 +1272,8 @@ public class Zip extends MatchingTask {
 
     /**
      * Drops all non-file resources from the given array.
-     *
+     * @param orig the resources to filter
+     * @return the filters resources
      * @since Ant 1.6
      */
     protected Resource[] selectFileResources(Resource[] orig) {
@@ -1254,6 +1304,9 @@ public class Zip extends MatchingTask {
      * "add", "preserve" or "fail"
      */
     public static class Duplicate extends EnumeratedAttribute {
+        /**
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};
         }
@@ -1274,10 +1327,18 @@ public class Zip extends MatchingTask {
             resourcesToAdd = r;
         }
 
+        /**
+         * Return the outofdate status.
+         * @return the outofdate status
+         */
         public boolean isOutOfDate() {
             return outOfDate;
         }
 
+        /**
+         * Get the resources to add.
+         * @return the resources to add
+         */
         public Resource[][] getResourcesToAdd() {
             return resourcesToAdd;
         }
