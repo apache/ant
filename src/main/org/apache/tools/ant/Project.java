@@ -535,10 +535,10 @@ public class Project {
         }
         else {
             if (isError) {
-                task.handleOutput(line);
+                task.handleErrorOutput(line);
             }
             else {
-                task.handleErrorOutput(line);
+                task.handleOutput(line);
             }
         }
     }
