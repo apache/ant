@@ -542,7 +542,9 @@ public class XMLCatalog extends DataType
                         log("Warning: catalogpath listing external catalogs"+
                                 " will be ignored",
                             Project.MSG_WARN);
-                }
+                        log("Failed to load Apache resolver: " 
+                            + ex, Project.MSG_DEBUG);
+                    }
             }
         }
         return catalogResolver;
