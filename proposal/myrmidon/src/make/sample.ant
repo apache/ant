@@ -16,196 +16,218 @@ Legal:
 
 <project version="2.0.0">
 
-  <projectref name="prim" location="primitive-tests.ant" />
+    <projectref name="prim" location="primitive-tests.ant" />
 
-  <property name="year" value="2000"/>
+    <property name="year" value="2000"/>
 
-  <target name="main"
-          depends="typedef-test, converterdef-test,
-                   datatype-test, namespace-test,
-                   ant1-tasklib-test,
-                   prim->extensions-test" />
+    <target name="main"
+        depends="typedef-test, converterdef-test,
+                 datatype-test, namespace-test,
+                 ant1-tasklib-test,
+                 prim->extensions-test" />
 
-  <target name="xp-deployer-test" depends="typedef-test, prim->undefined-task" />
+    <target name="xp-deployer-test" depends="typedef-test, prim->undefined-task" />
 
-  <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test, ant1-tasklib-test, prim->main" />
+    <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test, ant1-tasklib-test, prim->main" />
 
-<!--
-    <register-tasklib lib="../../dist/lib/core.atl" />
--->
+    <!--
+        <register-tasklib lib="../../dist/lib/core.atl" />
+    -->
 
-  <target name="if-test">
-    <property name="blah" value="true" />
-    <if test="${blah}">
-      <log message="Sucessful if test!"/>
-    </if>
-  </target>
+    <target name="if-test">
+        <property name="blah" value="true" />
+        <if test="${blah}">
+            <log message="Sucessful if test!"/>
+        </if>
+    </target>
 
-  <target name="property-test">
-    <property name="blah" value="fred" />
-    <property name="${blah}" value="barney" />
+    <target name="property-test">
+        <property name="blah" value="fred" />
+        <property name="${blah}" value="barney" />
 
-    <log message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
-  </target>
+        <log message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
+    </target>
 
-  <target name="typedef-test">
-    <type-def name="log2"
-              role="task"
-              classname="org.apache.antlib.core.Log"
-              lib="../../dist/lib/core.atl" />
+    <target name="typedef-test">
+        <type-def name="log2"
+            role="task"
+            classname="org.apache.antlib.core.Log"
+            lib="../../dist/lib/core.atl" />
 
-    <log2 message="Luke to Echo base. Can you hear me?"/>
-  </target>
+        <log2 message="Luke to Echo base. Can you hear me?"/>
+    </target>
 
-  <target name="converterdef-test">
-    <converter-def classname="org.apache.myrmidon.libs.core.StringToClassConverter"
-                   source-type="java.lang.String"
-                   destination-type="java.lang.Class"
-                   lib="../../dist/lib/core.atl" />
-  </target>
+    <target name="converterdef-test">
+        <converter-def classname="org.apache.myrmidon.libs.core.StringToClassConverter"
+            source-type="java.lang.String"
+            destination-type="java.lang.Class"
+            lib="../../dist/lib/core.atl" />
+    </target>
 
-  <target name="ant-call-test">
-    <!-- test elided until we decide scope and necessity of ant-call -->
-    <log message="AntCall test elided until we decide scope and necessity of ant-call"/>
-<!--
-    <ant-call target="ant-call-test-target">
-      <param name="blah" value="blah-value" />
-    </ant-call>
--->
-  </target>
+    <target name="ant-call-test">
+        <!-- test elided until we decide scope and necessity of ant-call -->
+        <log message="AntCall test elided until we decide scope and necessity of ant-call"/>
+        <!--
+            <ant-call target="ant-call-test-target">
+              <param name="blah" value="blah-value" />
+            </ant-call>
+        -->
+    </target>
 
-  <target name="ant-call-test-target">
-    <log message="This should fail ...."/>
-    <log message="${blah}"/>
-    <log message="Whoa - it no fail. You used ant-call to call me and set param blah!"/>
-  </target>
+    <target name="ant-call-test-target">
+        <log message="This should fail ...."/>
+        <log message="${blah}"/>
+        <log message="Whoa - it no fail. You used ant-call to call me and set param blah!"/>
+    </target>
 
-  <target name="log-level-test">
-    <log message="Testing log level debug" level="debug"/>
-    <log message="Testing log level info" level="info"/>
-    <log message="Testing log level warn" level="warn"/>
-    <log message="Testing log level error" level="error"/>
+    <target name="log-level-test">
+        <log message="Testing log level debug" level="debug"/>
+        <log message="Testing log level info" level="info"/>
+        <log message="Testing log level warn" level="warn"/>
+        <log message="Testing log level error" level="error"/>
 
-    <log message="Testing log level fatal error" level="fatalError"/>
-    <log message="Testing log level error" level="this-no-work"/>
-  </target>
+        <log message="Testing log level fatal error" level="fatalError"/>
+        <log message="Testing log level error" level="this-no-work"/>
+    </target>
 
-  <target name="datatype-test">
-    <property name="foo">
-      <pattern name="*.java"/>
-    </property>
+    <target name="datatype-test">
+        <property name="foo">
+            <pattern name="*.java"/>
+        </property>
 
-    <pattern id="foo2" name="*.java" if="..." />
+        <pattern id="foo2" name="*.java" if="..." />
 
-    <log message="foo=${foo}" />
-    <log message="foo2=${foo2}" />
-  </target>
+        <log message="foo=${foo}" />
+        <log message="foo2=${foo2}" />
+    </target>
 
-  <target name="namespace-test">
+    <target name="namespace-test">
 
-    <!-- ant and doc are built in namespaces -->
-    <log ant:fail-on-error="true" message="Some random message">
-      <doc:description>
-        Test case for aspects
-      </doc:description>
-      <ant:some-element some-attribute="blah"/>
-    </log>
+        <!-- ant and doc are built in namespaces -->
+        <log ant:fail-on-error="true" message="Some random message">
+            <doc:description>
+              Test case for aspects
+            </doc:description>
+            <ant:some-element some-attribute="blah"/>
+        </log>
 
-    <!-- load facility for blee: namespace -->
-    <facility namespace="blee">
-      <noop/>
-    </facility>
+        <!-- load facility for blee: namespace -->
+        <facility namespace="blee">
+            <noop/>
+        </facility>
 
-    <log blee:some-param="blah" message="Blee namespace test successful!"/>
+        <log blee:some-param="blah" message="Blee namespace test successful!"/>
 
-  </target>
+    </target>
 
-  <target name="fail-test1">
-    <fail message="Build is failing"/>
-  </target>
+    <target name="fail-test1">
+        <fail message="Build is failing"/>
+    </target>
 
-  <target name="fail-test2">
-    <fail message="Build is failing if prop X is set" if="x"/>
-  </target>
+    <target name="fail-test2">
+        <fail message="Build is failing if prop X is set" if="x"/>
+    </target>
 
-  <target name="fail-test3">
-    <fail message="Build is failing unless prop X is set" unless="x"/>
-  </target>
+    <target name="fail-test3">
+        <fail message="Build is failing unless prop X is set" unless="x"/>
+    </target>
 
-  <target name="fail-test4">
-    <fail>Some multiline fail
-    message.</fail>
-  </target>
+    <target name="fail-test4">
+        <fail>Some multiline fail
+        message.</fail>
+    </target>
 
-  <target name="ant1-tasklib-test">
+    <target name="ant1-tasklib-test">
 
-  <!--
-    <ant1-tasklib prefix="a1-" lib="../../dist/lib/ant1-compat.jar"/>
+        <!--
+          <ant1-tasklib prefix="a1-" lib="../../dist/lib/ant1-compat.jar"/>
 
-    <a1-log message="Boo!" />
-    <a1-mkdir dir="../../dist/test"/>
-    <a1-copy file="../../tools/lib/ant.jar" tofile="../../dist/test/ant1-compat.jar" />
-  -->
+          <a1-log message="Boo!" />
+          <a1-mkdir dir="../../dist/test"/>
+          <a1-copy file="../../tools/lib/ant.jar" tofile="../../dist/test/ant1-compat.jar" />
+        -->
 
-  </target>
+    </target>
 
-  <target name="loadenvironment-test">
-    <load-environment prefix="env"/>
-    <log message="env.TMP=${env.TMP}"/>
-  </target>
+    <target name="loadenvironment-test">
+        <load-environment prefix="env"/>
+        <log message="env.TMP=${env.TMP}"/>
+    </target>
 
-  <target name="loadproperties-test">
-    <load-properties prefix="myPrefix" file="template-simple.properties"/>
-    <log message="myPrefix.foo=${myPrefix.foo}"/>
-  </target>
+    <target name="loadproperties-test">
+        <load-properties prefix="myPrefix" file="template-simple.properties"/>
+        <log message="myPrefix.foo=${myPrefix.foo}"/>
+    </target>
 
-  <target name="exec-test">
-    <exec dir="../.." executable="cvs">
-      <arg value="up"/>
-    </exec>
-    <log message="exec cvs done!"/>
-  </target>
+    <target name="exec-test">
+        <exec dir="../.." executable="cvs">
+            <arg value="up"/>
+        </exec>
+        <log message="exec cvs done!"/>
+    </target>
 
-  <target name="cvs-test">
-    <cvs noexec="true" dest="../.." command="up"/>
-    <log message="cvs done!"/>
-  </target>
+    <target name="cvs-test">
+        <cvs noexec="true" dest="../.." command="up"/>
+        <log message="cvs done!"/>
+    </target>
 
-  <target name="ref-test">
-    <property name="refme1" value="These are not the droids you are looking for." />
-    <property name="refme2" value="Move along." />
+    <target name="ref-test">
+        <property name="refme1" value="These are not the droids you are looking for." />
+        <property name="refme2" value="Move along." />
 
-    <log message="Following should be a deomnstration of the -ref attribute extension:"/>
-    <log message-ref="refme1"/>
-    <log message-ref="refme2"/>
-  </target>
+        <log message="Following should be a deomnstration of the -ref attribute extension:"/>
+        <log message-ref="refme1"/>
+        <log message-ref="refme2"/>
+    </target>
 
-  <target name="gzip-test">
-    <property name="zip" value="../../dist/bin/sample.gz" />
-    <property name="unzip" value="../../dist/bin/sample.txt" />
+    <target name="gzip-test">
+        <property name="zip" value="../../dist/bin/sample.gz" />
+        <property name="unzip" value="../../dist/bin/sample.txt" />
 
-    <gzip src="sample.ant" zipfile="${zip}"/>
-    <log message="Gzipped file!"/>
+        <gzip src="sample.ant" zipfile="${zip}"/>
+        <log message="Gzipped file!"/>
 
-    <gunzip src="${zip}" dest="${unzip}"/>
-    <log message="Ungzipped file!"/>
-  </target>
+        <gunzip src="${zip}" dest="${unzip}"/>
+        <log message="Ungzipped file!"/>
+    </target>
 
-  <target name="bzip2-test">
-    <property name="zip" value="../../dist/bin/sample.bz2" />
-    <property name="unzip" value="../../dist/bin/sample.txt" />
+    <target name="bzip2-test">
+        <property name="zip" value="../../dist/bin/sample.bz2" />
+        <property name="unzip" value="../../dist/bin/sample.txt" />
 
-    <bzip2 src="sample.ant" zipfile="${zip}"/>
-    <log message="Gzipped file!"/>
+        <bzip2 src="sample.ant" zipfile="${zip}"/>
+        <log message="Gzipped file!"/>
 
-    <bunzip2 src="${zip}" dest="${unzip}"/>
-    <log message="Ungzipped file!"/>
-  </target>
+        <bunzip2 src="${zip}" dest="${unzip}"/>
+        <log message="Ungzipped file!"/>
+    </target>
 
-  <target name="file-test">
-    <mkdir dir="/tmp/deleteme"/>
-    <touch file="/tmp/deleteme/touch-test"/>
-    <delete dir="/tmp/deleteme"/>
-  </target>
+    <target name="file-test">
+        <mkdir dir="/tmp/deleteme"/>
+        <touch file="/tmp/deleteme/touch-test"/>
+        <delete dir="/tmp/deleteme"/>
+    </target>
+
+    <target name="trycatch-test1">
+        <try-catch>
+            <try>
+                <log message="Reference to bad (undefined) variable! ${bad.variable}"/>
+            </try>
+            <catch>
+                <log message="Caught exception due to bad variable reference!"/>
+            </catch>
+        </try-catch>
+    </target>
+
+    <target name="trycatch-test2">
+        <try-catch>
+            <try>
+                <log message="Reference to bad (undefined) variable! ${bad.variable}"/>
+            </try>
+            <finally>
+                <log message="In final section!"/>
+            </finally>
+        </try-catch>
+    </target>
 
 </project>
