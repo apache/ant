@@ -9,13 +9,12 @@ package org.apache.antlib.extensions;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.jar.Manifest;
-import java.util.jar.JarFile;
 import java.text.ParseException;
-import java.lang.StringBuffer;
-import org.apache.myrmidon.api.TaskException;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.extension.Specification;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Utility class to output the information in a jar relating
@@ -34,10 +33,25 @@ class LibraryDisplayer
      * @param file the file
      * @throws TaskException if fail to read file
      */
-    public void displayLibrary( final File file )
+    void displayLibrary( final File file )
         throws TaskException
     {
         final Manifest manifest = getManifest( file );
+        displayLibrary( file, manifest );
+    }
+
+    /**
+     * Display the extensions and specifications contained
+     * within specified file.
+     *
+     * @param file the file to use while reporting
+     * @param manifest the manifest of file
+     * @throws TaskException if fail to read file
+     */
+    void displayLibrary( final File file,
+                         final Manifest manifest )
+        throws TaskException
+    {
         final Extension[] available = Extension.getAvailable( manifest );
         final Extension[] required = Extension.getRequired( manifest );
         final Specification[] specifications = getSpecifications( manifest );
