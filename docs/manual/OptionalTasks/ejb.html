@@ -560,9 +560,12 @@ respect to the class files and deployment descriptors that make up the bean. If
 any of these files are newer than the jar file the jar will be rebuilt otherwise
 a message is logged that the jar file is up to date.</p>
 
-<p>The task uses the jakarta-bcel framework, to extract all dependent classes. This
-means, that beside the classes, that are mentioned in the deployment descriptor, also
-all classes, that these depend on, are automatically included in the jar file.</p>
+<p>The task uses the
+<a href="http://jakarta.apache.org/bcel"> jakarta-BCEL </a> framework
+to extract all dependent classes. This
+means that, in addition to the classes that are mentioned in the
+deployment descriptor, any classes that these depend on are also
+automatically included in the jar file.</p>
 
 
 <h3>Naming Convention</h3>
@@ -645,7 +648,9 @@ classes and super interfaces of the bean classes. For this technique to work the
 classes had to be loaded into Ant's JVM. This was not always possible due to class dependencies.
 </p>
 
-<p>The ejbjar task in Ant 1.5 uses the jakarta-BCEL library to analyze the bean's class
+<p>The ejbjar task in Ant 1.5 uses the
+<a href="http://jakarta.apache.org/bcel"> jakarta-BCEL </a> library
+to analyze the bean's class
 files directly, rather than loading them into the JVM. This also allows ejbjar to add all
 of the required support classes for a bean and not just super classes.
 </p>
@@ -661,7 +666,8 @@ behaviour where super classes and super interfaces are added to the jar</li>
 <li><code>full</code> - In this mode all classes used by the bean's classes and interfaces
 are added to the jar</li>
 </ul>
-<p>The <code>super</code> and <code>full</code> values require the jakarta-BCEL library
+<p>The <code>super</code> and <code>full</code> values require the
+<a href="http://jakarta.apache.org/bcel"> jakarta-BCEL </a> library
 to be available. If it is not, ejbjar will drop back to the behaviour corresponding to
 the value <code>none</code>.</p>
 
