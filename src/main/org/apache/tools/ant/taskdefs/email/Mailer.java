@@ -55,8 +55,9 @@ package org.apache.tools.ant.taskdefs.email;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -81,7 +82,7 @@ abstract class Mailer {
     protected boolean includeFileNames = false;
 
     private static DateFormat df =
-        new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
 
     /**
      * Sets the mail server
@@ -208,7 +209,27 @@ abstract class Mailer {
      * @since Ant 1.5
      */
     protected final String getDate() {
-        return df.format(new Date());
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = cal.getTimeZone();
+        int offset = tz.getOffset(cal.get(Calendar.ERA), 
+                                  cal.get(Calendar.YEAR),
+                                  cal.get(Calendar.MONTH),
+                                  cal.get(Calendar.DAY_OF_MONTH),
+                                  cal.get(Calendar.DAY_OF_WEEK),
+                                  cal.get(Calendar.MILLISECOND));
+        StringBuffer tzMarker = new StringBuffer(offset < 0 ? "-" : "+");
+        offset = Math.abs(offset);
+        int hours = offset / (60 * 60 * 1000);
+        int minutes = offset / (60 * 1000) - 60 * hours;
+        if (hours < 10) {
+            tzMarker.append("0");
+        }
+        tzMarker.append(hours);
+        if (minutes < 10) {
+            tzMarker.append("0");
+        }
+        tzMarker.append(minutes);
+        return df.format(cal.getTime()) + tzMarker.toString();
     }
 }
 
