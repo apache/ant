@@ -95,9 +95,10 @@ public class Expand extends Task {
     private boolean overwrite = true;
     private Vector patternsets = new Vector();
     private Vector filesets = new Vector();
-    private static final byte[] ZIPMARKER = {0x50, 0x4b, 0x03, 0x04};
-    private static final int MARKER_SIZE = ZIPMARKER.length;
-    private static final int MAX_LOOKAHEAD = 50 * 1024; // 50K.
+
+    private static final String NATIVE_ENCODING = "native-encoding";
+
+    private String encoding = "UTF8";
 
     /**
      * Do the work.
@@ -155,7 +156,7 @@ public class Expand extends Task {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
         ZipFile zf = null;
         try {
-            zf = new ZipFile(srcF, "UTF8");
+            zf = new ZipFile(srcF, encoding);
             Enumeration enum = zf.getEntries();
             while (enum.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) enum.nextElement();
@@ -322,6 +323,21 @@ public class Expand extends Task {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * Sets the encoding to assume for file names and comments.
+     *
+     * <p>Set to <code>native-encoding</code> if you want your
+     * platform's native encoding, defaults to UTF8.</p>
+     *
+     * @since Ant 1.6
+     */
+    public void setEncoding(String encoding) {
+        if (NATIVE_ENCODING.equals(encoding)) {
+            encoding = null;
+        }
+        this.encoding = encoding;
     }
 
 }

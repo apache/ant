@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,6 +110,17 @@ public class Untar extends Expand {
      */
     public void setCompression(UntarCompressionMethod method) {
         compression = method;
+    }
+
+    /**
+     * No encoding support in Untar.
+     *
+     * @since Ant 1.6
+     */
+    public void setEncoding(String encoding) {
+        throw new BuildException("The " + getTaskName() 
+                                 + " task doesn't support the encoding"
+                                 + " attribute", getLocation());
     }
 
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {

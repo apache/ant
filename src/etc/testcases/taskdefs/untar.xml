@@ -41,4 +41,7 @@
     <untar src="." dest="." />
   </target>
 
+  <target name="encoding">
+    <untar src="expected/asf-logo.gif.tar" dest="." encoding="foo"/>
+  </target>
 </project>

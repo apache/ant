@@ -46,10 +46,24 @@ to perform unarchival upon.
   </tr>
   <tr>
     <td valign="top">compression</td>
-    <td valign="top">compression method for untar.  Allowable values are
-       &quot;none&quot;, &quot;gzip&quot; and &quot;bzip2&quot;.  Default is
-       &quot;none&quot;.</td>
+    <td valign="top"><b>Note:</b> This attribute is only available for
+    the <code>untar</code> task.<br>
+    compression method.  Allowable values are &quot;none&quot;,
+    &quot;gzip&quot; and &quot;bzip2&quot;.  Default is
+    &quot;none&quot;.</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">encoding</td>
+    <td valign="top"><b>Note:</b> This attribute is not available for
+    the <code>untar</code> task.<br>
+    The character encoding that has been used for filenames
+    inside the zip file.  For a list of possible values see <a
+    href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.<br>
+    Defaults to &quot;UTF8&quot;, use the magic value
+    <code>native-encoding</code> for the platform's default character
+    encoding.</td>
+    <td align="center" valign="top">No</td>
   </tr>
 
 </table>
@@ -89,7 +103,7 @@ to perform unarchival upon.
 </pre></p>
 </blockquote>
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

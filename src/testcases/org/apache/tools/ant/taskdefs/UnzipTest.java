@@ -153,4 +153,13 @@ public class UnzipTest extends BuildFileTest {
                    getProject().resolveFile("unziptestout/2/bar").exists());
     }
 
+    /*
+     * PR 10504
+     */
+    public void testEncoding() {
+        executeTarget("encodingTest");
+        assertTrue("foo has been properly named",
+                   getProject().resolveFile("unziptestout/foo").exists());
+    }
+
 }

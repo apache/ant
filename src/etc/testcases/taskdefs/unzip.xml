@@ -78,4 +78,13 @@
     </unzip>
   </target>
 
+  <!-- Bugzilla Report 10504 -->
+  <target name="encodingTest">
+    <mkdir dir="unziptestin"/>
+    <touch file="unziptestin/foo"/>
+    <zip zipfile="unziptest.zip" basedir="unziptestin" encoding="UTF16"/>
+    <mkdir dir="unziptestout"/>
+    <unzip src="unziptest.zip" dest="unziptestout" encoding="UTF16"/>
+  </target>
+
 </project>
