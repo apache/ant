@@ -12,7 +12,6 @@ import java.net.URL;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
-import javax.xml.transform.ErrorListener;
 
 /*
  * ValidatorErrorHandler role :
