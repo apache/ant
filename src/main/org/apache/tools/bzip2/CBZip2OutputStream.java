@@ -411,8 +411,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
     boolean closed = false;
 
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         close();
+        super.finalize();
     }
 
     public void close() throws IOException {
