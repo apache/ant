@@ -67,31 +67,43 @@ import com.ibm.bsf.*;
 public class Script extends Task {
     private String language;
     private String script = "";
+    private Hashtable beans = new Hashtable();
     
+    /**
+     * Add a list of named objects to the list to be exported to the script
+     */
+    private void addBeans(Hashtable dictionary) {
+        for (Enumeration e=dictionary.keys(); e.hasMoreElements(); ) {
+            String key = (String)e.nextElement();
+
+	    boolean isValid = key.length()>0 &&
+                Character.isJavaIdentifierStart(key.charAt(0));
+
+            for (int i=1; isValid && i<key.length(); i++)
+                isValid = Character.isJavaIdentifierPart(key.charAt(i));
+
+            if (isValid) beans.put(key, dictionary.get(key));
+        }
+    }
+
     /**
      * Do the work.
      *
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
-        BSFManager manager = new BSFManager ();
         try {
-            // add id references (<task id="foo">)
-            Hashtable references = project.getReferences();
-            for (Enumeration e = references.keys() ; e.hasMoreElements() ;) {
-                String key = (String)e.nextElement();
-                Object value = references.get(key);
-                manager.declareBean(key, value, value.getClass());
-            }
+            addBeans(project.getProperties());
+            addBeans(project.getUserProperties());
+            addBeans(project.getTargets());
+            addBeans(project.getReferences());
 
-            // add properties (<property name="foo">)
-            Hashtable properties = project.getProperties();
-            for (Enumeration e = properties.keys() ; e.hasMoreElements() ;) {
+            BSFManager manager = new BSFManager ();
+
+            for (Enumeration e = beans.keys() ; e.hasMoreElements() ;) {
                 String key = (String)e.nextElement();
-                if (!references.contains(key)) {
-                    Object value = properties.get(key);
-                    manager.declareBean(key, value, value.getClass());
-                }
+                Object value = beans.get(key);
+                manager.declareBean(key, value, value.getClass());
             }
 
             // execute the script

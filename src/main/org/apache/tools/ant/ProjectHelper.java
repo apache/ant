@@ -102,8 +102,14 @@ public class ProjectHelper {
             throw new BuildException(msg);
         }
 
-        project.setName(root.getAttribute("name"));
         project.setDefaultTarget(root.getAttribute("default"));
+
+        String name = root.getAttribute("name");
+        project.setName(name);
+        if (name != null) project.addReference(name, project);
+
+        String id = root.getAttribute("id");
+        if (id != null) project.addReference(id, project);
 
         String baseDir = project.getProperty("basedir");
         if (baseDir == null) {

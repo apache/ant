@@ -196,6 +196,10 @@ public class Project {
         return properties;
     }
 
+    public Hashtable getUserProperties() {
+        return userProperties;
+    }
+
     public void setDefaultTarget(String defaultTarget) {
         this.defaultTarget = defaultTarget;
     }
@@ -351,6 +355,10 @@ public class Project {
         log(msg, MSG_VERBOSE);
         target.setProject(this);
         targets.put(targetName, target);
+    }
+
+    public Hashtable getTargets() {
+        return targets;
     }
 
     public Task createTask(String taskType) throws BuildException {
