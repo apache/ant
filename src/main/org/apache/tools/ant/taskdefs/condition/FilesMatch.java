@@ -54,9 +54,8 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
-import java.io.BufferedInputStream;
+import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -64,6 +63,7 @@ import java.io.IOException;
  * are not looked at at all.
  *
  * @author Steve Loughran
+ * @version $Revision$
  * @created 12 January 2002
  * @since Ant 1.5
  */
@@ -75,6 +75,10 @@ public class FilesMatch implements Condition {
      */
     private File file1, file2;
 
+    /**
+     * Helper that provides the file comparison method.
+     */
+    private FileUtils fu = FileUtils.newFileUtils();
 
     /**
      * Sets the File1 attribute 
@@ -93,43 +97,6 @@ public class FilesMatch implements Condition {
      */
     public void setFile2(File file2) {
         this.file2 = file2;
-    }
-
-    /**
-     * simple but sub-optimal comparision algorithm. 
-     * written for working rather than fast. Better would 
-     * be a block read into buffers followed by long comparisions
-     * apart from the final 1-7 bytes. 
-     */
-     
-    public boolean simpleFileCompare(File f1,File f2) throws IOException {
-        BufferedInputStream in1=null;
-        BufferedInputStream in2=null;
-        boolean matches=true;
-        try {
-            in1=new BufferedInputStream(new FileInputStream(f1));
-            in2=new BufferedInputStream(new FileInputStream(f2));
-            int c1,c2;
-            do {
-                c1=in1.read();
-                c2=in2.read();
-                if(c1!=c2) {
-                    matches=false;
-                } 
-            } while(matches && (c1!=-1));
-        } finally {
-            try {
-                if(in1!=null) {
-                    in1.close();
-                }
-            } catch(IOException e) { }
-            try {
-                if(in2!=null) {
-                    in2.close();
-                }
-            } catch(IOException e) { }
-        }
-        return matches; 
     }
 
     /**
@@ -152,21 +119,10 @@ public class FilesMatch implements Condition {
             throw new BuildException("file " + file2 + " not found");
         }
         
-        //shortcut tests
-        //#1 : same filename => true
-        if(file1.equals(file2)) {
-            return true;
-        }
-        
-        //#2 : different size =>false
-        if(file1.length()!=file2.length()) {
-            return false;
-        }
-        
         //#now match the files
         boolean matches=false;
         try {
-            matches=simpleFileCompare(file1,file2);
+            matches=fu.contentEquals(file1, file2);
         } catch(IOException ioe) {
             throw new BuildException("when comparing files", ioe);
         }

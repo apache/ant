@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -514,6 +514,11 @@ public class FileUtils {
     /**
      * Compares the contents of two files.
      *
+     * <p>simple but sub-optimal comparision algorithm.  written for
+     * working rather than fast. Better would be a block read into
+     * buffers followed by long comparisions apart from the final 1-7
+     * bytes.</p>
+     *
      * @since 1.9
      */
     public boolean contentEquals(File f1, File f2) throws IOException {
@@ -528,6 +533,16 @@ public class FileUtils {
         
         if (f1.isDirectory() || f2.isDirectory()) {
             // don't want to compare directory contents for now
+            return false;
+        }
+        
+        if (f1.equals(f2)) {
+            // same filename => true
+            return true;
+        }
+        
+        if (f1.length() != f2.length()) {
+            // different size =>false
             return false;
         }
         
