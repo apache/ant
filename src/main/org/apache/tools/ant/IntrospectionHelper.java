@@ -555,11 +555,11 @@ public class IntrospectionHelper implements BuildListener {
 
     public void buildStarted(BuildEvent event) {}
     public void buildFinished(BuildEvent event) {
-	attributeTypes.clear();
-	attributeSetters.clear();
-	nestedTypes.clear();
-	nestedCreators.clear();
-	addText = null;
+        attributeTypes.clear();
+        attributeSetters.clear();
+        nestedTypes.clear();
+        nestedCreators.clear();
+        addText = null;
         helpers.clear();
     }
 
