@@ -233,8 +233,7 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
-     * Not supported.
-     * @param e
+     * @ant.attribute ignore="true"
      */
     public void setExecutable(String e) {
         throw new BuildException(taskType 
@@ -242,8 +241,7 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
-     * Not supported.
-     * @param cmdl
+     * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
         throw new BuildException(taskType 
@@ -251,8 +249,7 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
-     * Not supported.
-     * @param skip
+     * @ant.attribute ignore="true"
      */
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(taskType 

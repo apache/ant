@@ -147,8 +147,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Deprecated, use executable instead.
-     * The full commandline to execute, executable + arguments.
+     * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
         log("The command attribute is deprecated. " +
