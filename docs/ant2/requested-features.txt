@@ -247,3 +247,8 @@ V. Things we probably don't agree on.
 
 * tasks should have access to its own XML representation.
 
+* Allow named tasks to be defined by <script> elements.
+
+* Let Ant ignore - but warn - if unknown XML elements or attributes
+  occur in a build file.
+
