@@ -558,10 +558,11 @@ public class Zip extends MatchingTask {
                                      + " file.");
         }
 
-        if (prefix.length() > 0
-            && !prefix.endsWith("/")
-            && !prefix.endsWith("\\")) {
-            prefix += "/";
+        if (prefix.length() > 0) {
+            if (!prefix.endsWith("/") && !prefix.endsWith("\\")) {
+                prefix += "/";
+            }
+            addParentDirs(null, prefix, zOut, "", dirMode);
         }
 
         ZipFile zf = null;
