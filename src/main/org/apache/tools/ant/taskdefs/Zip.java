@@ -413,7 +413,11 @@ public class Zip extends MatchingTask {
         addedDirs.put(vPath, vPath);
         
         ZipEntry ze = new ZipEntry (vPath);
-        if (dir != null) ze.setTime (dir.lastModified ());
+        if (dir != null && dir.exists()) {
+            ze.setTime(dir.lastModified());
+        } else {
+            ze.setTime(System.currentTimeMillis());
+        }
         ze.setSize (0);
         ze.setMethod (ZipEntry.STORED);
         // This is faintly ridiculous:
