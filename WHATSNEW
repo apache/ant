@@ -1,5 +1,17 @@
-Changes from Ant 1.6.1 to current Ant 1.6 CVS version
-=====================================================
+Changes from Ant 1.6.2beta1 to current Ant 1.6 CVS version
+==========================================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+Other changes:
+--------------
+
+Changes from Ant 1.6.1 to Ant 1.6.2beta1
+========================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -30,6 +42,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+* eliminate memory leak in AntClassLoader. Bugzilla Report 8689.
 
 * subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
 
