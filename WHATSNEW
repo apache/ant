@@ -41,6 +41,8 @@ Fixed bugs:
 
 * <javadoc>'s packagelist attribute didn't work.
 
+* the plain mailer would always use port 25 in <mail>.
+
 Other changes:
 --------------
 
