@@ -318,7 +318,7 @@ public class ANTLR extends Task {
 
             log(commandline.describeCommand(), Project.MSG_VERBOSE);
             int err = run(commandline.getCommandline());
-            if (err == 1) {
+            if (Execute.isFailure(err)) {
                 throw new BuildException("ANTLR returned: " + err, getLocation());
             } else {
                 String output = bos.toString();

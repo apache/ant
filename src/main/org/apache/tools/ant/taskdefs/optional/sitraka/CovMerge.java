@@ -139,7 +139,7 @@ public class CovMerge extends CovBase {
             // JProbe process always return 0 so  we will not be
             // able to check for failure ! :-(
             int exitValue = exec.execute();
-            if (exitValue != 0) {
+            if (Execute.isFailure(exitValue)) {
                 throw new BuildException("JProbe Coverage Merging failed (" + exitValue + ")");
             }
         } catch (IOException e) {

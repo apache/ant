@@ -372,7 +372,7 @@ public abstract class AbstractCvsTask extends Task {
             int retCode = exe.execute();
             log("retCode=" + retCode, Project.MSG_DEBUG);
             /*Throw an exception if cvs exited with error. (Iulian)*/
-            if (failOnError && retCode != 0) {
+            if (failOnError && Execute.isFailure(retCode)) {
                 throw new BuildException("cvs exited with error code "
                                          + retCode
                                          + StringUtils.LINE_SEP

@@ -236,7 +236,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 fos.close();
             }
 
-            if (result != 0 && !ignorerc) {
+            if (Execute.isFailure(result) && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
                 throw new BuildException(msg, getLocation());
             }

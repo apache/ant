@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
@@ -107,7 +108,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
         checkOptions(commandLine);
 
         result = run(commandLine, this);
-        if (result != 0) {
+        if (Execute.isFailure(result)) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }

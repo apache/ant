@@ -60,6 +60,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
@@ -197,7 +198,7 @@ public class CCMCheck extends Continuus {
         checkOptions(commandLine);
 
         int result = run(commandLine);
-        if (result != 0) {
+        if (Execute.isFailure(0)) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }

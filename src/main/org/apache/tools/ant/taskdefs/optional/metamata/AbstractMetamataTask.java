@@ -246,7 +246,7 @@ public abstract class AbstractMetamataTask extends Task {
         log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         process.setCommandline(cmdl.getCommandline());
         try {
-            if (process.execute() != 0) {
+            if (Execute.isFailure(process.execute())) {
                 throw new BuildException("Metamata task failed.");
             }
         } catch (IOException e) {

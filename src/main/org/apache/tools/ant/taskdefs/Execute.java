@@ -577,7 +577,7 @@ public class Execute {
             exe.setAntRun(task.getProject());
             exe.setCommandline(cmdline);
             int retval = exe.execute();
-            if (retval != 0) {
+            if (isFailure(retval)) {
                 throw new BuildException(cmdline[0]
                     + " failed with return code " + retval, task.getLocation());
             }

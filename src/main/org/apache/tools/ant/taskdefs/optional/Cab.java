@@ -303,7 +303,7 @@ public class Cab extends MatchingTask {
                 }
 
                 // Informative summary message in case of errors
-                if (result != 0) {
+                if (Execute.isFailure(result)) {
                     log("Error executing listcab; error code: " + result);
                 }
             } catch (IOException ex) {

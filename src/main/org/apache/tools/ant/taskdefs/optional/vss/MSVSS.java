@@ -222,7 +222,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         int result = 0;
         Commandline commandLine = buildCmdLine();
         result = run(commandLine);
-        if (result != 0 && getFailOnError()) {
+        if (Execute.isFailure(result) && getFailOnError()) {
             String msg = "Failed executing: " + formatCommandLine(commandLine)
                      + " With a return code of " + result;
             throw new BuildException(msg, getLocation());

@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -151,7 +152,7 @@ public class CCMklabel extends ClearCase {
         checkOptions(commandLine);
 
         result = run(commandLine);
-        if (result != 0) {
+        if (Execute.isFailure(result)) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ import org.apache.tools.ant.util.Watchdog;
  * Execute exec = new Execute(myloghandler, watchdog);
  * exec.setCommandLine(mycmdline);
  * int exitvalue = exec.execute();
- * if (exitvalue != SUCCESS && watchdog.killedProcess()) {
+ * if (Execute.isFailure(exitvalue) &amp;&amp; watchdog.killedProcess()) {
  *              // it was killed on purpose by the watchdog
  * }
  * </pre>

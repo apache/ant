@@ -460,7 +460,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             log(commandline.describeCommand(), Project.MSG_DEBUG);
             execTask.setCommandline(commandline.getCommandline());
             int result = execTask.execute();
-            if (result != 0) {
+            if (Execute.isFailure(result)) {
                 String msg = "Failed executing java2iiop (ret code is "
                     + result + ")";
                 throw new BuildException(msg, getTask().getLocation());

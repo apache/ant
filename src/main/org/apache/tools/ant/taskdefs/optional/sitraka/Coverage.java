@@ -331,7 +331,7 @@ public class Coverage extends CovBase {
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());
             int exitValue = exec.execute();
-            if (exitValue != 0) {
+            if (Execute.isFailure(exitValue)) {
                 throw new BuildException("JProbe Coverage failed (" + exitValue + ")");
             }
         } catch (IOException e) {

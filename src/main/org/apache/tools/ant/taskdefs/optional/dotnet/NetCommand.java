@@ -251,7 +251,7 @@ public class NetCommand {
             }
             executable.setCommandline(commandLine.getCommandline());
             err = executable.execute();
-            if (err != 0) {
+            if (Execute.isFailure(err)) {
                 if (failOnError) {
                     throw new BuildException(title + " returned: " + err, owner.getLocation());
                 } else {

@@ -290,7 +290,7 @@ public class JJTree extends Task {
         process.setCommandline(cmdl.getCommandline());
 
         try {
-            if (process.execute() != 0) {
+            if (Execute.isFailure(process.execute())) {
                 throw new BuildException("JJTree failed.");
             }
         } catch (IOException e) {
