@@ -138,6 +138,9 @@ Other changes:
 * Two new supported compilers for javac: kjc for kopi and gcj for the
   gcc frontend.
 
+* <fixrlf> can now with CR only line-ends and can use an arbitraty
+  between 2 and 80.
+
 Fixed bugs:
 -----------
 
@@ -210,6 +213,8 @@ Fixed bugs:
 
 * directory based tasks and fileset could miss some included files in
   directories that have been excluded
+
+* <fixcrl> failed for large files.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
