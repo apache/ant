@@ -120,7 +120,7 @@ public class Sleep extends Task {
 
 
     /**
-     * hours to to add to the sleep time
+     * hours to add to the sleep time.
      *
      * @param hours The new Hours value
      */
