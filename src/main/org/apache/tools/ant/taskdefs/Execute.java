@@ -261,7 +261,7 @@ public class Execute {
     public static String toString(ByteArrayOutputStream bos) {
         if (Os.isFamily("z/os")) {
             try {
-                bos.toString("Cp1047");
+                return bos.toString("Cp1047");
             } catch (java.io.UnsupportedEncodingException e) {
             }
         }
