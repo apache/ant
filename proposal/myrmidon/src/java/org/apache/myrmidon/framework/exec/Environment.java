@@ -47,39 +47,6 @@ public final class Environment
     {
     }
 
-    public static String[] toNativeFormat( final Properties environment )
-        throws ExecException
-    {
-        final ArrayList newEnvironment = new ArrayList();
-
-        final Iterator keys = environment.keySet().iterator();
-        while( keys.hasNext() )
-        {
-            final String key = (String)keys.next();
-            final String value = environment.getProperty( key );
-            newEnvironment.add( key + '=' + value );
-        }
-
-        return (String[])newEnvironment.toArray( new String[ newEnvironment.size() ] );
-    }
-
-    /**
-     * @deprecated Dont use me!!!
-     */
-    public static Properties createEnvVars( final String[] environment )
-        throws ExecException
-    {
-        final Properties newEnvironment = new Properties();
-
-        for( int i = 0; i < environment.length; i++ )
-        {
-            final String var = environment[ i ];
-            addProperty( newEnvironment, var );
-        }
-
-        return newEnvironment;
-    }
-
     public static void addNativeEnvironment( final Properties environment )
         throws ExecException, IOException
     {
