@@ -174,6 +174,26 @@ public class DefaultTaskContext
     }
 
     /**
+     * Create a Child Context.
+     * This allows separate hierarchly contexts to be easily constructed.
+     *
+     * @param name the name of sub-context
+     * @return the created TaskContext
+     * @exception TaskException if an error occurs
+     */
+    public TaskContext createSubContext( final String name )
+        throws TaskException
+    {
+        final DefaultTaskContext context = new DefaultTaskContext( this );
+
+        context.setProperty( TaskContext.NAME, getName() + "." + name );
+        context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
+        context.setProperty( TaskContext.JAVA_VERSION, getJavaVersion() );
+
+        return context;
+    }
+
+    /**
      * Make sure property is valid if it is one of the "magic" properties.
      *
      * @param name the name of property

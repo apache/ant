@@ -103,8 +103,8 @@ public interface TaskContext
      * @return the created TaskContext
      * @exception TaskException if an error occurs
      */
-    //TaskContext createSubContext( String name )
-    //throws TaskException;
+    TaskContext createSubContext( String name )
+        throws TaskException;
 
     /**
      * Safe wrapper class for Scope enums.
