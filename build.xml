@@ -247,6 +247,9 @@
 
     <copy file="${build.src}/${ant.package}/defaultManifest.mf"
           todir="${build.classes}/${ant.package}" />
+          
+    <copy file="${build.src}/${ant.package}/taskdefs/defaults.properties"
+          todir="${build.classes}/${ant.package}/taskdefs" />
 
   </target>
 
