@@ -55,14 +55,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.*;
-import java.util.Vector;
+import java.util.Hashtable;
 
 /**
  * Wait for an external event to occur.
@@ -74,32 +71,48 @@ import java.util.Vector;
  * The following attributes can be specified on a waitfor task:
  * <ul>
  * <li>maxwait - maximum length of time to wait before giving up</li>
+ * <li>maxwaitunit - The unit to be used to interpret maxwait attribute</li>
  * <li>checkevery - amount of time to sleep between each check</li>
+ * <li>checkeveryunit - The unit to be used to interpret checkevery attribute</li>
  * </ul>
  *
- * The time value can include a suffix of "ms", "s", "m", "h" to
- * indicate that the value is in milliseconds, seconds, minutes or
- * hours. The default is milliseconds.
+ * The maxwaitunit and checkeveryunit are allowed to have the following values:
+ * millesond, second, minute, hour, day and week. The default is millisecond.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 
 public class WaitFor extends ConditionBase {
-    private long maxWaitMillis = 1000 * 60 * 3;     // default max wait time
-    private long checkEveryMillis = 500;
+    private long maxWaitMillis = 1000l * 60l * 3l; // default max wait time
+    private long checkEveryMillis = 500l;
 
     /**
      * Set the maximum length of time to wait
      */
-    public void setMaxWait(String time) {
-        maxWaitMillis = parseTime(time);
+    public void setMaxWait(long time) {
+        maxWaitMillis = time;
+    }
+
+    /**
+     * Set the max wait time unit
+     */
+    public void setMaxWaitUnit(Unit unit) {
+        maxWaitMillis *= unit.getMultiplier();
     }
 
     /**
      * Set the time between each check
      */
-    public void setCheckEvery(String time) {
-        checkEveryMillis = parseTime(time);
+    public void setCheckEvery(long time) {
+        checkEveryMillis = time;
+    }
+
+    /**
+     * Set the check every time unit
+     */
+    public void setCheckEveryUnit(Unit unit) {
+        checkEveryMillis *= unit.getMultiplier();
     }
 
     /**
@@ -131,44 +144,38 @@ public class WaitFor extends ConditionBase {
         throw new BuildException("Task did not complete in time");
     }
 
-    /**
-     * Parse a time in the format nnnnnxx where xx is a common time
-     * multiplier suffix.
-     */
-    protected long parseTime(String value) {
-        int i = 0;
-        for (i = 0; i < value.length(); i++) {
-            char ch = value.charAt(i);
-            if (ch < '0' || ch > '9') {
-                break;
-            }
-        }
-        if (i == 0) {
-            throw new NumberFormatException();
-        }
-        String digits = value.substring(0, i);
-        return Long.parseLong(digits) * getMultiplier(value.substring(i));
-    }
+    public static class Unit extends EnumeratedAttribute {
 
-    /**
-     * Look for and decipher a multiplier suffix in the string.
-     * @param value - a string with a series of digits followed by the
-     * scale suffix.
-     */
-    protected long getMultiplier(String value) {
-        String lowercaseValue = value.toLowerCase();
-        if (lowercaseValue.startsWith("ms")) {
-            return 1;
+        private static final String MILLISECOND = "millisecond";
+        private static final String SECOND = "second";
+        private static final String MINUTE = "minute";
+        private static final String HOUR = "hour";
+        private static final String DAY = "day";
+        private static final String WEEK = "week";
+
+        private final static String[] units = {
+            MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK
+        };
+
+        private Hashtable timeTable = new Hashtable();
+
+        public Unit() {
+            timeTable.put(MILLISECOND, new Long(1l));
+            timeTable.put(SECOND,      new Long(1000l));
+            timeTable.put(MINUTE,      new Long(1000l * 60l));
+            timeTable.put(HOUR,        new Long(1000l * 60l * 60l));
+            timeTable.put(DAY,         new Long(1000l * 60l * 60l * 24l));
+            timeTable.put(WEEK,        new Long(1000l * 60l * 60l * 24l * 7l));
         }
-        if (lowercaseValue.startsWith("s")) {
-            return 1000;
+
+        public long getMultiplier() {
+            String key = getValue().toLowerCase();
+            Long l = (Long) timeTable.get(key);
+            return l.longValue();
         }
-        if (lowercaseValue.startsWith("m")) {
-            return 1000 * 60;
+
+        public String[] getValues() {
+            return units;
         }
-        if (lowercaseValue.startsWith("h")) {
-            return 1000 * 60 * 60;
-        }
-        return 1;
     }
 }

@@ -75,13 +75,13 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 /**
- * A consolidated copy task.  Copies a file or directory to a new file 
+ * A consolidated copy task.  Copies a file or directory to a new file
  * or directory.  Files are only copied if the source file is newer
- * than the destination file, or when the destination file does not 
+ * than the destination file, or when the destination file does not
  * exist.  It is possible to explicitly overwrite existing files.</p>
  *
  * <p>This implementation is based on Arnout Kuiper's initial design
- * document, the following mailing list discussions, and the 
+ * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
@@ -90,8 +90,8 @@ import java.util.Enumeration;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class Copy extends Task {
-    protected File file = null;     // the source file 
-    protected File destFile = null; // the destination file 
+    protected File file = null;     // the source file
+    protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
     protected Vector filesets = new Vector();
 
@@ -108,7 +108,7 @@ public class Copy extends Task {
     protected Mapper mapperElement = null;
     private Vector filterSets = new Vector();
     private FileUtils fileUtils;
-    
+
     public Copy() {
         fileUtils = FileUtils.newFileUtils();
     }
@@ -144,12 +144,22 @@ public class Copy extends Task {
         filterSets.addElement(filterSet);
         return filterSet;
     }
-    
+
+    /**
+     * Give the copied files the same last modified time as the original files.
+     * @deprecated setPreserveLastModified(String) has been deprecated and
+     *             replaced with setPreserveLastModified(boolean) to
+     *             consistently let the Introspection mechanism work.
+     */
+    public void setPreserveLastModified(String preserve) {
+        setPreserveLastModified(Project.toBoolean(preserve));
+    }
+
     /**
      * Give the copied files the same last modified time as the original files.
      */
-    public void setPreserveLastModified(String preserve) {
-        preserveLastModified = Project.toBoolean(preserve);
+    public void setPreserveLastModified(boolean preserve) {
+        preserveLastModified = preserve;
     }
 
     /**
@@ -160,7 +170,7 @@ public class Copy extends Task {
     protected Vector getFilterSets() {
         return filterSets;
     }
-    
+
     /**
      * Sets filtering.
      */
@@ -194,8 +204,8 @@ public class Copy extends Task {
             this.verbosity = Project.MSG_INFO;
         } else {
             this.verbosity = Project.MSG_VERBOSE;
-        } 
-    } 
+        }
+    }
 
     /**
      * Used to copy empty directories.
@@ -228,7 +238,7 @@ public class Copy extends Task {
      */
     public void execute() throws BuildException {
         // make sure we don't have an illegal set of options
-        validateAttributes();   
+        validateAttributes();
 
         // deal with the single file
         if (file != null) {
@@ -236,8 +246,8 @@ public class Copy extends Task {
                 if (destFile == null) {
                     destFile = new File(destDir, file.getName());
                 }
-                
-                if (forceOverwrite || 
+
+                if (forceOverwrite ||
                     (file.lastModified() > destFile.lastModified())) {
                     fileCopyMap.put(file.getAbsolutePath(), destFile.getAbsolutePath());
                 } else {
@@ -245,7 +255,7 @@ public class Copy extends Task {
                         Project.MSG_VERBOSE);
                 }
             } else {
-                String message = "Could not find file " 
+                String message = "Could not find file "
                                  + file.getAbsolutePath() + " to copy.";
                 log(message);
                 throw new BuildException(message);
@@ -280,7 +290,7 @@ public class Copy extends Task {
 
     /**
      * Ensure we have a consistent and legal set of attributes, and set
-     * any internal flags necessary based on different combinations 
+     * any internal flags necessary based on different combinations
      * of attributes.
      */
     protected void validateAttributes() throws BuildException {
@@ -299,7 +309,7 @@ public class Copy extends Task {
         if (file != null && file.exists() && file.isDirectory()) {
             throw new BuildException("Use a fileset to copy directories.");
         }
-           
+
         if (destFile != null && filesets.size() > 0) {
             if (filesets.size() > 1) {
                 throw new BuildException(
@@ -368,7 +378,7 @@ public class Copy extends Task {
             SourceFileScanner ds = new SourceFileScanner(this);
             toCopy = ds.restrict(names, fromDir, toDir, mapper);
         }
-        
+
         for (int i = 0; i < toCopy.length; i++) {
             File src = new File(fromDir, toCopy[i]);
             File dest = new File(toDir, mapper.mapFileName(toCopy[i])[0]);
@@ -382,8 +392,8 @@ public class Copy extends Task {
      */
     protected void doFileOperations() {
         if (fileCopyMap.size() > 0) {
-            log("Copying " + fileCopyMap.size() + 
-                " file" + (fileCopyMap.size() == 1 ? "" : "s") + 
+            log("Copying " + fileCopyMap.size() +
+                " file" + (fileCopyMap.size() == 1 ? "" : "s") +
                 " to " + destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
@@ -398,7 +408,7 @@ public class Copy extends Task {
 
                 try {
                     log("Copying " + fromFile + " to " + toFile, verbosity);
-                    
+
                     FilterSetCollection executionFilters = new FilterSetCollection();
                     if (filtering) {
                         executionFilters.addFilterSet(project.getGlobalFilterSet());
@@ -431,9 +441,9 @@ public class Copy extends Task {
             }
 
             if (count > 0) {
-                log("Copied " + count + 
-                    " empty director" + 
-                    (count==1?"y":"ies") + 
+                log("Copied " + count +
+                    " empty director" +
+                    (count==1?"y":"ies") +
                     " to " + destDir.getAbsolutePath());
             }
         }
