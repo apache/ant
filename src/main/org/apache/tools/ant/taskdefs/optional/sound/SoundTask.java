@@ -87,11 +87,17 @@ public class SoundTask extends Task {
     private BuildAlert success = null;
     private BuildAlert fail = null;
 
+    /**
+     * add a sound when the build succeeds
+     */
     public BuildAlert createSuccess() {
         success = new BuildAlert();
         return success;
     }
 
+    /**
+     * add a sound when the build fails
+     */
     public BuildAlert createFail() {
         fail = new BuildAlert();
         return fail;
@@ -135,14 +141,14 @@ public class SoundTask extends Task {
         private Long duration = null;
 
         /**
-         * Sets the duration in milliseconds the file should be played.
+         * Sets the duration in milliseconds the file should be played; optional.
          */
         public void setDuration(Long duration) {
             this.duration = duration;
         }
 
         /**
-         * Sets the location of the file to get the audio.
+         * Sets the location of the file to get the audio; required.
          *
          * @param source the name of a sound-file directory or of the audio file
          */
@@ -151,7 +157,7 @@ public class SoundTask extends Task {
         }
 
         /**
-         * Sets the number of times the source file should be played.
+         * Sets the number of times the source file should be played; optional.
          *
          * @param loops the number of loops to play the source file
          */
