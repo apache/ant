@@ -10,7 +10,6 @@ package org.apache.myrmidon.components.configurer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.property.PropertyException;
@@ -24,11 +23,9 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.log.Logger;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
-import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.converter.ConverterException;
+import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.converter.MasterConverter;
 
 /**
  * Class used to configure tasks.
@@ -43,26 +40,19 @@ public class DefaultConfigurer
         ResourceManager.getPackageResources( DefaultConfigurer.class );
 
     ///Compile time constant to turn on extreme debugging
-    private final static boolean   DEBUG         = false;
+    private final static boolean DEBUG = true;
 
     /*
      * TODO: Should reserved names be "configurable" ?
      */
-
-    ///Attribute names that are reserved
-    private final static String  RESERVED_ATTRIBUTES[] =
-    {
-        "logger"
-    };
-
     ///Element names that are reserved
-    private final static String  RESERVED_ELEMENTS[] =
-    {
-        "content"
-    };
+    private final static String[] RESERVED_ELEMENTS =
+        {
+            "content"
+        };
 
     ///Converter to use for converting between values
-    private MasterConverter        m_converter;
+    private MasterConverter m_converter;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -144,7 +134,6 @@ public class DefaultConfigurer
             }
 
             final String content = configuration.getValue( null );
-
             if( null != content )
             {
                 if( !content.trim().equals( "" ) )
@@ -204,16 +193,6 @@ public class DefaultConfigurer
                                      final Context context )
         throws ConfigurationException
     {
-        for( int i = 0; i < RESERVED_ATTRIBUTES.length; i++ )
-        {
-            if( RESERVED_ATTRIBUTES[ i ].equals( name ) )
-            {
-                final String message =
-                    REZ.getString( "reserved-attribute.error", name );
-                throw new ConfigurationException( message );
-            }
-        }
-
         final String methodName = getMethodNameFor( name );
         setValue( object, methodName, value, context );
     }
@@ -229,7 +208,6 @@ public class DefaultConfigurer
 
         final Class clazz = object.getClass();
         final Method[] methods = getMethodsFor( clazz, methodName );
-
         if( 0 == methods.length )
         {
             final String message =
@@ -320,7 +298,7 @@ public class DefaultConfigurer
 
         try
         {
-            method.invoke( object, new Object[] { value } );
+            method.invoke( object, new Object[]{value} );
         }
         catch( final IllegalAccessException iae )
         {
@@ -376,7 +354,7 @@ public class DefaultConfigurer
             }
         }
 
-        return (Method[])matches.toArray( new Method[0] );
+        return (Method[])matches.toArray( new Method[ 0 ] );
     }
 
     private Method[] getCreateMethodsFor( final Class clazz, final String methodName )
@@ -403,7 +381,7 @@ public class DefaultConfigurer
             }
         }
 
-        return (Method[])matches.toArray( new Method[0] );
+        return (Method[])matches.toArray( new Method[ 0 ] );
     }
 
     private String getMethodNameFor( final String attribute )
@@ -441,12 +419,6 @@ public class DefaultConfigurer
         throws ConfigurationException
     {
         final String name = configuration.getName();
-
-        for( int i = 0; i < RESERVED_ELEMENTS.length; i++ )
-        {
-            if( RESERVED_ATTRIBUTES[ i ].equals( name ) ) return;
-        }
-
         final String javaName = getJavaNameFor( name );
 
         // OMFG the rest of this is soooooooooooooooooooooooooooooooo
@@ -509,7 +481,7 @@ public class DefaultConfigurer
             final Object created = clazz.newInstance();
 
             configure( created, configuration, context );
-            method.invoke( object, new Object[] { created } );
+            method.invoke( object, new Object[]{created} );
         }
         catch( final ConfigurationException ce )
         {
