@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -180,6 +181,15 @@ public class ChangeLogTask
     }
 
     /**
+     * Set the numbers of days worth of log entries to process.
+     */
+    public void setDaysinpast( final int days )
+    {
+        final long time = System.currentTimeMillis() - (long)days * 24 * 60 * 60 * 1000;
+        setStart( new Date( time ) );
+    }
+
+    /**
      * Execute task
      */
     public void execute() throws BuildException
@@ -200,6 +210,16 @@ public class ChangeLogTask
         final Commandline command = new Commandline();
         command.setExecutable( "cvs" );
         command.createArgument().setValue( "log" );
+
+        if( null != m_start )
+        {
+            final SimpleDateFormat outputDate =
+                new SimpleDateFormat( "yyyy-MM-dd" );
+
+            // We want something of the form: -d ">=YYYY-MM-dd"
+            final String dateRange = "-d >=" + outputDate.format( m_start );
+            command.createArgument().setValue( dateRange );
+        }
 
         final ChangeLogParser parser = new ChangeLogParser( userList );
         final RedirectingStreamHandler handler =
