@@ -5,4 +5,5 @@
   <role shorthand="aspect"           name="org.apache.myrmidon.aspects.AspectHandler"/>
   <role shorthand="project-builder"  name="org.apache.myrmidon.interfaces.builder.ProjectBuilder"/>
   <role shorthand="converter"        name="org.apache.myrmidon.converter.Converter"/>
+  <role shorthand="configurer"       name="org.apache.myrmidon.interfaces.configurer.Configurer"/>
 </roles>
