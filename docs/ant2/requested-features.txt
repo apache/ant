@@ -378,3 +378,5 @@ V. Things we probably don't agree on.
   - project engine (ie model of targets/projects/workspaces) + support/utility classes 
     [ org.apache.ant.* ]
   - core tasks (ie tasks supported by ant contributors) [ org.apache.??? ]
+
+* check for more than one condition in if/unless attributes.
