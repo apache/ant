@@ -244,7 +244,7 @@ public class PropertyHelper {
      */
     public void setLocalProperties(LocalProperties localProperties) {
         if (localProperties == null) {
-            localProperties = new LocalPropertyStack();
+            localProperties = new LocalPropertyStack(null);
         }
         threadLocalProperties.set(localProperties);
     }
@@ -258,7 +258,7 @@ public class PropertyHelper {
     public void setNotOverrideLocalProperties(
         LocalProperties localProperties) {
         if (localProperties == null) {
-            localProperties = new LocalPropertyStack();
+            localProperties = new LocalPropertyStack(null);
         }
         LocalPropertyStack s = (LocalPropertyStack) localProperties;
         for (Iterator i = s.props.entrySet().iterator(); i.hasNext();) {
@@ -775,22 +775,39 @@ public class PropertyHelper {
      */
     private class LocalPropertyStack
         implements LocalProperties {
+        LocalPropertyStack(LocalPropertyStack owner) {
+            if (owner == null) {
+                init();
+            }
+            this.owner = owner;
+        }
         private int level = 0;
+        private  LocalPropertyStack owner;
         // HashMap<String, ListArray<LocalPropertyValue>>
-        private HashMap props = new HashMap();
+        private HashMap props;
+        
 
         // ArrayList<ArrayList<String>>
-        private List    stack = new ArrayList();
+        private List    stack;
+
+        private void init() {
+            props = new HashMap();
+            stack = new ArrayList();
+        }
+
+        private List getStack() {
+            return stack == null ? owner.stack : stack;
+        }
 
         public LocalProperties copy() {
-            LocalPropertyStack copy = new LocalPropertyStack();
+            LocalPropertyStack copy = new LocalPropertyStack(null);
             copy.stack = new ArrayList();
             copy.level = level;
-            for (int i = 0; i < stack.size(); ++i) {
-                copy.stack.add(((ArrayList) stack.get(i)).clone());
+            for (int i = 0; i < getStack().size(); ++i) {
+                copy.stack.add(((ArrayList) getStack().get(i)).clone());
             }
             copy.props = new HashMap();
-            for (Iterator i = props.entrySet().iterator(); i.hasNext();) {
+            for (Iterator i = getProps().entrySet().iterator(); i.hasNext();) {
                 Map.Entry entry = (Map.Entry) i.next();
                 ArrayList from = (ArrayList) entry.getValue();
                 List l2 = new ArrayList();
@@ -803,15 +820,17 @@ public class PropertyHelper {
             return copy;
         }
 
-        public LocalProperties shallowCopy() {
-            LocalPropertyStack copy = new LocalPropertyStack();
-            copy.stack = new ArrayList();
-            copy.level = level;
-            for (int i = 0; i < stack.size(); ++i) {
-                copy.stack.add(((ArrayList) stack.get(i)).clone());
+        private void shallowCopyParent() {
+            if (stack != null) {
+                return;
             }
-            copy.props = new HashMap();
-            for (Iterator i = props.entrySet().iterator(); i.hasNext();) {
+            stack = new ArrayList();
+            level = owner.level;
+            for (int i = 0; i < stack.size(); ++i) {
+                stack.add(((ArrayList) owner.stack.get(i)).clone());
+            }
+            props = new HashMap();
+            for (Iterator i = owner.props.entrySet().iterator(); i.hasNext();) {
                 Map.Entry entry = (Map.Entry) i.next();
                 ArrayList from = (ArrayList) entry.getValue();
                 List l2 = new ArrayList();
@@ -819,17 +838,22 @@ public class PropertyHelper {
                     LocalProperty v = (LocalProperty) l.next();
                     l2.add(v);
                 }
-                copy.props.put(entry.getKey(), l2);
+                props.put(entry.getKey(), l2);
             }
-            return copy;
         }
 
         public void enterLocalPropertyScope() {
+            if (stack == null) {
+                shallowCopyParent();
+            }
             stack.add(new ArrayList());
             level++;
         }
 
         public void addProperty(String name, Object value) {
+            if (stack == null) {
+                shallowCopyParent();
+            }
             if (stack.size() == 0) {
                 return;
             }
@@ -851,6 +875,9 @@ public class PropertyHelper {
         }
 
         public void exitLocalPropertyScope() {
+            if (stack == null) {
+                shallowCopyParent();
+            }
             if (stack.size() == 0) {
                 return;
             }
@@ -868,7 +895,14 @@ public class PropertyHelper {
             }
         }
 
+        
         public LocalProperty getLocalProperty(String name) {
+            if (stack == null) {
+                shallowCopyParent();
+            }
+            if (props == null) {
+                return owner.getLocalProperty(name);
+            }
             List l = (List) props.get(name);
             if (l != null && l.size() != 0) {
                 return (LocalProperty) l.get(l.size() - 1);
@@ -877,8 +911,9 @@ public class PropertyHelper {
         }
 
         public Map getProps() {
-            return props;
+            return props == null ? owner.props : props;
         }
+
     }
 
     /**
@@ -887,10 +922,11 @@ public class PropertyHelper {
 
     private class ThreadLocalProperties extends InheritableThreadLocal {
         protected synchronized Object initialValue() {
-            return new LocalPropertyStack();
+            return new LocalPropertyStack(null);
         }
         protected synchronized Object childValue(Object obj) {
-            return ((LocalPropertyStack) obj).shallowCopy();
+            //return ((LocalPropertyStack) obj).shallowCopy();
+            return new LocalPropertyStack((LocalPropertyStack) obj);
         }
         public LocalProperty getLocalProperty(String name) {
             return ((LocalPropertyStack) get()).getLocalProperty(name);
