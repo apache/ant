@@ -739,9 +739,9 @@
 
     <blockquote><pre>
     &lt;copy todir="dest">
-        &lt;filelist dir="src">
+        &lt;fileset dir="src">
             &lt;modified/>
-        &lt;/filelist>
+        &lt;/fileset>
     &lt;/copy
     </pre></blockquote>
     <p>This will copy all files from <i>src</i> to <i>dest</i> which content has changed.
@@ -750,7 +750,7 @@
 
     <blockquote><pre>
     &lt;copy todir="dest">
-        &lt;filelist dir="src">
+        &lt;fileset dir="src">
             &lt;modified update="true"
                       seldirs="true"
                       cache="propertyfile"
@@ -759,7 +759,7 @@
                 &lt;param name="cache.cachefile"     value="cache.properties"/>
                 &lt;param name="algorithm.algorithm" value="MD5"/>
             &lt;/modified>
-        &lt;/filelist>
+        &lt;/fileset>
     &lt;/copy>
     </pre></blockquote>
   <p>This is the same example rewritten as CoreSelector with setting the all the values
@@ -767,7 +767,7 @@
 
     <blockquote><pre>
     &lt;copy todir="dest">
-        &lt;filelist dir="src">
+        &lt;fileset dir="src">
             &lt;custom class="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector">
                 &lt;param name="update"     value="true"/>
                 &lt;param name="seldirs"    value="true"/>
@@ -777,7 +777,7 @@
                 &lt;param name="cache.cachefile"     value="cache.properties"/>
                 &lt;param name="algorithm.algorithm" value="MD5"/>
             &lt;/custom>
-        &lt;/filelist>
+        &lt;/fileset>
     &lt;/copy>
     </pre></blockquote>
   <p>And this is the same rewritten as CustomSelector.</p>
@@ -1192,11 +1192,9 @@
     <a href="selectors-program.html">Programming Selectors in Ant</a>.</p>
 
     <hr>
-    <p align="center">Copyright &copy; 2002-2003 Apache Software
+    <p align="center">Copyright &copy; 2002-2004 Apache Software
     Foundation. All rights Reserved.</p>
 
   </body>
 
 </html>
-
-
