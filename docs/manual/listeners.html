@@ -80,7 +80,7 @@ listeners and loggers.</p>
   <tr>
     <td width="33%"><code><a href="#XmlLogger">org.apache.tools.ant.XmlLogger</a></code></td>
     <td width="33%">Writes the build information to an XML file.</td>
-    <td width="34%">BuildListener</td>
+    <td width="34%">BuildLogger</td>
   </tr>
 </table>
 <h3><a name="DefaultLogger">DefaultLogger</a></h3>
@@ -269,10 +269,15 @@ corresponding Log4j level.</p>
 <h3><a name="XmlLogger">XmlLogger</a></h3>
 
 <p>Writes all build information out to an XML file named log.xml, or the value
-of the <code>XmlLogger.file</code> property if present. 
+of the <code>XmlLogger.file</code> property if present, when used as a
+listener. When used as a logger, it writes all output to either the
+console or to the value of <code>-logfile</code>. Whether used as a listener
+or logger, the output is not generated until the build is complete, as it
+buffers the information in order to provide timing information for task,
+targets, and the project.
 <p>
-By default the xml file creates 
-a reference to an xslt file "log.xsl" in the current directory; look in 
+By default the XML file creates 
+a reference to an XSLT file "log.xsl" in the current directory; look in 
 ANT_HOME/etc for one of these. You can set the property 
 <code>ant.XmlLogger.stylesheet.uri</code> to provide a uri to a style sheet.
 this can be a relative or absolute file path, or an http URL. 
@@ -286,7 +291,8 @@ is declared at all.
 
 <blockquote>
 
-<p><code>ant -listener org.apache.tools.ant.XmlLogger</code></p>
+<p><code>ant -listener org.apache.tools.ant.XmlLogger</code><br/>
+<code>ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</code></p>
 
 </blockquote>
 

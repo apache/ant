@@ -317,6 +317,9 @@ Other changes:
   
 * <rmic> has a new nested element, <compilerarg>, which allows you
   to specify additional args for the specific compiler you're using.
+  
+* org.apache.tools.ant.XmlLogger now is a BuildLogger, rather than just
+  a BuildListener. It can operate in either mode successfully.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
