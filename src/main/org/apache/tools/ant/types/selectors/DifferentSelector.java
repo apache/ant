@@ -110,14 +110,16 @@ public class DifferentSelector extends MappingSelector {
             return true;
         }
 
-        //same date if dest timestamp is within granularity of the srcfile
-        boolean sameDate;
-        sameDate = destfile.lastModified() >= srcfile.lastModified() - granularity
-            && destfile.lastModified() <= srcfile.lastModified() + granularity;
+        if (!ignoreFileTimes) {
+            //same date if dest timestamp is within granularity of the srcfile
+            boolean sameDate;
+            sameDate = destfile.lastModified() >= srcfile.lastModified() - granularity
+                && destfile.lastModified() <= srcfile.lastModified() + granularity;
 
-        //and when ignoreFileTimes is set we claim the files are now equal
-        if(sameDate && !ignoreFileTimes) {
-            return true;
+            // different dates => different files
+            if(!sameDate) {
+                return true;
+            }
         }
 
         //here do a bulk comparison
