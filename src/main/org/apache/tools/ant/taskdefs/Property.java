@@ -295,7 +295,7 @@ public class Property extends Task {
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
-            String value = (String) props.getProperty(name);
+            String value = props.getProperty(name);
 
             String v = project.replaceProperties(value);
             addProperty(name, v);
