@@ -128,5 +128,14 @@ public interface DataService {
     String replacePropertyRefs(String value, Map replacementValues)
          throws ExecutionException;
 
+    /**
+     * Get all the properties from the frame and any references frames. This
+     * is an expensive operation since it must clone all of the property
+     * stores in all frames
+     *
+     * @return a Map containing the frames properties indexed by their full name.
+     */
+    Map getAllProperties();         
+         
 }
 

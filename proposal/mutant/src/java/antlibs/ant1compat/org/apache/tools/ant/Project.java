@@ -54,6 +54,9 @@
 package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Iterator;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
@@ -617,6 +620,50 @@ public class Project {
         } catch (ExecutionException e) {
             throw new BuildException(e);
         }
+    }
+    
+    /**
+     * get a copy of the property hashtable
+     * @return the hashtable containing all properties, user included
+     */
+    public Hashtable getProperties() {
+        Map properties = dataService.getAllProperties();
+        Hashtable result = new Hashtable();
+        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+            String name = (String)i.next();
+            Object value = properties.get(name);
+            if (value instanceof String) {
+                result.put(name, value);
+            }
+        }
+        
+        return result;
+    }
+
+    /**
+     * get a copy of the property hashtable
+     * @return the hashtable containing all properties, user included
+     */
+    public Hashtable getUserProperties() {
+        return getProperties();
+    }
+    
+    /**
+     * Get all references in the project
+     * @return the hashtable containing all references
+     */
+    public Hashtable getReferences() {
+        Map properties = dataService.getAllProperties();
+        Hashtable result = new Hashtable();
+        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+            String name = (String)i.next();
+            Object value = properties.get(name);
+            if (!(value instanceof String)) {
+                result.put(name, value);
+            }
+        }
+        
+        return result;
     }
 }
 

@@ -235,7 +235,7 @@ public class ExecutionFrame {
         this.initConfig = initConfig;
 
         configureServices();
-        
+
         antLibraries = new HashMap(standardLibs);
 
         try {
@@ -274,6 +274,33 @@ public class ExecutionFrame {
      */
     public Project getProject() {
         return project;
+    }
+
+
+    /**
+     * Get all the properties from the frame and any references frames. This
+     * is an expensive operation since it must clone all of the property
+     * stores in all frames
+     *
+     * @return a Map containing the frames properties indexed by their full name.
+     */
+    public Map getAllProperties() {
+        Map allProperties = new HashMap(dataValues);
+        Iterator i = referencedFrames.keySet().iterator(); 
+        while (i.hasNext()) {
+            String refName = (String)i.next();
+            ExecutionFrame refFrame = getReferencedFrame(refName);
+            Map refProperties = refFrame.getAllProperties();
+            Iterator j = refProperties.keySet().iterator();
+            while (j.hasNext()) {
+                String name = (String)j.next();
+                Object value = refProperties.get(name);
+                allProperties.put(refName + Project.REF_DELIMITER + name,
+                    value);
+            }
+        }
+        
+        return allProperties;
     }
 
     /**

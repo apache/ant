@@ -128,9 +128,6 @@
 
   <target name="antlibs" depends="common">
     <antcall target="build-lib" inheritall="false">
-      <param name="libset" value="io"/>
-    </antcall>
-    <antcall target="build-lib" inheritall="false">
       <param name="libset" value="system"/>
     </antcall>
   </target>
@@ -171,7 +168,24 @@
                 parampattern="[a-z].*"
                 staticpattern="[a-z].*"
                 ignoreCastWhitespace="true">
-      <fileset dir="${java.dir}" includes="**/*.java"/>
+      <fileset dir="${java.dir}">
+        <include name="**/*.java"/>
+        <exclude name="**/org/apache/tools/ant/Task.java"/>
+        <exclude name="**/org/apache/tools/ant/ProjectComponent.java"/>
+        <exclude name="**/org/apache/tools/ant/types/DataType.java"/>
+      </fileset>
+    </checkstyle>
+    <checkstyle maxlinelen="80"
+                memberpattern="[a-z].*"
+                parampattern="[a-z].*"
+                staticpattern="[a-z].*"
+                allowProtected="true"
+                ignoreCastWhitespace="true">
+      <fileset dir="${java.dir}">
+        <include name="**/org/apache/tools/ant/Task.java"/>
+        <include name="**/org/apache/tools/ant/ProjectComponent.java"/>
+        <include name="**/org/apache/tools/ant/types/DataType.java"/>
+      </fileset>
     </checkstyle>
   </target>
   
