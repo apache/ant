@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.*;
 /**
  * Unit tests for ModifiedSelector.
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */
@@ -261,7 +261,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             for (int i=0; i<filenames.length; i++) {
                 String ch = "F";
                 if (files[i].isDirectory()) ch = "T";
-                // f2name shouldn´t be selected: only timestamp has changed!
+                // f2name shouldn't be selected: only timestamp has changed!
                 if (filenames[i].equalsIgnoreCase(f3name)) ch = "T";
                 if (filenames[i].equalsIgnoreCase(f4name)) ch = "T";
                 expected.append(ch);
@@ -304,7 +304,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             s.setClassname("org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector");
 
             s.addParam(createParam("cache.cachefile", cachefile));
-            //s.addParam(createParam("algorithm.provider","---")); // i don´t know any valid
+            //s.addParam(createParam("algorithm.provider","---")); // i don't know any valid
             s.addParam(createParam("cache","propertyfile"));
             s.addParam(createParam("update","true"));
             s.addParam(createParam("comparator","rule"));
@@ -404,7 +404,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      *       <param name="cache" value="propertyfiles" />
      *   </custom>
      * </pre> It was important first to set the cache and then to set
-     * the cache´s configuration parameters. That results in the reorganized
+     * the cache's configuration parameters. That results in the reorganized
      * configure() method of ModifiedSelector. This testcase tests that.
      */
     public void testCreatePropertiesCacheViaCustomSelector() {
@@ -535,7 +535,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             assertTrue("Not enough files copied on first time.", to1.list().length>5);
             assertTrue("Too much files copied on second time.", to2.list().length==0);
             assertTrue("Too much files copied on third time.", to3.list().length==2);
-        // don´t catch the JUnit exceptions
+        // don't catch the JUnit exceptions
         } finally {
             bft.doTarget("modifiedselectortest-scenario-clean");
             bft.deletePropertiesfile();

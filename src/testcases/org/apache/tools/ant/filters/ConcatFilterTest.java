@@ -62,7 +62,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * JUnit Testcases for ConcatReader
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  */
 public class ConcatFilterTest extends BuildFileTest {
 
