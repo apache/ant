@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,17 +24,13 @@ import java.io.PrintStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.PipedInputStream;
 import java.io.InputStreamReader;
 import java.io.PipedOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Vector;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
