@@ -400,32 +400,31 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         this.name = name;
     }
 
-    /* Two zipentries are not necessarily equal if they have the same name. */
-    /*
+    /**
      * Get the hashCode of the entry.
      * This uses the name as the hashcode.
      * @return a hashcode.
      * @since Ant 1.7
      */
-/*    public int hashCode() {
+    public int hashCode() {
+        // this method has severe consequences on performance. We cannot rely
+        // on the super.hashCode() method since super.getName() always return
+        // the empty string in the current implemention (there's no setter)
+        // so it is basically draining the performance of a hashmap lookup
         return getName().hashCode();
     }
-*/
-    /*
-     * The equality method.
 
+    /**
+     * The equality method. In this case, the implementation returns 'this == o'
+     * which is basically the equals method of the Object class.
      * @param o the object to compare to
      * @return true if this object has the same name as <code>o</code>
      * @since Ant 1.7
      */
-/*    public boolean equals(Object o) {
-        if (o instanceof ZipEntry) {
-            ZipEntry other = (ZipEntry) o;
-            return other.getName().equals(getName());
-        }
-        return false;
+    public boolean equals(Object o) {
+        return (this == o);
     }
-*/
+
     /**
      * Helper for JDK 1.1
      *
