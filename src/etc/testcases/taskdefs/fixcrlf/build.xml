@@ -142,6 +142,21 @@
              />
   </target>
 
+  <target name="testFixlastDos" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="fixlastfalse.lf"
+             eol="crlf"
+             />
+  </target>
+
+  <target name="testFixlastFalseMac" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="fixlastfalse.lf"
+             eol="cr"
+             fixlast="false"
+             />
+  </target>
+
   <!-- Bugzilla Report 20840 -->
   <target name="createParentDirs" depends="init">
     <fixcrlf srcdir="." destdir="result" includes="input/Junk1.java"/>
