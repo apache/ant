@@ -2043,6 +2043,12 @@ systems.</p>
       returncode other than 0.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">newenvironment</td>
+    <td valign="top">Do not propagate old environment when new environment
+      variables are specified.</td>
+    <td align="center" valign="top">No, default is <em>false</em></td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
@@ -2160,6 +2166,12 @@ command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
     <td valign="top">Stop the buildprocess if the command exits with a
       returncode other than 0.</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">newenvironment</td>
+    <td valign="top">Do not propagate old environment when new environment
+      variables are specified.</td>
+    <td align="center" valign="top">No, default is <em>false</em></td>
   </tr>
   <tr>
     <td valign="top">parallel</td>
@@ -3833,7 +3845,7 @@ resource) in the project.</p>
 property cannot be set, and will be ignored. This means that properties set
 outside the current project always override the properties of the current
 project.</p>
-<p>There are four ways to set properties:</p>
+<p>There are five ways to set properties:</p>
 <ul>
   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
@@ -3843,6 +3855,9 @@ project.</p>
   <li>By setting the <i>resource</i> attribute with the resource name of the
     property file to load. This property file has the format as defined by the
     file used in the class java.util.Properties.</li>
+  <li>By setting the <i>environment</i> attribute with a prefix to use.
+    Properties will be defined for every environment variable by
+    prefixing the suplied name and a period to the name of the variable.</li>
 </ul>
 <p>Although combinations of the three ways are possible, only one should be used
 at a time. Problems might occur with the order in which properties are set, for
