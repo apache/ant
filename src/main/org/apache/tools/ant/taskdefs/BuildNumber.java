@@ -79,12 +79,12 @@ public class BuildNumber
     /**
      * The name of the property in which the build number is stored.
      */
-    private static final String DEFAULT_PROPRTY_NAME = "build.number";
+    private static final String DEFAULT_PROPERTY_NAME = "build.number";
 
     /**
      * The default filename to use if no file specified.
      */
-    private static final String DEFAULT_FILENAME = DEFAULT_PROPRTY_NAME;
+    private static final String DEFAULT_FILENAME = DEFAULT_PROPERTY_NAME;
 
     /**
      * The File in which the build number is stored.
@@ -115,7 +115,7 @@ public class BuildNumber
         final Properties properties = loadProperties();
         final int buildNumber = getBuildNumber( properties );
 
-        properties.put( DEFAULT_PROPRTY_NAME,
+        properties.put( DEFAULT_PROPERTY_NAME,
                         String.valueOf( buildNumber + 1 ) );
 
         // Write the properties file back out
@@ -147,7 +147,7 @@ public class BuildNumber
         }
 
         //Finally set the property
-        getProject().setProperty( DEFAULT_PROPRTY_NAME,
+        getProject().setProperty( DEFAULT_PROPERTY_NAME,
                                   String.valueOf( buildNumber ) );
     }
 
@@ -162,7 +162,7 @@ public class BuildNumber
         throws BuildException
     {
         final String buildNumber =
-            properties.getProperty( DEFAULT_PROPRTY_NAME, "0" ).trim();
+            properties.getProperty( DEFAULT_PROPERTY_NAME, "0" ).trim();
 
         // Try parsing the line into an integer.
         try
