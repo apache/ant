@@ -11,6 +11,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.ComponentException;
@@ -36,6 +38,9 @@ public class DefaultConfigurer
     extends AbstractLoggable
     implements Configurer, Composable, Loggable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultConfigurer.class );
+
     ///Compile time constant to turn on extreme debugging
     private final static boolean   DEBUG         = false;
 
@@ -84,6 +89,7 @@ public class DefaultConfigurer
     {
         if( DEBUG )
         {
+            final String message = REZ.getString( "configuring-object.notice", object );
             getLogger().debug( "Configuring " + object );
         }
 
@@ -91,6 +97,7 @@ public class DefaultConfigurer
         {
             if( DEBUG )
             {
+                final String message = REZ.getString( "configurable.notice" );
                 getLogger().debug( "Configuring object via Configurable interface" );
             }
 
@@ -100,7 +107,8 @@ public class DefaultConfigurer
         {
             if( DEBUG )
             {
-                getLogger().debug( "Configuring object via Configurable reflection" );
+                final String message = REZ.getString( "reflection.notice" );
+                getLogger().debug( message );
             }
 
             final String[] attributes = configuration.getAttributeNames();
@@ -111,8 +119,8 @@ public class DefaultConfigurer
 
                 if( DEBUG )
                 {
-                    getLogger().debug( "Configuring attribute name=" + name +
-                                       " value=" + value );
+                    final String message = REZ.getString( "configure-attribute.notice", name, value );
+                    getLogger().debug( message );
                 }
 
                 configureAttribute( object, name, value, context );
@@ -126,7 +134,9 @@ public class DefaultConfigurer
 
                 if( DEBUG )
                 {
-                    getLogger().debug( "Configuring subelement name=" + child.getName() );
+                    final String message =
+                        REZ.getString( "configure-subelement.notice", child.getName() );
+                    getLogger().debug( message );
                 }
 
                 configureElement( object, child, context );
@@ -140,7 +150,9 @@ public class DefaultConfigurer
                 {
                     if( DEBUG )
                     {
-                        getLogger().debug( "Configuring content " + content );
+                        final String message =
+                            REZ.getString( "configure-content.notice", content );
+                        getLogger().debug( message );
                     }
 
                     configureContent( object, content, context );
@@ -160,9 +172,9 @@ public class DefaultConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    public void configure( final Object object, 
-                           final String name, 
-                           final String value, 
+    public void configure( final Object object,
+                           final String name,
+                           final String value,
                            final Context context )
         throws ConfigurationException
     {
@@ -193,10 +205,11 @@ public class DefaultConfigurer
     {
         for( int i = 0; i < RESERVED_ATTRIBUTES.length; i++ )
         {
-            if( RESERVED_ATTRIBUTES[ i ].equals( name ) ) 
+            if( RESERVED_ATTRIBUTES[ i ].equals( name ) )
             {
-                throw new ConfigurationException( "Can not specify reserved attribute " + 
-                                                  name );
+                final String message =
+                    REZ.getString( "reserved-attribute.error", name );
+                throw new ConfigurationException( message );
             }
         }
 
@@ -214,13 +227,13 @@ public class DefaultConfigurer
         // slow. Need to cache results per class etc.
 
         final Class clazz = object.getClass();
-        final Method methods[] = getMethodsFor( clazz, methodName );
+        final Method[] methods = getMethodsFor( clazz, methodName );
 
         if( 0 == methods.length )
         {
-            throw new ConfigurationException( "Unable to set attribute via " + methodName +
-                                              " due to not finding any appropriate " +
-                                              "accessor method" );
+            final String message =
+                REZ.getString( "no-attribute-method.error", methodName );
+            throw new ConfigurationException( message );
         }
 
         setValue( object, value, context, methods );
@@ -241,8 +254,9 @@ public class DefaultConfigurer
         }
         catch( final PropertyException pe )
         {
-            throw new ConfigurationException( "Error resolving property " + value,
-                                              pe );
+            final String message =
+                REZ.getString( "bad-property-resolve.error", value );
+            throw new ConfigurationException( message, pe );
         }
     }
 
@@ -263,9 +277,9 @@ public class DefaultConfigurer
             }
         }
 
-        throw new ConfigurationException( "Unable to set attribute via " +
-                                          methods[ 0 ].getName() + " as could not convert " +
-                                          source + " to a matching type" );
+        final String message =
+            REZ.getString( "no-can-convert.error", methods[ 0 ].getName(), source );
+        throw new ConfigurationException( message );
     }
 
     private boolean setValue( final Object object,
@@ -290,16 +304,17 @@ public class DefaultConfigurer
         {
             if( DEBUG )
             {
-                getLogger().debug( "Failed to find converter ", ce );
+                final String message = REZ.getString( "no-converter.error" );
+                getLogger().debug( message, ce );
             }
 
             return false;
         }
         catch( final Exception e )
         {
-            throw new ConfigurationException( "Error converting attribute for " +
-                                              method.getName(),
-                                              e );
+            final String message =
+                REZ.getString( "bad-convert-for-attribute.error", method.getName() );
+            throw new ConfigurationException( message, e );
         }
 
         try
@@ -309,15 +324,13 @@ public class DefaultConfigurer
         catch( final IllegalAccessException iae )
         {
             //should never happen ....
-            throw new ConfigurationException( "Error retrieving methods with " +
-                                              "correct access specifiers",
-                                              iae );
+            final String message = REZ.getString( "illegal-access.error" );
+            throw new ConfigurationException( message, iae );
         }
         catch( final InvocationTargetException ite )
         {
-            throw new ConfigurationException( "Error calling method attribute " +
-                                              method.getName(),
-                                              ite );
+            final String message = REZ.getString( "invoke-target.error", method.getName() );
+            throw new ConfigurationException( message, ite );
         }
 
         return true;
@@ -335,8 +348,8 @@ public class DefaultConfigurer
         else if( Double.TYPE.equals( clazz ) ) return Double.class;
         else
         {
-            throw new IllegalArgumentException( "Can not get complex type for non-primitive " +
-                                                "type " + clazz.getName() );
+            final String message = REZ.getString( "no-complex-type.error", clazz.getName() );
+            throw new IllegalArgumentException( message );
         }
     }
 
@@ -451,9 +464,9 @@ public class DefaultConfigurer
 
             if( 0 == methods.length )
             {
-                throw new ConfigurationException( "Unable to set attribute " + javaName +
-                                                  " due to not finding any appropriate " +
-                                                  "accessor method" );
+                final String message =
+                    REZ.getString( "no-element-method.error", javaName );
+                throw new ConfigurationException( message );
             }
 
             //guess it is first method ????
@@ -478,7 +491,8 @@ public class DefaultConfigurer
         }
         catch( final Exception e )
         {
-            throw new ConfigurationException( "Error creating sub-element", e );
+            final String message = REZ.getString( "subelement-create.error" );
+            throw new ConfigurationException( message, e );
         }
     }
 
@@ -502,7 +516,8 @@ public class DefaultConfigurer
         }
         catch( final Exception e )
         {
-            throw new ConfigurationException( "Error creating sub-element", e );
+            final String message = REZ.getString( "subelement-create.error" );
+            throw new ConfigurationException( message, e );
         }
     }
 }
