@@ -123,6 +123,14 @@ public class Tstamp extends Task {
         
         public void execute(Project project, Date date)
         {
+            if (propertyName == null) {
+                throw new BuildException("property attribute must be provided", location);
+            }
+            
+            if (pattern == null) {
+                throw new BuildException("pattern attribute must be provided", location);
+            }
+            
             SimpleDateFormat sdf = new SimpleDateFormat (pattern);
             project.setProperty(propertyName, sdf.format(date));
         }

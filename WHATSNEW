@@ -45,6 +45,16 @@ Other changes:
   of the source files are no longer required to be at the end of the
   command.
 
+* Ant now prints a warning when an attempt is made to use a property which has
+  not been set. Any build files which rely on non-set properties being passed
+  through untranslated will now break.
+  
+* Added a failonerror to the javac task. If set to false, the build will continue
+  even if there are compilation errors.
+  
+* Added nested format elements to the tstamp task allowing additional time formats
+  to be defined for arbitrary properties.   
+
 Fixed bugs:
 -----------
 
