@@ -65,7 +65,7 @@ import java.util.Iterator;
  * The assertion datatype. This type describes
  * assertion settings for the &lt;java&gt; task and others.
  * One can set the system assertions, and enable/disable those in
- * packages & classes.
+ * packages and classes.
  * Assertions can only be enabled or disabled when forking Java.
  *
  * Example: set system assertions and all org.apache packages except
