@@ -136,6 +136,8 @@ Other changes:
 * The OS/2 wrapper scripts have been adapted to use the new launcher.
   Bugzilla Report 28226.
 
+* <sshexec> now also captures stderr output.  Bugzilla Report 28349.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
