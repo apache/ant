@@ -586,7 +586,9 @@ public class FTP
 
         FTPFile[] files = ftp.listFiles(remoteFile);
 
-        if (files == null)
+        // For Microsoft's Ftp-Service an Array with length 0 is 
+        // returned if configured to return listings in "MS-DOS"-Format
+        if (files == null || files.length == 0)
         {
             // If we are sending files, then assume out of date.
             // If we are getting files, then throw an error
