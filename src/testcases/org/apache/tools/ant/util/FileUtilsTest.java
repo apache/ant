@@ -404,6 +404,8 @@ public class FileUtilsTest extends TestCase {
                                                  new File("c:\\foo\\bar")));
         assertEquals(fu.normalize("/bar").getAbsolutePath(), 
                      fu.removeLeadingPath(new File("/foo"), new File("/bar")));
+        assertEquals(fu.normalize("/foobar").getAbsolutePath(), 
+                     fu.removeLeadingPath(new File("/foo"), new File("/foobar")));
     }
 
     /**

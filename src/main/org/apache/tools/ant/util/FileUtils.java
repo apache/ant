@@ -866,14 +866,14 @@ public class FileUtils {
      * @since Ant 1.5
      */
     public String removeLeadingPath(File leading, File path) {
-        String l = normalize(leading.getAbsolutePath()).getAbsolutePath();
+        // if leading's path ends with a slash, it will be stripped by
+        // normalize - we always add one so we never think /foo was a
+        // parent directory of /foobar
+        String l = normalize(leading.getAbsolutePath()).getAbsolutePath()
+            + File.separator;
         String p = normalize(path.getAbsolutePath()).getAbsolutePath();
         if (p.startsWith(l)) {
-            String result = p.substring(l.length());
-            if (result.startsWith(File.separator)) {
-                result = result.substring(File.separator.length());
-            }
-            return result;
+            return p.substring(l.length());
         } else {
             return p;
         }
