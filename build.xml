@@ -146,6 +146,7 @@
   <selector id="needs.jdk1.4+">
     <or>
       <filename name="${regexp.package}/Jdk14Regexp*"/>
+      <filename name="${ant.package}/types/AssertionsTest.java"/>
     </or>
   </selector>
 
@@ -1431,9 +1432,9 @@
          Run testcase
        ===================================================================
   -->
-  <target name="test" depends="run-tests" description="--> run JUnit tests"/>
+  <target name="test" depends="run-tests,run-single-test" description="--> run JUnit tests"/>
 
-  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present">
+  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present" unless="testcase">
 
     <condition property="run.junitreport">
       <or>
@@ -1569,6 +1570,8 @@
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${ant.package}/taskdefs/ProcessDestroyerTest.java"
                    unless="tests.and.ant.share.classloader"/>
+          <exclude name="${ant.package}/taskdefs/ProtectedJarMethodsTest.java"
+                   unless="tests.and.ant.share.classloader"/>
 
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs
@@ -1590,7 +1593,7 @@
   <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
     description="--> runs the single unit test defined in the testcase property"/>
 
-  <target name="run-single-test-only"
+  <target name="run-single-test-only" if="testcase"
     description="--> runs the single unit test defined in the testcase property">
 
 
