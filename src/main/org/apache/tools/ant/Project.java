@@ -889,8 +889,26 @@ public class Project {
                     MSG_VERBOSE);
                 return;
             } else {
+                int logLevel = MSG_WARN;
+                if (old.getName().equals(taskClass.getName())) {
+                    ClassLoader oldLoader = old.getClassLoader();
+                    ClassLoader newLoader = taskClass.getClassLoader();
+                    // system classloader on older JDKs can be null
+                    if (oldLoader != null 
+                        && newLoader != null
+                        && oldLoader instanceof AntClassLoader
+                        && newLoader instanceof AntClassLoader
+                        && ((AntClassLoader) oldLoader).getClasspath()
+                        .equals(((AntClassLoader) newLoader).getClasspath())
+                        ) {
+                        // same classname loaded from the same
+                        // classpath components
+                        logLevel = MSG_VERBOSE;
+                    }
+                }
+                
                 log("Trying to override old definition of task " + taskName,
-                    MSG_WARN);
+                    logLevel);
                 invalidateCreatedTasks(taskName);
             }
         }
