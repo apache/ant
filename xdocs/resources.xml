@@ -254,6 +254,26 @@
 
     <section name="Articles">
 
+      <subsection name="Managing Build Complexity with Apache Ant 1.6">
+
+        <p>As Apache Ant is applied to increasingly difficult tasks,
+        its users are creating more complex and less legible build
+        files. This is due, in part, to the limited tools for
+        decomposition and code reuse within previous versions of
+        Ant.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Geoffrey Wiseman</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.sys-con.com/story/?storyid=45078&amp;DE=1">http://www.sys-con.com/story/?storyid=45078&amp;DE=1</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="New Ant 1.6 Features for Big Projects">
         <p>This article describes the &lt;macrodef&gt;, &lt;import&gt;
           and &lt;subant&gt; in detail and shows how they help in
