@@ -177,18 +177,41 @@ public class Manifest extends Task {
         }
 
         /**
+         * @see java.lang.Object#hashCode
+         */
+        public int hashCode() {
+            int hashCode = 0;
+            
+            if (name != null) {
+                hashCode += name.hashCode();
+            }
+            
+            hashCode += values.hashCode();
+            return hashCode;
+        }
+
+        /**
          * @see java.lang.Object#equals
          */
         public boolean equals(Object rhs) {
-            if (!(rhs instanceof Attribute)) {
+            if (rhs == null || rhs.getClass() != getClass()) {
                 return false;
+            }
+    
+            if (rhs == this) {
+                return true;
             }
 
             Attribute rhsAttribute = (Attribute) rhs;
-            return (name != null && rhsAttribute.name != null &&
-                    getKey().equals(rhsAttribute.getKey()) &&
-                    values != null && 
-                    CollectionUtils.equals(values, rhsAttribute.values));
+            String lhsKey = getKey();
+            String rhsKey = rhsAttribute.getKey();
+            if ((lhsKey == null && rhsKey != null) 
+                 || (lhsKey != null && rhsKey == null)
+                 || !lhsKey.equals(rhsKey)) {
+                return false;
+            }
+            
+            return CollectionUtils.equals(values, rhsAttribute.values);
         }
 
         /**
@@ -642,29 +665,34 @@ public class Manifest extends Task {
         }
 
         /**
+         * @see java.lang.Object#hashCode
+         */
+        public int hashCode() {
+            int hashCode = 0;
+            
+            if (name != null) {
+                hashCode += name.hashCode();
+            }
+            
+            hashCode += attributes.hashCode();
+            return hashCode;
+        }
+
+        /**
          * @see java.lang.Object#equals
          */
         public boolean equals(Object rhs) {
-            if (!(rhs instanceof Section)) {
+            if (rhs == null || rhs.getClass() != getClass()) {
                 return false;
+            }
+    
+            if (rhs == this) {
+                return true;
             }
 
             Section rhsSection = (Section) rhs;
-            if (attributes.size() != rhsSection.attributes.size()) {
-                return false;
-            }
-
-            for (Enumeration e = attributes.keys(); e.hasMoreElements();) {
-                String attributeName = (String) e.nextElement();
-                Object attributeValue  = attributes.get(attributeName);
-                Object rhsAttributeValue 
-                    = rhsSection.attributes.get(attributeName);
-                if (!attributeValue.equals(rhsAttributeValue)) {
-                    return false;
-                }
-            }
-
-            return true;
+            
+            return attributes.equals(rhsSection.attributes);
         }
     }
 
@@ -938,13 +966,32 @@ public class Manifest extends Task {
     }
 
     /**
+     * @see java.lang.Object#hashCode
+     */
+    public int hashCode() {
+        int hashCode = 0;
+        
+        if (manifestVersion != null) {
+            hashCode += manifestVersion.hashCode();
+        }
+        hashCode += mainSection.hashCode();
+        hashCode += sections.hashCode();
+        
+        return hashCode;
+    }
+    
+    /**
      * @see java.lang.Object#equals
      */
     public boolean equals(Object rhs) {
-        if (!(rhs instanceof Manifest)) {
+        if (rhs == null || rhs.getClass() != getClass()) {
             return false;
         }
 
+        if (rhs == this) {
+            return true;
+        }
+        
         Manifest rhsManifest = (Manifest) rhs;
         if (manifestVersion == null) {
             if (rhsManifest.manifestVersion != null) {
@@ -953,25 +1000,12 @@ public class Manifest extends Task {
         } else if (!manifestVersion.equals(rhsManifest.manifestVersion)) {
             return false;
         }
-        if (sections.size() != rhsManifest.sections.size()) {
-            return false;
-        }
 
         if (!mainSection.equals(rhsManifest.mainSection)) {
             return false;
         }
 
-        Enumeration e = sections.elements(); 
-        while (e.hasMoreElements()) {
-            Section section = (Section) e.nextElement();
-            Section rhsSection 
-                = (Section) rhsManifest.sections.get(section.getName());
-            if (!section.equals(rhsSection)) {
-                return false;
-            }
-        }
-
-        return true;
+        return sections.equals(rhsManifest.sections);
     }
 
     /**
