@@ -289,6 +289,35 @@
         </table>
       </subsection>
 
+      <subsection name="AntSpaces">
+
+	<p>AntSpaces provides Ant integration with JavaSpaces. This
+	allows you to coordinate Ant tasks via JavaSpaces, pull out
+	work units from a JavaSpace for distributed Ant tasks to work
+	on, and so forth.</p>
+
+	<table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.oopsconsultancy.com/software/antspaces/">http://www.oopsconsultancy.com/software/antspaces/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>antspaces at oopsconsultancy.com</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="AntTimerTask">
         <p><a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">Timer</a>
         is task for measuring the time elapsed to complete other
@@ -1058,6 +1087,32 @@
         </table>
       </subsection>
 
+      <subsection name="Ivy">
+
+        <p>Ivy is a simple yet powerful dependency manager featuring
+        continuous integration, dependencies of dependencies
+        management, multiple repositories including ibiblio and high
+        performance (use of a local cache).</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.5.1 or superior</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ivy.jayasoft.org/">http://ivy.jayasoft.org/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>contact at jayasoft dot org</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD License</td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="J2ME Ant Tasks">
 
