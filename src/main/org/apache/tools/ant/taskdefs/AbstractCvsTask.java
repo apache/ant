@@ -127,6 +127,11 @@ public abstract class AbstractCvsTask extends Task {
     private boolean quiet = false;
 
     /**
+     * suppress all messages.
+     */
+    private boolean reallyquiet = false;
+
+    /**
      * compression level to use.
      */
     private int compression = 0;
@@ -681,6 +686,16 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
+     * If true, suppress all messages.
+     * @param q  if true, suppress all messages
+     * @since Ant 1.6
+     */
+    public void setReallyquiet(boolean q) {
+        reallyquiet = q;
+    }
+
+
+    /**
      * If true, report only and don't change any files.
      *
      * @param ne if true, report only and do not change any files.
@@ -738,7 +753,7 @@ public abstract class AbstractCvsTask extends Task {
      * compression
      * </li>
      * <li>
-     * quiet
+     * quiet or reallyquiet
      * </li>
      * <li>cvsroot</li>
      * <li>noexec</li>
@@ -755,8 +770,11 @@ public abstract class AbstractCvsTask extends Task {
         if (this.compression > 0 && this.compression <= MAXIMUM_COMRESSION_LEVEL) {
             c.createArgument(true).setValue("-z" + this.compression);
         }
-        if (quiet) {
+        if (quiet && !reallyquiet) {
             c.createArgument(true).setValue("-q");
+        }
+        if (reallyquiet) {
+            c.createArgument(true).setValue("-Q");
         }
         if (noexec) {
             c.createArgument(true).setValue("-n");

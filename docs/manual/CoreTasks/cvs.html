@@ -13,8 +13,8 @@
 <a href="http://www.cvshome.org/" target="_top">CVS</a> repository.</p>
 <p>When doing automated builds, the <a href="get.html">get task</a> should be
 preferred over the <i>checkout</i> command, because of speed.</p>
-<p><b>Important:</b> This task needs "cvs" on the path. If it isn't, you will get
-an error (such as error 2 on windows). If &lt;cvs&gt; doesn't work, try to execute cvs.exe
+<p><b>Important:</b> This task needs &quot;<code>cvs</code>&quot; on the path. If it isn't, you will get
+an error (such as error <code>2</code> on windows). If <code>&lt;cvs&gt;</code> doesn't work, try to execute <code>cvs.exe</code>
 from the command line in the target directory in which you are working.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -31,25 +31,25 @@ from the command line in the target directory in which you are working.
   <tr>
     <td valign="top">compression</td>
     <td valign="top"><code>true</code> or <code>false</code> - if set
-    to true, this is the same as compressionlevel=&quot;3&quot;</td>
+    to true, this is the same as <code>compressionlevel=&quot;3&quot;</code></td>
     <td align="center" valign="top">No. Defaults to false.</td>
   </tr>
   <tr>
     <td valign="top">compressionlevel</td>
     <td valign="top">A number between 1 and 9 (corresponding to
-    possible values for CVS&apos; <code>-z#</code> argument). Any
-    other value is treated as compression=&quot;false&quot;</td>
+    possible values for CVS' <code>-z#</code> argument). Any
+    other value is treated as <code>compression=&quot;false&quot;</code></td>
     <td align="center" valign="top">No. Defaults to no compression.</td>
   </tr>
 
   <tr>
     <td valign="top">cvsRoot</td>
-    <td valign="top">the CVSROOT variable.</td>
+    <td valign="top">the <code>CVSROOT</code> variable.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">cvsRsh</td>
-    <td valign="top">the CVS_RSH variable.</td>
+    <td valign="top">the <code>CVS_RSH</code> variable.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -74,7 +74,13 @@ from the command line in the target directory in which you are working.
   </tr>
   <tr>
     <td valign="top">quiet</td>
-    <td valign="top">suppress informational messages.</td>
+    <td valign="top">suppress informational messages. This is the same as <code>-q</code> on the command line.</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
+  </tr>
+  <tr>
+    <td valign="top">reallyquiet</td>
+    <td valign="top">suppress all messages. This is the same as
+      <code>-Q</code> on the command line.  <em>since Ant 1.6</em>.</td>
     <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
   <tr>
@@ -110,7 +116,7 @@ from the command line in the target directory in which you are working.
   <tr>
     <td valign="top">failonerror</td>
     <td valign="top">Stop the build process if the command exits with a
-      return code other than 0. Defaults to false</td>
+      return code other than <code>0</code>. Defaults to false</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -120,31 +126,31 @@ from the command line in the target directory in which you are working.
        dest=&quot;${ws.dir}&quot;
   /&gt;</pre>
 <p>checks out the package/module &quot;ant&quot; from the CVS
-repository pointed to by the cvsRoot attribute, and stores the files in &quot;${ws.dir}&quot;.</p>
+repository pointed to by the <code>cvsRoot</code> attribute, and stores the files in &quot;<code>${ws.dir}</code>&quot;.</p>
 <pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot;/&gt;</pre>
 <p>updates the package/module that has previously been checked out into
-&quot;${ws.dir}&quot;.</p>
+&quot;<code>${ws.dir}</code>&quot;.</p>
 
 <pre>  &lt;cvs command=&quot;-q diff -u -N&quot; output=&quot;patch.txt&quot;/&gt;</pre>
 
-<p>silently (-q) creates a file called patch.txt which contains a unified (-u) diff which includes new files added via &quot;cvs add&quot; (-N) and can be used as input to patch.
-The equivalent, using  &lt;commandline&gt; elements, is:
+<p>silently (<code>-q</code>) creates a file called <code>patch.txt</code> which contains a unified (<code>-u</code>) diff which includes new files added via &quot;cvs add&quot; (<code>-N</code>) and can be used as input to patch.
+The equivalent, using  <code>&lt;commandline&gt;</code> elements, is:
 </p>
 <pre>
-&lt;cvs output="patch"&gt;
+&lt;cvs output=&quot;patch&quot;&gt;
     &lt;commandline&gt;
-        &lt;argument value="-q"/&gt;
-        &lt;argument value="diff"/&gt;
-        &lt;argument value="-u"/&gt;
-        &lt;argument value="-N"/&gt;
+        &lt;argument value=&quot;-q&quot;/&gt;
+        &lt;argument value=&quot;diff&quot;/&gt;
+        &lt;argument value=&quot;-u&quot;/&gt;
+        &lt;argument value=&quot;-N&quot;/&gt;
     &lt;/commandline&gt;
 &lt;/cvs&gt;
 </pre>
 or:
 <pre>
-&lt;cvs output="patch"&gt;
+&lt;cvs output=&quot;patch&quot;&gt;
     &lt;commandline&gt;
-        &lt;argument line="-q diff -u -N"/&gt;
+        &lt;argument line=&quot;-q diff -u -N&quot;/&gt;
     &lt;/commandline&gt;
 &lt;/cvs&gt;
 </pre>
@@ -156,11 +162,11 @@ from the <code>&lt;cvs&gt;</code> element.
 
 
 <pre>  &lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
-<p>Updates from the head of repository ignoring sticky bits (-A) and creating any new directories as necessary (-d).</p>
+<p>Updates from the head of repository ignoring sticky bits (<code>-A</code>) and creating any new directories as necessary (<code>-d</code>).</p>
 <p>Note: the text of the command is passed to cvs &quot;as-is&quot; so any cvs options should appear
 before the command, and any command options should appear after the command as in the diff example
-above. See <a href="http://www.cvshome.org/docs/manual/index.html" target="_top">the cvs manual</a> for details,
-specifically the <a href="http://www.cvshome.org/docs/manual/cvs_16.html" target="_top">Guide to CVS commands</a></p>
+above. See <a href="http://www.cvshome.org/docs/manual/cvs-1.11.6/cvs.html" target="_top">the cvs manual</a> for details,
+specifically the <a href="http://www.cvshome.org/docs/manual/cvs-1.11.6/cvs_16.html" target="_top">Guide to CVS commands</a></p>
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software
 Foundation.  All rights Reserved.</p>
