@@ -81,10 +81,10 @@ Legal:
 
   <target name="datatype-test">
     <property name="foo">
-      <pattern value="*.java"/>
+      <pattern name="*.java"/>
     </property>
 
-    <pattern id="foo2" value="*.java" if="..." />
+    <pattern id="foo2" name="*.java" if="..." />
 
     <log message="foo=${foo}" />
     <log message="foo2=${foo2}" />
