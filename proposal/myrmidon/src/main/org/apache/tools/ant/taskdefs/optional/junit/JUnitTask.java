@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
@@ -543,11 +544,13 @@ public class JUnitTask extends Task
                 getLogger().error( message );
                 if( errorOccurredHere && test.getErrorProperty() != null )
                 {
-                    setProperty( test.getErrorProperty(), "true" );
+                    final String name = test.getErrorProperty();
+                    getContext().setProperty( name, "true" );
                 }
                 if( failureOccurredHere && test.getFailureProperty() != null )
                 {
-                    setProperty( test.getFailureProperty(), "true" );
+                    final String name = test.getFailureProperty();
+                    getContext().setProperty( name, "true" );
                 }
             }
         }

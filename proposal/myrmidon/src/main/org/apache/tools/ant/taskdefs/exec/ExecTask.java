@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -215,7 +216,7 @@ public class ExecTask
         maybeSetResultPropertyValue( err );
         if( 0 != err )
         {
-            throw new TaskException( getName() + " returned: " + err );
+            throw new TaskException( getContext().getName() + " returned: " + err );
         }
 
         if( null != m_byteArrayOutput )
@@ -238,7 +239,9 @@ public class ExecTask
             }
             val.append( line );
         }
-        setProperty( m_outputProperty, val.toString() );
+        final String name = m_outputProperty;
+        final Object value = val.toString();
+        getContext().setProperty( name, value );
     }
 
     /**
@@ -332,10 +335,11 @@ public class ExecTask
     protected void maybeSetResultPropertyValue( int result )
         throws TaskException
     {
-        String res = Integer.toString( result );
+        final String res = Integer.toString( result );
         if( m_resultProperty != null )
         {
-            setProperty( m_resultProperty, res );
+            final String name = m_resultProperty;
+            getContext().setProperty( name, res );
         }
     }
 

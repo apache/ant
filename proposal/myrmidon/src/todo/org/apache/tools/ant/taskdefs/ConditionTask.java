@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
@@ -71,7 +72,9 @@ public class ConditionTask extends ConditionBase
         Condition c = (Condition)getConditions().nextElement();
         if( c.eval() )
         {
-            setProperty( property, value );
+            final String name = property;
+            final Object value1 = value;
+            getContext().setProperty( name, value1 );
         }
     }
 }

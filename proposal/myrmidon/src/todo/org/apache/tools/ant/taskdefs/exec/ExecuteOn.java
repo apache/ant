@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Marker;
@@ -117,7 +118,7 @@ public class ExecuteOn
     {
         if( m_srcFilePos != null )
         {
-            throw new TaskException( getName() + " doesn\'t support multiple srcfile elements." );
+            throw new TaskException( getContext().getName() + " doesn\'t support multiple srcfile elements." );
         }
         m_srcFilePos = getCommand().createMarker();
         return m_srcFilePos;
@@ -132,7 +133,7 @@ public class ExecuteOn
     {
         if( m_targetFilePos != null )
         {
-            throw new TaskException( getName() + " doesn\'t support multiple targetfile elements." );
+            throw new TaskException( getContext().getName() + " doesn\'t support multiple targetfile elements." );
         }
         m_targetFilePos = getCommand().createMarker();
         m_srcIsFirst = ( m_srcFilePos != null );

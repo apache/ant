@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 
 /**
@@ -142,7 +143,9 @@ public class Input extends Task
         // adopted from org.apache.tools.ant.taskdefs.Property
         if( addproperty != null )
         {
-            setProperty( addproperty, input );
+            final String name = addproperty;
+            final Object value = input;
+            getContext().setProperty( name, value );
         }
     }
 }

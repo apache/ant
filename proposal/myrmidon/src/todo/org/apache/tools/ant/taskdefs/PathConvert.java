@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 
@@ -156,11 +157,12 @@ public class PathConvert extends Task
         }
 
         // Place the result into the specified property
-        String value = rslt.toString();
+        final String value = rslt.toString();
 
         getLogger().debug( "Set property " + m_property + " = " + value );
 
-        setProperty( m_property, value );
+        final String name = m_property;
+        getContext().setProperty( name, value );
     }
 
     /**

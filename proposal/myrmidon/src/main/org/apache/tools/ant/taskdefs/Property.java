@@ -15,6 +15,7 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
@@ -76,7 +77,9 @@ public class Property
 
         if( ( m_name != null ) && ( m_value != null ) )
         {
-            setProperty( m_name, m_value );
+            final String name = m_name;
+            final Object value = m_value;
+            getContext().setProperty( name, value );
         }
 
         if( m_resource != null ) {
@@ -115,7 +118,7 @@ public class Property
         {
             final String name = (String)e.next();
             final String value = (String)props.getProperty( name );
-            setProperty( name, value );
+            getContext().setProperty( name, value );
         }
     }
 

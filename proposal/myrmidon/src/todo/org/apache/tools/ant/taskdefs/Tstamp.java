@@ -18,6 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -60,13 +61,19 @@ public class Tstamp
             Date d = new Date();
 
             SimpleDateFormat dstamp = new SimpleDateFormat( "yyyyMMdd" );
-            setProperty( m_prefix + "DSTAMP", dstamp.format( d ) );
+            final String name = m_prefix + "DSTAMP";
+            final Object value = dstamp.format( d );
+            getContext().setProperty( name, value );
 
             SimpleDateFormat tstamp = new SimpleDateFormat( "HHmm" );
-            setProperty( m_prefix + "TSTAMP", tstamp.format( d ) );
+            final String name1 = m_prefix + "TSTAMP";
+            final Object value1 = tstamp.format( d );
+            getContext().setProperty( name1, value1 );
 
             SimpleDateFormat today = new SimpleDateFormat( "MMMM d yyyy", Locale.US );
-            setProperty( m_prefix + "TODAY", today.format( d ) );
+            final String name2 = m_prefix + "TODAY";
+            final Object value2 = today.format( d );
+            getContext().setProperty( name2, value2 );
 
             Iterator i = customFormats.iterator();
             while( i.hasNext() )

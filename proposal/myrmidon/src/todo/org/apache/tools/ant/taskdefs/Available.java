@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 
@@ -165,7 +166,9 @@ public class Available
 
         if( eval() )
         {
-            setProperty( m_property, m_value );
+            final String name = m_property;
+            final Object value = m_value;
+            getContext().setProperty( name, value );
         }
     }
 

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.myrmidon.framework.PatternSet;
 import org.apache.tools.ant.taskdefs.exec.Execute;
@@ -72,7 +73,7 @@ public class Chmod
     public void setExecutable( String e )
         throws TaskException
     {
-        throw new TaskException( getName() + " doesn\'t support the executable attribute" );
+        throw new TaskException( getContext().getName() + " doesn\'t support the executable attribute" );
     }
 
     public void setFile( File src )
@@ -103,7 +104,7 @@ public class Chmod
 
     public void setSkipEmptyFilesets( final boolean skip )
     {
-        final String message = getName() + " doesn\'t support the skipemptyfileset attribute";
+        final String message = getContext().getName() + " doesn\'t support the skipemptyfileset attribute";
         throw new IllegalArgumentException( message );
     }
 

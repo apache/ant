@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -201,7 +202,9 @@ public class Checksum
         final boolean value = validateAndExecute();
         if( m_verifyProperty != null )
         {
-            setProperty( m_verifyProperty, new Boolean( value ).toString() );
+            final String name = m_verifyProperty;
+            final Object value1 = new Boolean( value ).toString();
+            getContext().setProperty( name, value1 );
         }
     }
 
@@ -298,14 +301,15 @@ public class Checksum
             Object destination = m_includeFileMap.get( src );
             if( destination instanceof String )
             {
-                String prop = (String)destination;
+                final String prop = (String)destination;
                 if( m_isCondition )
                 {
                     checksumMatches = checksum.equals( m_property );
                 }
                 else
                 {
-                    setProperty( prop, checksum );
+                    final Object value = checksum;
+                    getContext().setProperty( prop, value );
                 }
             }
             else if( destination instanceof File )

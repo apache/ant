@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -134,7 +135,8 @@ public class WaitFor extends ConditionBase
 
         if( timeoutProperty != null )
         {
-            setProperty( timeoutProperty, "true" );
+            final String name = timeoutProperty;
+            getContext().setProperty( name, "true" );
         }
     }
 

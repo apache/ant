@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * P4Change - grab a new changelist from Perforce. P4Change creates a new
@@ -138,7 +139,7 @@ public class P4Change
             getLogger().info( "Change Number is " + changenumber );
             try
             {
-                setProperty( "p4.change", "" + changenumber );
+                getContext().setProperty( "p4.change", "" + changenumber );
             }
             catch( final TaskException te )
             {
