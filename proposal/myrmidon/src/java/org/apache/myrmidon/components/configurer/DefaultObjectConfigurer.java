@@ -10,11 +10,11 @@ package org.apache.myrmidon.components.configurer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -35,7 +35,7 @@ class DefaultObjectConfigurer
     private final Class m_class;
 
     /**
-     * All property configurers. (For XML elements)
+     * Adder property configurers. (For XML elements)
      */
     private final HashMap m_adders = new HashMap();
 
@@ -55,6 +55,11 @@ class DefaultObjectConfigurer
     private PropertyConfigurer m_contentConfigurer;
 
     /**
+     * Total number of properties.
+     */
+    private int m_propCount;
+
+    /**
      * Creates an object configurer for a particular class.  The newly
      * created configurer will not handle any attributes, elements, or content.
      * Use the various <code>enable</code> methods to enable handling of these.
@@ -70,97 +75,143 @@ class DefaultObjectConfigurer
     private void enableAll()
         throws ConfigurationException
     {
-        enableProperties();
+        enableSetters();
+        enableAdders();
+        enableTypedAdder();
         enableContent();
+    }
+
+    /**
+     * Enables all setters.
+     */
+    private void enableSetters()
+        throws ConfigurationException
+    {
+        // Locate all the setter methods
+        final Collection methods = findMethods( "set", false );
+
+        // Create a configurer for each setter
+        final Iterator iterator = methods.iterator();
+        while( iterator.hasNext() )
+        {
+            final Method method = (Method)iterator.next();
+            final Class type = method.getParameterTypes()[ 0 ];
+            final String propName = extractName( 3, method.getName() );
+
+            final DefaultPropertyConfigurer setter =
+                new DefaultPropertyConfigurer( getPropertyCount(),
+                                               type,
+                                               method,
+                                               1 );
+            m_setters.put( propName, setter );
+        }
     }
 
     /**
      * Enables all adders.
      */
-    private void enableProperties()
+    private void enableAdders()
         throws ConfigurationException
     {
-        final Map configurers = findPropertyConfigurers();
+        // Locate all the adder methods
+        final Collection methods = findMethods( "add", false );
 
-        // Add the elements
-
-        final Iterator iterator = configurers.keySet().iterator();
+        final Iterator iterator = methods.iterator();
         while( iterator.hasNext() )
         {
-            final String name = (String)iterator.next();
-            final Method method = (Method)configurers.get( name );
-            final boolean isSetter = method.getName().startsWith( "set" );
+            final Method method = (Method)iterator.next();
+            final String methodName = method.getName();
 
-            // Determine and check the return type
+            // Skip the text content method
+            if( methodName.equals( "addContent" ) )
+            {
+                continue;
+            }
+
             final Class type = method.getParameterTypes()[ 0 ];
-            final boolean isTypedProp = ( name.length() == 0 );
-            if( isTypedProp && !type.isInterface() )
-            {
-                final String message =
-                    REZ.getString( "typed-adder-non-interface.error",
-                                   m_class.getName(),
-                                   type.getName() );
-                throw new ConfigurationException( message );
-            }
-            else if( isTypedProp && isSetter )
-            {
-                final String message =
-                    REZ.getString( "typed-setter-not-allowed.error",
-                                   m_class.getName(),
-                                   type.getName() );
-                throw new ConfigurationException( message );
-            }
-            else if( isTypedProp && null != m_typedPropertyConfigurer )
-            {
-                final String message =
-                    REZ.getString( "typed-adder-duplicates.error",
-                                   m_class.getName(),
-                                   type.getName() );
-                throw new ConfigurationException( message );
-            }
+            final String propName = extractName( 3, methodName );
 
-            // Determine the max count for the property
-            if( isSetter )
-            {
-                final DefaultPropertyConfigurer setter =
-                    new DefaultPropertyConfigurer( getPropertyCount(),
-                                                   type,
-                                                   method,
-                                                   1 );
-                m_setters.put( name, setter );
-            }
-            else
-            {
-                final DefaultPropertyConfigurer configurer =
-                    new DefaultPropertyConfigurer( getPropertyCount(),
-                                                   type,
-                                                   method,
-                                                   Integer.MAX_VALUE );
-                if( isTypedProp )
-                {
-                    m_typedPropertyConfigurer = configurer;
-                }
-                else
-                {
-                    m_adders.put( name, configurer );
-                }
-            }
+            final DefaultPropertyConfigurer configurer =
+                new DefaultPropertyConfigurer( getPropertyCount(),
+                                               type,
+                                               method,
+                                               Integer.MAX_VALUE );
+            m_adders.put( propName, configurer );
         }
     }
 
     /**
-     * Locate all 'add' and 'set' methods which return void, and take a
-     * single parameter.
+     * Enables the typed adder.
      */
-    private Map findPropertyConfigurers()
+    private void enableTypedAdder()
         throws ConfigurationException
     {
-        final Map adders = new HashMap();
-        final List methodSet = new ArrayList();
-        findMethodsWithPrefix( "add", methodSet );
-        findMethodsWithPrefix( "set", methodSet );
+        final Collection methods = findMethods( "add", true );
+        if( methods.size() == 0 )
+        {
+            return;
+        }
 
-        final Iterator iterator = methodSet.iterator();
+        final Method method = (Method)methods.iterator().next();
+        final Class type = method.getParameterTypes()[ 0 ];
+
+        // TODO - this isn't necessary
+        if( !type.isInterface() )
+        {
+            final String message =
+                REZ.getString( "typed-adder-non-interface.error",
+                               m_class.getName(),
+                               type.getName() );
+            throw new ConfigurationException( message );
+        }
+
+        m_typedPropertyConfigurer
+            = new DefaultPropertyConfigurer( getPropertyCount(),
+                                             type,
+                                             method,
+                                             Integer.MAX_VALUE );
+    }
+
+    /**
+     * Enables text content.
+     */
+    private void enableContent()
+        throws ConfigurationException
+    {
+        // Locate the 'addContent' methods, which return void, and take
+        // a single parameter.
+        final Collection methods = findMethods( "addContent", true );
+        if( methods.size() == 0 )
+        {
+            return;
+        }
+
+        final Method method = (Method)methods.iterator().next();
+        final Class type = method.getParameterTypes()[ 0 ];
+        m_contentConfigurer = new DefaultPropertyConfigurer( getPropertyCount(),
+                                                             type,
+                                                             method,
+                                                             1 );
+    }
+
+    /**
+     * Locate all methods whose name starts with a particular
+     * prefix, and which are non-static, return void, and take a single
+     * parameter.  If there are more than one matching methods of a given
+     * name, the method that takes a String parameter (if any) is ignored.
+     * If after that there are more than one matching methods of a given
+     * name, an exception is thrown.
+     *
+     * @return Map from property name -> Method object for that property.
+     */
+    private Collection findMethods( final String prefix,
+                                    final boolean exactMatch )
+        throws ConfigurationException
+    {
+        final Map methods = new HashMap();
+        final List allMethods = findMethodsWithPrefix( prefix, exactMatch );
+
+        final Iterator iterator = allMethods.iterator();
         while( iterator.hasNext() )
         {
             final Method method = (Method)iterator.next();
@@ -171,26 +222,13 @@ class DefaultObjectConfigurer
                 continue;
             }
 
-            // Skip the text content method
-            if( methodName.equals( "addContent" ) )
-            {
-                continue;
-            }
-
             // Extract property name
-            final String propName = extractName( 3, methodName );
             final Class type = method.getParameterTypes()[ 0 ];
 
             // Add to the adders map
-            if( adders.containsKey( propName ) )
+            if( methods.containsKey( methodName ) )
             {
-                final Method candidate = (Method)adders.get( propName );
-                final String operation = methodName.substring( 0, 3 );
-                if( !candidate.getName().startsWith( operation ) )
-                {
-                    continue;
-                }
-
+                final Method candidate = (Method)methods.get( methodName );
                 final Class currentType = candidate.getParameterTypes()[ 0 ];
 
                 // Ditch the string version, if any
@@ -202,70 +240,27 @@ class DefaultObjectConfigurer
                 }
                 else if( currentType != String.class || type == String.class )
                 {
-                    // Both are string, or both are not string
+                    // Both are string (which would be odd), or both are not string
                     final String message =
-                        REZ.getString( "multiple-adder-methods-for-element.error",
+                        REZ.getString( "multiple-methods-for-element.error",
                                        m_class.getName(),
-                                       propName );
+                                       methodName );
                     throw new ConfigurationException( message );
                 }
 
                 // Else, current type is string, and new type is not, so
-                // continue below, and overwrite the current method
+                // continue below, and replace the current method
             }
 
-            adders.put( propName, method );
+            methods.put( methodName, method );
         }
-        return adders;
-    }
 
-    /**
-     * Enables content.
-     */
-    private void enableContent()
-        throws ConfigurationException
-    {
-        // TODO - should be using 'setContent', rather than 'addContent',
-        // to better match the call-at-most-once semantics of the other
-        // setter methods
-
-        // Locate any 'addContent' methods, which return void, and take
-        // a single parameter.
-        final Method[] methods = m_class.getMethods();
-        for( int i = 0; i < methods.length; i++ )
-        {
-            final Method method = methods[ i ];
-            final String methodName = method.getName();
-            if( Modifier.isStatic( method.getModifiers() ) ||
-                !methodName.equals( "addContent" ) ||
-                method.getReturnType() != Void.TYPE ||
-                method.getParameterTypes().length != 1 )
-            {
-                continue;
-            }
-
-            // Check for multiple content setters
-            if( null != m_contentConfigurer )
-            {
-                final String message =
-                    REZ.getString( "multiple-content-setter-methods.error", m_class.getName() );
-                throw new ConfigurationException( message );
-            }
-
-            final Class type = method.getParameterTypes()[ 0 ];
-            m_contentConfigurer =
-                new DefaultPropertyConfigurer( getPropertyCount(),
-                                               type,
-                                               method,
-                                               1 );
-        }
+        return methods.values();
     }
 
     private int getPropertyCount()
     {
-        final int typedSize = ( null != m_typedPropertyConfigurer ) ? 1 : 0;
-        final int contentSize = ( null != m_contentConfigurer ) ? 1 : 0;
-        return m_adders.size() + m_setters.size() + contentSize + typedSize;
+        return m_propCount++;
     }
 
     /**
@@ -369,22 +364,31 @@ class DefaultObjectConfigurer
      * Locates all non-static methods whose name starts with a particular
      * prefix.
      */
-    private void findMethodsWithPrefix( final String prefix, final Collection matches )
+    private List findMethodsWithPrefix( final String prefix,
+                                        final boolean exactMatch )
     {
+        final ArrayList matches = new ArrayList();
         final int prefixLen = prefix.length();
         final Method[] methods = m_class.getMethods();
         for( int i = 0; i < methods.length; i++ )
         {
             final Method method = methods[ i ];
             final String methodName = method.getName();
-            if( Modifier.isStatic( method.getModifiers() ) ||
-                methodName.length() < prefixLen ||
-                !methodName.startsWith( prefix ) )
+            if( Modifier.isStatic( method.getModifiers() ) )
+            {
+                continue;
+            }
+            if( methodName.length() < prefixLen || !methodName.startsWith( prefix ) )
+            {
+                continue;
+            }
+            if( exactMatch && methodName.length() != prefixLen )
             {
                 continue;
             }
 
             matches.add( method );
         }
+        return matches;
     }
 }

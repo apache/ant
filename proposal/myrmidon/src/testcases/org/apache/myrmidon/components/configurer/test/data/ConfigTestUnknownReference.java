@@ -7,10 +7,7 @@
  */
 package org.apache.myrmidon.components.configurer.test.data;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.myrmidon.framework.DataType;
-import org.apache.myrmidon.components.configurer.test.DefaultConfigurerTestCase;
 
 /**
  * A simple test class with string properties.

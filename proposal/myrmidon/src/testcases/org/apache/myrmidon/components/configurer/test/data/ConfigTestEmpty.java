@@ -7,12 +7,10 @@
  */
 package org.apache.myrmidon.components.configurer.test.data;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.myrmidon.framework.DataType;
 
 /**
- * A simple test class with string properties.
+ * An empty class.
  *
  * @author Adam Murdoch
  */

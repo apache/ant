@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.configurer.test.data;
 
 import java.util.ArrayList;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.components.configurer.test.MyRole1;
 
 /**

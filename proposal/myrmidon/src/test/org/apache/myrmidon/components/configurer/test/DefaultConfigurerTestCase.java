@@ -38,6 +38,7 @@ import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedAdderR
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedAdderRole;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestTypedConfigAdder;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestUnknownReference;
+import org.apache.myrmidon.components.configurer.test.data.ConfigTestSetAndAdd;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -80,7 +81,7 @@ public class DefaultConfigurerTestCase
     }
 
     /**
-     * Tests setting an attribute, via adder and setter methods.
+     * Tests setting an attribute, via a setter method.
      */
     public void testSetAttribute()
         throws Exception
@@ -89,8 +90,6 @@ public class DefaultConfigurerTestCase
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         final String value1 = "some value";
         config.setAttribute( "some-prop", value1 );
-        final String value2 = "some other value";
-        config.setAttribute( "prop", value2 );
 
         final ConfigTestSetAttribute test = new ConfigTestSetAttribute();
 
@@ -100,7 +99,6 @@ public class DefaultConfigurerTestCase
         // Check result
         final ConfigTestSetAttribute expected = new ConfigTestSetAttribute();
         expected.setSomeProp( value1 );
-        expected.setProp( value2 );
         assertEquals( expected, test );
     }
 
@@ -167,7 +165,7 @@ public class DefaultConfigurerTestCase
         final String value1 = "some value";
         child1.setAttribute( "some-prop", value1 );
         config.addChild( child1 );
-        final DefaultConfiguration child2 = new DefaultConfiguration( "another-prop", "test" );
+        final DefaultConfiguration child2 = new DefaultConfiguration( "prop", "test" );
         final String value2 = "another value";
         child2.setAttribute( "some-prop", value2 );
         config.addChild( child2 );
@@ -184,7 +182,7 @@ public class DefaultConfigurerTestCase
         expected.addProp( elem );
         elem = new ConfigTestSetElement();
         elem.setSomeProp( value2 );
-        expected.addAnotherProp( elem );
+        expected.addProp( elem );
         assertEquals( expected, test );
     }
 
@@ -465,9 +463,9 @@ public class DefaultConfigurerTestCase
             final String[] messages = new String[]
             {
                 REZ.getString( "bad-configure-element.error", "test" ),
-                REZ.getString( "multiple-adder-methods-for-element.error",
+                REZ.getString( "multiple-methods-for-element.error",
                                ConfigTestMultipleTypedAdder.class.getName(),
-                               "" )
+                               "add" )
             };
             assertSameMessage( messages, ce );
         }
@@ -486,8 +484,9 @@ public class DefaultConfigurerTestCase
         config.addChild( child1 );
         config.addChild( child2 );
 
-        registerType( DataType.ROLE, "my-type1", MyType1.class );
-        registerType( DataType.ROLE, "my-type2", MyType2.class );
+        registerRole( new RoleInfo( MyRole1.ROLE, "my-role1", MyRole1.class ) );
+        registerType( MyRole1.ROLE, "my-type1", MyType1.class );
+        registerType( MyRole1.ROLE, "my-type2", MyType2.class );
 
         final ConfigTestTypedAdder test = new ConfigTestTypedAdder();
 
@@ -606,7 +605,7 @@ public class DefaultConfigurerTestCase
     /**
      * Tests to check that Configurable is handled properly.
      */
-    public void testConfigable()
+    public void testConfigurable()
         throws Exception
     {
         // Setup test data
@@ -773,10 +772,16 @@ public class DefaultConfigurerTestCase
     {
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
-        DefaultConfiguration elem = new DefaultConfiguration( "prop1", "test" );
+        config.setAttribute( "prop1", "some-value" );
+        config.setValue( "99" );
+        DefaultConfiguration elem = new DefaultConfiguration( "prop2", "test" );
         config.addChild( elem );
-        elem = new DefaultConfiguration( "prop2", "test" );
+        elem = new DefaultConfiguration( "my-type1", "test" );
         config.addChild( elem );
+
+        registerConverter( ObjectToMyRole1Converter.class, String.class, MyRole1.class );
+        registerConverter( StringToIntegerConverter.class, String.class, Integer.class );
+        registerType( DataType.ROLE, "my-type1", MyType1.class );
 
         final ConfigTestIgnoreStringMethods test = new ConfigTestIgnoreStringMethods();
 
@@ -785,8 +790,37 @@ public class DefaultConfigurerTestCase
 
         // Test expected value
         final ConfigTestIgnoreStringMethods expected = new ConfigTestIgnoreStringMethods();
-        expected.addProp1( new ConfigTestIgnoreStringMethods() );
+        expected.setProp1( new MyRole1Adaptor( "some-value" ) );
         expected.addProp2( new ConfigTestIgnoreStringMethods() );
+        expected.add( new MyType1() );
+        expected.addContent( 99 );
+        assertEquals( expected, test );
+    }
+
+    /**
+     * Tests that a class with a setter and adder with the same property name
+     * is handled correctly.
+     */
+    public void testSetAndAdd() throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        config.setAttribute( "prop", "some value" );
+        DefaultConfiguration elem = new DefaultConfiguration( "prop", "test" );
+        elem.setAttribute( "prop", "another value" );
+        config.addChild( elem );
+
+        final ConfigTestSetAndAdd test = new ConfigTestSetAndAdd();
+
+        // Configure the object
+        configure( test, config );
+
+        // Test expected value
+        final ConfigTestSetAndAdd expected = new ConfigTestSetAndAdd();
+        expected.setProp( "some value" );
+        final ConfigTestSetAndAdd nested = new ConfigTestSetAndAdd();
+        nested.setProp( "another value" );
+        expected.addProp( nested );
         assertEquals( expected, test );
     }
 

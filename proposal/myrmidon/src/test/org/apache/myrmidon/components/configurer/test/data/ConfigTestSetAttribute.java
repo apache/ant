@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import org.apache.myrmidon.components.configurer.test.DefaultConfigurerTestCase;
 
 /**
- * Simple class to test typed adder.
+ * Simple class to test setter.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
@@ -20,16 +20,11 @@ import org.apache.myrmidon.components.configurer.test.DefaultConfigurerTestCase;
 public class ConfigTestSetAttribute
 {
     private String m_someProp;
-    private List m_propList = new ArrayList();
 
     public boolean equals( final Object obj )
     {
         final ConfigTestSetAttribute test = (ConfigTestSetAttribute)obj;
         if( !DefaultConfigurerTestCase.equals( m_someProp, test.m_someProp ) )
-        {
-            return false;
-        }
-        else if( !m_propList.equals( test.m_propList ) )
         {
             return false;
         }
@@ -42,10 +37,5 @@ public class ConfigTestSetAttribute
     public void setSomeProp( final String value )
     {
         m_someProp = value;
-    }
-
-    public void setProp( final String value )
-    {
-        m_propList.add( value );
     }
 }

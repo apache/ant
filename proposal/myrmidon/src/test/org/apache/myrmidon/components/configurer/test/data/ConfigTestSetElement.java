@@ -18,18 +18,13 @@ import org.apache.myrmidon.components.configurer.test.DefaultConfigurerTestCase;
  */
 public class ConfigTestSetElement
 {
-    private ConfigTestSetElement m_prop;
     private List m_propList = new ArrayList();
     private String m_someProp;
 
     public boolean equals( Object obj )
     {
         ConfigTestSetElement test = (ConfigTestSetElement)obj;
-        if( !DefaultConfigurerTestCase.equals( m_prop, test.m_prop ) )
-        {
-            return false;
-        }
-        else if( !m_propList.equals( test.m_propList ) )
+        if( !m_propList.equals( test.m_propList ) )
         {
             return false;
         }
@@ -46,11 +41,6 @@ public class ConfigTestSetElement
     }
 
     public void addProp( final ConfigTestSetElement test )
-    {
-        m_prop = test;
-    }
-
-    public void addAnotherProp( final ConfigTestSetElement test )
     {
         m_propList.add( test );
     }

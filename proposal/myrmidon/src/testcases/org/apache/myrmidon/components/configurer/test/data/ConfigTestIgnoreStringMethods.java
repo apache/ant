@@ -10,6 +10,7 @@ package org.apache.myrmidon.components.configurer.test.data;
 import java.util.ArrayList;
 import junit.framework.AssertionFailedError;
 import org.apache.myrmidon.components.configurer.test.DefaultConfigurerTestCase;
+import org.apache.myrmidon.components.configurer.test.MyRole1;
 
 /**
  * A test class with multiple setters/adders/creators for a property.
@@ -18,8 +19,10 @@ import org.apache.myrmidon.components.configurer.test.DefaultConfigurerTestCase;
  */
 public class ConfigTestIgnoreStringMethods
 {
-    private ConfigTestIgnoreStringMethods m_prop1;
+    private MyRole1 m_prop1;
     private ArrayList m_prop2 = new ArrayList();
+    private int m_content;
+    private ArrayList m_typed = new ArrayList();
 
     public boolean equals( Object obj )
     {
@@ -32,19 +35,27 @@ public class ConfigTestIgnoreStringMethods
         {
             return false;
         }
+        if( m_content != test.m_content )
+        {
+            return false;
+        }
+        if( !m_typed.equals( test.m_typed ) )
+        {
+            return false;
+        }
         return true;
     }
 
     //
-    // Multiple setters
+    // Multiple Setters
     //
 
-    public void addProp1( final String value )
+    public void setProp1( final String value )
     {
         throw new AssertionFailedError();
     }
 
-    public void addProp1( final ConfigTestIgnoreStringMethods value )
+    public void setProp1( final MyRole1 value )
     {
         m_prop1 = value;
     }
@@ -62,4 +73,33 @@ public class ConfigTestIgnoreStringMethods
     {
         m_prop2.add( value );
     }
+
+    //
+    // Multiple typed adders
+    //
+
+    public void add( final String value )
+    {
+        throw new AssertionFailedError();
+    }
+
+    public void add( final MyRole1 value )
+    {
+        m_typed.add( value );
+    }
+
+    //
+    // Multiple content setters
+    //
+
+    public void addContent( final int value )
+    {
+        m_content = value;
+    }
+
+    public void addContent( final String value )
+    {
+        throw new AssertionFailedError();
+    }
+
 }
