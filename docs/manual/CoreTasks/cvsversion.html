@@ -11,7 +11,8 @@
 <h2><a name="cvs">CvsVersion</a></h2>
 <h3>Description</h3>
 <p>
-This task allows to retrieve a CVS client and server version
+This task allows to retrieve a CVS client and server version.
+  <i>Since Ant 1.6.1.</i>
 </p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -63,13 +64,13 @@ This task allows to retrieve a CVS client and server version
     <td colspan="3">Specific attributes</td>
   </tr>
   <tr>
-    <td valign="top">cvsclientproperty</td>
+    <td valign="top">clientversionproperty</td>
     <td valign="top">Name of a property where the cvsclient version
       should be stored</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">cvsserverproperty</td>
+    <td valign="top">serverversionproperty</td>
     <td valign="top">Name of a property where the cvs server version
       should be stored</td>
     <td align="center" valign="top">No</td>
@@ -78,8 +79,8 @@ This task allows to retrieve a CVS client and server version
 <h3>Examples</h3>
 <pre>  &lt;cvsversion cvsRoot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
        passfile=&quot;/home/myself/.cvspass&quot;
-       cvsserverproperty=&quot;apachecvsversion&quot;
-       cvsclientproperty=&quot;localcvsversion&quot;
+       serverversionproperty=&quot;apachecvsversion&quot;
+       clientversionproperty=&quot;localcvsversion&quot;
   /&gt;</pre>
 <p>finds out the cvs client and server versions and stores the versions in the
 properties called apachecvsversion and localcvsversion</p>
