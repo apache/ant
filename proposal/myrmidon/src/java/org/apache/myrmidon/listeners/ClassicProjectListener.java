@@ -15,6 +15,7 @@ import org.apache.avalon.framework.ExceptionUtil;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant:type type="listener" name="classic"
  */
 public class ClassicProjectListener
     extends AbstractProjectListener

@@ -13,7 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
 
 /**
- * Manage and propogate Aspects.
+ * Manage and propogate Aspects..
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$

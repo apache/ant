@@ -16,6 +16,7 @@ import org.apache.myrmidon.api.Context;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant:role shorthand="configurer"
  */
 public interface Configurer
 {

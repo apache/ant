@@ -35,6 +35,8 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant:type type="project-builder" name="xml"
+ * @ant:type type="project-builder" name="ant"
  */
 public class DefaultProjectBuilder
     extends AbstractLogEnabled

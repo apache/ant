@@ -50,6 +50,7 @@ import java.io.File;
  * </ul>
  *
  * @author Adam Murdoch
+ * @ant:role shorthand="file-system-manager"
  */
 public interface FileSystemManager
 {

@@ -12,6 +12,7 @@ package org.apache.myrmidon.listeners;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant:type type="listener" name="default"
  */
 public class DefaultProjectListener
     extends ClassicProjectListener

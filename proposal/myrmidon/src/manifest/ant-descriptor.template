@@ -18,10 +18,10 @@
       </XDtClass:ifHasClassTag>
     </XDtClass:forAllClasses>
 
-    <XDtClass:forAllClasses>
-      <XDtClass:forAllClassTags tagName="ant:type">
-        <<XDtClass:classTagValue tagName="ant:type" paramName="type"/>
-          name="<XDtClass:classTagValue tagName="ant:type" paramName="name"/>"
+    <XDtClass:forAllClasses extent="concrete-type">
+      <XDtClass:forAllClassTags tagName="ant:type" superclasses="false">
+        <<XDtClass:classTagValue tagName="ant:type" paramName="type" superclasses="false"/>
+          name="<XDtClass:classTagValue tagName="ant:type" paramName="name" superclasses="false"/>"
           classname="<XDtClass:fullClassName/>" />
       </XDtClass:forAllClassTags>
     </XDtClass:forAllClasses>

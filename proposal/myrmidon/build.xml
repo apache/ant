@@ -184,14 +184,24 @@ Legal:
 
   <!-- Compiles and installs the custom build tasks -->
   <target name="custom-tasks">
-      <property name="custom-tasks-dir" value="${build.dir}/tasks"/>
-      <mkdir dir="${custom-tasks-dir}"/>
-      <javac srcdir="src/make" destdir="${custom-tasks-dir}">
-          <classpath refid="project.class.path"/>
-      </javac>
-      <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
-          <classpath location="${custom-tasks-dir}"/>
-      </taskdef>
+    <property name="custom-tasks-dir" value="${build.dir}/tasks"/>
+    <mkdir dir="${custom-tasks-dir}"/>
+    <javac srcdir="src/make" destdir="${custom-tasks-dir}">
+      <classpath refid="project.class.path"/>
+    </javac>
+    <copy file="${manifest.dir}/ant-descriptor.template" todir="${build.dir}/tasks"/>
+    <copy file="${manifest.dir}/ant-roles.template" todir="${build.dir}/tasks"/>
+
+    <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
+      <classpath location="${custom-tasks-dir}"/>
+    </taskdef>
+
+    <taskdef name="antlib-descriptor" classname="org.apache.myrmidon.build.AntlibDescriptorTask">
+      <classpath>
+        <pathelement location="${custom-tasks-dir}"/>
+        <path refid="project.class.path"/>
+      </classpath>
+    </taskdef>
   </target>
 
   <!-- Compiles the source code -->
@@ -302,23 +312,15 @@ Legal:
 
   </target>
 
-  <!-- Creates the jars file -->
-  <target name="jars" depends="custom-tasks, compile">
-
+  <target name="jar-prepare" depends="custom-tasks, compile">
     <mkdir dir="${build.lib}"/>
 
-    <jar jarfile="${build.lib}/myrmidon-launcher.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.dir}/myrmidon-launcher.mf">
+    <!-- Define the packaging for the various jars -->
+    <patternset id="myrmidon-launcher.include">
       <include name="org/apache/myrmidon/launcher/*" />
-    </jar>
+    </patternset>
 
-    <antlib-jar jarfile="${build.lib}/myrmidon-api.jar"
-                basedir="${build.classes}"
-                manifest="${manifest.dir}/myrmidon-api.mf"
-                rolesDescriptor="${manifest.dir}/builtin-ant-roles.xml"
-                descriptor="${manifest.dir}/builtin-ant-descriptor.xml"
-                servicesDescriptor="${manifest.dir}/core-services.xml" >
+    <patternset id="myrmidon-api.include">
       <include name="org/apache/myrmidon/api/*" />
       <include name="org/apache/myrmidon/aspects/*" />
       <include name="org/apache/myrmidon/converter/*" />
@@ -327,34 +329,91 @@ Legal:
       <include name="org/apache/myrmidon/framework/**" />
       <include name="org/apache/aut/**" />
       <include name="org/apache/tools/**" />
-<!--      <include name="org/apache/myrmidon/*" />
-      <include name="org/apache/myrmidon/components/**"/>
-      <include name="org/apache/myrmidon/frontends/*" /> -->
-    </antlib-jar>
-
-<!--
-    <jar jarfile="${build.lib}/myrmidon-framework.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.dir}/myrmidon-framework.mf">
-      <include name="org/apache/myrmidon/framework/**" />
-
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
-        <include name="builtin-ant-roles.xml"/>
-      </zipfileset>
-
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="builtin-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
--->
-    <jar jarfile="${build.lib}/myrmidon-container.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.dir}/myrmidon-container.mf">
+    </patternset>
+    
+    <patternset id="myrmidon-container.include">
       <include name="org/apache/myrmidon/components/**" />
       <include name="org/apache/myrmidon/frontends/*" />
       <include name="org/apache/myrmidon/*" />
+    </patternset>
+
+    <patternset id="selftest.include">
+      <include name="org/apache/antlib/selftest/**" />
+      <exclude name="org/apache/antlib/selftest/extension1/**" />
+    </patternset>
+
+    <patternset id="selftest-extension1.include">
+       <include name="org/apache/antlib/selftest/extension1/**" />
+    </patternset>
+  </target>
+
+  <!-- The generation of the descriptor is kept separated from the packaging
+       of the jars, since jarring is fast and XDoclet is pretty slow.-->
+  <target name="antlib-descriptors"
+          depends="jar-prepare"
+          unless="antlib-descriptors.omit"
+          description="Generates Antlib descriptors using XDoclet.">
+
+    <!-- The "builtin" descriptors include metainfo for both
+         myrmidon-api and myrmidon-container jars.
+         (Packaged with myrmidon-api.jar). -->
+    <antlib-descriptor libName="builtin"
+                       destdir="${gen.dir}"
+                       classpathref="project.class.path">
+      <fileset dir="${java.dir}">
+        <patternset refid="myrmidon-api.include"/>
+        <patternset refid="myrmidon-container.include"/>
+      </fileset>
+    </antlib-descriptor>
+
+    <antlib-descriptor libName="selftest"
+                       destdir="${gen.dir}"
+                       classpathref="project.class.path">
+      <fileset dir="${java.dir}">
+        <patternset refid="selftest.include"/>
+      </fileset>
+    </antlib-descriptor>
+  </target>
+
+  <!-- Package the jar files -->
+  <target name="jars" depends="antlib-descriptors">
+
+    <jar jarfile="${build.lib}/myrmidon-launcher.jar"
+         basedir="${build.classes}"
+         manifest="${manifest.dir}/myrmidon-launcher.mf">
+        <patternset refid="myrmidon-launcher.include"/>
     </jar>
 
+    <jar jarfile="${build.lib}/myrmidon-container.jar"
+         basedir="${build.classes}"
+         manifest="${manifest.dir}/myrmidon-container.mf">
+        <patternset refid="myrmidon-container.include"/>
+    </jar>
+
+    <antlib-jar jarfile="${build.lib}/myrmidon-api.jar"
+                basedir="${build.classes}"
+                manifest="${manifest.dir}/myrmidon-api.mf"
+                rolesDescriptor="${gen.dir}/builtin-ant-roles.xml"
+                descriptor="${gen.dir}/builtin-ant-descriptor.xml"
+                servicesDescriptor="${manifest.dir}/core-services.xml" >
+      <patternset refid="myrmidon-api.include"/>
+    </antlib-jar>
+
+    <antlib-jar jarfile="${build.lib}/selftest.atl"
+                basedir="${build.classes}"
+                manifest="${manifest.dir}/selftest.mf"
+                descriptor="${gen.dir}/selftest-ant-descriptor.xml"
+                rolesDescriptor="${gen.dir}/selftest-ant-roles.xml">
+      <patternset refid="selftest.include"/>
+    </antlib-jar>
+
+    <jar jarfile="${build.lib}/selftest-extension1.jar"
+         basedir="${build.classes}"
+         manifest="${manifest.dir}/selftest-extension1.mf">
+      <patternset refid="selftest-extension1.include" />
+    </jar>
+
+    <!-- Simple cases handled by antlib.xml -->
     <ant antfile="antlib.xml">
       <property name="antlib.name" value="core"/>
     </ant>
@@ -390,22 +449,6 @@ Legal:
     <ant antfile="antlib.xml">
       <property name="antlib.name" value="vfile"/>
     </ant>
-
-    <antlib-jar jarfile="${build.lib}/selftest.atl"
-         basedir="${build.classes}"
-         manifest="${manifest.dir}/selftest.mf"
-         descriptor="${manifest.dir}/selftest-ant-descriptor.xml"
-         rolesDescriptor="${manifest.dir}/empty-roles.xml">
-      <include name="org/apache/antlib/selftest/**" />
-      <exclude name="org/apache/antlib/selftest/extension1/**" />
-    </antlib-jar>
-
-    <jar jarfile="${build.lib}/selftest-extension1.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.dir}/selftest-extension1.mf">
-      <include name="org/apache/antlib/selftest/extension1/**" />
-    </jar>
-
   </target>
 
   <!-- Compiles and runs the unit tests -->
@@ -487,7 +530,9 @@ Legal:
   </target>
 
   <!-- Creates the distribution -->
-  <target name="dist-lite" depends="jars">
+  <target name="dist-lite" 
+          depends="jars"
+          description="Generates a minimal working distribution.">
 
     <mkdir dir="${dist.bin}"/>
     <mkdir dir="${dist.lib}"/>
@@ -527,6 +572,12 @@ Legal:
     <fixcrlf srcdir="${dist.bin}" eol="lf" includes="**/*.sh" />
     <fixcrlf srcdir="${dist.bin}" eol="lf" includes="ant" />
 
+  </target>
+
+  <target name="dist-extralite" 
+          description="A faster version of dist-lite (no XDoclet).">
+      <property name="antlib-descriptors.omit" value="true"/>
+      <antcall target="dist-lite"/>
   </target>
 
   <!-- Creates the distribution -->

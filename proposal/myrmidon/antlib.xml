@@ -27,7 +27,6 @@ Legal:
   <property name="gen.dir" value="${build.dir}/gen"/>
 
   <property name="antlib.name" value="NONAME"/>
-  <property name="antlib.include" value="org/apache/antlib/${antlib.name}/**"/>
   <property name="antlib.descriptor" value="${antlib.name}-ant-descriptor.xml"/>
   <property name="antlib.role.descriptor" value="${antlib.name}-ant-roles.xml"/>
 
@@ -40,36 +39,37 @@ Legal:
   </path>
 
   <!-- Main target -->
-  <target name="main" depends="jar" />
+  <target name="main" depends="antlib-jar" />
 
-  <target name="check-uptodate">
-    <uptodate property="xdoclet.uptodate" targetfile="${gen.dir}/${antlib.descriptor}" >
-      <srcfiles dir= "${java.dir}" includes="${antlib.include}/*.java"/>
-    </uptodate>
+  <!-- Define the pattern which specifies file to include/exclude
+       in this antlib. -->
+  <target name="antlib-definition">
+      <patternset id="antlib.include">
+        <include name="org/apache/antlib/${antlib.name}/**"/>
+      </patternset>
   </target>
 
   <!-- runs xdoclet if need be -->
-  <target name="xdoclet" depends="check-uptodate" unless="xdoclet.uptodate">
-    <taskdef name="xdoclet" classname="xdoclet.DocletTask" classpathref="project.class.path"/>
-
-    <xdoclet sourcepath="${java.dir}" destdir="${gen.dir}" classpathref="project.class.path">
+  <target name="antlib-descriptors"
+          depends="antlib-definition"
+          unless="antlib-descriptors.omit">
+    <antlib-descriptor libName="${antlib.name}"
+                       destdir="${gen.dir}"
+                       classpathref="project.class.path">
       <fileset dir="${java.dir}">
-        <include name="${antlib.include}/*.java" />
+        <patternset refid="antlib.include"/>
       </fileset>
-      <template templateFile="${manifest.dir}/ant-descriptor.template"
-                destinationfile="${antlib.descriptor}"/>
-      <template templateFile="${manifest.dir}/ant-roles.template"
-                destinationfile="${antlib.role.descriptor}"/>
-    </xdoclet>
+    </antlib-descriptor>
   </target>
 
-  <!-- Creates the jars file -->
-  <target name="jar" depends="xdoclet">
+  <!-- Generate an "atl" jar file for this antlib. -->
+  <target name="antlib-jar" depends="antlib-descriptors">
     <antlib-jar jarfile="${build.lib}/${antlib.name}.atl"
-                basedir="${build.classes}"
                 descriptor="${gen.dir}/${antlib.descriptor}"
                 rolesDescriptor="${gen.dir}/${antlib.role.descriptor}">
-      <include name="${antlib.include}" />
+      <fileset dir="${build.classes}">
+        <patternset refid="antlib.include"/>
+      </fileset>
     </antlib-jar>
   </target>
 

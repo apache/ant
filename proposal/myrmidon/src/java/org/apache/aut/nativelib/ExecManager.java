@@ -28,6 +28,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant:role shorthand="exec-manager"
  */
 public interface ExecManager
 {
