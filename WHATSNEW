@@ -53,6 +53,9 @@ Changes that could break older environments:
   attribute (actually increment) overwritten with the new value of the entry
   after execution.
 
+* Output stored from a <java> or <exec> task is now exactly as generated. No
+  conversion to platform end-of-line characters is performed.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla
