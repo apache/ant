@@ -181,10 +181,12 @@
             <td>1.5.4</td>
             <td>12 August 2003</td>
           </tr>
+
           <tr>
             <td>1.6.0</td>
             <td>18 December 2003</td>
           </tr>
+
           <tr>
             <td>1.6.1</td>
             <td>12 February 2004</td>
@@ -579,6 +581,17 @@ shell-prompt> m4 foo.m4 > foo
 ]]></source>
          <p>With AntContrib (external task library) you can do <code>
          &lt;propertycopy name="prop" from="${anotherprop}"/&gt;</code>.</p>
+         <p>With Ant 1.6 you can simulate the AntContribs &lt;propertycopy&gt;
+         and avoid the need of an external library:</p>
+        <source><![CDATA[
+<macrodef name="propertycopy">
+  <attribute name="name"/>
+  <attribute name="from"/>
+  <sequential>
+    <property name="@{name}" value="${@{from}}"/>
+  </sequential>
+</macrodef>
+]]></source>
       </answer>
     </faq>
   </faqsection>
@@ -1369,7 +1382,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         </p>
         <p>
           There was a number of valid reasons for this change. But the backward
-          compatibility problems were not noticied until after Ant 1.6.0 was
+          compatibility problems were not noticed until after Ant 1.6.0 was
           released.
         </p>
         <p>
@@ -1382,11 +1395,11 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           If you want to do more processing on the task,
           you need to use the techniques in apache.tools.ant.taskdefs.Antlib#execute()
           This does make use of one 1.6 method call (UE#getRealObject()),
-          you need to use UE#getTask() instread - this will
+          you need to use UE#getTask() instead - this will
           return null for non tasks (types like fileset id=x).
         </p>
         <p>
-          So.. interate over the tasks, if they are UEs, convert them to
+          So.. iterate over the tasks, if they are UEs, convert them to
           tasks, using UE#maybeConfigure and UE#getTask()
         </p>
         <source><![CDATA[
@@ -1405,6 +1418,21 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <p>
           This approach should work for ant1.5 and ant1.6.
         </p>
+      </answer>
+    </faq>
+
+    <faq id="java.exception.stacktrace">
+      <question>
+        The program I run via &lt;java&gt; throws an exception but I
+        can't seem to get the full stack trace.
+      </question>
+      <answer>
+        <p>This is a know bug that has been fixed after the release of
+        Ant 1.6.1.</p>
+
+        <p>As a workaround, run your &lt;java&gt; task with
+        <code>fork="true"</code> and Ant will display the full
+        trace.</p>
       </answer>
     </faq>
   </faqsection>
