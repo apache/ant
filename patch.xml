@@ -15,11 +15,11 @@
     <property name="patch.file" value="patch.txt"/>
 
     <condition property="cvs.found">
-      <or>
-        <available file="cvs"     filepath="${env.PATH}"/>
-        <available file="cvs.exe" filepath="${env.PATH}"/>
-        <available file="cvs.exe" filepath="${env.Path}"/>
-      </or>
+        <or>
+            <available file="cvs" filepath="${env.PATH}"/>
+            <available file="cvs.exe" filepath="${env.PATH}"/>
+            <available file="cvs.exe" filepath="${env.Path}"/>
+        </or>
     </condition>
 
     <target name="createpatch" if="cvs.found">
@@ -30,6 +30,22 @@
         <delete file="${patch.package}"/>
         <cvs command="-q diff -N" output="${patch.file}.tmp"/>
         <replace file="${patch.file}.tmp" token="? " value=""/>
+        <fileset dir="${basedir}"
+            includesfile="${patch.file}.tmp"
+            id="no.copyright.set">
+            <not>
+                <and>
+                    <contains text="Copyright"/>
+                    <contains text="Apache Software Foundation"/>
+                </and>
+            </not>
+        </fileset>
+        <pathconvert pathsep="${line.separator}"
+            setonempty="false"
+            property="no.copyright"
+            refid="no.copyright.set"/>
+        <fail if="no.copyright"
+            message="Please assign the Apache Ant Copyright to these files and retry:${line.separator}${no.copyright}"/>
     </target>
 
     <target name="patchpackage" depends="newfiles">
