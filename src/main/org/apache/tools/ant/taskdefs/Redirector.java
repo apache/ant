@@ -57,9 +57,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.OutputStream;
@@ -68,6 +67,7 @@ import java.io.PrintStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.DelayedFileOutputStream;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
@@ -269,16 +269,10 @@ public class Redirector {
             errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
         } else {
             if (out != null)  {
-                try {
                     outputStream
-                        = new FileOutputStream(out.getAbsolutePath(), append);
+                        = new DelayedFileOutputStream(out, append);
                     managingTask.log("Output redirected to " + out,
                                      Project.MSG_VERBOSE);
-                } catch (FileNotFoundException fne) {
-                    throw new BuildException("Cannot write to " + out, fne);
-                } catch (IOException ioe) {
-                    throw new BuildException("Cannot write to " + out, ioe);
-                }
             }
 
             if (outputProperty != null) {
@@ -302,16 +296,10 @@ public class Redirector {
         }
 
         if (error != null)  {
-            try {
                 errorStream
-                    = new FileOutputStream(error.getAbsolutePath(), append);
+                    = new DelayedFileOutputStream(error, append);
                 managingTask.log("Error redirected to " + error,
                     Project.MSG_VERBOSE);
-            } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot write to " + error, fne);
-            } catch (IOException ioe) {
-                throw new BuildException("Cannot write to " + error, ioe);
-            }
         }
 
         if (errorProperty != null) {
