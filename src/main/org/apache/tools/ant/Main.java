@@ -95,7 +95,7 @@ public class Main {
 
     /**
      * The Ant logger class. There may be only one logger. It will have the
-     * right to use the 'out' PrintStream. The class must implements the BuildLogger 
+     * right to use the 'out' PrintStream. The class must implements the BuildLogger
      * interface
      */
     private String loggerClassname = null;
@@ -114,7 +114,7 @@ public class Main {
      * Indicates we should only parse and display the project help information
      */
     private boolean projectHelp = false;
-    
+
     /**
      * Command line entry point. This method kicks off the building
      * of a project object and executes a build using either a given
@@ -276,7 +276,7 @@ public class Main {
         try {
             addBuildListeners(project);
             project.fireBuildStarted();
-            
+
             project.init();
 
             // set user-define properties
@@ -355,12 +355,12 @@ public class Main {
                 logger = (BuildLogger)(Class.forName(loggerClassname).newInstance());
             }
             catch (ClassCastException e) {
-                System.err.println("The specified logger class " + loggerClassname + 
+                System.err.println("The specified logger class " + loggerClassname +
                                          " does not implement the BuildLogger interface");
                 throw new RuntimeException();
             }
             catch (Exception e) {
-                System.err.println("Unable to instantiate specified logger class " + 
+                System.err.println("Unable to instantiate specified logger class " +
                                            loggerClassname + " : " + e.getClass().getName());
                 throw new RuntimeException();
             }
@@ -368,12 +368,12 @@ public class Main {
         else {
             logger = new DefaultLogger();
         }
-        
+
         logger.setMessageOutputLevel(msgOutputLevel);
         logger.setOutputPrintStream(out);
         logger.setErrorPrintStream(err);
         logger.setEmacsMode(emacsMode);
-        
+
         return logger;
     }
 
@@ -383,7 +383,7 @@ public class Main {
     private static void printUsage() {
         String lSep = System.getProperty("line.separator");
         StringBuffer msg = new StringBuffer();
-        msg.append("ant [options] [target]" + lSep);
+        msg.append("ant [options] [target [target2 [target3] ...]]" + lSep);
         msg.append("Options: " + lSep);
         msg.append("  -help                  print this message" + lSep);
         msg.append("  -projecthelp           print project help information" + lSep);
@@ -422,49 +422,78 @@ public class Main {
             System.err.println("Could not load the version information.");
         }
     }
-    
+
     /**
      * Print out a list of all targets in the current buildfile
      */
     private static void printTargets(Project project) {
-        // find the target with the longest name and
-        // filter out the targets with no description
+        // find the target with the longest name
         int maxLength = 0;
         Enumeration ptargets = project.getTargets().elements();
         String targetName;
         String targetDescription;
         Target currentTarget;
-        Vector names = new Vector();
-        Vector descriptions = new Vector();
+        // split the targets in top-level and sub-targets depending
+        // on the presence of a description
+        Vector topNames = new Vector();
+        Vector topDescriptions = new Vector();
+        Vector subNames = new Vector();
 
         while (ptargets.hasMoreElements()) {
             currentTarget = (Target)ptargets.nextElement();
             targetName = currentTarget.getName();
             targetDescription = currentTarget.getDescription();
+            // maintain a sorted list of targets
             if (targetDescription == null) {
-                targetDescription = "";
-            }
-            
-            names.addElement(targetName);
-            descriptions.addElement(targetDescription);
+                int pos = findTargetPosition(subNames, targetName);
+                subNames.insertElementAt(targetName, pos);
+            } else {
+                int pos = findTargetPosition(topNames, targetName);
+                topNames.insertElementAt(targetName, pos);
+                topDescriptions.insertElementAt(targetDescription, pos);
             if (targetName.length() > maxLength) {
                 maxLength = targetName.length();
             }
         }
+        }
+        printTargets(topNames, topDescriptions, "Main targets:", maxLength);
+        printTargets(subNames, null, "Subtargets:", 0);
+    }
 
+    /**
+     * Search for the insert position to keep names a sorted list of Strings
+     */
+    private static int findTargetPosition(Vector names, String name) {
+        int res = names.size();
+        for (int i=0; i<names.size() && res == names.size(); i++) {
+            if (name.compareTo((String)names.elementAt(i)) < 0) {
+                res = i;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Output a formatted list of target names with an optional description
+     */
+    private static void printTargets(Vector names, Vector descriptions, String heading, int maxlen) {
         // now, start printing the targets and their descriptions
         String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
         String spaces = "    ";
-        while (spaces.length()<maxLength) {
+        while (spaces.length()<maxlen) {
             spaces += spaces;
         }
         StringBuffer msg = new StringBuffer();
-        msg.append("Targets: " + lSep);
+        msg.append(heading + lSep + lSep);
         for (int i=0; i<names.size(); i++) {
-            msg.append(" -"+names.elementAt(i));
-            msg.append(spaces.substring(0, maxLength - ((String)names.elementAt(i)).length() + 2));
-            msg.append(descriptions.elementAt(i)+lSep);
+            msg.append(" ");
+            msg.append(names.elementAt(i));
+            if (descriptions != null) {
+                msg.append(spaces.substring(0, maxlen - ((String)names.elementAt(i)).length() + 2));
+                msg.append(descriptions.elementAt(i));
+            }
+            msg.append(lSep);
         }
         System.out.println(msg.toString());
     }

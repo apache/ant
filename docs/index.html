@@ -174,21 +174,23 @@ buildfile (see the <a href="#property">property task</a>).
 This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
 option, where <i>&lt;property&gt;</i> is the name of the property and <i>&lt;value&gt;</i>
 the value.</p>
-<p>To more options are <i>-quiet</i> which instructs Ant to print less
+<p>Two more options are <i>-quiet</i> which instructs Ant to print less
 information on the console when running. The option <i>-verbose</i> on the other
 hand makes Ant print more information on the console.</p>
-<p>It is also possible to specify the target that should be executed. Default
-the target that is mentioned in the <i>default</i> attribute of the project is
-used. This can be overridden by adding the target name to the end of the
-commandline.</p>
+<p>It is also possible to specify one or more targets that should be executed. When omitted the target that is mentioned in the <i>default</i> attribute of the project is
+used.</p>
+<p>The <i>-projecthelp</i> option gives a list of this projects targets. First those with a description and then those without one.</p>
 <p>Commandline option summary:</p>
-<pre>ant [options] [target]
+<pre>ant [options] [target [target2 [target3] ...]]
 Options:
 -help                  print this message
+-projecthelp           print project help information
 -version               print the version information and exit
 -quiet                 be extra quiet
 -verbose               be extra verbose
+-emacs                 produce logging information without adornments
 -logfile &lt;file&gt;        use given file for log
+-logger &lt;classname&gt;    the class which is to perform logging
 -listener &lt;classname&gt;  add an instance of class as a project listener
 -buildfile &lt;file&gt;      use given buildfile
 -D&lt;property&gt;=&lt;value&gt;   use value for given property</pre>
@@ -302,6 +304,7 @@ href="#tstamp">tstamp</a> tasks in a so called initialization target, on which
 all other targets depend. Make sure that target is always the first one in
 the depends list of the other targets. In this manual, most initialization targets
 have the name "init".</p>
+<p>The optional <i>description</i> attribute can be used to provide a one line description of this target that is printed by the <i>-projecthelp</i> commandline option.</p>
 <p>A target has the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -330,6 +333,11 @@ have the name "init".</p>
     <td valign="top">unless</td>
     <td valign="top">the name of the property that must not be set in order 
       for this target to execute.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">description</td>
+    <td valign="top">a short description of this targets function.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>

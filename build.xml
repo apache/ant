@@ -131,7 +131,7 @@
   <!-- =================================================================== -->
   <!-- Creates the binary structure                                        -->
   <!-- =================================================================== -->
-  <target name="main" depends="jar">
+  <target name="main" depends="jar" description="Creates the binary structure">
      <mkdir dir="${bin.dir}"/>
      <copydir src="${src.bin.dir}" dest="${bin.dir}"/>
      <chmod perm="+x">
@@ -146,7 +146,7 @@
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare">
+  <target name="javadocs" depends="prepare" description="Creates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="${packages}"
              sourcepath="${basedir}/${src.dir}"
@@ -162,7 +162,7 @@
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="main,jar,javadocs">
+  <target name="dist" depends="main,jar,javadocs" description="Creates the distribution">
      <mkdir dir="${ant.dist.dir}"/>
      <mkdir dir="${ant.dist.dir}/bin"/>
      <mkdir dir="${ant.dist.dir}/lib"/>
@@ -207,7 +207,7 @@
   <!-- =================================================================== -->
   <!-- Installs the ant.jar library and binary files into ant.home         -->
   <!-- =================================================================== -->
-  <target name="bootstrap" depends="main">
+  <target name="bootstrap" depends="main" description="Installs the ant.jar library and binary files into ant.home">
     <echo message="copying bootstrapped files into bin and lib"/>
     <copydir src="${lib.dir}" dest="lib"/>
     <copydir src="${bin.dir}" dest="bin"/>
