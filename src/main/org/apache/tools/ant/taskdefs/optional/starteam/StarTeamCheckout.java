@@ -580,7 +580,10 @@ public class StarTeamCheckout extends TreeBasedTask {
             }
 
             String[] localFiles = localFolder.list();
-
+            // PR 31965 says that it can return null
+            if (localFiles == null){
+                return this;
+            }
             for (int i = 0; i < localFiles.length; i++) {
                 java.io.File localFile =
                     new java.io.File(localFolder, localFiles[i]).getAbsoluteFile();
