@@ -7,17 +7,19 @@
  */
 package org.apache.tools.ant.taskdefs.security;
 
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.ExecTask;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.tools.ant.types.Commandline;
+import java.io.IOException;
 
 /**
  * Generates a key.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class GenerateKey
-    extends Task
+    extends AbstractTask
 {
     /**
      * The alias of signer.
@@ -141,87 +143,103 @@ public class GenerateKey
         final String message = "Generating Key for " + m_alias;
         getLogger().info( message );
 
-        final ExecTask cmd = (ExecTask)getProject().createTask( "exec" );
+        final Commandline cmd = createCommand();
+        final Execute2 exe = new Execute2();
+        exe.setWorkingDirectory( getBaseDirectory() );
+        exe.setCommandline( cmd.getCommandline() );
+        try
+        {
+            exe.execute();
+        }
+        catch( final IOException ioe )
+        {
+            throw new TaskException( ioe.getMessage(), ioe );
+        }
+    }
+
+    private Commandline createCommand()
+    {
+        final Commandline cmd = new Commandline();
         cmd.setExecutable( "keytool" );
 
-        cmd.createArg().setValue( "-genkey " );
+        cmd.createArgument().setValue( "-genkey " );
 
         if( m_verbose )
         {
-            cmd.createArg().setValue( "-v " );
+            cmd.createArgument().setValue( "-v " );
         }
 
-        cmd.createArg().setValue( "-alias" );
-        cmd.createArg().setValue( m_alias );
+        cmd.createArgument().setValue( "-alias" );
+        cmd.createArgument().setValue( m_alias );
 
         if( null != m_dname )
         {
-            cmd.createArg().setValue( "-dname" );
-            cmd.createArg().setValue( m_dname );
+            cmd.createArgument().setValue( "-dname" );
+            cmd.createArgument().setValue( m_dname );
         }
 
         if( null != m_expandedDname )
         {
-            cmd.createArg().setValue( "-dname" );
-            cmd.createArg().setValue( m_expandedDname.toString() );
+            cmd.createArgument().setValue( "-dname" );
+            cmd.createArgument().setValue( m_expandedDname.toString() );
         }
 
         if( null != m_keystore )
         {
-            cmd.createArg().setValue( "-keystore" );
-            cmd.createArg().setValue( m_keystore );
+            cmd.createArgument().setValue( "-keystore" );
+            cmd.createArgument().setValue( m_keystore );
         }
 
         if( null != m_storepass )
         {
-            cmd.createArg().setValue( "-storepass" );
-            cmd.createArg().setValue( m_storepass );
+            cmd.createArgument().setValue( "-storepass" );
+            cmd.createArgument().setValue( m_storepass );
         }
 
         if( null != m_storetype )
         {
-            cmd.createArg().setValue( "-storetype" );
-            cmd.createArg().setValue( m_storetype );
+            cmd.createArgument().setValue( "-storetype" );
+            cmd.createArgument().setValue( m_storetype );
         }
 
-        cmd.createArg().setValue( "-keypass" );
+        cmd.createArgument().setValue( "-keypass" );
         if( null != m_keypass )
         {
-            cmd.createArg().setValue( m_keypass );
+            cmd.createArgument().setValue( m_keypass );
         }
         else
         {
-            cmd.createArg().setValue( m_storepass );
+            cmd.createArgument().setValue( m_storepass );
         }
 
         if( null != m_sigalg )
         {
-            cmd.createArg().setValue( "-sigalg" );
-            cmd.createArg().setValue( m_sigalg );
+            cmd.createArgument().setValue( "-sigalg" );
+            cmd.createArgument().setValue( m_sigalg );
         }
 
         if( null != m_keyalg )
         {
-            cmd.createArg().setValue( "-keyalg" );
-            cmd.createArg().setValue( m_keyalg );
+            cmd.createArgument().setValue( "-keyalg" );
+            cmd.createArgument().setValue( m_keyalg );
         }
 
         if( 0 < m_keysize )
         {
-            cmd.createArg().setValue( "-keysize" );
-            cmd.createArg().setValue( "" + m_keysize );
+            cmd.createArgument().setValue( "-keysize" );
+            cmd.createArgument().setValue( "" + m_keysize );
         }
 
         if( 0 < m_validity )
         {
-            cmd.createArg().setValue( "-validity" );
-            cmd.createArg().setValue( "" + m_validity );
+            cmd.createArgument().setValue( "-validity" );
+            cmd.createArgument().setValue( "" + m_validity );
         }
-
-        cmd.execute();
+        return cmd;
     }
 
-    private void validate() throws TaskException
+    private void validate()
+        throws TaskException
     {
         if( null == m_alias )
         {

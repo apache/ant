@@ -15,15 +15,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.taskdefs.exec.ExecTask;
+import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
  * Sign a archive.
  *
- * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
- * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:nick@ox.compsoc.net">Nick Fortescue</a>
  */
 public class SignJar
     extends AbstractTask
@@ -285,67 +286,82 @@ public class SignJar
 
         final StringBuffer sb = new StringBuffer();
 
-        final ExecTask cmd = null;//(ExecTask)getProject().createTask( "exec" );
+        final String message = "Signing Jar : " + jarSource.getAbsolutePath();
+        getLogger().info( message );
+
+        final Commandline cmd = buildCommand( jarTarget, jarSource );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
+        try
+        {
+            exe.execute();
+        }
+        catch( final IOException ioe )
+        {
+            throw new TaskException( ioe.getMessage(), ioe );
+        }
+    }
+
+    private Commandline buildCommand( final File jarTarget, final File jarSource )
+    {
+        final Commandline cmd = new Commandline();
         cmd.setExecutable( "jarsigner" );
 
         if( null != m_keystore )
         {
-            cmd.createArg().setValue( "-keystore" );
-            cmd.createArg().setValue( m_keystore.toString() );
+            cmd.createArgument().setValue( "-keystore" );
+            cmd.createArgument().setValue( m_keystore.toString() );
         }
 
         if( null != m_storepass )
         {
-            cmd.createArg().setValue( "-storepass" );
-            cmd.createArg().setValue( m_storepass );
+            cmd.createArgument().setValue( "-storepass" );
+            cmd.createArgument().setValue( m_storepass );
         }
 
         if( null != m_storetype )
         {
-            cmd.createArg().setValue( "-storetype" );
-            cmd.createArg().setValue( m_storetype );
+            cmd.createArgument().setValue( "-storetype" );
+            cmd.createArgument().setValue( m_storetype );
         }
 
         if( null != m_keypass )
         {
-            cmd.createArg().setValue( "-keypass" );
-            cmd.createArg().setValue( m_keypass );
+            cmd.createArgument().setValue( "-keypass" );
+            cmd.createArgument().setValue( m_keypass );
         }
 
         if( null != m_sigfile )
         {
-            cmd.createArg().setValue( "-sigfile" );
-            cmd.createArg().setValue( m_sigfile.toString() );
+            cmd.createArgument().setValue( "-sigfile" );
+            cmd.createArgument().setValue( m_sigfile.toString() );
         }
 
         if( null != jarTarget )
         {
-            cmd.createArg().setValue( "-signedjar" );
-            cmd.createArg().setValue( jarTarget.toString() );
+            cmd.createArgument().setValue( "-signedjar" );
+            cmd.createArgument().setValue( jarTarget.toString() );
         }
 
         if( m_verbose )
         {
-            cmd.createArg().setValue( "-verbose" );
+            cmd.createArgument().setValue( "-verbose" );
         }
 
         if( m_internalsf )
         {
-            cmd.createArg().setValue( "-internalsf" );
+            cmd.createArgument().setValue( "-internalsf" );
         }
 
         if( m_sectionsonly )
         {
-            cmd.createArg().setValue( "-sectionsonly" );
+            cmd.createArgument().setValue( "-sectionsonly" );
         }
 
-        cmd.createArg().setValue( jarSource.toString() );
+        cmd.createArgument().setValue( jarSource.toString() );
 
-        cmd.createArg().setValue( m_alias );
-
-        final String message = "Signing Jar : " + jarSource.getAbsolutePath();
-        getLogger().info( message );
-        cmd.execute();
+        cmd.createArgument().setValue( m_alias );
+        return cmd;
     }
 }
 

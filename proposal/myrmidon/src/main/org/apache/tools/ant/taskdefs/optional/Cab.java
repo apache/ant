@@ -14,41 +14,36 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.Os;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.taskdefs.exec.ExecTask;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
  * Create a CAB archive.
  *
- * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">
- *      rvaughn@seaconinc.com</a>
+ * @author <a href="mailto:rvaughn@seaconinc.com">Roger Vaughn</a>
  */
-
-public class Cab extends MatchingTask
+public class Cab
+    extends MatchingTask
 {
-    private ArrayList filesets = new ArrayList();
-    private boolean doCompress = true;
-    private boolean doVerbose = false;
-
-    protected String archiveType = "cab";
-
-    private File baseDir;
-
-    private File cabFile;
-    private String cmdOptions;
+    private ArrayList m_filesets = new ArrayList();
+    private boolean m_compress = true;
+    private File m_baseDir;
+    private File m_cabFile;
+    private String m_options;
 
     /**
      * This is the base directory to look in for things to cab.
      *
      * @param baseDir The new Basedir value
      */
-    public void setBasedir( File baseDir )
+    public void setBasedir( final File baseDir )
     {
-        this.baseDir = baseDir;
+        m_baseDir = baseDir;
     }
 
     /**
@@ -56,9 +51,9 @@ public class Cab extends MatchingTask
      *
      * @param cabFile The new Cabfile value
      */
-    public void setCabfile( File cabFile )
+    public void setCabfile( final File cabFile )
     {
-        this.cabFile = cabFile;
+        m_cabFile = cabFile;
     }
 
     /**
@@ -66,9 +61,9 @@ public class Cab extends MatchingTask
      *
      * @param compress The new Compress value
      */
-    public void setCompress( boolean compress )
+    public void setCompress( final boolean compress )
     {
-        doCompress = compress;
+        m_compress = compress;
     }
 
     /**
@@ -76,19 +71,9 @@ public class Cab extends MatchingTask
      *
      * @param options The new Options value
      */
-    public void setOptions( String options )
+    public void setOptions( final String options )
     {
-        cmdOptions = options;
-    }
-
-    /**
-     * Sets whether we want to see or suppress cabarc output.
-     *
-     * @param verbose The new Verbose value
-     */
-    public void setVerbose( boolean verbose )
-    {
-        doVerbose = verbose;
+        m_options = options;
     }
 
     /**
@@ -96,38 +81,38 @@ public class Cab extends MatchingTask
      *
      * @param set The feature to be added to the Fileset attribute
      */
-    public void addFileset( FileSet set )
+    public void addFileset( final FileSet set )
     {
-        filesets.add( set );
+        m_filesets.add( set );
     }
 
     public void execute()
         throws TaskException
     {
-
         checkConfiguration();
 
-        ArrayList files = getFileList();
+        final ArrayList files = getFileList();
 
         // quick exit if the target is up to date
         if( isUpToDate( files ) )
+        {
             return;
+        }
 
-        getLogger().info( "Building " + archiveType + ": " + cabFile.getAbsolutePath() );
+        getLogger().info( "Building cab: " + m_cabFile.getAbsolutePath() );
 
         if( !Os.isFamily( "windows" ) )
         {
             getLogger().debug( "Using listcab/libcabinet" );
 
-            StringBuffer sb = new StringBuffer();
+            final StringBuffer sb = new StringBuffer();
 
-            Iterator fileEnum = files.iterator();
-
-            while( fileEnum.hasNext() )
+            final Iterator e = files.iterator();
+            while( e.hasNext() )
             {
-                sb.append( fileEnum.next() ).append( "\n" );
+                sb.append( e.next() ).append( "\n" );
             }
-            sb.append( "\n" ).append( cabFile.getAbsolutePath() ).append( "\n" );
+            sb.append( "\n" ).append( m_cabFile.getAbsolutePath() ).append( "\n" );
 
             try
             {
@@ -139,7 +124,7 @@ public class Cab extends MatchingTask
             }
             catch( IOException ex )
             {
-                String msg = "Problem creating " + cabFile + " " + ex.getMessage();
+                String msg = "Problem creating " + m_cabFile + " " + ex.getMessage();
                 throw new TaskException( msg );
             }
         }
@@ -148,32 +133,20 @@ public class Cab extends MatchingTask
             try
             {
                 File listFile = createListFile( files );
-                ExecTask exec = createExec();
-                File outFile = null;
-
-                // die if cabarc fails
-                exec.setDir( baseDir );
-
-                if( !doVerbose )
-                {
-                    outFile = File.createTempFile( "ant", "", getBaseDirectory() );
-                    exec.setOutput( outFile );
-                }
-
-                setupCommand( listFile, exec );
-                exec.execute();
-
-                if( outFile != null )
-                {
-                    outFile.delete();
-                }
+                Execute2 exe = new Execute2();
+                setupLogger( exe );
+                exe.setWorkingDirectory( m_baseDir );
+                final Commandline cmd = createCommand( listFile );
+                exe.setCommandline( cmd.getCommandline() );
+                exe.execute();
 
                 listFile.delete();
             }
-            catch( IOException ioe )
+            catch( final IOException ioe )
             {
-                String msg = "Problem creating " + cabFile + " " + ioe.getMessage();
-                throw new TaskException( msg );
+                final String message =
+                    "Problem creating " + m_cabFile + " " + ioe.getMessage();
+                throw new TaskException( message );
             }
         }
     }
@@ -182,26 +155,23 @@ public class Cab extends MatchingTask
      * Get the complete list of files to be included in the cab. Filenames are
      * gathered from filesets if any have been added, otherwise from the
      * traditional include parameters.
-     *
-     * @return The FileList value
-     * @exception TaskException Description of Exception
      */
     protected ArrayList getFileList()
         throws TaskException
     {
         ArrayList files = new ArrayList();
 
-        if( filesets.size() == 0 )
+        if( m_filesets.size() == 0 )
         {
             // get files from old methods - includes and nested include
-            appendFiles( files, super.getDirectoryScanner( baseDir ) );
+            appendFiles( files, super.getDirectoryScanner( m_baseDir ) );
         }
         else
         {
             // get files from filesets
-            for( int i = 0; i < filesets.size(); i++ )
+            for( int i = 0; i < m_filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.get( i );
+                FileSet fs = (FileSet)m_filesets.get( i );
                 if( fs != null )
                 {
                     appendFiles( files, fs.getDirectoryScanner() );
@@ -224,8 +194,8 @@ public class Cab extends MatchingTask
         for( int i = 0; i < files.size() && upToDate; i++ )
         {
             String file = files.get( i ).toString();
-            if( new File( baseDir, file ).lastModified() >
-                cabFile.lastModified() )
+            if( new File( m_baseDir, file ).lastModified() >
+                m_cabFile.lastModified() )
                 upToDate = false;
         }
         return upToDate;
@@ -255,15 +225,15 @@ public class Cab extends MatchingTask
     protected void checkConfiguration()
         throws TaskException
     {
-        if( baseDir == null )
+        if( m_baseDir == null )
         {
             throw new TaskException( "basedir attribute must be set!" );
         }
-        if( !baseDir.exists() )
+        if( !m_baseDir.exists() )
         {
             throw new TaskException( "basedir does not exist!" );
         }
-        if( cabFile == null )
+        if( m_cabFile == null )
         {
             throw new TaskException( "cabfile attribute must be set!" );
         }
@@ -271,44 +241,31 @@ public class Cab extends MatchingTask
 
     /**
      * Create the cabarc command line to use.
-     *
-     * @param listFile Description of Parameter
-     * @return Description of the Returned Value
      */
-    protected void setupCommand( File listFile, ExecTask exec )
+    protected Commandline createCommand( final File listFile )
         throws TaskException
     {
-        exec.setExecutable( "cabarc" );
-        exec.createArg().setValue( "-r" );
-        exec.createArg().setValue( "-p" );
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( "cabarc" );
+        cmd.createArgument().setValue( "-r" );
+        cmd.createArgument().setValue( "-p" );
 
-        if( !doCompress )
+        if( !m_compress )
         {
-            exec.createArg().setValue( "-m" );
-            exec.createArg().setValue( "none" );
+            cmd.createArgument().setValue( "-m" );
+            cmd.createArgument().setValue( "none" );
         }
 
-        if( cmdOptions != null )
+        if( m_options != null )
         {
-            exec.createArg().setLine( cmdOptions );
+            cmd.createArgument().setLine( m_options );
         }
 
-        exec.createArg().setValue( "n" );
-        exec.createArg().setFile( cabFile );
-        exec.createArg().setValue( "@" + listFile.getAbsolutePath() );
-    }
+        cmd.createArgument().setValue( "n" );
+        cmd.createArgument().setFile( m_cabFile );
+        cmd.createArgument().setValue( "@" + listFile.getAbsolutePath() );
 
-    /**
-     * Create a new exec delegate. The delegate task is populated so that it
-     * appears in the logs to be the same task as this one.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
-     */
-    protected ExecTask createExec()
-        throws TaskException
-    {
-        return (ExecTask)getProject().createTask( "exec" );
+        return cmd;
     }
 
     /**
