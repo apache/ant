@@ -2,6 +2,7 @@
 
     <properties>
         <author email="adammurdoch@apache.org">Adam Murdoch</author>
+        <author email="peter@apache.org">Peter Donald</author>
         <title>Get Involved</title>
     </properties>
 
@@ -13,6 +14,125 @@
             fledged build system, that can serve as the basis for Ant 2.  The following
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
+
+            <subsection name="XML Catalog to load XML Fragments">
+                <p>
+                  When including fragments of XML we are currently forced to use relative paths.
+                  However this is sometimes undesirable when a single fragment needs to be used
+                  across several projects in several different locations. Instead we could use
+                  a Catalog to name the fragment and then each developer would only need to install
+                  the fragment once and it would be accessible from all the projects.
+                </p>
+            </subsection>
+
+            <subsection name="Refactor Java Infrastructure into a Service">
+                <p>Much like Exec should be decoupled from Ant runtime, so should classes
+                to implement java task for the same benefits.</p>
+            </subsection>
+
+            <subsection name="Structural Dependency Utils">
+                <p>
+                  In the present ant, it is required that each task manage dependency separately.
+                  This makes it a lot of work to implement even simple dependency checking. To this
+                  day many of the core tasks do not implement it correctly. I am specifically
+                  talking about "structural" dependency information. The main reason is that it is
+                  painful to implement.
+                </p>
+                <p>
+                  Some tasks do no dependency checking and will recompile/transform/etc everytime.
+                  Others may perform a simple dependency checking (ie if source file is newer than
+                  destination file then recompile). Ideally a dependency system would actually
+                  calculate the dependencies correctly. So we need to have some mechanism to determine
+                  that <code>foo.c</code> actually depends upon <code>foo.h</code>, <code>bar.h</code>
+                  and <code>baz.h</code>. As this information is particular to each different task
+                  we need to allow tasks to implement this behaviour. Possibly by supplying an interface
+                  of the form;
+                </p>
+<source>
+public interface DependencyGenerator
+{
+  File[] generateDependencies( File file );
+}
+</source>
+                <p>
+                  Generating the dependency information is a costly operation and thus we do not want to
+                  be doing it everytime you run ant. We want to generate it on the initial build and then
+                  persist somewhere. Everytime a file is out of date, it's dependency information would
+                  be regenerated and stored in the dependency cache. Ideally this cache would also store the
+                  above mentioned coloring information. So the entry for <code>foo.c</code> may declare that
+                  it is dependent upon <code>foo.h</code>, <code>bar.h</code> and <code>baz.h</code>, aswell
+                  as being compiled with -O2 flag. If any of the dependencies have changed or are out of date
+                  then foo.c would need to be recompiled.
+                </p>
+                <p>
+                  A possible API would be
+                </p>
+<source>
+DependencyManager dm = ...;
+dm.setFileSet( myFileSet );
+dm.setDependencyCache( myDependencyCacheFile );
+File[] files = cm.getOutOfDate();
+</source>
+            </subsection>
+
+            <!--
+            <subsection name="">
+            </subsection>
+
+            <subsection name="">
+            </subsection>
+
+            <subsection name="">
+            </subsection>
+
+            <subsection name="">
+            </subsection>
+            -->
+
+            <subsection name="Coloring API">
+                <p>
+                  When you execute a task such as "javac" there is two types of dependency information
+                  that is important to analyze before we determine if we need to recompile a file. Say
+                  we are compiling <code>Foo.java</code>, it may depend on the <code>Bar.java</code>
+                  file. We call this "structural" dependency information - the structure of the source file
+                  determines what other files it depend upon. However there is also "environmental"
+                  dependency information. For instance if the <code>Foo.java</code> file was compiled with
+                  <code>debug="true"</code> last run and this time needs to be compiled with
+                  <code>debug="false"</code> then it is out of date and needs to be recompiled. We call this
+                  "environmental" dependency information "coloring".
+                </p>
+                <p>
+                  So we need to create an infrastructure that allows tasks to manage "coloring". So a task
+                  should be able to add coloring information for each resource processed. When the task
+                  comes to process the resource again it will detect if the coloring has changed and if it
+                  has will force a recompile.
+                </p>
+                <p>
+                  An API for such a bean has yet to be established but an example API would be.
+                </p>
+<source>
+ColoringManager cm = ...;
+cm.addColor( "debug", "true" );
+cm.addColor( "optimize", "false" );
+cm.setFileSet( myFileSet );
+File[] files = cm.getOutOfDate();
+</source>
+            </subsection>
+
+            <subsection name="Create Task/Element/Attribute Naming guidelines">
+
+                <p> Currently Ant has a mixture of tasks from various stages it's evolution, with different
+                authors and each utilizing different naming patterns. Some tasks use names such as
+                "src" and "dest" while others use "file" and "tofile". It would be preferrable if
+                consistent naming patterns were used. It is recomended that we come up with a "best
+                practices" document to document our recomended naming patterns.</p>
+                <p>Before we can come up with such a document we need to identify common patterns through
+                out the tasks. Several tasks have the notion of transforming input from a "source"
+                to a "destination". So we should have consistent naming schemes for these attributes and
+                elements. Analysis of existing tasks will likely bring out other similar patterns. Once
+                we have identified and documented these similarities then we can establish conventions.</p>
+
+            </subsection>
 
             <subsection name="Rethink Notification/Event scheme">
 

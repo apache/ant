@@ -10,6 +10,8 @@
   
                       <meta name="author" value="Adam Murdoch">
   <meta name="email" value="adammurdoch@apache.org">
+                <meta name="author" value="Peter Donald">
+  <meta name="email" value="peter@apache.org">
         
       <title>Apache Myrmidon - Get Involved</title>
     </head>
@@ -87,6 +89,203 @@
             fledged build system, that can serve as the basis for Ant 2.  The following
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="XML Catalog to load XML Fragments"><strong>XML Catalog to load XML Fragments</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>
+                  When including fragments of XML we are currently forced to use relative paths.
+                  However this is sometimes undesirable when a single fragment needs to be used
+                  across several projects in several different locations. Instead we could use
+                  a Catalog to name the fragment and then each developer would only need to install
+                  the fragment once and it would be accessible from all the projects.
+                </p>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Refactor Java Infrastructure into a Service"><strong>Refactor Java Infrastructure into a Service</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Much like Exec should be decoupled from Ant runtime, so should classes
+                to implement java task for the same benefits.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Structural Dependency Utils"><strong>Structural Dependency Utils</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>
+                  In the present ant, it is required that each task manage dependency separately.
+                  This makes it a lot of work to implement even simple dependency checking. To this
+                  day many of the core tasks do not implement it correctly. I am specifically
+                  talking about "structural" dependency information. The main reason is that it is
+                  painful to implement.
+                </p>
+                                <p>
+                  Some tasks do no dependency checking and will recompile/transform/etc everytime.
+                  Others may perform a simple dependency checking (ie if source file is newer than
+                  destination file then recompile). Ideally a dependency system would actually
+                  calculate the dependencies correctly. So we need to have some mechanism to determine
+                  that <code>foo.c</code> actually depends upon <code>foo.h</code>, <code>bar.h</code>
+                  and <code>baz.h</code>. As this information is particular to each different task
+                  we need to allow tasks to implement this behaviour. Possibly by supplying an interface
+                  of the form;
+                </p>
+                                  <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+public interface DependencyGenerator
+{
+  File[] generateDependencies( File file );
+}
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                <p>
+                  Generating the dependency information is a costly operation and thus we do not want to
+                  be doing it everytime you run ant. We want to generate it on the initial build and then
+                  persist somewhere. Everytime a file is out of date, it's dependency information would
+                  be regenerated and stored in the dependency cache. Ideally this cache would also store the
+                  above mentioned coloring information. So the entry for <code>foo.c</code> may declare that
+                  it is dependent upon <code>foo.h</code>, <code>bar.h</code> and <code>baz.h</code>, aswell
+                  as being compiled with -O2 flag. If any of the dependencies have changed or are out of date
+                  then foo.c would need to be recompiled.
+                </p>
+                                <p>
+                  A possible API would be
+                </p>
+                                  <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+DependencyManager dm = ...;
+dm.setFileSet( myFileSet );
+dm.setDependencyCache( myDependencyCacheFile );
+File[] files = cm.getOutOfDate();
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Coloring API"><strong>Coloring API</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>
+                  When you execute a task such as "javac" there is two types of dependency information
+                  that is important to analyze before we determine if we need to recompile a file. Say
+                  we are compiling <code>Foo.java</code>, it may depend on the <code>Bar.java</code>
+                  file. We call this "structural" dependency information - the structure of the source file
+                  determines what other files it depend upon. However there is also "environmental"
+                  dependency information. For instance if the <code>Foo.java</code> file was compiled with
+                  <code>debug="true"</code> last run and this time needs to be compiled with
+                  <code>debug="false"</code> then it is out of date and needs to be recompiled. We call this
+                  "environmental" dependency information "coloring".
+                </p>
+                                <p>
+                  So we need to create an infrastructure that allows tasks to manage "coloring". So a task
+                  should be able to add coloring information for each resource processed. When the task
+                  comes to process the resource again it will detect if the coloring has changed and if it
+                  has will force a recompile.
+                </p>
+                                <p>
+                  An API for such a bean has yet to be established but an example API would be.
+                </p>
+                                  <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+ColoringManager cm = ...;
+cm.addColor( &quot;debug&quot;, &quot;true&quot; );
+cm.addColor( &quot;optimize&quot;, &quot;false&quot; );
+cm.setFileSet( myFileSet );
+File[] files = cm.getOutOfDate();
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Create Task/Element/Attribute Naming guidelines"><strong>Create Task/Element/Attribute Naming guidelines</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p> Currently Ant has a mixture of tasks from various stages it's evolution, with different
+                authors and each utilizing different naming patterns. Some tasks use names such as
+                "src" and "dest" while others use "file" and "tofile". It would be preferrable if
+                consistent naming patterns were used. It is recomended that we come up with a "best
+                practices" document to document our recomended naming patterns.</p>
+                                <p>Before we can come up with such a document we need to identify common patterns through
+                out the tasks. Several tasks have the notion of transforming input from a "source"
+                to a "destination". So we should have consistent naming schemes for these attributes and
+                elements. Analysis of existing tasks will likely bring out other similar patterns. Once
+                we have identified and documented these similarities then we can establish conventions.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
