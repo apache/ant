@@ -138,6 +138,10 @@ public class Touch extends Task {
                                                            Locale.US);
             try {
                 setMillis(df.parse(dateTime).getTime());
+                if (millis < 0) {
+                    throw new BuildException("Date of " + dateTime
+                                             + " results in negative milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT).");
+                }
             } catch (ParseException pe) {
                 throw new BuildException(pe.getMessage(), pe, location);
             }
@@ -190,7 +194,11 @@ public class Touch extends Task {
         }
     }
 
-    protected void touch(File file) {
+    protected void touch(File file) throws BuildException {
+        if (!file.canWrite()) {
+            throw new BuildException("Can not change modification date of read-only file " + file);
+        }
+
         if (project.getJavaVersion() == Project.JAVA_1_1) {
             return;
         }
