@@ -372,7 +372,7 @@ public class Translate extends MatchingTask {
         processBundle(bundleFile, 5, false);
 
         bundleFile = bundle + language;
-        processBundle(bundleFile, 6, true);
+        processBundle(bundleFile, 6, false);
     }
 
     /**
