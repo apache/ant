@@ -17,9 +17,10 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
+import org.apache.myrmidon.framework.exec.ExecOutputHandler;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -59,6 +60,7 @@ import org.apache.tools.ant.types.Path;
 
 public class Javadoc
     extends Task
+    implements ExecOutputHandler
 {
     private Commandline m_command = new Commandline();
 
@@ -544,8 +546,8 @@ public class Javadoc
             m_command.createArgument().setValue( m_bottom.getText() );
         }
 
-        Commandline toExecute = (Commandline)m_command.clone();
-        toExecute.setExecutable( getJavadocExecutableName() );
+        Commandline cmd = (Commandline)m_command.clone();
+        cmd.setExecutable( getJavadocExecutableName() );
 
         // ------------------------------------------------ general javadoc arguments
         if( m_classpath == null )
@@ -553,14 +555,14 @@ public class Javadoc
         else
             m_classpath = m_classpath.concatSystemClasspath( "ignore" );
 
-        toExecute.createArgument().setValue( "-classpath" );
-        toExecute.createArgument().setValue( m_sourcePath.toString() +
-                                             System.getProperty( "path.separator" ) + m_classpath.toString() );
+        cmd.createArgument().setValue( "-classpath" );
+        cmd.createArgument().setValue( m_sourcePath.toString() +
+                                       System.getProperty( "path.separator" ) + m_classpath.toString() );
 
         if( m_version && m_doclet == null )
-            toExecute.createArgument().setValue( "-version" );
+            cmd.createArgument().setValue( "-version" );
         if( m_author && m_doclet == null )
-            toExecute.createArgument().setValue( "-author" );
+            cmd.createArgument().setValue( "-author" );
 
         if( m_doclet == null )
         {
@@ -583,12 +585,12 @@ public class Javadoc
             }
             else
             {
-                toExecute.createArgument().setValue( "-doclet" );
-                toExecute.createArgument().setValue( m_doclet.getName() );
+                cmd.createArgument().setValue( "-doclet" );
+                cmd.createArgument().setValue( m_doclet.getName() );
                 if( m_doclet.getPath() != null )
                 {
-                    toExecute.createArgument().setValue( "-docletpath" );
-                    toExecute.createArgument().setPath( m_doclet.getPath() );
+                    cmd.createArgument().setValue( "-docletpath" );
+                    cmd.createArgument().setPath( m_doclet.getPath() );
                 }
                 for( Iterator e = m_doclet.getParams(); e.hasNext(); )
                 {
@@ -598,18 +600,18 @@ public class Javadoc
                         throw new TaskException( "Doclet parameters must have a name" );
                     }
 
-                    toExecute.createArgument().setValue( param.getName() );
+                    cmd.createArgument().setValue( param.getName() );
                     if( param.getValue() != null )
                     {
-                        toExecute.createArgument().setValue( param.getValue() );
+                        cmd.createArgument().setValue( param.getValue() );
                     }
                 }
             }
 
             if( m_bootclasspath != null )
             {
-                toExecute.createArgument().setValue( "-bootclasspath" );
-                toExecute.createArgument().setPath( m_bootclasspath );
+                cmd.createArgument().setValue( "-bootclasspath" );
+                cmd.createArgument().setPath( m_bootclasspath );
             }
 
             // add the links arguments
@@ -635,9 +637,9 @@ public class Javadoc
                         File packageList = new File( packageListLocation, "package-list" );
                         if( packageList.exists() )
                         {
-                            toExecute.createArgument().setValue( "-linkoffline" );
-                            toExecute.createArgument().setValue( la.getHref() );
-                            toExecute.createArgument().setValue( packageListLocation.getAbsolutePath() );
+                            cmd.createArgument().setValue( "-linkoffline" );
+                            cmd.createArgument().setValue( la.getHref() );
+                            cmd.createArgument().setValue( packageListLocation.getAbsolutePath() );
                         }
                         else
                         {
@@ -646,8 +648,8 @@ public class Javadoc
                     }
                     else
                     {
-                        toExecute.createArgument().setValue( "-link" );
-                        toExecute.createArgument().setValue( la.getHref() );
+                        cmd.createArgument().setValue( "-link" );
+                        cmd.createArgument().setValue( la.getHref() );
                     }
                 }
             }
@@ -674,9 +676,9 @@ public class Javadoc
                     {
                         String name = grp.substring( 0, space );
                         String pkgList = grp.substring( space + 1 );
-                        toExecute.createArgument().setValue( "-group" );
-                        toExecute.createArgument().setValue( name );
-                        toExecute.createArgument().setValue( pkgList );
+                        cmd.createArgument().setValue( "-group" );
+                        cmd.createArgument().setValue( name );
+                        cmd.createArgument().setValue( pkgList );
                     }
                 }
             }
@@ -693,9 +695,9 @@ public class Javadoc
                     {
                         throw new TaskException( "The title and packages must be specified for group elements." );
                     }
-                    toExecute.createArgument().setValue( "-group" );
-                    toExecute.createArgument().setValue( title );
-                    toExecute.createArgument().setValue( packages );
+                    cmd.createArgument().setValue( "-group" );
+                    cmd.createArgument().setValue( title );
+                    cmd.createArgument().setValue( packages );
                 }
             }
 
@@ -716,7 +718,7 @@ public class Javadoc
                 }
                 else
                 {
-                    toExecute.createArgument().setValue( name );
+                    cmd.createArgument().setValue( name );
                 }
             }
 
@@ -732,7 +734,7 @@ public class Javadoc
             }
             if( packages.size() > 0 )
             {
-                evaluatePackages( toExecute, m_sourcePath, packages, excludePackages );
+                evaluatePackages( cmd, m_sourcePath, packages, excludePackages );
             }
         }
 
@@ -750,7 +752,7 @@ public class Javadoc
                     if( m_tmpList == null )
                     {
                         m_tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
-                        toExecute.createArgument().setValue( "@" + m_tmpList.getAbsolutePath() );
+                        cmd.createArgument().setValue( "@" + m_tmpList.getAbsolutePath() );
                     }
                     srcListWriter = new PrintWriter( new FileWriter( m_tmpList.getAbsolutePath(),
                                                                      true ) );
@@ -767,7 +769,7 @@ public class Javadoc
                     }
                     else
                     {
-                        toExecute.createArgument().setValue( sourceFileName );
+                        cmd.createArgument().setValue( sourceFileName );
                     }
                 }
 
@@ -787,17 +789,15 @@ public class Javadoc
 
         if( m_packageList != null )
         {
-            toExecute.createArgument().setValue( "@" + m_packageList );
+            cmd.createArgument().setValue( "@" + m_packageList );
         }
-        getLogger().debug( "Javadoc args: " + toExecute );
+        getLogger().debug( "Javadoc args: " + cmd );
 
         getLogger().info( "Javadoc execution" );
 
-        final JavadocOutputStream out = new JavadocOutputStream( getLogger(), false );
-        final JavadocOutputStream err = new JavadocOutputStream( getLogger(), true );
-        Execute exe = new Execute();
-        exe.setOutput( out );
-        exe.setError( err );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
+        exe.setExecOutputHandler( this );
 
         /*
          * No reason to change the working directory as all filenames and
@@ -808,7 +808,7 @@ public class Javadoc
         exe.setWorkingDirectory( null );
         try
         {
-            exe.setCommandline( toExecute.getCommandline() );
+            exe.setCommandline( cmd.getCommandline() );
             final int ret = exe.execute();
             if( ret != 0 )
             {
@@ -826,17 +826,6 @@ public class Javadoc
             {
                 m_tmpList.delete();
                 m_tmpList = null;
-            }
-
-            try
-            {
-                out.flush();
-                err.flush();
-                out.close();
-                err.close();
-            }
-            catch( IOException e )
-            {
             }
         }
     }
@@ -1027,5 +1016,30 @@ public class Javadoc
                 packageListWriter.close();
             }
         }
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard output.
+     */
+    public void stdout( final String line )
+    {
+        if( line.startsWith( "Generating " ) || line.startsWith( "Building " ) )
+        {
+            getLogger().debug( line );
+        }
+        else
+        {
+            getLogger().info( line );
+        }
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard error.
+     */
+    public void stderr( final String line )
+    {
+        getLogger().warn( line );
     }
 }
