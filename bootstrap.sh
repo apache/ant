@@ -117,7 +117,7 @@ chmod +x bin/antRun
 
 echo ... Building Ant Distribution
 
-"${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. org.apache.tools.ant.Main -emacs bootstrap
+"${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. org.apache.tools.ant.Main -emacs "$@" bootstrap
 
 echo ... Cleaning Up Build Directories
 

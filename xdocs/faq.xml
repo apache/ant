@@ -6,6 +6,28 @@
     <title>Frequently Asked Questions</title>
   </properties>
 
+  <faqsection title="About this FAQ">
+    <faq id="latest-version">
+      <question>Where do I find the latest version of this
+        document?</question>
+      <answer>
+        <p><a href="http://jakarta.apache.org/ant/faq.html">here</a>.</p>
+      </answer>
+    </faq>
+
+    <faq id="adding-faqs">
+      <question>How can I contribute to this FAQ?</question>
+      <answer>
+        <p>The page you are looking it is generated from 
+          <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/faq.xml">this</a>
+
+          document.  If you want to add a new question, please submit
+          a patch against this document, the structure is hoped to be
+          self-explaining.</p>
+      </answer>
+    </faq>
+  </faqsection>
+
   <faqsection title="General">
     <faq id="what-is-ant">
       <question>What is Apache Ant?</question>

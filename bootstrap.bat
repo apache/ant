@@ -58,7 +58,46 @@ copy %TOOLS%\ant\types\*.properties %CLASSDIR%\org\apache\tools\ant\types
 echo.
 echo ... Building Ant Distribution
 
-"%JAVA%" %ANT_OPTS% org.apache.tools.ant.Main -emacs bootstrap
+if not "%OS%"=="Windows_NT" goto win9xStart
+:winNTStart
+@setlocal
+
+REM parse command line arguments
+rem Need to check if we are using the 4NT shell...
+if "%eval[2+2]" == "4" goto setup4NT
+
+rem On NT/2K grab all arguments at once
+set ANT_CMD_LINE_ARGS=%*
+goto doneStart
+
+:setup4NT
+set ANT_CMD_LINE_ARGS=%$
+goto doneStart
+
+:win9xStart
+rem Slurp the command line arguments.  This loop allows for an unlimited number of 
+rem agruments (up to the command line limit, anyway).
+
+set ANT_CMD_LINE_ARGS=
+
+:setupArgs
+if %1a==a goto doneStart
+set ANT_CMD_LINE_ARGS=%ANT_CMD_LINE_ARGS% %1
+shift
+goto setupArgs
+
+:doneStart
+rem This label provides a place for the argument list loop to break out 
+rem and for NT handling to skip to.
+
+"%JAVA%" %ANT_OPTS% org.apache.tools.ant.Main -emacs %ANT_CMD_LINE_ARGS% bootstrap
+
+set ANT_CMD_LINE_ARGS=
+if not "%OS%"=="Windows_NT" goto mainEnd
+:winNTend
+@endlocal
+
+:mainEnd
 
 echo.
 echo ... Cleaning Up Build Directories
