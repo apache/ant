@@ -148,6 +148,9 @@ Fixed bugs:
 * <scp> now properly handles remote files and directories with spaces
   in their names.  Bugzilla Report 26097.
 
+* <scp> now has (local|remote)tofile attributes to rename files on the
+  fly.  Bugzilla Report 26758.
+
 Other changes:
 --------------
 * doc fix concerning the dependencies of the ftp task
