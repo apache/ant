@@ -9,6 +9,7 @@ package org.apache.antlib.core;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.LogLevel;
 
 /**
  * This is a task used to log messages in the build file.
