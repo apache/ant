@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,55 +51,66 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit;
+package org.apache.tools.ant.taskdefs.optional.rjunit;
 
-import java.io.File;
+import java.util.Properties;
+import java.util.Vector;
 
-import junit.framework.TestCase;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener;
 
 /**
- * Basic test to ensure that the collector is working.
+ * A TestRunListener that stores all events for later check.
+ *
+ * <p>
+ * All the events are stored chronologically in distinct vectors
+ * and are made available as public instances
+ * </p>
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class ZipScannerTest extends TestCase {
-    public ZipScannerTest(String s) {
-        super(s);
+public class TestRunRecorder implements TestRunListener {
+
+// all these are public in order for testcases to have access quickly
+    public Vector testStarted = new Vector();
+    public Vector testEnded = new Vector();
+    public Vector testFailed = new Vector();
+    public Vector testError = new Vector();
+    public Vector runStarted = new Vector();
+    public Vector runEnded = new Vector();
+    public Vector runStopped = new Vector();
+
+    public void onTestStarted(TestRunEvent evt) {
+        testStarted.addElement(evt);
     }
 
-    protected ZipScanner _scanner;
-
-    protected void setUp() throws Exception {
-        _scanner = new ZipScanner();
-        String path = System.getProperty("java.home") + "/lib/rt.jar";
-        _scanner.setBasedir(path);
+    public void onTestEnded(TestRunEvent evt) {
+        testEnded.addElement(evt);
     }
 
-    public void testScan() throws Exception {
-        _scanner.scan();
-        String[] files = _scanner.getIncludedFiles();
-        assertContains(files, "java/lang/Exception.class");
-        String[] dirs = _scanner.getIncludedDirectories();
-        assertContains(dirs, "java/lang/");
+    public void onTestFailure(TestRunEvent evt) {
+        testFailed.addElement(evt);
     }
 
-    public void testIncludes() throws Exception {
-        _scanner.setIncludes( new String[]{ "**/Exception.class" });
-        _scanner.scan();
-        String[] files = _scanner.getIncludedFiles();
-        assertEquals(1, files.length);
-        assertEquals(files[0], "java/lang/Exception.class");
+    public void onRunStarted(TestRunEvent evt) {
+        runStarted.addElement(evt);
     }
 
-
-
-    public void assertContains(Object[] lists, Object o){
-        for (int i = 0; i < lists.length; i++){
-            if (lists[i].equals(o)){
-                return;
-            }
-        }
-        fail("Should contain " + o);
+    public void onRunEnded(TestRunEvent evt) {
+        runEnded.addElement(evt);
     }
 
+    public void onRunStopped(TestRunEvent evt) {
+        runStopped.addElement(evt);
+    }
+
+    public void onSuiteStarted(TestRunEvent evt) {
+    }
+
+    public void onSuiteEnded(TestRunEvent evt) {
+    }
+
+    public void onTestError(TestRunEvent evt) {
+        testError.addElement( evt );
+    }
 }

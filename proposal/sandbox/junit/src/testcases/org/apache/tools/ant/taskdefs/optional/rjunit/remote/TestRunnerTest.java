@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.remote;
+package org.apache.tools.ant.taskdefs.optional.rjunit.remote;
 
 import java.util.Vector;
 import java.util.Properties;
@@ -60,9 +60,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.framework.TestListener;
 
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.PlainFormatter;
-import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunListener;
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
+import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.PlainFormatter;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener;
+import org.apache.tools.ant.taskdefs.optional.rjunit.TestRunRecorder;
 
 /**
  * TestCase for the test runner.

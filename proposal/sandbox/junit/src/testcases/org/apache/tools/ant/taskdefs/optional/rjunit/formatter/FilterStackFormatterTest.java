@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.formatter;
+package org.apache.tools.ant.taskdefs.optional.rjunit.formatter;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -61,6 +61,8 @@ import java.util.Properties;
 import junit.framework.TestCase;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 
 /**
  * Not exactly rocket science test.. dooh !
@@ -110,43 +112,49 @@ public class FilterStackFormatterTest extends TestCase
     }
 
     public void testFiltering() {
+        /*
         FilterStackFormatter wrapper = new FilterStackFormatter(this);
-        wrapper.onTestFailed(0, "", trace);
+        Exception e = new Exception("xx");
+        e.fillInStackTrace();
+        TestRunEvent evt = new TestRunEvent(new Integer(1), TestRunEvent.TEST_ERROR, "xx");
+        wrapper.onTestFailure(evt);
+        StringUtils.getStackTrace()
         assertEquals(expected, filteredTrace);
+        */
     }
 
 
 // --- formatter implementation
     protected String filteredTrace;
 
-    public void onTestStarted(String testname) {
+    public void onTestStarted(TestRunEvent evt) {
     }
 
-    public void onTestEnded(String testname) {
+    public void onTestEnded(TestRunEvent evt) {
     }
 
     public void init(Properties props) throws BuildException {
     }
 
-    public void onTestFailed(int status, String testname, String trace) {
+    public void onTestFailure(TestRunEvent evt) {
         filteredTrace = trace;
     }
 
-    public void onTestStdOutLine(String testname, String line) {
+    public void onSuiteStarted(TestRunEvent evt) {
     }
 
-    public void onTestStdErrLine(String testname, String line) {
+    public void onSuiteEnded(TestRunEvent evt) {
     }
 
-    public void onTestRunSystemProperties(Properties props) {
+    public void onTestError(TestRunEvent evt) {
     }
 
-    public void onTestRunStarted(int testcount) {
+    public void onRunStarted(TestRunEvent evt) {
     }
 
-    public void onTestRunEnded(long elapsedtime) {
+    public void onRunEnded(TestRunEvent evt) {
     }
 
-    public void onTestRunStopped(long elapsedtime) {
+    public void onRunStopped(TestRunEvent evt) {
     }
 }

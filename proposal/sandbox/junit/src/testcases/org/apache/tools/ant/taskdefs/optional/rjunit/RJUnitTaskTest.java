@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit;
+package org.apache.tools.ant.taskdefs.optional.rjunit;
 
 import java.io.File;
 import java.net.URL;
@@ -83,7 +83,11 @@ public class RJUnitTaskTest extends BuildFileTest {
         executeTarget("server-and-client");
         System.out.println(getFullLog());
     }
-
+    public void testServerAndClient2(){
+        executeTarget("server-and-client");
+        System.out.println(getFullLog());
+    }
+    /*
     public void testStandalone() throws Exception {
         // run server first..
         Thread thread = new Thread(){
@@ -97,4 +101,6 @@ public class RJUnitTaskTest extends BuildFileTest {
         System.out.println(getFullLog());
         thread.join();
     }
+*/
+
 }

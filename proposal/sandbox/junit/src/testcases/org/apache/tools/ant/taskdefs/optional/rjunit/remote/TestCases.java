@@ -51,28 +51,61 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.data;
+package org.apache.tools.ant.taskdefs.optional.rjunit.remote;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.framework.Test;
+import junit.extensions.TestSetup;
 
 /**
- * Provide a common set of test reporting.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class Test1 extends TestCase {
-    public Test1(String s) {
-        super(s);
+public class TestCases {
+
+    /** null testcase w/ 3 tests */
+    public static class NullTestCase extends TestCase {
+        public NullTestCase(String s) {
+            super(s);
+        }
+        public void testSuccess(){}
+        public void testFailure(){ assertTrue(false); }
+        public void testError(){ throw new RuntimeException("on purpose"); }
     }
 
-    public void testSuccess(){
+    /** testcase w/ a static suite method */
+    public static class NullTestSuite extends TestCase {
+        public NullTestSuite(String s) {
+            super(s);
+        }
+        public static Test suite(){
+            return new TestSuite(NullTestCase.class);
+        }
     }
 
-    public void testFailure(){
-        fail("failure on purpose");
+    public static class SimpleTestCase extends TestCase {
+        public SimpleTestCase(String s) {
+            super(s);
+        }
+        public void testSuccess(){}
     }
 
-    public void testError(){
-        throw new RuntimeException("error on purpose");
+    public static class FailSetupTestSuite extends TestCase {
+        public FailSetupTestSuite(String s) {
+            super(s);
+        }
+        public static Test suite(){
+            return new FailTestSetup( new TestSuite(SimpleTestCase.class) );
+        }
+    }
+
+    public static class FailTestSetup extends TestSetup {
+        public FailTestSetup(Test test) {
+            super(test);
+        }
+        protected void setUp(){
+            throw new IllegalArgumentException("on purpose");
+        }
     }
 }
