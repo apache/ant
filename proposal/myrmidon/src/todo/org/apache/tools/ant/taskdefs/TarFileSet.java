@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.myrmidon.api.TaskException;
 
 public class TarFileSet
@@ -46,7 +47,7 @@ public class TarFileSet
     {
         if( m_files == null )
         {
-            final DirectoryScanner scanner = getDirectoryScanner();
+            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( this );
             final String[] directories = scanner.getIncludedDirectories();
             final String[] filesPerSe = scanner.getIncludedFiles();
             m_files = new String[ directories.length + filesPerSe.length ];

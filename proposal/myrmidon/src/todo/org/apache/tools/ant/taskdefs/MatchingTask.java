@@ -13,6 +13,7 @@ import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.myrmidon.framework.PatternSet;
 
 /**
@@ -83,13 +84,10 @@ public abstract class MatchingTask
 
     /**
      * add a set of patterns
-     *
-     * @return Description of the Returned Value
      */
-    public PatternSet createPatternSet()
-        throws TaskException
+    public void addPatternSet( final PatternSet set )
     {
-        return m_fileset.createPatternSet();
+        m_fileset.addPatternSet( set );
     }
 
     /**
@@ -103,6 +101,6 @@ public abstract class MatchingTask
     {
         m_fileset.setDir( baseDir );
         m_fileset.setDefaultexcludes( m_useDefaultExcludes );
-        return m_fileset.getDirectoryScanner();
+        return ScannerUtil.getDirectoryScanner( m_fileset );
     }
 }

@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Sign a archive.
@@ -152,7 +153,7 @@ public class SignJar
             for( int i = 0; i < m_filesets.size(); i++ )
             {
                 final FileSet fileSet = (FileSet)m_filesets.get( i );
-                final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+                final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
                 final String[] jarFiles = scanner.getIncludedFiles();
                 for( int j = 0; j < jarFiles.length; j++ )
                 {

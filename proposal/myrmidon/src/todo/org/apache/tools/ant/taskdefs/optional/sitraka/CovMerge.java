@@ -19,6 +19,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Convenient task to run the snapshot merge utility for JProbe Coverage.
@@ -150,7 +151,7 @@ public class CovMerge extends Task
         for( int i = 0; i < size; i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int j = 0; j < f.length; j++ )

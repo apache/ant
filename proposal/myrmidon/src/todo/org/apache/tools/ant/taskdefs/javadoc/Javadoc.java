@@ -26,6 +26,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -984,7 +985,7 @@ public class Javadoc
                 final File source = resolveFile( list[ j ] );
                 fs.setDir( source );
 
-                final DirectoryScanner ds = fs.getDirectoryScanner();
+                final DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 final String[] packageDirs = ds.getIncludedDirectories();
 
                 for( int i = 0; i < packageDirs.length; i++ )

@@ -18,6 +18,7 @@ import org.apache.tools.ant.util.mappers.Mapper;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Will set the given property if the specified target has a timestamp greater
@@ -128,7 +129,7 @@ public class UpToDate extends MatchingTask implements Condition
         while( upToDate && enum.hasNext() )
         {
             FileSet fs = (FileSet)enum.next();
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             upToDate = upToDate && scanDir( fs.getDir(),
                                             ds.getIncludedFiles() );
         }

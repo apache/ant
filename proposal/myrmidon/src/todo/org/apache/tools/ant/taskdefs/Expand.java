@@ -19,9 +19,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.myrmidon.framework.PatternSet;
+import org.apache.myrmidon.framework.PatternUtil;
 import org.apache.tools.ant.types.ScannerUtil;
 
 /**
@@ -132,7 +134,7 @@ public class Expand extends MatchingTask
             for( int j = 0; j < filesets.size(); j++ )
             {
                 FileSet fs = (FileSet)filesets.get( j );
-                DirectoryScanner ds = fs.getDirectoryScanner();
+                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 File fromDir = fs.getDir();
 
                 String[] files = ds.getIncludedFiles();
@@ -201,7 +203,8 @@ public class Expand extends MatchingTask
             for( int v = 0; v < patternsets.size(); v++ )
             {
                 PatternSet p = (PatternSet)patternsets.get( v );
-                String[] incls = p.getIncludePatterns( getContext() );
+                final TaskContext context = getContext();
+                String[] incls = PatternUtil.getIncludePatterns( p, context );
                 if( incls != null )
                 {
                     for( int w = 0; w < incls.length; w++ )
@@ -214,7 +217,8 @@ public class Expand extends MatchingTask
                         }
                     }
                 }
-                String[] excls = p.getExcludePatterns( getContext() );
+                final TaskContext context1 = getContext();
+                String[] excls = PatternUtil.getExcludePatterns( p, context1 );
                 if( excls != null )
                 {
                     for( int w = 0; w < excls.length; w++ )

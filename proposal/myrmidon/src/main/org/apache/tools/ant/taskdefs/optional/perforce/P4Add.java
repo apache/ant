@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * P4Add - add the specified files to perforce. <b>Example Usage:</b>
@@ -125,7 +126,7 @@ public class P4Add extends P4Base
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             //File fromDir = fs.getDir(project);
 
             String[] srcFiles = ds.getIncludedFiles();

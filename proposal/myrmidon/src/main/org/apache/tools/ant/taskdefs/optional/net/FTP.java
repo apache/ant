@@ -23,9 +23,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Basic FTP client that performs the following actions:
@@ -772,12 +775,14 @@ public class FTP
 
         if( m_action == SEND_FILES )
         {
-            ds = fs.getDirectoryScanner();
+            ds = ScannerUtil.getDirectoryScanner( fs );
         }
         else
         {
             ds = new FTPDirectoryScanner( ftp );
-            fs.setupDirectoryScanner( ds );
+            final FileScanner ds1 = ds;
+            final TaskContext context = getContext();
+            ScannerUtil.setupDirectoryScanner( fs, ds1, context );
             ds.scan();
         }
 

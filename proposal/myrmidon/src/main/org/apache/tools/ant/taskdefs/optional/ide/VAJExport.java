@@ -9,8 +9,10 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.myrmidon.framework.PatternSet;
+import org.apache.myrmidon.framework.PatternUtil;
 
 /**
  * Export packages from the Visual Age for Java workspace. The packages are
@@ -172,9 +174,11 @@ public class VAJExport extends VAJTask
         }
 
         // delegate the export to the VAJUtil object.
+        final TaskContext context = getContext();
+        final TaskContext context1 = getContext();
         getUtil().exportPackages( destDir,
-                                  patternSet.getIncludePatterns( getContext() ),
-                                  patternSet.getExcludePatterns( getContext() ),
+                                  PatternUtil.getIncludePatterns( patternSet, context ),
+                                  PatternUtil.getExcludePatterns( patternSet, context1 ),
                                   exportClasses, exportDebugInfo,
                                   exportResources, exportSources,
                                   useDefaultExcludes, overwrite );

@@ -27,6 +27,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.aut.zip.ZipEntry;
 import org.apache.aut.zip.ZipOutputStream;
@@ -266,7 +267,7 @@ public class Zip
         for( int i = 0; i < m_filesets.size(); i++ )
         {
             FileSet fs = (FileSet)m_filesets.get( i );
-            dss.add( fs.getDirectoryScanner() );
+            dss.add( ScannerUtil.getDirectoryScanner( fs ) );
         }
         int dssSize = dss.size();
         FileScanner[] scanners = new FileScanner[ dssSize ];
@@ -556,7 +557,7 @@ public class Zip
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
 
             String prefix = "";
             String fullpath = "";

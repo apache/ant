@@ -25,6 +25,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.xml.sax.EntityResolver;
 
 import org.xml.sax.InputSource;
@@ -223,7 +224,7 @@ public class XMLValidateTask
         for( int i = 0; i < size; i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.get( i );
-            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
             final String[] files = scanner.getIncludedFiles();
 
             for( int j = 0; j < files.length; j++ )

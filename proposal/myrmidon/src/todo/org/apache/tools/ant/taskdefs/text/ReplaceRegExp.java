@@ -20,6 +20,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
@@ -216,7 +217,7 @@ public class ReplaceRegExp extends Task
         for( int i = 0; i < sz; i++ )
         {
             FileSet fs = (FileSet)( filesets.get( i ) );
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
 
             String files[] = ds.getIncludedFiles();
             for( int j = 0; j < files.length; j++ )

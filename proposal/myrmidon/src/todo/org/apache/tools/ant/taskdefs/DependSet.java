@@ -16,6 +16,7 @@ import org.apache.aut.nativelib.Os;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * A Task to record explicit dependencies. If any of the target files are out of
@@ -154,7 +155,7 @@ public class DependSet extends MatchingTask
         {
 
             FileSet targetFS = (FileSet)enumTargetSets.next();
-            DirectoryScanner targetDS = targetFS.getDirectoryScanner();
+            DirectoryScanner targetDS = ScannerUtil.getDirectoryScanner( targetFS );
             String[] targetFiles = targetDS.getIncludedFiles();
 
             for( int i = 0; i < targetFiles.length; i++ )
@@ -212,7 +213,7 @@ public class DependSet extends MatchingTask
             {
 
                 FileSet sourceFS = (FileSet)enumSourceSets.next();
-                DirectoryScanner sourceDS = sourceFS.getDirectoryScanner();
+                DirectoryScanner sourceDS = ScannerUtil.getDirectoryScanner( sourceFS );
                 String[] sourceFiles = sourceDS.getIncludedFiles();
 
                 for( int i = 0; upToDate && i < sourceFiles.length; i++ )

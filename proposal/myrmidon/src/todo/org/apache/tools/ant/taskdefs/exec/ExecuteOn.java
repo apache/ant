@@ -17,6 +17,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Marker;
 import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.mappers.Mapper;
 
@@ -369,7 +370,7 @@ public class ExecuteOn
             {
                 final FileSet fs = (FileSet)m_filesets.get( i );
                 final File base = fs.getDir();
-                final DirectoryScanner ds = fs.getDirectoryScanner();
+                final DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
 
                 if( !"dir".equals( m_type ) )
                 {

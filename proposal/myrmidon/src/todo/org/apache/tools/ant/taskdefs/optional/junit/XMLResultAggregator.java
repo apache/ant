@@ -22,6 +22,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -201,7 +202,7 @@ public class XMLResultAggregator
         for( int i = 0; i < size; i++ )
         {
             final FileSet fileSet = (FileSet)filesets.get( i );
-            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
             scanner.scan();
             final String[] includes = scanner.getIncludedFiles();
             for( int j = 0; j < includes.length; j++ )

@@ -18,6 +18,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Touch a file and/or fileset(s) -- corresponds to the Unix touch command. <p>
@@ -157,7 +158,7 @@ public class Touch
         for( int i = 0; i < size; i++ )
         {
             final FileSet fs = (FileSet)m_filesets.get( i );
-            final DirectoryScanner ds = fs.getDirectoryScanner();
+            final DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             final File fromDir = fs.getDir();
 
             final String[] srcFiles = ds.getIncludedFiles();

@@ -27,6 +27,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * A task to send SMTP email. This version has near identical syntax to the
@@ -309,7 +310,7 @@ public class MimeMail extends Task
             FileSet fs = (FileSet)filesets.get( i );
             if( fs != null )
             {
-                DirectoryScanner ds = fs.getDirectoryScanner();
+                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 String[] dsfiles = ds.getIncludedFiles();
                 File baseDir = ds.getBasedir();
 

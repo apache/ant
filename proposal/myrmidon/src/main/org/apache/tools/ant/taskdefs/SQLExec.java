@@ -39,6 +39,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Reads in a text file containing SQL statements seperated with semicolons and
@@ -382,7 +383,7 @@ public class SQLExec
             for( int i = 0; i < filesets.size(); i++ )
             {
                 FileSet fs = (FileSet)filesets.get( i );
-                DirectoryScanner ds = fs.getDirectoryScanner();
+                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 File srcDir = fs.getDir();
 
                 String[] srcFiles = ds.getIncludedFiles();

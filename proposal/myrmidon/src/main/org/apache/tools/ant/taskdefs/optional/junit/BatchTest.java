@@ -15,6 +15,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * <p>
@@ -116,7 +117,7 @@ public final class BatchTest extends BaseTest
         for( int j = 0; j < size; j++ )
         {
             FileSet fs = (FileSet)filesets.get( j );
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int k = 0; k < f.length; k++ )

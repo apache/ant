@@ -26,6 +26,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * This task can be used to create checksums for files. It can also be used to
@@ -502,7 +503,7 @@ public class Checksum
         for( int i = 0; i < size; i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.get( i );
-            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
             final String[] srcFiles = scanner.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {

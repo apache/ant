@@ -12,11 +12,11 @@ import java.io.IOException;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
+import org.apache.myrmidon.framework.PatternSet;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.myrmidon.framework.PatternSet;
 
 /**
  * Chmod equivalent for unix-like environments.
@@ -64,11 +64,8 @@ public class Chmod
     /**
      * Sets the set of exclude patterns. Patterns may be separated by a comma or
      * a space.
-     *
-     * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
-        throws TaskException
     {
         m_defaultSetDefined = true;
         m_defaultSet.setExcludes( excludes );
@@ -96,7 +93,6 @@ public class Chmod
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
-        throws TaskException
     {
         m_defaultSetDefined = true;
         m_defaultSet.setIncludes( includes );
@@ -127,7 +123,6 @@ public class Chmod
      * add a name entry on the include list
      */
     public void addInclude( final Pattern pattern )
-        throws TaskException
     {
         m_defaultSetDefined = true;
         m_defaultSet.addInclude( pattern );
@@ -135,13 +130,11 @@ public class Chmod
 
     /**
      * add a set of patterns
-     *
      */
-    public PatternSet createPatternSet()
-        throws TaskException
+    public void addPatternSet( final PatternSet set )
     {
         m_defaultSetDefined = true;
-        return m_defaultSet.createPatternSet();
+        m_defaultSet.addPatternSet( set );
     }
 
     public void execute()
@@ -154,8 +147,10 @@ public class Chmod
         else if( isValidOs() )
         {
             // we are chmodding the given directory
-            addArg( new Argument( m_defaultSet.getDir().getPath() ) );
-            Execute execute = prepareExec();
+            final Argument argument =
+                new Argument( m_defaultSet.getDir().getPath() );
+            addArg( argument );
+            final Execute execute = prepareExec();
             try
             {
                 execute.setCommandline( getCommand().getCommandline() );

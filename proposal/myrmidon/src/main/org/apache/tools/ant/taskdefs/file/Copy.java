@@ -26,6 +26,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.mappers.FlatFileNameMapper;
 import org.apache.tools.ant.util.mappers.IdentityMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * A consolidated copy task. Copies a file or directory to a new file or
@@ -229,7 +230,7 @@ public class Copy
         for( int i = 0; i < m_filesets.size(); i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.get( i );
-            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
             final File fromDir = fileSet.getDir();
 
             final String[] srcFiles = scanner.getIncludedFiles();
@@ -487,7 +488,7 @@ public class Copy
             else
             {
                 FileSet fs = (FileSet)m_filesets.get( 0 );
-                DirectoryScanner ds = fs.getDirectoryScanner();
+                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 String[] srcFiles = ds.getIncludedFiles();
 
                 if( srcFiles.length > 0 )

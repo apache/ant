@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset. The
@@ -126,7 +127,7 @@ public class Delete
             FileSet fs = (FileSet)filesets.get( i );
             try
             {
-                DirectoryScanner ds = fs.getDirectoryScanner();
+                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
                 String[] files = ds.getIncludedFiles();
                 String[] dirs = ds.getIncludedDirectories();
                 removeFiles( fs.getDir(), files, dirs );

@@ -13,6 +13,7 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Import source, class files, and resources to the Visual Age for Java
@@ -224,7 +225,7 @@ public class VAJImport extends VAJTask
      */
     protected void importFileset( FileSet fileset )
     {
-        DirectoryScanner ds = fileset.getDirectoryScanner();
+        DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fileset );
         if( ds.getIncludedFiles().length == 0 )
         {
             return;

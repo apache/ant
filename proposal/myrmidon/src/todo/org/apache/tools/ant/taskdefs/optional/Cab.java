@@ -21,6 +21,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Create a CAB archive.
@@ -174,7 +175,7 @@ public class Cab
                 FileSet fs = (FileSet)m_filesets.get( i );
                 if( fs != null )
                 {
-                    appendFiles( files, fs.getDirectoryScanner() );
+                    appendFiles( files, ScannerUtil.getDirectoryScanner( fs ) );
                 }
             }
         }

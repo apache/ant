@@ -36,6 +36,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.depend.Dependencies;
 import org.apache.tools.ant.util.depend.Filter;
 import org.xml.sax.InputSource;
@@ -567,7 +568,7 @@ public class GenericDeploymentTool
         {
             FileSet supportFileSet = (FileSet)i.next();
             File supportBaseDir = supportFileSet.getDir();
-            DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner();
+            DirectoryScanner supportScanner = ScannerUtil.getDirectoryScanner( supportFileSet );
             supportScanner.scan();
             String[] supportFiles = supportScanner.getIncludedFiles();
             for( int j = 0; j < supportFiles.length; ++j )

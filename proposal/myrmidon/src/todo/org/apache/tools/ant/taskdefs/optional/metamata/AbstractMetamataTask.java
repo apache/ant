@@ -23,6 +23,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks. This
@@ -338,7 +339,7 @@ public abstract class AbstractMetamataTask
         for( int i = 0; i < m_fileSets.size(); i++ )
         {
             FileSet fs = (FileSet)m_fileSets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
+            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             getLogger().debug( i + ") Adding " + f.length + " files from directory " + ds.getBasedir() );
