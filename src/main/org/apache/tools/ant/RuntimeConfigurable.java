@@ -371,12 +371,11 @@ public class RuntimeConfigurable implements Serializable {
                     } else  if (getElementTag() == null) {
                         throw be;
                     } else {
-                        be.setMessage(
+                        throw new BuildException(
                             getElementTag()
                             +  " doesn't support the \""
                             + be.getAttribute()
-                            + "\" attribute");
-                        throw be;
+                            + "\" attribute", be);
                     }
                 } catch (BuildException be) {
                     if (name.equals("id")) {

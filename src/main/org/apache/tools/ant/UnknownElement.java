@@ -342,11 +342,10 @@ public class UnknownElement extends Task {
                         }
                     }
                 } catch (UnsupportedElementException ex) {
-                    ex.setMessage(
+                    throw new BuildException(
                         parentWrapper.getElementTag()
                         + " doesn't support the nested \"" + ex.getElement()
-                        + "\" element.");
-                    throw ex;
+                        + "\" element.", ex);
                 }
             }
         }

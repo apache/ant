@@ -32,7 +32,6 @@ package org.apache.tools.ant;
  */
 public class UnsupportedElementException extends BuildException {
 
-    private String  myMessage = null;
     private String  element;
 
     /**
@@ -52,27 +51,5 @@ public class UnsupportedElementException extends BuildException {
      */
     public String getElement() {
         return element;
-    }
-
-    /**
-     * Override throwable#getMessage
-     * @return the message
-     */
-    public String getMessage() {
-        if (myMessage == null) {
-            return super.getMessage();
-        } else {
-            return myMessage;
-        }
-    }
-
-    /**
-     * Set the message (If not set already)
-     * @param message a new message
-     */
-    public void setMessage(String message) {
-        if (this.myMessage == null) {
-            this.myMessage = message;
-        }
     }
 }

@@ -23,7 +23,6 @@ package org.apache.tools.ant;
  */
 public class UnsupportedAttributeException extends BuildException {
 
-    private String myMessage;
     private String attribute;
 
     /**
@@ -34,7 +33,6 @@ public class UnsupportedAttributeException extends BuildException {
     public UnsupportedAttributeException(String msg, String attribute) {
         super(msg);
         this.attribute = attribute;
-        this.myMessage = msg;
     }
 
     /**
@@ -46,19 +44,4 @@ public class UnsupportedAttributeException extends BuildException {
         return attribute;
     }
 
-    /**
-     * Override throwable#getMessage
-     * @return the message
-     */
-    public String getMessage() {
-        return myMessage;
-    }
-
-    /**
-     * Set the message
-     * @param message a new message
-     */
-    public void setMessage(String message) {
-        this.myMessage = message;
-    }
 }
