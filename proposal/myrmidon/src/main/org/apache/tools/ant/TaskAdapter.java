@@ -18,45 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class TaskAdapter extends Task
 {
-
     Object proxy;
-
-    /**
-     * Checks a class, whether it is suitable to be adapted by TaskAdapter.
-     * Checks conditions only, which are additionally required for a tasks
-     * adapted by TaskAdapter. Thus, this method should be called by {@link
-     * Project#checkTaskClass}. Throws a TaskException and logs as
-     * Project.MSG_ERR for conditions, that will cause the task execution to
-     * fail. Logs other suspicious conditions with Project.MSG_WARN.
-     *
-     * @param taskClass Description of Parameter
-     * @param project Description of Parameter
-     */
-    public static void checkTaskClass( final Class taskClass, final Project project )
-        throws TaskException
-    {
-        // don't have to check for interface, since then
-        // taskClass would be abstract too.
-        try
-        {
-            final Method executeM = taskClass.getMethod( "execute", null );
-            // don't have to check for public, since
-            // getMethod finds public method only.
-            // don't have to check for abstract, since then
-            // taskClass would be abstract too.
-            if( !Void.TYPE.equals( executeM.getReturnType() ) )
-            {
-                final String message = "return type of execute() should be void but was \"" + executeM.getReturnType() + "\" in " + taskClass;
-                project.log( message, Project.MSG_WARN );
-            }
-        }
-        catch( NoSuchMethodException e )
-        {
-            final String message = "No public execute() in " + taskClass;
-            project.log( message, Project.MSG_ERR );
-            throw new TaskException( message );
-        }
-    }
 
     /**
      * Set the target object class
@@ -124,5 +86,4 @@ public class TaskAdapter extends Task
         }
 
     }
-
 }
