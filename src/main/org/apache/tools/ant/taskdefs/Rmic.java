@@ -399,8 +399,12 @@ public class Rmic extends MatchingTask {
             }
         }
 
-        // Move the generated source file to the base directory
-        if (null != sourceBase) {
+        /* 
+         * Move the generated source file to the base directory.  If
+         * base directory and sourcebase are the same, the generated
+         * sources are already in place.
+         */
+        if (null != sourceBase && !baseDir.equals(sourceBase)) {
             if (idl) {
                 log("Cannot determine sourcefiles in idl mode, ", 
                     Project.MSG_WARN);
