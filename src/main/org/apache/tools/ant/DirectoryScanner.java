@@ -772,15 +772,18 @@ public class DirectoryScanner
                 excludes = nullExcludes ? new String[0] : excludes;
 
                 if (basedir == null) {
-                    throw new IllegalStateException("No basedir set");
+                    illegal = new IllegalStateException("No basedir set");
                 }
                 if (!basedir.exists()) {
-                    throw new IllegalStateException("basedir " + basedir
+                    illegal = new IllegalStateException("basedir " + basedir
                                                     + " does not exist");
                 }
                 if (!basedir.isDirectory()) {
-                    throw new IllegalStateException("basedir " + basedir
+                    illegal = new IllegalStateException("basedir " + basedir
                                                     + " is not a directory");
+                }
+                if (illegal != null) {
+                    throw illegal;
                 }
                 if (isIncluded("")) {
                     if (!isExcluded("")) {
