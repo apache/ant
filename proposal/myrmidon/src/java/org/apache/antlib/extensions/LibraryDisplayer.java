@@ -54,10 +54,12 @@ class LibraryDisplayer
     {
         final Extension[] available = Extension.getAvailable( manifest );
         final Extension[] required = Extension.getRequired( manifest );
+        final Extension[] options = Extension.getOptions( manifest );
         final Specification[] specifications = getSpecifications( manifest );
 
         if( 0 == available.length &&
             0 == required.length &&
+            0 == options.length &&
             0 == specifications.length )
         {
             return;
@@ -84,6 +86,16 @@ class LibraryDisplayer
             for( int i = 0; i < required.length; i++ )
             {
                 final Extension extension = required[ i ];
+                System.out.println( extension.toString() );
+            }
+        }
+
+        if( 0 != options.length )
+        {
+            System.out.println( "Extensions that will be used by Library if present:" );
+            for( int i = 0; i < options.length; i++ )
+            {
+                final Extension extension = options[ i ];
                 System.out.println( extension.toString() );
             }
         }
