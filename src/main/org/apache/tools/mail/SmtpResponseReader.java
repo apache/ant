@@ -86,7 +86,7 @@ public class SmtpResponseReader {
     public String getResponse() throws IOException {
         result.setLength(0);
         String line = reader.readLine();
-        if (line != null) {
+        if (line != null && line.length() >= 3) {
             result.append(line.substring(0, 3));
             result.append(" ");
         }
@@ -112,14 +112,16 @@ public class SmtpResponseReader {
      * Should we expect more input?
      */
     protected boolean hasMoreLines(String line) {
-        return line.charAt(3) == '-';
+        return line.length() > 3 && line.charAt(3) == '-';
     }
 
     /**
      * Append the text from this line of the resonse.
      */
     private void append(String line) {
-        result.append(line.substring(4));
-        result.append(" ");
+        if (line.length() > 4) {
+            result.append(line.substring(4));
+            result.append(" ");
+        }
     }
 }
