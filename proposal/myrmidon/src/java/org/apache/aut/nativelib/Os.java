@@ -38,7 +38,7 @@ public class Os
 
     /** All DOS based OSes. */
     public final static OsFamily OS_FAMILY_DOS
-        = new OsFamily( "dos", new OsFamily[]{OS_FAMILY_WINDOWS} );
+        = new OsFamily( "dos" );
 
     /** All Windows NT based OSes. */
     public final static OsFamily OS_FAMILY_WINNT
