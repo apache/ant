@@ -323,7 +323,7 @@ public class CLIMain
         final File homeDir = getHomeDir();
         final File buildFile = getBuildFile();
 
-        //getLogger().info( "Ant Bin Directory: " + m_binDir );
+        //getLogger().debug( "Ant Bin Directory: " + m_binDir );
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
 
