@@ -1572,6 +1572,7 @@ the one that is currently running Ant.</p>
         fork=&quot;yes&quot;
         jvmargs=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;
   /&gt;</pre>
+
 <hr>
 <h2><a name="javac">Javac</a></h2>
 <h3>Description</h3>
@@ -1614,7 +1615,7 @@ relative to the <i>srcdir</i> directory.</p>
   <tr>
     <td valign="top">srcdir</td>
     <td valign="top">location of the java files.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, unless nested <code>&lt;src&gt;</code> elements are present.</td>
   </tr>
   <tr>
     <td valign="top">destdir</td>
@@ -1695,6 +1696,30 @@ relative to the <i>srcdir</i> directory.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h3>Parameters specified as nested elements</h3>
+Being a directory based task, Javac supports the <code>&lt;include&gt;</code> and 
+<code>&lt;exclude&gt;</code> nested elements common to a number of Ant tasks. Javac also supports a 
+nested <code>&lt;src&gt;</code> element. This is used to specify multiple source paths. 
+Multiple <code>src</code> elements may be present and each specifies a source path which will be 
+searched by Javac for classes to compile.
+
+<h4>src</h4>
+Define a source path to be search for source files.
+<H4>Parameters</h4>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">A source path. It may contain multiple elements separated with either a ';' or a ':'</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;
@@ -1719,6 +1744,26 @@ The classpath used contains <code>xyz.jar</code>, and debug information is on.
 Only files under <code>mypackage/p1</code> and <code>mypackage/p2</code> are
 used. Files in the <code>mypackage/p1/testpackage</code> directory are excluded
 form compilation and copy.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}:${src2}&quot;
+         destdir=&quot;${build}&quot;
+         includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
+         excludes=&quot;mypackage/p1/testpackage/**&quot;
+         classpath=&quot;xyz.jar&quot;
+         debug=&quot;on&quot;
+  /&gt;</pre>
+
+<p>is the same as the previous example with the addition of a second source path, defined by
+the propery <code>src2</code>. This can also be represented using nested elements as follows
+
+<pre>  &lt;javac destdir=&quot;${build}&quot;
+         classpath=&quot;xyz.jar&quot;
+         debug=&quot;on&quot;&gt;
+    &lt;src path=&quot;${src}&quot; /&gt;
+    &lt;src path=&quot;${src2}&quot; /&gt;
+    &lt;include name=&quot;mypackage/p1/**,mypackage/p2/**&quot; /&gt;
+    &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot; /&gt;
+  &lt;/javac&gt;</pre>
 
 <hr>
 <h2><a name="javadoc">Javadoc/Javadoc2</a></h2>
@@ -2028,7 +2073,7 @@ instead.</p>
   </tr>
 </table>
 
-<h3>Parameters specified as subelements</h3>
+<h3>Parameters specified as nested elements</h3>
 Two parameters of the Javadoc task may be specified as nested elements of the
 Javadoc task element: link and group.
 When present, there can be any number of each of these elements.
