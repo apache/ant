@@ -1107,7 +1107,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         pathComponents = null;
         project = null;
         for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
-            ZipFile zipFile = (ZipFile) e.nextElement();
+            ZipFile zipFile = (ZipFile)e.nextElement();
             try {
                 zipFile.close();
             } catch (IOException ioe) {

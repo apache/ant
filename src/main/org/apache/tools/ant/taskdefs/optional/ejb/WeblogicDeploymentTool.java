@@ -608,7 +608,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 }
 
                 //Cycle Through generic and make sure its in weblogic
-                ClassLoader genericLoader = getClassLoaderFromJar(genericJarFile);
+                ClassLoader genericLoader 
+                    = getClassLoaderFromJar(genericJarFile);
 
                 for (Enumeration e = genericEntries.keys(); e.hasMoreElements();) {
                     String filepath = (String) e.nextElement();
@@ -701,6 +702,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 } else {
                     log("Weblogic Jar rebuild needed due to changed "
                          + "interface or XML", Project.MSG_VERBOSE);
+                }
+                
+                if (genericLoader instanceof AntClassLoader) {
+                    AntClassLoader loader = (AntClassLoader)genericLoader;
+                    loader.cleanup();
                 }
             } else {
                 rebuild = true;
