@@ -475,6 +475,62 @@ Example:
 
 Sets the default value of the condition to true, then in the script, 
 sets the value to false. This condition always evaluates to "false"
+
+<h4>parsersupports</h4>
+
+<p>Tests whether Ant's XML parser supports a given
+feature or property, as per the SAX/JAXP specifications, by
+attempting to set the appropriate property/feature/</p>
+
+<p>This condition was added in Apache Ant 1.7.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">property to set</td>
+    <td valign="top" align="center">one of property or feature</td>
+  </tr>
+  <tr>
+    <td valign="top">feature</td>
+    <td valign="top">feature to set</td>
+    <td valign="top" align="center">one of property or feature</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">string (property) or boolean (feature)</td>
+    <td valign="top" align="center">For property tests, but not for feature tests</td>
+  </tr>
+</table>
+
+<pre>
+&lt;parsersupports feature="http://xml.org/sax/features/namespaces"/&gt;
+</pre>
+Check for namespace support. All SAX2 parsers should have this.
+<pre>
+&lt;or&gt;
+  &lt;parsersupports
+    feature="http://apache.org/xml/features/validation/schema"/&gt;
+  &lt;parsersupports
+    feature="http://java.sun.com/xml/jaxp/properties/schemaSource"/&gt;
+&lt;/or&gt;
+</pre>
+
+Check for XML Schema support.
+
+<pre>
+
+&lt;parsersupports
+  property="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+  value="document.xsd"/&gt;
+</pre>
+
+Check for Xerces-specific definition of the location of the no namespace schema.
+
 <hr>
 <p align="center">Copyright &copy; 2001-2005 Apache Software
 Foundation. All rights Reserved.</p>
