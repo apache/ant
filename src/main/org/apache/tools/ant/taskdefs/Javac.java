@@ -703,11 +703,6 @@ public class Javac extends MatchingTask {
         }
         if (depend) {
             cmd.createArgument().setValue("-depend");
-            String fullDependProperty = project.getProperty("build.compiler.fulldepend");
-            if (fullDependProperty != null 
-                && Project.toBoolean(fullDependProperty)) {
-                cmd.createArgument().setValue("+F");
-            }
         } 
         /**
          * XXX
@@ -746,6 +741,16 @@ public class Javac extends MatchingTask {
             cmd.createArgument().setValue("+P");
         }
  
+        /**
+         * Jikes supports something it calls "full dependency
+         * checking", see the jikes documentation for differences
+         * between -depend and +F.
+         */
+        String fullDependProperty = project.getProperty("build.compiler.fulldepend");
+        if (fullDependProperty != null && Project.toBoolean(fullDependProperty)) {
+            cmd.createArgument().setValue("+F");
+        }
+
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
