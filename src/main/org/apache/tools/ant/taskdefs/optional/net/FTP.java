@@ -258,16 +258,24 @@ public class FTP
 
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
-
                     if (!file.getName().equals(".")
                          && !file.getName().equals("..")) {
-                        if (file.isDirectory()) {
+                        if (isFunctioningAsDirectory(ftp, dir, file)) {
                             String name = vpath + file.getName();
-                            if (isIncluded(name)) {
+                            boolean slowScanAllowed = true;
+                            if (!isFollowSymlinks() && file.isSymbolicLink()) {
+                                dirsExcluded.addElement(name);
+                                slowScanAllowed = false;
+                            } else if (isIncluded(name)) {
                                 if (!isExcluded(name)) {
                                     if (fast) {
-                                        scandir(file.getName(),
+                                        if (file.isSymbolicLink()) {
+                                            scandir(file.getLink(),
                                                 name + File.separator, fast);
+                                        } else {
+                                            scandir(file.getName(),
+                                                name + File.separator, fast);
+                                        }
                                     }
                                     dirsIncluded.addElement(name);
                                 } else {
@@ -284,12 +292,12 @@ public class FTP
                                             name + File.separator, fast);
                                 }
                             }
-                            if (!fast) {
+                            if (!fast && slowScanAllowed) {
                                 scandir(file.getName(),
                                         name + File.separator, fast);
                             }
                         } else {
-                            if (file.isFile()) {
+                            if (isFunctioningAsFile(ftp, dir, file)) {
                                 String name = vpath + file.getName();
 
                                 if (isIncluded(name)) {
@@ -312,8 +320,74 @@ public class FTP
             }
         }
     }
-
-
+    /**
+     * check FTPFiles to check whether they function as directories too
+     * the FTPFile API seem to make directory and symbolic links incompatible
+     * we want to find out if we can cd to a symbolic link
+     * @param dir  the parent directory of the file to test
+     * @param file the file to test
+     * @return true if it is possible to cd to this directory
+     * @since ant 1.6
+     */
+    private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file) {
+        String testDirectory =  dir + remoteFileSep + file.getName();
+        boolean result = false;
+        String currentWorkingDir = null;
+        if (file.isDirectory()) {
+            return true;
+        } else if (file.isFile()) {
+            return false;
+        }
+        try {
+            currentWorkingDir = ftp.printWorkingDirectory();
+        } catch (IOException ioe) {
+            getProject().log("could not find current working directory " + dir
+                + " while checking a symlink",
+                Project.MSG_DEBUG);
+        }
+        if (currentWorkingDir != null) {
+            try {
+                result = ftp.changeWorkingDirectory(file.getLink());
+            } catch (IOException ioe) {
+                getProject().log("could not cd to " + file.getLink() + " while checking a symlink",
+                    Project.MSG_DEBUG);
+            }
+            if (result) {
+                boolean comeback = false;
+                try {
+                    comeback = ftp.changeWorkingDirectory(currentWorkingDir);
+                } catch (IOException ioe) {
+                    getProject().log("could not cd back to " + dir + " while checking a symlink",
+                        Project.MSG_ERR);
+                } finally {
+                    if (!comeback) {
+                        throw new BuildException("could not cd back to " + dir
+                            + " while checking a symlink");
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    /**
+     * check FTPFiles to check whether they function as directories too
+     * the FTPFile API seem to make directory and symbolic links incompatible
+     * we want to find out if we can cd to a symbolic link
+     * @param dir  the parent directory of the file to test
+     * @param file the file to test
+     * @return true if it is possible to cd to this directory
+     * @since ant 1.6
+     */
+    private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) {
+        String testDirectory =  dir + remoteFileSep + file.getName();
+        System.out.println("checking dir entry " + testDirectory);
+        if (file.isDirectory()) {
+            return false;
+        } else if (file.isFile()) {
+            return true;
+        }
+        return !isFunctioningAsDirectory(ftp, dir, file);
+    }
     /**
      * Sets the remote directory where files will be placed. This may be a
      * relative or absolute path, and must be in the path syntax expected by

@@ -514,6 +514,17 @@ public class DirectoryScanner
     }
 
     /**
+     * gets whether or not a DirectoryScanner follows symbolic links
+     *
+     * @return flag indicating whether symbolic links should be followed
+     *
+     * @since ant 1.6
+     */
+    public boolean isFollowSymlinks() {
+        return followSymlinks;
+    }
+
+    /**
      * Sets whether or not symbolic links should be followed.
      *
      * @param followSymlinks whether or not symbolic links should be followed
@@ -1005,7 +1016,7 @@ public class DirectoryScanner
      */
     private boolean isMorePowerfulThanExcludes(String name, String includepattern) {
         String soughtexclude = name + File.separator + "**";
-        for (int counter=0; counter <excludes.length; counter++) {
+        for (int counter = 0; counter < excludes.length; counter++) {
             if (excludes[counter].equals(soughtexclude))  {
                 return false;
             }
