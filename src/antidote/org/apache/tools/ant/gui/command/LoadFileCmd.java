@@ -98,13 +98,13 @@ public class LoadFileCmd implements Command {
                 ProjectProxy project = new ProjectProxy(_context, _file);
                 _context.setProject(project);
             }
-            catch(IOException ex) {
+            catch(Exception ex) {
                 String message = _context.getResources().getMessage(
                     getClass(), "loadError", 
                     new Object[] { _file.toString() });
 
                 _context.getEventBus().
-                    postEvent(new ErrorEvent(_context, message));
+                    postEvent(new ErrorEvent(_context, message, ex));
             }
         }
     }

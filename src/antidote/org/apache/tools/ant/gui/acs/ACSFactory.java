@@ -57,6 +57,7 @@ import javax.xml.parsers.*;
 import java.io.File;
 import java.io.IOException;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 import com.sun.xml.parser.Parser;
 import com.sun.xml.tree.SimpleElementFactory;
 import com.sun.xml.tree.XmlDocument;
@@ -119,7 +120,7 @@ public class ACSFactory {
 	 * @param f File to load.
 	 * @return 
 	 */
-    public ACSProjectElement load(File f) throws IOException {
+    public ACSProjectElement load(File f) throws IOException, SAXException {
         XmlDocument doc = null;
 
         try {
@@ -139,8 +140,9 @@ public class ACSFactory {
             sax.parse(f, null);
 
             doc = builder.getDocument();
+
         }
-        catch(Exception ex) {
+        catch(ParserConfigurationException ex) {
             ex.printStackTrace();
             throw new IOException(ex.getMessage());
         }

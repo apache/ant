@@ -1,3 +1,8 @@
+2000-11-20  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/command/DisplayErrorCmd.java: Added
+	code to allow display of stack backtrace if needed.
+
 2000-11-18  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/customizer/PropertiesPropertyEditor.java:

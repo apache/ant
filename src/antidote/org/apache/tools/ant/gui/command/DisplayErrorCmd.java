@@ -53,7 +53,11 @@
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.AppContext;
-import javax.swing.JOptionPane;
+import org.apache.tools.ant.gui.util.StackFrame;
+import javax.swing.*;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * Command for displaying an arbitrary error message to the user.
@@ -101,7 +105,35 @@ public class DisplayErrorCmd implements Command {
         String title = _context.getResources().getString(getClass(), "title"); 
 
         JOptionPane.showMessageDialog(
-            _context.getParentFrame(), _message, 
+            _context.getParentFrame(), new MsgPanel(),
             title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    // Panel for assembling the error information.
+    private class MsgPanel extends JPanel implements ActionListener {
+        public MsgPanel() {
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            add(new JLabel(_message));
+            if(_ex != null) {
+                add(new JLabel(_ex.getMessage()));
+                JButton b = new JButton(_context.getResources().
+                                        getString(DisplayErrorCmd.class, 
+                                                  "expand"));
+                b.addActionListener(this);
+                add(Box.createVerticalStrut(20));
+                add(b);
+            }
+        }
+        // Called when the user clicks the expand button.
+        public void actionPerformed(ActionEvent e) {
+            JComponent source = (JComponent) e.getSource();
+            JComponent parent = (JComponent) source.getParent();
+            parent.remove(source);
+            JTextArea text = new JTextArea();
+            text.setEditable(false);
+            text.setText(StackFrame.toString(_ex));
+            parent.add(new JScrollPane(text));
+            SwingUtilities.windowForComponent(parent).pack();
+        }
     }
 }
