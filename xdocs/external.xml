@@ -443,6 +443,31 @@
         </table>
       </subsection>
 
+      <subsection name="PMD">
+
+        <p>PMD checks Java source code for unused variables,
+        unnecessary object creation, etc</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://pmd.sf.net/">http://pmd.sf.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:tcopeland@apache.org">Tom Copeland</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
