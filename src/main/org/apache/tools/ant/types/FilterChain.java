@@ -73,7 +73,7 @@ import org.apache.tools.ant.filters.TailFilter;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class FilterChain {
+public final class FilterChain extends DataType implements Cloneable {
 
     private final Vector filterReaders = new Vector();
 
