@@ -287,7 +287,7 @@ public class XSLTProcess extends MatchingTask {
     private void process(File baseDir,String xmlFile,File destDir)
         throws BuildException
     {
-	String fileExt=".html";
+	String fileExt=targetExtension;
 	File   outFile=null;
 	File   inFile=null;
 
