@@ -14,6 +14,13 @@ new type can be used in the current project. Two attributes are
 needed, the name that identifies this data type uniquely, and the full
 name of the class (including the packages) that implements this
 type.</p>
+<p>You can also define a group of data types at once using the file or
+resource attributes.  These attributes point to files in the format of
+Java property files.  Each line defines a single data type in the
+format:</p>
+<pre>
+typename=fully.qualified.java.classname
+</pre>
 <p>Typedef should be used to add your own types to the system. Data
 types are things like <a href="../using.html#path">paths</a> or <a
 href="../CoreTypes/fileset.html">filesets</a> that can be defined at
@@ -29,12 +36,26 @@ the project level and referenced via their ID attribute.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">the name of the data type</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes, unless file or resource have
+    been specified.</td>
   </tr>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the full class name implementing the data type</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes, unless file or resource have
+    been specified.</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">Name of the property file to load
+     typename/classname pairs from.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">Name of the property resource to load
+     typename/classname pairs from.</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">classpath</td> <td valign="top">the classpath to

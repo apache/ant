@@ -13,6 +13,13 @@
 used in the current project. Two attributes are needed, the name that identifies
 this task uniquely, and the full name of the class (including the packages) that
 implements this task.</p>
+<p>You can also define a group of tasks at once using the file or
+resource attributes.  These attributes point to files in the format of
+Java property files.  Each line defines a single task in the
+format:</p>
+<pre>
+taskname=fully.qualified.java.classname
+</pre>
 <p>Taskdef should be used to add your own tasks to the system. See also &quot;<a
 href="../develop.html#writingowntask">Writing your own task</a>&quot;.</p>
 <h3>Parameters</h3>
@@ -25,17 +32,32 @@ href="../develop.html#writingowntask">Writing your own task</a>&quot;.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">the name of the task</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes, unless file or resource have
+    been specified.</td>
   </tr>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the full class name implementing the task</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes, unless file or resource have
+    been specified.</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">Name of the property file to load
+     taskname/classname pairs from.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">Name of the property resource to load
+     taskname/classname pairs from.</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">classpath</td> <td valign="top">the classpath to
-      use when looking up <code>classname</code>.</td> <td
-    align="center" valign="top">No</td>
+    use when looking up <code>classname</code> or
+    <code>resource</code>.</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
