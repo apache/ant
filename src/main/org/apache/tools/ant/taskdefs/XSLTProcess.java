@@ -183,7 +183,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
-     * Controls whether the stylesheet is reloaded for every transform
+     * Controls whether the stylesheet is reloaded for every transform.
      *
      * <p>Setting this to true may get around a bug in certain
      * Xalan-J versions, default is false.</p>

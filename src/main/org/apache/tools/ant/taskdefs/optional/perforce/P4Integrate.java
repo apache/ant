@@ -92,7 +92,7 @@ public class P4Integrate extends P4Base {
     /**
      * get the changelist number
      *
-     * @returns the changelist number set for this task
+     * @return the changelist number set for this task
      */
     public String getChange() {
         return change;
@@ -111,7 +111,7 @@ public class P4Integrate extends P4Base {
     /**
      * get the from file specification
      *
-     * @returns the from file specification
+     * @return the from file specification
      */
     public String getFromfile() {
         return fromfile;
@@ -129,7 +129,7 @@ public class P4Integrate extends P4Base {
     /**
      * get the to file specification
      *
-     * @returns the to file specification
+     * @return the to file specification
      */
     public String getTofile() {
         return tofile;
@@ -147,7 +147,7 @@ public class P4Integrate extends P4Base {
     /**
      * get the branch
      *
-     * @returns the name of the branch
+     * @return the name of the branch
      */
     public String getBranch() {
         return branch;
@@ -165,7 +165,7 @@ public class P4Integrate extends P4Base {
     /**
      * gets the restoredeletedrevisions flag
      *
-     * @returns restore deleted revisions
+     * @return restore deleted revisions
      */
     public boolean isRestoreDeletedRevisions() {
         return restoredeletedrevisions;
@@ -183,7 +183,7 @@ public class P4Integrate extends P4Base {
     /**
      * gets the forceintegrate flag
      *
-     * @returns restore deleted revisions
+     * @return restore deleted revisions
      */
     public boolean isForceIntegrate() {
         return forceintegrate;
@@ -201,7 +201,7 @@ public class P4Integrate extends P4Base {
     /**
      * gets the leavetargetrevision flag
      *
-     * @returns flag indicating if the target revision should be preserved
+     * @return flag indicating if the target revision should be preserved
      */
     public boolean isLeaveTargetRevision() {
         return leavetargetrevision;
@@ -219,7 +219,7 @@ public class P4Integrate extends P4Base {
     /**
      * gets the enablebaselessmerges flag
      *
-     * @returns boolean indicating if baseless merges are desired
+     * @return boolean indicating if baseless merges are desired
      */
     public boolean isEnableBaselessMerges() {
         return enablebaselessmerges;
@@ -237,7 +237,7 @@ public class P4Integrate extends P4Base {
     /**
      * gets the simulationmode flag
      *
-     * @returns simulation mode flag
+     * @return simulation mode flag
      */
     public boolean isSimulationMode() {
         return simulationmode;
@@ -254,7 +254,7 @@ public class P4Integrate extends P4Base {
     /**
      * returns the flag indicating if reverse branch mappings are sought
      *
-     * @returns reversebranchmappings flag
+     * @return reversebranchmappings flag
      */
     public boolean isReversebranchmappings() {
         return reversebranchmappings;
@@ -271,7 +271,7 @@ public class P4Integrate extends P4Base {
     /**
      *  returns flag indicating if propagation of source file type is sought
      *
-     *  @returns flag set to true if you want to propagate source file type for existing target files
+     *  @return flag set to true if you want to propagate source file type for existing target files
      */
     public boolean isPropagatesourcefiletype() {
         return propagatesourcefiletype;
@@ -287,7 +287,7 @@ public class P4Integrate extends P4Base {
     /**
      *   returns flag indicating if one wants to suppress the copying on the local hard disk of new target files
      *
-     *   @returns flag indicating if one wants to suppress the copying on the local hard disk of new target files
+     *   @return flag indicating if one wants to suppress the copying on the local hard disk of new target files
      */
     public boolean isNocopynewtargetfiles() {
         return nocopynewtargetfiles;

@@ -64,7 +64,8 @@ import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Executes the contained tasks in separate threads, continuing
- * once all are completed.<br/>
+ * once all are completed.
+ * <p>
  * New behavior allows for the ant script to specify a maximum number of 
  * threads that will be executed in parallel.  One should be very careful about
  * using the <code>waitFor</code> task when specifying <code>threadCount</code>
@@ -74,7 +75,7 @@ import org.apache.tools.ant.util.StringUtils;
  * task is started, but it will not insure a successful completion of those 
  * tasks or that those tasks will finish first (i.e. it's a classic race 
  * condition).
- * <p>
+ * </p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @author Conor MacNeill
  * @author Danno Ferrin

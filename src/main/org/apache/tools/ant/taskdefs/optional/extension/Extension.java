@@ -177,7 +177,7 @@ public final class Extension
     /**
      * Enum indicating that extension is incompatible with
      * other extension in ways other than other enums
-     * indicate). ie For example the other extension may have
+     * indicate). For example the other extension may have
      * a different ID.
      */
     public static final Compatibility INCOMPATIBLE =

@@ -194,7 +194,7 @@ public class SetProxy extends Task {
     }
 
     /**
-     * set the password for the proxy. used only if the proxyUser is set
+     * Set the password for the proxy. Used only if the proxyUser is set.
      * @param proxyPassword password to go with the username
      * @since Ant1.6
      */
