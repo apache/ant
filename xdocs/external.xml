@@ -291,6 +291,30 @@
         </table>
       </subsection>
 
+      <subsection name="IntelliJ IDEA 2.0">
+
+        <p>Java IDE with refactoring support and Ant integration.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>bundles Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.intellij.com/idea/">http://www.intellij.com/idea/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@intellij.com">support@intellij.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="NetBeans / Forte for Java">
 
         <p>A module that integrates Ant into the NetBeans or Forte for Java IDEs.</p>
