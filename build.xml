@@ -192,6 +192,8 @@
     <echo message="installing full copy of ant into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
     <copydir src="${ant.dist.dir}" dest="${ant.install}"/>
+    <chmod perm="+x" file="${ant.install}/bin/ant"/>
+    <chmod perm="+x" file="${ant.install}/bin/antRun"/>
   </target>     
   
   <target name="install" depends="main" if="ant.install">
@@ -199,6 +201,8 @@
     <mkdir dir="${ant.install}"/>
     <copydir src="${lib.dir}" dest="${ant.install}/lib"/>
     <copydir src="${bin.dir}" dest="${ant.install}/bin"/>
+    <chmod perm="+x" file="${ant.install}/bin/ant"/>
+    <chmod perm="+x" file="${ant.install}/bin/antRun"/>
   </target>     
 
   <!-- =================================================================== -->

@@ -1,28 +1,16 @@
 #!/bin/sh
 
-if [ "$ANT_HOME" = "" ] ; then
-  ANT_HOME=`pwd`
-fi
+REALANTHOME=$ANT_HOME
+ANT_HOME=.
 export ANT_HOME
 
-LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
+if test ! -f lib/ant.jar -o  ! -x bin/ant -o ! -x bin/antRun ; then
+  ./bootstrap.sh
+fi    
 
-if [ "$CLASSPATH" != "" ] ; then
-  LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
+if [ "$REALANTHOME" != "" ] ; then
+  ANT_INSTALL="-Dant.install $REALANTHOME"
 fi
 
-if test -f $JAVA_HOME/lib/tools.jar ; then
-  LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
-fi
+bin/ant $ANT_INSTALL $*
 
-if test -f $JAVA_HOME/lib/classes.zip ; then
-  LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
-fi
-
-echo
-echo Building with classpath: $LOCALCLASSPATH
-echo
-
-chmod 0755 $ANT_HOME/bin/antRun
-
-java -Dant.home=$ANT_HOME -classpath $LOCALCLASSPATH $ANT_OPTS org.apache.tools.ant.Main $*

@@ -1,16 +1,9 @@
 #!/bin/sh
 
-if [ -f $HOME/.antrc ] ; then 
-  . $HOME/.antrc
-fi
+ANT_HOME=.
+export ANT_HOME
 
-if [ "$ANT_HOME" = "" ] ; then
-  ANT_HOME=`pwd`
-  export ANT_HOME
-fi
-
-SRCDIR=src/main/org/apache/tools
-CLASSDIR=classes
+echo ... Bootstrapping Ant Distribution
 
 if test -f lib/ant.jar ; then
   rm lib/ant.jar
@@ -32,28 +25,32 @@ if test -f $JAVA_HOME/lib/classes.zip ; then
   CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/classes.zip
 fi
 
+TOOLS=src/main/org/apache/tools
+CLASSDIR=classes
+
 CLASSPATH=${CLASSPATH}:${CLASSDIR}:src/main
+export CLASSPATH
 
 mkdir -p ${CLASSDIR}
 
-export CLASSPATH
+echo ... Compiling Ant Classes
 
-echo
-echo Building with classpath: $CLASSPATH
-echo
+javac  -d ${CLASSDIR} ${TOOLS}/tar/*.java
+javac  -d ${CLASSDIR} ${TOOLS}/ant/*.java
+javac  -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
 
-javac  -d ${CLASSDIR} ${SRCDIR}/tar/*.java
-javac  -d ${CLASSDIR} ${SRCDIR}/ant/*.java
-javac  -d ${CLASSDIR} ${SRCDIR}/ant/taskdefs/*.java
+echo ... Copying Required Files
 
 cp src/main/org/apache/tools/ant/taskdefs/defaults.properties ${CLASSDIR}/org/apache/tools/ant/taskdefs
 
-java org.apache.tools.ant.Main clean main bootstrap
-java org.apache.tools.ant.Main clean 
+echo ... Building Ant Distribution
 
-if test ! -d bin; then mkdir bin; fi
-cp src/bin/antRun bin
-chmod +x bin/antRun
+java org.apache.tools.ant.Main clean main bootstrap
+
+echo ... Cleaning Up Build Directories
+
+chmod +x bin/ant bin/antRun
 
 rm -rf ${CLASSDIR}
 
+echo ... Done Bootstrapping Ant Distribution
