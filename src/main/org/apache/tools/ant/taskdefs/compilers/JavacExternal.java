@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Performs a compile using javac externally.
@@ -75,7 +76,8 @@ public class JavacExternal extends DefaultCompilerAdapter {
         Commandline cmd = new Commandline();
         cmd.setExecutable(getJavac().getJavacExecutable());
         setupModernJavacCommandlineSwitches(cmd);
-        int firstFileName = cmd.size();
+        int firstFileName = JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) 
+            ? -1 : cmd.size();
         logAndAddFilesToCompile(cmd);
 
         return 
