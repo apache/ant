@@ -1557,7 +1557,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         </p>
                         <p>
           There was a number of valid reasons for this change. But the backward
-          compatibility problems were not noticied until after Ant 1.6.0 was
+          compatibility problems were not noticed until after Ant 1.6.0 was
           released.
         </p>
                         <p>
@@ -1570,11 +1570,11 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           If you want to do more processing on the task,
           you need to use the techniques in apache.tools.ant.taskdefs.Antlib#execute()
           This does make use of one 1.6 method call (UE#getRealObject()),
-          you need to use UE#getTask() instread - this will
+          you need to use UE#getTask() instead - this will
           return null for non tasks (types like fileset id=x).
         </p>
                         <p>
-          So.. interate over the tasks, if they are UEs, convert them to
+          So.. iterate over the tasks, if they are UEs, convert them to
           tasks, using UE#maybeConfigure and UE#getTask()
         </p>
                         <pre class="code">
