@@ -1,6 +1,6 @@
 @echo off
 
-REM   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+REM   Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
 REM   reserved.
 
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
