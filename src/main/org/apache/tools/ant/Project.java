@@ -460,8 +460,9 @@ public class Project {
      * Sets a property unless it is already defined as a user property
      * (in which case the method returns silently).
      *
-     * @param name the name of the property.
-     * @param value the property value.
+     * @param name The name of the property. 
+     *             Must not be <code>null</code>.
+     * @param value The property value. Must not be <code>null</code>.
      */
     private void setPropertyInternal(String name, String value) {
         if (null != userProperties.get(name)) {
@@ -638,7 +639,8 @@ public class Project {
      * 
      * @param token The token to filter.
      *              Must not be <code>null</code>.
-     * @param value the replacement value.
+     * @param value The replacement value.
+     *              Must not be <code>null</code>.
      * @deprecated Use getGlobalFilterSet().addFilter(token,value)
      * 
      * @see #getGlobalFilterSet()
@@ -816,10 +818,11 @@ public class Project {
      * Ant task implementation classes must be public, concrete, and have 
      * a no-arg constructor.
      * 
-     * @param taskClass the class to be checked.
+     * @param taskClass The class to be checked. 
+     *                  Must not be <code>null</code>.
      *
      * @exception BuildException if the class is unsuitable for being an Ant 
-     *                           task. An error level message is logged before 
+     *                           task. An error level message is logged before
      *                           this exception is thrown.
      */
     public void checkTaskClass(final Class taskClass) throws BuildException {
@@ -1446,7 +1449,7 @@ public class Project {
      *                             the resulting file should be set to that
      *                             of the source file.
      * 
-     * @exception IOException if the copying fails
+     * @exception IOException if the file cannot be copied.
      *
      * @deprecated
      */
