@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
@@ -47,7 +46,7 @@ public class PropertySet extends DataType {
     private Set cachedNames;
     private Vector ptyRefs = new Vector();
     private Vector setRefs = new Vector();
-    private Mapper _mapper;
+    private Mapper mapper;
 
     /**
      * this is a nested class containing a reference to some properties
@@ -61,25 +60,41 @@ public class PropertySet extends DataType {
         private String prefix;
         private String builtin;
 
+        /**
+         * Set the name.
+         * @param name a <code>String</code> value
+         */
         public void setName(String name) {
             assertValid("name", name);
             this.name = name;
         }
 
+        /**
+         * Set the regular expression to use to filter the properties.
+         * @param regex a regular expression
+         */
         public void setRegex(String regex) {
             assertValid("regex", regex);
             this.regex = regex;
         }
 
+        /**
+         * Set the prefix to use.
+         * @param prefix a <code>String</code> value
+         */
         public void setPrefix(String prefix) {
             assertValid("prefix", prefix);
             this.prefix = prefix;
         }
 
+        /**
+         * Builtin property names - all, system or commandline.
+         * @param b an enumerated <code>BuildinPropertySetName</code> value
+         */
         public void setBuiltin(BuiltinPropertySetName b) {
-            String built_in = b.getValue();
-            assertValid("builtin", built_in);
-            this.builtin = built_in;
+            String pBuiltIn = b.getValue();
+            assertValid("builtin", pBuiltIn);
+            this.builtin = pBuiltIn;
         }
 
         private void assertValid(String attr, String value) {
@@ -93,6 +108,10 @@ public class PropertySet extends DataType {
             }
         }
 
+        /**
+         * a debug toString()
+         * @return a string version of this object
+         */
         public String toString() {
             return "name=" + name + ", regex=" + regex + ", prefix=" + prefix
                 + ", builtin=" + builtin;
@@ -100,24 +119,40 @@ public class PropertySet extends DataType {
 
     } //end nested class
 
+    /**
+     * Allow properties of a particular name in the set.
+     * @param name the property name to allow
+     */
     public void appendName(String name) {
         PropertyRef r = new PropertyRef();
         r.setName(name);
         addPropertyref(r);
     }
 
+    /**
+     * Allow properties whose names match a regex in the set.
+     * @param regex the regular expression to use
+     */
     public void appendRegex(String regex) {
         PropertyRef r = new PropertyRef();
         r.setRegex(regex);
         addPropertyref(r);
     }
 
+    /**
+     * Allow properties whose names start with a prefix in the set.
+     * @param prefix the prefix to use
+     */
     public void appendPrefix(String prefix) {
         PropertyRef r = new PropertyRef();
         r.setPrefix(prefix);
         addPropertyref(r);
     }
 
+    /**
+     * Allow builtin (all, system or commandline) properties in the set.
+     * @param b the type of builtin properties
+     */
     public void appendBuiltin(BuiltinPropertySetName b) {
         PropertyRef r = new PropertyRef();
         r.setBuiltin(b);
@@ -138,23 +173,35 @@ public class PropertySet extends DataType {
         mapper.setTo(to);
     }
 
+    /**
+     * Add a property reference (nested element) to the references to be used.
+     * @param ref a property reference.
+     */
     public void addPropertyref(PropertyRef ref) {
         assertNotReference();
         ptyRefs.addElement(ref);
     }
 
+    /**
+     * Add another property set to this set.
+     * @param ref another property set
+     */
     public void addPropertyset(PropertySet ref) {
         assertNotReference();
         setRefs.addElement(ref);
     }
 
+    /**
+     * Create a mapper to map the property names.
+     * @return a mapper to be configured
+     */
     public Mapper createMapper() {
         assertNotReference();
-        if (_mapper != null) {
+        if (mapper != null) {
             throw new BuildException("Too many <mapper>s!");
         }
-        _mapper = new Mapper(getProject());
-        return _mapper;
+        mapper = new Mapper(getProject());
+        return mapper;
     }
 
     /**
@@ -166,22 +213,45 @@ public class PropertySet extends DataType {
         createMapper().add(fileNameMapper);
     }
 
+    /**
+     * Whether to reevaluate the set everytime the set is used.
+     * Default is true.
+     *
+     * @param dynamic if true, reevaluate the property set each time
+     *                the set is used. if false cache the property set
+     *                the first time and use the cached set on subsequent
+     *                occasions.
+     */
     public void setDynamic(boolean dynamic) {
         assertNotReference();
         this.dynamic = dynamic;
     }
 
+    /**
+     * Whether to negate results.
+     * If "true", all properties not selected by nested elements will be returned.
+     *  Default is "false"
+     * @param negate if true, negate the selection criteria
+     */
     public void setNegate(boolean negate) {
         assertNotReference();
         this.negate = negate;
     }
 
+    /**
+     * Get the dynamic attribute.
+     * @return true if the property set is to be evalulated each time it is used
+     */
     public boolean getDynamic() {
         return isReference() ? getRef().dynamic : dynamic;
     }
 
+    /**
+     * Get the mapper attribute.
+     * @return the mapper attribute
+     */
     public Mapper getMapper() {
-        return isReference() ? getRef()._mapper : _mapper;
+        return isReference() ? getRef().mapper : mapper;
     }
 
     /**
@@ -201,7 +271,7 @@ public class PropertySet extends DataType {
 
     /**
      * this is the operation to get the existing or recalculated properties.
-     * @return
+     * @return the properties for this propertyset
      */
     public Properties getProperties() {
         if (isReference()) {
@@ -309,7 +379,8 @@ public class PropertySet extends DataType {
 
     /**
      * Performs the check for circular references and returns the
-     * referenced FileList.
+     * referenced PropertySet.
+     * @return the referenced PropertySet
      */
     protected PropertySet getRef() {
         if (!isChecked()) {
@@ -372,6 +443,7 @@ public class PropertySet extends DataType {
         static final String ALL = "all";
         static final String SYSTEM = "system";
         static final String COMMANDLINE = "commandline";
+        /** @see EnumeratedAttribute#getValues() */
         public String[] getValues() {
             return new String[] {ALL, SYSTEM, COMMANDLINE};
         }
