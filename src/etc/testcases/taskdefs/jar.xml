@@ -2,6 +2,8 @@
 
 <project name="jar-test" basedir="." default="test1">
 
+  <property name="tmp.jar" location="tmp.jar"/>
+
   <target name="test1">
     <jar/>
   </target>
@@ -22,23 +24,63 @@
 
   <target name="test4">
    <jar
-    	destfile="tmp.jar"
+    	destfile="${tmp.jar}"
 	basedir="."
 	includes="jar.xml"
     />
   </target>
 
-  <!-- This test is to make sure upToDate is working -->
-  <target name="test5">
+  <target name="testNoRecreateWithUpdate">
     <jar
-    	destfile="tmp.jar"
-	basedir="."
-	includes="jar.xml"
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testRecreateNewerFileSetup" depends="test4">
+    <touch file="jar.xml"/>
+    <sleep seconds="2"/>
+    <touch file="${tmp.jar}"/>
+  </target>
+
+  <target name="testRecreateWithoutUpdateAdditionalFiles">
+    <jar
+         destfile="${tmp.jar}"
+         includes="*.xml"
+         basedir="."
+    />
+  </target>
+
+  <target name="testRecreateWithUpdateAdditionalFiles">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="*.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testRecreateWithoutUpdateNewerFile">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+    />
+  </target>
+
+  <target name="testRecreateWithUpdateNewerFile">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+         update="true"
     />
   </target>
 
   <target name="cleanup">
-    <delete file="tmp.jar" />
+    <delete file="${tmp.jar}" />
   </target>
 
 </project>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,7 +63,6 @@ import org.apache.tools.ant.BuildFileTest;
  */
 public class JarTest extends BuildFileTest {
 
-    private static long jarModifiedDate;
     private static String tempJar = "tmp.jar";
 
     public JarTest(String name) {
@@ -94,12 +93,60 @@ public class JarTest extends BuildFileTest {
         executeTarget("test4");
         File jarFile = new File(getProjectDir(), tempJar);
         assertTrue(jarFile.exists());
-        jarModifiedDate = jarFile.lastModified();
     }
 
-    public void XXXtest5() {
-        executeTarget("test5");
+    public void testNoRecreateWithoutUpdate() {
+        testNoRecreate("test4");
+    }
+
+    public void testNoRecreateWithUpdate() {
+        testNoRecreate("testNoRecreateWithUpdate");
+    }
+
+    private void testNoRecreate(String secondTarget) {
+        executeTarget("test4");
         File jarFile = new File(getProjectDir(), tempJar);
-        assertEquals(jarModifiedDate, jarFile.lastModified());
+        long jarModifiedDate = jarFile.lastModified();
+        try {
+            // give Windows a chance
+            Thread.currentThread().sleep(2500);
+        } catch (InterruptedException e) {
+        } // end of try-catch
+        executeTarget(secondTarget);
+        assertEquals("jar has not been recreated in " + secondTarget,
+                     jarModifiedDate, jarFile.lastModified());
+    }
+
+    public void XtestRecreateWithoutUpdateAdditionalFiles() {
+        testRecreate("test4", "testRecreateWithoutUpdateAdditionalFiles");
+    }
+
+    public void XtestRecreateWithUpdateAdditionalFiles() {
+        testRecreate("test4", "testRecreateWithUpdateAdditionalFiles");
+    }
+
+    public void XtestRecreateWithoutUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateWithoutUpdateNewerFile");
+    }
+
+    public void XtestRecreateWithUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateWithUpdateNewerFile");
+    }
+
+    private void testRecreate(String firstTarget, String secondTarget) {
+        executeTarget(firstTarget);
+        try {
+            // give Windows a chance
+            Thread.currentThread().sleep(2500);
+        } catch (InterruptedException e) {
+        } // end of try-catch
+        File jarFile = new File(getProjectDir(), tempJar);
+        long jarModifiedDate = jarFile.lastModified();
+        executeTarget(secondTarget);
+        jarFile = new File(getProjectDir(), tempJar);
+        assertTrue("jar has been recreated in " + secondTarget,
+                   jarModifiedDate < jarFile.lastModified());
     }
 }
