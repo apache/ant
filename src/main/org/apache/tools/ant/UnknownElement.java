@@ -104,6 +104,12 @@ public class UnknownElement extends Task {
         return elementName;
     }
 
+    /**
+     * Get the RuntimeConfigurable instance for this UnknownElement, containing
+     * the configuration information.
+     *
+     * @return the configuration info.
+     */
     public RuntimeConfigurable getWrapper() {
         return wrapper;
     }

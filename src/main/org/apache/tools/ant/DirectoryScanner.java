@@ -152,7 +152,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
-public class DirectoryScanner implements FileScanner, SelectorScanner, ResourceFactory {
+public class DirectoryScanner 
+       implements FileScanner, SelectorScanner, ResourceFactory {
 
     /**
      * Patterns which should be excluded by default.
@@ -558,7 +559,7 @@ public class DirectoryScanner implements FileScanner, SelectorScanner, ResourceF
 
         if (isIncluded("")) {
             if (!isExcluded("")) {
-                if (isSelected("",basedir)) {
+                if (isSelected("", basedir)) {
                     dirsIncluded.addElement("");
                 } else {
                     dirsDeselected.addElement("");
@@ -676,7 +677,7 @@ public class DirectoryScanner implements FileScanner, SelectorScanner, ResourceF
             if (file.isDirectory()) {
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
-                        if (isSelected(name,file)) {
+                        if (isSelected(name, file)) {
                             dirsIncluded.addElement(name);
                             if (fast) {
                                 scandir(file, name + File.separator, fast);
@@ -709,7 +710,7 @@ public class DirectoryScanner implements FileScanner, SelectorScanner, ResourceF
             } else if (file.isFile()) {
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
-                        if (isSelected(name,file)) {
+                        if (isSelected(name, file)) {
                             filesIncluded.addElement(name);
                         } else {
                             everythingIncluded = false;
@@ -949,8 +950,10 @@ public class DirectoryScanner implements FileScanner, SelectorScanner, ResourceF
     }
 
     /**
+     * Get the named resource
      * @param name path name of the file relative to the dir attribute.
      *
+     * @return the resource with the given name.
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {

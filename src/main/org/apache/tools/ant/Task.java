@@ -64,6 +64,7 @@ import java.io.IOException;
  * using this class directly for construction.
  *
  * @see Project#createTask
+ * @author James Duncan Davidson
  */
 public abstract class Task extends ProjectComponent {
     /**

@@ -54,14 +54,10 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.helper.*;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
 
-import java.util.*;
-
-import org.xml.sax.AttributeList;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributeListImpl;
-import org.xml.sax.helpers.AttributesImpl;
 
 /* ISSUES:
  - ns param. It could be used to provide "namespaces" for properties, which

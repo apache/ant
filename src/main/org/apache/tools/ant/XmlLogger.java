@@ -84,6 +84,7 @@ import org.w3c.dom.Text;
  * if executed in parallel.
  *
  * @see Project#addBuildListener(BuildListener)
+ * @author Matt Foemmel
  */
 public class XmlLogger implements BuildLogger {
 
@@ -288,7 +289,8 @@ public class XmlLogger implements BuildLogger {
                 TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != targetElement) {
                     throw new RuntimeException("Mismatch - popped element = "
-                            + poppedStack.element + " finished target element = "
+                            + poppedStack.element 
+                            + " finished target element = "
                             + targetElement.element);
                 }
                 if (!threadStack.empty()) {
@@ -477,6 +479,9 @@ public class XmlLogger implements BuildLogger {
 
     /**
      * Ignore emacs mode, as it has no meaning in XML format
+     *
+     * @param emacsMode true if no loggher should produce emacs compatible 
+     *        output
      */
     public void setEmacsMode(boolean emacsMode) {
     }
@@ -485,6 +490,8 @@ public class XmlLogger implements BuildLogger {
      * Ignore error print stream. All output will be written to
      * either the XML log file or the PrintStream provided to
      * setOutputPrintStream
+     *
+     * @param err the stream we are going to ignore.
      */
     public void setErrorPrintStream(PrintStream err) {
     }

@@ -77,6 +77,9 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class Diagnostics {
 
+    private static final String TEST_CLASS 
+        = "org.apache.tools.ant.taskdefs.optional.Test";
+    
     /** utility class */
     private Diagnostics(){
     }
@@ -88,7 +91,7 @@ public final class Diagnostics {
      */
     public static boolean isOptionalAvailable() {
         try {
-            Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
+            Class.forName(TEST_CLASS);
         } catch (ClassNotFoundException e){
             return false;
         }
@@ -102,13 +105,15 @@ public final class Diagnostics {
      */
     public static void validateVersion() throws BuildException {
         try {
-            Class optional = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
+            Class optional 
+                = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
             String coreVersion = getImplementationVersion(Main.class);
             String optionalVersion = getImplementationVersion(optional);
             
-            if (coreVersion != null && !coreVersion.equals(optionalVersion) ){
+            if (coreVersion != null && !coreVersion.equals(optionalVersion)) {
                 throw new BuildException(
-                        "Invalid implementation version between Ant core and Ant optional tasks.\n" +
+                        "Invalid implementation version between Ant core and " 
+                        + "Ant optional tasks.\n" +
                         " core    : " + coreVersion + "\n" +
                         " optional: " + optionalVersion);
             }
@@ -169,7 +174,7 @@ public final class Diagnostics {
               // pkg.getImplementationVersion();
               method = pkg.getClass().getMethod("getImplementationVersion", new Class[0]);
               Object version = method.invoke(pkg, null);          
-              return (String)version;
+              return (String) version;
           }
         } catch (Exception e){
           // JDK < 1.2 should land here because the methods above don't exist.
@@ -183,7 +188,7 @@ public final class Diagnostics {
      * @return the classname of the parser
      */
     private static String getXmlParserName() {
-        SAXParser saxParser= getSAXParser();
+        SAXParser saxParser = getSAXParser();
         if (saxParser == null) {
             return "Could not create an XML Parser";
         }
@@ -202,7 +207,7 @@ public final class Diagnostics {
         if (saxParserFactory == null) {
             return null;
         }
-        SAXParser saxParser=null;
+        SAXParser saxParser = null;
         try {
             saxParser = saxParserFactory.newSAXParser();
         } catch (Exception e) {
@@ -220,7 +225,7 @@ public final class Diagnostics {
         if (saxParser == null) {
             return null;
         }
-        String location=getClassLocation(saxParser.getClass());
+        String location = getClassLocation(saxParser.getClass());
         return location;
     }
 
@@ -230,7 +235,7 @@ public final class Diagnostics {
      * @return the jar file or path where a class was found, or null
      */
 
-    private static String getClassLocation( Class clazz) {
+    private static String getClassLocation(Class clazz) {
         File f = LoaderUtils.getClassSource(clazz);
         return f == null ? null : f.getAbsolutePath();
     }
@@ -253,7 +258,8 @@ public final class Diagnostics {
         try {
             optional = Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.Test");
-            out.println("optional tasks : " + getImplementationVersion(optional));
+            out.println("optional tasks : " 
+                + getImplementationVersion(optional));
         } catch (ClassNotFoundException e){
             out.println("optional tasks : not available");
         }
@@ -297,9 +303,9 @@ public final class Diagnostics {
      * @param out the stream to print the properties to.
      */
     private static void doReportSystemProperties(PrintStream out){
-        for( Enumeration keys = System.getProperties().keys();
-            keys.hasMoreElements(); ){
-            String key = (String)keys.nextElement();
+        for (Enumeration keys = System.getProperties().keys();
+            keys.hasMoreElements();) {
+            String key = (String) keys.nextElement();
             out.println(key + " : " + System.getProperty(key));
         }
     }
@@ -331,7 +337,8 @@ public final class Diagnostics {
         Throwable error = null;
         try {
             Class which = Class.forName("org.apache.env.Which");
-            Method method = which.getMethod("main", new Class[]{ String[].class });
+            Method method 
+                = which.getMethod("main", new Class[]{ String[].class });
             method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");
@@ -366,7 +373,7 @@ public final class Diagnostics {
             try {
                 props.load(is);
                 for (Enumeration keys = props.keys(); keys.hasMoreElements();){
-                    String key = (String)keys.nextElement();
+                    String key = (String) keys.nextElement();
                     String classname = props.getProperty(key);
                     try {
                         Class.forName(classname);
@@ -375,7 +382,7 @@ public final class Diagnostics {
                         out.println(key + " : Not Available");
                     } catch (NoClassDefFoundError e) {
                         String pkg = e.getMessage().replace('/', '.');
-                        out.println(key + " : Missing dependency " + pkg );
+                        out.println(key + " : Missing dependency " + pkg);
                     } catch (Error e) {
                         out.println(key + " : Initialization error");
                     }
@@ -394,13 +401,13 @@ public final class Diagnostics {
      * @param out
      */
     private static void doReportParserInfo(PrintStream out) {
-        String parserName=getXmlParserName();
-        String parserLocation=getXMLParserLocation();
-        if(parserName==null) {
-            parserName="unknown";
+        String parserName = getXmlParserName();
+        String parserLocation = getXMLParserLocation();
+        if (parserName == null) {
+            parserName = "unknown";
         }
-        if(parserLocation==null) {
-            parserLocation="unknown";
+        if (parserLocation == null) {
+            parserLocation = "unknown";
         }
         out.println("XML Parser : " + parserName);
         out.println("XML Parser Location: " + parserLocation);

@@ -257,7 +257,8 @@ public class IntrospectionHelper implements BuildListener {
                         particular order.
                     */
                 }
-                AttributeSetter as = createAttributeSetter(m, args[0], propName);
+                AttributeSetter as 
+                    = createAttributeSetter(m, args[0], propName);
                 if (as != null) {
                     attributeTypes.put(propName, args[0]);
                     attributeSetters.put(propName, as);

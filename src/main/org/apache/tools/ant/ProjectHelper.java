@@ -58,14 +58,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
 import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.xml.sax.AttributeList;
-import org.xml.sax.Attributes;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
@@ -134,7 +132,7 @@ public class ProjectHelper {
     // Since the tree is composed of UE and RC - it can be reused !
     // protected Hashtable processedFiles=new Hashtable();
 
-    protected Vector importStack=new Vector();
+    protected Vector importStack = new Vector();
 
     // Temporary - until we figure a better API
     /** EXPERIMENTAL WILL_CHANGE
@@ -464,10 +462,9 @@ public class ProjectHelper {
      * @deprecated Use PropertyHelper
      */
      public static String replaceProperties(Project project, String value,
-         Hashtable keys) throws BuildException
-    {
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(project);
-        return ph.replaceProperties( null, value, keys);
+         Hashtable keys) throws BuildException {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(project);
+        return ph.replaceProperties(null, value, keys);
     }
 
     /**
@@ -490,8 +487,7 @@ public class ProjectHelper {
      */
     public static void parsePropertyString(String value, Vector fragments,
                                            Vector propertyRefs)
-        throws BuildException
-    {
+        throws BuildException {
         PropertyHelper.parsePropertyStringDefault(value, fragments,
                 propertyRefs);
     }
