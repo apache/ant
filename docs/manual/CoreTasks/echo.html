@@ -52,13 +52,21 @@ ignored</p>
   
 </table>
 <h3>Examples</h3>
-<pre>  &lt;echo message=&quot;Hello, world&quot;/&gt;</pre>
-<pre>  
+<pre>
+&lt;echo message=&quot;Hello, world&quot;/&gt;
+</pre>
+<pre>
+&lt;echo message=&quot;Embed a line break:${line.separator}&quot;/&gt;
+</pre>
+<pre>
+&lt;echo&gt;Embed another:${line.separator}&lt;/echo&gt;
+</pre>
+<pre>
 &lt;echo&gt;This is a longer message stretching over
 two lines.
 &lt;/echo&gt;
 </pre>
-<pre>  
+<pre>
 &lt;echo&gt;
 This is a longer message stretching over
 three lines; the first line is a blank
