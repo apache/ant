@@ -20,7 +20,7 @@ import org.apache.avalon.framework.context.Context;
 public interface Configurer
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.configurer.Configurer";
+    String ROLE = Configurer.class.getName();
 
     /**
      * Configure an object based on a configuration in a particular context.
