@@ -466,7 +466,9 @@ public class Execute {
         try {
             process.waitFor();
             setExitValue(process.exitValue());
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+            process.destroy();
+        }
     }
 
     protected void setExitValue(int value) {
