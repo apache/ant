@@ -109,37 +109,37 @@ public class FileUtilsTest extends TestCase {
         assertEquals(File.separator,
                      FILE_UTILS.resolveFile(null, "\\").getPath());
 
-        /*
-         * throw in drive letters
-         */
-        String driveSpec = "C:";
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.resolveFile(null, driveSpec + "/").getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.resolveFile(null, driveSpec + "\\").getPath());
-        String driveSpecLower = "c:";
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.resolveFile(null, driveSpecLower + "/").getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.resolveFile(null, driveSpecLower + "\\").getPath());
-        /*
-         * promised to eliminate consecutive slashes after drive letter.
-         */
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.resolveFile(null, driveSpec + "/////").getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
-
-        if (Os.isFamily("netware")) {
+        if (Os.isFamily("dos")) {
+            /*
+             * throw in drive letters
+             */
+            String driveSpec = "C:";
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.resolveFile(null, driveSpec + "/").getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.resolveFile(null, driveSpec + "\\").getPath());
+            String driveSpecLower = "c:";
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.resolveFile(null, driveSpecLower + "/").getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.resolveFile(null, driveSpecLower + "\\").getPath());
+            /*
+             * promised to eliminate consecutive slashes after drive letter.
+             */
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.resolveFile(null, driveSpec + "/////").getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
+        } else if (Os.isFamily("netware")) {
             /*
              * throw in NetWare volume names
              */
-            driveSpec = "SYS:";
+            String driveSpec = "SYS:";
             assertEquals(driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "/").getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "\\").getPath());
-            driveSpecLower = "sys:";
+            String driveSpecLower = "sys:";
             assertEquals(driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpecLower + "/").getPath());
             assertEquals(driveSpec,
@@ -151,6 +151,20 @@ public class FileUtilsTest extends TestCase {
                          FILE_UTILS.resolveFile(null, driveSpec + "/////").getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
+        } else {
+            /*
+             * drive letters must be considered just normal filenames.
+             */
+            String driveSpec = "C:";
+            assertEquals(driveSpec,
+                         FILE_UTILS.resolveFile(null, driveSpec + "/").getPath());
+            assertEquals(driveSpec,
+                         FILE_UTILS.resolveFile(null, driveSpec + "\\").getPath());
+            String driveSpecLower = "c:";
+            assertEquals(driveSpecLower,
+                         FILE_UTILS.resolveFile(null, driveSpecLower + "/").getPath());
+            assertEquals(driveSpecLower,
+                         FILE_UTILS.resolveFile(null, driveSpecLower + "\\").getPath());
         }
 
         /*
@@ -191,41 +205,41 @@ public class FileUtilsTest extends TestCase {
         assertEquals(File.separator,
                      FILE_UTILS.normalize("\\").getPath());
 
-        /*
-         * throw in drive letters
-         */
-        String driveSpec = "C:";
-        assertEquals(driveSpec,
-                     FILE_UTILS.normalize(driveSpec).getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.normalize(driveSpec + "/").getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.normalize(driveSpec + "\\").getPath());
-        String driveSpecLower = "c:";
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.normalize(driveSpecLower + "/").getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.normalize(driveSpecLower + "\\").getPath());
-        /*
-         * promised to eliminate consecutive slashes after drive letter.
-         */
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.normalize(driveSpec + "/////").getPath());
-        assertEquals(driveSpec + "\\",
-                     FILE_UTILS.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
-
-        if (Os.isFamily("netware")) {
+        if (Os.isFamily("dos")) {
+            /*
+             * throw in drive letters
+             */
+            String driveSpec = "C:";
+            assertEquals(driveSpec,
+                         FILE_UTILS.normalize(driveSpec).getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.normalize(driveSpec + "/").getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.normalize(driveSpec + "\\").getPath());
+            String driveSpecLower = "c:";
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.normalize(driveSpecLower + "/").getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.normalize(driveSpecLower + "\\").getPath());
+            /*
+             * promised to eliminate consecutive slashes after drive letter.
+             */
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.normalize(driveSpec + "/////").getPath());
+            assertEquals(driveSpec + "\\",
+                         FILE_UTILS.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
+        } else if (Os.isFamily("netware")) {
             /*
              * throw in NetWare volume names
              */
-            driveSpec = "SYS:";
+            String driveSpec = "SYS:";
             assertEquals(driveSpec,
                          FILE_UTILS.normalize(driveSpec).getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.normalize(driveSpec + "/").getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.normalize(driveSpec + "\\").getPath());
-            driveSpecLower = "sys:";
+            String driveSpecLower = "sys:";
             assertEquals(driveSpec,
                          FILE_UTILS.normalize(driveSpecLower).getPath());
             assertEquals(driveSpec,
@@ -241,6 +255,15 @@ public class FileUtilsTest extends TestCase {
                          FILE_UTILS.normalize(driveSpec + "/////").getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
+        } else {
+            try {
+                String driveSpec = "C:";
+                assertEquals(driveSpec,
+                             FILE_UTILS.normalize(driveSpec).getPath());
+                fail("Expected failure, C: isn't an absolute path on other os's");
+            } catch (BuildException e) {
+                // Passed test 
+            }
         }
 
         /*

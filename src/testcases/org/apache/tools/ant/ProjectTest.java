@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -74,27 +75,43 @@ public class ProjectTest extends TestCase {
         assertEquals(File.separator,
                      p.resolveFile("\\", null).getPath());
 
-        /*
-         * throw in drive letters
-         */
-        String driveSpec = "C:";
-        assertEquals(driveSpec + "\\",
-                     p.resolveFile(driveSpec + "/", null).getPath());
-        assertEquals(driveSpec + "\\",
-                     p.resolveFile(driveSpec + "\\", null).getPath());
-        String driveSpecLower = "c:";
-        assertEquals(driveSpec + "\\",
-                     p.resolveFile(driveSpecLower + "/", null).getPath());
-        assertEquals(driveSpec + "\\",
-                     p.resolveFile(driveSpecLower + "\\", null).getPath());
-        /*
-         * promised to eliminate consecutive slashes after drive letter.
-         */
-        assertEquals(driveSpec + "\\",
-                     p.resolveFile(driveSpec + "/////", null).getPath());
-        assertEquals(driveSpec + "\\",
-                     p.resolveFile(driveSpec + "\\\\\\\\\\\\", null).getPath());
-
+        if (Os.isFamily("netware") || Os.isFamily("dos")) {
+            /*
+             * throw in drive letters
+             */
+            String driveSpec = "C:";
+            assertEquals(driveSpec + "\\",
+                         p.resolveFile(driveSpec + "/", null).getPath());
+            assertEquals(driveSpec + "\\",
+                         p.resolveFile(driveSpec + "\\", null).getPath());
+            String driveSpecLower = "c:";
+            assertEquals(driveSpec + "\\",
+                         p.resolveFile(driveSpecLower + "/", null).getPath());
+            assertEquals(driveSpec + "\\",
+                         p.resolveFile(driveSpecLower + "\\", null).getPath());
+            /*
+             * promised to eliminate consecutive slashes after drive letter.
+             */
+            assertEquals(driveSpec + "\\",
+                         p.resolveFile(driveSpec + "/////", null).getPath());
+            assertEquals(driveSpec + "\\",
+                         p.resolveFile(driveSpec + "\\\\\\\\\\\\", null).getPath());
+        } else {
+            /*
+             * drive letters are not used, just to be considered as normal
+             * part of a name
+             */
+            String driveSpec = "C:";
+            assertEquals(driveSpec,
+                         p.resolveFile(driveSpec + "/", null).getPath());
+            assertEquals(driveSpec,
+                         p.resolveFile(driveSpec + "\\", null).getPath());
+            String driveSpecLower = "c:";
+            assertEquals(driveSpecLower,
+                         p.resolveFile(driveSpecLower + "/", null).getPath());
+            assertEquals(driveSpecLower,
+                         p.resolveFile(driveSpecLower + "\\", null).getPath());
+        }
         /*
          * Now test some relative file name magic.
          */
