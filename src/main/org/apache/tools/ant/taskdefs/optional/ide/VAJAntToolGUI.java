@@ -86,7 +86,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.TextEvent;
 import java.awt.event.WindowEvent;
 
-
 import java.beans.PropertyChangeListener;
 
 import org.apache.tools.ant.BuildException;
@@ -94,6 +93,7 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.DateUtils;
 
 /**
  * This is a simple grafical user interface to provide the information needed
@@ -214,7 +214,7 @@ public class VAJAntToolGUI extends Frame {
                 logException( error );
             }
 
-            getMessageTextArea().append(lineSeparator + "Total time: " + formatTime(System.currentTimeMillis() - startTime));
+            getMessageTextArea().append(lineSeparator + "Total time: " + DateUtils.formatElapsedTime(System.currentTimeMillis() - startTime));
         }
 
 
@@ -543,23 +543,7 @@ public class VAJAntToolGUI extends Frame {
             getBuildButton().setEnabled(true);
         }
     }
-    /**
-     * Copied from DefaultLogger to provide the same time-format.
-     */
-    public static String formatTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
-        if (minutes > 0) {
-            return Long.toString(minutes) + " minute"
-                + (minutes == 1 ? " " : "s ")
-                + Long.toString(seconds%60) + " second"
-                + (seconds%60 > 1 ? "s" : "");
-        }
-        else {
-            return Long.toString(seconds) + " second"
-                + (seconds%60 > 1 ? "s" : "");
-        }
-    }
+
     /**
      * Return the AboutCommandPanel property value.
      * @return java.awt.Panel

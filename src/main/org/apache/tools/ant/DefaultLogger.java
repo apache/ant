@@ -59,6 +59,7 @@ import java.text.ChoiceFormat;
 import java.text.MessageFormat;
 
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.DateUtils;
 
 /**
  *  Writes build event to a PrintStream. Currently, it
@@ -66,28 +67,6 @@ import org.apache.tools.ant.util.StringUtils;
  *  any messages that get logged.
  */
 public class DefaultLogger implements BuildLogger {
-    private final static MessageFormat MINUTE_SECONDS =
-        new MessageFormat("Total time: {0}{1}.");
-
-    private final static double[] LIMITS = {0, 1, 2};
-
-    private final static String[] MINUTES_PART =
-        {"", "1 minute, ", "{0,number} minutes, "};
-
-    private final static String[] SECONDS_PART =
-        {"no seconds", "1 second", "{1,number} seconds"};
-
-    private final static ChoiceFormat MINUTES_FORMAT =
-        new ChoiceFormat(LIMITS, MINUTES_PART);
-
-    private final static ChoiceFormat SECONDS_FORMAT =
-        new ChoiceFormat(LIMITS, SECONDS_PART);
-
-    static {
-        MINUTE_SECONDS.setFormat(0, MINUTES_FORMAT);
-        MINUTE_SECONDS.setFormat(1, SECONDS_FORMAT);
-    }
-
     private static int LEFT_COLUMN_SIZE = 12;
 
     protected PrintStream out;
@@ -181,6 +160,7 @@ public class DefaultLogger implements BuildLogger {
             }
         }
         message.append(StringUtils.LINE_SEP);
+        message.append("Total time: ");
         message.append(formatTime(System.currentTimeMillis() - startTime));
 
         String msg = message.toString();
@@ -236,16 +216,8 @@ public class DefaultLogger implements BuildLogger {
         }
     }
 
-    protected static String formatTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
-
-        Object[] args = {
-            new Long(minutes),
-            new Long(seconds % 60)
-        };
-
-        return MINUTE_SECONDS.format(args);
+    protected static String formatTime(final long millis) {
+        return DateUtils.formatElapsedTime(millis);
     }
 
     protected void printMessage(final String message,
