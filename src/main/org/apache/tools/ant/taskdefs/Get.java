@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -67,9 +67,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * Get a particular file from a URL source. 
- * Options include verbose reporting, timestamp based fetches and controlling 
- * actions on failures. NB: access through a firewall only works if the whole 
+ * Get a particular file from a URL source.
+ * Options include verbose reporting, timestamp based fetches and controlling
+ * actions on failures. NB: access through a firewall only works if the whole
  * Java runtime is correctly configured.
  *
  * @author costin@dnt.ro
@@ -84,7 +84,7 @@ public class Get extends Task {
     private String uname = null;
     private String pword = null;
 
-    
+
     /**
      * Does the work.
      *
@@ -99,12 +99,12 @@ public class Get extends Task {
             throw new BuildException("dest attribute is required", location);
         }
 
-        if (dest.exists() && dest.isDirectory()) { 
+        if (dest.exists() && dest.isDirectory()) {
             throw new BuildException("The specified destination is a directory",
                                      location);
         }
 
-        if (dest.exists() && !dest.canWrite()) { 
+        if (dest.exists() && !dest.canWrite()) {
             throw new BuildException("Can't write to " + dest.getAbsolutePath(),
                                      location);
         }
@@ -123,10 +123,10 @@ public class Get extends Task {
                     Date t=new Date(timestamp);
                     log("local file date : "+t.toString());
                 }
-                
+
                 hasTimestamp=true;
             }
-        
+
             //set up the URL connection
             URLConnection connection=source.openConnection();
             //modify the headers
@@ -134,24 +134,23 @@ public class Get extends Task {
             if(useTimestamp && hasTimestamp) {
                 connection.setIfModifiedSince(timestamp);
             }
-	    // prepare Java 1.1 style credentials
-	    if (uname != null || pword != null) {
-	      String up = uname + ":" + pword;
-	      String encoding;
-	      // check to see if sun's Base64 encoder is available.
-	      try {
-		sun.misc.BASE64Encoder encoder = 
-		  (sun.misc.BASE64Encoder) Class.forName("sun.misc.BASE64Encoder").newInstance();
-		encoding = encoder.encode (up.getBytes());
+            // prepare Java 1.1 style credentials
+            if (uname != null || pword != null) {
+                String up = uname + ":" + pword;
+                String encoding;
+                // check to see if sun's Base64 encoder is available.
+                try {
+                    sun.misc.BASE64Encoder encoder =
+                        (sun.misc.BASE64Encoder) Class.forName("sun.misc.BASE64Encoder").newInstance();
+                    encoding = encoder.encode (up.getBytes());
 
-	      }
-	      catch (Exception ex) { // sun's base64 encoder isn't available 
-		Base64Converter encoder = new Base64Converter();
-		encoding = encoder.encode(up.getBytes());
-	      }
-	      connection.setRequestProperty ("Authorization", "Basic " + encoding);
-
-	    }
+                }
+                catch (Exception ex) { // sun's base64 encoder isn't available
+                    Base64Converter encoder = new Base64Converter();
+                    encoding = encoder.encode(up.getBytes());
+                }
+                connection.setRequestProperty ("Authorization", "Basic " + encoding);
+            }
 
             //connect to the remote site (may take some time)
             connection.connect();
@@ -160,23 +159,23 @@ public class Get extends Task {
                 HttpURLConnection httpConnection=(HttpURLConnection)connection;
                 if(httpConnection.getResponseCode()==HttpURLConnection.HTTP_NOT_MODIFIED)  {
                     //not modified so no file download. just return instead
-                    //and trace out something so the user doesn't think that the 
+                    //and trace out something so the user doesn't think that the
                     //download happened when it didnt
                     log("Not modified - so not downloaded");
-                    return; 
+                    return;
                 }
-		// test for 401 result (HTTP only)
+                // test for 401 result (HTTP only)
                 if(httpConnection.getResponseCode()==HttpURLConnection.HTTP_UNAUTHORIZED)  {
                     log("Not authorized - check " + dest + " for details");
-                    return; 
+                    return;
                 }
 
             }
 
             //REVISIT: at this point even non HTTP connections may support the if-modified-since
             //behaviour -we just check the date of the content and skip the write if it is not
-            //newer. Some protocols (FTP) dont include dates, of course. 
-                   
+            //newer. Some protocols (FTP) dont include dates, of course.
+
             FileOutputStream fos = new FileOutputStream(dest);
 
             InputStream is=null;
@@ -190,15 +189,15 @@ public class Get extends Task {
             }
             if( is==null ) {
                 log( "Can't get " + source + " to " + dest);
-                if(ignoreErrors) 
+                if(ignoreErrors)
                     return;
                 throw new BuildException( "Can't get " + source + " to " + dest,
                                           location);
             }
-                
+
             byte[] buffer = new byte[100 * 1024];
             int length;
-            
+
             while ((length = is.read(buffer)) >= 0) {
                 fos.write(buffer, 0, length);
                 if (verbose) System.out.print(".");
@@ -206,8 +205,8 @@ public class Get extends Task {
             if(verbose) System.out.println();
             fos.close();
             is.close();
-           
-            //if (and only if) the use file time option is set, then the 
+
+            //if (and only if) the use file time option is set, then the
             //saved file now has its timestamp set to that of the downloaded file
             if(useTimestamp)  {
                 long remoteTimestamp=connection.getLastModified();
@@ -219,18 +218,15 @@ public class Get extends Task {
                 if(remoteTimestamp!=0)
                     touchFile(dest,remoteTimestamp);
             }
-
-           
-
         } catch (IOException ioe) {
             log("Error getting " + source + " to " + dest );
-            if(ignoreErrors) 
+            if(ignoreErrors)
                 return;
             throw new BuildException(ioe, location);
         }
     }
-    
-    /** 
+
+    /**
      * set the timestamp of a named file to a specified time.
      *
      * @param filename
@@ -240,7 +236,7 @@ public class Get extends Task {
      *@exception BuildException Thrown in unrecoverable error. Likely
      *this comes from file access failures.
      */
-    protected boolean touchFile(File file, long timemillis) 
+    protected boolean touchFile(File file, long timemillis)
         throws BuildException  {
 
         if (project.getJavaVersion() != Project.JAVA_1_1) {
@@ -252,11 +248,11 @@ public class Get extends Task {
             touch.setMillis(timemillis);
             touch.touch();
             return true;
-            
+
         } else {
             return false;
         }
-    }        
+    }
 
     /**
      * Set the URL.
@@ -300,13 +296,13 @@ public class Get extends Task {
      * <p>In this situation, the if-modified-since header is set so that the file is
      * only fetched if it is newer than the local file (or there is no local file)
      * This flag is only valid on HTTP connections, it is ignored in other cases.
-     * When the flag is set, the local copy of the downloaded file will also 
-     * have its timestamp set to the remote file time. 
+     * When the flag is set, the local copy of the downloaded file will also
+     * have its timestamp set to the remote file time.
      * <br>
      * Note that remote files of date 1/1/1970 (GMT) are treated as 'no timestamp', and
      * web servers often serve files with a timestamp in the future by replacing their timestamp
-     * with that of the current time. Also, inter-computer clock differences can cause no end of 
-     * grief. 
+     * with that of the current time. Also, inter-computer clock differences can cause no end of
+     * grief.
      * @param v "true" to enable file time fetching
      */
     public void setUseTimestamp(boolean v) {
@@ -334,95 +330,92 @@ public class Get extends Task {
       this.pword = p;
     }
 
-     /*********************************************************************
-     * BASE 64 encoding of a String or an array of bytes.
-     *
-     * Based on RFC 1421.
-     * 
-     * @author
-     *    Unknown
-     *  @author
-     *    <a HREF="gg@grtmail.com">Gautam Guliani</a>
-     *********************************************************************/
+    /*********************************************************************
+    * BASE 64 encoding of a String or an array of bytes.
+    *
+    * Based on RFC 1421.
+    *
+    * @author
+    *    Unknown
+    *  @author
+    *    <a HREF="gg@grtmail.com">Gautam Guliani</a>
+    *********************************************************************/
 
-     class  Base64Converter
-     {
+    class  Base64Converter
+    {
 
-     public final char [ ]  alphabet = {
-       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',   //  0 to  7
-       'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',   //  8 to 15
-       'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',   // 16 to 23
-       'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',   // 24 to 31
-       'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',   // 32 to 39
-       'o', 'p', 'q', 'r', 's', 't', 'u', 'v',   // 40 to 47
-       'w', 'x', 'y', 'z', '0', '1', '2', '3',   // 48 to 55
-       '4', '5', '6', '7', '8', '9', '+', '/' }; // 56 to 63
+        public final char [ ]  alphabet = {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',   //  0 to  7
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',   //  8 to 15
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',   // 16 to 23
+            'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',   // 24 to 31
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',   // 32 to 39
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v',   // 40 to 47
+            'w', 'x', 'y', 'z', '0', '1', '2', '3',   // 48 to 55
+            '4', '5', '6', '7', '8', '9', '+', '/' }; // 56 to 63
 
 
-     public String  encode ( String  s )
-     {
-       return encode ( s.getBytes ( ) );
+        public String  encode ( String  s )
+        {
+            return encode ( s.getBytes ( ) );
+        }
+
+        public String  encode ( byte [ ]  octetString )
+        {
+            int  bits24;
+            int  bits6;
+
+            char [ ]  out
+              = new char [ ( ( octetString.length - 1 ) / 3 + 1 ) * 4 ];
+
+            int outIndex = 0;
+            int i        = 0;
+
+            while ( ( i + 3 ) <= octetString.length ) {
+                // store the octets
+                bits24=( octetString [ i++ ] & 0xFF ) << 16;
+                bits24 |=( octetString [ i++ ] & 0xFF ) << 8;
+
+                bits6=( bits24 & 0x00FC0000 )>> 18;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = ( bits24 & 0x0003F000 ) >> 12;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = ( bits24 & 0x00000FC0 ) >> 6;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = ( bits24 & 0x0000003F );
+                out [ outIndex++ ] = alphabet [ bits6 ];
+            }
+
+            if ( octetString.length - i == 2 )
+            {
+                // store the octets
+                bits24  = ( octetString [ i     ] & 0xFF ) << 16;
+                bits24 |=( octetString [ i + 1 ] & 0xFF ) << 8;
+                bits6=( bits24 & 0x00FC0000 )>> 18;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = ( bits24 & 0x0003F000 ) >> 12;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = ( bits24 & 0x00000FC0 ) >> 6;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+
+                // padding
+                out [ outIndex++ ] = '=';
+            }
+            else if ( octetString.length - i == 1 )
+            {
+                // store the octets
+                bits24 = ( octetString [ i ] & 0xFF ) << 16;
+                bits6=( bits24 & 0x00FC0000 )>> 18;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = ( bits24 & 0x0003F000 ) >> 12;
+                out [ outIndex++ ] = alphabet [ bits6 ];
+
+                // padding
+                out [ outIndex++ ] = '=';
+                out [ outIndex++ ] = '=';
+            }
+
+            return new String ( out );
+        }
      }
-
-     public String  encode ( byte [ ]  octetString )
-     {
-       int  bits24;
-       int  bits6;
-
-       char [ ]  out
-         = new char [ ( ( octetString.length - 1 ) / 3 + 1 ) * 4 ];
-
-       int outIndex = 0;
-       int i        = 0;
-
-       while ( ( i + 3 ) <= octetString.length ) {
-       // store the octets 
-	 bits24=( octetString [ i++ ] & 0xFF ) << 16;
-         bits24 |=( octetString [ i++ ] & 0xFF ) << 8;
-
-         bits6=( bits24 & 0x00FC0000 )>> 18; 
-         out [ outIndex++ ] = alphabet [ bits6 ];
-         bits6 = ( bits24 & 0x0003F000 ) >> 12; 
-         out [ outIndex++ ] = alphabet [ bits6 ];
-         bits6 = ( bits24 & 0x00000FC0 ) >> 6; 
-         out [ outIndex++ ] = alphabet [ bits6 ];
-         bits6 = ( bits24 & 0x0000003F );
-         out [ outIndex++ ] = alphabet [ bits6 ]; 
-       }
-
-       if ( octetString.length - i == 2 )
-       {
-         // store the octets 
-         bits24  = ( octetString [ i     ] & 0xFF ) << 16;
-         bits24 |=( octetString [ i + 1 ] & 0xFF ) << 8;
-         bits6=( bits24 & 0x00FC0000 )>> 18;
-         out [ outIndex++ ] = alphabet [ bits6 ]; 
-         bits6 = ( bits24 & 0x0003F000 ) >> 12; 
-         out [ outIndex++ ] = alphabet [ bits6 ]; 
-         bits6 = ( bits24 & 0x00000FC0 ) >> 6; 
-         out [ outIndex++ ] = alphabet [ bits6 ];
-
-         // padding
-         out [ outIndex++ ] = '='; 
-       }
-       else if ( octetString.length - i == 1 )
-       {
-         // store the octets 
-         bits24 = ( octetString [ i ] & 0xFF ) << 16;
-         bits6=( bits24 & 0x00FC0000 )>> 18;
-         out [ outIndex++ ] = alphabet [ bits6 ];
-         bits6 = ( bits24 & 0x0003F000 ) >> 12; 
-         out [ outIndex++ ] = alphabet [ bits6 ];
-
-         // padding
-         out [ outIndex++ ] = '='; 
-         out [ outIndex++ ] = '='; 
-       }
-
-       return new String ( out );
-     }
-
-     }
-
-
 }

@@ -132,14 +132,14 @@ public class RuntimeConfigurable {
     public String getElementTag() {
         return elementTag;
     }
-    
-    
+
+
     /**
      * Configure the wrapped element and all children.
      */
     public void maybeConfigure(Project p) throws BuildException {
-	String id = null;
-	
+    String id = null;
+
         if (attributes != null) {
             ProjectHelper.configure(wrappedObject, attributes, p);
             id = attributes.getValue("id");

@@ -92,31 +92,31 @@ import org.apache.tools.ant.util.DOMElementWriter;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class XMLResultAggregator extends Task implements XMLConstants {
-    
+
     /** the list of all filesets, that should contains the xml to aggregate */
     protected Vector filesets = new Vector();
-    
+
     /** the name of the result file */
     protected String toFile;
-    
+
     /** the directory to write the file to */
     protected File toDir;
-    
+
     protected Vector transformers = new Vector();
-    
+
     /** the default directory: <tt>.</tt>. It is resolved from the project directory */
     public final static String DEFAULT_DIR = ".";
-    
+
     /** the default file name: <tt>TESTS-TestSuites.xml</tt> */
     public final static String DEFAULT_FILENAME = "TESTS-TestSuites.xml";
-    
-    
+
+
     public AggregateTransformer createReport(){
         AggregateTransformer transformer = new AggregateTransformer(this);
         transformers.addElement(transformer);
         return transformer;
     }
-    
+
     /**
      * Set the name of the file aggregating the results. It must be relative
      * from the <tt>todir</tt> attribute. If not set it will use {@link #DEFAULT_FILENAME}
@@ -126,7 +126,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     public void setTofile(String value){
         toFile = value;
     }
-    
+
     /**
      * Set the destination directory where the results should be written. If not
      * set if will use {@link #DEFAULT_DIR}. When given a relative directory
@@ -137,7 +137,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     public void setTodir(File value){
         toDir = value;
     }
-    
+
     /**
      * Add a new fileset containing the xml results to aggregate
      * @param    fs      the new fileset of xml results.
@@ -145,12 +145,12 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     public void addFileSet(FileSet fs) {
         filesets.addElement(fs);
     }
-    
+
     /**
      * Aggregate all testsuites into a single document and write it to the
      * specified directory and file.
-     * @throws	BuildException	thrown if there is a serious error while writing
-     *			the document.
+     * @throws  BuildException  thrown if there is a serious error while writing
+     *          the document.
      */
     public void execute() throws BuildException {
         Element rootElement = createDocument();
@@ -170,7 +170,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             transformer.transform();
         }
     }
-    
+
     /**
      * Get the full destination file where to write the result. It is made of
      * the <tt>todir</tt> and <tt>tofile</tt> attributes.
@@ -185,7 +185,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         }
         return new File(toDir, toFile);
     }
-    
+
     /**
      * Get all <code>.xml</code> files in the fileset.
      *
@@ -208,14 +208,14 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 }
             }
         }
-        
+
         File[] files = new File[v.size()];
         v.copyInto(files);
         return files;
     }
-    
+
     //----- from now, the methods are all related to DOM tree manipulation
-    
+
     /**
      * Write the DOM tree to a file.
      * @param doc the XML document to dump to disk.
@@ -234,12 +234,12 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             throw new IOException("Error while writing DOM content");
         }
     }
-    
+
     /**
-     * <p> Create a DOM tree. 
+     * <p> Create a DOM tree.
      * Has 'testsuites' as firstchild and aggregates all
      * testsuite results that exists in the base directory.
-     * @return	the root element of DOM tree that aggregates all testsuites.
+     * @return  the root element of DOM tree that aggregates all testsuites.
      */
     protected Element createDocument() {
         // create the dom tree
@@ -247,7 +247,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         Document doc = builder.newDocument();
         Element rootElement = doc.createElement(TESTSUITES);
         doc.appendChild(rootElement);
-        
+
         // get all files and add them to the document
         File[] files = getFiles();
         for (int i = 0; i < files.length; i++) {
@@ -278,7 +278,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         }
         return rootElement;
     }
-    
+
     /**
      * <p> Add a new testsuite node to the document.
      * The main difference is that it
@@ -294,17 +294,17 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     protected void addTestSuite(Element root, Element testsuite){
         String fullclassname = testsuite.getAttribute(ATTR_NAME);
         int pos = fullclassname.lastIndexOf('.');
-        
+
         // a missing . might imply no package at all. Don't get fooled.
         String pkgName = (pos == -1) ? "" : fullclassname.substring(0, pos);
         String classname = (pos == -1) ? fullclassname : fullclassname.substring(pos + 1);
         Element copy = (Element)DOMUtil.importNode(root, testsuite);
-        
+
         // modify the name attribute and set the package
         copy.setAttribute(ATTR_NAME, classname);
         copy.setAttribute(ATTR_PACKAGE, pkgName);
     }
-    
+
     /**
      * Create a new document builder. Will issue an <tt>ExceptionInitializerError</tt>
      * if something is going wrong. It is fatal anyway.
@@ -318,5 +318,5 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             throw new ExceptionInInitializerError(exc);
         }
     }
-    
+
 }

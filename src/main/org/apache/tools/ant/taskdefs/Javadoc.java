@@ -107,15 +107,15 @@ public class Javadoc extends Task {
     public class DocletParam {
         private String name;
         private String value;
-        
+
         public void setName(String name) {
             this.name = name;
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
         public void setValue(String value) {
             this.value = value;
         }
@@ -128,17 +128,17 @@ public class Javadoc extends Task {
     public class DocletInfo {
         private String name;
         private Path path;
-        
+
         private Vector params = new Vector();
 
         public void setName(String name) {
             this.name = name;
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
         public void setPath(Path path) {
             if (this.path == null) {
                 this.path = path;
@@ -150,7 +150,7 @@ public class Javadoc extends Task {
         public Path getPath() {
             return path;
         }
-        
+
         public Path createPath() {
             if (path == null) {
                 path = new Path(getProject());
@@ -168,10 +168,10 @@ public class Javadoc extends Task {
         public DocletParam createParam() {
             DocletParam param = new DocletParam();
             params.addElement(param);
-            
+
             return param;
         }
-        
+
         public Enumeration getParams() {
             return params.elements();
         }
@@ -219,7 +219,7 @@ public class Javadoc extends Task {
     }
 
     private Commandline cmd = new Commandline();
-    private static boolean javadoc1 = 
+    private static boolean javadoc1 =
         (Project.getJavaVersion() == Project.JAVA_1_1);
 
 
@@ -235,11 +235,11 @@ public class Javadoc extends Task {
                 cmd.createArgument().setValue(key);
                 cmd.createArgument().setValue(value);
             } else {
-                project.log(this, 
-                            "Warning: Leaving out empty argument '" + key + "'", 
+                project.log(this,
+                            "Warning: Leaving out empty argument '" + key + "'",
                             Project.MSG_WARN);
             }
-        } 
+        }
     }
 
     private void add11ArgIf(boolean b, String arg) {
@@ -294,7 +294,7 @@ public class Javadoc extends Task {
     /**
      * Sets whether default exclusions should be used or not.
      *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *                           should be used, "false"|"off"|"no" when they
      *                           shouldn't be used.
      */
@@ -313,7 +313,7 @@ public class Javadoc extends Task {
     public void setAdditionalparam(String add){
         cmd.createArgument().setLine(add);
     }
-    
+
     public void setSourcepath(Path src) {
         if (sourcePath == null) {
             sourcePath = src;
@@ -405,7 +405,7 @@ public class Javadoc extends Task {
         }
         doclet.setName(src);
     }
-    
+
     public void setDocletPath(Path src) {
         if (doclet == null) {
             doclet = new DocletInfo();
@@ -551,17 +551,17 @@ public class Javadoc extends Task {
         if (!javadoc1) {
             LinkArgument le = createLink();
             le.setOffline(true);
-            String linkOfflineError = "The linkoffline attribute must include a URL and " + 
+            String linkOfflineError = "The linkoffline attribute must include a URL and " +
                 "a package-list file location separated by a space";
             if (src.trim().length() == 0) {
                 throw new BuildException(linkOfflineError);
-            }                
+            }
             StringTokenizer tok = new StringTokenizer(src, " ", false);
             le.setHref(tok.nextToken());
 
             if (!tok.hasMoreTokens()) {
                 throw new BuildException(linkOfflineError);
-            }                                        
+            }
             le.setPackagelistLoc(project.resolveFile(tok.nextToken()));
         }
     }
@@ -613,46 +613,46 @@ public class Javadoc extends Task {
     public void setPackageList(String src) {
         packageList = src;
     }
-    
+
     public LinkArgument createLink() {
         LinkArgument la = new LinkArgument();
         links.addElement(la);
         return la;
     }
-    
+
     public class LinkArgument {
         private String href;
         private boolean offline = false;
         private File packagelistLoc;
-        
+
         public LinkArgument() {
         }
 
         public void setHref(String hr) {
             href = hr;
         }
-        
+
         public String getHref() {
             return href;
         }
-        
+
         public void setPackagelistLoc(File src) {
             packagelistLoc = src;
         }
-        
+
         public File getPackagelistLoc() {
             return packagelistLoc;
         }
-        
+
         public void setOffline(boolean offline) {
             this.offline = offline;
         }
-        
+
         public boolean isLinkOffline() {
             return offline;
         }
     }
-    
+
     public GroupArgument createGroup() {
         GroupArgument ga = new GroupArgument();
         groups.addElement(ga);
@@ -703,7 +703,7 @@ public class Javadoc extends Task {
             return p.toString();
         }
     }
-    
+
     public void setCharset(String src) {
         this.add12ArgIfNotEmpty("-charset", src);
     }
@@ -778,7 +778,7 @@ public class Javadoc extends Task {
                 throw new BuildException(msg);
             }
         }
-        
+
 
 // --------------------------------- javadoc2 arguments for default doclet
 
@@ -789,7 +789,7 @@ public class Javadoc extends Task {
                 if (doclet.getName() == null) {
                     throw new BuildException("The doclet name must be specified.", location);
                 }
-                else {                
+                else {
                     toExecute.createArgument().setValue("-doclet");
                     toExecute.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
@@ -801,28 +801,28 @@ public class Javadoc extends Task {
                         if (param.getName() == null) {
                             throw new BuildException("Doclet parameters must have a name");
                         }
-                        
+
                         toExecute.createArgument().setValue(param.getName());
                         if (param.getValue() != null) {
                             toExecute.createArgument().setValue(param.getValue());
                         }
-                    }                        
+                    }
                 }
-            } 
+            }
             if (bootclasspath != null) {
                 toExecute.createArgument().setValue("-bootclasspath");
                 toExecute.createArgument().setPath(bootclasspath);
             }
-            
+
             // add the links arguments
             if (links.size() != 0) {
                 for (Enumeration e = links.elements(); e.hasMoreElements(); ) {
                     LinkArgument la = (LinkArgument)e.nextElement();
-                
+
                     if (la.getHref() == null) {
                         throw new BuildException("Links must provide the URL to the external class documentation.");
                     }
-                
+
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {
@@ -836,7 +836,7 @@ public class Javadoc extends Task {
                             toExecute.createArgument().setValue(packageListLocation.getAbsolutePath());
                         }
                         else {
-                            log("Warning: No package list was found at " + packageListLocation, 
+                            log("Warning: No package list was found at " + packageListLocation,
                                 Project.MSG_VERBOSE);
                         }
                     }
@@ -845,8 +845,8 @@ public class Javadoc extends Task {
                         toExecute.createArgument().setValue(la.getHref());
                     }
                 }
-            }                                   
-                                                
+            }
+
             // add the single group arguments
             // Javadoc 1.2 rules:
             //   Multiple -group args allowed.
@@ -872,7 +872,7 @@ public class Javadoc extends Task {
                     }
                 }
             }
-            
+
             // add the group arguments
             if (groups.size() != 0) {
                 for (Enumeration e = groups.elements(); e.hasMoreElements(); ) {
@@ -929,10 +929,10 @@ public class Javadoc extends Task {
                         tmpList = fileUtils.createTempFile("javadoc", "", null);
                         toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
                     }
-                    srcListWriter = new PrintWriter(new FileWriter(tmpList.getAbsolutePath(), 
+                    srcListWriter = new PrintWriter(new FileWriter(tmpList.getAbsolutePath(),
                                                                    true));
                 }
-            
+
                 Enumeration enum = sourceFiles.elements();
                 while (enum.hasMoreElements()) {
                     SourceFile sf = (SourceFile) enum.nextElement();
@@ -945,7 +945,7 @@ public class Javadoc extends Task {
                 }
 
             } catch (IOException e) {
-                throw new BuildException("Error creating temporary file", 
+                throw new BuildException("Error creating temporary file",
                                          e, location);
             } finally {
                 if (srcListWriter != null) {
@@ -965,7 +965,7 @@ public class Javadoc extends Task {
         JavadocOutputStream err = new JavadocOutputStream(Project.MSG_WARN);
         Execute exe = new Execute(new PumpStreamHandler(out, err));
         exe.setAntRun(project);
-        
+
         /*
          * No reason to change the working directory as all filenames and
          * path components have been resolved already.
@@ -987,7 +987,7 @@ public class Javadoc extends Task {
                 tmpList.delete();
                 tmpList = null;
             }
-            
+
             out.logFlush();
             err.logFlush();
             try {
@@ -1002,7 +1002,7 @@ public class Javadoc extends Task {
      * with the packages found in that path subdirs matching one of the given
      * patterns.
      */
-    private void evaluatePackages(Commandline toExecute, Path sourcePath, 
+    private void evaluatePackages(Commandline toExecute, Path sourcePath,
                                   Vector packages, Vector excludePackages) {
         log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         StringBuffer msg = new StringBuffer("Packages = ");
@@ -1050,10 +1050,10 @@ public class Javadoc extends Task {
             if (pkg.endsWith("*")) {
                 pkg += "*";
             }
-            
+
             fs.createExclude().setName(pkg);
         }
-        
+
         PrintWriter packageListWriter = null;
         try {
             if (useExternalFile) {
@@ -1066,10 +1066,10 @@ public class Javadoc extends Task {
             for (int j=0; j<list.length; j++) {
                 File source = project.resolveFile(list[j]);
                 fs.setDir(source);
-                
+
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] packageDirs = ds.getIncludedDirectories();
-                
+
                 for (int i=0; i<packageDirs.length; i++) {
                     File pd = new File(source, packageDirs[i]);
                     String[] files = pd.list(new FilenameFilter () {
@@ -1080,7 +1080,7 @@ public class Javadoc extends Task {
                                 return false;        // ignore dirs
                             }
                         });
-                    
+
                     if (files.length > 0) {
                         String pkgDir = packageDirs[i].replace('/','.').replace('\\','.');
                         if (!addedPackages.contains(pkgDir)) {
@@ -1095,7 +1095,7 @@ public class Javadoc extends Task {
                 }
             }
         } catch (IOException ioex) {
-            throw new BuildException("Error creating temporary file", 
+            throw new BuildException("Error creating temporary file",
                                      ioex, location);
         } finally {
             if (packageListWriter != null) {
@@ -1133,7 +1133,7 @@ public class Javadoc extends Task {
             }
         }
 
-        
+
         protected void logFlush() {
             if (queuedLine != null) {
                 super.processLine(queuedLine, Project.MSG_VERBOSE);
@@ -1146,15 +1146,15 @@ public class Javadoc extends Task {
      * Convenience method to expand properties.
      */
     protected String expand(String content) {
-        return ProjectHelper.replaceProperties(project, content, 
+        return ProjectHelper.replaceProperties(project, content,
                                                project.getProperties());
     }
 
     private String getJavadocExecutableName()
     {
-        // This is the most common extension case - exe for windows and OS/2, 
+        // This is the most common extension case - exe for windows and OS/2,
         // nothing for *nix.
-	String extension =  Os.isFamily("dos") ? ".exe" : "";
+        String extension =  Os.isFamily("dos") ? ".exe" : "";
 
         // Look for javadoc in the java.home/../bin directory.  Unfortunately
         // on Windows java.home doesn't always refer to the correct location,

@@ -153,7 +153,7 @@ public class JDependTask extends Task {
      * @see #setFork(boolean)
      */
     public void setJvm(String value) {
-		_jvm = value;
+        _jvm = value;
 
     }
 
@@ -230,18 +230,18 @@ public class JDependTask extends Task {
 
     public void setFormat(FormatAttribute ea)
     {
-		format = ea.getValue();
-	}
+        format = ea.getValue();
+    }
 
-	public static class FormatAttribute extends EnumeratedAttribute
-	{
-		private String [] formats = new String[]{"xml","text"};
+    public static class FormatAttribute extends EnumeratedAttribute
+    {
+        private String [] formats = new String[]{"xml","text"};
 
-		public String[] getValues()
-		{
-			return formats;
-		}
-	}
+        public String[] getValues()
+        {
+            return formats;
+        }
+    }
 
 
     /**
@@ -255,16 +255,16 @@ public class JDependTask extends Task {
 
     public void execute() throws BuildException {
 
-		CommandlineJava commandline = new CommandlineJava();
+        CommandlineJava commandline = new CommandlineJava();
 
-		if("text".equals(format))
-			commandline.setClassname("jdepend.textui.JDepend");
-		else
-		if("xml".equals(format))
-			commandline.setClassname("jdepend.xmlui.JDepend");
+        if("text".equals(format))
+            commandline.setClassname("jdepend.textui.JDepend");
+        else
+        if("xml".equals(format))
+            commandline.setClassname("jdepend.xmlui.JDepend");
 
-		if(_jvm!=null)
-			commandline.setVm(_jvm);
+        if(_jvm!=null)
+            commandline.setVm(_jvm);
 
         if (getSourcespath() == null)
             throw new BuildException("Missing Sourcepath required argument");
@@ -311,9 +311,9 @@ public class JDependTask extends Task {
         jdepend.textui.JDepend jdepend;
 
         if("xml".equals(format))
-        	jdepend = new jdepend.xmlui.JDepend();
+            jdepend = new jdepend.xmlui.JDepend();
         else
-        	jdepend = new jdepend.textui.JDepend();
+            jdepend = new jdepend.textui.JDepend();
 
         if (getOutputFile() != null) {
             FileWriter fw;

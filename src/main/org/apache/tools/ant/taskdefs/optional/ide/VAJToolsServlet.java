@@ -69,7 +69,7 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Abstract base class to provide common services for the
- * VAJ tool API servlets 
+ * VAJ tool API servlets
  *
  * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
@@ -88,7 +88,7 @@ public abstract class VAJToolsServlet extends HttpServlet {
                         if ( nlPos == -1 ) {
                             nlPos = msg.length();
                         }
-                        response.getWriter().println( Integer.toString(level) 
+                        response.getWriter().println( Integer.toString(level)
                                                       + " " + msg.substring( i, nlPos ));
                         i = nlPos + 1;
                     }
@@ -99,7 +99,7 @@ public abstract class VAJToolsServlet extends HttpServlet {
             }
         }
     }
-	
+
     // constants for servlet param names
     public final static String DIR_PARAM = "dir";
     public final static String INCLUDE_PARAM = "include";
@@ -124,17 +124,17 @@ public abstract class VAJToolsServlet extends HttpServlet {
     /**
      * Execute the request by calling the appropriate
      * VAJ tool API methods. This method must be implemented
-     * by the concrete servlets 
+     * by the concrete servlets
      */
     protected abstract void executeRequest();
-	
+
     /**
      * Respond to a HTTP request. This method initializes
-     * the servlet and handles errors. 
-     * The real work is done in the abstract method executeRequest() 
+     * the servlet and handles errors.
+     * The real work is done in the abstract method executeRequest()
      */
     public void doGet(HttpServletRequest req, HttpServletResponse res)
-	throws ServletException, IOException {
+        throws ServletException, IOException {
         try {
             response = res;
             request = req;
@@ -148,14 +148,14 @@ public abstract class VAJToolsServlet extends HttpServlet {
                     StringWriter sw = new StringWriter();
                     e.printStackTrace(new PrintWriter(sw));
                     String trace = new String( sw.getBuffer() );
-                    util.log("Program error in " + this.getClass().getName() 
+                    util.log("Program error in " + this.getClass().getName()
                              + ":\n" + trace, VAJUtil.MSG_ERR);
                 }
             } catch( Throwable t ) {
                 t.printStackTrace();
             } finally {
                 if ( ! (e instanceof BuildException) )
-                    {	
+                    {
                         throw new ServletException( e.getMessage() );
                     }
             }
@@ -171,7 +171,7 @@ public abstract class VAJToolsServlet extends HttpServlet {
             util = new VAJLocalServletUtil();
         }
     }
-	
+
     /**
      * Get the VAJUtil implementation
      */
@@ -224,5 +224,5 @@ public abstract class VAJToolsServlet extends HttpServlet {
     protected boolean toBoolean(String string) {
         String lower = string.toLowerCase();
         return (lower.equals("yes") || lower.equals("true") || lower.equals("ok"));
-    }	
+    }
 }

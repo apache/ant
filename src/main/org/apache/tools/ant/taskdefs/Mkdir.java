@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -50,7 +50,7 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- */ 
+ */
 
 package org.apache.tools.ant.taskdefs;
 
@@ -68,7 +68,7 @@ import java.io.File;
 public class Mkdir extends Task {
 
     private File dir;
-    
+
     public void execute() throws BuildException {
         if (dir == null) {
             throw new BuildException("dir attribute is required", location);
@@ -77,19 +77,19 @@ public class Mkdir extends Task {
         if (dir.isFile()) {
             throw new BuildException("Unable to create directory as a file already exists with that name: " + dir.getAbsolutePath());
         }
-        
+
         if (!dir.exists()) {
-	    boolean result = dir.mkdirs();
-	    if (result == false) {
-		String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
-		    "successful for an unknown reason";
-		throw new BuildException(msg, location);
-	    }
-	    log("Created dir: " + dir.getAbsolutePath());
-	}
+            boolean result = dir.mkdirs();
+            if (result == false) {
+                String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
+                    "successful for an unknown reason";
+                throw new BuildException(msg, location);
+            }
+            log("Created dir: " + dir.getAbsolutePath());
+        }
     }
 
     public void setDir(File dir) {
-	this.dir = dir;
+        this.dir = dir;
     }
 }

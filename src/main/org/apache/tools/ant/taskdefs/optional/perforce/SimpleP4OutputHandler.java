@@ -63,30 +63,30 @@ import org.apache.tools.ant.Project;
 
 public class SimpleP4OutputHandler extends P4HandlerAdapter {
 
-	P4Base parent;
-	public SimpleP4OutputHandler(P4Base parent) {
-		this.parent = parent;
-	}
-	
-	public void process(String line) throws BuildException {
-		if(parent.util.match("/^exit/",line)) return;
+    P4Base parent;
+    public SimpleP4OutputHandler(P4Base parent) {
+        this.parent = parent;
+    }
 
-		//Throw exception on errors (except up-to-date)
-		//p4 -s is unpredicatable. For example a server down
-		//does not return error: markup
-		//
-		//Some forms producing commands (p4 -s change -o) do tag the output
-		//others don't.....
-		//Others mark errors as info, for example edit a file
-		//which is already open for edit.....
-		//Just look for error: - catches most things....
+    public void process(String line) throws BuildException {
+        if(parent.util.match("/^exit/",line)) return;
 
-		if(parent.util.match("/error:/", line) && !parent.util.match("/up-to-date/", line)) {
-			throw new BuildException(line);
-	
-		} 
+        //Throw exception on errors (except up-to-date)
+        //p4 -s is unpredicatable. For example a server down
+        //does not return error: markup
+        //
+        //Some forms producing commands (p4 -s change -o) do tag the output
+        //others don't.....
+        //Others mark errors as info, for example edit a file
+        //which is already open for edit.....
+        //Just look for error: - catches most things....
 
-		parent.log(parent.util.substitute("s/^.*: //",line), Project.MSG_INFO);
-		
-	}
+        if(parent.util.match("/error:/", line) && !parent.util.match("/up-to-date/", line)) {
+            throw new BuildException(line);
+
+        }
+
+        parent.log(parent.util.substitute("s/^.*: //",line), Project.MSG_INFO);
+
+    }
 }

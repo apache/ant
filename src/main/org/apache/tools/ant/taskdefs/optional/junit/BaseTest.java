@@ -60,7 +60,7 @@ import java.util.Vector;
 /**
  * Baseclass for BatchTest and JUnitTest.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public abstract class BaseTest {
@@ -116,12 +116,12 @@ public abstract class BaseTest {
      * Sets the destination directory.
      */
     public void setTodir(File destDir) {
-        this.destDir = destDir; 
+        this.destDir = destDir;
     }
 
     /**
      * @return the destination directory as an absolute path if it exists
-     *			otherwise return <tt>null</tt>
+     *         otherwise return <tt>null</tt>
      */
     public String getTodir(){
         if (destDir != null){
@@ -133,15 +133,15 @@ public abstract class BaseTest {
     public java.lang.String getFailureProperty() {
         return failureProperty;
     }
-    
+
     public void setFailureProperty(String failureProperty) {
         this.failureProperty = failureProperty;
     }
-    
+
     public java.lang.String getErrorProperty() {
         return errorProperty;
     }
-    
+
     public void setErrorProperty(String errorProperty) {
         this.errorProperty = errorProperty;
     }

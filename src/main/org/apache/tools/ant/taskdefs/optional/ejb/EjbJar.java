@@ -89,7 +89,7 @@ import org.apache.tools.ant.types.FileSet;
  * </p>
  *
  * <p>Functionality is currently provided for standard EJB1.1 jars and Weblogic
- * 5.1 jars. The weblogic deployment descriptors, used in constructing the 
+ * 5.1 jars. The weblogic deployment descriptors, used in constructing the
  * Weblogic jar, are located based on a simple naming convention. The name of the
  * standard deployment descriptor is taken upto the first instance of a String,
  * specified by the attribute baseNameTerminator, and then the regular Weblogic
@@ -106,23 +106,23 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:tfennell@sapient.com">Tim Fennell</a>
  */
 public class EjbJar extends MatchingTask {
-    
+
     public static class DTDLocation {
         private String publicId = null;
         private String location = null;
-        
+
         public void setPublicId(String publicId) {
             this.publicId = publicId;
         }
-        
+
         public void setLocation(String location) {
             this.location = location;
         }
-        
+
         public String getPublicId() {
             return publicId;
         }
-        
+
         public String getLocation() {
             return location;
         }
@@ -138,7 +138,7 @@ public class EjbJar extends MatchingTask {
 
         /** Stores a handle to the directory under which to search for deployment descriptors */
         public File descriptorDir;
-        
+
         /** Instance variable that marks the end of the 'basename' */
         public String baseNameTerminator = "-";
 
@@ -150,28 +150,28 @@ public class EjbJar extends MatchingTask {
          * of a flat directory as the destination for the jar files.
          */
         public boolean flatDestDir = false;
-        
+
         /**
          * The classpath to use when loading classes
          */
         public Path classpath;
-    
+
         /**
          * A Fileset of support classes
          */
         public List supportFileSets = new ArrayList();
-        
+
         /**
          * The list of configured DTD locations
          */
         public ArrayList dtdLocations = new ArrayList();
-        
+
         /**
          * The naming scheme used to determine the generated jar name
          * from the descriptor information
          */
         public NamingScheme namingScheme;
-        
+
         /**
          * The Manifest file
          */
@@ -196,7 +196,7 @@ public class EjbJar extends MatchingTask {
         deployment descriptor tools are provided. Normally each deployment tool
         will specify the desitination dir itself. */
     private File destDir;
- 
+
     /** Instance variable that stores the suffix for the generated jarfile. */
     private String genericJarSuffix = "-generic.jar";
 
@@ -235,7 +235,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Create a nested element used to configure a deployment tool for iPlanet
-	 * Application Server.
+     * Application Server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -279,7 +279,7 @@ public class EjbJar extends MatchingTask {
      *
      * This classpath is used to locate the super classes and interfaces
      * of the classes that will make up the EJB jar.
-     * 
+     *
      * @return the path to be configured.
      */
     public Path createClasspath() {
@@ -296,7 +296,7 @@ public class EjbJar extends MatchingTask {
     public DTDLocation createDTD() {
         DTDLocation dtdLocation = new DTDLocation();
         config.dtdLocations.add(dtdLocation);
-        
+
         return dtdLocation;
     }
 
@@ -310,7 +310,7 @@ public class EjbJar extends MatchingTask {
         config.supportFileSets.add(supportFileSet);
         return supportFileSet;
     }
-    
+
 
      /**
       * Set the Manifest file to use when jarring.
@@ -327,7 +327,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Set the srcdir attribute. The source directory is the directory that contains
-     * the classes that will be added to the EJB jar. Typically this will include the 
+     * the classes that will be added to the EJB jar. Typically this will include the
      * home and remote interfaces and the bean class.
      *
      * @param inDir the source directory.
@@ -342,7 +342,7 @@ public class EjbJar extends MatchingTask {
      * The descriptor directory contains the EJB deployment descriptors. These are XML
      * files that declare the properties of a bean in a particular deployment scenario. Such
      * properties include, for example, the transactional nature of the bean and the security
-     * access control to the bean's methods.  
+     * access control to the bean's methods.
      *
      * @param inDir the directory containing the deployment descriptors.
      */
@@ -352,8 +352,8 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Set the base name of the EJB jar that is to be created if it is not to be
-     * determined from the name of the deployment descriptor files. 
-     * 
+     * determined from the name of the deployment descriptor files.
+     *
      * @param inValue the basename that will be used when writing the jar file containing
      * the EJB
      */
@@ -364,9 +364,9 @@ public class EjbJar extends MatchingTask {
             config.namingScheme.setValue(NamingScheme.BASEJARNAME);
         }
         else if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)) {
-            throw new BuildException("The basejarname attribute is not compatible with the " + 
+            throw new BuildException("The basejarname attribute is not compatible with the " +
                                      config.namingScheme.getValue() + " naming scheme");
-        }                                     
+        }
     }
 
     /**
@@ -379,22 +379,22 @@ public class EjbJar extends MatchingTask {
         config.namingScheme = namingScheme;
         if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
             config.baseJarName != null) {
-            throw new BuildException("The basejarname attribute is not compatible with the " + 
+            throw new BuildException("The basejarname attribute is not compatible with the " +
                                      config.namingScheme.getValue() + " naming scheme");
-        }                                     
+        }
     }
-    
+
 
     /**
      * Set the destination directory.
-     * 
+     *
      * The EJB jar files will be written into this directory. The jar files that exist in
-     * this directory are also used when determining if the contents of the jar file 
+     * this directory are also used when determining if the contents of the jar file
      * have changed.
      *
      * Note that this parameter is only used if no deployment tools are specified. Typically
      * each deployment tool will specify its own destination directory.
-     * 
+     *
      * @param inFile the destination directory.
      */
     public void setDestdir(File inDir) {
@@ -402,7 +402,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Set the classpath to use when resolving classes for inclusion in the jar. 
+     * Set the classpath to use when resolving classes for inclusion in the jar.
      *
      * @param classpath the classpath to use.
      */
@@ -413,26 +413,26 @@ public class EjbJar extends MatchingTask {
     /**
      * Set the flat dest dir flag.
      *
-     * This flag controls whether the destination jars are written out in the 
-     * destination directory with the same hierarchal structure from which 
-     * the deployment descriptors have been read. If this is set to true the 
+     * This flag controls whether the destination jars are written out in the
+     * destination directory with the same hierarchal structure from which
+     * the deployment descriptors have been read. If this is set to true the
      * generated EJB jars are written into the root of the destination directory,
      * otherwise they are written out in the same relative position as the deployment
      * descriptors in the descriptor directory.
-     * 
+     *
      * @param inValue the new value of the flatdestdir flag.
      */
     public void setFlatdestdir(boolean inValue) {
         config.flatDestDir = inValue;
     }
-     
+
     /**
      * Set the suffix for the generated jar file.
      * When generic jars are generated, they have a suffix which is appended to the
      * the bean name to create the name of the jar file. Note that this suffix includes
-     * the extension fo te jar file and should therefore end with an appropriate 
+     * the extension fo te jar file and should therefore end with an appropriate
      * extension such as .jar or .ear
-     * 
+     *
      * @param inString the string to use as the suffix.
      */
     public void setGenericjarsuffix(String inString) {
@@ -443,7 +443,7 @@ public class EjbJar extends MatchingTask {
      * Set the baseNameTerminator.
      *
      * The basename terminator is the string which terminates the bean name. The convention
-     * used by this task is that bean descriptors are named as the BeanName with some suffix. 
+     * used by this task is that bean descriptors are named as the BeanName with some suffix.
      * The baseNameTerminator string separates the bean name and the suffix and is used to
      * determine the bean name.
      *
@@ -468,19 +468,19 @@ public class EjbJar extends MatchingTask {
         }
         else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
                  config.baseJarName == null) {
-            throw new BuildException("The basejarname attribute must be specified " + 
+            throw new BuildException("The basejarname attribute must be specified " +
                                      "with the basejarname naming scheme");
         }
-    }        
+    }
 
     /**
      * Invoked by Ant after the task is prepared, when it is ready to execute
-     * this task.  
+     * this task.
      *
-     * This will configure all of the nested deployment tools to allow them to 
-     * process the jar. If no deployment tools have been configured a generic 
+     * This will configure all of the nested deployment tools to allow them to
+     * process the jar. If no deployment tools have been configured a generic
      * tool is created to handle the jar.
-     * 
+     *
      * A parser is configured and then each descriptor found is passed to all
      * the deployment tool elements for processing.
      *
@@ -490,7 +490,7 @@ public class EjbJar extends MatchingTask {
      */
     public void execute() throws BuildException {
         validateConfig();
-        
+
         if (deploymentTools.size() == 0) {
             GenericDeploymentTool genericTool = new GenericDeploymentTool();
             genericTool.setTask(this);
@@ -498,27 +498,27 @@ public class EjbJar extends MatchingTask {
             genericTool.setGenericJarSuffix(genericJarSuffix);
             deploymentTools.add(genericTool);
         }
-        
+
         for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
             EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
             tool.configure(config);
             tool.validateConfigured();
         }
-        
+
         try {
             // Create the parser using whatever parser the system dictates
             SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
             saxParserFactory.setValidating(true);
             SAXParser saxParser = saxParserFactory.newSAXParser();
-    
-                        
+
+
             DirectoryScanner ds = getDirectoryScanner(config.descriptorDir);
             ds.scan();
             String[] files = ds.getIncludedFiles();
-    
+
             log(files.length + " deployment descriptors located.",
                 Project.MSG_VERBOSE);
-            
+
             // Loop through the files. Each file represents one deployment
             // descriptor, and hence one bean in our model.
             for (int index = 0; index < files.length; ++index) {
@@ -527,7 +527,7 @@ public class EjbJar extends MatchingTask {
                     EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
                     tool.processDescriptor(files[index], saxParser);
                 }
-            }    
+            }
         }
         catch (SAXException se) {
             String msg = "SAXException while creating parser."

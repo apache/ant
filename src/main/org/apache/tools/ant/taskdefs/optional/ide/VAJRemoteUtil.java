@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -90,7 +90,7 @@ class VAJRemoteUtil implements VAJUtil{
     /**
      * export the array of Packages
      */
-    public void exportPackages(File destDir, 
+    public void exportPackages(File destDir,
                                String[] includePatterns, String[] excludePatterns,
                                boolean exportClasses, boolean exportDebugInfo, boolean exportResources,
                                boolean exportSources, boolean useDefaultExcludes, boolean overwrite ) {
@@ -112,13 +112,13 @@ class VAJRemoteUtil implements VAJUtil{
      * Do the import.
      */
     public void importFiles(
-                            String importProject, File srcDir, 
-                            String[] includePatterns, String[] excludePatterns, 
-                            boolean importClasses, boolean importResources, 
+                            String importProject, File srcDir,
+                            String[] includePatterns, String[] excludePatterns,
+                            boolean importClasses, boolean importResources,
                             boolean importSources, boolean useDefaultExcludes) {
         try {
             String request = "http://" + remoteServer + "/servlet/vajimport?"
-                + VAJImportServlet.PROJECT_NAME_PARAM + "=" 
+                + VAJImportServlet.PROJECT_NAME_PARAM + "="
                 + importProject + "&"
                 + assembleImportExportParams( srcDir,
                                               includePatterns, excludePatterns,
@@ -128,7 +128,7 @@ class VAJRemoteUtil implements VAJUtil{
         } catch (Exception ex) {
             throw new BuildException(ex);
         }
-			
+
     }
 
     /**
@@ -137,11 +137,11 @@ class VAJRemoteUtil implements VAJUtil{
      */
     private String assembleImportExportParams(
                                               File dir,
-                                              String[] includePatterns, String[] excludePatterns, 
-                                              boolean includeClasses, boolean includeResources, 
+                                              String[] includePatterns, String[] excludePatterns,
+                                              boolean includeClasses, boolean includeResources,
                                               boolean includeSources, boolean useDefaultExcludes) {
         String result =
-            VAJToolsServlet.DIR_PARAM + "=" 
+            VAJToolsServlet.DIR_PARAM + "="
             + dir.getAbsolutePath().replace('\\', '/') + "&"
             + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
             + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
@@ -156,14 +156,14 @@ class VAJRemoteUtil implements VAJUtil{
         }
         if ( excludePatterns != null ) {
             for ( int i = 0; i < excludePatterns.length; i++ ){
-                result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "=" 
+                result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "="
                     + excludePatterns[i].replace(' ', '+').replace('\\', '/');
             }
         }
 
         return result;
     }
-			
+
     /**
      * Load specified projects.
      */
@@ -173,8 +173,8 @@ class VAJRemoteUtil implements VAJUtil{
             String delimiter = "";
             for ( Enumeration e = projectDescriptions.elements(); e.hasMoreElements(); ){
                 VAJProjectDescription pd = (VAJProjectDescription)e.nextElement();
-                request = request 
-                    + delimiter + VAJLoadServlet.PROJECT_NAME_PARAM 
+                request = request
+                    + delimiter + VAJLoadServlet.PROJECT_NAME_PARAM
                     + "=" + pd.getName().replace(' ', '+')
                     + "&" + VAJLoadServlet.VERSION_PARAM
                     + "=" + pd.getVersion().replace(' ', '+');
@@ -201,10 +201,10 @@ class VAJRemoteUtil implements VAJUtil{
         boolean requestFailed = false;
         try {
             log("Request: " + request, MSG_DEBUG);
-	
+
             //must be HTTP connection
             URL requestUrl = new URL( request );
-            HttpURLConnection connection = 
+            HttpURLConnection connection =
                 (HttpURLConnection) requestUrl.openConnection();
 
             InputStream is = null;
@@ -238,7 +238,7 @@ class VAJRemoteUtil implements VAJUtil{
                 log( line.substring(2), level );
                 line = br.readLine();
             }
-		
+
         } catch (IOException ex) {
             log("Error sending tool request to VAJ" + ex, MSG_ERR);
             throw new BuildException("Couldn't execute " + request );

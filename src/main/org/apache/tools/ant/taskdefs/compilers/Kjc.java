@@ -80,9 +80,9 @@ public class Kjc extends DefaultCompilerAdapter {
             Class c = Class.forName("at.dms.kjc.Main");
 
             // Call the compile() method
-            Method compile = c.getMethod("compile", 
+            Method compile = c.getMethod("compile",
                                          new Class [] { String [].class });
-            Boolean ok = (Boolean)compile.invoke(null, 
+            Boolean ok = (Boolean)compile.invoke(null,
                                                  new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         }
@@ -105,8 +105,8 @@ public class Kjc extends DefaultCompilerAdapter {
      */
     protected Commandline setupKjcCommand() {
         Commandline cmd = new Commandline();
-	
-	// generate classpath, because kjc does't support sourcepath.
+
+        // generate classpath, because kjc does't support sourcepath.
         Path classpath = getCompileClasspath();
 
         if (deprecation == true) {
@@ -118,26 +118,26 @@ public class Kjc extends DefaultCompilerAdapter {
             cmd.createArgument().setFile(destDir);
         }
 
-        // generate the clsspath 
+        // generate the clsspath
         cmd.createArgument().setValue("-classpath");
 
-	Path cp = new Path(project);
+    Path cp = new Path(project);
 
-	// kjc don't have bootclasspath option.
-	if (bootclasspath != null) {
+    // kjc don't have bootclasspath option.
+    if (bootclasspath != null) {
             cp.append(bootclasspath);
-	}
+    }
 
-	if (extdirs != null) {
+    if (extdirs != null) {
             cp.addExtdirs(extdirs);
-	}
+    }
 
-	cp.append(classpath);
-	cp.append(src);
+    cp.append(classpath);
+    cp.append(src);
 
-	cmd.createArgument().setPath(cp);
+    cmd.createArgument().setPath(cp);
 
-	// kjc-1.5A doesn't support -encoding option now.
+    // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
         if (encoding != null) {
             cmd.createArgument().setValue("-encoding");

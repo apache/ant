@@ -134,7 +134,7 @@ public class Javac extends MatchingTask {
 
     private String source;
     private String debugLevel;
-    
+
     /**
      * Get the value of debugLevel.
      * @return value of debugLevel.
@@ -158,7 +158,7 @@ public class Javac extends MatchingTask {
     public String getSource() {
         return source;
     }
-    
+
     /**
      * Set the value of source.
      * @param v  Value to assign to source.
@@ -500,7 +500,7 @@ public class Javac extends MatchingTask {
      * Is this a forked invocation of JDK's javac?
      */
     public boolean isForkedJavac() {
-        return !"false".equals(fork) || 
+        return !"false".equals(fork) ||
             "extJavac".equals(project.getProperty("build.compiler"));
     }
 
@@ -534,7 +534,7 @@ public class Javac extends MatchingTask {
      * Adds an implementation specific command line argument.
      */
     public ImplementationSpecificArgument createCompilerArg() {
-        ImplementationSpecificArgument arg = 
+        ImplementationSpecificArgument arg =
             new ImplementationSpecificArgument();
         implementationSpecificArgs.addElement(arg);
         return arg;
@@ -546,10 +546,10 @@ public class Javac extends MatchingTask {
      */
     public String[] getCurrentCompilerArgs() {
         Vector args = new Vector();
-        for (Enumeration enum = implementationSpecificArgs.elements(); 
+        for (Enumeration enum = implementationSpecificArgs.elements();
              enum.hasMoreElements();
              ) {
-            String[] curr = 
+            String[] curr =
                 ((ImplementationSpecificArgument) enum.nextElement()).getParts();
             for (int i=0; i<curr.length; i++) {
                 args.addElement(curr[i]);
@@ -666,25 +666,25 @@ public class Javac extends MatchingTask {
     }
 
     protected String getSystemJavac() {
-	// This is the most common extension case - exe for windows and OS/2, 
+        // This is the most common extension case - exe for windows and OS/2,
         // nothing for *nix.
-	String extension =  Os.isFamily("dos") ? ".exe" : "";
+        String extension =  Os.isFamily("dos") ? ".exe" : "";
 
-	// Look for java in the java.home/../bin directory.  Unfortunately
-	// on Windows java.home doesn't always refer to the correct location, 
-	// so we need to fall back to assuming java is somewhere on the
-	// PATH.
-	java.io.File jExecutable = 
+        // Look for java in the java.home/../bin directory.  Unfortunately
+        // on Windows java.home doesn't always refer to the correct location,
+        // so we need to fall back to assuming java is somewhere on the
+        // PATH.
+        java.io.File jExecutable =
             new java.io.File(System.getProperty("java.home") +
                              "/../bin/javac" + extension );
 
-	if (jExecutable.exists() && !Os.isFamily("netware")) {
-	    return jExecutable.getAbsolutePath();
-	} else {
-	    return "javac";
-	}
+        if (jExecutable.exists() && !Os.isFamily("netware")) {
+            return jExecutable.getAbsolutePath();
+        } else {
+            return "javac";
+        }
     }
-    
+
     private String determineCompiler() {
         String compiler = project.getProperty("build.compiler");
 

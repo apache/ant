@@ -137,32 +137,32 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         AudioInputStream audioInputStream = null;
 
 
-		try {
-			audioInputStream = AudioSystem.getAudioInputStream(file);
-		}
-		catch (UnsupportedAudioFileException uafe) {
-			project.log("Audio format is not yet supported: "+uafe.getMessage());
-		}
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(file);
+        }
+        catch (UnsupportedAudioFileException uafe) {
+            project.log("Audio format is not yet supported: "+uafe.getMessage());
+        }
         catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
-		if (audioInputStream != null) {
-			AudioFormat	format = audioInputStream.getFormat();
-			DataLine.Info	info = new DataLine.Info(Clip.class, format,
+        if (audioInputStream != null) {
+            AudioFormat format = audioInputStream.getFormat();
+            DataLine.Info   info = new DataLine.Info(Clip.class, format,
                                              AudioSystem.NOT_SPECIFIED);
-			try {
-				audioClip = (Clip) AudioSystem.getLine(info);
-				audioClip.addLineListener(this);
+            try {
+                audioClip = (Clip) AudioSystem.getLine(info);
+                audioClip.addLineListener(this);
                 audioClip.open(audioInputStream);
-			}
-			catch (LineUnavailableException e) {
+            }
+            catch (LineUnavailableException e) {
                 project.log("The sound device is currently unavailable");
                 return;
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
 
             if (duration != null) {
                 playClip(audioClip, duration.longValue());
@@ -171,10 +171,10 @@ public class AntSoundPlayer implements LineListener, BuildListener {
             }
             audioClip.drain();
             audioClip.close();
-		}
-		else {
-			project.log("Can't get data from file " + file.getName());
-		}
+        }
+        else {
+            project.log("Can't get data from file " + file.getName());
+        }
     }
 
     private void playClip(Clip clip, int loops) {
@@ -203,16 +203,16 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         if (event.getType().equals(LineEvent.Type.STOP)) {
             Line line = event.getLine();
             line.close();
-		}
-		else if (event.getType().equals(LineEvent.Type.CLOSE)) {
-			/*
-			 *	There is a bug in JavaSound 0.90 (jdk1.3beta).
-			 *	It prevents correct termination of the VM.
-			 *	So we have to exit ourselves.
-			 */
-			//System.exit(0);
-		}
-	}
+        }
+        else if (event.getType().equals(LineEvent.Type.CLOSE)) {
+            /*
+             *  There is a bug in JavaSound 0.90 (jdk1.3beta).
+             *  It prevents correct termination of the VM.
+             *  So we have to exit ourselves.
+             */
+            //System.exit(0);
+        }
+    }
 
 
     /**
@@ -220,7 +220,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      */
     public void buildStarted(BuildEvent event){
     }
-    
+
     /**
      *  Fired after the last target has finished. This event
      *  will still be thrown if an error occured during the build.

@@ -409,7 +409,7 @@ public class XMLReport {
                 methods.addElement(method);
                 log("keeping " + signature);
             } else {
-//				log("discarding " + signature);
+//              log("discarding " + signature);
             }
         }
         return methods;

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
+
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 
@@ -61,21 +61,21 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.PatternSet;
 
 /**
- * Export packages from the Visual Age for Java workspace. 
- * The packages are specified similar to all other MatchingTasks. 
- * Since the VA Workspace is not file based, this task is simulating 
+ * Export packages from the Visual Age for Java workspace.
+ * The packages are specified similar to all other MatchingTasks.
+ * Since the VA Workspace is not file based, this task is simulating
  * a directory hierarchy for the workspace:
- * The 'root' contains all project 'dir's, and the projects contain 
+ * The 'root' contains all project 'dir's, and the projects contain
  * their respective package 'dir's.
- * Example:  
- * <blockquote> 
+ * Example:
+ * <blockquote>
  * &lt;vajexport destdir="C:/builddir/source">
  * &nbsp;&lt;include name="/MyVAProject/org/foo/subsystem1/**" />
  * &nbsp;&lt;exclude name="/MyVAProject/org/foo/subsystem1/test/**"/>
  * &lt;/vajexport>
  * </blockquote>
  * exports all packages in the project MyVAProject which start with
- * 'org.foo.subsystem1' except of these starting with 
+ * 'org.foo.subsystem1' except of these starting with
  * 'org.foo.subsystem1.test'.
  *
  * There are flags to choose which items to export:
@@ -89,124 +89,124 @@ import org.apache.tools.ant.types.PatternSet;
  */
 
 public class VAJExport extends VAJTask {
-		//set set... method comments for description
-	protected File destDir;
-	protected boolean exportSources = true;
-	protected boolean exportResources = true;
-	protected boolean exportClasses = false;
-	protected boolean exportDebugInfo = false;
-	protected boolean useDefaultExcludes = true;
-	protected boolean overwrite = true;
+    //set set... method comments for description
+    protected File destDir;
+    protected boolean exportSources = true;
+    protected boolean exportResources = true;
+    protected boolean exportClasses = false;
+    protected boolean exportDebugInfo = false;
+    protected boolean useDefaultExcludes = true;
+    protected boolean overwrite = true;
 
-	protected PatternSet patternSet = new PatternSet();
+    protected PatternSet patternSet = new PatternSet();
 
-	/**
-	 * add a name entry on the exclude list
-	 */
-	public PatternSet.NameEntry createExclude() {
-		return patternSet.createExclude();
-	}
+    /**
+     * add a name entry on the exclude list
+     */
+    public PatternSet.NameEntry createExclude() {
+        return patternSet.createExclude();
+    }
 
-	/**
-	 * add a name entry on the include list
-	 */
-	public PatternSet.NameEntry createInclude() {
-		return patternSet.createInclude();
-	}
+    /**
+     * add a name entry on the include list
+     */
+    public PatternSet.NameEntry createInclude() {
+        return patternSet.createInclude();
+    }
 
-	/**
-	 * do the export
-	 */
-	public void execute() throws BuildException {
-		// first off, make sure that we've got a destdir
-		if (destDir == null) {
-			throw new BuildException("destdir attribute must be set!");
-		}
+    /**
+     * do the export
+     */
+    public void execute() throws BuildException {
+        // first off, make sure that we've got a destdir
+        if (destDir == null) {
+            throw new BuildException("destdir attribute must be set!");
+        }
 
-		// delegate the export to the VAJUtil object.
-		getUtil().exportPackages(destDir,
-			patternSet.getIncludePatterns(getProject()),
-			patternSet.getExcludePatterns(getProject()),
-		    exportClasses, exportDebugInfo, 
-		    exportResources, exportSources,  
-		    useDefaultExcludes, overwrite);
-	}
+        // delegate the export to the VAJUtil object.
+        getUtil().exportPackages(destDir,
+            patternSet.getIncludePatterns(getProject()),
+            patternSet.getExcludePatterns(getProject()),
+            exportClasses, exportDebugInfo,
+            exportResources, exportSources,
+            useDefaultExcludes, overwrite);
+    }
 
-	/**
-	 * Sets whether default exclusions should be used or not.
-	 *
-	 * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
-	 *                           should be used, "false"|"off"|"no" when they
-	 *                           shouldn't be used.
-	 */
-	public void setDefaultexcludes(boolean useDefaultExcludes) {
-		this.useDefaultExcludes = useDefaultExcludes;
-	}
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
+     *                           should be used, "false"|"off"|"no" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(boolean useDefaultExcludes) {
+        this.useDefaultExcludes = useDefaultExcludes;
+    }
 
-	/**
-	 * Set the destination directory into which the selected
-	 * items should be exported
-	 */
-	public void setDestdir(File destDir) {
-		this.destDir = destDir;
-	}
+    /**
+     * Set the destination directory into which the selected
+     * items should be exported
+     */
+    public void setDestdir(File destDir) {
+        this.destDir = destDir;
+    }
 
-	/**
-	 * Sets the set of exclude patterns. Patterns may be separated by a comma
-	 * or a space. Currently only patterns denoting packages are
-	 * supported
-	 *
-	 * @param excludes the string containing the exclude patterns
-	 */
-	public void setExcludes(String excludes) {
-		patternSet.setExcludes(excludes);
-	}
+    /**
+     * Sets the set of exclude patterns. Patterns may be separated by a comma
+     * or a space. Currently only patterns denoting packages are
+     * supported
+     *
+     * @param excludes the string containing the exclude patterns
+     */
+    public void setExcludes(String excludes) {
+        patternSet.setExcludes(excludes);
+    }
 
-	/**
-	 * if exportClasses is set, class files are exported
-	 */
-	public void setExportClasses(boolean doExport) {
-		exportClasses = doExport;
-	}
+    /**
+     * if exportClasses is set, class files are exported
+     */
+    public void setExportClasses(boolean doExport) {
+        exportClasses = doExport;
+    }
 
-	/**
-	 * if exportDebugInfo is set, the exported class files contain
-	 * debug info
-	 */
-	public void setExportDebugInfo(boolean doExport) {
-		exportDebugInfo = doExport;
-	}
+    /**
+     * if exportDebugInfo is set, the exported class files contain
+     * debug info
+     */
+    public void setExportDebugInfo(boolean doExport) {
+        exportDebugInfo = doExport;
+    }
 
-	/**
-	 * if exportResources is set, resource file will be exported
-	 */
-	public void setExportResources(boolean doExport) {
-		exportResources = doExport;
-	}
+    /**
+     * if exportResources is set, resource file will be exported
+     */
+    public void setExportResources(boolean doExport) {
+        exportResources = doExport;
+    }
 
-	/**
-	 * if exportSources is set, java files will be exported
-	 */
-	public void setExportSources(boolean doExport) {
-		exportSources = doExport;
-	}
+    /**
+     * if exportSources is set, java files will be exported
+     */
+    public void setExportSources(boolean doExport) {
+        exportSources = doExport;
+    }
 
-	/**
-	 * Sets the set of include patterns. Patterns may be separated by a comma
-	 * or a space.Currently only patterns denoting packages are
-	 * supported
-	 *
-	 * @param includes the string containing the include patterns
-	 */
-	public void setIncludes(String includes) {
-		patternSet.setIncludes(includes);
-	}
+    /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.Currently only patterns denoting packages are
+     * supported
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        patternSet.setIncludes(includes);
+    }
 
-	/**
-	 * if Overwrite is set, files will be overwritten during export
-	 */
-	public void setOverwrite(boolean doOverwrite) {
-		overwrite = doOverwrite;
-	}
-	
+    /**
+     * if Overwrite is set, files will be overwritten during export
+     */
+    public void setOverwrite(boolean doOverwrite) {
+        overwrite = doOverwrite;
+    }
+
 }

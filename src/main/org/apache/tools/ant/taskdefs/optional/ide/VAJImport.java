@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -64,11 +64,11 @@ import org.apache.tools.ant.types.FileSet;
 import java.lang.reflect.Field;
 
 /**
- * Import source, class files, and resources to the Visual Age for Java 
+ * Import source, class files, and resources to the Visual Age for Java
  * workspace using FileSets.
  * <p>
- * Example:  
- * <pre> 
+ * Example:
+ * <pre>
  * &lt;vajimport project="MyVAProject"&gt;
  *   &lt;fileset dir="src"&gt;
  *     &lt;include name="org/foo/subsystem1/**" /&gt;
@@ -77,7 +77,7 @@ import java.lang.reflect.Field;
  * &lt;/vajexport&gt;
  * </pre>
  * import all source and resource files from the "src" directory
- * which start with 'org.foo.subsystem1', except of these starting with 
+ * which start with 'org.foo.subsystem1', except of these starting with
  * 'org.foo.subsystem1.test' into the project MyVAProject.
  * </p>
  * <p>If MyVAProject isn't loaded into the Workspace, a new edition is
@@ -117,116 +117,116 @@ import java.lang.reflect.Field;
  * @author: Glenn McAllister, inspired by a similar task written by Peter Kelley
  */
 public class VAJImport extends VAJTask {
-	protected Vector filesets = new Vector();
-	protected boolean importSources = true;
-	protected boolean importResources = true;
-	protected boolean importClasses = false;
-	protected String importProject = null;
-	protected boolean useDefaultExcludes = true;
+    protected Vector filesets = new Vector();
+    protected boolean importSources = true;
+    protected boolean importResources = true;
+    protected boolean importClasses = false;
+    protected String importProject = null;
+    protected boolean useDefaultExcludes = true;
 
 
-	/**
-	 * The VisualAge for Java Project name to import into.
-	 */
-	public void setProject(String projectName) {
-		this.importProject = projectName;
-	}
+    /**
+     * The VisualAge for Java Project name to import into.
+     */
+    public void setProject(String projectName) {
+        this.importProject = projectName;
+    }
 
-	/**
-	 * Adds a set of files (nested fileset attribute).
-	 */
-	public void addFileset(FileSet set) {
-		filesets.addElement(set);
-	}
+    /**
+     * Adds a set of files (nested fileset attribute).
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
 
-	/**
-	 * Import .class files.
-	 */
-	public void setImportClasses(boolean importClasses) {
-		this.importClasses = importClasses;
-	}
+    /**
+     * Import .class files.
+     */
+    public void setImportClasses(boolean importClasses) {
+        this.importClasses = importClasses;
+    }
 
-	/**
-	 * Import resource files (anything that doesn't end in
-	 * .class or .java)
-	 */
-	public void setImportResources(boolean importResources) {
-		this.importResources = importResources;
-	}
+    /**
+     * Import resource files (anything that doesn't end in
+     * .class or .java)
+     */
+    public void setImportResources(boolean importResources) {
+        this.importResources = importResources;
+    }
 
-	/**
-	 * Import .java files
-	 */
-	public void setImportSources(boolean importSources) {
-		this.importSources = importSources;
-	}
+    /**
+     * Import .java files
+     */
+    public void setImportSources(boolean importSources) {
+        this.importSources = importSources;
+    }
 
-	/**
-	 * Sets whether default exclusions should be used or not.
-	 *
-	 * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
-	 *                           should be used, "false"|"off"|"no" when they
-	 *                           shouldn't be used.
-	 */
-	public void setDefaultexcludes(boolean useDefaultExcludes) {
-		this.useDefaultExcludes = useDefaultExcludes;
-	}
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
+     *                           should be used, "false"|"off"|"no" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(boolean useDefaultExcludes) {
+        this.useDefaultExcludes = useDefaultExcludes;
+    }
 
-	/**
-	 * Do the import.
-	 */
-	public void execute() throws BuildException {
-		if (filesets.size() == 0) {
-			throw new BuildException("At least one fileset is required!");
-		}
+    /**
+     * Do the import.
+     */
+    public void execute() throws BuildException {
+        if (filesets.size() == 0) {
+            throw new BuildException("At least one fileset is required!");
+        }
 
-		if (importProject == null || "".equals(importProject)) {
-			throw new BuildException("The VisualAge for Java Project name is required!");
-		}
+        if (importProject == null || "".equals(importProject)) {
+            throw new BuildException("The VisualAge for Java Project name is required!");
+        }
 
-		for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
-			importFileset((FileSet) e.nextElement());
-		}
-	}
+        for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
+            importFileset((FileSet) e.nextElement());
+        }
+    }
 
-	/**
-	 * Import all files from the fileset into the Project in the
-	 * Workspace.
-	 */
-	protected void importFileset(FileSet fileset) {
-		DirectoryScanner ds = fileset.getDirectoryScanner(this.project);
-		if (ds.getIncludedFiles().length == 0) {
-			return;
-		}
+    /**
+     * Import all files from the fileset into the Project in the
+     * Workspace.
+     */
+    protected void importFileset(FileSet fileset) {
+        DirectoryScanner ds = fileset.getDirectoryScanner(this.project);
+        if (ds.getIncludedFiles().length == 0) {
+            return;
+        }
 
-		String[] includes = null;
-		String[] excludes = null;
+        String[] includes = null;
+        String[] excludes = null;
 
-		// Hack to get includes and excludes. We could also use getIncludedFiles,
-		// but that would result in very long HTTP-requests.
-		// Therefore we want to send the patterns only to the remote tool server
-		// and let him figure out the files.
-		try {
-			Class directoryScanner = ds.getClass();
-		
-			Field includesField = directoryScanner.getDeclaredField("includes");
-			includesField.setAccessible(true);
-			includes = (String[]) includesField.get(ds);
-	
-			Field excludesField = directoryScanner.getDeclaredField("excludes");
-			excludesField.setAccessible(true);
-			excludes = (String[]) excludesField.get(ds);
-		} catch (NoSuchFieldException nsfe) {
-			throw new BuildException(
-				"DirectoryScanner.includes or .excludes missing" + nsfe.getMessage());
-		} catch (IllegalAccessException iae) {
-			throw new BuildException(
-				"Access to DirectoryScanner.includes or .excludes not allowed");
-		}
+        // Hack to get includes and excludes. We could also use getIncludedFiles,
+        // but that would result in very long HTTP-requests.
+        // Therefore we want to send the patterns only to the remote tool server
+        // and let him figure out the files.
+        try {
+            Class directoryScanner = ds.getClass();
 
-		getUtil().importFiles( importProject, ds.getBasedir(), 
-				includes, excludes, 
-				importClasses, importResources, importSources, 
-				useDefaultExcludes);
-	}
+            Field includesField = directoryScanner.getDeclaredField("includes");
+            includesField.setAccessible(true);
+            includes = (String[]) includesField.get(ds);
+
+            Field excludesField = directoryScanner.getDeclaredField("excludes");
+            excludesField.setAccessible(true);
+            excludes = (String[]) excludesField.get(ds);
+        } catch (NoSuchFieldException nsfe) {
+            throw new BuildException(
+                "DirectoryScanner.includes or .excludes missing" + nsfe.getMessage());
+        } catch (IllegalAccessException iae) {
+            throw new BuildException(
+                "Access to DirectoryScanner.includes or .excludes not allowed");
+        }
+
+        getUtil().importFiles( importProject, ds.getBasedir(),
+                includes, excludes,
+                importClasses, importResources, importSources,
+                useDefaultExcludes);
+    }
 }

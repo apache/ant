@@ -59,7 +59,7 @@ import java.io.File;
 
 /**
  * A Remote Access to Tools Servlet to import a Project
- * from files into the Repository. The following 
+ * from files into the Repository. The following
  * table describes the servlet parameters.
  *
  * <table>
@@ -95,8 +95,8 @@ public class VAJImportServlet extends VAJToolsServlet {
                       getBooleanParam(RESOURCES_PARAM, true),
                       getBooleanParam(SOURCES_PARAM, true),
                       false // no default excludes, because they
-		      // are already added on client side
-                      //			getBooleanParam(DEFAULT_EXCLUDES_PARAM, true)
+              // are already added on client side
+                      //            getBooleanParam(DEFAULT_EXCLUDES_PARAM, true)
                       );
     }
 }

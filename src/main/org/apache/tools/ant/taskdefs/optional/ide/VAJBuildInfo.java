@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
- 
+
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -80,7 +80,7 @@ import org.apache.tools.ant.BuildEvent;
  *   execute target)
  * - manages a seperate thread for Ant project execution
  *   this allows interrupting a running build from a GUI
- *    
+ *
  * @author Wolf Siberski, TUI Infotec GmbH
  */
 
@@ -102,7 +102,7 @@ class VAJBuildInfo implements Runnable {
     private class InterruptedChecker implements BuildListener {
         // the real listener
         BuildListener wrappedListener;
-		
+
         /**
          * Can only be constructed as wrapper around a real listener
          * @param listener the real listener
@@ -182,11 +182,10 @@ class VAJBuildInfo implements Runnable {
             checkInterrupted();
         }
     }
-	
-	
+
     // name of the VA project this BuildInfo belongs to
     private String vajProjectName = "";
-	
+
     // name of the Ant build file
     private String buildFileName = "";
 
@@ -208,30 +207,30 @@ class VAJBuildInfo implements Runnable {
     // Support for bound properties
     protected transient PropertyChangeSupport propertyChange;
 
-    // thread for Ant build execution 
+    // thread for Ant build execution
     private Thread buildThread;
 
     // the listener used to log output.
     private BuildListener projectLogger;
 
-		
+
     /**
-     * The addPropertyChangeListener method was generated to support the 
+     * The addPropertyChangeListener method was generated to support the
      * propertyChange field.
      */
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         getPropertyChange().addPropertyChangeListener(listener);
     }
-	
+
     /**
      * Returns the BuildInfo information as String. The BuildInfo can
      * be rebuilt from that String by calling parse().
      * @return java.lang.String
      */
     public String asDataString() {
-        String result = getOutputMessageLevel() + "|" + getBuildFileName() 
+        String result = getOutputMessageLevel() + "|" + getBuildFileName()
             + "|" + getTarget();
-        for ( Enumeration e = getProjectTargets().elements(); 
+        for ( Enumeration e = getProjectTargets().elements();
               e.hasMoreElements(); ) {
             result = result + "|" + e.nextElement();
         }
@@ -286,14 +285,14 @@ class VAJBuildInfo implements Runnable {
         }
         return project;
     }
-	
+
     /**
      * return a list of all targets in the current buildfile
      */
     public Vector getProjectTargets() {
         return projectTargets;
     }
-	
+
     /**
      * Accessor for the propertyChange field.
      */
@@ -373,13 +372,13 @@ class VAJBuildInfo implements Runnable {
     }
 
     /**
-     * The removePropertyChangeListener method was generated 
+     * The removePropertyChangeListener method was generated
      * to support the propertyChange field.
      */
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         getPropertyChange().removePropertyChangeListener(listener);
     }
-	
+
     /**
      * Sets the build file name
      * @param buildFileName build file name
@@ -390,7 +389,7 @@ class VAJBuildInfo implements Runnable {
         setProjectInitialized(false);
         firePropertyChange("buildFileName", oldValue, buildFileName);
     }
-	
+
     /**
      * Sets the log level (value must be one of the constants in Project)
      * @param outputMessageLevel log level.
@@ -398,7 +397,7 @@ class VAJBuildInfo implements Runnable {
     public void setOutputMessageLevel(int newOutputMessageLevel) {
         int oldValue = outputMessageLevel;
         outputMessageLevel = newOutputMessageLevel;
-        firePropertyChange("outputMessageLevel", 
+        firePropertyChange("outputMessageLevel",
                            new Integer(oldValue), new Integer(outputMessageLevel));
     }
 
@@ -410,7 +409,7 @@ class VAJBuildInfo implements Runnable {
         int level = Integer.parseInt( outputMessageLevel );
         setOutputMessageLevel( level );
     }
-	
+
     /**
      * sets the initialized flag
      */
@@ -461,7 +460,7 @@ class VAJBuildInfo implements Runnable {
 
 
     /**
-     * cancels a build. 
+     * cancels a build.
      */
     public void cancelBuild() {
         buildThread.interrupt();
@@ -484,7 +483,7 @@ class VAJBuildInfo implements Runnable {
         } catch (Error err) {
             error = err;
             throw err;
-        } 
+        }
     }
 
     /**
@@ -501,7 +500,7 @@ class VAJBuildInfo implements Runnable {
                 if (!isProjectInitialized()) {
                     initProject();
                 }
-		
+
                 project.addBuildListener( ic );
                 project.executeTarget(target);
 

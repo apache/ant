@@ -79,7 +79,7 @@ import org.apache.tools.ant.DirectoryScanner;
  *   <li>VisualAge*\**</li>
  * </ul>
  * <p>
- * This class works like DirectoryScanner. 
+ * This class works like DirectoryScanner.
  *
  * @see org.apache.tools.ant.DirectoryScanner
  *
@@ -88,19 +88,19 @@ import org.apache.tools.ant.DirectoryScanner;
 class VAJWorkspaceScanner extends DirectoryScanner {
 
     // Patterns that should be excluded by default.
-    private final static String[] DEFAULTEXCLUDES = 
+    private final static String[] DEFAULTEXCLUDES =
     {
-        "IBM*/**", 
-        "Java class libraries/**", 
-        "Sun class libraries*/**", 
-        "JSP Page Compile Generated Code/**", 
-        "VisualAge*/**", 
-    }; 
+        "IBM*/**",
+        "Java class libraries/**",
+        "Sun class libraries*/**",
+        "JSP Page Compile Generated Code/**",
+        "VisualAge*/**",
+    };
 
-    // The packages that where found and matched at least 
+    // The packages that where found and matched at least
     // one includes, and matched no excludes.
     private Vector packagesIncluded = new Vector();
-   
+
     /**
      * Adds the array with default exclusions to the current exclusions set.
      */
@@ -114,11 +114,11 @@ class VAJWorkspaceScanner extends DirectoryScanner {
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].
                 replace( '/', File.separatorChar ).
-                replace( '\\', File.separatorChar ); 
+                replace( '\\', File.separatorChar );
         }
         excludes = newExcludes;
     }
-		
+
     /**
      * Finds all Projects specified in include patterns.
      *
@@ -133,11 +133,11 @@ class VAJWorkspaceScanner extends DirectoryScanner {
         for (int i = 0; i < projects.length; i++) {
             Project project = projects[i];
             for (int j = 0; j < includes.length && !allProjectsMatch; j++) {
-                StringTokenizer tok = 
+                StringTokenizer tok =
                     new StringTokenizer(includes[j], File.separator);
                 String projectNamePattern = tok.nextToken();
                 if (projectNamePattern.equals("**")) {
-                    // if an include pattern starts with '**', 
+                    // if an include pattern starts with '**',
                     // all projects match
                     allProjectsMatch = true;
                 } else
@@ -157,7 +157,7 @@ class VAJWorkspaceScanner extends DirectoryScanner {
 
         return matchingProjects;
     }
-		
+
     /**
      * Get the names of the packages that matched at least one of the include
      * patterns, and didn't match one of the exclude patterns.
@@ -172,7 +172,7 @@ class VAJWorkspaceScanner extends DirectoryScanner {
         }
         return packages;
     }
-		
+
     /**
      * Matches a string against a pattern. The pattern contains two special
      * characters:
@@ -212,7 +212,7 @@ class VAJWorkspaceScanner extends DirectoryScanner {
             scanProject(project);
         }
     }
-		
+
     /**
      * Scans a project for packages that match at least one include
      * pattern, and don't match any exclude patterns.
@@ -227,10 +227,10 @@ class VAJWorkspaceScanner extends DirectoryScanner {
                     // replace '.' by file seperator because the patterns are
                     // using file seperator syntax (and we can use the match
                     // methods this way).
-                    String name = 
+                    String name =
                         project.getName()
                         + File.separator
-                        + item.getName().replace('.', File.separatorChar); 
+                        + item.getName().replace('.', File.separatorChar);
                     if (isIncluded(name) && !isExcluded(name)) {
                         packagesIncluded.addElement(item);
                     }

@@ -96,10 +96,10 @@ public class AggregateTransformer {
     public final static String NOFRAMES = "noframes";
 
     public static class Format extends EnumeratedAttribute {
-		public String[] getValues(){
-			return new String[]{FRAMES, NOFRAMES};
-		}
-	}
+        public String[] getValues(){
+            return new String[]{FRAMES, NOFRAMES};
+        }
+    }
 
     /** Task */
     protected Task task;

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -73,20 +73,20 @@ import org.apache.tools.ant.BuildException;
 public class VAJAntTool {
     private final static String TOOL_DATA_KEY = "AntTool";
 
-	
+
     /**
      * Loads the BuildInfo for the specified VAJ project from the
      * tool data for this project.
      * If there is no build info stored for that project, a new
      * default BuildInfo is returned
-     * 
+     *
      * @return BuildInfo buildInfo build info for the specified project
      * @param projectName String project name
      */
     public static VAJBuildInfo loadBuildData(String projectName) {
         VAJBuildInfo result = null;
         try {
-            Project project = 
+            Project project =
                 VAJLocalUtil.getWorkspace().loadedProjectNamed( projectName );
             if ( project.testToolRepositoryData(TOOL_DATA_KEY) ) {
                 ToolData td = project.getToolRepositoryData(TOOL_DATA_KEY);
@@ -97,7 +97,7 @@ public class VAJAntTool {
             }
             result.setVAJProjectName( projectName );
         } catch (Throwable t) {
-            throw new BuildException("BuildInfo for Project " 
+            throw new BuildException("BuildInfo for Project "
                                      + projectName + " could not be loaded" + t);
         }
         return result;
@@ -108,7 +108,7 @@ public class VAJAntTool {
      * Starts the application.
      *
      * @param args an array of command-line arguments. VAJ puts the
-     *             VAJ project name into args[1] when starting the 
+     *             VAJ project name into args[1] when starting the
      *             tool from the project context menu
      */
     public static void main(java.lang.String[] args) {
@@ -117,11 +117,11 @@ public class VAJAntTool {
             if ( args.length >= 2 && args[1] instanceof String ) {
                 String projectName = (String)args[1];
                 info = loadBuildData( projectName );
-            } 
+            }
             else {
                 info = new VAJBuildInfo();
             }
-	
+
             VAJAntToolGUI mainFrame = new VAJAntToolGUI( info );
             mainFrame.show();
         } catch ( Throwable t ) {
@@ -141,10 +141,10 @@ public class VAJAntTool {
         String data = info.asDataString();
         try {
             ToolData td = new ToolData( TOOL_DATA_KEY, data );
-            VAJLocalUtil.getWorkspace().loadedProjectNamed( 
+            VAJLocalUtil.getWorkspace().loadedProjectNamed(
                                                            info.getVAJProjectName() ).setToolRepositoryData( td );
         } catch (Throwable t) {
-            throw new BuildException("BuildInfo for Project " 
+            throw new BuildException("BuildInfo for Project "
                                      + info.getVAJProjectName() + " could not be saved", t);
         }
     }

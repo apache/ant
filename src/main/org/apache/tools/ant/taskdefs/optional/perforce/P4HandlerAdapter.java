@@ -78,7 +78,7 @@ public abstract class P4HandlerAdapter implements P4Handler {
     public void start() throws BuildException {
 
     try{
-        //First write any output to P4 
+        //First write any output to P4
         if(p4input != null && p4input.length() >0 && os != null) {
                     os.write(p4input.getBytes());
                     os.flush();
@@ -86,17 +86,17 @@ public abstract class P4HandlerAdapter implements P4Handler {
             }
 
         //Now read any input and process
-      
+
         BufferedReader input = new BufferedReader(
                                      new InputStreamReader(
                                        new SequenceInputStream(is,es)));
 
             String line;
-	    	while((line = input.readLine()) != null) {
-	    	   process(line);
-	    	}
-	    	
-	    	input.close();
+            while((line = input.readLine()) != null) {
+               process(line);
+            }
+
+            input.close();
 
 
         }catch(Exception e) {

@@ -75,7 +75,7 @@ import java.io.FileNotFoundException;
  * @author rubys@us.ibm.com
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a> 
+ * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
  */
 public class ExecTask extends Task {
 
@@ -95,7 +95,7 @@ public class ExecTask extends Task {
 
     /** Controls whether the VM (1.3 and above) is used to execute the command */
     private boolean vmLauncher = true;
-     
+
     /**
      * Timeout in milliseconds after which the process will be killed.
      */
@@ -146,7 +146,7 @@ public class ExecTask extends Task {
      * the process
      */
     public void setOutputproperty(String outputprop) {
-	this.outputprop = outputprop;
+        this.outputprop = outputprop;
     }
 
     /**
@@ -195,10 +195,10 @@ public class ExecTask extends Task {
             throw new BuildException("no executable specified", location);
         }
         if (dir != null && !dir.exists()) {
-        	throw new BuildException("The directory you specified does not exist");
+            throw new BuildException("The directory you specified does not exist");
         }
         if (dir != null && !dir.isDirectory()) {
-        	throw new BuildException("The directory you specified is not a directory");
+            throw new BuildException("The directory you specified is not a directory");
         }
     }
 
@@ -224,7 +224,7 @@ public class ExecTask extends Task {
     public void setVMLauncher(boolean vmLauncher) {
         this.vmLauncher = vmLauncher;
     }
-    
+
     /**
      * Create an Execute instance with the correct working directory set.
      */
@@ -233,7 +233,7 @@ public class ExecTask extends Task {
         if (dir == null) dir = project.getBaseDir();
         // show the command
         log(cmdl.toString(), Project.MSG_VERBOSE);
-        
+
         Execute exe = new Execute(createHandler(), createWatchdog());
         exe.setAntRun(project);
         exe.setWorkingDirectory(dir);
@@ -265,7 +265,7 @@ public class ExecTask extends Task {
             }
         }
         if (baos != null) {
-            BufferedReader in = 
+            BufferedReader in =
                 new BufferedReader(new StringReader(baos.toString()));
             String line = null;
             StringBuffer val = new StringBuffer();
@@ -278,7 +278,7 @@ public class ExecTask extends Task {
             project.setProperty(outputprop, val.toString());
         }
     }
-    
+
     /**
      * Run the command using the given Execute instance. This may be overidden by subclasses
      */
@@ -309,10 +309,10 @@ public class ExecTask extends Task {
                 throw new BuildException("Cannot write to "+out, ioe, location);
             }
         } else if (outputprop != null) {
-	    //	    try {
-	    baos = new ByteArrayOutputStream();
-	    log("Output redirected to ByteArray", Project.MSG_VERBOSE);
-	    return new PumpStreamHandler(baos);
+        //    try {
+        baos = new ByteArrayOutputStream();
+        log("Output redirected to ByteArray", Project.MSG_VERBOSE);
+        return new PumpStreamHandler(baos);
         } else {
             return new LogStreamHandler(this,
                                         Project.MSG_INFO, Project.MSG_WARN);

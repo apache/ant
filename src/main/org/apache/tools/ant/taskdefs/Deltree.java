@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -72,28 +72,28 @@ public class Deltree extends Task {
     private File dir;
 
     public void setDir(File dir) {
-	this.dir = dir;
+        this.dir = dir;
     }
-    
+
     public void execute() throws BuildException {
         log("DEPRECATED - The deltree task is deprecated.  Use delete instead.");
 
         if (dir == null) {
             throw new BuildException("dir attribute must be set!", location);
-        } 
+        }
 
-	if (dir.exists()) {
-	    if (!dir.isDirectory()) {
-		if (!dir.delete()) {
-        	    throw new BuildException("Unable to delete directory " 
+        if (dir.exists()) {
+            if (!dir.isDirectory()) {
+                if (!dir.delete()) {
+                    throw new BuildException("Unable to delete directory "
                                              + dir.getAbsolutePath(),
                                              location);
-	        }
-		return;
-		// String msg = "Given dir: " + dir.getAbsolutePath() +
-		// " is not a dir";
-		// throw new BuildException(msg);
-	    }
+                }
+                return;
+                // String msg = "Given dir: " + dir.getAbsolutePath() +
+                // " is not a dir";
+                // throw new BuildException(msg);
+            }
 
             log("Deleting: " + dir.getAbsolutePath());
 
@@ -105,31 +105,31 @@ public class Deltree extends Task {
             }
         }
     }
-    
+
     private void removeDir(File dir) throws IOException {
 
         // check to make sure that the given dir isn't a symlink
         // the comparison of absolute path and canonical path
         // catches this
-	
-	//        if (dir.getCanonicalPath().equals(dir.getAbsolutePath())) {
-	// (costin) It will not work if /home/costin is symlink to /da0/home/costin ( taz
-	// for example )
-	String[] list = dir.list();
-	for (int i = 0; i < list.length; i++) {
-	    String s = list[i];
-	    File f = new File(dir, s);
-	    if (f.isDirectory()) {
-		removeDir(f);
-	    } else {
-		if (!f.delete()) {
-        	    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
-	        }
-	    }
-	}
+
+        //        if (dir.getCanonicalPath().equals(dir.getAbsolutePath())) {
+        // (costin) It will not work if /home/costin is symlink to /da0/home/costin ( taz
+        // for example )
+        String[] list = dir.list();
+        for (int i = 0; i < list.length; i++) {
+            String s = list[i];
+            File f = new File(dir, s);
+            if (f.isDirectory()) {
+                removeDir(f);
+            } else {
+                if (!f.delete()) {
+                    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                }
+            }
+        }
         if (!dir.delete()) {
-	    throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
-	}
+            throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+        }
     }
 }
 
