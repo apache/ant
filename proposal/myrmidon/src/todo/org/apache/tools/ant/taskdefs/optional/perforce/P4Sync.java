@@ -82,19 +82,19 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
-public class P4Sync extends P4Base
+public class P4Sync
+    extends P4Base
 {
     private String m_syncCmd = "";
     private String m_label;
 
-    public void setForce( final String force )
+    public void setForce( final boolean force )
         throws TaskException
     {
-        if( force == null && !m_label.equals( "" ) )
+        if( force  )
         {
-            throw new TaskException( "P4Sync: If you want to force, set force to non-null string!" );
+            m_p4CmdOpts = "-f";
         }
-        m_p4CmdOpts = "-f";
     }
 
     public void setLabel( String label )

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework;
+package org.apache.aut.nativelib;
 
 import java.util.Locale;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
@@ -32,18 +32,20 @@ public class Os
     private final static String PATH_SEP =
         System.getProperty( "path.separator" );
 
-    private String m_arch;
-    private String m_family;
-    private String m_name;
-    private String m_version;
-
-    public Os()
+    /**
+     * Private constructor to block instantiation.
+     */
+    private Os()
     {
     }
 
-    public Os( final String family )
+    /**
+     * Determines if the OS on which Ant is executing matches the given OS
+     * version.
+     */
+    public static boolean isVersion( final String version )
     {
-        setFamily( family );
+        return isOs( null, null, null, version );
     }
 
     /**
@@ -93,10 +95,10 @@ public class Os
      * @param version The OS version
      * @return The Os value
      */
-    private static boolean isOs( final String family,
-                                 final String name,
-                                 final String arch,
-                                 final String version )
+    public static boolean isOs( final String family,
+                                final String name,
+                                final String arch,
+                                final String version )
     {
         if( family != null || name != null || arch != null || version != null )
         {
@@ -180,75 +182,5 @@ public class Os
             }
         }
         return isFamily;
-    }
-
-    /**
-     * Determines if the OS on which Ant is executing matches the given OS
-     * version.
-     */
-    public static boolean isVersion( final String version )
-    {
-        return isOs( null, null, null, version );
-    }
-
-    /**
-     * Sets the desired OS architecture
-     *
-     * @param arch The OS architecture
-     */
-    public void setArch( final String arch )
-    {
-        m_arch = arch.toLowerCase( Locale.US );
-    }
-
-    /**
-     * Sets the desired OS family type
-     *
-     * @param f The OS family type desired<br />
-     *      Possible values:<br />
-     *
-     *      <ul>
-     *        <li> dos</li>
-     *        <li> mac</li>
-     *        <li> netware</li>
-     *        <li> os/2</li>
-     *        <li> unix</li>
-     *        <li> windows</li>
-     *      </ul>
-     */
-    public void setFamily( String f )
-    {
-        m_family = f.toLowerCase( Locale.US );
-    }
-
-    /**
-     * Sets the desired OS name
-     *
-     * @param name The OS name
-     */
-    public void setName( String name )
-    {
-        m_name = name.toLowerCase( Locale.US );
-    }
-
-    /**
-     * Sets the desired OS version
-     *
-     * @param version The OS version
-     */
-    public void setVersion( String version )
-    {
-        m_version = version.toLowerCase( Locale.US );
-    }
-
-    /**
-     * Determines if the OS on which Ant is executing matches the type of that
-     * set in setFamily.
-     *
-     * @see Os#setFamily(String)
-     */
-    public boolean eval()
-    {
-        return isOs( m_family, m_name, m_arch, m_version );
     }
 }

@@ -5,16 +5,16 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec.launchers;
+package org.apache.aut.nativelib.launchers;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import org.apache.myrmidon.framework.exec.Environment;
-import org.apache.myrmidon.framework.exec.ExecException;
-import org.apache.myrmidon.framework.exec.ExecMetaData;
+import org.apache.aut.nativelib.Environment;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecMetaData;
 
 /**
  * A set of utility functions useful when writing CommandLaunchers.

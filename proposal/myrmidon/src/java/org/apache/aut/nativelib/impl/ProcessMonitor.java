@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec.impl;
+package org.apache.aut.nativelib.impl;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec;
+package org.apache.aut.nativelib;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +16,6 @@ import java.util.Locale;
 import java.util.Properties;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 
 /**

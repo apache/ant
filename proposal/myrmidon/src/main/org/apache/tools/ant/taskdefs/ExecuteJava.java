@@ -12,7 +12,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SysProperties;
@@ -43,11 +42,11 @@ public class ExecuteJava
         m_sysProperties = sysProperties;
     }
 
-    public void execute( Project project )
+    public void execute()
         throws TaskException
     {
         final String classname = m_javaCommand.getExecutable();
-        final Object[] argument = {m_javaCommand.getArguments()};
+        final Object[] argument = new Object[]{m_javaCommand.getArguments()};
 
         try
         {

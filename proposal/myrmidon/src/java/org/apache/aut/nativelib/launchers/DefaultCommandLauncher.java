@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec.launchers;
+package org.apache.aut.nativelib.launchers;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +14,10 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.framework.exec.CommandLauncher;
-import org.apache.myrmidon.framework.exec.Environment;
-import org.apache.myrmidon.framework.exec.ExecException;
-import org.apache.myrmidon.framework.exec.ExecMetaData;
+import org.apache.aut.nativelib.CommandLauncher;
+import org.apache.aut.nativelib.Environment;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecMetaData;
 
 /**
  * A command launcher for a particular JVM/OS platform. This class is a

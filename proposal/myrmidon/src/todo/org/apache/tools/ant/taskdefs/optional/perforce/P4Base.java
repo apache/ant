@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.ExecOutputHandler;
+import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;

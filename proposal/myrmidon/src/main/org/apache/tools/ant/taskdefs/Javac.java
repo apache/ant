@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.JavaVersion;
-import org.apache.myrmidon.framework.Os;
+import org.apache.aut.nativelib.Os;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;

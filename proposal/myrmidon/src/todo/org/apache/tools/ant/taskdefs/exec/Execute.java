@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.ExecException;
-import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.myrmidon.framework.exec.impl.DefaultExecManager;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecMetaData;
+import org.apache.aut.nativelib.impl.DefaultExecManager;
 
 /**
  * Runs an external program.

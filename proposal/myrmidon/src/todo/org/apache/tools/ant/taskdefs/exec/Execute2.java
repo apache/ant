@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.Properties;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.DefaultExecOutputHandler;
-import org.apache.myrmidon.framework.exec.ExecException;
-import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.myrmidon.framework.exec.ExecOutputHandler;
-import org.apache.myrmidon.framework.exec.impl.DefaultExecManager;
+import org.apache.aut.nativelib.DefaultExecOutputHandler;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecMetaData;
+import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.impl.DefaultExecManager;
 
 /**
  * Runs an external program.

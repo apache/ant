@@ -14,8 +14,8 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.Environment;
-import org.apache.myrmidon.framework.exec.ExecException;
+import org.apache.aut.nativelib.Environment;
+import org.apache.aut.nativelib.ExecException;
 
 /**
  * This task is responsible for loading that OS-specific environment

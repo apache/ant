@@ -20,7 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.ExecOutputHandler;
+import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec.impl;
+package org.apache.aut.nativelib.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,16 +13,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.myrmidon.framework.Os;
-import org.apache.myrmidon.framework.exec.CommandLauncher;
-import org.apache.myrmidon.framework.exec.ExecException;
-import org.apache.myrmidon.framework.exec.ExecManager;
-import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.myrmidon.framework.exec.ExecOutputHandler;
-import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
+import org.apache.aut.nativelib.Os;
+import org.apache.aut.nativelib.CommandLauncher;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecManager;
+import org.apache.aut.nativelib.ExecMetaData;
+import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.launchers.DefaultCommandLauncher;
+import org.apache.aut.nativelib.launchers.MacCommandLauncher;
+import org.apache.aut.nativelib.launchers.ScriptCommandLauncher;
+import org.apache.aut.nativelib.launchers.WinNTCommandLauncher;
 
 /**
  * Default implementation of <code>ExecManager</code>.
