@@ -102,6 +102,7 @@ public class Copy extends Task {
     protected File destDir = null;  // the destination directory
     protected Vector filesets = new Vector();
 
+    private boolean enableMultipleMappings = false;
     protected boolean filtering = false;
     protected boolean preserveLastModified = false;
     protected boolean forceOverwrite = false;
@@ -260,6 +261,28 @@ public class Copy extends Task {
     }
 
     /**
+     * Attribute to handle mappers that return multiple
+     * mappings for a given source path.
+     * @param enableMultipleMappings If true the task will
+     *        copy to all the mappings for a given source path, if
+     *        false, only the first file or directory is
+     *        processed.
+     *        By default, this setting is false to provide backward
+     *        compatibility with earlier releases.
+     * @since 1.6
+     */
+    public void setEnableMultipleMappings(boolean enableMultipleMappings) {
+        this.enableMultipleMappings = enableMultipleMappings;
+    }
+
+    /**
+     * @return the value of the enableMultipleMapping attribute
+     */
+    public boolean isEnableMultipleMapping() {
+        return enableMultipleMappings;
+    }
+    
+    /**
      * If false, note errors to the output but keep going.
      * @param failonerror true or false
      */
@@ -354,7 +377,7 @@ public class Copy extends Task {
                     if (forceOverwrite || !destFile.exists()
                         || (file.lastModified() > destFile.lastModified())) {
                         fileCopyMap.put(file.getAbsolutePath(),
-                                        destFile.getAbsolutePath());
+                                        new String[] {destFile.getAbsolutePath()});
                     } else {
                         log(file + " omitted as " + destFile
                             + " is up to date.", Project.MSG_VERBOSE);
@@ -528,8 +551,20 @@ public class Copy extends Task {
 
         for (int i = 0; i < toCopy.length; i++) {
             File src = new File(fromDir, toCopy[i]);
-            File dest = new File(toDir, mapper.mapFileName(toCopy[i])[0]);
-            map.put(src.getAbsolutePath(), dest.getAbsolutePath());
+
+            String[] mappedFiles = mapper.mapFileName(toCopy[i]);
+
+            if (!enableMultipleMappings) {
+                map.put(src.getAbsolutePath(),
+                        new String[] {new File(toDir, mappedFiles[0]).getAbsolutePath()});
+            } else {
+                // reuse the array created by the mapper
+                for (int k = 0; k < mappedFiles.length; k++) {
+                    mappedFiles[k] = new File(toDir, mappedFiles[k]).getAbsolutePath();
+                }
+
+                map.put(src.getAbsolutePath(), mappedFiles);
+            }
         }
     }
 
@@ -546,64 +581,74 @@ public class Copy extends Task {
             Enumeration e = fileCopyMap.keys();
             while (e.hasMoreElements()) {
                 String fromFile = (String) e.nextElement();
-                String toFile = (String) fileCopyMap.get(fromFile);
+                String[] toFiles = (String[]) fileCopyMap.get(fromFile);
 
-                if (fromFile.equals(toFile)) {
-                    log("Skipping self-copy of " + fromFile, verbosity);
-                    continue;
-                }
+                for (int i = 0; i < toFiles.length; i++) {
+                    String toFile = toFiles[i];
 
-                try {
-                    log("Copying " + fromFile + " to " + toFile, verbosity);
+                    if (fromFile.equals(toFile)) {
+                        log("Skipping self-copy of " + fromFile, verbosity);
+                        continue;
+                    }
 
-                    FilterSetCollection executionFilters =
-                        new FilterSetCollection();
-                    if (filtering) {
-                        executionFilters
-                            .addFilterSet(getProject().getGlobalFilterSet());
+                    try {
+                        log("Copying " + fromFile + " to " + toFile, verbosity);
+
+                        FilterSetCollection executionFilters =
+                            new FilterSetCollection();
+                        if (filtering) {
+                            executionFilters
+                                .addFilterSet(getProject().getGlobalFilterSet());
+                        }
+                        for (Enumeration filterEnum = filterSets.elements();
+                            filterEnum.hasMoreElements();) {
+                            executionFilters
+                                .addFilterSet((FilterSet) filterEnum.nextElement());
+                        }
+                        fileUtils.copyFile(fromFile, toFile, executionFilters,
+                                           filterChains, forceOverwrite,
+                                           preserveLastModified, inputEncoding,
+                                           outputEncoding, getProject());
+                    } catch (IOException ioe) {
+                        String msg = "Failed to copy " + fromFile + " to " + toFile
+                            + " due to " + ioe.getMessage();
+                        File targetFile = new File(toFile);
+                        if (targetFile.exists() && !targetFile.delete()) {
+                            msg += " and I couldn't delete the corrupt " + toFile;
+                        }
+                        throw new BuildException(msg, ioe, getLocation());
                     }
-                    for (Enumeration filterEnum = filterSets.elements();
-                         filterEnum.hasMoreElements();) {
-                        executionFilters
-                            .addFilterSet((FilterSet) filterEnum.nextElement());
-                    }
-                    fileUtils.copyFile(fromFile, toFile, executionFilters,
-                                       filterChains, forceOverwrite,
-                                       preserveLastModified, inputEncoding,
-                                       outputEncoding, getProject());
-                } catch (IOException ioe) {
-                    String msg = "Failed to copy " + fromFile + " to " + toFile
-                        + " due to " + ioe.getMessage();
-                    File targetFile = new File(toFile);
-                    if (targetFile.exists() && !targetFile.delete()) {
-                        msg += " and I couldn't delete the corrupt " + toFile;
-                    }
-                    throw new BuildException(msg, ioe, getLocation());
                 }
             }
         }
 
         if (includeEmpty) {
             Enumeration e = dirCopyMap.elements();
-            int count = 0;
+            int createCount = 0;
             while (e.hasMoreElements()) {
-                File d = new File((String) e.nextElement());
-                if (!d.exists()) {
-                    if (!d.mkdirs()) {
-                        log("Unable to create directory "
-                            + d.getAbsolutePath(), Project.MSG_ERR);
-                    } else {
-                        count++;
+                String[] dirs = (String[]) e.nextElement();
+                for (int i = 0; i < dirs.length; i++) {
+                    File d = new File(dirs[i]);
+                    if (!d.exists()) {
+                        if (!d.mkdirs()) {
+                            log("Unable to create directory "
+                                + d.getAbsolutePath(), Project.MSG_ERR);
+                        } else {
+                            createCount++;
+                        }
                     }
                 }
             }
-
-            if (count > 0) {
-                log("Copied " + count + " empty director"
-                    + (count == 1 ? "y" : "ies")
-                    + " to " + destDir.getAbsolutePath());
+            if (createCount > 0) {
+                log("Copied " + dirCopyMap.size()
+                    + " empty director"
+                    + (dirCopyMap.size() == 1 ? "y" : "ies")
+                    + " to " + createCount
+                    + " empty director"
+                    + (createCount == 1 ? "y" : "ies") + " under "
+                    + destDir.getAbsolutePath());
             }
         }
     }
-
 }
+

@@ -103,6 +103,16 @@ to move to the <var>todir</var> directory.</p>
     <td align="center">No - defaults to the value of the encoding
     attribute if given or the default JVM encoding otherwise.</td>
   </tr>
+  <tr>
+    <td valign="top">enablemultiplemapping</td>
+    <td valign="top">
+      If true the task will process to all the mappings for a
+      given source path. If false the task will only process
+      the first file or directory. This attribute is only relevant
+      if there is a mapper subelement.
+      <em>since Ant 1.6</em>.</td>
+    <td align="center">No - defaults to false.</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>mapper</h4>
