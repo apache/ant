@@ -56,7 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunListener;
 
 /**
  * The formatter interface.
