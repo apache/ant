@@ -69,6 +69,10 @@ enhancements of existing tasks.
 * Unify <available> and <uptodate> into a more general <condition>
   task, support AND/OR of several tests here.
 
+* jsp-compilation task
+
+  Sounds like a candidate for a facade task.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
