@@ -320,7 +320,7 @@ public class UnknownElement extends Task {
 
         String parentUri = getNamespace();
         Class parentClass = parent.getClass();
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
+        IntrospectionHelper ih = IntrospectionHelper.getHelper(getProject(), parentClass);
 
 
         if (children != null) {

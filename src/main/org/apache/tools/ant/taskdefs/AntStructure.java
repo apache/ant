@@ -200,7 +200,7 @@ public class AntStructure extends Task {
 
         IntrospectionHelper ih = null;
         try {
-            ih = IntrospectionHelper.getHelper(element);
+            ih = IntrospectionHelper.getHelper(getProject(), element);
         } catch (Throwable t) {
             /*
              * XXX - failed to load the class properly.

@@ -863,7 +863,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         public void init(String propType, AttributeList attrs) throws SAXParseException {
             Class parentClass = parent.getClass();
             IntrospectionHelper ih =
-                IntrospectionHelper.getHelper(parentClass);
+                IntrospectionHelper.getHelper(helperImpl.project, parentClass);
 
             try {
                 String elementName = propType.toLowerCase(Locale.US);

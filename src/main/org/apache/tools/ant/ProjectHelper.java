@@ -304,9 +304,7 @@ public class ProjectHelper {
         }
 
         IntrospectionHelper ih =
-            IntrospectionHelper.getHelper(target.getClass());
-
-        project.addBuildListener(ih);
+            IntrospectionHelper.getHelper(project, target.getClass());
 
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
@@ -368,7 +366,7 @@ public class ProjectHelper {
             target = ((TypeAdapter) target).getProxy();
         }
 
-        IntrospectionHelper.getHelper(target.getClass()).addText(project,
+        IntrospectionHelper.getHelper(project, target.getClass()).addText(project,
             target, text);
     }
 
@@ -388,7 +386,7 @@ public class ProjectHelper {
     public static void storeChild(Project project, Object parent,
          Object child, String tag) {
         IntrospectionHelper ih
-            = IntrospectionHelper.getHelper(parent.getClass());
+            = IntrospectionHelper.getHelper(project, parent.getClass());
         ih.storeElement(project, parent, child, tag);
     }
 

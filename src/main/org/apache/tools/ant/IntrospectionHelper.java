@@ -310,12 +310,7 @@ public final class IntrospectionHelper implements BuildListener {
      * @return a helper for the specified class
      */
     public static synchronized IntrospectionHelper getHelper(Class c) {
-        IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
-        if (ih == null) {
-            ih = new IntrospectionHelper(c);
-            helpers.put(c, ih);
-        }
-        return ih;
+        return getHelper(null, c);
     }
 
     /**
@@ -332,9 +327,19 @@ public final class IntrospectionHelper implements BuildListener {
      * @return a helper for the specified class
      */
     public static IntrospectionHelper getHelper(Project p, Class c) {
-        IntrospectionHelper ih = getHelper(c);
-        // Cleanup at end of project
-        p.addBuildListener(ih);
+        IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
+        if (ih == null) {
+            ih = new IntrospectionHelper(c);
+            if (p != null) {
+                // #30162: do *not* cache this if there is no project, as we
+                // cannot guarantee that the cache will be cleared.
+                helpers.put(c, ih);
+            }
+        }
+        if (p != null) {
+            // Cleanup at end of project
+            p.addBuildListener(ih);
+        }
         return ih;
     }
 
