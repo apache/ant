@@ -373,3 +373,8 @@ V. Things we probably don't agree on.
 * Make if/unless attributes to check for the value of a property, not
   only its existance.
 
+* separate CVSes and code hierarchies for
+  - task engine [ org.apache.task.* ]
+  - project engine (ie model of targets/projects/workspaces) + support/utility classes 
+    [ org.apache.ant.* ]
+  - core tasks (ie tasks supported by ant contributors) [ org.apache.??? ]
