@@ -495,6 +495,7 @@ Legal:
         <fileset dir="${test.classes}">
           <include name="**/*Test.class" unless="single.test"/>
           <include name="**/${single.test}Test.class" if="single.test"/>
+          <exclude name="**/BzipTest.class" unless="test.bzip"/>
           <exclude name="**/SmbFileSystemTest.class" unless="test.smb"/>
           <exclude name="**/FtpFileSystemTest.class" unless="test.ftp"/>
         </fileset>
