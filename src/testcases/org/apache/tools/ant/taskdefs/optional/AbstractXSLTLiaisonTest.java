@@ -1,5 +1,3 @@
-package org.apache.tools.ant.taskdefs.optional;
-
 /*
  * Copyright  2001,2004 The Apache Software Foundation
  *
@@ -17,15 +15,17 @@ package org.apache.tools.ant.taskdefs.optional;
  *
  */
 
-import junit.framework.TestCase;
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.w3c.dom.Document;
+package org.apache.tools.ant.taskdefs.optional;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import junit.framework.TestCase;
+import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.util.FileUtils;
+import org.w3c.dom.Document;
 
 /**
  * Abtract testcase for XSLTLiaison.
@@ -54,7 +54,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
         if (url == null){
           throw new FileNotFoundException("Unable to load '" + name + "' from classpath");
         }
-        return new File(url.getFile());
+        return new File(FileUtils.newFileUtils().fromURI(url.toExternalForm()));
     }
 
     /** keep it simple stupid */
@@ -64,6 +64,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
         liaison.addParam("param", "value");
         File in = getFile("/taskdefs/optional/xsltliaison-in.xml");
         File out = new File("xsltliaison.tmp");
+        out.deleteOnExit(); // just to be sure
         try {
             liaison.transform(in, out);
         } finally {
@@ -76,6 +77,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
         liaison.setStylesheet(xsl);
         File in = getFile("/taskdefs/optional/xsltliaison-encoding-in.xml");
         File out = new File("xsltliaison-encoding.tmp");
+        out.deleteOnExit(); // just to be sure
         try {
             liaison.transform(in, out);
             Document doc = parseXML(out);
