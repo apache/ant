@@ -363,7 +363,7 @@ public class Get extends Task {
     *    <a HREF="gg@grtmail.com">Gautam Guliani</a>
     *********************************************************************/
 
-    class  Base64Converter {
+    private static class  Base64Converter {
 
         public final char [ ]  alphabet = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',   //  0 to  7

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1028,7 +1028,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         return b;
     }
 
-    private class StackElem {
+    private static class StackElem {
         int ll;
         int hh;
         int dd;

@@ -86,9 +86,9 @@ public class AntStructure extends Task {
 
     private final String lSep = System.getProperty("line.separator");
 
-    private final String BOOLEAN = "%boolean;";
-    private final String TASKS = "%tasks;";
-    private final String TYPES = "%types;";
+    private static final String BOOLEAN = "%boolean;";
+    private static final String TASKS = "%tasks;";
+    private static final String TYPES = "%types;";
 
     private Hashtable visited = new Hashtable();
 

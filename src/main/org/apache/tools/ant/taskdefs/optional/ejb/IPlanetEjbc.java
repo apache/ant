@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1386,7 +1386,7 @@ public class IPlanetEjbc {
      *
      * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
-    private class Classname {
+    private static class Classname {
         private String qualifiedName;  // Fully qualified name of the Java class
         private String packageName;    // Name of the package for this class
         private String className;      // Name of the class without the package
@@ -1488,7 +1488,7 @@ public class IPlanetEjbc {
      *
      * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
-    private class RedirectOutput extends Thread {
+    private static class RedirectOutput extends Thread {
         InputStream stream;  // Stream to read and redirect to standard output
 
         /**
