@@ -53,7 +53,7 @@ public abstract class Repository extends DataType {
         if (getRefid() == null) {
             return this;
         } else {
-            Repository repository = (Repository) getCheckedRef(this.getClass(),
+            Repository repository = (Repository) getCheckedRef(Repository.class, 
                     "Repository");
             return repository;
         }

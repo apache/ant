@@ -105,16 +105,6 @@ public class GetLibraries extends Task {
         add(repo);
     }
 
-
-    /**
-     * add a maven repository.
-     */
-/*
-    public void addMavenRepository(MavenRepository repo) {
-        add(repo);
-    }
-*/
-
     /**
      * bind to a repository.
      */
@@ -173,12 +163,17 @@ public class GetLibraries extends Task {
         this.offline = offline;
     }
 
+
+    /**
+     * get the destination directory
+     * @return
+     */
     public File getDestDir() {
         return destDir;
     }
 
     /**
-     * get fore download flag
+     * get force download flag
      * @return
      */
     public boolean isForceDownload() {
@@ -224,7 +219,7 @@ public class GetLibraries extends Task {
      * @throws BuildException
      */
     public void validate() {
-        if (destDir == null || !destDir.exists() || !destDir.isDirectory()) {
+        if (destDir == null || !destDir.isDirectory()) {
             throw new BuildException(ERROR_NO_DEST_DIR);
         }
         if (repository == null) {
@@ -245,6 +240,7 @@ public class GetLibraries extends Task {
      */
     public void execute() throws BuildException {
         validate();
+        destDir.mkdirs();
         Repository repo = repository.resolve();
         repo.validate();
         if (libraries.size() == 0) {
@@ -261,7 +257,6 @@ public class GetLibraries extends Task {
             verifyAllLibrariesPresent();
             return;
         }
-
 
         //connect the repository
         repo.connect(this);
@@ -413,7 +408,6 @@ public class GetLibraries extends Task {
             return (_next != null);
         }
 
-
         /**
          * get the next element
          * @return
@@ -426,7 +420,6 @@ public class GetLibraries extends Task {
             _next = null;
             return result;
         }
-
 
         /**
          * removal is not supported

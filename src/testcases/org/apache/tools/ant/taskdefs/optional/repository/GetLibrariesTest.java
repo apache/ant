@@ -66,7 +66,7 @@ public class GetLibrariesTest extends BuildFileTest {
     /**
      * refs are  broken
      * */
-    public void NotestFunctionalInline() {
+    public void testFunctionalInline() {
         execIfOnline("testFunctionalInline");
     }
     
@@ -113,6 +113,10 @@ public class GetLibrariesTest extends BuildFileTest {
 
     public void testPathID() {
         execIfOnline("testPathID");
+    }
+
+    public void testSecurity() {
+        execIfOnline("testSecurity");
     }
 
  }

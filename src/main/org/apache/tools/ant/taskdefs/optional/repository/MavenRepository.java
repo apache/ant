@@ -17,6 +17,16 @@
 
 package org.apache.tools.ant.taskdefs.optional.repository;
 
+import org.apache.tools.ant.util.FileUtils;
+
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+
 
 /**
  * A Maven repository knows about maven repository layout rules It also defaults
@@ -31,10 +41,28 @@ public class MavenRepository extends HttpRepository {
 
 
     /**
+     * check the MD5 flag
+     */
+    public boolean checkMD5;
+
+    /**
+     * this is what we think the MD5 type is
+     */
+    protected static final String MAVEN_MD5_FILE_TYPE = "US-ASCII";
+
+    /**
      * bind to the main maven repository
      */
     public MavenRepository() {
         setUrl(MAVEN_URL);
+    }
+
+    /**
+     * set this to check the MD5 signatures. SECURITY IS NOT YET FUNCTIONAL
+     * @param checkMD5
+     */
+    public void setCheckMD5(boolean checkMD5) {
+        this.checkMD5 = checkMD5;
     }
 
     /**
@@ -62,4 +90,55 @@ public class MavenRepository extends HttpRepository {
         return "Maven Repository at " + getUrl();
     }
 
+    /**
+     * fetch a library from the repository
+     *
+     * @param library
+     *
+     * @return true if we retrieved
+     *
+     * @throws org.apache.tools.ant.BuildException
+     *
+     */
+    public boolean fetch(Library library) throws IOException {
+        boolean  fetched=super.fetch(library);
+        if(fetched && checkMD5) {
+            //we got here if there was a fetch. so we now get the MD5 info from the file,
+            boolean successful=false;
+            String md5path = getRemoteLibraryURL(library) + ".md5";
+            File md5file = File.createTempFile(library.getArchive(),".md5");
+            Reader in = null;
+            try {
+                URL md5url=new URL(md5path);
+                logVerbose("getting md5 file from " + md5path +" to "+md5file.getAbsolutePath());
+                get(md5url,md5file, false,getUsername(), getPassword());
+                in = new InputStreamReader(new FileInputStream(md5file),MAVEN_MD5_FILE_TYPE);
+                char md5data[] =new char[32];
+                in.read(md5data);
+                logDebug("md5 data "+md5data);
+                //TODO: verify this against a <checksum> generated signature.
+
+                successful=true;
+            } catch (IOException e) {
+                logVerbose("IO failure on MD5 fetch "+e.getMessage());
+                throw e;
+            } finally {
+                FileUtils.close(in);
+                if(md5file.exists()) {
+                    md5file.delete();
+                }
+                if(!successful) {
+                    //if security checks failed for any reason,
+                    //delete the library file
+                    //brute force paranoia
+                    library.getLibraryFile().delete();
+                }
+            }
+        }
+        return fetched;
+
+    }
+
 }
+
+// e1b1720a761ca36eaa47e1c7d802e676

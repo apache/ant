@@ -157,5 +157,12 @@
       Did not find commons logging in the path
     </fail>
   </target>
+
+  <target name="testSecurity" depends="init">
+    <getlib>
+      <mavenrepository checkMD5="true"/>
+    </getlib>
+    <assert-downloaded/>
+  </target>
 </project>
 

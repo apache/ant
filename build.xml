@@ -329,7 +329,6 @@
   </selector>
 
   <selector id="needs.apache-httpclient">
-    <filename name="${optional.package}/repository/**/*"/>
   </selector>
 
 

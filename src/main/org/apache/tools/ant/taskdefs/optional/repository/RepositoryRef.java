@@ -29,6 +29,9 @@ import java.io.IOException;
  * @since Ant1.7
  */
 public final class RepositoryRef extends Repository {
+    /** this constant name is only funny to COM developers  
+     */
+    public static final String E_NOTIMPL = "Not Implemented";
 
 
     /**
@@ -70,7 +73,7 @@ public final class RepositoryRef extends Repository {
      * @return
      */
     public boolean fetch(Library library) throws IOException {
-        throw new BuildException("Not Implemented");
+        throw new BuildException(E_NOTIMPL);
     }
 
 }
