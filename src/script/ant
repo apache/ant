@@ -4,14 +4,16 @@ if [ -f $HOME/.antrc ] ; then
   . $HOME/.antrc
 fi
 
-# Cygwin support.  $cygwin _must_ be set to either true or false.
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false;
+darwin=false;
 case "`uname`" in
   CYGWIN*) cygwin=true ;;
-  *) cygwin=false ;;
+  Darwin*) darwin=true ;;
 esac
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
-if $cygwin; then
+if $cygwin ; then
   [ -n "$ANT_HOME" ] &&
     ANT_HOME=`cygpath --unix "$ANT_HOME"`
   [ -n "$JAVA_HOME" ] &&
@@ -81,6 +83,18 @@ if [ "$JAVA_HOME" != "" ] ; then
   if test -f $JAVA_HOME/lib/classes.zip ; then
     LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
+
+  # OSX hack to make Ant work with jikes
+  if $darwin ; then
+  OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
+  if [ -d ${OSXHACK} ] ; then
+    for i in ${OSXHACK}/*.jar
+    do
+      JIKESPATH=$JIKESPATH:$i
+    done
+  fi
+  fi
+
 else
   echo "Warning: JAVA_HOME environment variable is not set."
   echo "  If build fails because sun.* classes could not be found"
