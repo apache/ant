@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.image;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.IOException;
@@ -71,12 +72,11 @@ public class ImageTest extends BuildFileTest {
         expectLogContaining("testSimpleScale", "Processing File");
         File f = createRelativeFile("/dest/" + LARGEIMAGE);
         long lastModified = f.lastModified();
-        if (Os.isFamily("dos")) {
-            try {
-                Thread.sleep(2000);
-            }
-            catch (InterruptedException e) {}
+        try {
+            Thread.sleep(FileUtils.newFileUtils()
+                         .getFileTimestampGranularity());
         }
+        catch (InterruptedException e) {}
         expectLogContaining("testOverwriteTrue", "Processing File");
         f = createRelativeFile("/dest/" + LARGEIMAGE);
         long overwrittenLastModified = f.lastModified();
