@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,7 +91,7 @@ public interface FileScanner {
      * The names are relative to the base directory.
      *
      * @return the names of the files which matched at least one of the
-     *         include patterns and at at least one of the exclude patterns.
+     *         include patterns and at least one of the exclude patterns.
      *
      */
     String[] getExcludedFiles();

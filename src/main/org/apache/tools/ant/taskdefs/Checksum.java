@@ -96,7 +96,7 @@ public class Checksum extends MatchingTask implements Condition {
     private File file = null;
 
     /**
-     * Root directory in which the checksu files will be written.
+     * Root directory in which the checksum files will be written.
      * If not specified, the checksum files will be written
      * in the same directory as each file.
      */
@@ -576,7 +576,7 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Converts an array of characters representing hexidecimal values into an
+     * Converts an array of characters representing hexadecimal values into an
      * array of bytes of those same values. The returned array will be half the
      * length of the passed array, as it takes two characters to represent any
      * given byte. An exception is thrown if the passed char array has an odd

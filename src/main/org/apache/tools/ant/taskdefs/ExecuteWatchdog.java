@@ -82,7 +82,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /** the process to execute and watch for duration */
     private Process process;
 
-    /** say whether or not the watchog is currently monitoring a process */
+    /** say whether or not the watchdog is currently monitoring a process */
     private boolean watch = false;
 
     /** exception that might be thrown during the process execution */
@@ -91,14 +91,14 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /** say whether or not the process was killed due to running overtime */
     private boolean     killedProcess = false;
 
-    /** will tell us whether timeout has occured */
+    /** will tell us whether timeout has occurred */
     private Watchdog watchdog;
 
     /**
      * Creates a new watchdog with a given timeout.
      *
      * @param timeout the timeout for the process in milliseconds.
-     * It must be greather than 0.
+     * It must be greater than 0.
      */
     public ExecuteWatchdog(long timeout) {
         watchdog = new Watchdog(timeout);

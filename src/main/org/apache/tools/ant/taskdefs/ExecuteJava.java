@@ -166,7 +166,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 Task currentThreadTask
                     = project.getThreadTask(Thread.currentThread());
                 project.registerThreadTask(thread, currentThreadTask);
-                // if we run into a timout, the run-away thread shall not
+                // if we run into a timeout, the run-away thread shall not
                 // make the VM run forever - if no timeout occurs, Ant's
                 // main thread will still be there to let the new thread
                 // finish

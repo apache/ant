@@ -303,7 +303,7 @@ public class Concat extends Task {
     /**
      * Specify the end of line to find and to add if
      * not present at end of each input file. This attribute
-     * is used in conjuction with fixlastline.
+     * is used in conjunction with fixlastline.
      * @param crlf the type of new line to add -
      *              cr, mac, lf, unix, crlf, or dos
      * @since Ant 1.6
@@ -737,7 +737,7 @@ public class Concat extends Task {
          * Read a character from the current reader object. Advance
          * to the next if the reader is finished.
          * @return the character read, -1 for EOF on the last reader.
-         * @exception IOException - possiblly thrown by the read for a reader
+         * @exception IOException - possibly thrown by the read for a reader
          *            object.
          */
         public int read() throws IOException {
@@ -773,7 +773,7 @@ public class Concat extends Task {
          * @param cbuf The array to be read into.
          * @param off The offset.
          * @param len The length to read.
-         * @exception IOException - possiblely thrown by the reads to the
+         * @exception IOException - possibly thrown by the reads to the
          *            reader objects.
          */
         public int read(char[] cbuf, int off, int len)

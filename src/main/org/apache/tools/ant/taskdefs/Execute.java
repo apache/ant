@@ -440,7 +440,7 @@ public class Execute {
      * allow the shell to perform additional processing such as associating an
      * executable with a script, etc
      *
-     * @param useVMLauncher true if exec should launch through thge VM,
+     * @param useVMLauncher true if exec should launch through the VM,
      *                   false if the shell should be used to launch the
      *                   command.
      */
@@ -603,7 +603,7 @@ public class Execute {
 
     /**
      * test for an untimely death of the process
-     * @return true iff a watchdog had to kill the process
+     * @return true if a watchdog had to kill the process
      * @since Ant 1.5
      */
     public boolean killedProcess() {
@@ -727,7 +727,7 @@ public class Execute {
          * @param project       The project that the command is part of
          * @param cmd           The command to execute
          * @param env           The environment for the new process.  If null,
-         *                      the environment of the current proccess is used.
+         *                      the environment of the current process is used.
          * @throws IOException  if attempting to run a command in a specific directory
          */
         public Process exec(Project project, String[] cmd, String[] env)
@@ -746,7 +746,7 @@ public class Execute {
          * @param project       The project that the command is part of
          * @param cmd           The command to execute
          * @param env           The environment for the new process.  If null,
-         *                      the environment of the current proccess is used.
+         *                      the environment of the current process is used.
          * @param workingDir    The directory to start the command in.  If null,
          *                      the current directory is used
          * @throws IOException  if trying to change directory

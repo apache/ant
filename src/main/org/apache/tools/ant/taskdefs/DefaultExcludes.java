@@ -80,7 +80,7 @@ public class DefaultExcludes extends Task {
     /**
      * Does the work.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
         if (!defaultrequested && add.equals("") && remove.equals("") && !echo) {
@@ -129,7 +129,7 @@ public class DefaultExcludes extends Task {
      * Pattern to remove from the default excludes.
      *
      * @param remove Sets the value for the pattern that
-     *            should nolonger be excluded.
+     *            should no longer be excluded.
      */
     public void setRemove(String remove) {
         this.remove = remove;

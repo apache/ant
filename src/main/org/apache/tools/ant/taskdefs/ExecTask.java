@@ -537,7 +537,7 @@ public class ExecTask extends Task {
 
     /**
      * Run the command using the given Execute instance. This may be
-     * overidden by subclasses
+     * overridden by subclasses
      *
      * @param exe instance of Execute to run
      *

@@ -444,7 +444,7 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * add an arbitary selector
+     * add an arbitrary selector
      * @param selector the selector to be added
      * @since Ant 1.6
      */

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,7 @@ public class Echo extends Task {
     /**
      * Does the work.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
         if (file == null) {

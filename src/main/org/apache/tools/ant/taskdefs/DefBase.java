@@ -65,7 +65,7 @@ import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
  * Base class for Definitions
- * handling uri and and class loading.
+ * handling uri and class loading.
  * (This was part of Definer)
  *
  * @author Costin Manolache
@@ -130,7 +130,7 @@ public abstract class DefBase extends Task implements AntlibInterface {
     }
 
     /**
-     * @return the class path path for this definition
+     * @return the classpath for this definition
      */
     public Path getClasspath() {
         return cpDelegate.getClasspath();

@@ -877,7 +877,7 @@ public class DirectoryScanner
                     }
                 } catch (IOException ioe) {
                     String msg = "IOException caught while checking "
-                        + "for links, couldn't get cannonical path!";
+                        + "for links, couldn't get canonical path!";
                     // will be caught and redirected to Ant's logging system
                     System.err.println(msg);
                     noLinks.addElement(newfiles[i]);
@@ -1108,7 +1108,7 @@ public class DirectoryScanner
      * performing a slow scan if one has not already been completed.
      *
      * @return the names of the files which matched at least one of the
-     *         include patterns and at at least one of the exclude patterns.
+     *         include patterns and at least one of the exclude patterns.
      *
      * @see #slowScan
      */
@@ -1385,7 +1385,7 @@ public class DirectoryScanner
                 }
             } catch (IOException ioe) {
                 String msg = "IOException caught while checking "
-                    + "for links, couldn't get cannonical path!";
+                    + "for links, couldn't get canonical path!";
                 // will be caught and redirected to Ant's logging system
                 System.err.println(msg);
                 return false;
@@ -1402,8 +1402,8 @@ public class DirectoryScanner
     private Set scannedDirs = new HashSet();
 
     /**
-     * Has the directorty with the given path relative to the base
-     * directory allready been scanned?
+     * Has the directory with the given path relative to the base
+     * directory already been scanned?
      *
      * <p>Registers the given directory as scanned as a side effect.</p>
      *

@@ -146,7 +146,7 @@ public final class IntrospectionHelper implements BuildListener {
     // distinction between addConfigured and add. It's obvious what the
     // code *here* does (addConfigured sets both a creator method which
     // calls a no-arg constructor and a storer method which calls the
-    // method we're looking at, whlie add just sets a creator method
+    // method we're looking at, while add just sets a creator method
     // which calls the method we're looking at) but it's not at all
     // obvious what the difference in actual *effect* will be later
     // on. I can't see any mention of addConfiguredXXX in "Developing
@@ -1071,7 +1071,7 @@ public final class IntrospectionHelper implements BuildListener {
             if (polyType != null) {
                 if (!nestedCreator.isPolyMorphic()) {
                     throw new BuildException(
-                        "Not allowed to use the polymorhic form"
+                        "Not allowed to use the polymorphic form"
                         + " for this element");
                 }
                 Class elementClass = nestedCreator.getElementClass();
@@ -1111,8 +1111,8 @@ public final class IntrospectionHelper implements BuildListener {
         }
 
         /**
-         * Stores the nested elemtnt object using a storage method
-         * detimined by introspection.
+         * Stores the nested element object using a storage method
+         * determined by introspection.
          *
          */
         public void store() {

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -106,7 +106,7 @@ public abstract class ProjectComponent {
     }
 
     /**
-     * Logs a mesage with the given priority.
+     * Logs a message with the given priority.
      *
      * @param msg The message to be logged. Should not be <code>null</code>.
      * @param msgLevel the message priority at which this message is

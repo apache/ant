@@ -111,7 +111,7 @@ public class Exit extends Task {
      * evaluate both if and unless conditions, and if
      * ifCondition is true or unlessCondition is false, throw a
      * build exception to exit the build.
-     * The errore message is constructed from the text fields, or from
+     * The error message is constructed from the text fields, or from
      * the if and unless parameters (if present).
      * @throws BuildException
      */
@@ -168,7 +168,7 @@ public class Exit extends Task {
     /**
      * test the unless condition
      * @return true if there is no unless condition,
-     *  or there is a named property but it doesnt exist
+     *  or there is a named property but it doesn't exist
      */
     private boolean testUnlessCondition() {
         if (unlessCondition == null || "".equals(unlessCondition)) {
