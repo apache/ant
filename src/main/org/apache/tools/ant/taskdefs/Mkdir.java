@@ -81,7 +81,7 @@ public class Mkdir extends Task {
 	    boolean result = dir.mkdirs();
 	    if (result == false) {
 		String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
-		    "succesful for an unknown reason";
+		    "succesfull for an unknown reason";
 		throw new BuildException(msg, location);
 	    }
 	    log("Created dir: " + dir.getAbsolutePath());

@@ -45,6 +45,8 @@ supplied, write a class that implements the CompilerAdapter interface
 (package org.apache.tools.ant.taskdefs.compilers). Supply the full
 classname in the &quot;build.compiler&quot; property.
 </p>
+<p>This task will drop all entries that point to non-existant
+files/directories from the CLASSPATH it passes to the compiler.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

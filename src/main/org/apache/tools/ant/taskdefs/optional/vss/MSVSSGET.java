@@ -194,7 +194,7 @@ public class MSVSSGET extends MSVSS {
                 boolean done = dir.mkdirs();
                 if (done == false) {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
-                        "succesful for an unknown reason";
+                        "succesfull for an unknown reason";
                     throw new BuildException(msg, location);
                 }
                 project.log("Created dir: " + dir.getAbsolutePath());

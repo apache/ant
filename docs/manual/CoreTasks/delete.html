@@ -38,7 +38,8 @@ To remove empty directories, use the <em>includeEmptyDirs</em> atribute.</p>
   <tr>
     <td valign="top">quiet</td>
     <td valign="top">If the file does not exist, do not display a diagnostic 
-     message or modify the exit status to reflect an error.
+     message or modify the exit status to reflect an error (unless Ant
+     has been invoked with the -verbose or -debug switches).
      This means that if a file or directory cannot be deleted,
      then no error is reported. This setting emulates the 
      -f option to the Unix &quot;rm&quot; command.

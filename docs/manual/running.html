@@ -90,7 +90,30 @@ target called <code>dist</code>.</p>
 target called <code>dist</code>, setting the <code>build</code> property to the
 value <code>build/classes</code>.</p>
 
-<h3>Running Ant by Hand</h3>
+<h3>Files</h3>
+
+<p>The Ant wrapper script for Unix will source (read and evaluate) the
+file <code>~/.antrc</code> before it does anything - the Windows batch
+file invokes <code>%HOME%\antrc_pre.bat</code> at the start and
+<code>%HOME%\antrc_post.bat</code> at the end.  You can use these
+files to set/unset environment variables that should only be visible
+during the execution of Ant.  See the next section for example.</p>
+
+<h3>Environment Variables</h3>
+
+<p>The wrapper scripts use the following environment variables (if
+set):</p>
+
+<ul>
+  <li><code>JAVACMD</code> full path of the Java executable.  Use this
+  to invoke a different JVM than <code>JAVA_HOME/bin/java(.exe)</code>.</li>
+
+  <li><code>ANT_OPTS</code> command line arguments that should be
+  passed to the JVM - for example, you can define properties or set
+  the maximum Java heap size here.</li>
+</ul>
+
+<h2>Running Ant by Hand</h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
 with:</p>
 <blockquote>
