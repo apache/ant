@@ -65,6 +65,7 @@ import org.apache.tools.ant.util.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.Remote;
 import java.util.Vector;
 
 /**
@@ -400,10 +401,16 @@ public class Rmic extends MatchingTask {
 
         // Move the generated source file to the base directory
         if (null != sourceBase) {
-            for (int j = 0; j < fileCount; j++) {
-                moveGeneratedFile(baseDir, sourceBase,
-                                  (String) compileList.elementAt(j),
-                                  adapter);
+            if (idl) {
+                log("Cannot determine sourcefiles in idl mode, ", 
+                    Project.MSG_WARN);
+                log("sourcebase attribute will be ignored.", Project.MSG_WARN);
+            } else {
+                for (int j = 0; j < fileCount; j++) {
+                    moveGeneratedFile(baseDir, sourceBase,
+                                      (String) compileList.elementAt(j),
+                                      adapter);
+                }
             }
         }
         compileList.removeAllElements();
@@ -446,8 +453,20 @@ public class Rmic extends MatchingTask {
      */
     protected void scanDir(File baseDir, String files[],
                            FileNameMapper mapper) {
-        SourceFileScanner sfs = new SourceFileScanner(this);
-        String[] newFiles = sfs.restrict(files, baseDir, baseDir, mapper);
+
+        String[] newFiles = files;
+        if (idl) {
+            log("will leave uptodate test to rmic implementation in idl mode.",
+                Project.MSG_VERBOSE);
+        } else if (iiop 
+                   && iiopopts != null && iiopopts.indexOf("-always") > -1) {
+            log("no uptodate test as -always option has been specified",
+                Project.MSG_VERBOSE);
+        } else {
+            SourceFileScanner sfs = new SourceFileScanner(this);
+            newFiles = sfs.restrict(files, baseDir, baseDir, mapper);
+        }
+
         for (int i = 0; i < newFiles.length; i++) {
             String classname = newFiles[i].replace(File.separatorChar, '.');
             classname = classname.substring(0, classname.lastIndexOf(".class"));
@@ -461,8 +480,8 @@ public class Rmic extends MatchingTask {
     public boolean isValidRmiRemote(String classname) {
         try {
             Class testClass = loader.loadClass(classname);
-            // One cannot RMIC an interface
-            if (testClass.isInterface()) {
+            // One cannot RMIC an interface for "classic" RMI (JRMP)
+            if (testClass.isInterface() && !iiop && !idl) {
                 return false;
             }
             return isValidRmiRemote(testClass);
@@ -482,30 +501,35 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * Returns the topmost interface that extends Remote for a given
+     * class - if one exists.
+     */
+    public Class getRemoteInterface(Class testClass) {
+        if (Remote.class.isAssignableFrom(testClass)) {
+            Class [] interfaces = testClass.getInterfaces();
+            if (interfaces != null) {
+                for (int i = 0; i < interfaces.length; i++) {
+                    if (Remote.class.isAssignableFrom(interfaces[i])) {
+                        return interfaces[i];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Check to see if the class or (super)interfaces implement
      * java.rmi.Remote.
      */
     private boolean isValidRmiRemote (Class testClass) {
-        Class rmiRemote = java.rmi.Remote.class;
-        
-        if (rmiRemote.equals(testClass)) {
-            // This class is java.rmi.Remote
-            return true;
-        }
-            
-        Class [] interfaces = testClass.getInterfaces();
-        if (interfaces != null) {
-            for (int i = 0; i < interfaces.length; i++) {
-                if (rmiRemote.equals(interfaces[i])) {
-                    // This class directly implements java.rmi.Remote
-                    return true;
-                }
-                if (isValidRmiRemote(interfaces[i])) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return getRemoteInterface(testClass) != null;
     }
+
+    /**
+     * Classloader for the user-specified classpath.
+     */
+    public ClassLoader getLoader() {return loader;}
+
 }
 

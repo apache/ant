@@ -60,6 +60,7 @@ import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.*;
 
 import java.io.File;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -320,6 +321,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
     }
 
+    private final static Random rand = new Random();
+
     /**
      * Mapper that possibly returns two file names, *_Stub and *_Skel.
      */
@@ -353,19 +356,30 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                 return null;
             }
 
-            if (!attributes.getIiop()) {
+            /*
+             * fallback in case we have trouble loading the class or
+             * don't know how to handle it (there is no easy way to
+             * know what IDL mode would generate.
+             *
+             * This is supposed to make Ant always recompile the
+             * class, as a file of that name should not exist.
+             */
+            String[] target = new String[] {name+".tmp."+rand.nextLong()};
+
+            if (!attributes.getIiop() && !attributes.getIdl()) {
+                // JRMP with simple naming convention
                 if ("1.2".equals(attributes.getStubVersion())) {
-                    return new String[] {
+                    target = new String[] {
                         base + getStubClassSuffix() + ".class"
                     };
                 } else {
-                    return new String[] {
+                    target = new String[] {
                         base + getStubClassSuffix() + ".class",
                         base + getSkelClassSuffix() + ".class",
                     };
                 }
-            } else {
-                int lastSlash = base.lastIndexOf("/");
+            } else if (!attributes.getIdl()) {
+                int lastSlash = base.lastIndexOf(File.separatorChar);
 
                 String dirname = "";
                 /*
@@ -382,11 +396,55 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
                 String filename = base.substring(index);
 
-                return new String[] {
-                    dirname + "_" + filename + getStubClassSuffix() + ".class",
-                    dirname + "_" + filename + getTieClassSuffix() + ".class"
-                };
+                try {
+                    Class c = attributes.getLoader().loadClass(classname);
+
+                    if (c.isInterface()) {
+                        // only stub, no tie
+                        target = new String[] {
+                            dirname + "_" + filename + getStubClassSuffix() 
+                            + ".class"
+                        };
+                    } else {
+                        /*
+                         * stub is derived from implementation, 
+                         * tie from interface name.
+                         */
+                        Class interf = attributes.getRemoteInterface(c);
+                        String iName = interf.getName();
+                        String iDir = "";
+                        int iIndex = -1;
+                        int lastDot = iName.lastIndexOf(".");
+                        if (lastDot == -1) {
+                            // no package
+                            iIndex = 0;
+                        } else {
+                            iIndex = lastDot + 1;
+                            iDir = iName.substring(0, iIndex);
+                            iDir = iDir.replace('.', File.separatorChar);
+                        }
+                        
+                        target = new String[] {
+                            dirname + "_" + filename + getTieClassSuffix() 
+                            + ".class",
+                            iDir + "_" + iName.substring(iIndex) 
+                            + getStubClassSuffix() + ".class"
+                        };
+                    }
+                } catch (ClassNotFoundException e) {
+                    attributes.log("Unable to verify class " + classname
+                                   + ". It could not be found.", 
+                                   Project.MSG_WARN);
+                } catch (NoClassDefFoundError e) {
+                    attributes.log("Unable to verify class " + classname
+                                   + ". It is not defined.", Project.MSG_WARN);
+                } catch (Throwable t) {
+                    attributes.log("Unable to verify class " + classname
+                                   + ". Loading caused Exception: "
+                                   + t.getMessage(), Project.MSG_WARN);
+                }
             }
+            return target;
         }
     }
 
