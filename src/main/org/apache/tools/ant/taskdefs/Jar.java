@@ -165,16 +165,6 @@ public class Jar extends Zip {
     }
 
     /**
-     * Override to get hold of the original Manifest (if present and
-     * only if updating ...
-     *
-     * @since Ant 1.5.2
-     */
-    public void setDestFile(File jarFile) {
-        super.setDestFile(jarFile);
-    }
-
-    /**
      * Set whether or not to create an index list for classes.
      * This may speed up classloading in some cases.
      */
