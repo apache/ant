@@ -154,7 +154,7 @@
 
   <selector id="needs.jdk1.5+">
     <or>
-      <filename name="${ant.package}/taskdefs/condition/IsPingable*"/>
+      <filename name="${ant.package}/taskdefs/optional/condition/IsPingable*"/>
     </or>
   </selector>
   
