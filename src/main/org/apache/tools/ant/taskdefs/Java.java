@@ -64,10 +64,12 @@ import java.util.*;
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@pache.org">stefano@apache.org</a>
  */
-public class Java extends Task {
+public class Java extends Exec {
 
     private String classname = null;
     private String args = null;
+    private String jvmargs = null;
+    private boolean fork = false;
     
     /**
      * Do the execution.
@@ -75,16 +77,31 @@ public class Java extends Task {
     public void execute() throws BuildException {
         
         project.log("Calling " + classname, "java", project.MSG_VERBOSE);
-        
+
         if (classname == null) {
             throw new BuildException("Class name must not be null.");
         }
 
-        Vector argList = tokenize(args);
-        
-        project.log("Java args: " + argList.toString(), "java", project.MSG_VERBOSE);
-        
-        run(classname, argList);
+        if (fork) {
+            StringBuffer b = new StringBuffer();
+            b.append("java ");
+            if (jvmargs != null) {
+                b.append(jvmargs);
+                b.append(" ");
+            }
+            b.append(classname);
+            if (args != null) {
+                b.append(" ");
+                b.append(args);
+            }
+            
+            run(b.toString());
+        } else {
+            Vector argList = tokenize(args);
+            if (jvmargs != null) project.log("JVM args ignored when same JVM is used.", "java", project.MSG_VERBOSE);
+            project.log("Java args: " + argList.toString(), "java", project.MSG_VERBOSE);
+            run(classname, argList);
+        }
     }
     
     /**
@@ -101,6 +118,20 @@ public class Java extends Task {
         this.args = s;
     }
 
+    /**
+     * Set the forking flag.
+     */
+    public void setFork(String s) {
+        this.fork = Project.toBoolean(s);
+    }
+
+    /**
+     * Set the jvm arguments.
+     */
+    public void setJvmargs(String s) {
+        this.jvmargs = s;
+    }
+        
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.
