@@ -55,9 +55,6 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -65,8 +62,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.xml.sax.AttributeList;
 import org.apache.tools.ant.helper.ProjectHelperImpl;
@@ -92,6 +87,19 @@ import org.apache.tools.ant.util.LoaderUtils;
  * @author duncan@x180.com
  */
 public class ProjectHelper {
+    /** 
+     * Name of JVM system property which provides the name of the 
+     * ProjectHelper class to use.
+     */
+    public static final String HELPER_PROPERTY =
+        "org.apache.tools.ant.ProjectHelper";
+    
+    /**
+     * The service identifier in jars which provide Project Helper 
+     * implementations.
+     */
+    public static final String SERVICE_ID =
+        "/META-INF/services/org.apache.tools.ant.ProjectHelper";
 
     /**
      * Configures the project with the contents of the specified XML file.
@@ -103,11 +111,13 @@ public class ProjectHelper {
      * @exception BuildException if the configuration is invalid or cannot 
      *                           be read
      */
-    public static void configureProject(Project project, File buildFile) throws BuildException {
-        ProjectHelper helper=ProjectHelper.getProjectHelper();
+    public static void configureProject(Project project, File buildFile) 
+        throws BuildException {
+        ProjectHelper helper = ProjectHelper.getProjectHelper();
         helper.parse(project, buildFile);
     }
 
+    /** Default constructor */
     public ProjectHelper() {
     }
 
@@ -125,16 +135,9 @@ public class ProjectHelper {
      *                           be read
      */
     public void parse(Project project, Object source) throws BuildException {
-        throw new BuildException("ProjectHelper.parse() must be implemented in a helper plugin "
-                                 + this.getClass().getName());
+        throw new BuildException("ProjectHelper.parse() must be implemented "
+            + "in a helper plugin " + this.getClass().getName());
     }
-
-    /* -------------------- Helper discovery -------------------- */
-    public static final String HELPER_PROPERTY =
-        "org.apache.tools.ant.ProjectHelper";
-    
-    public static final String SERVICE_ID =
-        "/META-INF/services/org.apache.tools.ant.ProjectHelper";
 
     
     /** Discover a project helper instance. Uses the same patterns
@@ -142,11 +145,10 @@ public class ProjectHelper {
      *  service discovery, default.
      */
     public static ProjectHelper getProjectHelper()
-        throws BuildException
-    {
+        throws BuildException {
         // Identify the class loader we will be using. Ant may be
         // in a webapp or embeded in a different app
-        ProjectHelper helper=null;
+        ProjectHelper helper = null;
         
         // First, try the system property
         try {
@@ -161,18 +163,18 @@ public class ProjectHelper {
 
         // A JDK1.3 'service' ( like in JAXP ). That will plug a helper
         // automatically if in CLASSPATH, with the right META-INF/services.
-        if( helper==null ) {
+        if (helper == null) {
             try {
-                ClassLoader classLoader=getContextClassLoader();
-                InputStream is=null;
+                ClassLoader classLoader = getContextClassLoader();
+                InputStream is = null;
                 if (classLoader != null) {
-                    is=classLoader.getResourceAsStream( SERVICE_ID );
+                    is = classLoader.getResourceAsStream(SERVICE_ID);
                 }
-                if( is==null ) {
-                    is=ClassLoader.getSystemResourceAsStream( SERVICE_ID );
+                if (is == null) {
+                    is = ClassLoader.getSystemResourceAsStream(SERVICE_ID);
                 }
                 
-                if( is != null ) {
+                if (is != null) {
                     // This code is needed by EBCDIC and other strange systems.
                     // It's a fix for bugs reported in xerces
                     BufferedReader rd;
@@ -186,17 +188,17 @@ public class ProjectHelper {
                     rd.close();
                     
                     if (helperClassName != null &&
-                        ! "".equals(helperClassName)) {
+                        !"".equals(helperClassName)) {
                         
-                        helper= newHelper( helperClassName );
+                        helper = newHelper( helperClassName );
                     }
                 }
-            } catch( Exception ex ) {
+            } catch (Exception ex) {
                 ;
             }
         }
 
-        if( helper!=null ) {
+        if (helper != null) {
             return helper;
         } else {
             // Default
@@ -209,19 +211,18 @@ public class ProjectHelper {
      *  loaded this class.
      */
     private static ProjectHelper newHelper(String helperClass)
-        throws BuildException
-    {
+        throws BuildException {
         ClassLoader classLoader = getContextClassLoader();
         try {
             Class clazz = null;
             if (classLoader != null) {
                 try {
                     clazz = classLoader.loadClass(helperClass);
-                } catch( ClassNotFoundException ex ) {
+                } catch (ClassNotFoundException ex) {
                     // try next method
                 }
             }
-            if( clazz==null ) {
+            if (clazz == null) {
                 clazz = Class.forName(helperClass);
             }
             return ((ProjectHelper) clazz.newInstance());
@@ -235,8 +236,7 @@ public class ProjectHelper {
      *  Cut&paste from Jaxp.
      */
     public static ClassLoader getContextClassLoader()
-        throws BuildException
-    {
+        throws BuildException {
         if (!LoaderUtils.isContextLoaderAvailable()) {
             return null;
         }
@@ -244,7 +244,7 @@ public class ProjectHelper {
         return LoaderUtils.getContextClassLoader();
     }
 
-    // -------------------- Static utils, used by most helpers -------------------- 
+    // -------------------- Static utils, used by most helpers ---------------- 
 
     /**
      * Configures an object using an introspection handler.
@@ -261,8 +261,8 @@ public class ProjectHelper {
      */
     public static void configure(Object target, AttributeList attrs, 
                                  Project project) throws BuildException {
-        if( target instanceof TaskAdapter ) {
-            target=((TaskAdapter)target).getProxy();
+        if (target instanceof TaskAdapter) {
+            target = ((TaskAdapter)target).getProxy();
         }
 
         IntrospectionHelper ih = 
@@ -272,7 +272,7 @@ public class ProjectHelper {
 
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
-            String value=replaceProperties(project, attrs.getValue(i), 
+            String value = replaceProperties(project, attrs.getValue(i), 
                                            project.getProperties() );
             try {
                 ih.setAttribute(project, target, 
@@ -301,8 +301,8 @@ public class ProjectHelper {
      * 
      * @exception BuildException if the target object doesn't accept text
      */
-    public static void addText(Project project, Object target, char[] buf, int start, int count)
-        throws BuildException {
+    public static void addText(Project project, Object target, char[] buf, 
+        int start, int count) throws BuildException {
         addText(project, target, new String(buf, start, count));
     }
 
@@ -326,11 +326,12 @@ public class ProjectHelper {
             return;
         }
 
-        if(target instanceof TaskAdapter) {
+        if (target instanceof TaskAdapter) {
             target = ((TaskAdapter) target).getProxy();
         }
 
-        IntrospectionHelper.getHelper(target.getClass()).addText(project, target, text);
+        IntrospectionHelper.getHelper(target.getClass()).addText(project, 
+            target, text);
     }
 
     /**
@@ -346,7 +347,8 @@ public class ProjectHelper {
      *                May be <code>null</code>, in which case
      *                the child is not stored.
      */
-    public static void storeChild(Project project, Object parent, Object child, String tag) {
+    public static void storeChild(Project project, Object parent, 
+         Object child, String tag) {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parent.getClass());
         ih.storeElement(project, parent, child, tag);
     }
@@ -389,8 +391,8 @@ public class ProjectHelper {
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
      */
-     public static String replaceProperties(Project project, String value, Hashtable keys)
-            throws BuildException {
+     public static String replaceProperties(Project project, String value, 
+         Hashtable keys) throws BuildException {
         if (value == null) {
             return null;
         }
@@ -407,7 +409,8 @@ public class ProjectHelper {
             if (fragment == null) {
                 String propertyName = (String)j.nextElement();
                 if (!keys.containsKey(propertyName)) {
-                    project.log("Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE);
+                    project.log("Property ${" + propertyName 
+                        + "} has not been set", Project.MSG_VERBOSE);
                 }
                 fragment = (keys.containsKey(propertyName)) ? (String) keys.get(propertyName) 
                                                             : "${" + propertyName + "}"; 
@@ -444,11 +447,10 @@ public class ProjectHelper {
                 fragments.addElement(value.substring(prev, pos));
             }
 
-            if( pos == (value.length() - 1)) {
+            if (pos == (value.length() - 1)) {
                 fragments.addElement("$");
                 prev = pos + 1;
-            }
-            else if (value.charAt(pos + 1) != '{' ) {
+            } else if (value.charAt(pos + 1) != '{' ) {
                 fragments.addElement(value.substring(pos + 1, pos + 2));
                 prev = pos + 2;
             } else {

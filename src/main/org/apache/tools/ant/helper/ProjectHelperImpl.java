@@ -54,15 +54,10 @@
 
 package org.apache.tools.ant.helper;
 
-import org.apache.tools.ant.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.util.Locale;
 import org.xml.sax.Locator;
 import org.xml.sax.InputSource;
@@ -72,10 +67,21 @@ import org.xml.sax.SAXException;
 import org.xml.sax.DocumentHandler;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.XMLReaderAdapter;
-
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.RuntimeConfigurable;
+import org.apache.tools.ant.IntrospectionHelper;
+import org.apache.tools.ant.TaskContainer;
+import org.apache.tools.ant.Location;
+import org.apache.tools.ant.TaskAdapter;
 
 /**
  * Original helper.
@@ -94,33 +100,36 @@ public class ProjectHelperImpl extends ProjectHelper {
      * SAX 1 style parser used to parse the given file. This may 
      * in fact be a SAX 2 XMLReader wrapped in an XMLReaderAdapter.
      */
-    org.xml.sax.Parser parser;
+    private org.xml.sax.Parser parser;
     
     /** The project to configure. */
-    Project project;
+    private Project project;
     /** The configuration file to parse. */
-    File buildFile;
+    private File buildFile;
     /** 
      * Parent directory of the build file. Used for resolving entities
      * and setting the project's base directory.
      */
-    File buildFileParent;
+    private File buildFileParent;
     /** 
      * Locator for the configuration file parser. 
      * Used for giving locations of errors etc.
      */
-    Locator locator;
+    private Locator locator;
 
     /**
      * Parses the project file, configuring the project as it goes.
      * 
+     * @param project project instance to be configured.
+     * @param source the source from which the project is read. 
      * @exception BuildException if the configuration is invalid or cannot 
-     *                           be read
+     *                           be read.
      */
     public void parse(Project project, Object source) throws BuildException {
-        if( ! (source instanceof File) )
+        if (!(source instanceof File)) {
             throw new BuildException( "Only File source supported by default plugin" );
-        File buildFile=(File)source;
+        }
+        File buildFile = (File)source;
         FileInputStream inputStream = null;
         InputSource inputSource = null;
 
@@ -136,28 +145,29 @@ public class ProjectHelperImpl extends ProjectHelper {
                 parser = new XMLReaderAdapter(saxParser.getXMLReader());
             }
 
+            
             String uri = "file:" + buildFile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
-                uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
+                uri = uri.substring(0, index) + "%23" + uri.substring(index + 1);
             }
             
             inputStream = new FileInputStream(buildFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
-            project.log("parsing buildfile " + buildFile + " with URI = " + uri, Project.MSG_VERBOSE);
+            project.log("parsing buildfile " + buildFile + " with URI = " 
+                + uri, Project.MSG_VERBOSE);
             HandlerBase hb = new RootHandler(this);
             parser.setDocumentHandler(hb);
             parser.setEntityResolver(hb);
             parser.setErrorHandler(hb);
             parser.setDTDHandler(hb);
             parser.parse(inputSource);
-        }
-        catch(ParserConfigurationException exc) {
+        } catch (ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
-        }
-        catch(SAXParseException exc) {
+        } catch (SAXParseException exc) {
             Location location =
-                new Location(buildFile.toString(), exc.getLineNumber(), exc.getColumnNumber());
+                new Location(buildFile.toString(), exc.getLineNumber(), 
+                    exc.getColumnNumber());
 
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
@@ -169,26 +179,21 @@ public class ProjectHelperImpl extends ProjectHelper {
             }
             
             throw new BuildException(exc.getMessage(), t, location);
-        }
-        catch(SAXException exc) {
+        } catch (SAXException exc) {
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
                 throw (BuildException) t;
             }
             throw new BuildException(exc.getMessage(), t);
-        }
-        catch(FileNotFoundException exc) {
+        } catch (FileNotFoundException exc) {
             throw new BuildException(exc);
-        }
-        catch(IOException exc) {
+        } catch (IOException exc) {
             throw new BuildException("Error reading project file", exc);
-        }
-        finally {
+        } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     // ignore this
                 }
             }
@@ -227,13 +232,16 @@ public class ProjectHelperImpl extends ProjectHelper {
          * Creates a handler and sets the parser to use it
          * for the current element.
          * 
+         * @param helperImpl the ProjectHelperImpl instance associated 
+         *                   with this handler.
+         * 
          * @param parentHandler The handler which should be restored to the 
          *                      parser at the end of the element. 
          *                      Must not be <code>null</code>.
          */
         public AbstractHandler(ProjectHelperImpl helperImpl, DocumentHandler parentHandler) {
             this.parentHandler = parentHandler;
-            this.helperImpl=helperImpl;
+            this.helperImpl = helperImpl;
 
             // Start handling SAX events
             helperImpl.parser.setDocumentHandler(this);
@@ -309,7 +317,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         ProjectHelperImpl helperImpl;
         
         public RootHandler( ProjectHelperImpl helperImpl ) {
-            this.helperImpl=helperImpl;
+            this.helperImpl = helperImpl;
         }
         
         /**
@@ -355,7 +363,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                     inputSource.setSystemId("file:" + entitySystemId);
                     return inputSource;
                 } catch (FileNotFoundException fne) {
-                    helperImpl.project.log(file.getAbsolutePath()+" could not be found", 
+                    helperImpl.project.log(file.getAbsolutePath() + " could not be found", 
                                 Project.MSG_WARN);
                 }
             }
@@ -490,7 +498,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * appropriate handler is created and initialised with the details
          * of the element.
          * 
-         * @param tag The name of the element being started. 
+         * @param name The name of the element being started. 
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
@@ -520,7 +528,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * Handles a task defintion element by creating a task handler
          * and initialising is with the details of the element.
          * 
-         * @param tag The name of the element to be handled.
+         * @param name The name of the element to be handled.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element to be handled.
          *              Will not be <code>null</code>.
@@ -537,7 +545,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * Handles a type defintion element by creating a task handler
          * and initialising is with the details of the element.
          * 
-         * @param tag The name of the element to be handled.
+         * @param name The name of the element to be handled.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element to be handled.
          *              Will not be <code>null</code>.
@@ -553,7 +561,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * Handles a property defintion element by creating a task handler
          * and initialising is with the details of the element.
          * 
-         * @param tag The name of the element to be handled.
+         * @param name The name of the element to be handled.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element to be handled.
          *              Will not be <code>null</code>.
@@ -584,7 +592,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * Handles a data type defintion element by creating a data type 
          * handler and initialising is with the details of the element.
          * 
-         * @param tag The name of the element to be handled.
+         * @param name The name of the element to be handled.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element to be handled.
          *              Will not be <code>null</code>.
@@ -687,7 +695,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         /**
          * Handles the start of an element within a target.
          * 
-         * @param tag The name of the element being started. 
+         * @param name The name of the element being started. 
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
@@ -852,7 +860,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * will always use another task handler, and all other tasks
          * will always use a nested element handler.
          * 
-         * @param tag The name of the element being started. 
+         * @param name The name of the element being started. 
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
@@ -864,8 +872,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (task instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
                 new TaskHandler(helperImpl, this, (TaskContainer)task, wrapper, target).init(name, attrs);
-            }
-            else {
+            } else {
                 new NestedElementHandler(helperImpl, this, task, wrapper, target).init(name, attrs);
             }
         }
@@ -933,7 +940,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * its parent container (if any). Nested elements are then
          * added later as the parser encounters them.
          * 
-         * @param tag Name of the element which caused this handler
+         * @param propType Name of the element which caused this handler
          *            to be created. Must not be <code>null</code>.
          *            
          * @param attrs Attributes of the element which caused this
@@ -1003,7 +1010,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * will always use a task handler, and all other elements
          * will always use another nested element handler.
          * 
-         * @param tag The name of the element being started. 
+         * @param name The name of the element being started. 
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
@@ -1016,8 +1023,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                 // taskcontainer nested element can contain other tasks - no other 
                 // nested elements possible
                 new TaskHandler(helperImpl, this, (TaskContainer)child, childWrapper, target).init(name, attrs);
-            }
-            else {
+            } else {
                 new NestedElementHandler(helperImpl, this, child, childWrapper, target).init(name, attrs);
             }
         }
@@ -1067,7 +1073,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * its parent container (if any). Nested elements are then
          * added later as the parser encounters them.
          * 
-         * @param tag Name of the element which caused this handler
+         * @param propType Name of the element which caused this handler
          *            to be created. Must not be <code>null</code>.
          *            
          * @param attrs Attributes of the element which caused this
@@ -1080,7 +1086,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             try {
                 element = helperImpl.project.createDataType(propType);
                 if (element == null) {
-                    throw new BuildException("Unknown data type "+propType);
+                    throw new BuildException("Unknown data type " + propType);
                 }
                 
                 if (target != null) {
@@ -1122,7 +1128,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * Handles the start of an element within this one.
          * This will always use a nested element handler.
          * 
-         * @param tag The name of the element being started. 
+         * @param name The name of the element being started. 
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
