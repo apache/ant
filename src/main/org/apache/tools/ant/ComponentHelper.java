@@ -161,6 +161,41 @@ public class ComponentHelper  {
         return component;
     }
 
+    /**
+     * get the class of a particular component
+     */
+    public Class getComponentClass(String componentName) {
+        Class elementClass =
+            (Class) getTaskDefinitions().get(componentName);
+        if (elementClass != null) {
+            if (! (Task.class.isAssignableFrom(elementClass))) {
+                elementClass = TaskAdapter.class;
+            }
+            return elementClass;
+        }
+        return (Class) getDataTypeDefinitions().get(componentName);
+    }
+    
+    /**
+     * create a named component
+     */
+    public Object createComponent(String componentName)
+        throws BuildException
+    {
+        Object obj = createTask(componentName);
+        if (obj == null) {
+            obj = createDataType(componentName);
+        }
+        if (obj == null) {
+            return obj;
+        }
+        project.setProjectReference(obj);
+        if (obj instanceof Task) {
+            ((Task)obj).init(); // Needed here ??
+        }
+        return obj;
+    }
+
     /** Initialization code - implementing the original ant component
      * loading from /org/apache/tools/ant/taskdefs/default.properties 
      * and .../types/default.properties

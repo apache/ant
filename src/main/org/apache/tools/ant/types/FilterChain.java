@@ -59,7 +59,6 @@ import java.io.Reader;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.EscapeUnicode;
@@ -85,7 +84,7 @@ import org.apache.tools.ant.taskdefs.Concat;
  * @author Magesh Umasankar
  */
 public final class FilterChain extends DataType
-    implements Cloneable, DynamicConfigurator
+    implements Cloneable
 {
 
     private Vector filterReaders = new Vector();
@@ -246,38 +245,14 @@ public final class FilterChain extends DataType
 
         super.setRefid(r);
     }
-    
+
     /**
-     * create the named datatype and check if it
-     * is a filter.
-     *
-     * @throws BuildException if unknown datatype or incorrect datatype
+     * add a chainfilter
      * @since Ant 1.6
      */
-    
-    public Object createDynamicElement(String name)
-    {
-        if (getProject() == null)
-            throw new BuildException("Unable to get the project");
 
-        Object obj = getProject().createDataType(name);
-        if (obj == null)
-            throw new BuildException("Unknown type " + name);
-        if (! (obj instanceof ChainableReader))
-            throw new BuildException(
-                "type " + name + " is not a filterreader");
-        filterReaders.addElement(obj);
-        return obj;
-    }
-
-    /**
-     * Needed for dynamic element support.
-     *
-     * @throws BuildException always
-     */
-    
-    public void setDynamicAttribute(String name, String value) {
-        throw new BuildException("Unknown attribute " + name);
+    public void add(ChainableReader filter) {
+        filterReaders.addElement(filter);
     }
 
 }

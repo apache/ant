@@ -58,8 +58,10 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
@@ -96,6 +98,11 @@ public class IntrospectionHelper implements BuildListener {
      * (String to NestedCreator).
      */
     private Hashtable nestedCreators;
+
+    /**
+     * Vector of methods matching add[Configured](Class) pattern
+     */
+    private List   addTypeMethods;
 
     /**
      * Map from attribute names to methods to store configured nested types
@@ -199,6 +206,7 @@ public class IntrospectionHelper implements BuildListener {
         nestedTypes = new Hashtable();
         nestedCreators = new Hashtable();
         nestedStorers = new Hashtable();
+        addTypeMethods = new ArrayList();
 
         this.bean = bean;
 
@@ -208,6 +216,14 @@ public class IntrospectionHelper implements BuildListener {
             final String name = m.getName();
             Class returnType = m.getReturnType();
             Class[] args = m.getParameterTypes();
+
+            // check of add[Configured](Class) pattern
+            if (args.length == 1
+                && java.lang.Void.TYPE.equals(returnType)
+                && (name.equals("add") /*|| name.equals("addConfigured")*/)) {
+                insertAddTypeMethod(m);
+                continue;
+            }
 
             // not really user settable properties on tasks
             if (org.apache.tools.ant.Task.class.isAssignableFrom(bean)
@@ -534,6 +550,16 @@ public class IntrospectionHelper implements BuildListener {
     public Object createElement(Project project, Object parent,
         String elementName) throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
+        if (nc == null && addTypeMethods.size() > 0) {
+            Object nestedElement = createAddTypeElement(
+                project, parent, elementName);
+            if (nestedElement != null) {
+                if (project != null) {
+                    project.setProjectReference(nestedElement);
+                }
+                return nestedElement;
+            }
+        }
         if (nc == null && parent instanceof DynamicConfigurator) {
             DynamicConfigurator dc = (DynamicConfigurator) parent;
             Object nestedElement = dc.createDynamicElement(elementName);
@@ -578,7 +604,8 @@ public class IntrospectionHelper implements BuildListener {
      */
     public boolean supportsNestedElement(String elementName) {
         return nestedCreators.containsKey(elementName) ||
-            DynamicConfigurator.class.isAssignableFrom(bean);
+            DynamicConfigurator.class.isAssignableFrom(bean) ||
+            addTypeMethods.size() != 0;
     }
 
     /**
@@ -978,4 +1005,102 @@ public class IntrospectionHelper implements BuildListener {
      * @param event Ignored in this implementation.
      */
     public void messageLogged(BuildEvent event) {}
+
+    /**
+     * Check if the parent accepts a typed nested element
+     * and if so, create the object, call the parents
+     * addmethod.
+     * This method is part of the initial support
+     * for add(Type) and addConfigured(Type).
+     * AddConfigured(Type) will be done later.
+     */
+
+    private Object createAddTypeElement(
+        Project project, Object parent, String elementName)
+    {
+        ComponentHelper helper = ComponentHelper.getComponentHelper(project);
+        Object addedObject = null;
+        Method addMethod = null;
+
+        Class clazz = helper.getComponentClass(elementName);
+        if (clazz == null) {
+            return null;
+        }
+        addMethod = findMatchingMethod(clazz, addTypeMethods);
+        if (addMethod == null) {
+            return null;
+        }
+        addedObject = helper.createComponent(elementName);
+        if (addedObject == null) {
+            return null;
+        }
+
+        try {
+            addMethod.invoke(parent, new Object[] {addedObject});
+        } catch (IllegalAccessException ex) {
+            throw new BuildException(ex);
+        } catch (InvocationTargetException ex) {
+            Throwable t = ex.getTargetException();
+            if (t instanceof BuildException) {
+                throw (BuildException) t;
+            }
+            throw new BuildException(t);
+        } catch (Throwable t) {
+            throw new BuildException(t);
+        }
+        return addedObject;
+    }
+
+    /**
+     * Inserts an add or addConfigured method into
+     * the addTypeMethods array. The array is
+     * ordered so that the more derived classes
+     * are first.
+     */
+
+    private void insertAddTypeMethod(Method method) {
+        Class argClass = method.getParameterTypes()[0];
+        for (int c = 0; c < addTypeMethods.size(); ++c) {
+            Method current = (Method) addTypeMethods.get(c);
+            if (current.getParameterTypes()[0].equals(argClass)) {
+                return; // Already present
+            }
+            if (current.getParameterTypes()[0].isAssignableFrom(
+                            argClass)) {
+                addTypeMethods.add(c, method);
+                return; // higher derived
+            }
+        }
+        addTypeMethods.add(method);
+    }
+    
+
+    /**
+     * Search the list of methods to find the first method
+     * that has a parameter that accepts the nested element object
+     */
+    private Method findMatchingMethod(Class paramClass, List methods) {
+        Class matchedClass = null;
+        Method matchedMethod = null;
+        
+        for (int i = 0; i < methods.size(); ++i) {
+            Method method = (Method) methods.get(i);
+            Class  methodClass = method.getParameterTypes()[0];
+            if (methodClass.isAssignableFrom(paramClass)) {
+                if (matchedClass == null) {
+                    matchedClass = methodClass;
+                    matchedMethod = method;
+                } else {
+                    if (! methodClass.isAssignableFrom(matchedClass)) {
+                        throw new BuildException(
+                            "ambiguous: types " + matchedClass.getName() +
+                            " and " + methodClass.getName() +
+                            " match " + paramClass.getName());
+                    }
+                }
+            }
+        }
+        return matchedMethod;
+    }
+
 }

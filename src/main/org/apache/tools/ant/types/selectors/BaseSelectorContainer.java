@@ -305,5 +305,14 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
+    
+    /**
+     * add an arbitary selector
+     * @since Ant 1.6
+     */
+    public void add(FileSelector selector) {
+        appendSelector(selector);
+    }
+
 }
 

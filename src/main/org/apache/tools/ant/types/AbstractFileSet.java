@@ -650,6 +650,14 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * add an arbitary selector
+     * @since Ant 1.6
+     */
+    public void add(FileSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
      * Returns included files as a list of semicolon-separated filenames
      *
      * @return String object with included filenames

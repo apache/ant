@@ -189,5 +189,11 @@ public interface SelectorContainer {
      * @since ant 1.6
      */
     public void addDifferent(DifferentSelector selector);
+
+    /**
+     * add an arbitary selector
+     * @since Ant 1.6
+     */
+    public void add(FileSelector selector);
 }
 

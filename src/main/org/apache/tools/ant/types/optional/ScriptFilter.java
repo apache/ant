@@ -79,8 +79,6 @@ import org.apache.tools.ant.Task;
 public class ScriptFilter
     extends TokenFilter.ChainableReaderFilter
 {
-    /** The current project - set by ant reflection */
-    private Project project;
     /** The language - attribute of element */
     private String language;
     /** The script - inline text or external file */
@@ -93,16 +91,6 @@ public class ScriptFilter
     private BSFManager manager;
     /** the token used by the script */
     private String token;
-
-    /** Called by ant reflection to set the project */
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    /** this is provided to allow easier CAP from the ScriptTask */
-    private Project getProject() {
-        return project;
-    }
 
     /**
      * Defines the language (required).

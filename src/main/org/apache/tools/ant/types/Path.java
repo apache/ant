@@ -221,6 +221,19 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
+     * Adds a nested path
+     * @since Ant 1.6
+     */
+    public void add(Path path) throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        elements.addElement(path);
+        setChecked( false );
+        
+    }
+    
+    /**
      * Creates a nested <code>&lt;path&gt;</code> element.
      */
     public Path createPath() throws BuildException {

@@ -426,6 +426,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public void addDifferent(DifferentSelector selector) {
         fileset.addDifferent(selector);
     }
+
     /**
      * add a type selector entry on the type list
      * @param selector
@@ -433,6 +434,14 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void addType(TypeSelector selector) {
         fileset.addType(selector);
+    }
+
+    /**
+     * add an arbitary selector
+     * @since Ant 1.6
+     */
+    public void add(FileSelector selector) {
+        fileset.add(selector);
     }
 
     /**

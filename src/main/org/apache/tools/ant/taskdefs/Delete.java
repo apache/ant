@@ -76,6 +76,7 @@ import org.apache.tools.ant.types.selectors.OrSelector;
 import org.apache.tools.ant.types.selectors.PresentSelector;
 import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SizeSelector;
+import org.apache.tools.ant.types.selectors.FileSelector;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -416,6 +417,15 @@ public class Delete extends MatchingTask {
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         usedMatchingTask = true;
         super.addContainsRegexp(selector);
+    }
+
+    /**
+     * add an arbitary selector
+     * @since Ant 1.6
+     */
+    public void add(FileSelector selector) {
+        usedMatchingTask = true;
+        super.add(selector);
     }
 
     /**

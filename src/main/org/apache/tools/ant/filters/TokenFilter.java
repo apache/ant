@@ -59,8 +59,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.RegularExpression;
@@ -80,7 +80,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
  */
 public class TokenFilter
     extends BaseFilterReader
-    implements ChainableReader, DynamicConfigurator
+    implements ChainableReader
 {
     /**
      * input stream tokenizers implement this interface
@@ -229,9 +229,7 @@ public class TokenFilter
      */
 
     public void addLineTokenizer(LineTokenizer tokenizer) {
-        if (this.tokenizer != null)
-            throw new BuildException("Only one tokenizer allowed");
-        this.tokenizer = tokenizer;
+        add(tokenizer);
     }
 
     /**
@@ -239,21 +237,26 @@ public class TokenFilter
      */
 
     public void addStringTokenizer(StringTokenizer tokenizer) {
-        if (this.tokenizer != null)
-            throw new BuildException("Only one tokenizer allowed");
-        this.tokenizer = tokenizer;
+        add(tokenizer);
     }
 
     /**
      *  add a file tokenizer
      */
     public void addFileTokenizer(FileTokenizer tokenizer) {
+        add(tokenizer);
+    }
+
+    /**
+     * add a tokenizer
+     */
+    
+    public void add(Tokenizer tokenizer) {
         if (this.tokenizer != null)
             throw new BuildException("Only one tokenizer allowed");
         this.tokenizer = tokenizer;
     }
-
-
+    
     // -----------------------------------------
     //  Predefined filters
     // -----------------------------------------
@@ -297,48 +300,7 @@ public class TokenFilter
         filters.addElement(filter);
     }
 
-    /**
-     * create the named datatype and check if it
-     * is a filter or a tokenizer
-     *
-     * @throws BuildException if unknown datatype or incorrect datatype
-     */
-
-    public Object createDynamicElement(String name)
-    {
-        if (getProject() == null)
-            throw new BuildException(
-                "createDynamicElement.TokenFilter" +
-                " - Unable to get the project");
-
-        Object obj = getProject().createDataType(name);
-        if (obj == null)
-            throw new BuildException("Unknown type " + name);
-        if (obj instanceof Filter)
-            filters.addElement(obj);
-        else if (obj instanceof Tokenizer) {
-            if (this.tokenizer != null)
-                throw new BuildException("Only one tokenizer allowed");
-            tokenizer = (Tokenizer) obj;
-        }
-        else
-            throw new BuildException(
-                "type " + name + " is not a TokenFilter.Filter or " +
-                "TokenFiler.Tokenizer");
-        return obj;
-    }
-
-
-    /**
-     * Needed for dynamic element support.
-     *
-     * @throws BuildException always
-     */
-
-    public void setDynamicAttribute(String name, String value) {
-        throw new BuildException("Unknown attribute " + name);
-    }
-
+        
     // --------------------------------------------
     //
     //      Tokenizer Classes
@@ -349,6 +311,7 @@ public class TokenFilter
      * class to read the complete input into a string
      */
     public static class FileTokenizer
+        extends ProjectComponent
         implements Tokenizer
     {
         /**
@@ -378,6 +341,7 @@ public class TokenFilter
      * by \r (mac style), \r\n (dos/windows style) or \n (unix style)
      */
     public static class LineTokenizer
+        extends ProjectComponent
         implements Tokenizer
     {
         private String  lineEnd = "";
@@ -466,6 +430,7 @@ public class TokenFilter
      * as delims flag is set).
      */
     public static class StringTokenizer
+        extends ProjectComponent
         implements Tokenizer
     {
         private String intraString = "";
@@ -585,6 +550,7 @@ public class TokenFilter
     // --------------------------------------------
 
     public static abstract class ChainableReaderFilter
+        extends ProjectComponent
         implements ChainableReader, Filter
     {
         private boolean byLine = true;
@@ -596,7 +562,7 @@ public class TokenFilter
         public Reader chain(Reader reader) {
             TokenFilter tokenFilter = new TokenFilter(reader);
             if (!byLine)
-                tokenFilter.addFileTokenizer(new FileTokenizer());
+                tokenFilter.add(new FileTokenizer());
             tokenFilter.add(this);
             return tokenFilter;
         }
@@ -656,6 +622,7 @@ public class TokenFilter
      * Simple filter to filter lines contains strings
      */
     public static class ContainsString
+        extends ProjectComponent
         implements Filter
     {
         private String contains;
@@ -818,6 +785,7 @@ public class TokenFilter
      * Filter to delete characters
      */
     public static class DeleteCharacters
+        extends ProjectComponent
         implements Filter, ChainableReader
     {
         // Attributes
