@@ -8,7 +8,6 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.avalon.framework.Enum;
 
 /**
  * This interface represents the <em>Context</em> in which Task is executed.
@@ -22,12 +21,6 @@ import org.apache.avalon.framework.Enum;
 public interface TaskContext
     extends Context
 {
-    //these values are used when setting properties to indicate the scope at
-    //which properties are set
-    ScopeEnum CURRENT = new ScopeEnum( "Current" );
-    ScopeEnum PARENT = new ScopeEnum( "Parent" );
-    ScopeEnum TOP_LEVEL = new ScopeEnum( "TopLevel" );
-
     //these are the names of properties that every TaskContext must contain
     String BASE_DIRECTORY = "myrmidon.base.directory";
     String NAME = "myrmidon.task.name";
@@ -82,16 +75,6 @@ public interface TaskContext
         throws TaskException;
 
     /**
-     * Set property value.
-     *
-     * @param name the name of property
-     * @param value the value of property
-     * @param scope the scope at which to set property
-     */
-    void setProperty( String name, Object value, ScopeEnum scope )
-        throws TaskException;
-
-    /**
      * Create a Child Context.
      * This allows separate hierarchly contexts to be easily constructed.
      *
@@ -101,17 +84,5 @@ public interface TaskContext
      */
     TaskContext createSubContext( String name )
         throws TaskException;
-
-    /**
-     * Safe wrapper class for Scope enums.
-     */
-    public final class ScopeEnum
-        extends Enum
-    {
-        ScopeEnum( final String name )
-        {
-            super( name );
-        }
-    }
 }
 

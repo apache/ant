@@ -228,49 +228,8 @@ public class DefaultTaskContext
     public void setProperty( final String name, final Object value )
         throws TaskException
     {
-        setProperty( name, value, CURRENT );
-    }
-
-    /**
-     * Set property value.
-     */
-    public void setProperty( final String name, final Object value, final ScopeEnum scope )
-        throws TaskException
-    {
         checkPropertyValid( name, value );
-
-        if( CURRENT == scope )
-        {
-            m_contextData.put( name, value );
-        }
-        else if( PARENT == scope )
-        {
-            if( null == m_parent )
-            {
-                final String message = REZ.getString( "no-parent.error" );
-                throw new TaskException( message );
-            }
-            else
-            {
-                m_parent.setProperty( name, value );
-            }
-        }
-        else if( TOP_LEVEL == scope )
-        {
-            DefaultTaskContext context = this;
-
-            while( null != context.m_parent )
-            {
-                context = (DefaultTaskContext)context.m_parent;
-            }
-
-            context.m_contextData.put( name, value );
-        }
-        else
-        {
-            final String message = REZ.getString( "bad-scope.error", scope );
-            throw new IllegalStateException( message );
-        }
+        m_contextData.put( name, value );
     }
 
     /**
