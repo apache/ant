@@ -126,7 +126,7 @@ public interface TaskContext
     /**
      * Safe wrapper class for Scope enums.
      */
-    final class ScopeEnum
+    public final class ScopeEnum
         extends Enum
     {
         ScopeEnum( final String name )
