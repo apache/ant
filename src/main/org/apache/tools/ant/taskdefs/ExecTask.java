@@ -197,6 +197,8 @@ public class ExecTask extends Task {
                 return new PumpStreamHandler(fos);
             } catch (FileNotFoundException fne) {
                 throw new BuildException("Cannot write to "+out, fne, location);
+            } catch (IOException ioe) {
+                throw new BuildException("Cannot write to "+out, ioe, location);
             }
         } else {
             return new LogStreamHandler(this,

@@ -158,13 +158,13 @@ public class JavaCC extends Task {
                 }
             } finally {
                 if (cleanupHack) {
-                    final File oo393 = new File(javaFile.getParentFile(),
+                    final File oo393 = new File(javaFile.getParent(),
                                                 "OO393.class");
                     if (oo393.exists()) {
                         project.log("Removing stale file: " + oo393.getName());
                         oo393.delete();
                     }
-                    final File sunjj = new File(javaFile.getParentFile(),
+                    final File sunjj = new File(javaFile.getParent(),
                                                 "__jj" + javaFile.getName().substring(0,
                                                                                       javaFile.getName().indexOf(".java")) + ".sunjj");
                     if (sunjj.exists()) {
