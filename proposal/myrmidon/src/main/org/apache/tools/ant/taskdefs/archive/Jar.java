@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.zip.ZipFile;
 import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.Manifest;
-import org.apache.tools.ant.taskdefs.ManifestException;
+import org.apache.tools.ant.taskdefs.manifest.Manifest;
+import org.apache.tools.ant.taskdefs.manifest.ManifestException;
 import org.apache.tools.ant.types.FileScanner;
 
 /**

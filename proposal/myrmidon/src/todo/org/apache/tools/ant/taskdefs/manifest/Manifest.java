@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.manifest;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +32,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class Manifest
     extends AbstractTask
