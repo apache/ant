@@ -72,6 +72,7 @@ import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -92,6 +93,7 @@ public class Replace extends MatchingTask {
     private NestedString value = new NestedString();
 
     private File propertyFile = null;
+    private File replaceFilterFile = null;
     private Properties properties = null;
     private Vector replacefilters = new Vector();
 
@@ -207,6 +209,18 @@ public class Replace extends MatchingTask {
      * Do the execution.
      */
     public void execute() throws BuildException {
+
+        if (replaceFilterFile != null) {
+            Properties properties = getProperties(replaceFilterFile);
+            Enumeration enum = properties.keys();
+            while(enum.hasMoreElements()){
+               String token =  enum.nextElement().toString();
+               Replacefilter replaceFilter = createReplacefilter();
+               replaceFilter.setToken(token);
+               replaceFilter.setValue(properties.getProperty(token));
+            }
+        }
+
         validateAttributes();
 
         if (propertyFile != null) {
@@ -434,6 +448,13 @@ public class Replace extends MatchingTask {
     }
     
     
+    /**
+     * Sets a file used to define multiple ReplaceFilters from key-value pairs.
+     */
+    public void setReplaceFilterFile(File filename) {
+        replaceFilterFile = filename;
+    }
+
     /**
      * Set the source files path when using matching tasks.
      */
