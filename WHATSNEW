@@ -251,8 +251,14 @@ Other changes:
 
 * Perforce tasks now support a "failonerror" attribute (defaults to "true").
 
-* Open Source application server JOnAS support :
-  EJB hot deploy and deploy with <serverdeploy> and <ejbjar>
+* Open Source application server JOnAS support:
+    EJB hot deploy and deploy with <serverdeploy> and <ejbjar>
+
+* Added new DirSet (<dirset>) datatype.
+
+* <path> now supports nested <dirset> and <filelist> elements.
+
+* <pathconvert> now supports nested <dirset> and <filelist> elements.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================

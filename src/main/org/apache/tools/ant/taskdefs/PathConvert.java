@@ -184,15 +184,16 @@ public class PathConvert extends Task {
     }
 
     /**
-     * Set the value of the proprty attribute - this is the property into which our
-     * converted path will be placed.
+     * Set the value of the property attribute - this is the property
+     * into which our converted path will be placed.
      */
     public void setProperty( String p ) {
         property = p;
     }
 
     /**
-     * Adds a reference to a PATH or FILESET defined elsewhere.
+     * Adds a reference to a Path, FileSet, DirSet, or FileList defined
+     * elsewhere.
      */
     public void setRefid(Reference r) {
         if( path != null ) {
@@ -312,8 +313,8 @@ public class PathConvert extends Task {
 
         if( size != 0 ) {
 
-            // Iterate over the map entries and apply each one.  Stop when one of the
-            // entries actually changes the element
+            // Iterate over the map entries and apply each one.
+            // Stop when one of the entries actually changes the element.
 
             for( int i=0; i < size; i++ ) {
                 MapEntry entry = (MapEntry)prefixMap.elementAt(i);
@@ -379,7 +380,7 @@ public class PathConvert extends Task {
      * not have child elements if the refid attribute is set.  
      */
     private BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested PATH elements when using refid");
+        return new BuildException("You must not specify nested <path> elements when using the refid attribute.");
     }
 
 
