@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,10 @@ public class RegexpPatternMapper implements FileNameMapper {
     protected char[] to = null;
     protected StringBuffer result = new StringBuffer();
 
+    /**
+     * Constructor for RegexpPatternMapper.
+     * @throws BuildException on error.
+     */
     public RegexpPatternMapper() throws BuildException {
         reg = (new RegexpMatcherFactory()).newRegexpMatcher();
     }
@@ -66,6 +70,8 @@ public class RegexpPatternMapper implements FileNameMapper {
 
     /**
      * Sets the &quot;from&quot; pattern. Required.
+     * @param from the from pattern.
+     * @throws BuildException on error.
      */
     public void setFrom(String from) throws BuildException {
         try {
@@ -80,6 +86,8 @@ public class RegexpPatternMapper implements FileNameMapper {
 
     /**
      * Sets the &quot;to&quot; pattern. Required.
+     * @param to the to pattern.
+     * @throws BuildException on error.
      */
     public void setTo(String to) {
         this.to = to.toCharArray();
@@ -89,6 +97,9 @@ public class RegexpPatternMapper implements FileNameMapper {
      * Returns null if the source file name doesn't match the
      * &quot;from&quot; pattern, an one-element array containing the
      * translated file otherwise.
+     * @param sourceFileName the source file name
+     * @return a one-element array containing the translated file or
+     *         null if the to pattern did not match
      */
     public String[] mapFileName(String sourceFileName) {
         if (handleDirChar) {
@@ -106,6 +117,8 @@ public class RegexpPatternMapper implements FileNameMapper {
     /**
      * Replace all backreferences in the to pattern with the matched
      * groups of the source.
+     * @param source the source file name.
+     * @return the translated file name.
      */
     protected String replaceReferences(String source) {
         Vector v = reg.getGroups(source, regexpOptions);
