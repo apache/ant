@@ -107,7 +107,7 @@ public class TraXLiaison implements XSLTLiaison {
     public void setStylesheet(File stylesheet) throws Exception {
         xslStream = new FileInputStream(stylesheet);
         StreamSource src = new StreamSource(xslStream);
-        src.setSystemId(FILE_PROTOCOL_PREFIX + stylesheet.getAbsolutePath());
+        src.setSystemId(getSystemId(stylesheet));
         templates = tfactory.newTemplates(src);
         transformer = templates.newTransformer();
     }
@@ -119,10 +119,10 @@ public class TraXLiaison implements XSLTLiaison {
             fis = new FileInputStream(infile);
             fos = new FileOutputStream(outfile);
             StreamSource src = new StreamSource(fis);
-            src.setSystemId(FILE_PROTOCOL_PREFIX + infile.getAbsolutePath());
+            src.setSystemId(getSystemId(infile));
             StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
-            res.setSystemId(FILE_PROTOCOL_PREFIX + outfile.getAbsolutePath());
+            res.setSystemId(getSystemId(outfile));
 
             transformer.transform(src, res);
         } finally {
@@ -145,6 +145,16 @@ public class TraXLiaison implements XSLTLiaison {
                 }
             } catch (IOException ignored){}
         }
+    }
+
+    // make sure that the systemid is made of '/' and not '\' otherwise
+    // crimson will complain that it cannot resolve relative entities
+    // because it grabs the base uri via lastIndexOf('/') without
+    // making sure it is really a /'ed path
+    protected String getSystemId(File file){
+      String path = file.getAbsolutePath();
+      path = path.replace('\\','/');
+      return FILE_PROTOCOL_PREFIX + path;
     }
 
     public void addParam(String name, String value){
