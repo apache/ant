@@ -123,8 +123,8 @@ public class SSHExec extends SSHBase {
     }
 
     /**
-     * Should the output be appended to the file given in
-     * <code>setOutput</code> ? Default is false, that is, overwrite
+     * Determines if the output is appended to the file given in
+     * <code>setOutput</code>. Default is false, that is, overwrite
      * the file.
      *
      * @param append  True to append to an existing file, false to overwrite.

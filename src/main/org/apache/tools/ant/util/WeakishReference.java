@@ -73,7 +73,7 @@ public abstract class WeakishReference  {
     /**
      * create the appropriate type of reference for the java version
      * @param object
-     * @return
+     * @return reference to the Object.
      */
     public static WeakishReference createReference(Object object) {
         if(referenceConstructor==null) {
