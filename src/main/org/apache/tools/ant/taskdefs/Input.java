@@ -121,6 +121,7 @@ public class Input extends Task {
 
     /**
      * Set a multiline message.
+     * @param msg The message to be displayed.
      */
     public void addText(String msg) {
         message += getProject().replaceProperties(msg);
@@ -133,8 +134,8 @@ public class Input extends Task {
     }
 
     /**
-     * Actual method executed by jakarta-ant.
-     * @exception BuildException
+     * Actual method executed by ant.
+     * @throws BuildException
      */
     public void execute () throws BuildException {
         if (addproperty != null

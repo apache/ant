@@ -311,7 +311,7 @@ public class ExecuteOn extends ExecTask {
                 }
 
                 if (!"file".equals(currentType)) {
-                    String[] s = getDirs(base, ds);;
+                    String[] s = getDirs(base, ds);
                     for (int j = 0; j < s.length; j++) {
                         totalDirs++;
                         fileNames.addElement(s[j]);

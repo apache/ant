@@ -104,7 +104,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     public void setSystemProperties(CommandlineJava.SysProperties s) {
         sysProperties = s;
     }
-    
+
     /**
      * Permissions for the application run.
      * @since Ant 1.6
@@ -220,7 +220,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     public void run() {
         final Object[] argument = {javaCommand.getArguments()};
         try {
-            if(perm != null) {
+            if (perm != null) {
                 perm.setSecurityManager();
             }
             main.invoke(null, argument);
@@ -232,7 +232,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         } catch (Throwable t) {
             caught = t;
         } finally {
-            if(perm != null) {
+            if (perm != null) {
                 perm.restoreSecurityManager();
             }
             synchronized (this) {

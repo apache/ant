@@ -307,11 +307,13 @@ public class Execute {
             try {
                 return bos.toString("Cp1047");
             } catch (java.io.UnsupportedEncodingException e) {
+                //noop default encoding used
             }
         } else if (Os.isFamily("os/400")) {
             try {
                 return bos.toString("Cp500");
             } catch (java.io.UnsupportedEncodingException e) {
+                //noop default encoding used
             }
         }
         return bos.toString();

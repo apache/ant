@@ -98,6 +98,9 @@ public class Exit extends Task {
         unlessCondition = c;
     }
 
+    /**
+     * Exits the actual build.
+     */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
             if (message != null && message.length() > 0) {
@@ -110,6 +113,7 @@ public class Exit extends Task {
 
     /**
      * Set a multiline message.
+     * @param msg the message to display
      */
     public void addText(String msg) {
         if (message == null) {
