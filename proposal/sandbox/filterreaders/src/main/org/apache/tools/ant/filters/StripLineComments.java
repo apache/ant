@@ -15,11 +15,11 @@ import org.apache.tools.ant.types.Parameterizable;
  * =======
  *
  * <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
- *    <param name="comment" value="#"/>
- *    <param name="comment" value="--"/>
- *    <param name="comment" value="REM "/>
- *    <param name="comment" value="rem "/>
- *    <param name="comment" value="//"/>
+ *    <param type="comment" value="#"/>
+ *    <param type="comment" value="--"/>
+ *    <param type="comment" value="REM "/>
+ *    <param type="comment" value="rem "/>
+ *    <param type="comment" value="//"/>
  * </filterreader>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
@@ -126,7 +126,7 @@ public final class StripLineComments
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
-                if (COMMENTS_KEY.equals(parameters[i].getName())) {
+                if (COMMENTS_KEY.equals(parameters[i].getType())) {
                     comments.addElement(parameters[i].getValue());
                 }
             }
