@@ -9,6 +9,7 @@ package org.apache.tools.ant.types;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.Os;
+import org.apache.avalon.excalibur.util.StringUtil;
 import java.io.File;
 
 /**
@@ -178,14 +179,6 @@ public class CommandlineJava
         sysProperties.addVariable( sysp );
     }
 
-    /**
-     * Clear out the java arguments.
-     */
-    public void clearJavaArgs()
-    {
-        javaCommand.clearArgs();
-    }
-
     public Argument createArgument()
     {
         return javaCommand.createArgument();
@@ -239,7 +232,8 @@ public class CommandlineJava
     {
         try
         {
-            return Commandline.toString( getCommandline() );
+            String[] line = getCommandline();
+            return StringUtil.join( line, " " );
         }
         catch( TaskException e )
         {
@@ -249,7 +243,8 @@ public class CommandlineJava
 
     private Commandline getActualVMCommand()
     {
-        Commandline actualVMCommand = (Commandline)vmCommand.clone();
+        Commandline actualVMCommand = new Commandline();
+        //(Commandline)vmCommand.clone();
         if( maxMemory != null )
         {
             actualVMCommand.createArgument().setValue( "-Xmx" + maxMemory );
