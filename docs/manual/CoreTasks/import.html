@@ -31,12 +31,12 @@ that are not possible with entity includes:
   <li>special properties</li>
 </ul>
   </p>
-<b>Target overriding</b><br />
-<br />
-If a target in the main file is also present in at least one of the
-imported files, it takes precedence.<br />
-<br />
-So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
+<h4>Target overriding</h4>
+
+<p>If a target in the main file is also present in at least one of the
+imported files, it takes precedence.</p>
+
+<p>So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
 that contains a &quot;<b>docs</b>&quot; target, I can redefine it in my main
 buildfile and that is the one that will be called. This makes it easy to
 keep the same target name, so that the overriding target is still called
@@ -44,26 +44,26 @@ by any other targets--in either the main or imported buildfile(s)--for which
 it is a dependency, with a different implementation. The original target is
 made available by the name &quot;<b>builddocs</b><b>.docs</b>&quot;.
 This enables the new implementation to call the old target, thus
-<i>enhancing</i> it with tasks called before or after it.<br />
-<br />
-<b>Special Properties</b><br />
-<br />
-Imported files are treated as they are present in the main
+<i>enhancing</i> it with tasks called before or after it.</p>
+
+<h4>Special Properties</h4>
+
+<p>Imported files are treated as they are present in the main
 buildfile. This makes it easy to understand, but it makes it impossible
 for them to reference files and resources relative to their path.
 Because of this, for every imported file, Ant adds a property that
 contains the path to the imported buildfile. With this path, the
 imported buildfile can keep resources and be able to reference them
-relative to its position.<br />
-<br />
-So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
-I can get its path as <b>ant.file.builddocs</b>, similarly to the <b>ant.file</b>
-property of the main buildfile.<br />
-Note that &quot;builddocs&quot; is not the filename, but the name attribute
-present in the imported project tag.<br />
+relative to its position.</p>
 
-<br/>
-<b>Resolving files against the imported file</b>
+<p>So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
+I can get its path as <b>ant.file.builddocs</b>, similarly to the <b>ant.file</b>
+property of the main buildfile.</p>
+
+<p>Note that &quot;builddocs&quot; is not the filename, but the name attribute
+present in the imported project tag.</p>
+
+<h4>Resolving files against the imported file</h4>
 
 <p>Suppose your main build file called <code>importing.xml</code>
 imports a build file <code>imported.xml</code>, located anywhere on
@@ -134,19 +134,19 @@ project).</p>
     </tr>
   </tbody>
 </table>
-<h3><br />
-</h3>
+
 <h3>Examples</h3>
-<pre>&nbsp; &lt;import file=&quot;../common-targets.xml&quot; /&gt;<br /></pre>
-<br />
-Imports targets from the common-targets.xml file that is in a parent
-directory.<br />
-<br />
-<pre>&nbsp; &lt;import file=&quot;${deploy-platform}.xml&quot; /&gt;<br /></pre>
-<br />
-Imports the project defined by the property deploy-platform<br />
-<br />
-<br />
+<pre>&nbsp; &lt;import file=&quot;../common-targets.xml&quot; /&gt;
+</pre>
+
+<p>Imports targets from the common-targets.xml file that is in a parent
+directory.</p>
+
+<pre>&nbsp; &lt;import file=&quot;${deploy-platform}.xml&quot; /&gt;
+</pre>
+
+<p>Imports the project defined by the property deploy-platform</p>
+
 <hr>
 <p align="center">Copyright &copy; 2003-2004 The Apache Software
 Foundation. All rights
