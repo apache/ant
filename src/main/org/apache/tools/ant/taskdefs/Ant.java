@@ -62,6 +62,8 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
@@ -393,10 +395,10 @@ public class Ant extends Task {
                     throw new BuildException(getTaskName() + " task calling "
                                              + "its own parent target.");
                 } else {
-                    Target other = 
+                    Target other =
                         (Target) getProject().getTargets().get(target);
                     if (other != null && other.dependsOn(owningTargetName)) {
-                        throw new BuildException(getTaskName() 
+                        throw new BuildException(getTaskName()
                                                  + " task calling a target"
                                                  + " that depends on"
                                                  + " its parent target \'"
@@ -409,9 +411,9 @@ public class Ant extends Task {
             addReferences();
 
             if (target != null) {
-                newProject.executeTarget(target);
-            } else {
-                newProject.executeTarget("");
+                if (!"".equals(target)) {
+                    newProject.executeTarget(target);
+                }
             }
         } finally {
             // help the gc
@@ -441,6 +443,17 @@ public class Ant extends Task {
      * @throws BuildException under unknown circumstances
      */
     private void overrideProperties() throws BuildException {
+        // remove duplicate properties - last property wins
+        // Needed for backward compatibility
+        Set set = new HashSet();
+        for (int i = properties.size() - 1; i >= 0; --i) {
+            Property p = (Property) properties.get(i);
+            if (set.contains(p.getName())) {
+                properties.remove(i);
+            } else {
+                set.add(p.getName());
+            }
+        }
         Enumeration e = properties.elements();
         while (e.hasMoreElements()) {
             Property p = (Property) e.nextElement();

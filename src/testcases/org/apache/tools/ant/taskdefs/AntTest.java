@@ -306,6 +306,14 @@ public class AntTest extends BuildFileTest {
         expectBuildException("infinite-loop-via-depends", "recursive call");
     }
 
+    public void testMultiSameProperty() {
+        expectLog("multi-same-property", "prop is two");
+    }
+
+    public void testTopLevelTarget() {
+        expectLog("topleveltarget", "Hello world");
+    }
+    
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;

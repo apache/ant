@@ -169,4 +169,20 @@
 
   <target name="middleman" depends="infinite-loop-via-depends"/>
   <target name="dependent" depends="middleman"/>
+  
+  <target name="multi-same-property">
+    <ant antfile="ant.xml" target="echo-for-multi-same">
+      <property name="prop" value="one"/>
+      <property name="prop" value="two"/>
+    </ant>
+  </target>
+
+  <target name="echo-for-multi-same">
+    <echo>prop is ${prop}</echo>
+  </target>
+
+  <target name="topleveltarget">
+    <ant antfile="ant.topleveltest.xml"/>
+  </target>
+
 </project>
