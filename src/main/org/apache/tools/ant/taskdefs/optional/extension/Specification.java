@@ -71,81 +71,79 @@ import java.util.jar.Manifest;
  * Java2 Standard Edition package, in file
  * <code>guide/extensions/versioning.html</code>.</p>
  *
- * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
- *  This file is from excalibur.extension package. Dont edit this file
- * directly as there is no unit tests to make sure it is operational
- * in ant. Edit file in excalibur and run tests there before changing
- * ants file.
- * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
- *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public final class Specification
-{
+public final class Specification {
     /**
      * Manifest Attribute Name object for SPECIFICATION_TITLE.
      * @see Attributes.Name#SPECIFICATION_TITLE
      */
-    public static final Attributes.Name SPECIFICATION_TITLE = Attributes.Name.SPECIFICATION_TITLE;
+    public static final Attributes.Name SPECIFICATION_TITLE
+        = Attributes.Name.SPECIFICATION_TITLE;
 
     /**
      * Manifest Attribute Name object for SPECIFICATION_VERSION.
      * @see Attributes.Name#SPECIFICATION_VERSION
      */
-    public static final Attributes.Name SPECIFICATION_VERSION = Attributes.Name.SPECIFICATION_VERSION;
+    public static final Attributes.Name SPECIFICATION_VERSION
+        = Attributes.Name.SPECIFICATION_VERSION;
 
     /**
      * Manifest Attribute Name object for SPECIFICATION_VENDOR.
      * @see Attributes.Name#SPECIFICATION_VENDOR
      */
-    public static final Attributes.Name SPECIFICATION_VENDOR = Attributes.Name.SPECIFICATION_VENDOR;
+    public static final Attributes.Name SPECIFICATION_VENDOR
+        = Attributes.Name.SPECIFICATION_VENDOR;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_TITLE.
      * @see Attributes.Name#IMPLEMENTATION_TITLE
      */
-    public static final Attributes.Name IMPLEMENTATION_TITLE = Attributes.Name.IMPLEMENTATION_TITLE;
+    public static final Attributes.Name IMPLEMENTATION_TITLE
+        = Attributes.Name.IMPLEMENTATION_TITLE;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VERSION.
      * @see Attributes.Name#IMPLEMENTATION_VERSION
      */
-    public static final Attributes.Name IMPLEMENTATION_VERSION = Attributes.Name.IMPLEMENTATION_VERSION;
+    public static final Attributes.Name IMPLEMENTATION_VERSION
+        = Attributes.Name.IMPLEMENTATION_VERSION;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VENDOR.
      * @see Attributes.Name#IMPLEMENTATION_VENDOR
      */
-    public static final Attributes.Name IMPLEMENTATION_VENDOR = Attributes.Name.IMPLEMENTATION_VENDOR;
+    public static final Attributes.Name IMPLEMENTATION_VENDOR
+        = Attributes.Name.IMPLEMENTATION_VENDOR;
 
     /**
      * Enum indicating that extension is compatible with other Package
      * Specification.
      */
     public static final Compatibility COMPATIBLE =
-        new Compatibility( "COMPATIBLE" );
+        new Compatibility("COMPATIBLE");
 
     /**
      * Enum indicating that extension requires an upgrade
      * of specification to be compatible with other Package Specification.
      */
     public static final Compatibility REQUIRE_SPECIFICATION_UPGRADE =
-        new Compatibility( "REQUIRE_SPECIFICATION_UPGRADE" );
+        new Compatibility("REQUIRE_SPECIFICATION_UPGRADE");
 
     /**
      * Enum indicating that extension requires a vendor
      * switch to be compatible with other Package Specification.
      */
     public static final Compatibility REQUIRE_VENDOR_SWITCH =
-        new Compatibility( "REQUIRE_VENDOR_SWITCH" );
+        new Compatibility("REQUIRE_VENDOR_SWITCH");
 
     /**
      * Enum indicating that extension requires an upgrade
      * of implementation to be compatible with other Package Specification.
      */
     public static final Compatibility REQUIRE_IMPLEMENTATION_CHANGE =
-        new Compatibility( "REQUIRE_IMPLEMENTATION_CHANGE" );
+        new Compatibility("REQUIRE_IMPLEMENTATION_CHANGE");
 
     /**
      * Enum indicating that extension is incompatible with
@@ -154,46 +152,46 @@ public final class Specification
      * may have a different ID.
      */
     public static final Compatibility INCOMPATIBLE =
-        new Compatibility( "INCOMPATIBLE" );
+        new Compatibility("INCOMPATIBLE");
 
     /**
      * The name of the Package Specification.
      */
-    private String m_specificationTitle;
+    private String specificationTitle;
 
     /**
      * The version number (dotted decimal notation) of the specification
      * to which this optional package conforms.
      */
-    private DeweyDecimal m_specificationVersion;
+    private DeweyDecimal specificationVersion;
 
     /**
      * The name of the company or organization that originated the
      * specification to which this specification conforms.
      */
-    private String m_specificationVendor;
+    private String specificationVendor;
 
     /**
      * The title of implementation.
      */
-    private String m_implementationTitle;
+    private String implementationTitle;
 
     /**
      * The name of the company or organization that produced this
      * implementation of this specification.
      */
-    private String m_implementationVendor;
+    private String implementationVendor;
 
     /**
      * The version string for implementation. The version string is
      * opaque.
      */
-    private String m_implementationVersion;
+    private String implementationVersion;
 
     /**
      * The sections of jar that the specification applies to.
      */
-    private String[] m_sections;
+    private String[] sections;
 
     /**
      * Return an array of <code>Package Specification</code> objects.
@@ -201,12 +199,12 @@ public final class Specification
      *
      * @param manifest Manifest to be parsed
      * @return the Package Specifications extensions in specified manifest
+     * @throws ParseException if the attributes of the specifications cannot
+     * be parsed according to their expected formats.
      */
-    public static Specification[] getSpecifications( final Manifest manifest )
-        throws ParseException
-    {
-        if( null == manifest )
-        {
+    public static Specification[] getSpecifications(final Manifest manifest)
+        throws ParseException {
+        if (null == manifest) {
             return new Specification[ 0 ];
         }
 
@@ -214,19 +212,18 @@ public final class Specification
 
         final Map entries = manifest.getEntries();
         final Iterator keys = entries.keySet().iterator();
-        while( keys.hasNext() )
-        {
-            final String key = (String)keys.next();
-            final Attributes attributes = (Attributes)entries.get( key );
-            final Specification specification = getSpecification( key, attributes );
-            if( null != specification )
-            {
-                results.add( specification );
+        while (keys.hasNext()) {
+            final String key = (String) keys.next();
+            final Attributes attributes = (Attributes) entries.get(key);
+            final Specification specification
+                = getSpecification(key, attributes);
+            if (null != specification) {
+                results.add(specification);
             }
         }
 
-        final ArrayList trimmedResults = removeDuplicates( results );
-        return (Specification[])trimmedResults.toArray( new Specification[ 0 ] );
+        final ArrayList trimmedResults = removeDuplicates(results);
+        return (Specification[]) trimmedResults.toArray(new Specification[0]);
     }
 
     /**
@@ -241,16 +238,15 @@ public final class Specification
      * @param implementationVersion the implementation Version.
      * @param implementationVendor the implementation Vendor.
      */
-    public Specification( final String specificationTitle,
+    public Specification(final String specificationTitle,
                           final String specificationVersion,
                           final String specificationVendor,
                           final String implementationTitle,
                           final String implementationVersion,
-                          final String implementationVendor )
-    {
-        this( specificationTitle, specificationVersion, specificationVendor,
+                          final String implementationVendor) {
+        this(specificationTitle, specificationVersion, specificationVendor,
               implementationTitle, implementationVersion, implementationVendor,
-              null );
+              null);
     }
 
     /**
@@ -266,47 +262,42 @@ public final class Specification
      * @param implementationVendor the implementation Vendor.
      * @param sections the sections/packages that Specification applies to.
      */
-    public Specification( final String specificationTitle,
+    public Specification(final String specificationTitle,
                           final String specificationVersion,
                           final String specificationVendor,
                           final String implementationTitle,
                           final String implementationVersion,
                           final String implementationVendor,
-                          final String[] sections )
-    {
-        m_specificationTitle = specificationTitle;
-        m_specificationVendor = specificationVendor;
+                          final String[] sections) {
+        this.specificationTitle = specificationTitle;
+        this.specificationVendor = specificationVendor;
 
-        if( null != specificationVersion )
-        {
-            try
-            {
-                m_specificationVersion = new DeweyDecimal( specificationVersion );
-            }
-            catch( final NumberFormatException nfe )
-            {
-                final String error = "Bad specification version format '" + specificationVersion +
-                    "' in '" + specificationTitle + "'. (Reason: " + nfe + ")";
-                throw new IllegalArgumentException( error );
+        if (null != specificationVersion) {
+            try {
+                this.specificationVersion
+                    = new DeweyDecimal(specificationVersion);
+            } catch (final NumberFormatException nfe) {
+                final String error = "Bad specification version format '"
+                    + specificationVersion + "' in '" + specificationTitle
+                    + "'. (Reason: " + nfe + ")";
+                throw new IllegalArgumentException(error);
             }
         }
 
-        m_implementationTitle = implementationTitle;
-        m_implementationVendor = implementationVendor;
-        m_implementationVersion = implementationVersion;
+        this.implementationTitle = implementationTitle;
+        this.implementationVendor = implementationVendor;
+        this.implementationVersion = implementationVersion;
 
-        if( null == m_specificationTitle )
-        {
-            throw new NullPointerException( "specificationTitle" );
+        if (null == this.specificationTitle) {
+            throw new NullPointerException("specificationTitle");
         }
 
         String[] copy = null;
-        if( null != sections )
-        {
+        if (null != sections) {
             copy = new String[ sections.length ];
-            System.arraycopy( sections, 0, copy, 0, sections.length );
+            System.arraycopy(sections, 0, copy, 0, sections.length);
         }
-        m_sections = copy;
+        this.sections = copy;
     }
 
     /**
@@ -314,9 +305,8 @@ public final class Specification
      *
      * @return the title of speciication
      */
-    public String getSpecificationTitle()
-    {
-        return m_specificationTitle;
+    public String getSpecificationTitle() {
+        return specificationTitle;
     }
 
     /**
@@ -324,9 +314,8 @@ public final class Specification
      *
      * @return the vendor of the specification.
      */
-    public String getSpecificationVendor()
-    {
-        return m_specificationVendor;
+    public String getSpecificationVendor() {
+        return specificationVendor;
     }
 
     /**
@@ -334,9 +323,8 @@ public final class Specification
      *
      * @return the title of the specification.
      */
-    public String getImplementationTitle()
-    {
-        return m_implementationTitle;
+    public String getImplementationTitle() {
+        return implementationTitle;
     }
 
     /**
@@ -344,9 +332,8 @@ public final class Specification
      *
      * @return the version of the specification.
      */
-    public DeweyDecimal getSpecificationVersion()
-    {
-        return m_specificationVersion;
+    public DeweyDecimal getSpecificationVersion() {
+        return specificationVersion;
     }
 
     /**
@@ -354,9 +341,8 @@ public final class Specification
      *
      * @return the vendor of the extensions implementation.
      */
-    public String getImplementationVendor()
-    {
-        return m_implementationVendor;
+    public String getImplementationVendor() {
+        return implementationVendor;
     }
 
     /**
@@ -364,9 +350,8 @@ public final class Specification
      *
      * @return the version of the implementation.
      */
-    public String getImplementationVersion()
-    {
-        return m_implementationVersion;
+    public String getImplementationVersion() {
+        return implementationVersion;
     }
 
     /**
@@ -376,65 +361,55 @@ public final class Specification
      * @return an array containing sections to which specification applies
      *         or null if relevent to no sections.
      */
-    public String[] getSections()
-    {
-        if( null == m_sections )
-        {
+    public String[] getSections() {
+        if (null == sections) {
             return null;
-        }
-        else
-        {
-            final String[] sections = new String[ m_sections.length ];
-            System.arraycopy( m_sections, 0, sections, 0, m_sections.length );
-            return sections;
+        } else {
+            final String[] newSections = new String[ sections.length ];
+            System.arraycopy(sections, 0, newSections, 0, sections.length);
+            return newSections;
         }
     }
 
     /**
      * Return a Compatibility enum indicating the relationship of this
-     * <code>Package Specification</code> with the specified <code>Extension</code>.
+     * <code>Package Specification</code> with the specified
+     * <code>Extension</code>.
      *
      * @param other the other specification
      * @return the enum indicating the compatibility (or lack thereof)
      *         of specifed Package Specification
      */
-    public Compatibility getCompatibilityWith( final Specification other )
-    {
+    public Compatibility getCompatibilityWith(final Specification other) {
         // Specification Name must match
-        if( !m_specificationTitle.equals( other.getSpecificationTitle() ) )
-        {
+        if (!specificationTitle.equals(other.getSpecificationTitle())) {
             return INCOMPATIBLE;
         }
 
         // Available specification version must be >= required
-        final DeweyDecimal specificationVersion = other.getSpecificationVersion();
-        if( null != specificationVersion )
-        {
-            if( null == m_specificationVersion ||
-                !isCompatible( m_specificationVersion, specificationVersion ) )
-            {
+        final DeweyDecimal specificationVersion
+            = other.getSpecificationVersion();
+        if (null != specificationVersion) {
+            if (null == specificationVersion
+                || !isCompatible(specificationVersion, specificationVersion)) {
                 return REQUIRE_SPECIFICATION_UPGRADE;
             }
         }
 
         // Implementation Vendor ID must match
         final String implementationVendor = other.getImplementationVendor();
-        if( null != implementationVendor )
-        {
-            if( null == m_implementationVendor ||
-                !m_implementationVendor.equals( implementationVendor ) )
-            {
+        if (null != implementationVendor) {
+            if (null == implementationVendor
+                || !implementationVendor.equals(implementationVendor)) {
                 return REQUIRE_VENDOR_SWITCH;
             }
         }
 
         // Implementation version must be >= required
         final String implementationVersion = other.getImplementationVersion();
-        if( null != implementationVersion )
-        {
-            if( null == m_implementationVersion ||
-                !m_implementationVersion.equals( implementationVersion ) )
-            {
+        if (null != implementationVersion) {
+            if (null == implementationVersion
+                || !implementationVersion.equals(implementationVersion)) {
                 return REQUIRE_IMPLEMENTATION_CHANGE;
             }
         }
@@ -451,9 +426,8 @@ public final class Specification
      * @param other the specification
      * @return true if the specification is compatible with this specification
      */
-    public boolean isCompatibleWith( final Specification other )
-    {
-        return ( COMPATIBLE == getCompatibilityWith( other ) );
+    public boolean isCompatibleWith(final Specification other) {
+        return (COMPATIBLE == getCompatibilityWith(other));
     }
 
     /**
@@ -461,54 +435,49 @@ public final class Specification
      *
      * @return string representation of object.
      */
-    public String toString()
-    {
-        final String lineSeparator = System.getProperty( "line.separator" );
+    public String toString() {
+        final String lineSeparator = System.getProperty("line.separator");
         final String brace = ": ";
 
-        final StringBuffer sb = new StringBuffer( SPECIFICATION_TITLE.toString() );
-        sb.append( brace );
-        sb.append( m_specificationTitle );
-        sb.append( lineSeparator );
+        final StringBuffer sb
+            = new StringBuffer(SPECIFICATION_TITLE.toString());
+        sb.append(brace);
+        sb.append(specificationTitle);
+        sb.append(lineSeparator);
 
-        if( null != m_specificationVersion )
-        {
-            sb.append( SPECIFICATION_VERSION );
-            sb.append( brace );
-            sb.append( m_specificationVersion );
-            sb.append( lineSeparator );
+        if (null != specificationVersion) {
+            sb.append(SPECIFICATION_VERSION);
+            sb.append(brace);
+            sb.append(specificationVersion);
+            sb.append(lineSeparator);
         }
 
-        if( null != m_specificationVendor )
-        {
-            sb.append( SPECIFICATION_VENDOR );
-            sb.append( brace );
-            sb.append( m_specificationVendor );
-            sb.append( lineSeparator );
+        if (null != specificationVendor) {
+            sb.append(SPECIFICATION_VENDOR);
+            sb.append(brace);
+            sb.append(specificationVendor);
+            sb.append(lineSeparator);
         }
 
-        if( null != m_implementationTitle )
-        {
-            sb.append( IMPLEMENTATION_TITLE );
-            sb.append( brace );
-            sb.append( m_implementationTitle );
-            sb.append( lineSeparator );
+        if (null != implementationTitle) {
+            sb.append(IMPLEMENTATION_TITLE);
+            sb.append(brace);
+            sb.append(implementationTitle);
+            sb.append(lineSeparator);
         }
 
-        if( null != m_implementationVersion )
-        {
-            sb.append( IMPLEMENTATION_VERSION );
-            sb.append( brace );
-            sb.append( m_implementationVersion );
-            sb.append( lineSeparator );
+        if (null != implementationVersion) {
+            sb.append(IMPLEMENTATION_VERSION);
+            sb.append(brace);
+            sb.append(implementationVersion);
+            sb.append(lineSeparator);
         }
 
-        if( null != m_implementationVendor )
-        {
-            sb.append( IMPLEMENTATION_VENDOR );
-            sb.append( brace );
-            sb.append( m_implementationVendor );
-            sb.append( lineSeparator );
+        if (null != implementationVendor) {
+            sb.append(IMPLEMENTATION_VENDOR);
+            sb.append(brace);
+            sb.append(implementationVendor);
+            sb.append(lineSeparator);
         }
 
         return sb.toString();
@@ -521,9 +490,9 @@ public final class Specification
      * @param first First version number (dotted decimal)
      * @param second Second version number (dotted decimal)
      */
-    private boolean isCompatible( final DeweyDecimal first, final DeweyDecimal second )
-    {
-        return first.isGreaterThanOrEqual( second );
+    private boolean isCompatible(final DeweyDecimal first,
+                                 final DeweyDecimal second) {
+        return first.isGreaterThanOrEqual(second);
     }
 
     /**
@@ -536,31 +505,26 @@ public final class Specification
      * @param list the array of results to trim
      * @return an array list with all duplicates removed
      */
-    private static ArrayList removeDuplicates( final ArrayList list )
-    {
+    private static ArrayList removeDuplicates(final ArrayList list) {
         final ArrayList results = new ArrayList();
         final ArrayList sections = new ArrayList();
-        while( list.size() > 0 )
-        {
-            final Specification specification = (Specification)list.remove( 0 );
+        while (list.size() > 0) {
+            final Specification specification = (Specification) list.remove(0);
             final Iterator iterator = list.iterator();
-            while( iterator.hasNext() )
-            {
-                final Specification other = (Specification)iterator.next();
-                if( isEqual( specification, other ) )
-                {
+            while (iterator.hasNext()) {
+                final Specification other = (Specification) iterator.next();
+                if (isEqual(specification, other)) {
                     final String[] otherSections = other.getSections();
-                    if( null != sections )
-                    {
-                        sections.addAll( Arrays.asList( otherSections ) );
+                    if (null != sections) {
+                        sections.addAll(Arrays.asList(otherSections));
                     }
                     iterator.remove();
                 }
             }
 
             final Specification merged =
-                mergeInSections( specification, sections );
-            results.add( merged );
+                mergeInSections(specification, sections);
+            results.add(merged);
             //Reset list of sections
             sections.clear();
         }
@@ -576,16 +540,15 @@ public final class Specification
      * @return true if two specifications are equal except for their
      *         sections, else false
      */
-    private static boolean isEqual( final Specification specification,
-                                    final Specification other )
-    {
+    private static boolean isEqual(final Specification specification,
+                                    final Specification other) {
         return
-            specification.getSpecificationTitle().equals( other.getSpecificationTitle() ) &&
-            specification.getSpecificationVersion().isEqual( other.getSpecificationVersion() ) &&
-            specification.getSpecificationVendor().equals( other.getSpecificationVendor() ) &&
-            specification.getImplementationTitle().equals( other.getImplementationTitle() ) &&
-            specification.getImplementationVersion().equals( other.getImplementationVersion() ) &&
-            specification.getImplementationVendor().equals( other.getImplementationVendor() );
+            specification.getSpecificationTitle().equals(other.getSpecificationTitle())
+            && specification.getSpecificationVersion().isEqual(other.getSpecificationVersion())
+            && specification.getSpecificationVendor().equals(other.getSpecificationVendor())
+            && specification.getImplementationTitle().equals(other.getImplementationTitle())
+            && specification.getImplementationVersion().equals(other.getImplementationVersion())
+            && specification.getImplementationVendor().equals(other.getImplementationVendor());
     }
 
     /**
@@ -596,27 +559,23 @@ public final class Specification
      * @param sectionsToAdd the list of sections to merge
      * @return the merged specification
      */
-    private static Specification mergeInSections( final Specification specification,
-                                                  final ArrayList sectionsToAdd )
-    {
-        if( 0 == sectionsToAdd.size() )
-        {
+    private static Specification mergeInSections(final Specification specification,
+                                              final ArrayList sectionsToAdd) {
+        if (0 == sectionsToAdd.size()) {
             return specification;
-        }
-        else
-        {
-            sectionsToAdd.addAll( Arrays.asList( specification.getSections() ) );
+        } else {
+            sectionsToAdd.addAll(Arrays.asList(specification.getSections()));
 
             final String[] sections =
-                (String[])sectionsToAdd.toArray( new String[ sectionsToAdd.size() ] );
+                (String[]) sectionsToAdd.toArray(new String[sectionsToAdd.size()]);
 
-            return new Specification( specification.getSpecificationTitle(),
+            return new Specification(specification.getSpecificationTitle(),
                                       specification.getSpecificationVersion().toString(),
                                       specification.getSpecificationVendor(),
                                       specification.getImplementationTitle(),
                                       specification.getImplementationVersion(),
                                       specification.getImplementationVendor(),
-                                      sections );
+                                      sections);
         }
     }
 
@@ -626,14 +585,10 @@ public final class Specification
      * @param value the string to trim or null
      * @return the trimmed string or null
      */
-    private static String getTrimmedString( final String value )
-    {
-        if( null == value )
-        {
+    private static String getTrimmedString(final String value) {
+        if (null == value) {
             return null;
-        }
-        else
-        {
+        } else {
             return value.trim();
         }
     }
@@ -644,51 +599,50 @@ public final class Specification
      * @param attributes Attributes to searched
      * @return the new Specification object, or null
      */
-    private static Specification getSpecification( final String section,
-                                                   final Attributes attributes )
-        throws ParseException
-    {
+    private static Specification getSpecification(final String section,
+                                                   final Attributes attributes)
+        throws ParseException {
         //WARNING: We trim the values of all the attributes because
         //Some extension declarations are badly defined (ie have spaces
         //after version or vendor)
-        final String name = getTrimmedString( attributes.getValue( SPECIFICATION_TITLE ) );
-        if( null == name )
-        {
+        final String name
+            = getTrimmedString(attributes.getValue(SPECIFICATION_TITLE));
+        if (null == name) {
             return null;
         }
 
-        final String specVendor = getTrimmedString( attributes.getValue( SPECIFICATION_VENDOR ) );
-        if( null == specVendor )
-        {
-            throw new ParseException( "Missing " + SPECIFICATION_VENDOR, 0 );
+        final String specVendor
+            = getTrimmedString(attributes.getValue(SPECIFICATION_VENDOR));
+        if (null == specVendor) {
+            throw new ParseException("Missing " + SPECIFICATION_VENDOR, 0);
         }
 
-        final String specVersion = getTrimmedString( attributes.getValue( SPECIFICATION_VERSION ) );
-        if( null == specVersion )
-        {
-            throw new ParseException( "Missing " + SPECIFICATION_VERSION, 0 );
+        final String specVersion
+            = getTrimmedString(attributes.getValue(SPECIFICATION_VERSION));
+        if (null == specVersion) {
+            throw new ParseException("Missing " + SPECIFICATION_VERSION, 0);
         }
 
-        final String impTitle = getTrimmedString( attributes.getValue( IMPLEMENTATION_TITLE ) );
-        if( null == impTitle )
-        {
-            throw new ParseException( "Missing " + IMPLEMENTATION_TITLE, 0 );
+        final String impTitle
+            = getTrimmedString(attributes.getValue(IMPLEMENTATION_TITLE));
+        if (null == impTitle) {
+            throw new ParseException("Missing " + IMPLEMENTATION_TITLE, 0);
         }
 
-        final String impVersion = getTrimmedString( attributes.getValue( IMPLEMENTATION_VERSION ) );
-        if( null == impVersion )
-        {
-            throw new ParseException( "Missing " + IMPLEMENTATION_VERSION, 0 );
+        final String impVersion
+            = getTrimmedString(attributes.getValue(IMPLEMENTATION_VERSION));
+        if (null == impVersion) {
+            throw new ParseException("Missing " + IMPLEMENTATION_VERSION, 0);
         }
 
-        final String impVendor = getTrimmedString( attributes.getValue( IMPLEMENTATION_VENDOR ) );
-        if( null == impVendor )
-        {
-            throw new ParseException( "Missing " + IMPLEMENTATION_VENDOR, 0 );
+        final String impVendor
+            = getTrimmedString(attributes.getValue(IMPLEMENTATION_VENDOR));
+        if (null == impVendor) {
+            throw new ParseException("Missing " + IMPLEMENTATION_VENDOR, 0);
         }
 
-        return new Specification( name, specVersion, specVendor,
+        return new Specification(name, specVersion, specVendor,
                                   impTitle, impVersion, impVendor,
-                                  new String[]{section} );
+                                  new String[]{section});
     }
 }

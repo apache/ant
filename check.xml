@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <project default="checkstyle" name="CheckAnt">
 
-<!--  <import file="build.xml"/> --> 
+<!--  <import file="build.xml"/> -->
   <property name="src.dir" value="src"/>
   <property name="java.dir" value="${src.dir}/main"/>
   <property name="etc.dir" value="${src.dir}/etc"/>
   <property name="config.dir" value="${etc.dir}/checkstyle"/>
   <property name="build.dir" value="build"/>
-  
+
   <property name="checkstyle.reportdir" value="${build.dir}/reports/checkstyle"/>
   <property name="checkstyle.raw" value="${checkstyle.reportdir}/raw.xml"/>
   <property name="stylesheet.html" value="${config.dir}/checkstyle-frames.xsl"/>
@@ -17,9 +17,11 @@
   <property name="checkstyle.basedir" location="${java.dir}"/>
 
   <!-- Ant Checkstyle report -->
-  <property name="tocheck" value="**/*.java"/>  
+  <property name="tocheck" value="**/*.java"/>
   <property name="javadoc.scope" value="public"/>
-  
+
+  <taskdef resource="simiantask.properties"/>
+
   <target name="checkstyle">
     <mkdir dir="${checkstyle.reportdir}"/>
     <taskdef resource="checkstyletask.properties"/>
@@ -28,6 +30,7 @@
       <fileset dir="${java.dir}">
         <include name="${tocheck}"/>
         <exclude name="**/BZip2Constants.java"/>
+        <exclude name="**/CVSPass.java"/>
       </fileset>
     </checkstyle>
   </target>
@@ -39,7 +42,7 @@
       <param name="basedir" expression="${checkstyle.basedir}"/>
     </style>
   </target>
-  
+
   <target name="textreport">
     <style in="${checkstyle.raw}" style="${stylesheet.text}"
            out="${checkstyle.reportdir}/report.txt">
@@ -58,6 +61,12 @@
       <filelist dir="${checkstyle.reportdir}" files="report.txt"/>
     </concat>
   </target>
-  
+
+  <target name="simiancheck">
+    <simian>
+        <fileset dir="${java.dir}" />
+    </simian>
+  </target>
+
 </project>
 

@@ -106,7 +106,7 @@ public class CVSPass extends Task {
     /**
      * Create a CVS task using the default cvspass file location.
      */
-    public CVSPass(){
+    public CVSPass() {
         passFile = new File(
             System.getProperty("cygwin.user.home",
                 System.getProperty("user.home"))
@@ -161,7 +161,9 @@ public class CVSPass extends Task {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             if (writer != null) {
                 writer.close();
@@ -169,7 +171,7 @@ public class CVSPass extends Task {
         }
     }
 
-    private final String mangle(String password){
+    private final String mangle(String password) {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < password.length(); i++) {
             buf.append(shifts[password.charAt(i)]);
@@ -179,6 +181,8 @@ public class CVSPass extends Task {
 
     /**
      * The CVS repository to add an entry for.
+     *
+     * @param cvsRoot the CVS repository
      */
     public void setCvsroot(String cvsRoot) {
         this.cvsRoot = cvsRoot;
@@ -186,6 +190,8 @@ public class CVSPass extends Task {
 
     /**
      * Password file to add the entry to.
+     *
+     * @param passFile the password file.
      */
     public void setPassfile(File passFile) {
         this.passFile = passFile;
@@ -193,6 +199,8 @@ public class CVSPass extends Task {
 
     /**
      * Password to be added to the password file.
+     *
+     * @param password the password.
      */
     public void setPassword(String password) {
         this.password = password;
