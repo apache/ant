@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <document>
 
   <properties>
@@ -87,6 +87,27 @@
           <tr>
             <th>URL:</th>
             <td><a href="http://www.oreilly.com/catalog/anttdg/">http://www.oreilly.com/catalog/anttdg/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Ant. Kurz und Gut.">
+        <p>
+            Ant kurz &amp; gut enthält eine vollständige Referenz der Built-in Tasks
+            und ihrer jeweiligen Attribute sowie kurze Beispiele für ihre Verwendung.
+            Daneben bietet das Buch eine knappe Einführung in die Arbeit mit Ant und
+            eine Erläuterung der Ant-Basiselemente (Projekte, Properties, Targets und Tasks).
+            Behandelt werden außerdem grundlegende Konzepte wie Filesets, Patternsets und
+            Pfadstrukturen, das Schreiben eigener Tasks, die Aufruf-Syntax und Optional Tasks.
+        </p>
+        <table>
+          <tr>
+            <th>Author:</th>
+            <td>Stefan Edlich</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.amazon.de/exec/obidos/ASIN/3897212412/">http://www.amazon.de/exec/obidos/ASIN/3897212412/</a></td>
           </tr>
         </table>
       </subsection>
