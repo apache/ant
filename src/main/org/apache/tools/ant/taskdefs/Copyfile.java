@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,10 @@ import org.apache.tools.ant.BuildException;
  *
  * @author duncan@x180.com
  *
- * @deprecated The copyfile task is deprecated.  Use copy instead.
+ * @since Ant 1.1
+ *
+ * @deprecated The copyfile task is deprecated since Ant 1.2.  Use
+ * copy instead.
  */
 
 public class Copyfile extends Task {
@@ -96,7 +99,8 @@ public class Copyfile extends Task {
         log("DEPRECATED - The copyfile task is deprecated.  Use copy instead.");
 
         if (srcFile == null) {
-            throw new BuildException("The src attribute must be present.", location);
+            throw new BuildException("The src attribute must be present.", 
+                                     location);
         }
         
         if (!srcFile.exists()) {
@@ -105,14 +109,16 @@ public class Copyfile extends Task {
         }
 
         if (destFile == null) {
-            throw new BuildException("The dest attribute must be present.", location);
+            throw new BuildException("The dest attribute must be present.", 
+                                     location);
         }
 
         if (srcFile.equals(destFile)) {
-            log("Warning: src == dest");
+            log("Warning: src == dest", Project.MSG_WARN);
         }
 
-        if (forceOverwrite || srcFile.lastModified() > destFile.lastModified()) {
+        if (forceOverwrite 
+            || srcFile.lastModified() > destFile.lastModified()) {
             try {
                 project.copyFile(srcFile, destFile, filtering, forceOverwrite);
             } catch (IOException ioe) {

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,13 +60,16 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 
 /**
  * Copies a directory.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  *
- * @deprecated The copydir task is deprecated.  Use copy instead.
+ * @since Ant 1.1
+ *
+ * @deprecated The copydir task is deprecated since Ant 1.2.  Use copy instead.
  */
 
 public class Copydir extends MatchingTask {
@@ -112,34 +115,39 @@ public class Copydir extends MatchingTask {
         }
 
         if (destDir == null) {
-            throw new BuildException("The dest attribute must be set.", location);
+            throw new BuildException("The dest attribute must be set.", 
+                                     location);
         }
 
         if (srcDir.equals(destDir)) {
-            log("Warning: src == dest");
+            log("Warning: src == dest", Project.MSG_WARN);
         }
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
 
-        String[] files = ds.getIncludedFiles();
-        scanDir(srcDir, destDir, files);
-        if (filecopyList.size() > 0) {
-            log("Copying " + filecopyList.size() + " file"
-                + (filecopyList.size() == 1 ? "" : "s")
-                + " to " + destDir.getAbsolutePath());
-            Enumeration enum = filecopyList.keys();
-            while (enum.hasMoreElements()) {
-                String fromFile = (String) enum.nextElement();
-                String toFile = (String) filecopyList.get(fromFile);
-                try {
-                    project.copyFile(fromFile, toFile, filtering, 
-                                     forceOverwrite);
-                } catch (IOException ioe) {
-                    String msg = "Failed to copy " + fromFile + " to " + toFile
-                        + " due to " + ioe.getMessage();
-                    throw new BuildException(msg, ioe, location);
+        try {
+            String[] files = ds.getIncludedFiles();
+            scanDir(srcDir, destDir, files);
+            if (filecopyList.size() > 0) {
+                log("Copying " + filecopyList.size() + " file"
+                    + (filecopyList.size() == 1 ? "" : "s")
+                    + " to " + destDir.getAbsolutePath());
+                Enumeration enum = filecopyList.keys();
+                while (enum.hasMoreElements()) {
+                    String fromFile = (String) enum.nextElement();
+                    String toFile = (String) filecopyList.get(fromFile);
+                    try {
+                        project.copyFile(fromFile, toFile, filtering, 
+                                         forceOverwrite);
+                    } catch (IOException ioe) {
+                        String msg = "Failed to copy " + fromFile + " to " 
+                            + toFile + " due to " + ioe.getMessage();
+                        throw new BuildException(msg, ioe, location);
+                    }
                 }
             }
+        } finally {
+            filecopyList.clear();
         }
     }
 
