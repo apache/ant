@@ -327,7 +327,7 @@ public class Ant extends Task {
             // the build file if this is a top level task)?
             if (thisAntFile != null
                 && newProject.resolveFile(newProject.getProperty("ant.file"))
-                .equals(getProject().resolveFile(thisAntFile)) 
+                .equals(getProject().resolveFile(thisAntFile))
                 && getOwningTarget() != null) {
 
                 if (getOwningTarget().getName().equals("")) {

@@ -192,7 +192,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     /* -------------------- */
 
     /**
-     * Set the {@link #keepgenerated} flag.
+     * Sets the <code>keepgenerated</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */
@@ -201,7 +201,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #additionalargs}.
+     * Sets the additional arguments.
      *
      * @param aString additional args.
      */
@@ -210,7 +210,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #nocompil} flag.
+     * Sets the <code>nocompil</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */
@@ -219,7 +219,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #novalidation} flag.
+     * Sets the <code>novalidation</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */
@@ -228,7 +228,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the java compiler {@link #javac} to use.
+     * Sets the java compiler to use.
      *
      * @param aString the java compiler.
      */
@@ -255,7 +255,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #secpropag} flag.
+     * Sets the <code>secpropag</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */
@@ -264,7 +264,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #verbose} flag.
+     * Sets the <code>verbose</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */
@@ -286,7 +286,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #keepgeneric} flag.
+     * Sets the <code>keepgeneric</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */
@@ -295,7 +295,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #suffix jar suffix}.
+     * Sets the jar suffix.
      *
      * @param aString the string to use as the suffix.
      */
@@ -304,7 +304,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #orb} to construct classpath.
+     * Sets the <code>orb</code> to construct classpath.
      *
      * @param aString 'RMI', 'JEREMIE', or 'DAVID'.
      */
@@ -313,7 +313,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the {@link #nogenic} flag.
+     * Sets the <code>nogenic</code> flag.
      *
      * @param aBoolean <code>true</code> if the flag must be set.
      */

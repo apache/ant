@@ -528,7 +528,7 @@ public class ProjectHelper2 extends ProjectHelper {
     /**
      * The main handler - it handles the &lt;project&gt; tag.
      *
-     * @see AntHandler
+     * @see org.apache.tools.ant.helper.ProjectHelper2.AntHandler
      */
     public static class MainHandler extends AntHandler {
 

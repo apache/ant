@@ -170,8 +170,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @param rootLocalFolder
      *               the local folder that will mirror
      *               this.rootStarteamFolder
-     *
-     * @see rootLocalFolder
      */
     public void setRootLocalFolder(String rootLocalFolder) {
         this.rootLocalFolder = rootLocalFolder;
@@ -185,7 +183,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * or null if not specified.
      *
      * @return the local folder that mirrors this.rootStarteamFolder
-     * @see rootLocalFolder
      */
     public String getRootLocalFolder() {
         return this.rootLocalFolder;

@@ -38,7 +38,6 @@ import java.util.jar.Manifest;
 public final class Extension {
     /**
      * Manifest Attribute Name object for EXTENSION_LIST.
-     * @see Attributes.Name#EXTENSION_LIST
      */
     public static final Attributes.Name EXTENSION_LIST
         = new Attributes.Name("Extension-List");
@@ -58,48 +57,41 @@ public final class Extension {
 
     /**
      * Manifest Attribute Name object for EXTENSION_NAME.
-     * @see Attributes.Name#EXTENSION_NAME
      */
     public static final Attributes.Name EXTENSION_NAME =
         new Attributes.Name("Extension-Name");
     /**
      * Manifest Attribute Name object for SPECIFICATION_VERSION.
-     * @see Attributes.Name#SPECIFICATION_VERSION
      */
     public static final Attributes.Name SPECIFICATION_VERSION
         = Attributes.Name.SPECIFICATION_VERSION;
 
     /**
      * Manifest Attribute Name object for SPECIFICATION_VENDOR.
-     * @see Attributes.Name#SPECIFICATION_VENDOR
      */
     public static final Attributes.Name SPECIFICATION_VENDOR
         = Attributes.Name.SPECIFICATION_VENDOR;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VERSION.
-     * @see Attributes.Name#IMPLEMENTATION_VERSION
      */
     public static final Attributes.Name IMPLEMENTATION_VERSION
         = Attributes.Name.IMPLEMENTATION_VERSION;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VENDOR.
-     * @see Attributes.Name#IMPLEMENTATION_VENDOR
      */
     public static final Attributes.Name IMPLEMENTATION_VENDOR
         = Attributes.Name.IMPLEMENTATION_VENDOR;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_URL.
-     * @see Attributes.Name#IMPLEMENTATION_URL
      */
     public static final Attributes.Name IMPLEMENTATION_URL
         = new Attributes.Name("Implementation-URL");
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VENDOR_ID.
-     * @see Attributes.Name#IMPLEMENTATION_VENDOR_ID
      */
     public static final Attributes.Name IMPLEMENTATION_VENDOR_ID
         = new Attributes.Name("Implementation-Vendor-Id");

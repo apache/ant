@@ -206,7 +206,7 @@ public class Assertions extends DataType implements Cloneable {
     /**
      * add the assertions to a list in a format suitable
      * for adding to a command line
-     * @param commandList
+     * @param commandIterator list of commands
      */
     public void applyAssertions(final ListIterator commandIterator) {
         getProject().log("Applying assertions", Project.MSG_DEBUG);

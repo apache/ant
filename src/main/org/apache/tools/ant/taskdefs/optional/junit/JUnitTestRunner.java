@@ -391,7 +391,7 @@ public class JUnitTestRunner implements TestListener {
     }
 
     /**
-     * @see Task#handleInput(byte[], int, int)
+     * @see org.apache.tools.ant.Task#handleInput(byte[], int, int)
      *
      * @since Ant 1.6
      */
@@ -521,7 +521,7 @@ public class JUnitTestRunner implements TestListener {
         int returnCode = SUCCESS;
         if (multipleTests) {
             try {
-                java.io.BufferedReader reader = 
+                java.io.BufferedReader reader =
                     new java.io.BufferedReader(new java.io.FileReader(args[0]));
                 String testCaseName;
                 int code = 0;
@@ -534,19 +534,19 @@ public class JUnitTestRunner implements TestListener {
                     JUnitTest t = new JUnitTest(testCaseName);
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
-                    code = launch(t, haltError, stackfilter, haltFail, 
+                    code = launch(t, haltError, stackfilter, haltFail,
                                   showOut, props);
                     errorOccured = (code == ERRORS);
                     failureOccured = (code != SUCCESS);
                     if (errorOccured || failureOccured ) {
-                        if ((errorOccured && haltError) 
+                        if ((errorOccured && haltError)
                             || (failureOccured && haltFail)) {
                             System.exit(code);
                         } else {
                             if (code > returnCode) {
                                 returnCode = code;
                             }
-                            System.out.println("TEST " + t.getName() 
+                            System.out.println("TEST " + t.getName()
                                                + " FAILED");
                         }
                     }
@@ -569,8 +569,8 @@ public class JUnitTestRunner implements TestListener {
         for (int i = 0; i < fromCmdLine.size(); i++) {
             FormatterElement fe = (FormatterElement) fromCmdLine.elementAt(i);
             if (multipleTests && fe.getUseFile()) {
-                File destFile = 
-                    new File(test.getTodir(), 
+                File destFile =
+                    new File(test.getTodir(),
                              test.getOutfile() + fe.getExtension());
                 fe.setOutfile(destFile);
             }
@@ -645,10 +645,10 @@ public class JUnitTestRunner implements TestListener {
      * @since Ant 1.6.2
      */
     private static int launch(JUnitTest t, boolean haltError,
-                              boolean stackfilter, boolean haltFail, 
+                              boolean stackfilter, boolean haltFail,
                               boolean showOut, Properties props) {
         t.setProperties(props);
-        JUnitTestRunner runner = 
+        JUnitTestRunner runner =
             new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut);
         runner.forked = true;
         transferFormatters(runner, t);
