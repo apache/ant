@@ -60,9 +60,8 @@ import java.io.File;
  * useful for matching JUnit test cases againt their XML formatter
  * results.
  * <pre>
- *    &lt;mapper classname="org.apache.tools.ant.util.PackageNameMapper"
- *            classpathref="test.classpath"
- *            from="*.java" to="${test.data.dir}/TEST-*.xml"/&gt;
+ * &lt;mapper classname="org.apache.tools.ant.util.PackageNameMapper"
+ *         from="*Test.java" to="${test.data.dir}/TEST-*Test.xml"/&gt;
  * </pre>
  *
  *@author     Erik Hatcher
