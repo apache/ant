@@ -35,12 +35,16 @@ to support additional EJB Servers.
 <hr>
 <h2><a name="ejbtasks">EJB Tasks</a></h2>
 <table border="1" cellpadding="5">
- <tr><td>Task</td><td>Application Servers</td></tr>
- <tr><td><a href="#ddcreator">ddcreator</a></td><td>Weblogic 4.5.1</td></tr>
- <tr><td><a href="#ejbc">ejbc</a></td><td>Weblogic 4.5.1</td></tr>
- <tr><td><a href="#wlrun">wlrun</a></td><td>Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
- <tr><td><a href="#wlstop">wlstop</a></td><td>Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
- <tr><td><a href="#ejbjar">ejbjar</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
+ <tr><td>Task</td><td colspan="2">Application Servers</td></tr>
+ <tr><td><a href="BorlandGenerateClient.html">blgenclient</a></td><td colspan="2">Borland Application Server 4.5</td></tr>
+ <tr><td><a href="#ddcreator">ddcreator</a></td><td colspan="2">Weblogic 4.5.1</td></tr>
+ <tr><td><a href="#ejbc">ejbc</a></td><td colspan="2">Weblogic 4.5.1</td></tr>
+ <tr><td rowspan="3"><a href="#ejbjar">ejbjar</a></td><td colspan="2" align="center">Nested Elements</td></tr>
+ <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
+ <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5</td></tr>
+ <tr><td><a href="#wlrun">wlrun</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
+ <tr><td><a href="#wlstop">wlstop</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
+
 </table>
 
 <hr>
@@ -558,6 +562,7 @@ Each vendor-specific nested element controls the generation of a deployable jar
 specific to that vendor's EJB container. The parameters for each supported 
 deployment element are detailed here.
 
+<a name="ejbjar_weblogic"></a>
 <h3>Weblogic element</h3>
 
 <p>The weblogic element is used to control the weblogic.ejbc compiler for 

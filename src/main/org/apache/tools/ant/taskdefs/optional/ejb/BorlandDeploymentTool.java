@@ -52,6 +52,7 @@
  * <http://www.apache.org/>.
  */
 
+
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.*;
@@ -73,7 +74,7 @@ import org.xml.sax.*;
 
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5
- * This task generates and compilesthe stubs and skeletons for all ejb described into the
+ * This task generates and compiles the stubs and skeletons for all ejb described into the
  * Deployement Descriptor, builds the jar file including the support files and verify
  * whether the produced jar is valid or not.
  * The supported options are:
@@ -83,6 +84,7 @@ import org.xml.sax.*;
  * <li>verifyargs (String) : add optional argument to verify command (see vbj com.inprise.ejb.util.Verify)</li>
  * <li>ejbdtd (String)  : location of the SUN DTD </li>
  * <li>basdtd (String)  : location of the BAS DTD </li>
+ * <li>generatelclient  (boolean) : turn on the client jar file generation </li>
  * </ul>
  *
  *<PRE>
@@ -98,6 +100,7 @@ import org.xml.sax.*;
  *         &lt;/support&gt;
  *     &lt;/ejbjar&gt;
  *</PRE>
+ * @author     <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  */
 public class BorlandDeploymentTool extends GenericDeploymentTool 
@@ -125,7 +128,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     protected static final String VERIFY = "com.inprise.ejb.util.Verify";
 
     /** Instance variable that stores the suffix for the borland jarfile. */
-    private String jarSuffix = ".jar";
+    private String jarSuffix = "-ejb.jar";
 
     /** Instance variable that stores the location of the borland DTD file. */
     private String borlandDTD;
@@ -137,6 +140,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     /** Instance variable that determines whether the debug mode is on */
     private boolean java2iiopdebug = false;
 
+    /** Instance variable that determines whetger the client jar file is generated */
+    private boolean generateclient = false;
     /** Instance variable that determines whether it is necessary to verify the produced jar */
     private boolean verify     = true;
     private String  verifyArgs = "";
@@ -156,7 +161,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     }
 
    
-
     /**
      * Setter used to store the suffix for the generated borland jar file.
      * @param inString the string to use as the suffix.
@@ -168,9 +172,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
     /**
      * sets some additional args to send to verify command
+     * @param args addtions command line parameters
      */
-    public void setVerifyArgs(String args) 
-    {
+    public void setVerifyArgs(String args) {
         this.verifyArgs = args;
     }
     
@@ -193,28 +197,35 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         this.ejb11DTD = inString;
     }
         
+    /**
+     * setter used to store whether the task will include the generate client task.
+     * (see : BorlandGenerateClient task)
+     */
+    public void setGenerateclient(boolean b) {
+        this.generateclient = b;
+    }
+
 
     protected void registerKnownDTDs(DescriptorHandler handler) {
         handler.registerDTD(PUBLICID_EJB11, DEFAULT_BAS45_EJB11_DTD_LOCATION);
     }
 
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
-        DescriptorHandler handler = 
-            new DescriptorHandler(getTask(), srcDir) {        
-                    protected void processElement() {
-                        if (currentElement.equals("type-storage")) {
-                            // Get the filename of vendor specific descriptor
-                            String fileNameWithMETA = currentText;
-                            //trim the META_INF\ off of the file name
-                            String fileName = fileNameWithMETA.substring(META_DIR.length(), 
-                                                                         fileNameWithMETA.length() );
-                            File descriptorFile = new File(srcDir, fileName);
-                        
-                            ejbFiles.put(fileNameWithMETA, descriptorFile);
-                        }
-                    }
+        DescriptorHandler handler =
+           new DescriptorHandler(getTask(), srcDir) {
+                   protected void processElement() {
+                       if (currentElement.equals("type-storage")) {
+                           // Get the filename of vendor specific descriptor
+                           String fileNameWithMETA = currentText;
+                           //trim the META_INF\ off of the file name
+                           String fileName = fileNameWithMETA.substring(META_DIR.length(), 
+                                                                        fileNameWithMETA.length() );
+                           File descriptorFile = new File(srcDir, fileName);
+                       
+                           ejbFiles.put(fileNameWithMETA, descriptorFile);
+                       }
+                   }
                 };
-
         handler.registerDTD(PUBLICID_BORLAND_EJB, 
                             borlandDTD == null ? DEFAULT_BAS_DTD_LOCATION : borlandDTD);
                             
@@ -232,35 +243,30 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
 
         File borlandDD = new File(getConfig().descriptorDir,META_DIR+BAS_DD);
-        if (borlandDD.exists()) 
-        {
+        if (borlandDD.exists()) {
             log("Borland specific file found "+ borlandDD,  Project.MSG_VERBOSE);
             ejbFiles.put(META_DIR + BAS_DD, borlandDD);
         }
-        else 
-        {
+        else {
             log("Unable to locate borland deployment descriptor. It was expected to be in " + 
                 borlandDD.getPath(), Project.MSG_WARN);
             return;
         }
-
     }
     
     /**
      * Get the vendor specific name of the Jar that will be output. The modification date
      * of this jar will be checked against the dependent bean classes.
      */
-    File getVendorOutputJarFile(String baseName) 
-    {   
-        return new File(getDestDir(), baseName + jarSuffix);
+    File getVendorOutputJarFile(String baseName) {   
+        return new File(getDestDir(), baseName +  jarSuffix);
     }
 
     /**
      * Verify the produced jar file by invoking the Borland verify tool
      * @param sourceJar java.io.File representing the produced jar file
      */
-    private void verifyBorlandJar(File sourceJar)
-    {
+    private void verifyBorlandJar(File sourceJar) {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
         log("verify "+sourceJar,Project.MSG_INFO);
         try {
@@ -283,14 +289,39 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             log("Calling "+VERIFY+" for " + sourceJar.toString(), Project.MSG_VERBOSE);
             javaTask.execute();
         }
-        catch (Exception e) 
-        {
+        catch (Exception e) {
             //TO DO : delete the file if it is not a valid file.
             String msg = "Exception while calling "+VERIFY+" Details: " + e.toString();
             throw new BuildException(msg, e);
         }
+    }
 
+    /**
+     * Generate the client jar corresponding to the jar file passed as paremeter
+     * the method uses the BorlandGenerateClient task.
+     * @param sourceJar java.io.File representing the produced jar file
+     */
+    private void generateClient(File sourceJar) {
+        getTask().getProject().addTaskDefinition("internal_bas_generateclient",
+                                                 org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class);
 
+        org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
+        log("generate client for "+sourceJar,Project.MSG_INFO);
+        try {
+            String args = verifyArgs;            
+            args += " "+sourceJar.getPath();
+            
+            gentask = (BorlandGenerateClient) getTask().getProject().createTask("internal_bas_generateclient");
+            gentask.setEjbjar(sourceJar);
+            gentask.setDebug(java2iiopdebug);            
+            gentask.setTaskName("generate client");
+            gentask.execute();
+        }
+        catch (Exception e) {
+            //TO DO : delete the file if it is not a valid file.
+            String msg = "Exception while calling "+VERIFY+" Details: " + e.toString();
+            throw new BuildException(msg, e);
+        }
     }
 
     /**
@@ -299,16 +330,17 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * @param ithomes : iterator on home class
      * @param files   : file list , updated by the adding generated files
      */
-    private void buildBorlandStubs(Iterator ithomes,Hashtable files )
-    {
+    private void buildBorlandStubs(Iterator ithomes,Hashtable files ) {
         org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-        File java2iiopOut = new File("java2iiop.log");
-        try 
-        {
+        //File java2iiopOut = new File("java2iiop.log");
+        File java2iiopOut = null;
+        try {
+            java2iiopOut = File.createTempFile("java2iiop","log");
+            log(" iiop log file : "+ java2iiopOut ,Project.MSG_DEBUG);
+
             execTask = (ExecTask) getTask().getProject().createTask("exec");
             execTask.setOutput(java2iiopOut);
-            if ( java2iiopdebug ) 
-            {
+            if ( java2iiopdebug ) {
                 execTask.createArg().setValue("-VBJdebug");                
             } // end of if ()
                        
@@ -319,14 +351,15 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             execTask.createArg().setPath(getCombinedClasspath());
             //list file
             execTask.createArg().setValue("-list_files");
+            //no TIE classes
+            execTask.createArg().setValue("-no_tie");
             //root dir
             execTask.createArg().setValue("-root_dir");
             execTask.createArg().setValue(getConfig().srcDir.getAbsolutePath());
             //compiling order
             execTask.createArg().setValue("-compile");
             //add the home class
-            while ( ithomes.hasNext()) 
-            {
+            while ( ithomes.hasNext()) {
                 execTask.createArg().setValue(ithomes.next().toString());                
             } // end of while ()
             log("Calling java2iiop",Project.MSG_VERBOSE);                       
@@ -338,15 +371,12 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             throw new BuildException(msg, e);
         }
 
-        try
-        {
+        try {
             FileReader fr = new FileReader(java2iiopOut);
             LineNumberReader lnr = new LineNumberReader(fr);
             String javafile;
-            while ( ( javafile = lnr.readLine()) != null) 
-            {
-                if ( javafile.endsWith(".java") )
-                {
+            while ( ( javafile = lnr.readLine()) != null) {
+                if ( javafile.endsWith(".java") ) {
                     String classfile = toClassFile(javafile);
                     
                     String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length()+1);
@@ -357,11 +387,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             } // end of while ()
             lnr.close();            
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
             throw new BuildException(msg, e);
         }
+
+        //delete the output , only if all is succesfull
+        java2iiopOut.delete();
     }
 
     /**
@@ -369,16 +401,14 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
      */
-    protected void writeJar(String baseName, File jarFile, Hashtable files, 
-                            String publicId) throws BuildException {
+    protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId) 
+        throws BuildException {
         //build the home classes list.
         Vector homes = new Vector();
         Iterator it = files.keySet().iterator();
-        while ( it.hasNext()) 
-        {
+        while ( it.hasNext()) {
             String clazz = (String) it.next();
-            if ( clazz.endsWith("Home.class") ) 
-            {
+            if ( clazz.endsWith("Home.class") ) {
                 //remove .class extension
                 String home = toClass(clazz);
                 homes.add(home);
@@ -390,19 +420,20 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         
         super.writeJar(baseName, jarFile, files, publicId);
 
-        if ( verify ) 
-        {
+        if ( verify ) {
             verifyBorlandJar(jarFile);
         } // end of if ()
-                
+
+        if ( generateclient) {
+            generateClient(jarFile);
+        } // end of if ()                       
     }
 
     /**
      * convert a class file name : A/B/C/toto.class
      * into    a class name: A.B.C.toto
      */
-    protected String toClass(String filename)
-    {
+    private String toClass(String filename) {
         //remove the .class
         String classname = filename.substring(0,filename.lastIndexOf(".class"));
         classname = classname.replace('\\','.');
@@ -413,8 +444,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * convert a file name : A/B/C/toto.java
      * into    a class name: A/B/C/toto.class
      */
-    protected String toClassFile(String filename)
-    {
+    private  String toClassFile(String filename) {
         //remove the .class
         String classfile = filename.substring(0,filename.lastIndexOf(".java"));
         classfile = classfile+".class";
