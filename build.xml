@@ -292,6 +292,7 @@
     <exclude name="**/GetTest.java" if="offline"/>
   </patternset>
   <patternset id="teststhatfail">
+    <exclude name="${optional.package}/BeanShellScriptTest.java"/>
   </patternset>
 
   <!--
@@ -524,6 +525,9 @@
 
     <available property="rhino.present"
                classname="org.mozilla.javascript.Scriptable"
+               classpathref="classpath"/>
+    <available property="beanshell.present"
+               classname="bsh.StringUtil"
                classpathref="classpath"/>
   </target>
 
@@ -1499,6 +1503,10 @@
                    unless="bsf.present"/>
           <exclude name="${optional.package}/RhinoScriptTest.java"
                    unless="rhino.present"/>
+          <exclude name="${optional.package}/BeanShellScriptTest.java"
+                   unless="bsf.present"/>
+          <exclude name="${optional.package}/BeanShellScriptTest.java"
+                   unless="beanshell.present"/>
 
           <!-- fail if testcases can be loaded from the system classloader -->
           <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"

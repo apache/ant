@@ -39,4 +39,11 @@
   </target>
 
   <target name="example2" depends="sub1,sub2"/>
+
+  <target name="useBeanshell">
+    <script language="beanshell"><![CDATA[
+       self.log("I'm here", org.apache.tools.ant.Project.MSG_INFO);
+    ]]></script>
+  </target>
+
 </project>
