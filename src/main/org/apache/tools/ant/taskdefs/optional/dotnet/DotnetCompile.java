@@ -965,11 +965,15 @@ public abstract class DotnetCompile
         StringBuffer referenceList = new StringBuffer(REFERENCE_OPTION);
         //now scan the hashtable and add the files
         Enumeration files = filesToBuild.elements();
+        boolean firstEntry = true;
         while (files.hasMoreElements()) {
             File file = (File) files.nextElement();
             if (isFileManagedBinary(file)) {
+                if (!firstEntry) {
+                    referenceList.append(getReferenceDelimiter());
+                }
                 referenceList.append(file.toString());
-                referenceList.append(getReferenceDelimiter());
+                firstEntry = false;
             } else {
                 log("ignoring " + file + " as it is not a managed executable",
                         Project.MSG_VERBOSE);
