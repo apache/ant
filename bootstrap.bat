@@ -2,7 +2,7 @@
 
 REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-REM    Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+REM    Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
 REM    reserved.
 
 set OLDJAVA=%JAVA%

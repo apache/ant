@@ -61,7 +61,7 @@ package org.apache.tools.zip;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class ZipShort implements Cloneable {
+public final class ZipShort implements Cloneable {
 
     private int value;
 
