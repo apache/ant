@@ -64,238 +64,19 @@ import java.util.Stack;
 import java.util.Vector;
 
 /**
- * Essentially a clone of FileSet, but gets a set of dirs instead of files.
+ * Subclass as hint for supporting tasks that the included directories
+ * instead of files should be used.
  */
-public class DirSet extends DataType implements Cloneable {
+public class DirSet extends FileSet {
     
-    private PatternSet defaultPatterns = new PatternSet();
-    private Vector additionalPatterns = new Vector();
-
-    private File dir;
-    private boolean isCaseSensitive = true;
-
     public DirSet() {
         super();
+        setDataTypeName("dirset");
     }
 
     protected DirSet(DirSet dirset) {
-        this.dir = dirset.dir;
-        this.defaultPatterns = dirset.defaultPatterns;
-        this.additionalPatterns = dirset.additionalPatterns;
-        this.isCaseSensitive = dirset.isCaseSensitive;
-        setProject(getProject());
-    }
-
-    /**
-     * Makes this instance in effect a reference to another PatternSet
-     * instance.
-     *
-     * <p>You must not set another attribute or nest elements inside
-     * this element if you make it a reference.</p> 
-     */
-    public void setRefid(Reference r) throws BuildException {
-        if (dir != null || defaultPatterns.hasPatterns()) {
-            throw tooManyAttributes();
-        }
-        if (!additionalPatterns.isEmpty()) {
-            throw noChildrenAllowed();
-        }
-        super.setRefid(r);
-    }
-
-    public void setDir(File dir) throws BuildException {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
-
-        this.dir = dir;
-    }
-
-    public File getDir(Project p) {
-        if (isReference()) {
-            return getRef(p).getDir(p);
-        }
-        return dir;
-    }
-
-    public PatternSet createPatternSet() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        PatternSet patterns = new PatternSet();
-        additionalPatterns.addElement(patterns);
-        return patterns;
-    }
-
-    /**
-     * add a name entry on the include list
-     */
-    public PatternSet.NameEntry createInclude() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createInclude();
-    }
-    
-    /**
-     * add a name entry on the include files list
-     */
-    public PatternSet.NameEntry createIncludesFile() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createIncludesFile();
-    }
-    
-    /**
-     * add a name entry on the exclude list
-     */
-    public PatternSet.NameEntry createExclude() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createExclude();
-    }
-
-    /**
-     * add a name entry on the include files list
-     */
-    public PatternSet.NameEntry createExcludesFile() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createExcludesFile();
-    }
-    
-    /**
-     * Sets the set of include patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param includes the string containing the include patterns
-     */
-    public void setIncludes(String includes) {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
-
-        defaultPatterns.setIncludes(includes);
-    }
-
-    /**
-     * Sets the set of exclude patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param excludes the string containing the exclude patterns
-     */
-    public void setExcludes(String excludes) {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
-
-        defaultPatterns.setExcludes(excludes);
-    }
-
-    /**
-     * Sets the name of the file containing the includes patterns.
-     *
-     * @param incl The file to fetch the include patterns from.  
-     */
-     public void setIncludesfile(File incl) throws BuildException {
-         if (isReference()) {
-             throw tooManyAttributes();
-         }
-
-         defaultPatterns.setIncludesfile(incl);
-     }
-
-    /**
-     * Sets the name of the file containing the includes patterns.
-     *
-     * @param excl The file to fetch the exclude patterns from.  
-     */
-     public void setExcludesfile(File excl) throws BuildException {
-         if (isReference()) {
-             throw tooManyAttributes();
-         }
-
-         defaultPatterns.setExcludesfile(excl);
-     }
-
-    /**
-     * Sets case sensitivity of the file system
-     *
-     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
-     *                           sensitive, "false"|"off"|"no" when not.
-     */
-    public void setCaseSensitive(boolean isCaseSensitive) {
-        this.isCaseSensitive = isCaseSensitive;
-    }
-
-    /**
-     * Returns the directory scanner needed to access the dirs to process.
-     */
-    public DirectoryScanner getDirectoryScanner(Project p) {
-        if (isReference()) {
-            return getRef(p).getDirectoryScanner(p);
-        }
-
-        if (dir == null) {
-            throw new BuildException("No directory specified for dirset.");
-        }
-
-        if (!dir.exists()) {
-            throw new BuildException(dir.getAbsolutePath()+" not found.");
-        }
-        if (!dir.isDirectory()) {
-            throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
-        }
-
-        DirectoryScanner ds = new DirectoryScanner();
-        setupDirectoryScanner(ds, p);
-        ds.scan();
-        ds.getIncludedDirectories();
-        return ds;
-    }
-    
-    public void setupDirectoryScanner(FileScanner ds, Project p) {
-        if (ds == null) {
-            throw new IllegalArgumentException("ds cannot be null");
-        }
-        
-        ds.setBasedir(dir);
-
-        final int count = additionalPatterns.size();
-        for (int i = 0; i < count; i++) {
-            Object o = additionalPatterns.elementAt(i);
-            defaultPatterns.append((PatternSet) o, p);
-        }
-
-        p.log( "DirSet: Setup dir scanner in dir " + dir + 
-            " with " + defaultPatterns, Project.MSG_DEBUG );
-        
-        ds.setIncludes(defaultPatterns.getIncludePatterns(p));
-        ds.setExcludes(defaultPatterns.getExcludePatterns(p));
-        ds.setCaseSensitive(isCaseSensitive);
-    }
-
-    /**
-     * Performs the check for circular references and returns the
-     * referenced DirSet.  
-     */
-    protected DirSet getRef(Project p) {
-        if (!checked) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
-        
-        Object o = ref.getReferencedObject(p);
-        if (!(o instanceof DirSet)) {
-            String msg = ref.getRefId()+" doesn\'t denote a dirset";
-            throw new BuildException(msg);
-        } else {
-            return (DirSet) o;
-        }
+        super(dirset);
+        setDataTypeName("dirset");
     }
 
     /**
@@ -304,7 +85,7 @@ public class DirSet extends DataType implements Cloneable {
      */
     public Object clone() {
         if (isReference()) {
-            return new DirSet(getRef(getProject()));
+            return new DirSet((DirSet) getRef(getProject()));
         } else {
             return new DirSet(this);
         }

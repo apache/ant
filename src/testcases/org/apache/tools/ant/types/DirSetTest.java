@@ -246,4 +246,32 @@ public class DirSetTest extends TestCase {
         File dir = f1.getDir(project);
         assertEquals("Dir is basedir", dir, project.getBaseDir());
     }
+
+    public void testFileSetIsNoDirSet() {
+        DirSet ds = new DirSet();
+        ds.setProject(project);
+        FileSet fs = new FileSet();
+        fs.setProject(project);
+        project.addReference("dummy", fs);
+        ds.setRefid(new Reference("dummy"));
+        try {
+            ds.getDir(project);
+            fail("DirSet created from FileSet reference");
+        } catch (BuildException e) {
+            assertEquals("dummy doesn\'t denote a dirset", e.getMessage());
+        }
+
+        ds = new DirSet();
+        ds.setProject(project);
+        project.addReference("dummy2", ds);
+        fs.setRefid(new Reference("dummy2"));
+        try {
+            fs.getDir(project);
+            fail("FileSet created from DirSet reference");
+        } catch (BuildException e) {
+            assertEquals("dummy2 doesn\'t denote a fileset", e.getMessage());
+        }
+
+    }
+
 }

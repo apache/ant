@@ -83,6 +83,8 @@ public class FileSet extends DataType implements Cloneable {
     private boolean useDefaultExcludes = true;
     private boolean isCaseSensitive = true;
 
+    private String dataTypeName = "fileset";
+
     public FileSet() {
         super();
     }
@@ -257,6 +259,13 @@ public class FileSet extends DataType implements Cloneable {
     }
 
     /**
+     * sets the name used for this datatype instance.
+     */
+    protected final void setDataTypeName(String name) {
+        dataTypeName = name;
+    }
+
+    /**
      * Returns the directory scanner needed to access the files to process.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
@@ -265,7 +274,8 @@ public class FileSet extends DataType implements Cloneable {
         }
 
         if (dir == null) {
-            throw new BuildException("No directory specified for fileset.");
+            throw new BuildException("No directory specified for "
+                                     + dataTypeName + ".");
         }
 
         if (!dir.exists()) {
@@ -294,7 +304,7 @@ public class FileSet extends DataType implements Cloneable {
             defaultPatterns.append((PatternSet) o, p);
         }
 
-        p.log( "FileSet: Setup file scanner in dir " + dir + 
+        p.log(dataTypeName + ": Setup scanner in dir " + dir + 
             " with " + defaultPatterns, Project.MSG_DEBUG );
         
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
@@ -317,8 +327,8 @@ public class FileSet extends DataType implements Cloneable {
         }
         
         Object o = ref.getReferencedObject(p);
-        if (!(o instanceof FileSet)) {
-            String msg = ref.getRefId()+" doesn\'t denote a fileset";
+        if (!o.getClass().equals(getClass())) {
+            String msg = ref.getRefId()+" doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
         } else {
             return (FileSet) o;

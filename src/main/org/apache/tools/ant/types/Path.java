@@ -319,35 +319,23 @@ public class Path extends DataType implements Cloneable {
                 for (int j=0; j<parts.length; j++) {
                     addUnlessPresent(result, parts[j]);
                 }
-            } else if (o instanceof FileSet) {
-                FileSet fs = (FileSet) o;
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] s = ds.getIncludedFiles();
-                File dir = fs.getDir(getProject());
-                for (int j=0; j<s.length; j++) {
-                    File f = new File(dir, s[j]);
-                    String absolutePath = f.getAbsolutePath();
-                    addUnlessPresent(result, translateFile(absolutePath));
-                } 
             } else if (o instanceof DirSet) {
                 DirSet dset = (DirSet) o;
                 DirectoryScanner ds = dset.getDirectoryScanner(getProject());
                 String[] s = ds.getIncludedDirectories();
                 File dir = dset.getDir(getProject());
-                for (int j=0; j<s.length; j++) {
-                    File d = new File(dir, s[j]);
-                    String absolutePath = d.getAbsolutePath();
-                    addUnlessPresent(result, translateFile(absolutePath));
-                } 
+                addUnlessPresent(result, dir, s);
+            } else if (o instanceof FileSet) {
+                FileSet fs = (FileSet) o;
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                String[] s = ds.getIncludedFiles();
+                File dir = fs.getDir(getProject());
+                addUnlessPresent(result, dir, s);
             } else if (o instanceof FileList) {
                 FileList fl = (FileList) o;
                 String[] s = fl.getFiles(getProject());
                 File dir = fl.getDir(getProject());
-                for (int j=0; j<s.length; j++) {
-                    File d = new File(dir, s[j]);
-                    String absolutePath = d.getAbsolutePath();
-                    addUnlessPresent(result, translateFile(absolutePath));
-                } 
+                addUnlessPresent(result, dir, s);
             }
         }
         String[] res = new String[result.size()];
@@ -507,6 +495,18 @@ public class Path extends DataType implements Cloneable {
         if (v.indexOf(s) == -1) {
             v.addElement(s);
         }
+    }
+
+    /**
+     * Adds absolute path names of listed files in the given directory
+     * to the Vector if they are not already included.
+     */
+    private static void addUnlessPresent(Vector v, File dir, String[] s) {
+        for (int j=0; j<s.length; j++) {
+            File d = new File(dir, s[j]);
+            String absolutePath = d.getAbsolutePath();
+            addUnlessPresent(v, translateFile(absolutePath));
+        } 
     }
 
     /**
