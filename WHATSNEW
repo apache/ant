@@ -58,6 +58,10 @@ Changes that could break older environments:
   required in order to exclude remote symbolic links (when doing a get, chmod,
   delete, rmdir).
 
+* The values of the Copy#fileCopyMap variable has changed from String to
+  String[]. (In java 1.5 terms it was Hashtable<String, String> and
+  is now Hashtable<String, String[]>). This will affect third party code
+  that extend Copy and override Copy#doFileOperations.
 
 Fixed bugs:
 -----------
