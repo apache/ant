@@ -626,8 +626,8 @@ public class Javadoc extends Task {
             packagelistLoc = src;
         }
         
-        public String getPackagelistLoc() {
-            return packagelistLoc.getAbsolutePath();
+        public File getPackagelistLoc() {
+            return packagelistLoc;
         }
         
         public void setOffline(boolean offline) {
@@ -810,14 +810,21 @@ public class Javadoc extends Task {
                     }
                 
                     if (la.isLinkOffline()) {
-                        String packageListLocation = la.getPackagelistLoc();
+                        File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {
                             throw new BuildException("The package list location for link " + la.getHref() +
                                                      " must be provided because the link is offline");
                         }
-                        toExecute.createArgument().setValue("-linkoffline");
-                        toExecute.createArgument().setValue(la.getHref());
-                        toExecute.createArgument().setValue(packageListLocation);
+                        File packageList = new File(packageListLocation, "package-list");
+                        if (packageList.exists()) {
+                            toExecute.createArgument().setValue("-linkoffline");
+                            toExecute.createArgument().setValue(la.getHref());
+                            toExecute.createArgument().setValue(packageListLocation.getAbsolutePath());
+                        }
+                        else {
+                            log("Warning: No package list was found at " + packageListLocation, 
+                                Project.MSG_VERBOSE);
+                        }
                     }
                     else {
                         toExecute.createArgument().setValue("-link");
