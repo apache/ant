@@ -80,6 +80,8 @@ Changes that could break older environments:
   </delete>
   will now remove "somedir" as well, unless there are still files left
   in it (matched by the default excludes).
+  
+* The copy task will now fail if the file to be copied is not found. 
 
 Other changes:
 --------------
