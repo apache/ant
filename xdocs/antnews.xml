@@ -146,6 +146,7 @@
     <p>
        As we continue to evolve and enhance Ant 1.x, it is now time to define what Ant 2.0 will
        encompass. Ant 2.0 will be a major rearchitecting of Ant. It has a number of goals including:
+    </p>
        <ul>
          <li>Define the "contract" with build file writers to which Ant will be bound.</li>
          <li>Define the "contract" between the Ant core and Task writers.</li>
@@ -153,7 +154,7 @@
          <li>Allow Ant to function as a component to simplify integration with GUIs and IDEs.</li>
          <li>Make Ant more regular and logical.</li>
        </ul>
-       
+     <p>       
        It is expected that Ant 2.0 will break Ant 1.x based build files. The intention is to
        make this the last time that will happen.
      </p>
