@@ -72,6 +72,8 @@ Other changes:
 
 * Docs fixes for xmlvalidate.html. Bugzilla Report 27092.
 
+* <pathconvert> now accepts nested <mapper>s.  Bugzilla Report 26364.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 

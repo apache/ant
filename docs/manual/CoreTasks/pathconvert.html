@@ -19,6 +19,9 @@ of files in a FileList into a path.
 </p>
 <p>Nested <code>&lt;map&gt;</code> elements can be specified to map Windows
 drive letters to Unix paths, and vice-versa.</p>
+<p>More complex transformations can be achieved using a nested
+<a href="../CoreTypes/mapper.html"><code>&lt;mapper&gt;</code></a>.
+</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -114,6 +117,11 @@ prefixes of other <code>from</code> values.</i>
 <p>If the <code>refid</code> attribute is not specified, then a
    nested <code>&lt;path&gt;</code> element must be supplied.  See
    <a href="../using.html#path">Path-like Structures</a> for details.</p>
+<h4>mapper</h4>
+<p>A single nested <a href="../CoreTypes/mapper.html">
+<code>&lt;mapper&gt;</code></a> element can be specified
+to perform any of various filename transformations.
+</p>
 
 <h3>Examples</h3>
 <p>In the examples below, assume that the <code>${wl.home}</code> property
