@@ -242,6 +242,9 @@ Fixed bugs:
 * The socket condition will now close the socket created to test.
   Bugzilla Report 23040.
 
+* <junit includeantruntime="true" fork="true"> replaced the CLASSPATH instead
+  of adding to it.  Bugzilla Report 14971.
+
 Other changes:
 --------------
 * All tasks can be used outside of <target>s.  Note that some tasks

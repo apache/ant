@@ -717,6 +717,17 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue("haltOnFailure="
                                       + test.getHaltonfailure());
         if (includeAntRuntime) {
+            Vector v = Execute.getProcEnvironment();
+            Enumeration e = v.elements();
+            while (e.hasMoreElements()) {
+                String s = (String) e.nextElement();
+                if (s.startsWith("CLASSPATH=")) {
+                    cmd.createClasspath(getProject()).createPath()
+                        .append(new Path(getProject(), 
+                                         s.substring(10 // "CLASSPATH=".length()
+                                                     )));
+                }
+            }
             log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
                 Project.MSG_VERBOSE);
             cmd.createClasspath(getProject()).createPath()
