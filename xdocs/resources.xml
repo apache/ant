@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+﻿<?xml version="1.0" encoding="ISO-8859-1" ?>
 <document>
 
   <properties>
@@ -38,7 +38,7 @@
       </subsection>
 
       <subsection name="FAQ about Borland Application Server tasks">
-        <p>Benoit Moussaud, the original author if the Borland
+        <p>Benoit Moussaud, the original author of the Borland
         Application Server specific <a
         href="manual/OptionalTasks/ejb.html#ejbtasks">EJB tasks</a> has put
         together a FAQ for this specific subtask.</p>

@@ -226,6 +226,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 ((XSLTLoggerAware) liaison).setLogger(this);
             }
 
+            Class cl = liaison.getClass();
+            String s = cl.toString();
+
             log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
 
             File stylesheet = getProject().resolveFile(xslFile);
@@ -566,22 +569,27 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     protected XSLTLiaison getLiaison() {
         // if processor wasn't specified, see if TraX is available.  If not,
         // default it to xslp or xalan, depending on which is in the classpath
+        Class cl = null;
         if (liaison == null) {
             if (processor != null) {
                 try {
                     resolveProcessor(processor);
+                    cl = liaison.getClass();
                 } catch (Exception e) {
                     throw new BuildException(e);
                 }
             } else {
                 try {
                     resolveProcessor("trax");
+                    cl = liaison.getClass();
                 } catch (Throwable e1) {
                     try {
                         resolveProcessor("xalan");
+                        cl = liaison.getClass();
                     } catch (Throwable e2) {
                         try {
                             resolveProcessor("xslp");
+                            cl = liaison.getClass();
                         } catch (Throwable e3) {
                             e3.printStackTrace();
                             e2.printStackTrace();
@@ -591,6 +599,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             }
         }
+        cl = liaison.getClass();
         return liaison;
     }
 
@@ -701,7 +710,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     && project.getProperty(unlessProperty) != null) {
                 return false;
             }
-            
+
             return true;
         }
     } // Param
