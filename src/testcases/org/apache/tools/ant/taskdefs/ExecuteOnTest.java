@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -554,13 +554,21 @@ public class ExecuteOnTest extends BuildFileTest {
         executeTarget("ignoremissing");
     }
 
+    public void testForce() {
+        executeTarget("force");
+    }
+
+    public void testNoDest() {
+        executeTarget("testNoDest");
+    }
+
     //borrowed from TokenFilterTest
     private String getFileString(String filename) throws IOException {
         String result = null;
         FileReader reader = null;
         try {
             reader = new FileReader(getProject().resolveFile(filename));
-            result = FileUtils.newFileUtils().readFully(reader);
+            result = FileUtils.readFully(reader);
         } finally {
             if (reader != null) {
                 try {

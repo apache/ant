@@ -54,6 +54,12 @@ Other changes:
 * Overloaded FileUtils.createNewFile with a boolean mkdirs attribute
   to create nonexistent parent directories.
 
+* <apply> has a new "force" attribute that, when true, disables
+  checking of target files.
+
+* Made the dest attribute of the apply task optional; mapped target
+  filenames will be interpreted as absolute pathnames when dest is omitted.
+
 Fixed bugs:
 -----------
 
@@ -141,6 +147,12 @@ Fixed bugs:
 
 * DependScanner.getResource() always returned nonexistent resources,
   even when the resource actually existed.  Bugzilla Report 30558.
+
+* <apply> was broken with classfilesets.  Bugzilla Report 30567.
+
+* <available> returned false positives when checking a file
+  passed in with the current basedir leading twice:
+  e.g. ${basedir}${file.separator}${basedir}${file.separator}foo .
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================

@@ -313,10 +313,7 @@
         </apply>
     </target>
 
-    <target name="ignoremissing" depends="init,xyz" if="echo.can.run">
-        <filelist id="xylist" dir="${basedir}" files="x,y" />
-        <delete file="z" />
-
+    <target name="pad">
         <condition property="pad" value="">
             <or>
                 <not>
@@ -340,6 +337,12 @@
                 </or>
             </and>
         </condition>
+
+    </target>
+
+    <target name="ignoremissing" depends="init,xyz,pad" if="echo.can.run">
+        <filelist id="xylist" dir="${basedir}" files="x,y" />
+        <delete file="z" />
 
         <pathconvert property="xy" pathsep="${pad}${line.separator}">
             <path>
@@ -373,6 +376,56 @@
                 </not>
             </condition>
         </fail>
+    </target>
+
+    <target name="force" depends="init,xyz,pad" if="echo.can.run">
+        <presetdef name="ekko">
+            <apply executable="echo" append="true" dest="${basedir}">
+                <filelist refid="xyzlist" />
+                <mapper type="identity" />
+            </apply>
+        </presetdef>
+
+        <pathconvert property="xyz" pathsep="${pad}${line.separator}">
+            <path>
+                <filelist refid="xyzlist" />
+            </path>
+        </pathconvert>
+
+        <ekko outputproperty="foo" />
+        <ekko outputproperty="bar" force="true" />
+        <fail>
+            <condition>
+                <not>
+                    <and>
+                        <equals arg1="${foo}" arg2="" />
+                        <equals arg1="${bar}" arg2="${xyz}" />
+                    </and>
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="testNoDest" depends="init,xyz" if="echo.can.run">
+      <presetdef name="ekko">
+        <apply executable="echo" addsourcefile="false" force="true">
+          <filelist dir="${basedir}" files="x" />
+          <globmapper from="*" to="${basedir}/*" />
+          <targetfile />
+        </apply>
+      </presetdef>
+      <ekko outputproperty="dest" dest="${basedir}" />
+      <ekko outputproperty="nodest" />
+      <fail>
+        <condition>
+          <or>
+            <available file="${dest}" />
+            <not>
+              <available file="${nodest}" />
+            </not>
+          </or>
+        </condition>
+      </fail>
     </target>
 
     <target name="cleanup">
