@@ -30,6 +30,7 @@ import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * Create a ZIP archive.
@@ -263,7 +264,8 @@ public class Zip
         {
             dss.add( getDirectoryScanner( m_baseDir ) );
         }
-        for( int i = 0; i < m_filesets.size(); i++ )
+        final int size = m_filesets.size();
+        for( int i = 0; i < size; i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.get( i );
             final DirectoryScanner scanner = getScanner( fileSet );
@@ -316,7 +318,8 @@ public class Zip
                     oldFiles.setSrc( renamedFile );
 
                     StringBuffer exclusionPattern = new StringBuffer();
-                    for( int i = 0; i < m_addedFiles.size(); i++ )
+                    final int addedFilesCount = m_addedFiles.size();
+                    for( int i = 0; i < addedFilesCount; i++ )
                     {
                         if( i != 0 )
                         {
@@ -573,7 +576,8 @@ public class Zip
         throws IOException, TaskException
     {
         // Add each fileset in the ArrayList.
-        for( int i = 0; i < filesets.size(); i++ )
+        final int size = filesets.size();
+        for( int i = 0; i < size; i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = getScanner( fs );
@@ -637,7 +641,7 @@ public class Zip
             Stack directories = new Stack();
             int slashPos = entry.length();
 
-            while( ( slashPos = entry.lastIndexOf( (int)'/', slashPos - 1 ) ) != -1 )
+            while( ( slashPos = entry.lastIndexOf( '/', slashPos - 1 ) ) != -1 )
             {
                 String dir = entry.substring( 0, slashPos + 1 );
                 if( m_addedDirs.get( prefix + dir ) != null )
@@ -794,12 +798,14 @@ public class Zip
         zOut.putNextEntry( ze );
     }
 
-    protected void zipFile( InputStream in, ZipOutputStream zOut, String vPath,
-                            long lastModified )
+    protected void zipFile( final InputStream input,
+                            final ZipOutputStream output,
+                            final String path,
+                            final long lastModified )
         throws IOException, TaskException
     {
-        ZipEntry ze = new ZipEntry( vPath );
-        ze.setTime( lastModified );
+        final ZipEntry entry = new ZipEntry( path );
+        entry.setTime( lastModified );
 
         /*
          * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
@@ -811,11 +817,13 @@ public class Zip
          * I couldn't find any documentation on this, just found out by try
          * and error.
          */
+
+        InputStream inputToStore = input;
         if( !m_compress )
         {
+            final CRC32 crc = new CRC32();
             long size = 0;
-            CRC32 cal = new CRC32();
-            if( !in.markSupported() )
+            if( !inputToStore.markSupported() )
             {
                 // Store data into a byte[]
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -825,61 +833,55 @@ public class Zip
                 do
                 {
                     size += count;
-                    cal.update( buffer, 0, count );
+                    crc.update( buffer, 0, count );
                     bos.write( buffer, 0, count );
-                    count = in.read( buffer, 0, buffer.length );
+                    count = inputToStore.read( buffer, 0, buffer.length );
                 } while( count != -1 );
-                in = new ByteArrayInputStream( bos.toByteArray() );
-
+                inputToStore = new ByteArrayInputStream( bos.toByteArray() );
             }
             else
             {
-                in.mark( Integer.MAX_VALUE );
+                inputToStore.mark( Integer.MAX_VALUE );
                 byte[] buffer = new byte[ 8 * 1024 ];
                 int count = 0;
                 do
                 {
                     size += count;
-                    cal.update( buffer, 0, count );
-                    count = in.read( buffer, 0, buffer.length );
+                    crc.update( buffer, 0, count );
+                    count = inputToStore.read( buffer, 0, buffer.length );
                 } while( count != -1 );
-                in.reset();
+                inputToStore.reset();
             }
-            ze.setSize( size );
-            ze.setCrc( cal.getValue() );
+            entry.setSize( size );
+            entry.setCrc( crc.getValue() );
         }
 
-        zOut.putNextEntry( ze );
+        output.putNextEntry( entry );
 
-        byte[] buffer = new byte[ 8 * 1024 ];
-        int count = 0;
-        do
-        {
-            if( count != 0 )
-            {
-                zOut.write( buffer, 0, count );
-            }
-            count = in.read( buffer, 0, buffer.length );
-        } while( count != -1 );
-        m_addedFiles.add( vPath );
+        IOUtil.copy( inputToStore, output );
+
+        m_addedFiles.add( path );
     }
 
-    protected void zipFile( File file, ZipOutputStream zOut, String vPath )
+    protected void zipFile( final File file,
+                            final ZipOutputStream zOut,
+                            final String vPath )
         throws IOException, TaskException
     {
         if( file.equals( m_file ) )
         {
-            throw new TaskException( "A zip file cannot include itself" );
+            final String message = "A zip file cannot include itself";
+            throw new TaskException( message );
         }
 
-        FileInputStream fIn = new FileInputStream( file );
+        final FileInputStream fIn = new FileInputStream( file );
         try
         {
             zipFile( fIn, zOut, vPath, file.lastModified() );
         }
         finally
         {
-            fIn.close();
+            IOUtil.shutdownStream( fIn );
         }
     }
 }
