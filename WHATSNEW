@@ -209,6 +209,12 @@ Fixed bugs:
   element tagdiff of the xml output
   Bugzilla Report 16081.
 
+* <cvstagdiff> had a problem with aliased modules and with requests for multiple modules
+  Bugzilla Reports 21373 and 22877.
+
+* <cvstagdiff> could not parse properly the revision number of new files with CVS 1.11.9 or higher
+  Bugzilla Report 24406.
+
 * <fixcrlf> make fixcrlf create its temporary files in the default directory
   of FileUtils#createTempFile instead of the destination dir of fixcrlf.
   Bugzilla Report 20870.
