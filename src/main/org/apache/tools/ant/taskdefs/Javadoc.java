@@ -94,7 +94,7 @@ public class Javadoc extends Exec {
     private boolean author = true;
     private boolean version = true;
     private String doclet = null;
-    private File docletpath = null;
+    private String docletpath = null;
     private boolean old = false;
     private String classpath = null;
     private String bootclasspath = null;
@@ -165,7 +165,7 @@ public class Javadoc extends Exec {
         doclet = src;
     }
     public void setDocletPath(String src) {
-        docletpath = project.resolveFile(src);
+        docletpath = project.translatePath(src);
     }
     public void setOld(String src) {
         old = Project.toBoolean(src);
@@ -417,6 +417,10 @@ public class Javadoc extends Exec {
             if (doclet != null) {
                 argList.addElement("-doclet");
                 argList.addElement(doclet);
+            }
+            if (docletpath != null) {
+                argList.addElement("-docletpath");
+                argList.addElement(docletpath);
             }
             if (bootclasspath != null) {
                 argList.addElement("-bootclasspath");
