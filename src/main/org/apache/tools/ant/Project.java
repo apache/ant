@@ -278,6 +278,16 @@ public class Project {
         properties.put(name, value);
     }
 
+    public void unsetProperty(String name) {
+        // command line properties take precedence
+        if (null != userProperties.get(name)) {
+            log("Won\'t unset user property " + name, MSG_VERBOSE);
+            return;
+        }
+        log("Unsetting project property: " + name, MSG_DEBUG);
+        properties.remove(name);
+    }
+
     public void setUserProperty(String name, String value) {
         log("Setting ro project property: " + name + " -> " +
             value, MSG_DEBUG);

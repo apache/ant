@@ -87,7 +87,7 @@ public class MockBuildListener extends Assert implements BuildListener {
     }
     
     public void assertEmpty() {
-        assertTrue("MockBuilListener is not empty", buffer.isEmpty());
+        assertTrue("MockBuildListener is not empty", buffer.isEmpty());
     }
     
     public void addBuildEvent(final String message, final int priority) {

@@ -472,6 +472,7 @@ public class Javac extends MatchingTask {
                    || f.equalsIgnoreCase("false")
                    || f.equalsIgnoreCase("no")) {
             fork = "false";
+            forkedExecutable = null;
         } else {
             fork = "true";
             forkedExecutable = f;
@@ -490,6 +491,11 @@ public class Javac extends MatchingTask {
      * The name of the javac executable to use in fork-mode.
      */
     public String getJavacExecutable() {
+        if (forkedExecutable == null && isForkedJavac()) {
+            forkedExecutable = getSystemJavac();
+        } else if (forkedExecutable != null && !isForkedJavac()) {
+            forkedExecutable = null;
+        }
         return forkedExecutable;
     }
 
