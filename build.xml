@@ -559,6 +559,8 @@
          Run testcase                                                        
        =================================================================== 
   -->
+  <target name="test" depends="run-tests"/>
+
   <target name="run-tests" depends="dump-info,compile-tests" if="junit.present">
 
 
