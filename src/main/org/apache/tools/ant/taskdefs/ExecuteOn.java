@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,6 +83,7 @@ public class ExecuteOn extends ExecTask {
     protected Vector filesets = new Vector();
     private boolean relative = false;
     private boolean parallel = false;
+    private boolean forwardSlash = false;
     protected String type = "file";
     protected Commandline.Marker srcFilePos = null;
     private boolean skipEmpty = false;
@@ -142,6 +143,14 @@ public class ExecuteOn extends ExecTask {
      */
     public void setDest(File destDir) {
         this.destDir = destDir;
+    }
+
+    /**
+     * The source and target file names on Windows and OS/2 must use
+     * forward slash as file separator.
+     */
+    public void setForwardslash(boolean forwardSlash) {
+        this.forwardSlash = forwardSlash;
     }
 
     /**
@@ -284,6 +293,7 @@ public class ExecuteOn extends ExecTask {
      * @param baseDir filenames are relative to this dir
      */
     protected String[] getCommandline(String[] srcFiles, File[] baseDirs) {
+        final char fileSeparator = File.separatorChar;
         Vector targets = new Vector();
         if (targetFilePos != null) {
             Hashtable addedFiles = new Hashtable();
@@ -296,6 +306,9 @@ public class ExecuteOn extends ExecTask {
                             name = (new File(destDir, subTargets[j])).getAbsolutePath();
                         } else {
                             name = subTargets[j];
+                        }
+                        if (forwardSlash && fileSeparator != '/') {
+                            name = name.replace(fileSeparator, '/');
                         }
                         if (!addedFiles.contains(name)) {
                             targets.addElement(name);
@@ -379,6 +392,10 @@ public class ExecuteOn extends ExecTask {
                     (new File(baseDirs[i], srcFiles[i])).getAbsolutePath();
             } else {
                 result[srcIndex + i] = srcFiles[i];
+            }
+            if (forwardSlash && fileSeparator != '/') {
+                result[srcIndex + i] = 
+                    result[srcIndex + i].replace(fileSeparator, '/');
             }
         }
         return result;

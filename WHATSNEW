@@ -179,6 +179,11 @@ Other changes:
 
 * New task <sync> that synchronizes two directory trees.
 
+* <apply> has new forwardslash attribute that can force filenames to
+  use forward slashes (/) as file separators even on platforms with a
+  different separator.  This is useful if you want to run certain
+  ported Unix tools.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
