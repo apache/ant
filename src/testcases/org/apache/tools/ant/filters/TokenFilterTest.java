@@ -238,7 +238,6 @@ public class TokenFilterTest extends BuildFileTest {
         catch (Throwable ex) {
             System.out.println(
                 test + ": skipped - script not present ");
-            ex.printStackTrace(System.out);
             return false;
         }
         return true;

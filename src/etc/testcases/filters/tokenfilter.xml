@@ -297,7 +297,7 @@
   </target>
 
   <target name="hasscript">
-    <script language="beanshell">
+    <script language="javascript">
       i = 1;
     </script>
   </target>
