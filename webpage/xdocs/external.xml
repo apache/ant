@@ -27,17 +27,24 @@
         <p>Actually, Anakia is more than just an Ant task, it is a an
         XML transformation tool based on JDOM, Velocity and Ant.</p>
 
-        <p><strong>Compatibility:</strong> Ant 1.2 and 1.3</p>
-
-        <p><strong>URL</strong>: <a
-        href="http://jakarta.apache.org/velocity/anakia.html">http://jakarta.apache.org/velocity/anakia.html</a>.</p>
-
-        <p><strong>Contact:</strong> <a
-        href="http://jakarta.apache.org/site/mail2.html">Velocity
-        mailing lists</a></p>
-
-        <p><strong>License:</strong> Apache Software License</p>
-
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jakarta.apache.org/velocity/anakia.html">http://jakarta.apache.org/velocity/anakia.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://jakarta.apache.org/site/mail2.html">Velocity mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
       </subsection>
 
     </section>
@@ -48,43 +55,73 @@
 
         <p>An OpenTool that integrates Ant into the JBuilder IDE.</p>
 
-        <p><strong>Compatibility:</strong> Ant 1.2 and 1.3</p>
-
-        <p><strong>URL</strong>: <a href="http://www.dieter-bogdoll.de/java/AntRunner/">http://www.dieter-bogdoll.de/java/AntRunner/</a>.</p>
-
-        <p><strong>Contact:</strong> <a href="mailto:bogdoll@users.sourceforge.net">Dieter Bogdoll</a></p>
-
-        <p><strong>License:</strong> GNU General Public License</p>
-
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.dieter-bogdoll.de/java/AntRunner/">http://www.dieter-bogdoll.de/java/AntRunner/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:bogdoll@users.sourceforge.net">Dieter Bogdoll</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
       </subsection>
 
       <subsection name="AntWork">
 
         <p>A plugin that integrates Ant into the Jext editor.</p>
 
-        <p><strong>Compatibility:</strong> Ant 1.2 and 1.3</p>
-
-        <p><strong>URL</strong>: <a href="ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip">ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip</a>.</p>
-
-        <p><strong>Contact:</strong> <a href="mailto:KHartlage@t-online.de">Klaus Hartlage</a></p>
-
-        <p><strong>License:</strong> GNU General Public License</p>
-
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip">ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:KHartlage@t-online.de">Klaus Hartlage</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
       </subsection>
 
       <subsection name="Forte module for Ant">
 
         <p>A module that integrates Ant into the Forte IDE.</p>
 
-        <p><strong>Compatibility:</strong> any version of Ant prior to
-          and including Ant 1.3</p>
-
-        <p><strong>URL</strong>: <a href="http://ant.netbeans.org">http://ant.netbeans.org</a>.</p>
-
-        <p><strong>Contact:</strong> <a href="mailto:nbdev@netbeans.org">nbdev@netbeans.org</a></p>
-
-        <p><strong>License:</strong> Sun Public License</p>
-
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>any version of Ant prior to
+          and including Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ant.netbeans.org">http://ant.netbeans.org</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:nbdev@netbeans.org">nbdev@netbeans.org</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Sun Public License</td>
+          </tr>
+        </table>
       </subsection>
     </section>
 
