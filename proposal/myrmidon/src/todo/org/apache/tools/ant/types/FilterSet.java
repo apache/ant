@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.types;// java io classes
+package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,7 +81,7 @@ public class FilterSet
      *
      * @param filter The feature to be added to the Filter attribute
      */
-    public void addFilter( Filter filter )
+    public void addFilter( final Filter filter )
     {
         m_filters.add( filter );
     }
@@ -120,17 +120,6 @@ public class FilterSet
     {
         return new FiltersFile();
     }*/
-
-    /**
-     * Test to see if this filter set it empty.
-     *
-     * @return Return true if there are filter in this set otherwise false.
-     */
-    public boolean hasFilters()
-        throws TaskException
-    {
-        return m_filters.size() > 0;
-    }
 
     /**
      * Read the filters from the given file.

@@ -7,13 +7,9 @@
  */
 package org.apache.tools.ant.types;// java io classes
 
-// java util classes
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-
-// ant classes
 
 /**
  * A FilterSetCollection is a collection of filtersets each of which may have a
@@ -23,40 +19,11 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class FilterSetCollection
 {
+    private ArrayList m_filterSets = new ArrayList();
 
-    private ArrayList filterSets = new ArrayList();
-
-    public FilterSetCollection()
+    public void addFilterSet( final FilterSet filterSet )
     {
-    }
-
-    public FilterSetCollection( FilterSet filterSet )
-    {
-        addFilterSet( filterSet );
-    }
-
-    public void addFilterSet( FilterSet filterSet )
-    {
-        filterSets.add( filterSet );
-    }
-
-    /**
-     * Test to see if this filter set it empty.
-     *
-     * @return Return true if there are filter in this set otherwise false.
-     */
-    public boolean hasFilters()
-        throws TaskException
-    {
-        for( Iterator e = filterSets.iterator(); e.hasNext(); )
-        {
-            FilterSet filterSet = (FilterSet)e.next();
-            if( filterSet.hasFilters() )
-            {
-                return true;
-            }
-        }
-        return false;
+        m_filterSets.add( filterSet );
     }
 
     /**
@@ -70,9 +37,11 @@ public class FilterSetCollection
         throws TaskException
     {
         String replacedLine = line;
-        for( Iterator e = filterSets.iterator(); e.hasNext(); )
+
+        final Iterator filterSets = m_filterSets.iterator();
+        while( filterSets.hasNext() )
         {
-            FilterSet filterSet = (FilterSet)e.next();
+            final FilterSet filterSet = (FilterSet)filterSets.next();
             replacedLine = filterSet.replaceTokens( replacedLine );
         }
         return replacedLine;
