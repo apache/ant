@@ -52,5 +52,5 @@ else
   ANT_INSTALL="-emacs"
 fi
 
-bootstrap/bin/ant -nouserlib -noclasspath -lib lib/optional "$ANT_INSTALL" $*
+bootstrap/bin/ant -nouserlib -lib lib/optional "$ANT_INSTALL" $*
 
