@@ -67,15 +67,14 @@ public class AspectAwareExecutor
     private void executeTask( Configuration taskModel, final TaskContext context )
         throws TaskException
     {
-        getLogger().debug( "Creating" );
-
         taskModel = getAspectManager().preCreate( taskModel );
-
         taskModel = prepareAspects( taskModel );
 
+        getLogger().debug( "Pre-Create" );
         final Task task = createTask( taskModel.getName() );
         getAspectManager().postCreate( task );
 
+        getLogger().debug( "Pre-Loggable" );
         getAspectManager().preLoggable( getLogger() );
         setupLogger( task );
 
