@@ -79,7 +79,7 @@ public class ClassPathLoader {
     public final static FileLoader NULL_LOADER = new NullLoader();
 
     /** the list of files to look for */
-    protected File[] files;
+    private File[] files;
 
     /**
      * create a new instance with a given classpath. It must be urls
@@ -166,8 +166,8 @@ public class ClassPathLoader {
     }
 
     /** the loader enumeration that will return loaders */
-    protected class LoaderEnumeration implements Enumeration {
-        protected int index = 0;
+    private class LoaderEnumeration implements Enumeration {
+        private int index = 0;
 
         public boolean hasMoreElements() {
             return index < files.length;
@@ -213,7 +213,7 @@ public class ClassPathLoader {
 }
 
 /** a null loader to return when the file is not valid */
-class NullLoader implements ClassPathLoader.FileLoader {
+final class NullLoader implements ClassPathLoader.FileLoader {
     private File file;
 
     NullLoader() {
@@ -238,7 +238,7 @@ class NullLoader implements ClassPathLoader.FileLoader {
  * @todo read the jar manifest in case there is a Class-Path
  * entry.
  */
-class JarLoader implements ClassPathLoader.FileLoader {
+final class JarLoader implements ClassPathLoader.FileLoader {
     private File file;
 
     JarLoader(File file) {
@@ -273,8 +273,10 @@ class JarLoader implements ClassPathLoader.FileLoader {
  * @todo should discard classes which package name does not
  * match the directory ?
  */
-class DirectoryLoader implements ClassPathLoader.FileLoader {
+final class DirectoryLoader implements ClassPathLoader.FileLoader {
     private File directory;
+    private final static FilenameFilter DIRECTORY_FILTER = new DirectoryFilter();
+    private final static FilenameFilter CLASS_FILTER = new ClassFilter();
 
     DirectoryLoader(File dir) {
         directory = dir;
@@ -285,9 +287,10 @@ class DirectoryLoader implements ClassPathLoader.FileLoader {
     }
 
     public ClassFile[] getClasses() throws IOException {
-        Vector v = new Vector();
+        Vector v = new Vector(127);
         Vector files = listFiles(directory, new ClassFilter(), true);
-        for (int i = 0; i < files.size(); i++) {
+        final int filesCount = files.size();
+        for (int i = 0; i < filesCount; i++) {
             File file = (File) files.elementAt(i);
             InputStream is = null;
             try {
@@ -323,7 +326,7 @@ class DirectoryLoader implements ClassPathLoader.FileLoader {
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory + " is not a directory");
         }
-        Vector list = new Vector();
+        Vector list = new Vector(512);
         listFilesTo(list, directory, filter, recurse);
         return list;
     }
@@ -355,7 +358,7 @@ class DirectoryLoader implements ClassPathLoader.FileLoader {
 }
 
 /** Convenient filter that accepts only directory <tt>File</tt> */
-class DirectoryFilter implements FilenameFilter {
+final class DirectoryFilter implements FilenameFilter {
     public boolean accept(File directory, String name) {
         File pathname = new File(directory, name);
         return pathname.isDirectory();
@@ -363,7 +366,7 @@ class DirectoryFilter implements FilenameFilter {
 }
 
 /** convenient filter to accept only .class files */
-class ClassFilter implements FilenameFilter {
+final class ClassFilter implements FilenameFilter {
     public boolean accept(File dir, String name) {
         return name.endsWith(".class");
     }
