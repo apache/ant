@@ -7,10 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
@@ -20,10 +18,9 @@ import org.apache.tools.bzip2.CBZip2InputStream;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-
-public class BUnzip2 extends Unpack
+public class BUnzip2
+    extends Unpack
 {
-
     private final static String DEFAULT_EXTENSION = ".bz2";
 
     protected String getDefaultExtension()
@@ -31,90 +28,17 @@ public class BUnzip2 extends Unpack
         return DEFAULT_EXTENSION;
     }
 
-    protected void extract()
-        throws TaskException
+    protected InputStream getUnpackingStream( final InputStream input )
+        throws TaskException, IOException
     {
-        if( source.lastModified() > dest.lastModified() )
+        final int b1 = input.read();
+        final int b2 = input.read();
+        if( b1 != 'B' || b2 != 'Z' )
         {
-            getLogger().info( "Expanding " + source.getAbsolutePath() + " to "
-                              + dest.getAbsolutePath() );
-
-            FileOutputStream out = null;
-            CBZip2InputStream zIn = null;
-            FileInputStream fis = null;
-            BufferedInputStream bis = null;
-            try
-            {
-                out = new FileOutputStream( dest );
-                fis = new FileInputStream( source );
-                bis = new BufferedInputStream( fis );
-                int b = bis.read();
-                if( b != 'B' )
-                {
-                    throw new TaskException( "Invalid bz2 file." );
-                }
-                b = bis.read();
-                if( b != 'Z' )
-                {
-                    throw new TaskException( "Invalid bz2 file." );
-                }
-                zIn = new CBZip2InputStream( bis );
-                byte[] buffer = new byte[ 8 * 1024 ];
-                int count = 0;
-                do
-                {
-                    out.write( buffer, 0, count );
-                    count = zIn.read( buffer, 0, buffer.length );
-                } while( count != -1 );
-            }
-            catch( IOException ioe )
-            {
-                String msg = "Problem expanding bzip2 " + ioe.getMessage();
-                throw new TaskException( msg, ioe );
-            }
-            finally
-            {
-                if( bis != null )
-                {
-                    try
-                    {
-                        bis.close();
-                    }
-                    catch( IOException ioex )
-                    {
-                    }
-                }
-                if( fis != null )
-                {
-                    try
-                    {
-                        fis.close();
-                    }
-                    catch( IOException ioex )
-                    {
-                    }
-                }
-                if( out != null )
-                {
-                    try
-                    {
-                        out.close();
-                    }
-                    catch( IOException ioex )
-                    {
-                    }
-                }
-                if( zIn != null )
-                {
-                    try
-                    {
-                        zIn.close();
-                    }
-                    catch( IOException ioex )
-                    {
-                    }
-                }
-            }
+            final String message = "Invalid bz2 file.";
+            throw new TaskException( message );
         }
+
+        return new CBZip2InputStream( input );
     }
 }

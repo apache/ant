@@ -8,89 +8,147 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Abstract Base class for unpack tasks.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
-public abstract class Unpack extends Task
+public abstract class Unpack
+    extends AbstractTask
 {
-    protected File dest;
+    private File m_dest;
+    private File m_src;
 
-    protected File source;
-
-    public void setDest( String dest )
-        throws TaskException
+    public void setDest( final File dest )
     {
-        this.dest = resolveFile( dest );
+        m_dest = dest;
     }
 
-    public void setSrc( String src )
-        throws TaskException
+    public void setSrc( final File src )
     {
-        source = resolveFile( src );
+        m_src = src;
     }
 
     public void execute()
         throws TaskException
     {
         validate();
-        extract();
+
+        final File source = getSrc();
+        final File dest = getDest();
+
+        if( source.lastModified() > dest.lastModified() )
+        {
+            final String message = "Expanding " + source.getAbsolutePath() +
+                " to " + dest.getAbsolutePath();
+            getLogger().info( message );
+
+            extract();
+        }
     }
 
     protected abstract String getDefaultExtension();
 
-    protected abstract void extract()
-        throws TaskException;
+    protected abstract InputStream getUnpackingStream( InputStream input )
+        throws TaskException, IOException;
 
-    private void createDestFile( String defaultExtension )
+    private void extract()
+        throws TaskException
     {
-        String sourceName = source.getName();
-        int len = sourceName.length();
-        if( defaultExtension != null
-            && len > defaultExtension.length()
-            && defaultExtension.equalsIgnoreCase( sourceName.substring( len - defaultExtension.length() ) ) )
+        OutputStream output = null;
+        InputStream input = null;
+        InputStream fileInput = null;
+        try
         {
-            dest = new File( dest, sourceName.substring( 0,
-                                                         len - defaultExtension.length() ) );
+            output = new FileOutputStream( getDest() );
+            fileInput = new FileInputStream( getSrc() );
+            input = getUnpackingStream( fileInput );
+            IOUtil.copy( input, output );
+        }
+        catch( final IOException ioe )
+        {
+            final String message = "Problem expanding " + getSrc() +
+                ":" + ioe.getMessage();
+            throw new TaskException( message, ioe );
+        }
+        finally
+        {
+            IOUtil.shutdownStream( fileInput );
+            IOUtil.shutdownStream( output );
+            IOUtil.shutdownStream( input );
+        }
+    }
+
+    private File createDestFile()
+    {
+        final String extension = getDefaultExtension();
+        final String sourceName = m_src.getName();
+        final int length = sourceName.length();
+        final int index = length - extension.length();
+
+        if( null != extension &&
+            length > extension.length() &&
+            extension.equalsIgnoreCase( sourceName.substring( index ) ) )
+        {
+            final String child = sourceName.substring( 0, index );
+            return new File( m_dest, child );
         }
         else
         {
-            dest = new File( dest, sourceName );
+            return new File( m_dest, sourceName );
         }
     }
 
     private void validate()
         throws TaskException
     {
-        if( source == null )
+        if( null == m_src )
         {
-            throw new TaskException( "No Src for gunzip specified" );
+            final String message = "No Src for " + getName() + " specified";
+            throw new TaskException( message );
         }
 
-        if( !source.exists() )
+        if( !m_src.exists() )
         {
-            throw new TaskException( "Src doesn't exist" );
+            final String message = "Src doesn't exist";
+            throw new TaskException( message );
         }
 
-        if( source.isDirectory() )
+        if( m_src.isDirectory() )
         {
-            throw new TaskException( "Cannot expand a directory" );
+            final String message = "Cannot expand a directory";
+            throw new TaskException( message );
         }
 
-        if( dest == null )
+        if( null == m_dest )
         {
-            dest = new File( source.getParent() );
+            m_dest = new File( m_src.getParent() );
         }
 
-        if( dest.isDirectory() )
+        if( m_dest.isDirectory() )
         {
-            String defaultExtension = getDefaultExtension();
-            createDestFile( defaultExtension );
+            m_dest = createDestFile();
         }
+    }
+
+    protected final File getDest()
+    {
+        return m_dest;
+    }
+
+    protected final File getSrc()
+    {
+        return m_src;
     }
 }
