@@ -40,6 +40,9 @@ Changes that could break older environments:
 * <propertyfile>'s <entry> element was modified to remove "never" as a value
   as its behavior was undocumented and flakey.
 
+* The -projecthelp flag now only prints out targets that include the
+  'description' attribute, unless the -verbose or -debug flag is included
+  on the Ant command line.
 
 Fixed bugs:
 -----------
