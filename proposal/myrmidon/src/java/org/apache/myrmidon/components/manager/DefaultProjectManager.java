@@ -32,6 +32,7 @@ import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.model.Condition;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
+import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -45,11 +46,12 @@ public class DefaultProjectManager
 {
     private Executor                 m_executor;
     private ProjectListenerSupport   m_listenerSupport   = new ProjectListenerSupport();
-    private DefaultComponentManager  m_componentManager;
+    private ComponentManager         m_componentManager;
     private Parameters               m_parameters;
     private Project                  m_project;
     private TaskContext              m_baseContext;
     private HashMap                  m_entrys            = new HashMap();
+    private TypeManager              m_typeManager;
 
     /**
      * Add a listener to project events.
@@ -80,8 +82,9 @@ public class DefaultProjectManager
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_componentManager = new DefaultComponentManager( componentManager );
+        m_componentManager = componentManager;
 
+        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_executor = (Executor)componentManager.lookup( Executor.ROLE );
         m_project = (Project)componentManager.lookup( Project.ROLE );
     }
@@ -149,6 +152,10 @@ public class DefaultProjectManager
         final DefaultComponentManager componentManager = 
             new DefaultComponentManager( m_componentManager );
 
+        //Add in child type manager so each frame can register different 
+        //sets of tasks etc
+        componentManager.put( TypeManager.ROLE, m_typeManager.createChildTypeManager() );
+
         //We need to place projects and ProjectManager
         //in ComponentManager so as to support project-local antcall
         componentManager.put( ProjectManager.ROLE, this );
@@ -161,8 +168,6 @@ public class DefaultProjectManager
             final Project other = project.getProject( name );
             componentManager.put( Project.ROLE + "/" + name, other );
         }
-
-        //Per frame TypeManager here...
 
         final DefaultExecutionFrame frame = new DefaultExecutionFrame();
                

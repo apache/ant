@@ -36,9 +36,10 @@ public class DefaultExecutionFrame
     implements ExecutionFrame, Loggable, Contextualizable, Composable
 {
     private TypeManager              m_typeManager;
+
     private Logger                   m_logger;
     private TaskContext              m_context;
-    private DefaultComponentManager  m_componentManager = new DefaultComponentManager();
+    private ComponentManager         m_componentManager;
 
     public void setLogger( final Logger logger )
     {
@@ -91,13 +92,9 @@ public class DefaultExecutionFrame
             (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
         m_componentManager.put( ConverterRegistry.ROLE, converterRegistry );
 */
-        m_componentManager = new DefaultComponentManager( componentManager );
+        m_componentManager = componentManager;
 
-        //Extend from inherited version
-        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_typeManager = typeManager.createChildTypeManager();
-        //m_typeManager = typeManager;
-        m_componentManager.put( TypeManager.ROLE, m_typeManager );
+        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
     public TypeManager getTypeManager()
