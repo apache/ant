@@ -122,6 +122,12 @@
          includes="ziptest/**" filesonly="true"/>
   </target>
 
+  <!-- Bugzilla Report 22865 -->
+  <target name="testEmptySkip">
+    <mkdir dir="ziptest"/>
+    <zip destfile="test3.zip" basedir="ziptest" whenempty="skip"/>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
