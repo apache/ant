@@ -20,7 +20,6 @@ import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -435,31 +434,6 @@ public class DefaultEmbeddor
             final String message = REZ.getString( "file-not-dir.error", name, file );
             throw new Exception( message );
         }
-    }
-
-    /**
-     * Helper method to retrieve current JVM version.
-     *
-     * @return the current JVM version
-     */
-    private JavaVersion getJavaVersion()
-    {
-        JavaVersion version = JavaVersion.JAVA1_0;
-
-        try
-        {
-            Class.forName( "java.lang.Void" );
-            version = JavaVersion.JAVA1_1;
-            Class.forName( "java.lang.ThreadLocal" );
-            version = JavaVersion.JAVA1_2;
-            Class.forName( "java.lang.StrictMath" );
-            version = JavaVersion.JAVA1_3;
-        }
-        catch( final ClassNotFoundException cnfe )
-        {
-        }
-
-        return version;
     }
 
     /**

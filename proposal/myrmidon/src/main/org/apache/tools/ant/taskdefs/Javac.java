@@ -10,11 +10,10 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.JavaVersion;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Argument;
@@ -895,7 +894,7 @@ public class Javac extends MatchingTask
 
         if( compiler == null )
         {
-            if( JavaVersion.JAVA1_2  != getJavaVersion() )
+            if( JavaVersion.JAVA1_2 != JavaVersion.getCurrentJavaVersion() )
             {
                 compiler = "modern";
             }

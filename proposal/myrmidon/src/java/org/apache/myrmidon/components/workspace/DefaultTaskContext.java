@@ -14,7 +14,6 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
@@ -52,24 +51,6 @@ public class DefaultTaskContext
     public DefaultTaskContext( final TaskContext parent )
     {
         super( parent );
-    }
-
-    /**
-     * Retrieve JavaVersion running under.
-     *
-     * @return the version of JVM
-     */
-    public JavaVersion getJavaVersion()
-    {
-        try
-        {
-            return (JavaVersion)get( JAVA_VERSION );
-        }
-        catch( final ContextException ce )
-        {
-            final String message = REZ.getString( "no-version.error" );
-            throw new IllegalStateException( message );
-        }
     }
 
     /**
@@ -210,7 +191,6 @@ public class DefaultTaskContext
 
         context.setProperty( TaskContext.NAME, getName() + "." + name );
         context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
-        context.setProperty( TaskContext.JAVA_VERSION, getJavaVersion() );
 
         return context;
     }
@@ -235,12 +215,6 @@ public class DefaultTaskContext
         {
             final String message =
                 REZ.getString( "bad-property.error", NAME, String.class.getName() );
-            throw new TaskException( message );
-        }
-        else if( JAVA_VERSION.equals( name ) && !( value instanceof JavaVersion ) )
-        {
-            final String message =
-                REZ.getString( "bad-property.error", JAVA_VERSION, JavaVersion.class.getName() );
             throw new TaskException( message );
         }
     }

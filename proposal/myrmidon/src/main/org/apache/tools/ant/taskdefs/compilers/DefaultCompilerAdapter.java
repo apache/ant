@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.JavaVersion;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.exec.Execute;

@@ -268,7 +268,7 @@ public class Javah extends Task
         String compiler = getProject().getProperty( "build.compiler" );
         if( compiler == null )
         {
-            if( JavaVersion.JAVA1_2  != getJavaVersion() )
+            if( JavaVersion.JAVA1_2  != JavaVersion.getCurrentJavaVersion() )
             {
                 compiler = "modern";
             }

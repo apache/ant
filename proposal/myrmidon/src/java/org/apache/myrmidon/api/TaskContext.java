@@ -30,16 +30,8 @@ public interface TaskContext
     ScopeEnum TOP_LEVEL = new ScopeEnum( "TopLevel" );
 
     //these are the names of properties that every TaskContext must contain
-    String JAVA_VERSION = "myrmidon.java.version";
     String BASE_DIRECTORY = "myrmidon.base.directory";
     String NAME = "myrmidon.task.name";
-
-    /**
-     * Retrieve JavaVersion running under.
-     *
-     * @return the version of JVM
-     */
-    JavaVersion getJavaVersion();
 
     /**
      * Retrieve Name of tasklet.

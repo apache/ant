@@ -78,11 +78,6 @@ public abstract class AbstractTask
         return m_context;
     }
 
-    protected final JavaVersion getJavaVersion()
-    {
-        return getContext().getJavaVersion();
-    }
-
     protected final Object get( final Object key )
         throws ContextException
     {
