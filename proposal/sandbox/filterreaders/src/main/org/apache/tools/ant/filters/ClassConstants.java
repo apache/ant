@@ -56,9 +56,10 @@ package org.apache.tools.ant.filters;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.filters.util.JavaClassHelper;
 
 /**
  * Assemble the constants declared in a Java class in
@@ -91,6 +92,10 @@ public final class ClassConstants
 {
     /** Data that must be read from, if not null. */
     private String queuedData = null;
+
+    /** Helper Class to be invoked via reflection. */
+    private String JAVA_CLASS_HELPER =
+        "org.apache.tools.ant.filters.util.JavaClassHelper";
 
     /**
      * This constructor is a dummy constructor and is
@@ -134,10 +139,37 @@ public final class ClassConstants
                 ch = -1;
             } else {
                 final byte[] bytes = clazz.getBytes();
-                final StringBuffer sb = JavaClassHelper.getConstants(bytes);
-                if (sb.length() > 0) {
-                    queuedData = sb.toString();
-                    return read();
+                try {
+                    final Class javaClassHelper =
+                        Class.forName(JAVA_CLASS_HELPER);
+                    if (javaClassHelper != null) {
+                        final Class params[] = {
+                            byte[].class
+                        };
+                        final Method getConstants =
+                            javaClassHelper.getMethod("getConstants", params);
+                        final Object[] args = {
+                            bytes
+                        };
+                        // getConstants is a staic method, no need to
+                        // pass in the object
+                        final StringBuffer sb = (StringBuffer)
+                                getConstants.invoke(null, args);
+                        if (sb.length() > 0) {
+                            queuedData = sb.toString();
+                            return read();
+                        }
+                    }
+                } catch (ClassNotFoundException cnfe) {
+                    throw new IOException(cnfe.getMessage());
+                } catch (NoSuchMethodException nsme) {
+                    throw new IOException(nsme.getMessage());
+                } catch (IllegalAccessException iae) {
+                    throw new IOException(iae.getMessage());
+                } catch (IllegalArgumentException iarge) {
+                    throw new IOException(iarge.getMessage());
+                } catch (InvocationTargetException ite) {
+                    throw new IOException(ite.getMessage());
                 }
             }
         }
