@@ -631,7 +631,7 @@
     </copy>
 
     <copy todir="${build.classes}"
-          overwrite="true">
+          overwrite="true" encoding="UTF-8">
       <fileset dir="${java.dir}">
         <include name="**/version.txt"/>
         <include name="**/defaultManifest.mf"/>
