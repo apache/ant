@@ -14,6 +14,7 @@ import org.apache.avalon.framework.context.Context;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant:role shorthand="converter"
  */
 public interface Converter
 {
@@ -28,7 +29,7 @@ public interface Converter
      * @param original the original type
      * @param context the context in which to convert
      * @return the converted object
-     * @exception Exception if an error occurs
+     * @exception ConverterException if an error occurs
      */
     Object convert( Class destination, Object original, Context context )
         throws ConverterException;
