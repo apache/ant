@@ -18,11 +18,9 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Create a CAB archive.
@@ -39,7 +37,6 @@ public class Cab extends MatchingTask
 
     protected String archiveType = "cab";
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
     private File baseDir;
 
     private File cabFile;
@@ -161,7 +158,7 @@ public class Cab extends MatchingTask
 
                 if( !doVerbose )
                 {
-                    outFile = fileUtils.createTempFile( "ant", "", null );
+                    outFile = File.createTempFile( "ant", "", getBaseDirectory() );
                     exec.setOutput( outFile );
                 }
 
@@ -327,7 +324,7 @@ public class Cab extends MatchingTask
     protected File createListFile( Vector files )
         throws IOException
     {
-        File listFile = fileUtils.createTempFile( "ant", "", null );
+        File listFile = File.createTempFile( "ant", "", getBaseDirectory() );
 
         PrintWriter writer = new PrintWriter( new FileOutputStream( listFile ) );
 

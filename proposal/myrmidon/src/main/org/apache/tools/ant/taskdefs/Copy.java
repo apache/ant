@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -61,12 +62,6 @@ public class Copy extends Task
 
     protected Mapper mapperElement = null;
     private Vector filterSets = new Vector();
-    private FileUtils fileUtils;
-
-    public Copy()
-    {
-        fileUtils = FileUtils.newFileUtils();
-    }
 
     /**
      * Sets a single source file to copy.
@@ -277,11 +272,6 @@ public class Copy extends Task
         }
     }
 
-    protected FileUtils getFileUtils()
-    {
-        return fileUtils;
-    }
-
     /**
      * Get the filtersets being applied to this operation.
      *
@@ -335,8 +325,8 @@ public class Copy extends Task
         if( fileCopyMap.size() > 0 )
         {
             getLogger().info( "Copying " + fileCopyMap.size() +
-                 " file" + ( fileCopyMap.size() == 1 ? "" : "s" ) +
-                 " to " + destDir.getAbsolutePath() );
+                              " file" + ( fileCopyMap.size() == 1 ? "" : "s" ) +
+                              " to " + destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
             while( e.hasMoreElements() )
@@ -363,8 +353,17 @@ public class Copy extends Task
                     {
                         executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
                     }
-                    fileUtils.copyFile( fromFile, toFile, executionFilters,
-                                        forceOverwrite, preserveLastModified );
+                    final File src = new File( fromFile );
+                    final File dest = new File( toFile );
+                    if( forceOverwrite )
+                    {
+                        FileUtil.forceDelete( dest );
+                    }
+                    FileUtils.newFileUtils().copyFile( src, dest, executionFilters );
+                    if( preserveLastModified )
+                    {
+                        dest.setLastModified( src.lastModified() );
+                    }
                 }
                 catch( IOException ioe )
                 {
@@ -398,9 +397,9 @@ public class Copy extends Task
             if( count > 0 )
             {
                 getLogger().info( "Copied " + count +
-                     " empty director" +
-                     ( count == 1 ? "y" : "ies" ) +
-                     " to " + destDir.getAbsolutePath() );
+                                  " empty director" +
+                                  ( count == 1 ? "y" : "ies" ) +
+                                  " to " + destDir.getAbsolutePath() );
             }
         }
     }

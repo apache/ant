@@ -19,7 +19,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Touch a file and/or fileset(s) -- corresponds to the Unix touch command. <p>
@@ -39,12 +38,6 @@ public class Touch extends Task
     private String dateTime;
 
     private File file;
-    private FileUtils fileUtils;
-
-    public Touch()
-    {
-        fileUtils = FileUtils.newFileUtils();
-    }
 
     /**
      * Date in the format MM/DD/YYYY HH:MM AM_PM.

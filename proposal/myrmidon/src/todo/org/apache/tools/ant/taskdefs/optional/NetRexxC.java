@@ -17,11 +17,11 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import netrexx.lang.Rexx;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Task to compile NetRexx source files. This task can take the following
@@ -501,8 +501,8 @@ public class NetRexxC extends MatchingTask
         if( compileList.size() > 0 )
         {
             getLogger().info( "Compiling " + compileList.size() + " source file"
-                 + ( compileList.size() == 1 ? "" : "s" )
-                 + " to " + destDir );
+                              + ( compileList.size() == 1 ? "" : "s" )
+                              + " to " + destDir );
             doNetRexxCompile();
         }
     }
@@ -611,8 +611,8 @@ public class NetRexxC extends MatchingTask
         if( filecopyList.size() > 0 )
         {
             getLogger().info( "Copying " + filecopyList.size() + " file"
-                 + ( filecopyList.size() == 1 ? "" : "s" )
-                 + " to " + destDir.getAbsolutePath() );
+                              + ( filecopyList.size() == 1 ? "" : "s" )
+                              + " to " + destDir.getAbsolutePath() );
             Enumeration enum = filecopyList.keys();
             while( enum.hasMoreElements() )
             {
@@ -620,7 +620,7 @@ public class NetRexxC extends MatchingTask
                 String toFile = (String)filecopyList.get( fromFile );
                 try
                 {
-                    FileUtils.newFileUtils().copyFile( fromFile, toFile );
+                    FileUtil.copyFile( new File( fromFile ), new File( toFile ) );
                 }
                 catch( IOException ioe )
                 {

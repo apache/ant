@@ -18,12 +18,12 @@ import java.io.OutputStreamWriter;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Translates text embedded in files using Resource Bundle files.
@@ -40,10 +40,6 @@ public class Translate extends MatchingTask
      * Holds key value pairs loaded from resource bundle file
      */
     private Hashtable resourceMap = new Hashtable();
-    /**
-     * Used to resolve file names.
-     */
-    private FileUtils fileUtils = FileUtils.newFileUtils();
     /**
      * Last Modified Timestamp of resource bundle file being used.
      */
@@ -528,7 +524,7 @@ public class Translate extends MatchingTask
             {
                 try
                 {
-                    File dest = fileUtils.resolveFile( toDir, srcFiles[ j ] );
+                    File dest = FileUtil.resolveFile( toDir, srcFiles[ j ] );
                     //Make sure parent dirs exist, else, create them.
                     try
                     {

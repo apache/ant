@@ -17,8 +17,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
@@ -37,15 +35,6 @@ import org.apache.tools.ant.types.FilterSetCollection;
 
 public class FileUtils
 {
-    private static Random rand = new Random( System.currentTimeMillis() );
-
-    /**
-     * Empty constructor.
-     */
-    private FileUtils()
-    {
-    }
-
     /**
      * Factory method.
      *
@@ -133,54 +122,6 @@ public class FileUtils
     }
 
     /**
-     * Convienence method to copy a file from a source to a destination. No
-     * filtering is performed.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( String sourceFile, String destFile )
-        throws IOException, TaskException
-    {
-        copyFile( new File( sourceFile ), new File( destFile ), null, false, false );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filters Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( String sourceFile, String destFile, FilterSetCollection filters )
-        throws IOException, TaskException
-    {
-        copyFile( new File( sourceFile ), new File( destFile ), filters, false, false );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used and if source files may
-     * overwrite newer destination files.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filters Description of Parameter
-     * @param overwrite Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( String sourceFile, String destFile, FilterSetCollection filters,
-                          boolean overwrite )
-        throws IOException, TaskException
-    {
-        copyFile( new File( sourceFile ), new File( destFile ), filters,
-                  overwrite, false );
-    }
-
-    /**
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may overwrite
      * newer destination files and the last modified time of <code>destFile</code>
@@ -194,84 +135,14 @@ public class FileUtils
      * @param preserveLastModified Description of Parameter
      * @throws IOException
      */
-    public void copyFile( String sourceFile, String destFile, FilterSetCollection filters,
-                          boolean overwrite, boolean preserveLastModified )
+    public void copyFile( File sourceFile,
+                          File destFile,
+                          FilterSetCollection filters )
         throws IOException, TaskException
     {
-        copyFile( new File( sourceFile ), new File( destFile ), filters,
-                  overwrite, preserveLastModified );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination. No
-     * filtering is performed.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( File sourceFile, File destFile )
-        throws IOException, TaskException
-    {
-        copyFile( sourceFile, destFile, null, false, false );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filters Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( File sourceFile, File destFile, FilterSetCollection filters )
-        throws IOException, TaskException
-    {
-        copyFile( sourceFile, destFile, filters, false, false );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used and if source files may
-     * overwrite newer destination files.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filters Description of Parameter
-     * @param overwrite Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( File sourceFile, File destFile, FilterSetCollection filters,
-                          boolean overwrite )
-        throws IOException, TaskException
-    {
-        copyFile( sourceFile, destFile, filters, overwrite, false );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used, if source files may overwrite
-     * newer destination files and the last modified time of <code>destFile</code>
-     * file should be made equal to the last modified time of <code>sourceFile</code>
-     * .
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filters Description of Parameter
-     * @param overwrite Description of Parameter
-     * @param preserveLastModified Description of Parameter
-     * @throws IOException
-     */
-    public void copyFile( File sourceFile, File destFile, FilterSetCollection filters,
-                          boolean overwrite, boolean preserveLastModified )
-        throws IOException, TaskException
-    {
-
-        if( overwrite || !destFile.exists() ||
+        if( !destFile.exists() ||
             destFile.lastModified() < sourceFile.lastModified() )
         {
-
             if( destFile.exists() && destFile.isFile() )
             {
                 destFile.delete();
@@ -327,52 +198,7 @@ public class FileUtils
                 in.close();
                 out.close();
             }
-
-            if( preserveLastModified )
-            {
-                destFile.setLastModified( sourceFile.lastModified() );
-            }
         }
-    }
-
-    /**
-     * Create a temporary file in a given directory. <p>
-     *
-     * The file denoted by the returned abstract pathname did not exist before
-     * this method was invoked, any subsequent invocation of this method will
-     * yield a different file name.</p> <p>
-     *
-     * This method is different to File.createTempFile of JDK 1.2 as it doesn't
-     * create the file itself and doesn't use platform specific temporary
-     * directory when the parentDir attribute is null.</p>
-     *
-     * @param parentDir Directory to create the temporary file in - current
-     *      working directory will be assumed if this parameter is null.
-     * @param prefix Description of Parameter
-     * @param suffix Description of Parameter
-     * @return Description of the Returned Value
-     * @since 1.8
-     */
-    public File createTempFile( String prefix, String suffix, File parentDir )
-    {
-
-        File result = null;
-        String parent = null;
-        if( parentDir != null )
-        {
-            parent = parentDir.getPath();
-        }
-        DecimalFormat fmt = new DecimalFormat( "#####" );
-        synchronized( rand )
-        {
-            do
-            {
-                result = new File( parent,
-                                   prefix + fmt.format( rand.nextInt() )
-                                   + suffix );
-            } while( result.exists() );
-        }
-        return result;
     }
 
     /**
@@ -513,69 +339,6 @@ public class FileUtils
             path = path.replace( '/', '\\' );
         }
         return new File( path );
-    }
-
-    /**
-     * Interpret the filename as a file relative to the given file - unless the
-     * filename already represents an absolute filename.
-     *
-     * @param file the "reference" file for relative paths. This instance must
-     *      be an absolute file and must not contain &quot;./&quot; or
-     *      &quot;../&quot; sequences (same for \ instead of /). If it is null,
-     *      this call is equivalent to <code>new java.io.File(filename)</code>.
-     * @param filename a file name
-     * @return an absolute file that doesn't contain &quot;./&quot; or
-     *      &quot;../&quot; sequences and uses the correct separator for the
-     *      current platform.
-     */
-    public File resolveFile( File file, String filename )
-        throws TaskException
-    {
-        filename = filename.replace( '/', File.separatorChar )
-            .replace( '\\', File.separatorChar );
-
-        // deal with absolute files
-        if( filename.startsWith( File.separator ) ||
-            ( filename.length() >= 2 &&
-            Character.isLetter( filename.charAt( 0 ) ) &&
-            filename.charAt( 1 ) == ':' )
-        )
-        {
-            return normalize( filename );
-        }
-
-        if( file == null )
-        {
-            return new File( filename );
-        }
-
-        File helpFile = new File( file.getAbsolutePath() );
-        StringTokenizer tok = new StringTokenizer( filename, File.separator );
-        while( tok.hasMoreTokens() )
-        {
-            String part = tok.nextToken();
-            if( part.equals( ".." ) )
-            {
-                helpFile = helpFile.getParentFile();
-                if( helpFile == null )
-                {
-                    String msg = "The file or path you specified ("
-                        + filename + ") is invalid relative to "
-                        + file.getPath();
-                    throw new TaskException( msg );
-                }
-            }
-            else if( part.equals( "." ) )
-            {
-                // Do nothing here
-            }
-            else
-            {
-                helpFile = new File( helpFile, part );
-            }
-        }
-
-        return new File( helpFile.getAbsolutePath() );
     }
 }
 

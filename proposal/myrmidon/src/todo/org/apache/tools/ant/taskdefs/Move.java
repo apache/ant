@@ -10,8 +10,10 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -106,7 +108,7 @@ public class Move extends Copy
         if( fileCopyMap.size() > 0 )
         {// files to move
             getLogger().info( "Moving " + fileCopyMap.size() + " files to " +
-                 destDir.getAbsolutePath() );
+                              destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
             while( e.hasMoreElements() )
@@ -156,8 +158,12 @@ public class Move extends Copy
                             {
                                 executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
                             }
-                            getFileUtils().copyFile( f, d, executionFilters,
-                                                     forceOverwrite );
+
+                            if( forceOverwrite )
+                            {
+                                FileUtil.forceDelete( d );
+                            }
+                            FileUtils.newFileUtils().copyFile( f, d, executionFilters );
 
                             f = new File( fromFile );
                             if( !f.delete() )

@@ -21,9 +21,9 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Used to load classes within ant with a different claspath from that used to
@@ -421,7 +421,7 @@ public class AntClassLoader
         throws TaskException
     {
         File pathComponent
-            = project != null ? FileUtils.newFileUtils().resolveFile( project.getBaseDir(), pathElement )
+            = project != null ? FileUtil.resolveFile( project.getBaseDir(), pathElement )
             : new File( pathElement );
         pathComponents.addElement( pathComponent );
     }

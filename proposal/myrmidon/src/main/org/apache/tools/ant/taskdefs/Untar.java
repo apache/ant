@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarInputStream;
 
@@ -25,7 +24,7 @@ import org.apache.tools.tar.TarInputStream;
 public class Untar extends Expand
 {
 
-    protected void expandFile( FileUtils fileUtils, File srcF, File dir )
+    protected void expandFile( File srcF, File dir )
         throws TaskException
     {
         TarInputStream tis = null;
@@ -38,7 +37,7 @@ public class Untar extends Expand
 
             while( ( te = tis.getNextEntry() ) != null )
             {
-                extractFile( fileUtils, srcF, dir, tis,
+                extractFile( srcF, dir, tis,
                              te.getName(),
                              te.getModTime(), te.isDirectory() );
             }

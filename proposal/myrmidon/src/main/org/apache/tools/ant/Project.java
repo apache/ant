@@ -8,15 +8,12 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.lang.reflect.Modifier;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Stack;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Central representation of an Ant project. This class defines a Ant project

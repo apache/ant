@@ -17,13 +17,13 @@ import java.util.Enumeration;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -184,7 +184,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         }
         if( toDir == null )
         {
-            toDir = FileUtils.newFileUtils().resolveFile( project.getBaseDir(), DEFAULT_DIR );
+            toDir = FileUtil.resolveFile( project.getBaseDir(), DEFAULT_DIR );
         }
         return new File( toDir, toFile );
     }
@@ -210,7 +210,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 if( pathname.endsWith( ".xml" ) )
                 {
                     File file = new File( ds.getBasedir(), pathname );
-                    file = FileUtils.newFileUtils().
+                    file = FileUtil.
                         resolveFile( project.getBaseDir(), file.getPath() );
                     v.addElement( file );
                 }

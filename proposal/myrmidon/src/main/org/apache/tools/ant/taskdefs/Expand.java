@@ -17,12 +17,12 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Unzip a file.
@@ -115,8 +115,6 @@ public class Expand extends MatchingTask
             throw new TaskException( "Dest must be a directory." );
         }
 
-        FileUtils fileUtils = FileUtils.newFileUtils();
-
         if( source != null )
         {
             if( source.isDirectory() )
@@ -126,7 +124,7 @@ public class Expand extends MatchingTask
             }
             else
             {
-                expandFile( fileUtils, source, dest );
+                expandFile( source, dest );
             }
         }
         if( filesets.size() > 0 )
@@ -141,7 +139,7 @@ public class Expand extends MatchingTask
                 for( int i = 0; i < files.length; ++i )
                 {
                     File file = new File( fromDir, files[ i ] );
-                    expandFile( fileUtils, file, dest );
+                    expandFile( file, dest );
                 }
             }
         }
@@ -150,7 +148,7 @@ public class Expand extends MatchingTask
     /*
      * This method is to be overridden by extending unarchival tasks.
      */
-    protected void expandFile( FileUtils fileUtils, File srcF, File dir )
+    protected void expandFile( File srcF, File dir )
         throws TaskException
     {
         ZipInputStream zis = null;
@@ -162,7 +160,7 @@ public class Expand extends MatchingTask
 
             while( ( ze = zis.getNextEntry() ) != null )
             {
-                extractFile( fileUtils, srcF, dir, zis,
+                extractFile( srcF, dir, zis,
                              ze.getName(),
                              new Date( ze.getTime() ),
                              ze.isDirectory() );
@@ -189,7 +187,7 @@ public class Expand extends MatchingTask
         }
     }
 
-    protected void extractFile( FileUtils fileUtils, File srcF, File dir,
+    protected void extractFile( File srcF, File dir,
                                 InputStream compressedInputStream,
                                 String entryName,
                                 Date entryDate, boolean isDirectory )
@@ -237,7 +235,7 @@ public class Expand extends MatchingTask
             }
         }
 
-        File f = fileUtils.resolveFile( dir, entryName );
+        File f = FileUtil.resolveFile( dir, entryName );
         try
         {
             if( !overwrite && f.exists()

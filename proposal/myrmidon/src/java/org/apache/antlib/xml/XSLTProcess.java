@@ -8,8 +8,6 @@
 package org.apache.antlib.xml;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
@@ -19,7 +17,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A Task to process via XSLT a set of XML documents. This is useful for
@@ -56,17 +53,8 @@ public class XSLTProcess
     private boolean m_stylesheetLoaded;
     private boolean m_force;
     private String m_outputtype;
-    private FileUtils m_fileUtils;
     private XSLTLiaison m_liaison;
     private String m_processor;
-
-    /**
-     * Creates a new XSLTProcess Task.
-     */
-    public XSLTProcess()
-    {
-        m_fileUtils = FileUtils.newFileUtils();
-    }//-- setForce
 
     /**
      * Set the base directory.

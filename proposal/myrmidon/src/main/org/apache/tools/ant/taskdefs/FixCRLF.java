@@ -101,8 +101,6 @@ public class FixCRLF extends MatchingTask
     private boolean javafiles = false;
     private File destDir = null;
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
-
     /**
      * Encoding to assume for the files
      */
@@ -578,7 +576,7 @@ public class FixCRLF extends MatchingTask
             // Set up the output Writer
             try
             {
-                tmpFile = fileUtils.createTempFile( "fixcrlf", "", destD );
+                tmpFile = File.createTempFile( "fixcrlf", "", destD );
                 Writer writer = ( encoding == null ) ? new FileWriter( tmpFile )
                     : new OutputStreamWriter( new FileOutputStream( tmpFile ), encoding );
                 outWriter = new BufferedWriter( writer );
@@ -761,7 +759,7 @@ public class FixCRLF extends MatchingTask
             {
                 // Compare the destination with the temp file
                 log( "destFile exists", Project.MSG_DEBUG );
-                if( !fileUtils.contentEquals( destFile, tmpFile ) )
+                if( !FileUtils.newFileUtils().contentEquals( destFile, tmpFile ) )
                 {
                     log( destFile + " is being written", Project.MSG_DEBUG );
                     if( !destFile.delete() )

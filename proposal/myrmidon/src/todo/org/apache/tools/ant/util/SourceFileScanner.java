@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.avalon.excalibur.io.FileUtil;
 
 /**
  * Utility class that collects the functionality of the various scanDir methods
@@ -26,18 +27,14 @@ import org.apache.tools.ant.Task;
  */
 public class SourceFileScanner
 {
-
-    protected Task task;
-
-    private FileUtils fileUtils;
+    private Task m_task;
 
     /**
      * @param task The task we should log messages through
      */
     public SourceFileScanner( Task task )
     {
-        this.task = task;
-        fileUtils = FileUtils.newFileUtils();
+        this.m_task = task;
     }
 
     /**
@@ -80,16 +77,16 @@ public class SourceFileScanner
             String[] targets = mapper.mapFileName( files[ i ] );
             if( targets == null || targets.length == 0 )
             {
-                task.log( files[ i ] + " skipped - don\'t know how to handle it",
+                m_task.log( files[ i ] + " skipped - don\'t know how to handle it",
                           Project.MSG_VERBOSE );
                 continue;
             }
 
-            File src = fileUtils.resolveFile( srcDir, files[ i ] );
+            File src = FileUtil.resolveFile( srcDir, files[ i ] );
 
             if( src.lastModified() > now )
             {
-                task.log( "Warning: " + files[ i ] + " modified in the future.",
+                m_task.log( "Warning: " + files[ i ] + " modified in the future.",
                           Project.MSG_WARN );
             }
 
@@ -97,18 +94,18 @@ public class SourceFileScanner
             targetList.setLength( 0 );
             for( int j = 0; !added && j < targets.length; j++ )
             {
-                File dest = fileUtils.resolveFile( destDir, targets[ j ] );
+                File dest = FileUtil.resolveFile( destDir, targets[ j ] );
 
                 if( !dest.exists() )
                 {
-                    task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
+                    m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
                               Project.MSG_VERBOSE );
                     v.addElement( files[ i ] );
                     added = true;
                 }
                 else if( src.lastModified() > dest.lastModified() )
                 {
-                    task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.",
+                    m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.",
                               Project.MSG_VERBOSE );
                     v.addElement( files[ i ] );
                     added = true;
@@ -125,7 +122,7 @@ public class SourceFileScanner
 
             if( !added )
             {
-                task.log( files[ i ] + " omitted as " + targetList.toString()
+                m_task.log( files[ i ] + " omitted as " + targetList.toString()
                           + ( targets.length == 1 ? " is" : " are " )
                           + " up to date.", Project.MSG_VERBOSE );
             }

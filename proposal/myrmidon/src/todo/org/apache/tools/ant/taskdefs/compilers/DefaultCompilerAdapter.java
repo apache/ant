@@ -13,12 +13,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.Javac;
+import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -39,7 +38,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
     protected boolean depend = false;
     protected boolean verbose = false;
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
     protected Javac attributes;
     protected Path bootclasspath;
     protected Path compileClasspath;
@@ -400,7 +398,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                 PrintWriter out = null;
                 try
                 {
-                    tmpFile = fileUtils.createTempFile( "jikes", "", null );
+                    tmpFile = File.createTempFile( "jikes", "", new File( "." ) );
                     out = new PrintWriter( new FileWriter( tmpFile ) );
                     for( int i = firstFileName; i < args.length; i++ )
                     {

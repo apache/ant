@@ -16,7 +16,6 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Will set the given property if the requested resource is available at
@@ -274,7 +273,6 @@ public class Available
                     return false;
                 }
 
-                FileUtils fileUtils = FileUtils.newFileUtils();
                 File parent = path.getParentFile();
                 // **   full-pathname specified == parent dir of path in list
                 if( parent != null && parent.exists()

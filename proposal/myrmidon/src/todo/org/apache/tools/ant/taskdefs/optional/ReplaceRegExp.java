@@ -23,7 +23,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
@@ -73,8 +72,6 @@ import org.apache.tools.ant.util.regexp.Regexp;
  */
 public class ReplaceRegExp extends Task
 {
-
-    private FileUtils fileUtils = FileUtils.newFileUtils();
     private boolean byline;
 
     private File file;
@@ -263,7 +260,7 @@ public class ReplaceRegExp extends Task
         throws IOException, TaskException
     {
         File parentDir = new File( new File( f.getAbsolutePath() ).getParent() );
-        File temp = fileUtils.createTempFile( "replace", ".txt", parentDir );
+        File temp = File.createTempFile( "replace", ".txt", parentDir );
 
         FileReader r = null;
         FileWriter w = null;

@@ -12,11 +12,11 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.Vector;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -196,8 +196,7 @@ public class Path
     {
         if( project != null )
         {
-            File f = FileUtils.newFileUtils().
-                resolveFile( project.getBaseDir(), relativeName );
+            File f = FileUtil.resolveFile( project.getBaseDir(), relativeName );
             return f.getAbsolutePath();
         }
         return relativeName;

@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.zip.ZipEntry;
@@ -235,9 +234,15 @@ public class Zip extends MatchingTask
         doUpdate = doUpdate && zipFile.exists();
         if( doUpdate )
         {
-            FileUtils fileUtils = FileUtils.newFileUtils();
-            renamedFile = fileUtils.createTempFile( "zip", ".tmp",
-                                                    zipFile.getParentFile() );
+            try
+            {
+                renamedFile = File.createTempFile( "zip", ".tmp",
+                                                   zipFile.getParentFile() );
+            }
+            catch( final IOException ioe )
+            {
+                throw new TaskException( ioe.toString(), ioe );
+            }
 
             try
             {

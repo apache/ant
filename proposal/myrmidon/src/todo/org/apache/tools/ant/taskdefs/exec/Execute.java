@@ -16,12 +16,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Vector;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Runs an external program.
@@ -817,7 +817,7 @@ public class Execute
             {
                 throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
             }
-            String antRun = FileUtils.newFileUtils().
+            String antRun = FileUtil.
                 resolveFile( project.getBaseDir(), antHome + File.separator + _script ).toString();
 
             // Build the command
@@ -883,7 +883,7 @@ public class Execute
             {
                 throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
             }
-            String antRun = FileUtils.newFileUtils().
+            String antRun = FileUtil.
                 resolveFile( project.getBaseDir(), antHome + File.separator + _script ).toString();
 
             // Build the command

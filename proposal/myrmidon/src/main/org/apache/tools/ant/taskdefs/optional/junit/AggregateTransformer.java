@@ -15,11 +15,11 @@ import java.io.InputStream;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -215,12 +215,11 @@ public class AggregateTransformer
         // set the destination directory relative from the project if needed.
         if( toDir == null )
         {
-            toDir = FileUtils.newFileUtils().resolveFile( task.getBaseDirectory(), "." );
+            toDir = FileUtil.resolveFile( task.getBaseDirectory(), "." );
         }
         else if( !toDir.isAbsolute() )
         {
-            toDir = FileUtils.newFileUtils().
-                resolveFile( task.getBaseDirectory(), toDir.getPath() );
+            toDir = FileUtil.resolveFile( task.getBaseDirectory(), toDir.getPath() );
         }
     }
 

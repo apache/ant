@@ -20,12 +20,12 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileUtils;
 import org.xml.sax.InputSource;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool
@@ -755,7 +755,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
         {
             try
             {
-                FileUtils.newFileUtils().copyFile( sourceJar, destJar );
+                FileUtil.copyFile( sourceJar, destJar );
                 if( !keepgenerated )
                 {
                     sourceJar.delete();

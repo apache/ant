@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.util.Vector;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
@@ -688,7 +689,7 @@ public class Rmic extends MatchingTask
                 }
                 else
                 {
-                    FileUtils.newFileUtils().copyFile( oldFile, newFile );
+                    FileUtil.copyFile( oldFile, newFile );
                 }
                 oldFile.delete();
             }

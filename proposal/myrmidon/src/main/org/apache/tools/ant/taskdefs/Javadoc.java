@@ -21,8 +21,8 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -94,8 +94,6 @@ public class Javadoc extends Task
     private Html bottom = null;
     private boolean useExternalFile = false;
     private File tmpList = null;
-
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     public void setAccess( AccessType at )
     {
@@ -873,7 +871,7 @@ public class Javadoc extends Task
                 {
                     if( tmpList == null )
                     {
-                        tmpList = fileUtils.createTempFile( "javadoc", "", null );
+                        tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
                         toExecute.createArgument().setValue( "@" + tmpList.getAbsolutePath() );
                     }
                     srcListWriter = new PrintWriter( new FileWriter( tmpList.getAbsolutePath(),
@@ -1122,7 +1120,7 @@ public class Javadoc extends Task
         {
             if( useExternalFile )
             {
-                tmpList = fileUtils.createTempFile( "javadoc", "", null );
+                tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
                 toExecute.createArgument().setValue( "@" + tmpList.getAbsolutePath() );
                 packageListWriter = new PrintWriter( new FileWriter( tmpList ) );
             }

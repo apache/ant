@@ -55,8 +55,6 @@ public class Replace extends MatchingTask
      */
     private String encoding = null;
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
-
     private int fileCount;
     private int replaceCount;
 
@@ -295,8 +293,15 @@ public class Replace extends MatchingTask
             throw new TaskException( "Replace: source file " + src.getPath() + " doesn't exist" );
         }
 
-        File temp = fileUtils.createTempFile( "rep", ".tmp",
-                                              src.getParentFile() );
+        File temp = null;
+        try
+        {
+            temp = File.createTempFile( "rep", ".tmp", src.getParentFile() );
+        }
+        catch( IOException ioe )
+        {
+            throw new TaskException( ioe.toString(), ioe );
+        }
 
         Reader reader = null;
         Writer writer = null;
