@@ -70,6 +70,7 @@ public class Copydir extends MatchingTask {
     private File srcDir;
     private File destDir;
     private boolean filtering = false;
+    private boolean flatten = false;
     private boolean forceOverwrite = false;
     private Hashtable filecopyList = new Hashtable();
 
@@ -83,6 +84,10 @@ public class Copydir extends MatchingTask {
 
     public void setFiltering(String filter) {
         filtering = Project.toBoolean(filter);
+    }
+
+    public void setFlatten(boolean flatten) {
+        this.flatten = flatten;
     }
 
     public void setForceoverwrite(String force) {
@@ -127,7 +132,12 @@ public class Copydir extends MatchingTask {
         for (int i = 0; i < files.length; i++) {
             String filename = files[i];
             File srcFile = new File(from, filename);
-            File destFile = new File(to, filename);
+            File destFile;
+            if (flatten) {
+                destFile = new File(to, new File(filename).getName());
+            } else {
+                destFile = new File(to, filename);
+            }
             if (forceOverwrite ||
                 (srcFile.lastModified() > destFile.lastModified())) {
                 filecopyList.put(srcFile.getAbsolutePath(),
