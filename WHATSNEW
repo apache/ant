@@ -10,6 +10,8 @@ Changes that could break older environments:
   rmic to use a new compiler a lot easier but may break custom
   versions of this task that rely on the old implementation.
 
+* <touch> can now work on <fileset>s
+
 Other changes:
 --------------
 

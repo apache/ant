@@ -10,7 +10,9 @@
 <h2><a name="touch">Touch</a></h2>
 <h3>Description</h3>
 <p>Changes the modification time of a file and possibly creates it at
-the same time.</p>
+the same time. In addition to working with a single file, this Task
+can also work a <a href="../CoreTypes/fileset.html">Fileset</a> (which
+also includes directories).</p>
 <p>For JDK 1.1 only the creation of new files with a modification time
 of now works, all other cases will emit a warning.</p>
 <h3>Parameters</h3>
@@ -23,7 +25,8 @@ of now works, all other cases will emit a warning.</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the name of the file</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">unless a nested fileset element
+       has been specified.</td>
   </tr>
   <tr>
     <td valign="top">millis</td>
@@ -48,6 +51,11 @@ modification time to the current time.</p>
 <p>creates <code>myfile</code> if it doesn't exist and changes the
 modification time to Jun, 28 2000 2:02 pm (14:02 for those used to 24
 hour times).</p>
+<pre>  &lt;touch datetime=&quot;09/10/1974 4:30 pm&quot;&gt;
+    &lt;fileset dir=&quot;src_dir&quot;/&gt;
+  &lt;/touch&gt;</pre>
+<p>changes the modification time to Oct, 09 1974 4:30 pm of all files and directories 
+  found in <code>src_dir</code>. </p>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>

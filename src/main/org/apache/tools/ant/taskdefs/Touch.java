@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,25 +66,33 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Vector;
 
 /**
- * Touch a file - corresponds to the Unix touch command.
+ * Touch a file and/or fileset(s) -- corresponds to the Unix touch command.
  *
  * <p>If the file to touch doesn't exist, an empty one is
- * created. Setting the modification time of files is not supported in
- * JDK 1.1.
+ * created. </p>
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * <p>Note: Setting the modification time of files is not supported in
+ * JDK 1.1.</p>
+ *
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
+ * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
  */
 public class Touch extends Task {
 
     private File file;              // required
     private long millis = -1;
     private String dateTime;
+    private Vector filesets = new Vector();
 
     /**
-     * The name of the file to touch.
+     * Sets a single source file to touch.  If the file does not exist
+     * an  empty file will be created.
      */
     public void setFile(File file) {
         this.file = file;
@@ -103,18 +113,25 @@ public class Touch extends Task {
     }
 
     /**
-     * Do the work.
-     *
-     * @exception BuildException Thrown in unrecoverable error.
+     * Adds a set of files (nested fileset attribute).
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
+
+    /**
+     * Execute the touch operation.
      */
     public void execute() throws BuildException {
-        if (file.exists() && project.getJavaVersion() == Project.JAVA_1_1) {
-            log("Cannot change the modification time of "
-                + file + " in JDK 1.1",
-                Project.MSG_WARN);
-            return;
+        if (file == null && filesets.size() == 0) {
+            throw 
+                new BuildException("Specify at least one source - a file or a fileset.");
         }
-        
+
+        if (file != null && file.exists() && file.isDirectory()) {
+            throw new BuildException("Use a fileset to touch directories.");
+        }
+
         if (dateTime != null) {
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT,
                                                            DateFormat.SHORT,
@@ -126,30 +143,54 @@ public class Touch extends Task {
             }
         }
 
-        if (millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1) {
-            log(file + " will be created but its modification time cannot be set in JDK 1.1",
-                Project.MSG_WARN);
-        }
-
         touch();
     }
 
     /**
      * Does the actual work. Entry point for Untar and Expand as well.
      */
-    void touch() throws BuildException {
-        if (!file.exists()) {
-            log("Creating "+file, Project.MSG_INFO);
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(new byte[0]);
-                fos.close();
-            } catch (IOException ioe) {
-                throw new BuildException("Could not create "+file, ioe, 
-                                         location);
+    protected void touch() throws BuildException {
+        if (file != null) {
+            if (!file.exists()) {
+                log("Creating "+file, Project.MSG_INFO);
+                try {
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(new byte[0]);
+                    fos.close();
+                } catch (IOException ioe) {
+                    throw new BuildException("Could not create "+file, ioe, 
+                                             location);
+                }
             }
+            touch(file);
         }
 
+        if (millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1) {
+            log("modification time of files cannot be set in JDK 1.1",
+                Project.MSG_WARN);
+            return;
+        }
+
+        // deal with the filesets
+        for (int i=0; i < filesets.size(); i++) {
+            FileSet fs = (FileSet) filesets.elementAt(i);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            File fromDir = fs.getDir(project);
+
+            String[] srcFiles = ds.getIncludedFiles();
+            String[] srcDirs = ds.getIncludedDirectories();
+
+            for(int j=0; j < srcFiles.length ; j++) {
+                touch(new File(fromDir, srcFiles[j]));
+            }
+         
+            for(int j=0; j < srcDirs.length ; j++) {
+                touch(new File(fromDir, srcDirs[j]));
+            }
+        }
+    }
+
+    protected void touch(File file) {
         if (project.getJavaVersion() == Project.JAVA_1_1) {
             return;
         }
