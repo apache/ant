@@ -175,7 +175,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
             XMLCatalog catalog = (XMLCatalog) o;
             setElements(catalog.getElements());
         } else {
-            String msg = r.getRefId() + " doesn\'t refer to an XCatalog";
+            String msg = r.getRefId() + " doesn\'t refer to an XMLCatalog";
             throw new BuildException(msg);
         }
 
