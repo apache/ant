@@ -169,6 +169,9 @@ Other changes:
 
 * Support for HP's NonStop (Tandem) OS has been added.
 
+* <cab>'s basedir attribute is now optional if you specify nested
+  filesets.  Bugzilla Report 18046.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -143,14 +143,17 @@ public class Cab extends MatchingTask {
      * for side-effects to me...
      */
     protected void checkConfiguration() throws BuildException {
-        if (baseDir == null) {
-            throw new BuildException("basedir attribute must be set!", getLocation());
+        if (baseDir == null && filesets.size() == 0) {
+            throw new BuildException("basedir attribute or at least one "
+                                     + "nested filest is required!", 
+                                     getLocation());
         }
-        if (!baseDir.exists()) {
+        if (baseDir != null && !baseDir.exists()) {
             throw new BuildException("basedir does not exist!", getLocation());
         }
         if (cabFile == null) {
-            throw new BuildException("cabfile attribute must be set!" , getLocation());
+            throw new BuildException("cabfile attribute must be set!",
+                                     getLocation());
         }
     }
 
@@ -175,7 +178,7 @@ public class Cab extends MatchingTask {
         boolean upToDate = true;
         for (int i = 0; i < files.size() && upToDate; i++) {
             String file = files.elementAt(i).toString();
-            if (new File(baseDir, file).lastModified() >
+            if (fileUtils.resolveFile(baseDir, file).lastModified() >
                 cabFile.lastModified()) {
                 upToDate = false;
             }
@@ -220,16 +223,16 @@ public class Cab extends MatchingTask {
     protected Vector getFileList() throws BuildException {
         Vector files = new Vector();
 
-        if (filesets.size() == 0) {
+        if (baseDir != null) {
             // get files from old methods - includes and nested include
             appendFiles(files, super.getDirectoryScanner(baseDir));
-        } else {
-            // get files from filesets
-            for (int i = 0; i < filesets.size(); i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
-                if (fs != null) {
-                    appendFiles(files, fs.getDirectoryScanner(getProject()));
-                }
+        }
+
+        // get files from filesets
+        for (int i = 0; i < filesets.size(); i++) {
+            FileSet fs = (FileSet) filesets.elementAt(i);
+            if (fs != null) {
+                appendFiles(files, fs.getDirectoryScanner(getProject()));
             }
         }
 
@@ -264,7 +267,9 @@ public class Cab extends MatchingTask {
             try {
                 Process p = Execute.launch(getProject(),
                                            new String[] {"listcab"}, null,
-                                           baseDir, true);
+                                           baseDir != null ? baseDir 
+                                                   : getProject().getBaseDir(),
+                                           true);
                 OutputStream out = p.getOutputStream();
 
                 // Create the stream pumpers to forward listcab's stdout and stderr to the log
