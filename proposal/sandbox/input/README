@@ -48,7 +48,7 @@ You'll get the ugliest dialog you've ever seen, but it works ;-)
 
 Use 
 
-ANT_OPTS=-Dant.input.properties=proposal/sandbox/input/src/testcases/works.properties
+ANT_OPTS=-Dant.input.properties=proposal/sandbox/input/src/testcases/works.properties\
 ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.tools.ant.input.PropertyFileInputHandler
 
 to see the non-interactive build process in action.  fails.properties

@@ -6,7 +6,7 @@
 
   <target name="multi">
     <input addproperty="multi" 
-           message="This is a prompt" 
+           message="This is a prompt " 
            validargs="1,2" />
     <echo>$${multi} is ${multi}</echo>
   </target>
