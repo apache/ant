@@ -80,18 +80,20 @@ public class Library implements EnabledLibraryElement {
      */
     private boolean toFetch = true;
 
+    /**
+     * flag set after fetching
+     */
     private boolean fetched = false;
 
     public static final String ERROR_NO_ARCHIVE = "No archive defined";
     public static final String ERROR_NO_PROJECT = "No project defined";
     public static final String ERROR_NO_VERSION = "No version defined";
-    public static final String ERROR_NO_SUFFIX = "No version defined";
+    public static final String ERROR_FILE_IS_A_DIR = "Library file is a directory:";
 
     /**
      * suffix
      */
-    private String suffix = "jar";
-    public static final String ERROR_FILE_IS_A_DIR = "Library file is a directory:";
+    private String suffix = ".jar";
 
 
     /**
@@ -169,7 +171,7 @@ public class Library implements EnabledLibraryElement {
     }
 
     /**
-     * set the suffix for this file; default is "jar"
+     * set the suffix for this file; default is ".jar"
      * @param suffix
      */
     public void setSuffix(String suffix) {
@@ -213,10 +215,16 @@ public class Library implements EnabledLibraryElement {
      * @throws BuildException if invalid
      */
     public void validate() {
-        faultIfEmpty(archive, ERROR_NO_ARCHIVE);
         faultIfEmpty(project, ERROR_NO_PROJECT);
+        if(archive==null) {
+            //adopt the name of the project if no archive is specced
+            archive=project;
+        }
+        faultIfEmpty(archive, ERROR_NO_ARCHIVE);
         faultIfEmpty(version, ERROR_NO_VERSION);
-        faultIfEmpty(version, ERROR_NO_SUFFIX);
+        if(suffix==null) {
+            suffix="";
+        }
     }
 
     /**
@@ -278,7 +286,7 @@ public class Library implements EnabledLibraryElement {
      *         source
      */
     public String getNormalFilename() {
-        return archive + "-" + version + "." + suffix;
+        return archive + "-" + version + suffix;
     }
 
     /**

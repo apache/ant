@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
 import org.apache.tools.ant.taskdefs.repository.Libraries;
+import org.apache.tools.ant.taskdefs.repository.Library;
 
 /**
  * test the test libraries stuff.
@@ -179,4 +180,28 @@ public class LibrariesTest extends BuildFileTest {
                 "Wrong count in assertdownloaded",
                 AssertDownloaded.ERROR_DOWNLOAD_FAILURE);
     }
+
+    public void testNoVersion() {
+        expectBuildException("testNoVersion",
+                Library.ERROR_NO_PROJECT);
+    }
+
+    public void testNoProject() {
+        expectBuildException("testNoProject",
+                Library.ERROR_NO_PROJECT);
+    }
+
+    public void testNoArchiveName() {
+        execIfOnline("testNoArchiveName");
+    }
+
+    public void testEmptyArchive() {
+        expectBuildException("testEmptyArchive",
+                Library.ERROR_NO_ARCHIVE);
+    }
+
+    public void testNoSuffix() {
+        execIfOnline("testNoSuffix");
+    }
+
 }
