@@ -849,7 +849,9 @@ public class Javac extends MatchingTask {
     public String getCompiler() {
         String compilerImpl = getCompilerVersion();
         if (fork) {
-            if (!isJdkCompiler(compilerImpl)) {
+            if (isJdkCompiler(compilerImpl)) {
+                compilerImpl = "extJavac";
+            } else {
                 log("Since compiler setting isn't classic or modern,"
                     + "ignoring fork setting.", Project.MSG_WARN);
             }
