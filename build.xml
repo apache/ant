@@ -907,6 +907,10 @@
           depends="compile-tests"
           description="--> creates the Apache Ant Test Utilties jar">
 
+    <fail unless="junit.present">
+      We cannot build the test jar unless JUnit is present,
+      as JUnit is needed to compile the test classes.
+    </fail>
     <jar destfile="${build.lib}/${name}-testutil.jar"
          basedir="${build.tests}">
       <patternset refid="useful.tests"/>
