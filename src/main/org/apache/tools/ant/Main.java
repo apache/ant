@@ -592,7 +592,7 @@ public class Main {
                 }
 
                 project.setUserProperty("ant.file",
-                    buildFile.getAbsolutePath());
+                                        buildFile.getAbsolutePath());
 
                 ProjectHelper.configureProject(project, buildFile);
 

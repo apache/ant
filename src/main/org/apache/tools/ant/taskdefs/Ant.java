@@ -329,7 +329,10 @@ public class Ant extends Task {
 
             if (dir != null) {
                 newProject.setBaseDir(dir);
-                newProject.setUserProperty("basedir" , dir.getAbsolutePath());
+                if (savedDir != null) { // has been set explicitly
+                    newProject.setInheritedProperty("basedir" , 
+                                                    dir.getAbsolutePath());
+                }
             } else {
                 dir = project.getBaseDir();
             }
