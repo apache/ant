@@ -122,7 +122,11 @@ public class PatternSet extends DataType implements Cloneable {
          * @return a printable form of this object.
          */
         public String toString() {
-            StringBuffer buf = new StringBuffer(name != null ? name : "");
+            if (name == null) {
+                throw new BuildException(
+                    "Missing attribute \"name\" for a pattern");
+            }
+            StringBuffer buf = new StringBuffer(name);
             if ((ifCond != null) || (unlessCond != null)) {
                 buf.append(":");
                 String connector = "";
