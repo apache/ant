@@ -197,7 +197,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Output the generated jar to a directory.
+     * If set ejbc will use this directory as the output
+     * destination rather than a jar file. This allows for the
+     * generation of &quot;exploded&quot; jars.
      */
     public void setOutputDir(File outputDir) {
         this.outputDir = outputDir;
@@ -251,7 +253,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Sets the weblogic.StdoutSeverityLevel to use when running the JVM that
-     * executes ejbc. Set to 16 to avoid the warnings about EJB Home and
+     * executes ejbc; optional. Set to 16 to avoid the warnings about EJB Home and
      * Remotes being in the classpath
      */
     public void setJvmDebugLevel(Integer jvmDebugLevel) {
@@ -307,7 +309,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the additional arguments to pass to the weblogic JVM
+     * Set any additional arguments to pass to the weblogic JVM; optional.
      * @param args the arguments to be passed to the JVM
      */
     public void setJvmargs(String args) {
@@ -315,7 +317,12 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
     /** 
-     * Set the classname of the ejbc compiler;  optional  
+     * Set the classname of the ejbc compiler;  optional 
+     * Normally ejbjar determines
+     * the appropriate class based on the DTD used for the EJB. The EJB 2.0 compiler
+     * featured in weblogic 6 has, however, been deprecated in version 7. When
+     * using with version 7 this attribute should be set to
+     * &quot;weblogic.ejbc&quot; to avoid the deprecation warning.     
      */
     public void setEjbcClass(String ejbcClass) {
         this.ejbcClass = ejbcClass;
@@ -389,7 +396,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
 
-    /** Do not EJBC the jar after it has been put together.  */
+    /** 
+     * Do not EJBC the jar after it has been put together;
+     * optional, default false
+     */
     public void setNoEJBC(boolean noEJBC) {
         this.noEJBC = noEJBC;
     }

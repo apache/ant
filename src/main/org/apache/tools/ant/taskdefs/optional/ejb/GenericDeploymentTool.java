@@ -169,7 +169,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
 
     /**
-     * Set the destination directory; usually required.
+     * Set the destination directory; required.
      * @param inDir the destination directory.
      */
     public void setDestdir(File inDir) {
