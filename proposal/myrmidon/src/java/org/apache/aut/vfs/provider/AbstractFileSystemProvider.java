@@ -20,8 +20,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public abstract class AbstractFileSystemProvider
     implements FileSystemProvider
 {
-    private final static Resources REZ
-        = ResourceManager.getPackageResources( AbstractFileSystemProvider.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( AbstractFileSystemProvider.class );
 
     protected FileSystemProviderContext m_context;
 
