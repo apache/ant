@@ -147,6 +147,7 @@ public class MyVeryOwnTask extends Task {
   <li>Use your task in the rest of the buildfile.</li>
 </ol>
 
+
 <h3>Example</h3>
 <blockquote>
 <pre>
@@ -161,6 +162,37 @@ public class MyVeryOwnTask extends Task {
 &lt;/project&gt;
 </pre>
 </blockquote>
+<h3>Example 2</h3>
+To use a task directly from the buildfile which created it, place the 
+<code>&lt;taskdef&gt;</code> declaration inside a target 
+<i>after the compilation</i>. Use the <code>classpath</code> attribute of
+<code>&lt;taskdef&gt;</code> to point to where the code has just been
+compiled.
+<blockquote>
+<pre>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+
+&lt;project name=&quot;OwnTaskExample2&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
+
+  &lt;target name=&quot;build&quot; &gt;
+    &lt;mkdir dir=&quot;build&quot;/&gt;
+    &lt;javac srcdir=&quot;source&quot; destdir=&quot;build&quot;/&gt;
+  &lt;/target&gt;
+  
+  &lt;target name=&quot;declare&quot; depends=&quot;build&quot;&gt;
+    &lt;taskdef name=&quot;mytask&quot; 
+        classname=&quot;com.mydomain.MyVeryOwnTask&quot;
+        classpath=&quot;build&quot;/&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;main&quot; depends=&quot;declare&quot;&gt;
+    &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot;/&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+</pre>
+</blockquote>
+
+
 <p>Another way to add a task (more permanently), is to add the task name and
 implementing class name to the <code>default.properties</code> file in the
 <code>org.apache.tools.ant.taskdefs</code>
