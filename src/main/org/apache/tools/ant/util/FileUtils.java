@@ -1030,12 +1030,13 @@ public class FileUtils {
     }
 
     /**
-     * This was originally an emulation of File.getParentFile for JDK 1.1,
-     * but it is now implemented using that method (Ant1.7 onwards).
+     * This was originally an emulation of {@link File#getParentFile} for JDK 1.1,
+     * but it is now implemented using that method (Ant 1.7 onwards).
      * @param f the file whose parent is required.
      * @return the given file's parent, or null if the file does not have a
      *         parent.
      * @since 1.10
+     * @deprecated Just use {@link File#getParentFile} directly.
      */
     public File getParentFile(File f) {
         return (f == null) ? null : f.getParentFile();
