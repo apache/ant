@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.JavaVersion;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.exec.Execute;
@@ -125,12 +126,7 @@ public abstract class DefaultCompilerAdapter
         throws TaskException
     {
         Path classpath = getCompileClasspath();
-
-        // we cannot be using Java 1.0 when forking, so we only have to
-        // distinguish between Java 1.1, and Java 1.2 and higher, as Java 1.1
-        // has its own parameter format
-        boolean usingJava1_1 = Project.getJavaVersion().equals( Project.JAVA_1_1 );
-        String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
+        String memoryParameterPrefix = "-J-X";
         if( m_memoryInitialSize != null )
         {
             if( !m_attributes.isForkedJavac() )
@@ -174,47 +170,27 @@ public abstract class DefaultCompilerAdapter
         }
 
         cmd.createArgument().setValue( "-classpath" );
+        cmd.createArgument().setPath( classpath );
 
-        // Just add "sourcepath" to classpath ( for JDK1.1 )
-        // as well as "bootclasspath" and "extdirs"
-        if( Project.getJavaVersion().startsWith( "1.1" ) )
+        cmd.createArgument().setValue( "-sourcepath" );
+        cmd.createArgument().setPath( src );
+
+        if( target != null )
         {
-            Path cp = new Path();
-            /*
-             * XXX - This doesn't mix very well with build.systemclasspath,
-             */
-            if( m_bootclasspath != null )
-            {
-                cp.append( m_bootclasspath );
-            }
-            if( m_extdirs != null )
-            {
-                cp.addExtdirs( m_extdirs );
-            }
-            cp.append( classpath );
-            cp.append( src );
-            cmd.createArgument().setPath( cp );
+            cmd.createArgument().setValue( "-target" );
+            cmd.createArgument().setValue( target );
         }
-        else
+
+        if( m_bootclasspath != null )
         {
-            cmd.createArgument().setPath( classpath );
-            cmd.createArgument().setValue( "-sourcepath" );
-            cmd.createArgument().setPath( src );
-            if( target != null )
-            {
-                cmd.createArgument().setValue( "-target" );
-                cmd.createArgument().setValue( target );
-            }
-            if( m_bootclasspath != null )
-            {
-                cmd.createArgument().setValue( "-bootclasspath" );
-                cmd.createArgument().setPath( m_bootclasspath );
-            }
-            if( m_extdirs != null )
-            {
-                cmd.createArgument().setValue( "-extdirs" );
-                cmd.createArgument().setPath( m_extdirs );
-            }
+            cmd.createArgument().setValue( "-bootclasspath" );
+            cmd.createArgument().setPath( m_bootclasspath );
+        }
+
+        if( m_extdirs != null )
+        {
+            cmd.createArgument().setValue( "-extdirs" );
+            cmd.createArgument().setPath( m_extdirs );
         }
 
         if( m_encoding != null )
@@ -224,11 +200,8 @@ public abstract class DefaultCompilerAdapter
         }
         if( m_debug )
         {
-            if( useDebugLevel
-                && Project.getJavaVersion() != Project.JAVA_1_0
-                && Project.getJavaVersion() != Project.JAVA_1_1 )
+            if( useDebugLevel )
             {
-
                 String debugLevel = m_attributes.getDebugLevel();
                 if( debugLevel != null )
                 {
@@ -244,31 +217,13 @@ public abstract class DefaultCompilerAdapter
                 cmd.createArgument().setValue( "-g" );
             }
         }
-        else if( Project.getJavaVersion() != Project.JAVA_1_0 &&
-            Project.getJavaVersion() != Project.JAVA_1_1 )
+        else
         {
             cmd.createArgument().setValue( "-g:none" );
         }
         if( m_optimize )
         {
             cmd.createArgument().setValue( "-O" );
-        }
-
-        if( m_depend )
-        {
-            if( Project.getJavaVersion().startsWith( "1.1" ) )
-            {
-                cmd.createArgument().setValue( "-depend" );
-            }
-            else if( Project.getJavaVersion().startsWith( "1.2" ) )
-            {
-                cmd.createArgument().setValue( "-Xdepend" );
-            }
-            else
-            {
-                final String message = "depend attribute is not supported by the modern compiler";
-                getLogger().warn( message );
-            }
         }
 
         if( m_verbose )

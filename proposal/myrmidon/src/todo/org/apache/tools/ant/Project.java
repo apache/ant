@@ -115,16 +115,6 @@ public class Project
     }
 
     /**
-     * static query of the java version
-     *
-     * @return something like "1.1" or "1.3"
-     */
-    public static String getJavaVersion()
-    {
-        return javaVersion;
-    }
-
-    /**
      * returns the boolean equivalent of a string, which is considered true if
      * either "on", "true", or "yes" is found, ignoring case.
      *
@@ -136,28 +126,6 @@ public class Project
         return ( s.equalsIgnoreCase( "on" ) ||
             s.equalsIgnoreCase( "true" ) ||
             s.equalsIgnoreCase( "yes" ) );
-    }
-
-    /**
-     * set the ant.java.version property, also tests for unsupported JVM
-     * versions, prints the verbose log messages
-     *
-     * @throws TaskException if this Java version is not supported
-     */
-    public void setJavaVersionProperty()
-        throws TaskException
-    {
-        setPropertyInternal( "ant.java.version", javaVersion );
-
-        // sanity check
-        if( javaVersion == JAVA_1_0 )
-        {
-            throw new TaskException( "Ant cannot work on Java 1.0" );
-        }
-
-        getLogger().debug( "Detected Java version: " + javaVersion + " in: " + System.getProperty( "java.home" ) );
-
-        getLogger().debug( "Detected OS: " + System.getProperty( "os.name" ) );
     }
 
     /**

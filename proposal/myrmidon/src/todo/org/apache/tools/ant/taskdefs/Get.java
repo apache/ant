@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -95,10 +94,7 @@ public class Get extends Task
      */
     public void setUseTimestamp( boolean v )
     {
-        if( getProject().getJavaVersion() != Project.JAVA_1_1 )
-        {
-            useTimestamp = v;
-        }
+        useTimestamp = v;
     }
 
     /**
@@ -296,22 +292,14 @@ public class Get extends Task
      * @exception TaskException Thrown in unrecoverable error. Likely this
      *      comes from file access failures.
      */
-    protected boolean touchFile( File file, long timemillis )
+    protected void touchFile( File file, long timemillis )
         throws TaskException
     {
 
-        if( getProject().getJavaVersion() != Project.JAVA_1_1 )
-        {
-            Touch touch = (Touch)getProject().createTask( "touch" );
-            touch.setFile( file );
-            touch.setMillis( timemillis );
-            touch.touch();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        Touch touch = (Touch)getProject().createTask( "touch" );
+        touch.setFile( file );
+        touch.setMillis( timemillis );
+        touch.touch();
     }
 
     /**

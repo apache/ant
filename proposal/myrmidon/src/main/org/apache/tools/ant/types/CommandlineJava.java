@@ -26,24 +26,21 @@ import org.apache.tools.ant.Project;
  */
 public class CommandlineJava implements Cloneable
 {
-
     private Commandline vmCommand = new Commandline();
     private Commandline javaCommand = new Commandline();
     private SysProperties sysProperties = new SysProperties();
-    private Path classpath = null;
-    private String maxMemory = null;
+    private Path classpath;
+    private String maxMemory;
 
     /**
      * Indicate whether it will execute a jar file or not, in this case the
      * first vm option must be a -jar and the 'executable' is a jar file.
      */
-    private boolean executeJar = false;
-    private String vmVersion;
+    private boolean executeJar;
 
     public CommandlineJava()
     {
         setVm( getJavaExecutableName() );
-        setVmversion( Project.getJavaVersion() );
     }
 
     /**
@@ -87,11 +84,6 @@ public class CommandlineJava implements Cloneable
     public void setVm( String vm )
     {
         vmCommand.setExecutable( vm );
-    }
-
-    public void setVmversion( String value )
-    {
-        vmVersion = value;
     }
 
     /**
@@ -185,11 +177,6 @@ public class CommandlineJava implements Cloneable
         return getActualVMCommand();
     }
 
-    public String getVmversion()
-    {
-        return vmVersion;
-    }
-
     public void addSysproperty( EnvironmentVariable sysp )
     {
         sysProperties.addVariable( sysp );
@@ -214,7 +201,6 @@ public class CommandlineJava implements Cloneable
         {
             c.classpath = (Path)classpath.clone();
         }
-        c.vmVersion = vmVersion;
         c.executeJar = executeJar;
         return c;
     }
@@ -285,14 +271,7 @@ public class CommandlineJava implements Cloneable
         Commandline actualVMCommand = (Commandline)vmCommand.clone();
         if( maxMemory != null )
         {
-            if( vmVersion.startsWith( "1.1" ) )
-            {
-                actualVMCommand.createArgument().setValue( "-mx" + maxMemory );
-            }
-            else
-            {
-                actualVMCommand.createArgument().setValue( "-Xmx" + maxMemory );
-            }
+            actualVMCommand.createArgument().setValue( "-Xmx" + maxMemory );
         }
         return actualVMCommand;
     }

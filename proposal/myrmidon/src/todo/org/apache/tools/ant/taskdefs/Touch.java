@@ -148,12 +148,6 @@ public class Touch extends Task
             }
         }
 
-        if( millis >= 0 && getProject().getJavaVersion() == Project.JAVA_1_1 )
-        {
-            getLogger().warn( "modification time of files cannot be set in JDK 1.1" );
-            return;
-        }
-
         boolean resetMillis = false;
         if( millis < 0 )
         {
@@ -199,11 +193,6 @@ public class Touch extends Task
         if( !file.canWrite() )
         {
             throw new TaskException( "Can not change modification date of read-only file " + file );
-        }
-
-        if( getProject().getJavaVersion() == Project.JAVA_1_1 )
-        {
-            return;
         }
 
         final long time = ( millis < 0 ) ? System.currentTimeMillis() : millis;

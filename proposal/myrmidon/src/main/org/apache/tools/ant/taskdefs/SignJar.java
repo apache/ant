@@ -249,11 +249,6 @@ public class SignJar extends Task
     private void doOneJar( File jarSource, File jarTarget )
         throws TaskException
     {
-        if( getProject().getJavaVersion().equals( Project.JAVA_1_1 ) )
-        {
-            throw new TaskException( "The signjar task is only available on JDK versions 1.2 or greater" );
-        }
-
         if( null == alias )
         {
             throw new TaskException( "alias attribute must be set" );

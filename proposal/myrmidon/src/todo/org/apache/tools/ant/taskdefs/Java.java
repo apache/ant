@@ -109,11 +109,6 @@ public class Java extends Task
         this.fork = s;
     }
 
-    public void setJVMVersion( String value )
-    {
-        cmdl.setVmversion( value );
-    }
-
     /**
      * set the jar name...
      *

@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Argument;
@@ -119,14 +118,7 @@ public abstract class AbstractMetamataTask extends Task
      */
     public void setMaxmemory( String max )
     {
-        if( Project.getJavaVersion().startsWith( "1.1" ) )
-        {
-            createJvmarg().setValue( "-mx" + max );
-        }
-        else
-        {
-            createJvmarg().setValue( "-Xmx" + max );
-        }
+        createJvmarg().setValue( "-Xmx" + max );
     }
 
     /**

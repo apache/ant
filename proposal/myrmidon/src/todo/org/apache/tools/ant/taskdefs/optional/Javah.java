@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.JavaVersion;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -267,8 +268,7 @@ public class Javah extends Task
         String compiler = getProject().getProperty( "build.compiler" );
         if( compiler == null )
         {
-            if( Project.getJavaVersion() != Project.JAVA_1_1 &&
-                Project.getJavaVersion() != Project.JAVA_1_2 )
+            if( JavaVersion.JAVA1_2  != getJavaVersion() )
             {
                 compiler = "modern";
             }
@@ -353,28 +353,17 @@ public class Javah extends Task
             cmd.createArgument().setPath( classpath );
         }
 
-        // JDK1.1 is rather simpler than JDK1.2
-        if( Project.getJavaVersion().startsWith( "1.1" ) )
+        if( verbose )
         {
-            if( verbose )
-            {
-                cmd.createArgument().setValue( "-v" );
-            }
+            cmd.createArgument().setValue( "-verbose" );
         }
-        else
+        if( old )
         {
-            if( verbose )
-            {
-                cmd.createArgument().setValue( "-verbose" );
-            }
-            if( old )
-            {
-                cmd.createArgument().setValue( "-old" );
-            }
-            if( force )
-            {
-                cmd.createArgument().setValue( "-force" );
-            }
+            cmd.createArgument().setValue( "-old" );
+        }
+        if( force )
+        {
+            cmd.createArgument().setValue( "-force" );
         }
 
         if( stubs )

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -113,18 +112,8 @@ public abstract class DefaultRmicAdapter
 
         if( attributes.getExtdirs() != null )
         {
-            if( Project.getJavaVersion().startsWith( "1.1" ) )
-            {
-                /*
-                 * XXX - This doesn't mix very well with build.systemclasspath,
-                 */
-                classpath.addExtdirs( attributes.getExtdirs() );
-            }
-            else
-            {
-                cmd.createArgument().setValue( "-extdirs" );
-                cmd.createArgument().setPath( attributes.getExtdirs() );
-            }
+            cmd.createArgument().setValue( "-extdirs" );
+            cmd.createArgument().setPath( attributes.getExtdirs() );
         }
 
         cmd.createArgument().setValue( "-classpath" );

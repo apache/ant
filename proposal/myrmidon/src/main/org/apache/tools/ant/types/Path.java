@@ -353,12 +353,6 @@ public class Path
             kaffeJarFiles.setIncludes( "*.jar" );
             addFileset( kaffeJarFiles );
         }
-        else if( Project.getJavaVersion() == Project.JAVA_1_1 )
-        {
-            final String classes = System.getProperty( "java.home" ) +
-                File.separator + "lib" + File.separator + "classes.zip";
-            addExisting( new Path( classes ) );
-        }
         else
         {
             // JDK > 1.1 seems to set java.home to the JRE directory.

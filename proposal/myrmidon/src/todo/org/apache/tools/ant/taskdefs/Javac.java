@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -894,8 +895,7 @@ public class Javac extends MatchingTask
 
         if( compiler == null )
         {
-            if( Project.getJavaVersion() != Project.JAVA_1_1 &&
-                Project.getJavaVersion() != Project.JAVA_1_2 )
+            if( JavaVersion.JAVA1_2  != getJavaVersion() )
             {
                 compiler = "modern";
             }
