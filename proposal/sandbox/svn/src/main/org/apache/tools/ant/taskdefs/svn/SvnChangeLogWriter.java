@@ -16,8 +16,18 @@
  */
 package org.apache.tools.ant.taskdefs.svn;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.JAXPUtils;
+
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 /**
  * Class used to generate an XML changelog.
@@ -29,6 +39,8 @@ public class SvnChangeLogWriter {
     /** output format for times written to xml file */
     private static final SimpleDateFormat OUTPUT_TIME
         = new SimpleDateFormat("HH:mm");
+    /** stateless helper for writing the XML document */
+    private static final DOMElementWriter DOM_WRITER = new DOMElementWriter();
 
     /**
      * Print out the specified entries.
@@ -37,15 +49,18 @@ public class SvnChangeLogWriter {
      * @param entries the entries to be written.
      */
     public void printChangeLog(final PrintWriter output,
-                               final SvnEntry[] entries) {
+                               final SvnEntry[] entries) throws IOException {
         output.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        output.println("<changelog>");
+        Document doc = JAXPUtils.getDocumentBuilder().newDocument();
+        Element root = doc.createElement("changelog");
+        DOM_WRITER.openElement(root, output, 0, "\t");
+        output.println();
         for (int i = 0; i < entries.length; i++) {
             final SvnEntry entry = entries[i];
 
-            printEntry(output, entry);
+            printEntry(output, entry, root);
         }
-        output.println("</changelog>");
+        DOM_WRITER.closeElement(root, output, 0, "\t", entries.length > 0);
         output.flush();
         output.close();
     }
@@ -57,28 +72,58 @@ public class SvnChangeLogWriter {
      * @param entry the entry to print
      * @param output writer to which to send output.
      */
-    private void printEntry(final PrintWriter output, final SvnEntry entry) {
-        output.println("\t<entry>");
-        output.println("\t\t<date>" + OUTPUT_DATE.format(entry.getDate())
-            + "</date>");
-        output.println("\t\t<time>" + OUTPUT_TIME.format(entry.getDate())
-            + "</time>");
-        output.println("\t\t<author><![CDATA[" + entry.getAuthor()
-            + "]]></author>");
-        output.println("\t\t<revision>" + entry.getRevision()
-            + "</revision>");
+    private void printEntry(final PrintWriter output, final SvnEntry entry,
+                            final Element element) throws IOException {
+        Document doc = element.getOwnerDocument();
+
+        Element ent = doc.createElement("entry");
+        appendTextElement(ent, "date", OUTPUT_DATE.format(entry.getDate()));
+        appendTextElement(ent, "time", OUTPUT_TIME.format(entry.getDate()));
+        appendCDATAElement(ent, "author", entry.getAuthor());
+        appendTextElement(ent, "revision", entry.getRevision());
 
         SvnEntry.Path[] paths = entry.getPaths();
         for (int i = 0; i < paths.length; i++) {
-            output.println("\t\t<path>");
-            output.println("\t\t\t<name><![CDATA[" + paths[i].getName() 
-                           + "]]></name>");
-            output.println("\t\t\t<action>" + paths[i].getActionDescription() 
-                           + "</action>");
-            output.println("\t\t</path>");
+            Element path = doc.createElement("path");
+            ent.appendChild(path);
+            appendCDATAElement(path, "name", paths[i].getName());
+            appendTextElement(path, "action", paths[i].getActionDescription());
         }
-        output.println("\t\t<message><![CDATA[" + entry.getMessage() + "]]></message>");
-        output.println("\t</entry>");
+        appendCDATAElement(ent, "message", entry.getMessage());
+        DOM_WRITER.write(ent, output, 1, "\t");
+    }
+
+    /**
+     * Creates a named element with nested text as child of the given element.
+     *
+     * @param parent the parent element
+     * @param name name of the child element
+     * @param content the content of the nested text
+     */
+    private static void appendTextElement(Element parent, String name,
+                                          String content) {
+        Document doc = parent.getOwnerDocument();
+        Element e = doc.createElement(name);
+        parent.appendChild(e);
+        Text t = doc.createTextNode(content);
+        e.appendChild(t);
+    }
+
+    /**
+     * Creates a named element with a nested CDATA section as child of
+     * the given element.
+     *
+     * @param parent the parent element
+     * @param name name of the child element
+     * @param content the content of the nested text
+     */
+    private static void appendCDATAElement(Element parent, String name,
+                                           String content) {
+        Document doc = parent.getOwnerDocument();
+        Element e = doc.createElement(name);
+        parent.appendChild(e);
+        CDATASection c  = doc.createCDATASection(content);
+        e.appendChild(c);
     }
 }
 
