@@ -72,10 +72,14 @@ public class Delete extends Task {
     }
 
     public void execute() throws BuildException {
-        project.log("Deleting: " + f.getAbsolutePath());
-
         if (f.exists()) {
-            f.delete();
+            if (f.isDirectory()) { 
+                project.log("Directory: " + f.getAbsolutePath() + 
+                    " cannot be removed with delete.  Use Deltree instead.");
+            } else {
+                project.log("Deleting: " + f.getAbsolutePath());
+                f.delete();
+            }
         }
     }
 }

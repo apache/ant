@@ -81,7 +81,8 @@ public class Chmod extends Task {
     public void execute() throws BuildException {
 	try {
 	    // XXX if OS=unix
-	    if (System.getProperty("path.separator").equals(":"))
+	    if (System.getProperty("path.separator").equals(":") &&
+                    !System.getProperty("os.name").startsWith("Mac"))
 		Runtime.getRuntime().exec("chmod " + mod + " " + srcFile );
 	} catch (IOException ioe) {
 	    // ignore, but warn

@@ -248,10 +248,14 @@ public class Javac extends MatchingTask {
 
     /**
      * Scans the directory looking for source files to be compiled and
-     * support files to be copied.
+     * support files to be copied.  The results are returned in the
+     * class variables compileList and filecopyList.
      */
 
     private void scanDir(File srcDir, File destDir, String files[]) {
+
+        compileList.removeAllElements();
+        filecopyList.clear();
 
         long now = (new Date()).getTime();
 
