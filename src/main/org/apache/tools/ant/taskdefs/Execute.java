@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -476,6 +476,9 @@ public class Execute {
             launcher = shellLauncher;
         }
 
+        if (dir != null && !dir.exists()) {
+            throw new BuildException(dir + " doesn't exists.");
+        }
         return launcher.exec(project, command, env, dir);
     }
 
@@ -487,6 +490,9 @@ public class Execute {
      *            of the subprocess failed
      */
     public int execute() throws IOException {
+        if (workingDirectory != null && !workingDirectory.exists()) {
+            throw new BuildException(workingDirectory + " doesn't exists.");
+        }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
                                        useVMLauncher);
@@ -536,6 +542,9 @@ public class Execute {
      * @since ant 1.6
      */
     public void spawn() throws IOException {
+        if (workingDirectory != null && !workingDirectory.exists()) {
+            throw new BuildException(workingDirectory + " doesn't exists.");
+        }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
                                        useVMLauncher);
@@ -625,7 +634,7 @@ public class Execute {
         // so we only return the new values which then will be set in
         // the generated DCL script, inheriting the parent process environment
         if (Os.isFamily("openvms")) {
-                return env;
+            return env;
         }
 
         Vector osEnv = (Vector) getProcEnvironment().clone();
