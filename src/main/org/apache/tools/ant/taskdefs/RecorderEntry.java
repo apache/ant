@@ -57,6 +57,8 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.util.StringUtils;
+
 import java.io.PrintStream;
 
 
@@ -92,10 +94,6 @@ public class RecorderEntry implements BuildLogger  {
      * The start time of the last know target.
      */
     private long targetStartTime = 0l;
-    /**
-     * Line separator.
-     */
-    private static String lSep = System.getProperty("line.separator");
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS
@@ -136,9 +134,9 @@ public class RecorderEntry implements BuildLogger  {
 
         Throwable error = event.getException();
         if (error == null) {
-            out.println(lSep + "BUILD SUCCESSFUL");
+            out.println(StringUtils.LINE_SEP + "BUILD SUCCESSFUL");
         } else {
-            out.println(lSep + "BUILD FAILED" + lSep);
+            out.println(StringUtils.LINE_SEP + "BUILD FAILED" + StringUtils.LINE_SEP);
             error.printStackTrace(out);
         }
         out.flush();
@@ -147,7 +145,7 @@ public class RecorderEntry implements BuildLogger  {
 
     public void targetStarted(BuildEvent event) {
         log( ">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG );
-        log( lSep + event.getTarget().getName() + ":", Project.MSG_INFO );
+        log( StringUtils.LINE_SEP + event.getTarget().getName() + ":", Project.MSG_INFO );
         targetStartTime = System.currentTimeMillis();
     }
 
@@ -159,7 +157,7 @@ public class RecorderEntry implements BuildLogger  {
     }
 
     public void taskStarted(BuildEvent event) {
-        log( ">>> TAST STARTED -- " + event.getTask(), Project.MSG_DEBUG );
+        log( ">>> TASK STARTED -- " + event.getTask(), Project.MSG_DEBUG );
     }
 
     public void taskFinished(BuildEvent event) {

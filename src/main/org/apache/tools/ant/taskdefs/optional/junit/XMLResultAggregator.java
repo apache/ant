@@ -76,6 +76,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.StringUtils;
 
 
 /**
@@ -269,9 +270,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
                 log("The file " + files[i] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN);
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                log(sw.toString(), Project.MSG_DEBUG);
+                log(StringUtils.getStackTrace(e), Project.MSG_DEBUG);
             } catch (IOException e){
                 log("Error while accessing file " + files[i] + ": " + e.getMessage(), Project.MSG_ERR);
             }

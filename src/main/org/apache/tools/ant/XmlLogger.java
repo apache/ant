@@ -68,6 +68,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  *  Generates a "log.xml" file in the current directory with
@@ -133,13 +134,8 @@ public class XmlLogger implements BuildListener {
             buildElement.element.setAttribute(ERROR_ATTR, event.getException().toString());
             // print the stacktrace in the build file it is always useful...
             // better have too much info than not enough.
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PrintStream ps = new PrintStream(baos,true);
             Throwable t = event.getException();
-            t.printStackTrace(ps);
-            ps.flush();
-            ps.close();
-            Text errText =  doc.createCDATASection(baos.toString());
+            Text errText =  doc.createCDATASection(StringUtils.getStackTrace(t));
             Element stacktrace = doc.createElement(STACKTRACE_TAG);
             stacktrace.appendChild(errText);
             buildElement.element.appendChild(stacktrace);

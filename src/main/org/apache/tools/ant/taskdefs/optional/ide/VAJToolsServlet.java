@@ -66,6 +66,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Abstract base class to provide common services for the
@@ -145,9 +146,7 @@ public abstract class VAJToolsServlet extends HttpServlet {
         } catch( Exception e ) {
             try {
                 if ( ! (e instanceof BuildException) ) {
-                    StringWriter sw = new StringWriter();
-                    e.printStackTrace(new PrintWriter(sw));
-                    String trace = new String( sw.getBuffer() );
+                    String trace = StringUtils.getStackTrace(e);
                     util.log("Program error in " + this.getClass().getName()
                              + ":\n" + trace, VAJUtil.MSG_ERR);
                 }

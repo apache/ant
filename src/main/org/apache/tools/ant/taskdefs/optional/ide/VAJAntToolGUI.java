@@ -93,6 +93,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a simple grafical user interface to provide the information needed
@@ -114,7 +115,7 @@ public class VAJAntToolGUI extends Frame {
      * Members
      */
     private VAJBuildLogger logger = new VAJBuildLogger();
-    private String lineSeparator = "\r\n";
+    private final static String lineSeparator = "\r\n";
     private PrivateEventHandler iEventHandler = new PrivateEventHandler();
 
     /**
@@ -1287,9 +1288,7 @@ public class VAJAntToolGUI extends Frame {
      */
     private void handleException(Throwable exception) {
         // Write exceptions to the log-window
-        StringWriter sw = new StringWriter();
-        exception.printStackTrace(new PrintWriter(sw));
-        String trace = new String( sw.getBuffer() );
+        String trace = StringUtils.getStackTrace(exception);
 
         getMessageTextArea().append(lineSeparator + lineSeparator + trace);
         getMessageFrame().show();

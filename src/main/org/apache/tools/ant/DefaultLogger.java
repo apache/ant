@@ -58,6 +58,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.apache.tools.ant.util.StringUtils;
+
 /**
  *  Writes build event to a PrintStream. Currently, it
  *  only writes which targets are being executed, and
@@ -70,8 +72,6 @@ public class DefaultLogger implements BuildLogger {
     protected PrintStream err;
     protected int msgOutputLevel = Project.MSG_ERR;
     private long startTime = System.currentTimeMillis();
-
-    protected static String lSep = System.getProperty("line.separator");
 
     protected boolean emacsMode = false;
 
@@ -134,29 +134,29 @@ public class DefaultLogger implements BuildLogger {
         StringBuffer message = new StringBuffer();
 
         if (error == null) {
-            message.append(lSep + "BUILD SUCCESSFUL");
+            message.append(StringUtils.LINE_SEP);
+            message.append("BUILD SUCCESSFUL");
         }
         else {
-            message.append(lSep + "BUILD FAILED" + lSep);
+            message.append(StringUtils.LINE_SEP);
+            message.append("BUILD FAILED");
+            message.append(StringUtils.LINE_SEP);
 
             if (Project.MSG_VERBOSE <= msgOutputLevel ||
                 !(error instanceof BuildException)) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                error.printStackTrace(pw);
-                message.append(sw.toString());
+                message.append(StringUtils.getStackTrace(error));
             }
             else {
                 if (error instanceof BuildException) {
-                    message.append(error.toString() + lSep);
+                    message.append(error.toString()).append(StringUtils.LINE_SEP);
                 }
                 else {
-                    message.append(error.getMessage() + lSep);
+                    message.append(error.getMessage()).append(StringUtils.LINE_SEP);
                 }
             }
         }
-
-        message.append(lSep + "Total time: "
+        message.append(StringUtils.LINE_SEP);
+        message.append("Total time: "
                        + formatTime(System.currentTimeMillis() - startTime));
 
         String msg = message.toString();
@@ -170,7 +170,7 @@ public class DefaultLogger implements BuildLogger {
 
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
-            String msg = lSep + event.getTarget().getName() + ":";
+            String msg = StringUtils.LINE_SEP + event.getTarget().getName() + ":";
             out.println(msg);
             log(msg);
         }

@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.StringUtils;
 
 import junit.framework.TestListener;
 import junit.framework.TestResult;
@@ -477,11 +478,7 @@ public class JUnitTestRunner implements TestListener {
      * Scott M. Stirling.
      */
     public static String getFilteredTrace(Throwable t) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        t.printStackTrace(writer);
-        StringBuffer buffer = stringWriter.getBuffer();
-        String trace = buffer.toString();
+        String trace = StringUtils.getStackTrace(t);
         return JUnitTestRunner.filterStack(trace);
     }
 
