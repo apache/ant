@@ -32,12 +32,12 @@
 #
 
 if [ -n "$TMP" ]; then
-  TEMP_FILE="$TMP"/changed-files
+  TEMP_DIR="$TMP"
 else
   if [ -n "$TEMP" ]; then
-    TEMP_FILE="$TEMP"/changed-files
+    TEMP_DIR="$TEMP"
   else
-    TEMP_FILE=/tmp/changed-files
+    TEMP_DIR=/tmp
   fi
 fi
 
@@ -47,11 +47,17 @@ if [ $YEAR = yearcheck.sh ]; then
     YEAR=`date -R | cut -d ' ' -f 4`
 fi
 
+if [ -d ".svn" ]; then
+    svn up | fgrep -v 'At revision' > "$TEMP_DIR"/update
+else
+    cvs -z3 update -dP > "$TEMP_DIR"/update
+fi
+
 if [ -z "$1" ]; then
-  cvs -z3 update -dP | fgrep -v proposal | cut -f 2 -d ' ' > $TEMP_FILE
+   fgrep -v proposal < "$TEMP_DIR"/update | cut -f 2 -d ' ' > "$TEMP_DIR"/changed-files
 else
   if [ "all" == "$1" ]; then
-    cvs -z3 update -dP | cut -f 2 -d ' ' > $TEMP_FILE
+    cut -f 2 -d ' ' < "$TEMP_DIR"/update > "$TEMP_DIR"/changed-files
   else
     echo "Usage: $YEAR [all]"
     exit
@@ -60,20 +66,20 @@ fi
 
 echo "Changed:"
 echo "========"
-cat $TEMP_FILE
+cat "$TEMP_DIR"/changed-files
 echo
 
-xargs fgrep -L Copyright < $TEMP_FILE > /tmp/no-copyright
+xargs fgrep -L Copyright < "$TEMP_DIR"/changed-files > "$TEMP_DIR"/no-copyright
 
 echo "No Copyright line"
 echo "================="
-cat /tmp/no-copyright
+cat "$TEMP_DIR"/no-copyright
 echo
 
-xargs egrep -L "Copyright.*$YEAR" < $TEMP_FILE | cut -f 1 -d : > /tmp/no-$YEAR
+xargs egrep -L "Copyright.*$YEAR" < "$TEMP_DIR"/changed-files | cut -f 1 -d : > "$TEMP_DIR"/no-$YEAR
 
 echo "No Copyright line for year $YEAR"
 echo "================================"
-cat /tmp/no-$YEAR
+cat "$TEMP_DIR"/no-$YEAR
 
-rm $TEMP_FILE
+rm "$TEMP_DIR"/no-$YEAR "$TEMP_DIR"/no-copyright "$TEMP_DIR"/changed-files "$TEMP_DIR"/update
