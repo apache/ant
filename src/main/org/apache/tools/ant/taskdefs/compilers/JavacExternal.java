@@ -80,8 +80,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
 
         return 
             executeExternalCompile(cmd.getCommandline(), firstFileName,
-                                   !assumeJava11() && !assumeJava12() 
-                                   && !assumeJava13()) 
+                                   true)
             == 0;
     }
 

@@ -119,7 +119,11 @@ Fixed bugs:
   Bugzilla Report 19187.
 
 * file names that include spaces need to be quoted inside the @argfile
-  argument using forked <javac> and JDK 1.4.  Bugzilla Report 10499.
+  argument using forked <javac> and (all JDKS).  Bugzilla Report 10499.
+  NB : a first correction was only introducing quotes for JDK 1.4
+  It has been changed to quote for all external compilers when paths contain spaces.
+  Also the backslashes need to be converted to forward slashes 
+  Bugzilla Report 17683.
 
 * Setting filesonly to true in <zip> and related tasks would cause the
   archives to be always recreated.  Bugzilla Report 19449.

@@ -405,7 +405,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * system.
      */
     protected int executeExternalCompile(String[] args, int firstFileName) {
-        return executeExternalCompile(args, firstFileName, false);
+        return executeExternalCompile(args, firstFileName, true);
     }
 
     /**
@@ -415,7 +415,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * if the index is negative, no temporary file will ever be
      * created, but this may hit the command line length limit on your
      * system.
-     * @param quoteFilenames - if set to true, filenames containing
+     * @param quoteFiles - if set to true, filenames containing
      * spaces will be quoted when they appear in the external file.
      * This is necessary when running JDK 1.4's javac and probably
      * others.
@@ -448,6 +448,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         if (quoteFiles && args[i].indexOf(" ") > -1) {
+                            args[i] = args[i].replace('\\', '/');
                             out.println("\"" + args[i] + "\"");
                         } else {
                             out.println(args[i]);
