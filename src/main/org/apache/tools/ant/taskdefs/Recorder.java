@@ -93,7 +93,7 @@ public class Recorder extends Task {
     /** What level to log?  -1 means not initialized yet. */
     private int loglevel = -1;
     /** The list of recorder entries. */
-    private static HashMap recorderEntries = new HashMap();
+    private static Hashtable recorderEntries = new Hashtable();
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS

@@ -240,7 +240,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
             }
 
             entry.setSize(def.getTotalIn());
-            entry.setCompressedSize(def.getTotalOut());
+            entry.setComprSize(def.getTotalOut());
             entry.setCrc(realCrc);
 
             def.reset();
@@ -295,7 +295,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
             if (entry.getCrc() == -1) {
                 throw new ZipException("crc checksum is required for STORED method");
             }
-            entry.setCompressedSize(entry.getSize());
+            entry.setComprSize(entry.getSize());
         } else {
             def.setLevel(level);
         }        

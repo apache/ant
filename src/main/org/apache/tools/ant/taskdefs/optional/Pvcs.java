@@ -59,6 +59,7 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.*;
 import java.text.*;
+import java.util.Random;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -150,9 +151,9 @@ public class Pvcs extends org.apache.tools.ant.Task {
         if(getPvcsproject()!=null)
             commandLine.createArgument().setValue(getPvcsproject());
 
-        File tmp;
+        File tmp = null;
         try {
-            tmp = File.createTempFile("pvcs_ant_",".log");
+            tmp = new File("pvcs_ant_"+(new Random(System.currentTimeMillis())).nextLong()+".log");
             result = runCmd(commandLine, new PumpStreamHandler(new FileOutputStream(tmp), new LogOutputStream(this,Project.MSG_WARN)));
             if ( result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
@@ -196,6 +197,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
         } catch(ParseException e) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(e.getMessage(),location);
+        } finally {
+            if (tmp != null) {
+                tmp.delete();
+            }
         }
     }
 

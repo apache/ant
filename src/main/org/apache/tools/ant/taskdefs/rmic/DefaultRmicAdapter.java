@@ -260,7 +260,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         niceSourceList.append(" to be compiled:");
 
         for (int i=0; i < compileList.size(); i++) {
-            String arg = (String)compileList.get(i);
+            String arg = (String)compileList.elementAt(i);
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg);
         }

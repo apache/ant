@@ -58,7 +58,6 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.jar.*;
 import javax.xml.parsers.*;
 
 import org.apache.tools.ant.*;

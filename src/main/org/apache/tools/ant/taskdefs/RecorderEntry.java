@@ -203,7 +203,7 @@ public class RecorderEntry implements BuildLogger  {
     }
 
     public void setEmacsMode(boolean emacsMode) {
-        throw new java.lang.UnsupportedOperationException("Method setEmacsMode() not yet implemented.");
+        throw new java.lang.RuntimeException("Method setEmacsMode() not yet implemented.");
     }
 
     public void setErrorPrintStream(PrintStream err) {

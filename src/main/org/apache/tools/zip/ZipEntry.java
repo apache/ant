@@ -54,6 +54,8 @@
 
 package org.apache.tools.zip;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Vector;
 import java.util.zip.ZipException;
 
@@ -85,7 +87,29 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      * @since 1.1
      */
     public ZipEntry(java.util.zip.ZipEntry entry) throws ZipException {
-        super(entry);
+        /*
+         * REVISIT: call super(entry) instead of this stuff in Ant2,
+         *          "copy constructor" has not been available in JDK 1.1
+         */
+        super(entry.getName());
+
+        setComment(entry.getComment());
+        setMethod(entry.getMethod());
+        setTime(entry.getTime());
+
+        long size = entry.getSize();
+        if (size > 0) {
+            setSize(size);
+        }
+        long cSize = entry.getCompressedSize();
+        if (cSize > 0) {
+            setComprSize(cSize);
+        }
+        long crc = entry.getCrc();
+        if (crc > 0) {
+            setCrc(crc);
+        }
+        
         byte[] extra = entry.getExtra();
         if (extra != null) {
             setExtraFields(ExtraFieldUtils.parse(extra));
@@ -100,8 +124,8 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      *
      * @since 1.1
      */
-    public ZipEntry(ZipEntry entry) {
-        super(entry);
+    public ZipEntry(ZipEntry entry) throws ZipException {
+        this((java.util.zip.ZipEntry) entry);
         setInternalAttributes(entry.getInternalAttributes());
         setExternalAttributes(entry.getExternalAttributes());
         setExtraFields(entry.getExtraFields());
@@ -269,4 +293,110 @@ public class ZipEntry extends java.util.zip.ZipEntry {
     public byte[] getCentralDirectoryExtra() {
         return ExtraFieldUtils.mergeCentralDirectoryData(getExtraFields());
     }
+
+    /**
+     * Helper for JDK 1.1 <-> 1.2 incompatibility.
+     *
+     * @since 1.2
+     */
+    private Long compressedSize = null;
+
+    /**
+     * Make this class work in JDK 1.1 like a 1.2 class.
+     *
+     * <p>This either stores the size for later usage or invokes
+     * setCompressedSize via reflection.</p>
+     *
+     * @since 1.2
+     */
+    public void setComprSize(long size) {
+        if (haveSetCompressedSize()) {
+            performSetCompressedSize(this, size);
+        } else {
+            compressedSize = new Long(size);
+        }
+    }
+
+    /**
+     * Override to make this class work in JDK 1.1 like a 1.2 class.
+     *
+     * @since 1.2
+     */
+    public long getCompressedSize() {
+        if (compressedSize != null) {
+            // has been set explicitly and we are running in a 1.1 VM
+            return compressedSize.longValue();
+        }
+        return super.getCompressedSize();
+    }
+
+    /**
+     * Helper for JDK 1.1
+     *
+     * @since 1.2
+     */
+    private static Method setCompressedSizeMethod = null;
+    /**
+     * Helper for JDK 1.1
+     *
+     * @since 1.2
+     */
+    private static Object lockReflection = new Object();
+    /**
+     * Helper for JDK 1.1
+     *
+     * @since 1.2
+     */
+    private static boolean triedToGetMethod = false;
+
+    /**
+     * Are we running JDK 1.2 or higher?
+     *
+     * @since 1.2
+     */
+    private static boolean haveSetCompressedSize() {
+        checkSCS();
+        return setCompressedSizeMethod != null;
+    }
+
+    /**
+     * Invoke setCompressedSize via reflection.
+     *
+     * @since 1.2
+     */
+    private static void performSetCompressedSize(ZipEntry ze, long size) {
+        Long[] s = {new Long(size)};
+        try {
+            setCompressedSizeMethod.invoke(ze, s);
+        } catch (InvocationTargetException ite) {
+            Throwable nested = ite.getTargetException();
+            throw new RuntimeException("Exception setting the compressed size "
+                                       + "of " + ze + ": "
+                                       + nested.getMessage());
+        } catch (Throwable other) {
+            throw new RuntimeException("Exception setting the compressed size "
+                                       + "of " + ze + ": "
+                                       + other.getMessage());
+        }
+    }
+
+    /**
+     * Try to get a handle to the setCompressedSize method.
+     *
+     * @since 1.2
+     */
+    private static void checkSCS() {
+        if (!triedToGetMethod) {
+            synchronized (lockReflection) {
+                triedToGetMethod = true;
+                try {
+                    setCompressedSizeMethod = 
+                        java.util.zip.ZipEntry.class.getMethod("setCompressedSize", 
+                                                               new Class[] {Long.TYPE});
+                } catch (NoSuchMethodException nse) {
+                }
+            }
+        }
+    }
+
 }

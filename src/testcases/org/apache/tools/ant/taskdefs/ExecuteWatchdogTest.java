@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.Project;
+
 import java.net.*;
 import junit.framework.*;
 import java.io.*;
@@ -89,6 +91,15 @@ public class ExecuteWatchdogTest extends TestCase {
 			System.err.println("WARNING: 'build.tests' property is not available !");
 			classpath = System.getProperty("java.class.path");
 		}
+
+                // JDK 1.1 needs classes.zip in -classpath argument
+                if (Project.getJavaVersion() == Project.JAVA_1_1) {
+                    classpath +=   File.pathSeparator
+                                 + System.getProperty("java.home")
+                                 + File.separator + "lib"
+                                 + File.separator + "classes.zip";
+                }
+
 		return classpath;
 	}
 
