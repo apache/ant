@@ -257,7 +257,6 @@ public class DemuxOutputStream extends OutputStream {
             // either end of buffer or a line separator char
             int blockLength = offset - blockStartOffset;
             if (blockLength > 0) {
-                project.log("Sending " + blockLength);
                 bufferInfo.buffer.write(b, blockStartOffset, blockLength);
             }
             while(remaining > 0 && (b[offset] == 0x0a || b[offset] == 0x0d)) {

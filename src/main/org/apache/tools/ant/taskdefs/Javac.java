@@ -735,8 +735,8 @@ public class Javac extends MatchingTask {
         File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
 
         if (newFiles.length > 0) {
-            File[] newCompileList = new File[compileList.length +
-                newFiles.length];
+            File[] newCompileList
+                = new File[compileList.length + newFiles.length];
             System.arraycopy(compileList, 0, newCompileList, 0,
                     compileList.length);
             System.arraycopy(newFiles, 0, newCompileList,
@@ -751,12 +751,12 @@ public class Javac extends MatchingTask {
     }
 
     protected boolean isJdkCompiler(String compilerImpl) {
-        return "modern".equals(compilerImpl) ||
-            "classic".equals(compilerImpl) ||
-            "javac1.1".equals(compilerImpl) ||
-            "javac1.2".equals(compilerImpl) ||
-            "javac1.3".equals(compilerImpl) ||
-            "javac1.4".equals(compilerImpl);
+        return "modern".equals(compilerImpl)
+            || "classic".equals(compilerImpl)
+            || "javac1.1".equals(compilerImpl)
+            || "javac1.2".equals(compilerImpl)
+            || "javac1.3".equals(compilerImpl)
+            || "javac1.4".equals(compilerImpl);
     }
 
     protected String getSystemJavac() {
@@ -854,13 +854,12 @@ public class Javac extends MatchingTask {
         String compilerImpl = getCompiler();
 
         if (compileList.length > 0) {
-            log("Compiling " + compileList.length +
-                " source file"
+            log("Compiling " + compileList.length + " source file"
                 + (compileList.length == 1 ? "" : "s")
                 + (destDir != null ? " to " + destDir : ""));
 
             if (listFiles) {
-                for (int i = 0 ; i < compileList.length ; i++) {
+                for (int i = 0; i < compileList.length; i++) {
                   String filename = compileList[i].getAbsolutePath();
                   log(filename) ;
                 }

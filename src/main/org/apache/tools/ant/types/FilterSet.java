@@ -74,7 +74,7 @@ import org.apache.tools.ant.Project;
  * @author     <A href="mailto:martin@mvdb.net">  Martin van den Bemt </A>
  */
 public class FilterSet extends DataType implements Cloneable {
-    
+
     /**
      * Individual filter component of filterset
      *
@@ -83,10 +83,10 @@ public class FilterSet extends DataType implements Cloneable {
     public static class Filter {
         /** Token which will be replaced in the filter operation */
         String token;
-        
+
         /** The value which will replace the token in the filtering operation */
         String value;
-        
+
         /**
          * Constructor for the Filter object
          *
@@ -97,13 +97,13 @@ public class FilterSet extends DataType implements Cloneable {
            this.token = token;
            this.value = value;
         }
-        
+
         /**
          * No argument conmstructor
          */
         public Filter() {
         }
-        
+
         /**
          * Sets the Token attribute of the Filter object
          *
@@ -112,7 +112,7 @@ public class FilterSet extends DataType implements Cloneable {
         public void setToken(String token) {
            this.token = token;
         }
-        
+
         /**
          * Sets the Value attribute of the Filter object
          *
@@ -121,7 +121,7 @@ public class FilterSet extends DataType implements Cloneable {
         public void setValue(String value) {
            this.value = value;
         }
-        
+
         /**
          * Gets the Token attribute of the Filter object
          *
@@ -130,7 +130,7 @@ public class FilterSet extends DataType implements Cloneable {
         public String getToken() {
            return token;
         }
-        
+
         /**
          * Gets the Value attribute of the Filter object
          *
@@ -140,20 +140,20 @@ public class FilterSet extends DataType implements Cloneable {
            return value;
         }
      }
-    
+
     /**
      * The filtersfile nested element.
      *
      * @author    Michael McCallum
      */
     public class FiltersFile {
-        
+
         /**
          * Constructor for the Filter object
          */
         public FiltersFile() {
         }
-        
+
         /**
          * Sets the file from which filters will be read.
          *
@@ -163,24 +163,27 @@ public class FilterSet extends DataType implements Cloneable {
            readFiltersFromFile(file);
         }
     }
-    
+
     /** The default token start string */
     public static final String DEFAULT_TOKEN_START = "@";
-    
+
     /** The default token end string */
     public static final String DEFAULT_TOKEN_END = "@";
-    
+
     private String startOfToken = DEFAULT_TOKEN_START;
     private String endOfToken = DEFAULT_TOKEN_END;
-    
+
     /**
      * List of ordered filters and filter files.
      */
     private Vector filters = new Vector();
-    
+
+    /**
+     * Default constructor
+     */
     public FilterSet() {
     }
-    
+
     /**
      * Create a Filterset from another filterset
      *
@@ -191,6 +194,11 @@ public class FilterSet extends DataType implements Cloneable {
         this.filters = (Vector) filterset.getFilters().clone();
     }
 
+    /**
+     * Get the filters in the filter set
+     *
+     * @return a Vector of Filter instances
+     */
     protected Vector getFilters() {
         if (isReference()) {
             return getRef().getFilters();
@@ -198,10 +206,15 @@ public class FilterSet extends DataType implements Cloneable {
         return filters;
     }
 
+    /**
+     * Get the referred filter set
+     *
+     * @return the filterset from the reference.
+     */
     protected FilterSet getRef() {
         return (FilterSet) getCheckedRef(FilterSet.class, "filterset");
     }
-    
+
     /**
      * Gets the filter hash of the FilterSet.
      *
@@ -216,7 +229,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         return filterHash;
     }
-    
+
     /**
      * set the file containing the filters for this filterset.
      *
@@ -229,7 +242,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         readFiltersFromFile(filtersFile);
     }
-    
+
     /**
      * The string used to id the beginning of a token.
      *
@@ -245,14 +258,19 @@ public class FilterSet extends DataType implements Cloneable {
         this.startOfToken = startOfToken;
     }
 
+    /**
+     * Get the begin token for this filterset
+     *
+     * @return the filter set's begin token for filtering
+     */
     public String getBeginToken() {
         if (isReference()) {
             return getRef().getBeginToken();
         }
         return startOfToken;
     }
-    
-    
+
+
     /**
      * The string used to id the end of a token.
      *
@@ -268,14 +286,19 @@ public class FilterSet extends DataType implements Cloneable {
         this.endOfToken = endOfToken;
     }
 
+    /**
+     * Get the end token for this filterset
+     *
+     * @return the filter set's end token for replacement delimiting
+     */
     public String getEndToken() {
         if (isReference()) {
             return getRef().getEndToken();
         }
         return endOfToken;
     }
-    
-    
+
+
     /**
      * Read the filters from the given file.
      *
@@ -289,7 +312,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
 
         if (!filtersFile.exists()) {
-            throw new BuildException("Could not read filters from file " 
+            throw new BuildException("Could not read filters from file "
                                      + filtersFile + " as it doesn't exist.");
         }
 
@@ -300,7 +323,7 @@ public class FilterSet extends DataType implements Cloneable {
               Properties props = new Properties();
               in = new FileInputStream(filtersFile);
               props.load(in);
-              
+
               Enumeration enum = props.propertyNames();
               Vector filters = getFilters();
               while (enum.hasMoreElements()) {
@@ -309,22 +332,23 @@ public class FilterSet extends DataType implements Cloneable {
                  filters.addElement(new Filter(strPropName, strValue));
               }
            } catch (Exception e) {
-              throw new BuildException("Could not read filters from file: " 
+              throw new BuildException("Could not read filters from file: "
                 + filtersFile);
            } finally {
               if (in != null) {
                  try {
                     in.close();
                  } catch (IOException ioex) {
+                     // ignore
                  }
               }
            }
         } else {
-           throw new BuildException("Must specify a file not a directory in " 
+           throw new BuildException("Must specify a file not a directory in "
             + "the filtersfile attribute:" + filtersFile);
         }
     }
-    
+
     /**
      * Does replacement on the given string with token matching.
      * This uses the defined begintoken and endtoken values which default to @ for both.
@@ -336,7 +360,7 @@ public class FilterSet extends DataType implements Cloneable {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
         int index = line.indexOf(beginToken);
-        
+
         if (index > -1) {
             Hashtable tokens = getFilterHash();
             try {
@@ -344,14 +368,14 @@ public class FilterSet extends DataType implements Cloneable {
                 int i = 0;
                 String token = null;
                 String value = null;
-                
+
                 do {
-                    int endIndex = line.indexOf(endToken, 
+                    int endIndex = line.indexOf(endToken,
                         index + beginToken.length() + 1);
                     if (endIndex == -1) {
                         break;
                     }
-                    token 
+                    token
                         = line.substring(index + beginToken.length(), endIndex);
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
@@ -360,10 +384,10 @@ public class FilterSet extends DataType implements Cloneable {
                             // we have another token, let's parse it.
                             value = replaceTokens(value, token);
                         }
-                        log("Replacing: " + beginToken + token + endToken 
+                        log("Replacing: " + beginToken + token + endToken
                             + " -> " + value, Project.MSG_VERBOSE);
                         b.append(value);
-                        i = index + beginToken.length() + token.length() 
+                        i = index + beginToken.length() + token.length()
                             + endToken.length();
                     } else {
                         // just append beginToken and search further
@@ -371,7 +395,7 @@ public class FilterSet extends DataType implements Cloneable {
                         i = index + beginToken.length();
                     }
                 } while ((index = line.indexOf(beginToken, i)) > -1);
-                
+
                 b.append(line.substring(i));
                 return b.toString();
             } catch (StringIndexOutOfBoundsException e) {
@@ -381,12 +405,12 @@ public class FilterSet extends DataType implements Cloneable {
            return line;
         }
     }
-    
+
     /** Contains a list of parsed tokens */
     private Vector passedTokens;
     /** if a ducplicate token is found, this is set to true */
     private boolean duplicateToken = false;
-    
+
     /**
      * This parses tokens which point to tokens.
      * It also maintains a list of currently used tokens, so we cannot
@@ -395,8 +419,7 @@ public class FilterSet extends DataType implements Cloneable {
      * @param parent the parant token (= the token it was parsed from)
      */
     private String replaceTokens(String line, String parent)
-    throws BuildException
-    {
+        throws BuildException {
         if (passedTokens == null) {
             passedTokens = new Vector();
         }
@@ -405,8 +428,10 @@ public class FilterSet extends DataType implements Cloneable {
             StringBuffer sb = new StringBuffer();
             sb.append("Inifinite loop in tokens. Currently known tokens : ");
             sb.append(passedTokens);
-            sb.append("\nProblem token : "+getBeginToken()+parent+getEndToken());
-            sb.append(" called from "+getBeginToken()+passedTokens.lastElement());
+            sb.append("\nProblem token : " + getBeginToken() + parent
+                + getEndToken());
+            sb.append(" called from " + getBeginToken()
+                + passedTokens.lastElement());
             sb.append(getEndToken());
             System.out.println(sb.toString());
             return parent;
@@ -416,24 +441,24 @@ public class FilterSet extends DataType implements Cloneable {
         if (value.indexOf(getBeginToken()) == -1 && !duplicateToken) {
             duplicateToken = false;
             passedTokens = null;
-        } else if(duplicateToken) {
+        } else if (duplicateToken) {
             // should always be the case...
             if (passedTokens.size() > 0) {
                 value = (String) passedTokens.lastElement();
-                passedTokens.removeElementAt(passedTokens.size()-1);
+                passedTokens.removeElementAt(passedTokens.size() - 1);
                 if (passedTokens.size() == 0) {
-                    value = getBeginToken()+value+getEndToken();
+                    value = getBeginToken() + value + getEndToken();
                     duplicateToken = false;
                 }
             }
         }
         return value;
     }
-    
+
     /**
      * Create a new filter
      *
-     * @param  the filter to be added
+     * @param filter the filter to be added
      */
     public void addFilter(Filter filter) {
         if (isReference()) {
@@ -441,7 +466,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         filters.addElement(filter);
     }
-    
+
     /**
      * Create a new FiltersFile
      *
@@ -453,7 +478,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         return new FiltersFile();
     }
-    
+
     /**
     * Add a new filter made from the given token and value.
     *
@@ -466,7 +491,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         filters.addElement(new Filter(token, value));
     }
-    
+
     /**
     * Add a Filterset to this filter set
     *
@@ -480,7 +505,7 @@ public class FilterSet extends DataType implements Cloneable {
             filters.addElement(e.nextElement());
         }
     }
-    
+
     /**
     * Test to see if this filter set it empty.
     *
@@ -490,6 +515,13 @@ public class FilterSet extends DataType implements Cloneable {
         return getFilters().size() > 0;
     }
 
+    /**
+     * clone the filterset
+     *
+     * @return a deep clone of this filterset
+     *
+     * @throws BuildException if the clone cannot be performed.
+     */
     public Object clone() throws BuildException {
         if (isReference()) {
             return ((FilterSet) getRef()).clone();
@@ -506,6 +538,6 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
 }
- 
+
 
 

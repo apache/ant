@@ -96,117 +96,150 @@ public abstract class ConditionBase extends ProjectComponent {
      *
      * @since 1.1
      */
-    public void addAvailable(Available a) {conditions.addElement(a);}
+    public void addAvailable(Available a) {
+        conditions.addElement(a);
+    }
 
     /**
      * Add an &lt;checksum&gt; condition.
      *
      * @since 1.4, Ant 1.5
      */
-    public void addChecksum(Checksum c) {conditions.addElement(c);}
+    public void addChecksum(Checksum c) {
+        conditions.addElement(c);
+    }
 
     /**
      * Add an &lt;uptodate&gt; condition.
      *
      * @since 1.1
      */
-    public void addUptodate(UpToDate u) {conditions.addElement(u);}
+    public void addUptodate(UpToDate u) {
+        conditions.addElement(u);
+    }
 
     /**
      * Add an &lt;not&gt; condition "container".
      *
      * @since 1.1
      */
-    public void addNot(Not n) {conditions.addElement(n);}
+    public void addNot(Not n) {
+        conditions.addElement(n);
+    }
 
     /**
      * Add an &lt;and&gt; condition "container".
      *
      * @since 1.1
      */
-    public void addAnd(And a) {conditions.addElement(a);}
+    public void addAnd(And a) {
+        conditions.addElement(a);
+    }
 
     /**
      * Add an &lt;or&gt; condition "container".
      *
      * @since 1.1
      */
-    public void addOr(Or o) {conditions.addElement(o);}
+    public void addOr(Or o) {
+        conditions.addElement(o);
+    }
 
     /**
      * Add an &lt;equals&gt; condition.
      *
      * @since 1.1
      */
-    public void addEquals(Equals e) {conditions.addElement(e);}
+    public void addEquals(Equals e) {
+        conditions.addElement(e);
+    }
 
     /**
      * Add an &lt;os&gt; condition.
      *
      * @since 1.1
      */
-    public void addOs(Os o) {conditions.addElement(o);}
+    public void addOs(Os o) {
+        conditions.addElement(o);
+    }
 
     /**
      * Add an &lt;isset&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addIsSet(IsSet i) {conditions.addElement(i);}
+    public void addIsSet(IsSet i) {
+        conditions.addElement(i);
+    }
 
     /**
      * Add an &lt;http&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addHttp(Http h) {conditions.addElement(h);}
+    public void addHttp(Http h) {
+        conditions.addElement(h);
+    }
 
     /**
      * Add a &lt;socket&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addSocket(Socket s) {conditions.addElement(s);}
+    public void addSocket(Socket s) {
+        conditions.addElement(s);
+    }
 
     /**
      * Add a &lt;filesmatch&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addFilesMatch(FilesMatch test) {conditions.addElement(test);}
-    
+    public void addFilesMatch(FilesMatch test) {
+        conditions.addElement(test);
+    }
+
     /**
      * Add a &lt;contains&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addContains(Contains test) {conditions.addElement(test);}
+    public void addContains(Contains test) {
+        conditions.addElement(test);
+    }
 
     /**
      * Add a &lt;istrue&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addIsTrue(IsTrue test) {conditions.addElement(test);}
+    public void addIsTrue(IsTrue test) {
+        conditions.addElement(test);
+    }
 
     /**
      * Add a &lt;isfalse&gt; condition.
      *
      * @since Ant 1.5
      */
-    public void addIsFalse(IsFalse test) {conditions.addElement(test);}
-      
+    public void addIsFalse(IsFalse test) {
+        conditions.addElement(test);
+    }
+
     /**
      * Add an &lt;isreference&gt; condition.
      *
      * @since Ant 1.6
      */
-    public void addIsReference(IsReference i) {conditions.addElement(i);}
+    public void addIsReference(IsReference i) {
+        conditions.addElement(i);
+    }
 
     /**
      * Add an arbitary condition
      * @since Ant 1.6
      */
-    public void add(Condition c) {conditions.addElement(c);}
-    
+    public void add(Condition c) {
+        conditions.addElement(c);
+    }
 }

@@ -313,7 +313,17 @@ public class Javadoc extends Task {
         /** The source file */
         private File file;
 
-        public SourceFile() {}
+        /**
+         * Default constructor
+         */
+        public SourceFile() {
+        }
+
+        /**
+         * Constructor specifying the source file directly
+         *
+         * @param file the source file
+         */
         public SourceFile(File file) {
             this.file = file;
         }
@@ -390,9 +400,9 @@ public class Javadoc extends Task {
 
     /** Flag which indicates if javadoc from JDK 1.4 is available */
     private static boolean javadoc4 =
-        (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) &&
-         !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) &&
-         !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
+        !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+            && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+            && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
 
     /**
      * Utility method to add an argument to the command line conditionally
@@ -446,7 +456,7 @@ public class Javadoc extends Task {
     private Path sourcePath = null;
     private File destDir = null;
     private Vector sourceFiles = new Vector();
-    private Vector packageNames = new Vector(5);
+    private Vector packageNames = new Vector();
     private Vector excludePackageNames = new Vector(1);
     private boolean author = true;
     private boolean version = true;
@@ -455,9 +465,9 @@ public class Javadoc extends Task {
     private Path bootclasspath = null;
     private String group = null;
     private String packageList = null;
-    private Vector links = new Vector(2);
-    private Vector groups = new Vector(2);
-    private Vector tags = new Vector(5);
+    private Vector links = new Vector();
+    private Vector groups = new Vector();
+    private Vector tags = new Vector();
     private boolean useDefaultExcludes = true;
     private Html doctitle = null;
     private Html header = null;
@@ -1063,6 +1073,8 @@ public class Javadoc extends Task {
     /**
      * Link to docs at "url" using package list at "url2"
      * - separate the URLs by using a space character.
+     *
+     * @param src the offline link specification (url and package list)
      */
     public void setLinkoffline(String src) {
         if (!javadoc1) {
@@ -1086,6 +1098,10 @@ public class Javadoc extends Task {
 
     /**
      * Group specified packages together in overview page.
+     *
+     * @param src the group packages - a command separated list of group specs,
+     *        each one being a group name and package specification separated
+     *        by a space.
      */
     public void setGroup(String src) {
         group = src;
@@ -1101,49 +1117,63 @@ public class Javadoc extends Task {
     }
 
     /**
-     * If true, do not include @deprecated information.
+     * Control deprecation infromation
+     *
+     * @param b If true, do not include deprecated information.
      */
     public void setNodeprecated(boolean b) {
         addArgIf(b, "-nodeprecated");
     }
 
     /**
-     * If true, do not generate deprecated list.
+     * Control deprecated list generation
+     *
+     * @param b if true, do not generate deprecated list.
      */
     public void setNodeprecatedlist(boolean b) {
         add12ArgIf(b, "-nodeprecatedlist");
     }
 
     /**
-     * If true, do not generate class hierarchy.
+     * Control class tree generation.
+     *
+     * @param b if true, do not generate class hierarchy.
      */
     public void setNotree(boolean b) {
         addArgIf(b, "-notree");
     }
 
     /**
-     * If true, do not generate index.
+     * Control generation of index.
+     *
+     * @param b if true, do not generate index.
      */
     public void setNoindex(boolean b) {
         addArgIf(b, "-noindex");
     }
 
     /**
-     * If true, do not generate help link
+     * Control generation of help link.
+     *
+     * @param b if true, do not generate help link
      */
     public void setNohelp(boolean b) {
         add12ArgIf(b, "-nohelp");
     }
 
     /**
-     * If true, do not generate navigation bar.
+     * Control generation of the navigation bar.
+     *
+     * @param b if true, do not generate navigation bar.
      */
     public void setNonavbar(boolean b) {
         add12ArgIf(b, "-nonavbar");
     }
 
     /**
-     * If true, generate warning about @serial tag.
+     * Control warnings about serial tag.
+     *
+     * @param b if true, generate warning aboutthe serial tag.
      */
     public void setSerialwarn(boolean b) {
         add12ArgIf(b, "-serialwarn");
@@ -1151,6 +1181,8 @@ public class Javadoc extends Task {
 
     /**
      * Specifies the CSS stylesheet file to use.
+     *
+     * @param f the file with the CSS to use.
      */
     public void setStylesheetfile(File f) {
         if (!javadoc1) {
@@ -1161,6 +1193,8 @@ public class Javadoc extends Task {
 
     /**
      * Specifies the HTML help file to use.
+     *
+     * @param f the file containing help content.
      */
     public void setHelpfile(File f) {
         if (!javadoc1) {
@@ -1171,6 +1205,8 @@ public class Javadoc extends Task {
 
     /**
      * Output file encoding name.
+     *
+     * @param enc name of the encoding to use.
      */
     public void setDocencoding(String enc) {
         cmd.createArgument().setValue("-docencoding");
@@ -1179,6 +1215,8 @@ public class Javadoc extends Task {
 
     /**
      * The name of a file containing the packages to process.
+     *
+     * @param src the file containing the package list.
      */
     public void setPackageList(String src) {
         if (!javadoc1) {
@@ -1188,6 +1226,8 @@ public class Javadoc extends Task {
 
     /**
      * Create link to javadoc output at the given URL.
+     *
+     * @param link argument to configure
      */
     public LinkArgument createLink() {
         LinkArgument la = new LinkArgument();
@@ -1195,6 +1235,10 @@ public class Javadoc extends Task {
         return la;
     }
 
+    /**
+     * Represents a link triplet (href, whether link is offline, location of the
+     * package list if off line)
+     */
     public class LinkArgument {
         private String href;
         private boolean offline = false;
@@ -1334,8 +1378,9 @@ public class Javadoc extends Task {
                 } else {
                     int i;
                     for (i = 0; i < SCOPE_ELEMENTS.length; i++) {
-                        if (next.equals (SCOPE_ELEMENTS[i]))
+                        if (next.equals (SCOPE_ELEMENTS[i])) {
                             break;
+                        }
                     }
                     if (i == SCOPE_ELEMENTS.length) {
                         throw new BuildException ("Unrecognised scope element: "
@@ -1412,7 +1457,7 @@ public class Javadoc extends Task {
 
     public class GroupArgument {
         private Html title;
-        private Vector packages = new Vector(3);
+        private Vector packages = new Vector();
 
         public GroupArgument() {
         }
@@ -1765,7 +1810,7 @@ public class Javadoc extends Task {
                 while (tok.hasMoreTokens()) {
                     String grp = tok.nextToken().trim();
                     int space = grp.indexOf(" ");
-                    if (space > 0){
+                    if (space > 0) {
                         String name = grp.substring(0, space);
                         String pkgList = grp.substring(space + 1);
                         toExecute.createArgument().setValue("-group");
@@ -1799,7 +1844,7 @@ public class Javadoc extends Task {
                     if (element instanceof TagArgument) {
                         TagArgument ta = (TagArgument) element;
                         File tagDir = ta.getDir(getProject());
-                        if (tagDir == null ) {
+                        if (tagDir == null) {
                             // The tag element is not used as a fileset,
                             // but specifies the tag directly.
                             toExecute.createArgument().setValue ("-tag");
@@ -1810,17 +1855,20 @@ public class Javadoc extends Task {
                             DirectoryScanner tagDefScanner = ta.getDirectoryScanner(getProject());
                             String[] files = tagDefScanner.getIncludedFiles();
                             for (int i = 0; i < files.length; i++) {
-                                File tagDefFile = new File( tagDir, files[i] );
+                                File tagDefFile = new File(tagDir, files[i]);
                                 try {
-                                    BufferedReader in = new BufferedReader( new FileReader(tagDefFile) );
+                                    BufferedReader in
+                                        = new BufferedReader(new FileReader(tagDefFile));
                                     String line = null;
-                                    while( (line = in.readLine()) != null ) {
+                                    while ((line = in.readLine()) != null) {
                                         toExecute.createArgument().setValue ("-tag");
                                         toExecute.createArgument().setValue (line);
                                     }
                                     in.close();
-                                } catch( IOException ioe ) {
-                                    throw new BuildException( "Couldn't read tag file from " + tagDefFile.getAbsolutePath(), ioe );
+                                } catch (IOException ioe) {
+                                    throw new BuildException("Couldn't read "
+                                        + " tag file from "
+                                        + tagDefFile.getAbsolutePath(), ioe );
                                 }
                             }
                         }
@@ -1952,7 +2000,9 @@ public class Javadoc extends Task {
             try {
                 out.close();
                 err.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+                // ignore
+            }
         }
     }
 
