@@ -22,7 +22,7 @@ public class TestConverter1
     /**
      * Convert original to destination type.
      */
-    public Object convert( Class destination, Object original, Context context )
+    public Object convert( Class destination, Object original, Object context )
         throws ConverterException
     {
         return new TestType1();

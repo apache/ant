@@ -22,7 +22,8 @@ import org.apache.myrmidon.converter.ConverterException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @ant:converter source="java.lang.String" destination="org.apache.aut.vfs.FileObject"
  */
-public class StringToFileObjectConverter extends AbstractConverter
+public class StringToFileObjectConverter
+    extends AbstractConverter
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( StringToFileObjectConverter.class );
@@ -35,22 +36,23 @@ public class StringToFileObjectConverter extends AbstractConverter
     /**
      * Converts a String into a FileObject.
      */
-    protected Object convert( Object original, Context context )
+    protected Object convert( final Object original, final Object context )
         throws ConverterException
     {
-        final String fileUri = (String)original;
+        final String uri = (String)original;
         final TaskContext taskContext = (TaskContext)context;
 
         try
         {
-            final FileSystemManager manager = (FileSystemManager)taskContext.getService( FileSystemManager.class );
+            final FileSystemManager manager =
+                (FileSystemManager)taskContext.getService( FileSystemManager.class );
 
             // TODO - change TaskContext.getBaseDirectory() to return a FileObject
-            return manager.resolveFile( taskContext.getBaseDirectory(), fileUri );
+            return manager.resolveFile( taskContext.getBaseDirectory(), uri );
         }
         catch( Exception e )
         {
-            final String message = REZ.getString( "bad-convert-string-to-file.error", fileUri );
+            final String message = REZ.getString( "bad-convert-string-to-file.error", uri );
             throw new ConverterException( message, e );
         }
     }

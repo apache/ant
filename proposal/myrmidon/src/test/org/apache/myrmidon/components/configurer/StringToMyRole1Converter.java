@@ -24,7 +24,7 @@ public class StringToMyRole1Converter
         super( String.class, MyRole1.class );
     }
 
-    protected Object convert( Object original, Context context )
+    protected Object convert( Object original, Object context )
         throws ConverterException
     {
         return new MyType1();
