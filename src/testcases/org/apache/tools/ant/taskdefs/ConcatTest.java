@@ -162,8 +162,9 @@ public class ConcatTest
     }
 
     public void test6() {
-        expectLogContaining("test6", 
-                            "src/etc/testcases/taskdefs/thisfiledoesnotexist does not exist.");
+        String filename = "src/etc/testcases/taskdefs/thisfiledoesnotexist"
+            .replace('/', File.separatorChar);
+        expectLogContaining("test6", filename +" does not exist.");
     }
 
     public void testConcatNoNewline() {
