@@ -345,6 +345,7 @@
     <exclude unless="run.failing.tests" name="${optional.package}/BeanShellScriptTest.java"/>
     <exclude unless="run.failing.tests" name="${optional.package}/jdepend/JDependTest.java"/>
     <exclude unless="run.failing.tests" name="${optional.package}/DotnetTest.java"/>
+    <exclude unless="run.failing.tests" name="${optional.package}/WsdlToDotnetTest.java"/>
   </patternset>
 
   <!--
