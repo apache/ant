@@ -70,7 +70,7 @@ public class SSHUserInfo implements UserInfo {
 
     public SSHUserInfo() {
         super();
-        this.trustAllCertificates = true;
+        this.trustAllCertificates = false;
     }
 
     public SSHUserInfo(String password, boolean trustAllCertificates) {
@@ -144,6 +144,13 @@ public class SSHUserInfo implements UserInfo {
      */
     public void setTrust(boolean trust) {
         this.trustAllCertificates = trust;
+    }
+
+    /**
+     * @return whether to trust or not.
+     */
+    public boolean getTrust() {
+        return this.trustAllCertificates;
     }
 
     /**
