@@ -18,8 +18,10 @@
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.Environment;
 
 /**
  * Specialized <exec> that knows how to deal with Mono vs. Microsoft's
@@ -115,4 +117,34 @@ public class DotNetExecTask extends ExecTask {
     protected final static boolean isMono(String vm) {
         return "mono".equals(vm) || "mint".equals(vm);
     }
+
+    /**
+     * Creates an instance of this task based on a different tasks settings.
+     */
+    public static DotNetExecTask getTask(Task t, String vm, 
+                                         String executable,
+                                         Environment env) {
+        DotNetExecTask exec = new DotNetExecTask();
+        if (vm != null) {
+            exec.setVm(vm);
+        }
+        exec.setProject(t.getProject());
+        exec.setExecutable(executable);
+        exec.setTaskName(t.getTaskName());
+        if (env != null) {
+            String[] environment = env.getVariables();
+            if (environment != null) {
+                for (int i = 0; i < environment.length; i++) {
+                    int idx = environment[i].indexOf("=");
+                    Environment.Variable v = new Environment.Variable();
+                    v.setKey(environment[i].substring(0, idx));
+                    v.setValue(environment[i].substring(idx + 1));
+                    exec.addEnv(v);
+                }
+            }
+        }
+        
+        return exec;
+    }
+
 }

@@ -202,13 +202,8 @@ public abstract class AbstractBuildTask extends Task {
                                      + " same time");
         }
 
-        DotNetExecTask exec = new DotNetExecTask();
-        if (vm != null) {
-            exec.setVm(vm);
-        }
-        exec.setProject(getProject());
-        exec.setExecutable(getExecutable());
-        exec.setTaskName(getTaskName());
+        DotNetExecTask exec = DotNetExecTask.getTask(this, vm, 
+                                                     getExecutable(), null);
         String[] args = getPropertyArguments(properties);
         for (int i = 0; i < args.length; i++) {
             exec.createArg().setValue(args[i]);

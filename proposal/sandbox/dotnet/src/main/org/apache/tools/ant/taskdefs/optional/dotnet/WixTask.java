@@ -211,13 +211,8 @@ public class WixTask extends Task {
      * potentially adding an /out parameter.
      */
     private void run(String executable, List s, File target) {
-        DotNetExecTask exec = new DotNetExecTask();
-        if (vm != null) {
-            exec.setVm(vm);
-        }
-        exec.setProject(getProject());
-        exec.setExecutable(executable);
-        exec.setTaskName(getTaskName());
+        DotNetExecTask exec = DotNetExecTask.getTask(this, vm, 
+                                                     executable, null);
         Iterator iter = s.iterator();
         while (iter.hasNext()) {
             File f = (File) iter.next();

@@ -76,8 +76,9 @@
   <target name="testCSC" depends="validate_csc">
     <csc
       destFile="${testCSC.exe}"
-      targetType="exe"
-      />
+      targetType="exe">
+      <src dir="${src.dir}" includes="ex*.cs"/>
+    </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
     <dn:dotnetexec executable="${testCSC.exe}" failonerror="true" />
