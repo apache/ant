@@ -21,30 +21,27 @@ import org.apache.tools.zip.ZipOutputStream;
  */
 public class Ear extends Jar
 {
-
-    private File deploymentDescriptor;
-    private boolean descriptorAdded;
+    private File m_appxml;
+    private boolean m_descriptorAdded;
 
     public Ear()
     {
-        super();
-        archiveType = "ear";
-        emptyBehavior = "create";
+        m_archiveType = "ear";
+        m_emptyBehavior = "create";
     }
 
-    public void setAppxml( File descr )
+    public void setAppxml( final File appxml )
         throws TaskException
     {
-        deploymentDescriptor = descr;
-        if( !deploymentDescriptor.exists() )
-            throw new TaskException( "Deployment descriptor: " + deploymentDescriptor + " does not exist." );
+        m_appxml = appxml;
+        if( !m_appxml.exists() )
+        {
+            final String message = "Deployment descriptor: " +
+                m_appxml + " does not exist.";
+            throw new TaskException( message );
+        }
 
-        // Create a ZipFileSet for this file, and pass it up.
-        ZipFileSet fs = new ZipFileSet();
-        fs.setDir( new File( deploymentDescriptor.getParent() ) );
-        fs.setIncludes( deploymentDescriptor.getName() );
-        fs.setFullpath( "META-INF/application.xml" );
-        super.addFileset( fs );
+        addFileAs( m_appxml, "META-INF/application.xml" );
     }
 
     public void addArchives( ZipFileSet fs )
@@ -56,23 +53,13 @@ public class Ear extends Jar
         super.addFileset( fs );
     }
 
-    /**
-     * Make sure we don't think we already have a web.xml next time this task
-     * gets executed.
-     */
-    protected void cleanUp()
-    {
-        descriptorAdded = false;
-        super.cleanUp();
-    }
-
-    protected void initZipOutputStream( ZipOutputStream zOut )
+    protected void initZipOutputStream( final ZipOutputStream zOut )
         throws IOException, TaskException
     {
-        // If no webxml file is specified, it's an error.
-        if( deploymentDescriptor == null && !isInUpdateMode() )
+        if( m_appxml == null && !isInUpdateMode() )
         {
-            throw new TaskException( "appxml attribute is required" );
+            final String message = "appxml attribute is required";
+            throw new TaskException( message );
         }
 
         super.initZipOutputStream( zOut );
@@ -87,17 +74,19 @@ public class Ear extends Jar
         // a <fileset> element.
         if( vPath.equalsIgnoreCase( "META-INF/aplication.xml" ) )
         {
-            if( deploymentDescriptor == null || !deploymentDescriptor.equals( file ) || descriptorAdded )
+            if( m_appxml == null ||
+                !m_appxml.equals( file ) ||
+                m_descriptorAdded )
             {
-                final String message = "Warning: selected " + archiveType +
+                final String message = "Warning: selected " + m_archiveType +
                     " files include a META-INF/application.xml which will be ignored " +
-                    "(please use appxml attribute to " + archiveType + " task)";
+                    "(please use appxml attribute to " + m_archiveType + " task)";
                 getLogger().warn( message );
             }
             else
             {
                 super.zipFile( file, zOut, vPath );
-                descriptorAdded = true;
+                m_descriptorAdded = true;
             }
         }
         else

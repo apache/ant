@@ -18,70 +18,59 @@ import org.apache.tools.zip.ZipOutputStream;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class War extends Jar
+public class War
+    extends Jar
 {
-
-    private File deploymentDescriptor;
-    private boolean descriptorAdded;
+    private File m_webxml;
+    private boolean m_descriptorAdded;
 
     public War()
     {
         super();
-        archiveType = "war";
-        emptyBehavior = "create";
+        m_archiveType = "war";
+        m_emptyBehavior = "create";
     }
 
-    public void setWebxml( File descr )
+    public void setWebxml( final File descr )
         throws TaskException
     {
-        deploymentDescriptor = descr;
-        if( !deploymentDescriptor.exists() )
-            throw new TaskException( "Deployment descriptor: " + deploymentDescriptor + " does not exist." );
+        m_webxml = descr;
+        if( !m_webxml.exists() )
+        {
+            final String message = "Deployment descriptor: " +
+                m_webxml + " does not exist.";
+            throw new TaskException( message );
+        }
 
-        // Create a ZipFileSet for this file, and pass it up.
-        ZipFileSet fs = new ZipFileSet();
-        fs.setDir( new File( deploymentDescriptor.getParent() ) );
-        fs.setIncludes( deploymentDescriptor.getName() );
-        fs.setFullpath( "WEB-INF/web.xml" );
-        super.addFileset( fs );
+        addFileAs(descr, "WEB-INF/web.xml" );
     }
 
-    public void addClasses( ZipFileSet fs )
+    public void addClasses( final ZipFileSet fs )
     {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix( "WEB-INF/classes/" );
         super.addFileset( fs );
     }
 
-    public void addLib( ZipFileSet fs )
+    public void addLib( final ZipFileSet fs )
     {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix( "WEB-INF/lib/" );
         super.addFileset( fs );
     }
 
-    public void addWebinf( ZipFileSet fs )
+    public void addWebinf( final ZipFileSet fs )
     {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix( "WEB-INF/" );
         super.addFileset( fs );
     }
 
-    /**
-     * Make sure we don't think we already have a web.xml next time this task
-     * gets executed.
-     */
-    protected void cleanUp()
-    {
-        descriptorAdded = false;
-        super.cleanUp();
-    }
-
-    protected void initZipOutputStream( ZipOutputStream zOut )
+    protected void initZipOutputStream( final ZipOutputStream zOut )
         throws IOException, TaskException
     {
         // If no webxml file is specified, it's an error.
-        if( deploymentDescriptor == null && !isInUpdateMode() )
+        if( m_webxml == null && !isInUpdateMode() )
         {
             throw new TaskException( "webxml attribute is required" );
         }
@@ -89,7 +78,9 @@ public class War extends Jar
         super.initZipOutputStream( zOut );
     }
 
-    protected void zipFile( File file, ZipOutputStream zOut, String vPath )
+    protected void zipFile( final File file,
+                            final ZipOutputStream zOut,
+                            final String vPath )
         throws IOException, TaskException
     {
         // If the file being added is WEB-INF/web.xml, we warn if it's not the
@@ -98,17 +89,17 @@ public class War extends Jar
         // a <fileset> element.
         if( vPath.equalsIgnoreCase( "WEB-INF/web.xml" ) )
         {
-            if( deploymentDescriptor == null || !deploymentDescriptor.equals( file ) || descriptorAdded )
+            if( m_webxml == null || !m_webxml.equals( file ) || m_descriptorAdded )
             {
-                final String message = "Warning: selected " + archiveType +
+                final String message = "Warning: selected " + m_archiveType +
                     " files include a WEB-INF/web.xml which will be ignored " +
-                    "(please use webxml attribute to " + archiveType + " task)";
+                    "(please use webxml attribute to " + m_archiveType + " task)";
                 getLogger().warn( message );
             }
             else
             {
                 super.zipFile( file, zOut, vPath );
-                descriptorAdded = true;
+                m_descriptorAdded = true;
             }
         }
         else

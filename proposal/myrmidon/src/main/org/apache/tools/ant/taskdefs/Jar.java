@@ -29,7 +29,8 @@ import org.apache.tools.zip.ZipOutputStream;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
-public class Jar extends Zip
+public class Jar
+    extends Zip
 {
     /**
      * The index file name.
@@ -39,16 +40,15 @@ public class Jar extends Zip
     /**
      * true if a manifest has been specified in the task
      */
-    private boolean buildFileManifest = false;
+    private boolean buildFileManifest;
 
     /**
      * jar index is JDK 1.3+ only
      */
-    private boolean index = false;
-    private Manifest execManifest;
-    private Manifest manifest;
-
-    private File manifestFile;
+    private boolean m_index;
+    private Manifest m_execManifest;
+    private Manifest m_manifest;
+    private File m_manifestFile;
 
     /**
      * constructor
@@ -56,8 +56,8 @@ public class Jar extends Zip
     public Jar()
     {
         super();
-        archiveType = "jar";
-        emptyBehavior = "create";
+        m_archiveType = "jar";
+        m_emptyBehavior = "create";
         setEncoding( "UTF8" );
     }
 
@@ -69,7 +69,7 @@ public class Jar extends Zip
      */
     public void setIndex( boolean flag )
     {
-        index = flag;
+        m_index = flag;
     }
 
     public void setManifest( File manifestFile )
@@ -77,30 +77,33 @@ public class Jar extends Zip
     {
         if( !manifestFile.exists() )
         {
-            throw new TaskException( "Manifest file: " + manifestFile + " does not exist." );
+            final String message = "Manifest file: " + manifestFile + " does not exist.";
+            throw new TaskException( message );
         }
 
-        this.manifestFile = manifestFile;
+        this.m_manifestFile = manifestFile;
 
         Reader r = null;
         try
         {
             r = new FileReader( manifestFile );
             Manifest newManifest = new Manifest( r );
-            if( manifest == null )
+            if( m_manifest == null )
             {
-                manifest = Manifest.getDefaultManifest();
+                m_manifest = Manifest.getDefaultManifest();
             }
-            manifest.merge( newManifest );
+            m_manifest.merge( newManifest );
         }
         catch( ManifestException e )
         {
-            getLogger().error( "Manifest is invalid: " + e.getMessage() );
-            throw new TaskException( "Invalid Manifest: " + manifestFile, e );
+            final String message = "Manifest " + manifestFile + " is invalid: " + e.getMessage();
+            getLogger().error( message );
+            throw new TaskException( message, e );
         }
         catch( IOException e )
         {
-            throw new TaskException( "Unable to read manifest file: " + manifestFile, e );
+            final String message = "Unable to read manifest file: " + manifestFile;
+            throw new TaskException( message, e );
         }
         finally
         {
@@ -127,11 +130,11 @@ public class Jar extends Zip
     public void addConfiguredManifest( Manifest newManifest )
         throws ManifestException, TaskException
     {
-        if( manifest == null )
+        if( m_manifest == null )
         {
-            manifest = Manifest.getDefaultManifest();
+            m_manifest = Manifest.getDefaultManifest();
         }
-        manifest.merge( newManifest );
+        m_manifest.merge( newManifest );
         buildFileManifest = true;
     }
 
@@ -155,7 +158,7 @@ public class Jar extends Zip
         throws TaskException
     {
         // need to handle manifest as a special check
-        if( buildFileManifest || manifestFile == null )
+        if( buildFileManifest || m_manifestFile == null )
         {
             java.util.zip.ZipFile theZipFile = null;
             try
@@ -168,11 +171,11 @@ public class Jar extends Zip
                     return false;
                 }
                 Manifest currentManifest = new Manifest( new InputStreamReader( theZipFile.getInputStream( entry ) ) );
-                if( manifest == null )
+                if( m_manifest == null )
                 {
-                    manifest = Manifest.getDefaultManifest();
+                    m_manifest = Manifest.getDefaultManifest();
                 }
-                if( !currentManifest.equals( manifest ) )
+                if( !currentManifest.equals( m_manifest ) )
                 {
                     getLogger().debug( "Updating jar since jar manifest has changed" );
                     return false;
@@ -199,20 +202,11 @@ public class Jar extends Zip
                 }
             }
         }
-        else if( manifestFile.lastModified() > zipFile.lastModified() )
+        else if( m_manifestFile.lastModified() > zipFile.lastModified() )
         {
             return false;
         }
         return super.isUpToDate( scanners, zipFile );
-    }
-
-    /**
-     * Make sure we don't think we already have a MANIFEST next time this task
-     * gets executed.
-     */
-    protected void cleanUp()
-    {
-        super.cleanUp();
     }
 
     protected boolean createEmptyZip( File zipFile )
@@ -224,7 +218,7 @@ public class Jar extends Zip
     protected void finalizeZipOutputStream( ZipOutputStream zOut )
         throws IOException, TaskException
     {
-        if( index )
+        if( m_index )
         {
             createIndexList( zOut );
         }
@@ -235,13 +229,13 @@ public class Jar extends Zip
     {
         try
         {
-            execManifest = Manifest.getDefaultManifest();
+            m_execManifest = Manifest.getDefaultManifest();
 
-            if( manifest != null )
+            if( m_manifest != null )
             {
-                execManifest.merge( manifest );
+                m_execManifest.merge( m_manifest );
             }
-            for( Iterator e = execManifest.getWarnings(); e.hasNext(); )
+            for( Iterator e = m_execManifest.getWarnings(); e.hasNext(); )
             {
                 getLogger().warn( "Manifest warning: " + (String)e.next() );
             }
@@ -250,7 +244,7 @@ public class Jar extends Zip
             // time to write the manifest
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PrintWriter writer = new PrintWriter( baos );
-            execManifest.write( writer );
+            m_execManifest.write( writer );
             writer.flush();
 
             ByteArrayInputStream bais = new ByteArrayInputStream( baos.toByteArray() );
@@ -273,9 +267,9 @@ public class Jar extends Zip
         // a <fileset> element.
         if( vPath.equalsIgnoreCase( "META-INF/MANIFEST.MF" ) )
         {
-            final String message = "Warning: selected " + archiveType +
+            final String message = "Warning: selected " + m_archiveType +
                 " files include a META-INF/MANIFEST.MF which will be ignored " +
-                "(please use manifest attribute to " + archiveType + " task)";
+                "(please use manifest attribute to " + m_archiveType + " task)";
             getLogger().warn( message );
         }
         else
@@ -328,12 +322,12 @@ public class Jar extends Zip
         writer.println();
 
         // header newline
-        writer.println( zipFile.getName() );
+        writer.println( m_file.getName() );
 
         // JarIndex is sorting the directories by ascending order.
         // it's painful to do in JDK 1.1 and it has no value but cosmetic
         // since it will be read into a hashtable by the classloader.
-        Enumeration enum = addedDirs.keys();
+        Enumeration enum = m_addedDirs.keys();
         while( enum.hasMoreElements() )
         {
             String dir = (String)enum.nextElement();
@@ -377,13 +371,13 @@ public class Jar extends Zip
     {
         try
         {
-            if( execManifest == null )
+            if( m_execManifest == null )
             {
-                execManifest = new Manifest( new InputStreamReader( is ) );
+                m_execManifest = new Manifest( new InputStreamReader( is ) );
             }
             else if( isAddingNewFiles() )
             {
-                execManifest.merge( new Manifest( new InputStreamReader( is ) ) );
+                m_execManifest.merge( new Manifest( new InputStreamReader( is ) ) );
             }
         }
         catch( ManifestException e )
