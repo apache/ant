@@ -70,8 +70,11 @@ public abstract class ModelElement {
     /** The aspects defined for this element. */
     private Map aspectMaps;
 
-    /** The location of this element */
-    private Location location;
+    /** The starting location of this element */
+    private Location location = Location.UNKNOWN_LOCATION;
+    
+    /** The ending location of this element */
+    private Location endLocation = Location.UNKNOWN_LOCATION;
 
     /** A comment associated with this element, if any */
     private String comment;
@@ -94,6 +97,15 @@ public abstract class ModelElement {
         this.comment = comment;
     }
 
+    /**
+     * Set the end location of this element
+     *
+     * @param endLocation the location where this element's definition ends
+     */
+    public void setEndLocation(Location endLocation) {
+        this.endLocation = endLocation;
+    }
+    
     /**
      * Set the aspects of this element
      *
@@ -126,6 +138,15 @@ public abstract class ModelElement {
      */
     public Location getLocation() {
         return location;
+    }
+
+    /**
+     * Get the location of the source where this element's definition fiunishes
+     *
+     * @return the element's end location
+     */
+    public Location getEndLocation() {
+        return endLocation;
     }
 
     /**

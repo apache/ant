@@ -51,23 +51,38 @@
  *  information on the Apache Software Foundation, please see
  *  <http://www.apache.org/>.
  */
-package org.apache.tools.ant;
+package org.apache.ant.antcore.modelparser;
+import org.apache.ant.antcore.xml.ElementHandler;
+
+import org.apache.ant.common.model.ModelElement;
 
 /**
- *  Old Ant1 entry point
+ *  A BuildElementHandler parses the task elements of a build. Task elements
+ *  include tasks themselves plus all their nested elements to any depth.
  *
  * @author  Conor MacNeill
- * @created  4 April 2002
+ * @created  9 January 2002
  */
-public class Main {
+public abstract class ModelElementHandler extends ElementHandler {
+    /**  The model element being parsed by this handler. */
+    private ModelElement modelElement;
+
+
     /**
-     *  Entry point for starting command line Ant
+     *  Set the model element being handled by this handler
      *
-     * @param  args commandline arguments
-     * @exception  Exception if there is a problem running Ant
+     * @param  modelElement The new modelElement value
      */
-    public static void main(String[] args) throws Exception {
-        org.apache.ant.start.Main.main(args);
+    protected void setModelElement(ModelElement modelElement) {
+        this.modelElement = modelElement;
+    }
+
+
+    /**  Set the end location of the element.  */
+    protected void finish() {
+        if (modelElement != null) {
+            modelElement.setEndLocation(getLocation());
+        }
     }
 }
 

@@ -63,6 +63,7 @@ public class Location {
 
     /** Standard unknown location constant; */
     public static final Location UNKNOWN_LOCATION = new Location();
+    
     /** The source URL to which this location relates. */
     private String source;
 

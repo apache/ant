@@ -114,9 +114,9 @@ public class InitConfig {
     private File userConfigArea;
 
     /**
-     * XXX Constructor for the InitConfig object
+     * Constructor for the Initialization configuration
      *
-     * @exception InitException XXX Description of Exception
+     * @exception InitException if the configuration cannot be initialized
      */
     public InitConfig() throws InitException {
         try {

@@ -55,7 +55,6 @@ package org.apache.ant.antcore.modelparser;
 import java.util.StringTokenizer;
 
 import org.apache.ant.common.model.Target;
-import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
@@ -65,7 +64,7 @@ import org.xml.sax.SAXParseException;
  * @author Conor MacNeill
  * @created 9 January 2002
  */
-public class TargetHandler extends ElementHandler {
+public class TargetHandler extends ModelElementHandler {
     /** The name attribute */
     public static final String NAME_ATTR = "name";
 
@@ -104,6 +103,7 @@ public class TargetHandler extends ElementHandler {
     public void processElement(String elementName)
          throws SAXParseException {
         target = new Target(getLocation(), getAttribute(NAME_ATTR));
+        setModelElement(target);
         target.setDescription(getAttribute(DESC_ATTR));
         target.setAspects(getAspects());
 

@@ -55,7 +55,6 @@ package org.apache.ant.antcore.modelparser;
 import java.util.Iterator;
 
 import org.apache.ant.common.model.BuildElement;
-import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
@@ -66,7 +65,7 @@ import org.xml.sax.SAXParseException;
  * @author Conor MacNeill
  * @created 9 January 2002
  */
-public class BuildElementHandler extends ElementHandler {
+public class BuildElementHandler extends ModelElementHandler {
     /** The task element being parsed by this handler. */
     private BuildElement buildElement;
 
@@ -87,7 +86,8 @@ public class BuildElementHandler extends ElementHandler {
     public void processElement(String elementName) {
         buildElement
              = new BuildElement(getLocation(), elementName);
-
+        setModelElement(buildElement);
+        
         for (Iterator i = getAttributes(); i.hasNext(); ) {
             String attributeName = (String)i.next();
             buildElement.addAttribute(attributeName,

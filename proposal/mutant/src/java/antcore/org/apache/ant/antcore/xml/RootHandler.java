@@ -122,8 +122,8 @@ public class RootHandler extends DefaultHandler {
 
 
     /**
-     * Start a new element in the root. This must be a project element All
-     * other elements are invalid.
+     * Start a new element in the root. This must be an allowed root element.
+     * All other elements are invalid.
      *
      * @param uri The Namespace URI.
      * @param localName The local name (without prefix).

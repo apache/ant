@@ -54,7 +54,6 @@
 package org.apache.ant.antcore.modelparser;
 import org.apache.ant.common.model.ModelException;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
@@ -66,7 +65,7 @@ import org.xml.sax.SAXParseException;
  * @author Conor MacNeill
  * @created 9 January 2002
  */
-public class ProjectHandler extends ElementHandler {
+public class ProjectHandler extends ModelElementHandler {
     /** The basedir attribute tag */
     public static final String BASEDIR_ATTR = "basedir";
 
@@ -129,7 +128,8 @@ public class ProjectHandler extends ElementHandler {
          throws SAXParseException {
         if (project == null) {
             project = new Project(getElementSource(), getLocation());
-
+            setModelElement(project);
+            
             project.setDefaultTarget(getAttribute(DEFAULT_ATTR));
             project.setBase(getAttribute(BASEDIR_ATTR));
             project.setName(getAttribute(NAME_ATTR));

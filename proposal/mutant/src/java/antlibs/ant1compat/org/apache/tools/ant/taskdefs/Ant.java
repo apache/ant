@@ -131,7 +131,7 @@ public class Ant extends Task {
     }
 
     /**
-     * XXX Sets the output of the Ant
+     * Set the output file in which Ant stores output
      *
      * @param s name of the file to store output.
      */
@@ -158,7 +158,8 @@ public class Ant extends Task {
     /**
      * Do the execution.
      *
-     * @exception BuildException XXX Description of Exception
+     * @exception BuildException if the execution of the sub-build has a 
+     *            problem
      */
     public void execute() throws BuildException {
         for (Iterator i = properties.iterator(); i.hasNext(); ) {
