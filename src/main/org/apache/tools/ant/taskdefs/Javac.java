@@ -77,6 +77,8 @@ import java.util.*;
  * <li>debug
  * <li>encoding
  * <li>target
+ * <li>depend
+ * <li>vebose
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
  * <p>
@@ -105,6 +107,8 @@ public class Javac extends MatchingTask {
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
+    private boolean depend = false;
+    private boolean verbose = false;
     private String target;
     private Path bootclasspath;
     private Path extdirs;
@@ -250,6 +254,20 @@ public class Javac extends MatchingTask {
      public void setOptimize(boolean optimize) {
          this.optimize = optimize;
      }
+
+    /** 
+     * Set the depend flag.
+     */ 
+     public void setDepend(boolean depend) {
+         this.depend = depend;
+     }  
+
+    /** 
+     * Set the verbose flag.
+     */ 
+     public void setVerbose(boolean verbose) {
+         this.verbose = verbose;
+     }  
 
     /**
      * Sets the target VM that the classes will be compiled for. Valid
@@ -522,6 +540,21 @@ public class Javac extends MatchingTask {
             cmd.createArgument().setPath(extdirs);
         }
 
+        if (depend) {
+            if (Project.getJavaVersion().startsWith("1.1")) {
+                cmd.createArgument().setValue("-depend");
+            } else if (Project.getJavaVersion().startsWith("1.2")) {
+                cmd.createArgument().setValue("-Xdepend");
+            } else {
+                log("depend attribute is not supported by the modern compiler",
+                    Project.MSG_WARN);
+            }
+        }
+
+        if (verbose) {
+            cmd.createArgument().setValue("-verbose");
+        }
+
         logAndAddFilesToCompile(cmd);
         return cmd;
     }
@@ -608,7 +641,17 @@ public class Javac extends MatchingTask {
         if (optimize) {
             cmd.createArgument().setValue("-O");
         }
-
+        if (verbose) {
+            cmd.createArgument().setValue("-verbose");
+        }
+        if (depend) {
+            cmd.createArgument().setValue("-depend");
+            String fullDependProperty = project.getProperty("build.compiler.fulldepend");
+            if (fullDependProperty != null 
+                && Project.toBoolean(fullDependProperty)) {
+                cmd.createArgument().setValue("+F");
+            }
+        } 
         /**
          * XXX
          * Perhaps we shouldn't use properties for these
@@ -623,10 +666,7 @@ public class Javac extends MatchingTask {
          * to the place, where the error occured.
          */
         String emacsProperty = project.getProperty("build.compiler.emacs");
-        if (emacsProperty != null &&
-            (emacsProperty.equalsIgnoreCase("on") ||
-             emacsProperty.equalsIgnoreCase("true"))
-            ) {
+        if (emacsProperty != null && Project.toBoolean(emacsProperty)) {
             cmd.createArgument().setValue("+E");
         }
 
@@ -637,10 +677,7 @@ public class Javac extends MatchingTask {
          * warning can be pretty annoying.
          */
         String warningsProperty = project.getProperty("build.compiler.warnings");
-        if (warningsProperty != null &&
-            (warningsProperty.equalsIgnoreCase("off") ||
-             warningsProperty.equalsIgnoreCase("false"))
-            ) {
+        if (warningsProperty != null && !Project.toBoolean(warningsProperty)) {
             cmd.createArgument().setValue("-nowarn");
         }
 
@@ -648,10 +685,7 @@ public class Javac extends MatchingTask {
          * Jikes can issue pedantic warnings. 
          */
         String pedanticProperty = project.getProperty("build.compiler.pedantic");
-        if (pedanticProperty != null &&
-            (pedanticProperty.equalsIgnoreCase("on") ||
-             pedanticProperty.equalsIgnoreCase("true"))
-            ) {
+        if (pedanticProperty != null && Project.toBoolean(pedanticProperty)) {
             cmd.createArgument().setValue("+P");
         }
  
