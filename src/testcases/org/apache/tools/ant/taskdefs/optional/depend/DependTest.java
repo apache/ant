@@ -187,4 +187,17 @@ public class DependTest extends BuildFileTest {
         executeTarget("testcache");
     }
 
+    /**
+     * Test the detection and warning of non public classes
+     */
+    public void testNonPublic() {
+        executeTarget("testnonpublic");
+        String log = getLog();
+        assertTrue("Expected warning about APrivate", 
+            log.indexOf("The class APrivate in file") != -1);
+        assertTrue("but has not been deleted because its source file " 
+            + "could not be determined", 
+            log.indexOf("The class APrivate in file") != -1);
+    }
+
 }

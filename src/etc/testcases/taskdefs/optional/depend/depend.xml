@@ -5,6 +5,7 @@
   <property name="src2.dir" value="src2"/>
   <property name="src3.dir" value="src3"/>
   <property name="src4.dir" value="src4"/>
+  <property name="src5.dir" value="src5"/>
   
   <property name="tempsrc.dir" value="working"/>
   <property name="cache.dir" value="working"/>
@@ -38,6 +39,12 @@
   <target name="src4setup" depends="basesetup">
     <copy todir="${tempsrc.dir}">
       <fileset dir="${src4.dir}"/>
+    </copy>
+  </target>
+
+  <target name="src5setup" depends="basesetup">
+    <copy todir="${tempsrc.dir}">
+      <fileset dir="${src5.dir}"/>
     </copy>
   </target>
 
@@ -136,5 +143,13 @@
             destdir="${classes.dir}" closure="yes"/>
     <depend cache="${cache.dir}" srcdir="${tempsrc.dir}" 
             destdir="${classes.dir}" closure="yes"/>
+  </target>
+
+  <target name="testnonpublic" depends="src5setup, compile">
+    <sleep seconds="3"/>
+    <delete file="${tempsrc.dir}/B.java"/>
+    <copy file="${src2.dir}/B.java" tofile="${tempsrc.dir}/B.java"/>
+    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
+    <fileset id="result" dir="${classes.dir}"/>
   </target>
 </project>
