@@ -105,8 +105,12 @@ public abstract class BaseTestElement
      */
     protected boolean shouldRun() {
         final Project project = getProject();
-        if ((project.getProperty(ifProperty) == null) ||
-                (project.getProperty(unlessProperty) != null)) {
+        if ( ifProperty != null &&
+                project.getProperty(ifProperty) == null ){
+            return false;
+        }
+        if (unlessProperty != null &&
+                project.getProperty(unlessProperty) != null) {
             return false;
         }
         return true;
