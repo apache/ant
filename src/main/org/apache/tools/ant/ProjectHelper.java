@@ -104,12 +104,17 @@ public class ProjectHelper {
         try {
             SAXParser saxParser = getParserFactory().newSAXParser();
             parser = saxParser.getParser();
-            
+
             String uri = "file:" + buildFile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
                 uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
             }
-            saxParser.parse(uri, new RootHandler());
+            
+            inputStream = new FileInputStream(buildFile);
+            inputSource = new InputSource(inputStream);
+            inputSource.setSystemId(uri);
+            project.log("parsing buildfile " + buildFile + " with URI = " + uri, Project.MSG_VERBOSE);
+            saxParser.parse(inputSource, new RootHandler());
         }
         catch(ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
@@ -212,6 +217,8 @@ public class ProjectHelper {
          */
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
+        
+            project.log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
         
             if (systemId.startsWith("file:")) {
                 String path = systemId.substring(5);
