@@ -130,18 +130,19 @@ public final class LoadProperties extends Task {
             crh.setFilterChains(filterChains);
 
             String text = crh.processStream();
-            if (!text.endsWith("\n")) {
-                text = text + "\n";
-            }
 
             if (text != null) {
-                StringInputStream sis = new StringInputStream(text);
-                Properties props = new Properties();
+                if (!text.endsWith("\n")) {
+                    text = text + "\n";
+                }
+
+                final StringInputStream sis = new StringInputStream(text);
+                final Properties props = new Properties();
                 props.load(sis);
-                Enumeration e = props.keys();
+                final Enumeration e = props.keys();
                 while (e.hasMoreElements()) {
-                    String key = (String) e.nextElement();
-                    String value = props.getProperty(key);
+                    final String key = (String) e.nextElement();
+                    final String value = props.getProperty(key);
                     if (key != null && value != null
                             && value.trim().length() > 0) {
                         project.setNewProperty(key, value);
