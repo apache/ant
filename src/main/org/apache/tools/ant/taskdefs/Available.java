@@ -68,7 +68,7 @@ public class Available extends Task {
 
     private String property;
     private String classname;
-    private String file;
+    private File file;
     private String resource;
 
     public void setProperty(String property) {
@@ -86,8 +86,8 @@ public class Available extends Task {
         this.classname = classname;
     }
 
-    public void setFile(String filename) {
-        this.file = filename;
+    public void setFile(File file) {
+        this.file = file;
     }
 
     public void setResource(String resource) {
@@ -102,14 +102,8 @@ public class Available extends Task {
         this.project.setProperty(property, "true");
     }
 
-    private boolean checkFile(String file) {
-        try {
-            File f = new File(file);
-            return f.exists();
-        } catch (Exception e) {
-            log(e.toString(), Project.MSG_VERBOSE);
-            return false;
-        }
+    private boolean checkFile(File file) {
+        return file.exists();
     }
 
     private boolean checkResource(String resource) {
