@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.libs.core;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
@@ -19,18 +21,22 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToDoubleConverter
     extends AbstractConverter
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( StringToDoubleConverter.class );
+
     public StringToDoubleConverter()
     {
         super( String.class, Double.class );
     }
 
-    public Object convert( final Object original, final Context context )
+    public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Double( (String)original ); }
+        try { return new Double( (String)object ); }
         catch( final NumberFormatException nfe )
         {
-            throw new ConverterException( "Error formatting object", nfe );
+            final String message = REZ.getString( "convert.bad-double.error", object );
+            throw new ConverterException( message, nfe );
         }
     }
 }

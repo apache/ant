@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.libs.runtime;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +29,9 @@ public class Import
     extends AbstractTask
     implements Composable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Import.class );
+
     private File        m_lib;
     private Deployer    m_deployer;
 
@@ -46,7 +51,8 @@ public class Import
     {
         if( null == m_lib )
         {
-            throw new TaskException( "Must specify lib parameter" );
+            final String message = REZ.getString( "import.no-lib.error" );
+            throw new TaskException( message );
         }
 
         try
@@ -55,7 +61,8 @@ public class Import
         }
         catch( final DeploymentException de )
         {
-            throw new TaskException( "Error importing tasklib", de );
+            final String message = REZ.getString( "import.no-deploy.error" );
+            throw new TaskException( message, de );
         }
     }
 }

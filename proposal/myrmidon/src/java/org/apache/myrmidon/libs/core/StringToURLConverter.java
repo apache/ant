@@ -9,6 +9,8 @@ package org.apache.myrmidon.libs.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
@@ -21,18 +23,22 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToURLConverter
     extends AbstractConverter
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( StringToURLConverter.class );
+
     public StringToURLConverter()
     {
         super( String.class, URL.class );
     }
 
-    public Object convert( final Object original, final Context context )
+    public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new URL( (String)original ); }
+        try { return new URL( (String)object ); }
         catch( final MalformedURLException mue )
         {
-            throw new ConverterException( "Error formatting object", mue );
+            final String message = REZ.getString( "convert.bad-url.error", object );
+            throw new ConverterException( message, mue );
         }
 
     }

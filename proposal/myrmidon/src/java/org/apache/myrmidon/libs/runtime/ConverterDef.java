@@ -10,6 +10,8 @@ package org.apache.myrmidon.libs.runtime;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -29,6 +31,9 @@ public class ConverterDef
     extends AbstractTask
     implements Composable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( ConverterDef.class );
+
     private String              m_sourceType;
     private String              m_destinationType;
     private File                m_lib;
@@ -68,19 +73,23 @@ public class ConverterDef
     {
         if( null == m_classname )
         {
-            throw new TaskException( "Must specify classname parameter" );
+            final String message = REZ.getString( "converterdef.no-classname.error" );
+            throw new TaskException( message );
         }
         else if( null == m_sourceType )
         {
-            throw new TaskException( "Must specify the source-type parameter" );
+            final String message = REZ.getString( "converterdef.no-source.error" );
+            throw new TaskException( message );
         }
         else if( null == m_destinationType )
         {
-            throw new TaskException( "Must specify the destination-type parameter" );
+            final String message = REZ.getString( "converterdef.no-destination.error" );
+            throw new TaskException( message );
         }
         else if( null == m_lib )
         {
-            throw new TaskException( "Must specify the lib parameter" );
+            final String message = REZ.getString( "converterdef.no-lib.error" );
+            throw new TaskException( message );
         }
 
         try
@@ -95,7 +104,8 @@ public class ConverterDef
         }
         catch( final Exception e )
         {
-            throw new TaskException( "Failed to register converter " + m_classname, e );
+            final String message = REZ.getString( "converterdef.no-register.error", m_classname );
+            throw new TaskException( message, e );
         }
     }
 }

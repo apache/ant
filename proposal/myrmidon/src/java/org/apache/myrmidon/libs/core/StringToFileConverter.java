@@ -8,6 +8,8 @@
 package org.apache.myrmidon.libs.core;
 
 import java.io.File;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -22,22 +24,26 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToFileConverter
     extends AbstractConverter
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( StringToFileConverter.class );
+
     public StringToFileConverter()
     {
         super( String.class, File.class );
     }
 
-    public Object convert( final Object original, final Context context )
+    public Object convert( final Object object, final Context context )
         throws ConverterException
     {
         try
         {
             final TaskContext taskContext = (TaskContext)context;
-            return taskContext.resolveFile( (String)original );
+            return taskContext.resolveFile( (String)object );
         }
         catch( final TaskException te )
         {
-            throw new ConverterException( "Error resolving file during conversion", te );
+            final String message = REZ.getString( "convert.bad-file.error", object );
+            throw new ConverterException( message, te );
         }
     }
 }

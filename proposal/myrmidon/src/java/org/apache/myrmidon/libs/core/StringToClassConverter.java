@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.libs.core;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
@@ -19,19 +21,23 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToClassConverter
     extends AbstractConverter
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( StringToClassConverter.class );
+
     public StringToClassConverter()
     {
         super( String.class, Class.class );
     }
 
-    public Object convert( final Object original, final Context context )
+    public Object convert( final Object object, final Context context )
         throws ConverterException
     {
         //TODO: Should we use ContextClassLoader here???
-        try { return Class.forName( (String)original ); }
+        try { return Class.forName( (String)object ); }
         catch( final Exception e )
         {
-            throw new ConverterException( "Error converting to class type", e );
+            final String message = REZ.getString( "convert.bad-class.error", object );
+            throw new ConverterException( message, e );
         }
     }
 }

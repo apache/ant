@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.libs.core;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -32,6 +34,9 @@ public class Property
     extends AbstractContainerTask
     implements Configurable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Property.class );
+
     private String              m_name;
     private Object              m_value;
     private boolean             m_localScope     = true;
@@ -46,7 +51,8 @@ public class Property
         try { m_factory = typeManager.getFactory( DataType.ROLE ); }
         catch( final TypeException te )
         {
-            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
+            final String message = REZ.getString( "property.bad-factory.error" );
+            throw new ComponentException( message, te );
         }
     }
 
@@ -72,7 +78,8 @@ public class Property
             }
             catch( final Exception e )
             {
-                throw new ConfigurationException( "Unable to set datatype", e );
+                final String message = REZ.getString( "property.no-set.error" );
+                throw new ConfigurationException( message, e );
             }
         }
     }
@@ -87,7 +94,8 @@ public class Property
     {
         if( null != m_value )
         {
-            throw new TaskException( "Value can not be set multiple times" );
+            final String message = REZ.getString( "property.multi-set.error" );
+            throw new TaskException( message );
         }
 
         m_value = value;
@@ -103,12 +111,14 @@ public class Property
     {
         if( null == m_name )
         {
-            throw new TaskException( "Name must be specified" );
+            final String message = REZ.getString( "property.no-name.error" );
+            throw new TaskException( message );
         }
 
         if( null == m_value )
         {
-            throw new TaskException( "Value must be specified" );
+            final String message = REZ.getString( "property.no-value.error" );
+            throw new TaskException( message );
         }
 
         if( m_localScope )

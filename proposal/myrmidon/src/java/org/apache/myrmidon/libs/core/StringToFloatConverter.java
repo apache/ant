@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.libs.core;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
@@ -19,18 +21,22 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToFloatConverter
     extends AbstractConverter
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( StringToFloatConverter.class );
+
     public StringToFloatConverter()
     {
         super( String.class, Float.class );
     }
 
-    public Object convert( final Object original, final Context context )
+    public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Float( (String)original ); }
+        try { return new Float( (String)object ); }
         catch( final NumberFormatException nfe )
         {
-            throw new ConverterException( "Error formatting object", nfe );
+            final String message = REZ.getString( "convert.bad-float.error", object );
+            throw new ConverterException( message, nfe );
         }
     }
 }

@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class Echo 
+public class Echo
     extends AbstractTask
 {
     private String      m_message;
