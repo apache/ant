@@ -42,7 +42,8 @@ enhancements of existing tasks.
 
 * Better docs.
 
-  More examples. Tutorials, beginner documents.
+  More examples. Tutorials, beginner documents, reference sheets for
+  tasks, printable version.
 
 * RPM task.
 
@@ -81,6 +82,8 @@ decisions.
   possible - i.e. don't break something just because we can.
 
 * Ant should be cancelable
+
+* no commit without documentation (ouch 8-)
 
 III. Things that are simple, easy to implement, where we expect the
 committers to agree
