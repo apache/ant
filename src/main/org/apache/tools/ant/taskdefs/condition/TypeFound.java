@@ -63,6 +63,7 @@ import org.apache.tools.ant.AntTypeDefinition;
  * looks for a task or other Ant type that exists. Existence is defined as
  * the type is defined, and its implementation class is present. This
  * will work for datatypes and preset, script and macro definitions.
+ * @author Steve Loughran
  */
 public class TypeFound extends ProjectComponent implements Condition {
 
@@ -70,7 +71,7 @@ public class TypeFound extends ProjectComponent implements Condition {
 
     /**
      * the task or other type to look for
-     * @param name
+     * @param name the name of the type
      */
     public void setName(String name) {
         this.name = name;
@@ -78,18 +79,19 @@ public class TypeFound extends ProjectComponent implements Condition {
 
     /**
      * test for a task or other ant type existing in the current project
-     * @param typename
+     * @param typename the name of the type
      * @return true if the typename exists
      */
     protected boolean doesTypeExist(String typename) {
 
-        ComponentHelper helper=ComponentHelper.getComponentHelper(getProject());
-        AntTypeDefinition def=helper.getDefinition(typename);
-        if(def==null) {
+        ComponentHelper helper =
+            ComponentHelper.getComponentHelper(getProject());
+        AntTypeDefinition def = helper.getDefinition(typename);
+        if (def == null) {
             return false;
         }
         //now verify that the class has an implementation
-        return def.getExposedClass(getProject())!=null;
+        return def.getExposedClass(getProject()) != null;
     }
 
 
@@ -99,7 +101,7 @@ public class TypeFound extends ProjectComponent implements Condition {
      * @exception BuildException if an error occurs
      */
     public boolean eval() throws BuildException {
-        if(name==null) {
+        if (name == null) {
             throw new BuildException("No type specified");
         }
         return doesTypeExist(name);
