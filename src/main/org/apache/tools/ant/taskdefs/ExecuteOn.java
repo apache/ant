@@ -115,10 +115,6 @@ public class ExecuteOn extends ExecTask {
     /**
      * Adds directories to operate on.
      *
-     * <p><em>Note that the directories will be added to the build
-     * path in no particular order, so if order is significant, one
-     * should use a file list instead!</em></p>
-     *
      * @param  set the DirSet to add.
      *
      * @since Ant 1.6
