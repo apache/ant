@@ -143,6 +143,9 @@
     <available property="jmf.present" 
                classname="javax.sound.sampled.Clip"  
                classpathref="classpath"/>
+    <available property="icontract.present"
+               classname="com.reliablesystems.iContract.IContracted"
+               classpathref="classpath"/>
   </target>
 
   <!-- 
@@ -174,6 +177,8 @@
                unless="jakarta.regexp.present" />
       <exclude name="${ant.package}/util/regexp/JakartaOroMatcher.java" 
                unless="jakarta.oro.present" />
+
+      <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
       <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
       <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
