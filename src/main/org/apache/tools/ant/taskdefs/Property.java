@@ -184,43 +184,46 @@ public class Property extends Task {
     }
 
     private void resolveAllProperties(Hashtable props) {
-        Hashtable toResolve = new Hashtable();
-        Enumeration e = props.keys();
-        boolean more = true;
-        
-        while (more) {
-            while (e.hasMoreElements()) {
-                Vector propsInValue = new Vector();
-                String name = (String) e.nextElement();
-                String value = (String) props.get(name);
+        Hashtable unresolvableProperties = new Hashtable();
+        for (Enumeration e = props.keys(); e.hasMoreElements(); ) {
+            String name = (String) e.nextElement();
+            String value = (String) props.get(name);
 
+            boolean resolved = false;
+            while (!resolved) { 
+                Vector propsInValue = new Vector();
+    
+                // assume it will be resolved
+                resolved = true;
+                boolean unresolvable = false;
                 if (extractProperties(value, propsInValue)) {
                     for (int i=0; i < propsInValue.size(); i++) {
                         String elem = (String) propsInValue.elementAt(i);
+                        if (elem.equals(name) || unresolvableProperties.containsKey(elem)) {
+                            // we won't try further resolving elements with circular 
+                            // property dependencies or dependencies on unresolvable elements
+                            unresolvable = true;
+                            break;
+                        }
+                        
                         if (project.getProperties().containsKey(elem) ||
                             props.containsKey(elem)) {
-                            toResolve.put(name, value);
-                            break;
+                            resolved = false;
                         }
                     }
                 }
-
-                if (toResolve.size() > 0) {
-                    Enumeration tre = toResolve.keys();
-                    while (tre.hasMoreElements()) {
-                        String name2 = (String) tre.nextElement();
-                        String value2 = (String) toResolve.get(name2);
-                        String v = ProjectHelper.replaceProperties(value2,
-                                                                   project.getProperties());
-                        v = ProjectHelper.replaceProperties(v, props);
-                        props.put(name, v);
-                    }
-
-                    toResolve.clear();
-                    e = props.keys();
-                } else {
-                    more = false;
+    
+                if (unresolvable) {
+                    unresolvableProperties.put(name, value);
+                    resolved = true;
                 }
+    
+                if (!resolved) {
+                    value = ProjectHelper.replaceProperties(value,
+                                                               project.getProperties());
+                    value = ProjectHelper.replaceProperties(value, props);
+                    props.put(name, value);
+                }    
             }
         }
     }
