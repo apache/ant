@@ -325,7 +325,7 @@ public class Execute {
     /**
      * Sets the environment variables for the subprocess to launch.
      *
-     * @param commandline array of Strings, each element of which has
+     * @param env array of Strings, each element of which has
      * an environment variable settings in format <em>key=value</em>
      */
     public void setEnvironment(String[] env) {
@@ -365,7 +365,7 @@ public class Execute {
      * allow the shell to perform additional processing such as associating an
      * executable with a script, etc
      *
-     * @param vmLauncher true if exec should launch through thge VM,
+     * @param useVMLauncher true if exec should launch through thge VM,
      *                   false if the shell should be used to launch the 
      *                   command.
      */
@@ -379,7 +379,7 @@ public class Execute {
      * @param project the Project, only used for logging purposes, may be null.
      * @param command the command to run
      * @param env the environment for the command
-     * @param the working directory for the command
+     * @param dir the working directory for the command
      * @param useVM use the built-in exec command for JDK 1.3 if available.
      *
      * @since Ant 1.5
@@ -400,7 +400,7 @@ public class Execute {
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>
-     * @exception java.io.IOExcpetion The exception is thrown, if launching
+     * @exception java.io.IOException The exception is thrown, if launching
      *            of the subprocess failed
      */
     public int execute() throws IOException {
