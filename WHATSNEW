@@ -63,7 +63,8 @@ Other changes:
 --------------
 
 * New tasks: ear, p4counter, record, cvspass, vsscheckin, vsscheckout,
-  typedef, sleep, mimemail, set of tasks for Continuus/Synergy, dependset
+  typedef, sleep, mimemail, set of tasks for Continuus/Synergy, dependset,
+  condition
 
 * Ant now uses JAXP 1.1
 
