@@ -70,7 +70,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 /**
- * Load a file's contents as Ant Properties.
+ * Load a file's contents as Ant properties.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  * @since Ant 1.5
@@ -89,7 +89,7 @@ public final class LoadProperties extends Task {
     private final Vector filterChains = new Vector();
 
     /**
-     * Sets the srcfile attribute.
+     * Sets the file to load.
      *
      * @param srcFile The new SrcFile value
      */
@@ -175,7 +175,7 @@ public final class LoadProperties extends Task {
     }
 
     /**
-     * Add the FilterChain element.
+     * Adds a FilterChain.
      */
     public final void addFilterChain(FilterChain filter) {
         filterChains.addElement(filter);

@@ -57,52 +57,12 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.taskdefs.email.EmailTask;
 
 /**
- * A task to send SMTP email.
- * <p>
- * <table border="1" cellpadding="3" cellspacing="0">
- * <tr bgcolor="#CCCCFF">
- * <th>Attribute</th>
- * <th>Description</th>
- * <th>Required</th>
- * </tr>
- * <tr>
- * <td>from</td>
- * <td>Email address of sender.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>mailhost</td>
- * <td>Host name of the mail server.</td>
- * <td>No, default to &quot;localhost&quot;</td>
- * </tr>
- * <tr>
- * <td>toList</td>
- * <td>Comma-separated list of recipients.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>subject</td>
- * <td>Email subject line.</td>
- * <td>No</td>
- * </tr>
- * <tr>
- * <td>files</td>
- * <td>Filename(s) of text to send in the body of the email. Multiple files are
- *     comma-separated.</td>
- * <td rowspan="2">One of these two attributes</td>
- * </tr>
- * <tr>
- * <td>message</td>
- * <td>Message to send inthe body of the email.</td>
- * </tr>
- * </table>
- * <tr>
- * <td>includefilenames</td>
- * <td>Includes filenames before file contents when set to true.</td>
- * <td>No, default is <I>false</I></td>
- * </tr>
- * <p>
- *
+ * A task to send SMTP email. 
+ * This task can send mail using either plain
+ * text, UU encoding or Mime format mail depending on what is available.
+ * Attachments may be sent using nested FileSet
+ * elements.
+ 
  * @author glenn_twiggs@bmc.com
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *

@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.util.FileUtils;
@@ -85,7 +86,7 @@ import java.util.zip.ZipEntry;
  *           name="unjar"
  *           name="unwar"
  */
-public class Expand extends MatchingTask {
+public class Expand extends Task {
     private File dest; //req
     private File source; // req
     private boolean overwrite = true;
@@ -298,4 +299,5 @@ public class Expand extends MatchingTask {
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
+
 }

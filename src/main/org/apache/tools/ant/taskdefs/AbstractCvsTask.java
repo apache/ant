@@ -276,17 +276,16 @@ public abstract class AbstractCvsTask extends Task {
          * Need a better cross platform integration with <cvspass>, so
          * use the same filename.
          */
-        /* But currently we cannot because 'cvs log' is not working
-         * with a pass file.
-        if(passFile == null){
+        if(passFile == null) {
 
-            File defaultPassFile = new File(System.getProperty("user.home") 
+            File defaultPassFile = new File(
+                System.getProperty("cygwin.user.home",
+                    System.getProperty("user.home")) 
                 + File.separatorChar + ".cvspass");
 
             if(defaultPassFile.exists())
                 this.setPassfile(defaultPassFile);
         }
-         */
 
         if (passFile != null) {
             Environment.Variable var = new Environment.Variable();
@@ -313,6 +312,10 @@ public abstract class AbstractCvsTask extends Task {
         exe.setAntRun(project);
         if (dest == null) {
             dest = project.getBaseDir();
+        }
+
+        if (!dest.exists()) {
+            dest.mkdirs();
         }
 
         exe.setWorkingDirectory(dest);
@@ -421,6 +424,11 @@ public abstract class AbstractCvsTask extends Task {
         return stringBuffer.toString();
     }
 
+    /**
+     * The CVSROOT variable.
+     *
+     * @param root
+     */
     public void setCvsRoot(String root) {
 
         // Check if not real cvsroot => set it to null
@@ -438,6 +446,11 @@ public abstract class AbstractCvsTask extends Task {
         return this.cvsRoot;
     }
 
+    /**
+     * The CVS_RSH variable.
+     *
+     * @param rsh
+     */
     public void setCvsRsh(String rsh) {
         // Check if not real cvsrsh => set it to null
         if (rsh != null) {
@@ -454,6 +467,11 @@ public abstract class AbstractCvsTask extends Task {
         return this.cvsRsh;
     }
 
+    /**
+     * Port used by CVS to communicate with the server.
+     *
+     * @param port
+     */
     public void setPort(int port){
         this.port = port;
     }
@@ -463,6 +481,11 @@ public abstract class AbstractCvsTask extends Task {
         return this.port;
     }
 
+    /**
+     * Password file to read passwords from.
+     *
+     * @param passFile
+     */
     public void setPassfile(File passFile){
         this.passFile = passFile;
     }
@@ -472,6 +495,11 @@ public abstract class AbstractCvsTask extends Task {
         return this.passFile;
     }
 
+    /**
+     * The directory where the checked out files should be placed.
+     *
+     * @param dest
+     */
     public void setDest(File dest) {
         this.dest = dest;
     }
@@ -481,6 +509,11 @@ public abstract class AbstractCvsTask extends Task {
         return this.dest;
     }
 
+    /**
+     * The package/module to operate upon.
+     *
+     * @param p
+     */
     public void setPackage(String p) {
         this.cvsPackage = p;
     }
@@ -490,6 +523,10 @@ public abstract class AbstractCvsTask extends Task {
         return this.cvsPackage;
     }
 
+    /**
+     * The tag of the package/module to operate upon.
+     * @param p
+     */
     public void setTag(String p) {
         // Check if not real tag => set it to null
         if (p != null && p.trim().length() > 0) {
@@ -511,6 +548,10 @@ public abstract class AbstractCvsTask extends Task {
     }
 
 
+    /**
+     * Use the most recent revision no later than the given date.
+     * @param p
+     */
     public void setDate(String p) {
         if (p != null && p.trim().length() > 0) {
             addCommandArgument("-D");
@@ -518,6 +559,10 @@ public abstract class AbstractCvsTask extends Task {
         }
     }
 
+    /**
+     * The CVS command to execute.
+     * @param c
+     */
     public void setCommand(String c) {
         this.command = c;
     }
@@ -525,26 +570,54 @@ public abstract class AbstractCvsTask extends Task {
         return this.command;
     }
 
+    /**
+     * If true, suppress informational messages.
+     * @param q
+     */
     public void setQuiet(boolean q) {
         quiet = q;
     }
 
+    /**
+     * If true, report only and don't change any files.
+     *
+     * @param ne
+     */
     public void setNoexec(boolean ne) {
         noexec = ne;
     }
 
+    /**
+     * The file to direct standard output from the command.
+     * @param output
+     */
     public void setOutput(File output) {
         this.output = output;
     }
 
+    /**
+     * The file to direct standard error from the command.
+     *
+     * @param error
+     */
     public void setError(File error) {
         this.error = error;
     }
 
+    /**
+     * Whether to append output/error when redirecting to a file.
+     * @param value
+     */
     public void setAppend(boolean value){
         this.append = value;
     }
 
+    /**
+     * Stop the build process if the command exits with
+     * a return code other than 0.
+     * Defaults to false.
+     * @param failOnError
+     */
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
     }
@@ -578,6 +651,10 @@ public abstract class AbstractCvsTask extends Task {
         vecCommandlines.removeElement(c);
     }
 
+    /**
+     * Adds direct command-line to execute.
+     * @param c
+     */
     public void addConfiguredCommandline(Commandline c) {
         this.addConfiguredCommandline(c, false);
     }
@@ -608,6 +685,8 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
+     * If true, this is the same as compressionlevel="3".
+     *
      * @param usecomp If true, turns on compression using default
      * level, AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL.
      */

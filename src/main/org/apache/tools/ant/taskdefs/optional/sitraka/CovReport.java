@@ -78,10 +78,9 @@ import org.apache.tools.ant.types.Path;
 
 
 /**
- * Convenient task to run the snapshot merge utility for JProbe Coverage 3.0.
+ * Runs the JProbe Coverage 3.0 snapshot merge utility.
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
- *
  * @ant.task name="jpcovreport" category="metrics"
  */
 public class CovReport extends Task {
@@ -167,8 +166,7 @@ public class CovReport extends Task {
 
 
     /**
-     * Set the coverage home. It must point to JProbe coverage
-     * directories where are stored native libraries and jars.
+     * The directory where JProbe is installed.
      */
     public void setHome(File value) {
         this.home = value;
@@ -180,7 +178,9 @@ public class CovReport extends Task {
         }
     }
 
-    /** set the format of the report html|text|xml*/
+    /**
+     * set the format of the report: "html", "text", or "xml"
+     */
     public void setFormat(ReportFormat value) {
         this.format = value.getValue();
     }
@@ -191,26 +191,41 @@ public class CovReport extends Task {
         }
     }
 
-    /** sets the report type executive|summary|detailed|verydetailed */
+    /**
+     * The type of report to be generated: "executive", "summary",
+     * "detailed" or "verydetailed".
+     */
     public void setType(ReportType value) {
         this.type = value.getValue();
     }
 
-    /** include source code lines. XML report only */
+    /**
+     * If true, include text of the source code lines.
+     * Only applies to format="xml" and type="verydetailed"
+     */
     public void setIncludesource(boolean value) {
         this.includeSource = value;
     }
 
-    /** sets the threshold printing method 0-100*/
+    /**
+     * A numeric value for the threshold for printing methods.
+     * Must be between 0 and 100.
+     */
     public void setPercent(Integer value) {
         this.percent = value;
     }
 
-    /** set the filters */
+    /**
+     * set the filters
+     * @ant.attribute ignore="true"
+     */
     public void setFilters(String values) {
         this.filters = values;
     }
 
+    /**
+     * Adds a path to source files.
+     */
     public Path createSourcepath() {
         if (sourcePath == null) {
             sourcePath = new Path(project);
@@ -218,18 +233,24 @@ public class CovReport extends Task {
         return sourcePath.createPath();
     }
 
+    /**
+     * The name of the snapshot file that is the source to the report.
+     */
     public void setSnapshot(File value) {
         this.snapshot = value;
     }
 
     /**
-     * Set the output snapshot file
+     * The name of the generated output file.
      */
     public void setTofile(File value) {
         this.tofile = value;
     }
 
-    //@todo to remove
+    /**
+     * @todo needs to be removed
+     * @ant.element ignore="true"
+     */
     public Path createCoveragepath() {
         if (coveragePath == null) {
             coveragePath = new Path(project);
@@ -237,6 +258,10 @@ public class CovReport extends Task {
         return coveragePath.createPath();
     }
 
+    /**
+     * Adds a set of classes whose coverage information will be
+     * checked against.
+     */
     public Reference createReference() {
         if (reference == null) {
             reference = new Reference();

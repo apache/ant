@@ -68,8 +68,15 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * Sign a archive.
- *
+ * Signs jar or zip files with the javasign command line tool. The
+ * tool detailed dependency checking: files are only signed if they
+ * are not signed. The <tt>signjar</tt> attribute can point to the file to
+ * generate; if this file exists then
+ * its modification date is used as a cue as to whether to resign any JAR file.
+ * <br>  
+ * <strong>Note:</strong> Requires Java 1.2 or later. </p>
+
+ * 
  * @author Peter Donald 
  *         <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
  * @author Nick Fortescue 
@@ -113,56 +120,97 @@ public class SignJar extends Task {
      */
     protected boolean lazy;
 
+    /**
+     * the jar file to sign; required
+     */
     public void setJar(final File jar) {
         this.jar = jar;
     }
 
+    /**
+     * the alias to sign under; required
+     */
     public void setAlias(final String alias) {
         this.alias = alias;
     }
 
+    /**
+     * keystore location; required
+     */
     public void setKeystore(final File keystore) {
         this.keystore = keystore;
     }
 
+    /**
+     * password for keystore integrity; required
+     */
     public void setStorepass(final String storepass) {
         this.storepass = storepass;
     }
 
+    /**
+     * keystore type; optional
+     */
     public void setStoretype(final String storetype) {
         this.storetype = storetype;
     }
 
+    /**
+     * password for private key (if different); optional
+     */
     public void setKeypass(final String keypass) {
         this.keypass = keypass;
     }
 
+    /**
+     * name of .SF/.DSA file; optional
+     */
     public void setSigfile(final File sigfile) {
         this.sigfile = sigfile;
     }
 
+    /**
+     * name of signed JAR file; optional
+     */
     public void setSignedjar(final File signedjar) {
         this.signedjar = signedjar;
     }
 
+    /**
+     * Enable verbose output when signing
+     * ; optional: default false
+     */
     public void setVerbose(final boolean verbose) {
         this.verbose = verbose;
     }
 
+    /**
+     * Flag to include the .SF file inside the signature;
+     * optional; default false
+     */
     public void setInternalsf(final boolean internalsf) {
         this.internalsf = internalsf;
     }
 
+    /**
+     * flag to compute hash of entire manifest;
+     * optional, default false
+     */
     public void setSectionsonly(final boolean sectionsonly) {
         this.sectionsonly = sectionsonly;
     }
 
+    /**
+     * flag to control whether the presence of a signature
+     * file means a JAR is signed;
+     * optional, default false
+     */
     public void setLazy(final boolean lazy) {
         this.lazy = lazy;
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files to sign
      * @since Ant 1.4
      */
     public void addFileset(final FileSet set) {
@@ -170,6 +218,9 @@ public class SignJar extends Task {
     }
 
 
+    /** 
+     * sign the jar(s)
+     */
     public void execute() throws BuildException {
         if (null == jar && null == filesets) {
             throw new BuildException("jar must be set through jar attribute "
@@ -193,6 +244,9 @@ public class SignJar extends Task {
         }
     }
 
+    /**
+     * sign one jar
+     */
     private void doOneJar(File jarSource, File jarTarget) 
         throws BuildException {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {

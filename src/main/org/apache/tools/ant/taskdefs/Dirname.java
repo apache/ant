@@ -55,11 +55,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Task to determine the directory name of the specified file.
+ * Determines the directory name of the specified file.
  *
  * This task can accept the following attributes:
  * <ul>
@@ -83,31 +84,37 @@ import org.apache.tools.ant.Task;
  */
 
 public class Dirname extends Task {
-  private File file;
-  private String property;
+    private File file;
+    private String property;
 
-  // The setter for the `file' attribute
-  public void setFile(File file) {
-    this.file = file;
-  }
+    /**
+     * Path to take the dirname of.
+     * @param file
+     */
+    public void setFile(File file) {
+        this.file = file;
+    }
 
-  // The setter for the `property' attribute
-  public void setProperty(String property) {
-    this.property  = property ;
-  }
+    /**
+     * The name of the property to set.
+     * @param property
+     */
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
 
-  // The method executing the task
-  public void execute() throws BuildException {
-      if (property == null) {
-          throw new BuildException("property attribute required", location);
-      }
-      if (file == null) {
-          throw new BuildException("file attribute required", location);
-      } else {
-        String value = file.getParent();
-        getProject().setNewProperty(property, value);
-      }
-  }
+    // The method executing the task
+    public void execute() throws BuildException {
+        if (property == null) {
+            throw new BuildException("property attribute required", location);
+        }
+        if (file == null) {
+            throw new BuildException("file attribute required", location);
+        } else {
+            String value = file.getParent();
+            getProject().setNewProperty(property, value);
+        }
+    }
 }
 

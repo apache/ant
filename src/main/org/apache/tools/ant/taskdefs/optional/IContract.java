@@ -77,12 +77,12 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 /**
- * Instruments Java classes with <a href="http://www.reliable-systems.com/tools/">iContract</a>
- * DBC preprocessor.
+ * Instruments Java classes with iContract DBC preprocessor.
  * <br/>
  * The task can generate a properties file for <a href="http://hjem.sol.no/hellesoy/icontrol.html">iControl</a>,
  * a graphical user interface that lets you turn on/off assertions. iControl generates a control file that you can refer to
  * from this task using the controlfile attribute.
+ * iContract is at <a href="http://www.reliable-systems.com/tools/">http://www.reliable-systems.com/tools/</a>
  * <p/>
  * Thanks to Rainer Schmitz for enhancements and comments.
  *
@@ -226,12 +226,6 @@ public class IContract extends MatchingTask {
     private static final String ICONTROL_PROPERTIES_HEADER =
         " You might want to set classRoot to point to your normal compilation class root directory.";
 
-    private static final String ICONTROL_PROPERTIES_MESSAGE =
-        "You should probably modify icontrol.properties' classRoot to where comiled (uninstrumented) classes go.";
-
-    /** \ on windows, / on linux/unix */
-    private static final String ps = System.getProperty("path.separator");
-
     /** compiler to use for instrumenation */
     private String icCompiler = "javac";
 
@@ -274,9 +268,6 @@ public class IContract extends MatchingTask {
     /** The -q option */
     private boolean quiet = false;
 
-    /** Indicates whether or not to use internal compilation */
-    private boolean internalcompilation = false;
-
     /** The -m option */
     private File controlFile = null;
 
@@ -305,9 +296,8 @@ public class IContract extends MatchingTask {
     /** Regular compilation class root  */
     private File classDir = null;
 
-
     /**
-     * Sets the source directory
+     * Sets the source directory.
      *
      * @param srcDir the source directory
      */
@@ -317,9 +307,9 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Sets the class directory (uninstrumented classes)
+     * Sets the class directory (uninstrumented classes).
      *
-     * @param srcDir the source directory
+     * @param classDir the source directory
      */
     public void setClassdir(File classDir) {
         this.classDir = classDir;
@@ -327,7 +317,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Sets the instrumentation directory
+     * Sets the instrumentation directory.
      *
      * @param instrumentDir the source directory
      */
@@ -340,7 +330,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Sets the build directory for instrumented classes
+     * Sets the build directory for instrumented classes.
      *
      * @param buildDir the build directory
      */
@@ -350,7 +340,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Sets the build directory for repository classes
+     * Sets the build directory for repository classes.
      *
      * @param repositoryDir the source directory
      */
@@ -363,9 +353,9 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Sets the build directory for instrumented classes
+     * Sets the build directory for instrumented classes.
      *
-     * @param buildDir the build directory
+     * @param repBuildDir the build directory
      */
     public void setRepbuilddir(File repBuildDir) {
         this.repBuildDir = repBuildDir;
@@ -373,7 +363,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Turns on/off precondition instrumentation
+     * Turns on/off precondition instrumentation.
      *
      * @param pre true turns it on
      */
@@ -384,7 +374,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Turns on/off postcondition instrumentation
+     * Turns on/off postcondition instrumentation.
      *
      * @param post true turns it on
      */
@@ -395,7 +385,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Turns on/off invariant instrumentation
+     * Turns on/off invariant instrumentation.
      *
      * @param invariant true turns it on
      */
@@ -406,7 +396,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Sets the Throwable (Exception) to be thrown on assertion violation
+     * Sets the Throwable (Exception) to be thrown on assertion violation.
      *
      * @param clazz the fully qualified Throwable class name
      */
@@ -474,9 +464,12 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Creates a nested classpath element
+     * Sets the classpath.
      *
      * @return the nested classpath element
+     * @todo this overwrites the classpath so only one
+     *       effective classpath element would work. This
+     *       is not how we do this elsewhere.
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -497,7 +490,7 @@ public class IContract extends MatchingTask {
 
 
     /**
-     * Decides whether or not to update iControl properties file
+     * If true, updates iControl properties file
      *
      * @param updateIcontrol true if iControl properties file should be
      *      updated

@@ -58,7 +58,7 @@ perform checksum verifications.
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td valign="top">overwrite</td>
+    <td valign="top">forceoverwrite</td>
     <td valign="top">Overwrite existing files even if the destination
       files are newer. Defaults to &quot;no&quot;.</td>
     <td valign="top" align="center">No</td>
@@ -71,6 +71,13 @@ perform checksum verifications.
     this is set, the generated checksum is not written to a file or
     property, but rather, the content of the file or property is used to
     check against the generated checksum.
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">readbuffersize</td>
+    <td valign="top">The size of the buffer )in bytes) to use when
+    reading a file. Defaults to &quot;8192&quot; - you may get a
+    better performance on big files if you increase this value.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
@@ -144,7 +151,7 @@ When working with more than one file, if condition and/or verifyproperty is used
 the result will be true only if the checksums matched correctly for all files being
 considered.
 
-<hr><p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

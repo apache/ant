@@ -71,10 +71,9 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Convenient task to run the snapshot merge utility for JProbe Coverage.
+ * Runs the snapshot merge utility for JProbe Coverage.
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
- *
  * @ant.task name="jpcovmerge" category="metrics"
  */
 public class CovMerge extends Task {
@@ -91,26 +90,30 @@ public class CovMerge extends Task {
     private boolean verbose;
 
     /**
-     * set the coverage home. It must point to JProbe coverage
-     * directories where are stored native librairies and jars
+     * The directory where JProbe is installed.
      */
     public void setHome(File value) {
         this.home = value;
     }
 
     /**
-     * Set the output snapshot file
+     * Set the output snapshot file.
      */
     public void setTofile(File value) {
         this.tofile = value;
     }
 
-    /** run the merging in verbose mode */
+    /**
+     * If true, perform the merge in verbose mode giving details
+     * about the snapshot processing.
+     */
     public void setVerbose(boolean flag) {
         this.verbose = flag;
     }
 
-    /** add a fileset containing the snapshots to include/exclude */
+    /**
+     * add a fileset containing the snapshots to include.
+     */
     public void addFileset(FileSet fs) {
         filesets.addElement(fs);
     }

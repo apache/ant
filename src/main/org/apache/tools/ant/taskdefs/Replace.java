@@ -81,7 +81,8 @@ import java.util.Vector;
  * Replaces all occurrences of one or more string tokens with given
  * values in the indicated files. Each value can be either a string 
  * or the value of a property available in a designated property file.
- *
+ * If you want to replace a text that crosses line boundaries, you
+ * must use a nested <code>&lt;replacetoken&gt;</code> element.
  * @author Stefano Mazzocchi 
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:erik@desknetinc.com">Erik Langenbach</a>
@@ -112,7 +113,9 @@ public class Replace extends MatchingTask {
     
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
-    //Inner class
+    /**
+     * an inline string to use as the replacement text
+     */
     public class NestedString {
 
         private StringBuffer buf = new StringBuffer();
@@ -126,12 +129,18 @@ public class Replace extends MatchingTask {
         }
     }
 
-    //Inner class
+    /**
+     * A filter to apply.
+     */
     public class Replacefilter {
         private String token;
         private String value;
         private String property;
 
+        /**
+         * validate the filter's configuration
+         * @throws BuildException if any part is invalid
+         */
         public void validate() throws BuildException {
             //Validate mandatory attributes
             if (token == null) {
@@ -173,6 +182,10 @@ public class Replace extends MatchingTask {
             }
         }
 
+        /**
+         * get the replacement value for this filter token
+         * @return
+         */
         public String getReplaceValue() {
             if (property != null) {
                 return properties.getProperty(property);
@@ -186,26 +199,53 @@ public class Replace extends MatchingTask {
             }
         }
 
+        /**
+         * Set the token to replace
+         * @param token token
+         */
         public void setToken(String token) {
             this.token = token;
         }
 
+        /**
+         * Get the string to search for
+         * @return current token
+         */
         public String getToken() {
             return token;
         }
 
+        /**
+         * The replacement string; required if <code>property<code>
+         * is not set
+         * @param value value to replace
+         */
         public void setValue(String value) {
             this.value = value;
         }
 
+        /**
+         * Get replacements string
+         * @return replacement or null
+         */
         public String getValue() {
             return value;
         }
 
+        /**
+         * Set the name of the property whose value is to serve as
+         * the replacement value; required if <code>value</code> is not set.
+         * @param property propname
+         */
         public void setProperty(String property) {
             this.property = property;
         }
 
+        /**
+         * Get the name of the property whose value is to serve as
+         * the replacement value;
+         * @return property or null
+         */
         public String getProperty() {
             return property;
         }
@@ -213,6 +253,7 @@ public class Replace extends MatchingTask {
 
     /**
      * Do the execution.
+     * @throws BuildException if we cant build
      */
     public void execute() throws BuildException {
 
@@ -310,6 +351,13 @@ public class Replace extends MatchingTask {
         }
     }
 
+    /**
+     * helper method to load a properties file and throw a build exception
+     * if it cannot be loaded
+     * @param propertyFile
+     * @return loaded properties collection
+     * @throws BuildException if the file could not be found or read
+     */
     public Properties getProperties(File propertyFile) throws BuildException {
         Properties properties = new Properties();
 
@@ -413,8 +461,14 @@ public class Replace extends MatchingTask {
             // otherwise, delete the new one
             if (changes) {
                 ++fileCount;
-                src.delete();
-                temp.renameTo(src);
+                if (!src.delete()) {
+                    throw new BuildException("Couldn't delete " + src,
+                                             getLocation());
+                }
+                if (!temp.renameTo(src)) {
+                    throw new BuildException("Couldn't rename temporary file " 
+                                             + temp, getLocation());
+                }
                 temp = null;
             }
         } catch (IOException ioe) {
@@ -439,6 +493,12 @@ public class Replace extends MatchingTask {
         
     }
 
+    /**
+     * apply all replace filters to a buffer
+     * @param buffer string to filter
+     * @param filename filename for logging purposes
+     * @return filtered string
+     */
     private String processReplacefilters(String buffer, String filename) {
         String newString = new String(buffer);
 
@@ -457,14 +517,17 @@ public class Replace extends MatchingTask {
 
 
     /**
-     * Set the source file.
+     * Set the source file; required unless <code>dir</code> is set.
+     * @param file source file
      */
     public void setFile(File file) {
         this.src = file;
     }
 
     /**
-     * Request a summary
+     * Indicates whether a summary of the replace operation should be
+     * produced, detailing how many token occurrences and files were
+     * processed; optional, default=false
      *
      * @param summary true if you would like a summary logged of the
      * replace operation
@@ -475,35 +538,48 @@ public class Replace extends MatchingTask {
     
     
     /**
-     * Sets a file used to define multiple ReplaceFilters from key-value pairs.
+     * Sets the name of a property file containing filters; optional.
+     * Each property will be treated as a
+     * replacefilter where token is the name of the property and value
+     * is the value of the property.
+     * @param filename file to load
      */
     public void setReplaceFilterFile(File filename) {
         replaceFilterFile = filename;
     }
 
     /**
-     * Set the source files path when using matching tasks.
+     * The base directory to use when replacing a token in multiple files;
+     * required if <code>file</code> is not defined.
+     * @param dir base dir
      */
     public void setDir(File dir) {
         this.dir = dir;
     }
 
     /**
-     * Set the string token to replace.
+     * Set the string token to replace;
+     * required unless a nested
+     * <code>replacetoken</code> element or the <code>replacefilterfile</code>
+     * attribute is used.
+     * @param token token string
      */
     public void setToken(String token) {
         createReplaceToken().addText(token);
     }
 
     /**
-     * Set the string value to use as token replacement.
+     * Set the string value to use as token replacement;
+     * optional, default is the empty string ""
+     * @param value replacement value
      */
     public void setValue(String value) {
         createReplaceValue().addText(value);
     }
 
     /**
-     * Set the file encoding to use on the files read and written by replace
+     * Set the file encoding to use on the files read and written by the task;
+     * optional, defaults to default JVM encoding
      *
      * @param encoding the encoding to use on the files
      */
@@ -512,7 +588,8 @@ public class Replace extends MatchingTask {
     }
     
     /**
-     * Nested &lt;replacetoken&gt; element.
+     * the token to filter as the text of a nested element
+     * @return nested token to configure
      */
     public NestedString createReplaceToken() {
         if (token == null) {
@@ -522,21 +599,26 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * Nested &lt;replacevalue&gt; element.
+     * the string to replace the token as the text of a nested element
+     * @return replacement value to configure
      */
     public NestedString createReplaceValue() {
         return value;
     }
 
     /**
-     * Sets a file to be searched for property values.
+     * The name of a property file from which properties specified using
+     * nested <code>&lt;replacefilter&gt;</code> elements are drawn;
+     * Required only if <i>property</i> attribute of
+     * <code>&lt;replacefilter&gt;</code> is used.
+     * @param filename file to load
      */
     public void setPropertyFile(File filename) {
         propertyFile = filename;
     }
 
     /**
-     * Add nested &lt;replacefilter&gt; element.
+     * Add a nested &lt;replacefilter&gt; element.
      */
     public Replacefilter createReplacefilter() {
         Replacefilter filter = new Replacefilter();

@@ -90,6 +90,7 @@ public abstract class Continuus extends Task {
     /**
      * Set the value of ccmAction.
      * @param v  Value to assign to ccmAction.
+     * @ant.attribute ignore="true"
      */
     public void setCcmAction(String v) {
         this.ccmAction = v;
@@ -97,7 +98,8 @@ public abstract class Continuus extends Task {
 
 
     /**
-     * Set the directory where the ccm executable is located
+     * Set the directory where the ccm executable is located.
+     *
      * @param dir the directory containing the ccm executable
      */
     public final void setCcmDir(String dir) {

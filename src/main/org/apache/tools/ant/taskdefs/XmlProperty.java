@@ -72,21 +72,27 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * Task that gets property values from a valid xml file.
- * Example:
- *   <root-tag myattr="true">
- *     <inner-tag someattr="val">Text</inner-tag>
- *     <a2><a3><a4>false</a4></a3></a2>
- *   </root-tag>
+ * Loads property values from a valid XML file,
+ * generating the property names from the file's element and attribute names.
  *
+ * Example:
+ * <pre>
+ *   &lt;root-tag myattr="true"&gt;
+ *     &lt;inner-tag someattr="val"&gt;Text&lt;/inner-tag&gt;
+ *     &lt;a2&gt;&lt;a3&gt;&lt;a4&gt;false&lt;/a4&gt;&lt;/a3&gt;&lt;/a2&gt;
+ *   &lt;/root-tag&gt;
+ *</pre>
+ * this generates
+ * <pre>
  *  root-tag(myattr)=true
  *  root-tag.inner-tag=Text
  *  root-tag.inner-tag(someattr)=val
  *  root-tag.a2.a3.a4=false
- *
+ * </pre>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Erik Hatcher
  * @created 14 January 2002
+ * @ant.task name="xmlproperty" category="xml"
  */
 
 public class XmlProperty extends org.apache.tools.ant.Task {
@@ -115,10 +121,12 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
     /**
      * Run the task.
-     * @exception org.apache.tools.ant.BuildException The exception raised during task execution.
+     * @throws BuildException The exception raised during task execution.
+     * @todo validate the source file is valid before opening, print a better error message
+     * @todo add a verbose level log message listing the name of the file being loaded
      */
     public void execute()
-            throws org.apache.tools.ant.BuildException {
+            throws BuildException {
             
         BufferedInputStream configurationStream = null;
 
@@ -172,6 +180,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         }
     }
 
+    /**
+     * add all attributes of a node, and its inner text, and then recursively add all nested elements
+     */
 
     void addNodeRecursively(org.w3c.dom.Node node, String prefix) {
 
@@ -186,8 +197,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                 }
                 else{
                   attributeName = prefix + (prefix.trim().equals("")?"":".") + node.getNodeName() + "(" + attributeNode.getNodeName() + ")";
-		}              
-		  
+                }              
+          
                 String attributeValue = attributeNode.getNodeValue();
                 log(attributeName + ":" + attributeValue, Project.MSG_DEBUG);
                 project.setNewProperty(attributeName, attributeValue);
@@ -214,22 +225,40 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         }
     }
 
+    /**
+     * The XML file to parse; required.
+     */
     public void setFile(File src) {
         this.src = src;
     }
 
+    /**
+     * the prefix to prepend to each property
+     */
     public void setPrefix(String prefix) {
         this.prefix = prefix.trim();
     }
 
+    /**
+     * flag to include the xml root tag as a 
+     * first value in the property name; optional, 
+     * default is true
+     */
     public void setKeeproot(boolean keepRoot) {
         this.keepRoot = keepRoot;
     }
 
+    /**
+     * flag to validate the XML file; optional, default false
+     */
     public void setValidate(boolean validate) {
         this.validate = validate;
     }
 
+    /**
+     * flag to treat attributes as nested elements;
+     * optional, default false
+     */
     public void setCollapseAttributes(boolean collapseAttributes) {
         this.collapseAttributes = collapseAttributes;
     }

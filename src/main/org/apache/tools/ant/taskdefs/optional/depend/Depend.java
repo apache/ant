@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 
 /**
- * Generate a dependency file for a given set of classes
+ * Generates a dependency file for a given set of classes.
  *
  * @author Conor MacNeill
  */
@@ -173,7 +173,7 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * Creates a nested classpath element.
+     * Adds a classpath to be used for this dependency check.
      *
      * @return A path object to be configured by Ant
      */
@@ -185,7 +185,7 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a classpath defined elsewhere.
      *
      * @param r a reference to a path object to be used as the depend
      *      classpath
@@ -687,8 +687,6 @@ public class Depend extends MatchingTask {
      */
     protected void scanDir(File srcDir, String files[]) {
 
-        long now = System.currentTimeMillis();
-
         for (int i = 0; i < files.length; i++) {
             File srcFile = new File(srcDir, files[i]);
             if (files[i].endsWith(".java")) {
@@ -798,7 +796,7 @@ public class Depend extends MatchingTask {
 
 
     /**
-     * Set the source dirs to find the source Java files.
+     * Set the directories path to find the Java source files.
      *
      * @param srcPath the source path
      */
@@ -807,7 +805,7 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * Set the destination directory where the compiled java files exist.
+     * Set the destination directory where the compiled Java files exist.
      *
      * @param destPath the destination areas where build files are written
      */
@@ -816,7 +814,7 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * Sets the dependency cache file
+     * Sets the dependency cache file.
      *
      * @param cache the dependency cache file
      */
@@ -825,10 +823,10 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * Set the closure flag. When not set, the depend task will only follow
-     * direct dependencies between classes. When set, transitive
-     * dependencies are followed until the closure of the dependency set if
-     * reached.
+     * If true, transitive dependencies are followed until the
+     * closure of the dependency set if reached.
+     * When not set, the depend task will only follow
+     * direct dependencies between classes.
      *
      * @param closure indicate if dependency closure is required.
      */
@@ -837,8 +835,8 @@ public class Depend extends MatchingTask {
     }
 
     /**
-     * Flag to indicate whether the reverse dependency list should be dumped
-     * to debug
+     * If true, the dependency information will be written
+     * to the debug level log.
      *
      * @param dump set to true to dump dependency information to the log
      */

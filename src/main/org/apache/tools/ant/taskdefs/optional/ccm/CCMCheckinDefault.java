@@ -55,7 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 /**
- * Task to perform Checkin Default task command to Continuus
+ * Performs Continuus Checkin Default task command.
+ *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  *
  * @ant.task name="ccmcheckintask" category="scm"

@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>ExtensionSet Type</title>
+</head>
+
+<body>
+<h2><a name="fileset">ClassFileSet</a></h2>
+<p>Utility type that represents a set of Extensions.</p>
+<p>Note that this type
+works with extensions as defined by the "Optional Package" specification.
+ For more information about optional packages, see the document
+<em>Optional Package Versioning</em> in the documentation bundle for your
+Java2 Standard Edition package, in file
+<code>guide/extensions/versioning.html</code> or online at
+<a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html">
+http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
+
+<h3>Nested Elements</h3>
+
+<h4>extension</h4>
+<p><a href="extension.html">Extension</a> object to add to set.</p>
+
+<h4>fileset</h4>
+ <p><a href="../CoreTypes/fileset.html">FileSet</a>s all files contained
+ contained within set that are jars and implement an extension are added
+ to extension set.</p>
+
+<h4>fileset</h4>
+ <p><a href="libfileset.html">LibFileSet</a>s all files contained
+ contained within set that are jars and implement an extension are added
+ to extension set. However the extension information may be modified by
+ attributes of libfileset</p>
+
+<h4>Examples</h4>
+<blockquote><pre>
+&lt;extension id=&quot;e1&quot;
+    extensionName=&quot;MyExtensions&quot;
+    specificationVersion=&quot;1.0&quot;
+    specificationVendor=&quot;Peter Donald&quot;
+    implementationVendorID=&quot;vv&quot;
+    implementationVendor=&quot;Apache&quot;
+    implementationVersion=&quot;2.0&quot;
+    implementationURL=&quot;http://somewhere.com/myExt.jar&quot;/&gt;
+
+&lt;libfileset id="lfs"
+               includeUrl="true"
+               includeImpl="false"
+               dir="tools/lib"&gt;
+  &lt;include name="*.jar"/&gt;
+&lt;/libfileset&gt;
+
+&lt;extensionSet id="exts"&gt;
+  &lt;libfileset dir="lib"&gt;
+    &lt;include name="*.jar"/&gt;
+  &lt;/libfileset&gt;
+  &lt;libfileset refid="lfs"/&gt;
+  &lt;extension refid="e1"/&gt;
+&lt;/extensionSet&gt;
+
+</pre></blockquote>
+
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

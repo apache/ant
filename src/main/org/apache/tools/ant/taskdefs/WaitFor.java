@@ -124,7 +124,7 @@ public class WaitFor extends ConditionBase {
     }
 
     /**
-     * Set the timeout property.
+     * Name the property to set after a timeout.
      */
     public void setTimeoutProperty(String p) {
         timeoutProperty = p;
@@ -172,6 +172,11 @@ public class WaitFor extends ConditionBase {
         }
     }
 
+    /**
+     * The enumeration of units: 
+     * millisecond, second, minute, hour, day, week
+     * @todo: we use timestamps in many places, why not factor this out 
+     */
     public static class Unit extends EnumeratedAttribute {
 
         private static final String MILLISECOND = "millisecond";

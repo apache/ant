@@ -39,6 +39,39 @@
     </section>
     
     <section name="Books">
+      <p>Listed by descending publication date.</p>
+      <!-- TODO: reorganize as a table? -->
+      <subsection name="Java Development with Ant">
+        <p>Coming soon: August 2002, covers Ant 1.5
+        </p>
+
+        <table>
+          <tr>
+            <th>Authors:</th>
+            <td>Erik Hatcher and Steve Loughran</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.manning.com/antbook/">http://www.manning.com/antbook/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Ant: The Definitive Guide">
+          <!-- a soon as somebody submits a description, let's add it -->
+        <p>Covers Ant release 1.4.1.</p>
+        <table>
+          <tr>
+            <th>Authors:</th>
+            <td>Jesse E. Tilly and Eric M. Burke</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.oreilly.com/catalog/anttdg/">http://www.oreilly.com/catalog/anttdg/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Java Tools for eXtreme Programming">
         <p>This book covers the following XP subjects:
             <ul>
@@ -61,6 +94,7 @@
           </tr>
         </table>
       </subsection>
+
     </section>
 
     <section name="Articles and Presentations">

@@ -69,7 +69,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * StarTeamCheckIn.java
+ * Checks files into a StarTeam project.  
+ * Optionally adds files and in the local tree that
+ * are not managed by the repository to its control.
  *
  *
  * Created: Sat Dec 15 20:26:07 2001
@@ -118,7 +120,7 @@ public class StarTeamCheckin extends TreeBasedTask {
     }
 
     /**
-     * Set the value of comment.
+     * Optional checkin comment to be saved with the file.
      * @param comment  Value to assign to comment.
      */
     public void setComment(String comment) {
@@ -134,7 +136,8 @@ public class StarTeamCheckin extends TreeBasedTask {
     }
 
     /**
-     * Set the value of addUncontrolled.
+     * if true, any files or folders NOT in StarTeam will be 
+     * added to the repository.  Defaults to "false".
      * @param addUncontrolled  Value to assign to addUncontrolled.
      */
     public void setAddUncontrolled(boolean addUncontrolled) {
@@ -150,7 +153,9 @@ public class StarTeamCheckin extends TreeBasedTask {
     private int lockStatus = Item.LockType.UNCHANGED;
 
     /**
-     * Set to do an unlocked checkout. Default is false;
+     * Set to do an unlocked checkout; optional, default is false;
+     * If true, file will be unlocked so that other users may
+     * change it.  If false, lock status will not change.     
      * @param v  true means do an unlocked checkout
      *           false means leave status alone.
      */

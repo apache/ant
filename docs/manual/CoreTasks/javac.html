@@ -119,7 +119,7 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">Comma-separated list of files (may be specified using
+    <td valign="top">Comma- or space-separated list of files (may be specified using
       wildcard patterns) that must be
       included; all <code>.java</code> files are included when omitted.</td>
     <td valign="top" align="center">No</td>
@@ -132,7 +132,7 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">Comma-separated list of files (may be specified using
+    <td valign="top">Comma- or space-separated list of files (may be specified using
       wildcard patterns) that must be excluded; no files (except default
       excludes) are excluded when omitted.</td>
     <td valign="top" align="center">No</td>
@@ -229,8 +229,13 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">target</td>
-    <td valign="top">Generate class files for specific VM version (e.g.,
-	 <code>1.1</code> or <code>1.2</code>).</td>
+    <td valign="top">Generate class files for specific VM version
+    (e.g., <code>1.1</code> or <code>1.2</code>). <b>Note that the
+    default value depends on the JVM that is running Ant.  In
+    particular, if you use JDK 1.4 the generated classes will not be
+    usable for a 1.1 Java VM unless you explicitly set this attribute
+    to the value 1.1 (which is the default value for JDK 1.1 to
+    1.3).</b></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -300,13 +305,13 @@ invoking the compiler.</p>
 
     <td valign="top">Value of the <code>-source</code> command-line
     switch; will be ignored by all implementations except
-    <code>modern</code> and <code>jikes</code>.<br>
-    If you use this attribute together with <code>jikes</code>, you
-    must make sure that your version of jikes supports the
-    <code>-source</code> switch.<br>
-    Legal values are <code>1.3</code> and <code>1.4</code> &ndash; by
-    default, no <code>-source</code> argument will be used at
-    all.</td>
+    <code>javac1.4</code> (or <code>modern</code> when Ant is not
+    running in a 1.3 VM) and <code>jikes</code>.<br> If you use this
+    attribute together with <code>jikes</code>, you must make sure
+    that your version of jikes supports the <code>-source</code>
+    switch.<br> Legal values are <code>1.3</code> and <code>1.4</code>
+    &ndash; by default, no <code>-source</code> argument will be used
+    at all.</td>
 
     <td align="center" valign="top">No</td>
   </tr>
@@ -456,6 +461,20 @@ the property <code>src2</code>. This can also be represented using nested
     &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
   &lt;/javac&gt;</pre>
 
+<p>If you want to run the javac compiler of a different JDK, you
+should tell Ant, where to find the compiler and which version of JDK
+you will be using so it can choose the correct command line switches.
+The following example executes a JDK 1.1 javac in a new process and
+uses the correct command line switches even when Ant is running in a
+Java VM of a different version:</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         fork=&quot;yes&quot;
+         executable=&quot;/opt/java/jdk1.1/bin/javac&quot;
+         compiler=&quot;javac1.1&quot;
+  /&gt;</pre>
+
 <p><a name="srcdirnote"><b>Note:</b></a>
 If you wish to compile only source files located in certain packages below a
 common root, use the <code>include</code>/<code>exclude</code> attributes
@@ -543,7 +562,7 @@ while all others are <code>false</code>.</p>
 </p>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation.
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>

@@ -82,7 +82,7 @@ public abstract class ClearCase extends Task {
     private String m_viewPath = null;
 
     /**
-     * Set the directory where the cleartool executable is located
+     * Set the directory where the cleartool executable is located.
      *
      * @param dir the directory containing the cleartool executable
      */
@@ -107,7 +107,7 @@ public abstract class ClearCase extends Task {
     }
 
     /**
-     * Set the path to the item in a clearcase view to operate on
+     * Set the path to the item in a ClearCase view to operate on.
      *
      * @param viewPath Path to the view directory or file
      */

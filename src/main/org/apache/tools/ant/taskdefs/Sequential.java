@@ -63,8 +63,16 @@ import java.util.Enumeration;
 
 
 /**
- * Implements a single threaded task execution.
+ * Sequential is a container task - it can contain other Ant tasks. The nested 
+ * tasks are simply executed in sequence. Sequential's primary use is to support 
+ * the sequential execution of a subset of tasks within the
+ {@link Parallel Parallel Task} 
+
  * <p>
+ * The sequential task has no attributes and does not support any nested 
+ * elements apart from Ant tasks. Any valid Ant task may be embedded within the 
+ * sequential task.</p>
+ 
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @since Ant 1.4
  * @ant.task category="control"
@@ -74,6 +82,21 @@ public class Sequential extends Task
 
     /** Optional Vector holding the nested tasks */
     private Vector nestedTasks = new Vector();
+
+    /**
+     * Override {@link org.apache.tools.ant.Task#maybeConfigure
+     * maybeConfigure} in a way that leaves the nested tasks
+     * unconfigured until they get executed.
+     *
+     * @since Ant 1.5
+     */
+    public void maybeConfigure() throws BuildException {
+        if (isInvalid()) {
+            super.maybeConfigure();
+        } else {
+            getRuntimeConfigurableWrapper().maybeConfigure(getProject(), false);
+        }
+    }
 
     /**
      * Add a nested task to Sequential.

@@ -61,7 +61,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Date;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Message;
@@ -117,7 +116,7 @@ class MimeMailer extends Mailer {
             if (subject != null) {
                 msg.setSubject(subject);
             }
-            msg.addHeader("Date", (new Date()).toString());
+            msg.addHeader("Date", getDate());
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PrintStream out = new PrintStream(baos);

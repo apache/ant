@@ -57,10 +57,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.email.EmailTask;
 
 /**
- * A task to send SMTP email. This version has near identical syntax to
- * the SendEmail task, but is MIME aware. It also requires Sun's mail.jar and
- * activation.jar to compile and execute, which puts it clearly into the
- * very optional category.
+ * A task to send SMTP email; Use <tt>mail</tt> instead 
  *
  * @deprecated Use {@link EmailTask} instead.
  *
@@ -68,6 +65,7 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  * @author steve_l@iseran.com steve loughran
  * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
+ * @since Ant1.4
  */
 public class MimeMail extends EmailTask {
     /**

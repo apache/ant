@@ -69,8 +69,8 @@ import java.util.Vector;
 import java.io.File;
 
 /**
- * This task converts path and classpath information to a specific target OS
- * format. The resulting formatted path is placed into a specified property.
+ * Converts path and classpath information to a specific target OS
+ * format. The resulting formatted path is placed into the specified property.
  *
  * @author Larry Streepy <a href="mailto:streepy@healthlanguage.com">
  *      streepy@healthlanguage.com</a>
@@ -80,27 +80,58 @@ import java.io.File;
 public class PathConvert extends Task {
 
     // Members
-    private Path path = null;// Path to be converted
-    private Reference refid = null;// Reference to path/fileset to
-    // convert
-    private String targetOS = null;// The target OS type
-    private boolean targetWindows = false;// Set when targetOS is set
-    private boolean onWindows = false;// Set if we're running on windows
-    private String property = null;// The property to receive the
-    //results
-    private Vector prefixMap = new Vector();// Path prefix map
-    private String pathSep = null;// User override on path sep char
-    private String dirSep = null;// User override on directory sep
-    // char
+    /**
+     * Path to be converted
+     */
+    private Path path = null;
+    /**
+     * Reference to path/fileset to convert
+     */
+    private Reference refid = null;
+    /**
+     * The target OS type
+     */
+    private String targetOS = null;
+    /**
+     * Set when targetOS is set to windows
+     */
+    private boolean targetWindows = false;
+    /**
+     * Set if we're running on windows
+     */
+    private boolean onWindows = false;
+    /**
+     * Set if we should create a new property even if the result is empty
+     */
+    private boolean setonempty = true;
+    /**
+     * The property to receive the conversion
+     */
+    private String property = null;//
+    /**
+     * Path prefix map
+     */
+    private Vector prefixMap = new Vector();
+    /**
+     * User override on path sep char
+     */
+    private String pathSep = null;
+    /**
+     * User override on directory sep char
+     */
+    private String dirSep = null;
 
+    /**
+     * constructor
+     */
     public PathConvert() {
         onWindows = Os.isFamily("dos");
     }
 
 
     /**
-     * Helper class, holds the nested <map> values. Elements will look like
-     * this: &lt;map from=&quot;d:&quot; to=&quot;/foo&quot;/&gt; <p>
+     * Helper class, holds the nested &lt;map&gt; values. Elements will look like
+     * this: &lt;map from=&quot;d:&quot; to=&quot;/foo&quot;/&gt;
      *
      * When running on windows, the prefix comparison will be case
      * insensitive.
@@ -108,12 +139,21 @@ public class PathConvert extends Task {
     public class MapEntry {
 
         /** Set the &quot;from&quot; attribute of the map entry  */
+        /**
+         * the prefix string to search for; required.
+         * Note that this value is case-insensitive when the build is
+         * running on a Windows platform and case-sensitive when running on
+         * a Unix platform.
+         * @param from
+         */
         public void setFrom(String from) {
             this.from = from;
         }
 
-
-        /** Set the &quot;to&quot; attribute of the map entry  */
+        /**
+         *  The replacement text to use when from is matched; required.
+         * @param to new prefix
+         */
         public void setTo(String to) {
             this.to = to;
         }
@@ -157,6 +197,10 @@ public class PathConvert extends Task {
     }
 
 
+    /**
+     * an enumeration of supported targets:
+     * windows", "unix", "netware", and "os/2".
+     */
     public static class TargetOs extends EnumeratedAttribute {
         public String[] getValues() {
             return new String[]{"windows", "unix", "netware", "os/2"};
@@ -178,7 +222,10 @@ public class PathConvert extends Task {
     }
 
 
-    /** Create a nested MAP element  */
+    /**
+     * Create a nested MAP element
+     * @return a Map to configure
+     */
     public MapEntry createMap() {
 
         MapEntry entry = new MapEntry();
@@ -189,10 +236,12 @@ public class PathConvert extends Task {
 
 
     /**
-     * Set the value of the targetos attribute
+     * Set targetos to a platform to one of
+     * "windows", "unix", "netware", or "os/2"; required unless
+     * unless pathsep and/or dirsep are specified.
      *
      * @deprecated use the method taking a TargetOs argument instead
-     * @see setTargetos(TargetOs)
+     * @see #setTargetos(TargetOs)
      */
     public void setTargetos(String target) {
         TargetOs to = new TargetOs();
@@ -203,7 +252,9 @@ public class PathConvert extends Task {
 
 
     /**
-     * Set the value of the targetos attribute
+     * Set targetos to a platform to one of
+     * "windows", "unix", "netware", or "os/2"; required unless
+     * unless pathsep and/or dirsep are specified.
      *
      * @since Ant 1.5
      */
@@ -221,10 +272,20 @@ public class PathConvert extends Task {
         targetWindows = !targetOS.equals("unix");
     }
 
+    /**
+     * Set setonempty
+     *
+     * If false, don't set the new property if the result is the empty string.
+     * @param setonempty true or false
+     *
+     * @since Ant 1.5
+     */
+     public void setSetonempty(boolean setonempty) {
+         this.setonempty = setonempty;
+     }
 
     /**
-     * Set the value of the property attribute - this is the property into
-     * which our converted path will be placed.
+     * The property into which the converted path will be placed.
      */
     public void setProperty(String p) {
         property = p;
@@ -244,27 +305,39 @@ public class PathConvert extends Task {
     }
 
 
-    /** Override the default path separator string for the target os  */
+    /**
+     * Set the default path separator string;
+     * defaults to current JVM
+     * {@link java.io.File#pathSeparator File.pathSeparator}
+     * @param sep path separator string
+     */
     public void setPathSep(String sep) {
         pathSep = sep;
     }
 
 
     /**
-     * Override the default directory separator string for the target os
+     * Set the default directory separator string;
+     * defaults to current JVM {@link java.io.File#separator File.separator}
+     * @param sep directory separator string
      */
     public void setDirSep(String sep) {
         dirSep = sep;
     }
 
 
-    /** Has the refid attribute of this element been set?  */
+    /**
+     * Has the refid attribute of this element been set?
+     * @return true if refid is valid
+     */
     public boolean isReference() {
         return refid != null;
     }
 
 
-    /** Do the execution.  */
+    /** Do the execution.
+     * @throws BuildException if something is invalid
+     */
     public void execute() throws BuildException {
         Path savedPath = path;
         String savedPathSep = pathSep;// may be altered in validateSetup
@@ -343,13 +416,20 @@ public class PathConvert extends Task {
                 }
             }
 
-            // Place the result into the specified property
+            // Place the result into the specified property,
+            // unless setonempty == false
             String value = rslt.toString();
-
-            log("Set property " + property + " = " + value,
-                Project.MSG_VERBOSE);
-
-            getProject().setNewProperty(property, value);
+            if(setonempty) {
+                log("Set property " + property + " = " + value,
+                    Project.MSG_VERBOSE);
+                getProject().setNewProperty(property, value);
+            } else {
+                if(rslt.length() > 0) {
+                    log("Set property " + property + " = " + value,
+                        Project.MSG_VERBOSE);
+                    getProject().setNewProperty(property, value);
+                }
+            }
         } finally {
             path = savedPath;
             dirSep = savedDirSep;

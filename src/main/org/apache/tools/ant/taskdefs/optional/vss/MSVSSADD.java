@@ -59,10 +59,11 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Task to perform Add commands to Microsoft Visual Source Safe.
+ * Performs Add commands to Microsoft Visual SourceSafe.
  * Based on the VSS Checkin code by Martin Poeschl
  *
  * @author Nigel Magnay
+ * @ant.task name="vssadd" category="scm"
  */
 public class MSVSSADD extends MSVSS {
 
@@ -135,7 +136,7 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Set behaviour, used in get command to make files that are 'got' writable
+     * Leave added files writable? Default: false. 
      */
     public final void setWritable(boolean argWritable) {
         m_Writable = argWritable;
@@ -152,6 +153,10 @@ public class MSVSSADD extends MSVSS {
         }
     }
 
+    /**
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
+     */      
     public void setAutoresponse(String response){
         if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;
@@ -182,7 +187,7 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Sets the comment to apply in SourceSafe.
+     * Sets the comment to apply; optional.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.

@@ -64,7 +64,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Execute a script
+ * Executes a script.
  *
  * @ant.task name="script"
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
@@ -73,7 +73,17 @@ public class Script extends Task {
     private String language;
     private String script = "";
     private Hashtable beans = new Hashtable();
-    
+
+    // Register BeanShell ourselves, since BSF does not
+    // natively support it (yet).
+    // This "hack" can be removed once BSF has been
+    // modified to support BeanShell or more dynamic
+    // registration.
+    static {
+        BSFManager.registerScriptingEngine( "beanshell",
+            "bsh.util.BeanShellBSFEngine", new String [] { "bsh" } );
+    }
+
     /**
      * Add a list of named objects to the list to be exported to the script
      */
@@ -144,7 +154,7 @@ public class Script extends Task {
     }
 
     /**
-     * Load the script from an external file 
+     * Load the script from an external file ; optional.
      *
      * @param msg Sets the value for the script variable.
      */
@@ -169,7 +179,7 @@ public class Script extends Task {
     }
 
     /**
-     * Defines the script.
+     * The script text.
      *
      * @param msg Sets the value for the script variable.
      */

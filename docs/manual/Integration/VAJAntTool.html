@@ -57,8 +57,8 @@ support VAJ has not (out of the box).</P>
         To Tool API'. Therefore builds containing VAJ tasks can also be executed
         from the command line (Kudos to Glenn McAllister for describing the
         concept and providing source code at
-		<A href="http://www7.software.ibm.com/vad.nsf/Data/Document4366">
-		http://www7.software.ibm.com/vad.nsf/Data/Document4366</A>.&nbsp;
+        <A href="http://www7.software.ibm.com/vad.nsf/Data/Document4366">
+        http://www7.software.ibm.com/vad.nsf/Data/Document4366</A>.&nbsp;
 
         <LI>It is possible to cancel a running&nbsp;build
         executed from the plugin
@@ -125,14 +125,7 @@ workspace.</P>
        <td valign="top">version</TD>
        <td valign="top">name of the requested version</TD>
        <td valign="top" align="middle">yes</TD></TR>
-     <tr>
-       <td valign="top">remote</TD>
-       <td valign="top">
-      <P>name and port of a remote tool server. (format:
-      &lt;servername&gt;:&lt;port no&gt;).<BR>If this
-      attribute is set, the tasks will&nbsp;be executed on the specified tool
-      server.&nbsp;</P></TD>
-       <td valign="top" align="middle">no</TD></TR></TABLE>
+     </TABLE>
 
 <h3>Example</H3>
 <pre>&lt;vajload remote="localhost:32767"&gt;
@@ -246,11 +239,11 @@ This example exports all packages in the VAJ project 'MyProject', except
 packages starting with 'test'.
 <h3>Default Excludes</H3>
 The default excludes are:<br>
-<pre>	IBM*/**
-	Java class libraries/**
-	Sun class libraries*/**
-	JSP Page Compile Generated Code/**
-	VisualAge*/**
+<pre>   IBM*/**
+    Java class libraries/**
+    Sun class libraries*/**
+    JSP Page Compile Generated Code/**
+    VisualAge*/**
 </PRE>
 <hr>
 <h2><a name="vajimport"></A>VAJImport</H2>
@@ -273,17 +266,17 @@ from the file system into VAJ. These imports can be specified with a fileset.
        <td valign="top" align="middle">yes</TD></TR>
      <tr>
        <td valign="top">importSources</TD>
-       <td valign="top">export source files (default:
+       <td valign="top">import source files (default:
 "yes")</TD>
        <td valign="top" align="middle">no</TD></TR>
      <tr valign="top">
        <td valign="top">importResources</TD>
-       <td valign="top">export resource files (default:
+       <td valign="top">import resource files (default:
     "yes")</TD>
        <td valign="top" align="middle">no</TD></TR>
      <tr valign="top">
        <td valign="top">importClasses</TD>
-       <td valign="top">export class files (default: "no")</TD>
+       <td valign="top">import class files (default: "no")</TD>
        <td valign="top" align="middle">no</TD></TR>
      <tr>
        <td valign="top">remote</TD>
@@ -369,8 +362,8 @@ install directory. If You have installed it elsewhere, adapt the pathes below.
                    For
         a good introduction into the VAJ Remote Tool Access see the
         great introduction from Glenn McAllister at
-		<A href="http://www7.software.ibm.com/vad.nsf/Data/Document4366">
-		http://www7.software.ibm.com/vad.nsf/Data/Document4366</A>.&nbsp;It
+        <A href="http://www7.software.ibm.com/vad.nsf/Data/Document4366">
+        http://www7.software.ibm.com/vad.nsf/Data/Document4366</A>.&nbsp;It
   is highly recommended to read this article before doing the installation (to
   understand what you do :-) ).
   <LI>insert the following lines into

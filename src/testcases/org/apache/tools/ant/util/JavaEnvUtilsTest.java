@@ -155,7 +155,8 @@ public class JavaEnvUtilsTest extends TestCase {
                        j.startsWith(javaHomeParent));
 
             if (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_0 ||
-                JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1) {
+                JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1 ||
+                Os.isFamily("mac")) {
                 assertTrue(j+" is normalized and in the JRE dir",
                            j.startsWith(javaHome));
             } else {

@@ -34,7 +34,7 @@ elements of <code>&lt;patternset&gt;</code> directly, as well as
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">A comma-separated list of patterns of directories that
+    <td valign="top">A comma- or space-separated list of patterns of directories that
      must be included; all directories are included when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -46,7 +46,7 @@ elements of <code>&lt;patternset&gt;</code> directly, as well as
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">A comma-separated list of patterns of directories that
+    <td valign="top">A comma- or space-separated list of patterns of directories that
      must be excluded; no directories are excluded when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -62,6 +62,12 @@ elements of <code>&lt;patternset&gt;</code> directly, as well as
      (<code>true</code>|<code>yes</code>|<code>on</code> or
      <code>false</code>|<code>no</code>|<code>off</code>).</td>
     <td valign="top" align="center">No; defaults to true.</td>
+  </tr>
+  <tr>
+    <td valign="top">followsymlinks</td>
+    <td valign="top">Shall symbolic links be followed? Defaults to
+      true. See <a href="fileset.html#symlink">fileset's documentation</a>.</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 

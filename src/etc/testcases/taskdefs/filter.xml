@@ -42,6 +42,13 @@
     </copy>
   </target>
 
+  <target name="test9">
+    <filter filtersfile="filterdefs.properties" />
+    <copy todir="./taskdefs.tmp" filtering="yes" overwrite="yes">
+      <fileset dir="." includes="filter3.txt"/>
+    </copy>
+  </target>
+
   <target name="cleanup">
     <delete dir="taskdefs.tmp" />
   </target>

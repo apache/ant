@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs.optional.pvcs;
 
 
 /**
- * class to handle &lt;pvcsprojec&gt; elements
+ * represents a project within the PVCS repository to extract files from.
  */
 public class PvcsProject {
     private String name;
@@ -66,9 +66,16 @@ public class PvcsProject {
         super();
     }
     
+    /**
+     * Set the name of the project
+     */
     public void setName(String name) {
         PvcsProject.this.name = name;
     }
+    
+    /**
+     * Get the name of the project
+     */
     public String getName() {
         return name;
     }

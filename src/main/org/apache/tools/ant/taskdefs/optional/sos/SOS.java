@@ -119,7 +119,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Disable the cache
+     * flag to disable the cache when set;
+     * optional needed if SOSHOME is set as an environment variable.
      *
      * @param  nocache  The new noCache value
      */
@@ -129,9 +130,9 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Disable compression
+     * Flag that disables compression when set; optional, default 
      *
-     * @param  nocompress  The new noCompress value
+     * @param  nocompress  true to disable compression
      */
     public void setNoCompress(boolean nocompress) {
         noCompress = nocompress;
@@ -139,7 +140,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the directory where soscmd(.exe) is located
+     * Set the directory where soscmd(.exe) is located;
+     * optional, soscmd must be on the path if omitted.
      *
      * @param  dir  The new sosCmd value
      */
@@ -149,7 +151,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the username to use to access SOS.
+     * Set the SourceSafe username; required.
      *
      * @param  username  The new username value
      */
@@ -159,7 +161,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the password to use to access SOS.
+     * Set the SourceSafe password; optional. 
      *
      * @param  password  The new password value
      */
@@ -169,9 +171,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the path to the item in SOS to operate on.
-     * <p>
-     * To avoid the "$$" in th build file we add it here
+     * Set the SourceSafe project path without the "$" prefix; required
      *
      * @param  projectpath  The new projectPath value
      */
@@ -181,7 +181,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the path to the location of the ss.ini.
+     * Set the path to the location of the ss.ini file; 
+     * required.
      *
      * @param  vssServerPath  The new vssServerPath value
      */
@@ -191,7 +192,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the path of soshome
+     * The path to the SourceOffSite home directory
      *
      * @param  sosHome  The new sosHome value
      */
@@ -201,7 +202,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the address & port of SourceOffSite Server
+     * Set the address and port of SourceOffSite Server,
+     * eg. 192.168.0.1:8888 ; required. 
      *
      * @param  sosServerPath  The new sosServerPath value
      */
@@ -211,7 +213,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the local path.
+     * Override the working directory and get to the specified path; optional.
      *
      * @param  path  The new localPath value
      */
@@ -221,7 +223,9 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the filename to get from SOS
+     * Set the Filename to act upon; optional.
+     * If no file is specified then the tasks 
+     * act upon the project
      *
      * @param  filename  The new file value
      */
@@ -231,7 +235,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set behaviour verbose or quiet
+     * Enable verbose output; optional, default false
      *
      * @param  verbose  The new verbose value
      */
@@ -241,7 +245,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Flag to recursively apply the action (not valid
+     * on all SOS tasks ); optional, default false
      *
      * @param  recursive  The new recursive value
      */
@@ -251,7 +256,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the stored version string
+     * Set the a version number to get - 
+     * only works with the SOSGet on a file; optional.
      *
      * @param  version  The new version value
      */
@@ -271,7 +277,8 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the comment to get
+     * Set the comment to apply to all files being labelled;
+     * optional, only valid in SOSLabel
      *
      * @param  comment  The new comment value
      */
