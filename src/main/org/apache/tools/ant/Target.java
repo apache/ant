@@ -94,7 +94,6 @@ public class Target implements TaskContainer {
                                               "\" has an empty string for dependency." );
                 }
 
-                //Add dependency
                 addDependency(token);
                 
                 //Make sure that depends attribute does not
