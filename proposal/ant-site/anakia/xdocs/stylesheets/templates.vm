@@ -312,7 +312,7 @@
 
 #macro (footer)
                   </div>
-                </td><td width="10"><img width="10" height="1" alt="" src="images/spacer.gif"></td>
+                </td><td width="10"><img width="10" height="4" alt="" src="images/spacer.gif"></td>
               </tr>
             </table>
           </td>
@@ -320,7 +320,7 @@
       </table>
       <table summary="footer" cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr>
-          <td colspan="2" height="20" bgcolor="$blue2"><img height="1" width="1" alt="" src="images/spacer.gif"><a href="images/label.gif"></a><a href="images/page.gif"></a><a href="images/chapter.gif"></a><a href="images/chapter_open.gif"></a><a href="images/current.gif"></a><a href="/favicon.ico"></a></td>
+          <td colspan="2" height="1" bgcolor="$blue2"><img height="1" width="1" alt="" src="images/spacer.gif"><a href="images/label.gif"></a><a href="images/page.gif"></a><a href="images/chapter.gif"></a><a href="images/chapter_open.gif"></a><a href="images/current.gif"></a><a href="/favicon.ico"></a></td>
         </tr>
         <tr>
           <td colspan="2" bgcolor="$blue1" class="copyright" align="center"><font size="2" face="Arial, Helvetica, Sans-Serif">Copyright &copy;

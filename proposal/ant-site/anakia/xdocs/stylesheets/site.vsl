@@ -67,6 +67,7 @@
 ## This is where the common page macro's live
 
 #macro ( subsection $subsection)
+      <br/>
       <a name="$escape.getText($subsection.getAttributeValue("name"))"></a>
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
         <tr><td bgcolor="$blue2">
@@ -75,7 +76,6 @@
           </font>
         </td></tr>
       </table>
-
       #foreach ( $items in $subsection.getChildren() )
         #if ($items.getName().equals("img"))
           #image ($items)
@@ -90,10 +90,10 @@
 #end
 
 #macro ( section $section)
-  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+  <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="$blue3"><font color="$lightfg"><a name="$escape.getText($section.getAttributeValue("name"))"><strong>$section.getAttributeValue("name")</strong></a></font></td></tr>
   </table>
-
       #foreach ( $items in $section.getChildren() )
         #if ($items.getName().equals("img"))
           #image ($items)
@@ -112,6 +112,7 @@
 ## This is where the FAQ specific macro's live
 
 #macro (toc $section)
+      <br/>
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
         <tr><td bgcolor="$blue2">
           <font color="$lightfg" face="arial,helvetica,sanserif">
@@ -141,6 +142,7 @@
 
 #macro (faq $faq)
   #set ($id = $faq.getAttributeValue("id"))
+    <br/>
       <a name="$id"></a>
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
         <tr><td bgcolor="$blue2">
@@ -162,7 +164,6 @@
         $xmlout.outputString($item)
       #end
     #end
-    <br>
 #end
 
 #macro (document)
