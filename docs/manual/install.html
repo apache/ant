@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>Installing Ant</title>
 </head>
 
 <body>
@@ -34,6 +34,9 @@ Ant CVS repository</a> on-line. </p>
 
 <hr>
 <h2><a name="sysrequirements">System Requirements</a></h2>
+Ant has been used successfully on many platforms, including Linux,
+commercial flavours of Unix such as Solaris and HP-UX,
+Windows 9x and NT, Novell Netware 6 and MacOS X. 
 <p>
 To build and use Ant, you must have a JAXP-compliant XML parser installed and 
 available on your classpath.</p>
@@ -52,10 +55,17 @@ You can then either put the jars from your preferred parser into Ant's
 
 <p>
 For the current version of Ant, you will also need a JDK installed on
-your system, version 1.1 or later. A future version of Ant will require
-JDK 1.2 or later.
+your system, version 1.1 or later. Some tasks work better on post-1.1 systems;
+some tasks only work on Java 1.2 and successors. 
+A future version of Ant -Ant 2.0- will require JDK 1.2 or later, though
+Ant 1.x strives to retain 1.1 compatibility.
+</p><p>
+<strong>Note: </strong>The Microsoft JVM/JDK is not adequate on its own, although the MS
+compiler is supported.
 </p>
-  
+<p>
+<strong>Note #2: </strong>If a JDK is not present, only the JRE runtime, then many tasks will not work.
+</p>  
 <hr>
 <h2><a name="installing">Installing Ant</a></h2>
 <p>The binary distribution of Ant consists of three directories:
@@ -164,6 +174,11 @@ must be set to the directory containing where you installed Ant. Again
 this is set by the Ant scripts to the value of the ANT_HOME environment
 variable.</li>
 </ul>
+The supplied ant shell scripts all support an <tt>ANT_OPTS</tt>
+environment variable which can be used to supply extra options
+to ant. Some of the scripts also read in an extra script stored
+in the users home directory, which can be used to set such options. Look
+at the source for your platform's invocation script for details.
 
 <hr>  
 <h2><a name="buildingant">Building Ant</a></h2>
