@@ -71,10 +71,8 @@ import org.apache.tools.ant.types.CommandlineJava;
 public abstract class DefaultJspCompilerAdapter
     implements JspCompilerAdapter {
 
-    /* ------------------------------------------------------------ */
     private static String lSep = System.getProperty("line.separator");
 
-    /* ------------------------------------------------------------ */
     /**
      * Logs the compilation parameters, adds the files to compile and logs the 
      * &quot;niceSourceList&quot;
