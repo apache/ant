@@ -18,10 +18,12 @@
       <table border="0" width="100%" cellspacing="0">
         <!-- TOP IMAGE -->
         <tr>
-                <td colspan="2">
+          <td>      <td colspan="2">
     <a href="http://jakarta.apache.org"><img src="http://jakarta.apache.org/images/jakarta-logo.gif" align="left" border="0"/></a>
     </td>
-          </tr>
+  </td>
+          <td valign="bottom"><div align="right"><b><font size="+3" color="#525D76">Apache Myrmidon</font></b></div></td>
+        </tr>
       </table>
       <table border="0" width="100%" cellspacing="4">
         <tr><td colspan="2">
@@ -35,38 +37,34 @@
     <ul>
           <li>      <a href="./index.html">Introduction</a>
   </li>
-          <li>      <a href="./user.html">User Guide</a>
+          <li>      <a href="./getinvolved.html">Get Involved</a>
   </li>
-          <li>      <a href="./todo.html">Get Involved</a>
+          <li>      <a href="./user.html">Building Myrmidon</a>
   </li>
-          <li>      <a href="./todo.html#Todo List">Todo List</a>
+          <li>      <a href="./todo.html">Todo List</a>
   </li>
+        </ul>
+      <p><strong>User Guide</strong></p>
+    <ul>
+          <li>      <a href="./buildfile.html">Build file</a>
+  </li>
+          <li>      <a href="./vfs.html">Virtual File System</a>
+  </li>
+        </ul>
+      <p><strong>Extending Ant</strong></p>
+    <ul>
+          <li>      <a href="./task.html">Task Writers HOWTO</a>
+  </li>
+          <li>      <a href="./classloader.html">ClassLoader HOWTO</a>
+  </li>
+          <li>      <a href="./librarys.html">Library HOWTO</a>
+  </li>
+        </ul>
+      <p><strong>Container Design</strong></p>
+    <ul>
         </ul>
             </td>
           <td align="left" valign="top">
-        <table border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#525D76">
-      <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Get Involved"><strong>Get Involved</strong></a>
-      </font>
-    </td></tr>
-    <tr><td>
-      <blockquote>
-                        <p>There are plenty of things you can do to help out with Myrmidon.  The Todo
-list below describes items which still need to be done.  Of course, since
-this is an open-source project, there's plenty of scope for experimentation,
-and you can pretty much make up your own items to work on.</p>
-                                <p>Some things that are worth reading if you do want to get involved:</p>
-                                <ul>
-<li>The <a href="http://jakarta.apache.org/ant/ant2/">Ant 2</a> goals and requirements.</li>
-<li>The <a href="http://jakarta.apache.org/ant/ant2/actionlist.html">Ant 1.9 Action List</a>.</li>
-<li>The Jakarta Project's <a href="http://jakarta.apache.org/site/getinvolved.html">Get Involved</a> page.</li>
-</ul>
-                                <p>There is no Ant 2 or Myrmidon mailing list yet, so direct any questions
-or comments you have to the ant-dev mailing list.</p>
-                    </blockquote>
-    </td></tr>
-  </table>
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
@@ -76,9 +74,9 @@ or comments you have to the ant-dev mailing list.</p>
     <tr><td>
       <blockquote>
                         <p>The broad goal is to grow Myrmidon from a prototype task engine into a fully
-fledged build system, that can serve as the basis for Ant 2.  The following
-sections describe some of the many things which still need to be done to
-achieve that goal.  This list is currently under construction.</p>
+            fledged build system, that can serve as the basis for Ant 2.  The following
+            sections describe some of the many things which still need to be done to
+            achieve that goal.  This list is currently under construction.</p>
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
@@ -88,10 +86,10 @@ achieve that goal.  This list is currently under construction.</p>
     <tr><td>
       <blockquote>
                         <p>Myrmidon must be able to build itself.  Currently, it is built using
-Ant 1.x.  Ultimately, Myrmidon should be able to build itself from exactly the
-same build file.  To start with, however, there is no need for Myrmidon to be
-able to do this.  Myrmidon should also be able to be bootstrapped (that is, be
-able to be built from scratch, without using Ant 1.x at all).</p>
+                Ant 1.x.  Ultimately, Myrmidon should be able to build itself from exactly the
+                same build file.  To start with, however, there is no need for Myrmidon to be
+                able to do this.  Myrmidon should also be able to be bootstrapped (that is, be
+                able to be built from scratch, without using Ant 1.x at all).</p>
                     </blockquote>
     </td></tr>
   </table>
@@ -104,8 +102,8 @@ able to be built from scratch, without using Ant 1.x at all).</p>
     <tr><td>
       <blockquote>
                         <p>There are 2 parts to this broad topic:  Allow Ant 1.x build scripts to be
-executed by Myrmidon, and allow Ant 1.x tasks to be executed unmodified
-by Myrmidon.</p>
+                executed by Myrmidon, and allow Ant 1.x tasks to be executed unmodified
+                by Myrmidon.</p>
                     </blockquote>
     </td></tr>
   </table>
@@ -119,21 +117,21 @@ by Myrmidon.</p>
       <blockquote>
                         <p>The VFS needs plenty of work:</p>
                                 <ul>
-    <li>Move and copy files/folders.</li>
-    <li>Search through a file hierarchy, using Ant-style wildcards.</li>
-    <li>Search through a file hierarchy, using a Selector interface.</li>
-    <li>The in-memory caching mechanism is pretty rudimentary at this stage.
-    It needs work to make it size capped.  In addition, some mechanism needs
-    to be provided to release and refresh cached info.
-    </li>
-    <li>Capabilities discovery.</li>
-    <li>Attributes and attribute schema.</li>
-    <li>File system layering.  That is, the ability for a file system to
-    sit on top of another file system, or a file from another file system
-    (e.g. Zip/Jar/Tar file systems, gzip/encoding file systems, virtual file
-    systems).
-    </li>
-</ul>
+                    <li>Move and copy files/folders.</li>
+                    <li>Search through a file hierarchy, using Ant-style wildcards.</li>
+                    <li>Search through a file hierarchy, using a Selector interface.</li>
+                    <li>The in-memory caching mechanism is pretty rudimentary at this stage.
+                    It needs work to make it size capped.  In addition, some mechanism needs
+                    to be provided to release and refresh cached info.
+                    </li>
+                    <li>Capabilities discovery.</li>
+                    <li>Attributes and attribute schema.</li>
+                    <li>File system layering.  That is, the ability for a file system to
+                    sit on top of another file system, or a file from another file system
+                    (e.g. Zip/Jar/Tar file systems, gzip/encoding file systems, virtual file
+                    systems).
+                    </li>
+                </ul>
                     </blockquote>
     </td></tr>
   </table>
@@ -146,72 +144,72 @@ by Myrmidon.</p>
     <tr><td>
       <blockquote>
                         <p>The file data-types, such as <code>&lt;fileset&gt;</code> and
-<code>&lt;path&gt;</code>, are some of the most widely used parts of Ant 1.x.
-Unfortunately, they aren't particularly extensible.</p>
+                <code>&lt;path&gt;</code>, are some of the most widely used parts of Ant 1.x.
+                Unfortunately, they aren't particularly extensible.</p>
                                 <ul>
-    <li>Redesign the file data-types, replacing them with an interface-based
-    API, plus a set of implementations.  The API should use the VFS file
-    <code>FileObject</code>, rather than <code>java.io.File</code>.
-    This process has started, in the <code>antlib.vfile</code> package.
-    </li>
-    <li>File Selectors:
-    <ul>
-        <li>Change <code>AbstractNameFileSelector</code> to use Ant 1 style patterns
-        matches, rather than Globs patterns.</li>
-        <li>Add 'defaultexcludes' to <code>DefaultFileSet</code>.  Also add a
-        file selector implementation that matches everything except the default
-        excludes.</li>
-        <li>Add a condition -&gt; file selector adaptor, so that arbitrary conditions
-        can be used to select files.</li>
-        <li>Add a name selector that loads patterns from a file.</li>
-        <li>Add more selector implementations: size and last-modified comparisons,
-        checksum comparison, byte-wise content comparison.</li>
-    </ul></li>
-    <li>File Name Mappers:
-    <ul>
-        <li>Add a file name mapper interface, and port the current Mapper
-        implementations to it.</li>
-    </ul></li>
-    <li>File Sets:
-    <ul>
-        <li>Add a file set implementation that uses a mapper to transform a nested
-        file set.</li>
-        <li>Add a file set implementation that provides the union of several
-        nested file sets (that is, a file set that merges several file sets
-        together).</li>
-        <li>Add a file set implementation that filters files that are up-to-date
-        WRT some other file.  Alternatively, this might be better done using a
-        file selector.</li>
-    </ul></li>
-    <li>Paths:
-    <ul>
-        <li>Add path implementations that evaluate to the system classpath,
-        and the ant runtime classpath.  Or, more generally, combine this with
-        <code>ClassLoaderManager</code> to evaluate to the classpath of any
-        'library' (e.g. system classpath, ant runtime, tools.jar,
-        an antlib, an installed extension, or the system classes of another JVM
-        for cross-compiling).</li>
-    </ul></li>
-    <li>File Filters:
-    <ul>
-        <li>Add a file filter interface, and use it in the copy task.</li>
-        <li>Add a filter implementation that applies the token replacement that
-        the old copy task provides.</li>
-        <li>Add a filter that does cr/lf translation.</li>
-        <li>Add a gzip/gunzip filter.</li>
-        <li>Add a filter that applies character set encode/decode.</li>
-    </ul></li>
-    <li>Copy task:
-    <ul>
-        <li>Implement 'preservelastmodified', 'overwrite', and 'includeemptydirs'.</li>
-        <li>Support a file name mapper.</li>
-        <li>Support file filters.</li>
-    </ul></li>
-    <li>Implement the <code>&lt;move&gt;</code>, <code>&lt;delete&gt;</code>,
-    <code>&lt;touch&gt;</code> and <code>&lt;mkdir&gt;</code> tasks on top
-    of the VFS and the new file data-types.  Might be some scope for generalising
-    'touch' and 'mkdir' into a single task.</li>
-</ul>
+                    <li>Redesign the file data-types, replacing them with an interface-based
+                    API, plus a set of implementations.  The API should use the VFS file
+                    <code>FileObject</code>, rather than <code>java.io.File</code>.
+                    This process has started, in the <code>antlib.vfile</code> package.
+                    </li>
+                    <li>File Selectors:
+                    <ul>
+                        <li>Change <code>AbstractNameFileSelector</code> to use Ant 1 style patterns
+                        matches, rather than Globs patterns.</li>
+                        <li>Add 'defaultexcludes' to <code>DefaultFileSet</code>.  Also add a
+                        file selector implementation that matches everything except the default
+                        excludes.</li>
+                        <li>Add a condition -&gt; file selector adaptor, so that arbitrary conditions
+                        can be used to select files.</li>
+                        <li>Add a name selector that loads patterns from a file.</li>
+                        <li>Add more selector implementations: size and last-modified comparisons,
+                        checksum comparison, byte-wise content comparison.</li>
+                    </ul></li>
+                    <li>File Name Mappers:
+                    <ul>
+                        <li>Add a file name mapper interface, and port the current Mapper
+                        implementations to it.</li>
+                    </ul></li>
+                    <li>File Sets:
+                    <ul>
+                        <li>Add a file set implementation that uses a mapper to transform a nested
+                        file set.</li>
+                        <li>Add a file set implementation that provides the union of several
+                        nested file sets (that is, a file set that merges several file sets
+                        together).</li>
+                        <li>Add a file set implementation that filters files that are up-to-date
+                        WRT some other file.  Alternatively, this might be better done using a
+                        file selector.</li>
+                    </ul></li>
+                    <li>Paths:
+                    <ul>
+                        <li>Add path implementations that evaluate to the system classpath,
+                        and the ant runtime classpath.  Or, more generally, combine this with
+                        <code>ClassLoaderManager</code> to evaluate to the classpath of any
+                        'library' (e.g. system classpath, ant runtime, tools.jar,
+                        an antlib, an installed extension, or the system classes of another JVM
+                        for cross-compiling).</li>
+                    </ul></li>
+                    <li>File Filters:
+                    <ul>
+                        <li>Add a file filter interface, and use it in the copy task.</li>
+                        <li>Add a filter implementation that applies the token replacement that
+                        the old copy task provides.</li>
+                        <li>Add a filter that does cr/lf translation.</li>
+                        <li>Add a gzip/gunzip filter.</li>
+                        <li>Add a filter that applies character set encode/decode.</li>
+                    </ul></li>
+                    <li>Copy task:
+                    <ul>
+                        <li>Implement 'preservelastmodified', 'overwrite', and 'includeemptydirs'.</li>
+                        <li>Support a file name mapper.</li>
+                        <li>Support file filters.</li>
+                    </ul></li>
+                    <li>Implement the <code>&lt;move&gt;</code>, <code>&lt;delete&gt;</code>,
+                    <code>&lt;touch&gt;</code> and <code>&lt;mkdir&gt;</code> tasks on top
+                    of the VFS and the new file data-types.  Might be some scope for generalising
+                    'touch' and 'mkdir' into a single task.</li>
+                </ul>
                     </blockquote>
     </td></tr>
   </table>
@@ -224,26 +222,26 @@ Unfortunately, they aren't particularly extensible.</p>
     <tr><td>
       <blockquote>
                         <p>One of the goals of Ant 2 is to allow the user to easily customise and
-extend Ant.  The command-line and local configuration files, are two places
-where this would be done.  Currently, Myrmidon some customisation from the
-command-line, but does not support configuration files.</p>
+                extend Ant.  The command-line and local configuration files, are two places
+                where this would be done.  Currently, Myrmidon some customisation from the
+                command-line, but does not support configuration files.</p>
                                 <ul>
 
-<li>Load configuration from system (from $ANT_HOME) and user (from $HOME)
-configuration files.</li>
+                    <li>Load configuration from system (from $ANT_HOME) and user (from $HOME)
+                    configuration files.</li>
 
-<li>Allow the following via config files:
-    <ul>
-        <li>Add (or override) the <code>lib</code> and <code>ext</code> directories.</li>
-        <li>Enable more than one listener, and configure the listeners from
-        the conents of the config file.</li>
-        <li>Import libraries, and set properties.</li>
-        <li>Execute tasks.</li>
-        <li>Install and configure runtime services.</li>
-    </ul>
-</li>
+                    <li>Allow the following via config files:
+                        <ul>
+                            <li>Add (or override) the <code>lib</code> and <code>ext</code> directories.</li>
+                            <li>Enable more than one listener, and configure the listeners from
+                            the conents of the config file.</li>
+                            <li>Import libraries, and set properties.</li>
+                            <li>Execute tasks.</li>
+                            <li>Install and configure runtime services.</li>
+                        </ul>
+                    </li>
 
-</ul>
+                </ul>
                     </blockquote>
     </td></tr>
   </table>
@@ -256,23 +254,23 @@ configuration files.</li>
     <tr><td>
       <blockquote>
                         <p>Everyone loves writing documentation, and so a goal for Ant 2 is to
-generate a lot of reference documentation for tasks and other types directly
-from the source.  Unfortunately, there's still plenty of tutorial material
-to write.  In particular we need these:</p>
+                generate a lot of reference documentation for tasks and other types directly
+                from the source.  Unfortunately, there's still plenty of tutorial material
+                to write.  In particular we need these:</p>
                                 <ul>
-<li>User documentation - describing things like the build file format,
-how properties work, how to use references, how sub-builds work, how to customise
-Myrmidon, and so on.</li>
+                    <li>User documentation - describing things like the build file format,
+                    how properties work, how to use references, how sub-builds work, how to customise
+                    Myrmidon, and so on.</li>
 
-<li>Task writer documentation - describing things like an overview the task API,
-how configuration works, task lifecycle, how to assemble an antlib, a catalog
-of the runtime services, and so on.</li>
+                    <li>Task writer documentation - describing things like an overview the task API,
+                    how configuration works, task lifecycle, how to assemble an antlib, a catalog
+                    of the runtime services, and so on.</li>
 
-<li>Myrmidon developer documentation - a broad outline of the architecture,
-how to build, how to test, and so on.  Also, this todo list needs plenty
-of filling out.</li>
+                    <li>Myrmidon developer documentation - a broad outline of the architecture,
+                    how to build, how to test, and so on.  Also, this todo list needs plenty
+                    of filling out.</li>
 
-</ul>
+                </ul>
                     </blockquote>
     </td></tr>
   </table>
@@ -286,32 +284,32 @@ of filling out.</li>
       <blockquote>
                         <p>A completely unordered list of items, big and small:</p>
                                 <ul>
-<li>Search through the code for 'TODO' items and fix them.</li>
-<li>Add a custom task to the build to generate antlib descriptors from source.
-It would wrap XDoclet, and replace <code>antlib.xml</code>.</li>
-<li>Tidy-up CLIMain so that it calls System.exit() with a non-zero exit code,
-if the build fails.</li>
-<li>Tidy-up the 'build failed' message, so that the stack trace is only
-printed out if the log level is verbose/debug.</li>
-<li>Allow service factories to be configured from the contents of the
-<code>ant-services.xml</code> descriptor.</li>
-<li>Route external process stdout and stderr through the logger.</li>
-<li>Add verbosity level to ProjectListener LogEvent</li>
-<li>Fire ProjectListener events taskFinished(), targetFinished() and
-projectFinished() events on build failure, adding indicator methods to
-ProjectEvent.</li>
-<li>Fire ProjectListener events projectStarted() and projectFinished()
-events on start and finish of referenced projects, adding indicator methods
-to ProjectEvent.</li>
-<li>Convert PropertyUtil to a non-static PropertyResolver service.</li>
-<li>Validate project and target names in DefaultProjectBuilder - reject dodgy
-names like "," or "", or "  ".  Probably want to exclude names that start or
-end with white-space (though internal whitespace is probably fine).</li>
-<li>Detect duplicate type names.</li>
-<li>Add fully qualified type names, based on antlib name and type shorthand name.
-Allow these to be used in build files in addition to the shorthand names.</li>
-<li>Unit tests.</li>
-</ul>
+                    <li>Search through the code for 'TODO' items and fix them.</li>
+                    <li>Add a custom task to the build to generate antlib descriptors from source.
+                    It would wrap XDoclet, and replace <code>antlib.xml</code>.</li>
+                    <li>Tidy-up CLIMain so that it calls System.exit() with a non-zero exit code,
+                    if the build fails.</li>
+                    <li>Tidy-up the 'build failed' message, so that the stack trace is only
+                    printed out if the log level is verbose/debug.</li>
+                    <li>Allow service factories to be configured from the contents of the
+                    <code>ant-services.xml</code> descriptor.</li>
+                    <li>Route external process stdout and stderr through the logger.</li>
+                    <li>Add verbosity level to ProjectListener LogEvent</li>
+                    <li>Fire ProjectListener events taskFinished(), targetFinished() and
+                    projectFinished() events on build failure, adding indicator methods to
+                    ProjectEvent.</li>
+                    <li>Fire ProjectListener events projectStarted() and projectFinished()
+                    events on start and finish of referenced projects, adding indicator methods
+                    to ProjectEvent.</li>
+                    <li>Convert PropertyUtil to a non-static PropertyResolver service.</li>
+                    <li>Validate project and target names in DefaultProjectBuilder - reject dodgy
+                    names like "," or "", or "  ".  Probably want to exclude names that start or
+                    end with white-space (though internal whitespace is probably fine).</li>
+                    <li>Detect duplicate type names.</li>
+                    <li>Add fully qualified type names, based on antlib name and type shorthand name.
+                    Allow these to be used in build files in addition to the shorthand names.</li>
+                    <li>Unit tests.</li>
+                </ul>
                     </blockquote>
     </td></tr>
   </table>
