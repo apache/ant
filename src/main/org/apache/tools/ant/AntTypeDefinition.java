@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant;
 
+
 /**
  * This class contains all the information
  * on a particular ant type,
@@ -217,7 +218,7 @@ public class AntTypeDefinition {
      * @return the created object
      */
     public Object create(Project project) {
-        return  icreate(project);
+        return icreate(project);
     }
 
     /**
@@ -326,5 +327,24 @@ public class AntTypeDefinition {
                 "Could not create type " + name + " due to " + t, t);
         }
     }
-}
 
+    /**
+     * Equality method for this definition
+     *
+     * @param other another definition
+     * @param project the project the definition
+     * @return true if the definitions are the same
+     */
+    public boolean sameDefinition(AntTypeDefinition other, Project project) {
+        if (other == null) {
+            return false;
+        }
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        if (!(other.getTypeClass(project).equals(getTypeClass(project)))) {
+            return false;
+        }
+        return other.getExposedClass(project).equals(getExposedClass(project));
+    }
+}

@@ -651,15 +651,7 @@ public class ComponentHelper  {
         if (!validDefinition(def) || !validDefinition(old)) {
             return validDefinition(def) == validDefinition(old);
         }
-
-        if (!(old.getTypeClass(project).equals(def.getTypeClass(project)))) {
-            return false;
-        }
-        if (!(old.getExposedClass(project).equals(
-                  def.getExposedClass(project)))) {
-            return false;
-        }
-        return true;
+        return def.sameDefinition(old, project);
     }
 
 
