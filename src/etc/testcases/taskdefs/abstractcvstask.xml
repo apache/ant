@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<project name="abstractcvstask-test" basedir="../../../../" 
+         default="all">
+
+  <property name="file" value="ant.properties.sample" />
+  <target name="all">
+    <cvs failonerror="true" command="status ${file}"/>
+    <!--
+    <cvs failonerror="true">
+      <commandline>
+        <argument value="up"/>
+        <argument value="-r"/>
+        <argument value="1.1"/>
+        <argument value="${file}"/>
+      </commandline>
+    </cvs>
+    <cvs failonerror="true" command="status ${file}"/>
+    <cvs failonerror="true">up -r HEAD ${file}</cvs>
+    <cvs failonerror="true" command="status ${file}"/>
+    -->
+  </target>
+</project>

@@ -1230,6 +1230,12 @@
           so until the defect is actually fixed it is taken
           out of the test list -->
           <exclude name="${ant.package}/taskdefs/JavaTest.java" />
+
+          <!-- can only run if cvs is installed on your machine
+               enable by setting the property have.cvs
+          -->
+          <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java" 
+                   unless="have.cvs" />
         </fileset>
       </batchtest>
 
