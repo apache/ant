@@ -250,9 +250,9 @@ public class FixCRLF extends MatchingTask {
      * @deprecated use {@link #setEol setEol} instead.
      */
     public void setCr(AddAsisRemove attr) {
-        log("DEPRECATED: The cr attribute has been deprecated,", 
+        log("DEPRECATED: The cr attribute has been deprecated,",
             Project.MSG_WARN);
-        log("Please us the eol attribute instead", Project.MSG_WARN);
+        log("Please use the eol attribute instead", Project.MSG_WARN);
         String option = attr.getValue();
         CrLf c = new CrLf();
         if (option.equals("remove")) {
@@ -341,7 +341,7 @@ public class FixCRLF extends MatchingTask {
      */
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
-        
+
         if (srcDir == null) {
             throw new BuildException("srcdir attribute must be set!");
         }
@@ -384,7 +384,7 @@ public class FixCRLF extends MatchingTask {
      */
     private Reader getReader(File f) throws IOException {
         return (encoding == null) ? new FileReader(f)
-            : new InputStreamReader(new FileInputStream(f), encoding);    
+            : new InputStreamReader(new FileInputStream(f), encoding);
     }
 
 
@@ -403,12 +403,12 @@ public class FixCRLF extends MatchingTask {
             try {
                 tmpFile = fileUtils.createTempFile("fixcrlf", "", destD);
                 Writer writer = (encoding == null) ? new FileWriter(tmpFile)
-                    : new OutputStreamWriter(new FileOutputStream(tmpFile), encoding);    
+                    : new OutputStreamWriter(new FileOutputStream(tmpFile), encoding);
                 outWriter = new BufferedWriter(writer);
             } catch (IOException e) {
                 throw new BuildException(e);
             }
-            
+
             while (lines.hasMoreElements()) {
                 // In-line states
                 int endComment;
@@ -418,11 +418,11 @@ public class FixCRLF extends MatchingTask {
                 } catch (NoSuchElementException e) {
                     throw new BuildException(e);
                 }
-            
+
                 String lineString = line.getLineString();
                 int linelen = line.length();
 
-                // Note - all of the following processing NOT done for 
+                // Note - all of the following processing NOT done for
                 // tabs ASIS
 
                 if (tabs == ASIS) {
@@ -439,11 +439,11 @@ public class FixCRLF extends MatchingTask {
                     while ((ptr = line.getNext()) < linelen) {
 
                         switch (lines.getState()) {
-                            
+
                         case NOTJAVA:
                             notInConstant(line, line.length(), outWriter);
                             break;
-                        
+
                         case IN_MULTI_COMMENT:
                             if ((endComment =
                                  lineString.indexOf("*/", line.getNext())
@@ -456,7 +456,7 @@ public class FixCRLF extends MatchingTask {
                             else {
                                 endComment = linelen;
                             }
-                        
+
                             notInConstant(line, endComment, outWriter);
                             break;
 
@@ -472,7 +472,7 @@ public class FixCRLF extends MatchingTask {
                             // Find the end of the constant.  Watch out for
                             // backslashes.  Literal tabs are left unchanged, and
                             // the column is adjusted accordingly.
-                            
+
                             int begin = line.getNext();
                             char terminator = (lines.getState() == IN_STR_CONST
                                                ? '\"'
@@ -483,42 +483,42 @@ public class FixCRLF extends MatchingTask {
                                     line.setColumn(
                                                    line.getColumn() +
                                                    tablength -
-                                                   line.getColumn() % tablength); 
+                                                   line.getColumn() % tablength);
                                 }
                                 else {
                                     line.incColumn();
                                 }
                             }
-                            
+
                             // Now output the substring
                             try {
                                 outWriter.write(line.substring(begin, line.getNext()));
                             } catch (IOException e) {
                                 throw new BuildException(e);
                             }
-                            
+
                             lines.setState(LOOKING);
-                            
+
                             break;
-                            
-                            
+
+
                         case LOOKING:
                             nextStateChange(line);
                             notInConstant(line, line.getLookahead(), outWriter);
                             break;
-                            
+
                         } // end of switch (state)
-                        
+
                     } // end of while (line.getNext() < linelen)
-                    
+
                 } // end of else (tabs != ASIS)
-                
+
                 try {
                     outWriter.write(eolstr);
                 } catch (IOException e) {
                     throw new BuildException(e);
                 } // end of try-catch
-                
+
             } // end of while (lines.hasNext())
 
             try {
@@ -537,11 +537,11 @@ public class FixCRLF extends MatchingTask {
                     throw new BuildException(e);
                 }
             }
-            
-            
+
+
             File destFile = new File(destD, file);
 
-            try {                                            
+            try {
                 lines.close();
                 lines = null;
             }
@@ -598,7 +598,7 @@ public class FixCRLF extends MatchingTask {
             } catch (IOException io) {
                 log("Error closing "+srcFile, Project.MSG_ERR);
             } // end of catch
-            
+
             if (tmpFile != null) {
                 tmpFile.delete();
             }
@@ -624,8 +624,8 @@ public class FixCRLF extends MatchingTask {
     {
         int eol = bufline.length();
         int ptr = bufline.getNext();
-        
-        
+
+
         //  Look for next single or double quote, double slash or slash star
         while (ptr < eol) {
             switch (bufline.getChar(ptr++)) {
@@ -652,7 +652,7 @@ public class FixCRLF extends MatchingTask {
                 }
                 break;
             } // end of switch (bufline.getChar(ptr++))
-            
+
         } // end of while (ptr < eol)
         // Eol is the next token
         bufline.setLookahead(ptr);
@@ -758,7 +758,7 @@ public class FixCRLF extends MatchingTask {
                 place = nextStop - placediff;
                 nextStop += tablength;
             }
-            
+
             for ( ; nextStop - placediff <= linestring.length()
                           ; nextStop += tablength)
             {
@@ -792,7 +792,7 @@ public class FixCRLF extends MatchingTask {
             } catch (IOException e) {
                 throw new BuildException(e);
             } // end of try-catch
-            
+
         } // end of else tabs == ADD
 
         // Set column position as modified by this method
@@ -839,13 +839,13 @@ public class FixCRLF extends MatchingTask {
                     line.append((char) ch);
                     ch = reader.read();
                 }
-                
+
                 if (ch == -1 && line.length() == 0) {
                     // Eof has been reached
                     reachedEof = true;
                     return;
                 }
-                
+
                 switch ((char) ch) {
                 case '\r':
                     // Check for \r, \r\n and \r\r\n
@@ -869,12 +869,12 @@ public class FixCRLF extends MatchingTask {
                         break;
                     } // end of switch ((char)(ch = reader.read()))
                     break;
-                    
+
                 case '\n':
                     ++eolcount;
                     eolStr.append('\n');
                     break;
-                    
+
                 } // end of switch ((char) ch)
 
                 // if at eolcount == 0 and trailing characters of string
@@ -895,9 +895,9 @@ public class FixCRLF extends MatchingTask {
                             line.setLength(i + 1);
                         }
                     }
-                    
+
                 } // end of if (eolcount == 0)
-                
+
             } catch (IOException e) {
                 throw new BuildException(e);
             }
@@ -944,7 +944,7 @@ public class FixCRLF extends MatchingTask {
             private int lookahead = UNDEF;
             private String line;
             private String eolStr;
-        
+
             public BufferLine(String line, String eolStr)
                 throws BuildException
             {
