@@ -114,6 +114,11 @@ Other changes:
 
 * New "pattern" attribute for <date> selector.
 
+* <junit> has a new forkmode attribute that controls the number of
+  Java VMs that get created when forking tests.  This allows you to
+  run all tests in a single forked JVM reducing the overhead of VM
+  creation a lot.  Bugzilla Report 24697.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 

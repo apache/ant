@@ -147,7 +147,7 @@ public class JUnitTask extends Task {
     private File tmpDir;
     private AntClassLoader classLoader = null;
     private Permissions perm = null;
-    private ForkStyle forkStyle = new ForkStyle("perTest");
+    private ForkMode forkMode = new ForkMode("perTest");
 
     private static final int STRING_BUFFER_SIZE = 128;
 
@@ -295,8 +295,8 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.6.2
      */
-    public void setForkStyle(ForkStyle style) {
-        this.forkStyle = style;
+    public void setForkMode(ForkMode mode) {
+        this.forkMode = mode;
     }
 
     /**
@@ -628,11 +628,11 @@ public class JUnitTask extends Task {
     public void execute() throws BuildException {
         List testLists = new ArrayList();
 
-        boolean forkPerTest = forkStyle.getValue().equals(ForkStyle.PER_TEST);
-        if (forkPerTest || forkStyle.getValue().equals(ForkStyle.ONCE)) {
+        boolean forkPerTest = forkMode.getValue().equals(ForkMode.PER_TEST);
+        if (forkPerTest || forkMode.getValue().equals(ForkMode.ONCE)) {
             testLists.addAll(executeOrQueue(getIndividualTests(),
                                             forkPerTest));
-        } else { /* forkStyle.getValue().equals(ForkStyle.PER_BATCH) */
+        } else { /* forkMode.getValue().equals(ForkMode.PER_BATCH) */
             final int count = batchTests.size();
             for (int i = 0; i < count; i++) {
                 BatchTest batchtest = (BatchTest) batchTests.elementAt(i);
@@ -1366,7 +1366,7 @@ public class JUnitTask extends Task {
      * These are the different forking options
      * @since 1.6.2
      */
-    public static final class ForkStyle extends EnumeratedAttribute {
+    public static final class ForkMode extends EnumeratedAttribute {
 
         /**
          * fork once only
@@ -1381,11 +1381,11 @@ public class JUnitTask extends Task {
          */
         public static final String PER_BATCH = "perBatch";
 
-        public ForkStyle() {
+        public ForkMode() {
             super();
         }
 
-        public ForkStyle(String value) {
+        public ForkMode(String value) {
             super();
             setValue(value);
         }
