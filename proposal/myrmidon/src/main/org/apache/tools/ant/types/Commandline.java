@@ -57,8 +57,6 @@ public class Commandline
 
     /**
      * Sets the executable to run.
-     *
-     * @param executable The new Executable value
      */
     public void setExecutable( final String executable )
     {
@@ -96,8 +94,6 @@ public class Commandline
 
     /**
      * Returns the executable and all defined arguments.
-     *
-     * @return The Commandline value
      */
     public String[] getCommandline()
     {
@@ -153,8 +149,6 @@ public class Commandline
      *
      * This marker can be used to locate a position on the commandline - to
      * insert something for example - when all parameters have been set.</p>
-     *
-     * @return Description of the Returned Value
      */
     public Marker createMarker()
     {
