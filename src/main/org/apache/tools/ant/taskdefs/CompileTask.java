@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.PatternSet;
 
 import java.util.*;
 
@@ -88,7 +89,7 @@ public class CompileTask extends Javac {
         for (Enumeration e=taskList.elements(); e.hasMoreElements(); ) {
             Taskdef task = (Taskdef)e.nextElement();
             String source = task.getClassname().replace('.','/') + ".java";
-            MatchingTask.NameEntry include = super.createInclude();
+            PatternSet.NameEntry include = super.createInclude();
             include.setName("**/" + source);
         }
 
