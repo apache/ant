@@ -91,24 +91,27 @@ public abstract class BaseFilterReader
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
+     *           
      */
     public BaseFilterReader(final Reader in) {
         super(in);
     }
 
     /**
-     * Read characters into a portion of an array.  This method will block
+     * Reads characters into a portion of an array.  This method will block
      * until some input is available, an I/O error occurs, or the end of the
      * stream is reached.
      *
-     * @param      cbuf  Destination buffer
-     * @param      off   Offset at which to start storing characters
-     * @param      len   Maximum number of characters to read
+     * @param      cbuf  Destination buffer to write characters to. 
+     *                   Must not be <code>null</code>.
+     * @param      off   Offset at which to start storing characters.
+     * @param      len   Maximum number of characters to read.
      *
-     * @return     The number of characters read, or -1 if the end of the
+     * @return     the number of characters read, or -1 if the end of the
      *             stream has been reached
      *
      * @exception  IOException  If an I/O error occurs
@@ -130,12 +133,12 @@ public abstract class BaseFilterReader
     }
 
     /**
-     * Skip characters.  This method will block until some characters are
+     * Skips characters.  This method will block until some characters are
      * available, an I/O error occurs, or the end of the stream is reached.
      *
      * @param  n  The number of characters to skip
      *
-     * @return    The number of characters actually skipped
+     * @return    the number of characters actually skipped
      *
      * @exception  IllegalArgumentException  If <code>n</code> is negative.
      * @exception  IOException  If an I/O error occurs
@@ -154,51 +157,76 @@ public abstract class BaseFilterReader
     }
 
     /**
-     * Set the initialized status.
+     * Sets the initialized status.
+     * 
+     * @param initialized Whether or not the filter is initialized.
      */
     protected final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
     /**
-     * Get the initialized status.
+     * Returns the initialized status.
+     * 
+     * @return whether or not the filter is initialized
      */
     protected final boolean getInitialized() {
         return initialized;
     }
 
     /**
-     * Set the project to work with
+     * Sets the project to work with.
+     * 
+     * @param project The project this filter is part of. 
+     *                Should not be <code>null</code>.
      */
     public final void setProject(final Project project) {
         this.project = project;
     }
 
     /**
-     * Get the project
+     * Returns the project this filter is part of.
+     * 
+     * @return the project this filter is part of
      */
     protected final Project getProject() {
         return project;
     }
 
     /**
-     * Read till EOL
+     * Reads a line of text ending with '\n' (or until the end of the stream).
+     * The returned String retains the '\n'.
+     * 
+     * @return the line read, or <code>null</code> if the end of the stream
+     * has already been reached
+     * 
+     * @throws IOException if the underlying reader throws one during reading
      */
     protected final String readLine() throws IOException {
         int ch = in.read();
-        String line = (ch == -1) ? null : "";
+        
+        if (ch==-1)
+            return null;
+            
+        StringBuffer line = new StringBuffer();
+        line.append ((char)ch);
+                
         while (ch != -1) {
-            line += (char) ch;
+            line.append ((char)ch);
             if (ch == '\n') {
                 break;
             }
             ch = in.read();
         }
-        return line;
+        return line.toString();
     }
 
     /**
-     * Read till EOF
+     * Reads to the end of the stream, returning the contents as a String.
+     * 
+     * @return the remaining contents of the reader, as a String
+     * 
+     * @throws IOException if the underlying reader throws one during reading
      */
     protected final String readFully() throws IOException {
         return FileUtils.readFully(in, 8192);
