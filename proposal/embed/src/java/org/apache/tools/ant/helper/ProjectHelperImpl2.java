@@ -55,6 +55,7 @@
 package org.apache.tools.ant.helper;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,6 +67,9 @@ import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Stack;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+
 import org.xml.sax.Locator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
@@ -79,6 +83,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.AttributeListImpl;
 
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Sax2 based project reader
@@ -95,7 +100,12 @@ public class ProjectHelperImpl2 extends ProjectHelper {
     static AntHandler nestedElementHandler=new NestedElementHandler();
     static AntHandler mainHandler=new MainHandler();
     static AntHandler projectHandler=new ProjectHandler();
-    
+
+    /**
+     * helper for path -> URI and URI -> path conversions.
+     */
+    private static FileUtils fu = FileUtils.newFileUtils();
+
     /** Method to add several 'special' tasks that are specific
      *  to this helper. In future we could use the properties file
      */
@@ -166,10 +176,12 @@ public class ProjectHelperImpl2 extends ProjectHelper {
              */
             context.parser =JAXPUtils.getXMLReader();
 
-            String uri = "file:" + context.buildFile.getAbsolutePath().replace('\\', '/');
-            for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
-                uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
-            }
+            String uri = ProjectHelperImpl2.toURI(context.buildFile.getAbsolutePath());
+
+            //String uri = "file:" + context.buildFile.getAbsolutePath().replace('\\', '/');
+            //for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
+            //    uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
+            //}
             
             inputStream = new FileInputStream(context.buildFile);
             inputSource = new InputSource(inputStream);
@@ -453,37 +465,21 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             context.getProject().log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
         
             if (systemId.startsWith("file:")) {
-                String path = systemId.substring(5);
-                int index = path.indexOf("file:");
-                
-                // we only have to handle these for backward compatibility
-                // since they are in the FAQ.
-                while (index != -1) {
-                    path = path.substring(0, index) + path.substring(index + 5);
-                    index = path.indexOf("file:");
-                }
-                
-                String entitySystemId = path;
-                index = path.indexOf("%23");
-                // convert these to #
-                while (index != -1) {
-                    path = path.substring(0, index) + "#" + path.substring(index + 3);
-                    index = path.indexOf("%23");
-                }
+                String path = ProjectHelperImpl2.fromURI(systemId);
 
                 File file = new File(path);
                 if (!file.isAbsolute()) {
-                    file = new File(context.buildFileParent, path);
+                    file = fu.resolveFile(context.buildFileParent, path);
                 }
-                
                 try {
                     InputSource inputSource = new InputSource(new FileInputStream(file));
-                    inputSource.setSystemId("file:" + entitySystemId);
+                    inputSource.setSystemId(ProjectHelperImpl2.toURI(file.getAbsolutePath()));
                     return inputSource;
                 } catch (FileNotFoundException fne) {
-                    context.getProject().log(file.getAbsolutePath()+" could not be found", 
-                                        Project.MSG_WARN);
+                    context.project.log(file.getAbsolutePath() + " could not be found",
+                            Project.MSG_WARN);
                 }
+
             }
             // use default if not file or file not found
             return null;
@@ -1062,4 +1058,130 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             context.pushWrapper( wrapper );
         }
     }
+
+    // --------------------  Backward compatibility with 1.5  --------------------
+
+    /**
+     * Constructs a <code>file:</code> URI that represents the
+     * external form of the given pathname.
+     *
+     * <p>Will be an absolute URI if the given path is absolute.</p>
+     *
+     * <p>This code doesn't handle non-ASCII characters properly.</p>
+     *
+     * @since Ant 1.6
+     */
+    public static String toURI(String path) {
+        StringBuffer sb = new StringBuffer("file:");
+
+        // catch exception if normalize thinks this is not an absolute path
+        try {
+            path = fu.normalize(path).getAbsolutePath();
+            sb.append("//");
+            // add an extra slash for filesystems with drive-specifiers
+            if (!path.startsWith("/")) {
+                sb.append("/");
+            }
+
+        } catch (BuildException e) {
+            // relative path
+        }
+
+        path = path.replace('\\', '/');
+        CharacterIterator iter = new StringCharacterIterator(path);
+        for (char c = iter.first(); c != CharacterIterator.DONE;
+             c = iter.next()) {
+            if (isSpecial[c]) {
+                sb.append('%');
+                sb.append(escapedChar1[c]);
+                sb.append(escapedChar2[c]);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Constructs a file path from a <code>file:</code> URI.
+     *
+     * <p>Will be an absolute path if the given URI is absolute.</p>
+     *
+     * <p>Swallows '%' that are not followed by two characters,
+     * doesn't deal with non-ASCII characters.</p>
+     *
+     * @since Ant 1.6
+     */
+    public static String fromURI(String uri) {
+        if (!uri.startsWith("file:")) {
+            throw new IllegalArgumentException("Can only handle file: URIs");
+        }
+        if (uri.startsWith("file://")) {
+            uri = uri.substring(7);
+        } else {
+            uri = uri.substring(5);
+        }
+
+        uri = uri.replace('/', File.separatorChar);
+        if (Os.isFamily("dos") && uri.startsWith("\\") && uri.length() > 2
+                && Character.isLetter(uri.charAt(1)) && uri.charAt(2) == ':') {
+            uri = uri.substring(1);
+        }
+
+        StringBuffer sb = new StringBuffer();
+        CharacterIterator iter = new StringCharacterIterator(uri);
+        for (char c = iter.first(); c != CharacterIterator.DONE;
+             c = iter.next()) {
+            if (c == '%') {
+                char c1 = iter.next();
+                if (c1 != CharacterIterator.DONE) {
+                    int i1 = Character.digit(c1, 16);
+                    char c2 = iter.next();
+                    if (c2 != CharacterIterator.DONE) {
+                        int i2 = Character.digit(c2, 16);
+                        sb.append((char) ((i1 << 4) + i2));
+                    }
+                }
+            } else {
+                sb.append(c);
+            }
+        }
+
+        String path = sb.toString();
+        // catch exception if normalize thinks this is not an absolute path
+        try {
+            path = fu.normalize(path).getAbsolutePath();
+        } catch (BuildException e) {
+            // relative path
+        }
+        return path;
+    }
+    // for toURI
+    private static boolean[] isSpecial = new boolean[256];
+    private static char[] escapedChar1 = new char[256];
+    private static char[] escapedChar2 = new char[256];
+
+
+    // stolen from FilePathToURI of the Xerces-J team
+    static {
+        for (int i = 0; i <= 0x20; i++) {
+            isSpecial[i] = true;
+            escapedChar1[i] = Character.forDigit(i >> 4, 16);
+            escapedChar2[i] = Character.forDigit(i & 0xf, 16);
+        }
+        isSpecial[0x7f] = true;
+        escapedChar1[0x7f] = '7';
+        escapedChar2[0x7f] = 'F';
+        char[] escChs = {'<', '>', '#', '%', '"', '{', '}',
+                         '|', '\\', '^', '~', '[', ']', '`'};
+        int len = escChs.length;
+        char ch;
+        for (int i = 0; i < len; i++) {
+            ch = escChs[i];
+            isSpecial[ch] = true;
+            escapedChar1[ch] = Character.forDigit(ch >> 4, 16);
+            escapedChar2[ch] = Character.forDigit(ch & 0xf, 16);
+        }
+    }
+
 }
