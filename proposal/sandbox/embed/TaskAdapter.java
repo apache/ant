@@ -56,11 +56,10 @@ package org.apache.tools.ant;
 
 import java.lang.reflect.Method;
 
-
-
 /**
- *  Use introspection to "adapt" an arbitrary Bean ( not extending Task, but with similar
- *  patterns).
+ * Uses introspection to "adapt" an arbitrary Bean which doesn't
+ * itself extend Task, but still contains an execute method and optionally 
+ * a setProject method.
  *
  *  The adapter can also be used to wrap tasks that are loaded in a different class loader
  *  by ant, when used in programatic mode.
@@ -69,19 +68,28 @@ import java.lang.reflect.Method;
  */
 public class TaskAdapter extends Task {
 
+    /** Object to act as a proxy for. */
     private Object proxy;
     private String methodName="execute";
+    Object proxy;
     
     /**
-     * Checks a class, whether it is suitable to be adapted by TaskAdapter.
+     * Checks whether or not a class is suitable to be adapted by TaskAdapter.
      *
-     * Checks conditions only, which are additionally required for a tasks
-     * adapted by TaskAdapter. Thus, this method should be called by
-     * {@link Project#checkTaskClass}.
+     * This only checks conditions which are additionally required for 
+     * tasks adapted by TaskAdapter. Thus, this method should be called by
+     * Project.checkTaskClass.
      *
      * Throws a BuildException and logs as Project.MSG_ERR for
-     * conditions, that will cause the task execution to fail.
+     * conditions that will cause the task execution to fail.
      * Logs other suspicious conditions with Project.MSG_WARN.
+     * 
+     * @param taskClass Class to test for suitability. 
+     *                  Must not be <code>null</code>.
+     * @param project   Project to log warnings/errors to. 
+     *                  Must not be <code>null</code>.
+     * 
+     * @see Project#checkTaskClass(Class)
      */
     public static void checkTaskClass(final Class taskClass, final Project project) {
         // Any task can be used via adapter. If it doesn't have any execute()
@@ -154,7 +162,7 @@ public class TaskAdapter extends Task {
     }
     
     /**
-     * Do the execution.
+     * Executes the proxied task.
      */
     public void execute() throws BuildException {
         Method setProjectM = null;
@@ -201,12 +209,19 @@ public class TaskAdapter extends Task {
     }
     
     /**
-     * Set the target object class
+     * Sets the target object to proxy for.
+     * 
+     * @param o The target object. Must not be <code>null</code>.
      */
     public void setProxy(Object o) {
         this.proxy = o;
     }
 
+    /**
+     * Returns the target object being proxied.
+     * 
+     * @return the target proxy object
+     */
     public Object getProxy() {
         return this.proxy ;
     }
