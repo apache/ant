@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,12 +90,15 @@ public class Os implements Condition {
      *
      * @param f      The OS family type desired<br />
      *               Possible values:<br />
-     *               <ul><li>dos</li>
+     *               <ul>
+     *               <li>dos</li>
      *               <li>mac</li>
      *               <li>netware</li>
      *               <li>os/2</li>
      *               <li>unix</li>
-     *               <li>windows</li></ul>
+     *               <li>windows</li>
+     *               <li>win9x</li>
+     *               </ul>
      */
     public void setFamily(String f) {family = f.toLowerCase(Locale.US);}
 
@@ -212,6 +215,11 @@ public class Os implements Condition {
                 } else if (family.equals("unix")) {
                     isFamily = pathSep.equals(":")
                         && (!isFamily("mac") || osName.endsWith("x"));
+                } else if (family.equals("win9x")) {
+                    isFamily = isFamily("windows") &&
+                        !(osName.indexOf("nt") >= 0 ||
+                          osName.indexOf("2000") >= 0 ||
+                          osName.indexOf("xp") >= 0 );
                 } else {
                     throw new BuildException(
                         "Don\'t know how to detect os family \""

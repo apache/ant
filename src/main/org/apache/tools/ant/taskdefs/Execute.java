@@ -137,13 +137,7 @@ public class Execute {
                 baseLauncher = new CommandLauncher();
             }
 
-            // Determine if we're running under XP/2000/NT or 98/95
-            String osname =
-                System.getProperty("os.name").toLowerCase(Locale.US);
-
-            if ( osname.indexOf("nt") >= 0 ||
-                 osname.indexOf("2000") >= 0 ||
-                 osname.indexOf("xp") >= 0 ) {
+            if ( !Os.isFamily("win9x") ) {
                 // Windows XP/2000/NT
                 shellLauncher = new WinNTCommandLauncher(baseLauncher);
             }
@@ -236,9 +230,7 @@ public class Execute {
             String osname =
                 System.getProperty("os.name").toLowerCase(Locale.US);
             // Determine if we're running under XP/2000/NT or 98/95
-            if ( osname.indexOf("nt") >= 0 ||
-                 osname.indexOf("2000") >= 0 ||
-                 osname.indexOf("xp") >= 0 ) {
+            if ( !Os.isFamily("win9x") ) {
                 // Windows XP/2000/NT
                 String[] cmd = {"cmd", "/c", "set" };
                 return cmd;
