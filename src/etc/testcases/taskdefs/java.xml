@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 
 <project name="java-test" basedir="." default="foo">
+  <fail unless="tests-classpath.value"
+      message="the property tests-classpath.value is required by this test" />
   <!-- this property gets overridden programmatically-->
   <property name="timeToWait" value="4"/>
   <!-- this property gets overridden programmatically-->
@@ -13,10 +15,6 @@
 
   <property name="spawnapp"
     value="org.apache.tools.ant.taskdefs.JavaTest$$SpawnEntryPoint" />
-
-  <path id="test.classpath">
-    <pathelement location="${build.tests}"/>
-  </path>
 
   <target name="testNoJarNoClassname">
     <java/>
