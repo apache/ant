@@ -19,6 +19,9 @@
         </menu>
 
         <menu name="Extending Ant">
+            <item name="Configuration HOWTO" href="/configuring.html"/>
+            <item name="Converter HOWTO" href="/converter.html"/>
+            <item name="Type HOWTO" href="/type.html"/>
             <item name="ClassLoader HOWTO" href="/classloader.html"/>
             <item name="Library HOWTO" href="/librarys.html"/>
         </menu>
