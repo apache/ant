@@ -143,6 +143,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
 
         if (attributes.getIncludejavaruntime()) {
+            // XXX move this stuff to a separate class, code is identical to
+            //     code in ../compiler/DefaultCompilerAdapter
+
             if (System.getProperty("java.vendor").toLowerCase().indexOf("microsoft") >= 0) {
                 // Pull in *.zip from packages directory
                 FileSet msZipFiles = new FileSet();
@@ -176,6 +179,18 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                                                 + File.separator +"jre"
                                                 + File.separator + "lib"
                                                 + File.separator + "rt.jar"));
+
+                // Added for MacOS X
+                classpath.addExisting(new Path(null,
+                                               System.getProperty("java.home")
+                                               + File.separator + ".."
+                                               + File.separator + "Classes"
+                                               + File.separator + "classes.jar"));
+                classpath.addExisting(new Path(null,
+                                               System.getProperty("java.home")
+                                               + File.separator + ".."
+                                               + File.separator + "Classes"
+                                               + File.separator + "ui.jar"));
             }
         }
         return classpath;
