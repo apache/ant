@@ -71,6 +71,9 @@ public class CompileStep extends AbstractWizardStep implements OptionalStep {
      * 
      */
     protected void init() {
+
+
+
     }
 
     /** 

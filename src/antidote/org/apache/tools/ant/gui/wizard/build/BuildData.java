@@ -57,6 +57,7 @@ import org.apache.tools.ant.gui.wizard.*;
 import org.apache.tools.ant.gui.core.ResourceManager;
 import org.apache.tools.ant.gui.acs.*;
 import java.util.*;
+import java.io.File;
 
 /**
  * Data model for the build wizard.
@@ -70,7 +71,8 @@ public class BuildData implements WizardData {
         "org.apache.tools.ant.gui.resources.buildFileWizard");
 
     private StateMachine _stateMachine = new BuildStateMachine();
-    private String _name = null;
+    private String _name = "MyProject";
+    private File _outputFile = new File("build.xml");
     private boolean _isNewProject = true;
     private List _optionalSteps = null;
 
@@ -120,6 +122,25 @@ public class BuildData implements WizardData {
     }
 
     /** 
+     * Set the output file.
+     * 
+     * @param out Output file.
+     */
+    public void setOutputFile(File out) {
+        _outputFile = out;
+    }
+
+    /** 
+     * Get the output file.
+     * 
+     * @return Output file.
+     */
+    public File getOutputFile() {
+        return _outputFile;
+    }
+
+
+    /** 
      * Set whether or not a new project is being created.
      * 
      * @param isNew True if new project, false if importing a project.
@@ -156,4 +177,13 @@ public class BuildData implements WizardData {
 
     }
 
+    /** 
+     * Convert the state data into a project.
+     * 
+     * @return Created project.
+     */
+    public ACSProjectElement createProject() {
+        Builder builder = new Builder(this);
+        return builder.buildProject();
+    }
 }

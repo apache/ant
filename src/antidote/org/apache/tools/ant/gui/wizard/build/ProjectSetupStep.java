@@ -54,11 +54,14 @@
 package org.apache.tools.ant.gui.wizard.build;
 
 import org.apache.tools.ant.gui.wizard.AbstractWizardStep;
+import org.apache.tools.ant.gui.util.LabelFieldGBC;
+import org.apache.tools.ant.gui.customizer.FilePropertyEditor;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.util.*;
+import java.io.File;
 
 /**
  * Build file wizard step for naming the project and 
@@ -89,6 +92,9 @@ public class ProjectSetupStep extends AbstractWizardStep {
 
     /** Name of the project. */
     private JTextField _name = null;
+    /** Control for selecting a file. */
+    private FilePropertyEditor _fileEditor = null;
+
 
     /** 
      * Initialize the screen widgets.
@@ -97,12 +103,19 @@ public class ProjectSetupStep extends AbstractWizardStep {
     protected void init() {
         setLayout(new BorderLayout());
 
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        LabelFieldGBC gbc = new LabelFieldGBC();
+        JPanel p = new JPanel(new GridBagLayout());
         add(p, BorderLayout.NORTH);
 
+        _fileEditor = new FilePropertyEditor();
+        p.add(new JLabel(
+            getResources().getString(getID() + ".fileLabel")), gbc.forLabel());
+        p.add(_fileEditor.getCustomEditor(), gbc.forField());
+
         _name = new JTextField(10);
-        p.add(new JLabel(getResources().getString(getID() + ".nameLabel")));
-        p.add(_name);
+        p.add(new JLabel(
+            getResources().getString(getID() + ".nameLabel")), gbc.forLabel());
+        p.add(_name, gbc.forField());
 
         p = new JPanel(null);
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
@@ -131,6 +144,8 @@ public class ProjectSetupStep extends AbstractWizardStep {
         BuildData data = (BuildData) getDataModel();
         _name.setText(data.getProjectName());
 
+        _fileEditor.setValue(data.getOutputFile());
+
         // Steps.
         List steps = data.getOptionalSteps();
         if(steps != null) {
@@ -149,6 +164,8 @@ public class ProjectSetupStep extends AbstractWizardStep {
         // Name.
         BuildData data = (BuildData) getDataModel();
         data.setProjectName(_name.getText());
+
+        data.setOutputFile((File)_fileEditor.getValue());
 
         // Steps.
         List steps = new ArrayList();

@@ -51,39 +51,42 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizard;
+package org.apache.tools.ant.gui.wizard.build;
 
-import org.apache.tools.ant.gui.core.ResourceManager;
+import org.apache.tools.ant.gui.acs.*;
 
 /**
- * Interface for the wizard data model.
+ * Class that takes care of converting the wizard state data stored in
+ * BuildData and translates it into a build file.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizardData {
-    /** 
-     * Get access to the resources for the wizard.
-     * 
-     * @return Wizard resources.
-     */
-    ResourceManager getResources();
+public class Builder  {
+
+    /** Build data. */
+    private BuildData _data = null;
 
     /** 
-     * Get the class the determines what the next step should be.
+     * Constructor.
      * 
-     * @return State machine.
+     * @param data Build data to create project from.
      */
-    StateMachine getStateMachine();
+    public Builder(BuildData data) {
+        _data = data;
+    }
 
-    
     /** 
-     * Get any listeners to register with the wizard controller.
+     * Convert build data into a project.
      * 
-     * @return WizardListener instances to register for control events, or null
-     *  for none.
+     * @return Project.
      */
-    // XXX not sure about this yet.
-    //WizardListener[] getWizardListeners();
+    public ACSProjectElement buildProject() {
+        ACSProjectElement retval = ACSFactory.getInstance().createProject();
+        retval.setName(_data.getProjectName());
+
+
+        return retval;
+    }
 
 }

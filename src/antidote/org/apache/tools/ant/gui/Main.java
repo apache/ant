@@ -122,7 +122,8 @@ public class Main {
                 // results of the wizard.
                 wiz.addWizardListener(new WizardListener() {
                         public void finished(Object model) {
-                            System.out.println(model);
+                            BuildData data = (BuildData) model;
+                            System.out.println(data.createProject());
                             System.exit(0);
                         }
                         public void canceled() {
