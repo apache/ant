@@ -165,7 +165,9 @@ public class Project {
      * contains one FilterSet, but the wrapper is needed in order to
      * make it easier to use the FileUtils interface.
      */
-    private FilterSetCollection globalFilters = new FilterSetCollection(globalFilterSet);
+    private FilterSetCollection globalFilters 
+        = new FilterSetCollection(globalFilterSet);
+        
     /** Project base directory. */
     private File baseDir;
 
@@ -246,9 +248,11 @@ public class Project {
                     Class taskClass = Class.forName(value);
                     addTaskDefinition(key, taskClass);
                 } catch (NoClassDefFoundError ncdfe) {
-                    log("Could not load a dependent class (" + ncdfe.getMessage() + ") for task " + key, MSG_DEBUG); 
+                    log("Could not load a dependent class (" 
+                        + ncdfe.getMessage() + ") for task " + key, MSG_DEBUG); 
                 } catch (ClassNotFoundException cnfe) {
-                    log("Could not load class (" + value + ") for task " + key, MSG_DEBUG); 
+                    log("Could not load class (" + value 
+                        + ") for task " + key, MSG_DEBUG); 
                 }
             }
         } catch (IOException ioe) {
@@ -257,7 +261,7 @@ public class Project {
 
         String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
 
-        try{
+        try {
             Properties props = new Properties();
             InputStream in = this.getClass().getResourceAsStream(dataDefs);
             if (in == null) { 
@@ -455,6 +459,9 @@ public class Project {
     /**
      * Sets a property unless it is already defined as a user property
      * (in which case the method returns silently).
+     *
+     * @param name the name of the property.
+     * @param value the property value.
      */
     private void setPropertyInternal(String name, String value) {
         if (null != userProperties.get(name)) {
@@ -491,8 +498,8 @@ public class Project {
      *         by values, or <code>null</code> if the given string is
      *         <code>null</code>.
      * 
-     * @exception BuildException if the given value has an unclosed property name,
-     *                           e.g. <code>${xxx</code>
+     * @exception BuildException if the given value has an unclosed 
+     *                           property name, e.g. <code>${xxx</code>
      */
     public String replaceProperties(String value)
         throws BuildException { 
@@ -518,7 +525,8 @@ public class Project {
 
     /**
      * Returns a copy of the properties table.
-     * @return a hashtable containing all properties (including user properties).
+     * @return a hashtable containing all properties 
+     *         (including user properties).
      */
     public Hashtable getProperties() {
         Hashtable propertiesCopy = new Hashtable();
@@ -630,6 +638,7 @@ public class Project {
      * 
      * @param token The token to filter.
      *              Must not be <code>null</code>.
+     * @param value the replacement value.
      * @deprecated Use getGlobalFilterSet().addFilter(token,value)
      * 
      * @see #getGlobalFilterSet()
@@ -684,10 +693,12 @@ public class Project {
     public void setBaseDir(File baseDir) throws BuildException {
         baseDir = fileUtils.normalize(baseDir.getAbsolutePath());
         if (!baseDir.exists()) { 
-            throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " does not exist");
+            throw new BuildException("Basedir " + baseDir.getAbsolutePath() 
+                + " does not exist");
         }
         if (!baseDir.isDirectory()) { 
-            throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " is not a directory");
+            throw new BuildException("Basedir " + baseDir.getAbsolutePath() 
+                + " is not a directory");
         }
         this.baseDir = baseDir;
         setPropertyInternal( "basedir", this.baseDir.getPath());
@@ -738,7 +749,8 @@ public class Project {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
 
-        log("Detected Java version: " + javaVersion + " in: " + System.getProperty("java.home"), MSG_VERBOSE);
+        log("Detected Java version: " + javaVersion + " in: " 
+            + System.getProperty("java.home"), MSG_VERBOSE);
 
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }
@@ -777,7 +789,8 @@ public class Project {
      *
      * @see #checkTaskClass(Class)
      */
-    public void addTaskDefinition(String taskName, Class taskClass) throws BuildException {
+    public void addTaskDefinition(String taskName, Class taskClass) 
+         throws BuildException {
         Class old = (Class)taskClassDefinitions.get(taskName);
         if (null != old) {
             if (old.equals(taskClass)) {
@@ -786,7 +799,7 @@ public class Project {
                     MSG_VERBOSE);
                 return;
             } else {
-                log("Trying to override old definition of task "+taskName, 
+                log("Trying to override old definition of task " + taskName, 
                     MSG_WARN);
                 invalidateCreatedTasks(taskName);
             }
@@ -803,17 +816,19 @@ public class Project {
      * Ant task implementation classes must be public, concrete, and have 
      * a no-arg constructor.
      * 
+     * @param taskClass the class to be checked.
+     *
      * @exception BuildException if the class is unsuitable for being an Ant 
      *                           task. An error level message is logged before 
      *                           this exception is thrown.
      */
     public void checkTaskClass(final Class taskClass) throws BuildException {
-        if(!Modifier.isPublic(taskClass.getModifiers())) {
+        if (!Modifier.isPublic(taskClass.getModifiers())) {
             final String message = taskClass + " is not public";
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
         }
-        if(Modifier.isAbstract(taskClass.getModifiers())) {
+        if (Modifier.isAbstract(taskClass.getModifiers())) {
             final String message = taskClass + " is abstract";
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
@@ -822,12 +837,13 @@ public class Project {
             taskClass.getConstructor( null );
             // don't have to check for public, since
             // getConstructor finds public constructors only.
-        } catch(NoSuchMethodException e) {
-            final String message = "No public no-arg constructor in " + taskClass;
+        } catch (NoSuchMethodException e) {
+            final String message = "No public no-arg constructor in " 
+                + taskClass;
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
         }
-        if( !Task.class.isAssignableFrom(taskClass) ) {
+        if (!Task.class.isAssignableFrom(taskClass) ) {
             TaskAdapter.checkTaskClass(taskClass, this);
         }
     }
@@ -853,7 +869,7 @@ public class Project {
      * 
      * @param typeName The name of the datatype.
      *                 Must not be <code>null</code>.
-     * @param taskClass The full name of the class implementing the datatype.
+     * @param typeClass The full name of the class implementing the datatype.
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
@@ -865,19 +881,20 @@ public class Project {
                     MSG_VERBOSE);
                 return;
             } else {
-                log("Trying to override old definition of datatype "+typeName, 
-                    MSG_WARN);
+                log("Trying to override old definition of datatype " 
+                    + typeName, MSG_WARN);
             }
         }
 
-        String msg = " +User datatype: " + typeName + "     " + typeClass.getName();
+        String msg = " +User datatype: " + typeName + "     " 
+            + typeClass.getName();
         log(msg, MSG_DEBUG);
         dataClassDefinitions.put(typeName, typeClass);
     }
 
     /**
-     * Returns the current datatype definition hashtable. The returned hashtable is 
-     * "live" and so should not be modified.
+     * Returns the current datatype definition hashtable. The returned 
+     * hashtable is "live" and so should not be modified.
      * 
      * @return a map of from datatype name to implementing class 
      *         (String to Class). 
@@ -896,10 +913,10 @@ public class Project {
      * 
      * @see Project#addOrReplaceTarget
      */
-    public void addTarget(Target target) {
+    public void addTarget(Target target) throws BuildException {
         String name = target.getName();
         if (targets.get(name) != null) {
-            throw new BuildException("Duplicate target: `"+name+"'");
+            throw new BuildException("Duplicate target: `" + name + "'");
         }
         addOrReplaceTarget(name, target);
     }
@@ -919,7 +936,7 @@ public class Project {
      public void addTarget(String targetName, Target target)
          throws BuildException {
          if (targets.get(targetName) != null) {
-             throw new BuildException("Duplicate target: `"+targetName+"'");
+             throw new BuildException("Duplicate target: `" + targetName + "'");
          }
          addOrReplaceTarget(targetName, target);
      }
@@ -982,14 +999,14 @@ public class Project {
         try {
             Object o = c.newInstance();
             Task task = null;
-            if( o instanceof Task ) {
-               task=(Task)o;
+            if (o instanceof Task) {
+               task = (Task)o;
             } else {
                 // "Generic" Bean - use the setter pattern
                 // and an Adapter
-                TaskAdapter taskA=new TaskAdapter();
-                taskA.setProxy( o );
-                task=taskA;
+                TaskAdapter taskA = new TaskAdapter();
+                taskA.setProxy(o);
+                task = taskA;
             }
             task.setProject(this);
             task.setTaskType(taskType);
@@ -1195,6 +1212,8 @@ public class Project {
      *                 respect to. May be <code>null</code>, in which case
      *                 the current directory is used.
      *
+     * @return the resolved File. 
+     * 
      * @deprecated
      */
     public File resolveFile(String fileName, File rootDir) {
@@ -1209,6 +1228,9 @@ public class Project {
      *
      * @param fileName The name of the file to resolve. 
      *                 Must not be <code>null</code>.
+     *
+     * @return the resolved File. 
+     * 
      */
     public File resolveFile(String fileName) {
         return fileUtils.resolveFile(baseDir, fileName);
@@ -1263,7 +1285,8 @@ public class Project {
      *
      * @deprecated
      */
-    public void copyFile(String sourceFile, String destFile) throws IOException {
+    public void copyFile(String sourceFile, String destFile) 
+          throws IOException {
         fileUtils.copyFile(sourceFile, destFile);
     }
 
@@ -1284,7 +1307,8 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null);
+        fileUtils.copyFile(sourceFile, destFile, 
+            filtering ? globalFilters : null);
     }
 
     /**
@@ -1307,7 +1331,8 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, overwrite);
+        fileUtils.copyFile(sourceFile, destFile, 
+            filtering ? globalFilters : null, overwrite);
     }
 
     /**
@@ -1336,8 +1361,8 @@ public class Project {
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, 
-                           overwrite, preserveLastModified);
+        fileUtils.copyFile(sourceFile, destFile, 
+            filtering ? globalFilters : null, overwrite, preserveLastModified);
     }
 
     /**
@@ -1374,7 +1399,8 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null);
+        fileUtils.copyFile(sourceFile, destFile, 
+            filtering ? globalFilters : null);
     }
 
     /**
@@ -1391,13 +1417,14 @@ public class Project {
      * @param overwrite Whether or not the destination file should be 
      *                  overwritten if it already exists.
      * 
-     * @exception IOException 
+     * @exception IOException if the file cannot be copied.
      *
      * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, overwrite);
+        fileUtils.copyFile(sourceFile, destFile, 
+            filtering ? globalFilters : null, overwrite);
     }
 
     /**
@@ -1426,24 +1453,27 @@ public class Project {
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, 
-                           overwrite, preserveLastModified);
+        fileUtils.copyFile(sourceFile, destFile, 
+            filtering ? globalFilters : null, overwrite, preserveLastModified);
     }
 
     /**
      * Calls File.setLastModified(long time) on Java above 1.1, and logs
      * a warning on Java 1.1.
      * 
-     * @param File The file to set the last modified time on.
+     * @param file The file to set the last modified time on.
      *             Must not be <code>null</code>.
      *
+     * @param time the required modification time.
+     * 
      * @deprecated
      * 
      * @exception BuildException if the last modified time cannot be set
      *                           despite running on a platform with a version 
      *                           above 1.1.
      */
-    public void setFileLastModified(File file, long time) throws BuildException {
+    public void setFileLastModified(File file, long time) 
+         throws BuildException {
         if (getJavaVersion() == JAVA_1_1) {
             log("Cannot change the modification time of " + file
                 + " in JDK 1.1", Project.MSG_WARN);
@@ -1500,18 +1530,19 @@ public class Project {
         // build Target.
 
         tsort(root, targets, state, visiting, ret);
-        log("Build sequence for target `"+root+"' is "+ret, MSG_VERBOSE);
-        for (Enumeration en=targets.keys(); en.hasMoreElements();) {
+        log("Build sequence for target `" + root + "' is " + ret, MSG_VERBOSE);
+        for (Enumeration en = targets.keys(); en.hasMoreElements();) {
             String curTarget = (String)(en.nextElement());
             String st = (String) state.get(curTarget);
             if (st == null) {
                 tsort(curTarget, targets, state, visiting, ret);
             }
             else if (st == VISITING) {
-                throw new RuntimeException("Unexpected node in visiting state: "+curTarget);
+                throw new RuntimeException("Unexpected node in visiting state: "
+                    + curTarget);
             }
         }
-        log("Complete build sequence is "+ret, MSG_VERBOSE);
+        log("Complete build sequence is " + ret, MSG_VERBOSE);
         return ret;
     }
 
@@ -1580,9 +1611,9 @@ public class Project {
             throw new BuildException(new String(sb));
         }
 
-        for (Enumeration en=target.getDependencies(); en.hasMoreElements();) {
+        for (Enumeration en = target.getDependencies(); en.hasMoreElements();) {
             String cur = (String) en.nextElement();
-            String m=(String)state.get(cur);
+            String m = (String)state.get(cur);
             if (m == null) {
                 // Not been visited
                 tsort(cur, targets, state, visiting, ret);
@@ -1595,14 +1626,16 @@ public class Project {
 
         String p = (String) visiting.pop();
         if (root != p) {
-            throw new RuntimeException("Unexpected internal error: expected to pop "+root+" but got "+p);
+            throw new RuntimeException("Unexpected internal error: expected to "
+                + "pop " + root + " but got " + p);
         }
         state.put(root, VISITED);
         ret.addElement(target);
     }
 
     /**
-     * Builds an appropriate exception detailing a specified circular dependency.
+     * Builds an appropriate exception detailing a specified circular 
+     * dependency.
      * 
      * @param end The dependency to stop at. Must not be <code>null</code>.
      * @param stk A stack of dependencies. Must not be <code>null</code>.
@@ -1617,7 +1650,7 @@ public class Project {
             c = (String)stk.pop();
             sb.append(" <- ");
             sb.append(c);
-        } while(!c.equals(end));
+        } while (!c.equals(end));
         return new BuildException(new String(sb));
     }
 
@@ -1633,7 +1666,7 @@ public class Project {
                 MSG_WARN);
         }
         log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
-        references.put(name,value);
+        references.put(name, value);
     }
 
     /**
@@ -1806,7 +1839,8 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    private void fireMessageLoggedEvent(BuildEvent event, String message, int priority) {
+    private void fireMessageLoggedEvent(BuildEvent event, String message, 
+                                        int priority) {
         event.setMessage(message, priority);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
@@ -1823,7 +1857,8 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Project project, String message, int priority) {
+    protected void fireMessageLogged(Project project, String message, 
+                                     int priority) {
         BuildEvent event = new BuildEvent(project);
         fireMessageLoggedEvent(event, message, priority);
     }
@@ -1837,7 +1872,8 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Target target, String message, int priority) {
+    protected void fireMessageLogged(Target target, String message, 
+                                     int priority) {
         BuildEvent event = new BuildEvent(target);
         fireMessageLoggedEvent(event, message, priority);
     }
