@@ -55,17 +55,9 @@
 package org.apache.ant.xdoclet;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Iterator;
 
-import xjavadoc.XClass;
-import xjavadoc.XJavaDoc;
-import xjavadoc.XMethod;
-
-import xdoclet.TemplateSubTask;
 import xdoclet.XDocletException;
-import xdoclet.XDocletTagSupport;
-import xdoclet.util.TypeConversionUtil;
+import xjavadoc.XClass;
 
 /**
  * Generates Ant task descriptors.

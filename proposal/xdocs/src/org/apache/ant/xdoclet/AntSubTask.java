@@ -74,10 +74,9 @@ public abstract class AntSubTask extends TemplateSubTask
      *
      * @param clazz
      * @return
-     * @exception XDocletException
      * @todo                        perhaps make deprecation switch configurable
      */
-    public final static boolean isAntTask(XClass clazz) throws XDocletException
+    public final static boolean isAntTask(XClass clazz)
     {
         if (clazz.isAbstract()) {
             return false;
@@ -153,7 +152,8 @@ public abstract class AntSubTask extends TemplateSubTask
     protected void startProcess() throws XDocletException
     {
         XJavaDoc xjd = new XJavaDoc();
-        Collection classes = xjd.getSourceClasses(false, processInnerClasses());
+        xjd.setUseNodeParser(false);
+        xjd.getSourceClasses();
 
         super.startProcess();
     }

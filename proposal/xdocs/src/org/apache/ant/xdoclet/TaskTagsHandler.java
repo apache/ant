@@ -67,9 +67,7 @@ import java.util.Properties;
 
 import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import xjavadoc.TagIterator;
 import xjavadoc.XClass;
-import xjavadoc.XCollections;
 import xjavadoc.XMethod;
 import xjavadoc.XParameter;
 import xjavadoc.XTag;
@@ -146,15 +144,9 @@ public class TaskTagsHandler extends XDocletTagSupport
 
     /**
      * Provides the Ant task name. Order of rules:
-     * <ol>
-     *   <li> Value of
      *
      * @param clazz
-     * @return
-     * @ant:task     name="..."</li>
-     *      <li> Lowercased classname with "Task" suffix removed</li>
-     *    </ol>
-     *
+     * @return  Lowercased classname with "Task" suffix removed
      */
     public final static String getTaskName(XClass clazz)
     {
@@ -215,29 +207,6 @@ public class TaskTagsHandler extends XDocletTagSupport
             }
         }
     }
-
-//    /**
-//     * Iterates over all Ant attributes.
-//     *
-//     * @param template              XDoclet template
-//     * @param attributes            Tag parameters
-//     * @exception XDocletException  Oops!
-//     */
-//    public void forAllAttributes(String template, Properties attributes) throws XDocletException
-//    {
-//        // throw exception if not an Ant task
-//
-//        XClass cur_class = getCurrentClass();
-//
-//        XMethod[] methods = getAttributeMethods(cur_class);
-//
-////        System.out.println("# attributes = " + methods.length);
-//
-//        for (int i = 0; i < methods.length; i++) {
-//            setCurrentMethod(methods[i]);
-//            generate(template);
-//        }
-//    }
 
     /**
      * Iterates over all Ant attributes.
@@ -318,8 +287,8 @@ public class TaskTagsHandler extends XDocletTagSupport
     {
         Collection tags = getCurrentClass().getDoc().getTags("ant.attribute.group");
 
-        for (TagIterator t = XCollections.tagIterator(tags); t.hasNext(); ) {
-            setCurrentClassTag(t.next());
+        for (Iterator t = tags.iterator(); t.hasNext(); ) {
+            setCurrentClassTag((XTag) t.next());
 
             generate(template);
         }
@@ -379,7 +348,7 @@ public class TaskTagsHandler extends XDocletTagSupport
     public String displayAttributeType() throws XDocletException
     {
         Collection parameters = getCurrentMethod().getParameters();
-        XParameter param = XCollections.parameterIterator(parameters).next();
+        XParameter param = (XParameter) parameters.iterator().next();
 
         String methodType = param.getType().getQualifiedName();
         String display = (String) attributeDisplayMap.get(methodType);
@@ -610,7 +579,8 @@ public class TaskTagsHandler extends XDocletTagSupport
                 continue;
             }
 
-            String attributeType = XCollections.parameterIterator(method.getParameters()).next().getType().getQualifiedName();
+            Iterator it = method.getParameters().iterator();
+            String attributeType = ((XParameter) it.next()).getType().getQualifiedName();
 
 //            System.out.println("attributeType = " + attributeType);
 
@@ -713,7 +683,8 @@ public class TaskTagsHandler extends XDocletTagSupport
                 if (method.getParameters().size() != 1) {
                     continue;
                 }
-                elementType = XCollections.parameterIterator(method.getParameters()).next().getType().getQualifiedName();
+                Iterator it = method.getParameters().iterator();
+                elementType = ((XParameter) it.next()).getType().getQualifiedName();
             }
             else {
                 elementType = method.getReturnType().getType().getQualifiedName();
@@ -748,9 +719,8 @@ public class TaskTagsHandler extends XDocletTagSupport
      *
      * @param cur_class
      * @return
-     * @exception XDocletException
      */
-    private XMethod[] getMethods(XClass cur_class) throws XDocletException
+    private XMethod[] getMethods(XClass cur_class)
     {
         Map already = new HashMap();
 
@@ -829,7 +799,8 @@ public class TaskTagsHandler extends XDocletTagSupport
                 Collection params = getCurrentMethod().getParameters();
 
                 if (params.size() == 1) {
-                    clazz = XCollections.parameterIterator(params).next().getType();
+                    Iterator it = params.iterator();
+                    clazz = ((XParameter)it.next()).getType();
                 }
             }
         }
