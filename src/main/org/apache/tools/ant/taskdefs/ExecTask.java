@@ -287,6 +287,10 @@ public class ExecTask extends Task {
         int err = -1; // assume the worst
 
         err = exe.execute();
+        //test for and handle a forced process death
+        if(exe.killedProcess()) {
+            log("Timeout: killed the sub-process",Project.MSG_WARN); 
+        }
         maybeSetResultPropertyValue(err);
         if (err != 0) {
             if (failOnError) {
