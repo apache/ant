@@ -9,6 +9,8 @@ Changes that could break older environments:
   of nested elements was ant's namespace uri. This change will affect users
   of ant 1.6b1 and ant 1.6b2.
 
+* <csc>'s executable attribute defaults to mcs on non-Windows platforms.
+
 Fixed bugs:
 -----------
 * better debugging support for ApacheCatalogResolver
@@ -57,7 +59,9 @@ Other changes:
 --------------
 * Change default uri from ant:core to antlib:org.apache.tools.ant
 
-* upgrade to xml-apis.jar from Xerces-J 2.5.0.
+* upgrade to xml-apis.jar from Xerces-J 2.6.0.
+
+* Shipped XML parser is now Xerces 2.6.0
 
 * set project for created targets.
 
