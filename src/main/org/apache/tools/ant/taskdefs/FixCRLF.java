@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -170,20 +171,18 @@ public class FixCRLF extends MatchingTask {
      */
     public FixCRLF () {
         tabs = ASIS;
-        if (System.getProperty("path.separator").equals(":")) {
+        if (Os.isFamily("mac")) {
             ctrlz = REMOVE;
-            if (System.getProperty("os.name").indexOf("Mac") > -1) {
-                eol = CR;
-                eolstr = "\r";
-            } else {
-                eol = LF;
-                eolstr = "\n";
-            }
-        }
-        else {
+            eol = CR;
+            eolstr = "\r";
+        } else if (Os.isFamily("dos")) {
             ctrlz = ASIS;
             eol = CRLF;
             eolstr = "\r\n";
+        } else {
+            ctrlz = REMOVE;
+            eol = LF;
+            eolstr = "\n";
         }
     }
 
@@ -853,6 +852,7 @@ public class FixCRLF extends MatchingTask {
                     // Regard \r\r not followed by \n as two lines
                     ++eolcount;
                     eolStr.append('\r');
+                    reader.mark(2);
                     switch ((char)(ch = reader.read())) {
                     case '\r':
                         if ((char)(ch = reader.read()) == '\n') {
@@ -863,6 +863,9 @@ public class FixCRLF extends MatchingTask {
                     case '\n':
                         ++eolcount;
                         eolStr.append('\n');
+                        break;
+                    default:
+                        reader.reset();
                         break;
                     } // end of switch ((char)(ch = reader.read()))
                     break;

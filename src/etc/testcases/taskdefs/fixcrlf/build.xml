@@ -97,6 +97,13 @@
              />
   </target>
 
+  <target name="testMacLines" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="Mac2Unix"
+             eol="lf"
+             />
+  </target>
+
   <target name="testEncoding" depends="init">
     <fixcrlf srcdir="input" destdir="result"
              includes="input.crlf.utf16"

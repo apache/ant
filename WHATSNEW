@@ -60,6 +60,8 @@ Fixed bugs:
 * Some junit formatters incorrectly assumed that all testcases would
   inherit from junit.framework.TestCase.
 
+* <fixcrlf> dropped the first characters from Mac files.
+
 Other changes:
 --------------
 * <move> attempts to rename the directory, if everything inside it is
