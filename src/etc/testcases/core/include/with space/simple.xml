@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<project name="include-test" basedir="." default="test1">
+  <target name="test1">
+    <echo message="from simple buildfile in &apos;with space&apos;"/>
+  </target>
+</project>

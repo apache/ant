@@ -145,4 +145,19 @@ public class IncludeTest extends BuildFileTest {
         }
     }
 
+    public void testWithSpaceInclude() { 
+        configureProject("src/etc/testcases/core/include/with space/include.xml");
+        expectLog("test1", "from included entity in 'with space'");
+    }
+    
+    public void testWithSpaceSimple() { 
+        configureProject("src/etc/testcases/core/include/with space/simple.xml");
+        expectLog("test1", "from simple buildfile in 'with space'");
+    }
+    
+    public void testWithSpaceRelative() { 
+        configureProject("src/etc/testcases/core/include/with space/relative.xml");
+        expectLog("test1", "from included entity in 'with space'");
+    }
+
 }

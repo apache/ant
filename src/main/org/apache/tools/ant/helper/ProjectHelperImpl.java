@@ -71,6 +71,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskAdapter;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.AttributeList;
 import org.xml.sax.DocumentHandler;
@@ -115,6 +116,10 @@ public class ProjectHelperImpl extends ProjectHelper {
      * been placed outside of targets.</p>
      */
     private Target implicitTarget = new Target();
+    /**
+     * helper for path -> URI and URI -> path conversions.
+     */
+    private static FileUtils fu = FileUtils.newFileUtils();
 
     public ProjectHelperImpl() {
         implicitTarget.setName("");
@@ -148,11 +153,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             }
 
 
-            String uri = "file:" + buildFile.getAbsolutePath().replace('\\', '/');
-            for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
-                uri = uri.substring(0, index) + "%23" + uri.substring(index + 1);
-            }
-
+            String uri = fu.toURI(buildFile.getAbsolutePath());
             inputStream = new FileInputStream(buildFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
@@ -329,32 +330,15 @@ public class ProjectHelperImpl extends ProjectHelper {
             helperImpl.project.log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
 
             if (systemId.startsWith("file:")) {
-                String path = systemId.substring(5);
-                int index = path.indexOf("file:");
-
-                // we only have to handle these for backward compatibility
-                // since they are in the FAQ.
-                while (index != -1) {
-                    path = path.substring(0, index) + path.substring(index + 5);
-                    index = path.indexOf("file:");
-                }
-
-                String entitySystemId = path;
-                index = path.indexOf("%23");
-                // convert these to #
-                while (index != -1) {
-                    path = path.substring(0, index) + "#" + path.substring(index + 3);
-                    index = path.indexOf("%23");
-                }
+                String path = fu.fromURI(systemId);
 
                 File file = new File(path);
                 if (!file.isAbsolute()) {
-                    file = new File(helperImpl.buildFileParent, path);
+                    file = fu.resolveFile(helperImpl.buildFileParent, path);
                 }
-
                 try {
                     InputSource inputSource = new InputSource(new FileInputStream(file));
-                    inputSource.setSystemId("file:" + entitySystemId);
+                    inputSource.setSystemId(fu.toURI(file.getAbsolutePath()));
                     return inputSource;
                 } catch (FileNotFoundException fne) {
                     helperImpl.project.log(file.getAbsolutePath() + " could not be found",

@@ -70,7 +70,9 @@ import java.io.Reader;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.CharacterIterator;
 import java.text.DecimalFormat;
+import java.text.StringCharacterIterator;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -103,6 +105,34 @@ public class FileUtils {
 
     private boolean onNetWare = Os.isFamily("netware");
 
+    // for toURI
+    private static boolean[] isSpecial = new boolean[256];
+    private static char[] escapedChar1 = new char[256];
+    private static char[] escapedChar2 = new char[256];
+
+
+    // stolen from FilePathToURI of the Xerces-J team
+    static {
+        for (int i = 0; i <= 0x20; i++) {
+            isSpecial[i] = true;
+            escapedChar1[i] = Character.forDigit(i >> 4, 16);
+            escapedChar2[i] = Character.forDigit(i & 0xf, 16);
+        }
+        isSpecial[0x7f] = true;
+        escapedChar1[0x7f] = '7';
+        escapedChar2[0x7f] = 'F';
+        char[] escChs = {'<', '>', '#', '%', '"', '{', '}',
+                         '|', '\\', '^', '~', '[', ']', '`'};
+        int len = escChs.length;
+        char ch;
+        for (int i = 0; i < len; i++) {
+            ch = escChs[i];
+            isSpecial[ch] = true;
+            escapedChar1[ch] = Character.forDigit(ch >> 4, 16);
+            escapedChar2[ch] = Character.forDigit(ch & 0xf, 16);
+        }
+    }
+
     /**
      * Factory method.
      */
@@ -124,14 +154,11 @@ public class FileUtils {
      *      formed.
      */
     public URL getFileURL(File file) throws MalformedURLException {
-        String uri = "file:" + file.getAbsolutePath().replace('\\', '/');
-        for (int i = uri.indexOf('#'); i != -1; i = uri.indexOf('#')) {
-            uri = uri.substring(0, i) + "%23" + uri.substring(i + 1);
-        }
+        String path = file.getAbsolutePath();
         if (file.isDirectory()) {
-            uri += "/";
+            path += "/";
         }
-        return new URL(uri);
+        return new URL(toURI(path));
     }
 
     /**
@@ -168,7 +195,7 @@ public class FileUtils {
                  overwrite, false);
     }
 
-     /**
+    /**
      * Convienence method to copy a file from a source to a
      * destination specifying if token filtering must be used, if
      * source files may overwrite newer destination files and the
@@ -342,12 +369,12 @@ public class FileUtils {
                     } else {
                         in =
                             new BufferedReader(new InputStreamReader(
-                                                 new FileInputStream(sourceFile),
-                                                 encoding));
+                                                                     new FileInputStream(sourceFile),
+                                                                     encoding));
                         out =
                             new BufferedWriter(new OutputStreamWriter(
-                                                 new FileOutputStream(destFile),
-                                                 encoding));
+                                                                      new FileOutputStream(destFile),
+                                                                      encoding));
                     }
 
                     if (filterChainsAvailable) {
@@ -555,8 +582,8 @@ public class FileUtils {
         if (!onNetWare) {
             if (!path.startsWith(File.separator) &&
                 !(path.length() >= 2 &&
-                   Character.isLetter(path.charAt(0)) &&
-                   colon == 1)) {
+                  Character.isLetter(path.charAt(0)) &&
+                  colon == 1)) {
                 String msg = path + " is not an absolute path";
                 throw new BuildException(msg);
             }
@@ -780,7 +807,7 @@ public class FileUtils {
     public static final String readFully(Reader rdr, int bufferSize) throws IOException {
         if (bufferSize <= 0) {
             throw new IllegalArgumentException("Buffer size must be greater "
-                + "than 0");
+                                               + "than 0");
         }
         final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
@@ -791,7 +818,7 @@ public class FileUtils {
             if (bufferLength != -1) {
                 if (textBuffer == null) {
                     textBuffer = new StringBuffer(
-                                    new String(buffer, 0, bufferLength));
+                                                  new String(buffer, 0, bufferLength));
                 } else {
                     textBuffer.append(new String(buffer, 0, bufferLength));
                 }
@@ -875,5 +902,92 @@ public class FileUtils {
             return p;
         }
     }
+
+    /**
+     * Constructs a <code>file:</code> URI that represents the
+     * external form of the given pathname.
+     *
+     * <p>Will be an absolute URI if the given path is absolute.</p>
+     *
+     * <p>This code doesn't handle non-ASCII characters properly.</p>
+     *
+     * @since Ant 1.6
+     */
+    public String toURI(String path) {
+        StringBuffer sb = new StringBuffer("file:");
+
+        // catch exception if normalize thinks this is not an absolute path
+        try {
+            path = normalize(path).getAbsolutePath();
+            sb.append("//");
+        } catch (BuildException e) {
+            // relative path
+        }
+        
+        path = path.replace('\\', '/');
+        CharacterIterator iter = new StringCharacterIterator(path);
+        for (char c = iter.first(); c != CharacterIterator.DONE; 
+             c = iter.next()) {
+            if (isSpecial[c]) {
+                sb.append('%');
+                sb.append(escapedChar1[c]);
+                sb.append(escapedChar2[c]);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Constructs a file path from a <code>file:</code> URI.
+     *
+     * <p>Will be an absolute path if the given URI is absolute.</p>
+     *
+     * <p>Swallows '%' that are not followed by two characters,
+     * doesn't deal with non-ASCII characters.</p>
+     *
+     * @since Ant 1.6
+     */
+    public String fromURI(String uri) {
+        if (!uri.startsWith("file:")) {
+            throw new IllegalArgumentException("Can only handle file: URIs");
+        }
+        if (uri.startsWith("file://")) {
+            uri = uri.substring(7);
+        } else {
+            uri = uri.substring(5);
+        }
+
+        uri = uri.replace('/', File.separatorChar);
+        StringBuffer sb = new StringBuffer();
+        CharacterIterator iter = new StringCharacterIterator(uri);
+        for (char c = iter.first(); c != CharacterIterator.DONE; 
+             c = iter.next()) {
+            if (c == '%') {
+                char c1 = iter.next();
+                if (c1 != CharacterIterator.DONE) {
+                    int i1 = Character.digit(c1, 16);
+                    char c2 = iter.next();
+                    if (c2 != CharacterIterator.DONE) {
+                        int i2 = Character.digit(c2, 16);
+                        sb.append((char) ((i1 << 4) + i2));
+                    }
+                }
+            } else {
+                sb.append(c);
+            }
+        }
+
+        String path = sb.toString();
+        // catch exception if normalize thinks this is not an absolute path
+        try {
+            path = normalize(path).getAbsolutePath();
+        } catch (BuildException e) {
+            // relative path
+        }
+        return path;
+    }
+
 }
 

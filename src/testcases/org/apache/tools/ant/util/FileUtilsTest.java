@@ -409,6 +409,37 @@ public class FileUtilsTest extends TestCase {
     }
 
     /**
+     * test toUri
+     */
+    public void testToURI() {
+        if (Os.isFamily("windows")) {
+            assertEquals("file://C:/foo", fu.toURI("c:\\foo"));
+        }
+        assertEquals("file:///foo", fu.toURI("/foo"));
+        assertEquals("file:./foo",  fu.toURI("./foo"));
+        assertEquals("file:///foo", fu.toURI("\\foo"));
+        assertEquals("file:./foo",  fu.toURI(".\\foo"));
+        assertEquals("file:///foo%20bar", fu.toURI("/foo bar"));
+        assertEquals("file:///foo%20bar", fu.toURI("\\foo bar"));
+        assertEquals("file:///foo%23bar", fu.toURI("/foo#bar"));
+        assertEquals("file:///foo%23bar", fu.toURI("\\foo#bar"));
+    }
+
+    /**
+     * test fromUri
+     */
+    public void testFromURI() {
+        if (Os.isFamily("windows")) {
+            assertEquals("C:\\foo", fu.fromURI("file://c:/foo"));
+        }
+        assertEquals(localize("/foo"), fu.fromURI("file:///foo"));
+        assertEquals("." + File.separator + "foo", 
+                     fu.fromURI("file:./foo"));
+        assertEquals(localize("/foo bar"), fu.fromURI("file:///foo%20bar"));
+        assertEquals(localize("/foo#bar"), fu.fromURI("file:///foo%23bar"));
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {
