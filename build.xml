@@ -29,6 +29,7 @@
     <property name="build.compiler" value="classic"/>
 
     <available property="bsf.present" classname="com.ibm.bsf.BSFManager" />
+    <available property="netrexx.present" classname="netrexx.lang.Rexx" />
 
     <!-- Give user a chance to override without editing this file 
          (and without typing -D each time it compiles it -->
@@ -54,6 +55,7 @@
            deprecation="on"
            optimize="on" >
       <exclude name="**/Script.java" unless="bsf.present" />
+      <exclude name="**/NetRexxC.java" unless="netrexx.present" />
     </javac>
   </target>
 
