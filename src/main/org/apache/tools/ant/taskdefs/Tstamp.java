@@ -88,7 +88,7 @@ public class Tstamp extends Task {
             while(i.hasMoreElements())
             {
                 CustomFormat cts = (CustomFormat)i.nextElement();
-                cts.execute(project,d);
+                cts.execute(project,d, location);
             }
             
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class Tstamp extends Task {
             }
         }            
         
-        public void execute(Project project, Date date)
+        public void execute(Project project, Date date, Location location)
         {
             if (propertyName == null) {
                 throw new BuildException("property attribute must be provided", location);
