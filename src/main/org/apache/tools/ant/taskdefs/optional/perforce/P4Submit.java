@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,13 +83,37 @@ public class P4Submit extends P4Base {
      * change list number
      */
     public String change;
-
+    /**
+     * change property
+     */
+    private String changeProperty;
+    /**
+     * needsresolveproperty
+     */
+    private String needsResolveProperty;
     /**
      * set the change list number to submit
      * @param change The changelist number to submit; required.
      */
     public void setChange(String change) {
         this.change = change;
+    }
+    /**
+     * property defining the change number if the change number gets renumbered
+     * @param changeProperty name of a new property to which the change number
+     * will be assigned if it changes
+     * @since ant 1.6.1
+     */
+    public void setChangeProperty(String changeProperty) {
+        this.changeProperty = changeProperty;
+    }
+    /**
+     * property defining the need to resolve the change list
+     * @param needsResolveProperty a property which will be set if the change needs resolve
+     * @since ant 1.6.1
+     */
+    public void setNeedsResolveProperty(String needsResolveProperty) {
+        this.needsResolveProperty = needsResolveProperty;
     }
 
     /**
@@ -133,6 +157,9 @@ public class P4Submit extends P4Base {
                             int changenumber = Integer.parseInt(chnum);
                             log("Perforce change renamed " + changenumber, Project.MSG_INFO);
                             getProject().setProperty("p4.change", "" + changenumber);
+                            if (changeProperty != null) {
+                                getProject().setNewProperty(changeProperty, chnum);
+                            }
                             found = false;
                         }
                         if (((myarray.elementAt(counter))).equals("renamed")) {
@@ -148,6 +175,9 @@ public class P4Submit extends P4Base {
             }
             if (util.match("/p4 submit -c/", line)) {
                 getProject().setProperty("p4.needsresolve", "1");
+                if (needsResolveProperty != null) {
+                    getProject().setNewProperty(needsResolveProperty, "true");
+                }
             }
 
         }
