@@ -96,12 +96,17 @@ public abstract class Definer extends Task {
             throw new BuildException(msg);
         }
         try {
+            boolean systemFirst = false;
+            String bscp = project.getProperty("build.sysclasspath");
+            if (bscp != null && bscp.equals("only")) {
+                systemFirst = true;
+            }
             ClassLoader loader = null;
             AntClassLoader al = null;
             if (classpath != null) {
-                al = new AntClassLoader(project, classpath, false);
+                al = new AntClassLoader(project, classpath, systemFirst);
             } else {
-                al = new AntClassLoader(project, Path.systemClasspath, false);
+                al = new AntClassLoader(project, Path.systemClasspath, systemFirst);
             }
             // need to load Task via system classloader or the new
             // task we want to define will never be a Task but always
