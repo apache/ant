@@ -81,6 +81,10 @@ public class IndexGen extends Task {
 
         String[] categories = rootDir.list();
 
+        if (categories == null) {
+            throw new BuildException("Root directory \"" + rootDir.getPath() + "\" does not exist!", getLocation());
+        }
+
         StringBuffer sb = new StringBuffer();
         sb.append("<html><head><title>xdocs index</title></head>");
         sb.append("<body>");
