@@ -260,7 +260,7 @@ public class FileSet extends DataType {
      * Performs the check for circular references and returns the
      * referenced FileSet.  
      */
-    private FileSet getRef(Project p) {
+    protected FileSet getRef(Project p) {
         if (!checked) {
             Stack stk = new Stack();
             stk.push(this);

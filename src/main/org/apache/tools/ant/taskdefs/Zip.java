@@ -267,10 +267,10 @@ public class Zip extends MatchingTask {
         throws IOException
     {
         ZipScanner zipScanner = (ZipScanner) ds;
-        String zipSrc = fs.getSrc();
+        File zipSrc = fs.getSrc();
 
         ZipEntry entry;
-        ZipInputStream in = new ZipInputStream(new FileInputStream(new File(zipSrc)));
+        ZipInputStream in = new ZipInputStream(new FileInputStream(zipSrc));
         while ((entry = in.getNextEntry()) != null) {
             String vPath = entry.getName();
             if (zipScanner.match(vPath)) {

@@ -74,7 +74,7 @@ public class ZipScanner extends DirectoryScanner {
     /**
      * The zip file which should be scanned.
      */
-    protected String srcFile;
+    protected File srcFile;
 
     /**
      * Sets the srcFile for scanning. This is the jar or zip file that is scanned
@@ -82,7 +82,7 @@ public class ZipScanner extends DirectoryScanner {
      *
      * @param srcFile the (non-null) zip file name for scanning
      */
-    public void setSrc(String srcFile) {
+    public void setSrc(File srcFile) {
         this.srcFile = srcFile;
     }
 
@@ -95,7 +95,7 @@ public class ZipScanner extends DirectoryScanner {
      */
     public String[] getIncludedFiles() {
         String[] result = new String[1];
-        result[0] = srcFile;
+        result[0] = srcFile.getAbsolutePath();
         return result;
     }
 

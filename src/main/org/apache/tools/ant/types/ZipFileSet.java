@@ -79,7 +79,7 @@ import org.apache.tools.ant.Project;
  */
 public class ZipFileSet extends FileSet {
 
-    private String srcFileName = null;
+    private File srcFile          = null;
     private String prefix         = "";
     private String fullpath       = "";
     private boolean hasDir        = false;
@@ -89,7 +89,7 @@ public class ZipFileSet extends FileSet {
      * from being specified.
      */
     public void setDir(File dir) throws BuildException {
-        if (srcFileName != null) {
+        if (srcFile != null) {
             throw new BuildException("Cannot set both dir and src attributes");
         } else {
             super.setDir(dir);
@@ -98,16 +98,16 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
-     * Set the source Zip file for the zipfileset.  Prevents both "dir" and "src"
-     * from being specified.
+     * Set the source Zip file for the zipfileset.  Prevents both
+     * "dir" and "src" from being specified.
      *
-     * @param srcFileName The zip file from which to extract entries.
+     * @param srcFile The zip file from which to extract entries.
      */
-    public void setSrc(String srcFileName) {
+    public void setSrc(File srcFile) {
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
         }
-        this.srcFileName = srcFileName;
+        this.srcFile = srcFile;
     }
 
     /**
@@ -115,8 +115,8 @@ public class ZipFileSet extends FileSet {
      * References are not followed, since it is not possible
      * to have a reference to a ZipFileSet, only to a FileSet.
      */
-    public String getSrc() {
-        return srcFileName;
+    public File getSrc() {
+        return srcFile;
     }
 
     /**
@@ -162,12 +162,10 @@ public class ZipFileSet extends FileSet {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
-        if (srcFileName != null) {
+        if (srcFile != null) {
             ZipScanner zs = new ZipScanner();
-            zs.setSrc(srcFileName);
-            if (getDir(p) == null) {
-                super.setDir(new File("."));
-            }
+            zs.setSrc(srcFile);
+            super.setDir(new File("."));
             setupDirectoryScanner(zs, p);
             zs.init();
             return zs;
@@ -176,24 +174,4 @@ public class ZipFileSet extends FileSet {
         }
     }    
   
-    /**
-     * Performs the check for circular references and returns the
-     * referenced FileSet.  
-     */
-    private FileSet getRef(Project p) {
-        if (!checked) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
-        
-        Object o = ref.getReferencedObject(p);
-        if (!(o instanceof FileSet)) {
-            String msg = ref.getRefId()+" doesn\'t denote a fileset";
-            throw new BuildException(msg);
-        } else {
-            return (FileSet) o;
-        }
-    }
-    
 }
