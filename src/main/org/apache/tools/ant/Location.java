@@ -140,6 +140,7 @@ public class Location implements Serializable {
      * @param other the object to compare to.
      * @return true if the other object contains the same information
      *              as this object.
+     * @since Ant 1.6.3
      */
     public boolean equals(Object other) {
         if (this == other) {
@@ -157,6 +158,7 @@ public class Location implements Serializable {
     /**
      * Hash operation.
      * @return a hash code value for this location.
+     * @since Ant 1.6.3
      */
     public int hashCode() {
         return toString().hashCode();
