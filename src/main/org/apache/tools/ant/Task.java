@@ -488,5 +488,6 @@ public abstract class Task extends ProjectComponent {
         setTaskName(owner.getTaskName());
         setDescription(owner.getDescription());
         setLocation(owner.getLocation());
+        setTaskType(owner.getTaskType());
     }
 }
