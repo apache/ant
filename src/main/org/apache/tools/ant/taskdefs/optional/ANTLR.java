@@ -315,11 +315,6 @@ public class ANTLR extends Task {
             throw new BuildException("Invalid target: " + target);
         }
 
-        // validate the superGrammar file
-        if (superGrammar != null && !new File(superGrammar).isFile()) {
-            throw new BuildException("Invalid super grammar file: " + superGrammar);
-        }
-
         // if no output directory is specified, used the target's directory
         if (outputDirectory == null) {
             setOutputdirectory(new File(target.getParent()));
