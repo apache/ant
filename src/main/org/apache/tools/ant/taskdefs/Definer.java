@@ -534,7 +534,7 @@ public abstract class Definer extends Task {
                 def.setAdaptToClass(adaptToClass);
                 def.setClassLoader(al);
                 if (cl != null) {
-                    def.checkClass(project);
+                    def.checkClass(getProject());
                 }
                 ComponentHelper.getComponentHelper(getProject())
                     .addDataTypeDefinition(def);
