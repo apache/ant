@@ -11,6 +11,7 @@
   <property name="debug" value="true" />
   <property name="deprecation" value="false" />
   <property name="optimize" value="true" />
+  <property environment="env"/>
 
 
   <target name='init'>
@@ -94,5 +95,11 @@
 
   <target name='cleanall' depends='clean'>
     <delete dir='${dist}' />
+  </target>
+  <target name="install-lite" if="env.ANT_HOME" description="primitive installation system" >
+     <delete file="${env.ANT_HOME}/lib/optional.jar" quiet="true"/>
+     <mkdir dir="${env.ANT_HOME}/autolib"/>
+     <copy file="dist/autolib/optional.jar" todir="${env.ANT_HOME}/autolib"/>
+     <copy file="dist/lib/ant.jar" todir="${env.ANT_HOME}/lib" overwrite="true"/>
   </target>
 </project>
