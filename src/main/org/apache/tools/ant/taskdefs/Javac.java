@@ -106,7 +106,6 @@ public class Javac extends MatchingTask {
     private Path extdirs;
 
     protected Vector compileList = new Vector();
-    protected Hashtable filecopyList = new Hashtable();
 
     /**
      * Create a nested <src ...> element for multiple source path
@@ -302,29 +301,6 @@ public class Javac extends MatchingTask {
                 throw new BuildException(msg);
             }
         }
-
-        // copy the support files
-
-        if (filecopyList.size() > 0) {
-            log("The implicit copying of support files by javac has been deprecated. " +
-                "Use the copydir task to copy support files explicitly.",
-                Project.MSG_WARN);
-
-            log("Copying " + filecopyList.size() +
-                " support files to " + destDir.getAbsolutePath());
-            Enumeration enum = filecopyList.keys();
-            while (enum.hasMoreElements()) {
-                String fromFile = (String) enum.nextElement();
-                String toFile = (String) filecopyList.get(fromFile);
-                try {
-                    project.copyFile(fromFile, toFile, filtering);
-                } catch (IOException ioe) {
-                    String msg = "Failed to copy " + fromFile + " to " + toFile
-                        + " due to " + ioe.getMessage();
-                    throw new BuildException(msg);
-                }
-            }
-        }
     }
 
     /**
@@ -332,13 +308,11 @@ public class Javac extends MatchingTask {
      */
     protected void resetFileLists() {
         compileList.removeAllElements();
-        filecopyList.clear();
     }
 
     /**
-     * Scans the directory looking for source files to be compiled and
-     * support files to be copied.  The results are returned in the
-     * class variables compileList and filecopyList.
+     * Scans the directory looking for source files to be compiled.  
+     * The results are returned in the class variable compileList
      */
 
     protected void scanDir(File srcDir, File destDir, String files[]) {
@@ -358,12 +332,6 @@ public class Javac extends MatchingTask {
 
                 if (srcFile.lastModified() > classFile.lastModified()) {
                     compileList.addElement(srcFile.getAbsolutePath());
-                }
-            } else {
-                File destFile = new File(destDir, files[i]);
-                if (srcFile.lastModified() > destFile.lastModified()) {
-                    filecopyList.put(srcFile.getAbsolutePath(),
-                                     destFile.getAbsolutePath());
                 }
             }
         }
