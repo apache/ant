@@ -133,7 +133,7 @@ public class Input extends Task {
     }
 
     /**
-     * Actual test method executed by jakarta-ant.
+     * Actual method executed by jakarta-ant.
      * @exception BuildException
      */
     public void execute () throws BuildException {
@@ -152,7 +152,7 @@ public class Input extends Task {
             && defaultvalue != null) {
             value = defaultvalue;
         }
-        if (addproperty != null) {
+        if (addproperty != null && value != null) {
             getProject().setNewProperty(addproperty, value);
         }
     }
