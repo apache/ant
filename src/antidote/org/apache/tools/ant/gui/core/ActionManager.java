@@ -319,6 +319,16 @@ public class ActionManager {
     }
 
 
+	/** 
+	 * Get the Action with the given id.
+	 * 
+	 * @param actionID Id of action to get command for.
+	 * @return AntAction associated with the given id.
+	 */
+    public AntAction getAction(String actionID) {
+        return (AntAction) _actions.get(actionID);
+    }
+    
 	/**
 	 * Add tool tip, Mnemonic, etc.
 	 *
