@@ -62,6 +62,8 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Random;
+import java.text.DecimalFormat;
 
 /**
  * Create a CAB archive.
@@ -93,7 +95,7 @@ public class Cab extends MatchingTask {
      * create the .cab file.
      */
     public void setCabfile(File cabFile) {
-        cabFile = cabFile;
+        this.cabFile = cabFile;
     }
     
     /**
@@ -215,6 +217,27 @@ public class Cab extends MatchingTask {
         return command;
     }
 
+    private static int counter = new Random().nextInt() % 100000;
+    protected File createTempFile(String prefix, String suffix)
+    {
+        if (suffix == null)
+        {
+            suffix = ".tmp";
+        }
+
+        String name = prefix +
+            new DecimalFormat("#####").format(new Integer(counter++)) +
+            suffix;
+
+        String tmpdir = System.getProperty("java.io.tmpdir");
+
+        // java.io.tmpdir is not present in 1.1
+        if (tmpdir == null)
+            return new File(name);
+        else
+            return new File(tmpdir, name);
+    }
+
     /**
      * Creates a list file.  This temporary file contains a list of all files
      * to be included in the cab, one file per line.
@@ -222,8 +245,8 @@ public class Cab extends MatchingTask {
     protected File createListFile(Vector files)
         throws IOException
     {
-        File listFile = File.createTempFile("ant", null);
-        listFile.deleteOnExit();
+        File listFile = createTempFile("ant", null);
+        
         PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
 
         for (int i = 0; i < files.size(); i++)
@@ -327,6 +350,7 @@ public class Cab extends MatchingTask {
         try {
             File listFile = createListFile(files);
             ExecTask exec = createExec();
+            File outFile = null;
             
             // die if cabarc fails
             exec.setFailonerror(true);
@@ -334,13 +358,19 @@ public class Cab extends MatchingTask {
             
             if (!doVerbose)
             {
-                File outFile = File.createTempFile("ant", null);
-                outFile.deleteOnExit();
+                outFile = createTempFile("ant", null);
                 exec.setOutput(outFile);
             }
                 
             exec.setCommand(createCommand(listFile));
             exec.execute();
+
+            if (outFile != null)
+            {
+                outFile.delete();
+            }
+            
+            listFile.delete();
         } catch (IOException ioe) {
             String msg = "Problem creating " + cabFile + " " + ioe.getMessage();
             throw new BuildException(msg);
