@@ -26,7 +26,7 @@ import org.apache.myrmidon.framework.AbstractFileSet;
  */
 public class PatternFileSet
     extends AbstractFileSet
-    implements FileList, FileSet
+    implements FileSet
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( PatternFileSet.class );
@@ -42,26 +42,10 @@ public class PatternFileSet
     }
 
     /**
-     * Returns the root directory
-     */
-    public FileObject getDir()
-    {
-        return m_dir;
-    }
-
-    /**
-     * Returns the list of files, in depthwise order.
-     */
-    public FileObject[] listFiles( TaskContext context ) throws TaskException
-    {
-        final FileSetResult result = getResult( context );
-        return result.getFiles();
-    }
-
-    /**
      * Returns the contents of the set.
      */
-    public FileSetResult getResult( TaskContext context ) throws TaskException
+    public FileSetResult getResult( final TaskContext context )
+        throws TaskException
     {
         if( m_dir == null )
         {

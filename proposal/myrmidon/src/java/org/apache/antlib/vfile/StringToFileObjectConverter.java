@@ -7,14 +7,13 @@
  */
 package org.apache.antlib.vfile;
 
+import org.apache.aut.converter.AbstractConverter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.aut.converter.AbstractConverter;
-import org.apache.aut.converter.ConverterException;
 
 /**
  * Converts a String to a {@link FileObject}
