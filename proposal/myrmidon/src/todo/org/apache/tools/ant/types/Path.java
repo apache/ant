@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.PathTokenizer;
+import org.apache.tools.ant.util.PathTokenizer;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
