@@ -54,7 +54,6 @@
 package org.apache.ant.antcore.execution;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.ExecutionComponent;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.model.BuildElement;
 
@@ -90,7 +89,7 @@ public class ExecutionContext implements AntContext {
      *
      * @param frame the frame containing this context
      * @param component the component associated with this context - may be null
-     * @param model the build model associated with this component if any. 
+     * @param model the build model associated with this component if any.
      */
     protected ExecutionContext(Frame frame, ExecutionComponent component,
                                BuildElement model) {
@@ -170,7 +169,7 @@ public class ExecutionContext implements AntContext {
     protected ExecutionComponent getExecutionComponent() {
         return component;
     }
-    
+
     /**
      * Get the build model associated with this context.
      *

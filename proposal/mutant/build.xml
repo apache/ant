@@ -8,13 +8,13 @@
   <property name="dist.dir" value="dist"/>
   <property name="javadocs.dir" value="${dist.dir}/javadocs"/>
   <property name="distlib.dir" value="${dist.dir}/lib"/>
-  
+
   <property name="debug" value="true"/>
 
   <path id="classpath.parser">
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
   </path>
-  
+
   <path id="classpath.common">
     <pathelement location="${distlib.dir}/init.jar"/>
   </path>
@@ -29,13 +29,13 @@
     <path refid="classpath.antcore"/>
     <pathelement location="${distlib.dir}/antcore/antcore.jar"/>
   </path>
-  
+
   <path id="classpath.start">
     <pathelement location="${distlib.dir}/init.jar"/>
   </path>
 
   <target name="buildsetup">
-    <available classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" 
+    <available classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"
                property="checkstyle.available"/>
     <mkdir dir="${bin.dir}"/>
     <mkdir dir="${distlib.dir}"/>
@@ -123,7 +123,7 @@
   <target name="ant1compat" depends="common">
     <ant antfile="build/ant1compat.xml" />
   </target>
-  
+
   <target name="remote" depends="init">
     <mkdir dir="${bin.dir}/remote"/>
     <depend destdir="${bin.dir}/remote" srcdir="${java.dir}/remote" closure="yes">
@@ -138,38 +138,46 @@
       </manifest>
     </jar>
   </target>
-  
+
   <target name="clean">
     <delete dir="${bin.dir}"/>
     <delete dir="${dist.dir}"/>
   </target>
 
-  <target name="antlibs" depends="common, systemlib">
-    <ant antfile="build/script.xml"/> 
+  <target name="antlibs" depends="common">
+    <ant antfile="build/script.xml"/>
+    <antcall target="buildlib">
+      <param name="libid" value="system"/>
+      <param name="libarea" value="syslibs"/>
+    </antcall>
+    <antcall target="buildlib">
+      <param name="libid" value="monitor"/>
+      <param name="libarea" value="syslibs"/>
+    </antcall>
   </target>
-  
-  <target name="systemlib" depends="common">
-    <mkdir dir="${bin.dir}/antlibs/system"/>
-    <mkdir dir="${distlib.dir}/syslibs"/>
+
+  <target name="buildlib">
+    <mkdir dir="${bin.dir}/${libarea}/${libid}"/>
+    <mkdir dir="${distlib.dir}/${libarea}"/>
     <path id="classpath.antlibs">
       <path refid="classpath.common"/>
       <pathelement location="${distlib.dir}/common/common.jar"/>
     </path>
-    <depend destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system" closure="yes">
+    <depend destdir="${bin.dir}/${libarea}/${libid}" srcdir="${java.dir}/antlibs/${libid}" closure="yes">
       <classpath refid="classpath.antlibs"/>
     </depend>
-    <javac destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system" debug="${debug}">
+    <javac destdir="${bin.dir}/${libarea}/${libid}" srcdir="${java.dir}/antlibs/${libid}" debug="${debug}">
       <classpath refid="classpath.antlibs"/>
     </javac>
-    <jar basedir="${bin.dir}/antlibs/system" jarfile="${distlib.dir}/syslibs/system.jar">
-      <metainf dir="${java.dir}/antlibs/system" 
+    <jar basedir="${bin.dir}/${libarea}/${libid}" jarfile="${distlib.dir}/${libarea}/${libid}.jar">
+      <metainf dir="${java.dir}/antlibs/${libid}"
                 includes="antlib.xml"/>
     </jar>
   </target>
 
-  <target name="main" depends="frontend, antlibs, ant1compat, remote, checkstyle"/> 
-  
-  <target name="checkstyle" if="xxxcheckstyle.available">
+  <target name="main" depends="frontend, antlibs, ant1compat, remote, checkstyle"/>
+
+  <target name="checkstyle" if="xxcheckstyle.available">
     <taskdef name="checkstyle"
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
     <mkdir dir="${bin.dir}/check"/>
@@ -184,7 +192,7 @@
         <exclude name="**/builder/Ant1CompatBuilder.java"/>
       </fileset>
     </checkstyle>
-    <checkstyle allowProtected="true" 
+    <checkstyle allowProtected="true"
                 headerFile="../../src/etc/RequiredHeader.txt"
                 headerIgnoreLine="4">
       <fileset dir="${java.dir}">
@@ -194,14 +202,14 @@
       </fileset>
     </checkstyle>
   </target>
-  
+
   <target name="javadocs">
     <mkdir dir="${javadocs.dir}"/>
     <javadoc packagenames="org.apache.*"
              useexternalfile="yes"
              sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/frontend:${java.dir}/start"
              destdir="${javadocs.dir}"
-             author="true" 
+             author="true"
              private ="true"
              version="true"
              windowtitle="Mutant API"
@@ -216,4 +224,12 @@
       <tag name="created" description="Date Created:" scope="types"/>
     </javadoc>
   </target>
+
+
+  <target name="test">
+    <ant antfile="build/ant1compat.xml" target="test"/>
+  </target>
+
+
+
 </project>

@@ -54,7 +54,7 @@
 package org.apache.ant.antcore.antlib;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * A Component Library supplies components to the Ant core.
@@ -83,9 +83,9 @@ public interface ComponentLibrary {
      *      required
      * @return an instance of the factory, or null if this library does not
      *      support a factory
-     * @exception ExecutionException if the factory cannot be created
+     * @exception AntException if the factory cannot be created
      */
-    AntLibFactory getFactory(AntContext context) throws ExecutionException;
+    AntLibFactory getFactory(AntContext context) throws AntException;
 
     /**
      * Gets the libraryId of the AntLibrary

@@ -54,7 +54,7 @@
 package org.apache.ant.antlib.script;
 
 import org.apache.ant.common.antlib.AbstractTask;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Define a task using a script
@@ -98,9 +98,9 @@ public class ScriptDef extends AbstractTask {
      * Define the script. The script itself is stored in the factory where
      * it is retried by the ScriptBase instance
      *
-     * @exception ExecutionException if the script cannot be defined
+     * @exception AntException if the script cannot be defined
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         // tell the factory about this script, under this name.
         factory.defineScript(name, language, script);
     }

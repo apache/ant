@@ -65,18 +65,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.config.AntConfig;
-import org.apache.ant.antcore.execution.ExecutionManager;
+import org.apache.ant.antcore.execution.Frame;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.DemuxOutputStream;
+import org.apache.ant.common.logger.DefaultLogger;
+import org.apache.ant.common.logger.BuildLogger;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
 import org.apache.ant.frontend.FrontendUtils;
+import org.apache.ant.frontend.FrontendException;
 
 /**
  * This is the command line front end. It drives the core.
@@ -141,34 +143,34 @@ public class Commandline {
      * Adds a feature to the BuildListeners attribute of the Commandline
      * object
      *
-     * @param execManager The feature to be added to the BuildListeners
-     *      attribute
-     * @exception ConfigException if the necessary listener instances could
+     * @param eventSource the build event source to which listeners
+     *        will be added.
+     * @exception FrontendException if the necessary listener instances could
      *      not be created
      */
-    protected void addBuildListeners(ExecutionManager execManager)
-         throws ConfigException {
+    protected void addBuildListeners(Frame eventSource)
+         throws FrontendException {
 
         // Add the default listener
-        execManager.addBuildListener(logger);
+        eventSource.addBuildListener(logger);
 
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             String className = (String) i.next();
             try {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
-                execManager.addBuildListener(listener);
+                eventSource.addBuildListener(listener);
             } catch (ClassCastException e) {
                 System.err.println("The specified listener class "
                      + className +
                     " does not implement the Listener interface");
-                throw new ConfigException("Unable to instantiate listener "
+                throw new FrontendException("Unable to instantiate listener "
                      + className, e);
             } catch (Exception e) {
                 System.err.println("Unable to instantiate specified listener "
                      + "class " + className + " : "
                      + e.getClass().getName());
-                throw new ConfigException("Unable to instantiate listener "
+                throw new FrontendException("Unable to instantiate listener "
                      + className, e);
             }
         }
@@ -182,15 +184,15 @@ public class Commandline {
      *      be
      * @param argType the option type
      * @return the value of the option
-     * @exception ConfigException if the option cannot be read
+     * @exception FrontendException if the option cannot be read
      */
     private String getOption(String[] args, int position, String argType)
-         throws ConfigException {
+         throws FrontendException {
         String value = null;
         try {
             value = args[position];
         } catch (IndexOutOfBoundsException e) {
-            throw new ConfigException("You must specify a value for the "
+            throw new FrontendException("You must specify a value for the "
                  + argType + " argument");
         }
         return value;
@@ -205,7 +207,7 @@ public class Commandline {
      */
     private void process(String[] args, InitConfig initConfig) {
         this.initConfig = initConfig;
-        ExecutionManager executionManager = null;
+        Frame mainFrame = null;
         Project project = null;
         try {
             parseArguments(args);
@@ -213,7 +215,7 @@ public class Commandline {
             determineBuildFile();
 
             AntConfig config = new AntConfig();
-            AntConfig userConfig = 
+            AntConfig userConfig =
                 FrontendUtils.getAntConfig(initConfig.getUserConfigArea());
             AntConfig systemConfig
                  = FrontendUtils.getAntConfig(initConfig.getSystemConfigArea());
@@ -227,28 +229,28 @@ public class Commandline {
 
             for (Iterator i = configFiles.iterator(); i.hasNext();) {
                 File configFile = (File) i.next();
-                AntConfig runConfig 
+                AntConfig runConfig
                     = FrontendUtils.getAntConfigFile(configFile);
                 config.merge(runConfig);
             }
 
             if (!buildFileURL.getProtocol().equals("file")
                  && !config.isRemoteProjectAllowed()) {
-                throw new ConfigException("Remote Projects are not allowed: "
+                throw new FrontendException("Remote Projects are not allowed: "
                      + buildFileURL);
             }
 
             project = parseProject();
 
             // create the execution manager to execute the build
-            executionManager = new ExecutionManager(initConfig, config);
+            mainFrame = new Frame(initConfig, config);
             OutputStream demuxOut
-                = new DemuxOutputStream(executionManager, false);
+                = new DemuxOutputStream(mainFrame, false);
             OutputStream demuxErr
-                = new DemuxOutputStream(executionManager, true);
+                = new DemuxOutputStream(mainFrame, true);
             System.setOut(new PrintStream(demuxOut));
             System.setErr(new PrintStream(demuxErr));
-            addBuildListeners(executionManager);
+            addBuildListeners(mainFrame);
         } catch (Throwable e) {
             if (logger != null) {
                 BuildEvent finishedEvent
@@ -261,7 +263,10 @@ public class Commandline {
         }
 
         try {
-            executionManager.runBuild(project, targets, definedProperties);
+            mainFrame.setProject(project);
+            mainFrame.initialize(definedProperties);
+
+            mainFrame.startBuild(targets);
             System.exit(0);
         } catch (Throwable t) {
             System.exit(1);
@@ -285,9 +290,9 @@ public class Commandline {
      * Handle build file argument
      *
      * @param url the build file's URL
-     * @exception ConfigException if the build file location is not valid
+     * @exception FrontendException if the build file location is not valid
      */
-    private void argBuildFile(String url) throws ConfigException {
+    private void argBuildFile(String url) throws FrontendException {
         try {
             if (url.indexOf(":") == -1) {
                 // We convert any hash characters to their URL escape.
@@ -296,7 +301,7 @@ public class Commandline {
                 buildFileURL = new URL(url);
             }
         } catch (MalformedURLException e) {
-            throw new ConfigException("Build file is not valid", e);
+            throw new FrontendException("Build file is not valid", e);
         }
     }
 
@@ -304,15 +309,15 @@ public class Commandline {
      * Handle the log file option
      *
      * @param arg the value of the log file option
-     * @exception ConfigException if the log file is not writeable
+     * @exception FrontendException if the log file is not writeable
      */
-    private void argLogFile(String arg) throws ConfigException {
+    private void argLogFile(String arg) throws FrontendException {
         try {
             File logFile = new File(arg);
             out = new PrintStream(new FileOutputStream(logFile));
             err = out;
         } catch (IOException ioe) {
-            throw new ConfigException("Cannot write on the specified log " +
+            throw new FrontendException("Cannot write on the specified log " +
                 "file. Make sure the path exists and " +
                 "you have write permissions.", ioe);
         }
@@ -322,11 +327,11 @@ public class Commandline {
      * Handle the logger attribute
      *
      * @param arg the logger classname
-     * @exception ConfigException if a logger has already been defined
+     * @exception FrontendException if a logger has already been defined
      */
-    private void argLogger(String arg) throws ConfigException {
+    private void argLogger(String arg) throws FrontendException {
         if (loggerClassname != null) {
-            throw new ConfigException("Only one logger class may be " +
+            throw new FrontendException("Only one logger class may be " +
                 "specified.");
         }
         loggerClassname = arg;
@@ -336,14 +341,14 @@ public class Commandline {
     /**
      * Determine the build file to use
      *
-     * @exception ConfigException if the build file cannot be found
+     * @exception FrontendException if the build file cannot be found
      */
-    private void determineBuildFile() throws ConfigException {
+    private void determineBuildFile() throws FrontendException {
         if (buildFileURL == null) {
-            File defaultBuildFile 
+            File defaultBuildFile
                 = new File(FrontendUtils.DEFAULT_BUILD_FILENAME);
             if (!defaultBuildFile.exists()) {
-                File ant1BuildFile 
+                File ant1BuildFile
                     = new File(FrontendUtils.DEFAULT_ANT1_FILENAME);
                 if (ant1BuildFile.exists()) {
                     defaultBuildFile = ant1BuildFile;
@@ -352,7 +357,7 @@ public class Commandline {
             try {
                 buildFileURL = InitUtils.getFileURL(defaultBuildFile);
             } catch (MalformedURLException e) {
-                throw new ConfigException("Build file is not valid", e);
+                throw new FrontendException("Build file is not valid", e);
             }
         }
     }
@@ -361,11 +366,11 @@ public class Commandline {
      * Parse the command line arguments.
      *
      * @param args the command line arguments
-     * @exception ConfigException thrown when the command line contains some
+     * @exception FrontendException thrown when the command line contains some
      *      sort of error.
      */
     private void parseArguments(String[] args)
-         throws ConfigException {
+         throws FrontendException {
 
         int i = 0;
         while (i < args.length) {
@@ -417,9 +422,9 @@ public class Commandline {
      * Creates the default build logger for sending build events to the ant
      * log.
      *
-     * @exception ConfigException if the logger cannot be instantiatd
+     * @exception FrontendException if the logger cannot be instantiatd
      */
-    private void createLogger() throws ConfigException {
+    private void createLogger() throws FrontendException {
         if (loggerClassname != null) {
             try {
                 Class loggerClass = Class.forName(loggerClassname);
@@ -428,13 +433,13 @@ public class Commandline {
                 System.err.println("The specified logger class "
                      + loggerClassname +
                     " does not implement the BuildLogger interface");
-                throw new ConfigException("Unable to instantiate logger "
+                throw new FrontendException("Unable to instantiate logger "
                      + loggerClassname, e);
             } catch (Exception e) {
                 System.err.println("Unable to instantiate specified logger "
                      + "class " + loggerClassname + " : "
                      + e.getClass().getName());
-                throw new ConfigException("Unable to instantiate logger "
+                throw new FrontendException("Unable to instantiate logger "
                      + loggerClassname, e);
             }
         } else {

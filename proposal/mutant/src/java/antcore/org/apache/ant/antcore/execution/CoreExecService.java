@@ -64,9 +64,11 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.service.BuildKey;
 import org.apache.ant.init.InitUtils;
 import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.util.AntException;
 
 /**
  * This is the core's implementation of the Execution Service.
@@ -98,9 +100,9 @@ public class CoreExecService implements ExecService {
      * core. This is checked
      *
      * @param task the task to be executed
-     * @exception ExecutionException if there is an execution problem
+     * @exception AntException if there is an execution problem
      */
-    public void executeTask(Task task) throws ExecutionException {
+    public void executeTask(Task task) throws AntException {
         ExecutionContext execContext = getTaskExecutionContext(task);
 
         BuildElement model = execContext.getModel();
@@ -110,7 +112,7 @@ public class CoreExecService implements ExecService {
         }
         frame.executeTask(task, aspectValues);
     }
-    
+
     /**
      * Retrieve the execution context from a task and verify that the context
      * is valid.
@@ -120,7 +122,7 @@ public class CoreExecService implements ExecService {
      *
      * @exception ExecutionException if the task's context is not valid.
      */
-    private ExecutionContext getTaskExecutionContext(Task task) 
+    private ExecutionContext getTaskExecutionContext(Task task)
          throws ExecutionException {
         AntContext context = task.getAntContext();
 
@@ -130,25 +132,25 @@ public class CoreExecService implements ExecService {
         }
         return (ExecutionContext) context;
     }
-    
+
     /**
-     * Execute a task with a set of aspect values. Normally aspect values come 
+     * Execute a task with a set of aspect values. Normally aspect values come
      * from a build model but not all tasks will be created from a build model.
-     * Some may be created dynamically and configured programatically. This 
+     * Some may be created dynamically and configured programatically. This
      * method allows aspect values to provided for execution of such tasks since
      * by their nature, aspect values are not part of the task configuration.
      *
      * @param task the task to be executed
      * @param aspectValues the aspect attribute values.
-     * @exception ExecutionException if there is an execution problem
+     * @exception AntException if there is an execution problem
      */
-    public void executeTask(Task task, AspectValueCollection aspectValues) 
-         throws ExecutionException {
+    public void executeTask(Task task, AspectValueCollection aspectValues)
+         throws AntException {
         ExecutionContext execContext = getTaskExecutionContext(task);
 
         frame.executeTask(task, aspectValues);
     }
-    
+
 
 
     /**
@@ -158,6 +160,17 @@ public class CoreExecService implements ExecService {
      */
     public File getBaseDir() {
         return frame.getBaseDir();
+    }
+
+    /**
+     * Set the basedir for the current execution
+     *
+     * @param baseDir the new base directory for this execution of Ant
+     *
+     * @exception AntException if the baseDir cannot be set to the given value.
+     */
+    public void setBaseDir(File baseDir) throws AntException {
+        frame.setBaseDir(baseDir);
     }
 
 
@@ -204,14 +217,53 @@ public class CoreExecService implements ExecService {
 
 
     /**
+     * Force initialisation of a particular ant library in the context of the
+     * given subbuild.
+     *
+     * @param key the build key.
+     * @param libraryId the id of the library to be initialized.
+     * @exception AntException if the build cannot be run
+     */
+    public void initializeBuildLibrary(BuildKey key, String libraryId)
+         throws AntException {
+        Frame subFrame = getSubbuildFrame(key);
+        subFrame.initializeLibrary(libraryId);
+    }
+
+    /**
+     * Add a listener to a subbuild
+     *
+     * @param key the key identifying the build previously setup
+     * @param listener the listener to add to the build.
+     *
+     * @exception ExecutionException if the build cannot be found.
+     */
+    public void addBuildListener(BuildKey key, BuildListener listener)
+         throws ExecutionException {
+        getSubbuildFrame(key).addBuildListener(listener);
+    }
+
+
+    /**
      * Run a build which have been previously setup
      *
      * @param targets A list of targets to be run
      * @param key Description of the Parameter
-     * @exception ExecutionException if the build cannot be run
+     * @exception AntException if the build cannot be run
      */
-    public void runBuild(Object key, List targets) throws ExecutionException {
+    public void runBuild(BuildKey key, List targets) throws AntException {
         getSubbuildFrame(key).runBuild(targets);
+    }
+
+
+    /**
+     * Release a subbuild that is no longer in use.
+     *
+     * @param key the BuildKey identifiying the subbuild.
+     *
+     * @exception ExecutionException if the build was not registered.
+     */
+    public void releaseBuild(BuildKey key) throws ExecutionException {
         subBuilds.remove(key);
     }
 
@@ -245,12 +297,12 @@ public class CoreExecService implements ExecService {
      *      referenced.
      * @param model the project model.
      * @param initialData the project's initial data load.
-     * @exception ExecutionException if the project cannot be referenced.
+     * @exception AntException if the project cannot be referenced.
      */
-    public void createProjectReference(String referenceName, Project model, 
+    public void createProjectReference(String referenceName, Project model,
                                        Map initialData)
-         throws ExecutionException {
-        frame.createProjectReference(referenceName, model, initialData);     
+         throws AntException {
+        frame.createProjectReference(referenceName, model, initialData);
     }
 
 
@@ -259,16 +311,22 @@ public class CoreExecService implements ExecService {
      *
      * @param model the project model to be used for the build
      * @param properties the initiali properties to be used in the build
+     * @param addListeners true if the current frame's listeners should be
+     *        added to the created Frame
      * @return Description of the Return Value
-     * @exception ExecutionException if the subbuild cannot be run
+     * @exception AntException if the subbuild cannot be run
      */
-    public Object setupBuild(Project model, Map properties)
-         throws ExecutionException {
+    public BuildKey setupBuild(Project model, Map properties,
+                               boolean addListeners)
+         throws AntException {
         Frame newFrame = frame.createFrame(model);
+        if (addListeners) {
+            frame.addListeners(newFrame);
+        }
+        newFrame.initialize(properties);
 
-        newFrame.setInitialProperties(properties);
-
-        Object key = new Object();
+        // create an anonymous inner class key.
+        BuildKey key = new BuildKey() {};
 
         subBuilds.put(key, newFrame);
         return key;
@@ -279,12 +337,14 @@ public class CoreExecService implements ExecService {
      * Setup a sub-build using the current frame's project model
      *
      * @param properties the initiali properties to be used in the build
+     * @param addListeners true if the current frame's listeners should be
+     *        added to the created Frame
      * @return Description of the Return Value
-     * @exception ExecutionException if the subbuild cannot be run
+     * @exception AntException if the subbuild cannot be run
      */
-    public Object setupBuild(Map properties)
-         throws ExecutionException {
-        return setupBuild(frame.getProject(), properties);
+    public BuildKey setupBuild(Map properties, boolean addListeners)
+         throws AntException {
+        return setupBuild(frame.getProject(), properties, addListeners);
     }
 }
 

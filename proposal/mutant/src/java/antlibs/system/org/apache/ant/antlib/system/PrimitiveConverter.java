@@ -54,8 +54,8 @@
 package org.apache.ant.antlib.system;
 
 import org.apache.ant.common.antlib.AbstractConverter;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.PropertyUtils;
+import org.apache.ant.common.antlib.ConverterException;
 
 /**
  * A converter to convert to Java's primitie types
@@ -72,8 +72,8 @@ public class PrimitiveConverter extends AbstractConverter {
      */
     public Class[] getTypes() {
         return new Class[] {
-            Character.class, Character.TYPE, Byte.TYPE, Short.TYPE, 
-            Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE, 
+            Character.class, Character.TYPE, Byte.TYPE, Short.TYPE,
+            Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE,
             Boolean.class, Boolean.TYPE};
     }
 
@@ -84,10 +84,10 @@ public class PrimitiveConverter extends AbstractConverter {
      * @param value The value to be converted
      * @param type the desired type of the converted object
      * @return the value of the converted object
-     * @exception ExecutionException if the conversion cannot be made
+     * @exception ConverterException if the conversion cannot be made
      */
-    public Object convert(String value, Class type) throws ExecutionException {
-        if (type.equals(Character.class) 
+    public Object convert(String value, Class type) throws ConverterException {
+        if (type.equals(Character.class)
                 || type.equals(Character.TYPE)) {
             return new Character(value.charAt(0));
         } else if (type.equals(Byte.TYPE)) {
@@ -102,12 +102,12 @@ public class PrimitiveConverter extends AbstractConverter {
             return new Float(value);
         } else if (type.equals(Double.TYPE)) {
             return new Double(value);
-        } else if (type.equals(Boolean.class) 
+        } else if (type.equals(Boolean.class)
                 || type.equals(Boolean.TYPE)) {
             return new Boolean(PropertyUtils.toBoolean(value));
         }
-        throw new ExecutionException("This converter does not handle " 
-            + type.getName()); 
+        throw new ConverterException("This converter does not handle "
+            + type.getName());
     }
 }
 

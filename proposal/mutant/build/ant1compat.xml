@@ -1,20 +1,29 @@
 <project default="ant1compat" name="Ant1Compat" basedir="..">
 
-  <property name="src.dir" value="src"/>
-  <property name="lib.dir" value="lib"/>
-  <property name="java.dir" value="${src.dir}/java"/>
+  <property name="debug" value="true" />
+  <property name="chmod.fail" value="true" />
+  <property name="deprecation" value="false" />
+  <property name="optimize" value="true" />
+  <property name="junit.fork" value="false" />
+  <property name="junit.filtertrace" value="off"/>
+  <property name="junit.summary" value="no"/>
 
-  <property name="bin.dir" value="bin"/>
-  <property name="dist.dir" value="dist"/>
-  <property name="javadocs.dir" value="${dist.dir}/javadocs"/>
-  <property name="distlib.dir" value="${dist.dir}/lib"/>
-
-  <property name="ant1base.dir" value="../.."/>  
+  <property name="ant1base.dir" value="../.."/>
   <property name="ant1src.dir" value="${ant1base.dir}/src"/>
   <property name="ant1java.dir" value="${ant1src.dir}/main"/>
   <property name="ant1etc.dir" value="${ant1src.dir}/etc"/>
+  <property name="ant1.tests.dir" value="${ant1src.dir}/etc/testcases"/>
 
-  <property name="debug" value="true"/>
+  <property name="src.dir" value="src"/>
+  <property name="java.dir" value="${src.dir}/java"/>
+  <property name="script.dir" value="${src.dir}/script"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="tests.dir" value="${ant1src.dir}/testcases"/>
+  <property name="tests.etc.dir" value="${src.dir}/etc/testcases"/>
+
+  <property name="bin.dir" value="bin"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="distlib.dir" value="${dist.dir}/lib"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
@@ -22,15 +31,42 @@
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
 
+  <!--
+       ===================================================================
+         Set the properties for the build area
+       ===================================================================
+  -->
+  <property name="build.tests" value="${bin.dir}/testcases"/>
+
+
+  <path id="classpath">
+    <pathelement location="${distlib.dir}/init.jar"/>
+    <fileset dir="${lib.dir}/parser" includes="*.jar"/>
+    <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
+    <pathelement location="${distlib.dir}/common/common.jar"/>
+    <pathelement location="${distlib.dir}/syslibs/system.jar"/>
+  </path>
+
+  <path id="tests-classpath">
+    <pathelement location="${build.classes}" />
+    <pathelement location="${build.tests}" />
+    <!--
+        include the test source and test data dirs
+        so that we can pick resources via getResource(AsStream)
+     -->
+    <pathelement location="${tests.dir}"/>
+    <pathelement location="${tests.etc.dir}"/>
+    <path refid="classpath" />
+  </path>
+
   <patternset id="deprecated">
     <exclude name="org/apache/tools/ant/taskdefs/Copydir.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/Copyfile.java"/>
   </patternset>
-  
+
   <patternset id="toohard">
-    <exclude name="org/apache/tools/ant/taskdefs/Do.java"/>
   </patternset>
-  
+
   <patternset id="converted">
     <exclude name="org/apache/tools/ant/taskdefs/Ant.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/CallTarget.java"/>
@@ -51,7 +87,17 @@
     <exclude name="org/apache/tools/ant/RuntimeConfigurable.java"/>
     <exclude name="org/apache/tools/ant/UnknownElement.java"/>
   </patternset>
-  
+
+  <patternset id="unsupportedTests">
+    <exclude name="org/apache/tools/ant/taskdefs/ParallelTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/AntTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/InitializeClassTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/InputTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/JavaTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/JavacTest.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/TStampTest.java"/>
+  </patternset>
+
   <fileset id="ant1src_tocopy" dir="${ant1java.dir}">
     <include name="**/*.properties"/>
     <include name="**/*.mf"/>
@@ -71,13 +117,8 @@
     <patternset refid="notrequired"/>
   </fileset>
 
-  <path id="classpath">
-    <pathelement location="${distlib.dir}/init.jar"/>
-    <fileset dir="${lib.dir}/parser" includes="*.jar"/>
-    <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
-    <pathelement location="${distlib.dir}/common/common.jar"/>
-    <pathelement location="${distlib.dir}/syslibs/system.jar"/>
-  </path>
+  <fileset id="ant1testcases_tocopy" dir="${ant1.tests.dir}">
+  </fileset>
 
   <!--
        ===================================================================
@@ -89,9 +130,9 @@
   <patternset id="needs.jdk1.2+">
     <exclude name="${util.package}/optional/NoExitSecurityManager.java"
              unless="jdk1.2+" />
-    <exclude name="${optional.package}/Javah.java" 
+    <exclude name="${optional.package}/Javah.java"
              unless="jdk1.2+" />
-    <exclude name="${optional.package}/metamata/*.java" 
+    <exclude name="${optional.package}/metamata/*.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/EjbJar.java"
              unless="jdk1.2+" />
@@ -102,12 +143,14 @@
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
              unless="jdk1.2+" />
-    <!-- use various 1.2 methods -->             
+    <!-- use various 1.2 methods -->
     <exclude name="${optional.package}/sitraka/**/*.java"
              unless="jdk1.2+" />
   </patternset>
   <patternset id="needs.jdk1.3+">
     <exclude name="${ant.package}/taskdefs/TestProcess.java"
+             unless="jdk1.3+" />
+    <exclude name="${optional.package}/extension/**/*.java"
              unless="jdk1.3+" />
   </patternset>
   <patternset id="needs.jdk1.4+">
@@ -138,9 +181,11 @@
   <patternset id="needs.trax">
     <exclude name="${optional.package}/TraXLiaison*.java"
              unless="trax.present" />
-    <exclude name="${optional.package}/sitraka/**" 
+    <exclude name="${optional.package}/sitraka/**"
              unless="trax.present"/>
-    <exclude name="${optional.package}/metamata/MMetrics*" 
+    <exclude name="${optional.package}/metamata/MMetrics*"
+             unless="trax.present"/>
+    <exclude name="${optional.package}/XsltTest.java"
              unless="trax.present"/>
   </patternset>
   <patternset id="needs.xalan1">
@@ -154,7 +199,7 @@
              unless="xalan2.present" />
   </patternset>
   <patternset id="needs.xslp">
-    <exclude name="${optional.package}/XslpLiaison*.java" 
+    <exclude name="${optional.package}/XslpLiaison*.java"
              unless="xslp.present" />
   </patternset>
   <patternset id="needs.junit">
@@ -165,15 +210,15 @@
              unless="jakarta.regexp.present" />
   </patternset>
   <patternset id="needs.jakarta.oro">
-    <exclude name="${regexp.package}/JakartaOro*.java" 
+    <exclude name="${regexp.package}/JakartaOro*.java"
              unless="jakarta.oro.present" />
-    <exclude name="${optional.package}/perforce/*.java" 
+    <exclude name="${optional.package}/perforce/*.java"
              unless="jakarta.oro.present" />
-    <exclude name="${optional.package}/metamata/MAudit*.java" 
+    <exclude name="${optional.package}/metamata/MAudit*.java"
              unless="jakarta.oro.present"/>
   </patternset>
   <patternset id="needs.jakarta.bcel">
-    <exclude name="${ant.package}/filters/util/JavaClassHelper.java" 
+    <exclude name="${ant.package}/filters/util/JavaClassHelper.java"
              unless="bcel.present" />
     <exclude name="${util.package}/depend/bcel/*.java"
              unless="bcel.present" />
@@ -184,12 +229,16 @@
     <exclude name="${ant.package}/listener/Log4jListener.java"
              unless="log4j.present" />
   </patternset>
+  <patternset id="needs.commons.logging">
+    <exclude name="${ant.package}/listener/CommonsLoggingListener.java"
+             unless="commons.logging.present" />
+  </patternset>
   <patternset id="needs.bsf">
-    <exclude name="${optional.package}/Script.java" 
+    <exclude name="${optional.package}/Script.java"
              unless="bsf.present" />
   </patternset>
   <patternset id="needs.stylebook">
-    <exclude name="${optional.package}/StyleBook.java" 
+    <exclude name="${optional.package}/StyleBook.java"
              unless="stylebook.present" />
   </patternset>
   <patternset id="needs.javamail">
@@ -205,7 +254,7 @@
              unless="netrexx.present" />
   </patternset>
   <patternset id="needs.weblogic.ejbc">
-    <exclude name="${optional.package}/ejb/Ejbc*.java" 
+    <exclude name="${optional.package}/ejb/Ejbc*.java"
              unless="ejb.ejbc.present" />
   </patternset>
   <patternset id="needs.weblogic.ddcreator">
@@ -215,7 +264,7 @@
   <patternset id="needs.weblogic.server">
     <exclude name="${optional.package}/ejb/WLRun.java"
              unless="ejb.wls.present" />
-    <exclude name="${optional.package}/ejb/WLStop.java" 
+    <exclude name="${optional.package}/ejb/WLStop.java"
              unless="ejb.wls.present" />
   </patternset>
   <patternset id="needs.netcomponents">
@@ -231,7 +280,7 @@
              unless="starteam.present" />
   </patternset>
   <patternset id="needs.vaj">
-    <exclude name="${optional.package}/ide/VAJ*.java" 
+    <exclude name="${optional.package}/ide/VAJ*.java"
              unless="vaj.present" />
   </patternset>
   <patternset id="needs.antlr">
@@ -253,6 +302,8 @@
   <patternset id="needs.swing">
     <exclude name="${optional.package}/splash/*.java" unless="swing.present" />
   </patternset>
+  <patternset id="teststhatfail">
+  </patternset>
 
   <!--
        ===================================================================
@@ -268,7 +319,7 @@
                classpathref="classpath" />
     <condition property="netrexx.present">
       <and>
-        <isset property="jdk1.2+"/>                
+        <isset property="jdk1.2+"/>
         <available classname="netrexx.lang.Rexx"
                    classpathref="classpath"/>
       </and>
@@ -323,7 +374,7 @@
                classpathref="classpath"/>
     <condition property="icontract.present">
         <and>
-            <isset property="jdk1.2+"/>                
+            <isset property="jdk1.2+"/>
             <available classname="com.reliablesystems.iContract.IContracted"
                        classpathref="classpath"/>
         </and>
@@ -333,6 +384,9 @@
                classpathref="classpath"/>
     <available property="log4j.present"
                classname="org.apache.log4j.Category"
+               classpathref="classpath"/>
+    <available property="commons.logging.present"
+               classname="org.apache.commons.logging.LogFactory"
                classpathref="classpath"/>
     <!-- this is just a way to check for a TraX implementation -->
     <available property="trax.impl.present"
@@ -354,7 +408,7 @@
                classpathref="classpath" />
     <condition property="bcel.present">
         <and>
-            <isset property="jdk1.2+"/>                
+            <isset property="jdk1.2+"/>
             <available classname="org.apache.bcel.Constants"
                        classpathref="classpath"/>
         </and>
@@ -379,7 +433,14 @@
         <isset property="jakarta.oro.present" />
       </or>
     </condition>
-    
+
+    <condition property="tests.and.ant.share.classloader">
+      <or>
+        <equals arg1="${junit.fork}" arg2="true" />
+        <equals arg1="${build.sysclasspath}" arg2="only" />
+      </or>
+    </condition>
+
     <condition property="sun.tools.present">
       <and>
         <available classname="sun.tools.native2ascii.Main" />
@@ -389,17 +450,29 @@
 
     <available property="base64.present" classname="sun.misc.BASE64Encoder" />
 
+    <property name="build.tests.resolved" location="${build.tests}" />
+    <condition property="tests.are.on.system.classpath">
+      <or>
+        <!-- relative paths in CLASSPATH -->
+        <contains string="${java.class.path}"
+                  substring="${build.tests}" />
+        <!-- absolute paths in CLASSPATH -->
+        <contains string="${java.class.path}"
+                  substring="${build.tests.resolved}" />
+      </or>
+    </condition>
+
     <condition property="jasper.present">
       <and>
         <available classname="org.apache.jasper.compiler.Compiler" />
         <available classname="org.apache.jasper.JasperException" />
       </and>
     </condition>
-    
+
     <available property="swing.present"
                classname="javax.swing.ImageIcon"
                classpathref="classpath"/>
-               
+
    <condition property="wsdl.found">
       <or>
         <available file="wsdl"     filepath="${env.PATH}" />
@@ -421,7 +494,7 @@
         <isset property="csc.found"/>
         <isset property="wsdl.found"/>
       </and>
-    </condition>               
+    </condition>
    <echo level="verbose"> csc.found=${csc.found}</echo>
   </target>
 
@@ -431,21 +504,23 @@
     <copy todir="${bin.dir}/ant1src_copy">
       <fileset refid="ant1src_tocopy"/>
     </copy>
-    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat" 
+    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat"
             closure="yes">
       <classpath refid="classpath"/>
     </depend>
-    <javac destdir="${bin.dir}/ant1compat" 
+    <javac destdir="${bin.dir}/ant1compat"
            srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat"
            debug="${debug}">
       <classpath refid="classpath" />
 
       <patternset refid="needs.jdk1.2+" />
+      <patternset refid="needs.jdk1.3+" />
       <patternset refid="needs.jdk1.4+" />
 
       <patternset refid="needs.jakarta.regexp" />
       <patternset refid="needs.jakarta.oro" />
       <patternset refid="needs.jakarta.log4j" />
+      <patternset refid="needs.commons.logging" />
       <patternset refid="needs.sun.uue" />
       <patternset refid="needs.javamail" />
       <patternset refid="needs.icontract" />
@@ -485,14 +560,235 @@
 
     <mkdir dir="${distlib.dir}/antlibs/"/>
     <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.jar">
-      <metainf dir="${java.dir}/antlibs/ant1compat" 
+      <metainf dir="${java.dir}/antlibs/ant1compat"
                 includes="antlib.xml"/>
     </jar>
   </target>
-  
+
+  <!--
+       ===================================================================
+         Compile testcases
+       ===================================================================
+  -->
+  <target name="compile-tests" depends="check_for_optional_packages" if="junit.present">
+    <mkdir dir="${build.tests}"/>
+
+    <javac srcdir="${tests.dir}"
+           destdir="${build.tests}"
+           debug="${debug}"
+           deprecation="${deprecation}" >
+      <classpath refid="tests-classpath" />
+
+      <patternset refid="needs.antlr" />
+
+      <patternset refid="needs.jdk1.2+" />
+      <patternset refid="needs.jdk1.3+" />
+      <patternset refid="needs.jdk1.4+" />
+
+      <patternset refid="needs.jakarta.regexp" />
+      <patternset refid="needs.jakarta.oro" />
+
+      <patternset refid="needs.trax" />
+      <patternset refid="needs.xslp" />
+      <patternset refid="needs.xalan1" />
+      <patternset refid="needs.jakarta.bcel" />
+      <patternset refid="unsupportedTests" />
+    </javac>
+    <copy todir="${tests.etc.dir}">
+      <fileset refid="ant1testcases_tocopy"/>
+    </copy>
+  </target>
+
+  <target name="dump-info" depends="dump-sys-properties,run-which" />
+
+  <target name="dump-sys-properties" unless="which.present"
+          depends="xml-check">
+    <echo message="java.vm.info=${java.vm.info}" />
+    <echo message="java.vm.name=${java.vm.name}" />
+    <echo message="java.vm.vendor=${java.vm.vendor}" />
+    <echo message="java.vm.version=${java.vm.version}" />
+    <echo message="os.arch=${os.arch}" />
+    <echo message="os.name=${os.name}" />
+    <echo message="os.version=${os.version}" />
+    <echo message="file.encoding=${file.encoding}" />
+    <echo message="user.language=${user.language}" />
+  </target>
+
+  <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
+  <target name="xml-check" depends="check_for_optional_packages"
+          if="xalan.envcheck" unless="which.present">
+      <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
+  </target>
+
+  <target name="run-which" depends="check_for_optional_packages"
+          if="which.present">
+      <java classname="org.apache.env.Which" taskname="which"/>
+  </target>
+
+  <!-- test to see if we are online or not. can take a while when we are off line, so
+    setting the property is a good shortcut-->
+  <target name="probe-offline">
+      <condition property="offline">
+      <or>
+        <isset property="offline"/>
+        <not>
+          <http  url="http://www.apache.org/"/>
+        </not>
+      </or>
+    </condition>
+    <echo level="verbose" > offline=${offline}</echo>
+  </target>
+
+  <!--
+       ===================================================================
+         Run testcase
+       ===================================================================
+  -->
+  <target name="test" depends="run-tests" description="--> run JUnit tests"/>
+
+  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present">
+
+    <junit printsummary="${junit.summary}" haltonfailure="yes"
+           filtertrace="${junit.filtertrace}"
+           fork="${junit.fork}">
+      <classpath refid="tests-classpath"/>
+
+      <sysproperty key="ant.home" value="${ant.home}" />
+      <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="tests-classpath.value"
+                   value="${tests-classpath.value}" />
+
+      <formatter type="brief" usefile="false" />
+
+      <batchtest>
+        <fileset dir="${tests.dir}">
+          <include name="**/*Test*" />
+
+          <!-- abstract classes, not testcases -->
+          <exclude name="${ant.package}/taskdefs/TaskdefsTest.java" />
+          <exclude name="${ant.package}/BuildFileTest.java" />
+          <exclude name="${regexp.package}/RegexpMatcherTest.java" />
+          <exclude name="${regexp.package}/RegexpTest.java" />
+          <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java" />
+          <exclude name="${ant.package}/types/AbstractFileSetTest.java" />
+
+          <!-- helper classes, not testcases -->
+          <exclude name="org/example/**" />
+          <exclude name="${ant.package}/taskdefs/TaskdefTest*Task.java" />
+
+          <!-- interactive test -->
+          <exclude name="${ant.package}/taskdefs/TestProcess.java" />
+
+          <!-- only run these tests if their required libraries are
+               installed -->
+          <patternset refid="needs.jdk1.2+" />
+          <patternset refid="needs.jdk1.4+" />
+          <patternset refid="needs.jakarta.regexp" />
+          <patternset refid="needs.jakarta.oro" />
+          <patternset refid="needs.vaj" />
+          <patternset refid="needs.antlr" />
+          <patternset refid="needs.xalan1" />
+          <patternset refid="needs.xslp" />
+          <patternset refid="needs.jakarta.bcel" />
+          <patternset refid="needs.trax" />
+          <patternset refid="unsupportedTests" />
+          <!-- fails under 1.1 -->
+          <exclude name="${optional.package}/perforce/P4ChangeTest.java"
+                   unless="jdk1.2+"/>
+
+          <!-- tests excluded if the test is run in offline mode -->
+          <patternset refid="onlinetests"/>
+
+          <!-- failing tests excluded unless run.failing.tests is set -->
+          <patternset refid="teststhatfail" />
+
+          <!-- runtime dependencies that are different from compile
+               time dependencies -->
+          <exclude name="${optional.package}/ReplaceRegExpTest.java"
+                   unless="some.regexp.support" />
+          <exclude name="${optional.package}/sitraka/*.java"
+                   unless="some.regexp.support" />
+
+          <!-- fail if testcases can be loaded from the system classloader -->
+          <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
+                   if="tests.are.on.system.classpath"/>
+          <exclude name="${optional.package}/sitraka/XMLReportTest.java"
+                   if="tests.are.on.system.classpath"/>
+
+          <!-- these tests need to be localised before being ran???? -->
+          <exclude name="${optional.package}/PvcsTest.java" />
+
+          <!-- ehm, this is not really a TraX test but rather a xalan2 test..-->
+          <exclude name="${optional.package}/TraXLiaisonTest.java"
+                   unless="xalan2.present"/>
+
+          <!-- needs BSF to work -->
+          <exclude name="${optional.package}/XalanLiaisonTest.java"
+                   unless="bsf.present" />
+
+          <!--
+          XXX need to figure out what's causing this InvocationTargetException
+          -->
+          <exclude name="${optional.package}/junit/JUnitTestRunnerTest.java"
+                   unless="jdk1.2+" />
+          <!-- DateTime handling seems to be broken in JDK 1.1 -->
+          <exclude name="${util.package}/DateUtilsTest.java"
+                   unless="jdk1.2+" />
+
+          <!-- misc oneoff tests -->
+          <exclude name="${optional.package}/JspcTest.java"
+                   unless="jasper.present" />
+          <exclude name="${optional.package}/WsdlToDotnetTest.java"
+                   unless="dotnetapps.found" />
+
+          <!--  These tests only passes if testcases and Ant classes have
+          been loaded by the same classloader - will throw
+          IllegalAccessExceptions otherwise.  -->
+          <exclude name="${ant.package}/taskdefs/SQLExecTest.java"
+                   unless="tests.and.ant.share.classloader" />
+          <exclude name="${optional.package}/sos/SOSTest.java"
+                   unless="tests.and.ant.share.classloader" />
+          <exclude name="${optional.package}/TraXLiaisonTest.java"
+                   unless="tests.and.ant.share.classloader" />
+          <exclude name="${optional.package}/metamata/MAuditParserTest.java"
+                   unless="tests.and.ant.share.classloader" />
+
+          <!-- can only run if cvs is installed on your machine
+               enable by setting the property have.cvs
+          -->
+          <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
+                   unless="have.cvs" />
+
+        </fileset>
+      </batchtest>
+
+    </junit>
+  </target>
+
+  <target name="run-single-test" if="testcase" depends="compile-tests"
+    description="--> runs the single unit test defined in the testcase property">
+
+
+    <junit printsummary="${junit.summary}"
+          haltonfailure="yes"
+          fork="${junit.fork}"
+          filtertrace="${junit.filtertrace}">
+<!--      <jvmarg value="-classic"/> -->
+      <sysproperty key="ant.home" value="${ant.home}" />
+      <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="tests-classpath.value"
+                   value="${tests-classpath.value}" />
+      <classpath refid="classes.zip" />
+      <classpath refid="tests-classpath"/>
+      <formatter type="plain" usefile="false" />
+      <test name="${testcase}" />
+    </junit>
+  </target>
+
   <target name="clean">
     <delete dir="${bin.dir}/ant1src_copy"/>
     <delete dir="${bin.dir}/ant1compat"/>
+    <delete dir="${tests.etc.dir}"/>
   </target>
 
 </project>

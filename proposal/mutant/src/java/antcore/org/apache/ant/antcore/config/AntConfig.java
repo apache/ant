@@ -52,9 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.config;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import org.apache.ant.common.model.BuildElement;
 
 /**
@@ -75,10 +73,15 @@ public class AntConfig {
     private boolean unsetProperties = true;
 
     /**
-     * Configuration tasks. 
+     * Global Configuration tasks. These are run only once.
      */
-    private List tasks = new ArrayList();
-    
+    private BuildElement globalTasks;
+
+    /**
+     * Frame tasks - these are run in each new frame.
+     */
+    private BuildElement frameTasks;
+
     /**
      * Indicate if unset properties are OK.
      *
@@ -107,21 +110,47 @@ public class AntConfig {
     }
 
     /**
-     * Get the configuration tasks
+     * Get the global configuration tasks
      *
      * @return an iterator over the set of config tasks.
      */
-    public Iterator getTasks() {
-        return tasks.iterator();
+    public Iterator getGlobalTasks() {
+        if (globalTasks == null) {
+            return null;
+        }
+        return globalTasks.getNestedElements();
     }
 
     /**
-     * Add a config task.
+     * Get the per-frame configuration tasks
      *
-     * @param task a task to be executed as part of the configuration process.
+     * @return an iterator over the set of config tasks.
      */
-    public void addTask(BuildElement task) {
-        tasks.add(task);
+    public Iterator getFrameTasks() {
+        if (frameTasks == null) {
+            return null;
+        }
+        return frameTasks.getNestedElements();
+    }
+
+    /**
+     * Add a global config task.
+     *
+     * @param globalTasks a collection of tasks to be executed as part of
+     * the configuration process.
+     */
+    public void addGlobalTasks(BuildElement globalTasks) {
+        this.globalTasks = globalTasks;
+    }
+
+    /**
+     * Add a per-frame config task.
+     *
+     * @param frameTasks a collection of tasks to be executed as part of the
+     * setup of each new frame.
+     */
+    public void addFrameTasks(BuildElement frameTasks) {
+        this.frameTasks = frameTasks;
     }
 
     /**
@@ -151,7 +180,7 @@ public class AntConfig {
     public void allowUnsetProperties(boolean allowUnsetProperties) {
         this.unsetProperties = allowUnsetProperties;
     }
-    
+
     /**
      * Merge in another configuration. The configuration being merged in
      * takes precedence
@@ -162,7 +191,32 @@ public class AntConfig {
         remoteLibs = otherConfig.remoteLibs;
         remoteProjects = otherConfig.remoteProjects;
         unsetProperties = otherConfig.unsetProperties;
-        tasks.addAll(otherConfig.tasks);
+        globalTasks = combineTasks(globalTasks, otherConfig.globalTasks);
+        frameTasks = combineTasks(frameTasks, otherConfig.frameTasks);
+    }
+
+    /**
+     * Combine two task collections
+     *
+     * @param lhs the lefthand collection
+     * @param rhs the right hand collection
+     *
+     * @return the combined collection of tasks
+     */
+    private BuildElement combineTasks(BuildElement lhs, BuildElement rhs) {
+        if (rhs == null) {
+            return lhs;
+        }
+
+        if (lhs == null) {
+            return rhs;
+        }
+
+        for (Iterator i = rhs.getNestedElements(); i.hasNext();) {
+            lhs.addNestedElement((BuildElement) i.next());
+        }
+
+        return lhs;
     }
 }
 

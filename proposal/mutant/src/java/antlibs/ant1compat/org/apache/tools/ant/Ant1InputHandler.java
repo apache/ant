@@ -54,7 +54,7 @@
 package org.apache.tools.ant;
 
 import org.apache.ant.common.service.InputService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.InputRequest;
 
@@ -87,7 +87,7 @@ public class Ant1InputHandler implements InputHandler {
     public void handleInput(InputRequest request) throws BuildException {
         try {
             inputService.handleInput(request);
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }

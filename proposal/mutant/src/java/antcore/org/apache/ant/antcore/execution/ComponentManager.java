@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +77,7 @@ import org.apache.ant.common.antlib.TaskContainer;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.init.LoaderUtils;
 
@@ -91,11 +90,6 @@ import org.apache.ant.init.LoaderUtils;
  */
 public class ComponentManager implements ComponentService {
 
-    /**
-     * These are AntLibraries which have been loaded into this component
-     * manager
-     */
-    private static Map antLibraries = new HashMap();
     /**
      * Type converters for this frame. Converters are used when configuring
      * Tasks to handle special type conversions.
@@ -129,12 +123,6 @@ public class ComponentManager implements ComponentService {
     /** The definitions which have been imported into this frame. */
     private Map imports = new HashMap();
 
-    /**
-     * This map stores a list of additional paths for each library indexed by
-     * the libraryId
-     */
-    private Map libPathsMap = new HashMap();
-
     /** Reflector objects used to configure Tasks from the Task models. */
     private Map setters = new HashMap();
 
@@ -143,16 +131,17 @@ public class ComponentManager implements ComponentService {
      * Constructor
      *
      * @param frame the frame containing this context
-     *
-     * @exception ExecutionException if the loaded libraries could not be 
+     * @param libManager the library manager with the library definitions
+     *        which are shared across all component manager instances.
+     * @exception ExecutionException if the loaded libraries could not be
      * imported.
      */
-    protected ComponentManager(Frame frame) throws ExecutionException {
+    protected ComponentManager(Frame frame, AntLibManager libManager)
+         throws ExecutionException {
         this.frame = frame;
         AntConfig config = frame.getConfig();
-        libManager = new AntLibManager(config.isRemoteLibAllowed());
+        this.libManager = libManager;
         dynamicLibraries = new HashMap();
-        libPathsMap = new HashMap();
     }
 
     /**
@@ -162,32 +151,32 @@ public class ComponentManager implements ComponentService {
      * @param libLocation the file or URL of the library location
      * @param importAll if true all tasks are imported as the library is
      *      loaded
-     * @param autoImport true if libraries in the Ant namespace should be
-     *      automatically imported.
-     * @exception ExecutionException if the library cannot be loaded
+     * @exception AntException if the library cannot be loaded
      */
-    public void loadLib(String libLocation, boolean importAll,
-                        boolean autoImport)
-         throws ExecutionException {
-        try {
-            Map librarySpecs = new HashMap();
-            libManager.loadLibs(librarySpecs, libLocation);
-            Map newLibraries = libManager.configLibraries(frame.getInitConfig(),
-                librarySpecs, antLibraries, libPathsMap);
-
-            antLibraries.putAll(newLibraries);
-            Iterator i = antLibraries.keySet().iterator();
-            while (i.hasNext()) {
-                String libraryId = (String) i.next();
-                boolean doAuto = autoImport
-                     && libraryId.startsWith(Constants.ANT_LIB_PREFIX);
-                if (importAll || doAuto) {
-                    importLibrary(libraryId);
-                }
+    public void loadLib(URL libLocation, boolean importAll)
+         throws AntException {
+        Map newLibraries = libManager.loadLibs(libLocation);
+        Iterator i = newLibraries.keySet().iterator();
+        while (i.hasNext()) {
+            String libraryId = (String) i.next();
+            if (importAll) {
+                importLibrary(libraryId);
             }
-        } catch (MalformedURLException e) {
-            throw new ExecutionException("Unable to load libraries from "
-                 + libLocation, e);
+        }
+    }
+
+    /**
+     * Examine all the libraries defined in the Library manager and import
+     * those which are in the ant library namespace.
+     *
+     * @exception AntException if the standard components cannot be imported.
+     */
+    protected void importStandardComponents() throws AntException {
+        for (Iterator i = libManager.getLibraryIds(); i.hasNext();) {
+            String libraryId = (String) i.next();
+            if (libraryId.startsWith(Constants.ANT_LIB_PREFIX)) {
+                importLibrary(libraryId);
+            }
         }
     }
 
@@ -229,32 +218,21 @@ public class ComponentManager implements ComponentService {
      * @param libraryId the unique id of the library for which an additional
      *      path is being defined
      * @param libPath the library path (usually a jar)
-     * @exception ExecutionException if the path cannot be specified
+     * @exception AntException if the path cannot be specified
      */
     public void addLibPath(String libraryId, URL libPath)
-         throws ExecutionException {
-        List libPaths = (List) libPathsMap.get(libraryId);
-        if (libPaths == null) {
-            libPaths = new ArrayList();
-            libPathsMap.put(libraryId, libPaths);
-        }
-        libPaths.add(libPath);
-
-        // If this library already exists give it the new path now
-        AntLibrary library = (AntLibrary) antLibraries.get(libraryId);
-        if (library != null) {
-            libManager.addLibPath(library, libPath);
-        }
+         throws AntException {
+        libManager.addLibPath(libraryId, libPath);
     }
 
     /**
      * Import a complete library into the current execution frame
      *
      * @param libraryId The id of the library to be imported
-     * @exception ExecutionException if the library cannot be imported
+     * @exception AntException if the library cannot be imported
      */
-    public void importLibrary(String libraryId) throws ExecutionException {
-        AntLibrary library = (AntLibrary) antLibraries.get(libraryId);
+    public void importLibrary(String libraryId) throws AntException {
+        AntLibrary library = libManager.getLibrary(libraryId);
         if (library == null) {
             throw new ExecutionException("Unable to import library " + libraryId
                  + " as it has not been loaded");
@@ -277,11 +255,11 @@ public class ComponentManager implements ComponentService {
      * @param alias the name under which this component will be used in the
      *      build scripts. If this is null, the components default name is
      *      used.
-     * @exception ExecutionException if the component cannot be imported
+     * @exception AntException if the component cannot be imported
      */
     public void importComponent(String libraryId, String defName,
-                                String alias) throws ExecutionException {
-        AntLibrary library = (AntLibrary) antLibraries.get(libraryId);
+                                String alias) throws AntException {
+        AntLibrary library = libManager.getLibrary(libraryId);
         if (library == null) {
             throw new ExecutionException("Unable to import component from "
                  + "library \"" + libraryId + "\" as it has not been loaded");
@@ -331,10 +309,10 @@ public class ComponentManager implements ComponentService {
      * @param componentName the name of the component
      * @return the created component. The return type of this method depends
      *      on the component type.
-     * @exception ExecutionException if the component cannot be created
+     * @exception AntException if the component cannot be created
      */
     public Object createComponent(String componentName)
-         throws ExecutionException {
+         throws AntException {
         return createComponent(componentName, (BuildElement) null);
     }
 
@@ -347,12 +325,11 @@ public class ComponentManager implements ComponentService {
      * @param localName the name component within the library.
      * @return the created component. The return type of this method depends
      *      on the component type.
-     * @exception ExecutionException if the component cannot be created
+     * @exception AntException if the component cannot be created
      */
     public Object createComponent(String libraryId, String localName)
-         throws ExecutionException {
-        AntLibrary library
-             = (AntLibrary) antLibraries.get(libraryId);
+         throws AntException {
+        AntLibrary library = libManager.getLibrary(libraryId);
         if (library == null) {
             throw new ExecutionException("No library with libraryId \""
                  + libraryId + "\" is available");
@@ -378,16 +355,31 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
+     * Initialize a library.
+     *
+     * @param libraryId the library's identifier.
+     *
+     * @exception AntException if the library cannot be initalized.
+     */
+    protected void initializeLibrary(String libraryId)
+         throws AntException {
+        AntLibrary library = libManager.getLibrary(libraryId);
+        if (library != null) {
+            getLibFactory(library);
+        }
+    }
+
+    /**
      * Get the collection of Ant Libraries defined for this frame Gets the
      * factory object for the given library
      *
      * @param componentLibrary the compnent library for which a factory objetc
      *      is required
      * @return the library's factory object
-     * @exception ExecutionException if the factory cannot be created
+     * @exception AntException if the factory cannot be created
      */
     protected AntLibFactory getLibFactory(ComponentLibrary componentLibrary)
-         throws ExecutionException {
+         throws AntException {
         String libraryId = componentLibrary.getLibraryId();
         if (libFactories.containsKey(libraryId)) {
             return (AntLibFactory) libFactories.get(libraryId);
@@ -419,11 +411,11 @@ public class ComponentManager implements ComponentService {
      * @param model the build model representing the component and its
      *      configuration
      * @return the configured component
-     * @exception ExecutionException if there is a problem creating or
+     * @exception AntException if there is a problem creating or
      *      configuring the component
      */
     protected Object createComponent(BuildElement model)
-         throws ExecutionException {
+         throws AntException {
         String componentName = model.getType();
         return createComponent(componentName, model);
     }
@@ -437,20 +429,20 @@ public class ComponentManager implements ComponentService {
      * @param model the build model of the component. If this is null, the
      *      component is created but not configured.
      * @return the configured component
-     * @exception ExecutionException if there is a problem creating or
+     * @exception AntException if there is a problem creating or
      *      configuring the component
      */
     private Object createComponent(String componentName, BuildElement model)
-         throws ExecutionException {
+         throws AntException {
 
         Object component = null;
-        if (model != null) {             
+        if (model != null) {
             for (Iterator i = aspects.iterator(); i.hasNext();) {
                 Aspect aspect = (Aspect) i.next();
                 component = aspect.preCreateComponent(component, model);
             }
         }
-        
+
         if (component == null) {
             ImportInfo importInfo = getImport(componentName);
             if (importInfo == null) {
@@ -458,21 +450,21 @@ public class ComponentManager implements ComponentService {
                 + componentName + "> component");
             }
             String className = importInfo.getClassName();
-            
+
             ComponentLibrary componentLibrary
             = importInfo.getComponentLibrary();
-            
+
             component = createComponentFromDef(componentName, componentLibrary,
                 importInfo.getDefinition(), model);
         }
-        
+
         if (model != null) {
             for (Iterator i = aspects.iterator(); i.hasNext();) {
                 Aspect aspect = (Aspect) i.next();
                 component = aspect.postCreateComponent(component, model);
             }
         }
-        
+
         return component;
     }
 
@@ -485,13 +477,13 @@ public class ComponentManager implements ComponentService {
      * @param libDefinition the component's definition
      * @param model the BuildElement model of the component's configuration.
      * @return the required component potentially wrapped in a wrapper object.
-     * @exception ExecutionException if the component cannot be created
+     * @exception AntException if the component cannot be created
      */
     private Object createComponentFromDef(String componentName,
                                           ComponentLibrary componentLibrary,
                                           AntLibDefinition libDefinition,
                                           BuildElement model)
-         throws ExecutionException {
+         throws AntException {
 
         Location location = Location.UNKNOWN_LOCATION;
         if (model != null) {
@@ -633,12 +625,12 @@ public class ComponentManager implements ComponentService {
      * @param libFactory the factory object of the typeClass's Ant library
      * @param localName the name of the type within its Ant library
      * @return an instance of the given class appropriately configured
-     * @exception ExecutionException if there is a problem creating the type
+     * @exception AntException if there is a problem creating the type
      *      instance
      */
     private Object createTypeInstance(Class typeClass, AntLibFactory libFactory,
                                       BuildElement model, String localName)
-         throws ExecutionException {
+         throws AntException {
         try {
             Object typeInstance
                  = libFactory.createComponent(typeClass, localName);
@@ -646,7 +638,7 @@ public class ComponentManager implements ComponentService {
             if (typeInstance instanceof ExecutionComponent) {
                 ExecutionComponent component
                      = (ExecutionComponent) typeInstance;
-                ExecutionContext context 
+                ExecutionContext context
                     = new ExecutionContext(frame, component, model);
                 component.init(context, localName);
                 configureElement(libFactory, typeInstance, model);
@@ -680,16 +672,16 @@ public class ComponentManager implements ComponentService {
      * @param model the model of the nested element
      * @param factory Ant Library factory associated with the element to which
      *      the attribute is to be added.
-     * @exception ExecutionException if the nested element cannot be created
+     * @exception AntException if the nested element cannot be created
      */
     private void addNestedElement(AntLibFactory factory, Setter setter,
                                   Object element, BuildElement model)
-         throws ExecutionException {
+         throws AntException {
         String nestedElementName = model.getType();
         Class nestedType = setter.getType(nestedElementName);
 
         // is there a polymorph indicator - look in Ant aspects
-        String typeName 
+        String typeName
             = model.getAspectAttributeValue(Constants.ANT_ASPECT, "type");
 
         Object typeInstance = null;
@@ -734,11 +726,11 @@ public class ComponentManager implements ComponentService {
      * @param model the build model for the nestd element
      * @param factory Ant Library factory associated with the element creating
      *      the nested element
-     * @exception ExecutionException if the nested element cannot be created.
+     * @exception AntException if the nested element cannot be created.
      */
     private void createNestedElement(AntLibFactory factory, Setter setter,
                                      Object element, BuildElement model)
-         throws ExecutionException {
+         throws AntException {
         String nestedElementName = model.getType();
         try {
             Object nestedElement
@@ -747,7 +739,7 @@ public class ComponentManager implements ComponentService {
             if (nestedElement instanceof ExecutionComponent) {
                 ExecutionComponent component
                      = (ExecutionComponent) nestedElement;
-                ExecutionContext context 
+                ExecutionContext context
                     = new ExecutionContext(frame, component, model);
                 component.init(context, nestedElementName);
                 configureElement(factory, nestedElement, model);
@@ -770,12 +762,12 @@ public class ComponentManager implements ComponentService {
      * @param attributeValues a map containing named attribute values.
      * @param ignoreUnsupported if this is true, attribute names for which no
      *                          setter method exists are ignored.
-     * @exception ExecutionException if the object does not support an
+     * @exception AntException if the object does not support an
      *            attribute in the map.
      */
     public void configureAttributes(Object object, Map attributeValues,
                                     boolean ignoreUnsupported)
-         throws ExecutionException {
+         throws AntException {
         Setter setter = getSetter(object.getClass());
         for (Iterator i = attributeValues.keySet().iterator(); i.hasNext();) {
             String attributeName = (String) i.next();
@@ -800,36 +792,13 @@ public class ComponentManager implements ComponentService {
      * @param model the BuildElement describing the object in the build file
      * @param factory Ant Library factory associated with the element being
      *      configured
-     * @exception ExecutionException if the element cannot be configured
+     * @exception AntException if the element cannot be configured
      */
     private void configureElement(AntLibFactory factory, Object element,
                                   BuildElement model)
-         throws ExecutionException {
+         throws AntException {
         Setter setter = getSetter(element.getClass());
-        // start by setting the attributes of this element
-        for (Iterator i = model.getAttributeNames(); i.hasNext();) {
-            String attributeName = (String) i.next();
-            String attributeValue = model.getAttributeValue(attributeName);
-            if (!setter.supportsAttribute(attributeName)) {
-                throw new ExecutionException(model.getType()
-                     + " does not support the \"" + attributeName
-                     + "\" attribute", model.getLocation());
-            }
-            setter.setAttribute(element, attributeName,
-                frame.replacePropertyRefs(attributeValue));
-        }
-
-        String modelText = model.getText().trim();
-        if (modelText.length() != 0) {
-            if (!setter.supportsText()) {
-                throw new ExecutionException(model.getType()
-                     + " does not support content", model.getLocation());
-            }
-            setter.addText(element,
-                frame.replacePropertyRefs(modelText));
-        }
-
-        // now do the nested elements
+        // do the nested elements
         for (Iterator i = model.getNestedElements(); i.hasNext();) {
             BuildElement nestedElementModel = (BuildElement) i.next();
             String nestedElementName = nestedElementModel.getType();
@@ -851,13 +820,37 @@ public class ComponentManager implements ComponentService {
                     createNestedElement(factory, setter, element,
                         nestedElementModel);
                 } else {
-                    throw new ExecutionException(model.getType()
+                    throw new ExecutionException("<" + model.getType() + ">"
                          + " does not support the \"" + nestedElementName
                          + "\" nested element",
                         nestedElementModel.getLocation());
                 }
             }
         }
+
+        // Set the attributes of this element
+        for (Iterator i = model.getAttributeNames(); i.hasNext();) {
+            String attributeName = (String) i.next();
+            String attributeValue = model.getAttributeValue(attributeName);
+            if (!setter.supportsAttribute(attributeName)) {
+                throw new ExecutionException("<" + model.getType() + ">"
+                     + " does not support the \"" + attributeName
+                     + "\" attribute", model.getLocation());
+            }
+            setter.setAttribute(element, attributeName,
+                frame.replacePropertyRefs(attributeValue));
+        }
+
+        String modelText = model.getText();
+        if (modelText.length() != 0) {
+            if (!setter.supportsText()) {
+                throw new ExecutionException("<" + model.getType() + ">"
+                     + " does not support content", model.getLocation());
+            }
+            setter.addText(element,
+                frame.replacePropertyRefs(modelText));
+        }
+
     }
 
     /**
@@ -889,9 +882,9 @@ public class ComponentManager implements ComponentService {
      *
      * @param library the library from which the aspects are to be loaded.
      *
-     * @exception ExecutionException if an aspect cannot be loaded.
+     * @exception AntException if an aspect cannot be loaded.
      */
-    private void addAspects(AntLibrary library) throws ExecutionException {
+    private void addAspects(AntLibrary library) throws AntException {
         if (!library.hasAspects()
             || loadedAspects.contains(library.getLibraryId())) {
             return;
@@ -912,7 +905,7 @@ public class ComponentManager implements ComponentService {
                          + " does not implement the Aspect interface");
                 }
                 Aspect aspect = (Aspect) libFactory.createInstance(aspectClass);
-                ExecutionContext context 
+                ExecutionContext context
                     = new ExecutionContext(frame, null, null);
                 aspect.init(context);
                 aspects.add(aspect);
@@ -946,11 +939,11 @@ public class ComponentManager implements ComponentService {
      * frame.
      *
      * @param library the library from which the converters are required
-     * @exception ExecutionException if a converter defined in the library
+     * @exception AntException if a converter defined in the library
      *      cannot be instantiated
      */
     private void addConverters(AntLibrary library)
-         throws ExecutionException {
+         throws AntException {
         if (!library.hasConverters()
              || loadedConverters.contains(library.getLibraryId())) {
             return;
@@ -972,7 +965,7 @@ public class ComponentManager implements ComponentService {
                 }
                 Converter converter
                      = (Converter) libFactory.createInstance(converterClass);
-                ExecutionContext context 
+                ExecutionContext context
                     = new ExecutionContext(frame, null, null);
                 converter.init(context);
                 Class[] converterTypes = converter.getTypes();
@@ -1004,7 +997,7 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
-     * Get the aspects which have been registered from ant libraries. 
+     * Get the aspects which have been registered from ant libraries.
      *
      * @return the list of Aspect instances currently defined.
      */

@@ -53,73 +53,73 @@
  */
 package org.apache.ant.common.antlib;
 
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.AspectValueCollection;
 
 /**
- * An aspect is a component which is activated across all task and 
+ * An aspect is a component which is activated across all task and
  * component operations. It allows a single implmentation to be applied
- * to a number of tasks without requiring changes to the task implementations. 
+ * to a number of tasks without requiring changes to the task implementations.
  *
  * @author Conor MacNeill
  */
 public interface Aspect {
     /**
-     * Initialise the aspect with a context. 
+     * Initialise the aspect with a context.
      *
      * @param context the aspect's context
-     * @exception ExecutionException if the aspect cannot be initialised
+     * @exception AntException if the aspect cannot be initialised
      */
     void init(AntContext context)
-         throws ExecutionException;
+         throws AntException;
 
-         
+
     /**
      * This join point is activated before a component has been created.
-     * The aspect can return an object to be used rather than the core creating 
-     * the object. 
+     * The aspect can return an object to be used rather than the core creating
+     * the object.
      *
      * @param component the component that has been created. This will be null
      *                  unless another aspect has created the component
      * @param model the Build model that applies to the component
      *
      * @return a component to use.
-     * @exception ExecutionException if the aspect cannot process the component.
-     */         
+     * @exception AntException if the aspect cannot process the component.
+     */
     Object preCreateComponent(Object component, BuildElement model)
-        throws ExecutionException;
+        throws AntException;
 
     /**
      * This join point is activated after a component has been created and
      * configured. If the aspect wishes, an object can be returned in place
-     * of the one created by Ant. 
+     * of the one created by Ant.
      *
      * @param component the component that has been created.
      * @param model the Build model used to create the component.
      *
      * @return a component to use
-     * @exception ExecutionException if the aspect cannot process the component.
-     */         
+     * @exception AntException if the aspect cannot process the component.
+     */
     Object postCreateComponent(Object component, BuildElement model)
-        throws ExecutionException;
+        throws AntException;
 
     /**
      * This join point is activated just prior to task execution.
      *
      * @param task the task being executed.
-     * @param aspectValues a collection of aspect attribute values for use 
+     * @param aspectValues a collection of aspect attribute values for use
      *        during the task execution - may be null if no aspect values are
      *        provided.
-     * @return an object which indicates that this aspect wishes to 
+     * @return an object which indicates that this aspect wishes to
      * be notified after execution has been completed, in which case the obkect
      * is returned to provide the aspect its context. If this returns null
      * the aspect's postExecuteTask method will not be invoked.
-     * @exception ExecutionException if the aspect cannot process the task.
+     * @exception AntException if the aspect cannot process the task.
      */
-    Object preExecuteTask(Task task, AspectValueCollection aspectValues) 
-        throws ExecutionException;
-    
+    Object preExecuteTask(Task task, AspectValueCollection aspectValues)
+        throws AntException;
+
     /**
      * This join point is activated after a task has executed. The aspect
      * may override the task's failure cause by returning a new failure.
@@ -143,7 +143,7 @@ public interface Aspect {
     String taskOutput(Object context, String line);
 
     /**
-     * This point is activated when the task is to receive error content that 
+     * This point is activated when the task is to receive error content that
      * has been sent to error stream and redirected into the task.
      *
      * @param context the context the aspect provided in preExecuteTask.

@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.antlib;
-import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.antcore.xml.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
@@ -80,7 +79,7 @@ public class AntLibHandler extends ElementHandler {
     /** The extends attribute name */
     public static final String ISOLATED_ATTR = "isolated";
 
-    
+
     /** The list of allowed Attributes */
     public static final String[] ALLOWED_ATTRIBUTES
          = {LIBID_ATTR, HOME_ATTR, REQXML_ATTR, REQTOOLS_ATTR,
@@ -166,8 +165,8 @@ public class AntLibHandler extends ElementHandler {
             } else {
                 super.startElement(uri, localName, qualifiedName, attributes);
             }
-        } catch (ConfigException e) {
-            throw new SAXParseException(e.getMessage(), getLocator());
+        } catch (AntLibException e) {
+            throw new SAXParseException(e.getMessage(), getLocator(), e);
         }
     }
 

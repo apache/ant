@@ -55,7 +55,7 @@ package org.apache.tools.ant;
 
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Ant1 Task facade
@@ -77,10 +77,10 @@ public abstract class Task extends ProjectComponent
     protected Location location;
 
     /**
-     * Called by the project to let the task do its work. This method may be 
-     * called more than once, if the task is invoked more than once. 
-     * For example, 
-     * if target1 and target2 both depend on target3, then running 
+     * Called by the project to let the task do its work. This method may be
+     * called more than once, if the task is invoked more than once.
+     * For example,
+     * if target1 and target2 both depend on target3, then running
      * "ant target1 target2" will run all tasks in target3 twice.
      *
      * @exception BuildException if something goes wrong with the build
@@ -159,10 +159,10 @@ public abstract class Task extends ProjectComponent
      * Add a nested task to this Ant1 task.
      *
      * @param task The task to be added
-     * @exception ExecutionException if the task cannot be added.
+     * @exception AntException if the task cannot be added.
      */
     public void addNestedTask(org.apache.ant.common.antlib.Task task)
-         throws ExecutionException {
+         throws AntException {
 
         if (!(this instanceof TaskContainer)) {
             throw new BuildException("Can't add tasks to this task");
@@ -185,15 +185,15 @@ public abstract class Task extends ProjectComponent
      *
      * @param context the core context for this component
      * @param componentType the component type of this component
-     * @exception ExecutionException if the component cannot be initialized
+     * @exception AntException if the component cannot be initialized
      */
     public void init(AntContext context, String componentType)
-         throws ExecutionException {
+         throws AntException {
         super.init(context, componentType);
 
         taskType = componentType;
         taskName = componentType;
-        
+
         org.apache.ant.common.util.Location contextLocation
              = context.getLocation();
 
@@ -225,7 +225,7 @@ public abstract class Task extends ProjectComponent
             ExecService execService
                  = (ExecService) context.getCoreService(ExecService.class);
             execService.executeTask(this);
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -281,7 +281,7 @@ public abstract class Task extends ProjectComponent
     void setTaskType(String type) {
         this.taskType = type;
     }
-    
+
     /**
      * Sets the file location where this task was defined.
      *

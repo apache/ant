@@ -51,25 +51,25 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.util;
+package org.apache.ant.antlib.script;
+
+import org.apache.ant.common.util.Location;
+import org.apache.ant.common.util.AntException;
 
 /**
- * An ExecutionException indicates a problem while executing tasks in a
- * build
+ * A Script related exception
  *
  * @author Conor MacNeill
- * @created 20 January 2002
  */
-public class ExecutionException extends AntException {
+public class ScriptException extends AntException {
     /**
      * Constructs an exception with the given descriptive message.
      *
      * @param msg Description of or information about the exception.
      */
-    public ExecutionException(String msg) {
+    public ScriptException(String msg) {
         super(msg);
     }
-
 
     /**
      * Constructs an exception with the given descriptive message and a
@@ -78,10 +78,9 @@ public class ExecutionException extends AntException {
      * @param msg Description of or information about the exception.
      * @param location Location in the project file where the error occured.
      */
-    public ExecutionException(String msg, Location location) {
+    public ScriptException(String msg, Location location) {
         super(msg, location);
     }
-
 
     /**
      * Constructs an exception with the given message and exception as a
@@ -90,10 +89,9 @@ public class ExecutionException extends AntException {
      * @param msg Description of or information about the exception.
      * @param cause Throwable that might have cause this one.
      */
-    public ExecutionException(String msg, Throwable cause) {
+    public ScriptException(String msg, Throwable cause) {
         super(msg, cause);
     }
-
 
     /**
      * Constructs an exception with the given message and exception as a
@@ -103,20 +101,19 @@ public class ExecutionException extends AntException {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-    public ExecutionException(String msg, Throwable cause, Location location) {
+    public ScriptException(String msg, Throwable cause,
+                          Location location) {
         super(msg, cause, location);
     }
-
 
     /**
      * Constructs an exception with the given exception as a root cause.
      *
      * @param cause Exception that might have caused this one.
      */
-    public ExecutionException(Throwable cause) {
+    public ScriptException(Throwable cause) {
         super(cause);
     }
-
 
     /**
      * Constructs an exception with the given exception as a root cause and
@@ -125,9 +122,8 @@ public class ExecutionException extends AntException {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-    public ExecutionException(Throwable cause, Location location) {
+    public ScriptException(Throwable cause, Location location) {
         super(cause, location);
     }
-
 }
 

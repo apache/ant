@@ -56,10 +56,10 @@ package org.apache.ant.antlib.system;
 import java.net.URL;
 import java.net.MalformedURLException;
 import org.apache.ant.common.antlib.AbstractConverter;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.antlib.ConverterException;
 
 /**
- * A converter to convert to URLs relative to the project base dir 
+ * A converter to convert to URLs relative to the project base dir
  *
  * @author Conor MacNeill
  */
@@ -82,13 +82,13 @@ public class URLConverter extends AbstractConverter {
      * @param value The value to be converted
      * @param type the desired type of the converted object
      * @return the value of the converted object
-     * @exception ExecutionException if the conversion cannot be made
+     * @exception ConverterException if the conversion cannot be made
      */
-    public Object convert(String value, Class type) throws ExecutionException {
+    public Object convert(String value, Class type) throws ConverterException {
         try {
             return new URL(value);
         } catch (MalformedURLException e) {
-            throw new ExecutionException(e);
+            throw new ConverterException(e);
         }
     }
 }

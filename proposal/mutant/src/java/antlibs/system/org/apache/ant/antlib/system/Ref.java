@@ -55,7 +55,7 @@ package org.apache.ant.antlib.system;
 import java.io.File;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * A Task to create a project reference.
@@ -77,10 +77,10 @@ public class Ref extends SubBuild {
      * @param context core's context
      * @param componentType the component type of this component (i.e its
      *      defined name in the build file)
-     * @exception ExecutionException if we can't access the data service
+     * @exception AntException if we can't access the data service
      */
     public void init(AntContext context, String componentType)
-         throws ExecutionException {
+         throws AntException {
         super.init(context, componentType);
     }
 
@@ -109,9 +109,9 @@ public class Ref extends SubBuild {
     /**
      * Create the project reference
      *
-     * @exception ExecutionException if the project cannot be referenced.
+     * @exception AntException if the project cannot be referenced.
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         Project model = getExecService().parseXMLBuildFile(projectFile);
 
         getExecService().createProjectReference(name, model, getProperties());

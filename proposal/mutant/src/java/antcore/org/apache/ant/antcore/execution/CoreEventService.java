@@ -54,7 +54,6 @@
 package org.apache.ant.antcore.execution;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.service.EventService;
-import org.apache.ant.common.util.ExecutionException;
 
 /**
  * Core implementation of the event service

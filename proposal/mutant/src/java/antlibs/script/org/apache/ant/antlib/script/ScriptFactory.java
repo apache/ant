@@ -58,7 +58,7 @@ import java.util.Map;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * The ScriptFactory class is a factory for the Scripting tasks. It stores
@@ -120,19 +120,19 @@ public class ScriptFactory extends StandardLibFactory {
      * Initialise the factory
      *
      * @param context the factory's context
-     * @exception ExecutionException if the factory cannot be initialized
+     * @exception AntException if the factory cannot be initialized
      */
-    public void init(AntContext context) throws ExecutionException {
+    public void init(AntContext context) throws AntException {
         super.init(context);
-        componentService = (ComponentService) 
+        componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
         try {
             Class.forName("com.ibm.bsf.BSFManager");
         } catch (ClassNotFoundException e) {
-            throw new ExecutionException("The script Ant library requires "
+            throw new ScriptException("The script Ant library requires "
                  + "bsf.jar to be available");
         } catch (NoClassDefFoundError e) {
-            throw new ExecutionException("The script Ant library requires "
+            throw new ScriptException("The script Ant library requires "
                  + "bsf.jar to be available. The class " + e.getMessage()
                  + "appears to be missing");
         }
@@ -147,11 +147,10 @@ public class ScriptFactory extends StandardLibFactory {
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the task
+     * @exception AntException if there is a problem creating the task
      */
     public Object createComponent(Class componentClass, String localName)
-         throws InstantiationException, IllegalAccessException,
-        ExecutionException {
+         throws InstantiationException, IllegalAccessException, AntException {
         Object component = super.createComponent(componentClass, localName);
 
         if (component instanceof ScriptDef) {
@@ -193,10 +192,10 @@ public class ScriptFactory extends StandardLibFactory {
      * @param name the name the script is to be defined under
      * @param language the language of the scripr
      * @param script the script text
-     * @exception ExecutionException if the script cannot be defined
+     * @exception AntException if the script cannot be defined
      */
     protected void defineScript(String name, String language, String script)
-         throws ExecutionException {
+         throws AntException {
         ScriptInfo scriptDefinition = new ScriptInfo(language, script);
         scripts.put(name, scriptDefinition);
         componentService.taskdef(this, ScriptBase.class.getClassLoader(),

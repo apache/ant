@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.cli;
+package org.apache.ant.common.logger;
 
 import java.io.PrintStream;
 import org.apache.ant.common.antlib.ExecutionComponent;

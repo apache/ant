@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * The Task interface defines the methods that a Task must implement.
@@ -64,9 +64,9 @@ public interface Task extends ExecutionComponent {
     /**
      * Execute the task.
      *
-     * @exception ExecutionException if the task has a problem executing.
+     * @exception AntException if the task has a problem executing.
      */
-    void execute() throws ExecutionException;
+    void execute() throws AntException;
 
     /**
      * Sets the taskName of the Task
@@ -89,9 +89,9 @@ public interface Task extends ExecutionComponent {
      * directly or indirectly.
      *
      * @param line The line of content produce by the task
-     * @exception ExecutionException if the output cannot be handled.
+     * @exception AntException if the output cannot be handled.
      */
-    void handleSystemOut(String line) throws ExecutionException;
+    void handleSystemOut(String line) throws AntException;
 
     /**
      * Handle error information produced by the task. When a task prints to
@@ -100,8 +100,8 @@ public interface Task extends ExecutionComponent {
      * System.err, directly or indirectly.
      *
      * @param line The line of error info produce by the task
-     * @exception ExecutionException if the output cannot be handled.
+     * @exception AntException if the output cannot be handled.
      */
-    void handleSystemErr(String line) throws ExecutionException;
+    void handleSystemErr(String line) throws AntException;
 }
 

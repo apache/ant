@@ -51,83 +51,41 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.util;
+package org.apache.ant.common.logger;
+
+import java.io.PrintStream;
+import org.apache.ant.common.event.BuildListener;
 
 /**
- * A ConfigException indicates a problem with Ant's configuration or the
- * commandline used to start Ant.
+ * Interface used by Ant to log the build output. A build logger is a build
+ * listener which has the 'right' to send output to the ant log, which is
+ * usually System.out unles redirected by the -logfile option.
  *
  * @author Conor MacNeill
- * @created 9 January 2002
+ * @created 15 January 2002
  */
-public class ConfigException extends AntException {
+public interface BuildLogger extends BuildListener {
     /**
-     * Constructs an exception with the given descriptive message.
+     * Set the msgOutputLevel this logger is to respond to. Only messages
+     * with a message level lower than or equal to the given level are
+     * output to the log.
      *
-     * @param msg Description of or information about the exception.
+     * @param level the logging level for the logger.
      */
-    public ConfigException(String msg) {
-        super(msg);
-    }
-
-
-    /**
-     * Constructs an exception with the given descriptive message and a
-     * location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
-     */
-    public ConfigException(String msg, Location location) {
-        super(msg, location);
-    }
-
+    void setMessageOutputLevel(int level);
 
     /**
-     * Constructs an exception with the given message and exception as a
-     * root cause.
+     * Set the output stream to which this logger is to send its output.
      *
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
+     * @param output the output stream for the logger.
      */
-    public ConfigException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
+    void setOutputPrintStream(PrintStream output);
 
     /**
-     * Constructs an exception with the given message and exception as a
-     * root cause and a location in a file.
+     * Set the output stream to which this logger is to send error messages.
      *
-     * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
+     * @param err the error stream for the logger.
      */
-    public ConfigException(String msg, Throwable cause, Location location) {
-        super(msg, cause, location);
-    }
-
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     *
-     * @param cause Exception that might have caused this one.
-     */
-    public ConfigException(Throwable cause) {
-        super(cause);
-    }
-
-
-    /**
-     * Constructs an exception with the given exception as a root cause and
-     * a location in a file.
-     *
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
-     */
-    public ConfigException(Throwable cause, Location location) {
-        super(cause, location);
-    }
-
+    void setErrorPrintStream(PrintStream err);
 }
 

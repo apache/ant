@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * This class represents the Ant library.
@@ -221,10 +221,10 @@ public class AntLibrary implements ComponentLibrary {
      *      required
      * @return an instance of the factory, or null if this library does not
      *      support a factory
-     * @exception ExecutionException if the factory cannot be created
+     * @exception AntException if the factory cannot be created
      */
     public AntLibFactory getFactory(AntContext context)
-         throws ExecutionException {
+         throws AntException {
         try {
             AntLibFactory libFactory = null;
             if (factoryClassName != null) {
@@ -236,20 +236,20 @@ public class AntLibrary implements ComponentLibrary {
             }
             return libFactory;
         } catch (ClassNotFoundException e) {
-            throw new ExecutionException("Unable to create factory "
+            throw new AntLibException("Unable to create factory "
                  + factoryClassName + " for the \"" + libraryId
                  + "\" Ant library", e);
         } catch (NoClassDefFoundError e) {
-            throw new ExecutionException("Could not load a dependent class ("
+            throw new AntLibException("Could not load a dependent class ("
                  + e.getMessage() + ") to create the factory "
                  + factoryClassName + " for the \"" + libraryId
                  + "\" Ant library", e);
         } catch (InstantiationException e) {
-            throw new ExecutionException("Unable to instantiate factory "
+            throw new AntLibException("Unable to instantiate factory "
                  + factoryClassName + " for the \"" + libraryId
                  + "\" Ant library", e);
         } catch (IllegalAccessException e) {
-            throw new ExecutionException("Unable to access factory "
+            throw new AntLibException("Unable to access factory "
                  + factoryClassName + " for the \"" + libraryId
                  + "\" Ant library", e);
         }

@@ -57,8 +57,9 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.event.BuildListener;
 
 /**
  * The ExecService provides executiuon services to tasks
@@ -72,9 +73,9 @@ public interface ExecService {
      *
      * @param xmlBuildFile The file containing the XML build description.
      * @return A Project model for the build.
-     * @exception ExecutionException if the build cannot be parsed
+     * @exception AntException if the build cannot be parsed
      */
-    Project parseXMLBuildFile(File xmlBuildFile) throws ExecutionException;
+    Project parseXMLBuildFile(File xmlBuildFile) throws AntException;
 
 
     /**
@@ -84,10 +85,10 @@ public interface ExecService {
      *      referenced.
      * @param model the project model.
      * @param initialData the project's initial data load.
-     * @exception ExecutionException if the project cannot be referenced.
+     * @exception AntException if the project cannot be referenced.
      */
-    void createProjectReference(String referenceName, Project model, 
-                                Map initialData) throws ExecutionException;
+    void createProjectReference(String referenceName, Project model,
+                                Map initialData) throws AntException;
 
 
     /**
@@ -95,22 +96,49 @@ public interface ExecService {
      *
      * @param model the project model to be used for the build
      * @param properties the initiali properties to be used in the build
+     * @param addListeners true if the current frame's listeners should be
+     *        added to the created Frame
      * @return a key to the build allowing it to be executed and managed
-     * @exception ExecutionException if the subbuild cannot be setup
+     * @exception AntException if the subbuild cannot be setup
      */
-    Object setupBuild(Project model, Map properties)
-         throws ExecutionException;
+    BuildKey setupBuild(Project model, Map properties, boolean addListeners)
+         throws AntException;
 
 
     /**
      * Setup a sub-build using the current frame's project model
      *
      * @param properties the initiali properties to be used in the build
+     * @param addListeners true if the current frame's listeners should be
+     *        added to the created Frame
      * @return a key to the build allowing it to be executed and managed
-     * @exception ExecutionException if the subbuild cannot be setup
+     * @exception AntException if the subbuild cannot be setup
      */
-    Object setupBuild(Map properties)
-         throws ExecutionException;
+    BuildKey setupBuild(Map properties, boolean addListeners)
+         throws AntException;
+
+
+    /**
+     * Force initialisation of a particular ant library in the context of the
+     * given subbuild.
+     *
+     * @param key the build key.
+     * @param libraryId the id of the library to be initialized.
+     * @exception AntException if the build cannot be run
+     */
+    void initializeBuildLibrary(BuildKey key, String libraryId)
+        throws AntException;
+
+    /**
+     * Add a listener to a subbuild
+     *
+     * @param key the key identifying the build previously setup
+     * @param listener the listener to add to the build.
+     *
+     * @exception AntException if the build cannot be found.
+     */
+    public void addBuildListener(BuildKey key, BuildListener listener)
+        throws AntException;
 
 
     /**
@@ -119,36 +147,46 @@ public interface ExecService {
      * @param buildKey the buildKey returned previously when the build was
      *      setup
      * @param targets A list of targets to be run
-     * @exception ExecutionException if the build cannot be run
+     * @exception AntException if the build cannot be run
      */
-    void runBuild(Object buildKey, List targets) throws ExecutionException;
+    void runBuild(BuildKey buildKey, List targets)
+        throws AntException;
 
+
+    /**
+     * Release a subbuild that is no longer in use.
+     *
+     * @param key the BuildKey identifiying the subbuild.
+     *
+     * @exception AntException if the build was not registered.
+     */
+    void releaseBuild(BuildKey key) throws AntException;
 
     /**
      * execute a task. The task should have already been initialised by the
      * core
      *
      * @param task the task to be executed.
-     * @exception ExecutionException if there is a problem in execution.
+     * @exception AntException if there is a problem in execution.
      */
-    void executeTask(Task task) throws ExecutionException;
+    void executeTask(Task task) throws AntException;
 
 
     /**
-     * Execute a task with a set of aspect values. Normally aspect values come 
+     * Execute a task with a set of aspect values. Normally aspect values come
      * from a build model but not all tasks will be created from a build model.
-     * Some may be created dynamically and configured programatically. This 
+     * Some may be created dynamically and configured programatically. This
      * method allows aspect values to provided for execution of such tasks since
      * by their nature, aspect values are not part of the task configuration.
      *
      * @param task the task to be executed
      * @param aspectValues the aspect attribute values.
-     * @exception ExecutionException if there is an execution problem
+     * @exception AntException if there is an execution problem
      */
-    void executeTask(Task task, AspectValueCollection aspectValues) 
-         throws ExecutionException;
-         
-         
+    void executeTask(Task task, AspectValueCollection aspectValues)
+         throws AntException;
+
+
     /**
      * get the name of the project associated with this execution.
      *
@@ -164,6 +202,15 @@ public interface ExecService {
      */
     File getBaseDir();
 
+    /**
+     * Set the basedir for the current execution
+     *
+     * @param baseDir the new base directory for this execution of Ant
+     * @exception AntException if the base directory cannot be set to the given
+     *            value.
+     */
+    void setBaseDir(File baseDir) throws AntException ;
+
 
     /**
      * Handle subbuild output.
@@ -171,9 +218,9 @@ public interface ExecService {
      * @param subbuildKey the core's key for managing the subbuild.
      * @param line the content produce by the current thread.
      * @param isErr true if this content is from the thread's error stream.
-     * @exception ExecutionException if the subbuild cannot be found.
+     * @exception AntException if the subbuild cannot be found.
      */
     void handleBuildOutput(Object subbuildKey, String line, boolean isErr)
-         throws ExecutionException;
+         throws AntException;
 }
 

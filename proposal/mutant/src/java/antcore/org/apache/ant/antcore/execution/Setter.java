@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * The Setter interface is used by the Ant core to set values and nested
@@ -68,12 +68,12 @@ public interface Setter {
      * @param obj the object on which the value is being set
      * @param attributeName the name of the attribute
      * @param value the string represenation of the attribute's value
-     * @exception ExecutionException if the object does not support the
+     * @exception AntException if the object does not support the
      *      attribute or the object has a problem setting the value
      */
     void setAttribute(Object obj, String attributeName,
                       String value)
-         throws ExecutionException;
+         throws AntException;
 
     /**
      * Get the type of the given nested element

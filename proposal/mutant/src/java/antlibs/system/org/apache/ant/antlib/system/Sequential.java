@@ -61,7 +61,7 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.antlib.TaskContainer;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Implements a single threaded task execution. <p>
@@ -94,10 +94,10 @@ public class Sequential extends AbstractTask
     /**
      * Execute all nestedTasks.
      *
-     * @exception ExecutionException if any of the nested tasks throws an
+     * @exception AntException if any of the nested tasks throws an
      *      exception
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         AntContext context = getAntContext();
         ExecService execService
              = (ExecService) context.getCoreService(ExecService.class);

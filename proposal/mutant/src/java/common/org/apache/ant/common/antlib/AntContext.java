@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
 
 /**
@@ -80,10 +80,10 @@ public interface AntContext {
      * @param serviceInterfaceClass the class object for the required
      *      interface
      * @return an instance of the requested interface
-     * @exception ExecutionException if the core service is not supported
+     * @exception AntException if the core service is not supported
      */
     Object getCoreService(Class serviceInterfaceClass)
-         throws ExecutionException;
+         throws AntException;
 
     /**
      * Gets the location associated with the AntContext

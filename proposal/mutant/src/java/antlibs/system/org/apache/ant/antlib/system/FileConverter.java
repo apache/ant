@@ -55,7 +55,7 @@ package org.apache.ant.antlib.system;
 
 import java.io.File;
 import org.apache.ant.common.antlib.AbstractConverter;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.antlib.ConverterException;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.service.FileService;
 
@@ -85,15 +85,15 @@ public class FileConverter extends AbstractConverter {
      * @param value The value to be converted
      * @param type the desired type of the converted object
      * @return the value of the converted object
-     * @exception ExecutionException if the conversion cannot be made
+     * @exception ConverterException if the conversion cannot be made
      */
-    public Object convert(String value, Class type) throws ExecutionException {
+    public Object convert(String value, Class type) throws ConverterException {
         try {
-            FileService fileService 
+            FileService fileService
                 = (FileService) getContext().getCoreService(FileService.class);
             return fileService.resolveFile(value);
         } catch (AntException e) {
-            throw new ExecutionException("Unable to resolve file: " 
+            throw new ConverterException("Unable to resolve file: "
                 + value, e);
         }
     }

@@ -54,7 +54,7 @@
 package org.apache.tools.ant;
 
 import org.apache.ant.common.antlib.AntContext;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * ProjectComponent facade
@@ -113,10 +113,10 @@ public abstract class ProjectComponent {
      *
      * @param context the core context for this component
      * @param componentType the component type of this component
-     * @exception ExecutionException if the component cannot be initialized
+     * @exception AntException if the component cannot be initialized
      */
-    public void init(AntContext context, String componentType) 
-            throws ExecutionException {
+    public void init(AntContext context, String componentType)
+            throws AntException {
         this.context = context;
         this.componentType = componentType;
 

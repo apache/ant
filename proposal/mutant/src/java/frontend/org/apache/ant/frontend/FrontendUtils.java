@@ -61,7 +61,6 @@ import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.antcore.config.AntConfigHandler;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
-import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.init.InitUtils;
 
 /**
@@ -84,11 +83,11 @@ public class FrontendUtils {
      * @param configArea the config area from which the config may be read
      * @return the AntConfig instance representing the config info read in
      *      from the config area. May be null if the AntConfig is not present
-     * @exception ConfigException if the URL for the config file cannotbe
+     * @exception FrontendException if the URL for the config file cannotbe
      *      formed.
      */
     public static AntConfig getAntConfig(File configArea)
-         throws ConfigException {
+         throws FrontendException {
         File configFile = new File(configArea, "antconfig.xml");
 
         try {
@@ -105,11 +104,11 @@ public class FrontendUtils {
      *
      * @param configFile the file containing the XML config
      * @return the parsed config object
-     * @exception ConfigException if the config cannot be parsed
+     * @exception FrontendException if the config cannot be parsed
      * @exception FileNotFoundException if the file cannot be found.
      */
     public static AntConfig getAntConfigFile(File configFile)
-         throws ConfigException, FileNotFoundException {
+         throws FrontendException, FileNotFoundException {
         try {
             URL configFileURL = InitUtils.getFileURL(configFile);
 
@@ -120,15 +119,15 @@ public class FrontendUtils {
 
             return configHandler.getAntConfig();
         } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to form URL to read config from "
-                 + configFile, e);
+            throw new FrontendException("Unable to form URL to read "
+                + "config from " + configFile, e);
         } catch (XMLParseException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw (FileNotFoundException) e.getCause();
             }
 
-            throw new ConfigException("Unable to parse config file from "
-                 + configFile, e);
+            throw new FrontendException("Unable to parse config file from "
+                 + configFile, e, e.getLocation());
         }
     }
 

@@ -54,8 +54,8 @@
 package org.apache.ant.antcore.execution;
 import java.io.File;
 import org.apache.ant.common.service.FileService;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
+import org.apache.ant.common.util.AntException;
 
 /**
  * The core's implementation of the File Service. The File Service is used
@@ -86,9 +86,9 @@ public class CoreFileService implements FileService {
      *
      * @param fileName the file name to be resolved.
      * @return the file resolved to the project's base dir
-     * @exception ExecutionException if the file cannot be resolved.
+     * @exception AntException if the file cannot be resolved.
      */
-    public File resolveFile(String fileName) throws ExecutionException {
+    public File resolveFile(String fileName) throws AntException {
         File base = frame.getBaseDir();
         return fileUtils.resolveFile(fileUtils.normalize(base.getPath()),
             fileName);

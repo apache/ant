@@ -54,7 +54,7 @@
 package org.apache.ant.common.service;
 
 import java.io.File;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Service interface for File manipulation operations provided by the Ant
@@ -70,8 +70,8 @@ public interface FileService {
      *
      * @param fileName the file name to be resolved.
      * @return the file resolved to the project's base dir
-     * @exception ExecutionException if the file cannot be resolved
+     * @exception AntException if the file cannot be resolved
      */
-    File resolveFile(String fileName) throws ExecutionException;
+    File resolveFile(String fileName) throws AntException;
 }
 

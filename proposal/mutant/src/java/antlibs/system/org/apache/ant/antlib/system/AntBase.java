@@ -55,7 +55,8 @@ package org.apache.ant.antlib.system;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.service.BuildKey;
 
 /**
  * Common Base class for the Ant and AntCall tasks
@@ -80,7 +81,7 @@ public abstract class AntBase extends SubBuild {
     /**
      * The key to the subbuild with which the Ant task can manage the subbuild
      */
-    private Object subbuildKey;
+    private BuildKey subbuildKey;
 
     /** The name of the target to be evaluated in the sub-build */
     private String targetName;
@@ -125,9 +126,9 @@ public abstract class AntBase extends SubBuild {
      * System.err, directly or indirectly.
      *
      * @param line The line of error info produce by the task
-     * @exception ExecutionException if the output cannot be handled.
+     * @exception AntException if the output cannot be handled.
      */
-    public void handleSystemErr(String line) throws ExecutionException {
+    public void handleSystemErr(String line) throws AntException {
         if (subbuildKey == null) {
             super.handleSystemErr(line);
         } else {
@@ -143,9 +144,9 @@ public abstract class AntBase extends SubBuild {
      * or indirectly.
      *
      * @param line The line of content produce by the task
-     * @exception ExecutionException if the output cannot be handled.
+     * @exception AntException if the output cannot be handled.
      */
-    public void handleSystemOut(String line) throws ExecutionException {
+    public void handleSystemOut(String line) throws AntException {
         if (subbuildKey == null) {
             super.handleSystemOut(line);
         } else {
@@ -180,7 +181,7 @@ public abstract class AntBase extends SubBuild {
      *
      * @param key the key returned by the Ant core for managing the subbuild
      */
-    protected void setSubBuildKey(Object key) {
+    protected void setSubBuildKey(BuildKey key) {
         this.subbuildKey = key;
     }
 

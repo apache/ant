@@ -55,7 +55,7 @@ package org.apache.tools.ant;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.service.EventService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.init.LoaderUtils;
 
 /**
@@ -78,9 +78,9 @@ public class Ant1Factory extends StandardLibFactory {
      *
      * @param context the context for this factory to use to access core
      *      services.
-     * @exception ExecutionException if the factory cannot be initialised.
+     * @exception AntException if the factory cannot be initialised.
      */
-    public void init(AntContext context) throws ExecutionException {
+    public void init(AntContext context) throws AntException {
         if (project != null) {
             return;
         }
@@ -109,11 +109,11 @@ public class Ant1Factory extends StandardLibFactory {
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the task
+     * @exception Ant1CompatException if there is a problem creating the task
      */
     public Object createComponent(Class componentClass, String localName)
          throws InstantiationException, IllegalAccessException,
-        ExecutionException {
+        Ant1CompatException {
         try {
             java.lang.reflect.Constructor constructor = null;
             // DataType can have a "no arg" constructor or take a single
@@ -123,7 +123,7 @@ public class Ant1Factory extends StandardLibFactory {
                 constructor = componentClass.getConstructor(new Class[0]);
                 component = constructor.newInstance(new Object[0]);
             } catch (NoSuchMethodException nse) {
-                constructor 
+                constructor
                     = componentClass.getConstructor(new Class[]{Project.class});
                 component = constructor.newInstance(new Object[]{project});
             }
@@ -136,9 +136,9 @@ public class Ant1Factory extends StandardLibFactory {
             Throwable t = ite.getTargetException();
             String msg = "Could not create component of type: "
                  + componentClass.getName() + " due to " + t;
-            throw new ExecutionException(msg, t);
+            throw new Ant1CompatException(msg, t);
         } catch (NoSuchMethodException e) {
-            throw new ExecutionException("Unable to find an appropriate "
+            throw new Ant1CompatException("Unable to find an appropriate "
                  + "constructor for component " + componentClass.getName(), e);
         }
     }
@@ -151,12 +151,12 @@ public class Ant1Factory extends StandardLibFactory {
      * @return a instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the
+     * @exception Ant1CompatException if there is a problem creating the
      *      converter
      */
     public Object createInstance(Class requiredClass)
          throws InstantiationException, IllegalAccessException,
-        ExecutionException {
+        Ant1CompatException {
 
         java.lang.reflect.Constructor c = null;
 
@@ -175,9 +175,9 @@ public class Ant1Factory extends StandardLibFactory {
             Throwable t = ite.getTargetException();
             String msg = "Could not create instance of type: "
                  + requiredClass.getName() + " due to " + t;
-            throw new ExecutionException(msg, t);
+            throw new Ant1CompatException(msg, t);
         } catch (NoSuchMethodException e) {
-            throw new ExecutionException("Unable to find an appropriate "
+            throw new Ant1CompatException("Unable to find an appropriate "
                  + "constructor for class " + requiredClass.getName(), e);
         }
     }
@@ -187,11 +187,11 @@ public class Ant1Factory extends StandardLibFactory {
      * create method.
      *
      * @param createdElement the element that the component created
-     * @exception ExecutionException if there is a problem registering the
+     * @exception AntException if there is a problem registering the
      *      element
      */
     public void registerCreatedElement(Object createdElement)
-         throws ExecutionException {
+         throws AntException {
         if (createdElement instanceof ProjectComponent) {
             ProjectComponent component = (ProjectComponent) createdElement;
             component.setProject(project);

@@ -57,9 +57,10 @@ import java.util.Map;
 import org.apache.ant.common.antlib.AbstractAspect;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.antlib.AspectException;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.AspectValueCollection;
 
@@ -71,7 +72,7 @@ import org.apache.ant.common.model.AspectValueCollection;
 public class AntAspect extends AbstractAspect {
     /** The Ant aspect used to identify Ant metadata */
     public static final String ANT_ASPECT = "ant";
-    
+
     /** The core's data service implementation */
     private DataService dataService = null;
 
@@ -79,73 +80,73 @@ public class AntAspect extends AbstractAspect {
     private ComponentService componentService = null;
 
     /**
-     * Initialise the aspect with a context. 
+     * Initialise the aspect with a context.
      *
      * @param context the aspect's context
-     * @exception ExecutionException if the aspect cannot be initialised
+     * @exception AntException if the aspect cannot be initialised
      */
-    public void init(AntContext context) throws ExecutionException {
+    public void init(AntContext context) throws AntException {
         super.init(context);
         dataService = (DataService) context.getCoreService(DataService.class);
-        componentService 
+        componentService
             = (ComponentService) context.getCoreService(ComponentService.class);
     }
-    
+
 
     /**
      * This join point is activated before a component has been created.
-     * The aspect can return an object to be used rather than the core creating 
-     * the object. 
+     * The aspect can return an object to be used rather than the core creating
+     * the object.
      *
      * @param component the component that has been created. This will be null
      *                  unless another aspect has created the component
      * @param model the Build model that applies to the component
      *
      * @return a component to use.
-     * @exception ExecutionException if the aspect cannot process the component.
-     */         
+     * @exception AntException if the aspect cannot process the component.
+     */
     public Object preCreateComponent(Object component, BuildElement model)
-         throws ExecutionException {
+         throws AntException {
         String refId = model.getAspectAttributeValue(ANT_ASPECT, "refid");
         if (refId != null) {
             if (model.getAttributeNames().hasNext() ||
                 model.getNestedElements().hasNext() ||
                 model.getText().length() != 0) {
-                throw new ExecutionException("Element <" + model.getType()
+                throw new AspectException("Element <" + model.getType()
                      + "> is defined by reference and hence may not specify "
                      + "any attributes, nested elements or content",
                     model.getLocation());
             }
             Object referredComponent = dataService.getDataValue(refId);
             if (referredComponent == null) {
-                throw new ExecutionException("The given ant:refid value '"
+                throw new AspectException("The given ant:refid value '"
                      + refId + "' is not defined", model.getLocation());
             }
             return referredComponent;
-        }             
+        }
         return component;
     }
-    
+
     /**
      * This join point is activated after a component has been created and
      * configured. If the aspect wishes, an object can be returned in place
-     * of the one created by Ant. 
+     * of the one created by Ant.
      *
      * @param component the component that has been created.
      * @param model the Build model used to create the component.
      *
      * @return a replacement for the component if desired. If null is returned
      *         the current component is used.
-     * @exception ExecutionException if the component cannot be processed.
-     */         
-    public Object postCreateComponent(Object component, BuildElement model) 
-         throws ExecutionException {
+     * @exception AntException if the component cannot be processed.
+     */
+    public Object postCreateComponent(Object component, BuildElement model)
+         throws AntException {
         String typeId = model.getAspectAttributeValue(ANT_ASPECT, "id");
-    
+
         if (typeId != null) {
             dataService.setMutableDataValue(typeId, component);
         }
-        
+
         return super.postCreateComponent(component, model);
     }
 
@@ -153,31 +154,31 @@ public class AntAspect extends AbstractAspect {
      * This join point is activated just prior to task execution.
      *
      * @param task the task being executed.
-     * @param aspectValues a collection of aspect attribute values for use 
+     * @param aspectValues a collection of aspect attribute values for use
      *        during the task execution.
      *
-     * @return an objectwhich indicates that this aspect wishes to 
+     * @return an objectwhich indicates that this aspect wishes to
      * be notified after execution has been completed, in which case the obkect
      * is returned to provide the aspect its context. If this returns null
      * the aspect's postExecuteTask method will not be invoked.
-     * @exception ExecutionException if the aspect cannot process the task.
+     * @exception AntException if the aspect cannot process the task.
      */
-    public Object preExecuteTask(Task task, AspectValueCollection aspectValues) 
-         throws ExecutionException {
+    public Object preExecuteTask(Task task, AspectValueCollection aspectValues)
+         throws AntException {
         AntAspectContext aspectContext = new AntAspectContext();
         Map antAspectValues = aspectValues.getAttributes(ANT_ASPECT);
         if (antAspectValues == null) {
             return null;
         }
-        
-        componentService.configureAttributes(aspectContext, antAspectValues, 
+
+        componentService.configureAttributes(aspectContext, antAspectValues,
             true);
         if (aspectContext.isRequired()) {
             return aspectContext;
         }
-        return null;             
+        return null;
     }
-    
+
     /**
      * This join point is activated after a task has executed. The aspect
      * may override the task's failure cause by returning a new failure.

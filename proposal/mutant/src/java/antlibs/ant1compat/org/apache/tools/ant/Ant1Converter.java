@@ -54,7 +54,7 @@
 package org.apache.tools.ant;
 
 import org.apache.ant.common.antlib.AbstractConverter;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.antlib.ConverterException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 
@@ -96,9 +96,9 @@ public class Ant1Converter extends AbstractConverter {
      * @param value The value to be converted
      * @param type the desired type of the converted object
      * @return the value of the converted object
-     * @exception ExecutionException if the conversion cannot be made
+     * @exception ConverterException if the conversion cannot be made
      */
-    public Object convert(String value, Class type) throws ExecutionException {
+    public Object convert(String value, Class type) throws ConverterException {
         if (type.equals(Path.class)) {
             return new Path(project, value);
         } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
@@ -108,13 +108,13 @@ public class Ant1Converter extends AbstractConverter {
                 ea.setValue(value);
                 return ea;
             } catch (InstantiationException e) {
-                throw new ExecutionException(e);
+                throw new ConverterException(e);
             } catch (IllegalAccessException e) {
-                throw new ExecutionException(e);
+                throw new ConverterException(e);
             }
 
         } else {
-            throw new ExecutionException("This converter does not handle "
+            throw new ConverterException("This converter does not handle "
                  + type.getName());
         }
     }

@@ -55,8 +55,9 @@ package org.apache.ant.antlib.system;
 
 import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.ValidationException;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Task to import a component or components from a library
@@ -116,22 +117,22 @@ public class Import extends AbstractTask {
     /**
      * Validate this task is properly configured
      *
-     * @exception ExecutionException if the task is not configured correctly
+     * @exception ValidationException if the task is not configured correctly
      */
-    public void validateComponent() throws ExecutionException {
+    public void validateComponent() throws ValidationException {
         if (ref != null) {
             if (libraryId != null || name != null) {
-                throw new ExecutionException("The \"ref\" attribute can only "
+                throw new ValidationException("The \"ref\" attribute can only "
                      + "be used when \"libraryId\" and \"name\" attributes are "
                      + "not present");
             }
         } else {
             if (libraryId == null) {
-                throw new ExecutionException("You must specify a library "
+                throw new ValidationException("You must specify a library "
                      + "identifier with the \"libraryid\" attribute");
             }
             if (alias != null && name == null) {
-                throw new ExecutionException("You may only specify an alias"
+                throw new ValidationException("You may only specify an alias"
                      + " when you specify the \"name\" or \"ref\" attributes");
             }
         }
@@ -140,9 +141,9 @@ public class Import extends AbstractTask {
     /**
      * Do the work and import the component or components
      *
-     * @exception ExecutionException if the components cannot be imported
+     * @exception AntException if the components cannot be imported
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         AntContext context = getAntContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);

@@ -58,7 +58,6 @@ import java.io.File;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.PropertyUtils;
 
 /**
@@ -106,7 +105,7 @@ public class ProjectHelper {
             DataService dataService
                  = (DataService) context.getCoreService(DataService.class);
             return dataService.replacePropertyRefs(value);
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -128,25 +127,24 @@ public class ProjectHelper {
             DataService dataService
                  = (DataService) context.getCoreService(DataService.class);
             return dataService.replacePropertyRefs(value, keys);
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
 
     /**
      * Old method to build a project.
-     * 
+     *
      * @param project The project to configure. Must not be <code>null</code>.
      * @param buildFile An XML file giving the project's configuration.
      *                  Must not be <code>null</code>.
-     * 
+     *
      * @exception BuildException always
      * @deprecated
      */
-    public static void configureProject(Project project, File buildFile) 
-        throws BuildException {
-        throw new BuildException("Project are not built by ProjectHelper " 
-            + "any longer.");
+    public static void configureProject(Project project, File buildFile)
+         throws BuildException {
+        project.configure(buildFile);
     }
 }
 

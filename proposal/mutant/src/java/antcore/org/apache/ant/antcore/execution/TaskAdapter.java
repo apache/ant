@@ -53,9 +53,9 @@
  */
 package org.apache.ant.antcore.execution;
 import java.lang.reflect.Method;
-
+import java.lang.reflect.InvocationTargetException;
 import org.apache.ant.common.antlib.AbstractTask;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.event.MessageLevel;
 
 /**
  * Use introspection to "adapt" an arbitrary Bean (not extending Task, but
@@ -105,7 +105,16 @@ public class TaskAdapter extends AbstractTask {
     public void execute() throws ExecutionException {
         try {
             executeMethod.invoke(worker, null);
+        } catch (InvocationTargetException e) {
+            log("Error in " + worker.getClass(), MessageLevel.MSG_ERR);
+            Throwable t = e.getTargetException();
+            if (t instanceof ExecutionException) {
+                throw (ExecutionException) t;
+            } else {
+                throw new ExecutionException(t);
+            }
         } catch (Throwable t) {
+            log("Error in " + worker.getClass(), MessageLevel.MSG_ERR);
             throw new ExecutionException(t);
         }
     }

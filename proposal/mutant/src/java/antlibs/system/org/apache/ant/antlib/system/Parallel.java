@@ -61,7 +61,7 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.antlib.TaskContainer;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
 
 /**
@@ -143,10 +143,10 @@ public class Parallel extends AbstractTask
      * Block execution until the specified time or for a specified amount of
      * milliseconds and if defined, execute the wait status.
      *
-     * @exception ExecutionException if any of the nested tasks throws an
+     * @exception AntException if any of the nested tasks throws an
      *      exception
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         TaskThread[] threads = new TaskThread[nestedTasks.size()];
         int threadNumber = 0;
         for (Iterator i = nestedTasks.iterator(); i.hasNext(); threadNumber++) {
@@ -181,9 +181,9 @@ public class Parallel extends AbstractTask
                 if (firstException == null) {
                     firstException = t;
                 }
-                if (t instanceof ExecutionException &&
+                if (t instanceof AntException &&
                     firstLocation == Location.UNKNOWN_LOCATION) {
-                    firstLocation = ((ExecutionException) t).getLocation();
+                    firstLocation = ((AntException) t).getLocation();
                 }
                 exceptionMessage.append(lSep);
                 exceptionMessage.append(t.getMessage());
@@ -191,13 +191,13 @@ public class Parallel extends AbstractTask
         }
 
         if (numExceptions == 1) {
-            if (firstException instanceof ExecutionException) {
-                throw (ExecutionException) firstException;
+            if (firstException instanceof AntException) {
+                throw (AntException) firstException;
             } else {
-                throw new ExecutionException(firstException);
+                throw new SystemException(firstException);
             }
         } else if (numExceptions > 1) {
-            throw new ExecutionException(exceptionMessage.toString(),
+            throw new SystemException(exceptionMessage.toString(),
                 firstLocation);
         }
     }

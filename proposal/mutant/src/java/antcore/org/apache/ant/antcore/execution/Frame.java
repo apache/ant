@@ -63,11 +63,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import org.apache.ant.antcore.config.AntConfig;
+import org.apache.ant.antcore.antlib.AntLibManager;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.antlib.Aspect;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.BuildElement;
+import org.apache.ant.common.model.ModelException;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.model.Target;
 import org.apache.ant.common.model.AspectValueCollection;
@@ -79,8 +81,9 @@ import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.InputService;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.DemuxOutputReceiver;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
+import org.apache.ant.common.util.Location;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.LoaderUtils;
 
@@ -102,20 +105,20 @@ public class Frame implements DemuxOutputReceiver {
     /** The referenced frames corresponding to the referenced projects */
     private Map referencedFrames = new HashMap();
 
-    /** 
+    /**
      * This is a Map of Maps. This map is keyed on an executing task.
      * Each entry is itself a Map of Aspects to their context for the
      * particular task.
      */
     private Map aspectContextsMap = new HashMap();
-    
-    /** 
-     * The property overrides for the referenced frames. This map is indexed 
-     * by the reference names of the frame. Each entry is another Map of 
+
+    /**
+     * The property overrides for the referenced frames. This map is indexed
+     * by the reference names of the frame. Each entry is another Map of
      * property values indexed by their relative name.
      */
     private Map overrides = new HashMap();
-    
+
     /**
      * The context of this execution. This contains all data object's created
      * by tasks that have been executed
@@ -146,10 +149,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * The Data Service instance used by the frame for data management
      */
-    private DataService dataService;
+    private CoreDataService dataService;
 
     /** The execution file service instance */
-    private FileService fileService;
+    private CoreFileService fileService;
 
     /**
      * the Component Manager used to manage the importing of library
@@ -160,19 +163,41 @@ public class Frame implements DemuxOutputReceiver {
     /** The core's execution Service */
     private CoreExecService execService;
 
+    /** The parent frame of this frame - may be null. */
+    private Frame parent = null;
+
+    /** The currently executing target in this frame */
+    private String currentTarget = null;
+
+    /** The global library manager */
+    private AntLibManager libManager;
 
     /**
-     * Create an Execution Frame for the given project
+     * Create the main or root Execution Frame.
      *
      * @param config the user config to use for this execution of Ant
      * @param initConfig Ant's initialisation config
-     * @exception ExecutionException if a component of the library cannot be
-     *      imported
      */
-    protected Frame(InitConfig initConfig,
-                    AntConfig config) throws ExecutionException {
+    public Frame(InitConfig initConfig, AntConfig config) {
         this.config = config;
         this.initConfig = initConfig;
+        this.parent = null;
+        this.libManager
+            = new AntLibManager(initConfig, config.isRemoteLibAllowed());
+    }
+
+    /**
+     * Create an Execution Frame.
+     *
+     * @param config the user config to use for this execution of Ant
+     * @param initConfig Ant's initialisation config
+     * @param parent the frame creating this frame.
+     */
+    private Frame(InitConfig initConfig, AntConfig config, Frame parent) {
+        this.config = config;
+        this.initConfig = initConfig;
+        this.parent = parent;
+        this.libManager = parent.libManager;
     }
 
 
@@ -182,10 +207,10 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @param value the string to be scanned for property references.
      * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
+     * @exception AntException if any of the properties do not exist
      */
-    protected String replacePropertyRefs(String value) 
-         throws ExecutionException {
+    protected String replacePropertyRefs(String value)
+         throws AntException {
         return dataService.replacePropertyRefs(value);
     }
 
@@ -194,12 +219,12 @@ public class Frame implements DemuxOutputReceiver {
      * Sets the Project of the Frame
      *
      * @param project The new Project value
-     * @exception ExecutionException if any required sub-frames cannot be
-     *      created and configured
+     * @exception ModelException if the project is not valid.
      */
-    protected void setProject(Project project) throws ExecutionException {
+    public void setProject(Project project) throws ModelException {
         this.project = project;
         referencedFrames.clear();
+        project.validate();
     }
 
 
@@ -235,7 +260,7 @@ public class Frame implements DemuxOutputReceiver {
 
         if (frame == this) {
             if (dataValues.containsKey(name) && !mutable) {
-                log("Ignoring oveeride for data value " + name,
+                log("Ignoring override for data value " + name,
                     MessageLevel.MSG_VERBOSE);
             } else {
                 dataValues.put(name, value);
@@ -252,22 +277,22 @@ public class Frame implements DemuxOutputReceiver {
      * @param name the name of the value
      * @param value the actual value
      * @param mutable if true, existing values can be changed
-     * @exception ExecutionException if attempting to override a property in 
-     *                               the current frame. 
+     * @exception ExecutionException if attempting to override a property in
+     *                               the current frame.
      */
-    private void setOverrideProperty(String name, Object value, 
-                                     boolean mutable) 
+    private void setOverrideProperty(String name, Object value,
+                                     boolean mutable)
          throws ExecutionException {
         int refIndex = name.indexOf(Project.REF_DELIMITER);
         if (refIndex == -1) {
-            throw new ExecutionException("Property overrides can only be set" 
-                + " for properties in referenced projects - not " 
+            throw new ExecutionException("Property overrides can only be set"
+                + " for properties in referenced projects - not "
                 + name);
         }
-        
+
         String firstFrameName = name.substring(0, refIndex);
-        
-        String relativeName 
+
+        String relativeName
             = name.substring(refIndex + Project.REF_DELIMITER.length());
 
         Map frameOverrides = (Map) overrides.get(firstFrameName);
@@ -278,30 +303,30 @@ public class Frame implements DemuxOutputReceiver {
 
         if (mutable || !frameOverrides.containsKey(relativeName)) {
             frameOverrides.put(relativeName, value);
-        }            
+        }
     }
-    
+
     /**
-     * Get a value which exists in the frame property overrides awaiting 
+     * Get a value which exists in the frame property overrides awaiting
      * the frame to be introduced.
      *
      * @param name the name of the value
-     * @return the value of the property or null if the property does not 
+     * @return the value of the property or null if the property does not
      * exist.
-     * @exception ExecutionException if attempting to get an override in 
-     *                               the current frame. 
+     * @exception ExecutionException if attempting to get an override in
+     *                               the current frame.
      */
     private Object getOverrideProperty(String name) throws ExecutionException {
         int refIndex = name.indexOf(Project.REF_DELIMITER);
         if (refIndex == -1) {
-            throw new ExecutionException("Property overrides can only be" 
-                + " returned for properties in referenced projects - not " 
+            throw new ExecutionException("Property overrides can only be"
+                + " returned for properties in referenced projects - not "
                 + name);
         }
-        
+
         String firstFrameName = name.substring(0, refIndex);
-        
-        String relativeName 
+
+        String relativeName
             = name.substring(refIndex + Project.REF_DELIMITER.length());
 
         Map frameOverrides = (Map) overrides.get(firstFrameName);
@@ -311,28 +336,28 @@ public class Frame implements DemuxOutputReceiver {
 
         return frameOverrides.get(relativeName);
     }
-    
+
     /**
-     * Get a value which exists in the frame property overrides awaiting 
+     * Get a value which exists in the frame property overrides awaiting
      * the frame to be introduced.
      *
      * @param name the name of the value
-     * @return the value of the property or null if the property does not 
+     * @return the value of the property or null if the property does not
      * exist.
-     * @exception ExecutionException if attempting to check an override in 
-     *                               the current frame. 
+     * @exception ExecutionException if attempting to check an override in
+     *                               the current frame.
      */
     private boolean isOverrideSet(String name) throws ExecutionException {
         int refIndex = name.indexOf(Project.REF_DELIMITER);
         if (refIndex == -1) {
-            throw new ExecutionException("Property overrides can only be" 
-                + " returned for properties in referenced projects - not " 
+            throw new ExecutionException("Property overrides can only be"
+                + " returned for properties in referenced projects - not "
                 + name);
         }
-        
+
         String firstFrameName = name.substring(0, refIndex);
-        
-        String relativeName 
+
+        String relativeName
             = name.substring(refIndex + Project.REF_DELIMITER.length());
 
         Map frameOverrides = (Map) overrides.get(firstFrameName);
@@ -342,32 +367,35 @@ public class Frame implements DemuxOutputReceiver {
 
         return frameOverrides.containsKey(relativeName);
     }
-    
+
 
     /**
-     * Set the initial properties to be used when the frame starts execution
+     * Initialize the frame setting any initial properties.
      *
      * @param properties a Map of named properties which may in fact be any
      *      object
-     * @exception ExecutionException if the properties cannot be set
+     * @exception AntException if the properties cannot be set
      */
-    protected void setInitialProperties(Map properties)
-         throws ExecutionException {
+    public void initialize(Map properties)
+         throws AntException {
+        configureServices();
         if (properties != null) {
             addProperties(properties);
         }
 
         // add in system properties
         addProperties(System.getProperties());
+        setMagicProperties();
     }
 
 
     /**
      * Set the values of various magic properties
      *
-     * @exception ExecutionException if the properties cannot be set
+     * @exception AntException if the properties cannot be set
      */
-    protected void setMagicProperties() throws ExecutionException {
+    protected void setMagicProperties() throws AntException {
+        // ant.home
         URL antHomeURL = initConfig.getAntHome();
         String antHomeString = null;
 
@@ -378,7 +406,25 @@ public class Frame implements DemuxOutputReceiver {
         } else {
             antHomeString = antHomeURL.toString();
         }
-        setDataValue(MagicProperties.ANT_HOME, antHomeString, true);
+        setDataValue(MagicProperties.ANT_HOME, antHomeString, false);
+
+        // ant.file
+        URL projectSource = project.getSourceURL();
+        if (projectSource != null
+             && projectSource.getProtocol().equals("file")) {
+            setDataValue(MagicProperties.ANT_FILE, projectSource.getFile(),
+                true);
+        }
+
+        // basedir
+        determineBaseDir();
+
+        // ant.project.name
+        String projectName = project.getName();
+        if (projectName != null) {
+            setDataValue(MagicProperties.ANT_PROJECT_NAME, projectName, true);
+        }
+
     }
 
 
@@ -650,26 +696,24 @@ public class Frame implements DemuxOutputReceiver {
      *      referenced.
      * @param project the project model.
      * @param initialData the project's initial data load.
-     * @exception ExecutionException if the project cannot be referenced.
+     * @exception AntException if the project cannot be referenced.
      */
     protected void createProjectReference(String name, Project project,
-                                          Map initialData) 
-        throws ExecutionException {
+                                          Map initialData)
+        throws AntException {
        Frame referencedFrame = createFrame(project);
+       addListeners(referencedFrame);
 
-       if (initialData != null) {
-           referencedFrame.setInitialProperties(initialData);
-       }
-       
+       referencedFrame.initialize(initialData);
+
        // does the frame have any overrides?
        Map initialProperties = (Map) overrides.get(name);
-       if (initialProperties != null) {
-           referencedFrame.setInitialProperties(initialProperties);
-           overrides.remove(name);
-       }
-        
+       referencedFrame.initialize(initialProperties);
+       overrides.remove(name);
+
        referencedFrames.put(name, referencedFrame);
-       referencedFrame.initialize();
+       referencedFrame.importStandardComponents();
+       referencedFrame.runGlobalTasks();
     }
 
     /**
@@ -677,21 +721,30 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @param project the project model the frame will deal with
      * @return an Frame ready to build the project
-     * @exception ExecutionException if the frame cannot be created.
+     * @exception ModelException if the given project is not valid.
      */
     protected Frame createFrame(Project project)
-         throws ExecutionException {
+         throws ModelException {
         Frame newFrame
-             = new Frame(initConfig, config);
+             = new Frame(initConfig, config, this);
 
         newFrame.setProject(project);
+
+        return newFrame;
+    }
+
+    /**
+     * Add all build listeners from this frame to the given sub frame.
+     *
+     * @param subFrame the subFrame to which all the listeners of this frame
+     *        will be added.
+     */
+    protected void addListeners(Frame subFrame) {
         for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
             BuildListener listener = (BuildListener) j.next();
 
-            newFrame.addBuildListener(listener);
+            subFrame.addBuildListener(listener);
         }
-        
-        return newFrame;
     }
 
 
@@ -711,7 +764,7 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @param listener the listener to be added to the frame
      */
-    protected void addBuildListener(BuildListener listener) {
+    public void addBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext();) {
             Frame referencedFrame = (Frame) i.next();
 
@@ -735,15 +788,26 @@ public class Frame implements DemuxOutputReceiver {
         eventSupport.removeBuildListener(listener);
     }
 
+    /**
+     * Import any standard components from the libraries which have been loaded.
+     * A standard component is a component provided by a library in the ant
+     * namespace.
+     *
+     * @exception AntException if the standard components cannot be imported.
+     */
+    private void importStandardComponents() throws AntException {
+        componentManager.importStandardComponents();
+    }
 
     /**
      * Run the given list of targets
      *
      * @param targets a list of target names which are to be evaluated
-     * @exception ExecutionException if there is a problem in the build
+     * @exception AntException if there is a problem in the build
      */
-    protected void runBuild(List targets) throws ExecutionException {
-        initialize();
+    protected void runBuild(List targets) throws AntException {
+        importStandardComponents();
+        runGlobalTasks();
         if (targets.isEmpty()) {
             // we just execute the default target if any
             String defaultTarget = project.getDefaultTarget();
@@ -787,10 +851,12 @@ public class Frame implements DemuxOutputReceiver {
      * @param flattenedList the List of targets that must be executed before
      *      the given target
      * @param fullTargetName the fully qualified name of the target
+     * @param targetRefLocation the location requesting this dependency.
      * @exception ExecutionException if the given target does not exist in the
      *      project hierarchy
      */
-    private void flattenDependency(List flattenedList, String fullTargetName)
+    private void flattenDependency(List flattenedList, String fullTargetName,
+                                   Location targetRefLocation)
          throws ExecutionException {
         if (flattenedList.contains(fullTargetName)) {
             return;
@@ -800,17 +866,18 @@ public class Frame implements DemuxOutputReceiver {
         String localTargetName = getNameInFrame(fullTargetName);
         Target target = frame.getProject().getTarget(localTargetName);
         if (target == null) {
-            throw new ExecutionException("Target " + fullTargetName
-                 + " does not exist");
+            throw new ExecutionException("Target \"" + fullTargetName
+                 + "\" does not exist", targetRefLocation);
         }
         for (Iterator i = target.getDependencies(); i.hasNext();) {
             String localDependencyName = (String) i.next();
             String fullDependencyName = localDependencyName;
             if (fullProjectName != null) {
-                fullDependencyName = fullProjectName + Project.REF_DELIMITER 
+                fullDependencyName = fullProjectName + Project.REF_DELIMITER
                     + localDependencyName;
             }
-            flattenDependency(flattenedList, fullDependencyName);
+            flattenDependency(flattenedList, fullDependencyName,
+                target.getLocation());
             if (!flattenedList.contains(fullDependencyName)) {
                 flattenedList.add(fullDependencyName);
             }
@@ -829,7 +896,7 @@ public class Frame implements DemuxOutputReceiver {
     protected List getTargetDependencies(String fullTargetName)
          throws ExecutionException {
         List flattenedList = new ArrayList();
-        flattenDependency(flattenedList, fullTargetName);
+        flattenDependency(flattenedList, fullTargetName, null);
         flattenedList.add(fullTargetName);
         return flattenedList;
     }
@@ -839,10 +906,10 @@ public class Frame implements DemuxOutputReceiver {
      * Execute the tasks of a target in this frame with the given name
      *
      * @param targetName the name of the target whose tasks will be evaluated
-     * @exception ExecutionException if there is a problem executing the tasks
+     * @exception AntException if there is a problem executing the tasks
      *      of the target
      */
-    protected void executeTarget(String targetName) throws ExecutionException {
+    protected void executeTarget(String targetName) throws AntException {
 
         // to execute a target we must determine its dependencies and
         // execute them in order.
@@ -864,10 +931,10 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @param task the task to be executed.
      * @param aspectValues the collection of aspect attribute values.
-     * @exception ExecutionException if the task has a problem.
+     * @exception AntException if the task has a problem.
      */
-    protected void executeTask(Task task, AspectValueCollection aspectValues) 
-         throws ExecutionException {
+    protected void executeTask(Task task, AspectValueCollection aspectValues)
+         throws AntException {
 
         List aspects = componentManager.getAspects();
         Map aspectContexts = new HashMap();
@@ -881,7 +948,7 @@ public class Frame implements DemuxOutputReceiver {
         if (aspectContexts.size() != 0) {
             aspectContextsMap.put(task, aspectContexts);
         }
-        
+
         eventSupport.fireTaskStarted(task);
 
         Throwable failureCause = null;
@@ -903,14 +970,14 @@ public class Frame implements DemuxOutputReceiver {
         for (Iterator i = activeAspects.iterator(); i.hasNext();) {
             Aspect aspect = (Aspect) i.next();
             Object aspectContext = aspectContexts.get(aspect);
-            failureCause 
+            failureCause
                 = aspect.postExecuteTask(aspectContext, failureCause);
         }
         eventSupport.fireTaskFinished(task, failureCause);
         if (aspectContexts.size() != 0) {
             aspectContextsMap.remove(task);
         }
-        
+
         if (failureCause != null) {
             if (failureCause instanceof ExecutionException) {
                 throw (ExecutionException) failureCause;
@@ -918,18 +985,22 @@ public class Frame implements DemuxOutputReceiver {
             throw new ExecutionException(failureCause);
         }
     }
-    
+
 
     /**
      * Run the tasks returned by the given iterator
      *
      * @param taskIterator the iterator giving the tasks to execute
-     * @exception ExecutionException if there is execution problem while
+     * @exception AntException if there is execution problem while
      *      executing tasks
      */
     protected void executeTasks(Iterator taskIterator)
-         throws ExecutionException {
-        
+         throws AntException {
+
+        if (taskIterator == null) {
+            return;
+        }
+
         while (taskIterator.hasNext()) {
             BuildElement model = (BuildElement) taskIterator.next();
 
@@ -938,7 +1009,7 @@ public class Frame implements DemuxOutputReceiver {
                 Object component = componentManager.createComponent(model);
                 if (component instanceof Task) {
                     execService.executeTask((Task) component);
-                } 
+                }
             } catch (ExecutionException e) {
                 e.setLocation(model.getLocation(), false);
                 throw e;
@@ -952,6 +1023,63 @@ public class Frame implements DemuxOutputReceiver {
 
     }
 
+    /**
+     * Get the parent frame of this frame.
+     *
+     * @return the parent frame - may be null if this frame has no parent.
+     */
+    private Frame getParent() {
+        return parent;
+    }
+
+    /**
+     * Get the currently executing target of this frame
+     *
+     * @return the name of the current target.
+     */
+    private String getCurrentTarget() {
+        return currentTarget;
+    }
+
+    /**
+     * Check for recursion - executing the same target in the same buildfile
+     * with the same base directory
+     *
+     * @param targetName the target to check
+     *
+     * @exception ExecutionException if the target is already being evaluated
+     * in a parent frame.
+     */
+    private void checkRecursion(String targetName) throws ExecutionException {
+        Frame checkFrame = getParent();
+        while (checkFrame != null) {
+            File checkDir = checkFrame.getBaseDir();
+            String checkTarget = checkFrame.getCurrentTarget();
+            URL checkURL = checkFrame.getProject().getSourceURL();
+            if (targetName.equals(checkTarget)
+                && checkDir.equals(getBaseDir())
+                && checkURL != null
+                && checkURL.equals(getProject().getSourceURL())) {
+                throw new ExecutionException("Recursive execution of "
+                    + "target \"" + targetName + "\" in "
+                    + "project \"" + checkURL + "\"");
+            }
+            checkFrame = checkFrame.getParent();
+        }
+    }
+
+    /**
+     * Initialize a library in this frame.
+     *
+     * @param libraryId the library's global identifier.
+     *
+     * @exception AntException if the library cannot be initialized.
+     */
+    protected void initializeLibrary(String libraryId)
+         throws AntException {
+        componentManager.initializeLibrary(libraryId);
+    }
+
 
     /**
      * Execute the given target's tasks. The target must be local to this
@@ -959,10 +1087,13 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @param targetName the name of the target within this frame that is to
      *      be executed.
-     * @exception ExecutionException if there is a problem executing tasks
+     * @exception AntException if there is a problem executing tasks
      */
     protected void executeTargetTasks(String targetName)
-         throws ExecutionException {
+         throws AntException {
+        checkRecursion(targetName);
+        currentTarget = targetName;
+
         Throwable failureCause = null;
         Target target = project.getTarget(targetName);
         String ifCondition = target.getIfCondition();
@@ -1000,51 +1131,104 @@ public class Frame implements DemuxOutputReceiver {
             throw ee;
         } finally {
             eventSupport.fireTargetFinished(target, failureCause);
+            currentTarget = null;
         }
+
     }
 
-
     /**
-     * Initialize the frame by executing the project level tasks if any
+     * Start the build. This is only called on the
+     * main frame of the build. All subordinate frames use runBuild to
+     * process sub builds.
      *
-     * @exception ExecutionException if the top level tasks of the frame
-     *      failed
+     * This method performs all global config tasks and then starts the
+     * build
+     *
+     * @param targets the targets to be evaluated in this build
+     *
+     * @exception AntException if there is a problem running the build.
      */
-    protected void initialize() throws ExecutionException {
-        configureServices();
-        setMagicProperties();
-        determineBaseDir();
+    public void startBuild(List targets) throws AntException {
+        eventSupport.fireBuildStarted(project);
 
-        try {        
+        Throwable buildFailureCause = null;
+        try {
             // load system ant lib
-            URL systemLibs 
+            URL systemLibs
                 = new URL(initConfig.getLibraryURL(), "syslibs/");
-            componentManager.loadLib(systemLibs.toString(), true, true);
-            
-            // execute any config tasks
-            executeTasks(config.getTasks());
-    
+            componentManager.loadLib(systemLibs, true);
+
+            executeTasks(config.getGlobalTasks());
+
             // now load other system libraries
             URL antLibs = new URL(initConfig.getLibraryURL(), "antlibs/");
-            componentManager.loadLib(antLibs.toString(), false, true);
-            
-            executeTasks(project.getTasks());
+            componentManager.loadLib(antLibs, false);
+
         } catch (MalformedURLException e) {
             throw new ExecutionException("Unable to initialize antlibs", e);
         }
+
+        try {
+            runBuild(targets);
+        } catch (RuntimeException e) {
+            buildFailureCause = e;
+            throw e;
+        } catch (AntException e) {
+            buildFailureCause = e;
+            throw e;
+        } finally {
+            eventSupport.fireBuildFinished(project, buildFailureCause);
+        }
+    }
+
+    /**
+     * Execute any config and project level tasks
+     *
+     * @exception AntException if the top level tasks of the frame
+     *      failed
+     */
+    private void runGlobalTasks() throws AntException {
+        executeTasks(config.getFrameTasks());
+        executeTasks(project.getTasks());
+    }
+
+    /**
+     * Set the base director for this frame's execution.
+     *
+     * @param baseDir the new base directory
+     *
+     * @exception AntException if the base directory cannot be set.
+     */
+    protected void setBaseDir(File baseDir) throws AntException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+
+        baseDir = fileUtils.normalize(baseDir.getAbsolutePath());
+        if (!baseDir.exists()) {
+            throw new ExecutionException("Basedir " + baseDir.getAbsolutePath()
+                + " does not exist");
+        }
+        if (!baseDir.isDirectory()) {
+            throw new ExecutionException("Basedir " + baseDir.getAbsolutePath()
+                + " is not a directory");
+        }
+        this.baseDir = baseDir;
+        setDataValue(MagicProperties.BASEDIR, baseDir.getPath(), false);
+        log("Project base dir set to: " + this.baseDir,
+            MessageLevel.MSG_VERBOSE);
     }
 
 
     /**
-     * Determine the base directory for each frame in the frame hierarchy
+     * Determine the base directory.
      *
-     * @exception ExecutionException if the base directories cannot be
+     * @exception AntException if the base directories cannot be
      *      determined
      */
-    private void determineBaseDir() throws ExecutionException {
+    private void determineBaseDir() throws AntException {
         if (isDataValueSet(MagicProperties.BASEDIR)) {
-            baseDir
-                 = new File(getDataValue(MagicProperties.BASEDIR).toString());
+            String baseDirString
+                = getDataValue(MagicProperties.BASEDIR).toString();
+            setBaseDir(new File(baseDirString));
         } else {
             URL projectURL = project.getSourceURL();
 
@@ -1054,17 +1238,16 @@ public class Frame implements DemuxOutputReceiver {
                 String base = project.getBase();
 
                 if (base == null) {
-                    baseDir = projectFileParent;
+                    setBaseDir(projectFileParent);
                 } else {
                     FileUtils fileUtils = FileUtils.newFileUtils();
 
-                    baseDir = fileUtils.resolveFile(projectFileParent, base);
+                    setBaseDir(fileUtils.resolveFile(projectFileParent, base));
                 }
             } else {
-                baseDir = new File(".");
+                setBaseDir(new File("."));
             }
         }
-        setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
     }
 
 
@@ -1072,13 +1255,13 @@ public class Frame implements DemuxOutputReceiver {
      * Configure the services that the frame makes available to its library
      * components
      *
-     * @exception ExecutionException if the services required by the core 
+     * @exception ExecutionException if the services required by the core
      * could not be configured.
      */
     private void configureServices() throws ExecutionException {
         // create services and make them available in our services map
         fileService = new CoreFileService(this);
-        componentManager = new ComponentManager(this);
+        componentManager = new ComponentManager(this, libManager);
         dataService = new CoreDataService(this,
             config.isUnsetPropertiesAllowed());
         execService = new CoreExecService(this);

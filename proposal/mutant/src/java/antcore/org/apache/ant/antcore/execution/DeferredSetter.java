@@ -53,7 +53,6 @@
  */
 package org.apache.ant.antcore.execution;
 import org.apache.ant.common.antlib.DeferredTask;
-import org.apache.ant.common.util.ExecutionException;
 
 /**
  * An implementation of the Setter interface for configuring instances of

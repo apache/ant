@@ -53,8 +53,6 @@
  */
 package org.apache.ant.common.antlib;
 
-import org.apache.ant.common.util.ExecutionException;
-
 /**
  * Convert between a string and a data type
  *
@@ -69,9 +67,9 @@ public interface Converter {
      * @param value The value to be converted
      * @param type the desired type of the converted object
      * @return the value of the converted object
-     * @exception ExecutionException if the conversion cannot be made
+     * @exception ConverterException if the conversion cannot be made
      */
-    Object convert(String value, Class type) throws ExecutionException;
+    Object convert(String value, Class type) throws ConverterException;
 
     /**
      * Initialise the converter. The converter may use the AntContext to
@@ -91,12 +89,12 @@ public interface Converter {
 
 
     /**
-     * This method allows a converter to indicate whether it can create 
+     * This method allows a converter to indicate whether it can create
      * the given type which is a sub-type of one of the converter's main
      * types indicated in getTypes. Most converters can return false here.
      *
      * @param subType the sub-type
-     * @return true if this converter can convert a string representation to 
+     * @return true if this converter can convert a string representation to
      *              the given subclass of one of its main class
      */
     boolean canConvertSubType(Class subType);

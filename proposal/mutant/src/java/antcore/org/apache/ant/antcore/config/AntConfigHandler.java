@@ -54,6 +54,7 @@
 package org.apache.ant.antcore.config;
 import org.apache.ant.antcore.xml.ElementHandler;
 import org.apache.ant.antcore.modelparser.BuildElementHandler;
+import org.apache.ant.common.model.BuildElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 
@@ -66,12 +67,18 @@ import org.xml.sax.SAXParseException;
 public class AntConfigHandler extends ElementHandler {
     /** The allowRemoteProject attribute name */
     public static final String REMOTE_PROJECT_ATTR = "allow-remote-project";
-    
+
     /** The allowRemoteLibrary attribute name */
     public static final String REMOTE_LIBRARY_ATTR = "allow-remote-library";
 
     /** The allowReportProject attribute name */
     public static final String UNSET_PROPS_ATTR = "allow-unset-properties";
+
+    /** The global tasks element */
+    public static final String GLOBAL_TASKS_ELEMENT = "global-tasks";
+
+    /** The per-frame tasks element */
+    public static final String PERFRAME_TASKS_ELEMENT = "frame-tasks";
 
     /** The list of allowed Attributes */
     public static final String[] ALLOWED_ATTRIBUTES
@@ -108,8 +115,8 @@ public class AntConfigHandler extends ElementHandler {
             allowUnsetProperties = getBooleanAttribute(UNSET_PROPS_ATTR);
         }
         config.allowUnsetProperties(allowUnsetProperties);
-    }        
-        
+    }
+
     /**
      * Start a new element in the ant config.
      *
@@ -123,17 +130,20 @@ public class AntConfigHandler extends ElementHandler {
                              Attributes attributes)
          throws SAXParseException {
 
-        // everything else is a task
+        // configs support two task collections as elements
         BuildElementHandler buildElementHandler = new BuildElementHandler();
         buildElementHandler.start(getParseContext(), getXMLReader(),
             this, getLocator(), attributes, getElementSource(),
             qualifiedName);
-        config.addTask(buildElementHandler.getBuildElement());
-//        try {
-//        } catch (ConfigException e) {
-//            throw new SAXParseException("Unable to process config",
-//                getLocator(), e);
-//        }
+        BuildElement element = buildElementHandler.getBuildElement();
+        if (element.getType().equals(GLOBAL_TASKS_ELEMENT)) {
+            config.addGlobalTasks(element);
+        } else if (element.getType().equals(PERFRAME_TASKS_ELEMENT)) {
+            config.addFrameTasks(element);
+        } else {
+            throw new SAXParseException("<antconfig> does not support the <"
+                + element.getType() + "> element", getLocator());
+        }
     }
 
     /**

@@ -54,7 +54,7 @@
 package org.apache.ant.common.service;
 
 import org.apache.ant.common.input.InputRequest;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Service interface for input management
@@ -67,8 +67,8 @@ public interface InputService {
      * Handle an input request
      *
      * @param request an input request
-     * @exception ExecutionException if the request cannot be handled
+     * @exception AntException if the request cannot be handled
      */
-    void handleInput(InputRequest request) throws ExecutionException;
+    void handleInput(InputRequest request) throws AntException;
 }
 

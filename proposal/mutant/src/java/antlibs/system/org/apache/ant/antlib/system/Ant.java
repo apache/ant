@@ -53,11 +53,18 @@
  */
 package org.apache.ant.antlib.system;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import org.apache.ant.common.model.Project;
+import org.apache.ant.common.service.BuildKey;
 import org.apache.ant.common.service.ExecService;
+import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.MagicProperties;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.FileUtils;
+import org.apache.ant.common.logger.DefaultLogger;
+import org.apache.ant.common.event.MessageLevel;
 
 /**
  * The Ant task - used to execute a different build file
@@ -71,7 +78,7 @@ public class Ant extends AntBase {
     /** the base directory to use for the run */
     private File baseDir;
     /** File to capture any output */
-    private File outputFile;
+    private String output;
 
 
     /**
@@ -97,19 +104,19 @@ public class Ant extends AntBase {
     /**
      * The output file for capturing the build output
      *
-     * @param outputFile the output file for capturing the build output
+     * @param output the output file for capturing the build output
      */
-    public void setOutput(File outputFile) {
-        this.outputFile = outputFile;
+    public void setOutput(String output) {
+        this.output = output;
     }
 
 
     /**
      * Run the sub-build
      *
-     * @exception ExecutionException if the build can't be run
+     * @exception AntException if the build can't be run
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         if (baseDir == null) {
             baseDir = getExecService().getBaseDir();
         }
@@ -130,10 +137,36 @@ public class Ant extends AntBase {
 
         ExecService execService = getExecService();
         Project model = execService.parseXMLBuildFile(antFile);
-        Object key = execService.setupBuild(model, getProperties());
+        BuildKey key = execService.setupBuild(model, getProperties(), true);
 
         setSubBuildKey(key);
+
+        if (output != null) {
+            FileService fileService
+                = (FileService) getCoreService(FileService.class);
+
+            File outfile = null;
+            if (baseDir != null) {
+                outfile = FileUtils.newFileUtils().resolveFile(baseDir, output);
+            } else {
+                outfile = fileService.resolveFile(output);
+            }
+            try {
+                PrintStream out
+                    = new PrintStream(new FileOutputStream(outfile));
+                DefaultLogger logger = new DefaultLogger();
+                logger.setMessageOutputLevel(MessageLevel.MSG_INFO);
+                logger.setOutputPrintStream(out);
+                logger.setErrorPrintStream(out);
+                execService.addBuildListener(key, logger);
+            } catch (IOException ex) {
+                log("Ant: Can't set output to " + output,
+                    MessageLevel.MSG_INFO);
+            }
+        }
+
         execService.runBuild(key, getTargets());
+        execService.releaseBuild(key);
     }
 }
 

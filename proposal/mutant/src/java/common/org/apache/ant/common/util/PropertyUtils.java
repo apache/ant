@@ -72,12 +72,12 @@ public class PropertyUtils {
      * @param value the string to be parsed
      * @param fragments the fragments parsed out of the string
      * @param propertyRefs the property refs to be replaced
-     * @exception ExecutionException if there is a problem parsing out the
+     * @exception GeneralException if there is a problem parsing out the
      *      values
      */
     public static void parsePropertyString(String value, List fragments,
                                            List propertyRefs)
-         throws ExecutionException {
+         throws GeneralException {
         int prev = 0;
         int pos;
         while ((pos = value.indexOf("$", prev)) >= 0) {
@@ -94,7 +94,7 @@ public class PropertyUtils {
             } else {
                 int endName = value.indexOf('}', pos);
                 if (endName < 0) {
-                    throw new ExecutionException("Syntax error in property: "
+                    throw new GeneralException("Syntax error in property: "
                          + value);
                 }
                 String propertyName = value.substring(pos + 2, endName);

@@ -53,7 +53,7 @@
  */
 package org.apache.ant.common.antlib;
 import org.apache.ant.common.event.MessageLevel;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Abstract implementation of the Task interface
@@ -90,9 +90,9 @@ public abstract class AbstractTask extends AbstractComponent implements Task {
      * directly or indirectly.
      *
      * @param line The line of content produce by the task
-     * @exception ExecutionException if the output cannot be handled.
+     * @exception AntException if the output cannot be handled.
      */
-    public void handleSystemOut(String line) throws ExecutionException {
+    public void handleSystemOut(String line) throws AntException {
         // default behaviout is to log at INFO level
         log(line, MessageLevel.MSG_INFO);
     }
@@ -104,9 +104,9 @@ public abstract class AbstractTask extends AbstractComponent implements Task {
      * System.err, directly or indirectly.
      *
      * @param line The line of error info produce by the task
-     * @exception ExecutionException if the output cannot be handled.
+     * @exception AntException if the output cannot be handled.
      */
-    public void handleSystemErr(String line) throws ExecutionException {
+    public void handleSystemErr(String line) throws AntException {
         // default behaviout is to log at WARN level
         log(line, MessageLevel.MSG_WARN);
     }

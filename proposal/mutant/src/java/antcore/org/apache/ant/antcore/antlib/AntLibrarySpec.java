@@ -57,7 +57,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.common.util.ConfigException;
 
 /**
  * This class represents the specification of an Ant library. It is merely
@@ -291,7 +290,7 @@ public class AntLibrarySpec {
     public void addAspect(String className) {
         aspectClassNames.add(className);
     }
-    
+
     /**
      * Indicates if this library requires Ant's XML parser
      *
@@ -308,13 +307,13 @@ public class AntLibrarySpec {
      * @param classname the name of the class implementing the element
      * @param definitionTypeName the name of the definition type. This is
      *      converted to its symbolic value
-     * @exception ConfigException if the definition has already been defined
+     * @exception AntLibException if the definition has already been defined
      */
     public void addDefinition(String definitionTypeName, String name,
                               String classname)
-         throws ConfigException {
+         throws AntLibException {
         if (definitions.containsKey(name)) {
-            throw new ConfigException("More than one definition "
+            throw new AntLibException("More than one definition "
                  + "in library for " + name);
         }
         int definitionType = 0;
@@ -324,7 +323,7 @@ public class AntLibrarySpec {
         } else if (definitionTypeName.equals("taskdef")) {
             definitionType = AntLibrary.TASKDEF;
         } else {
-            throw new ConfigException("Unknown type of definition "
+            throw new AntLibException("Unknown type of definition "
                  + definitionTypeName);
         }
         definitions.put(name,

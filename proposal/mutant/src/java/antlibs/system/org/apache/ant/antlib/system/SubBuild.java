@@ -57,9 +57,10 @@ import java.util.Map;
 import org.apache.ant.common.antlib.AbstractComponent;
 import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.ValidationException;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Common Base class all tasks that can pass references and property overrides
@@ -127,15 +128,15 @@ public abstract class SubBuild extends AbstractTask {
         /**
          * Validate this data type instance
          *
-         * @exception ExecutionException if either attribute has not been set
+         * @exception ValidationException if either attribute has not been set
          */
-        public void validateComponent() throws ExecutionException {
+        public void validateComponent() throws ValidationException {
             if (name == null) {
-                throw new ExecutionException("\"name\" attribute of "
+                throw new ValidationException("\"name\" attribute of "
                      + "<property> must be supplied");
             }
             if (value == null) {
-                throw new ExecutionException("\"value\" attribute of "
+                throw new ValidationException("\"value\" attribute of "
                      + "<property> must be supplied");
             }
         }
@@ -152,7 +153,7 @@ public abstract class SubBuild extends AbstractTask {
         /** The id of the reference to be passed */
         private String refId;
         /** The id to be used in the sub-build for this reference */
-        private String toId;
+        private String toRefId;
 
 
         /**
@@ -170,8 +171,8 @@ public abstract class SubBuild extends AbstractTask {
          *
          * @return the toId value
          */
-        public String getToId() {
-            return toId;
+        public String getToRefId() {
+            return toRefId;
         }
 
 
@@ -188,22 +189,22 @@ public abstract class SubBuild extends AbstractTask {
         /**
          * Sets the toId of the Reference
          *
-         * @param toId the new toId value
+         * @param toRefId the new toId value
          */
-        public void setToId(String toId) {
-            this.toId = toId;
+        public void setToRefId(String toRefId) {
+            this.toRefId = toRefId;
         }
 
 
         /**
          * Validate this data type instance
          *
-         * @exception ExecutionException if the refid attribute has not been
+         * @exception ValidationException if the refid attribute has not been
          *      set
          */
-        public void validateComponent() throws ExecutionException {
+        public void validateComponent() throws ValidationException {
             if (refId == null) {
-                throw new ExecutionException("\"refid\" attribute of "
+                throw new ValidationException("\"refid\" attribute of "
                      + "<reference> must be supplied");
             }
         }
@@ -234,17 +235,17 @@ public abstract class SubBuild extends AbstractTask {
      * Add a reference to be passed
      *
      * @param reference the descriptor of the reference to be passed
-     * @exception ExecutionException if the reference does not reference a
+     * @exception AntException if the reference does not reference a
      *      valid object
      */
-    public void addReference(Reference reference) throws ExecutionException {
+    public void addReference(Reference reference) throws AntException {
         String refId = reference.getRefId();
 
         if (!dataService.isDataValueSet(refId)) {
-            throw new ExecutionException("RefId \"" + refId + "\" is not set");
+            throw new ValidationException("RefId \"" + refId + "\" is not set");
         }
         Object value = dataService.getDataValue(refId);
-        String toId = reference.getToId();
+        String toId = reference.getToRefId();
 
         if (toId == null) {
             toId = refId;
@@ -290,10 +291,10 @@ public abstract class SubBuild extends AbstractTask {
      * @param context core's context
      * @param componentType the component type of this component (i.e its
      *      defined name in the build file)
-     * @exception ExecutionException if we can't access the data service
+     * @exception AntException if we can't access the data service
      */
     public void init(AntContext context, String componentType)
-         throws ExecutionException {
+         throws AntException {
         super.init(context, componentType);
         dataService = (DataService) getCoreService(DataService.class);
         execService = (ExecService) getCoreService(ExecService.class);

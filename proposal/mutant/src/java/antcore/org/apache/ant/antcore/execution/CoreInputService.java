@@ -53,7 +53,6 @@
  */
 package org.apache.ant.antcore.execution;
 import org.apache.ant.common.service.InputService;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.input.InputRequest;
 
 /**

@@ -58,8 +58,9 @@ import java.net.URL;
 
 import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.ValidationException;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.init.InitUtils;
 
@@ -91,9 +92,9 @@ public class LibPath extends AbstractTask {
      * Sets the URL of the library to be loaded
      *
      * @param url the URL from which the library is to be loaded
-     * @exception ExecutionException if the URL cannot be set
+     * @exception ValidationException if the URL cannot be set
      */
-    public void setURL(URL url) throws ExecutionException {
+    public void setURL(URL url) throws ValidationException {
         checkNullURL();
         this.url = url;
     }
@@ -102,14 +103,14 @@ public class LibPath extends AbstractTask {
      * Set the file from which the library should be loaded.
      *
      * @param file the file from which the library should be loaded
-     * @exception ExecutionException if the file attribute cannot be set
+     * @exception ValidationException if the file attribute cannot be set
      */
-    public void setFile(File file) throws ExecutionException {
+    public void setFile(File file) throws ValidationException {
         checkNullURL();
         try {
             this.url = InitUtils.getFileURL(file);
         } catch (MalformedURLException e) {
-            throw new ExecutionException(e);
+            throw new ValidationException(e);
         }
     }
 
@@ -117,29 +118,29 @@ public class LibPath extends AbstractTask {
      * Set the dir in which to search for AntLibraries.
      *
      * @param dir the dir from which all Ant Libraries found will be loaded.
-     * @exception ExecutionException if the dir attribute cannot be set
+     * @exception ValidationException if the dir attribute cannot be set
      */
-    public void setDir(File dir) throws ExecutionException {
+    public void setDir(File dir) throws ValidationException {
         checkNullURL();
         try {
             this.url = InitUtils.getFileURL(dir);
         } catch (MalformedURLException e) {
-            throw new ExecutionException(e);
+            throw new ValidationException(e);
         }
     }
 
     /**
      * Validate this task is configured correctly
      *
-     * @exception ExecutionException if the task is not configured correctly
+     * @exception ValidationException if the task is not configured correctly
      */
-    public void validateComponent() throws ExecutionException {
+    public void validateComponent() throws ValidationException {
         if (libraryId == null) {
-            throw new ExecutionException("You must specify the id of the"
+            throw new ValidationException("You must specify the id of the"
                  + "library for which you are providing additional classpaths");
         }
         if (url == null) {
-            throw new ExecutionException("You must provide an additional "
+            throw new ValidationException("You must provide an additional "
                  + "classpath using one of the file, dir or url attributes");
         }
     }
@@ -147,15 +148,15 @@ public class LibPath extends AbstractTask {
     /**
      * Add the libpath to the set of paths associated with the library
      *
-     * @exception ExecutionException if the library path cannot be addded to
+     * @exception AntException if the library path cannot be addded to
      *      the library
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws AntException {
         AntContext context = getAntContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
-        log("Adding lib path " + url + " for " + libraryId, 
-            MessageLevel.MSG_DEBUG);    
+        log("Adding lib path " + url + " for " + libraryId,
+            MessageLevel.MSG_DEBUG);
         componentService.addLibPath(libraryId, url);
     }
 
@@ -163,12 +164,13 @@ public class LibPath extends AbstractTask {
      * Check if any of the location specifying attributes have already been
      * set.
      *
-     * @exception ExecutionException if the search URL has already been set
+     * @exception ValidationException if the search URL has already been set
      */
-    private void checkNullURL() throws ExecutionException {
+    private void checkNullURL() throws ValidationException {
         if (url != null) {
-            throw new ExecutionException("Location of library has already been "
-                 + "set. Please use only one of file, dir or url attributes");
+            throw new ValidationException("Location of library has already "
+                + "been set. Please use only one of file, dir or url "
+                + "attributes");
         }
     }
 }

@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * A TaskContainer is an object which can contain and manage ExecutionTasks.
@@ -65,8 +65,8 @@ public interface TaskContainer {
      * Add a task to the container.
      *
      * @param task the task tobe added
-     * @exception ExecutionException if the container cannot add the task
+     * @exception AntException if the container cannot add the task
      */
-    void addNestedTask(Task task) throws ExecutionException;
+    void addNestedTask(Task task) throws AntException;
 }
 

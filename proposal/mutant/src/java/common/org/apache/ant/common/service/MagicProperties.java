@@ -68,5 +68,17 @@ public class MagicProperties {
 
     /** This property provides the location of Ant's home directory */
     public static final String ANT_HOME = "ant.home";
+    
+    /** The file containing the current project model, if any */
+    public static final String ANT_FILE = "ant.file";
+
+    /** The name of the project */
+    public static final String ANT_PROJECT_NAME = "ant.project.name";
+    
+    /** The version of Ant */
+    public static final String ANT_VERSION = "ant.version";
+    
+    /** The version of java detected by Ant. */
+    public static final String ANT_JAVA_VERSION = "ant.java.version";
 }
 

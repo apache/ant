@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * An execution component is a component from an AntLibrary which is used in
@@ -68,20 +68,20 @@ public interface ExecutionComponent {
      *
      * @param context the Component's context
      * @param componentType the type of the component
-     * @exception ExecutionException if the component cannot be initialised
+     * @exception AntException if the component cannot be initialised
      */
     void init(AntContext context, String componentType)
-         throws ExecutionException;
+         throws AntException;
 
     /**
      * Validate the component. This is called after the element has been
      * configured from its build model. The element may perform validation
      * of its configuration
      *
-     * @exception ExecutionException if the component is not validly
+     * @exception ValidationException if the component is not validly
      *      configured
      */
-    void validateComponent() throws ExecutionException;
+    void validateComponent() throws ValidationException;
 
     /**
      * Get the AntContext associated with this component

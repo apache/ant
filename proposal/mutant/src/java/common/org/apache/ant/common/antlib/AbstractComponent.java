@@ -53,7 +53,7 @@
  */
 package org.apache.ant.common.antlib;
 
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Abstract implementation of the ExecutionComponent
@@ -96,10 +96,10 @@ public abstract class AbstractComponent implements ExecutionComponent {
      *
      * @param context the component's context
      * @param componentType the type of the component
-     * @exception ExecutionException if initialisation fails
+     * @exception AntException if initialisation fails
      */
     public void init(AntContext context, String componentType)
-         throws ExecutionException {
+         throws AntException {
         this.context = context;
         this.componentType = componentType;
     }
@@ -109,9 +109,9 @@ public abstract class AbstractComponent implements ExecutionComponent {
      * configured from its build model. The element may perform validation
      * of its configuration
      *
-     * @exception ExecutionException if validation fails
+     * @exception ValidationException if validation fails
      */
-    public void validateComponent() throws ExecutionException {
+    public void validateComponent() throws ValidationException {
         // no validation by default
     }
 
@@ -121,11 +121,11 @@ public abstract class AbstractComponent implements ExecutionComponent {
      * @param serviceClass the required interface of which an instance is
      *      required
      * @return the core's instance of the requested service
-     * @exception ExecutionException if the core does not support the
+     * @exception AntException if the core does not support the
      *      requested service
      */
     protected Object getCoreService(Class serviceClass)
-         throws ExecutionException {
+         throws AntException {
         return context.getCoreService(serviceClass);
     }
 

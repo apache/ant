@@ -59,7 +59,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.ant.common.antlib.Converter;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * A reflector is used to set attributes and add nested elements to an
@@ -145,12 +145,12 @@ public class Reflector implements Setter {
      * @param obj the object on which the value is being set
      * @param attributeName the name of the attribute
      * @param value the string represenation of the attribute's value
-     * @exception ExecutionException if the object does not support the
+     * @exception AntException if the object does not support the
      *      attribute or the object has a problem setting the value
      */
     public void setAttribute(Object obj, String attributeName,
                              String value)
-         throws ExecutionException {
+         throws AntException {
         String name = attributeName.toLowerCase();
         AttributeSetter as
              = (AttributeSetter) attributeSetters.get(name);
@@ -338,14 +338,14 @@ public class Reflector implements Setter {
      * Add an attribute setter for the given property. The setter will only
      * be added if it does not override a higher priorty setter
      *
-     * @param attributeName the name of the attribute that the setter operates 
+     * @param attributeName the name of the attribute that the setter operates
      *        upon.
      * @param setter the AttribnuteSetter instance to use.
      */
-    private void addAttributeSetter(String attributeName, 
+    private void addAttributeSetter(String attributeName,
                                     AttributeSetter setter) {
         String name = attributeName.toLowerCase();
-        AttributeSetter currentSetter 
+        AttributeSetter currentSetter
             = (AttributeSetter) attributeSetters.get(name);
         if (currentSetter != null) {
             // there is a setter, is it lower down in the class hierarchy
@@ -359,11 +359,11 @@ public class Reflector implements Setter {
                     return;
                 }
             }
-        }                                         
+        }
         attributeSetters.put(name, setter);
     }
-    
-    
+
+
     /**
      * Determine if the class associated with this reflector supports a
      * particular nested element
@@ -380,13 +380,13 @@ public class Reflector implements Setter {
      * Add a method to the reflector for setting an attribute value
      *
      * @param m the method, obtained by introspection.
-     * @param depth the depth of this method's declaration in the class 
+     * @param depth the depth of this method's declaration in the class
      *        hierarchy
      * @param propertyName the property name the method will set.
      * @param converters A map of converter classes used to convert strings
      *      to different types.
      */
-    public void addAttributeMethod(Method m, int depth, 
+    public void addAttributeMethod(Method m, int depth,
                                    String propertyName, Map converters) {
         Class type = m.getParameterTypes()[0];
 
@@ -471,7 +471,7 @@ public class Reflector implements Setter {
      * Add an attribute setter with an associated converter
      *
      * @param m the attribute setter method
-     * @param depth the depth of this method's declaration in the class 
+     * @param depth the depth of this method's declaration in the class
      *        hierarchy
      * @param propertyName the name of the attribute this method supports
      * @param converter the converter to be used to construct the value
@@ -479,7 +479,7 @@ public class Reflector implements Setter {
      */
     private void addConvertingSetter(Method m, int depth,
                                      String propertyName, Converter converter) {
-        addAttributeSetter(propertyName, 
+        addAttributeSetter(propertyName,
             new AttributeSetter(m, depth, converter));
     }
 }

@@ -63,7 +63,7 @@ import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.model.ModelElement;
 import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.event.MessageLevel;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * BuildEventSupport is used by classes which which to send build events to
@@ -239,11 +239,11 @@ public class BuildEventSupport implements DemuxOutputReceiver {
                     task.handleSystemOut(line);
                 }
                 return;
-            } catch (ExecutionException e) {
-                // ignore just log normally
+            } catch (AntException e) {
+                // ignore just log as a non-task message
             }
         }
-        fireMessageLogged(this, line, 
+        fireMessageLogged(this, line,
             isError ? MessageLevel.MSG_ERR : MessageLevel.MSG_INFO);
     }
 }

@@ -90,16 +90,16 @@ public class FileUtils {
      * @param file the "reference" file for relative paths. This instance
      *      must be an absolute file and must not contain &quot;./&quot; or
      *      &quot;../&quot; sequences (same for \ instead of /). If it is
-     *      null, this call is equivalent to 
+     *      null, this call is equivalent to
      *      <code>new java.io.File(filename)</code>.
      * @param filename the filename to be resolved
      * @return an absolute file that doesn't contain &quot;./&quot; or
      *      &quot;../&quot; sequences and uses the correct separator for the
      *      current platform.
-     * @exception ExecutionException if the file cannot be resolved
+     * @exception GeneralException if the file cannot be resolved
      */
     public File resolveFile(File file, String filename)
-         throws ExecutionException {
+         throws GeneralException {
         String platformFilename = filename.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
 
@@ -126,7 +126,7 @@ public class FileUtils {
                     String msg = "The file or path you specified ("
                          + filename + ") is invalid relative to "
                          + file.getPath();
-                    throw new ExecutionException(msg);
+                    throw new GeneralException(msg);
                 }
             } else if (part.equals(".")) {
                 // Do nothing here
@@ -153,11 +153,11 @@ public class FileUtils {
      *
      * @param path the path to be normalized
      * @return the normalized path
-     * @exception ExecutionException if there is a problem with the path
+     * @exception GeneralException if there is a problem with the path
      * @throws NullPointerException if the file path is equal to null.
      */
     public File normalize(String path)
-         throws NullPointerException, ExecutionException {
+         throws NullPointerException, GeneralException {
 
         String platformPath = path.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
@@ -168,7 +168,7 @@ public class FileUtils {
             Character.isLetter(platformPath.charAt(0)) &&
             platformPath.charAt(1) == ':')) {
             String msg = path + " is not an absolute path";
-            throw new ExecutionException(msg);
+            throw new GeneralException(msg);
         }
 
         boolean dosWithDrive = false;
@@ -223,7 +223,7 @@ public class FileUtils {
                 continue;
             } else if ("..".equals(thisToken)) {
                 if (s.size() < 2) {
-                    throw new ExecutionException("Cannot resolve path "
+                    throw new GeneralException("Cannot resolve path "
                          + path);
                 } else {
                     s.pop();

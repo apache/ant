@@ -56,7 +56,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.ant.common.antlib.Converter;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * AttributeSetters are created at introspection time for each
@@ -69,25 +69,25 @@ import org.apache.ant.common.util.ExecutionException;
 public class AttributeSetter {
     /** The method that will perform the setting */
     private Method method;
-    
-    /** 
-     * A converter to convert the string value to a value to be given to 
-     * the setter method 
-     */ 
+
+    /**
+     * A converter to convert the string value to a value to be given to
+     * the setter method
+     */
     private Converter converter;
-    
+
     /**
      * A constructor used to create the string value to an object to be used
-     * by the setter 
+     * by the setter
      */
     private Constructor valueConstructor;
-    
+
     /** The depth of the setter in the class hierarchy */
     private int depth;
 
     /**
-     * Create a setter which just uses string values 
-     * 
+     * Create a setter which just uses string values
+     *
      * @param method the method to be invoked.
      * @param depth the depth of this method declaraion in the class hierarchy.
      */
@@ -97,8 +97,8 @@ public class AttributeSetter {
     }
 
     /**
-     * Create a setter which just uses string values 
-     * 
+     * Create a setter which just uses string values
+     *
      * @param method the method to be invoked.
      * @param depth the depth of this method declaraion in the class hierarchy.
      * @param converter a converter to convert string values into instances of
@@ -110,19 +110,19 @@ public class AttributeSetter {
     }
 
     /**
-     * Create a setter which just uses string values 
-     * 
+     * Create a setter which just uses string values
+     *
      * @param method the method to be invoked.
      * @param depth the depth of this method declaraion in the class hierarchy.
-     * @param valueConstructor an object constructor used to convert string 
+     * @param valueConstructor an object constructor used to convert string
      *        values into instances of the type expected by the method.
      */
-    public AttributeSetter(Method method, int depth, 
+    public AttributeSetter(Method method, int depth,
                            Constructor valueConstructor) {
         this(method, depth);
         this.valueConstructor = valueConstructor;
     }
-    
+
     /**
      * Set the attribute value on an object
      *
@@ -131,17 +131,17 @@ public class AttributeSetter {
      * @exception InvocationTargetException if the method cannot be
      *      invoked
      * @exception IllegalAccessException if the method cannot be invoked
-     * @exception ExecutionException if the conversion of the value
+     * @exception AntException if the conversion of the value
      *      fails
      */
     void set(Object obj, String stringValue)
          throws InvocationTargetException, IllegalAccessException,
-        ExecutionException {
-        
+        AntException {
+
         Object value = null;
         if (converter != null) {
             Class type = getType();
-            value = converter.convert(stringValue, type);  
+            value = converter.convert(stringValue, type);
         } else if (valueConstructor != null) {
             try {
                 value = valueConstructor.newInstance(new String[]{stringValue});
@@ -151,19 +151,19 @@ public class AttributeSetter {
         } else {
             value = stringValue;
         }
-        
+
         method.invoke(obj, new Object[]{value});
     }
-    
+
     /**
-     * Get the declaration depth of this setter. 
+     * Get the declaration depth of this setter.
      *
      * @return the attribute setter's declaration depth.
      */
     public int getDepth() {
         return depth;
     }
-    
+
     /**
      * Get the type expected by this setter's method
      *

@@ -57,8 +57,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.ant.common.service.DataService;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.PropertyUtils;
+import org.apache.ant.common.util.AntException;
 
 /**
  * This is the core's implementation of the DataService service interface.
@@ -156,10 +156,10 @@ public class CoreDataService implements DataService {
      *
      * @param value the string to be scanned for property references.
      * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
+     * @exception AntException if any of the properties do not exist
      */
     public String replacePropertyRefs(String value)
-         throws ExecutionException {
+         throws AntException {
         if (value == null) {
             return null;
         }
@@ -199,10 +199,10 @@ public class CoreDataService implements DataService {
      * @param value the string to be scanned for property references.
      * @param replacementValues the collection of replacement values
      * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
+     * @exception AntException if any of the properties do not exist
      */
     public String replacePropertyRefs(String value, Map replacementValues)
-         throws ExecutionException {
+         throws AntException {
         if (value == null) {
             return null;
         }

@@ -53,7 +53,7 @@
  */
 package org.apache.ant.common.service;
 import org.apache.ant.common.event.BuildListener;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Core service to manage receiving of events by components within Ant.
@@ -66,16 +66,16 @@ public interface EventService {
      * Add a build listener to the current frame
      *
      * @param listener the lister which will receive build events
-     * @exception ExecutionException if the listener cannot be added
+     * @exception AntException if the listener cannot be added
      */
-    void addBuildListener(BuildListener listener) throws ExecutionException;
+    void addBuildListener(BuildListener listener) throws AntException;
 
     /**
      * Remove a listener from the current frame
      *
      * @param listener the listener to be removed
-     * @exception ExecutionException if the listener could not be removed
+     * @exception AntException if the listener could not be removed
      */
-    void removeBuildListener(BuildListener listener) throws ExecutionException;
+    void removeBuildListener(BuildListener listener) throws AntException;
 }
 

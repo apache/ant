@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Standard Ant Library Factory
@@ -74,11 +74,11 @@ public class StandardLibFactory implements AntLibFactory {
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the task
+     * @exception AntException if there is a problem creating the task
      */
     public Object createComponent(Class componentClass, String localName)
          throws InstantiationException, IllegalAccessException,
-        ExecutionException {
+        AntException {
         return componentClass.newInstance();
     }
 
@@ -86,9 +86,9 @@ public class StandardLibFactory implements AntLibFactory {
      * Initilaise the factory
      *
      * @param context the factory's context
-     * @exception ExecutionException if the factory cannot be initialized
+     * @exception AntException if the factory cannot be initialized
      */
-    public void init(AntContext context) throws ExecutionException {
+    public void init(AntContext context) throws AntException {
         this.context = context;
     }
 
@@ -100,12 +100,12 @@ public class StandardLibFactory implements AntLibFactory {
      * @return a instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the
+     * @exception AntException if there is a problem creating the
      *      converter
      */
     public Object createInstance(Class requiredClass)
          throws InstantiationException, IllegalAccessException,
-        ExecutionException {
+        AntException {
         return requiredClass.newInstance();
     }
 
@@ -114,11 +114,11 @@ public class StandardLibFactory implements AntLibFactory {
      * create method.
      *
      * @param createdElement the element that the component created
-     * @exception ExecutionException if there is a problem registering the
+     * @exception AntException if there is a problem registering the
      *      element
      */
     public void registerCreatedElement(Object createdElement)
-         throws ExecutionException {
+         throws AntException {
         // do nothing
     }
 

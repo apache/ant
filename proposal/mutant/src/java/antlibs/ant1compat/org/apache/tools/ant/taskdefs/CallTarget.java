@@ -60,7 +60,7 @@ import org.apache.ant.antlib.system.AntCall;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -104,7 +104,7 @@ public class CallTarget extends Task {
             AntLibFactory factory = getProject().getFactory();
             antCall = (AntCall) componentService.createComponent("ant.system",
                 "antcall");
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -120,7 +120,7 @@ public class CallTarget extends Task {
         }
         try {
             antCall.execute();
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -145,7 +145,7 @@ public class CallTarget extends Task {
     public void addReference(AntBase.Reference r) {
         try {
             antCall.addReference(r);
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -154,11 +154,11 @@ public class CallTarget extends Task {
      * Gets the componentService
      *
      * @return the componentService instance provided by the core
-     * @exception ExecutionException if the service is not available.
+     * @exception AntException if the service is not available.
      */
-    private ComponentService getComponentService() throws ExecutionException {
+    private ComponentService getComponentService() throws AntException {
         AntContext context = getAntContext();
-        return 
+        return
             (ComponentService) context.getCoreService(ComponentService.class);
     }
 }

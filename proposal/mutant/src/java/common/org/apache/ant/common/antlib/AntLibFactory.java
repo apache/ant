@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * An Ant Library Factory is a class is used to create instances of the
@@ -68,9 +68,9 @@ public interface AntLibFactory {
      * Initialise the factory
      *
      * @param context the factory's context
-     * @exception ExecutionException if the factory cannot be initialized
+     * @exception AntException if the factory cannot be initialized
      */
-    void init(AntContext context) throws ExecutionException;
+    void init(AntContext context) throws AntException;
 
     /**
      * Create an instance of the given component class
@@ -81,11 +81,11 @@ public interface AntLibFactory {
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the task
+     * @exception AntException if there is a problem creating the task
      */
     Object createComponent(Class componentClass, String localName)
          throws InstantiationException, IllegalAccessException,
-        ExecutionException;
+        AntException;
 
     /**
      * Create an instance of the given class
@@ -95,12 +95,12 @@ public interface AntLibFactory {
      * @return a instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the
+     * @exception AntException if there is a problem creating the
      *      converter
      */
     Object createInstance(Class requiredClass)
          throws InstantiationException, IllegalAccessException,
-        ExecutionException;
+        AntException;
 
 
     /**
@@ -108,11 +108,11 @@ public interface AntLibFactory {
      * create method.
      *
      * @param createdElement the element that the component created
-     * @exception ExecutionException if there is a problem registering the
+     * @exception AntException if there is a problem registering the
      *      element
      */
     void registerCreatedElement(Object createdElement)
-         throws ExecutionException;
+         throws AntException;
 
 }
 

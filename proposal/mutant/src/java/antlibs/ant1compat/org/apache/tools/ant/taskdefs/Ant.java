@@ -60,7 +60,7 @@ import org.apache.ant.antlib.system.AntBase;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.service.ComponentService;
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -147,7 +147,7 @@ public class Ant extends Task {
             AntLibFactory factory = getProject().getFactory();
             realAnt = (org.apache.ant.antlib.system.Ant)
                 componentService.createComponent("ant.system", "ant");
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -156,7 +156,7 @@ public class Ant extends Task {
     /**
      * Do the execution.
      *
-     * @exception BuildException if the execution of the sub-build has a 
+     * @exception BuildException if the execution of the sub-build has a
      *            problem
      */
     public void execute() throws BuildException {
@@ -169,7 +169,7 @@ public class Ant extends Task {
         }
         try {
             realAnt.execute();
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -194,7 +194,7 @@ public class Ant extends Task {
     public void addReference(AntBase.Reference r) {
         try {
             realAnt.addReference(r);
-        } catch (ExecutionException e) {
+        } catch (AntException e) {
             throw new BuildException(e);
         }
     }
@@ -203,11 +203,11 @@ public class Ant extends Task {
      * Gets the componentService
      *
      * @return the componentService instance provided by the core
-     * @exception ExecutionException if the service is not available.
+     * @exception AntException if the service is not available.
      */
-    private ComponentService getComponentService() throws ExecutionException {
+    private ComponentService getComponentService() throws AntException {
         AntContext context = getAntContext();
-        return (ComponentService) 
+        return (ComponentService)
             context.getCoreService(ComponentService.class);
     }
 

@@ -54,7 +54,7 @@
 package org.apache.ant.common.service;
 import java.util.Map;
 
-import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.AntException;
 
 /**
  * Service interface for Data value manipulation operations provided by the
@@ -70,9 +70,9 @@ public interface DataService {
      * @param valueName the name of the data value
      * @return the current object associated with the name or null if no
      *      value is currently associated with the name
-     * @exception ExecutionException if the value cannot be retrieved.
+     * @exception AntException if the value cannot be retrieved.
      */
-    Object getDataValue(String valueName) throws ExecutionException;
+    Object getDataValue(String valueName) throws AntException;
 
     /**
      * Indicate if a data value has been set
@@ -80,10 +80,10 @@ public interface DataService {
      * @param name the name of the data value - may contain reference
      *      delimiters
      * @return true if the value exists
-     * @exception ExecutionException if the containing frame for the value
+     * @exception AntException if the containing frame for the value
      *      does not exist
      */
-    boolean isDataValueSet(String name) throws ExecutionException;
+    boolean isDataValueSet(String name) throws AntException;
 
     /**
      * Set a data value. If an existing data value exists, associated with
@@ -91,19 +91,19 @@ public interface DataService {
      *
      * @param valueName the name of the data value
      * @param value the value to be associated with the name
-     * @exception ExecutionException if the value cannot be set
+     * @exception AntException if the value cannot be set
      */
-    void setDataValue(String valueName, Object value) throws ExecutionException;
+    void setDataValue(String valueName, Object value) throws AntException;
 
     /**
      * Set a data value which can be overwritten
      *
      * @param valueName the name of the data value
      * @param value the value to be associated with the name
-     * @exception ExecutionException if the value cannot be set
+     * @exception AntException if the value cannot be set
      */
     void setMutableDataValue(String valueName, Object value)
-         throws ExecutionException;
+         throws AntException;
 
     /**
      * Replace ${} style constructions in the given value with the string
@@ -111,9 +111,9 @@ public interface DataService {
      *
      * @param value the string to be scanned for property references.
      * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
+     * @exception AntException if any of the properties do not exist
      */
-    String replacePropertyRefs(String value) throws ExecutionException;
+    String replacePropertyRefs(String value) throws AntException;
 
     /**
      * Replace ${} style constructions in the given value with the string
@@ -123,10 +123,10 @@ public interface DataService {
      * @param value the string to be scanned for property references.
      * @param replacementValues the collection of replacement values
      * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
+     * @exception AntException if any of the properties do not exist
      */
     String replacePropertyRefs(String value, Map replacementValues)
-         throws ExecutionException;
+         throws AntException;
 
     /**
      * Get all the properties from the frame and any references frames. This

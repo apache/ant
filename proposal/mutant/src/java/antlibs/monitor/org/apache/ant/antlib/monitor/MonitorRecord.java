@@ -51,41 +51,44 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.cli;
+package org.apache.ant.antlib.monitor;
 
+import org.apache.ant.common.antlib.AbstractAspect;
+import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.model.BuildElement;
+import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.event.MessageLevel;
+import java.util.Date;
 import java.io.PrintStream;
-import org.apache.ant.common.event.BuildListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
- * Interface used by Ant to log the build output. A build logger is a build
- * listener which has the 'right' to send output to the ant log, which is
- * usually System.out unles redirected by the -logfile option.
+ * A record of some performance values at a particular time
  *
  * @author Conor MacNeill
- * @created 15 January 2002
  */
-public interface BuildLogger extends BuildListener {
-    /**
-     * Set the msgOutputLevel this logger is to respond to. Only messages
-     * with a message level lower than or equal to the given level are
-     * output to the log.
-     *
-     * @param level the logging level for the logger.
-     */
-    void setMessageOutputLevel(int level);
+public class MonitorRecord {
+    private String recordName;
+    private long startMillis;
+    private long startMemory;
 
-    /**
-     * Set the output stream to which this logger is to send its output.
-     *
-     * @param output the output stream for the logger.
-     */
-    void setOutputPrintStream(PrintStream output);
+    private long getMemoryUsage() {
+        Runtime rt = Runtime.getRuntime();
+        return rt.totalMemory() - rt.freeMemory();
+    }
 
-    /**
-     * Set the output stream to which this logger is to send error messages.
-     *
-     * @param err the error stream for the logger.
-     */
-    void setErrorPrintStream(PrintStream err);
+    public MonitorRecord(String recordName) {
+        this.recordName = recordName;
+        startMillis = System.currentTimeMillis();
+        startMemory = getMemoryUsage();
+    }
+
+    public void print(PrintStream stream) {
+        long timeDiff = System.currentTimeMillis() - startMillis;
+        long memDiff = getMemoryUsage() - startMemory;
+        stream.println(recordName + " took " + timeDiff
+            + " milliseconds and memory used changed by " + memDiff);
+    }
 }
-

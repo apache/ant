@@ -62,7 +62,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.DeferredTask;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.antlib.AntContext;
 
 /**
@@ -113,9 +112,9 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
     /**
      * Execute the script
      *
-     * @exception ExecutionException if tghe script execution fails
+     * @exception ScriptException if tghe script execution fails
      */
-    public void execute() throws ExecutionException {
+    public void execute() throws ScriptException {
         String language = factory.getScriptLanguage(scriptName);
         String script = factory.getScript(scriptName);
 
@@ -123,10 +122,10 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
             BSFManager manager = new BSFManager();
             manager.declareBean("self", this, getClass());
             manager.declareBean("context", getAntContext(), AntContext.class);
-            
+
             // execute the script
             BSFEngine engine = manager.loadScriptingEngine(language);
-            
+
             engine.exec(scriptName, 0, 0, script);
             for (Iterator i = attributes.keySet().iterator(); i.hasNext();) {
                 String attributeName = (String) i.next();
@@ -135,7 +134,7 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
                 setter.setCharAt(0, Character.toUpperCase(setter.charAt(0)));
                 engine.call(null, "set" + setter, new Object[]{value});
             }
-            
+
             Iterator i = nestedElementNames.iterator();
             Iterator j = nestedElements.iterator();
             while (i.hasNext()) {
@@ -145,19 +144,19 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
                 adder.setCharAt(0, Character.toUpperCase(adder.charAt(0)));
                 engine.call(null, "add" + adder, new Object[]{nestedElement});
             }
-            
+
             engine.call(null, "execute", new Object[]{});
         } catch (BSFException e) {
             Throwable t = e;
             Throwable te = e.getTargetException();
             if (te != null) {
-                if (te instanceof ExecutionException) {
-                    throw (ExecutionException) te;
+                if (te instanceof ScriptException) {
+                    throw (ScriptException) te;
                 } else {
                     t = te;
                 }
             }
-            throw new ExecutionException(t);
+            throw new ScriptException(t);
         }
     }
 
