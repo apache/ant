@@ -29,6 +29,8 @@ Fixed bugs:
 * <cvstagdiff> would throw a NullPointException if there had been no
   differences.
 
+* <cvschangelog> could miss today's changes.
+
 Other changes:
 --------------
 

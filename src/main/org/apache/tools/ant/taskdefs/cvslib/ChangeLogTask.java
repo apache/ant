@@ -249,9 +249,10 @@ public class ChangeLogTask extends Task {
                     new SimpleDateFormat("yyyy-MM-dd");
 
                 // We want something of the form: -d ">=YYYY-MM-dd"
-                final String dateRange = "-d >="
-                     + outputDate.format(m_start);
+                final String dateRange = ">=" + outputDate.format(m_start);
 
+		// Supply '-d' as a separate argument - Bug# 14397
+                command.createArgument().setValue("-d");
                 command.createArgument().setValue(dateRange);
             }
 
@@ -262,7 +263,7 @@ public class ChangeLogTask extends Task {
                 while (e.hasMoreElements()) {
                     final FileSet fileSet = (FileSet) e.nextElement();
                     final DirectoryScanner scanner =
-                        fileSet.getDirectoryScanner(project);
+                        fileSet.getDirectoryScanner(getProject());
                     final String[] files = scanner.getIncludedFiles();
 
                     for (int i = 0; i < files.length; i++) {
@@ -275,8 +276,7 @@ public class ChangeLogTask extends Task {
             final RedirectingStreamHandler handler =
                 new RedirectingStreamHandler(parser);
 
-            log("ChangeLog command: [" + command.toString() + "]",
-                Project.MSG_VERBOSE);
+            log(command.describeCommand(), Project.MSG_VERBOSE);
 
             final Execute exe = new Execute(handler);
 
