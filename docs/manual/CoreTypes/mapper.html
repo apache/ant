@@ -229,6 +229,7 @@ another dollar-sign in Ant.</p>
 <p>The regexp mapper needs a supporting library and an implementation
 of <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
 hides the specifics of the library. Ant comes with implementations for
+<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/regex/package-summary.html"  target="_top">the java.util.regex package of JDK 1.4</a>,
 <a href="http://jakarta.apache.org/regexp/" target="_top">jakarta-regexp</a> and <a
 href="http://jakarta.apache.org/oro/" target="_top">jakarta-ORO</a>. If you compile
 from sources and plan to use one of them, make sure the libraries are
@@ -245,8 +246,8 @@ following algorithm:</p>
 name of the class implementing
 <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
 should be used.</li>
-<li>If it has not been set, first try jakarta-ORO; if that
-cannot be found, try jakarta-regexp.</li>
+<li>If it has not been set, first try the JDK 1.4 classes, then
+jakarta-ORO and finally try jakarta-regexp.</li>
 </ul>
 
 <b>Examples:</b>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,53 +54,64 @@
 
 package org.apache.tools.ant.util.regexp;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 import org.apache.tools.ant.BuildException;
+import java.util.Vector;
 
 /**
- * Simple Factory Class that produces an implementation of
- * RegexpMatcher based on the system property
- * <code>ant.regexp.matcherimpl</code> and the classes
- * available.
- * 
- * <p>In a more general framework this class would be abstract and
- * have a static newInstance method.</p>
+ * Implementation of RegexpMatcher for the built-in regexp matcher of
+ * JDK 1.4.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public class RegexpMatcherFactory {
+public class Jdk14RegexpMatcher implements RegexpMatcher {
 
-    public RegexpMatcherFactory() {}
+    private Pattern pattern;
 
-    public RegexpMatcher newRegexpMatcher() throws BuildException {
-        String systemDefault = System.getProperty("ant.regexp.matcherimpl");
-        if (systemDefault != null) {
-            return createInstance(systemDefault);
-            // XXX     should we silently possible exceptions and try to 
-            //         load a different implementation?
-        }
-
+    /**
+     * Set the regexp pattern from the String description.
+     */
+    public void setPattern(String pattern) throws BuildException {
         try {
-            return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
-        } catch (BuildException be) {}
-        
-        try {
-            return createInstance("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
-        } catch (BuildException be) {}
-        
-        try {
-            return createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
-        } catch (BuildException be) {}
-
-        throw new BuildException("No supported regular expression matcher found");
-   }
-
-    protected RegexpMatcher createInstance(String className) 
-        throws BuildException {
-        try {
-            Class implClass = Class.forName(className);
-            return (RegexpMatcher) implClass.newInstance();
-        } catch (Throwable t) {
-            throw new BuildException(t);
+            this.pattern = Pattern.compile(pattern);
+        } catch (PatternSyntaxException e) {
+            throw new BuildException(e);
         }
     }
+
+    /**
+     * Get a String representation of the regexp pattern
+     */
+    public String getPattern() {
+        return pattern.pattern();
+    }
+
+    /**
+     * Does the given argument match the pattern?
+     */
+    public boolean matches(String argument) {
+        return pattern.matcher(argument).find();
+    }
+
+    /**
+     * Returns a Vector of matched groups found in the argument.
+     *
+     * <p>Group 0 will be the full match, the rest are the
+     * parenthesized subexpressions</p>.
+     */
+    public Vector getGroups(String argument) {
+        Matcher matcher = pattern.matcher(argument);
+        if (!matcher.find()) {
+            return null;
+        }
+        Vector v = new Vector();
+        for (int i=0; i<=matcher.groupCount(); i++) {
+            v.addElement(matcher.group(i));
+        }
+        return v;
+    }
+
 }

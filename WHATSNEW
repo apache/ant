@@ -100,6 +100,8 @@ Other changes:
   and the OS shell, either directly or through the auxillary antRun 
   scripts is used. 
 
+* regexp mapper now supports the java.util.regex package of JDK 1.4.
+
 Fixed bugs:
 -----------
 
