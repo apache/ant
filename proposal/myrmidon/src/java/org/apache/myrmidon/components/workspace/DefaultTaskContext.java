@@ -47,7 +47,7 @@ public class DefaultTaskContext
     private final TaskContext m_parent;
     private final ServiceManager m_serviceManager;
     private final Logger m_logger;
-    private final PropertyResolver m_propertyResolver;
+    private PropertyResolver m_propertyResolver;
 
     /**
      * Constructor that takes both parent context and a service directory.
@@ -60,7 +60,7 @@ public class DefaultTaskContext
         m_parent = parent;
         m_serviceManager = serviceManager;
         m_logger = logger;
-        m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
+        //m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
     }
 
     /**
@@ -150,6 +150,10 @@ public class DefaultTaskContext
     {
         try
         {
+            if( null == m_propertyResolver )
+            {
+                m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
+            }
             final Object object =
                 m_propertyResolver.resolveProperties( value, this );
             if( null == object )
