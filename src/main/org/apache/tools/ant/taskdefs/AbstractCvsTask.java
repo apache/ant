@@ -400,10 +400,10 @@ public abstract class AbstractCvsTask extends Task {
         String[] variableArray = execute.getEnvironment();
 
         if(variableArray != null){
-	    stringBuffer.append(newLine);
-	    stringBuffer.append(newLine);
-	    stringBuffer.append("environment:");
-	    stringBuffer.append(newLine);
+            stringBuffer.append(newLine);
+            stringBuffer.append(newLine);
+            stringBuffer.append("environment:");
+            stringBuffer.append(newLine);
             for(int z=0; z<variableArray.length; z++){
                 stringBuffer.append(newLine);
                 stringBuffer.append("\t");

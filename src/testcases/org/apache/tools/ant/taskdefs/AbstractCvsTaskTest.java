@@ -53,13 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs;
  
-import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author stephan <stephan@wanderinghorse.net>
  * @version $Revision$
  */
