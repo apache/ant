@@ -12,6 +12,11 @@ Fixed bugs:
 
 * <whichresource> failed to load classes correctly.
 
+* Redirector exhibited inconsistent behavior with regard to split
+  output.  When sent to file only, files would be created in all
+  cases; when split file-property, files were only created if
+  writes were performed.
+
 Other changes:
 --------------
 
