@@ -23,6 +23,21 @@ get this fix in we first had to write the test suite to expose current
 behaviour, then change something so that singe $ was passed through, but
 double "$$" got mapped to "$" for backwards compatibility.
 
+<h2>Don't break the Java API</h2>
+
+Ant's tasks can be used by third party programs, and by third party tasks.
+We cannot make changes that break the API. This includes
+<ol>
+<li>Moving classes without leaving a backwards-compatible facade.
+<li>Deleting classes.
+<li>Deleting methods or fields, or reducing their accessibility.
+<li>Changing the signature of a <tt>setAttribute(Type)</tt> method. If you need
+to add a restrictive type, add a new attribute, and place it in the source
+<i>above</i> the original. The XML mapper will get the restricted type, old programs
+can still use the old type.
+<li>Don't change semantics. At least, not drastically. All bug fixes are
+implicit changes of semantics, after all.
+</ol>
 
 <h2>Use built in helper classes</h2>
 
@@ -180,7 +195,7 @@ Tasks which don't do any dependency checking do not help users as much as
 they can, because their needless work can trickle through the entire build, test
 and deploy process.
 
-<h2>Support Java 1.2 through Java 1.4</h2>
+<h2>Support Java 1.2 through Java 1.5+</h2>
 
 Ant1.5 and lower was designed to support Java1.1. Ant1.6 and higher
 is designed to support Java1.2: to build on it, to run on it. Sometimes
@@ -210,9 +225,14 @@ Ant tasks can not use this keyword. They also need to move away from
 using the JUnit <tt>assert()</tt> method and call <tt>assertTrue()</tt>
 instead.
 <p>
-Java 1.5 will (perhaps) add a new keyword - enum, one should avoid
-this for future compatibility.
+Java 1.5 adds the <tt>enum</tt>; again, this must not be used.
 
+<h2>Explicitly Expand properties in nested text</h2>
+
+For historical reasons, <tt>addText(String text)</tt> is called to
+set the task's nested text, without any property expansion taking place.
+Call <tt>Project.replaceProperties()</tt> to do this manually.
+ 
 
 <h2>Refactor</h2>
 
@@ -230,6 +250,13 @@ accessing data members directly -because these data members may not
 exist in the refactored design. Which is why having private data members
 is so important.
 
+<p>
+
+One thing we can not do is move existing tasks around or delete them.
+Remember that Ant has a Java API as well as an XML language. We don't want
+to break that API, or anything that subclasses existing Ant tasks. When
+refactoring, you need to leave facades where the original classes were. so
+existing code does not break.
 
 <h2>Test</h2>
 
@@ -251,7 +278,8 @@ The test cases are a great way of testing your task during development.
 A simple call to 'build run-test' in the ant source tree will run all ant
 tests, to verify that your changes don't break anything.
 To test a single task, use the one shot <code>ant run-single-test
--Dtestcase=${testname}</code> where <code>${testname}</code> is the name of your test class.
+-Dtestcase=${testname}</code> where <code>${testname}</code>
+is the name of your test class.
 
 
 <p>
@@ -267,7 +295,7 @@ utterly essential to many users.
 
 Remember also that Ant 1.x is designed to compile and run on Java1.2, so
 you should test on Java 1.2 as well as any later version which you use.
-You can download an old SDK from Sun for this purpose.
+You ought to be able to download an old SDK from Sun for this purpose.
 <p>
 Finally, run a full <code>build test</code> before and after you start
 developing your project, to make sure you havent broken anything else by
@@ -299,14 +327,14 @@ This is important.
 
 <p>
 
-The fairly laissez-faire license of Apache is not compabitible with
+The fairly laissez-faire license of Apache is not currently considered
+compabitible with
 either the GPL or the Lesser GPL of the Free Software Foundation -the
 Gnu project. These licenses have stricter terms, "copyleft", which are
 not in the Apache Software Foundation license.
 This permits people and organisations to build
 commercial and closed source applications atop the Apache libraries and
-source -but not use the Apache, Ant or Jakarta Project names without
-permission.
+source.
 
 <p>
 
@@ -315,13 +343,6 @@ application (or library, in the case of GLPL) into which it is
 incorporated, the Ant team can not incorporate any task based upon GPL
 or LGPL source into the Ant codebase. You are free to submit it, but it
 will be politely and firmly rejected.
-
-<p>
-
-Once ant-2 adds better dynamic task incorporation, it may be possible to
-provide a framework for indirectly supporting [L]GPL code, but still no tasks
-directly subject to the Gnu licenses can be included in the Ant
-CVS tree.
 
 <p>
 If you link to a GPL or LGPL library, by <code>import</code> or
@@ -334,11 +355,12 @@ them.
 Even if we cannot include your task into the Apache codebase, we can
 still point to where you host it -just submit a diff to
 xdocs/external.html pointing to your task.
-
+<p>
 If your task links directly to proprietary code, we have a differnt
 problem: it is really hard to build the tasks. Please use reflection.
 
-<h3>Dont re-invent the wheel</h3>
+
+<h3>Don't re-invent the wheel</h3>
 
 We've all done it: written and submitted a task only to discover it
 was already implemented in a small corner of another task, or it has
