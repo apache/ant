@@ -132,8 +132,6 @@
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/IPlanet*.java"
              unless="jdk1.2+" />
-    <exclude name="${optional.package}/extension/**/*.java"
-             unless="jdk1.2+" />
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
              unless="jdk1.2+" />
@@ -143,6 +141,8 @@
   </patternset>
   <patternset id="needs.jdk1.3+">
     <exclude name="${ant.package}/taskdefs/TestProcess.java"
+             unless="jdk1.3+" />
+    <exclude name="${optional.package}/extension/**/*.java"
              unless="jdk1.3+" />
   </patternset>
   <patternset id="needs.jdk1.4+">
@@ -529,6 +529,7 @@
       <classpath refid="classpath" />
 
       <patternset refid="needs.jdk1.2+" />
+      <patternset refid="needs.jdk1.3+" />
       <patternset refid="needs.jdk1.4+" />
 
       <patternset refid="needs.jakarta.regexp" />
