@@ -27,6 +27,12 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>base</code>) as well as the nested
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
+<p>It is possible to use different compilers. This can be selected with the
+&quot;build.rmic&quot; property. There are two choices:</p>
+<ul>
+  <li>sun (the standard compiler of the JDK)</li>
+  <li>kaffe (the standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
+</ul>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -133,12 +139,29 @@ supports all attributes of <code>&lt;fileset&gt;</code>
     <td valign="top">generate debug info (passes -g to rmic). Defaults to false.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">includeAntRuntime</td> 
+    <td valign="top">whether to include the Ant run-time libraries;
+      defaults to <code>yes</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includeJavaRuntime</td> 
+    <td valign="top">whether to include the default run-time
+      libraries from the executing VM; defaults to <code>no</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">extdirs</td>
+    <td valign="top">location of installed extensions.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>classpath</h4>
-<p><code>Rmic</code>'s <i>classpath</i> attribute is a <a
+<h4>classpath and extdirs</h4>
+<p><code>Rmic</code>'s <i>classpath</i> and <i>extdirs</i> attributes are <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
-<i>classpath</i> elements.</p>
+<i>classpath</i> and <i>extdirs</i> elements.</p>
 <h3>Examples</h3>
 <pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot;/&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The

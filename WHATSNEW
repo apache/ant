@@ -6,10 +6,18 @@ Changes that could break older environments:
 
 * Zip.setWhenempty() has changed its signature.
 
+* <rmic> is now implemented using a factory. This makes extending
+  rmic to use a new compiler a lot easier but may break custom
+  versions of this task that rely on the old implementation.
+
 Other changes:
 --------------
 
 * Ant now uses JAXP 1.1
+
+* rmic now supports Kaffe's version of rmic.
+
+* new magic property build.rmic to chose the rmic implementation
 
 Fixed bugs:
 -----------
