@@ -104,6 +104,33 @@
         </table>
       </subsection>
 
+      <subsection name="J2ME Ant Tasks">
+
+        <p>A set of tasks to help build <a
+        href="http://java.sun.com/j2me/">Java 2 Platform, Micro
+        Edition</a> (J2ME) applications.</p>
+        
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.dribin.org/dave/j2me_ant/">http://www.dribin.org/dave/j2me_ant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:drib@enteract.com">Dave Dribin</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+
+      </subsection>
+
     </section>
 
     <section name="IDE/Editor Integration">
