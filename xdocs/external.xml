@@ -86,11 +86,11 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.2 and 1.3</td>
+            <td>Ant 1.2 to 1.4.1</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.puppycrawl.com/checkstyle">http://www.puppycrawl.com/checkstyle</a></td>
+            <td><a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
