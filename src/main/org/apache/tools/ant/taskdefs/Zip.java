@@ -145,6 +145,18 @@ public class Zip extends MatchingTask {
             }
         } catch (IOException ioe) {
             String msg = "Problem creating " + archiveType + " " + ioe.getMessage();
+
+            // delete a bogus ZIP file
+	    if (zOut != null) {
+	        try {
+	            zOut.close();
+                    zOut = null;
+	        } catch (IOException e) {}
+                if (!zipFile.delete()) {
+                    msg = zipFile + " is probably corrupt but I could not delete it";
+                }
+            }
+
             throw new BuildException(msg, ioe, location);
 	} finally {
 	    if (zOut != null) {
