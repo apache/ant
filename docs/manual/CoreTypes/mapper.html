@@ -63,6 +63,10 @@ with the following attributes:</p>
     <td align="center" valign="top">Depends on implementation.</td>
   </tr>
 </table>
+<p>Note that Ant will not automatically convert / or \ characters in
+the <code>to</code> and <code>from</code> attributes to the correct
+directory separator of your current platform.  If you need to specify
+this separator, use <code>${file.separator}</code> instead.</p>
 <p>The classpath can be specified via a nested
 <code>&lt;classpath&gt;</code>, as well - that is,
 a <a href="../using.html#path">path</a>-like structure.</p>

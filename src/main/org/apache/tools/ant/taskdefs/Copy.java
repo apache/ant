@@ -365,14 +365,14 @@ public class Copy extends Task {
                 try {
                     log("Copying " + fromFile + " to " + toFile, verbosity);
                     
-                    FilterSet executionFilterSet = new FilterSet();
+                    FilterSetCollection executionFilters = new FilterSetCollection();
                     if (filtering) {
-                        executionFilterSet.addFilterSet(project.getGlobalFilterSet());
+                        executionFilters.addFilterSet(project.getGlobalFilterSet());
                     }
                     for (Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements();) {
-                        executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
+                        executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
                     }
-                    fileUtils.copyFile(fromFile, toFile, executionFilterSet,
+                    fileUtils.copyFile(fromFile, toFile, executionFilters,
                                        forceOverwrite, preserveLastModified);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile

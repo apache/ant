@@ -136,6 +136,7 @@ public class XmlLogger implements BuildListener {
             Writer out =
                 new OutputStreamWriter(new FileOutputStream(outFilename),
                                        "UTF8");
+            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
                       (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
@@ -200,11 +201,7 @@ public class XmlLogger implements BuildListener {
         taskElement.startTime = System.currentTimeMillis();
         taskElement.element = doc.createElement(TASK_TAG);
         
-        String name = task.getClass().getName();
-        int pos = name.lastIndexOf(".");
-        if (pos != -1) {
-            name = name.substring(pos + 1);
-        }
+        String name = event.getTask().getTaskName();
         taskElement.element.setAttribute(NAME_ATTR, name);
         taskElement.element.setAttribute(LOCATION_ATTR, event.getTask().getLocation().toString());
         tasks.put(task, taskElement);
@@ -248,7 +245,7 @@ public class XmlLogger implements BuildListener {
         }
         messageElement.setAttribute(PRIORITY_ATTR, name);
 
-        Text messageText = doc.createTextNode(event.getMessage());
+        Text messageText = doc.createCDATASection(event.getMessage());
         messageElement.appendChild(messageText);
 
         TimedElement parentElement = null;

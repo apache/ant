@@ -221,7 +221,7 @@ public class CommandlineJava implements Cloneable {
      * @return the list of all arguments necessary to run the vm.
      */
     public String[] getCommandline() {
-       String[] result = new String[size()];
+        String[] result = new String[size()];
         int pos = 0;
         String[] vmArgs = getActualVMCommand().getCommandline();
         // first argument is the java.exe path...
@@ -285,7 +285,8 @@ public class CommandlineJava implements Cloneable {
     public int size() {
         int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
-        if (classpath != null && classpath.size() > 0) {
+        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
+        if (fullClasspath != null && fullClasspath.toString().trim().length() > 0) {
             size += 2;
         }
         // jar execution requires an additional -jar option

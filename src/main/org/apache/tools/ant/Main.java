@@ -69,7 +69,6 @@ import java.util.*;
  *
  * @author duncan@x180.com
  */
-
 public class Main {
 
     /** The default build file name */
@@ -132,7 +131,7 @@ public class Main {
      * Entry point allowing for more options from other front ends
      */
     public static void start(String[] args, Properties additionalUserProperties,
-                             ClassLoader systemLoader) {
+                             ClassLoader coreLoader) {
         Main m = null;
 
         try {
@@ -151,7 +150,7 @@ public class Main {
         }
         
         try {
-            m.runBuild(systemLoader);
+            m.runBuild(coreLoader);
             System.exit(0);
         } catch (BuildException be) {
             if (m.err != System.err) {
@@ -390,7 +389,7 @@ public class Main {
     /**
      * Executes the build.
      */
-    private void runBuild(ClassLoader systemLoader) throws BuildException {
+    private void runBuild(ClassLoader coreLoader) throws BuildException {
 
         if (!readyToRun) {
             return;
@@ -403,7 +402,7 @@ public class Main {
         }
 
         final Project project = new Project();
-        project.setSystemLoader(systemLoader);
+        project.setCoreLoader(coreLoader);
         
         Throwable error = null;
 
@@ -433,15 +432,17 @@ public class Main {
                 
                 // first use the ProjectHelper to create the project object
                 // from the given build file.
+                String noParserMessage = 
+                    "No JAXP compliant XML parser found. Please visit http://xml.apache.org for a suitable parser";
                 try {
                     Class.forName("javax.xml.parsers.SAXParserFactory");
                     ProjectHelper.configureProject(project, buildFile);
                 } catch (NoClassDefFoundError ncdfe) {
-                    throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", ncdfe);
+                    throw new BuildException(noParserMessage, ncdfe);
                 } catch (ClassNotFoundException cnfe) {
-                    throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", cnfe);
+                    throw new BuildException(noParserMessage, cnfe);
                 } catch (NullPointerException npe) {
-                    throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", npe);
+                    throw new BuildException(noParserMessage, npe);
                 }
                 
                 // make sure that we have a target to execute

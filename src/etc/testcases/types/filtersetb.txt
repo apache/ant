@@ -1,0 +1,5 @@
+This is a test file for filters with non default markers
+@cccc@ - should not change
+%cccc^ - should change
+^dddd% - should not change
+%dddd^ - should change

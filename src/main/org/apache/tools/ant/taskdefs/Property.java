@@ -160,6 +160,18 @@ public class Property extends Task {
     }
 
     public void execute() throws BuildException {
+        if (name != null) {
+            if (value == null && ref == null) {
+                throw new BuildException("You must specify value, location or refid with the name attribute",
+                                         location);
+            }
+        } else {
+            if (file == null && resource == null && env == null) {
+                throw new BuildException("You must specify file, resource or environment when not using the name attribute",
+                                         location);
+            }
+        }
+
         if ((name != null) && (value != null)) {
             addProperty(name, value);
         }

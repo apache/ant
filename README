@@ -53,8 +53,8 @@
   -------------
 
   Documentation is available in HTML format, in the docs/ directory.
-  For building see docs/index.html#buildingant.
-  For installing see docs/index.html#installing.
+  For building see docs/manual/install.html#buildingant.
+  For installing see docs/manual/install.html#installing.
 
 
   Licensing

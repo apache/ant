@@ -397,9 +397,12 @@ public class Zip extends MatchingTask {
     }
 
     protected void addZipEntries(ZipFileSet fs, DirectoryScanner ds,
-      ZipOutputStream zOut, String prefix)
+                                 ZipOutputStream zOut, String prefix, String fullpath)
         throws IOException
     {
+        if (prefix.length() > 0 && fullpath.length() > 0)
+            throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
+
         ZipScanner zipScanner = (ZipScanner) ds;
         File zipSrc = fs.getSrc();
 
@@ -413,9 +416,14 @@ public class Zip extends MatchingTask {
                 entry = new ZipEntry(origEntry);
                 String vPath = entry.getName();
                 if (zipScanner.match(vPath)) {
-                    addParentDirs(null, vPath, zOut, prefix);
-                    if (! entry.isDirectory()) {
-                        zipFile(in, zOut, prefix+vPath, entry.getTime());
+                    if (fullpath.length() > 0) {
+                        addParentDirs(null, fullpath, zOut, "");
+                        zipFile(in, zOut, fullpath, entry.getTime());
+                    } else {
+                        addParentDirs(null, vPath, zOut, prefix);
+                        if (! entry.isDirectory()) {
+                            zipFile(in, zOut, prefix+vPath, entry.getTime());
+                        }
                     }
                 }
             }
@@ -679,7 +687,8 @@ public class Zip extends MatchingTask {
 
     /**
      * Iterate over the given Vector of (zip)filesets and add
-     * all files to the ZipOutputStream using the given prefix.
+     * all files to the ZipOutputStream using the given prefix
+     * or fullpath.
      */
     protected void addFiles(Vector filesets, ZipOutputStream zOut)
         throws IOException {
@@ -713,7 +722,7 @@ public class Zip extends MatchingTask {
 
             if (fs instanceof ZipFileSet
                 && ((ZipFileSet) fs).getSrc() != null) {
-                addZipEntries((ZipFileSet) fs, ds, zOut, prefix);
+                addZipEntries((ZipFileSet) fs, ds, zOut, prefix, fullpath);
             } else {
                 // Add the fileset.
                 addFiles(ds, zOut, prefix, fullpath);

@@ -1,0 +1,6 @@
+<project name="test" default="main" basedir=".">
+  <description>Multi Line
+Project Description</description>
+  <target name="main">
+  </target>
+</project>
