@@ -83,4 +83,18 @@ public class RJUnitTaskTest extends BuildFileTest {
         executeTarget("server-and-client");
         System.out.println(getFullLog());
     }
+
+    public void testStandalone() throws Exception {
+        // run server first..
+        Thread thread = new Thread(){
+            public void run(){
+                executeTarget("server-only");
+            }
+        };
+        thread.start();
+
+        executeTarget("client-only");
+        System.out.println(getFullLog());
+        thread.join();
+    }
 }

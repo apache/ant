@@ -7,7 +7,7 @@
         <rjunit>
             <server port="1234">
                 <formatter type="plain">
-                    <param name="file" location="d:/junit-test-log.txt"/>
+                    <param name="file" location="junit-test-log.txt"/>
                 </formatter>
             </server>
             <client host="127.0.0.1"  port="1234">
@@ -18,9 +18,25 @@
     </target>
 
     <target name="server-only">
+        <rjunit>
+            <server port="1234">
+                <formatter type="plain">
+                    <param name="file" location="junit-test-log.txt"/>
+                </formatter>
+                <formatter type="xml">
+                    <param name="file" location="junit-test-log.xml"/>
+                </formatter>
+            </server>
+        </rjunit>
     </target>
 
     <target name="client-only">
+        <rjunit>
+            <client host="127.0.0.1"  port="1234">
+                <classpath path="${java.class.path}"/>
+                <test name="org.apache.tools.ant.taskdefs.optional.junit.data.Test1"/>
+            </client>
+        </rjunit>
     </target>
 
 </project>
