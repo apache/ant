@@ -50,11 +50,15 @@ tasks) would be acceptable.
   [will need more discussion because of votes by Peter Donald and
                                                  Stefan Bodewig]
 
+  [finally ACCEPTED]
+
 * Add a JavaApply task that executes a given class with files from a
   fileset as arguments - similar to <apply>.
 
   [will need more discussion because of votes by Peter Donald and
                                                  Stefan Bodewig]
+
+  [finally ACCEPTED]
 
 * Include some more sophisticated loggers with the Ant distribution -
   especially for sending emails. Make the existing one more flexible
@@ -64,12 +68,16 @@ tasks) would be acceptable.
 
   [will need more discussion because of vote by Conor MacNeill]
 
+  [finally ACCEPTED]
+
 * make the default logger's output clear, informative, and terse.
 
   Actually, this is a little bit abstract, but doesn't apply to the
   core either.
 
   [will need more discussion because of vote by Conor MacNeill]
+
+  [REJECTED - vetoes by Conot MacNeill and Stefan Bodewig]
 
 * Better docs.
 
@@ -86,6 +94,8 @@ tasks) would be acceptable.
   value of a property.
 
   [will need more discussion because of vote by Peter Donald]
+
+  [REJECTED - veto by Peter Donald]
 
 * Task for splitting files (head/tail/split like functionality).
 
@@ -108,6 +118,8 @@ tasks) would be acceptable.
   must also accept references to PATHs.
 
   [will need more discussion because of vote by Stefan Bodewig]
+
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister and Stefan Bodewig]
 
 * Task to extract classes from a JAR file that a given class depends
   on.
@@ -216,6 +228,8 @@ committers to agree
   [will need more discussion because of vote by Glenn McAllister and
                                                 Conor MacNeill]
 
+  [finally ACCEPTED]
+
 * unify the namespace of all data types (ie properties + filesets +
   patternset + filtersets).
 
@@ -308,12 +322,16 @@ particular implementation has been made.
   [will need more discussion because of vote by Peter Donald and
                                                 Simeon Fitch]
 
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald and Simeon Fitch]
+
 * separate tasks into .tsk jars somehow. (Probably via function - ie
   java tasks, file tasks, ejb tasks).
 
   Decide on categories.
 
   [will need more discussion because of vote by Conor MacNeill]
+
+  [finally ACCEPTED]
 
 * make separate build files easy (ala AntFarm) and importing different
   projects a breeze
@@ -342,6 +360,8 @@ particular implementation has been made.
 
   [will need more discussion because of vote by Conor MacNeill]
 
+  [REJECTED - vetoes by Conor MacNeill and glenn McAllister]
+
 * It should be possible to modify details of the actual build (e.g. classpath,
   used compiler) without the need to change the build specification.
 
@@ -349,6 +369,8 @@ particular implementation has been made.
   need to add more stuff like this?
 
   [will need more discussion because of vote by Conor MacNeill]
+
+  [REJECTED - veto by Conor MacNeill]
 
 * Task to prompt for user input.
 
@@ -390,6 +412,8 @@ particular implementation has been made.
 
   [will need more discussion because of vote by Conor MacNeill]
 
+  [REJECTED - vetoes by Conor MacNeill and Stefan Bodewig]
+
 * build files should be declarative in nature
 
   [ACCEPTED]
@@ -412,6 +436,9 @@ V. Things we probably don't agree on.
    </mapper>
  </fileset>
 
+ [REJECTED - vetoes by Stefan Bodewig and Conor MacNeill, not enough
+             positive votes anyway.]
+
  * Allow include/exclude tow work with multiple characteristerics of a file.
  ie include into fileset if file is readable, modified after 29th of Feb,
  has a name that matches patter "**/*.java" and the property "foo.present"
@@ -428,6 +455,8 @@ V. Things we probably don't agree on.
                 value="29th Feb 2003"/>
  </include>
 
+ [REJECTED - only two +1 votes]
+
 * provide datatypes through property tag and remove need for separate free
   standing entities. ie
   <property name="foo">
@@ -436,9 +465,13 @@ V. Things we probably don't agree on.
     </fileset>
   </property>
 
+  [REJECTED - only one +1 vote]
+
 * provide support for non-hardwired (ie loadable) low-level 
  components (mappers/itemset-filters/converters). Allow them to be 
  loaded in either global or a new classloader.
+
+  [ACCEPTED]
 
 * provide support for non-hardwired (ie loadable) converters.
 
@@ -451,17 +484,29 @@ V. Things we probably don't agree on.
   relevent if you build ant based testing systems and use ant in certain
   web-related areas.
 
+  [REJECTED - only two +1 votes]
+
 * Make all datatypes interfaces to allow them to be customized in many
   ways.
 
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald and Stefan Bodewig]
+
 * Set arithmetic for fileset/patternset/*set
 
+  [REJECTED - only two +1 votes]
+
 * inheritance of ant properties/datatypes/context etc in project hierarchy
+
+  [ACCEPTED]
 
 * inheritance of between ant datatypes. ie fileset A inherits from fileset B (includes 
   all entries in A).
 
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald and Stefan Bodewig]
+
 * Homogenize notion of PATHs and filesets.
+
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald and Stefan Bodewig]
 
 [DISC] Ant's goals
 ------------------
@@ -469,6 +514,8 @@ V. Things we probably don't agree on.
 * make it possible to reuse taskengine for other things. ie
   Installshield type app, Peter's cron-server and other task based
   operations. 
+
+  [REJECTED as a primary goal - only two +1 votes]
 
 * provide support for CJAN
 
@@ -478,14 +525,22 @@ V. Things we probably don't agree on.
   in a known place and updating binaries when required. ("When required"
   being indicated by a change in property values).
 
+  [REJECTED as part of Ant's core - veto by Conor MacNeill, no single +1]
+
 [DISC] class loading
 --------------------
 
  * force resolution of classes on loading to identify classloader 
  issues early. (At least in global classloader).
 
+  [REJECTED - only one +1 vote]
+
 * Ignore any classes contained in the damned ext dirs of a JVM - possibly by launching
   with something like jar -Djava.ext.dir=foo -jar ant.jar
+
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister and Stefan
+              Bodewig, ACCEPTED if optional]
+
 
 [DISC] workspace/subbuild issues
 --------------------------------
@@ -495,20 +550,33 @@ V. Things we probably don't agree on.
   build process. It also helps CJAN to a lesser degree and would
   partially solve the JARs in CVS thing.
 
+  [ACCEPTED]
+
 * Project inheritance
 
   What's this?
+
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald and Stefan Bodewig]
 
 * Target inheritance. ie The ability to include targets from other 
   project files overidining them as necessary (so cascading project
   files).
 
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald and Stefan Bodewig]
+
 * Add an attribute to <ant> to feed back the environment (properties and
   taskdefs) from the child build to the parent.
 
+  [REJECTED - vetoes by Conor MacNeill, Peter Donald, Simeon Fitch and
+              Stefan Bodewig]
+
 * Allow a target to depend on a target which is in another buildfile.  
 
+  [ACCEPTED]
+
 * Allow a target to reference properties defined in another buildfile.
+
+  [REJECTED - only one +1 vote]
 
 [DISC] documentation system
 ---------------------------
@@ -516,6 +584,8 @@ V. Things we probably don't agree on.
 * generate docs by anakia/XSLT
 
   Corollary of "move to a system that allows docs to be generated"?
+
+  [ACCEPTED - with no decision on which system to use]
 
 [DISC] Task API
 ---------------
@@ -529,14 +599,25 @@ V. Things we probably don't agree on.
   should not impose any cost on runtime as it is only used a small 
   proportion of the time (design-time).  
 
+  [ACCEPTED]
+
 * tasks should have access to its own XML representation.
+
+  [REJECTED - vetoes by Christoph Wilhelms, Conor MacNeill and Simeon Fitch]
 
 * Task level if and unless attributes.
 
+  [REJECTED - no single +1 vote]
+
 * Allow tasks to find out, whether another task has completed successfully.
+
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister, Peter Donald
+              and Stefan Bodewig]
 
 * provide failonerror like functionality to all tasks. (Provide this as an aspect??
   much like logging aspect or classloader aspect).
+
+  [ACCEPTED]
 
 [DISC] logging
 --------------
@@ -544,28 +625,46 @@ V. Things we probably don't agree on.
 * allow build file writers to modify logging (verbosity for example)
   on a target by target or task by task basis.
 
+  [ACCEPTED]
+
 * Make loggers configurable via build.xml.
+
+  [ACCEPTED]
 
 [DISC] multithrading
 --------------------
 
 * Multithreaded execution of tasks within the same target.
 
+  [ACCEPTED]
+
 * Multithreaded execution of targets.
+
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister and Stefan Bodewig]
 
 [DISC] procedural versus purely declarative
 -------------------------------------------
 
 * Simple flow control (if-then-else, for)
 
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister, Peter Donald
+              and Stefan Bodewig]
+
 * targets should be like methods including a return value
 
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister, Peter Donald,
+              Simeon Fitch and Stefan Bodewig]
+
 * build files should be purely declarative
+
+  [REJECTED - veto by Stefan Bodewig]
 
 [DISC] Properties
 -----------------
 
 * Ability to manage scopping of properties in general (ie target/project/workspace).
+
+  [ACCEPTED]
 
 [DISC] Templates
 ----------------
@@ -574,6 +673,9 @@ V. Things we probably don't agree on.
   specifications, and to declare for a concrete item that it should be
   built according to such a general specification.
 
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister, Peter Donald
+              and Stefan Bodewig]
+
 [DISC] XML issues
 -----------------
 
@@ -581,38 +683,62 @@ V. Things we probably don't agree on.
   that doesn't use SYSTEM entities at all and therefore is XSchema
   friendly, allows for property expansions ...
 
+  [ACCEPTED]
+
 * Let Ant ignore - but warn - if unknown XML elements or attributes
   occur in a build file.
+
+  [REJECTED - vetoes by Conor MacNeill, Glenn McAllister, Peter Donald
+              and Stefan Bodewig]
 
 * Allow ant to farm out attributes and elements that are NOT in the ant 
   namespace to other components. ie hand doc: elements to the Documentation
   component or log: attributes to Log policy component etc
+
+  [ACCEPTED]
 
 [DISC] core extensions
 ----------------------
 
 * Allow named tasks to be defined by <script> elements.
 
+  [REJECTED - only one +1 vote]
+
 * specify an onfail task or target that runs in case of a build
   failure.
 
+  [REJECTED - vetoes by Glenn McAllister, Peter Donald and Stefan Bodewig]
+
 * allow sequence to be specified in depends attribute or enhance
   antcall to work with current list of executed targets
+
+  [REJECTED - veto by Peter Donald (which doesn't apply to the antcall
+              option)]
 
 * Support nesting tasks into other elements - not just as children of
   target - as proposed by Thomas Christen in
   <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>.
 
+  [ACCEPTED]
+
 * Make if/unless attributes to check for the value of a property, not
   only its existance.
 
+  [REJECTED - vetoes by Glenn McAllister and Stefan Bodewig]
+
 * check for more than one condition in if/unless attributes.
+
+  [REJECTED - vetoes by Glenn McAllister, Peter Donald and Stefan Bodewig]
 
 * provide a way to define the order in which targets a given target
   depends upon get executed.
 
+  [REJECTED - veto by Peter Donald]
+
 * define task contexts that define various common aspects (logging,
   failure handling ...) and assign them to tasks.
+
+  [ACCEPTED]
 
 [DISC] organization
 -------------------
@@ -623,10 +749,14 @@ V. Things we probably don't agree on.
     [ org.apache.ant.* ]
   - core tasks (ie tasks supported by ant contributors) [ org.apache.??? ]
 
+  [REJECTED - vetoes by Conor MacNeill and Glenn McAllister]
+
 [DISC] misc
 -----------
 
 * internationalization
+
+  [ACCEPTED]
 
 VI. entries that have been submitted too late
 =============================================
