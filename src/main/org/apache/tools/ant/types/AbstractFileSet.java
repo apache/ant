@@ -330,6 +330,21 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * find out if the fileset wants to follow symbolic links
+     *
+     * @return  flag indicating whether or not symbolic links should be followed
+     *
+     * @since ant 1.6
+     */
+    public boolean isFollowSymlinks() {
+        if (isReference()) {
+            return getRef(getProject()).isFollowSymlinks();
+        } else {
+            return followSymlinks;
+        }
+    }
+
+    /**
      * sets the name used for this datatype instance.
      */
     protected String getDataTypeName() {

@@ -18,6 +18,12 @@
     <fileset dir="${tmp.get.dir}" id="fileset-destination-without-selector">
         <include name="alpha/**"/>
     </fileset>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-followsymlinks" followsymlinks="true">
+        <include name="alpha/**"/>
+    </fileset>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-nofollowsymlinks" followsymlinks="false">
+        <include name="alpha/**"/>
+    </fileset>
     <target name="setup">
         <mkdir dir="${tmp.get.dir}"/>
         <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
@@ -46,6 +52,26 @@
         <delete dir="${tmp.dir}/alpha/beta"/>
         <symlink link="${tmp.dir}/alpha/beta" resource="${tmp.dir}/epsilon"/>
         <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+    </target>
+    <target name="ftp-get-directory-symbolic-link" depends="symlink-setup">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}"
+            >
+            <fileset refid="fileset-destination-followsymlinks"/>
+        </ftp>
+    </target>
+    <target name="ftp-get-directory-no-symbolic-link" depends="symlink-setup">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}"
+            >
+            <fileset refid="fileset-destination-nofollowsymlinks"/>
+        </ftp>
     </target>
     <target name="symlink-file-setup" depends="setup">
         <delete file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>

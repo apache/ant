@@ -248,7 +248,6 @@ public class FTP
                     ftp.changeToParentDirectory();
                     return;
                 }
-
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
                     if (!file.getName().equals(".")
@@ -662,7 +661,7 @@ public class FTP
      */
     protected int transferFiles(FTPClient ftp, FileSet fs)
          throws IOException, BuildException {
-        FileScanner ds;
+        DirectoryScanner ds;
 
         if (action == SEND_FILES) {
             ds = fs.getDirectoryScanner(getProject());
@@ -674,6 +673,7 @@ public class FTP
             }
             ds = new FTPDirectoryScanner(ftp);
             fs.setupDirectoryScanner(ds, getProject());
+            ds.setFollowSymlinks(fs.isFollowSymlinks());
             ds.scan();
         }
 
