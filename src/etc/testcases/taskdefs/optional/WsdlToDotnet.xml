@@ -40,6 +40,7 @@
    <echo> wsdl.found=${wsdl.found}</echo>
    <condition property="csc.found">
       <or>
+        <available file="mcs"     filepath="${env.PATH}" />
         <available file="csc"     filepath="${env.PATH}" />
         <available file="csc.exe" filepath="${env.PATH}" />
         <available file="csc.exe" filepath="${env.Path}" />
@@ -57,7 +58,6 @@
    <condition property="dotnetapps.found">
       <and>
         <isset property="csc.found"/>
-        <isset property="vbc.found"/>
         <isset property="wsdl.found"/>
       </and>
     </condition>
@@ -142,7 +142,7 @@
 
 
   
-  <target name="testLocalWsdlVB" depends="init">
+  <target name="testLocalWsdlVB" depends="init" if="vbc.found">
     <wsdltodotnet destFile="${out.vbc}"
       language="VB"
       srcFile="${local.wsdl}"
@@ -160,7 +160,7 @@
   </target>
   
   <target name="testLocalWsdlServerVB" 
-    depends="init" >
+    depends="init" if="vbc.found">
     <wsdltodotnet destFile="${out.vbc}"
       language="VB"
       srcFile="${local.wsdl}"
@@ -179,7 +179,7 @@
     <fail unless="app.created">No app created</fail>
   </target>
   
-  <target name="testInvalidExtraOpsVB" depends="init" if="vbc.found">
+  <target name="testInvalidExtraOpsVB" depends="init">
     <wsdltodotnet destFile="${out.vbc}"
       language="VB"
       srcFile="${local.wsdl}"

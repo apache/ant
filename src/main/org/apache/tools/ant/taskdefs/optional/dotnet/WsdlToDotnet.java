@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Converts a WSDL file or URL resource into a .NET language.
@@ -57,7 +59,7 @@ public class WsdlToDotnet extends Task  {
     /**
      * name of source file
      */
-    private File srcFile = null;
+    private String srcFileName = null;
 
     /**
      * language; defaults to C#
@@ -85,6 +87,11 @@ public class WsdlToDotnet extends Task  {
     protected String extraOptions = null;
 
     /**
+     * @since Ant 1.7
+     */
+    private boolean isMono = !Os.isFamily("windows");
+
+    /**
      * Name of the file to generate. Required
      * @param destFile filename
      */
@@ -106,8 +113,13 @@ public class WsdlToDotnet extends Task  {
      * The local WSDL file to parse; either url or srcFile is required.
      * @param srcFile name of WSDL file
      */
-    public void setSrcFile(File srcFile) {
-        this.srcFile = srcFile;
+    public void setSrcFile(String srcFileName) {
+        if (new File(srcFileName).isAbsolute()) {
+            srcFileName = FileUtils.newFileUtils()
+                .removeLeadingPath(getProject().getBaseDir(), 
+                                   new File(srcFileName));;
+        }
+        this.srcFileName = srcFileName;
     }
 
     /**
@@ -158,6 +170,17 @@ public class WsdlToDotnet extends Task  {
     }
 
     /**
+     * Explicitly override the Mono auto-detection.
+     *
+     * <p>Defaults to false on Windows and true on any other platform.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void setMono(boolean b) {
+        isMono = b;
+    }
+
+    /**
      * validation code
      * @throws  BuildException  if validation failed
      */
@@ -170,15 +193,16 @@ public class WsdlToDotnet extends Task  {
             throw new BuildException(
                 "destination file is a directory");
         }
-        if (url != null && srcFile != null) {
+        if (url != null && srcFileName != null) {
             throw new BuildException(
                     "you can not specify both a source file and a URL");
         }
-        if (url == null && srcFile == null) {
+        if (url == null && srcFileName == null) {
             throw new BuildException(
                     "you must specify either a source file or a URL");
         }
-        if (srcFile != null) {
+        if (srcFileName != null) {
+            File srcFile = getProject().resolveFile(srcFileName);
             if (!srcFile.exists()) {
                 throw new BuildException(
                     "source file does not exist");
@@ -213,8 +237,14 @@ public class WsdlToDotnet extends Task  {
 
         //set source and rebuild options
         boolean rebuild = true;
-        if (srcFile != null) {
-            command.addArgument(srcFile.toString());
+        if (srcFileName != null) {
+            File srcFile = getProject().resolveFile(srcFileName);
+            if (isMono) {
+                // Mono 1.0's wsdl doesn't deal with absolute paths
+                command.addArgument(srcFileName);
+            } else {
+                command.addArgument(srcFile.toString());
+            }
             //rebuild unless the dest file is newer than the source file
             if (srcFile.exists() && destFile.exists()
                 && srcFile.lastModified() <= destFile.lastModified()) {
