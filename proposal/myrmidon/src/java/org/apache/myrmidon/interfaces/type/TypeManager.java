@@ -20,15 +20,10 @@ public interface TypeManager
     /**
      * Registers a new type.
      *
-     * @param roleType
-     *      The role interface for the type.  Objects created by the factory
+     * @param roleType The role interface for the type.  Objects created by the factory
      *      must implement this interface.
-     *
-     * @param shorthandName
-     *      The shorthand name for the type.
-     *
-     * @param factory
-     *      The type factory.
+     * @param shorthandName The shorthand name for the type.
+     * @param factory The type factory.
      */
     void registerType( Class roleType, String shorthandName, TypeFactory factory )
         throws TypeException;
