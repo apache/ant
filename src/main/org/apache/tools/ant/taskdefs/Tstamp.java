@@ -65,6 +65,7 @@ import java.text.*;
  * @author costin@dnt.ro
  * @author stefano@apache.org
  * @author roxspring@yahoo.com
+ * @author conor@cognet.com.au
  */
 public class Tstamp extends Task {
     
@@ -106,6 +107,8 @@ public class Tstamp extends Task {
     {
         private String propertyName;
         private String pattern;
+        private int offset = 0;
+        private int field = Calendar.DATE;
         
         public CustomFormat()
         {
@@ -121,6 +124,40 @@ public class Tstamp extends Task {
             this.pattern = pattern;
         }
         
+        public void setOffset(int offset) {
+            this.offset = offset;
+        }
+        
+        public void setUnit(String unit) {
+            if (unit.equalsIgnoreCase("millisecond")) {
+                field = Calendar.MILLISECOND;
+            }
+            else if (unit.equalsIgnoreCase("second")) {
+                field = Calendar.SECOND;
+            }
+            else if (unit.equalsIgnoreCase("minute")) {
+                field = Calendar.MINUTE;
+            }
+            else if (unit.equalsIgnoreCase("hour")) {
+                field = Calendar.HOUR_OF_DAY;
+            }
+            else if (unit.equalsIgnoreCase("day")) {
+                field = Calendar.DATE;
+            }
+            else if (unit.equalsIgnoreCase("week")) {
+                field = Calendar.WEEK_OF_YEAR;
+            }
+            else if (unit.equalsIgnoreCase("month")) {
+                field = Calendar.MONTH;
+            }
+            else if (unit.equalsIgnoreCase("year")) {
+                field = Calendar.YEAR;
+            }
+            else {
+                throw new BuildException(unit + " is not a unit supported by the tstamp task");
+            }
+        }            
+        
         public void execute(Project project, Date date)
         {
             if (propertyName == null) {
@@ -132,6 +169,13 @@ public class Tstamp extends Task {
             }
             
             SimpleDateFormat sdf = new SimpleDateFormat (pattern);
+            if (offset != 0) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(field, offset);
+                date = calendar.getTime();
+            }
+
             project.setProperty(propertyName, sdf.format(date));
         }
     }
