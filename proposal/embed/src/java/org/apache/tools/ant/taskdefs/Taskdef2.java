@@ -219,7 +219,7 @@ public class Taskdef2 extends Definer {
      * create the classloader then hand the definition off to the subclass;
      * @throws BuildException when the class wont load for any reason
      */
-    private void addDefinition(ClassLoader al, String name, String value)
+    protected void addDefinition(ClassLoader al, String name, String value)
         throws BuildException {
         try {
             Class c = al.loadClass(value);
@@ -239,7 +239,7 @@ public class Taskdef2 extends Definer {
     /**
      * create a classloader for this definition
      */
-    private AntClassLoader createLoader() {
+    protected AntClassLoader createLoader() {
         // magic property
         if (getProject().getProperty(REUSE_LOADER_REF) != null) {
             // Generate the 'reuse' name automatically from the reference.
