@@ -476,6 +476,32 @@
         </table>
       </subsection>
       
+      <subsection name="WOProject">
+
+        <p>WOProject provides a set of tools to work with 
+        <a href="http://webobjects.com/">WebObjects 5.1</a> 
+        independent from platform and IDE. It significantly 
+        improves developer productivity
+        and makes complex project structures more flexible compared to
+        traditional Makefile-based approach.
+        </p>
+        
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://objectstyle.org/woproject/">http://objectstyle.org/woproject/</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache license</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XDoclet">
 
         <p>XDoclet is an extended Javadoc Doclet engine for use in Ant.
@@ -500,7 +526,7 @@
           </tr>
         </table>
       </subsection>
-
+      
     </section>
 
     <section name="Compiler Implementations">
