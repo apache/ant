@@ -60,6 +60,7 @@ import org.apache.tools.ant.types.*;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.*;
@@ -79,15 +80,16 @@ public class Zip extends MatchingTask {
     protected String archiveType = "zip";
     // For directories:
     private static long emptyCrc = new CRC32 ().getValue ();
-    protected String emptyBehavior = null;
+    protected String emptyBehavior = "skip";
     private Vector filesets = new Vector ();
+    private Hashtable addedDirs = new Hashtable();
     
     /**
      * This is the name/location of where to 
      * create the .zip file.
      */
-    public void setZipfile(String zipFilename) {
-        zipFile = project.resolveFile(zipFilename);
+    public void setZipfile(File zipFile) {
+        this.zipFile = zipFile;
     }
     
     /**
@@ -158,28 +160,9 @@ public class Zip extends MatchingTask {
 		    zOut.setMethod(ZipOutputStream.STORED);
 		}
 		initZipOutputStream(zOut);
-
-                // XXX ideally would also enter includedDirectories to the archive
-		Hashtable parentDirs = new Hashtable();
-
+                                
                 for (int j = 0; j < scanners.length; j++) {
-                    String[] files = scanners[j].getIncludedFiles();
-                    File thisBaseDir = scanners[j].getBasedir();
-                    for (int i = 0; i < files.length; i++) {
-                        File f = new File(thisBaseDir,files[i]);
-                        String name = files[i].replace(File.separatorChar,'/');
-                        // Look for & create parent dirs as needed.
-                        int slashPos = -1;
-                        while ((slashPos = name.indexOf((int)'/', slashPos + 1)) != -1) {
-                            String dir = name.substring(0, slashPos);
-                            if (!parentDirs.contains(dir)) {
-                                parentDirs.put(dir, dir);
-                                zipDir(new File(thisBaseDir, dir.replace('/', File.separatorChar)),
-                                       zOut, dir + '/');
-                            }
-                        }
-                        zipFile(f, zOut, name);
-                    }
+                    addFiles(scanners[j], zOut, "");
                 }
 	    } finally {
 		zOut.close ();
@@ -193,6 +176,36 @@ public class Zip extends MatchingTask {
 	    }
 
             throw new BuildException(msg, ioe, location);
+        }
+    }
+
+    /**
+     * Add all files of the given FileScanner to the ZipOutputStream
+     * prependig the given prefix to each filename.
+     *
+     * <p>Ensure parent directories have been added as well.  
+     */
+    protected void addFiles(FileScanner scanner, ZipOutputStream zOut, 
+                            String prefix) throws IOException {
+        File thisBaseDir = scanner.getBasedir();
+
+        // directories that matched include patterns
+        String[] dirs = scanner.getIncludedDirectories();
+        for (int i = 0; i < dirs.length; i++) {
+            String name = dirs[i].replace(File.separatorChar,'/');
+            if (!name.endsWith("/")) {
+                name += "/";
+            }
+            addParentDirs(thisBaseDir, name, zOut, prefix);
+        }
+
+        // files that matched include patterns
+        String[] files = scanner.getIncludedFiles();
+        for (int i = 0; i < files.length; i++) {
+            File f = new File(thisBaseDir, files[i]);
+            String name = files[i].replace(File.separatorChar,'/');
+            addParentDirs(thisBaseDir, name, zOut, prefix);
+            zipFile(f, zOut, prefix+name);
         }
     }
 
@@ -211,15 +224,14 @@ public class Zip extends MatchingTask {
      */
     protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException
     {
-        if (emptyBehavior == null) emptyBehavior = "skip";
         File[] files = grabFiles(scanners);
         if (files.length == 0) {
             if (emptyBehavior.equals("skip")) {
-                log("Warning: skipping ZIP archive " + zipFile +
+                log("Warning: skipping "+archiveType+" archive " + zipFile +
                     " because no files were included.", Project.MSG_WARN);
                 return true;
             } else if (emptyBehavior.equals("fail")) {
-                throw new BuildException("Cannot create ZIP archive " + zipFile +
+                throw new BuildException("Cannot create "+archiveType+" archive " + zipFile +
                                          ": no files were included.", location);
             } else {
                 // Create.
@@ -227,7 +239,7 @@ public class Zip extends MatchingTask {
                 // In this case using java.util.zip will not work
                 // because it does not permit a zero-entry archive.
                 // Must create it manually.
-                log("Note: creating empty ZIP archive " + zipFile, Project.MSG_INFO);
+                log("Note: creating empty "+archiveType+" archive " + zipFile, Project.MSG_INFO);
                 try {
                     OutputStream os = new FileOutputStream(zipFile);
                     try {
@@ -275,6 +287,13 @@ public class Zip extends MatchingTask {
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
         throws IOException
     {
+        if (addedDirs.get(vPath) != null) {
+            // don't add directories we've already added.
+            // no warning if we try, it is harmless in and of itself
+            return;
+        }
+        addedDirs.put(vPath, vPath);
+        
 	ZipEntry ze = new ZipEntry (vPath);
 	if (dir != null) ze.setTime (dir.lastModified ());
 	ze.setSize (0);
@@ -351,6 +370,31 @@ public class Zip extends MatchingTask {
             zipFile(fIn, zOut, vPath, file.lastModified());
         } finally {
             fIn.close();
+        }
+    }
+
+    /**
+     * Ensure all parent dirs of a given entry have been added.
+     */
+    protected void addParentDirs(File baseDir, String entry,
+                                 ZipOutputStream zOut, String prefix)
+        throws IOException {
+
+        Stack directories = new Stack();
+        int slashPos = entry.length();
+
+        while ((slashPos = entry.lastIndexOf((int)'/', slashPos-1)) != -1) {
+            String dir = entry.substring(0, slashPos+1);
+            if (addedDirs.get(prefix+dir) != null) {
+                break;
+            }
+            directories.push(dir);
+        }
+
+        while (!directories.isEmpty()) {
+            String dir = (String) directories.pop();
+            File f = new File(baseDir, dir);
+            zipDir(f, zOut, prefix+dir);
         }
     }
 }

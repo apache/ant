@@ -107,18 +107,12 @@ public class FileSet extends DataType {
             throw tooManyAttributes();
         }
 
-        /*
-         * XXX cannot check as long as tasks get configured at parse time.
-         *
-         * the build process might create the directory.
-         */
-
-//        if (!dir.exists()) {
-//            throw new BuildException(dir.getAbsolutePath()+" not found.");
-//        }
-//        if (!dir.isDirectory()) {
-//            throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
-//        }
+        if (!dir.exists()) {
+            throw new BuildException(dir.getAbsolutePath()+" not found.");
+        }
+        if (!dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
+        }
         this.dir = dir;
     }
 
@@ -237,17 +231,6 @@ public class FileSet extends DataType {
 
         if (dir == null) {
             throw new BuildException("No directory specified for fileset.");
-        }
-
-        /*
-         * XXX remove the check here and enable the one in setDir as soon
-         *     as we configure tasks at execution time.
-         */
-        if (!dir.exists()) {
-            throw new BuildException(dir.getAbsolutePath()+" not found.");
-        }
-        if (!dir.isDirectory()) {
-            throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
         }
 
         DirectoryScanner ds = new DirectoryScanner();
