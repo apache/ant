@@ -86,7 +86,13 @@ public class PermissionsTest extends TestCase {
         perm.setName("java.home");
         perm.setClass("java.util.PropertyPermission");
         perms.addConfiguredGrant(perm);
-        
+
+        perm = new Permissions.Permission();
+        perm.setActions("read");
+        perm.setName("file.encoding");
+        perm.setClass("java.util.PropertyPermission");
+        perms.addConfiguredGrant(perm);
+
         // Revoke permission to write user.home (granted above via user.*), still able to read though.
         // and the default granted permission to read os.name. 
         perm = new Permissions.Permission();
