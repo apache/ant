@@ -58,7 +58,7 @@ attribute are:</a></p>
       <code>javac1.4</code> and
       <code>javac1.5</code> can be used as aliases.</li>
   <li><code>jikes</code> (the <a
-    href="http://oss.software.ibm.com/developerworks/opensource/jikes/" target="_top">Jikes</a>
+    href="http://jikes.sourceforge.net/" target="_top">Jikes</a>
     compiler).</li>
   <li><code>jvc</code> (the Command-Line Compiler from Microsoft's SDK
       for Java / Visual J++) &ndash; <code>microsoft</code> can be used
@@ -209,7 +209,7 @@ invoking the compiler.</p>
     <td valign="top">debuglevel</td>
     <td valign="top">Keyword list to be appended to the <code>-g</code>
       command-line switch.  This will be ignored by all implementations except
-      <code>modern</code> and <code>classic(ver &gt;= 1.2)</code>.
+      <code>modern</code>, <code>classic(ver &gt;= 1.2)</code> and <code>jikes</code>.
       Legal values are <code>none</code> or a comma-separated list of the
       following keywords:
       <code>lines</code>, <code>vars</code>, and <code>source</code>.
@@ -535,6 +535,8 @@ for every use of an external compiler, this may be a problem of the JDK you are
 using.  This problem may occur with all JDKs &lt; 1.2.</p>
 
 <h3>Jikes Notes</h3>
+
+<p>You need Jikes 1.15 or later.</p>
 
 <p>Jikes supports some extra options, which can be set be defining
 the properties shown below prior to invoking the task. The setting

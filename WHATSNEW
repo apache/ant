@@ -20,6 +20,11 @@ Changes that could break older environments:
   you must set filtertrace to false.
   Bugzilla Report 22758
 
+* The jikes compiler adapter now supports -bootclasspath, -extdirs and
+  -sourcepath and also uses the same logic for debug flags as javac.
+  This means, the jikes compiler adapter now requires Jikes 1.15 or later.
+  Bugzilla Reports 25868, 26404 and 32609.
+
 Other changes:
 --------------
 
@@ -57,9 +62,6 @@ Other changes:
   Bugzilla report 32487
 
 * added a new mapper <filtermapper>
-
-* The jikes compiler adapter now supports -bootclasspath.  Bugzilla
-  Report 32609.
 
 * When a BuildListener tried to access System.err or System.out, Ant
   would have thrown an exception - this has been changed.  Ant now
