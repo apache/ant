@@ -72,7 +72,10 @@ public class DefaultExecManager
         waitFor( process );
 
         //Now wait for monitor to finish aswell
-        try { thread.join(); }
+        try
+        {
+            thread.join();
+        }
         catch( InterruptedException e )
         {
             //should never occur.

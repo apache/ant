@@ -80,8 +80,12 @@ class ExecUtil
     protected static String[] toNativeEnvironment( final Properties environment )
         throws ExecException
     {
-        if( null == environment ) return null;
-        else { return Environment.toNativeFormat( environment ); }
+        if( null == environment )
+            return null;
+        else
+        {
+            return Environment.toNativeFormat( environment );
+        }
     }
 
     /**
