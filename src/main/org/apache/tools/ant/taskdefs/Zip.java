@@ -73,6 +73,7 @@ public class Zip extends MatchingTask {
 
     private File zipFile;
     private File baseDir;
+    private boolean doCompress = true;
     protected String archiveType = "zip";
     
     /**
@@ -89,6 +90,13 @@ public class Zip extends MatchingTask {
      */
     public void setBasedir(String baseDirname) {
         baseDir = project.resolveFile(baseDirname);
+    }
+
+    /**
+     * Sets whether we want to compress the files or only store them.
+     */
+    public void setCompress(String compress) {
+        doCompress = Project.toBoolean(compress);
     }
 
     public void execute() throws BuildException {
@@ -116,6 +124,11 @@ public class Zip extends MatchingTask {
 
         try {
             ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+            if (doCompress) {
+                zOut.setMethod(ZipOutputStream.DEFLATED);
+            } else {
+                zOut.setMethod(ZipOutputStream.STORED);
+            }
             initZipOutputStream(zOut);
 
             for (int i = 0; i < dirs.length; i++) {
@@ -141,7 +154,6 @@ public class Zip extends MatchingTask {
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException
     {
-        zOut.setMethod(ZipOutputStream.DEFLATED);
     }
 
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
@@ -153,6 +165,49 @@ public class Zip extends MatchingTask {
         throws IOException
     {
         ZipEntry ze = new ZipEntry(vPath);
+
+        /*
+         * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
+         * size and the CRC sum before you start writing the data when using 
+         * STORED mode.
+         *
+         * This forces us to process the data twice.
+         *
+         * I couldn't find any documentation on this, just found out by try 
+         * and error.
+         */
+        if (!doCompress) {
+            long size = 0;
+            CRC32 cal = new CRC32();
+            if (!in.markSupported()) {
+                // Store data into a byte[]
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+                byte[] buffer = new byte[8 * 1024];
+                int count = 0;
+                do {
+                    size += count;
+                    cal.update(buffer, 0, count);
+                    bos.write(buffer, 0, count);
+                    count = in.read(buffer, 0, buffer.length);
+                } while (count != -1);
+                in = new ByteArrayInputStream(bos.toByteArray());
+
+            } else {
+                in.mark(Integer.MAX_VALUE);
+                byte[] buffer = new byte[8 * 1024];
+                int count = 0;
+                do {
+                    size += count;
+                    cal.update(buffer, 0, count);
+                    count = in.read(buffer, 0, buffer.length);
+                } while (count != -1);
+                in.reset();
+            }
+            ze.setSize(size);
+            ze.setCrc(cal.getValue());
+        }
+
         zOut.putNextEntry(ze);
 
         byte[] buffer = new byte[8 * 1024];

@@ -81,16 +81,19 @@ public class Jar extends Zip {
     protected void initZipOutputStream(ZipOutputStream zOut)
 	throws IOException, BuildException
     {
-	zOut.setMethod(ZipOutputStream.DEFLATED);
-
 	// add manifest first
 	if (manifest != null) {
-	    ZipEntry ze = new ZipEntry("META-INF/");
-	    zOut.putNextEntry(ze);
+            super.zipDir(new File(manifest.getParent()), zOut, "META-INF/");
 	    super.zipFile(manifest, zOut, "META-INF/MANIFEST.MF");
 	} else {
-	    ZipEntry ze = new ZipEntry("META-INF/");
-	    zOut.putNextEntry(ze);
+            /*
+             * We don't store directories at all and this one will cause a lot
+             * of problems with STORED Zip-Mode.
+             *
+             * That's why i've removed it -- Stefan Bodewig
+             */
+            //            ZipEntry ze = new ZipEntry("META-INF/");
+            //            zOut.putNextEntry(ze);
 	    String s = "/org/apache/tools/ant/defaultManifest.mf";
 	    InputStream in = this.getClass().getResourceAsStream(s);
             if ( in == null )
@@ -105,8 +108,7 @@ public class Jar extends Zip {
         // First add directory to zip entry
         if(!vPath.equals("META-INF/")) {
             // we already added a META-INF
-            ZipEntry ze = new ZipEntry(vPath);
-            zOut.putNextEntry(ze);
+            super.zipDir(dir, zOut, vPath);
         }
     }
 
