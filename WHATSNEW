@@ -46,7 +46,7 @@ Other changes:
 --------------
 
 * New tasks: antstructure, cab, execon, fail, ftp, genkey, jlink,
-junit, sql, javacc, jjtree, starteam, war, unwar, uptodate.
+junit, sql, javacc, jjtree, starteam, war, unwar, uptodate, native2ascii.
 
 * New tasks mparse pending documentation.
 

@@ -1,0 +1,58 @@
+<html>
+<head><title>Native2Ascii</title></head>
+<body>
+<h2>Native2Ascii</h2>
+
+<h3>Description:</h3>
+
+<p>Converts files from native encodings to ascii with escaped Unicode.
+A common usage is to convert source files maintained in a native
+operating system encoding, to ascii prior to compilation.</p>
+
+<p>All matching files in the source directory are converted from a
+native encoding to ascii.  If no encoding is specified, the default
+encoding for the JVM is used.  If ext is specified, then output
+files are renamed to use it as a new extension.  If dest and
+src point to the same directory, ext is required.</p>
+
+<p>This is a directory based task, and supports includes, includesfile,
+excludes, excludesfile, and defaultexcludes along with its specific
+attributes.</p>
+
+<pre>
+Attribute Description                              Required
+-----------------------------------------------------------
+reverse   Reverse the sense of the conversion,     No
+          i.e. convert from ascii to native 
+
+encoding  The native encoding the files are in     No
+
+src       The directory to find files in           No
+
+dest      The directory to output file to          Yes
+
+ext       File extension to use in renaming        No
+          output files 
+</pre>
+
+<h3>Examples</h3>
+
+<pre>
+&lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;srcdir&quot; dest=&quot;srcdir&quot;
+   includes=&quot;**/*.eucjis&quot; ext=&quot;.java&quot; /&gt;
+</pre>
+
+<p>Converts all files in the directory srcdir ending in eucjis
+from the EUCJIS encoding to ascii and renames the to end in
+.java.</p>
+
+<pre>
+&lt;native2ascii encoding='EUCJIS&quot; src=&quot;native/japanese&quot; dest=&quot;src&quot;
+   includes=&quot;**/*.java /&gt;
+</pre>
+
+<p>Converts all the files ending in .java in the directory native/japanese
+to ascii, placing the results in the directory src.  The names of
+the files remain the same.</p>
+</body>
+</html>
