@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -406,6 +406,15 @@ public class FileUtilsTest extends TestCase {
                      fu.removeLeadingPath(new File("/foo"), new File("/bar")));
         assertEquals(fu.normalize("/foobar").getAbsolutePath(), 
                      fu.removeLeadingPath(new File("/foo"), new File("/foobar")));
+        // bugzilla report 19979
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar"), 
+                                              new File("/foo/bar")));
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar"), 
+                                              new File("/foo/bar/")));
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"), 
+                                              new File("/foo/bar/")));
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"), 
+                                              new File("/foo/bar")));
     }
 
     /**
