@@ -74,19 +74,11 @@ import org.apache.tools.ant.types.FileSet;
  * @author charliehubbard76@yahoo.com
  * @since Ant 1.6
  */
-public class Scp extends Task implements LogListener {
+public class Scp extends SSHBase {
 
     private String fromUri;
     private String toUri;
-    private String knownHosts;
-    private boolean trust = false;
-    private int port = 22;
     private List fileSets = null;
-    private boolean failOnError = true;
-
-    public void setFailonerror( boolean failure ) {
-        failOnError = failure;
-    }
 
     /**
      * Sets the file to be transferred.  This can either be a remote
@@ -114,35 +106,7 @@ public class Scp extends Task implements LogListener {
         this.toUri = aToUri;
     }
 
-    /**
-     * Sets the path to the file that has the identities of
-     * all known hosts.  This is used by SSH protocol to validate
-     * the identity of the host.  The default is
-     * <i>${user.home}/.ssh/known_hosts</i>.
 
-     * @param knownHosts a path to the known hosts file.
-     */
-    public void setKnownhosts( String knownHosts ) {
-        this.knownHosts = knownHosts;
-    }
-
-    /**
-     * Setting this to true trusts hosts whose identity is unknown.
-     *
-     * @param yesOrNo if true trust the identity of unknown hosts.
-     */
-    public void setTrust( boolean yesOrNo ) {
-        this.trust = yesOrNo;
-    }
-
-    /**
-     * Changes the port used to connect to the remote host.
-     *
-     * @param port port number of remote host.
-     */
-    public void setPort( int port ) {
-        this.port = port;
-    }
 
     /**
      * Adds a FileSet tranfer to remote host.  NOTE: Either
@@ -161,9 +125,6 @@ public class Scp extends Task implements LogListener {
         super.init();
         this.toUri = null;
         this.fromUri = null;
-        this.knownHosts = System.getProperty("user.home") + "/.ssh/known_hosts";
-        this.trust = false;
-        this.port = 22;
         this.fileSets = null;
     }
 
@@ -174,12 +135,13 @@ public class Scp extends Task implements LogListener {
 
         if ( fromUri == null && fileSets == null ) {
             throw new BuildException("Either the 'file' attribute or one " +
-                    "FileSet is required.");
+                                     "FileSet is required.");
         }
 
         boolean isFromRemote = false;
-        if( fromUri != null )
+        if( fromUri != null ) {
             isFromRemote = isRemoteUri(fromUri);
+        }
         boolean isToRemote = isRemoteUri(toUri);
         try {
             if (isFromRemote && !isToRemote) {
@@ -194,11 +156,11 @@ public class Scp extends Task implements LogListener {
                 // not implemented yet.
             } else {
                 throw new BuildException("'todir' and 'file' attributes " +
-                        "must have syntax like the following: " +
-                        "user:password@host:/path");
+                                         "must have syntax like the following: " +
+                                         "user:password@host:/path");
             }
         } catch (Exception e) {
-            if( failOnError ) {
+            if(getFailonerror()) {
                 throw new BuildException(e);
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
@@ -207,20 +169,17 @@ public class Scp extends Task implements LogListener {
     }
 
     private void download( String fromSshUri, String toPath )
-            throws JSchException, IOException {
-        String[] fromValues = parseUri(fromSshUri);
+        throws JSchException, IOException {
+        String file = parseUri(fromSshUri);
 
         Session session = null;
         try {
-            session = openSession(fromValues[0],
-                    fromValues[1],
-                    fromValues[2],
-                    port );
+            session = openSession();
             ScpFromMessage message = new ScpFromMessage( session,
-                    fromValues[3],
-                    new File( toPath ),
-                    fromSshUri.endsWith("*") );
-            log("Receiving file: " + fromValues[3] );
+                                                         file,
+                                                         new File( toPath ),
+                                                         fromSshUri.endsWith("*") );
+            log("Receiving file: " + file );
             message.setLogListener( this );
             message.execute();
         } finally {
@@ -230,23 +189,20 @@ public class Scp extends Task implements LogListener {
     }
 
     private void upload( List fileSet, String toSshUri )
-            throws IOException, JSchException {
-        String[] toValues = parseUri(toSshUri);
+        throws IOException, JSchException {
+        String file = parseUri(toSshUri);
 
         Session session = null;
         try {
-            session = openSession( toValues[0],
-                    toValues[1],
-                    toValues[2],
-                    port );
+            session = openSession();
             List list = new ArrayList( fileSet.size() );
             for( Iterator i = fileSet.iterator(); i.hasNext(); ) {
                 FileSet set = (FileSet) i.next();
                 list.add( createDirectory( set ) );
             }
             ScpToMessage message = new ScpToMessage( session,
-                    list,
-                    toValues[3] );
+                                                     list,
+                                                     file);
             message.setLogListener( this );
             message.execute();
         } finally {
@@ -256,18 +212,15 @@ public class Scp extends Task implements LogListener {
     }
 
     private void upload( String fromPath, String toSshUri )
-            throws IOException, JSchException {
-        String[] toValues = parseUri(toSshUri);
+        throws IOException, JSchException {
+        String file = parseUri(toSshUri);
 
         Session session = null;
         try {
-            session = openSession( toValues[0],
-                    toValues[1],
-                    toValues[2],
-                    port );
+            session = openSession();
             ScpToMessage message = new ScpToMessage( session,
-                    new File( fromPath ),
-                    toValues[3] );
+                                                     new File( fromPath ),
+                                                     file );
             message.setLogListener( this );
             message.execute();
         } finally {
@@ -276,35 +229,32 @@ public class Scp extends Task implements LogListener {
         }
     }
 
-    private Session openSession( String user, String password,
-                                 String host, int port )
-            throws JSchException {
-        JSch jsch = new JSch();
-        if( knownHosts != null ) {
-            log( "Using known hosts: " + knownHosts, Project.MSG_DEBUG );
-            jsch.setKnownHosts( knownHosts );
-        }
-        Session session = jsch.getSession( user, host, port );
-
-        UserInfo userInfo = new DefaultUserInfo( password, trust );
-        session.setUserInfo(userInfo);
-        log("Connecting to " + host + ":" + port );
-        session.connect();
-        return session;
-    }
-
-    private String[] parseUri(String uri) {
+    private String parseUri(String uri) {
         int indexOfAt = uri.indexOf('@');
         int indexOfColon = uri.indexOf(':');
-        int indexOfPath = uri.indexOf(':', indexOfColon + 1);
+        if (indexOfColon > -1 && indexOfColon < indexOfAt) {
+            // user:password@host:/path notation
+            setUsername(uri.substring(0, indexOfColon));
+            setPassword(uri.substring(indexOfColon + 1, indexOfAt));
+        } else {
+            // no password, will require passphrase
+            setUsername(uri.substring(0, indexOfAt));
+        }
 
-        String[] values = new String[4];
-        values[0] = uri.substring(0, indexOfColon);
-        values[1] = uri.substring(indexOfColon + 1, indexOfAt);
-        values[2] = uri.substring(indexOfAt + 1, indexOfPath);
-        values[3] = uri.substring(indexOfPath + 1);
+        if (getUserInfo().getPassword() == null
+            && getUserInfo().getPassphrase() == null) {
+            throw new BuildException("neither password nor passphrase for user "
+                                     + getUserInfo().getName() + " has been "
+                                     + "given.  Can't authenticate.");
+        }
 
-        return values;
+        int indexOfPath = uri.indexOf(':', indexOfAt + 1);
+        if (indexOfPath == -1) {
+            throw new BuildException("no remote path in " + uri);
+        }
+        
+        setHost(uri.substring(indexOfAt + 1, indexOfPath));
+        return uri.substring(indexOfPath + 1);
     }
 
     private boolean isRemoteUri(String uri) {
@@ -337,47 +287,5 @@ public class Scp extends Task implements LogListener {
         }
 
         return root;
-    }
-
-
-    public class DefaultUserInfo implements UserInfo {
-        private String password = null;
-        private boolean firstTime = true;
-        private boolean trustAllCertificates;
-
-        public DefaultUserInfo(String password, boolean trustAllCertificates) {
-            this.password = password;
-            this.trustAllCertificates = trustAllCertificates;
-        }
-
-        public String getPassphrase() {
-            return null;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public boolean promptPassword( String passwordPrompt ) {
-            log( passwordPrompt, Project.MSG_DEBUG );
-            if( firstTime ) {
-                firstTime = false;
-                return true;
-            }
-            return firstTime;
-        }
-
-        public boolean promptPassphrase( String passPhrasePrompt ) {
-            return true;
-        }
-
-        public boolean promptYesNo( String prompt ) {
-            log( prompt, Project.MSG_DEBUG );
-            return trustAllCertificates;
-        }
-
-        public void showMessage( String message ) {
-            log( message, Project.MSG_DEBUG );
-        }
     }
 }
