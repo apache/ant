@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.lang.reflect.Method;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -97,9 +96,16 @@ public class JUnitVersionHelper {
             } catch (Throwable e) {}
         } else {
             try {
-                Method getNameMethod = 
-                    t.getClass().getMethod("getName", new Class [0]);
-                if (getNameMethod.getReturnType() == String.class) {
+                Method getNameMethod = null;
+                try {
+                    getNameMethod = 
+                        t.getClass().getMethod("getName", new Class [0]);
+                } catch (NoSuchMethodException e) {
+                    getNameMethod = t.getClass().getMethod("name", 
+                                                           new Class [0]);
+                }
+                if (getNameMethod != null &&
+                    getNameMethod.getReturnType() == String.class) {
                     return (String) getNameMethod.invoke(t, new Object[0]);
                 }
             } catch (Throwable e) {}
