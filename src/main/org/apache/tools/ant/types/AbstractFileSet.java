@@ -99,6 +99,7 @@ public abstract class AbstractFileSet extends DataType
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
      * @param r the <code>Reference</code> to use.
+     * @throws BuildException on error
      */
     public void setRefid(Reference r) throws BuildException {
         if (dir != null || defaultPatterns.hasPatterns(getProject())) {
@@ -116,6 +117,7 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Sets the base-directory for this instance.
      * @param dir the directory's <code>File</code> instance.
+     * @throws BuildException on error
      */
     public synchronized void setDir(File dir) throws BuildException {
         if (isReference()) {
@@ -292,6 +294,7 @@ public abstract class AbstractFileSet extends DataType
      * Sets the <code>File</code> containing the includes patterns.
      *
      * @param incl <code>File</code> instance.
+     * @throws BuildException on error
      */
     public synchronized void setIncludesfile(File incl) throws BuildException {
         if (isReference()) {
@@ -305,6 +308,7 @@ public abstract class AbstractFileSet extends DataType
      * Sets the <code>File</code> containing the excludes patterns.
      *
      * @param excl <code>File</code> instance.
+     * @throws BuildException on error
      */
     public synchronized void setExcludesfile(File excl) throws BuildException {
         if (isReference()) {
@@ -411,6 +415,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Returns the directory scanner needed to access the files to process.
+     * @param p the current project
      * @return a <code>DirectoryScanner</code> instance.
      */
     public DirectoryScanner getDirectoryScanner() {
@@ -496,6 +501,8 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Performs the check for circular references and returns the
      * referenced FileSet.
+     * @param p the current project
+     * @return the referenced FileSet
      */
     protected AbstractFileSet getRef(Project p) {
         if (!isChecked()) {
@@ -557,12 +564,12 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Returns the set of selectors as an array.
-     *
+     * @param p the current project
      * @return a <code>FileSelector[]</code> of the selectors in this container.
      */
     public synchronized FileSelector[] getSelectors(Project p) {
         return (isReference())
-            ? getRef(p).getSelectors(p) : (FileSelector[])(selectors.toArray(
+            ? getRef(p).getSelectors(p) : (FileSelector[]) (selectors.toArray(
             new FileSelector[selectors.size()]));
     }
 
@@ -768,7 +775,7 @@ public abstract class AbstractFileSet extends DataType
      * Creates a deep clone of this instance, except for the nested
      * selectors (the list of selectors is a shallow clone of this
      * instance's list).
-     *
+     * @return the cloned object
      * @since Ant 1.6
      */
     public synchronized Object clone() {
