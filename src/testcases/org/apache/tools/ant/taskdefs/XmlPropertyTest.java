@@ -180,13 +180,18 @@ public class XmlPropertyTest extends BuildFileTest {
                 xmlproperty.setIncludeSemanticAttribute(include);
                 xmlproperty.setRootDirectory(workingDir);
 
+                // Set a property on the project to make sure that loading
+                // a property with the same name from an xml file will
+                // *not* change it.
                 project.setNewProperty("override.property.test", "foo");
+
                 xmlproperty.execute();
 
                 Properties props = new Properties();
                 props.load(new FileInputStream(propertyFile));
 
                 //printProperties(project.getProperties());
+
                 ensureProperties(msg, inputFile, workingDir, project, props);
                 ensureReferences(msg, inputFile, project.getReferences());
 

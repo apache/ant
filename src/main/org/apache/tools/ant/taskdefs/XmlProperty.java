@@ -113,7 +113,7 @@ import org.xml.sax.SAXException;
  *
  * <p>Optionally, to more closely mirror the abilities of the Property
  * task, a selected set of attributes can be treated specially.  To
- * enable this behavior, the "semanticAttribute" property of this task
+ * enable this behavior, the "semanticAttributes" property of this task
  * must be set to true (it defaults to false).  If this attribute is
  * specified, the following attributes take on special meaning
  * (setting this to true implicitly sets collapseAttributes to true as
@@ -133,9 +133,10 @@ import org.xml.sax.SAXException;
  *
  * <pre>
  * &lt;root-tag&gt;
- *   &lt;build location="build"&gt;
- *     &lt;classes id="build.classes" location="${build.location}/classes"/&gt;
- *     &lt;reference refid="build.location"/&gt;
+ *   &lt;build&gt;
+ *   &lt;build folder="build"&gt;
+ *     &lt;classes id="build.classes" location="${build.folder}/classes"/&gt;
+ *     &lt;reference refid="build.classes"/&gt;
  *   &lt;/build&gt;
  *   &lt;compile&gt;
  *     &lt;classpath pathid="compile.classpath"&gt;
@@ -155,9 +156,9 @@ import org.xml.sax.SAXException;
  * <p>is equivalent to the following entries in a build file:</p>
  *
  * <pre>
- * &lt;property name="build.location" location="build"/&gt;
- * &lt;property name="build.classes.location" location="${build.location}/classes"/&gt;
- * &lt;property name="build.reference" refid="build.location"/&gt;
+ * &lt;property name="build" location="build"/&gt;
+ * &lt;property name="build.classes" location="${build.location}/classes"/&gt;
+ * &lt;property name="build.reference" refid="build.classes"/&gt;
  *
  * &lt;property name="run-time.jars" value="*.jar/&gt;
  *
@@ -193,13 +194,13 @@ import org.xml.sax.SAXException;
  * <li><b>semanticAttributes</b>: Indicate whether attributes
  *     named "location", "value", "refid" and "path"
  *     are interpreted as ant properties.  Defaults
- *     to true.</li>
+ *     to false.</li>
  * <li><b>rootDirectory</b>: Indicate the directory to use
  *     as the root directory for resolving location
  *     properties.  Defaults to the directory
  *     of the project using the task.</li>
  * <li><b>includeSemanticAttribute</b>: Indicate whether to include
- *     the semanticAttribute ("location" or "value") as
+ *     the semantic attribute ("location" or "value") as
  *     part of the property name.  Defaults to false.</li>
  * </ul>
  *
@@ -275,6 +276,10 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
             Element topElement = factory.newDocumentBuilder().parse(configurationStream).getDocumentElement();
 
+            // Keep a hashtable of attributes added by this task.
+            // This task is allow to override its own properties
+            // but not other properties.  So we need to keep track
+            // of which properties we've added.
             addedAttributes = new Hashtable();
 
             if (keepRoot) {
@@ -473,6 +478,12 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (addedAttributes.containsKey(name)) {
             // If this attribute was added by this task, then
             // we append this value to the existing value.
+            // We use the setProperty method which will
+            // forcibly override the property if it already exists.
+            // We need to put these properties into the project
+            // when we read them, though (instead of keeping them
+            // outside of the project and batch adding them at the end)
+            // to allow other properties to reference them.
             value = (String)addedAttributes.get(name) + "," + value;
             getProject().setProperty(name, value);
         } else {
