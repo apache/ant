@@ -730,7 +730,7 @@ public class Manifest {
             }
             try {
                 Manifest defaultManifest 
-                    = new Manifest(new InputStreamReader(in, "ASCII"));
+                    = new Manifest(new InputStreamReader(in, "UTF-8"));
                 Attribute createdBy = new Attribute("Created-By", 
                     System.getProperty("java.vm.version") + " ("
                     + System.getProperty("java.vm.vendor") + ")" );
