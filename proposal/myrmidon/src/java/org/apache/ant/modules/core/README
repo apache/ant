@@ -1,0 +1,2 @@
+This package is required for operation. No task within this directory is allowed to 
+require parameters other than strings for converter.
