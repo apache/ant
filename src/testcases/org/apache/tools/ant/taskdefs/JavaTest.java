@@ -31,10 +31,10 @@ import org.apache.tools.ant.util.FileUtils;
  * */
 public class JavaTest extends BuildFileTest {
 
-    private static final int TIME_TO_WAIT = 4;
+    private static final int TIME_TO_WAIT = 1;
     // wait 1 second extra to allow for java to start ...
     // this time was OK on a Win NT machine and on nagoya
-    private static final int SECURITY_MARGIN = 1000;
+    private static final int SECURITY_MARGIN = 2000;
 
     private boolean runFatalTests=false;
 
