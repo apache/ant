@@ -2,12 +2,6 @@
   
   <types>
 
-    <!-- tasks to test operation of engine -->
-    <task name="prim-test" classname="org.apache.ant.modules.test.PrimitiveTypesTest" />
-    <task name="sub-elements-test" classname="org.apache.ant.modules.test.SubElementTest" />
-    <task name="conf-test" classname="org.apache.ant.modules.test.ConfigurationTest" />
-    <task name="content-test" classname="org.apache.ant.modules.test.ContentTest" />
-
     <!-- basic tasks/datatypes/coverters required in most environments -->
     <task name="echo" classname="org.apache.ant.modules.basic.Echo" />
     <task name="property" classname="org.apache.ant.modules.basic.Property" />
