@@ -16,10 +16,9 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:mnewcomb@tacintel.com">Michael Newcomb</a>
  */
-class ProcessDestroyer
+public class ProcessDestroyer
     extends Thread
 {
-
     private ArrayList processes = new ArrayList();
 
     /**
