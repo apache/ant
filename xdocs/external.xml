@@ -98,7 +98,10 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>GNU General Public License</td>
+            <td>Releases 1.0 to 1.4 have been licensed under the GNU
+            General Public License.  Starting with release 2.0 the
+            license has been changed to the GNU Lesser General Public
+            License.</td>
           </tr>
         </table>
       </subsection>
