@@ -122,6 +122,7 @@ public class Launcher {
         String cpString = null;
         List argList = new ArrayList();
         String[] newArgs;
+        boolean  noUserLib = false;
 
         for (int i = 0; i < args.length; ++i) {
             if (args[i].equals("-lib")) {
@@ -140,6 +141,8 @@ public class Launcher {
                         + "not be repeated");
                 }
                 cpString = args[++i];
+            } else if (args[i].equals("--nouserlib") || args[i].equals("-nouserlib")) {
+                noUserLib = true;
             } else {
                 argList.add(args[i]);
             }
@@ -182,8 +185,8 @@ public class Launcher {
 
         File userLibDir
             = new File(System.getProperty("user.home"), USER_LIBDIR);
-        URL[] userJars = Locator.getLocationURLs(userLibDir);
 
+        URL[] userJars = noUserLib ? new URL[0] : Locator.getLocationURLs(userLibDir);
 
         int numJars = libJars.length + userJars.length + systemJars.length;
         if (toolsJar != null) {

@@ -53,6 +53,10 @@ Other changes:
 * Added searchpath attribute to <exec> for searching path variable(s)
   when resolveexecutable = true.
 
+* Added -nouserlib option to allow running ant without automatically loading
+  up ${user.dir}/.lib/ant. This is useful when compiling ant, and antlibs.
+  Modified the build.sh and build.bat to use the option.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
