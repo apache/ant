@@ -86,6 +86,9 @@ Other changes:
 * Junit task -- display suite first.
   Bugzilla report 31962.
 
+* <apply> has a new "overwrite" attribute that, when true, disables
+  checking of target files.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

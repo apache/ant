@@ -554,6 +554,10 @@ public class ExecuteOnTest extends BuildFileTest {
         executeTarget("ignoremissing");
     }
 
+    public void testOverwrite() {
+        executeTarget("overwrite");
+    }
+
     //borrowed from TokenFilterTest
     private String getFileString(String filename) throws IOException {
         String result = null;
