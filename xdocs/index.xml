@@ -33,6 +33,9 @@
     makes use of namespaces to avoid name clashes of custom tasks.
     For a longer list of fixed bugs and new features see the release
     notes.</p>
+    
+    <p>The manual of Ant 1.6 is available on line 
+    <a href="manual-1.6beta/"> here</a>.</p> 
 
  </section>
 
