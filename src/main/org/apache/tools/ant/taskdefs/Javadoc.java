@@ -725,20 +725,17 @@ public class Javadoc extends Task {
          * form, with each element being one of "all" (the default),
          * "overview", "packages", "types", "constructors", "methods",
          * "fields". The elements are treated in a case-insensitive
-         * manner. Specifying "all" and other elements will result in
-         * a warning message being generated but the "all" taking
-         * precedence. Specifying an unrecognised element will result
-         * in a warning message and the element being ignored. If no
-         * recognised elements are specified, a warning will be issued
-         * and the default of "all" will be used. If an element is
-         * specified twice, a warning will be issued but there will
-         * be no real ill-effects.
+         * manner. 
          * 
          * @param verboseScope The scope of the tag.
          *                     Must not be <code>null</code>, 
          *                     should not be empty.
+         * 
+         * @exception BuildException if all is specified along with other elements,
+         * if any elements are repeated, if no elements are specified, 
+         * or if any unrecognised elements are specified.
          */
-        public void setScope (String verboseScope) {
+        public void setScope (String verboseScope) throws BuildException {
             verboseScope=verboseScope.toLowerCase (Locale.US);
 
             boolean[] elements=new boolean[SCOPE_ELEMENTS.length];
@@ -750,11 +747,11 @@ public class Javadoc extends Task {
             // elements array and issuing warnings where appropriate.
             StringTokenizer tok = new StringTokenizer (verboseScope, ",");
             while (tok.hasMoreTokens()) {
-                String next = tok.nextToken();
+                String next = tok.nextToken().trim();
                 if (next.equals("all")) {
-                    if (gotAll) {
+                    if (gotAll) {   
                         project.log ("Repeated tag scope element: all", 
-                                     Project.MSG_WARN);
+                                     Project.MSG_VERBOSE);
                     }
                     gotAll=true;
                 }
@@ -765,13 +762,12 @@ public class Javadoc extends Task {
                             break;
                     }
                     if (i==SCOPE_ELEMENTS.length) {
-                        project.log ("Ignoring unrecognised scope element: "+
-                                     next, Project.MSG_WARN);
+                        throw new BuildException ("Unrecognised scope element: "+next);
                     } 
                     else {
                         if (elements[i]) {
                             project.log ("Repeated tag scope element: "+next, 
-                                         Project.MSG_WARN);
+                                         Project.MSG_VERBOSE);
                         }
                         elements[i]=true;
                         gotNotAll=true;
@@ -780,14 +776,11 @@ public class Javadoc extends Task {
             }
             
             if (gotNotAll && gotAll) {
-                project.log ("Mixture of \"all\" and other scope elements "+
-                             "repeated in tag parameter: defaulting to "+
-                             "\"all\".", Project.MSG_WARN);
+                throw new BuildException ("Mixture of \"all\" and other scope elements "+
+                                          "in tag parameter.");
             }
             if (!gotNotAll && !gotAll) {
-                project.log ("No recognised scope elements specified: "+
-                             "defaulting to \"all\".", Project.MSG_WARN);
-                gotAll=true;
+                throw new BuildException ("No scope elements specified in tag parameter.");
             }
             if (gotAll) {
                 this.scope="a";
