@@ -17,112 +17,84 @@
 
 package org.apache.tools.ant.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.apache.tools.ant.types.Mapper;
 
 /**
- * A filenamemapper that contains other filename mappers.
- * The mappers proceeded in a chain or separately.
+ * A <code>FileNameMapper</code> that contains
+ * other <CODE>FileNameMapper</CODE>s.
  * @see FileNameMapper
  */
+public abstract class ContainerMapper implements FileNameMapper {
 
-public class ContainerMapper implements FileNameMapper {
-
-    private boolean chained = false;
     private List mappers = new ArrayList();
 
     /**
-     * Add a file name mapper.
-     *
-     * @param fileNameMapper a file name mapper.
-     */
-    public void add(FileNameMapper fileNameMapper) {
-        mappers.add(fileNameMapper);
-    }
-
-    /**
-     * Add a Mapper
-     * @param mapper the mapper to add
+     * Add a <code>Mapper</code>.
+     * @param mapper the <code>Mapper</code> to add.
      */
     public void addConfiguredMapper(Mapper mapper) {
-        mappers.add(mapper.getImplementation());
+        add(mapper.getImplementation());
     }
 
     /**
-     * Set the chained attribute.
-     *
-     * @param chained if true the mappers are processed in
-     *                   a chained fashion. The outputs of
-     *                a mapper are the inputs for the next mapper.
-     *                if false the mappers are processed indepentanly, the
-     *                outputs are combined.
+     * Add a <code>FileNameMapper</code>.
+     * @param fileNameMapper a <CODE>FileNameMapper</CODE>.
+     * @throws <CODE>IllegalArgumentException</CODE> if attempting to add this
+     *         <CODE>ContainerMapper</CODE> to itself, or if the specified
+     *         <CODE>FileNameMapper</CODE> is itself a <CODE>ContainerMapper</CODE>
+     *         that contains this <CODE>ContainerMapper</CODE>.
      */
-    public void setChained(boolean chained) {
-        this.chained = chained;
+    public synchronized void add(FileNameMapper fileNameMapper) {
+        if (this == fileNameMapper
+            || (fileNameMapper instanceof ContainerMapper
+            && ((ContainerMapper)fileNameMapper).contains(this))) {
+            throw new IllegalArgumentException(
+                "Circular mapper containment condition detected");
+        } else {
+            mappers.add(fileNameMapper);
+        }
     }
 
     /**
-     * This method is ignored, present to fullfill the FileNameMapper
-     * interface.
-     * @param ignore this parameter is ignored.
+     * Return <CODE>true</CODE> if this <CODE>ContainerMapper</CODE> or any of
+     * its sub-elements contains the specified <CODE>FileNameMapper</CODE>.
+     * @param fileNameMapper   the <CODE>FileNameMapper</CODE> to search for.
+     * @return <CODE>boolean</CODE>.
+     */
+    protected synchronized boolean contains(FileNameMapper fileNameMapper) {
+        boolean foundit = false;
+        for (Iterator iter = mappers.iterator(); iter.hasNext() && !foundit;) {
+            FileNameMapper next = (FileNameMapper)(iter.next());
+            foundit|= (next == fileNameMapper
+                || (next instanceof ContainerMapper
+                && ((ContainerMapper)next).contains(fileNameMapper)));
+        }
+        return foundit;
+    }
+
+    /**
+     * Get the <CODE>List</CODE> of <CODE>FileNameMapper</CODE>s.
+     * @return <CODE>List</CODE>.
+     */
+    public synchronized List getMappers() {
+        return Collections.unmodifiableList(mappers);
+    }
+
+    /**
+     * Empty implementation.
      */
     public void setFrom(String ignore) {
     }
 
     /**
-     * This method is ignored, present to fullfill the FileNameMapper
-     * interface.
-     * @param ignore this parameter is ignored.
+     * Empty implementation.
      */
     public void setTo(String ignore) {
     }
 
-    /**
-     * Map a filename using the list of mappers.
-     *
-     * @param sourceFileName The filename to map.
-     * @return a <code>String[]</code> value or null if there
-     *         are no mappings.
-     */
-    public String[] mapFileName(String sourceFileName) {
-        List ret = new ArrayList();
-        if (chained) {
-            List inputs = new ArrayList();
-            ret.add(sourceFileName);
-            for (int i = 0; i < mappers.size(); ++i) {
-                inputs = ret;
-                ret = new ArrayList();
-                FileNameMapper mapper = (FileNameMapper) mappers.get(i);
-                for (Iterator it = inputs.iterator(); it.hasNext();) {
-                    String[] mapped = mapper.mapFileName(
-                        (String) it.next());
-                    if (mapped != null) {
-                        for (int m = 0; m < mapped.length; ++m) {
-                            ret.add(mapped[m]);
-                        }
-                    }
-                }
-                if (ret.size() == 0) {
-                    return null;
-                }
-            }
-        } else {
-            for (int i = 0; i < mappers.size(); ++i) {
-                FileNameMapper mapper = (FileNameMapper) mappers.get(i);
-                String[] mapped = mapper.mapFileName(sourceFileName);
-                if (mapped != null) {
-                    for (int m = 0; m < mapped.length; ++m) {
-                        ret.add(mapped[m]);
-                    }
-                }
-            }
-            if (ret.size() == 0) {
-                return null;
-            }
-        }
-        return (String[]) ret.toArray(new String[ret.size()]);
-    }
 }
 

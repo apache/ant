@@ -140,7 +140,7 @@ public class MapperTest extends TestCase {
         assertEquals("a.class", result[0]);
     }
 
-    public void testContainer() {
+    public void testNested() {
         Mapper mapper1 = new Mapper(project);
         Mapper.MapperType mt = new Mapper.MapperType();
         mt.setValue("glob");
@@ -171,7 +171,7 @@ public class MapperTest extends TestCase {
             list.contains("mergefile"));
     }
 
-    public void testChainedContainer() {
+    public void testChained() {
 
         // a --> b --> c --- def
         //               \-- ghi
@@ -184,6 +184,7 @@ public class MapperTest extends TestCase {
         mapperBC.setFrom("b");
         mapperBC.setTo("c");
 
+        //implicit composite
         Mapper mapperCX = new Mapper(project);
 
         FileNameMapper mapperDEF = new GlobPatternMapper();
@@ -197,20 +198,19 @@ public class MapperTest extends TestCase {
         mapperCX.add(mapperDEF);
         mapperCX.add(mapperGHI);
 
-        ContainerMapper chained = new ContainerMapper();
-        chained.setChained(true);
+        Mapper chained = new Mapper(project);
+        chained.setClassname(ChainedMapper.class.getName());
         chained.add(mapperAB);
         chained.add(mapperBC);
         chained.addConfiguredMapper(mapperCX);
 
-        String[] targets = chained.mapFileName("a");
+        FileNameMapper fileNameMapper = chained.getImplementation();
+        String[] targets = fileNameMapper.mapFileName("a");
         assertNotNull("no filenames mapped", targets);
         assertEquals("wrong number of filenames mapped", 2, targets.length);
         List list = Arrays.asList(targets);
-        assertTrue("cannot find expected target \"def\"",
-            list.contains("def"));
-        assertTrue("cannot find expected target \"ghi\"",
-            list.contains("ghi"));
+        assertTrue("cannot find expected target \"def\"", list.contains("def"));
+        assertTrue("cannot find expected target \"ghi\"", list.contains("ghi"));
     }
 
     public void testCopyTaskWithTwoFilesets() {

@@ -23,6 +23,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.CompositeMapper;
 import org.apache.tools.ant.util.ContainerMapper;
 
 /**
@@ -31,16 +32,25 @@ import org.apache.tools.ant.util.ContainerMapper;
  */
 public class Mapper extends DataType implements Cloneable {
 
-    protected MapperType      type = null;
-    private   ContainerMapper container = null;
-    private   Boolean         chained = null;
+    protected MapperType type = null;
+    protected String classname = null;
+    protected Path classpath = null;
+    protected String from = null;
+    protected String to = null;
 
+    private ContainerMapper container = null;
+
+    /**
+     * Construct a new <CODE>Mapper</CODE> element.
+     * @param p   the owning Ant <CODE>Project</CODE>.
+     */
     public Mapper(Project p) {
         setProject(p);
     }
 
     /**
-     * Set the type of FileNameMapper to use.
+     * Set the type of <code>FileNameMapper</code> to use.
+     * @param type   the <CODE>MapperType</CODE> enumerated attribute.
      */
     public void setType(MapperType type) {
         if (isReference()) {
@@ -49,15 +59,26 @@ public class Mapper extends DataType implements Cloneable {
         this.type = type;
     }
 
-    protected String classname = null;
-
     /**
-     * Add a nested filename mapper
-     * @param fileNameMapper the mapper to add
+     * Add a nested <CODE>FileNameMapper</CODE>.
+     * @param fileNameMapper   the <CODE>FileNameMapper</CODE> to add.
      */
     public void add(FileNameMapper fileNameMapper) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         if (container == null) {
-            container = new ContainerMapper();
+            if (type == null && classname == null) {
+                container = new CompositeMapper();
+            } else {
+                FileNameMapper m = getImplementation();
+                if (m instanceof ContainerMapper) {
+                    container = (ContainerMapper)m;
+                } else {
+                    throw new BuildException(String.valueOf(m)
+                        + " mapper implementation does not support nested mappers!");
+                }
+            }
         }
         container.add(fileNameMapper);
     }
@@ -69,16 +90,7 @@ public class Mapper extends DataType implements Cloneable {
     public void addConfiguredMapper(Mapper mapper) {
         add(mapper.getImplementation());
     }
-                    
-    /**
-     * Set the chained attribute of the nested mapper container
-     * @param chained the setting for the chained attribute of the
-     *        nested mapper container.
-     */
-    public void setChained(Boolean chained) {
-        this.chained = chained;
-    }
-    
+
     /**
      * Set the class name of the FileNameMapper to use.
      */
@@ -88,8 +100,6 @@ public class Mapper extends DataType implements Cloneable {
         }
         this.classname = classname;
     }
-
-    protected Path classpath = null;
 
     /**
      * Set the classpath to load the FileNameMapper through (attribute).
@@ -129,8 +139,6 @@ public class Mapper extends DataType implements Cloneable {
         createClasspath().setRefid(r);
     }
 
-    protected String from = null;
-
     /**
      * Set the argument to FileNameMapper.setFrom
      */
@@ -140,8 +148,6 @@ public class Mapper extends DataType implements Cloneable {
         }
         this.from = from;
     }
-
-    protected String to = null;
 
     /**
      * Set the argument to FileNameMapper.setTo
@@ -181,15 +187,6 @@ public class Mapper extends DataType implements Cloneable {
         }
 
         if (container != null) {
-            if (type != null || classname != null ||
-                to != null || from != null) {
-                throw new BuildException(
-                    "for nested mappers, type, classname, to and from" +
-                    " attributes are not allowed");
-            }
-            if (chained != null) {
-                container.setChained(chained.booleanValue());
-            }
             return container;
         }
 
@@ -199,35 +196,39 @@ public class Mapper extends DataType implements Cloneable {
         }
 
         try {
-            if (type != null) {
-                classname = type.getImplementation();
-            }
-
-            Class c = null;
-            if (classpath == null) {
-                c = Class.forName(classname);
-            } else {
-                AntClassLoader al = getProject().createClassLoader(classpath);
-                c = Class.forName(classname, true, al);
-            }
-
-            FileNameMapper m = (FileNameMapper) c.newInstance();
+            FileNameMapper m
+                = (FileNameMapper)(getImplementationClass().newInstance());
             final Project project = getProject();
             if (project != null) {
                 project.setProjectReference(m);
             }
             m.setFrom(from);
             m.setTo(to);
+
             return m;
         } catch (BuildException be) {
             throw be;
         } catch (Throwable t) {
             throw new BuildException(t);
-        } finally {
-            if (type != null) {
-                classname = null;
-            }
         }
+    }
+
+     /**
+     * Gets the Class object associated with the mapper implementation.
+     * @return <CODE>Class</CODE>.
+     */
+    protected Class getImplementationClass() throws ClassNotFoundException {
+
+        String classname = this.classname;
+        if (type != null) {
+            classname = type.getImplementation();
+        }
+
+        ClassLoader loader = (classpath == null)
+            ? getClass().getClassLoader()
+            : getProject().createClassLoader(classpath);
+
+        return Class.forName(classname, true, loader);
     }
 
     /**
