@@ -173,17 +173,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Defines the mapper to map source to destination files.
-     * @return a mapper to be configured
      * @exception BuildException if more than one mapper is defined
      * @since Ant 1.6.2
      */
-    public Mapper createMapper() throws BuildException {
+    public void addMapper(Mapper mapper) {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
                                      getLocation());
         }
-        mapperElement = new Mapper(getProject());
-        return mapperElement;
+        mapperElement = mapper;
     }
 
     /**
