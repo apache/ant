@@ -610,6 +610,12 @@ public final class IntrospectionHelper implements BuildListener {
         String uri = ProjectHelper.extractUriFromComponentName(elementName);
         String name = ProjectHelper.extractNameFromComponentName(elementName);
 
+        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
+            uri = "";
+        }
+        if (parentUri.equals(ProjectHelper.ANT_CORE_URI)) {
+            parentUri = "";
+        }
         NestedCreator nc = null;
         if (uri.equals(parentUri)) { //  || uri.equals("")) {
             nc = (NestedCreator) nestedCreators.get(
@@ -741,7 +747,13 @@ public final class IntrospectionHelper implements BuildListener {
      * @return true if the given nested element is supported
      */
     public boolean supportsNestedElement(String parentUri, String elementName) {
+        if (parentUri.equals(ProjectHelper.ANT_CORE_URI)) {
+            parentUri = "";
+        }
         String uri = ProjectHelper.extractUriFromComponentName(elementName);
+        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
+            uri = "";
+        }
         String name = ProjectHelper.extractNameFromComponentName(elementName);
 
         return (
