@@ -150,13 +150,7 @@
 
 #macro (document)
   #header()
-      <table class="title">
-        <tr>
-          <td valign="middle">
-            <h1>$root.getChild("properties").getChild("title").getText()</h1>
-          </td>
-        </tr>
-      </table>
+    <h1 class="title">$root.getChild("properties").getChild("title").getText()</h1>
   #set ($allSections = $root.getChild("body").getChildren("section"))
   #foreach ( $section in $allSections )
     #section ($section)
@@ -164,24 +158,12 @@
 
   #if ($root.getChildren("faqsection").size() > 0)
     #set ($allFaqSections = $root.getChildren("faqsection"))
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue3">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>Questions</strong>
-          </font>
-        </td></tr>
-      </table>
+      <h3 class="section">Questions</h3>
     #foreach ( $faqSection in $allFaqSections )
       #toc ($faqSection)
     #end
 
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue3">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>Answers</strong>
-          </font>
-        </td></tr>
-      </table>
+      <h3 class="section">Answers</h3>
     #foreach ( $faqSection in $allFaqSections )
       #answers ($faqSection)
     #end

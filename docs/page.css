@@ -102,6 +102,10 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
     border-bottom: 2px solid #4C6C8F;
 }
 
+.title {
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
 @media print {
    .menu {
      display: none;
