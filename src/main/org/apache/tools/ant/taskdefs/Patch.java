@@ -55,22 +55,20 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Commandline;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
-public class Patch extends Exec {
+public class Patch extends Task {
 
     private File originalFile;
-    private File patchFile;
-    private boolean backup = false;
-    private boolean ignoreWhitespace = false;
-    private int strip = -1;
-    private boolean quiet = false;
-    private boolean reverse = false;
+    private boolean havePatchfile = false;
+    private Commandline cmd = new Commandline();
 
     /**
      * The file to patch.
@@ -83,21 +81,31 @@ public class Patch extends Exec {
      * The file containing the diff output.
      */
     public void setPatchfile(File file) {
-        patchFile = file;
+        if (!file.exists()) {
+            throw new BuildException("patchfile "+file+" doesn\'t exist", 
+                                     location);
+        }
+        cmd.addValue("-i");
+        cmd.addValue(file.getAbsolutePath());
+        havePatchfile = true;
     }
 
     /**
      * Shall patch write backups.
      */
     public void setBackups(boolean backups) {
-        backup = backups;
+        if (backups) {
+            cmd.addValue("-b");
+        }
     }
 
     /**
      * Ignore whitespace differences.
      */
     public void setIgnorewhitespace(boolean ignore) {
-        ignoreWhitespace = ignore;
+        if (ignore) {
+            cmd.addValue("-l");
+        }
     }
 
     /**
@@ -110,65 +118,48 @@ public class Patch extends Exec {
         if (num < 0) {
             throw new BuildException("strip has to be >= 0", location);
         }
-        strip = num;
+        cmd.addValue("-p"+num);
     }
 
     /**
      * Work silently unless an error occurs.
      */
     public void setQuiet(boolean q) {
-        quiet = q;
+        if (q) {
+            cmd.addValue("-s");
+        }
     }
 
     /**
      * Assume patch was created with old and new files swapped.
      */
     public void setReverse(boolean r) {
-        reverse = r;
-    }
-
-    public final void setCommand(String command) throws BuildException {
-        throw new BuildException("Cannot set attribute command in patch task",
-                                 location);
+        if (r) {
+            cmd.addValue("-R");
+        }
     }
 
     public void execute() throws BuildException {
-        if (patchFile == null) {
+        if (!havePatchfile) {
             throw new BuildException("patchfile argument is required", 
                                      location);
         } 
-        if (!patchFile.exists()) {
-            throw new BuildException("patchfile "+patchFile+" doesn\'t exist", 
-                                     location);
-        }
         
-        StringBuffer command = new StringBuffer("patch -i "+patchFile+" ");
+        cmd.setExecutable("patch");
 
-        if (backup) {
-            command.append("-b ");
-        }
-        
-        if (ignoreWhitespace) {
-            command.append("-l ");
-        }
-        
-        if (strip >= 0) {
-            command.append("-p"+strip+" ");
-        }
-        
-        if (quiet) {
-            command.append("-s ");
-        }
-        
-        if (reverse) {
-            command.append("-R ");
-        }
-        
         if (originalFile != null) {
-            command.append(originalFile);
-        } 
+            cmd.addValue(originalFile.getAbsolutePath());
+        }
 
-        run(command.toString());
+        Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
+                                                       Project.MSG_WARN), 
+                                  null);
+        exe.setCommandline(cmd.getCommandline());
+        try {
+            exe.execute();
+        } catch (IOException e) {
+            throw new BuildException(e, location);
+        }
     }
 
 }// Patch

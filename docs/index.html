@@ -944,7 +944,7 @@ preferred over the <i>checkout</i> command, because of speed.</p>
   <tr>
     <td valign="top">dest</td>
     <td valign="top">the directory where the checked out files should be placed.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No, default is project's basedir.</td>
   </tr>
   <tr>
     <td valign="top">package</td>
@@ -970,12 +970,6 @@ preferred over the <i>checkout</i> command, because of speed.</p>
     <td valign="top">noexec</td>
     <td valign="top">report only, don't change any files.</td>
     <td align="center" valign="top">No, default &quot;false&quot;</td>
-  </tr>
-  <tr>
-    <td valign="top">failonerror</td>
-    <td valign="top">Stop the buildprocess if the command exits with a
-      returncode other than 0.</td>
-    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -2363,23 +2357,6 @@ necessary.</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">dir</td>
-    <td valign="top">the directory in which the command should be executed.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">os</td>
-    <td valign="top">list of Operating Systems on which the command may be
-      executed.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">output</td> 
-    <td valign="top">the file to which the output of the patch command 
-      should be redirected.</td> 
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
     <td valign="top">patchfile</td> 
     <td valign="top">the file that includes the diff output</td>
     <td align="center" valign="top">Yes</td>
@@ -2415,12 +2392,6 @@ necessary.</p>
     <td valign="top">strip</td> 
     <td valign="top">Strip the smallest prefix containing <i>num</i> leading 
       slashes from filenames.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">failonerror</td>
-    <td valign="top">Stop the buildprocess if the command exits with a
-      returncode other than 0.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>

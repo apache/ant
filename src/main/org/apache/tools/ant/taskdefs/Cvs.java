@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Commandline;
 import java.io.*;
 
 /**
@@ -65,42 +66,58 @@ import java.io.*;
  * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
  */
 
-public class Cvs extends Exec {
+public class Cvs extends Task {
 
+    private Commandline cmd = new Commandline();
     private String cvsRoot;
     private String pack;
-    private String tag;
-    private String date;
     private String command = "checkout";
     private boolean quiet = false;
     private boolean noexec = false;
+    private File dest;
     
     public void execute() throws BuildException {
 
 	// XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
 	// execution so that we don't rely on having native CVS stuff around (SM)
+
+        // We can't do it ourselves as jCVS is GPLed, a third party task 
+        // outside of jakarta repositories would be possible though (SB).
 	
-	StringBuffer sb=new StringBuffer();
-	sb.append(" cvs ");
+        Commandline toExecute = new Commandline();
+
+        toExecute.setExecutable("cvs");
         if (cvsRoot != null) { 
-            sb.append("-d ").append(cvsRoot).append(" ");
+            toExecute.addValue("-d");
+            toExecute.addValue(cvsRoot);
         }
-
-        sb.append(noexec ? "-n " : "")
-            .append(quiet  ? "-q " : "")
-            .append(command).append(" ");
-		
-	if (tag!=null)
-            sb.append("-r ").append(tag).append(" ");
-
-       if (date!=null)
-            sb.append("-D ").append(date).append(" ");
+        if (noexec) {
+            toExecute.addValue("-n");
+        }
+        if (quiet) {
+            toExecute.addValue("-q");
+        }
+        toExecute.addValue(command);
+        toExecute.addLine(cmd.getCommandline());
 
 	if (pack != null) {
-            sb.append(pack);
+            toExecute.addValue(pack);
 	}
 
-        run(sb.toString());
+        Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
+                                                       Project.MSG_WARN), 
+                                  null);
+
+        exe.setAntRun(project);
+        if (dest == null) dest = project.getBaseDir();
+        exe.setWorkingDirectory(dest);
+
+        exe.setCommandline(toExecute.getCommandline());
+        try {
+            exe.execute();
+        } catch (IOException e) {
+            throw new BuildException(e, location);
+        }
     }
 
     public void setCvsRoot(String root) {
@@ -113,8 +130,8 @@ public class Cvs extends Exec {
 	this.cvsRoot = root;
     }
 
-    public void setDest(String dest) {
-	setDir(dest);
+    public void setDest(File dest) {
+        this.dest = dest;
     }
 
     public void setPackage(String p) {
@@ -123,19 +140,18 @@ public class Cvs extends Exec {
 
     public void setTag(String p) { 
         // Check if not real tag => set it to null 
-        if (p != null) { 
-            if (p.trim().equals("")) 
-                p = null; 
-        } 
-
-        this.tag = p; 
+        if (p != null && p.trim().length() > 0) {
+            cmd.addValue("-r");
+            cmd.addValue(p);
+        }
     } 
 
     
     public void setDate(String p) {
-       if( p != null && p.trim().length()==0 )
-               p = null;
-       this.date = p;
+        if(p != null && p.trim().length() > 0) {
+            cmd.addValue("-D");
+            cmd.addValue(p);
+        }
     }
 
     public void setCommand(String c) {

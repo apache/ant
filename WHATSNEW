@@ -12,6 +12,10 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 
 * the class attribute of <java> has been removed.
 
+* <patch> has lost some of its attributes.
+
+* <java> and <cvs> have lost some undocumented attributes.
+
 Other changes:
 --------------
 
