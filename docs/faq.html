@@ -283,6 +283,12 @@
         <code>web-inf</code> or JAR files with a lower-case
         <code>meta-inf</code> directory.
       </a></li>
+                <li><a href="#NoClassDefFoundError">
+  I installed Ant 1.6.x and now get
+        <code>Exception in thread "main" java.lang.NoClassDefFoundError:
+ org/apache/tools/ant/launch/Launcher</code>
+      
+      </a></li>
             </ul>
                 <h4 class="toc">Ant and IDEs/Editors</h4>
         <ul>
@@ -1093,6 +1099,32 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         configuration.  In the Options/Configuration menu, in the View tab, General
         section, check the "Allow all upper case files names" box.  The META-INF and
         WEB-INF will look correct.</p>
+                    <p class="faq">
+      <a name="NoClassDefFoundError"></a>
+      I installed Ant 1.6.x and now get
+        <code>Exception in thread "main" java.lang.NoClassDefFoundError:
+ org/apache/tools/ant/launch/Launcher</code>
+      
+    </p>
+                  <p>
+          The cause of this is that there is an old version of ant somewhere in the
+          class path or configuration.
+        </p>
+                        <p>
+          A version of this problem may be seen on some linux systems.
+          Some linux systems (Fedora Core 2 for example), comes with a version
+          of ant pre-installed. There is a configuration file called
+          <code>/etc/ant.conf</code> which if present, the ant shell
+          script will 'dot' include. On Fedora Core 2, the /etc/ant.conf
+          file resets the <code>ANT_HOME</code> environment variable to
+          <code>/usr/share/ant</code>. This causes the problem that
+          an old version of ant (1.5.x in this cause) will be used
+          with a new version of the ant script file.
+        </p>
+                        <p>
+          One can check if this is the case by doing
+          <code>ant --noconfig -version</code>.
+        </p>
                                 <p class="faq">
       <a name="integration"></a>
       Is Ant supported by my IDE/Editor?
