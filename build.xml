@@ -150,6 +150,8 @@
              unless="jdk1.2+"/>
     <exclude name="${optional.package}/starteam/*.java"
              unless="jdk1.2+"/>
+    <exclude name="${optional.package}/XMLValidateTask.java"
+             unless="jdk1.2+"/>
   </patternset>
   <patternset id="needs.jdk1.3+">
     <exclude name="${ant.package}/taskdefs/TestProcess.java"
