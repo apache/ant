@@ -22,6 +22,32 @@
     </section>
 
     <section name="Tasks">
+      <subsection name="AJC">
+
+        <p><a href="http://aspectj.org">AspectJ</a> is an
+          aspect-oriented extension to Java.  This task compiles a
+          source tree using the AspectJ compiler -- AJC.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://aspectj.org/dl">http://aspectj.org/dl</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@aspectj.org">support@aspectj.org</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Anakia">
 
         <p>Actually, Anakia is more than just an Ant task, it is a an
