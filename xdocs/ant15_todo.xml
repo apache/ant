@@ -119,7 +119,12 @@
             <td></td>
             <td>Stefan, others welcome</td>
           </tr>
-
+          
+          <tr>
+            <td>Dotnet library tweaks</td>
+            <td>update to release, add uptodateness, add a web service import (for Axis interop testing)</td>
+            <td>Steve, in his copious free time</td>
+          </tr>
 <!-- for cut and paste use
           <tr>
             <td></td>
