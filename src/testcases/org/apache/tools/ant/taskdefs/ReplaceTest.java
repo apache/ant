@@ -95,4 +95,8 @@ public class ReplaceTest extends TaskdefsTest {
         expectBuildException("test7", "empty token not allowed");
     }
 
+    public void test8() { 
+        executeTarget("test8");
+    }
+
 }
