@@ -243,6 +243,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
         if (debug) {
             cmd.createArgument().setValue("-g");
+        } else if (Project.getJavaVersion() != Project.JAVA_1_0 &&
+                   Project.getJavaVersion() != Project.JAVA_1_1) {
+            cmd.createArgument().setValue("-g:none");
         }
         if (optimize) {
             cmd.createArgument().setValue("-O");
