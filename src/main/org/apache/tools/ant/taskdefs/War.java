@@ -69,10 +69,7 @@ import java.util.zip.*;
 public class War extends Jar {
 
     private File deploymentDescriptor;
-
-    private Vector libFileSets = new Vector();
-    private Vector classesFileSets = new Vector();
-    private Vector webInfFileSets = new Vector();
+    private boolean descriptorAdded;    
 
     public War() {
         super();
@@ -85,85 +82,64 @@ public class War extends Jar {
     }
     
     public void setWebxml(File descr) {
-        deploymentDescriptor = descr;
+        deploymentDescriptor = descr; 
+        if (!deploymentDescriptor.exists())
+            throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
+
+        // Create a PrefixedFileSet for this file, and pass it up.
+        PrefixedFileSet fs = new PrefixedFileSet();
+        fs.setDir(new File(deploymentDescriptor.getParent()));
+        fs.setIncludes(deploymentDescriptor.getName());
+        fs.setFullpath("WEB-INF/web.xml");
+        super.addFileset(fs);
     }
 
-    public void addLib(FileSet fs) {
-        libFileSets.addElement(fs);
+    public void addLib(PrefixedFileSet fs) {
+        // We just set the prefix for this fileset, and pass it up.
+        fs.setPrefix("WEB-INF/lib/");
+        super.addFileset(fs);
     }
 
-    public void addClasses(FileSet fs) {
-        classesFileSets.addElement(fs);
+    public void addClasses(PrefixedFileSet fs) {
+        // We just set the prefix for this fileset, and pass it up.
+        fs.setPrefix("WEB-INF/classes/");
+        super.addFileset(fs);
     }
 
-    public void addWebinf(FileSet fs) {
-        webInfFileSets.addElement(fs);
+    public void addWebinf(PrefixedFileSet fs) {
+        // We just set the prefix for this fileset, and pass it up.
+        fs.setPrefix("WEB-INF/");
+        super.addFileset(fs);
     }
 
-    /**
-     * Add the deployment descriptor as well as all files added the
-     * special way of nested lib, classes or webinf filesets.  
-     */
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException
     {
-        // add deployment descriptor first
-        if (deploymentDescriptor != null) {
-            zipDir(new File(deploymentDescriptor.getParent()), zOut, 
-                   "WEB-INF/");
-            super.zipFile(deploymentDescriptor, zOut, "WEB-INF/web.xml");
-        } else {
-            throw new BuildException("webxml attribute is required", location);
-        }
-
-        addFiles(libFileSets, zOut, "WEB-INF/lib/");
-        addFiles(classesFileSets, zOut, "WEB-INF/classes/");
-        addFiles(webInfFileSets, zOut, "WEB-INF/");
-
-        super.initZipOutputStream(zOut);
-     }
-
-    protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException
-    {
+        // If no webxml file is specified, it's an error.
         if (deploymentDescriptor == null) {
             throw new BuildException("webxml attribute is required", location);
         }
         
-        // just add some Scanners for our filesets and web.xml and let
-        // Jar/Zip do the rest of the work
-
-        FileScanner[] myScanners = new FileScanner[scanners.length
-                                                  + 1 // web.xml
-                                                  + libFileSets.size()
-                                                  + classesFileSets.size()
-                                                  + webInfFileSets.size()];
-
-        System.arraycopy(scanners, 0, myScanners, 0, scanners.length);
-
-        DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(deploymentDescriptor.getParent()));
-        ds.setIncludes(new String[] {deploymentDescriptor.getName()});
-        ds.scan();
-        myScanners[scanners.length] = ds;
-        
-        addScanners(myScanners, scanners.length+1, libFileSets);
-        addScanners(myScanners, scanners.length+1+libFileSets.size(), 
-                    classesFileSets);
-        addScanners(myScanners, scanners.length+1+libFileSets.size()+classesFileSets.size(), 
-                    webInfFileSets);
-
-        return super.isUpToDate(myScanners, zipFile);
+        super.initZipOutputStream(zOut);
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {
-        // We already added a WEB-INF/web.xml
-        if (!vPath.equalsIgnoreCase("WEB-INF/web.xml")) {
-            super.zipFile(file, zOut, vPath);
+        // If the file being added is WEB-INF/web.xml, we warn if it's not the
+        // one specified in the "webxml" attribute - or if it's being added twice, 
+        // meaning the same file is specified by the "webxml" attribute and in
+        // a <fileset> element.
+        if (vPath.equalsIgnoreCase("WEB-INF/web.xml"))  {
+            if (deploymentDescriptor == null || !deploymentDescriptor.equals(file) || descriptorAdded) {
+                log("Warning: selected "+archiveType+" files include a WEB-INF/web.xml which will be ignored " +
+                    "(please use webxml attribute to "+archiveType+" task)", Project.MSG_WARN);
+            } else {
+                super.zipFile(file, zOut, vPath);
+                descriptorAdded = true;
+            }
         } else {
-            log("Warning: selected "+archiveType+" files include a WEB-INF/web.xml which will be ignored " +
-                "(please use webxml attribute to "+archiveType+" task)", Project.MSG_WARN);
+            super.zipFile(file, zOut, vPath);
         }
     }
 }

@@ -2725,6 +2725,11 @@ You should not include <samp>META-INF/MANIFEST.MF</samp> in your set of files.
 If <code>create</code> (the default), the JAR is created anyway with only a manifest.
 If <code>skip</code>, the JAR is not created and a warning is issued.
 If <code>fail</code>, the JAR is not created and the build is halted with an error.
+<p>(The Jar task is a shortcut for specifying the manifest file of a JAR file. 
+The same thing can be accomplished by using the <i>fullpath</i>
+attribute of the filesets in a Zip task. The one difference is that if the
+<i>manifest</i> attribute is not specified, the Jar task will 
+include an empty one for you.)</p>
 </p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -2791,13 +2796,13 @@ If <code>fail</code>, the JAR is not created and the build is halted with an err
 </table>
 <h3>Examples</h3>
 <pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot; /&gt;</pre>
-<p>jars all files in the <code>${build}/classes</code> directory in a file
+<p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 <pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        excludes=&quot;**/Test.class&quot;
   /&gt;</pre>
-<p>jars all files in the <code>${build}/classes</code> directory in a file
+<p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Files
 with the name <code>Test.class</code> are excluded.</p>
 <pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot;
@@ -2805,7 +2810,7 @@ with the name <code>Test.class</code> are excluded.</p>
        includes=&quot;mypackage/test/**&quot;
        excludes=&quot;**/Test.class&quot;
   /&gt;</pre>
-<p>jars all files in the <code>${build}/classes</code> directory in a file
+<p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
@@ -2816,7 +2821,7 @@ the name <code>Test.class</code> are excluded.</p>
     &lt;fileset dir=&quot;${src}/resources&quot;/&gt;
   &lt;/jar&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory and also
-in the <code>${src}/resources</code> directory together in a file
+in the <code>${src}/resources</code> directory together into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.
 Files with the name <code>Test.class</code> are excluded.
 If there are files such as <code>${build}/classes/mypackage/MyClass.class</code>
@@ -4434,14 +4439,14 @@ task to come up with a .tar.gz package.</p>
 <h3>Examples</h3>
 <pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot; /&gt;
   &lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot; /&gt;</pre>
-<p>tars all files in the <code>htdocs/manual</code> directory in a file called <code>manual.tar</code>
+<p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code>  directory, then applies the gzip task to compress
 it.</p>
 <pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot;
        basedir=&quot;htdocs/manual&quot;
        excludes=&quot;mydocs/**, **/todo.html&quot;
   /&gt;</pre>
-<p>tars all files in the <code>htdocs/manual</code> directory in a file called <code>manual.tar</code>
+<p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
 <hr>
@@ -4779,10 +4784,10 @@ carried from tarfile.</p>
 <p>An extension of the <a href="#jar">Jar</a> task with special
 treatment for files that should end up in the
 <code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
-<code>WEB-INF</code> directories of the Web Application Archive. It
-also gives you more control over where your files end up in the
-archive by means of its nested <code>prefixedfileset</code>
-element.</p>
+<code>WEB-INF</code> directories of the Web Application Archive.
+<p>(The War task is a shortcut for specifying the particular layout of a WAR file. 
+The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
+attributes of the filesets in a Zip or Jar task.)</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -4866,60 +4871,6 @@ href="#fileset">FileSet</a>. All files included in this fileset will
 end up in the <code>WEB-INF</code> directory of the war file. If this
 fileset includes a file named <code>web.xml</code>, the file is
 ignored and you will get a warning.</p>
-<h4>prefixedfileset</h4>
-<p>The nested <code>prefixedfileset</code> element specifies a <a
-href="#fileset">FileSet</a> with an additional prefix attribute. All
-files included in this fileset will end up in the <em>prefix</em>
-directory of the war file, where <em>prefix</em> is the value of the
-<code>prefix</code> attribute.</p>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">prefix</td>
-    <td valign="top">The prefix directory to add to each filename when
-      adding it to the archive. Default is none.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">dir</td>
-    <td valign="top">The root of the directory tree of this FileSet.</td>
-    <td valign="top" align="center">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">defaultexcludes</td>
-    <td valign="top">indicates whether default excludes should be used or not
-      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">includes</td>
-    <td valign="top">comma separated list of patterns of files that must be
-      included. All files are included when omitted.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">includesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an include pattern</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">excludes</td>
-    <td valign="top">comma separated list of patterns of files that must be
-      excluded. No files (except default excludes) are excluded when omitted.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">excludesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an exclude pattern</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-</table>
 <h3>Examples</h3>
 <p>Assume the following structure in the project's base directory:
 <pre>
@@ -4941,7 +4892,7 @@ then the war file <code>myapp.war</code> created with
     &lt;exclude name=&quot;jdbc1.jar&quot; /&gt;
   &lt;/lib&gt;
   &lt;classes dir=&quot;build/main&quot; /&gt;
-  &lt;prefixedfileset dir=&quot;src/graphics/images/gifs&quot; 
+  &lt;fileset dir=&quot;src/graphics/images/gifs&quot; 
                    prefix="images"/&gt;
 &lt;/war&gt;
 </pre>
@@ -4986,6 +4937,13 @@ if <code>basedir</code> is set. You may use any mixture of the implicit file set
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
 <code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
 only reflect the relative paths of files <em>within</em> each fileset.</p>
+<p>Inside of <code>&lt;zip&gt;</code> elements, nested filesets may include one of two special attributes: 
+<i>prefix</i> or <i>fullpath</i>. These attributes modify the location of the files when they are placed 
+inside the archive. If the <i>prefix</i> attribute is set, all the files in the fileset are prefixed
+with that path in the archive. If the <i>fullpath</i> attribute is set, the file described by the filset is placed at that 
+exact location in the archive. (The <i>fullpath</i> attribute can only be set for filesets that 
+represent a single file. The <i>prefix</i> and <i>fullpath</i> attributes cannot both be set on the
+same fileset.)</p>
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
 If <code>fail</code>, the ZIP is not created and the build is halted with an error.
@@ -5053,31 +5011,36 @@ which should be recognized as such by compliant ZIP manipulation tools.</p>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
   /&gt;</pre>
-<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
+<p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory.</p>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        excludes=&quot;mydocs/**, **/todo.html&quot;
   /&gt;</pre>
-<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
-in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
+<p>zips all files in the <code>htdocs/manual</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        includes=&quot;api/**/*.html&quot;
        excludes=&quot;**/todo.html&quot;
   /&gt;</pre>
-<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
-in the <code>${dist}</code> directory. Only html files under the directory <code>api</code>
+<p>zips all files in the <code>htdocs/manual</code> directory. Only html files under the directory <code>api</code>
 are zipped, and files with the name <code>todo.html</code> are excluded.</p>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog.txt&quot;/&gt;
   &lt;/zip&gt;</pre>
-<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
-in the <code>${dist}</code> directory, and also adds the file <code>ChangeLog.txt</code> in the
+<p>zips all files in the <code>htdocs/manual</code> directory, and also adds the file <code>ChangeLog.txt</code> in the
 current directory. <code>ChangeLog.txt</code> will be added to the top of the ZIP file, just as if
 it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
+    &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog27.txt&quot; fullpath=&quot;docs/ChangeLog.txt&quot;/&gt;
+  &lt;/zip&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory
+in the archive, and also adds the file <code>ChangeLog27.txt</code> in the
+current directory as <code>docs/ChangeLog.txt</code>. For example, the archive might end up containing two files:
+<code>docs/user-guide/html/index.html</code> and <code>docs/ChangeLog.txt</code></p>
 
 <hr>
 <h2><a name="optionaltasks">Optional tasks</a></h2>
@@ -5188,7 +5151,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
      basedir=&quot;htdocs/manual&quot; 
   /&gt;
 </pre></blockquote>
-<p>cabs all files in the htdocs/manual directory in a file called
+<p>cabs all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory.</p>
 <blockquote><pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
@@ -5196,7 +5159,7 @@ manual.cab in the ${dist} directory.</p>
      excludes=&quot;mydocs/**, **/todo.html&quot;
   /&gt;
 </pre></blockquote>
-<p>cabs all files in the htdocs/manual directory in a file called
+<p>cabs all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Files in the directory mydocs,
 or files with the name todo.html are excluded.</p>
 <blockquote><pre>
@@ -5207,7 +5170,7 @@ or files with the name todo.html are excluded.</p>
      verbose=&quot;yes&quot;
   /&gt;
 </pre></blockquote>
-<p>cab all files in the htdocs/manual directory in a file called
+<p>cab all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Only html files under the
 directory api are archived, and files with the name todo.html are
 excluded. Output from the cabarc tool is displayed in the build
