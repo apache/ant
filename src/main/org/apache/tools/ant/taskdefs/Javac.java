@@ -61,10 +61,10 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.GlobPatternMapper;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
-import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 import java.util.Enumeration;
@@ -697,34 +697,7 @@ public class Javac extends MatchingTask {
     }
 
     protected String getSystemJavac() {
-        // This is the most common extension case - exe for windows and OS/2,
-        // nothing for *nix.
-        String extension =  Os.isFamily("dos") ? ".exe" : "";
-
-        File jExecutable = null;
-
-        // On AIX using IBM's JDK 1.2 the javac executable is in
-        // the java.home/../../sh directory
-        if (Os.isName("aix")) {
-            jExecutable = new File(System.getProperty("java.home") +
-                                   "/../../sh/javac" + extension);
-        }
-
-        if (jExecutable == null || !jExecutable.exists()) {
-            // Look for javac in the java.home/../bin directory.  
-            jExecutable = new File(System.getProperty("java.home") +
-                                   "/../bin/javac" + extension);
-        }
-
-        // Unfortunately
-        // on Windows java.home doesn't always refer to the correct location,
-        // so we need to fall back to assuming java is somewhere on the
-        // PATH.
-        if (jExecutable.exists() && !Os.isFamily("netware")) {
-            return jExecutable.getAbsolutePath();
-        } else {
-            return "javac" + extension;
-        }
+        return JavaEnvUtils.getJdkExecutable("javac");
     }
 
     /**
@@ -767,8 +740,8 @@ public class Javac extends MatchingTask {
         }
 
         if (compilerImpl == null) {
-            if (Project.getJavaVersion() != Project.JAVA_1_1 &&
-                Project.getJavaVersion() != Project.JAVA_1_2) {
+            if (JavaEnvUtils.getJavaVersion() != Project.JAVA_1_1 &&
+                JavaEnvUtils.getJavaVersion() != Project.JAVA_1_2) {
                 compilerImpl = "modern";
             } else {
                 compilerImpl = "classic";

@@ -60,7 +60,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * A representation of a Java command line that is nothing more
@@ -151,8 +151,8 @@ public class CommandlineJava implements Cloneable {
     }
 
     public CommandlineJava() {
-        setVm(getJavaExecutableName());
-        setVmversion(Project.getJavaVersion());
+        setVm(JavaEnvUtils.getJreExecutable("java"));
+        setVmversion(JavaEnvUtils.getJavaVersion());
     }
 
     public Commandline.Argument createArgument() {
@@ -358,39 +358,4 @@ public class CommandlineJava implements Cloneable {
         javaCommand.clearArgs();
     }
 
-    private String getJavaExecutableName() {
-        // This is the most common extension case - exe for windows and OS/2, 
-        // nothing for *nix.
-        String extension =  Os.isFamily("dos") ? ".exe" : "";
-
-        File jExecutable = null;
-
-        // On AIX using IBM's JDK 1.2 the java executable is in
-        // the java.home/../sh directory
-        if (Os.isName("aix")) {
-            jExecutable = new File(System.getProperty("java.home") +
-                                   "/../sh/java" + extension);
-        }
-        
-        if (jExecutable == null || !jExecutable.exists()) {
-            // Look for java in the java.home/../bin directory.  
-            jExecutable = new File(System.getProperty("java.home") +
-                                   "/../bin/java" + extension);
-        }
-
-        // Unfortunately
-        // on Windows java.home doesn't always refer to the correct location, 
-        // so we need to fall back to assuming java is somewhere on the
-        // PATH.
-
-        if (jExecutable.exists() && !Os.isFamily("netware")) {
-            // NetWare may have a "java" in that directory, but 99% of
-            // the time, you don't want to execute it -- Jeff Tulley
-            // <JTULLEY@novell.com>
-            return jExecutable.getAbsolutePath();
-        } else {
-            return "java" + extension;
-        }
-    }
-    
 }

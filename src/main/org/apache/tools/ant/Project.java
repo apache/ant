@@ -68,6 +68,7 @@ import java.lang.reflect.Modifier;
 import org.apache.tools.ant.types.FilterSet; 
 import org.apache.tools.ant.types.FilterSetCollection; 
 import org.apache.tools.ant.util.FileUtils; 
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -108,19 +109,16 @@ public class Project {
      */
     private final static String VISITED = "VISITED";
 
-    /** Version of currently running VM. */
-    private static String javaVersion;
-
     /** Version constant for Java 1.0 */
-    public final static String JAVA_1_0 = "1.0";
+    public final static String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
     /** Version constant for Java 1.1 */
-    public final static String JAVA_1_1 = "1.1";
+    public final static String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
     /** Version constant for Java 1.2 */
-    public final static String JAVA_1_2 = "1.2";
+    public final static String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
     /** Version constant for Java 1.3 */
-    public final static String JAVA_1_3 = "1.3";
+    public final static String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
     /** Version constant for Java 1.4 */
-    public final static String JAVA_1_4 = "1.4";
+    public final static String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 
     /** Default filter start token. */
     public final static String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
@@ -183,31 +181,6 @@ public class Project {
     /** Records the latest task to be executed on a thread (Thread to Task). */ 
     private Hashtable threadTasks = new Hashtable();
     
-    static {
-
-        // Determine the Java version by looking at available classes
-        // java.lang.CharSequence was introduced in JDK 1.4
-        // java.lang.StrictMath was introduced in JDK 1.3
-        // java.lang.ThreadLocal was introduced in JDK 1.2
-        // java.lang.Void was introduced in JDK 1.1
-        // Count up version until a NoClassDefFoundError ends the try
-
-        try {
-            javaVersion = JAVA_1_0;
-            Class.forName("java.lang.Void");
-            javaVersion = JAVA_1_1;
-            Class.forName("java.lang.ThreadLocal");
-            javaVersion = JAVA_1_2;
-            Class.forName("java.lang.StrictMath");
-            javaVersion = JAVA_1_3;
-            Class.forName("java.lang.CharSequence");
-            javaVersion = JAVA_1_4;
-        } catch (ClassNotFoundException cnfe) {
-            // swallow as we've hit the max class version that
-            // we have
-        }
-    }
-
     /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
 
@@ -728,9 +701,10 @@ public class Project {
     /**
      * Returns the version of Java this class is running under.
      * @return the version of Java as a String, e.g. "1.1"
+     * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
      */
     public static String getJavaVersion() {
-        return javaVersion;
+        return JavaEnvUtils.getJavaVersion();
     }
 
     /**
@@ -741,13 +715,14 @@ public class Project {
      *
      * @exception BuildException if this Java version is not supported
      * 
-     * @see #getJavaVersion()
+     * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
      */
     public void setJavaVersionProperty() throws BuildException {
+        String javaVersion = JavaEnvUtils.getJavaVersion();
         setPropertyInternal("ant.java.version", javaVersion);
 
         // sanity check
-        if (javaVersion == JAVA_1_0) {
+        if (javaVersion == JavaEnvUtils.JAVA_1_0) {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
 
@@ -1477,7 +1452,7 @@ public class Project {
      */
     public void setFileLastModified(File file, long time) 
          throws BuildException {
-        if (getJavaVersion() == JAVA_1_1) {
+        if (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1) {
             log("Cannot change the modification time of " + file
                 + " in JDK 1.1", Project.MSG_WARN);
             return;

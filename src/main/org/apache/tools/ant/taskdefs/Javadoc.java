@@ -67,13 +67,13 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection
@@ -223,12 +223,12 @@ public class Javadoc extends Task {
 
     private Commandline cmd = new Commandline();
     private static boolean javadoc1 =
-        (Project.getJavaVersion() == Project.JAVA_1_1);
+        (JavaEnvUtils.getJavaVersion() == Project.JAVA_1_1);
 
     private static boolean javadoc4 =
-        (Project.getJavaVersion() != Project.JAVA_1_1 &&
-         Project.getJavaVersion() != Project.JAVA_1_2 &&
-         Project.getJavaVersion() != Project.JAVA_1_3);
+        (JavaEnvUtils.getJavaVersion() != Project.JAVA_1_1 &&
+         JavaEnvUtils.getJavaVersion() != Project.JAVA_1_2 &&
+         JavaEnvUtils.getJavaVersion() != Project.JAVA_1_3);
 
     private void addArgIf(boolean b, String arg) {
         if (b) {
@@ -921,7 +921,7 @@ public class Javadoc extends Task {
         }
 
         Commandline toExecute = (Commandline)cmd.clone();
-        toExecute.setExecutable( getJavadocExecutableName() );
+        toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null) {
@@ -1335,44 +1335,6 @@ public class Javadoc extends Task {
      */
     protected String expand(String content) {
         return project.replaceProperties(content);
-    }
-
-    private String getJavadocExecutableName()
-    {
-        // This is the most common extension case - exe for windows and OS/2,
-        // nothing for *nix.
-        String extension =  Os.isFamily("dos") ? ".exe" : "";
-
-        File jdocExecutable = null;
-
-        // On AIX using IBM's JDK 1.2 the javadoc executable is in
-        // the java.home/../sh directory
-        if (Os.isName("aix")) {
-            jdocExecutable = new File(System.getProperty("java.home") +
-                                      "/../sh/javadoc" + extension);
-        }
-        
-        if (jdocExecutable == null || !jdocExecutable.exists()) {
-            // Look for javadoc in the java.home/../bin directory.  
-            jdocExecutable = new File(System.getProperty("java.home") +
-                                      "/../bin/javadoc" + extension);
-        }
-
-        // Unfortunately
-        // on Windows java.home doesn't always refer to the correct location, 
-        // so we need to fall back to assuming java is somewhere on the
-        // PATH.
-
-        if (jdocExecutable.exists() && !Os.isFamily("netware")) {
-            return jdocExecutable.getAbsolutePath();
-        } else {
-            if (!Os.isFamily("netware")) {
-                log( "Unable to locate " + jdocExecutable.getAbsolutePath()
-                     + ". Using \"javadoc" + extension
-                     + "\" instead.", Project.MSG_VERBOSE );
-            }
-            return "javadoc" + extension;
-        }
     }
 
 }
