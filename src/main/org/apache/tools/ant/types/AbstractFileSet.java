@@ -792,6 +792,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Get the merged include patterns for this AbstractFileSet.
      * @return the include patterns of the default pattern set and all
      * nested patternsets.
      *
@@ -802,6 +803,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Get the merged exclude patterns for this AbstractFileSet.
      * @return the exclude patterns of the default pattern set and all
      * nested patternsets.
      *
@@ -812,6 +814,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Get the merged patterns for this AbstractFileSet.
      * @return the default patternset merged with the additional sets
      * in a new PatternSet instance.
      *
