@@ -210,6 +210,8 @@ public class SignJar extends Task {
         log("Signing Jar : " + (new File(jar)).getAbsolutePath());
         final Exec cmd = (Exec) project.createTask("exec");
         cmd.setCommand(sb.toString());
+        cmd.setFailonerror("true");
+        cmd.setTaskName( getTaskName() );
         cmd.execute();
     } 
 }
