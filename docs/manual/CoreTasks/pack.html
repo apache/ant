@@ -2,14 +2,16 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>GZip/BZip2</title>
 </head>
 
 <body>
 
 <h2><a name="pack">GZip/BZip2</a></h2>
 <h3>Description</h3>
-<p>Packs a file using the GZip or BZip2 algorithm.</p>
+<p>Packs a file using the GZip or BZip2 algorithm.
+These tasks do not do any dependency checking; the output file is 
+always generated</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -19,22 +21,22 @@
   </tr>
   <tr>
     <td valign="top">src</td>
-    <td valign="top">the file to gzip.</td>
+    <td valign="top">the file to gzip/bzip.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
-    <td valign="top">tofile</td>
+    <td valign="top">zipfile</td>
     <td valign="top">the destination file.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;gzip src=&quot;test.tar&quot; tofile=&quot;test.tar.gz&quot;
+  <p><code>&lt;gzip src=&quot;test.tar&quot; zipfile=&quot;test.tar.gz&quot;
   /&gt;</code></p>
 </blockquote>
 <blockquote>
-  <p><code>&lt;bzip2 src=&quot;test.tar&quot; tofile=&quot;test.tar.bz2&quot;
+  <p><code>&lt;bzip2 src=&quot;test.tar&quot; zipfile=&quot;test.tar.bz2&quot;
   /&gt;</code></p>
 </blockquote>
 <hr>
