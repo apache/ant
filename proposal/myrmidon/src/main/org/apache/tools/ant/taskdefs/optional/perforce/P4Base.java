@@ -12,7 +12,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.perl.Perl5Util;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -167,7 +167,7 @@ public abstract class P4Base
             }
 
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute2 exe = new Execute2( execManager );
+            final Execute exe = new Execute( execManager );
             exe.setExecOutputHandler( handler );
             exe.setCommandline( cmd );
 

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.exec;
+package org.apache.myrmidon.framework;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +18,14 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Runs an external program.
+ * This is a utility class designed to make executing native
+ * processes easier in the context of ant.
  *
- * @author thomas.haas@softwired-inc.com
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
+ * @version $Revision$ $Date$
  */
-public class Execute2
+public class Execute
 {
     private Commandline m_command;
     private Properties m_environment = new Properties();
@@ -31,8 +34,9 @@ public class Execute2
     private ExecOutputHandler m_handler;
     private long m_timeout;
     private ExecManager m_execManager;
+    private Integer m_returnCode;
 
-    public Execute2( final ExecManager execManager )
+    public Execute( final ExecManager execManager )
     {
         m_execManager = execManager;
     }
@@ -95,6 +99,11 @@ public class Execute2
         m_workingDirectory = workingDirectory;
     }
 
+    public void setReturnCode( final int returnCode )
+    {
+        m_returnCode = new Integer( returnCode );
+    }
+
     /**
      * Runs a process defined by the command line and returns its exit status.
      *
@@ -103,10 +112,23 @@ public class Execute2
     public int execute()
         throws IOException, TaskException
     {
+        final int returnCode = executenativeProcess();
+
+        if( null != m_returnCode &&
+            returnCode != m_returnCode.intValue() )
+        {
+            throw new TaskException( "Unexpected return code " + returnCode );
+        }
+
+        return returnCode;
+    }
+
+    private int executenativeProcess()
+        throws TaskException
+    {
+        final ExecMetaData metaData = buildExecMetaData();
         try
         {
-            final ExecMetaData metaData = buildExecMetaData();
-
             if( null != m_handler )
             {
                 return m_execManager.execute( metaData, m_handler, m_timeout );
@@ -124,15 +146,23 @@ public class Execute2
         {
             throw new TaskException( ee.getMessage(), ee );
         }
+        catch( final IOException ioe )
+        {
+            throw new TaskException( ioe.getMessage(), ioe );
+        }
     }
 
+    /**
+     * Utility method to create an ExecMetaData object
+     * to pass to the ExecManager service.
+     */
     private ExecMetaData buildExecMetaData()
     {
         final String[] command = m_command.getCommandline();
 
-        final ExecMetaData metaData =
-            new ExecMetaData( command, m_environment,
-                              m_workingDirectory, m_newEnvironment );
-        return metaData;
+        return new ExecMetaData( command,
+                                 m_environment,
+                                 m_workingDirectory,
+                                 m_newEnvironment );
     }
 }

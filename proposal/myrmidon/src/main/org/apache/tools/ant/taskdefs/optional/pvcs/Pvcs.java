@@ -24,7 +24,7 @@ import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -192,7 +192,7 @@ public class Pvcs
         try
         {
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute2 exe = new Execute2( execManager );
+            final Execute exe = new Execute( execManager );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
             result = exe.execute();
@@ -273,7 +273,7 @@ public class Pvcs
             final File fileList = File.createTempFile( "pvcs_ant_", ".log" );
 
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute2 exe = new Execute2( execManager );
+            final Execute exe = new Execute( execManager );
             exe.setExecOutputHandler( this );
             m_output = new FileOutputStream( tmp );
             exe.setWorkingDirectory( getBaseDirectory() );

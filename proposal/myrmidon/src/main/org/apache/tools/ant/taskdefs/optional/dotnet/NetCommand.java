@@ -13,7 +13,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -44,7 +44,7 @@ public class NetCommand
     /**
      * executabe
      */
-    protected Execute2 _exe;
+    protected Execute _exe;
 
     /**
      * flag to control action on execution trouble
@@ -201,7 +201,7 @@ public class NetCommand
         // default directory to the project's base directory
         File dir = _owner.getBaseDirectory();
         final ExecManager execManager = (ExecManager)_owner.getService( ExecManager.class );
-        _exe = new Execute2( execManager );
+        _exe = new Execute( execManager );
         _exe.setWorkingDirectory( dir );
     }
 }

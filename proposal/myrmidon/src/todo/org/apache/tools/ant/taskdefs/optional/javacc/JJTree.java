@@ -14,7 +14,7 @@ import java.util.Hashtable;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -182,7 +182,7 @@ public class JJTree extends Task
         cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute2 exe = new Execute2( execManager );
+        final Execute exe = new Execute( execManager );
         getLogger().debug( cmdl.toString() );
         exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
 

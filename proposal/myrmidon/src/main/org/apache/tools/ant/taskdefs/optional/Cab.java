@@ -18,7 +18,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -136,7 +136,7 @@ public class Cab
             {
                 File listFile = createListFile( files );
                 final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-                Execute2 exe = new Execute2( execManager );
+                Execute exe = new Execute( execManager );
                 exe.setWorkingDirectory( m_baseDir );
                 final Commandline cmd = createCommand( listFile );
                 exe.setCommandline( cmd );

@@ -19,7 +19,7 @@ import java.util.Iterator;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -363,7 +363,7 @@ public class BorlandDeploymentTool
     private void buildBorlandStubs( Iterator ithomes, Hashtable files )
     {
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute2 exe = new Execute2( execManager );
+        final Execute exe = new Execute( execManager );
         exe.setWorkingDirectory( getTask().getBaseDirectory() );
 
         final Commandline cmd = buildCommandline( ithomes );

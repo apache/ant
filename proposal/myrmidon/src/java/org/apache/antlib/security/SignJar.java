@@ -16,7 +16,7 @@ import java.util.zip.ZipFile;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -296,7 +296,7 @@ public class SignJar
 
         final Commandline cmd = buildCommand( jarTarget, jarSource );
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute2 exe = new Execute2( execManager );
+        final Execute exe = new Execute( execManager );
         exe.setCommandline( cmd );
         try
         {

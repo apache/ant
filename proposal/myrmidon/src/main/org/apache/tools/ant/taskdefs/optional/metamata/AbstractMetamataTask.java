@@ -18,7 +18,7 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -280,7 +280,7 @@ public abstract class AbstractMetamataTask
         throws TaskException
     {
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute2 exe = new Execute2( execManager );
+        final Execute exe = new Execute( execManager );
         getLogger().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );

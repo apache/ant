@@ -12,7 +12,7 @@ import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -91,7 +91,7 @@ public class Rpm
     {
         final Commandline cmd = createCommand();
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute2 exe = new Execute2( execManager );
+        final Execute exe = new Execute( execManager );
 
         if( m_topDir == null )
         {

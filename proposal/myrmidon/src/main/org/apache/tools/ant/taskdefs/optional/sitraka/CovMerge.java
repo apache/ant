@@ -16,7 +16,7 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -116,7 +116,7 @@ public class CovMerge extends Task
             cmdl.addArgument( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute2 exe = new Execute2( execManager );
+            final Execute exe = new Execute( execManager );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
 

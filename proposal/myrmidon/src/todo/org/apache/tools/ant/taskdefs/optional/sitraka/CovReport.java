@@ -20,7 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
@@ -248,7 +248,7 @@ public class CovReport extends Task
 
             // use the custom handler for stdin issues
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute2 exe = new Execute2( execManager );
+            final Execute exe = new Execute( execManager );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
             int exitValue = exe.execute();
