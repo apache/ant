@@ -108,8 +108,9 @@ public class ReplaceTest extends BuildFileTest {
 
     public void test9() throws IOException{
         executeTarget("test9");
-        assertEqualContent(new File(TEST_PATH + "result.txt"),
-                    new File(TEST_PATH + "output.txt"));
+        String tmpdir = project.getProperty("tmp.dir");
+        assertEqualContent(new File(tmpdir, "result.txt"),
+                    new File(tmpdir, "output.txt"));
     }
     public void tearDown() {
         executeTarget("cleanup");
