@@ -179,6 +179,24 @@ public class Ant extends Task {
         }
     }
 
+    protected void handleOutput(String line) {
+        if (p1 != null) {
+            p1.demuxOutput(line, false);
+        }
+        else {
+            super.handleOutput(line);
+        }
+    }
+    
+    protected void handleErrorOutput(String line) {
+        if (p1 != null) {
+            p1.demuxOutput(line, true);
+        }
+        else {
+            super.handleErrorOutput(line);
+        }
+    }
+    
     /**
      * Do the execution.
      */

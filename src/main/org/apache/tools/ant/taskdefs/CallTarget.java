@@ -127,4 +127,23 @@ public class CallTarget extends Task {
     public void setTarget(String target) {
         subTarget = target;
     }
+
+    protected void handleOutput(String line) {
+        if (callee != null) {
+            callee.handleOutput(line);
+        }
+        else {
+            super.handleOutput(line);
+        }
+    }
+    
+    protected void handleErrorOutput(String line) {
+        if (callee != null) {
+            callee.handleErrorOutput(line);
+        }
+        else {
+            super.handleErrorOutput(line);
+        }
+    }
+    
 }
