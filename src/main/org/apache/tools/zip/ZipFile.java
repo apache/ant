@@ -461,7 +461,7 @@ public class ZipFile {
         cal.set(Calendar.HOUR_OF_DAY, (int) (dosTime >> 11) & 0x1f);
         cal.set(Calendar.MINUTE, (int) (dosTime >> 5) & 0x3f);
         cal.set(Calendar.SECOND, (int) (dosTime << 1) & 0x3e);
-        return cal.getTimeInMillis();
+        return cal.getTime().getTime();
     }
 
 
