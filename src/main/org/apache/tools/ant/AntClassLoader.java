@@ -399,6 +399,24 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     }
         
     /**
+     * The CLASSPATH this classloader will consult.
+     */
+    public String getClasspath() {
+        StringBuffer sb = new StringBuffer();
+        boolean firstPass = true;
+        Enumeration enum = pathComponents.elements();
+        while (enum.hasMoreElements()) {
+            if (!firstPass) {
+                sb.append(System.getProperty("path.separator"));
+            } else {
+                firstPass = false;
+            }
+            sb.append(((File) enum.nextElement()).getAbsolutePath());
+        }
+        return sb.toString();
+    }
+
+    /**
      * Set this classloader to run in isolated mode. In isolated mode, classes not
      * found on the given classpath will not be referred to the base class loader
      * but will cause a classNotFoundException.

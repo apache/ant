@@ -564,9 +564,10 @@ public class JUnitTask extends Task {
             AntClassLoader cl = null;
             Path classpath = commandline.getClasspath();
             if (classpath != null) {
-                log("Using CLASSPATH " + classpath, Project.MSG_VERBOSE);
-
                 cl = new AntClassLoader(null, project, classpath, false);
+                log("Using CLASSPATH " + cl.getClasspath(), 
+                    Project.MSG_VERBOSE);
+
                 // make sure the test will be accepted as a TestCase
                 cl.addSystemPackageRoot("junit");
                 // will cause trouble in JDK 1.1 if omitted
