@@ -63,6 +63,11 @@ Changes that could break older environments:
   is now Hashtable<String, String[]>). This will affect third party code
   that extend Copy and override Copy#doFileOperations.
 
+* <loadproperties> didn't expand properties while <property file="..."/>
+  does, so they were not equivalent.  This has been fixed, which means
+  that propetries may get expanded twice if you use an
+  <expandproperties> filterreader.  Bugzilla Report 17782.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla

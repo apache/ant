@@ -140,6 +140,7 @@ public final class LoadProperties extends Task {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         Reader instream = null;
+        ByteArrayInputStream tis = null;
 
         try {
             final long len = srcFile.length();
@@ -166,7 +167,6 @@ public final class LoadProperties extends Task {
                     text = text + "\n";
                 }
 
-                ByteArrayInputStream tis = null;
                 if (encoding == null) {
                     tis = new ByteArrayInputStream(text.getBytes());
                 } else {
@@ -174,16 +174,11 @@ public final class LoadProperties extends Task {
                 }
                 final Properties props = new Properties();
                 props.load(tis);
-                final Enumeration e = props.keys();
-                while (e.hasMoreElements()) {
-                    final String key = (String) e.nextElement();
-                    final String value = props.getProperty(key);
-                    if (key != null && value != null
-                            && value.trim().length() > 0) {
-                        getProject().setNewProperty(key, value);
-                    }
-                }
-                tis.close();
+
+                Property propertyTask = 
+                    (Property) getProject().createTask("property");
+                propertyTask.setTaskName(getTaskName());
+                propertyTask.addProperties(props);
             }
 
         } catch (final IOException ioe) {
@@ -195,6 +190,13 @@ public final class LoadProperties extends Task {
             try {
                 if (fis != null) {
                     fis.close();
+                }
+            } catch (IOException ioex) {
+                //ignore
+            }
+            try {
+                if (tis != null) {
+                    tis.close();
                 }
             } catch (IOException ioex) {
                 //ignore
