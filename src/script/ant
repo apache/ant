@@ -259,7 +259,7 @@ if $cygwin; then
   esac
   case "$LOCALCLASSPATH" in
     *\\ )
-    LOCALCLASSPATH="LOCALCLASSPATH\\"
+    LOCALCLASSPATH="$LOCALCLASSPATH\\"
     ;;
   esac
   case "$CLASSPATH" in
