@@ -24,6 +24,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:wwerner@picturesafe.de">Wolfgang Werner</a>
  * @version $Revision$ $Date$
+ * @ant:task name="cvs"
  */
 public class Cvs
     extends AbstractTask
