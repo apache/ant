@@ -57,8 +57,9 @@ package org.apache.tools.ant;
 import java.util.Vector;
 
 /**
- * Wrapper class that holds all information necessary to create a task
- * or data type that did not exist when Ant started.
+ * Wrapper class that holds all the information necessary to create a task
+ * or data type that did not exist when Ant started, or one which
+ * has had its definition updated to use a different implementation class.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
@@ -66,7 +67,8 @@ public class UnknownElement extends Task {
 
     /**
      * Holds the name of the task/type or nested child element of a
-     * task/type that hasn't been defined at parser time.
+     * task/type that hasn't been defined at parser time or has
+     * been redefined since original creation.
      */
     private String elementName;
 
@@ -76,29 +78,36 @@ public class UnknownElement extends Task {
     private Object realThing;
 
     /**
-     * Childelements, holds UnknownElement instances.
+     * List of child elements (UnknownElements).
      */
     private Vector children = new Vector();
 
     /**
-     * Create an UnknownElement for the given element name.
+     * Creates an UnknownElement for the given element name.
      *
-     * @param elementName the name of the unknown element.
+     * @param elementName The name of the unknown element.
+     *                    Must not be <code>null</code>.
      */
     public UnknownElement (String elementName) {
         this.elementName = elementName;
     }
 
     /**
-     * @return the corresponding XML element name.
+     * Returns the name of the XML element which generated this unknown
+     * element.
+     * 
+     * @return the name of the XML element which generated this unknown
+     *         element.
      */
     public String getTag() {
         return elementName;
     }
 
     /**
-     * creates the real object instance, creates child elements, configures
-     * the attributes of the real object.
+     * Creates the real object instance and child elements, then configures
+     * the attributes and text of the real object. This unknown element 
+     * is then replaced with the real object in the containing target's list
+     * of children.
      *
      * @exception BuildException if the configuration fails
      */
@@ -114,16 +123,16 @@ public class UnknownElement extends Task {
 
         wrapper.maybeConfigure(project);
         if (realThing instanceof Task) {
-            target.replaceChild(this, realThing);
+            target.replaceChild(this, (Task) realThing);
         } else {
             target.replaceChild(this, wrapper);
         }
     }
 
     /**
-     * Handle output sent to System.out by this task or its real task.
+     * Handles output sent to System.out by this task or its real task.
      *
-     * @param line the output string
+     * @param line The line of output to log. Should not be <code>null</code>.
      */
     protected void handleOutput(String line) {
         if (realThing instanceof Task) {
@@ -134,9 +143,9 @@ public class UnknownElement extends Task {
     }
     
     /**
-     * Handle error output sent to System.err by this task or its real task.
+     * Handles error output sent to System.err by this task or its real task.
      *
-     * @param line the error string
+     * @param line The error line to log. Should not be <code>null</code>.
      */
     protected void handleErrorOutput(String line) {
         if (realThing instanceof Task) {
@@ -147,7 +156,8 @@ public class UnknownElement extends Task {
     }
     
     /**
-     * Called when the real task has been configured for the first time.
+     * Executes the real object if it's a task. If it's not a task
+     * (e.g. a data type) then this method does nothing.
      */
     public void execute() {
         if (realThing == null) {
@@ -165,17 +175,18 @@ public class UnknownElement extends Task {
     /**
      * Adds a child element to this element.
      *
-     * @param child the child element
+     * @param child The child element to add. Must not be <code>null</code>.
      */
     public void addChild(UnknownElement child) {
         children.addElement(child);
     }
 
     /**
-     * Creates child elements, creates children of the children, sets
-     * attributes of the child elements.
+     * Creates child elements, creates children of the children
+     * (recursively), and sets attributes of the child elements.
      *
-     * @param parent the configured object for the parent
+     * @param parent The configured object for the parent. 
+     *               Must not be <code>null</code>.
      * @exception BuildException if the children cannot be configured.
      */
     protected void handleChildren(Object parent,
@@ -215,8 +226,14 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Creates a named task or data type - if it is a task, 
-     * configure it up to the init() stage.
+     * Creates a named task or data type. If the real object is a task, 
+     * it is configured up to the init() stage.
+     * 
+     * @param ue The unknown element to create the real object for.
+     *           Must not be <code>null</code>.
+     * @param w  Ignored in this implementation.
+     * 
+     * @return the task or data type represented by the given unknown element.
      */
     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
         Object o = makeTask(ue, w, true);
@@ -230,7 +247,19 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Create a named task and configure it up to the init() stage.
+     * Creates a named task and configures it up to the init() stage.
+     * 
+     * @param ue The UnknownElement to create the real task for.
+     *           Must not be <code>null</code>.
+     * @param w  Ignored.
+     * @param onTopLevel Whether or not this is definitely trying to create
+     *                   a task. If this is <code>true</code> and the
+     *                   task name is not recognised, a BuildException
+     *                   is thrown.
+     * 
+     * @return the task specified by the given unknown element, or 
+     *         <code>null</code> if the task name is not recognised and
+     *         onTopLevel is <code>false</code>.
      */
     protected Task makeTask(UnknownElement ue, RuntimeConfigurable w,
                             boolean onTopLevel) {
@@ -248,6 +277,16 @@ public class UnknownElement extends Task {
         return task;
     }
 
+    /**
+     * Returns a very verbose exception for when a task/data type cannot
+     * be found.
+     * 
+     * @param what The kind of thing being created. For example, when
+     *             a task name could not be found, this would be
+     *             <code>"task"</code>. Should not be <code>null</code>.
+     * @param elementName The name of the element which could not be found.
+     *                    Should not be <code>null</code>.
+     */
     protected BuildException getNotFoundException(String what,
                                                   String elementName) {
         String lSep = System.getProperty("line.separator");
@@ -288,7 +327,7 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Get the name to use in logging messages.
+     * Returns the name to use in logging messages.
      *
      * @return the name to use in logging messages.
      */
@@ -298,12 +337,13 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Return the task instance after it has been created and if it is a task.
+     * Returns the task instance after it has been created and if it is a task.
      *
-     * @return a task instance or null if the real object is not a task
+     * @return a task instance or <code>null</code> if the real object is not 
+     *         a task.
      */
     public Task getTask() {
-        if (realThing != null && realThing instanceof Task) {
+        if (realThing instanceof Task) {
             return (Task) realThing;
         }
         return null;
