@@ -89,6 +89,8 @@
     <delete file="test10.xml"/>
     <delete file="test11.tar.bz2"/>
     <delete file="test11.xml"/>
+    <delete file="asf-logo.gif.tar.gz"/>
+    <delete file="asf-logo.gif.tar.bz2"/>
   </target>
 
   <target name="feather">
