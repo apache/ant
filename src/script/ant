@@ -69,9 +69,6 @@ if [ -z "$ANT_HOME" ] ; then
   cd $saveddir
 fi
 
-# set ANT_LIB location
-ANT_LIB=${ANT_HOME}/lib
-
 # For Cygwin, ensure paths are in UNIX format before anything is touched
 if $cygwin ; then
   [ -n "$ANT_HOME" ] &&
@@ -81,6 +78,9 @@ if $cygwin ; then
   [ -n "$CLASSPATH" ] &&
     CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
+
+# set ANT_LIB location
+ANT_LIB=${ANT_HOME}/lib
 
 if [ -z "$JAVACMD" ] ; then 
   if [ -n "$JAVA_HOME"  ] ; then
