@@ -707,7 +707,11 @@ public class Manifest extends Task {
         }
 
         Manifest rhsManifest = (Manifest)rhs;
-        if (!manifestVersion.equals(rhsManifest.manifestVersion)) {
+        if (manifestVersion == null) {
+            if (rhsManifest.manifestVersion != null) {
+                return false;
+            }
+        } else if (!manifestVersion.equals(rhsManifest.manifestVersion)) {
             return false;
         }
         if (sections.size() != rhsManifest.sections.size()) {
