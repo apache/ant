@@ -66,7 +66,8 @@ the code to parse MS-DOS listings -any takers?
     <td valign="top">action</td>
     <td valign="top">the ftp action to perform, defaulting to &quot;send&quot;.  
                      Currently supports &quot;put&quot;, &quot;get&quot;,
-                     &quot;del&quot;, &quot;list&quot;, &quot;chmod&quot; and &quot;mkdir&quot;.</td>
+                     &quot;del&quot;, &quot;list&quot;, &quot;chmod&quot;,
+                     &quot;mkdir&quot; and &quot;rmdir&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -269,6 +270,55 @@ remotedir attribute.</p>
 <p>This creates the directory <code>some/remote/dir</code> beneath the default root
 directory.  As with all other actions, the directory separator character must be correct
 according to the desires of the FTP server.</p>
+<h3>Removing Directories</h3>
+This action uses nested fileset elements to 
+select the directories to remove from the remote FTP server.  The 
+filesets are relative to the remote directory, not a local directory. 
+The dir attribute of the fileset is ignored completely.
+The directories to be removed must be empty, or contain only
+other directories that have been also selected to be removed by the filesets
+patterns, otherwise a BuildException will be thrown.
+Also, if you don't have permission to remove a directory, a BuildException is 
+thrown.
+
+<pre>
+  &lt;ftp action=&quot;rmdir&quot;
+       server=&quot;ftp.apache.org&quot;
+       userid=&quot;anonymous&quot;
+       password=&quot;me@myorg.com&quot; 
+       remotedir=&quot;/somedir&quot; &gt;
+    &lt;fileset&gt;
+      &lt;include name=&quot;dira&quot;/&gt;
+      &lt;include name=&quot;dirb/**&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/ftp&gt;
+</pre>
+<p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and
+tries to remove <code>/somedir/dira</code> directory and
+all the directories tree starting at, and including, <code>/somedir/dirb</code>.
+When removing the <code>/somedir/dirb</code> tree,
+it will start at the leaves moving up to the root, so that when
+it tries to remove a directory it is sure all the directories under it are
+already removed.
+Obviuosly all the files in the tree must have been already deleted.
+</p>
+<p>As an example suppose you want to delete everything contained into 
+<code>/somedir</code>, so invoke first the <code>&lt;ftp&gt;</code> task with
+<code>action=&quot;delete&quot;</code>, then with 
+<code>action=&quot;rmdir&quot;</code> specifying in both cases
+<code>remotedir=&quot;/somedir&quot;</code> and
+
+<pre>
+    &lt;fileset&gt;
+        &lt;include name=&quot;**&quot;/&gt;
+    &lt;/fileset&gt;
+</pre>
+
+The directory specified in the <code>remotedir</code> parameter is never
+selected for remove, so if you need to remove it, specify its parent in
+<code>remotedir</code> parameter and include it in the 
+<code>&lt;fileset&gt;</code> pattern, like <code>&quot;somedir/**&quot;</code>.
+</p>
 <hr>
 <p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>

@@ -68,6 +68,11 @@ Other changes:
   "unknown" for Test implementations that don't extend TestCase but have
   a public String getName() method.
 
+* <ftp> now has a preservelastmodified attribute to preserve the
+  timestamp of a downloaded file.
+
+* new rmdir action for <ftp> that removes directories from a fileset.
+
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
 

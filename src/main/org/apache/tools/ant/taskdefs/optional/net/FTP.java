@@ -86,6 +86,8 @@ import org.apache.tools.ant.util.FileUtils;
  *   <li> <strong>del</strong> - delete files from a remote server.</li>
  *   <li> <strong>list</strong> - create a file listing.</li>
  *   <li> <strong>chmod</strong> - change unix file permissions.</li>
+ *   <li> <strong>rmdir</strong> - remove directories, if empty, from a 
+ *   remote server.</li>
  * </ul>
  * <strong>Note:</strong> Some FTP servers - notably the Solaris server - seem
  * to hold data ports open after a "retr" operation, allowing them to timeout
@@ -109,6 +111,7 @@ public class FTP
     protected static final int LIST_FILES = 3;
     protected static final int MK_DIR = 4;
     protected static final int CHMOD = 5;
+    protected static final int RM_DIR = 6;
 
     private String remotedir;
     private String server;
@@ -139,7 +142,8 @@ public class FTP
         "deleting",
         "listing",
         "making directory",
-        "chmod"
+        "chmod",
+        "removing"
         };
 
     protected static final String[] COMPLETED_ACTION_STRS = {
@@ -148,7 +152,18 @@ public class FTP
         "deleted",
         "listed",
         "created directory",
-        "mode changed"
+        "mode changed",
+        "removed"
+        };
+
+    protected static final String[] ACTION_TARGET_STRS = {
+        "files",
+        "files",
+        "files",
+        "files",
+        "directory",
+        "files",
+        "directories"
         };
 
 
@@ -212,11 +227,11 @@ public class FTP
                             String name = vpath + file.getName();
                             if (isIncluded(name)) {
                                 if (!isExcluded(name)) {
-                                    dirsIncluded.addElement(name);
                                     if (fast) {
                                         scandir(file.getName(),
                                                 name + File.separator, fast);
                                     }
+                                    dirsIncluded.addElement(name);
                                 } else {
                                     dirsExcluded.addElement(name);
                                     if (fast && couldHoldIncluded(name)) {
@@ -486,7 +501,12 @@ public class FTP
             ds.scan();
         }
 
-        String[] dsfiles = ds.getIncludedFiles();
+        String[] dsfiles = null;
+        if (action == RM_DIR) {
+            dsfiles = ds.getIncludedDirectories();
+        } else {
+            dsfiles = ds.getIncludedFiles();
+        }
         String dir = null;
 
         if ((ds.getBasedir() == null)
@@ -545,6 +565,12 @@ public class FTP
                         break;
                     }
 
+                    case RM_DIR:
+                    {
+                        rmDir(ftp, dsfiles[i]);
+                        break;
+                    }
+
                     default:
                     {
                         throw new BuildException("unknown ftp action " + action);
@@ -583,10 +609,12 @@ public class FTP
             }
         }
 
-        log(transferred + " files " + COMPLETED_ACTION_STRS[action]);
+        log(transferred + " " + ACTION_TARGET_STRS[action] + " " +
+                                COMPLETED_ACTION_STRS[action]);
         if (skipped != 0) {
-            log(skipped + " files were not successfully "
-                 + COMPLETED_ACTION_STRS[action]);
+            log(skipped + " " + ACTION_TARGET_STRS[action] + 
+                                " were not successfully "
+                + COMPLETED_ACTION_STRS[action]);
         }
     }
 
@@ -778,6 +806,29 @@ public class FTP
             }
         } else {
             log("File " + filename + " deleted from " + server,
+                Project.MSG_VERBOSE);
+            transferred++;
+        }
+    }
+
+    /** Delete a directory, if empty, from the remote host.  */
+    protected void rmDir(FTPClient ftp, String dirname)
+         throws IOException, BuildException {
+        if (verbose) {
+            log("removing " + dirname);
+        }
+
+        if (!ftp.removeDirectory(resolveFile(dirname))) {
+            String s = "could not remove directory: " + ftp.getReplyString();
+
+            if (skipFailedTransfers == true) {
+                log(s, Project.MSG_WARN);
+                skipped++;
+            } else {
+                throw new BuildException(s);
+            }
+        } else {
+            log("Directory " + dirname + " removed from " + server,
                 Project.MSG_VERBOSE);
             transferred++;
         }
@@ -991,7 +1042,7 @@ public class FTP
                             ftp.getReplyString());
                     }
                 }
-                log(ACTION_STRS[action] + " files");
+                log(ACTION_STRS[action] + " " + ACTION_TARGET_STRS[action]);
                 transferFiles(ftp);
             }
 
@@ -1013,13 +1064,14 @@ public class FTP
 
     /**
      * an action to perform, one of
-     * "send", "put", "recv", "get", "del", "delete", "list", "mkdir", "chmod"
+     * "send", "put", "recv", "get", "del", "delete", "list", "mkdir", "chmod",
+     * "rmdir"
      */
     public static class Action extends EnumeratedAttribute {
 
         private static final String[] validActions = {
             "send", "put", "recv", "get", "del", "delete", "list", "mkdir",
-            "chmod"
+            "chmod", "rmdir"
             };
 
 
@@ -1046,6 +1098,8 @@ public class FTP
                 return CHMOD;
             } else if (actionL.equals("mkdir")) {
                 return MK_DIR;
+            } else if (actionL.equals("rmdir")) {
+                return RM_DIR;
             }
             return SEND_FILES;
         }
