@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Locale;
 
 /**
  * The Locator is a utility class which is used to find certain items
@@ -181,7 +182,7 @@ public final class Locator {
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
         String javaHome = System.getProperty("java.home");
-        if (javaHome.endsWith("jre")) {
+        if (javaHome.toLowerCase(Locale.US).endsWith("jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
         }
         File toolsJar = new File(javaHome + "/lib/tools.jar");
