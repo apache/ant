@@ -108,7 +108,8 @@ public class StreamPumper implements Runnable {
                     Thread.sleep(SLEEP);
                 } catch (InterruptedException e) {}
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            // ignore
         } finally {
             synchronized (this) {
                 finished = true;
