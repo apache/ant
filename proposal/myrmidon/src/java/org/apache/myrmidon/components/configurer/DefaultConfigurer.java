@@ -7,11 +7,13 @@
  */
 package org.apache.myrmidon.components.configurer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.property.PropertyUtil;
+import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -36,9 +38,6 @@ public class DefaultConfigurer
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurer.class );
-
-    ///Compile time constant to turn on extreme debugging
-    private final static boolean DEBUG = false;
 
     ///Converter to use for converting between values
     private MasterConverter m_converter;
@@ -71,50 +70,88 @@ public class DefaultConfigurer
                            final Context context )
         throws ConfigurationException
     {
-        if( DEBUG )
+        try
         {
-            final String message = REZ.getString( "configuring-object.notice", object );
-            getLogger().debug( message );
+            configureObject( object, configuration, context );
         }
+        catch( InvocationTargetException ite )
+        {
+            // A configuration exception thrown from a nested object.  Unpack
+            // and re-throw
+            throw (ConfigurationException)ite.getTargetException();
+        }
+    }
 
+    /**
+     * Does the work of configuring an object.
+     */
+    private void configureObject( final Object object,
+                                  final Configuration configuration,
+                                  final Context context )
+        throws ConfigurationException, InvocationTargetException
+    {
         if( object instanceof Configurable )
         {
-            if( DEBUG )
-            {
-                final String message = REZ.getString( "configurable.notice" );
-                getLogger().debug( message );
-            }
-
             // Let the object configure itself
             ( (Configurable)object ).configure( configuration );
         }
         else
         {
-            if( DEBUG )
-            {
-                final String message = REZ.getString( "reflection.notice" );
-                getLogger().debug( message );
-            }
+            final String elemName = configuration.getName();
 
             // Locate the configurer for this object
             final ObjectConfigurer configurer = getConfigurer( object.getClass() );
+
+            // Start configuring this object
+            final ConfigurationState state = configurer.startConfiguration( object );
 
             // Set each of the attributes
             final String[] attributes = configuration.getAttributeNames();
             for( int i = 0; i < attributes.length; i++ )
             {
                 final String name = attributes[ i ];
-                final String value = configuration.getAttribute( name );
-
-                // Set the attribute
-                setAttribute( configurer, object, name, value, context );
+                try
+                {
+                    // Set the attribute
+                    final String value = configuration.getAttribute( name );
+                    setAttribute( state, name, value, context );
+                }
+                catch( final NoSuchPropertyException nspe )
+                {
+                    final String message =
+                        REZ.getString( "no-such-attribute.error", elemName, name );
+                    throw new ConfigurationException( message, nspe );
+                }
+                catch( final CascadingException ce )
+                {
+                    final String message =
+                        REZ.getString( "bad-set-attribute.error", elemName, name );
+                    throw new ConfigurationException( message, ce );
+                }
             }
 
             // Set the text content
             final String content = configuration.getValue( null );
             if( null != content && content.length() > 0 )
             {
-                setContent( configurer, object, content, context );
+                try
+                {
+                    // Set the content
+                    final PropertyConfigurer contentConfigurer = state.getConfigurer().getContentConfigurer();
+                    setValue( contentConfigurer, state, content, context );
+                }
+                catch( final NoSuchPropertyException nspe )
+                {
+                    final String message =
+                        REZ.getString( "no-content.error", elemName );
+                    throw new ConfigurationException( message, nspe );
+                }
+                catch( final CascadingException ce )
+                {
+                    final String message =
+                        REZ.getString( "bad-set-content.error", elemName );
+                    throw new ConfigurationException( message, ce );
+                }
             }
 
             // Create and configure each of the child elements
@@ -122,8 +159,27 @@ public class DefaultConfigurer
             for( int i = 0; i < children.length; i++ )
             {
                 final Configuration childConfig = children[ i ];
-                configureElement( configurer, object, childConfig, context );
+                final String name = childConfig.getName();
+                try
+                {
+                    configureElement( state, childConfig, context );
+                }
+                catch( final NoSuchPropertyException nspe )
+                {
+                    final String message =
+                        REZ.getString( "no-such-element.error", elemName, name );
+                    throw new ConfigurationException( message, nspe );
+                }
+                catch( final CascadingException ce )
+                {
+                    final String message =
+                        REZ.getString( "bad-set-element.error", name );
+                    throw new ConfigurationException( message, ce );
+                }
             }
+
+            // Finish configuring the object
+            configurer.finishConfiguration( state );
         }
     }
 
@@ -147,121 +203,103 @@ public class DefaultConfigurer
         // Locate the configurer for this object
         final ObjectConfigurer configurer = getConfigurer( object.getClass() );
 
+        // TODO - this ain't right, the validation is going to be screwed up
+        final ConfigurationState state = configurer.startConfiguration( object );
+
         // Set the attribute value
-        setAttribute( configurer, object, name, value, context );
-    }
-
-    /**
-     * Sets the text content of an object.
-     */
-    private void setContent( final ObjectConfigurer configurer,
-                             final Object object,
-                             final String content,
-                             final Context context )
-        throws ConfigurationException
-    {
-        if( DEBUG )
-        {
-            final String message =
-                REZ.getString( "configure-content.notice", content );
-            getLogger().debug( message );
-        }
-
-        // Set the content
-        final PropertyConfigurer contentConfigurer = configurer.getContentConfigurer();
-        if( null == contentConfigurer )
-        {
-            final String message = REZ.getString( "content-not-supported.error" );
-            throw new ConfigurationException( message );
-        }
-
         try
         {
-            setValue( contentConfigurer, object, content, context );
+            setAttribute( state, name, value, context );
         }
-        catch( final Exception e )
+        catch( final CascadingException ce )
         {
-            final String message = REZ.getString( "bad-set-content.error" );
-            throw new ConfigurationException( message, e );
+            final String message =
+                REZ.getString( "bad-set-class-attribute.error",
+                               name,
+                               object.getClass().getName() );
+            throw new ConfigurationException( message, ce );
         }
+
+        // Finish up
+        configurer.finishConfiguration( state );
     }
 
     /**
      * Configures a property from a nested element.
      */
-    private void configureElement( final ObjectConfigurer configurer,
-                                   final Object object,
+    private void configureElement( final ConfigurationState state,
                                    final Configuration element,
                                    final Context context )
-        throws ConfigurationException
+        throws CascadingException, InvocationTargetException
     {
         final String elementName = element.getName();
-
-        if( DEBUG )
-        {
-            final String message =
-                REZ.getString( "configure-subelement.notice", elementName );
-            getLogger().debug( message );
-        }
-
-        if( elementName.endsWith( "-ref" ) )
+        if( elementName.toLowerCase().endsWith( "-ref" ) )
         {
             // A reference
-            configureReference( configurer, object, element, context );
+            configureReference( state, element, context );
         }
         else
         {
             // An inline object
-            configureInline( configurer, object, element, context );
+            configureInline( state, element, context );
         }
     }
 
     /**
      * Configure a property from an inline object.
      */
-    private void configureInline( final ObjectConfigurer configurer,
-                                  final Object object,
+    private void configureInline( final ConfigurationState state,
                                   final Configuration element,
                                   final Context context )
-        throws ConfigurationException
+        throws CascadingException, InvocationTargetException
     {
         final String elementName = element.getName();
 
         // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer = configurer.getProperty( elementName );
-        if( null == childConfigurer )
+        final PropertyConfigurer childConfigurer = state.getConfigurer().getProperty( elementName );
+
+        // Create the child element
+        Object child = childConfigurer.createValue( state );
+        if( child == null )
         {
-            final String message = REZ.getString( "unknown-property.error", elementName );
-            throw new ConfigurationException( message );
+            // Create an instance using the default constructor
+            try
+            {
+                child = childConfigurer.getType().newInstance();
+            }
+            catch( final Exception e )
+            {
+                final String message =
+                    REZ.getString( "create-object.error",
+                                   childConfigurer.getType().getName() );
+                throw new ConfigurationException( message, e );
+            }
         }
 
+        // Configure the child element
         try
         {
-            // Create the child element
-            final Object child = childConfigurer.createValue( object );
-
-            // Configure the child element
-            configure( child, element, context );
-
-            // Set the child element
-            childConfigurer.setValue( object, child );
+            configureObject( child, element, context );
         }
         catch( final ConfigurationException ce )
         {
-            final String message =
-                REZ.getString( "bad-set-property.error", elementName );
-            throw new ConfigurationException( message, ce );
+            // Nasty hack-o-rama, used to get this exception up through
+            // the stack of doConfigure() calls.  This is unpacked by the
+            // top-most configure() call, and rethrown.
+            throw new InvocationTargetException( ce );
         }
+
+        // Set the child element
+        childConfigurer.addValue( state, child );
     }
 
     /**
      * Configures a property from a reference.
      */
-    private void configureReference( final ObjectConfigurer configurer,
-                                     final Object object,
+    private void configureReference( final ConfigurationState state,
                                      final Configuration element,
                                      final Context context )
-        throws ConfigurationException
+        throws CascadingException
     {
         // Adjust the name
         final String elementName = element.getName();
@@ -277,33 +315,23 @@ public class DefaultConfigurer
         }
 
         // Set the property
-        setReference( configurer, object, name, id, context );
+        setReference( state, name, id, context );
     }
 
     /**
      * Sets a property using a reference.
      */
-    private void setReference( final ObjectConfigurer configurer,
-                               final Object object,
+    private void setReference( final ConfigurationState state,
                                final String name,
-                               final String id,
+                               final String unresolvedId,
                                final Context context )
-        throws ConfigurationException
+        throws CascadingException
     {
         // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer = configurer.getProperty( name );
-        if( null == childConfigurer )
-        {
-            final String message = REZ.getString( "unknown-property.error", name );
-            throw new ConfigurationException( message );
-        }
+        final PropertyConfigurer childConfigurer = state.getConfigurer().getProperty( name );
 
-        // Check if the creator method must be used
-        if( childConfigurer.useCreator() )
-        {
-            final String message = REZ.getString( "must-be-element.error" );
-            throw new ConfigurationException( message );
-        }
+        // Resolve any props in the id
+        Object id = PropertyUtil.resolveProperty( unresolvedId, context, false );
 
         // Locate the referenced object
         Object ref = null;
@@ -311,77 +339,45 @@ public class DefaultConfigurer
         {
             ref = context.get( id );
         }
-        catch( final ContextException ce )
+        catch( final ContextException exc )
         {
-            final String message = REZ.getString( "get-ref.error", id, name );
-            throw new ConfigurationException( message, ce );
+            final String message = REZ.getString( "get-ref.error", id );
+            throw new ConfigurationException( message, exc );
         }
 
         // Check the types
         final Class type = childConfigurer.getType();
         if( !type.isInstance( ref ) )
         {
-            final String message = REZ.getString( "mismatch-ref-types.error", id, name );
+            final String message = REZ.getString( "mismatch-ref-types.error", id, type.getName(), ref.getClass().getName() );
             throw new ConfigurationException( message );
         }
 
         // Set the child element
-        try
-        {
-            childConfigurer.setValue( object, ref );
-        }
-        catch( final ConfigurationException ce )
-        {
-            final String message =
-                REZ.getString( "bad-set-property.error", name );
-            throw new ConfigurationException( message, ce );
-        }
+        childConfigurer.addValue( state, ref );
     }
 
     /**
      * Sets an attribute value.
      */
-    private void setAttribute( final ObjectConfigurer configurer,
-                               final Object object,
+    private void setAttribute( final ConfigurationState state,
                                final String name,
                                final String value,
                                final Context context )
-        throws ConfigurationException
+        throws CascadingException
     {
-        if( DEBUG )
-        {
-            final String message = REZ.getString( "configure-attribute.notice",
-                                                  name,
-                                                  value );
-            getLogger().debug( message );
-        }
-
-        if( name.endsWith( "-ref" ) )
+        if( name.toLowerCase().endsWith( "-ref" ) )
         {
             // A reference
             final String refName = name.substring( 0, name.length() - 4 );
-            setReference( configurer, object, refName, value, context );
+            setReference( state, refName, value, context );
         }
         else
         {
-            // Locate the configurer for this attribute
-            final PropertyConfigurer propConfigurer = configurer.getProperty( name );
-            if( null == propConfigurer )
-            {
-                final String message = REZ.getString( "unknown-property.error", name );
-                throw new ConfigurationException( message );
-            }
-
             // Set the value
-            try
-            {
-                setValue( propConfigurer, object, value, context );
-            }
-            catch( final Exception e )
-            {
-                final String message = REZ.getString( "bad-set-property.error", name );
-                throw new ConfigurationException( message, e );
-            }
+            final PropertyConfigurer propConfigurer =
+                state.getConfigurer().getProperty( name );
+            setValue( propConfigurer, state, value, context );
         }
     }
 
@@ -389,18 +385,11 @@ public class DefaultConfigurer
      * Sets an attribute value, or an element's text content.
      */
     private void setValue( final PropertyConfigurer setter,
-                           final Object object,
+                           final ConfigurationState state,
                            final String value,
                            final Context context )
-        throws Exception
+        throws CascadingException
     {
-        // Check if the creator method must be used
-        if( setter.useCreator() )
-        {
-            final String message = REZ.getString( "must-be-element.error" );
-            throw new ConfigurationException( message );
-        }
-
         // Resolve property references in the attribute value
         Object objValue = PropertyUtil.resolveProperty( value, context, false );
 
@@ -409,7 +398,7 @@ public class DefaultConfigurer
         objValue = m_converter.convert( clazz, objValue, context );
 
         // Set the value
-        setter.setValue( object, objValue );
+        setter.addValue( state, objValue );
     }
 
     /**

@@ -7,20 +7,19 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
  * An object configurer which uses reflection to determine the properties
@@ -41,6 +40,11 @@ public class DefaultObjectConfigurer
      * Map from lowercase property name -> PropertyConfigurer.
      */
     private final Map m_props = new HashMap();
+
+    /**
+     * All property configurers.
+     */
+    private final List m_allProps = new ArrayList();
 
     /**
      * Content configurer.
@@ -101,8 +105,8 @@ public class DefaultObjectConfigurer
                 {
                     final String message =
                         REZ.getString( "incompatible-element-types.error",
-                                       propName,
-                                       m_class.getName() );
+                                       m_class.getName(),
+                                       propName );
                     throw new ConfigurationException( message );
                 }
             }
@@ -115,9 +119,21 @@ public class DefaultObjectConfigurer
                 type = addMethod.getParameterTypes()[ 0 ];
             }
 
+            // Determine the max count for the property
+            int maxCount = Integer.MAX_VALUE;
+            if( addMethod != null && addMethod.getName().startsWith( "set" ) )
+            {
+                maxCount = 1;
+            }
+
             final DefaultPropertyConfigurer configurer =
-                new DefaultPropertyConfigurer( type, createMethod, addMethod );
+                new DefaultPropertyConfigurer( m_allProps.size(),
+                                               type,
+                                               createMethod,
+                                               addMethod,
+                                               maxCount );
             m_props.put( propName, configurer );
+            m_allProps.add( configurer );
         }
     }
 
@@ -138,8 +154,8 @@ public class DefaultObjectConfigurer
         {
             final Method method = (Method)iterator.next();
             final String methodName = method.getName();
-            if( method.getReturnType() != Void.TYPE ||
-                method.getParameterTypes().length != 1 )
+            if( method.getReturnType() != Void.TYPE
+                || method.getParameterTypes().length != 1 )
             {
                 continue;
             }
@@ -150,19 +166,37 @@ public class DefaultObjectConfigurer
                 continue;
             }
 
-            // Extract element name
-            final String elemName = extractName( 3, methodName );
+            // Extract property name
+            final String propName = extractName( 3, methodName );
+
+            final Class type = method.getParameterTypes()[ 0 ];
 
             // Add to the adders map
-            if( adders.containsKey( elemName ) )
+            if( adders.containsKey( propName ) )
             {
-                final String message =
-                    REZ.getString( "multiple-adder-methods-for-element.error",
-                                   m_class.getName(),
-                                   elemName );
-                throw new ConfigurationException( message );
+                final Class currentType = ( (Method)adders.get( propName ) ).getParameterTypes()[ 0 ];
+
+                // Ditch the string version, if any
+                if( currentType != String.class && type == String.class )
+                {
+                    // New type is string, and current type is not.  Ignore
+                    // the new method
+                    continue;
+                }
+                if( currentType != String.class || type == String.class )
+                {
+                    // Both are string, or both are not string
+                    final String message =
+                        REZ.getString( "multiple-adder-methods-for-element.error",
+                                       m_class.getName(),
+                                       propName );
+                    throw new ConfigurationException( message );
+                }
+
+                // Else, current type is string, and new type is not, so
+                // continue below, and overwrite the current method
             }
-            adders.put( elemName, method );
+            adders.put( propName, method );
         }
         return adders;
     }
@@ -235,8 +269,14 @@ public class DefaultObjectConfigurer
                 throw new ConfigurationException( message );
             }
 
-            Class type = method.getParameterTypes()[0];
-            m_contentConfigurer = new DefaultPropertyConfigurer( type, null, method );
+            final Class type = method.getParameterTypes()[ 0 ];
+            m_contentConfigurer =
+                new DefaultPropertyConfigurer( m_allProps.size(),
+                                               type,
+                                               null,
+                                               method,
+                                               1 );
+            m_allProps.add( m_contentConfigurer );
         }
     }
 
@@ -252,27 +292,64 @@ public class DefaultObjectConfigurer
     }
 
     /**
-     * Returns the class.
+     * Starts the configuration of an object.
      */
-    public Class getType()
+    public ConfigurationState startConfiguration( Object object )
+        throws ConfigurationException
     {
-        return m_class;
+        return new DefaultConfigurationState( this, object, m_allProps.size() );
+    }
+
+    /**
+     * Finishes the configuration of an object, performing any final
+     * validation and type conversion.
+     */
+    public Object finishConfiguration( final ConfigurationState state )
+        throws ConfigurationException
+    {
+        // Make sure there are no pending created objects
+        final DefaultConfigurationState defState = (DefaultConfigurationState)state;
+        for( int i = 0; i < m_allProps.size(); i++ )
+        {
+            if( defState.getCreatedObject( i ) != null )
+            {
+                final String message = REZ.getString( "pending-property-value.error" );
+                throw new ConfigurationException( message );
+            }
+        }
+
+        return defState.getObject();
     }
 
     /**
      * Returns a configurer for an element of this class.
      */
-    public PropertyConfigurer getProperty( final String name )
+    public PropertyConfigurer getProperty( final String name ) throws NoSuchPropertyException
     {
-        return (PropertyConfigurer)m_props.get( name );
+        final PropertyConfigurer prop = (PropertyConfigurer)m_props.get( name );
+        if( prop != null )
+        {
+            return prop;
+        }
+
+        // Unknown property
+        final String message = REZ.getString( "unknown-property.error", m_class.getName(), name );
+        throw new NoSuchPropertyException( message );
     }
 
     /**
      * Returns a configurer for the content of this class.
      */
-    public PropertyConfigurer getContentConfigurer()
+    public PropertyConfigurer getContentConfigurer() throws NoSuchPropertyException
     {
-        return m_contentConfigurer;
+        if( m_contentConfigurer != null )
+        {
+            return m_contentConfigurer;
+        }
+
+        // Does not handle content
+        final String message = REZ.getString( "content-unsupported.error", m_class.getName() );
+        throw new NoSuchPropertyException( message );
     }
 
     /**

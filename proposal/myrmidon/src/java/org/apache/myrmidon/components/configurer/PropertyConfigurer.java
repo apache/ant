@@ -19,36 +19,32 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 public interface PropertyConfigurer
 {
     /**
-     * Returns the type of the property.
+     * Returns the type of this property.
      */
     Class getType();
 
     /**
-     * Determines if the property value must be created via {@link #createValue}.
-     */
-    boolean useCreator();
-
-    /**
-     * Creates a default value for the property.  This value must be configured,
+     * Creates a default value for this property.  This value must be configured,
      * and then attached to the object using {@link #setValue}.  This
      * method must be called if {@link #useCreator} returns true.
      *
-     * @param parent The parent object.
+     * @param state The state object, representing the object being configured.
      * @return An object which is assignable to the type returned by
-     *         {@link #getType}.
+     *         {@link #getType}.  Returns null if this property does not
+     *         need a default value.
      * @throws ConfigurationException If the object cannot be created.
      */
-    Object createValue( Object parent )
+    Object createValue( ConfigurationState state )
         throws ConfigurationException;
 
     /**
-     * Sets a property value for an object.
+     * Adds a value for this property, to an object.
      *
-     * @param object The object to set the property of.
+     * @param state The state object, representing the object being configured.
      * @param value The property value.  This must be assignable to the type
      *              returned by {@link #getType}.
      * @throws ConfigurationException If the property cannot be set.
      */
-    void setValue( Object object, Object value )
+    void addValue( ConfigurationState state, Object value )
         throws ConfigurationException;
 }

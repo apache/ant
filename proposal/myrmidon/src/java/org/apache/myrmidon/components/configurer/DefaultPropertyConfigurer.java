@@ -7,12 +7,11 @@
  */
 package org.apache.myrmidon.components.configurer;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * The default property configurer implementation, which uses reflection to
@@ -27,21 +26,30 @@ class DefaultPropertyConfigurer
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultPropertyConfigurer.class );
 
+    private final int m_propIndex;
     private final Class m_type;
     private final Method m_createMethod;
     private final Method m_addMethod;
+    private final int m_maxCount;
 
-    public DefaultPropertyConfigurer( Class type,
-                                      Method createMethod,
-                                      Method addMethod )
+    public DefaultPropertyConfigurer( final int propIndex,
+                                      final Class type,
+                                      final Method createMethod,
+                                      final Method addMethod,
+                                      final int maxCount )
     {
+        m_propIndex = propIndex;
         if ( type.isPrimitive() )
         {
-            type = getComplexTypeFor(type);
+            m_type = getComplexTypeFor(type);
         }
-        m_type = type;
+        else
+        {
+            m_type = type;
+        }
         m_createMethod = createMethod;
         m_addMethod = addMethod;
+        m_maxCount = maxCount;
     }
 
     /**
@@ -53,29 +61,31 @@ class DefaultPropertyConfigurer
     }
 
     /**
-     * Determines if the property value must be created via {@link #createValue}.
+     * Creates a default value for this property.
      */
-    public boolean useCreator()
-    {
-        return (m_createMethod != null);
-    }
-
-    /**
-     * Creates a nested element.
-     */
-    public Object createValue( final Object parent )
+    public Object createValue( ConfigurationState state )
         throws ConfigurationException
     {
+        if( null == m_createMethod )
+        {
+            return null;
+        }
+
+        final DefaultConfigurationState defState = (DefaultConfigurationState)state;
+
+        // Make sure there isn't a pending object for this property
+        if( defState.getCreatedObject( m_propIndex ) != null )
+        {
+            final String message = REZ.getString( "pending-property-value.error" );
+            throw new ConfigurationException( message );
+        }
+
         try
         {
-            if( null != m_createMethod )
-            {
-                return m_createMethod.invoke( parent, null );
-            }
-            else
-            {
-                return m_type.newInstance();
-            }
+            // Create the value
+            final Object object = m_createMethod.invoke( defState.getObject(), null );
+            defState.setCreatedObject( m_propIndex, object );
+            return object;
         }
         catch( final InvocationTargetException ite )
         {
@@ -89,16 +99,42 @@ class DefaultPropertyConfigurer
     }
 
     /**
-     * Sets the nested element, after it has been configured.
+     * Adds a value for this property, to an object.
      */
-    public void setValue( final Object parent, final Object child )
+    public void addValue( ConfigurationState state, Object value )
         throws ConfigurationException
     {
+        final DefaultConfigurationState defState = (DefaultConfigurationState)state;
+
+        // Make sure the supplied object is the pending object
+        final Object pending = defState.getCreatedObject( m_propIndex );
+        if( pending != null && pending != value )
+        {
+        }
+
+        // Make sure the creator method was called, if necessary
+        if( pending == null && m_createMethod != null  )
+        {
+            final String message = REZ.getString( "must-be-element.error" );
+            throw new ConfigurationException( message );
+        }
+
+        defState.setCreatedObject( m_propIndex, null );
+
+        // Check the property count
+        if( defState.getPropCount( m_propIndex ) >= m_maxCount )
+        {
+            final String message = REZ.getString( "too-many-values.error" );
+            throw new ConfigurationException( message );
+        }
+        defState.incPropCount( m_propIndex );
+
         try
         {
+            // Add the value
             if( null != m_addMethod )
             {
-                m_addMethod.invoke( parent, new Object[]{child} );
+                m_addMethod.invoke( defState.getObject(), new Object[]{ value } );
             }
         }
         catch( final InvocationTargetException ite )
