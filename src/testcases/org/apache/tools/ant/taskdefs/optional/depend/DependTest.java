@@ -151,6 +151,12 @@ public class DependTest extends BuildFileTest {
             "No source specified", "srcdir attribute must be non-empty");
     }
 
+    /**
+     * Read the result fileset into a Hashtable
+     * 
+     * @return a Hashtable containing the names of the files in the result 
+     * fileset
+     */
     private Hashtable getResultFiles() {
         FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
@@ -173,4 +179,12 @@ public class DependTest extends BuildFileTest {
         assertEquals("Depend did not leave correct number of files", 2, 
             getResultFiles().size());
     }
+
+    /**
+     * Test the operation of the cache
+     */
+    public void testCache() {
+        executeTarget("testcache");
+    }
+
 }

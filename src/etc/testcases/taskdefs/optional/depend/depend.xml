@@ -7,6 +7,7 @@
   <property name="src4.dir" value="src4"/>
   
   <property name="tempsrc.dir" value="working"/>
+  <property name="cache.dir" value="working"/>
   <property name="classes.dir" value="classes"/>
   <target name="help">
     <echo>This buildfile is used as part of Ant's test suite.</echo>
@@ -128,5 +129,12 @@
             classpathref="path.compile"/>
            
     <fileset id="result" dir="${classes.dir}"/>
+  </target>
+  
+  <target name="testcache" depends="src1setup, compile">
+    <depend cache="${cache.dir}" srcdir="${tempsrc.dir}" 
+            destdir="${classes.dir}" closure="yes"/>
+    <depend cache="${cache.dir}" srcdir="${tempsrc.dir}" 
+            destdir="${classes.dir}" closure="yes"/>
   </target>
 </project>
