@@ -549,16 +549,15 @@ public class VAJAntToolGUI extends Frame {
     public static String formatTime(long millis) {
         long seconds = millis / 1000;
         long minutes = seconds / 60;
-
         if (minutes > 0) {
             return Long.toString(minutes) + " minute"
                 + (minutes == 1 ? " " : "s ")
                 + Long.toString(seconds%60) + " second"
-                + (seconds%60 == 1 ? "" : "s");
+                + (seconds%60 > 1 ? "s" : "");
         }
         else {
             return Long.toString(seconds) + " second"
-                + (seconds%60 == 1 ? "" : "s");
+                + (seconds%60 > 1 ? "s" : "");
         }
     }
     /**
