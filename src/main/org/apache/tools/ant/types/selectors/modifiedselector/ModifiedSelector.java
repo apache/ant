@@ -487,7 +487,15 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
     protected Object loadClass(String classname, String msg, Class type) {
         try {
             // load the specified class
-            Object rv = getClassLoader().loadClass(classname).newInstance();
+            ClassLoader cl = getClassLoader();
+            Class clazz = null;
+            if (cl != null) {
+                clazz = cl.loadClass(classname);
+            } else {
+                clazz = Class.forName(classname);
+            }
+            
+            Object rv = clazz.newInstance();
 
             if (!type.isInstance(rv)) {
                 throw new BuildException("Specified class (" + classname + ") " + msg);

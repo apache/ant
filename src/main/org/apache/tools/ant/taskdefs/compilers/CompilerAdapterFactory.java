@@ -140,8 +140,11 @@ public class CompilerAdapterFactory {
             return true;
         } catch (ClassNotFoundException cnfe) {
             try {
-                CompilerAdapterFactory.class.getClassLoader().loadClass(MODERN_COMPILER);
-                return true;
+                ClassLoader cl = CompilerAdapterFactory.class.getClassLoader();
+                if (cl != null) {
+                    cl.loadClass(MODERN_COMPILER);
+                    return true;
+                }
             } catch (ClassNotFoundException cnfe2) {
             }
         }
