@@ -26,6 +26,11 @@
       <subsection name="User List">
         <p>
           <b>Medium Traffic</b> 
+<!--
+          <a href="mailto:user-subscribe@ant.apache.org">Subscribe</a>  
+          <a href="mailto:user-unsubscribe@ant.apache.org">Unsubscribe</a> 
+          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=ant-user@jakarta.apache.org">Archive</a> 
+-->
           <a href="mailto:ant-user-subscribe@jakarta.apache.org">Subscribe</a>  
           <a href="mailto:ant-user-unsubscribe@jakarta.apache.org">Unsubscribe</a> 
           <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=ant-user@jakarta.apache.org">Archive</a> 
@@ -39,6 +44,11 @@
       <subsection name="Developer List">
         <p>
           <b>High Traffic</b> 
+<!--
+          <a href="mailto:dev-subscribe@ant.apache.org">Subscribe</a>  
+          <a href="mailto:dev-unsubscribe@ant.apache.org">Unsubscribe</a> 
+          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=ant-dev@jakarta.apache.org">Archive</a> 
+-->
           <a href="mailto:ant-dev-subscribe@jakarta.apache.org">Subscribe</a>  
           <a href="mailto:ant-dev-unsubscribe@jakarta.apache.org">Unsubscribe</a> 
           <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=ant-dev@jakarta.apache.org">Archive</a> 

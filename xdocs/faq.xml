@@ -20,6 +20,9 @@
       <question>How can I contribute to this FAQ?</question>
       <answer>
         <p>The page you are looking it is generated from 
+<!--
+          <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/faq.xml">this</a>
+-->
           <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/faq.xml">this</a>
           document.  If you want to add a new question, please submit
           a patch against this document to one of Ant&apos;s mailing lists;
@@ -43,6 +46,7 @@
         <p>The Velocity stylesheets used to process the XML files can
         be found in the <code>xdocs/stylesheets</code> subdirectory of
         Ant&apos;s CVS repository - the build file
+<!--        <code>docs.xml</code> at the top level of the ant CVS -->
         <code>docs.xml</code> at the top level of the jakarta-ant CVS
         module is used to drive Anakia.</p>
 
@@ -208,6 +212,11 @@
           tool/task</li>
         </ul>
 
+<!--
+        <p>The preferred format for this information is a patch to <a
+        href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/external.xml">this</a>
+        document.</p>
+-->
         <p>The preferred format for this information is a patch to <a
         href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/external.xml">this</a>
         document.</p>
@@ -840,6 +849,11 @@ while(<STDIN>) {
          ant -logger org.apache.tools.ant.listener.MailLogger
 ]]></source>
 
+<!--
+        <p>See the <a href="http://cvs.apache.org/viewcvs/~checkout~/ant/docs/manual/listeners.html?content-type=text/html">Listeners
+        &amp; Loggers</a> documentation for details on the properties
+        required.</p>
+-->
         <p>See the <a href="http://cvs.apache.org/viewcvs/~checkout~/jakarta-ant/docs/manual/listeners.html?content-type=text/html">Listeners
         &amp; Loggers</a> documentation for details on the properties
         required.</p>
@@ -1202,7 +1216,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         10664</a> and all it's duplicates.</p>
 
         <p>A fixed version of the wrapper script can be found <a
-        href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5/errata/">here</a>.
+        href="http://ant.apache.org/old-releases/v1.5/errata/">here</a>.
         Simply replace your script with this version.</p>
       </answer>
     </faq>

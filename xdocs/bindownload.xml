@@ -81,6 +81,11 @@ Other mirrors: <select name="Preferred">
 
 <section name="Nightly Builds">
 
+<!--
+<p>If you wish to use the latest Ant features, you can try downloading a
+<a href="http://cvs.apache.org/builds/ant/nightly/">nightly build</a>.
+</p>
+-->
 <p>If you wish to use the latest Ant features, you can try downloading a
 <a href="http://cvs.apache.org/builds/jakarta-ant/nightly/">nightly build</a>.
 </p>

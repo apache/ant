@@ -24,6 +24,14 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout [module-name]</s
       CVS tree via ViewCVS):</p>
 
       <ul>
+<!--
+        <li><a href="http://cvs.apache.org/viewcvs/ant/">ant</a> - The
+        &quot;main&quot; Ant module.</li>
+
+        <li><a
+        href="http://cvs.apache.org/viewcvs/ant-antidote/">ant-antidote</a>
+        - Antidote, a GUI frontend to Ant.</li>
+-->
         <li><a
         href="http://cvs.apache.org/viewcvs/jakarta-ant/">jakarta-ant</a> -
         The &quot;main&quot; Ant module.</li>
@@ -37,6 +45,9 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout [module-name]</s
       href="http://jakarta.apache.org/site/cvsindex.html">Jakarta's
       CVS page</a> may hold many helpful hints.</p>
 
+<!--
+      <p>Nightly snapshots of the CVS tree are available at <a href="http://cvs.apache.org/snapshots/ant/">http://cvs.apache.org/snapshots/ant/</a>.</p>
+-->
       <p>Nightly snapshots of the CVS tree are available at <a href="http://cvs.apache.org/snapshots/jakarta-ant/">http://cvs.apache.org/snapshots/jakarta-ant/</a>.</p>
   </section>
   </body>
