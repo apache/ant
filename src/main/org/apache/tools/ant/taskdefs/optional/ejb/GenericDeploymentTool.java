@@ -75,10 +75,6 @@ import javax.xml.parsers.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.apache.tools.ant.util.depend.DependencyAnalyzer;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.ClassParser;
-
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
@@ -87,6 +83,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 
 
 /**
@@ -102,16 +99,16 @@ import org.apache.tools.ant.types.FileSet;
 public class GenericDeploymentTool implements EJBDeploymentTool {
     /** The standard META-INF directory in jar files */
     protected static final String META_DIR  = "META-INF/";
-    
+
     /** Name for EJB Deployment descriptor within EJB jars */
     protected static final String EJB_DD    = "ejb-jar.xml";
 
     public static final String DEFAULT_ANALYZER_CLASS
         = "org.apache.tools.ant.util.depend.bcel.FullAnalyzer";
-    
+
     /**
-     * The configuration from the containing task. This config combined 
-     * with the settings of the individual attributes here constitues the 
+     * The configuration from the containing task. This config combined
+     * with the settings of the individual attributes here constitues the
      * complete config for this deployment tool.
      */
     private EjbJar.Config config;
@@ -127,7 +124,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     private String genericJarSuffix = "-generic.jar";
 
     /**
-     * The task to which this tool belongs. This is used to access services 
+     * The task to which this tool belongs. This is used to access services
      * provided by the ant core, such as logging.
      */
     private Task task;
@@ -152,7 +149,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * Dependency analyzer used to collect class dependencies
      */
     private DependencyAnalyzer dependencyAnalyzer;
-    
+
     public GenericDeploymentTool() {
         String analyzerClassName = DEFAULT_ANALYZER_CLASS;
         try {
@@ -164,9 +161,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
     }
 
-    
+
     /**
-     * Setter used to store the value of destination directory prior to 
+     * Setter used to store the value of destination directory prior to
      * execute() being called.
      * @param inDir the destination directory.
      */
@@ -214,7 +211,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Indicate if this build is using the base jar name.
      *
-     * @return true if the name of the generated jar is coming from the 
+     * @return true if the name of the generated jar is coming from the
      *              basejarname attribute
      */
     protected boolean usingBaseJarName() {
@@ -296,10 +293,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      */
     public void configure(EjbJar.Config config) {
         this.config = config;
-        dependencyAnalyzer.addClassPath(new Path(task.getProject(), 
+        dependencyAnalyzer.addClassPath(new Path(task.getProject(),
             config.srcDir.getPath()));
         dependencyAnalyzer.addClassPath(config.classpath);
-            
+
         classpathLoader = null;
     }
 
@@ -810,30 +807,30 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         throws BuildException {
 
         dependencyAnalyzer.reset();
-        
+
         Iterator i = checkEntries.keySet().iterator();
         while (i.hasNext()) {
             String entryName = (String)i.next();
             if (entryName.endsWith(".class")) {
-                String className = entryName.substring(0, 
+                String className = entryName.substring(0,
                     entryName.length() - ".class".length());
                 className = className.replace(File.separatorChar, '/');
                 className = className.replace('/', '.');
-                    
-                dependencyAnalyzer.addRootClass(className);               
+
+                dependencyAnalyzer.addRootClass(className);
             }
         }
-        
+
         Enumeration e = dependencyAnalyzer.getClassDependencies();
-        
+
         while (e.hasMoreElements()) {
             String classname = (String)e.nextElement();
-            String location 
+            String location
                 = classname.replace('.', File.separatorChar) + ".class";
             File classFile = new File(config.srcDir, location);
             if (classFile.exists()) {
                 checkEntries.put(location, classFile);
-                log("dependent class: " + classname + " - " + classFile, 
+                log("dependent class: " + classname + " - " + classFile,
                     Project.MSG_VERBOSE);
             }
         }
