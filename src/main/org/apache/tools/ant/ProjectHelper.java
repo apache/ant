@@ -223,6 +223,12 @@ public class ProjectHelper {
      * Handler for the top level "project" element.
      */
     private class ProjectHandler extends AbstractHandler {
+        /**
+         * Tasks not living in a target need special processing
+         * in endElement (this is the right place to call execute).
+         */
+        protected TaskHandler childHandler = null;
+
         public ProjectHandler(DocumentHandler parentHandler) {
             super(parentHandler);
         }
@@ -291,11 +297,13 @@ public class ProjectHelper {
         }
 
         private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
-            new TaskHandler(this, null).init(name, attrs);
+            childHandler = new TaskHandler(this, null);
+            childHandler.init(name, attrs);
         }
 
         private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
-            new TaskHandler(this, null).init(name, attrs);
+            childHandler = new TaskHandler(this, null);
+            childHandler.init(name, attrs);
         }
 
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
@@ -304,6 +312,15 @@ public class ProjectHelper {
 
         private void handleDataType(String name, AttributeList attrs) throws SAXParseException {
             new DataTypeHandler(this).init(name, attrs);
+        }
+
+        public void endElement(String name) throws SAXException {
+            if (childHandler != null) {
+                childHandler.finished();
+                childHandler = null;
+            }
+            
+            super.endElement(name);
         }
     }
 
@@ -416,6 +433,11 @@ public class ProjectHelper {
             } else {
                 task.init();
                 configure(task, attrs, project);
+            }
+        }
+
+        public void finished() {
+            if (task != null && target == null) {
                 task.execute();
             }
         }

@@ -63,6 +63,9 @@ Fixed bugs:
 * org.apache.tools.mail.MailMessage (and therefore <mail>) can now
   handle SMTP servers sending multi line responses.
 
+* nested <classpath> elements of <taskdef> now work for <taskdef>s not
+  nested into <target> as well.
+
 Changes from Ant 1.1 to Ant 1.2
 ===============================
 
