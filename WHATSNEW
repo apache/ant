@@ -79,6 +79,12 @@ on log output.
 
 * project specific help can now be obtained with the -projecthelp option.
 
+* Added a -debug option to make -verbose less verbose (and more useful)
+
+* Ant will now search for a file named build.xml in the parent directory
+and above (towards the root of the filesystem) if you didn't specify
+-buildfile and there is no build.xml in the current directory.
+
 Fixed bugs:
 -----------
 

@@ -76,6 +76,7 @@ public class Project {
     public static final int MSG_WARN = 1;
     public static final int MSG_INFO = 2;
     public static final int MSG_VERBOSE = 3;
+    public static final int MSG_DEBUG = 4;
 
     // private set of constants to represent the state
     // of a DFS of the Target dependencies
@@ -238,13 +239,13 @@ public class Project {
         if (null != userProperties.get(name))
             return;
         log("Setting project property: " + name + " -> " +
-            value, MSG_VERBOSE);
+            value, MSG_DEBUG);
         properties.put(name, value);
     }
 
     public void setUserProperty(String name, String value) {
         log("Setting ro project property: " + name + " -> " +
-            value, MSG_VERBOSE);
+            value, MSG_DEBUG);
         userProperties.put(name, value);
         properties.put(name, value);
     }
@@ -294,7 +295,7 @@ public class Project {
     public void addFilter(String token, String value) {
         if (token == null) return;
         log("Setting token to filter: " + token + " -> "
-            + value, MSG_VERBOSE);
+            + value, MSG_DEBUG);
         this.filters.put(token, value);
     }
 
@@ -350,7 +351,7 @@ public class Project {
 
     public void addTaskDefinition(String taskName, Class taskClass) {
         String msg = " +User task: " + taskName + "     " + taskClass.getName();
-        log(msg, MSG_VERBOSE);
+        log(msg, MSG_DEBUG);
         taskClassDefinitions.put(taskName, taskClass);
     }
 
@@ -360,7 +361,7 @@ public class Project {
 
     public void addDataTypeDefinition(String typeName, Class typeClass) {
         String msg = " +User datatype: " + typeName + "     " + typeClass.getName();
-        log(msg, MSG_VERBOSE);
+        log(msg, MSG_DEBUG);
         dataClassDefinitions.put(typeName, typeClass);
     }
 
@@ -416,7 +417,7 @@ public class Project {
      */
     public void addOrReplaceTarget(String targetName, Target target) {
         String msg = " +Target: " + targetName;
-        log(msg, MSG_VERBOSE);
+        log(msg, MSG_DEBUG);
         target.setProject(this);
         targets.put(targetName, target);
     }
@@ -449,7 +450,7 @@ public class Project {
             task.setTaskName(taskType);
 
             String msg = "   +Task: " + taskType;
-            log (msg, MSG_VERBOSE);
+            log (msg, MSG_DEBUG);
             return task;
         } catch (Exception e) {
             String msg = "Could not create task of type: "
@@ -484,7 +485,7 @@ public class Project {
                  o = ctor.newInstance(new Object[] {this});
             }
             String msg = "   +DataType: " + typeName;
-            log (msg, MSG_VERBOSE);
+            log (msg, MSG_DEBUG);
             return o;
         } catch (java.lang.reflect.InvocationTargetException ite) {
             Throwable t = ite.getTargetException();

@@ -72,11 +72,14 @@ import java.util.*;
 
 public class Main {
 
+    /** The default build file name */
+    public static final String DEFAULT_BUILD_FILENAME = "build.xml";
+
     /** Our current message output status. Follows Project.MSG_XXX */
     private int msgOutputLevel = Project.MSG_INFO;
 
     /** File that we are using for configuration */
-    private File buildFile = new File("build.xml");
+    private File buildFile; /** null */
 
     /** Stream that we are using for logging */
     private PrintStream out = System.out;
@@ -128,6 +131,7 @@ public class Main {
             System.exit(0);
         }
         catch(Throwable exc) {
+            System.err.println(exc.getMessage());
             System.exit(1);
         }
     }
@@ -150,6 +154,9 @@ public class Main {
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
                 printVersion();
                 msgOutputLevel = Project.MSG_VERBOSE;
+            } else if (arg.equals("-debug")) {
+                printVersion();
+                msgOutputLevel = Project.MSG_DEBUG;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
                     File logFile = new File(args[i+1]);
@@ -236,8 +243,13 @@ public class Main {
 
         }
 
-        // make sure buildfile exists
+        // if buildFile was not specified on the command line,
+        // then search for it
+        if (buildFile == null) {
+            buildFile = findBuildFile(DEFAULT_BUILD_FILENAME);
+        }
 
+        // make sure buildfile exists
         if (!buildFile.exists()) {
             System.out.println("Buildfile: " + buildFile + " does not exist!");
             throw new BuildException("Build failed");
@@ -252,6 +264,77 @@ public class Main {
         }
 
         readyToRun = true;
+    }
+
+    /**
+     * Helper to get the parent file for a given filename.
+     *
+     * <P>Added to simulate File.getParentFile() from JDK 1.2.
+     *
+     * @param filename  File name
+     * @return          Parent file or null if none
+     */
+    private File getParentFile(String filename) {
+        return getParentFile(new File(filename));
+    }
+
+    /**
+     * Helper to get the parent file for a given file.
+     *
+     * <P>Added to simulate File.getParentFile() from JDK 1.2.
+     *
+     * @param file   File
+     * @return       Parent file or null if none
+     */
+    private File getParentFile(File file) {
+        String filename = file.getAbsolutePath();
+        file = new File(filename);
+        filename = file.getParent();
+
+        if (filename != null && msgOutputLevel >= Project.MSG_VERBOSE) {
+            System.out.println("Searching in "+filename);
+        }
+
+        return (filename == null) ? null : new File(filename);
+    }
+
+    /**
+     * Search parent directories for the build file.
+     *
+     * <P>Takes the given target as a suffix to append to each
+     *    parent directory in seach of a build file.  Once the
+     *    root of the file-system has been reached an exception
+     *    is thrown.
+     *
+     * @param suffix    Suffix filename to look for in parents.
+     * @return          A handle to the build file
+     *
+     * @exception BuildException    Failed to locate a build file
+     */
+    private File findBuildFile(String suffix) throws BuildException {
+        if (msgOutputLevel >= Project.MSG_INFO) {
+            System.out.println("Searching for " + suffix + " ...");
+        }
+
+        File parent = getParentFile(suffix);
+        File file = new File(parent, suffix);
+        
+        // check if the target file exists in the current directory
+        while (!file.exists()) {
+            // change to parent directory
+            parent = getParentFile(parent);
+            
+            // if parent is null, then we are at the root of the fs,
+            // complain that we can't find the build file.
+            if (parent == null) {
+                throw new BuildException("Could not locate a build file!");
+            }
+            
+            // refresh our file handle
+            file = new File(parent, suffix);
+        }
+        
+        return file;
     }
 
     /**
@@ -390,6 +473,7 @@ public class Main {
         msg.append("  -version               print the version information and exit" + lSep);
         msg.append("  -quiet                 be extra quiet" + lSep);
         msg.append("  -verbose               be extra verbose" + lSep);
+        msg.append("  -debug                 print debugging information" + lSep);
         msg.append("  -emacs                 produce logging information without adornments" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
         msg.append("  -logger <classname>    the class which is to perform logging" + lSep);

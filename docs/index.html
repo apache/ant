@@ -25,7 +25,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/09/15</p>
+<p>Version 1.2 - 2000/09/19</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -166,10 +166,13 @@ shell script necessary to run execs on Unix.</p>
 <h2><a name="running">Running Ant</a></h2>
 <p>Running Ant is simple, when you installed it as described in the previous
 section. Just type <code>ant</code>.</p>
-<p>When nothing is specified, Ant looks for a <code>build.xml</code> file in the
-current directory. When found, it uses that file as a buildfile. To make Ant use
-another buildfile, use the commandline option <i>-buildfile &lt;file&gt;</i>,
-where <i>&lt;file&gt;</i> is the buildfile you want to use.</p>
+<p>When nothing is specified, Ant looks for a <code>build.xml</code>
+file in the current directory. When found, it uses that file as a
+buildfile, otherwise it searches in the parent directory and so on
+until the root of the filesystem has been reached. To make Ant use
+another buildfile, use the commandline option <i>-buildfile
+&lt;file&gt;</i>, where <i>&lt;file&gt;</i> is the buildfile you want
+to use.</p>
 <p>You can also set properties which override properties specified in the
 buildfile (see the <a href="#property">property task</a>). 
 This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
@@ -192,6 +195,7 @@ Options:
 -version               print the version information and exit
 -quiet                 be extra quiet
 -verbose               be extra verbose
+-debug                 print debugging information
 -emacs                 produce logging information without adornments
 -logfile &lt;file&gt;        use given file for log
 -logger &lt;classname&gt;    the class which is to perform logging
