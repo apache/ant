@@ -20,7 +20,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.tools.ant.Task;
 
 /**
- * This is the property "task" to declare a binding of a datatype to a name.
+ * Adapter of Ant1 tasks to ant2.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
