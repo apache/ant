@@ -66,6 +66,9 @@ enhancements of existing tasks.
 
   Based on <depend> of IBM's JAX for example.
 
+* Unify <available> and <uptodate> into a more general <condition>
+  task, support AND/OR of several tests here.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
@@ -350,3 +353,4 @@ V. Things we probably don't agree on.
   target - as proposed by Thomas Christen in
   <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>.
 
+* Task level if and unless attributes.
