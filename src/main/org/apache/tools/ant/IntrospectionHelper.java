@@ -604,7 +604,7 @@ public final class IntrospectionHelper implements BuildListener {
             parentUri = "";
         }
         NestedCreator nc = null;
-        if (uri.equals(parentUri)) { //  || uri.equals("")) {
+        if (uri.equals(parentUri) || uri.equals("")) {
             nc = (NestedCreator) nestedCreators.get(
                 name.toLowerCase(Locale.US));
         }
@@ -775,7 +775,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         return (
             nestedCreators.containsKey(name.toLowerCase(Locale.US))
-            && (uri.equals(parentUri))) // || uri.equals("")))
+            && (uri.equals(parentUri) || uri.equals("")))
             || DynamicElement.class.isAssignableFrom(bean)
             || DynamicElementNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;

@@ -14,6 +14,9 @@ Changes that could break older environments:
 * All exceptions thrown by tasks are now wrapped in a buildexception
   giving the location in the buildfile of the task.
 
+* Nested elements for namespaced tasks and types may belong to the
+  Ant default namespace as well as the task's or type's namespace.
+
 Fixed bugs:
 -----------
 

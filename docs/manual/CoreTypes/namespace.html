@@ -93,7 +93,8 @@
 
     <h2>Namespaces and Nested Elements</h2>
 
-    <p>Almost always in Ant 1.6, elements nested inside a namespaced
+    <p>
+      Almost always in Ant 1.6, elements nested inside a namespaced
       element have the same namespace as their parent. So if 'task' in the
       example above allowed a nested 'config' element, the build file snippet
       would look like this:
@@ -112,6 +113,18 @@
    ...
           &lt;/task&gt;
         </pre>
+    <p>
+      From Ant 1.6.2, elements nested inside a namespaced element may also be
+      in Ant's default namespace. This means that the following is now allowed:
+    </p>
+    </p><pre> &lt;typedef resource="org/example/tasks.properties"
+   uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
+ &lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+   &lt;config a="foo" b="bar"/&gt;
+   ...
+ &lt;/my:task&gt;
+</pre>
+      
     <h2>Namespaces and Attributes</h2>
 
     <p>
