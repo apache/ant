@@ -33,10 +33,10 @@ public class DefaultExtensionManager
     extends DefaultPackageRepository
     implements LogEnabled, Parameterizable, Initializable, Disposable, ExtensionManager
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultExtensionManager.class );
 
-    private static final String TOOLS_JAR = File.separator + "lib" + File.separator + "tools.jar";
+    private final static String TOOLS_JAR = File.separator + "lib" + File.separator + "tools.jar";
 
     private Logger m_logger;
 

@@ -23,17 +23,19 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-class FtpFileSystem extends AbstractFileSystem
+class FtpFileSystem
+    extends AbstractFileSystem
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( FtpFileSystem.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( FtpFileSystem.class );
 
     private FTPClient m_client;
 
-    public FtpFileSystem( FileName rootName,
-                          String hostname,
-                          String username,
-                          String password ) throws FileSystemException
+    public FtpFileSystem( final FileName rootName,
+                          final String hostname,
+                          final String username,
+                          final String password )
+        throws FileSystemException
     {
         super( rootName );
         try
@@ -95,7 +97,8 @@ class FtpFileSystem extends AbstractFileSystem
     /**
      * Creates a file object.
      */
-    protected FileObject createFile( FileName name ) throws FileSystemException
+    protected FileObject createFile( FileName name )
+        throws FileSystemException
     {
         return new FtpFileObject( name, this );
     }

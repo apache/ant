@@ -18,10 +18,11 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-public class SmbFileNameParser extends UriParser
+public class SmbFileNameParser
+    extends UriParser
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( SmbFileNameParser.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( SmbFileNameParser.class );
 
     /**
      * Parses an absolute URI, splitting it into its components.

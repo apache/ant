@@ -28,7 +28,7 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 public class IfTask
     extends AbstractContainerTask
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( IfTask.class );
 
     private Condition m_condition;

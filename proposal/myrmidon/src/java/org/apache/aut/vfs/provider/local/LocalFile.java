@@ -25,10 +25,12 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-final class LocalFile extends AbstractFileObject implements FileObject
+final class LocalFile
+    extends AbstractFileObject
+    implements FileObject
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( LocalFile.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( LocalFile.class );
 
     private File m_file;
     private String m_fileName;
@@ -36,16 +38,19 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Creates a non-root file.
      */
-    public LocalFile( LocalFileSystem fs, String fileName, FileName name )
+    public LocalFile( final LocalFileSystem fileSystem,
+                      final String fileName,
+                      final FileName name )
     {
-        super( name, fs );
+        super( name, fileSystem );
         m_fileName = fileName;
     }
 
     /**
      * Attaches this file object to its file resource.
      */
-    protected void doAttach() throws Exception
+    protected void doAttach()
+        throws Exception
     {
         if( m_file == null )
         {
@@ -56,7 +61,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Returns the file's type.
      */
-    protected FileType doGetType() throws Exception
+    protected FileType doGetType()
+        throws Exception
     {
         if( !m_file.exists() )
         {
@@ -78,7 +84,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Returns the children of the file.
      */
-    protected String[] doListChildren() throws Exception
+    protected String[] doListChildren()
+        throws Exception
     {
         return m_file.list();
     }
@@ -86,7 +93,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Deletes this file, and all children.
      */
-    public void doDelete() throws Exception
+    public void doDelete()
+        throws Exception
     {
         if( !m_file.delete() )
         {
@@ -98,7 +106,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Creates this folder.
      */
-    protected void doCreateFolder() throws Exception
+    protected void doCreateFolder()
+        throws Exception
     {
         if( !m_file.mkdir() )
         {
@@ -110,7 +119,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Creates an input stream to read the content from.
      */
-    protected InputStream doGetInputStream() throws Exception
+    protected InputStream doGetInputStream()
+        throws Exception
     {
         return new FileInputStream( m_file );
     }
@@ -118,7 +128,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Creates an output stream to write the file content to.
      */
-    protected OutputStream doGetOutputStream() throws Exception
+    protected OutputStream doGetOutputStream()
+        throws Exception
     {
         return new FileOutputStream( m_file );
     }
@@ -126,7 +137,8 @@ final class LocalFile extends AbstractFileObject implements FileObject
     /**
      * Returns the size of the file content (in bytes).
      */
-    protected long doGetContentSize() throws Exception
+    protected long doGetContentSize()
+        throws Exception
     {
         return m_file.length();
     }

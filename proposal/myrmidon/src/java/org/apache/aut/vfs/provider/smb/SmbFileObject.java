@@ -25,17 +25,21 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-public class SmbFileObject extends AbstractFileObject implements FileObject
+public class SmbFileObject
+    extends AbstractFileObject
+    implements FileObject
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( SmbFileObject.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( SmbFileObject.class );
 
     private String m_fileName;
     private SmbFile m_file;
 
-    protected SmbFileObject( String fileName, FileName name, SmbFileSystem fs )
+    protected SmbFileObject( final String fileName,
+                             final FileName name,
+                             final SmbFileSystem fileSystem )
     {
-        super( name, fs );
+        super( name, fileSystem );
         m_fileName = fileName;
     }
 

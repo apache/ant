@@ -19,10 +19,11 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-class LocalFileNameParser extends UriParser
+class LocalFileNameParser
+    extends UriParser
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( LocalFileNameParser.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( LocalFileNameParser.class );
 
     private boolean m_windowsNames;
 
@@ -35,7 +36,7 @@ class LocalFileNameParser extends UriParser
     /**
      * Determines if a name is an absolute file name.
      */
-    public boolean isAbsoluteName( String name )
+    public boolean isAbsoluteName( final String name )
     {
         // TODO - this is yucky
         StringBuffer b = new StringBuffer( name );
@@ -54,10 +55,10 @@ class LocalFileNameParser extends UriParser
     /**
      * Parses an absolute URI, splitting it into its components.
      *
-     * @param name
-     *          The URI.
+     * @param uriStr The URI.
      */
-    public ParsedUri parseUri( String uriStr ) throws FileSystemException
+    public ParsedUri parseUri( final String uriStr )
+        throws FileSystemException
     {
         StringBuffer name = new StringBuffer();
         ParsedFileUri uri = new ParsedFileUri();
@@ -90,8 +91,8 @@ class LocalFileNameParser extends UriParser
     /**
      * Pops the root prefix off a URI, which has had the scheme removed.
      */
-    private String extractRootPrefix( String uri,
-                                      StringBuffer name )
+    private String extractRootPrefix( final String uri,
+                                      final StringBuffer name )
         throws FileSystemException
     {
         // TODO - split this into sub-classes
@@ -116,8 +117,8 @@ class LocalFileNameParser extends UriParser
     /**
      * Extracts a Windows root prefix from a name.
      */
-    private String extractWindowsRootPrefix( String uri,
-                                             StringBuffer name )
+    private String extractWindowsRootPrefix( final String uri,
+                                             final StringBuffer name )
         throws FileSystemException
     {
         // Looking for:
@@ -158,7 +159,8 @@ class LocalFileNameParser extends UriParser
     /**
      * Extracts a drive prefix from a path.  Leading '/' chars have been removed.
      */
-    private String extractDrivePrefix( StringBuffer name ) throws FileSystemException
+    private String extractDrivePrefix( final StringBuffer name )
+        throws FileSystemException
     {
         // Looking for <letter> ':' '/'
         if( name.length() < 3 )
@@ -191,8 +193,9 @@ class LocalFileNameParser extends UriParser
     /**
      * Extracts a UNC name from a path.  Leading '/' chars have been removed.
      */
-    private String extractUNCPrefix( String uri,
-                                     StringBuffer name ) throws FileSystemException
+    private String extractUNCPrefix( final String uri,
+                                     final StringBuffer name )
+        throws FileSystemException
     {
         // Looking for <name> '/' <name> ( '/' | <end> )
 

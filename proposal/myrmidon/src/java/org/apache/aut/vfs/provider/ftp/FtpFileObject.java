@@ -22,10 +22,13 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-class FtpFileObject extends AbstractFileObject
+class FtpFileObject
+    extends AbstractFileObject
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( FtpFileObject.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( FtpFileObject.class );
+
+    private final static FTPFile[] EMPTY_FTP_FILE_ARRAY = {};
 
     private FtpFileSystem m_ftpFs;
 
@@ -33,12 +36,11 @@ class FtpFileObject extends AbstractFileObject
     private FTPFile m_fileInfo;
     private FTPFile[] m_children;
 
-    private static final FTPFile[] EMPTY_FTP_FILE_ARRAY = {};
 
-    public FtpFileObject( FileName name, FtpFileSystem fs )
+    public FtpFileObject( final FileName name, final FtpFileSystem fileSystem )
     {
-        super( name, fs );
-        m_ftpFs = fs;
+        super( name, fileSystem );
+        m_ftpFs = fileSystem;
     }
 
     /**
@@ -74,7 +76,8 @@ class FtpFileObject extends AbstractFileObject
     /**
      * Attaches this file object to its file resource.
      */
-    protected void doAttach() throws Exception
+    protected void doAttach()
+        throws Exception
     {
         // Get the parent folder to find the info for this file
         FtpFileObject parent = (FtpFileObject)getParent();
@@ -106,7 +109,8 @@ class FtpFileObject extends AbstractFileObject
      * Determines the type of the file, returns null if the file does not
      * exist.
      */
-    protected FileType doGetType() throws Exception
+    protected FileType doGetType()
+        throws Exception
     {
         if( m_fileInfo == null )
         {
@@ -129,7 +133,8 @@ class FtpFileObject extends AbstractFileObject
     /**
      * Lists the children of the file.
      */
-    protected String[] doListChildren() throws Exception
+    protected String[] doListChildren()
+        throws Exception
     {
         if( m_children == null )
         {
@@ -166,7 +171,8 @@ class FtpFileObject extends AbstractFileObject
     /**
      * Creates this file as a folder.
      */
-    protected void doCreateFolder() throws Exception
+    protected void doCreateFolder()
+        throws Exception
     {
         if( !m_ftpFs.getClient().makeDirectory( getName().getPath() ) )
         {
@@ -194,7 +200,8 @@ class FtpFileObject extends AbstractFileObject
     /**
      * Notification of the input stream being closed.
      */
-    protected void doEndInput() throws Exception
+    protected void doEndInput()
+        throws Exception
     {
         if( !m_ftpFs.getClient().completePendingCommand() )
         {
@@ -206,7 +213,8 @@ class FtpFileObject extends AbstractFileObject
     /**
      * Creates an output stream to write the file content to.
      */
-    protected OutputStream doGetOutputStream() throws Exception
+    protected OutputStream doGetOutputStream()
+        throws Exception
     {
         return m_ftpFs.getClient().storeFileStream( getName().getPath() );
     }
@@ -214,7 +222,8 @@ class FtpFileObject extends AbstractFileObject
     /**
      * Notification of the output stream being closed.
      */
-    protected void doEndOutput() throws Exception
+    protected void doEndOutput()
+        throws Exception
     {
         if( !m_ftpFs.getClient().completePendingCommand() )
         {
