@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.1//EN" "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
+
+<module name="Checker">
+  <module name="TreeWalker">
+    <!-- Javadoc requirements -->
+    <module name="JavadocType">
+      <property name="scope" value="protected"/>
+      <property name="authorFormat" value="\S"/>
+    </module>
+    <module name="JavadocMethod">
+      <property name="scope" value="protected"/>
+      <property name="allowUndeclaredRTE" value="true"/>
+    </module>
+    <module name="JavadocVariable">
+       <property name="scope" value="public"/>
+    </module>        
+    
+    <!-- element naming -->
+    <module name="PackageName">
+      <!-- no uppercase letters, between 2 and 8 characters -->
+      <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]{1,7})*$"/>
+    </module>
+    <module name="TypeName"/>
+    <module name="ConstantName"/>
+    <module name="LocalFinalVariableName"/>
+    <module name="LocalVariableName"/>
+    <module name="MemberName"/>
+    <module name="MethodName"/>
+    <module name="ParameterName"/>
+    <module name="StaticVariableName"/>
+    
+    <!-- required licence file -->
+    <module name="Header">
+        <property name="headerFile" value="${config.dir}/RequiredHeader.txt"/>
+        <property name="ignoreLines" value="4"/>
+    </module>
+    
+    <!-- Import conventions -->
+    <module name="AvoidStarImport"/>
+    <module name="IllegalImport"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports"/>
+    
+    <!-- size limits -->
+    <module name="FileLength"/>
+    <module name="LineLength"/>
+    <module name="MethodLength"/>
+    <module name="ParameterNumber"/>
+
+    <!-- whitespace checks -->
+    <module name="EmptyForIteratorPad"/>
+    <module name="NoWhitespaceAfter"/>
+    <module name="NoWhitespaceBefore"/>
+    <module name="OperatorWrap"/>
+    <module name="ParenPad"/>
+    <module name="TabCharacter"/>
+    <module name="WhitespaceAfter"/>
+    <module name="WhitespaceAround"/>
+
+    <!-- Modifier Checks -->
+    <module name="ModifierOrder"/>
+    <module name="RedundantModifier"/>
+    
+    
+    <!-- Checks for blocks -->
+    <module name="AvoidNestedBlocks"/>
+    <module name="EmptyBlock"/>
+    <module name="LeftCurly"/>
+    <module name="NeedBraces"/>
+    <module name="RightCurly"/>
+    
+    
+    <!-- Checks for common coding problems -->
+    <module name="AvoidInlineConditionals"/>
+    <module name="DoubleCheckedLocking"/>   
+    <module name="EmptyStatement"/>
+    <module name="EqualsHashCode"/>
+    <module name="IllegalInstantiation">
+      <property name="classes" value="java.lang.Boolean"/>
+    </module>
+    <module name="InnerAssignment"/>
+    <module name="MagicNumber"/>
+    <module name="MissingSwitchDefault"/>
+    <module name="RedundantThrows"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+    
+    <!-- Checks for class design -->
+    <module name="DesignForExtension"/>
+    <module name="FinalClass"/>
+    <module name="HideUtilityClassConstructor"/>
+    <module name="InterfaceIsType"/>
+    <module name="VisibilityModifier"/>
+    
+    <!-- Miscellaneous other checks.                   -->
+    <module name="ArrayTypeStyle"/>
+    <module name="GenericIllegalRegexp">
+      <property name="format" value="\s+$"/>
+      <property name="message" value="Line has trailing spaces."/>
+    </module>
+    <module name="TodoComment"/>
+    <module name="UpperEll"/>
+  </module>
+</module>

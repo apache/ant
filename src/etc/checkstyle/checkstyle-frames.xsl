@@ -6,7 +6,7 @@
 <!--
  The Apache Software License, Version 1.1
 
- Copyright (c) 2002 The Apache Software Foundation.  All rights
+ Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@
     <xsl:decimal-format decimal-separator="." grouping-separator="," />
 
     <xsl:param name="output.dir" select="'.'"/>
+    <xsl:param name="basedir" select="'.'"/>
 
     <xsl:template match="checkstyle">
         <!-- create the index.html -->
@@ -84,7 +85,7 @@
         </redirect:write>
 
         <!-- process all files -->
-        <xsl:apply-templates select="file"/>
+        <xsl:apply-templates select="file[count(error) != 0]"/>
     </xsl:template>
 
     <xsl:template name="index.html">
@@ -99,7 +100,8 @@
             <noframes>
                 <h2>Frame Alert</h2>
                 <p>
-                    This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+                    This document is designed to be viewed using the frames feature. 
+                    If you see this message, you are using a non-frame-capable web client.
                 </p>
             </noframes>
         </html>
@@ -111,7 +113,9 @@
                 <td class="text-align:right"><h2>CheckStyle Audit</h2></td>
             </tr>
             <tr>
-                <td class="text-align:right">Designed for use with <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
+                <td class="text-align:right">Designed for use with 
+                  <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and 
+                  <a href='http://ant.apache.org/'>Ant</a>.</td>
             </tr>
         </table>
         <hr size="1"/>
@@ -201,8 +205,8 @@
                 <p>
                     <table width="100%">
                         <!-- For each file create its part -->
-                        <xsl:apply-templates select="file" mode="all.classes">
-                            <xsl:sort select="@name"/>
+                        <xsl:apply-templates select="file[count(error) != 0]" mode="all.classes">
+                            <xsl:sort select="substring-after(@name, $basedir)"/>
                         </xsl:apply-templates>
                     </table>
                 </p>
@@ -217,8 +221,8 @@
                 <th>Name</th>
                 <th>Errors</th>
             </tr>
-            <xsl:apply-templates select="file" mode="filelist">
-                <xsl:sort select="@name"/>
+            <xsl:apply-templates select="file[count(error) != 0]" mode="filelist">
+                <xsl:sort select="count(error)" order="descending" data-type="number"/>
             </xsl:apply-templates>
         </table>
     </xsl:template>
@@ -229,9 +233,9 @@
             <td nowrap="nowrap">
                 <a>
                     <xsl:attribute name="href">
-                        <xsl:text>files/</xsl:text><xsl:value-of select="@name"/><xsl:text>.html</xsl:text>
+                        <xsl:text>files/</xsl:text><xsl:value-of select="substring-after(@name, $basedir)"/><xsl:text>.html</xsl:text>
                     </xsl:attribute>
-                    <xsl:value-of select="@name"/>
+                    <xsl:value-of select="substring-after(@name, $basedir)"/>
                 </a>
             </td>
             <td><xsl:value-of select="count(error)"/></td>
@@ -243,9 +247,9 @@
             <td nowrap="nowrap">
                 <a target="fileFrame">
                     <xsl:attribute name="href">
-                        <xsl:text>files/</xsl:text><xsl:value-of select="@name"/><xsl:text>.html</xsl:text>
+                        <xsl:text>files/</xsl:text><xsl:value-of select="substring-after(@name, $basedir)"/><xsl:text>.html</xsl:text>
                     </xsl:attribute>
-                    <xsl:value-of select="@name"/>
+                    <xsl:value-of select="substring-after(@name, $basedir)"/>
                 </a>
             </td>
         </tr>
@@ -269,16 +273,16 @@
     </xsl:template>
 
     <xsl:template match="file">
-        <redirect:write file="{$output.dir}/files/{@name}.html">
+        <redirect:write file="{$output.dir}/files/{substring-after(@name, $basedir)}.html">
             <html>
                 <head>
                     <link rel="stylesheet" type="text/css">
-                        <xsl:attribute name="href"><xsl:call-template name="path"><xsl:with-param name="path" select="@name"/></xsl:call-template><xsl:text>stylesheet.css</xsl:text></xsl:attribute>
+                        <xsl:attribute name="href"><xsl:call-template name="path"><xsl:with-param name="path" select="substring-after(@name, $basedir)"/></xsl:call-template><xsl:text>stylesheet.css</xsl:text></xsl:attribute>
                     </link>
                 </head>
                 <body>
                     <xsl:call-template name="pageHeader"/>
-                    <h3>File <xsl:value-of select="@name"/></h3>
+                    <h3>File <xsl:value-of select="substring-after(@name, $basedir)"/></h3>
                     <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
                         <tr>
                             <th>Error Description</th>
@@ -287,7 +291,7 @@
                         <xsl:for-each select="error">
                             <tr>
                                 <xsl:call-template name="alternated-row"/>
-                                <td><xsl:value-of select="@message"/></td>
+                                <td><a title="{@source}"><xsl:value-of select="@message"/></a></td>
                                 <td><xsl:value-of select="@line"/></td>
                             </tr>
                         </xsl:for-each>

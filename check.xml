@@ -1,20 +1,56 @@
-<project default="checkstyle" name="CheckAnt">
-  <property name="java.dir" value="src/main"/>
+<?xml version="1.0"?>
+<project default="htmlreport" name="CheckAnt">
+<!--  <import file="build.xml"/> --> 
+  <property name="src.dir" value="src"/>
+  <property name="java.dir" value="${src.dir}/main"/>
+  <property name="etc.dir" value="${src.dir}/etc"/>
+  <property name="config.dir" value="${etc.dir}/checkstyle"/>
+  <property name="build.dir" value="build"/>
+  
+  <property name="checkstyle.reportdir" value="${build.dir}/reports/checkstyle"/>
+  <property name="checkstyle.raw" value="${checkstyle.reportdir}/raw.xml"/>
+  <property name="stylesheet.html" value="${config.dir}/checkstyle-frames.xsl"/>
+  <property name="stylesheet.text" value="${config.dir}/checkstyle-text.xsl"/>
+  <property name="stylesheet.xdoc" value="${config.dir}/checkstyle-xdoc.xsl"/>
+
+  <property name="checkstyle.basedir" location="${java.dir}"/>
+
+  <!-- Ant Checkstyle report -->
   <property name="tocheck" value="**/*.java"/>  
   <property name="javadoc.scope" value="public"/>
   
   <target name="checkstyle">
-    <taskdef name="checkstyle"
-             classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
-    <checkstyle headerFile="src/etc/RequiredHeader.txt"
-                headerIgnoreLine="4"
-                allowProtected="true"
-                javadocScope="${javadoc.scope}">
+    <mkdir dir="${checkstyle.reportdir}"/>
+    <taskdef resource="checkstyletask.properties"/>
+    <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
+      <formatter type="xml" toFile="${checkstyle.raw}"/>
       <fileset dir="${java.dir}">
         <include name="${tocheck}"/>
       </fileset>
     </checkstyle>
   </target>
+
+  <target name="htmlreport">
+    <mkdir dir="${checkstyle.reportdir}"/>
+    <style in="${checkstyle.raw}" style="${stylesheet.html}"
+           out="${checkstyle.reportdir}/html/output.txt">
+      <param name="basedir" expression="${checkstyle.basedir}"/>
+    </style>
+  </target>
+  
+  <target name="textreport">
+    <style in="${checkstyle.raw}" style="${stylesheet.text}"
+           out="${checkstyle.reportdir}/report.txt">
+    </style>
+  </target>
+
+  <target name="xdocreport">
+    <style in="${checkstyle.raw}" style="${stylesheet.xdoc}"
+           out="${checkstyle.reportdir}/xdocs/index.xml">
+      <param name="basedir" expression="${checkstyle.basedir}"/>
+    </style>
+  </target>
+
   
 </project>
 
