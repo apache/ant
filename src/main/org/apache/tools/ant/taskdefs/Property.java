@@ -107,7 +107,7 @@ public class Property extends Task {
         return resource;
     }
 
-    public void execute() throws BuildException {
+    public void init() throws BuildException {
         try {
             if ((name != null) && (value != null)) {
                 addProperty(name, value);
