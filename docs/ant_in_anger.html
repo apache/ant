@@ -12,7 +12,7 @@
 </h2>
 
 <h4  align="center">
-Steve Loughran (<a href="mailto:steve_l@iseran.com">steve_l@iseran.com</a>)
+Steve Loughran
 </h4>
 
 <a name="introduction">
@@ -38,7 +38,7 @@ done.
 Firstly, here are some assumptions about the projects which this
 document covers
 <ul>
-<li> Pretty much pure Java.
+<li> Pretty much pure Java, maybe with some legacy cruft on the edges.
 
 <li> Team efforts, usually with the petulant prima-donnas all us Java
 programmers become once we realise how much in demand we are.
@@ -52,7 +52,7 @@ be vaguely aware of each other.
 
 <li> Significant mismatch between expectations and time available to
 deliver. 'Last Week' is the ideal delivery date handed down from above,
-next century the date coming up from below.
+late next century the date coming up from below.
 
 <li> Everyone is struggling to keep up with platform and tool evolution.
 
@@ -107,8 +107,8 @@ And of course, the ubiquitous <b>clean</b> target.
 With standard target names, it is easy to build encompassing ant build
 files which just hand off the work to the classes below using the
 <a href="manual/CoreTasks/ant.html">ant</a>
-task. For example. the clean target could be handed down to the intf and
-impl subdirectories from a parent directory
+task. For example. the clean target could be handed down to the <tt>intf</tt> and
+<tt>impl</tt> subdirectories from a parent directory
 
 <pre>&lt;target name=&quot;clean&quot;  depends=&quot;clean-intf, clean-impl&quot;&gt;
 &lt;/target&gt;
@@ -121,6 +121,11 @@ impl subdirectories from a parent directory
 	&lt;ant dir=&quot;impl&quot; target=&quot;clean&quot; /&gt;
 &lt;/target&gt;  </pre>
 
+If you give targets a <tt>description</tt> tag, then calling <tt>ant
+-projecthelp</tt> will list all tasks with their description as 'main targets', and 
+all tasks without a description as subtargets. Describing all your
+entry points is therefore very useful, even before a project becomes big and complicated.
+  
 <h3>
 	Extend ant through new tasks
 </h3>
@@ -178,7 +183,13 @@ write java code to stress large portions of the system -even if the code
 can not run as JUnit tasks- then the <a href= "manual/CoreTasks/java.html">java</a>
 task can be used to invoke them. It is best to specify that you want a
 new JVM for these tests, so that a significant crash does not break the
-full build.
+full build. The Junit extensions such as 
+<a href="http://httpunit.sourceforge.net/">HttpUnit</a> for web pages, and 
+<a href="http://jakarta.apache.org/commons/cactus/">Cactus</a> for J2EE and servlet 
+testing help to expand the testing framework. To test properly you will still
+need to invest a lot of effort in getting these to work with your project, and 
+deriving great unit, system and regression tests -but your customers will love 
+you for shipping software that works.   
 
 
 <a name="crossplatform">
@@ -199,7 +210,7 @@ tools (exec tasks) which are not portable, path issues, and hard coding
 in the location of things.
 
 <h3>Command Line apps: <a href="manual/CoreTasks/exec.html">Exec</a>/ <a href=
-"manual/CoreTasks/execon.html">ExecOn</a></h3>
+"manual/CoreTasks/apply.html">Apply</a></h3>
 
 The trouble with external invocation is that not all functions are found
 cross platform, and those that are often have different names -DOS
@@ -225,7 +236,7 @@ split entries. Thus
 a path in unix. In Windows the path must use semicolon separators,
 colons being used to specify disk drives, and backslash separators
 <i>"c:\bin\java\lib\xerces.jar;c:\bin\java\lib\ant.jar"</i>.
-
+<p>
 This difference between platforms (indeed, the whole java classpath
 paradigm) can cause hours of fun.
 
@@ -242,8 +253,13 @@ defined property in the command line. In the build files you may find it
 better to build a classpath by listing individual files (using location=
 attributes), or by including a fileset of *.jar in the classpath
 definition.
-
-
+<p>
+There is also the <a
+href="manual/CoreTasks/pathconvert.html">PathConvert</a> task which
+can put a fully resolved path into a property. Why do that? Because then 
+you can use that path in other ways -such as pass it as a parameter to 
+some application you are calling, or use the replace task to patch it
+into a localised shell script or batch file.
 <p>
 Note that DOS descended file systems are case insensitive (apart from
 the obscure aberration of the WinNT posix subsystem run against NTFS),
@@ -254,7 +270,7 @@ directories to see a disastrous example of this).
 <p>
 
 Ant's policy on case sensitivity is whatever the underlying file system
-implements *VERIFY*, and its handling of file extensions is that *.jav does not
+implements, and its handling of file extensions is that *.jav does not
 find any .java files. The Java compiler is of course case sensitive -you can
 not have a class 'ExampleThree' implemented in "examplethree.java".
 
@@ -336,8 +352,8 @@ file with tight access control is slightly better. The <a href=
 "manual/CoreTasks/fixcrlf.html">FixCRLF task</a> is often a useful interim step if
 you need to ensure that files have unix file extensions before upload. A
 WebDav task has long been discussed, which would provide a more secure
-upload to web servers, but it is still in the todo list. If DAV is your
-required upload mechanism, why not take up the challenge?
+upload to web servers, but it is still in the todo list. Rumour has it
+that there is such a task in the jakarta-slide libraries.
 
 <p>
 
@@ -351,15 +367,19 @@ project and the rest of the ant community.
 Finally, there are of course the fallbacks of just copying files to a
 destination using <a href="manual/CoreTasks/copy.html">Copy</a> and <a href =
 "index.html#copydir">Copydir</a> , or just sending them to a person or
-process using <a href= "manual/CoreTasks/mail.html">Mail</a>.
-
+process using <a href= "manual/CoreTasks/mail.html">Mail</a> or the attachment
+aware <a href= "manual/OptionalTasks/mimemail.html">MimeMail</a>.
+In one project our team even used ant to build CD images through a build followed
+by a long set of Copy tasks, which worked surprisingly well.
 <a name="directories">
 <h2> Directory Structures</h2>
 </a>
 
 How you structure your directory tree is very dependent upon the
 project. Here are some directory layout patterns which can be used as
-starting points.
+starting points. All the jakarta projects follow a roughly similar
+style, which makes it easy to navigate around one form one project to
+another, and easy to clean up when desired. 
 
 <h3>Simple Project</h3>
 
@@ -401,14 +421,25 @@ The project contains sub directories
 <tr>
 	<td><b>src</b>
 	</td>
-	<td>source goes in under this tree
+	<td>source goes in under this tree <i>in a heirarchy which matches
+	the package names<i>. The dependency compilation of javac requires this.  
 	</td>
 </tr>
 </table>
 
 The bin, lib, doc and src directories should be under source code control.
 Slight variations include an extra tree of content to be included in the
-distribution jars -inf files, images, etc. Javadoc output can be
+distribution jars -inf files, images, etc. These can go under source
+too, with a <tt>metadata</tt> directory for web.xml and similar
+manifests, and a <tt>web</tt> folder for web content -JSP, html, images
+and so on. Keeping the content in this folder (or sub heirarchy)
+together makes it easier to test links before deployment. The actual
+production of a deployment image -such as a war file- can be left to the
+appropriate ant task: there is no need to completely model your source tree 
+upon the deployment heirarchy. 
+<p> 
+
+Javadoc output can be
 directed to a doc/ folder beneath build/, or to doc/javadoc.
 
 <h3>Interface and Implementation split</h3>
@@ -439,6 +470,14 @@ This style works well if different teams have different code
 access/commitment rights. The risk is that by giving extra leeway to the
 sub projects, you can end up with incompatible source, libraries, build
 processes and just increase your workload and integration grief all round.
+<p>
+The only way to retain control over a fairly loosely integrated
+collection of projects is to have a fully automated  build 
+and test process which verifies that everything is still compatible. Sam
+Ruby runs one for all the apache java libraries and emails everyone when
+something breaks; your own project may be able to make use of 
+<A href="http://cruisecontrol.sourceforge.net/">Cruise Control</a> for
+an automated, continuous, background build process. 
 
 <h3>Integrated sub projects</h3>
 
@@ -456,7 +495,7 @@ more loosely coupled design will become a requirement as the projects
 progress -but by the time this is realised schedule pressure and
 intertwined build files make executing the split well nigh impossible.
 If that happens then just keep with it until there is the time to
-refactor the project directory structures.
+refactor the project directory structures. 
 
 <a name="antupdate">
 <h2>
@@ -505,7 +544,12 @@ enhance it and offer up the enhancements to the rest of the world. This
 is certainly better than starting work on your 'text case converter'
 task on Ant 0.8 in isolation, announcing its existence six months latter
 and discovering that instead of adulation all you get are helpful
-pointers to the existing implementation.
+pointers to the existing implementation. The final benefit of being
+involved with the process is that it makes it easier for your tasks to 
+be added with the ant CVS tree, bringing forward the date when ant has
+taken on all the changes you needed to make to get your project to work.
+If that happens you can revert to an official ant release, and get on
+with all the other crises. 
 
 <p>
 
@@ -517,7 +561,62 @@ consider routing it to an email address you don't use for much else. And
 don't make everyone on the team subscribe; it can be too much of a
 distraction.
 
+<a name="install">
+<h2>
+Installing with Ant.
+</h2>
+</a>
 
+Because ant can read environment variables, copy, unzip and delete files
+and make java and OS calls, it can be used for simple installation
+tasks. For example, an installer for tomcat could extract the
+environment variable TOMCAT_HOME, stop tomcat running, and copy a war
+file to TOMCAT_HOME/webapps. It could even start tomcat again, but the
+build wouldn't complete until tomcat exited, which is probably not what
+was wanted. 
+
+<p>
+
+The advantage of using ant is firstly that the same install targets
+can be used from your local build files (via an <tt>ant</tt> invocation
+of the install.xml file), and secondly that a basic install target is
+quite easy to write. The disadvantages of this approach are that the
+destination must have an up to date version of ant correctly
+pre-installed, and ant doesn't allow you to handle failures well -and a
+good installer is all about handling when things go wrong, from files
+being in use to jar versions being different. This means that ant is not
+suited for shrink wrapped software, but it does work for deployment and
+installation to your local servers.
+
+<p>
+
+One major build project I was involved in had an ant install build file
+for the bluestone application server, which would shutdown all four
+instances of the app server on a single machine, copy the new version of
+the war file (with datestamp and buildstamp) to an archive directory,
+clean up the current deployed version of the war and then install the
+new version. Because bluestone restarted JVMs on demand, this script was
+all you needed for web service deployment. On the systems behind the
+firewall, we upped the ante in the deployment process by using the ftp
+task to copy out the war and build files, then the telnet task to
+remotely invoke the build file. The result was we had automated
+recompile and redeploy to local servers from inside our IDE (Jedit) or
+the command line, which was simply invalualbe. 
+
+<p>
+
+One extra trick I added later was a junit test case to run through 
+the install check list. With tests to verify access permissions on network
+drives, approximate clock synchronisation between servers, DNS functionality,
+ability to spawn executables and all the other trouble spots
+, the install script could automatically do
+a system health test during install time and report problems. [The same tests
+could also be invoked from a JMX MBean, but that's another story]. 
+<p>
+
+So, ant is not a substitute for a real installer tool, except in the
+special case of servers you control, but in that context it does let
+you integrate remote installation with your build. 
 <a name="tips">
 <h2>
 Tips and Tricks</h2>
@@ -530,7 +629,7 @@ Tips and Tricks</h2>
 The <a href="manual/CoreTasks/get.html">get</a> task can fetch any URL, so be used
 to trigger remote server side code during the build process, from remote
 server restarts to sending SMS/pager messages to the developer
-cellphones
+cellphones.
 
 <dt><b>
 i18n
@@ -561,7 +660,9 @@ Faster compiles with Jikes
 
 The <a href="http://www.jikes.org/">jikes compiler</a> is usually much
 faster than javac, and does dependency checking. Get it. Then set
-build.compiler to "jikes" for it to be used in your build files.
+build.compiler to "jikes" for it to be used in your build files. Better
+yet, set the JIKES_HOME environment variable for jikes to automatically
+get used, without changing your build files to only work with jikes.
 
 <dt><b>
 #include targets to simplify multi build.xml projects
@@ -584,8 +685,6 @@ method is the most portable:-
 	&lt;!DOCTYPE project [
 	  &lt;!ENTITY IncludeBuildCore SYSTEM &quot;buildCore.xml&quot;&gt;
 	  &lt;!ENTITY IncludeBuildSecondary SYSTEM &quot;buildSecondary.xml&quot;&gt;
-	%IncludeBuildCore;
-	%IncludeBuildSecondary;
 	]&gt;  
 	
 	&lt;target name=&quot;includedBuild&quot;&gt;
@@ -593,12 +692,27 @@ method is the most portable:-
 		&amp;IncludeBuildSecondary;
 	&lt;/target&gt;
 </pre>
-The clean method using XInclude/Xpath will let you include named 
+The cleaner method using XInclude/Xpath will let you include named 
 targets from one build file or another, using
 <a href="http://www.w3.org/XML/Linking"> 
 the xpointer syntax</a>. You'll need to wait for the W3C proposals
 to finalise and the java XML parsers to implement it before
-using xpointer references.  
+using xpointer references.
+<p>
+Before you go overboard with using XML inclusion, note that the <tt>ant</tt> task lets 
+you call any target in any other build file -with all your property settings propagating down to 
+that target. So you can actually have a suite of utility targets -"deploy-to-stack-a", "email-to-team", 
+"cleanup-installation" which can be called from any of your main build files, perhaps with subtly changed
+parameters. Indeed, after a couple of projects you may be able to create a re-usable core build file which
+contains the core targets of a basic java development project -compile, debug, deploy- which project specific
+build files call with their own settings. If you can achive this then
+you are definately making your way up the software maturity ladder. NB,
+<tt>ant</tt> copies all your properties unless the <i>inheritall</i> attribute is set to false. Before that
+attribute existed you had to carefully name all property definitions in all build files to prevent unintentional
+overwriting of the invoked property by that of the caller, now you just have to remember to set
+<tt>inheritall="false"</tt> on all uses of the ant task.   
+
+	
 <dt><b>
 Implement complex Ant builds through XSL
 </b><dd>
@@ -606,7 +720,8 @@ Implement complex Ant builds through XSL
 XSLT can be used to dynamically generate build.xml files from a source
 xml file, with the <a href="manual/CoreTasks/style.html">Style</a> task controlling
 the transform. This is the current recommended strategy for creating
-complex build files dynamically.
+complex build files dynamically. However, its use is still apparently
+quite rare -which means you will be on the bleeding edge of technology.
 
 
 <dt><b>
@@ -654,6 +769,33 @@ Even if you edit ant files by hand, Antidote makes a good execution tool
 because it eliminates the startup time of the JVM, perhaps even some of
 the XML parsing delays. 
 
+<dt><b>
+Use the replace task to programmatic modify text files in your project.  
+</b><dd>
+Imagine your project has some source files -BAT files, ASP pages (!), anything
+which needs to be statically customised at compile time for particular
+installations, such driven from some properties of the project such as JVM options, or the URL
+to direct errors too. The replace task can be used to modify files, substituting text and creating
+versions customised for that build or destination. Of course, per-destination customisation
+should be delayed until installation, but if you are using ant for the remote installation
+that suddenly becomes feasible.     
+
+<dt><b>
+Use the mailing lists
+</b><dd>
+There are two 
+<a href="http://jakarta.apache.org/site/mail.html">mailing lists</a> 
+related to ant, ant-user and ant-developer. Ant user is where <i>all</i>
+questions related to using ant should go. Installation, syntax, code
+samples, etc -post your questions there or search the archives for 
+whether the query has been posted and answered before. Ant-developer
+is where ant development takes place -so it is <i>not</i> the place to
+post things like "I get a compilation error when I build my project" or
+"how do I make a zip file". If you are actually extending ant, on the other
+hand, it is the ideal place to ask questions about how to add new tasks, make
+changes to existing ones -and to post the results of your work, if you want them
+incorporated into the ant source tree.  
+   
 </dl>
 
 <a name="puttingtogether">
@@ -684,7 +826,8 @@ should be considered if they are part of the process.
 <p>
 Debug/release switching can be handled with separate initialisation
 targets called before the compile tasks which define the appropriate
-properties.
+properties. Antcall is the trick here, as it allows you to have two paths
+of property initialisation in a build file.   
 
 <p>
 Internal targets should be used to structure the process
@@ -773,7 +916,7 @@ before acting.
 
 <h3>It's not meant to be a nice language for humans</h3>
 
-XML isnt a nice representation of information for humans. It's a
+XML isn't a nice representation of information for humans. It's a
 reasonable representation for programs, and text editors and source code
 management systems can all handle it nicely. But a complex ant file can
 get ugly because XML is a bit ugly, and a complex build is, well,
@@ -781,6 +924,24 @@ complicated. Use XML comments so that the file you wrote last month
 still makes sense when you get back to it, and use Antidote to edit the
 files if you prefer it. 
 
+<h3>You still need all the other foundational bits of a software
+project</h3>
+
+If you don't have an source code management system, you are going to end
+up hosed. If you don't have everything under SCM, including web pages,
+dependent jars, installation files, you are still going to end up hosed,
+it's just a question of when it's going to happen.
+CVS is effectively free and works well with ant, but Sourcesafe, Perforce,
+Clearcase and StarTeam also have ant tasks. These tasks
+let you have auto-incrementing build counters, and automated file
+update processes. 
+
+<p>
+
+You also need some kind of change control process, to resist
+uncontrolled feature creep. Bugzilla is a simple and low cost tool for
+this, using ant and a continuous test process enables a rapid evolution of code
+to adapt to those changes which are inevitable.  
 
 <h2>Endpiece</h2>
 
@@ -809,8 +970,22 @@ running a continuous integration/testing proces.
 	code you will soon have.
 
 </ul>
+
+<a name="author">
+<h3>About the Author</h3>
+</a>
+
+Steve Loughran is a research scientist at a corporate R&amp;D lab,
+currently on a sabbatical building production web services against
+implausible deadlines for the fun of it. Because of those implausible
+deadlines, email questions related to this document are generally, and
+regretfully unwelcome, unless they are corrections to the content,
+advanced discourse on how to evolve software engineering processes to
+meet the next generation of challenges, or from someone he knows. Even
+then, a timely response is unlikely. Please use the mailing lists
+instead. 
+
 <hr>
-<p align="center">Copyright &copy; 2000 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000, 2001 Apache Software Foundation. All rights
 Reserved.</p>
-
-
+</body>
