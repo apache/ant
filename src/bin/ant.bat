@@ -1,5 +1,7 @@
 @echo off
 
+if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
+
 rem Slurp the command line arguments.  This loop allows for an unlimited number of 
 rem agruments (up to the command line limit, anyway).
 
@@ -63,6 +65,7 @@ goto end
 %JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 
 :end
+if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
 set LOCALCLASSPATH=
 set ANT_CMD_LINE_ARGS=
 
