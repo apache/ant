@@ -53,6 +53,10 @@
  */
 package org.apache.tools.ant.taskdefs.email;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -76,6 +80,8 @@ abstract class Mailer {
     protected Task task;
     protected boolean includeFileNames = false;
 
+    private static DateFormat df =
+        new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
 
     /**
      * Sets the mail server
@@ -194,5 +200,15 @@ abstract class Mailer {
      */
     public abstract void send()
          throws BuildException;
+
+    /**
+     * Returns the current Date in a format suitable for a SMTP date
+     * header.
+     *
+     * @since Ant 1.5
+     */
+    protected final String getDate() {
+        return df.format(new Date());
+    }
 }
 

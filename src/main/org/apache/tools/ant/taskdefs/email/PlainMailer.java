@@ -59,7 +59,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
-import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.mail.MailMessage;
@@ -103,7 +102,7 @@ class PlainMailer extends Mailer {
                 mailMessage.setSubject(subject);
             }
 
-            mailMessage.setHeader("Date", (new Date()).toString());
+            mailMessage.setHeader("Date", getDate());
             mailMessage.setHeader("Content-Type", message.getMimeType());
 
             PrintStream out = mailMessage.getPrintStream();
