@@ -219,6 +219,11 @@ public class DirectoryScanner implements FileScanner {
     protected boolean isCaseSensitive = true;
 
     /**
+     * Is everything we've seen so far included?
+     */
+    protected boolean everythingIncluded = true;
+
+    /**
      * Constructor.
      */
     public DirectoryScanner() {
@@ -522,7 +527,7 @@ strLoop:
             }
             return true; // String matches against pattern
         }
-        
+
         if (patIdxEnd == 0) {
             return true; // Pattern contains only '*', which matches anything
         }
@@ -735,6 +740,16 @@ strLoop:
         }
     }
 
+    /**
+     * Has the scanner excluded or omitted any files or directories it
+     * came accross?
+     *
+     * @return true if all files and directories that have been found,
+     * are included.
+     */
+    public boolean isEverythingIncluded() {
+        return everythingIncluded;
+    }
 
 
     /**
@@ -802,14 +817,14 @@ strLoop:
 
         for (int i=0; i<excl.length; i++) {
             if (!couldHoldIncluded(excl[i])) {
-                scandir(new File(basedir, excl[i]), 
+                scandir(new File(basedir, excl[i]),
                         excl[i]+File.separator, false);
             }
         }
-        
+
         for (int i=0; i<notIncl.length; i++) {
             if (!couldHoldIncluded(notIncl[i])) {
-                scandir(new File(basedir, notIncl[i]), 
+                scandir(new File(basedir, notIncl[i]),
                         notIncl[i]+File.separator, false);
             }
         }
@@ -843,7 +858,7 @@ strLoop:
              * two reasons are mentioned in the API docs for File.list
              * (1) dir is not a directory. This is impossible as
              *     we wouldn't get here in this case.
-             * (2) an IO error occurred (why doesn't it throw an exception 
+             * (2) an IO error occurred (why doesn't it throw an exception
              *     then???)
              */
             throw new BuildException("IO error scanning directory "
@@ -861,12 +876,14 @@ strLoop:
                             scandir(file, name+File.separator, fast);
                         }
                     } else {
+                        everythingIncluded = false;
                         dirsExcluded.addElement(name);
                         if (fast && couldHoldIncluded(name)) {
                             scandir(file, name+File.separator, fast);
                         }
                     }
                 } else {
+                    everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
                     if (fast && couldHoldIncluded(name)) {
                         scandir(file, name+File.separator, fast);
@@ -880,9 +897,11 @@ strLoop:
                     if (!isExcluded(name)) {
                         filesIncluded.addElement(name);
                     } else {
+                        everythingIncluded = false;
                         filesExcluded.addElement(name);
                     }
                 } else {
+                    everythingIncluded = false;
                     filesNotIncluded.addElement(name);
                 }
             }

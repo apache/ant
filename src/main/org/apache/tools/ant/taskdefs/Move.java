@@ -94,6 +94,24 @@ public class Move extends Copy {
 //************************************************************************
 
     protected void doFileOperations() {
+        //Attempt complete directory renames, if any, first.
+        if (completeDirMap.size() > 0) {
+            Enumeration e = completeDirMap.keys();
+            while (e.hasMoreElements()) {
+                File fromDir = (File) e.nextElement();
+                File toDir = (File) completeDirMap.get(fromDir);
+                try {
+                    log("Attempting to rename dir: " + fromDir +
+                        " to " + toDir, verbosity);
+                    renameFile(fromDir, toDir, filtering, forceOverwrite);
+                } catch (IOException ioe) {
+                    String msg = "Failed to rename dir " + fromDir
+                        + " to " + toDir
+                        + " due to " + ioe.getMessage();
+                    throw new BuildException(msg, ioe, location);
+                }
+            }
+        }
         if (fileCopyMap.size() > 0) {   // files to move
             log("Moving " + fileCopyMap.size() + " files to " +
                 destDir.getAbsolutePath() );
@@ -110,43 +128,46 @@ public class Move extends Copy {
 
                 boolean moved = false;
                 File f = new File(fromFile);
-                File d = new File(toFile);
 
-                try {
-                    log("Attempting to rename: " + fromFile +
-                        " to " + toFile, verbosity);
-                    moved = renameFile(f, d, filtering, forceOverwrite);
-                } catch (IOException ioe) {
-                    String msg = "Failed to rename " + fromFile 
-                        + " to " + toFile
-                        + " due to " + ioe.getMessage();
-                    throw new BuildException(msg, ioe, location);
-                }
+                if (f.exists()) { //Is this file still available to be moved?
+                    File d = new File(toFile);
 
-                if (!moved) {
                     try {
-                        log("Moving " + fromFile + " to " + toFile, verbosity);
-                    
-                        FilterSetCollection executionFilters = new FilterSetCollection();
-                        if (filtering) {
-                            executionFilters.addFilterSet(project.getGlobalFilterSet());
-                        }
-                        for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
-                            executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
-                        }
-                        getFileUtils().copyFile(f, d, executionFilters,
-                                                forceOverwrite);
-                        
-                        f = new File(fromFile);
-                        if (!f.delete()) {
-                            throw new BuildException("Unable to delete file " 
-                                                     + f.getAbsolutePath());
-                        }
+                        log("Attempting to rename: " + fromFile +
+                            " to " + toFile, verbosity);
+                        moved = renameFile(f, d, filtering, forceOverwrite);
                     } catch (IOException ioe) {
-                        String msg = "Failed to copy " + fromFile + " to " 
-                            + toFile
+                        String msg = "Failed to rename " + fromFile
+                            + " to " + toFile
                             + " due to " + ioe.getMessage();
                         throw new BuildException(msg, ioe, location);
+                    }
+
+                    if (!moved) {
+                        try {
+                            log("Moving " + fromFile + " to " + toFile, verbosity);
+
+                            FilterSetCollection executionFilters = new FilterSetCollection();
+                            if (filtering) {
+                                executionFilters.addFilterSet(project.getGlobalFilterSet());
+                            }
+                            for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
+                                executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
+                            }
+                            getFileUtils().copyFile(f, d, executionFilters,
+                                                    forceOverwrite);
+
+                            f = new File(fromFile);
+                            if (!f.delete()) {
+                                throw new BuildException("Unable to delete file "
+                                                         + f.getAbsolutePath());
+                            }
+                        } catch (IOException ioe) {
+                            String msg = "Failed to copy " + fromFile + " to "
+                                + toFile
+                                + " due to " + ioe.getMessage();
+                            throw new BuildException(msg, ioe, location);
+                        }
                     }
                 }
             }
@@ -255,7 +276,7 @@ public class Move extends Copy {
 
             if (destFile.exists()) {
                 if (!destFile.delete()) {
-                    throw new BuildException("Unable to remove existing file " 
+                    throw new BuildException("Unable to remove existing file "
                                              + destFile);
                 }
             }

@@ -104,6 +104,7 @@ public class Copy extends Task {
 
     protected Hashtable fileCopyMap = new Hashtable();
     protected Hashtable dirCopyMap = new Hashtable();
+    protected Hashtable completeDirMap = new Hashtable();
 
     protected Mapper mapperElement = null;
     private Vector filterSets = new Vector();
@@ -270,7 +271,11 @@ public class Copy extends Task {
 
             String[] srcFiles = ds.getIncludedFiles();
             String[] srcDirs = ds.getIncludedDirectories();
-
+            boolean isEverythingIncluded = ds.isEverythingIncluded();
+            if (isEverythingIncluded
+                && !flatten && mapperElement == null) {
+                completeDirMap.put(fromDir, destDir);
+            }
             scan(fromDir, destDir, srcFiles, srcDirs);
         }
 
