@@ -61,6 +61,18 @@ public interface TaskContext
         throws TaskException;
 
     /**
+     * Resolve a value according to the context.
+     * This involves evaluating the string and thus removing
+     * ${} sequences according to the rules specified at
+     * ............
+     *
+     * @param value the value to resolve
+     * @return the resolved value
+     */
+    Object resolveValue( String value )
+        throws TaskException;
+
+    /**
      * Retrieve property for name.
      *
      * @param name the name of property
