@@ -2,8 +2,6 @@
 
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-unset CLASSPATH
-
 if [ "$JAVA_HOME" != "" ] ; then
   if [ -f $JAVA_HOME/lib/tools.jar ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
