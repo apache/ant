@@ -84,7 +84,7 @@ public class TarInputStream extends FilterInputStream {
     protected TarBuffer buffer;
     protected TarEntry currEntry;
     private boolean v7Format;
-    
+
     public TarInputStream(InputStream is) {
         this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
     }

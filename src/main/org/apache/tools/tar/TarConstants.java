@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@
  */
 
 /*
- * This package is based on the work done by Timothy Gerard Endres 
+ * This package is based on the work done by Timothy Gerard Endres
  * (time@ice.com) to whom the Ant project is very grateful for his great code.
  */
 
@@ -67,7 +67,7 @@ package org.apache.tools.tar;
  */
 
 public interface TarConstants {
-    
+
     /**
      * The length of the name field in a header buffer.
      */
@@ -183,9 +183,9 @@ public interface TarConstants {
      * The namr of the GNU tar entry which contains a long name.
      */
     String GNU_LONGLINK = "././@LongLink";
-    
+
     /**
-     * Identifies the *next* file on the tape as having a long name.  
+     * Identifies the *next* file on the tape as having a long name.
      */
     byte LF_GNUTYPE_LONGNAME = (byte) 'L';
 }

@@ -53,7 +53,7 @@
  */
 
 /*
- * This package is based on the work done by Timothy Gerard Endres 
+ * This package is based on the work done by Timothy Gerard Endres
  * (time@ice.com) to whom the Ant project is very grateful for his great code.
  */
 
@@ -61,7 +61,7 @@ package org.apache.tools.tar;
 
 /**
  * This class provides static utility methods to work with byte streams.
- * 
+ *
  * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
@@ -70,7 +70,7 @@ public class TarUtils {
     /**
      * Parse an octal string from a header buffer. This is used for the
      * file permission mode value.
-     * 
+     *
      * @param header The header buffer from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
@@ -84,28 +84,28 @@ public class TarUtils {
         for (int i = offset; i < end; ++i) {
             if (header[i] == 0) {
                 break;
-            } 
+            }
 
             if (header[i] == (byte) ' ' || header[i] == '0') {
                 if (stillPadding) {
                     continue;
-                } 
+                }
 
                 if (header[i] == (byte) ' ') {
                     break;
-                } 
-            } 
+                }
+            }
 
             stillPadding = false;
             result = (result << 3) + (header[i] - '0');
-        } 
+        }
 
         return result;
-    } 
+    }
 
     /**
      * Parse an entry name from a header buffer.
-     * 
+     *
      * @param header The header buffer from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
@@ -118,17 +118,17 @@ public class TarUtils {
         for (int i = offset; i < end; ++i) {
             if (header[i] == 0) {
                 break;
-            } 
+            }
 
             result.append((char) header[i]);
-        } 
+        }
 
         return result;
-    } 
+    }
 
     /**
      * Determine the number of bytes in an entry name.
-     * 
+     *
      * @param header The header buffer from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
@@ -139,18 +139,18 @@ public class TarUtils {
 
         for (i = 0; i < length && i < name.length(); ++i) {
             buf[offset + i] = (byte) name.charAt(i);
-        } 
+        }
 
         for (; i < length; ++i) {
             buf[offset + i] = 0;
-        } 
+        }
 
         return offset + length;
-    } 
+    }
 
     /**
      * Parse an octal integer from a header buffer.
-     * 
+     *
      * @param header The header buffer from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
@@ -171,19 +171,19 @@ public class TarUtils {
             for (long val = value; idx >= 0 && val > 0; --idx) {
                 buf[offset + idx] = (byte) ((byte) '0' + (byte) (val & 7));
                 val = val >> 3;
-            } 
-        } 
+            }
+        }
 
         for (; idx >= 0; --idx) {
             buf[offset + idx] = (byte) ' ';
-        } 
+        }
 
         return offset + length;
-    } 
+    }
 
     /**
      * Parse an octal long integer from a header buffer.
-     * 
+     *
      * @param header The header buffer from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
@@ -196,11 +196,11 @@ public class TarUtils {
         System.arraycopy(temp, 0, buf, offset, length);
 
         return offset + length;
-    } 
+    }
 
     /**
      * Parse the checksum octal integer from a header buffer.
-     * 
+     *
      * @param header The header buffer from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
@@ -214,20 +214,20 @@ public class TarUtils {
 
         return offset + length;
     }
-    
-    /** 
+
+    /**
      * Compute the checksum of a tar entry header.
-     *  
+     *
      * @param buf The tar entry's header buffer.
      * @return The computed checksum.
-     */ 
+     */
     public static long computeCheckSum(byte[] buf) {
         long sum = 0;
-        
+
         for (int i = 0; i < buf.length; ++i) {
             sum += 255 & buf[i];
-        } 
-        
+        }
+
         return sum;
-    }    
+    }
 }

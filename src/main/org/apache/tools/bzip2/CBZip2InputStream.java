@@ -139,12 +139,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       freq table collected to save a pass over the data
       during decompression.
     */
-    private int unzftab[] = new int[256];
+    private int[] unzftab = new int[256];
 
-    private int limit[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
-    private int base[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
-    private int perm[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
-    private int minLens[] = new int[N_GROUPS];
+    private int[][] limit = new int[N_GROUPS][MAX_ALPHA_SIZE];
+    private int[][] base = new int[N_GROUPS][MAX_ALPHA_SIZE];
+    private int[][] perm = new int[N_GROUPS][MAX_ALPHA_SIZE];
+    private int[] minLens = new int[N_GROUPS];
 
     private InputStream bsStream;
 
@@ -302,10 +302,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             if (this.bsStream != null) {
                 if (this.bsStream != System.in) {
                     this.bsStream.close();
-                    this.bsStream= null;
+                    this.bsStream = null;
                 }
             }
         } catch (IOException ioe) {
+            //ignore
         }
     }
 
@@ -319,22 +320,20 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     private int bsR(int n) {
         int v;
-        {
-            while (bsLive < n) {
-                int zzi;
-                char thech = 0;
-                try {
-                    thech = (char) bsStream.read();
-                } catch (IOException e) {
-                    compressedStreamEOF();
-                }
-                if (thech == -1) {
-                    compressedStreamEOF();
-                }
-                zzi = thech;
-                bsBuff = (bsBuff << 8) | (zzi & 0xff);
-                bsLive += 8;
+        while (bsLive < n) {
+            int zzi;
+            char thech = 0;
+            try {
+                thech = (char) bsStream.read();
+            } catch (IOException e) {
+                compressedStreamEOF();
             }
+            if (thech == -1) {
+                compressedStreamEOF();
+            }
+            zzi = thech;
+            bsBuff = (bsBuff << 8) | (zzi & 0xff);
+            bsLive += 8;
         }
 
         v = (bsBuff >> (bsLive - n)) & ((1 << n) - 1);
@@ -376,7 +375,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                     pp++;
                 }
             }
-        };
+        }
 
         for (i = 0; i < MAX_CODE_LEN; i++) {
             base[i] = 0;
@@ -618,7 +617,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                                 bsLive--;
                             }
                             zvec = (zvec << 1) | zj;
-                        };
+                        }
                         nextSym = perm[zt][zvec - base[zt][zn]];
                     }
                 } while (nextSym == RUNA || nextSym == RUNB);
@@ -631,7 +630,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                     last++;
                     ll8[last] = ch;
                     s--;
-                };
+                }
 
                 if (last >= limitLast) {
                     blockOverrun();
@@ -698,7 +697,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                             bsLive--;
                         }
                         zvec = (zvec << 1) | zj;
-                    };
+                    }
                     nextSym = perm[zt][zvec - base[zt][zn]];
                 }
                 continue;

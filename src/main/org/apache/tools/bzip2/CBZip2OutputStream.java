@@ -163,8 +163,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                         if (yy > nHeap) {
                             break;
                         }
-                        if (yy < nHeap &&
-                            weight[heap[yy + 1]] < weight[heap[yy]]) {
+                        if (yy < nHeap
+                            && weight[heap[yy + 1]] < weight[heap[yy]]) {
                             yy++;
                         }
                         if (weight[tmp] < weight[heap[yy]]) {
@@ -187,8 +187,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                         if (yy > nHeap) {
                             break;
                         }
-                        if (yy < nHeap &&
-                            weight[heap[yy + 1]] < weight[heap[yy]]) {
+                        if (yy < nHeap
+                            && weight[heap[yy + 1]] < weight[heap[yy]]) {
                             yy++;
                         }
                         if (weight[tmp] < weight[heap[yy]]) {
