@@ -95,4 +95,21 @@ public class PropertyTest extends BuildFileTest {
         expectLog("test4", "http.url is http://localhost:999");
     }
     
+    public void testPrefixSuccess() {
+        executeTarget("prefix.success");
+        assertEquals("80", project.getProperty("server1.http.port"));
+    }
+
+    public void testPrefixFailure() {
+       try {
+            executeTarget("prefix.fail");
+        }
+        catch (BuildException e) {
+            assertEquals("Prefix allowed on non-resource/file load - ", true,
+                     e.getMessage().indexOf("Prefix is only valid") != -1);
+            return;                     
+        }
+        fail("Did not throw exception on invalid use of prefix");
+    }
+    
 }

@@ -86,6 +86,7 @@ public class Property extends Task {
     protected Path classpath;
     protected String env;
     protected Reference ref;
+    protected String prefix;
 
     protected boolean userProperty; // set read-only properties
 
@@ -123,6 +124,13 @@ public class Property extends Task {
 
     public File getFile() {
         return file;
+    }
+    
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+        if (!prefix.endsWith(".")) {
+          this.prefix += ".";
+        }
     }
 
     public void setRefid(Reference ref) {
@@ -191,6 +199,10 @@ public class Property extends Task {
                 throw new BuildException("You must specify file, resource or environment when not using the name attribute",
                                          location);
             }
+        }
+        
+        if (file == null && resource == null && prefix != null) {
+            throw new BuildException("Prefix is only valid when loading from a file or resource", location);
         }
 
         if ((name != null) && (value != null)) {
@@ -298,6 +310,11 @@ public class Property extends Task {
             String value = props.getProperty(name);
 
             String v = project.replaceProperties(value);
+
+            if (prefix != null) {
+                name = prefix + name;
+            }
+
             addProperty(name, v);
         }
     }
