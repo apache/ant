@@ -241,6 +241,7 @@ public class Project {
 
     public void setBaseDir(File baseDir) {
         this.baseDir = baseDir;
+	setProperty( "basedir", baseDir.getAbsolutePath());
         String msg = "Project base dir set to: " + baseDir;
         log(msg, MSG_INFO);
     }
