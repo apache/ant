@@ -98,6 +98,7 @@ public class Project {
 
     private Hashtable properties = new Hashtable();
     private Hashtable userProperties = new Hashtable();
+    private Hashtable references = new Hashtable();
     private String defaultTarget;
     private Hashtable taskClassDefinitions = new Hashtable();
     private Hashtable targets = new Hashtable();
@@ -772,5 +773,13 @@ public class Project {
             sb.append(c);
         } while(!c.equals(end));
         return new BuildException(new String(sb));
+    }
+
+    public void addReference(String name, Object value) {
+        references.put(name,value);
+    }
+
+    public Hashtable getReferences() {
+        return references;
     }
 }

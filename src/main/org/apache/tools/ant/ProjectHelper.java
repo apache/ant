@@ -137,6 +137,7 @@ public class ProjectHelper {
             String targetName = element.getAttribute("name");
             String targetDep = element.getAttribute("depends");
             String targetCond = element.getAttribute("if");
+            String targetId = element.getAttribute("id");
 
             // all targets must have a name
             if (targetName.equals("")) {
@@ -148,6 +149,9 @@ public class ProjectHelper {
             target.setName(targetName);
             target.setCondition(targetCond);
             project.addTarget(targetName, target);
+
+            if (targetId != null && !targetId.equals("")) 
+                project.addReference(targetId,target);
 
             // take care of dependencies
 
@@ -213,6 +217,23 @@ public class ProjectHelper {
 
             // right now, all we are interested in is element nodes
             // not quite sure what to do with others except drop 'em
+
+            if (node.getNodeType() == Node.TEXT_NODE) {
+                String text = ((Text)node).getData();
+                try {
+                    Method addProp = targetClass.getMethod(
+                        "addText", new Class[]{"".getClass()});
+                    Object child = addProp.invoke(target, new Object[] {text});
+                } catch (NoSuchMethodException nsme) {
+                    if (text.trim().length() > 0)
+                        throw new BuildException(targetClass + 
+                            " does not support nested text elements");
+                } catch (InvocationTargetException ite) {
+                    throw new BuildException(ite.getMessage());
+                } catch (IllegalAccessException iae) {
+                    throw new BuildException(iae.getMessage());
+                }
+            }
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element)node;
@@ -299,6 +320,11 @@ public class ProjectHelper {
 
                 Method setMethod = (Method)propertySetters.get(attr.getName());
                 if (setMethod == null) {
+                    if (attr.getName().equals("id")) {
+                        project.addReference(attr.getValue(), target);
+                        continue;
+                    }
+
                     String msg = "Configuration property \"" + attr.getName() +
                         "\" does not have a setMethod in " + target.getClass();
                     throw new BuildException(msg);

@@ -28,6 +28,8 @@
 
     <property name="build.compiler" value="classic"/>
 
+    <available property="bsf.present" classname="com.ibm.bsf.BSFManager" />
+
     <!-- Give user a chance to override without editing this file 
          (and without typing -D each time it compiles it -->
     <property file="${user.home}/.ant.properties" />
@@ -50,8 +52,9 @@
            classpath="${classpath}"
            debug="on"
            deprecation="on"
-           optimize="on"
-    />
+           optimize="on" >
+      <exclude name="**/Script.java" unless="bsf.present" />
+    </javac>
   </target>
 
   <!-- =================================================================== -->
