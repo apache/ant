@@ -1,0 +1,128 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>MMetrics Task</title>
+</head>
+
+<body>
+
+<h2>MMetrics</h2>
+<p>by</p>
+<ul>
+  <li>Stephane Bailliez (<a href="mailto:sbailliez@imediation.com">sbailliez@imediation.com</a>)</li>
+</ul>
+<h3>Requirements</h3>
+<p>This task requires Metamata Development environment 2.0/Webgain Quality Analyzer 2.0.
+An evaluation version is available at <a href="http://www.webgain.com/products/quality_analyzer">Webgain</a>.
+(Though you will not be able to use Metrics from the command line if you do not have a registered version).
+You also need a TRaX compliant processor(such as <a href="http://xml.apache.org/xalan-j">Xalan 2.x</a>) via JAXP 1.1</p>
+<h3>Description</h3> 
+<p>
+  Invokes the Metamata Metrics / WebGain Quality Analyzer</a> source code 
+  analyzer on a set of Java files.
+</p>
+<p>
+    <i>mmetrics</i> will compute the metrics of a set of Java files and write the results to an XML
+    file. As a convenience, a stylesheet is given in <tt>etc</tt> directory, so that an HTML report can be generated from the XML file.
+</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">metamatahome</td>
+    <td valign="top">The home directory containing the Metamata distribution.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">tofile</td>
+    <td valign="top">The XML were the resulting metrics will be written to.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">granularity</td>
+    <td valign="top">Metrics granularity of the source files. Must be either
+      <i>files</i> (compilation-units), <i>types</i> (types and compilation-units) or <i>methods</i>
+      (methods, types and compilation-units).
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">maxmemory</td>
+    <td valign="top">Set the maximum memory for the JVM. this is a convenient
+      way to set the -mx or -Xmx argument.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Nested elements</h3>
+For specifying the source code to analyze, you can either use a <tt>path</tt> or <tt>fileset</tt> elements (though a single path element is preferred, see note below).</i>
+<h4>jvmarg</h4>
+<p>Additional parameters may be passed to the VM via nested <code>&lt;jvmarg&gt;</code>
+attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="index.html#arg">Command
+line arguments</a>.</p>
+<h4>classpath</h4>
+<p>Sets class path (also source path unless one explicitly set). Overrides
+METAPATH/CLASSPATH environment variables. The <tt>classpath</tt> element represents a <a href="index.html#path">PATH like
+structure</a>.</p>
+<h4>sourcepath</h4>
+<p>Sets source path. Overrides the SOURCEPATH environment variable. The <tt>sourcepath</tt> element represents a <a href="index.html#path">PATH like
+structure</a>.</p>
+
+<h4>path</h4>
+<p>Sets the list of directories to analyze the code for metrics.;It represents a <a href="index.html#path">PATH structure</a>.</p>
+<h4>fileset</h4>
+<p>Sets a set of files to analyze for metrics.source  It represents a <a href="index.html#fileset">FILESET structure</a>.</p>
+
+<p>
+<font color="#FF0000">
+Note: For the sake of readability, it is highly recommended to analyze for a single unique directory instead than
+using filesets or several directories. Otherwise there will be multiple metrics outputs without any way to know
+what metrics refers to what source. Chance are also that the XML handler that does some heuristic will be confused
+by the different outputs.
+</font>
+</p>
+
+<h3>Example</h3>
+<pre>  &lt;mmetrics target=&quot;mmetrics.xml&quot;
+          metamatahome=&quot;c:/metamata&quot;
+          granularity=&quot;methods&quot;&gt;
+    &lt;classpath&gt;
+      &lt;pathelement location=&quot;c:/metamata/examples/metricsexamples&quot;/&gt;
+    &lt;/classpath&gt;
+    &lt;sourcepath&gt;
+      &lt;pathelement location=&quot;c:/metamata/examples/metricsexamples&quot;/&gt;
+    &lt;/sourcepath&gt;
+    &lt;path&gt;
+      &lt;pathelement location=&quot;c:/metamata/examples/metricsexamples&quot;/&gt;
+    &lt;/path&gt;
+  &lt;/mmetrics&gt;</pre>
+<p>
+  This invokes Metamata Metrics installed in <tt>c:/metamata</tt> on the metrics example.
+  (Note that here, classpath and sourcepath are not normally not needed)
+</p>
+
+<h3>Generating a report</h3>
+As a convenience, there is an XSL file(mmetrics-frames.xsl) that allows you to generate a full framed HTML report of the metrics.
+You can find it in the <i>etc</i> directory of Ant. As it uses the Xalan extensions, you will need
+BSF, Xalan and Xerces to run it. The stylesheet takes an <i>output.dir</i> parameter (otherwise it will be generated
+in the current directory), it can be run in Ant as follows:
+<pre>
+&lt;java classname=&quot;org.apache.xalan.xslt.Process&quot;&gt;
+    &lt;param value=&quot;-IN&quot;/&gt;
+    &lt;param value=&quot;${metrics.xml}&quot;/&gt;
+    &lt;param value=&quot;-XSL&quot;/&gt;
+    &lt;param value=&quot;mmetrics-frames.xsl&quot;/&gt;
+    &lt;param value=&quot;-PARAM&quot;/&gt;
+    &lt;param value=&quot;output.dir&quot;/&gt;
+    &lt;param value=&quot;&amp;quot;'${report.dir}'&amp;quot;&quot;/&gt;
+&lt;/java&gt;
+</pre>
+
+<hr>
+
+
