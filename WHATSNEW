@@ -30,6 +30,9 @@ Other changes:
 
 * Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
+* A new base class DispatchTask has been added to facilitate elegant 
+  creation of tasks with multiple actions.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =====================================================
 

@@ -17,7 +17,9 @@
 
 package org.apache.tools.ant;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.apache.tools.ant.dispatch.Dispatchable;
 
 /**
  * Uses introspection to "adapt" an arbitrary Bean which doesn't
@@ -32,6 +34,9 @@ public class TaskAdapter extends Task implements TypeAdapter {
 
     /**
      * Checks whether or not a class is suitable to be adapted by TaskAdapter.
+     * If the class is of type Dispatchable, the check is not performed because
+     * the method that will be executed will be determined only at runtime of
+     * the actual task and not during parse time.
      *
      * This only checks conditions which are additionally required for
      * tasks adapted by TaskAdapter. Thus, this method should be called by
@@ -50,28 +55,30 @@ public class TaskAdapter extends Task implements TypeAdapter {
      */
     public static void checkTaskClass(final Class taskClass,
                                       final Project project) {
-        // don't have to check for interface, since then
-        // taskClass would be abstract too.
-        try {
-            final Method executeM = taskClass.getMethod("execute", null);
-            // don't have to check for public, since
-            // getMethod finds public method only.
-            // don't have to check for abstract, since then
+        if (!Dispatchable.class.isAssignableFrom(taskClass)) {
+            // don't have to check for interface, since then
             // taskClass would be abstract too.
-            if (!Void.TYPE.equals(executeM.getReturnType())) {
-                final String message = "return type of execute() should be "
-                    + "void but was \"" + executeM.getReturnType() + "\" in "
-                    + taskClass;
-                project.log(message, Project.MSG_WARN);
+            try {
+                final Method executeM = taskClass.getMethod("execute", null);
+                // don't have to check for public, since
+                // getMethod finds public method only.
+                // don't have to check for abstract, since then
+                // taskClass would be abstract too.
+                if (!Void.TYPE.equals(executeM.getReturnType())) {
+                    final String message = "return type of execute() should be "
+                        + "void but was \"" + executeM.getReturnType() + "\" in "
+                        + taskClass;
+                    project.log(message, Project.MSG_WARN);
+                }
+            } catch (NoSuchMethodException e) {
+                final String message = "No public execute() in " + taskClass;
+                project.log(message, Project.MSG_ERR);
+                throw new BuildException(message);
+            } catch (LinkageError e) {
+                String message = "Could not load " + taskClass + ": " + e;
+                project.log(message, Project.MSG_ERR);
+                throw new BuildException(message, e);
             }
-        } catch (NoSuchMethodException e) {
-            final String message = "No public execute() in " + taskClass;
-            project.log(message, Project.MSG_ERR);
-            throw new BuildException(message);
-        } catch (LinkageError e) {
-            String message = "Could not load " + taskClass + ": " + e;
-            project.log(message, Project.MSG_ERR);
-            throw new BuildException(message, e);
         }
     }
 
@@ -83,6 +90,37 @@ public class TaskAdapter extends Task implements TypeAdapter {
      */
     public void checkProxyClass(Class proxyClass) {
         checkTaskClass(proxyClass, getProject());
+    }
+
+    /**
+     * Returns the name of the action method that the task must
+     * execute.
+     */
+    private final String getExecuteMethodName() throws NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
+        String methodName = "execute";
+        if (proxy instanceof Dispatchable) {
+            final Dispatchable dispatchable = (Dispatchable) proxy;
+            final String name = dispatchable.getActionParameterName();
+            if (name != null && name.trim().length() > 0) {
+                String mName = "get" + name.trim().substring(0, 1).toUpperCase();
+                if (name.length() > 1) {
+                    mName += name.substring(1);
+                }
+                final Class c = proxy.getClass();
+                final Method actionM = c.getMethod(mName, new Class[0]);
+                if (actionM != null) {
+                    final Object o = actionM.invoke(proxy, null);
+                    if (o != null) {
+                        final String s = o.toString();
+                        if (s != null && s.trim().length() > 0) {
+                            methodName = s.trim();
+                        }
+                    }
+                }
+            }
+        }
+        return methodName;
     }
 
     /**
@@ -113,11 +151,12 @@ public class TaskAdapter extends Task implements TypeAdapter {
         Method executeM = null;
         try {
             Class c = proxy.getClass();
-            executeM = c.getMethod("execute", new Class[0]);
+            final String methodName = getExecuteMethodName();
+            executeM = c.getMethod(methodName, new Class[0]);
             if (executeM == null) {
-                log("No public execute() in " + proxy.getClass(),
+                log("No public " + methodName + " in " + proxy.getClass(),
                     Project.MSG_ERR);
-                throw new BuildException("No public execute() in "
+                throw new BuildException("No public " + methodName + "() in "
                     + proxy.getClass());
             }
             executeM.invoke(proxy, null);
