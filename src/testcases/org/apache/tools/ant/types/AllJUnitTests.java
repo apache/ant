@@ -72,6 +72,8 @@ public class AllJUnitTests extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite(CommandlineTest.class);
         suite.addTest(new TestSuite(CommandlineJavaTest.class));
+        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
+        suite.addTest(new TestSuite(PathTest.class));
         return suite;
    }
 }

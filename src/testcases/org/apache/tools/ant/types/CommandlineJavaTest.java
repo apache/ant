@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.Project;
+
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
@@ -70,6 +72,13 @@ public class CommandlineJavaTest extends TestCase {
         super(name);
     }
 
+    private Project project;
+
+    public void setUp() {
+        project = new Project();
+        project.setBasedir(".");
+    }
+
     public void testGetCommandline() {
         CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
@@ -83,8 +92,8 @@ public class CommandlineJavaTest extends TestCase {
         assertEquals("no classpath", 
                      "org.apache.tools.ant.CommandlineJavaTest", s[3]);
 
-        c.createClasspath().setLocation("junit.jar");
-        c.createClasspath().setLocation("ant.jar");
+        c.createClasspath(project).setLocation("junit.jar");
+        c.createClasspath(project).setLocation("ant.jar");
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
         assertEquals("with classpath", "java", s[0]);

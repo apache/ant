@@ -52,7 +52,9 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.types;
+
+import org.apache.tools.ant.BuildException;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;

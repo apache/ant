@@ -259,6 +259,8 @@
       <exclude name="**/EnumeratedAttributeTest.java" unless="junit.present" />
       <exclude name="**/IntrospectionHelperTest.java" unless="junit.present" />
       <exclude name="**/PathTest.java" unless="junit.present" />
+      <exclude name="**/CommandlineTest.java" unless="junit.present" />
+      <exclude name="**/CommandlineJavaTest.java" unless="junit.present" />
     </javac>
    </target>
 

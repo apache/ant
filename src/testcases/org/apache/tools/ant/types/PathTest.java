@@ -52,7 +52,10 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.types;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -69,13 +72,20 @@ public class PathTest extends TestCase {
 
     public static boolean isUnixStyle = File.pathSeparatorChar == ':';
 
+    private Project project;
+
     public PathTest(String name) {
         super(name);
     }
 
+    public void setUp() {
+        project = new Project();
+        project.setBasedir(".");
+    }
+
     // actually tests constructor as well as setPath
     public void testConstructor() {
-        Path p = new Path("/a:/b");
+        Path p = new Path(project, "/a:/b");
         String[] l = p.list();
         assertEquals("two items, Unix style", 2, l.length);
         if (isUnixStyle) {
@@ -86,7 +96,7 @@ public class PathTest extends TestCase {
             assertEquals("\\b", l[1]);
         }        
 
-        p = new Path("\\a;\\b");
+        p = new Path(project, "\\a;\\b");
         l = p.list();
         assertEquals("two items, DOS style", 2, l.length);
         if (isUnixStyle) {
@@ -97,7 +107,7 @@ public class PathTest extends TestCase {
             assertEquals("\\b", l[1]);
         }        
 
-        p = new Path("\\a;\\b:/c");
+        p = new Path(project, "\\a;\\b:/c");
         l = p.list();
         assertEquals("three items, mixed style", 3, l.length);
         if (isUnixStyle) {
@@ -110,7 +120,7 @@ public class PathTest extends TestCase {
             assertEquals("\\c", l[2]);
         }        
 
-        p = new Path("c:\\test");
+        p = new Path(project, "c:\\test");
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
@@ -121,7 +131,7 @@ public class PathTest extends TestCase {
             assertEquals("c:\\test", l[0]);
         }
 
-        p = new Path("c:/test");
+        p = new Path(project, "c:/test");
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
@@ -134,7 +144,7 @@ public class PathTest extends TestCase {
     }
 
     public void testSetLocation() {
-        Path p = new Path();
+        Path p = new Path(project);
         p.setLocation("/a");
         String[] l = p.list();
         if (isUnixStyle) {
@@ -145,7 +155,7 @@ public class PathTest extends TestCase {
             assertEquals("\\a", l[0]);
         }
 
-        p = new Path();
+        p = new Path(project);
         p.setLocation("\\a");
         l = p.list();
         if (isUnixStyle) {
@@ -158,7 +168,7 @@ public class PathTest extends TestCase {
     }
 
     public void testAppending() {
-        Path p = new Path("/a:/b");
+        Path p = new Path(project, "/a:/b");
         String[] l = p.list();
         assertEquals("2 after construction", 2, l.length);
         p.setLocation("/c");
@@ -167,13 +177,13 @@ public class PathTest extends TestCase {
         p.setPath("\\d;\\e");
         l = p.list();
         assertEquals("5 after setPath", 5, l.length);
-        p.append(new Path("\\f"));
+        p.append(new Path(project, "\\f"));
         l = p.list();
         assertEquals("6 after append", 6, l.length);
     }
 
     public void testEmpyPath() {
-        Path p = new Path("");
+        Path p = new Path(project, "");
         String[] l = p.list();
         assertEquals("0 after construction", 0, l.length);
         p.setLocation("");
@@ -182,13 +192,13 @@ public class PathTest extends TestCase {
         p.setPath("");
         l = p.list();
         assertEquals("0 after setPath", 0, l.length);
-        p.append(new Path());
+        p.append(new Path(project));
         l = p.list();
         assertEquals("0 after append", 0, l.length);
     }
 
     public void testUnique() {
-        Path p = new Path("/a:/a");
+        Path p = new Path(project, "/a:/a");
         String[] l = p.list();
         assertEquals("1 after construction", 1, l.length);
         p.setLocation("\\a");
@@ -197,7 +207,7 @@ public class PathTest extends TestCase {
         p.setPath("\\a;/a");
         l = p.list();
         assertEquals("1 after setPath", 1, l.length);
-        p.append(new Path("/a;\\a:\\a"));
+        p.append(new Path(project, "/a;\\a:\\a"));
         l = p.list();
         assertEquals("1 after append", 1, l.length);
     }
