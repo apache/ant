@@ -102,6 +102,43 @@
         </table>
       </subsection>
 
+      <subsection name="Krysalis Centipede">
+
+        <p>Krysalis Centipede is a template for a software module;
+        gives you build with Ant and Site+Documentation with Apache
+        Cocoon.</p>
+
+        <p>Centipede is a starter project, empty in many respects, but
+        has a decent and standardized Ant build file, and some xdocs
+        that render to HTML using Cocoon. A developer would take
+        Centipede and use it to start development. After starting, the
+        build file would evolve as the developer see fit and move away
+        from the Centipede starting point.  Subsequent releases of
+        Centipede will address the issues found using it, and evolve
+        on user requests-issues.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://krysalis.org/centipede/">http://krysalis.org/centipede/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="http://sourceforge.net/mail/?group_id=36516">mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Krysalis Patchy Software License, based on and
+            fully compatible with the Apache Software Foundation
+            license</td>
+          </tr>
+        </table>
+      </subsection>
+      
       <subsection name="NAnt">
 
         <p>NAnt is a .NET based build tool. In theory it is kind of
@@ -179,6 +216,7 @@
           </tr>
         </table>
       </subsection>
+
     </section>
 
   </body>
