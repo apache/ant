@@ -210,6 +210,35 @@
         </table>
       </subsection>
 
+      <subsection name="Venus Application Publisher's (Vamp) Ant Task Suite">
+
+        <p>Venus Application Publisher's (Vamp) Ant Task Suite allows
+        you to sign and package your applications into relocatable Web
+        Archives that you can drop into your web server for
+        single-click launching using Java Web Start or into single
+        Java Archive installers that serve up their content through a
+        built-in, multi-threaded, ultra light-weight web server.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.geocities.com/vamp201/ant.html">http://www.geocities.com/vamp201/ant.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:vamp201@yahoo.com">Gerald Bauer</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
     </section>
 
     <section name="IDE/Editor Integration">
