@@ -147,17 +147,6 @@ public class Commandline
         }
     }
 
-    /**
-     * Return a marker. <p>
-     *
-     * This marker can be used to locate a position on the commandline - to
-     * insert something for example - when all parameters have been set.</p>
-     */
-//    public Marker createMarker()
-//    {
-//        return new Marker( this, m_arguments.size() );
-//    }
-
     public int size()
     {
         return getCommandline().length;
