@@ -7,6 +7,9 @@ Fixed bugs:
 * <manifest> wouldn't update an existing manifest if only an attribute
   of an existing section changed.
 
+* ant.bat now supports the ANT_ARGS environment variable again (like
+  Ant 1.5 did).
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
