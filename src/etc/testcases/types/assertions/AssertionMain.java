@@ -15,30 +15,16 @@
  * 
  */
  
- import junit.framework.TestCase;
 
 /**
- * this is an assertion tester for junit 
+ * this is an assertion tester
+ * It has a main() entry
  */
-public class AssertionTest extends TestCase {
+public class AssertionMain {
     
-	public AssertionTest(String name) {
-		super(name);
-	}
-	
-	public void testAssertRaised() {
-		try {
-			assert true == false;
-			fail("expected an assertion");
-		} catch(AssertionError asserto) {
-			//if we got here, all was well
-		}
-	}
-	
-	
-	public void testAssertNotRaised() {
-		assert(2+2==4);
-	}
-	
+    public static void main(String args[]) {
+		assert true == false : "there exist no facts that are both true and false";
+		System.out.println("Assertions are disabled");
+    }
     
 }

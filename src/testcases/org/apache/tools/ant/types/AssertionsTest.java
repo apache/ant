@@ -90,6 +90,9 @@ public class AssertionsTest extends BuildFileTest {
     }
 
 
+    public void testJunit() {
+        executeTarget("test-junit");
+    }
 }
 
 
