@@ -26,6 +26,8 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
 import java.io.File;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Mapper.
@@ -136,6 +138,79 @@ public class MapperTest extends TestCase {
         String[] result = fmm.mapFileName("a.java");
         assertEquals("a.java should match", 1, result.length);
         assertEquals("a.class", result[0]);
+    }
+
+    public void testNested() {
+        Mapper mapper1 = new Mapper(project);
+        Mapper.MapperType mt = new Mapper.MapperType();
+        mt.setValue("glob");
+        mapper1.setType(mt);
+        mapper1.setFrom("from*");
+        mapper1.setTo("to*");
+
+        //mix element types
+        FileNameMapper mapper2 = new FlatFileNameMapper();
+        FileNameMapper mapper3 = new MergingMapper();
+        mapper3.setTo("mergefile");
+
+        Mapper container = new Mapper(project);
+        container.addConfiguredMapper(mapper1);
+        container.add(mapper2);
+        container.add(mapper3);
+
+        FileNameMapper fileNameMapper = container.getImplementation();
+        String[] targets = fileNameMapper.mapFileName("fromfilename");
+        assertNotNull("no filenames mapped", targets);
+        assertEquals("wrong number of filenames mapped", 3, targets.length);
+        List list = Arrays.asList(targets);
+        assertTrue("cannot find expected target \"tofilename\"",
+            list.contains("tofilename"));
+        assertTrue("cannot find expected target \"fromfilename\"",
+            list.contains("fromfilename"));
+        assertTrue("cannot find expected target \"mergefile\"",
+            list.contains("mergefile"));
+    }
+
+    public void testChained() {
+
+        // a --> b --> c --- def
+        //               \-- ghi
+
+        FileNameMapper mapperAB = new GlobPatternMapper();
+        mapperAB.setFrom("a");
+        mapperAB.setTo("b");
+
+        FileNameMapper mapperBC = new GlobPatternMapper();
+        mapperBC.setFrom("b");
+        mapperBC.setTo("c");
+
+        //implicit composite
+        Mapper mapperCX = new Mapper(project);
+
+        FileNameMapper mapperDEF = new GlobPatternMapper();
+        mapperDEF.setFrom("c");
+        mapperDEF.setTo("def");
+
+        FileNameMapper mapperGHI = new GlobPatternMapper();
+        mapperGHI.setFrom("c");
+        mapperGHI.setTo("ghi");
+
+        mapperCX.add(mapperDEF);
+        mapperCX.add(mapperGHI);
+
+        Mapper chained = new Mapper(project);
+        chained.setClassname(ChainedMapper.class.getName());
+        chained.add(mapperAB);
+        chained.add(mapperBC);
+        chained.addConfiguredMapper(mapperCX);
+
+        FileNameMapper fileNameMapper = chained.getImplementation();
+        String[] targets = fileNameMapper.mapFileName("a");
+        assertNotNull("no filenames mapped", targets);
+        assertEquals("wrong number of filenames mapped", 2, targets.length);
+        List list = Arrays.asList(targets);
+        assertTrue("cannot find expected target \"def\"", list.contains("def"));
+        assertTrue("cannot find expected target \"ghi\"", list.contains("ghi"));
     }
 
     public void testCopyTaskWithTwoFilesets() {
