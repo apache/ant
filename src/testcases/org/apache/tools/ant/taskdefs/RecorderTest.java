@@ -27,6 +27,8 @@ import java.io.IOException;
  */
 public class RecorderTest extends BuildFileTest {
 
+    private static final String REC_DIR = "recorder-out";
+
     public RecorderTest(String name) {
         super(name);
     }
@@ -43,29 +45,41 @@ public class RecorderTest extends BuildFileTest {
     public void testNoAppend() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("noappend");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("recorder/rectest1.result"),
-                                           project.resolveFile("recorder/rectest1.log")));
+        assertTrue(fileUtils
+                   .contentEquals(project.resolveFile(REC_DIR 
+                                                      + "rectest1.result"),
+                                  project.resolveFile(REC_DIR 
+                                                      + "rectest1.log")));
     }
 
     public void testAppend() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("append");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("recorder/rectest2.result"),
-                                           project.resolveFile("recorder/rectest2.log")));
+        assertTrue(fileUtils
+                   .contentEquals(project.resolveFile(REC_DIR 
+                                                      + "rectest2.result"),
+                                  project.resolveFile(REC_DIR 
+                                                      + "rectest2.log")));
     }
 
     public void testRestart() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("restart");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("recorder/rectest3.result"),
-                                           project.resolveFile("recorder/rectest3.log")));
+        assertTrue(fileUtils
+                   .contentEquals(project.resolveFile(REC_DIR 
+                                                      + "rectest3.result"),
+                                  project.resolveFile(REC_DIR 
+                                                      + "rectest3.log")));
     }
 
     public void testDeleteRestart() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("deleterestart");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("recorder/rectest4.result"),
-                                           project.resolveFile("recorder/rectest4.log")));
+        assertTrue(fileUtils
+                   .contentEquals(project.resolveFile(REC_DIR 
+                                                      + "rectest4.result"),
+                                  project.resolveFile(REC_DIR 
+                                                      + "rectest4.log")));
     }
 
 }

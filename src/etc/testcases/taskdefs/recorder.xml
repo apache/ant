@@ -1,20 +1,25 @@
 <?xml version="1.0"?>
 <project name="recorder-test" default="all" basedir=".">
 
-    <property name="recdir" location="recorder"/>
+    <property name="recin" location="recorder"/>
+    <property name="recdir" location="recorder-out"/>
 
     <target name="all" depends="noappend,append,restart,deleterestart"/>
 
     <target name="prepare">
-        <fixcrlf srcdir="${recdir}" includes="*.result"/>
+      <mkdir dir="${recdir}"/>
+      <copy toDir="${recdir}">
+        <fileset dir="${recin}"/>
+      </copy>
+      <fixcrlf srcdir="${recdir}"/>
     </target>
-
 
     <target name="noappend">
         <copy file="${recdir}/rectest2.result" tofile="${recdir}/rectest1.log"/>
         <record name="${recdir}/rectest1.log" action="start" />
         <echo message="some message1"/>
         <record name="${recdir}/rectest1.log" action="stop" />
+        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
     <target name="append">
@@ -22,6 +27,7 @@
         <record name="${recdir}/rectest2.log" append="true" action="start"/>
         <echo message="some message2"/>
         <record name="${recdir}/rectest2.log" action="stop"/>
+        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
     <target name="restart">
@@ -32,6 +38,7 @@
         <record name="${recdir}/rectest3.log" action="start"/>
         <echo message="some message3"/>
         <record name="${recdir}/rectest3.log" action="stop"/>
+        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
     <target name="deleterestart">
@@ -43,14 +50,12 @@
         <record name="${recdir}/rectest4.log" action="start"/>
         <echo message="some message3"/>
         <record name="${recdir}/rectest4.log" action="stop"/>
+        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
 
     <target name="cleanup">
-        <delete file="${recdir}/rectest1.log"/>
-        <delete file="${recdir}/rectest2.log"/>
-        <delete file="${recdir}/rectest3.log"/>
-        <delete file="${recdir}/rectest4.log"/>
+        <delete dir="${recdir}"/>
     </target>
 
 </project>
