@@ -179,7 +179,7 @@ public class Project {
     }
 
     public void setUserProperty(String name, String value) {
-        log("Setting project property: " + name + " -> " +
+        log("Setting ro project property: " + name + " -> " +
             value, MSG_VERBOSE);
         userProperties.put(name, value);
         properties.put(name, value);

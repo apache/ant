@@ -65,17 +65,27 @@ import java.util.*;
  */
 public class Property extends Task {
 
-    private String name;
-    private String value;
-    private String file;
-    private String resource;
+    String name;
+    String value;
+    String file;
+    String resource;
+
+    boolean userProperty=false; // set read-only properties
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getName() {
+	return name;
+    }
+
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getValue() {
+	return value;
     }
 
     public void setFile(String file) {
@@ -90,7 +100,10 @@ public class Property extends Task {
         try {
             if ((name != null) && (value != null)) {
                 String v = ProjectHelper.replaceProperties(value, project.getProperties());
-                project.setProperty(name, v);
+		if( userProperty )
+		    project.setUserProperty(name, v);
+		else
+		    project.setProperty(name, v);
             }
 
             if (file != null) loadFile(file);
@@ -135,7 +148,14 @@ public class Property extends Task {
             String name = (String) e.nextElement();
             String value = (String) props.getProperty(name);
             String v = ProjectHelper.replaceProperties(value, project.getProperties());
-            project.setProperty(name, v);
+            if( userProperty )
+		project.setUserProperty(name, v);
+	    else
+		project.setProperty(name, v);
         }
+    }
+
+    public void setUserProperty( boolean userP ) {
+	userProperty=userP;
     }
 }

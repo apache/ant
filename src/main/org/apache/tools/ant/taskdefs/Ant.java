@@ -61,6 +61,20 @@ import java.util.*;
 /**
  * Call Ant in a sub-project
  *
+ *  <pre>
+ *    <target name="foo" depends="init">
+ *    <ant antfile="build.xml" target="bar" >
+ *      <property name="property1" value="aaaaa" />
+ *      <property name="foo" value="baz" />
+ *     </ant>
+ *  </target>
+ *
+ * <target name="bar" depends="init">
+ *    <echo message="prop is ${property1} ${foo}" />
+ * </target>
+ * </pre>
+ *
+ *
  * @author costin@dnt.ro
  */
 public class Ant extends Task {
@@ -69,11 +83,11 @@ public class Ant extends Task {
     private String antFile = null;
     private String target = null;
 
-    /**
-     * Do the execution.
-     */
-    public void execute() throws BuildException {
-        Project p1 = new Project(project.getOutput(), project.getOutputLevel());
+    Vector properties=new Vector();
+    Project p1;
+    
+    public void init() {
+        p1 = new Project(project.getOutput(), project.getOutputLevel());
 
         // set user-define properties
         Hashtable prop1 = project.getProperties();
@@ -81,12 +95,29 @@ public class Ant extends Task {
         while (e.hasMoreElements()) {
             String arg = (String) e.nextElement();
             String value = (String) prop1.get(arg);
-            p1.setUserProperty(arg, value);
+            p1.setProperty(arg, value);
+        }
+    }
+    
+    /**
+     * Do the execution.
+     */
+    public void execute() throws BuildException {
+	if( antFile==null) throw new BuildException( "ant required antFile property ");
+
+        if( dir==null) dir=".";
+	p1.setBasedir(dir);
+        p1.setUserProperty("basedir" , dir);
+
+	// Override with local-defined properties
+	Enumeration e = properties.elements();
+        while (e.hasMoreElements()) {
+            Property p=(Property) e.nextElement();
+	    //	    System.out.println("Setting " + p.getName()+ " " + p.getValue());
+	    p.init();
         }
 
-        p1.setBasedir(dir);
-        p1.setUserProperty("basedir" , dir);
-        if (antFile == null) antFile = dir + "/build.xml";
+	if (antFile == null) antFile = dir + "/build.xml";
         ProjectHelper.configureProject(p1, new File(antFile));
 
         if (target == null) {
@@ -106,5 +137,13 @@ public class Ant extends Task {
 
     public void setTarget(String s) {
         this.target = s;
+    }
+
+    // XXX replace with createProperty!!
+    public Task addProperty() {
+	Property p=(Property)p1.createTask("property");
+	p.setUserProperty(true);
+	properties.addElement( p );
+	return p;
     }
 }

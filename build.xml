@@ -20,13 +20,17 @@
     <property name="build.dir" value="build"/>
     <property name="build.classes" value="build/classes"/>
     <property name="build.javadocs" value="build/javadocs"/>
-    <property name="dist.dir" value="dist"/>
+    <property name="ant.dist.dir" value="dist"/>
 
     <property name="classpath" value="lib/xml.jar"/>
     <property name="packages" value="org.apache.tools.*"/>
     <property name="manifest" value="src/etc/manifest"/>
 
     <property name="build.compiler" value="classic"/>
+
+    <!-- Give user a chance to override without editing this file 
+         (and without typing -D each time it compiles it -->
+    <property file="${user.home}/.ant.properties" />
   </target>
 
   <!-- =================================================================== -->
@@ -93,41 +97,41 @@
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
   <target name="dist" depends="jar,javadocs">
-     <mkdir dir="${dist.dir}"/>
-     <mkdir dir="${dist.dir}/bin"/>
-     <mkdir dir="${dist.dir}/lib"/>
-     <mkdir dir="${dist.dir}/docs"/>
-     <mkdir dir="${dist.dir}/docs/api"/>
-     <mkdir dir="${dist.dir}/src"/>
+     <mkdir dir="${ant.dist.dir}"/>
+     <mkdir dir="${ant.dist.dir}/bin"/>
+     <mkdir dir="${ant.dist.dir}/lib"/>
+     <mkdir dir="${ant.dist.dir}/docs"/>
+     <mkdir dir="${ant.dist.dir}/docs/api"/>
+     <mkdir dir="${ant.dist.dir}/src"/>
 
-     <copydir src="${src.dir}" dest="${dist.dir}/src"/>
-     <copydir src="${lib.dir}" dest="${dist.dir}/lib"/>
+     <copydir src="${src.dir}" dest="${ant.dist.dir}/src"/>
+     <copydir src="${lib.dir}" dest="${ant.dist.dir}/lib"/>
 
-     <copyfile src="build.xml" dest="${dist.dir}/lib/build.xml"/>
-     <copydir src="src/bin" dest="${dist.dir}/bin"/>
-     <copydir src="${docs.dir}" dest="${dist.dir}/docs"/>
-     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
+     <copyfile src="build.xml" dest="${ant.dist.dir}/lib/build.xml"/>
+     <copydir src="src/bin" dest="${ant.dist.dir}/bin"/>
+     <copydir src="${docs.dir}" dest="${ant.dist.dir}/docs"/>
+     <copydir src="${build.javadocs}" dest="${ant.dist.dir}/docs/api"/>
 
-     <chmod perm="+x" src="${dist.dir}/bin/ant"/>
-     <chmod perm="+x" src="${dist.dir}/bin/antRun"/>
+     <chmod perm="+x" src="${ant.dist.dir}/bin/ant"/>
+     <chmod perm="+x" src="${ant.dist.dir}/bin/antRun"/>
 
-     <copyfile src="README" dest="${dist.dir}/README"/>
-     <copyfile src="TODO" dest="${dist.dir}/TODO"/>
-     <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
+     <copyfile src="README" dest="${ant.dist.dir}/README"/>
+     <copyfile src="TODO" dest="${ant.dist.dir}/TODO"/>
+     <copyfile src="LICENSE" dest="${ant.dist.dir}/LICENSE"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with ZIP                                  -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
-    <zip zipfile="${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
+    <zip zipfile="${Name}-${version}.zip" basedir="${ant.dist.dir}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with TAR-GZIP                             -->
   <!-- =================================================================== -->
   <target name="dist-tgz" depends="dist">
-    <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/>
+    <tar tarfile="${Name}-${version}.tar" basedir="${ant.dist.dir}" includes="**"/>
     <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
   </target>
 
@@ -136,7 +140,7 @@
   <!-- =================================================================== -->
   <target name="clean" depends="init">
     <deltree dir="${build.dir}"/>
-    <deltree dir="${dist.dir}"/>
+    <deltree dir="${ant.dist.dir}"/>
   </target>
 
   <!-- =================================================================== -->
