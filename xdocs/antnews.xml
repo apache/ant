@@ -3,12 +3,31 @@
 
   <properties>
     <author email="">Conor MacNeill</author>
-    <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
+    <author email="stefan.bodewig@freenet.de">Stefan Bodewig</author>
     <author email="">Magesh Umasankar</author>
     <title>News</title>
   </properties>
 
 <body>
+  <section name="Ant 1.5.2">
+    <h3>March 3, 2003 - Ant 1.5.2 Available!</h3>
+    <p>The final version of Ant 1.5.2 is now available for 
+     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+     If you have any feedback on this release, feel free to join the 
+     discussion on the dev and user mailing lists.
+     </p>
+  </section>
+
+  <section name="Ant 1.5.2Beta1">
+    <h3>February 21, 2003 - Ant 1.5.2 Beta1 Available!</h3>
+    <p>The first beta version of Ant 1.5.2 is now available for 
+     download at <a href="http://www.apache.org/dist/ant/v1.5.2beta1/">
+     http://www.apache.org/dist/ant/v1.5.2beta1</a>. 
+     If you have any feedback on the beta feel free to join the 
+     discussion on the dev and user mailing lists.
+     </p>
+  </section>
+
   <section name="Ant Top Level Project">
     <h3>November 18, 2002</h3>
     <p>The Apache board <a href="mission.html">created</a>
