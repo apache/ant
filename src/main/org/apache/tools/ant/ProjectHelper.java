@@ -324,8 +324,8 @@ public class ProjectHelper {
      */
     public static void configure(Object target, AttributeList attrs,
                                  Project project) throws BuildException {
-        if (target instanceof TaskAdapter) {
-            target = ((TaskAdapter) target).getProxy();
+        if (target instanceof TypeAdapter) {
+            target = ((TypeAdapter) target).getProxy();
         }
 
         IntrospectionHelper ih =
@@ -389,8 +389,8 @@ public class ProjectHelper {
             return;
         }
 
-        if (target instanceof TaskAdapter) {
-            target = ((TaskAdapter) target).getProxy();
+        if (target instanceof TypeAdapter) {
+            target = ((TypeAdapter) target).getProxy();
         }
 
         IntrospectionHelper.getHelper(target.getClass()).addText(project,

@@ -156,9 +156,6 @@ public class Ant extends Task {
         newProject = new Project();
         newProject.setDefaultInputStream(getProject().getDefaultInputStream());
         newProject.setJavaVersionProperty();
-        newProject.addTaskDefinition("property",
-                                     (Class) getProject().getTaskDefinitions()
-                                             .get("property"));
     }
 
     /**
@@ -238,25 +235,7 @@ public class Ant extends Task {
             }
         }
 
-        Hashtable taskdefs = getProject().getTaskDefinitions();
-        Enumeration et = taskdefs.keys();
-        while (et.hasMoreElements()) {
-            String taskName = (String) et.nextElement();
-            if (taskName.equals("property")) {
-                // we have already added this taskdef in #init
-                continue;
-            }
-            Class taskClass = (Class) taskdefs.get(taskName);
-            newProject.addTaskDefinition(taskName, taskClass);
-        }
-
-        Hashtable typedefs = getProject().getDataTypeDefinitions();
-        Enumeration e = typedefs.keys();
-        while (e.hasMoreElements()) {
-            String typeName = (String) e.nextElement();
-            Class typeClass = (Class) typedefs.get(typeName);
-            newProject.addDataTypeDefinition(typeName, typeClass);
-        }
+        getProject().initSubProject(newProject);
 
         // set user-defined properties
         getProject().copyUserProperties(newProject);
@@ -271,6 +250,7 @@ public class Ant extends Task {
             addAlmostAll(getProject().getProperties());
         }
 
+        Enumeration e;
         e = propertySets.elements();
         while (e.hasMoreElements()) {
             PropertySet ps = (PropertySet) e.nextElement();

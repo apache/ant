@@ -59,7 +59,15 @@ import org.apache.tools.ant.util.WeakishReference;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
 import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
@@ -68,21 +76,28 @@ import java.lang.reflect.Modifier;
 /**
  * Component creation and configuration.
  *
- * This is cut&paste from Project.java of everything related to
- * task/type management. Project will just delegate.
+ * The class is based around handing component
+ * definitions in an AntTypeTable.
+ *
+ * The old task/type methods have been kept
+ * for backward compatibly.
+ * Project will just delegate its calls to this class.
  *
  * A very simple hook mechnism is provided that allows users to plug
  * in custom code. It is also possible to replace the default behavior
  * ( for example in an app embeding ant )
  *
  * @author Costin Manolache
+ * @author Peter Reilly
  * @since Ant1.6
  */
 public class ComponentHelper  {
-    /** Map from data type names to implementing classes (String to Class). */
-    private Hashtable dataClassDefinitions;
-    /** Map from task names to implementing classes (String to Class). */
-    private Hashtable taskClassDefinitions;
+    // Map from task names to implementing classes - not used anymore
+    private Hashtable taskClassDefinitions = new Hashtable();
+
+    /** Map from compoennt name to anttypedefinition */
+    private AntTypeTable antTypeTable;
+
     /**
      * Map from task names to vectors of created tasks
      * (String to Vector of Task). This is used to invalidate tasks if
@@ -120,10 +135,24 @@ public class ComponentHelper  {
 
     public void setProject(Project project) {
         this.project = project;
-        dataClassDefinitions= new AntTaskTable(project, false);
-        taskClassDefinitions= new AntTaskTable(project, true);
+        antTypeTable = new AntTypeTable(project);
     }
 
+    /**
+     * Used with creating child projects. Each child
+     * project inherites the component definitions
+     * from its parent.
+     */
+    public void initSubProject(ComponentHelper helper) {
+        // add the types of the parent project
+        AntTypeTable typeTable = helper.antTypeTable;
+        for (Iterator i = typeTable.values().iterator(); i.hasNext();) {
+            AntTypeDefinition def = (AntTypeDefinition) i.next();
+            def = def.copy(project);
+            antTypeTable.put(def.getName(), def);
+        }
+    }
+    
     /** Factory method to create the components.
      * 
      * This should be called by UnknownElement.
@@ -139,63 +168,54 @@ public class ComponentHelper  {
                                    String taskName )
             throws BuildException
     {
-        Object component=null;
-
-        // System.out.println("Fallback to project default " + taskName );
-        // Can't create component. Default is to use the old methods in project.
-
-        // This policy is taken from 1.5 ProjectHelper. In future the difference between
-        // task and type should disapear.
-        if( project.getDataTypeDefinitions().get(taskName) != null ) {
-            // This is the original policy in ProjectHelper. The 1.5 version of UnkwnonwElement
-            // used to try first to create a task, and if it failed tried a type. In 1.6 the diff
-            // should disapear.
-            component = this.createDataType(taskName);
-            if( component!=null ) return component;
+        Object component = createComponent(taskName);
+        if (component == null) {
+            return null;
         }
 
-        // from UnkwnonwElement.createTask. The 'top level' case is removed, we're
-        // allways lazy
-        component = this.createTask(taskName);
+        if (component instanceof Task) {
+            Task task = (Task) component;
+            task.setTaskType(taskName);
+            task.setTaskName(taskName);
+            addCreatedTask(taskName, task);
+        }
 
         return component;
     }
-
-    /**
-     * get the class of a particular component
-     */
-    public Class getComponentClass(String componentName) {
-        Class elementClass =
-            (Class) getTaskDefinitions().get(componentName);
-        if (elementClass != null) {
-            if (! (Task.class.isAssignableFrom(elementClass))) {
-                elementClass = TaskAdapter.class;
-            }
-            return elementClass;
-        }
-        return (Class) getDataTypeDefinitions().get(componentName);
-    }
     
     /**
-     * create a named component
+     * Create an object for a component.
+     *
+     * @param componentName the name of the component, if
+     *                      the component is in a namespace, the
+     *                      name is prefixed withe the namespace uri and ":"
+     * @return the class if found or null if not.
      */
-    public Object createComponent(String componentName)
-        throws BuildException
+   public Object createComponent(String componentName)
+            throws BuildException
     {
-        Object obj = createTask(componentName);
-        if (obj == null) {
-            obj = createDataType(componentName);
-        }
-        if (obj == null) {
-            return obj;
-        }
-        project.setProjectReference(obj);
-        if (obj instanceof Task) {
-            ((Task)obj).init(); // Needed here ??
-        }
-        return obj;
+        return antTypeTable.create(componentName);
     }
 
+    /**
+     * Return the class of the component name.
+     *
+     * @param componentName the name of the component, if
+     *                      the component is in a namespace, the
+     *                      name is prefixed withe the namespace uri and ":"
+     * @return the class if found or null if not.
+     */
+    public Class getComponentClass(String componentName) {
+        return antTypeTable.getExposedClass(componentName);
+    }
+
+    /**
+     * Return the antTypeDefinition for a componentName
+     */
+    public AntTypeDefinition getDefinition(String componentName) {
+        return antTypeTable.getDefinition(componentName);
+    }
+    
     /** Initialization code - implementing the original ant component
      * loading from /org/apache/tools/ant/taskdefs/default.properties 
      * and .../types/default.properties
@@ -203,40 +223,8 @@ public class ComponentHelper  {
      * @throws BuildException
      */ 
     public void initDefaultDefinitions() throws BuildException {
-        String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
-
-        try {
-            Properties props = new Properties();
-            InputStream in = this.getClass().getResourceAsStream(defs);
-            if (in == null) {
-                throw new BuildException("Can't load default task list");
-            }
-            props.load(in);
-            in.close();
-            ((AntTaskTable)taskClassDefinitions).addDefinitions( props );
-
-
-        } catch (IOException ioe) {
-            throw new BuildException("Can't load default task list");
-        }
-
-        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
-
-        try {
-            Properties props = new Properties();
-            InputStream in = this.getClass().getResourceAsStream(dataDefs);
-            if (in == null) {
-                throw new BuildException("Can't load default datatype list");
-            }
-            props.load(in);
-            in.close();
-
-            ((AntTaskTable)dataClassDefinitions).addDefinitions(props);
-
-
-        } catch (IOException ioe) {
-            throw new BuildException("Can't load default datatype list");
-        }
+        initTasks();
+        initTypes();
     }
 
     /**
@@ -259,44 +247,17 @@ public class ComponentHelper  {
      *
      * @see #checkTaskClass(Class)
      */
-    public void addTaskDefinition(String taskName, Class taskClass)   
-            throws BuildException {
-        Class old = (Class) taskClassDefinitions.get(taskName);
-        if (null != old) {
-            if (old.equals(taskClass)) {
-//                project.log("Ignoring override for task " + taskName
-//                        + ", it is already defined by the same class.",
-//                        Project.MSG_VERBOSE);
-                return;
-            } else {
-                int logLevel = Project.MSG_WARN;
-                if (old.getName().equals(taskClass.getName())) {
-                    ClassLoader oldLoader = old.getClassLoader();
-                    ClassLoader newLoader = taskClass.getClassLoader();
-                    // system classloader on older JDKs can be null
-                    if (oldLoader != null
-                            && newLoader != null
-                            && oldLoader instanceof AntClassLoader
-                            && newLoader instanceof AntClassLoader
-                            && ((AntClassLoader) oldLoader).getClasspath()
-                            .equals(((AntClassLoader) newLoader).getClasspath())
-                    ) {
-                        // same classname loaded from the same
-                        // classpath components
-                        logLevel = Project.MSG_VERBOSE;
-                    }
-                }
-
-                project.log("Trying to override old definition of task " + taskName,
-                        logLevel);
-                invalidateCreatedTasks(taskName);
-            }
-        }
-
-        String msg = " +User task: " + taskName + "     " + taskClass.getName();
-        project.log(msg, Project.MSG_DEBUG);
+    public void addTaskDefinition(String taskName, Class taskClass) {
         checkTaskClass(taskClass);
-        taskClassDefinitions.put(taskName, taskClass);
+        AntTypeDefinition def = new AntTypeDefinition();
+        def.setProject(project);
+        def.setName(taskName);
+        def.setClassLoader(taskClass.getClassLoader());
+        def.setClass(taskClass);
+        def.setAdapterClass(TaskAdapter.class);
+        def.setClassName(taskClass.getName());
+        def.setAdaptToClass(Task.class);
+        updateDataTypeDefinition(def);
     }
 
     /**
@@ -340,6 +301,7 @@ public class ComponentHelper  {
     /**
      * Returns the current task definition hashtable. The returned hashtable is
      * "live" and so should not be modified.
+     * This table does not contain any information
      *
      * @return a map of from task name to implementing class
      *         (String to Class).
@@ -347,7 +309,7 @@ public class ComponentHelper  {
     public Hashtable getTaskDefinitions() {
         return taskClassDefinitions;
     }
-
+    
     /**
      * Adds a new datatype definition.
      * Attempting to override an existing definition with an
@@ -362,26 +324,25 @@ public class ComponentHelper  {
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        synchronized(dataClassDefinitions) {
-            Class old = (Class) dataClassDefinitions.get(typeName);
-            if (null != old) {
-                if (old.equals(typeClass)) {
-//                    project.log("Ignoring override for datatype " + typeName
-//                            + ", it is already defined by the same class.",
-//                            Project.MSG_VERBOSE);
-                    return;
-                } else {
-                    project.log("Trying to override old definition of datatype "
-                            + typeName, Project.MSG_WARN);
-                }
-            }
-            dataClassDefinitions.put(typeName, typeClass);
-        }
+        AntTypeDefinition def = new AntTypeDefinition();
+        def.setProject(project);
+        def.setName(typeName);
+        def.setClass(typeClass);
+        updateDataTypeDefinition(def);
         String msg = " +User datatype: " + typeName + "     "
                 + typeClass.getName();
         project.log(msg, Project.MSG_DEBUG);
     }
 
+    /**
+     * Describe <code>addDataTypeDefinition</code> method here.
+     *
+     * @param def an <code>AntTypeDefinition</code> value
+     */
+    public void addDataTypeDefinition(AntTypeDefinition def) {
+        updateDataTypeDefinition(def);
+    }
+    
     /**
      * Returns the current datatype definition hashtable. The returned
      * hashtable is "live" and so should not be modified.
@@ -390,7 +351,7 @@ public class ComponentHelper  {
      *         (String to Class).
      */
     public Hashtable getDataTypeDefinitions() {
-        return dataClassDefinitions;
+        return antTypeTable;
     }
 
     /**
@@ -432,49 +393,26 @@ public class ComponentHelper  {
      *                           creation fails.
      */
     private Task createNewTask(String taskType) throws BuildException {
-        Class c = (Class) taskClassDefinitions.get(taskType);
-
+        Class c = antTypeTable.getExposedClass(taskType);
         if (c == null) {
             return null;
         }
-
-        try {
-            Object o = c.newInstance();
-            if ( project != null ) {
-                project.setProjectReference( o );
-            }
-            Task task = null;
-            if (o instanceof Task) {
-                task = (Task) o;
-            } else {
-                // "Generic" Bean - use the setter pattern
-                // and an Adapter
-                TaskAdapter taskA = new TaskAdapter();
-                taskA.setProxy(o);
-                if ( project != null ) {
-                    project.setProjectReference( taskA );
-                }
-                task = taskA;
-            }
-            task.setProject( project );
-            task.setTaskType(taskType);
-
-            // set default value, can be changed by the user
-            task.setTaskName(taskType);
-
-            String msg = "   +Task: " + taskType;
-            project.log (msg, Project.MSG_DEBUG);
-            return task;
-        } catch (NoClassDefFoundError ncdfe) {
-            String msg = "Task " + taskType + ": A class needed by class "
-                + c + " cannot be found: " + ncdfe.getMessage();
-            throw new BuildException(msg, ncdfe);
-        } catch (Throwable t) {
-            System.out.println("task CL=" + c.getClassLoader());
-            String msg = "Could not create task of type: "
-                    + taskType + " due to " + t;
-            throw new BuildException(msg, t);
+                           
+        if (! Task.class.isAssignableFrom(c)) {
+            return null;
         }
+        Task task = (Task) antTypeTable.create(taskType);
+        if (task == null) {
+            return null;
+        }
+        task.setTaskType(taskType);
+
+        // set default value, can be changed by the user
+        task.setTaskName(taskType);
+
+        String msg = "   +Task: " + taskType;
+        project.log (msg, Project.MSG_DEBUG);
+        return task;
     }
 
     /**
@@ -538,52 +476,11 @@ public class ComponentHelper  {
      *                           instance creation fails.
      */
     public Object createDataType(String typeName) throws BuildException {
-        Class c = (Class) dataClassDefinitions.get(typeName);
-
-        if (c == null) {
-            return null;
-        }
-
-        try {
-            java.lang.reflect.Constructor ctor = null;
-            boolean noArg = false;
-            // DataType can have a "no arg" constructor or take a single
-            // Project argument.
-            try {
-                ctor = c.getConstructor(new Class[0]);
-                noArg = true;
-            } catch (NoSuchMethodException nse) {
-                ctor = c.getConstructor(new Class[] {Project.class});
-                noArg = false;
-            }
-
-            Object o = null;
-            if (noArg) {
-                o = ctor.newInstance(new Object[0]);
-            } else {
-                o = ctor.newInstance(new Object[] {project});
-            }
-            if ( project != null ) {
-                project.setProjectReference( o );
-            }
-            String msg = "   +DataType: " + typeName;
-            project.log(msg, Project.MSG_DEBUG);
-            return o;
-        } catch (java.lang.reflect.InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            String msg = "Could not create datatype of type: "
-                    + typeName + " due to " + t;
-            throw new BuildException(msg, t);
-        } catch (Throwable t) {
-            String msg = "Could not create datatype of type: "
-                    + typeName + " due to " + t;
-            throw new BuildException(msg, t);
-        }
+        return antTypeTable.create(typeName);
     }
 
     /**
-     * Returns a description of the type of the given element, with
-     * special handling for instances of tasks and data types.
+     * Returns a description of the type of the given element.
      * <p>
      * This is useful for logging purposes.
      *
@@ -595,127 +492,210 @@ public class ComponentHelper  {
      * @since Ant 1.6
      */
     public String getElementName(Object element) {
-        Hashtable elements = taskClassDefinitions;
+        //  PR: I do not know what to do if the object class
+        //      has multiple defines
+        //      but this is for logging only...
         Class elementClass = element.getClass();
-        String typeName = "task";
-        if (!elements.contains(elementClass)) {
-            elements = dataClassDefinitions;
-            typeName = "data type";
-            if (!elements.contains(elementClass)) {
-                elements = null;
+        for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
+            AntTypeDefinition def = (AntTypeDefinition) i.next();
+            if (elementClass == def.getExposedClass()) {
+                return "The <" + def.getName() + "> type"; 
             }
         }
-
-        if (elements != null) {
-            Enumeration e = elements.keys();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                Class clazz = (Class) elements.get(name);
-                if (elementClass.equals(clazz)) {
-                    return "The <" + name + "> " + typeName;
-                }
-            }
-        }
-
         return "Class " + elementClass.getName();
     }
+    
 
-
-    private static class AntTaskTable extends LazyHashtable {
-        Project project;
-        Properties props;
-        boolean tasks=false;
-
-        public AntTaskTable( Project p, boolean tasks ) {
-            this.project=p;
-            this.tasks=tasks;
+    /** return true if the two definitions are the same */
+    private boolean sameDefinition(
+        AntTypeDefinition def, AntTypeDefinition old) {
+        if (! (old.getTypeClass().equals(def.getTypeClass()))) {
+            return false;
         }
-
-        public void addDefinitions( Properties props ) {
-            this.props=props;
+        if (! (old.getExposedClass().equals(def.getExposedClass()))) {
+            return false;
         }
+        return true;
+    }
 
-        protected void initAll( ) {
-            if( initAllDone ) {
-                return;
+    /**
+     * update the component definition table with a new or
+     * modified definition.
+     */
+    private void updateDataTypeDefinition(AntTypeDefinition def) {
+        String name = def.getName();
+        synchronized (antTypeTable) {
+            AntTypeDefinition old = antTypeTable.getDefinition(name);
+            if (old != null) {
+                if (sameDefinition(def, old)) {
+                    return;
+                }
+                Class oldClass = antTypeTable.getExposedClass(name);
+                if (Task.class.isAssignableFrom(oldClass)) {
+                    int logLevel = Project.MSG_WARN;
+                    if (def.getClassName().equals(old.getClassName()) &&
+                        def.getClassLoader() == old.getClassLoader()) {
+                        logLevel = Project.MSG_VERBOSE;
+                    }
+                    project.log(
+                        "Trying to override old definition of task " +
+                        name, logLevel);
+                    invalidateCreatedTasks(name);
+                } else {
+                    project.log(
+                        "Trying to override old definition of datatype " +
+                        name, Project.MSG_WARN);
+                }
             }
-            project.log("InitAll", Project.MSG_DEBUG);
-            if( props==null ) {
-                return;
+            project.log(" +Datatype " + name + " " + def.getClassName(),
+                        Project.MSG_DEBUG);
+            antTypeTable.put(name, def);
+        }
+    }
+
+    /**
+     * load ant's tasks
+     */
+    private void initTasks() {
+        ClassLoader classLoader = null;
+        if (project.getCoreLoader() != null &&
+            ! ("only".equals(project.getProperty("build.sysclasspath")))) {
+            classLoader = project.getCoreLoader();
+        }
+        String dataDefs = "/org/apache/tools/ant/taskdefs/defaults.properties";
+
+        InputStream in = null;
+        try {
+            Properties props = new Properties();
+            in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException("Can't load default task list");
             }
+            props.load(in);
+
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
-                String key = (String) enum.nextElement();
-                Class taskClass=getTask( key );
-                if( taskClass!=null ) {
-                    // This will call a get() and a put()
-                    if( tasks ) {
-                        project.addTaskDefinition(key, taskClass);
-                    } else {
-                        project.addDataTypeDefinition(key, taskClass );
-                    }
-                }
+                String name = (String) enum.nextElement();
+                String className = props.getProperty(name);
+                AntTypeDefinition def = new AntTypeDefinition();
+                def.setProject(project);
+                def.setName(name);
+                def.setClassName(className);
+                def.setClassLoader(classLoader);
+                def.setAdaptToClass(Task.class);
+                def.setAdapterClass(TaskAdapter.class);
+                antTypeTable.put(name, def);
             }
-            initAllDone=true;
+        } catch (IOException ex) {
+            throw new BuildException("Can't load default type list");
         }
-
-        protected Class getTask(String key) {
-            if( props==null ) {
-                return null; // for tasks loaded before init()
+        finally {
+            if (in != null) {
+                try {in.close();} catch (Exception ignore) {}
             }
-            String value=props.getProperty(key);
-            if( value==null) {
-                //project.log( "No class name for " + key, Project.MSG_VERBOSE );
-                return null;
-            }
-            try {
-                Class taskClass=null;
-                if( project.getCoreLoader() != null &&
-                    !("only".equals(project.getProperty("build.sysclasspath")))) {
-                    try {
-                        project.log("Loading with the core loader " + value,
-                                Project.MSG_DEBUG);
-                        taskClass=project.getCoreLoader().loadClass(value);
-                        if( taskClass != null ) {
-                            return taskClass;
-                        }
-                    } catch( Exception ex ) {
-                        //ignore
-                    }
-                }
-                taskClass = Class.forName(value);
-                return taskClass;
-            } catch (NoClassDefFoundError ncdfe) {
-                project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task " 
-                        + key, Project.MSG_DEBUG);
-            } catch (ClassNotFoundException cnfe) {
-                project.log("Could not load class (" + value
-                        + ") for task " + key, Project.MSG_DEBUG);
-            }
-            return null;
         }
-
-        // Hashtable implementation
-        public Object get( Object key ) {
-            Object orig=super.get( key );
-            if( orig!= null ) {
-                return orig;
-            }
-            if( ! (key instanceof String) ) {
-                return null;
-            }
-            project.log("Get task " + key, Project.MSG_DEBUG );
-            Object taskClass=getTask( (String) key);
-            if( taskClass != null) {
-                super.put( key, taskClass );
-            }
-            return taskClass;
-        }
-
-        public boolean containsKey( Object key ) {
-            return get( key ) != null;
-        }
-
     }
+
+    /**
+     * load ant's datatypes
+     */
+    private void initTypes() {
+        ClassLoader classLoader = null;
+        if (project.getCoreLoader() != null &&
+            ! ("only".equals(project.getProperty("build.sysclasspath")))) {
+            classLoader = project.getCoreLoader();
+        }
+        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
+
+        InputStream in = null;
+        try {
+            Properties props = new Properties();
+            in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException("Can't load default datatype list");
+            }
+            props.load(in);
+
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String name = (String) enum.nextElement();
+                String className = props.getProperty(name);
+                AntTypeDefinition def = new AntTypeDefinition();
+                def.setProject(project);
+                def.setName(name);
+                def.setClassName(className);
+                def.setClassLoader(classLoader);
+                antTypeTable.put(name, def);
+            }
+        } catch (IOException ex) {
+            throw new BuildException("Can't load default type list");
+        }
+        finally {
+            if (in != null) {
+                try {in.close();} catch (Exception ignore) {}
+            }
+        }
+    }
+            
+    /**
+     * map that contains the component definitions
+     */
+    private static class AntTypeTable extends Hashtable {
+        Project project;
+
+        public AntTypeTable(Project project) {
+            this.project = project;
+        }
+
+        public AntTypeDefinition getDefinition(String key) {
+            AntTypeDefinition ret = (AntTypeDefinition) super.get(key);
+            return ret;
+        }
+        
+        /** Equivalent to getTypeType */
+        public Object get(Object key) {
+            return getTypeClass((String) key);
+        }
+
+        public Object create(String name) {
+            AntTypeDefinition def = getDefinition(name);
+            if (def == null) {
+                return null;
+            }
+            return def.create();
+        }
+            
+        public Class getTypeClass(String name) {
+            AntTypeDefinition def = getDefinition(name);
+            if (def == null) {
+                return null;
+            }
+            return def.getTypeClass();
+        }
+
+        public Class getExposedClass(String name) {
+            AntTypeDefinition def = getDefinition(name);
+            if (def == null) {
+                return null;
+            }
+            return def.getExposedClass();
+        }
+
+        public boolean contains(Object clazz) {
+            // only used in unit test ProjectTest
+            // needed ??? 
+            for (Iterator i = values().iterator(); i.hasNext();) {
+                AntTypeDefinition def = (AntTypeDefinition) i.next();
+                Class c = def.getExposedClass();
+                if (c == clazz)
+                    return true;
+            }
+            return false;
+        }
+
+        public boolean containsValue(Object value) {
+            return contains(value);
+        }
+    }
+
 }

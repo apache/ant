@@ -268,6 +268,14 @@ public class Project {
     }
 
     /**
+     * inits a sub project - used by taskdefs.Ant
+     */
+    public void initSubProject(Project subProject) {
+        ComponentHelper.getComponentHelper(subProject)
+            .initSubProject(ComponentHelper.getComponentHelper(this));
+    }
+
+    /**
      * Initialises the project.
      *
      * This involves setting the default task definitions and loading the

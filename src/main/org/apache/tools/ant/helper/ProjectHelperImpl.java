@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskAdapter;
+import org.apache.tools.ant.TypeAdapter;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.util.FileUtils;
@@ -865,8 +865,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                                     Target target) {
             super(helperImpl, parentHandler);
 
-            if (parent instanceof TaskAdapter) {
-                this.parent = ((TaskAdapter) parent).getProxy();
+            if (parent instanceof TypeAdapter) {
+                this.parent = ((TypeAdapter) parent).getProxy();
             } else {
                 this.parent = parent;
             }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,32 +52,48 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskAdapter;
+import java.lang.reflect.Method;
 
 /**
- * Adds a task definition to the current project, such that this new task can be
- * used in the current project. Two attributes are needed, the name that identifies
- * this task uniquely, and the full name of the class (including the packages) that
- * implements this task.</p>
- * <p>You can also define a group of tasks at once using the file or
- * resource attributes.  These attributes point to files in the format of
- * Java property files.  Each line defines a single task in the
- * format:</p>
- * <pre>
- * taskname=fully.qualified.java.classname
- * </pre>
- * @author Stefan Bodewig
- * @since Ant 1.1
- * @ant.task category="internal"
+ * Used to wrap types.
+ *
+ * @author costin@dnt.ro
+ * @author peter reilly
  */
-public class Taskdef extends Typedef {
+public interface TypeAdapter  {
 
-    public Taskdef() {
-        setAdapterClass(TaskAdapter.class);
-        setAdaptToClass(Task.class);
-    }
+    /**
+     * Sets the project
+     */
+    public void setProject(Project p);
+
+    /**
+     * Gets the project
+     */
+    public Project getProject();
+    
+    /**
+     * Sets the proxy object, whose methods are going to be
+     * invoked by ant.
+     * A proxy object is normally the object defined by
+     * a &lttypedef/&gt task that is adapted by the "adapter"
+     * attribute.
+     * 
+     * @param o The target object. Must not be <code>null</code>.
+     */
+    public void setProxy(Object o);
+
+    /**
+     * Returns the proxy object.
+     * 
+     * @return the target proxy object
+     */
+    public Object getProxy();
+
+    /**
+     * Check if the proxy class matchs the criteria
+     */
+    public void checkProxyClass(Class proxyClass);
 }

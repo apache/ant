@@ -183,9 +183,9 @@ public class ProjectTest extends TestCase {
         p.addBuildListener(mbl);
 
         p.addTaskDefinition("Ok", DummyTaskOk.class);
-        assertEquals(DummyTaskOk.class, p.getTaskDefinitions().get("Ok"));
+        assertEquals(DummyTaskOk.class, p.getDataTypeDefinitions().get("Ok"));
         p.addTaskDefinition("OkNonTask", DummyTaskOkNonTask.class);
-        assertEquals(DummyTaskOkNonTask.class, p.getTaskDefinitions().get("OkNonTask"));
+        assertEquals(DummyTaskOkNonTask.class, p.getDataTypeDefinitions().get("OkNonTask"));
         mbl.assertEmpty();
 
         assertTaskDefFails(DummyTaskPrivate.class,   DummyTaskPrivate.class   + " is not public");
@@ -220,7 +220,7 @@ public class ProjectTest extends TestCase {
         mbl.addBuildEvent("return type of execute() should be void but was \"int\" in " + DummyTaskWithNonVoidExecute.class, Project.MSG_WARN);
         p.addTaskDefinition("NonVoidExecute", DummyTaskWithNonVoidExecute.class);
         mbl.assertEmpty();
-        assertEquals(DummyTaskWithNonVoidExecute.class, p.getTaskDefinitions().get("NonVoidExecute"));
+        assertEquals(DummyTaskWithNonVoidExecute.class, p.getDataTypeDefinitions().get("NonVoidExecute"));
     }
         
     public void testInputHandler() {
@@ -233,11 +233,12 @@ public class ProjectTest extends TestCase {
     }
 
     public void testTaskDefinitionContainsKey() {
-        assertTrue(p.getTaskDefinitions().containsKey("echo"));
+        assertTrue(p.getDataTypeDefinitions().containsKey("echo"));
     }
 
     public void testTaskDefinitionContains() {
-        assertTrue(p.getTaskDefinitions().contains(org.apache.tools.ant.taskdefs.Echo.class));
+        assertTrue(p.getDataTypeDefinitions()
+                   .contains(org.apache.tools.ant.taskdefs.Echo.class));
     }
 
     private class DummyTaskPrivate extends Task {

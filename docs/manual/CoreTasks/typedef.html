@@ -21,7 +21,7 @@ format:</p>
 <pre>
 typename=fully.qualified.java.classname
 </pre>
-<p>Typedef should be used to add your own types to the system. Data
+<p>Typedef should be used to add your own tasks and types to the system. Data
 types are things like <a href="../using.html#path">paths</a> or <a
 href="../CoreTypes/fileset.html">filesets</a> that can be defined at
 the project level and referenced via their ID attribute.</p>
@@ -36,25 +36,23 @@ the project level and referenced via their ID attribute.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">the name of the data type</td>
-    <td valign="top" align="center">Yes, unless file or resource have
-    been specified.</td>
+    <td valign="top" align="center">Yes, unless the file or resource type
+      attributes have been specified.</td>
   </tr>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the full class name implementing the data type</td>
-    <td valign="top" align="center">Yes, unless file or resource have
-    been specified.</td>
+    <td valign="top" align="center">Yes, unless file or  resource
+      have been specified.</td>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">Name of the property file to load
-     typename/classname pairs from.</td>
+    <td valign="top">Name of the file to load definitions from.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">resource</td>
-    <td valign="top">Name of the property resource to load
-     typename/classname pairs from.</td>
+    <td valign="top">Name of the resouce to load definitions from.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -69,6 +67,40 @@ the project level and referenced via their ID attribute.</p>
     each other. ( introduced in ant1.5 )</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">onerror</td>
+    <td valign="top">The action to take if there was a failure in defining the
+      type. The values are <i>fail</i> - cause a build exception, <i>warn</i>
+      output a warning, but continue, <i>ignore</i>, do nothing. The default
+      is <i>fail</i>.
+      (introduced in ant1.6)
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">adapter</td>
+    <td valign="top">A class that is used to adapt the defined class to
+      another interface/class. The adapter class must implement the interface
+      "org.apache.tools.ant.TypeAdapter". The adapter class will be used
+      to wrap the defined class unless the defined class implements/extends
+      the class defined by the attribute "adaptto".
+      If "adaptto" is not set,
+      the defined class will always be wrapped.
+      (introduced in ant1.6)
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">adaptto</td>
+    <td valign="top">This attribute is used in conjunction with the
+      adapter attribute.
+      If the defined class does not implement/extend the interface/class
+      specified by this attribute, the adaptor class will be used
+      to wrap the class.
+      (introduced in ant1.6)
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
@@ -79,8 +111,9 @@ via a nested <i>classpath</i> element.</p>
 <pre>  &lt;typedef name=&quot;urlset&quot; classname=&quot;com.mydomain.URLSet&quot;/&gt;</pre>
 <p>makes a data type called <code>urlset</code> available to Ant. The
 class <code>com.mydomain.URLSet</code> implements this type.</p>
+
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software
+<p align="center">Copyright &copy; 2001-2003 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>

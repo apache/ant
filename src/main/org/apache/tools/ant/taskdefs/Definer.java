@@ -58,15 +58,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
+
+import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Base class for Taskdef and Typedef - does all the classpath
@@ -79,10 +87,61 @@ import org.apache.tools.ant.util.ClasspathUtils;
  */
 public abstract class Definer extends Task {
     private String name;
-    private String value;
+    private String classname;
     private File file;
     private String resource;
     private ClasspathUtils.Delegate cpDelegate;
+    
+    private   int    format = Format.PROPERTIES;
+    private   boolean definerSet = false;
+    private   ClassLoader internalClassLoader;
+    private   int         onError = OnError.FAIL;
+    private   String      adapter;
+    private   String      adaptTo;
+    
+    private   Class       adapterClass;
+    private   Class       adaptToClass;
+    
+    public static class OnError extends EnumeratedAttribute {
+        public static final int  FAIL = 0, REPORT = 1, IGNORE = 2;
+        public OnError() {
+            super();
+        }
+        public OnError(String value) {
+            setValue(value);
+        }
+        public String[] getValues() {
+            return new String[] {"fail", "report", "ignore"};
+        }
+    }
+
+    public static class Format extends EnumeratedAttribute {
+        public static final int  PROPERTIES=0, XML=1;
+        public String[] getValues() {
+            return new String[] {"properties", "xml"};
+        }
+    }
+
+    /**
+     * What to do if there is an error in loading the class.
+     * <dl>
+     *   <li>error - throw build exception</li>
+     *   <li>report - output at warning level</li>
+     *   <li>ignore - output at debug level</li>
+     * </dl>
+     *
+     * @param onError an <code>OnError</code> value
+     */
+    public void setOnError(OnError onError) {
+        this.onError = onError.getIndex();
+    }
+
+    /**
+     * Sets the format of the file or resource
+     */
+    public void setFormat(Format format) {
+        this.format = format.getIndex();
+    }
 
     /**
      * @deprecated stop using this attribute
@@ -165,101 +224,107 @@ public abstract class Definer extends Task {
     public void execute() throws BuildException {
         ClassLoader al = createLoader();
 
-        if (file == null && resource == null) {
-
-            // simple case - one definition
-            if (name == null || value == null) {
-                String msg = "name or classname attributes of "
-                    + getTaskName() + " element "
-                    + "are undefined";
-                throw new BuildException(msg);
+        if (!definerSet) {
+            throw new BuildException(
+                "name, file or resource attribute of "
+                + getTaskName() + " is undefined", getLocation());
+        }
+        
+        if (name != null) {
+            if (classname == null) {
+                throw new BuildException(
+                    "classname attribute of " + getTaskName() + " element "
+                    + "is undefined", getLocation());
             }
-            addDefinition(al, name, value);
-
+            addDefinition(al, name, classname);
         } else {
+            if (classname != null) {
+                String msg = "You must not specify classname "
+                    + "together with file or resource.";
+                throw new BuildException(msg, getLocation());
+            }
+            URL url = null;
+            if (file != null) {
+                url = fileToURL();
+            }
+            if (resource != null) {
+                url = resourceToURL(al);
+            }
 
-            InputStream is = null;
-            try {
-                if (name != null || value != null) {
-                    String msg = "You must not specify name or value "
-                        + "together with file or resource.";
-                    throw new BuildException(msg, getLocation());
-                }
+            if (url == null) {
+                return;
+            }
 
-                if (file != null && resource != null) {
-                    String msg = "You must not specify both, file and "
-                        + "resource.";
-                    throw new BuildException(msg, getLocation());
-                }
+            loadProperties(al, url);
+        }
+    }
 
+    private URL fileToURL() {
+        if (! file.exists()) {
+            log("File " + file + " does not exist", Project.MSG_WARN);
+            return null;
+        }
+        if (! file.isFile()) {
+            log("File " + file + " is not a file", Project.MSG_WARN);
+            return null;
+        }
+        try {
+            return file.toURL();
+        } catch (Exception ex) {
+            log("File " + file + " cannot use as URL: " +
+                ex.toString(), Project.MSG_WARN);
+            return null;
+        }
+    }
 
-                Properties props = new Properties();
-                if (file != null) {
-                    log("Loading definitions from file " + file,
-                        Project.MSG_VERBOSE);
-                    is = new FileInputStream(file);
-                    if (is == null) {
-                        log("Could not load definitions from file " + file
-                            + ". It doesn\'t exist.", Project.MSG_WARN);
-                    }
-                }
-                if (resource != null) {
-                    log("Loading definitions from resource " + resource,
-                        Project.MSG_VERBOSE);
-                    is = al.getResourceAsStream(resource);
-                    if (is == null) {
-                        log("Could not load definitions from resource "
-                            + resource + ". It could not be found.",
-                            Project.MSG_WARN);
-                    }
-                }
-
-                if (is != null) {
-                    props.load(is);
-                    Enumeration keys = props.keys();
-                    while (keys.hasMoreElements()) {
-                        String n = (String) keys.nextElement();
-                        String v = props.getProperty(n);
-                        addDefinition(al, n, v);
-                    }
-                }
-            } catch (IOException ex) {
-                throw new BuildException(ex, getLocation());
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {}
-                }
+    private URL resourceToURL(ClassLoader classLoader) {
+        URL ret = classLoader.getResource(resource);
+        if (ret == null) {
+            if (onError != OnError.IGNORE) {
+                log("Could not load definitions from resource "
+                    + resource + ". It could not be found.",
+                    Project.MSG_WARN);
+            }
+        }
+        return ret;
+    }
+    
+    protected void loadProperties(ClassLoader al, URL url) {
+        InputStream is = null;
+        try {
+            is = url.openStream();
+            if (is == null) {
+                log("Could not load definitions from " + url,
+                    Project.MSG_WARN);
+                return;
+            }
+            Properties props = new Properties();
+            props.load(is);
+            Enumeration keys = props.keys();
+            while (keys.hasMoreElements()) {
+                name = ((String) keys.nextElement());
+                classname = props.getProperty(name);
+                addDefinition(al, name, classname);
+            }
+        } catch (IOException ex) {
+            throw new BuildException(ex, getLocation());
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {}
             }
         }
     }
-
-    /**
-     * create the classloader then hand the definition off to the subclass;
-     * @throws BuildException when the class wont load for any reason
-     */
-    private void addDefinition(ClassLoader al, String name, String value)
-        throws BuildException {
-        try {
-            Class c = al.loadClass(value);
-            AntClassLoader.initializeClass(c);
-            addDefinition(name, c);
-        } catch (ClassNotFoundException cnfe) {
-            String msg = getTaskName() + " class " + value
-                + " cannot be found";
-            throw new BuildException(msg, cnfe, getLocation());
-        } catch (NoClassDefFoundError ncdfe) {
-            String msg = getTaskName() + ": A class needed by class "
-                + value + " cannot be found: " + ncdfe.getMessage();
-            throw new BuildException(msg, ncdfe, location);
-        }
-    }
+    
 
     /**
      * create a classloader for this definition
      */
-    private ClassLoader createLoader() {
+    protected ClassLoader createLoader() {
+        if (internalClassLoader != null) {
+            return internalClassLoader;
+        }
         ClassLoader al = this.cpDelegate.getClassLoader();
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always
@@ -274,6 +339,10 @@ public abstract class Definer extends Task {
      * ant name/classname pairs from.
      */
     public void setFile(File file) {
+        if (definerSet) {
+            tooManyDefinitions();
+        }
+        definerSet = true;
         this.file = file;
     }
 
@@ -282,6 +351,10 @@ public abstract class Definer extends Task {
      * ant name/classname pairs from.
      */
     public void setResource(String res) {
+        if (definerSet) {
+            tooManyDefinitions();
+        }
+        definerSet = true;
         this.resource = res;
     }
 
@@ -290,6 +363,10 @@ public abstract class Definer extends Task {
      * ant name/classname pairs from.
      */
     public void setName(String name) {
+        if (definerSet) {
+            tooManyDefinitions();
+        }
+        definerSet = true;
         this.name = name;
     }
 
@@ -298,7 +375,7 @@ public abstract class Definer extends Task {
      * May be <code>null</code>.
      */
     public String getClassname() {
-        return value;
+        return classname;
     }
 
     /**
@@ -307,16 +384,29 @@ public abstract class Definer extends Task {
      * been specified.
      */
     public void setClassname(String v) {
-        value = v;
+        classname = v;
     }
 
-    /**
-     * This must be implemented by subclasses; it is the callback
-     * they will get to add a new definition of their type.
-     */
-    protected abstract void addDefinition(String name, Class c);
+    public void setAdapter(String adapter) {
+        this.adapter = adapter;
+    }
+
+    protected void setAdapterClass(Class adapterClass) {
+        this.adapterClass = adapterClass;
+    }
     
-    
+    public void setAdaptTo(String adaptTo) {
+        this.adaptTo = adaptTo;
+    }
+
+    protected void setAdaptToClass(Class adaptToClass) {
+        this.adaptToClass = adaptToClass;
+    }
+
+    protected void setInternalClassLoader(ClassLoader classLoader) {
+        this.internalClassLoader = classLoader;
+    }
+
     /**
      * @see org.apache.tools.ant.Task#init()
      * @since Ant 1.6
@@ -326,4 +416,67 @@ public abstract class Definer extends Task {
         super.init();
     }
 
+    protected void addDefinition(ClassLoader al, String name, String classname)
+        throws BuildException
+    {
+        Class cl = null;
+        try {
+            try {
+                if (onError != OnError.IGNORE) {
+                    cl = al.loadClass(classname);
+                    AntClassLoader.initializeClass(cl);
+                }
+                
+                if (adapter != null) {
+                    adapterClass = al.loadClass(adapter);
+                    AntClassLoader.initializeClass(adapterClass);
+                }
+
+                if (adaptTo != null) {
+                    adaptToClass = al.loadClass(adaptTo);
+                    AntClassLoader.initializeClass(adaptToClass);
+                }
+
+                AntTypeDefinition def = new AntTypeDefinition();
+                def.setName(name);
+                def.setProject(getProject());
+                def.setClassName(classname);
+                def.setClass(cl);
+                def.setAdapterClass(adapterClass);
+                def.setAdaptToClass(adaptToClass);
+                def.setClassLoader(al);
+                if (cl != null) {
+                    def.checkClass();
+                }
+                ComponentHelper.getComponentHelper(getProject())
+                    .addDataTypeDefinition(def);
+            } catch (ClassNotFoundException cnfe) {
+                String msg = getTaskName() + " class " + classname
+                    + " cannot be found";
+                throw new BuildException(msg, cnfe, getLocation());
+            } catch (NoClassDefFoundError ncdfe) {
+                String msg = getTaskName() + "A class needed by class "
+                    + classname + " cannot be found: " + ncdfe.getMessage();
+                throw new BuildException(msg, ncdfe, location);
+            }
+        } catch (BuildException ex) {
+            switch (onError) {
+                case OnError.FAIL:
+                    throw ex;
+                case OnError.REPORT:
+                    log(ex.getLocation() + "Warning: " + ex.getMessage(),
+                        Project.MSG_WARN);
+                    break;
+                default:
+                    log(ex.getLocation() + ex.getMessage(),
+                        Project.MSG_DEBUG);
+            }
+        }
+    }
+
+    private void tooManyDefinitions() {
+        throw new BuildException(
+            "Only one of the attributes name,file,resource" +
+            " can be set", getLocation());
+    }
 }

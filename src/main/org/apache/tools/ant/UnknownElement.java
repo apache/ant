@@ -300,8 +300,8 @@ public class UnknownElement extends Task {
     protected void handleChildren(Object parent,
                                   RuntimeConfigurable parentWrapper)
         throws BuildException {
-        if (parent instanceof TaskAdapter) {
-            parent = ((TaskAdapter) parent).getProxy();
+        if (parent instanceof TypeAdapter) {
+            parent = ((TypeAdapter) parent).getProxy();
         }
 
         Class parentClass = parent.getClass();

@@ -63,7 +63,7 @@ import java.lang.reflect.Method;
  *
  * @author costin@dnt.ro
  */
-public class TaskAdapter extends Task {
+public class TaskAdapter extends Task implements TypeAdapter {
 
     /** Object to act as a proxy for. */
     private Object proxy;
@@ -107,6 +107,14 @@ public class TaskAdapter extends Task {
             project.log(message, Project.MSG_ERR);
             throw new BuildException(message);
         }
+    }
+
+    /**
+     * check if the proxy class is a valid class to use
+     * with this adapter.
+     */
+    public void checkProxyClass(Class proxyClass) {
+        checkTaskClass(proxyClass, getProject());
     }
     
     /**
