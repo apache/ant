@@ -5,24 +5,25 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.vfile;
+package org.apache.antlib.vfile.selectors;
 
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.antlib.vfile.FileSelector;
 
 /**
- * A file selector which only selects folders, not files.
+ * A file selector which only selects files, not folders.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="is-folder-selector"
- * @ant:type type="v-file-selector" name="is-folder"
+ * @ant:data-type name="is-file-selector"
+ * @ant:type type="v-file-selector" name="is-file"
  */
-public class IsDirectorySelector
+public class IsFileSelector
     implements FileSelector
 {
     /**
@@ -35,7 +36,7 @@ public class IsDirectorySelector
     {
         try
         {
-            return ( file.exists() && file.getType() == FileType.FOLDER );
+            return ( file.exists() && file.getType() == FileType.FILE );
         }
         catch( FileSystemException e )
         {

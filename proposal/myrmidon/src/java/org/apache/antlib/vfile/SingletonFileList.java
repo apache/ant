@@ -16,8 +16,6 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  *
- * @ant:data-type name="v-file"
- * @ant:type type="v-path" name="v-file"
  */
 public class SingletonFileList
     implements FileList

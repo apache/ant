@@ -5,24 +5,24 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.vfile;
+package org.apache.antlib.vfile.selectors;
 
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.aut.vfs.FileType;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.antlib.vfile.FileSelector;
 
 /**
- * A file selector which only selects files, not folders.
+ * A file selector that only selects files that exist.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="is-file-selector"
- * @ant:type type="v-file-selector" name="is-file"
+ * @ant:data-type name="exists-selector"
+ * @ant:type type="v-file-selector" name="exists"
  */
-public class IsFileSelector
+public class ExistenceFileSelector
     implements FileSelector
 {
     /**
@@ -35,7 +35,7 @@ public class IsFileSelector
     {
         try
         {
-            return ( file.exists() && file.getType() == FileType.FILE );
+            return file.exists();
         }
         catch( FileSystemException e )
         {

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.vfile;
+package org.apache.antlib.vfile.selectors;
 
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
@@ -17,6 +17,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.antlib.vfile.FileSelector;
 
 /**
  * An abstract file selector that selects files based on name.

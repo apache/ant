@@ -5,23 +5,25 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.vfile;
+package org.apache.antlib.vfile.selectors;
 
+import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
+import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**
- * A file selector that only selects files that exist.
+ * A file selector that selects empty directories.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="exists-selector"
- * @ant:type type="v-file-selector" name="exists"
+ * @ant:data-type name="is-empty-folder-selector"
+ * @ant:type type="v-file-selector" name="is-empty"
  */
-public class ExistenceFileSelector
+public class IsEmptyFolderSelector
     implements FileSelector
 {
     /**
@@ -34,7 +36,9 @@ public class ExistenceFileSelector
     {
         try
         {
-            return file.exists();
+            return ( file.exists()
+                     && file.getType() == FileType.FOLDER
+                     && file.getChildren().length == 0 );
         }
         catch( FileSystemException e )
         {

@@ -5,24 +5,25 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.antlib.vfile;
+package org.apache.antlib.vfile.selectors;
 
 import java.util.ArrayList;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.antlib.vfile.FileSelector;
 
 /**
- * A file selector that performs an AND of nested selectors.  Performs
+ * A file selector that performs an OR of nested selectors.  Performs
  * lazy evaluation.  Returns true when no nested elements are supplied.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="and-selector"
- * @ant:type type="v-file-selector" name="and"
+ * @ant:data-type name="or-selector"
+ * @ant:type type="v-file-selector" name="or"
  */
-public class AndFileSelector
+public class OrFileSelector
     implements FileSelector
 {
     private final ArrayList m_selectors = new ArrayList();
@@ -46,12 +47,13 @@ public class AndFileSelector
         for( int i = 0; i < m_selectors.size(); i++ )
         {
             final FileSelector fileSelector = (FileSelector)m_selectors.get(i );
-            if( ! fileSelector.accept( file, path, context ) )
+            if( fileSelector.accept( file, path, context ) )
             {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        // Return true if there are no selectors, false if there are
+        return (m_selectors.size() == 0);
     }
 }
