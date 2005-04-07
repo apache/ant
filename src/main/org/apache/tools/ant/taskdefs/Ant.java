@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,9 +63,6 @@ import org.apache.tools.ant.util.FileUtils;
  * @ant.task category="control"
  */
 public class Ant extends Task {
-
-    /** Target Executor */
-    private static final Executor EXECUTOR = new SingleCheckExecutor();
 
     /** the basedir where is executed the build file */
     private File dir = null;
@@ -382,9 +379,7 @@ public class Ant extends Task {
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.fireSubBuildStarted();
-                    EXECUTOR.executeTargets(newProject,
-                        (String[]) (locals.toArray(new String[locals.size()])));
-
+                    newProject.executeTargets(locals);
                 } catch (BuildException ex) {
                     t = ProjectHelper
                         .addLocationToBuildException(ex, getLocation());
