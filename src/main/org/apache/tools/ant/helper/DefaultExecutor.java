@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,25 +17,43 @@
 
 package org.apache.tools.ant.helper;
 
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Executor;
 import org.apache.tools.ant.BuildException;
 
-
 /**
  * Default Target executor implementation. Runs each target individually
- * (including all of its dependencies), halting immediately upon error.
+ * (including all of its dependencies). If an error occurs, behavior is
+ * determined by the Project's "keep-going" mode.
  * @since Ant 1.6.3
  */
 public class DefaultExecutor implements Executor {
 
+    private static final SingleCheckExecutor SUB_EXECUTOR = new SingleCheckExecutor();
+
     //inherit doc
     public void executeTargets(Project project, String[] targetNames)
         throws BuildException {
+        BuildException thrownException = null;
         for (int i = 0; i < targetNames.length; i++) {
-            project.executeTarget(targetNames[i]);
+            try {
+                project.executeTarget(targetNames[i]);
+            } catch (BuildException ex) {
+                if (project.isKeepGoingMode()) {
+                    thrownException = ex;
+                } else {
+                    throw ex;
+                }
+            }
         }
+        if (thrownException != null) {
+            throw thrownException;
+        }
+    }
+
+    //inherit doc
+    public Executor getSubProjectExecutor() {
+        return SUB_EXECUTOR;
     }
 
 }

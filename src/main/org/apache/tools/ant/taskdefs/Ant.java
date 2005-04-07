@@ -64,9 +64,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Ant extends Task {
 
-    /** Target Executor */
-    private static final Executor EXECUTOR = new SingleCheckExecutor();
-
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** the basedir where is executed the build file */
@@ -396,9 +393,7 @@ public class Ant extends Task {
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.fireSubBuildStarted();
-                    EXECUTOR.executeTargets(newProject,
-                        (String[]) (locals.toArray(new String[locals.size()])));
-
+                    newProject.executeTargets(locals);
                 } catch (BuildException ex) {
                     t = ProjectHelper
                         .addLocationToBuildException(ex, getLocation());

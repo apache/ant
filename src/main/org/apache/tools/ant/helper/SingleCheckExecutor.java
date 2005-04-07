@@ -38,4 +38,9 @@ public class SingleCheckExecutor implements Executor {
                 project.topoSort(targetNames, project.getTargets(), false));
     }
 
+    //inherit doc
+    public Executor getSubProjectExecutor() {
+        return this;
+    }
+
 }

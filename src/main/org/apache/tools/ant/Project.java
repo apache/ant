@@ -37,7 +37,6 @@ import java.util.WeakHashMap;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.helper.DefaultExecutor;
-import org.apache.tools.ant.helper.KeepGoingExecutor;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Description;
@@ -243,6 +242,7 @@ public class Project {
         ComponentHelper.getComponentHelper(subProject)
             .initSubProject(ComponentHelper.getComponentHelper(this));
         subProject.setKeepGoingMode(this.isKeepGoingMode());
+        subProject.setExecutor(getExecutor().getSubProjectExecutor());
     }
 
     /**
@@ -1015,23 +1015,23 @@ public class Project {
     }
 
     /**
-     * Execute the specified sequence of targets, and the targets
-     * they depend on.
-     *
-     * @param targetNames A vector of target name strings to execute.
-     *                    Must not be <code>null</code>.
-     *
-     * @exception BuildException if the build failed.
+     * Set the Executor instance for this Project.
+     * @param e the Executor to use.
      */
-    public void executeTargets(Vector targetNames) throws BuildException {
+    public void setExecutor(Executor e) {
+        addReference("ant.executor", e);
+    }
 
+    /**
+     * Get this Project's Executor (setting it if necessary).
+     * @return an Executor instance.
+     */
+    public Executor getExecutor() {
         Object o = getReference("ant.executor");
         if (o == null) {
             String classname = getProperty("ant.executor.class");
             if (classname == null) {
-                classname = (keepGoingMode)
-                    ? KeepGoingExecutor.class.getName()
-                    : DefaultExecutor.class.getName();
+                classname = DefaultExecutor.class.getName();
             }
             log("Attempting to create object of type " + classname, MSG_DEBUG);
             try {
@@ -1046,17 +1046,27 @@ public class Project {
             } catch (Exception ex) {
                 log(ex.toString(), MSG_ERR);
             }
-            if (o != null) {
-                addReference("ant.executor", o);
+            if (o == null) {
+                throw new BuildException(
+                    "Unable to obtain a Target Executor instance.");
             }
+            setExecutor((Executor) o);
         }
-        if (o == null) {
-            throw new BuildException("Unable to obtain a Target Executor instance.");
-        } else {
-            String[] targetNameArray = (String[]) (targetNames.toArray(
-                new String[targetNames.size()]));
-            ((Executor) o).executeTargets(this, targetNameArray);
-        }
+        return (Executor) o;
+    }
+
+    /**
+     * Execute the specified sequence of targets, and the targets
+     * they depend on.
+     *
+     * @param names A vector of target name strings to execute.
+     *              Must not be <code>null</code>.
+     *
+     * @exception BuildException if the build failed.
+     */
+    public void executeTargets(Vector names) throws BuildException {
+        getExecutor().executeTargets(this,
+            (String[]) (names.toArray(new String[names.size()])));
     }
 
     /**
