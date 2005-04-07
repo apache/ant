@@ -35,6 +35,27 @@
     </fail>
   </target>
 
+  <target name="testEachCondition" depends="init">
+    <length mode="each" property="length.each">
+      <fileset id="fs" dir="${dir}" />
+    </length>
+    <length string="${foo}${bar}........${line.separator}"
+            property="length.expected" />
+    <fail>
+      <!-- test that both files are represented, and that the
+           output is the expected length; do not assume order. -->
+      <condition>
+        <not>
+          <and>
+            <contains string="${length.each}" substring="${foo} : 3" />
+            <contains string="${length.each}" substring="${bar} : 3" />
+            <length string="${length.each}" length="${length.expected}" />
+          </and>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="testAll" depends="init">
     <length property="length.all">
       <fileset id="foo" file="${dir.a}/foo" />
@@ -49,12 +70,35 @@
     </fail>
   </target>
 
+  <target name="testAllCondition" depends="init">
+    <fail>
+      <condition>
+        <not>
+          <length length="6">
+            <fileset id="foo" file="${dir.a}/foo" />
+            <fileset id="bar" file="${dir.b}/bar" />
+          </length>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="testFile" depends="init">
     <length property="length.foo" file="${dir.a}/foo" />
     <fail>
       <condition>
         <not>
           <equals arg1="3" arg2="${length.foo}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testFileCondition" depends="init">
+    <fail>
+      <condition>
+        <not>
+          <length length="3" file="${dir.a}/foo" />
         </not>
       </condition>
     </fail>
@@ -73,6 +117,18 @@
     </fail>
   </target>
 
+  <target name="testBothCondition" depends="init">
+    <fail>
+      <condition>
+        <not>
+          <length length="6" file="${dir.a}/foo">
+            <fileset file="${dir.b}/bar" />
+          </length>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="testDupes" depends="init">
     <length property="length.foo" file="${dir.a}/foo">
       <fileset dir="${dir}" />
@@ -80,7 +136,19 @@
     <fail>
       <condition>
         <not>
-          <equals arg1="6" arg2="${length.foo}" />
+          <equals arg1="9" arg2="${length.foo}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testDupesCondition" depends="init">
+    <fail>
+      <condition>
+        <not>
+          <length length="9" file="${dir.a}/foo">
+            <fileset dir="${dir}" />
+          </length>
         </not>
       </condition>
     </fail>
@@ -92,6 +160,58 @@
       <condition>
         <not>
           <equals arg1="3" arg2="${length.string}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testStringCondition">
+    <fail>
+      <condition>
+        <not>
+          <length string="foo" length="3" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testTrimString">
+    <length string=" foo " trim="true" property="length.string" />
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="3" arg2="${length.string}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testTrimStringCondition">
+    <fail>
+      <condition>
+        <not>
+          <length string=" foo " trim="true" length="3" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testNoTrimString">
+    <length string=" foo " property="length.string" />
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="5" arg2="${length.string}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testNoTrimStringCondition">
+    <fail>
+      <condition>
+        <not>
+          <length string=" foo " length="5" />
         </not>
       </condition>
     </fail>
@@ -117,11 +237,14 @@
     </fail>
   </target>
 
-  <target name="testZipFileSet" depends="init">
+  <target name="zip" depends="init">
     <zip destfile="${zipfile}">
       <fileset file="${foo}" />
       <fileset file="${bar}" />
     </zip>
+  </target>
+
+  <target name="testZipFileSet" depends="zip">
     <length property="length.zipfile1">
       <zipfileset src="${zipfile}" />
     </length>
@@ -134,6 +257,23 @@
           <and>
             <equals arg1="6" arg2="${length.zipfile1}" />
             <equals arg1="3" arg2="${length.zipfile2}" />
+          </and>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testZipFileSetCondition" depends="zip">
+    <fail>
+      <condition>
+        <not>
+          <and>
+            <length length="6">
+              <zipfileset src="${zipfile}" />
+            </length>
+            <length length="3">
+              <zipfileset src="${zipfile}" includes="bar" />
+            </length>
           </and>
         </not>
       </condition>

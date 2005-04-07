@@ -22,33 +22,39 @@ import java.io.PrintStream;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Vector;
-import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Gets lengths:  of files, byte size; of strings, length (optionally trimmed).
+ * Gets lengths:  of files/resources, byte size; of strings, length (optionally trimmed).
  * The task is overloaded in this way for semantic reasons, much like Available.
  * @since Ant 1.6.3
  */
-public class Length extends Task {
+public class Length extends Task implements Condition {
 
     private static final String ALL = "all";
     private static final String EACH = "each";
     private static final String STRING = "string";
 
+    private static final String LENGTH_REQUIRED
+        = "Use of the Length condition requires that the length attribute be set.";
+
     private String property;
     private String string;
     private Boolean trim;
-    private Vector filesets;
     private String mode = ALL;
+    private When when = When.EQUAL;
+    private Long length;
+    private Vector filesets;
 
     /**
      * The property in which the length will be stored.
@@ -73,8 +79,28 @@ public class Length extends Task {
      * @param fs the <code>FileSet</code> to add.
      */
     public synchronized void add(FileSet fs) {
+        if (fs == null) {
+            return;
+        }
         filesets = (filesets == null) ? new Vector() : filesets;
         filesets.add(fs);
+    }
+
+    /**
+     * Set the target count number for use as a Condition.
+     * @param ell the long length to compare with.
+     */
+    public synchronized void setLength(long ell) {
+        length = new Long(ell);
+    }
+
+    /**
+     * Set the comparison criteria for use as a Condition:
+     * "equal", "greater", "less". Default is "equal".
+     * @param w EnumeratedAttribute When.
+     */
+    public synchronized void setWhen(When w) {
+        when = w;
     }
 
     /**
@@ -103,6 +129,14 @@ public class Length extends Task {
     }
 
     /**
+     * Learn whether strings will be trimmed.
+     * @return boolean trim setting.
+     */
+    public boolean getTrim() {
+        return trim != null && trim.booleanValue();
+    }
+
+    /**
      * Execute the length task.
      */
     public void execute() {
@@ -112,14 +146,38 @@ public class Length extends Task {
             : (OutputStream) new LogOutputStream(this, Project.MSG_INFO));
 
         if (STRING.equals(mode)) {
-            ps.print(((trim != null && trim.booleanValue())
-                ? string.trim() : string).length());
+            ps.print(getLength(string, getTrim()));
             ps.close();
         } else if (EACH.equals(mode)) {
-            handleFilesets(new EachHandler(ps));
+            handleResources(new EachHandler(ps));
         } else if (ALL.equals(mode)) {
-            handleFilesets(new AllHandler(ps));
+            handleResources(new AllHandler(ps));
         }
+    }
+
+    /**
+     * Fulfill the condition contract.
+     * @return true if the condition is true.
+     * @throws BuildException if an error occurs.
+     */
+    public boolean eval() {
+        validate();
+        if (length == null) {
+            throw new BuildException(LENGTH_REQUIRED);
+        }
+        Long ell = null;
+        if (STRING.equals(mode)) {
+            ell = new Long(getLength(string, getTrim()));
+        } else {
+            ConditionHandler h = new ConditionHandler();
+            handleResources(h);
+            ell = new Long(h.getLength());
+        }
+        int w = when.getIndex();
+        int comp = ell.compareTo(length);
+        return (w == 0 && comp == 0)
+            || (w == 1 && comp > 0)
+            || (w == 2 && comp < 0);
     }
 
     private void validate() {
@@ -130,9 +188,9 @@ public class Length extends Task {
             }
             if (!(STRING.equals(mode))) {
                 throw new BuildException("the mode attribute is for use"
-                    + " with the file length function");
+                    + " with the file/resource length function");
             }
-        } else if (filesets != null && filesets.size() > 0) {
+        } else if (filesets != null) {
             if (!(EACH.equals(mode) || ALL.equals(mode))) {
                 throw new BuildException("invalid mode setting for"
                     + " file length function: \"" + mode + "\"");
@@ -147,10 +205,9 @@ public class Length extends Task {
         }
     }
 
-    private void handleFilesets(Handler h) {
-        HashSet included = new HashSet(filesets.size());
-        for (int i = 0; i < filesets.size(); i++) {
-            FileSet fs = (FileSet) (filesets.get(i));
+    private void handleResources(Handler h) {
+        for (Iterator i = filesets.iterator(); i.hasNext();) {
+            FileSet fs = (FileSet) i.next();
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] f = ds.getIncludedFiles();
             for (int j = 0; j < f.length; j++) {
@@ -161,22 +218,20 @@ public class Length extends Task {
                     log(r.getName() + " is a directory; length unspecified",
                         Project.MSG_ERR);
                 } else {
-                    //clone the Resource and alter path
+                    //force a full path:
                     File basedir = ds.getBasedir();
-                    if (basedir != null) {
-                        r = (Resource) (r.clone());
-                        r.setName(FileUtils.getFileUtils().resolveFile(
-                            basedir, r.getName()).getAbsolutePath());
-                    }
-                    if (included.add(r.getName())) {
-                        h.handle(r);
-                    }
+                    String s = FileUtils.getFileUtils().resolveFile(
+                        basedir, r.getName()).getAbsolutePath();
+                    h.handle(new Resource(s, true,
+                        r.getLastModified(), false, r.getSize()));
                 }
             }
         }
-        included.clear();
-        included = null;
         h.complete();
+    }
+
+    private static long getLength(String s, boolean t) {
+        return (t ? s.trim() : s).length();
     }
 
     /** EnumeratedAttribute operation mode */
@@ -191,6 +246,25 @@ public class Length extends Task {
             return MODES;
         }
 
+    }
+
+    /**
+     * EnumeratedAttribute for the when attribute.
+     */
+    public static class When extends EnumeratedAttribute {
+        private static final String[] VALUES
+            = new String[] {"equal", "greater", "less"};
+
+        private static final When EQUAL = new When("equal");
+
+        public When() {
+        }
+        public When(String value) {
+            setValue(value);
+        }
+            public String[] getValues() {
+            return VALUES;
+        }
     }
 
     private class PropertyOutputStream extends ByteArrayOutputStream {
@@ -231,7 +305,7 @@ public class Length extends Task {
     }
 
     private class AllHandler extends Handler {
-        long length = 0L;
+        long accum = 0L;
         AllHandler(PrintStream ps) {
             super(ps);
         }
@@ -240,12 +314,23 @@ public class Length extends Task {
             if (size == Resource.UNKNOWN_SIZE) {
                 log("Size unknown for " + r.getName(), Project.MSG_WARN);
             } else {
-                length += size;
+                accum += size;
             }
         }
         void complete() {
-            ps.print(length);
+            ps.print(accum);
             super.complete();
+        }
+    }
+
+    private class ConditionHandler extends AllHandler {
+        ConditionHandler() {
+            super(null);
+        }
+        void complete() {
+        }
+        long getLength() {
+            return accum;
         }
     }
 }

@@ -37,24 +37,64 @@ public class LengthTest extends BuildFileTest {
         executeTarget("testEach");
     }
 
+    public void testEachCondition() {
+        executeTarget("testEachCondition");
+    }
+
     public void testAll() {
         executeTarget("testAll");
+    }
+
+    public void testAllCondition() {
+        executeTarget("testAllCondition");
     }
 
     public void testFile() {
         executeTarget("testFile");
     }
 
+    public void testFileCondition() {
+        executeTarget("testFileCondition");
+    }
+
     public void testBoth() {
         executeTarget("testBoth");
+    }
+
+    public void testBothCondition() {
+        executeTarget("testBothCondition");
     }
 
     public void testDupes() {
         executeTarget("testDupes");
     }
 
+    public void testDupesCondition() {
+        executeTarget("testDupesCondition");
+    }
+
     public void testString() {
         executeTarget("testString");
+    }
+
+    public void testStringCondition() {
+        executeTarget("testStringCondition");
+    }
+
+    public void testTrimString() {
+        executeTarget("testTrimString");
+    }
+
+    public void testTrimStringCondition() {
+        executeTarget("testTrimStringCondition");
+    }
+
+    public void testNoTrimString() {
+        executeTarget("testNoTrimString");
+    }
+
+    public void testNoTrimStringCondition() {
+        executeTarget("testNoTrimStringCondition");
     }
 
     public void testStringFile() {
@@ -74,4 +114,9 @@ public class LengthTest extends BuildFileTest {
     public void testZipFileSet() {
         executeTarget("testZipFileSet");
     }
+
+    public void testZipFileSetCondition() {
+        executeTarget("testZipFileSetCondition");
+    }
+
 }
