@@ -89,7 +89,7 @@ public class FileUtils {
     /**
      * The granularity of timestamps under the NT File System.
      * NTFS has a granularity of 100 nanoseconds, which is less
-     * than 1 millisecond, so we set this to 0.
+     * than 1 millisecond, so we round this up to 1 millisecond.
      */
     public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 1;
 
