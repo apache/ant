@@ -91,7 +91,7 @@ public class FileUtils {
      * NTFS has a granularity of 100 nanoseconds, which is less
      * than 1 millisecond, so we set this to 0.
      */
-    public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 0;
+    public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 1;
 
     // stolen from FilePathToURI of the Xerces-J team
     static {
