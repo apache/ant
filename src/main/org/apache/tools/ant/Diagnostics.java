@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
@@ -238,6 +240,9 @@ public final class Diagnostics {
 
         header(out, "Temp dir");
         doReportTempDir(out);
+
+        header(out, "Locale information");
+        doReportLocale(out);
         out.println();
     }
 
@@ -390,6 +395,7 @@ public final class Diagnostics {
     /**
      * try and create a temp file in our temp dir; this
      * checks that it has space and access.
+     * We also do some clock reporting.
      * @param out
      */
     private static void doReportTempDir(PrintStream out) {
@@ -406,6 +412,7 @@ public final class Diagnostics {
             return;
         }
         //create the file
+        long now=System.currentTimeMillis();
         File tempFile=null;
         FileOutputStream fileout = null;
         try {
@@ -418,8 +425,14 @@ public final class Diagnostics {
             }
             fileout.close();
             fileout=null;
+            long filetime=tempFile.lastModified();
             tempFile.delete();
             out.println("Temp dir is writeable");
+            long drift=filetime-now;
+            out.println("temp dir alignment with system clock is "+drift+" ms");
+            if(drift>10000) {
+                out.println("Warning: big clock drift -maybe a network filesystem");
+            }
         } catch (IOException e) {
             out.println("Failed to create a temporary file in the temp dir "
                 + tempdir);
@@ -430,6 +443,19 @@ public final class Diagnostics {
                 tempFile.delete();
             }
         }
+    }
+
+    /**
+     * Report locale information
+     * @param out
+     */
+    private static void doReportLocale(PrintStream out) {
+        //calendar stuff.
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = cal.getTimeZone();
+        long now = System.currentTimeMillis();
+        out.println("Timezone "+tz.getDisplayName()
+                + " offset="+tz.getOffset(now));
 
     }
 }
