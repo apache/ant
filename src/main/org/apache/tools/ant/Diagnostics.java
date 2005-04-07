@@ -453,9 +453,15 @@ public final class Diagnostics {
         //calendar stuff.
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();
-        long now = System.currentTimeMillis();
-        out.println("Timezone "+tz.getDisplayName()
-                + " offset="+tz.getOffset(now));
-
+        out.println("Timezone " + tz.getDisplayName()
+                + " offset=" + tz.getOffset(cal.get(Calendar.ERA), 
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH),
+                        cal.get(Calendar.DAY_OF_WEEK),
+                        ((cal.get(Calendar.HOUR_OF_DAY) * 60
+                         + cal.get(Calendar.MINUTE)) * 60
+                         + cal.get(Calendar.SECOND)) * 1000
+                         + cal.get(Calendar.MILLISECOND)));
     }
 }
