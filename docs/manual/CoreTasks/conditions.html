@@ -605,6 +605,23 @@ Probe for the maven repository being reachable.
 <p>
 Probe for the maven repository being reachable using the hostname, ten second timeout..
 </p>
+
+<h4>length</h4>
+<p>This condition is a facet of the <a href="length.html">Length</a> task.
+  It is used to test the length of a string or one or more files.
+  <b>Since Ant 1.6.3</b>
+</p>
+
+Verify a string is of a certain length:
+<pre>
+&lt;length string=&quot; foo &quot; trim="true" length=&quot;3&quot;/&gt;
+</pre>
+
+Verify a file is not empty:
+<pre>
+&lt;length file=&quot;foo&quot; when=&quot;greater&quot; length=&quot;0&quot;/&gt;
+</pre>
+
 <hr>
 <p align="center">Copyright &copy; 2001-2005 Apache Software
 Foundation. All rights Reserved.</p>

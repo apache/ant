@@ -11,7 +11,8 @@
 <h2>Length</h2>
 <h3>Description</h3>
 <p>Display or set a property containing length information for
-   a string, a file, or one or more nested filesets.</p>
+   a string, a file, or one or more nested filesets. Can also
+   be used as a condition. <b>Since Ant 1.6.3</b></p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -22,7 +23,8 @@
   <tr>
     <td valign="top">property</td>
     <td valign="top">The property to set.  If omitted
-      the length is written to the log.</td>
+      the results are written to the log. Ignored when
+      processing as a condition.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -40,13 +42,24 @@
     <td valign="top">File length mode; when &quot;all&quot; the resulting
       value is the sum of all included files' lengths; when &quot;each&quot;
       the task outputs the absolute path and length of each included file,
-      one per line.</td>
+      one per line. Ignored when processing as a condition.</td>
     <td valign="top" align="center">No; default is &quot;all&quot;</td>
   </tr>
   <tr>
     <td valign="top">trim</td>
     <td valign="top">Whether to trim when operating on a string.</td>
     <td valign="top" align="center">No; only valid when string is set</td>
+  </tr>
+  <tr>
+    <td valign="top">length</td>
+    <td valign="top">Comparison length for processing as a condition.</td>
+    <td valign="top" align="center">Yes, in condition mode</td>
+  </tr>
+  <tr>
+    <td valign="top">when</td>
+    <td valign="top">Comparison type: "equal", "greater", "less"
+                     for use when operating as a condition.</td>
+    <td valign="top" align="center">No; default is "equal"</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
