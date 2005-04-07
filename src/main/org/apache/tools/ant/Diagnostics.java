@@ -430,7 +430,7 @@ public final class Diagnostics {
             out.println("Temp dir is writeable");
             long drift=filetime-now;
             out.println("temp dir alignment with system clock is "+drift+" ms");
-            if(drift>10000) {
+            if(Math.abs(drift)>10000) {
                 out.println("Warning: big clock drift -maybe a network filesystem");
             }
         } catch (IOException e) {
