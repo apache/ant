@@ -308,6 +308,12 @@ strings.
     <td vAlign=top align="center">Substring to be searched for.</td>
     <td vAlign=top align="center">Yes</td>
   </tr>
+  <tr>
+    <td vAlign=top>negate</td>
+    <td vAlign=top align="center">Whether to select
+      <i>non-</i>matching lines only. <b>Since Ant 1.7</b></td>
+    <td vAlign=top align="center">No</td>
+  </tr>
 </table>
 <p>
 <h4>Example:</h4>
@@ -329,10 +335,45 @@ Convenience method:
 &lt;/linecontains&gt;
 </pre></blockquote>
 
+Negation:
+<blockquote><pre>
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContains&quot;&gt;
+  &lt;param type=&quot;negate&quot; value=&quot;true&quot;/&gt;
+  &lt;param type=&quot;contains&quot; value=&quot;foo&quot;/&gt;
+  &lt;param type=&quot;contains&quot; value=&quot;bar&quot;/&gt;
+&lt;/filterreader&gt;
+</pre></blockquote>
+<i>or</i>
+<blockquote><pre>
+&lt;linecontains negate=&quot;true&quot;&gt;
+  &lt;contains value=&quot;foo&quot;/&gt;
+  &lt;contains value=&quot;bar&quot;/&gt;
+&lt;/linecontains&gt;
+</pre></blockquote>
+
 <h3><a name="linecontainsregexp">LineContainsRegExp</a></h3>
 
 Filter which includes only those lines that contain the user-specified
 regular expression matching strings.
+
+<table cellSpacing=0 cellPadding=2 border=1>
+  <tr>
+    <td vAlign=top><b>Parameter Type</b></td>
+    <td vAlign=top><b>Parameter Value</b></td>
+    <td vAlign=top align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td vAlign=top>regexp</td>
+    <td vAlign=top align="center">Regular expression to be searched for.</td>
+    <td vAlign=top align="center">Yes</td>
+  </tr>
+  <tr>
+    <td vAlign=top>negate</td>
+    <td vAlign=top align="center">Whether to select
+      <i>non-</i>matching lines only. <b>Since Ant 1.7</b></td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+</table>
 
 See <a href="../CoreTypes/regexp.html">Regexp Type</a> for the description of the nested element regexp and of
 the choice of regular expression implementation.
@@ -348,6 +389,20 @@ This will fetch all those lines that contain the pattern <code>foo</code>
 Convenience method:
 <blockquote><pre>
 &lt;linecontainsregexp&gt;
+  &lt;regexp pattern=&quot;foo*&quot;/&gt;
+&lt;/linecontainsregexp&gt;
+</pre></blockquote>
+
+Negation:
+<blockquote><pre>
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContainsRegExp&quot;&gt;
+  &lt;param type=&quot;negate&quot; value=&quot;true&quot;/&gt;
+  &lt;param type=&quot;regexp&quot; value=&quot;foo*&quot;/&gt;
+&lt;/filterreader&gt;
+</pre></blockquote>
+<i>or</i>
+<blockquote><pre>
+&lt;linecontainsregexp negate=&quot;true&quot;&gt;
   &lt;regexp pattern=&quot;foo*&quot;/&gt;
 &lt;/linecontainsregexp&gt;
 </pre></blockquote>

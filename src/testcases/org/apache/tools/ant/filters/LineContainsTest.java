@@ -48,4 +48,8 @@ public class LineContainsTest extends BuildFileTest {
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 
+    public void testNegateLineContains() throws IOException {
+        executeTarget("testNegateLineContains");
+    }
+
 }

@@ -25,6 +25,26 @@
     </fixcrlf>-->
   </target>
   
+  <target name="testNegateLineContains" depends="init">
+    <copy file="input/linecontains.test"
+          tofile="result/negatelinecontains.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.LineContains">
+          <param type="negate" value="true"/>
+          <param type="contains" value="beta"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+    <fail>
+      <condition>
+        <not>
+          <filesmatch file1="result/negatelinecontains.test"
+                      file2="expected/negatelinecontains.test" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+  
   <target name="testEscapeUnicode" depends="init">
     <copy todir="result" encoding="UTF-8">
       <fileset dir="input">
