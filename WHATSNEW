@@ -165,6 +165,10 @@ Other changes:
   -tsaurl and tsacert attributes for timestamped JAR signing
   -nested <sysproperty> elements, which can be used for proxy setup and the like
 
+* The linecontains and linecontainsregexp filterreaders now support a
+  negate attribute to select lines -not- containing specified text.
+  Bugzilla Report 34374.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
