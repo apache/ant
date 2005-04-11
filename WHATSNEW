@@ -12,6 +12,10 @@ Other changes:
 Fixed bugs:
 -----------
 
+* SQL task would try access result sets of statements that didn't
+  return any, causing problems with Informix IDS 9.2 and IBM DB2 8.1
+  FixPak 6 (or later). Bugzilla Reports 27162 and 29954.
+
 Changes from Ant 1.6.2 to Ant 1.6.3beta1
 ========================================
 

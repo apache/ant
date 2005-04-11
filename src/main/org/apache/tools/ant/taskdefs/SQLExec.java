@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -66,7 +66,6 @@ import java.sql.ResultSetMetaData;
  * The possible values are: <b>continue</b> execution, only show the error;
  * <b>stop</b> execution and commit transaction;
  * and <b>abort</b> execution and transaction and fail task.</p>
-
  *
  * @since Ant 1.2
  *
@@ -489,13 +488,13 @@ public class SQLExec extends JDBCTask {
             return;
         }
 
+        ResultSet resultSet = null;
         try {
             totalSql++;
             log("SQL: " + sql, Project.MSG_VERBOSE);
 
             boolean ret;
             int updateCount = 0, updateCountTotal = 0;
-            ResultSet resultSet = null;
 
             ret = statement.execute(sql);
             updateCount = statement.getUpdateCount();
@@ -507,12 +506,14 @@ public class SQLExec extends JDBCTask {
                     }
                 } else {
                     if (print) {
-                        printResults(out);
+                        printResults(resultSet, out);
                     }
                 }
                 ret = statement.getMoreResults();
-                updateCount = statement.getUpdateCount();
-                resultSet = statement.getResultSet();
+                if (ret) {
+                    updateCount = statement.getUpdateCount();
+                    resultSet = statement.getResultSet();
+                }
             } while (ret);
 
             log(updateCountTotal + " rows affected",
@@ -537,15 +538,40 @@ public class SQLExec extends JDBCTask {
                 throw e;
             }
             log(e.toString(), Project.MSG_ERR);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
         }
     }
 
     /**
-     * print any results in the statement.
+     * print any results in the statement
+     * @deprecated use {@link #printResults(java.sql.ResultSet, java.io.PrintStream)
+     *             the two arg version} instead.
+     * @param out the place to print results
+     * @throws SQLException on SQL problems.
      */
-    protected void printResults(PrintStream out) throws java.sql.SQLException {
+    protected void printResults(PrintStream out) throws SQLException {
         ResultSet rs = null;
         rs = statement.getResultSet();
+        try {
+            printResults(rs, out);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+    }
+
+    /**
+     * print any results in the result set.
+     * @param rs the resultset to print information about
+     * @param out the place to print results
+     * @throws SQLException on SQL problems.
+     * @since Ant 1.6.3
+     */
+    protected void printResults(ResultSet rs, PrintStream out) throws SQLException {
         if (rs != null) {
             log("Processing new result set.", Project.MSG_VERBOSE);
             ResultSetMetaData md = rs.getMetaData();
