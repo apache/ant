@@ -222,7 +222,7 @@ public abstract class DotnetCompile
             if (isWindows) {
                 return REFERENCE_OPTION + '\"' + references + '\"';
             } else {
-                return references;
+                return REFERENCE_OPTION + references;
             }
         } else {
             return null;
