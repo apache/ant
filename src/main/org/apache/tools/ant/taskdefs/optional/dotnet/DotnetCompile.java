@@ -219,7 +219,11 @@ public abstract class DotnetCompile
     protected String getReferencesParameter() {
         //bail on no references
         if (notEmpty(references)) {
-            return REFERENCE_OPTION + '\"' + references + '\"';
+            if (isWindows) {
+                return REFERENCE_OPTION + '\"' + references + '\"';
+            } else {
+                return references;
+            }
         } else {
             return null;
         }
@@ -270,7 +274,13 @@ public abstract class DotnetCompile
         }
 
         StringBuffer s = new StringBuffer(REFERENCE_OPTION);
-        s.append('\"').append(refpath).append('\"');
+        if (isWindows) {
+            s.append('\"');
+        }
+        s.append(refpath);
+        if (isWindows) {
+            s.append('\"');
+        }
         return s.toString();
     }
 
@@ -903,7 +913,7 @@ public abstract class DotnetCompile
             if (isFileManagedBinary(file)) {
                 if (!firstEntry) {
                     referenceList.append(getReferenceDelimiter());
-                } else {
+                } else if (isWindows) {
                     referenceList.append('\"');
                 }
                 referenceList.append(file.toString());
@@ -918,7 +928,11 @@ public abstract class DotnetCompile
         // a managed binary
         if (!firstEntry) {
             //add it all to an argument
-            command.addArgument(referenceList.toString() + '\"');
+            if (isWindows) {
+                command.addArgument(referenceList.toString() + '\"');
+            } else {
+                command.addArgument(referenceList.toString());
+            }
         }
         
         return filesOutOfDate;

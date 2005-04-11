@@ -33,8 +33,6 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 
-import org.apache.tools.ant.taskdefs.condition.Os;
-
 // ====================================================================
 
 /**
@@ -160,7 +158,7 @@ public class CSharp extends DotnetCompile {
         unsafe = false;
         noconfig = false;
         definitions = null;
-        setExecutable(Os.isFamily("windows") ? "csc" : "mcs");
+        setExecutable(isWindows ? "csc" : "mcs");
     }
 
 

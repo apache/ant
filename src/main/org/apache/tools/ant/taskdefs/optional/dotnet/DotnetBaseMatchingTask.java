@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
@@ -45,6 +46,13 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      *  source directory upon which the search pattern is applied
      */
     protected File srcDir;
+
+    /**
+     * Are we running on Windows?
+     *
+     * @since Ant 1.6.3
+     */
+    protected static final boolean isWindows = Os.isFamily("windows");
 
     /**
     * Overridden because we need to be able to set the srcDir.
