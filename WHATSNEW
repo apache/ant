@@ -82,6 +82,10 @@ Fixed bugs:
 * The .NET compilation tasks failed if filenames given as references
   contained spaces.  Bugzilla Report 27170.
 
+* SQL task would try access result sets of statements that didn't
+  return any, causing problems with Informix IDS 9.2 and IBM DB2 8.1
+  FixPak 6 (or later). Bugzilla Reports 27162 and 29954.
+
 Other changes:
 --------------
 
@@ -512,8 +516,6 @@ Fixed bugs:
 * subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
 
 * macrodef @@ escaping was broken.  Bugzilla Report 27069.
-
-* SQL task did not work with Informix IDS 9.2. Bugzilla Report 27162.
 
 * MacroDef did not allow attributes named 'description'. Bugzilla Report 27175.
 

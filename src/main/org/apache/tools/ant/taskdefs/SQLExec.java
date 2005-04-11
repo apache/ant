@@ -590,9 +590,10 @@ public class SQLExec extends JDBCTask {
      * @param rs the resultset to print information about
      * @param out the place to print results
      * @throws SQLException on SQL problems.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
-    protected void printResults(ResultSet rs, PrintStream out) throws SQLException {
+    protected void printResults(ResultSet rs, PrintStream out)
+        throws SQLException {
         if (rs != null) {
             log("Processing new result set.", Project.MSG_VERBOSE);
             ResultSetMetaData md = rs.getMetaData();
