@@ -414,15 +414,14 @@ public class UnknownElement extends Task {
                 Task task = (Task) o;
                 task.setTaskType(ue.getTaskType());
                 task.setTaskName(ue.getTaskName());
+                task.init();
             }
         }
         if (o instanceof UnknownElement) {
             o = ((UnknownElement) o).makeObject((UnknownElement) o, w);
         }
         if (o instanceof Task) {
-            Task task = (Task) o;
-            task.setOwningTarget(getOwningTarget());
-            task.init();
+            ((Task) o).setOwningTarget(getOwningTarget());
         }
         return o;
     }
