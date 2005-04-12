@@ -25,7 +25,7 @@ import org.apache.tools.ant.types.Mapper;
 
 /**
  * A <code>FileNameMapper</code> that contains
- * other <CODE>FileNameMapper</CODE>s.
+ * other <code>FileNameMapper</code>s.
  * @see FileNameMapper
  */
 public abstract class ContainerMapper implements FileNameMapper {
@@ -42,11 +42,11 @@ public abstract class ContainerMapper implements FileNameMapper {
 
     /**
      * Add a <code>FileNameMapper</code>.
-     * @param fileNameMapper a <CODE>FileNameMapper</CODE>.
+     * @param fileNameMapper a <code>FileNameMapper</code>.
      * @throws IllegalArgumentException if attempting to add this
-     *         <CODE>ContainerMapper</CODE> to itself, or if the specified
-     *         <CODE>FileNameMapper</CODE> is itself a <CODE>ContainerMapper</CODE>
-     *         that contains this <CODE>ContainerMapper</CODE>.
+     *         <code>ContainerMapper</code> to itself, or if the specified
+     *         <code>FileNameMapper</code> is itself a <code>ContainerMapper</code>
+     *         that contains this <code>ContainerMapper</code>.
      */
     public synchronized void add(FileNameMapper fileNameMapper) {
         if (this == fileNameMapper
@@ -60,10 +60,10 @@ public abstract class ContainerMapper implements FileNameMapper {
     }
 
     /**
-     * Return <CODE>true</CODE> if this <CODE>ContainerMapper</CODE> or any of
-     * its sub-elements contains the specified <CODE>FileNameMapper</CODE>.
-     * @param fileNameMapper   the <CODE>FileNameMapper</CODE> to search for.
-     * @return <CODE>boolean</CODE>.
+     * Return <code>true</code> if this <code>ContainerMapper</code> or any of
+     * its sub-elements contains the specified <code>FileNameMapper</code>.
+     * @param fileNameMapper   the <code>FileNameMapper</code> to search for.
+     * @return <code>boolean</code>.
      */
     protected synchronized boolean contains(FileNameMapper fileNameMapper) {
         boolean foundit = false;
@@ -77,8 +77,8 @@ public abstract class ContainerMapper implements FileNameMapper {
     }
 
     /**
-     * Get the <CODE>List</CODE> of <CODE>FileNameMapper</CODE>s.
-     * @return <CODE>List</CODE>.
+     * Get the <code>List</code> of <code>FileNameMapper</code>s.
+     * @return <code>List</code>.
      */
     public synchronized List getMappers() {
         return Collections.unmodifiableList(mappers);
@@ -89,6 +89,7 @@ public abstract class ContainerMapper implements FileNameMapper {
      * @param ignore ignored.
      */
     public void setFrom(String ignore) {
+        //Empty
     }
 
     /**
@@ -96,6 +97,7 @@ public abstract class ContainerMapper implements FileNameMapper {
      * @param ignore ignored.
      */
     public void setTo(String ignore) {
+        //Empty
     }
 
 }
