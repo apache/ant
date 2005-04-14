@@ -285,16 +285,16 @@ public final class JavaEnvUtils {
         jrePackages = new Vector();
         switch(javaVersionNumber) {
             case 15:
-				//In Java1.5, the apache stuff moved. 
-				jrePackages.addElement("com.sun.org.apache");
-				//fall through. 
+                //In Java1.5, the apache stuff moved. 
+                jrePackages.addElement("com.sun.org.apache");
+                //fall through. 
             case 14:
-				if(javaVersionNumber == 14) {
-	                jrePackages.addElement("org.apache.crimson");
-	                jrePackages.addElement("org.apache.xalan");
-	                jrePackages.addElement("org.apache.xml");
-	                jrePackages.addElement("org.apache.xpath");
-				}
+                if(javaVersionNumber == 14) {
+                    jrePackages.addElement("org.apache.crimson");
+                    jrePackages.addElement("org.apache.xalan");
+                    jrePackages.addElement("org.apache.xml");
+                    jrePackages.addElement("org.apache.xpath");
+                }
                 jrePackages.addElement("org.ietf.jgss");
                 jrePackages.addElement("org.w3c.dom");
                 jrePackages.addElement("org.xml.sax");
@@ -334,15 +334,15 @@ public final class JavaEnvUtils {
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
             case 15:
-				tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
+                tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
             case 14:
                 tests.addElement("sun.audio.AudioPlayer");
-				if(javaVersionNumber == 14) {
-	                tests.addElement("org.apache.crimson.parser.ContentModel");
-	                tests.addElement("org.apache.xalan.processor.ProcessorImport");
-	                tests.addElement("org.apache.xml.utils.URI");
-	                tests.addElement("org.apache.xpath.XPathFactory");
-				}
+                if(javaVersionNumber == 14) {
+                    tests.addElement("org.apache.crimson.parser.ContentModel");
+                    tests.addElement("org.apache.xalan.processor.ProcessorImport");
+                    tests.addElement("org.apache.xml.utils.URI");
+                    tests.addElement("org.apache.xpath.XPathFactory");
+                }
                 tests.addElement("org.ietf.jgss.Oid");
                 tests.addElement("org.w3c.dom.Attr");
                 tests.addElement("org.xml.sax.XMLReader");
