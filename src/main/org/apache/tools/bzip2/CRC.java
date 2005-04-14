@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ package org.apache.tools.bzip2;
  * of the data.
  *
  */
-class CRC {
-    public static int crc32Table[] = {
+final class CRC {
+    static final int crc32Table[] = {
         0x00000000, 0x04c11db7, 0x09823b6e, 0x0d4326d9,
         0x130476dc, 0x17c56b6b, 0x1a864db2, 0x1e475005,
         0x2608edb8, 0x22c9f00f, 0x2f8ad6d6, 0x2b4bcb61,
@@ -96,7 +96,7 @@ class CRC {
         0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4
     };
 
-    public CRC() {
+    CRC() {
         initialiseCRC();
     }
 
@@ -122,6 +122,17 @@ class CRC {
             temp = 256 + temp;
         }
         globalCrc = (globalCrc << 8) ^ CRC.crc32Table[temp];
+    }
+
+    void updateCRC(int inCh, int repeat) {
+        int globalCrc = this.globalCrc;
+        while (repeat-- > 0) {
+            int temp = (globalCrc >> 24) ^ inCh;
+            globalCrc = (globalCrc << 8) ^ crc32Table[(temp >= 0)
+                                                      ? temp
+                                                      : (temp + 256)];
+        }
+        this.globalCrc = globalCrc;
     }
 
     int globalCrc;

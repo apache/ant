@@ -19,7 +19,12 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.bzip2.CBZip2InputStream;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 
 /**
@@ -44,9 +49,50 @@ public class BZip2Test extends BuildFileTest {
 
     public void testRealTest() throws IOException {
         executeTarget("realTest");
-        assertTrue("File content mismatch",
-            FILE_UTILS.contentEquals(project.resolveFile("expected/asf-logo-huge.tar.bz2"),
-                                    project.resolveFile("asf-logo-huge.tar.bz2")));
+
+        // doesn't work: Depending on the compression engine used,
+        // compressed bytes may differ. False errors would be
+        // reported.
+        // assertTrue("File content mismatch",
+        // FILE_UTILS.contentEquals(project.resolveFile("expected/asf-logo-huge.tar.bz2"),
+        // project.resolveFile("asf-logo-huge.tar.bz2")));
+
+        // We have to compare the decompressed content instead:
+
+        File originalFile =
+            project.resolveFile("expected/asf-logo-huge.tar.bz2");
+        File actualFile   = project.resolveFile("asf-logo-huge.tar.bz2");
+
+        InputStream originalIn =
+            new BufferedInputStream(new FileInputStream(originalFile));
+        assertEquals((byte) 'B', originalIn.read());
+        assertEquals((byte) 'Z', originalIn.read());
+
+        InputStream actualIn =
+            new BufferedInputStream(new FileInputStream(actualFile));
+        assertEquals((byte) 'B', actualIn.read());
+        assertEquals((byte) 'Z', actualIn.read());
+
+        originalIn = new CBZip2InputStream(originalIn);
+        actualIn   = new CBZip2InputStream(actualIn);
+
+        while (true) {
+            int expected = originalIn.read();
+            int actual   = actualIn.read();
+            if (expected >= 0) {
+                if (expected != actual) {
+                    fail("File content mismatch");
+                }
+            } else {
+                if (actual >= 0) {
+                    fail("File content mismatch");
+                }
+                break;
+            }
+        }
+
+        originalIn.close();
+        actualIn.close();
     }
 
     public void testDateCheck(){
