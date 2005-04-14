@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright  2005 The Apache Software Foundation
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="assert-test"
+         default="all" xmlns:au="antlib:org.apache.ant.antlib.antunit">
+
+  <target name="all">
+    <fail>Only run via JUnit</fail>
+  </target>
+
+  <target name="assertTruePass">
+    <au:assertTrue>
+      <istrue value="true"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="assertTrueFail">
+    <au:assertTrue>
+      <istrue value="false"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="assertFalsePass">
+    <au:assertFalse>
+      <isfalse value="true"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="assertFalseFail">
+    <au:assertFalse>
+      <isfalse value="false"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="assertEqualsPass">
+    <au:assertEquals expected="bar" actual="bar"/>
+  </target>
+
+  <target name="assertEqualsCasePass">
+    <au:assertEquals expected="bar" actual="BAR" casesensitive="false"/>
+  </target>
+
+  <target name="assertEqualsFail1">
+    <au:assertEquals expected="bar" actual="baz"/>
+  </target>
+
+  <target name="assertEqualsFail2">
+    <au:assertEquals expected="bar" actual="BAR"/>
+  </target>
+
+  <target name="assertPropertySetPass">
+    <property name="foo" value="bar"/>
+    <au:assertPropertySet name="foo"/>
+  </target>
+
+  <target name="assertPropertySetFail">
+    <au:assertPropertySet name="foo"/>
+  </target>
+
+  <target name="assertPropertyEqualsPass">
+    <property name="foo" value="bar"/>
+    <au:assertPropertyEquals name="foo" value="bar"/>
+  </target>
+
+  <target name="assertPropertyEqualsCasePass">
+    <property name="foo" value="bar"/>
+    <au:assertPropertyEquals name="foo" value="BAR" casesensitive="false"/>
+  </target>
+
+  <target name="assertPropertyEqualsFail1">
+    <au:assertPropertyEquals name="foo" value="bar"/>
+  </target>
+
+  <target name="assertPropertyEqualsFail2">
+    <property name="foo" value="bar"/>
+    <au:assertPropertyEquals name="foo" value="baz"/>
+  </target>
+
+  <target name="assertPropertyEqualsFail3">
+    <property name="foo" value="bar"/>
+    <au:assertPropertyEquals name="foo" value="BAR"/>
+  </target>
+
+  <target name="assertFileExistsPass">
+    <au:assertFileExists file="assert.xml"/>
+  </target>
+
+  <target name="assertFileExistsFail">
+    <au:assertFileExists file="assert.txt"/>
+  </target>
+
+  <target name="assertFileDoesntExistPass">
+    <au:assertFileDoesntExist file="assert.txt"/>
+  </target>
+
+  <target name="assertFileDoesntExistFail">
+    <au:assertFileDoesntExist file="assert.xml"/>
+  </target>
+
+  <target name="assertDestIsUptodatePass">
+    <au:assertDestIsUptodate
+      src="../../main/org/apache/ant/antlib/antunit/AssertTask.java"
+
+      dest="../../../build/classes/org/apache/ant/antlib/antunit/AssertTask.class"/>
+  </target>
+
+  <target name="assertDestIsUptodateFail">
+    <au:assertDestIsUptodate
+      dest="../../main/org/apache/ant/antlib/antunit/AssertTask.java"
+
+      src="../../../build/classes/org/apache/ant/antlib/antunit/AssertTask.class"/>
+  </target>
+
+  <target name="assertDestIsOutofdatePass">
+    <au:assertDestIsOutofdate
+      dest="../../main/org/apache/ant/antlib/antunit/AssertTask.java"
+
+      src="../../../build/classes/org/apache/ant/antlib/antunit/AssertTask.class"/>
+  </target>
+
+  <target name="assertDestIsOutofdateFail">
+    <au:assertDestIsOutofdate
+      src="../../main/org/apache/ant/antlib/antunit/AssertTask.java"
+
+      dest="../../../build/classes/org/apache/ant/antlib/antunit/AssertTask.class"/>
+  </target>
+
+</project>
