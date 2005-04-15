@@ -55,4 +55,9 @@ public class RedirectorElementTest extends BuildFileTest {
             assertDebuglogContaining("Using input string");
         }
     }
+
+    public void testRefid() {
+        executeTarget("testRefid");
+    }
+
 }

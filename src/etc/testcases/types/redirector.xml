@@ -30,6 +30,25 @@
     </exec>
   </target>
 
+  <target name="testRefid" depends="cat-check" if="can-cat">
+    <fail message="Property testRefid.out is already set!">
+      <condition>
+        <isset property="testRefid.out" />
+      </condition>
+    </fail>
+    <redirector id="r" outputproperty="testRefid.out" inputstring="foo" />
+    <exec executable="cat">
+      <redirector refid="r" />
+    </exec>
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="${testRefid.out}" arg2="foo" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cat-check">
     <property environment="env" />
     <condition property="can-cat">

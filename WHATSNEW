@@ -480,6 +480,8 @@ Fixed bugs:
 * forkmode="perBatch" or "once" would ignore extension attributes that
   had been specified for <formatter>s.  Bugzilla Report 32973.
 
+* The refid attribute of the I/O redirector was not functional.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

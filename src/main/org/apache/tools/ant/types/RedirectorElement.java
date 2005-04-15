@@ -17,9 +17,12 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.Stack;
 import java.util.Vector;
+import java.util.Iterator;
 import java.util.ArrayList;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Redirector;
 
@@ -287,7 +290,6 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        //pre JDK 1.4 compatible
         this.logError = ((logError) ? Boolean.TRUE : Boolean.FALSE);
     }
 
@@ -329,7 +331,6 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        //pre JDK 1.4 compatible
         this.append = ((append) ? Boolean.TRUE : Boolean.FALSE);
     }
 
@@ -344,7 +345,6 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        //pre JDK 1.4 compatible
         this.alwaysLog = ((alwaysLog) ? Boolean.TRUE : Boolean.FALSE);
     }
 
@@ -357,7 +357,6 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        //pre JDK 1.4 compatible
         this.createEmptyFiles = ((createEmptyFiles)
             ? Boolean.TRUE : Boolean.FALSE);
     }
@@ -432,6 +431,10 @@ public class RedirectorElement extends DataType {
      * @param sourcefile   <CODE>String</CODE>.
      */
     public void configure(Redirector redirector, String sourcefile) {
+        if (isReference()) {
+            getRef().configure(redirector, sourcefile);
+            return;
+        }
         if (alwaysLog != null) {
             redirector.setAlwaysLog(alwaysLog.booleanValue());
         }
@@ -548,6 +551,73 @@ public class RedirectorElement extends DataType {
             }
         }
         return (File[]) (list.toArray(new File[list.size()]));
+    }
+
+    /**
+     * Convenience method.
+     * @throws BuildException on error.
+     */
+    protected void dieOnCircularReference() throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        Stack s = new Stack();
+        s.push(this);
+        dieOnCircularReference(s, getProject());
+    }
+
+    /**
+     * Overrides the version of DataType to recurse on all DataType
+     * child elements that may have been added.
+     * @param stk the stack of data types to use (recursively).
+     * @param p   the project to use to dereference the references.
+     * @throws BuildException on error.
+     */
+    protected void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            Mapper[] m = new Mapper[] {inputMapper, outputMapper, errorMapper};
+            for (int i = 0; i < m.length; i++) {
+                if (m[i] != null) {
+                    stk.push(m[i]);
+                    m[i].dieOnCircularReference(stk, p);
+                    stk.pop();
+                }
+            }
+            Vector[] v = new Vector[]
+                {inputFilterChains, outputFilterChains, errorFilterChains};
+            for (int i = 0; i < v.length; i++) {
+                if (v[i] != null) {
+                    for (Iterator fci = v[i].iterator(); fci.hasNext();) {
+                        FilterChain fc = (FilterChain) fci.next();
+                        stk.push(fc);
+                        fc.dieOnCircularReference(stk, p);
+                        stk.pop();
+                    }
+                }
+            }
+            setChecked(true);
+        }
+    }
+
+    /**
+     * Perform the check for circular references, returning the
+     * referenced RedirectorElement
+     * @return the referenced RedirectorElement.
+     */
+    private RedirectorElement getRef() {
+        dieOnCircularReference();
+        Object o = getRefid().getReferencedObject(getProject());
+        if (!(o instanceof RedirectorElement)) {
+            throw new BuildException(getRefid().getRefId()
+                + " doesn\'t denote a RedirectorElement");
+        }
+        return (RedirectorElement) o;
     }
 
 }
