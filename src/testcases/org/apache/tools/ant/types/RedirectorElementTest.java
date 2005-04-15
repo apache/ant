@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildFileTest;
 
 public class RedirectorElementTest extends BuildFileTest {
@@ -25,7 +26,7 @@ public class RedirectorElementTest extends BuildFileTest {
     }
 
     public void setUp() {
-        configureProject("src/etc/testcases/types/redirector.xml");
+        configureProject("src/etc/testcases/types/redirector.xml", Project.MSG_VERBOSE);
     }
 
     public void test1() {
@@ -46,6 +47,10 @@ public class RedirectorElementTest extends BuildFileTest {
 
     public void test4() {
         executeTarget("test4");
+    }
+
+    public void testRefid() {
+        executeTarget("testRefid");
     }
 
 }
