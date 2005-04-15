@@ -194,6 +194,9 @@ public class Java extends Task {
                 }
             }
         } catch (BuildException e) {
+            if (e.getLocation() == null && getLocation() != null) {
+                e.setLocation(getLocation());
+            }
             if (failOnError) {
                 throw e;
             } else {
@@ -202,7 +205,7 @@ public class Java extends Task {
             }
         } catch (Throwable t) {
             if (failOnError) {
-                throw new BuildException(t);
+                throw new BuildException(t, getLocation());
             } else {
                 log(t);
                 return 0;
