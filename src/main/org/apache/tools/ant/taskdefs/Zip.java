@@ -1390,6 +1390,7 @@ public class Zip extends MatchingTask {
         }
         /**
          * find out if there are absolutely no resources to add
+         * @since Ant 1.6.3
          * @return true if there are no resources to add
          */
         public boolean isWithoutAnyResources() {
