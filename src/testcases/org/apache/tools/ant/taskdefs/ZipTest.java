@@ -141,7 +141,7 @@ public class ZipTest extends BuildFileTest {
                    getProject().resolveFile("test3.zip").exists());
     }
     public void testZipEmptyCreate() {
-        executeTarget("zipEmptyCreate");
+        expectLogContaining("zipEmptyCreate", "Note: creating empty");
         assertTrue("archive should be created",
                    getProject().resolveFile("test3.zip").exists());
     }

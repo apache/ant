@@ -474,6 +474,10 @@ public class Zip extends MatchingTask {
                 return;
             }
 
+            if (!zipFile.exists() && state.isWithoutAnyResources()) {
+                createEmptyZip(zipFile);
+                return;
+            }
             Resource[][] addThem = state.getResourcesToAdd();
 
             if (doUpdate) {
@@ -1383,6 +1387,23 @@ public class Zip extends MatchingTask {
          */
         public Resource[][] getResourcesToAdd() {
             return resourcesToAdd;
+        }
+        /**
+         * find out if there are absolutely no resources to add
+         * @return true if there are no resources to add
+         */
+        public boolean isWithoutAnyResources() {
+            if (resourcesToAdd == null)  {
+                return true;
+            }
+            for (int counter = 0; counter < resourcesToAdd.length; counter++) {
+                if (resourcesToAdd[counter] != null) {
+                    if (resourcesToAdd[counter].length > 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

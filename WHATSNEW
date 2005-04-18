@@ -362,6 +362,9 @@ Fixed bugs:
 
 * FTP task, getTimeDiff method was returning wrong value. Bugzilla 30595.
 
+* make sure that Zip and its derivates call the createEmptyZip method when
+ there are no resources to zip/jar/...
+
 * Zip task was not zipping when only empty directories were found.
   Bugzilla 30365.
 
