@@ -175,6 +175,12 @@ Other changes:
   negate attribute to select lines -not- containing specified text.
   Bugzilla Report 34374.
 
+* <os> condition adds "nt" as a family which can be tested. This is
+  all windows platforms other than the Win9x line, and windows CE.  
+
+* <exec> (and hence, <apply>) have an OsFamily attribute, which can restrict
+  execution to a single OS family.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
