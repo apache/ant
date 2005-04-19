@@ -250,6 +250,6 @@ public class Chmod extends ExecuteOn {
      * @return true if the os is valid.
      */
     protected boolean isValidOs() {
-        return Os.isFamily("unix") && super.isValidOs();
+        return Os.isFamily(Os.FAMILY_UNIX) && super.isValidOs();
     }
 }
