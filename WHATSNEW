@@ -316,6 +316,8 @@ Fixed bugs:
 
 * forkmode="perBatch" or "once" would ignore extension attributes that
   had been specified for <formatter>s.  Bugzilla Report 32973.
+  
+* minor performance update of Locator.fromUri. Bugzilla Report 34529.
 
 * The refid attribute of the I/O redirector was not functional.
 
