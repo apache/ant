@@ -1,6 +1,6 @@
 @echo off
 
-REM  Copyright 2001,2004 The Apache Software Foundation
+REM  Copyright 2001,2004-2005 The Apache Software Foundation
 REM
 REM  Licensed under the Apache License, Version 2.0 (the "License");
 REM  you may not use this file except in compliance with the License.
@@ -91,6 +91,10 @@ if not "%JIKESPATH%"=="" goto runAntWithJikes
 :runAnt
 if "%_USE_CLASSPATH%"=="no" goto runAntNoClasspath
 if not "%CLASSPATH%"=="" goto runAntWithClasspath
+"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+goto end
+
+:runAntNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
 goto end
 

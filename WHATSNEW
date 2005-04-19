@@ -371,6 +371,9 @@ Fixed bugs:
 * Jar task was not including manifest files when duplicate="preserve" was
   chosen. Bugzilla 32802.
 
+* ant.bat was missing runAntNoClasspath label for goto.
+  Bugzilla 34510
+
 * Classpath was treated in the same way as -lib options. Bugzilla 28046.
 
 * Manual page for cvsversion contained incorrect attributes and did not
