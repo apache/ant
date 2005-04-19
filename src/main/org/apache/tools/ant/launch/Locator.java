@@ -124,6 +124,20 @@ public final class Locator {
             && Character.isLetter(uri.charAt(1)) && uri.lastIndexOf(':') > -1) {
             uri = uri.substring(1);
         }
+        String path = decodeUri(uri);
+        return path;
+    }
+
+    /**
+     * Decodes an Uri with % characters.
+     * @param uri String with the uri possibly containing % characters.
+     * @return The decoded Uri
+     */
+    private static String decodeUri(String uri) {
+        if (uri.indexOf('%') == -1)
+        {
+            return uri;
+        }
         StringBuffer sb = new StringBuffer();
         CharacterIterator iter = new StringCharacterIterator(uri);
         for (char c = iter.first(); c != CharacterIterator.DONE;
