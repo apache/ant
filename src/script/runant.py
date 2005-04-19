@@ -95,6 +95,7 @@ cmdline = ('%s %s -classpath %s -Dant.home=%s %s ' + \
 
 if debug:
     print '\n%s\n\n' % (cmdline)
+sys.stdout.flush()
 
 # Run the biniou!
 os.system(cmdline)
