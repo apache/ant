@@ -19,6 +19,9 @@ Fixed bugs:
 * make sure that Zip and its derivates call the createEmptyZip method when
  there are no resources to zip/jar/...
 
+* ant.bat was missing runAntNoClasspath label for goto.
+  Bugzilla 34510.
+
 
 Changes from Ant 1.6.2 to Ant 1.6.3beta1
 ========================================
