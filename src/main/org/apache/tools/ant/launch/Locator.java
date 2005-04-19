@@ -126,6 +126,20 @@ public final class Locator {
             uri = uri.substring(1);
         }
 
+        String path = decodeUri(uri);
+        return path;
+    }
+
+    /**
+     * Decodes an Uri with % characters.
+     * @param uri String with the uri possibly containing % characters.
+     * @return The decoded Uri
+     */
+    private static String decodeUri(String uri) {
+        if (uri.indexOf('%') == -1)
+        {
+            return uri;
+        }
         StringBuffer sb = new StringBuffer();
         CharacterIterator iter = new StringCharacterIterator(uri);
         for (char c = iter.first(); c != CharacterIterator.DONE;
@@ -144,12 +158,10 @@ public final class Locator {
                 sb.append(c);
             }
         }
-
         String path = sb.toString();
         return path;
     }
-
-
+    
     /**
      * Get the File necessary to load the Sun compiler tools. If the classes
      * are available to this class, then no additional URL is required and
