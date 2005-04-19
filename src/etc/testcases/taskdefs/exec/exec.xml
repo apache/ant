@@ -329,6 +329,34 @@
         </fail>
     </target>
 
+    <!-- test will succeed as the OS wont match-->
+    <target name="testExecUnknownOS">
+      <exec executable="nonexistent-program-we-expect"
+        failonerror="true"
+        os="ZX81">
+      </exec>
+    </target>
+
+    <target name="testExecOSFamily">
+      <exec executable="uptime"
+        failonerror="true"
+        osFamily="unix">
+      </exec>
+      <exec executable="time"
+        failonerror="true"
+        osFamily="nt">
+        <arg value="/t" />
+      </exec>
+    </target>    
+    
+    <target name="testExecInconsistentSettings">
+      <exec executable="nonexistent-program-we-expect"
+        failonerror="true"
+        osFamily="WIN9X"
+        os="linux unix">
+      </exec>
+    </target>
+    
     <target name="cleanup">
         <delete>
             <fileset file="${logFile}" />

@@ -383,6 +383,18 @@ public class ExecTaskTest extends BuildFileTest {
         assertTrue("log file found after spawn", logFile.exists());
     }
 
+    public void testExecUnknownOS() {
+        executeTarget("testExecUnknownOS");
+    }
+
+    public void testExecOSFamily() {
+        executeTarget("testExecOSFamily");
+    }
+
+    public void testExecInconsistentSettings() {
+        executeTarget("testExecInconsistentSettings");
+    }
+    
     private static class MonitoredBuild implements Runnable {
         private Thread worker;
         private File myBuildFile = null;

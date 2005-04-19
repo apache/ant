@@ -17,7 +17,7 @@ systems.</p>
 
 <p>Note that you cannot interact with the forked program, the only way
 to send input to it is via the input and inputstring attributes. Also note that
-in Ant 1.6, any attempt to read input in the forked program will receive an
+since Ant 1.6, any attempt to read input in the forked program will receive an
 EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
 
 
@@ -115,7 +115,14 @@ or the task will fail as follows:
     <td valign="top">list of Operating Systems on which the command may be
       executed. If the current OS's name is contained in this list, the command will
       be executed. The OS's name is determined by the Java Virtual machine and is set
-      in the &quot;os.name&quot; system property.</td>
+      in the &quot;os.name&quot; system property.
+      </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">osfamily</td>
+    <td valign="top">OS family as used in the &lt;os&gt; condition.
+    <em>since Ant 1.7</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
