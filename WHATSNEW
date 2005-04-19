@@ -372,7 +372,7 @@ Fixed bugs:
   chosen. Bugzilla 32802.
 
 * ant.bat was missing runAntNoClasspath label for goto.
-  Bugzilla 34510
+  Bugzilla 34510.
 
 * Classpath was treated in the same way as -lib options. Bugzilla 28046.
 
