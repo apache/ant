@@ -344,7 +344,7 @@
       </exec>
       <exec executable="time"
         failonerror="true"
-        osFamily="nt">
+        osFamily="winnt">
         <arg value="/t" />
       </exec>
     </target>    

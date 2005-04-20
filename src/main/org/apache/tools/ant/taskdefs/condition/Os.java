@@ -63,7 +63,7 @@ public class Os implements Condition {
     /**
      * OS family that can be tested for. {@value}
      */
-    public static final String FAMILY_NT = "nt";
+    public static final String FAMILY_NT = "winnt";
     /**
      * OS family that can be tested for. {@value}
      */
