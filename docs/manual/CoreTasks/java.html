@@ -266,7 +266,7 @@ subelement.</p>
 <p>A nested <a href="../CoreTypes/redirector.html">I/O Redirector</a>
 can be specified.  In general, the attributes of the redirector behave
 as the corresponding attributes available at the task level.  The most
-notable peculiarity stems from the retention of the &lt;java&gt;
+notable peculiarity stems from the retention of the <code>&lt;java&gt;</code>
 attributes for backwards compatibility.  Any file mapping is done
 using a <CODE>null</CODE> sourcefile; therefore not all
 <a href="../CoreTypes/mapper.html">Mapper</a> types will return
@@ -275,13 +275,16 @@ will fall back to the task level attributes.  In practice this means that
 defaults can be specified for input, output, and error output files.
 </p>
 <h3>Errors and return codes</h3>
-By default the return code of a <code>&lt;java&gt;</code> is ignored. Alternatively, you can set <code>resultproperty</code> to the name
+By default the return code of a <code>&lt;java&gt;</code> is ignored.
+Alternatively, you can set <code>resultproperty</code> to the name
 of a property and have it assigned to the result code (barring immutability,
 of course).
-When you set <code>failonerror="true"</code>, the only possible value for <code>resultproperty</code> is 0. Any non zero response is treated as an
+When you set <code>failonerror="true"</code>, the only possible value for
+<code>resultproperty</code> is 0. Any non-zero response is treated as an
 error and would mean the build exits.
 <p> Similarly, if <code>failonerror="false"</code> and <code>fork="false"</code>
-, then <code>&lt;java&gt;</code> <b>must</b> return 0 otherwise the build will exit, as the class was run by the build jvm.</p>
+, then <code>&lt;java&gt;</code> <b>must</b> return 0 otherwise the build will
+exit, as the class was run by the build JVM.</p>
 
 <h3>JAR file execution</h3>
 
