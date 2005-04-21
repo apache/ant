@@ -384,7 +384,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 throw ProjectHelper.addLocationToBuildException(
                     ex, getLocation());
             } else {
-                throw new BuildException(ex.getMessage(), ex);
+                ex.setLocation(getLocation());
+                throw ex;
             }
         } finally {
             presentElements = null;
