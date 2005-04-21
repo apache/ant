@@ -380,8 +380,12 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         try {
             c.perform();
         } catch (BuildException ex) {
-            throw ProjectHelper.addLocationToBuildException(
-                ex, getLocation());
+            if (macroDef.getBackTrace()) {
+                throw ProjectHelper.addLocationToBuildException(
+                    ex, getLocation());
+            } else {
+                throw new BuildException(ex.getMessage(), ex);
+            }
         } finally {
             presentElements = null;
             localAttributes = null;

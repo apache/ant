@@ -181,6 +181,8 @@ Other changes:
 * <exec> (and hence, <apply>) have an OsFamily attribute, which can restrict
   execution to a single OS family.
 
+* added "backtrace" attribute to macrodef. Bugzilla report 27219.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

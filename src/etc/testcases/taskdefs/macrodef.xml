@@ -223,4 +223,20 @@
 
   </target>
 
+  <target name="backtraceoff">
+    <macrodef name="nobacktrace" backtrace="false">
+      <sequential>
+        <fail>This is a failure</fail>
+      </sequential>
+    </macrodef>
+    <nobacktrace/>
+  </target>
+  <target name="backtraceon">
+    <macrodef name="nobacktrace" backtrace="true">
+      <sequential>
+        <fail>This is a failure</fail>
+      </sequential>
+    </macrodef>
+    <nobacktrace/>
+  </target>
 </project>

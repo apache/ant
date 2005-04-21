@@ -42,6 +42,7 @@ import org.apache.tools.ant.UnknownElement;
 public class MacroDef extends AntlibDefinition  {
     private NestedSequential nestedSequential;
     private String     name;
+    private boolean    backTrace = true;
     private List       attributes = new ArrayList();
     private Map        elements   = new HashMap();
     private String     textName   = null;
@@ -90,6 +91,28 @@ public class MacroDef extends AntlibDefinition  {
 
     public Text getText() {
         return text;
+    }
+
+    /**
+     * Set the backTrace attribute.
+     *
+     * @param backTrace if true and the macro instance generates has
+     *                  an error, a backtrace of the location within
+     *                  the macro and call to the macro will be outout.
+     *                  if false, only the location of the call to
+     *                  macro will be shown. Default is true.
+     * @since ant 1.7
+     */
+    public void setBackTrace(boolean backTrace) {
+        this.backTrace = backTrace;
+    }
+
+    /**
+     * @return the backTrace attribute.
+     * @since ant 1.7
+     */
+    public boolean getBackTrace() {
+        return backTrace;
     }
 
     /**
