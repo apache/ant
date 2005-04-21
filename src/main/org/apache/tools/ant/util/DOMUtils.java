@@ -26,7 +26,7 @@ import org.w3c.dom.Text;
  * Some utility methods for common tasks when building DOM trees in memory.
  *
  * <p>In this documentation <code>&lt;a&gt;</code> means an {@link
- * org.w3c.do.Element Element} instance with name <code>a</code>.</p>
+ * org.w3c.dom.Element Element} instance with name <code>a</code>.</p>
  *
  * @since Ant 1.6.3
  */

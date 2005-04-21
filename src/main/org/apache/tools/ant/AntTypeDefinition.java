@@ -280,7 +280,7 @@ public class AntTypeDefinition {
     }
 
     /**
-     * Inner implementation of the {@see #createAndSet} logic, with no
+     * Inner implementation of the {@link #createAndSet(Project, Class)} logic, with no
      * exception catching
      * @param newclass class to create
      * @param project

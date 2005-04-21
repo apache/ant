@@ -415,7 +415,6 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Returns the directory scanner needed to access the files to process.
-     * @param p the current project
      * @return a <code>DirectoryScanner</code> instance.
      */
     public DirectoryScanner getDirectoryScanner() {

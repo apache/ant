@@ -78,7 +78,7 @@ public class ConcatFileInputStream extends InputStream {
     /**
      * Set a managing <code>Task</code> for
      * this <code>ConcatFileInputStream</code>.
-     * @param task   the managing <code>Task</code>.
+     * @param pc the managing <code>Task</code>.
      */
     public void setManagingComponent(ProjectComponent pc) {
         this.managingPc = pc;
