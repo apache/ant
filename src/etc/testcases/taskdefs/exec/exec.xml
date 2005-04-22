@@ -342,10 +342,11 @@
         failonerror="true"
         osFamily="unix">
       </exec>
-      <exec executable="time"
+      <exec executable="cmd.exe"
         failonerror="true"
         osFamily="winnt">
-        <arg value="/t" />
+        <arg value="/c" />
+        <arg value="time /t" />
       </exec>
     </target>    
     
