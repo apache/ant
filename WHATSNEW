@@ -88,6 +88,8 @@ Fixed bugs:
 
 * Task.init() was called twice for most tasks.  Bugzilla Report 34411.
 
+* JavaTest testcases sometimes fail on windows. Bugzilla Report 34502.
+
 Other changes:
 --------------
 
