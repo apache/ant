@@ -34,7 +34,8 @@ public class StreamPumper implements Runnable {
     private static final int SIZE = 128;
     private InputStream is;
     private OutputStream os;
-    private boolean finished;
+    private volatile boolean finish;
+    private volatile boolean finished;
     private boolean closeWhenExhausted;
     private boolean autoflush = false;
 
@@ -68,7 +69,7 @@ public class StreamPumper implements Runnable {
      * @param autoflush if true, push through data; if false, let it be buffered
      * @since Ant 1.6.3
      */
-    /*public*/ void setAutoflush(boolean autoflush) {
+    /*package*/ void setAutoflush(boolean autoflush) {
         this.autoflush = autoflush;
     }
 
@@ -78,21 +79,20 @@ public class StreamPumper implements Runnable {
      * Terminates as soon as the input stream is closed or an error occurs.
      */
     public void run() {
-        synchronized (this) {
-            // Just in case this object is reused in the future
-            finished = false;
-        }
+        finished = false;
+        finish = false;
 
         final byte[] buf = new byte[SIZE];
 
         int length;
         try {
-            while ((length = is.read(buf)) > 0 && !finished) {
+            while ((length = is.read(buf)) > 0 && !finish) {
                 os.write(buf, 0, length);
                 if (autoflush) {
                     os.flush();
                 }
             }
+            os.flush();
         } catch (Exception e) {
             // ignore errors
         } finally {
@@ -103,8 +103,8 @@ public class StreamPumper implements Runnable {
                     // ignore
                 }
             }
+            finished = true;
             synchronized (this) {
-                finished = true;
                 notifyAll();
             }
         }
@@ -114,7 +114,7 @@ public class StreamPumper implements Runnable {
      * Tells whether the end of the stream has been reached.
      * @return true is the stream has been exhausted.
      **/
-    public synchronized boolean isFinished() {
+    public boolean isFinished() {
         return finished;
     }
 
@@ -136,8 +136,8 @@ public class StreamPumper implements Runnable {
      * or any byte, and it will be marked as finished.
      * @since Ant 1.6.3
      */
-    /*public*/ synchronized void stop() {
-        finished = true;
+    /*package*/ synchronized void stop() {
+        finish = true;
         notifyAll();
     }
 }
