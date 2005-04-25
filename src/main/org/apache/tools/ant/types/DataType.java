@@ -152,6 +152,7 @@ public abstract class DataType extends ProjectComponent {
      * @param dataTypeName  the name of the datatype that the reference should be (error message
      *                      use only)
      * @return the derefenced object
+     * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      */
     protected Object getCheckedRef(final Class requiredClass,
                                    final String dataTypeName) {
