@@ -189,12 +189,6 @@ Note: This document was updated in the context of releasing Ant 1.6.
       /www/www.apache.org/dist/ant/[source|binary].
       This includes the old release notes.
 
-    * remove all *tar* files of the old release from
-      /www/archive.apache.org/dist/ant/[source|binary] on minotaur,
-      leave the *zip* files alone.
-      Also remove the old release notes from 
-      /www/archive.apache.org/dist/ant/
-
 20. Now and perhaps during previous betas any changes on the branch must
     be merged back into the tree.
 
