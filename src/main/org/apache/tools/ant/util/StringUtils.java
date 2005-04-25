@@ -26,6 +26,12 @@ import java.util.Vector;
  */
 public final class StringUtils {
 
+    /**
+     * constructor to stop anyone instantiating the class
+     */
+    private StringUtils() {
+    }
+
     /** the line separator for this OS */
     public static final String LINE_SEP = System.getProperty("line.separator");
 
