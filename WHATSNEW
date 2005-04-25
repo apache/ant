@@ -50,6 +50,8 @@ Changes that could break older environments:
   This means, the jikes compiler adapter now requires Jikes 1.15 or later.
   Bugzilla Reports 25868, 26404 and 32609.
 
+* Targets with identical name work in imported project. Bugzilla Report 34566.
+
 Other changes:
 --------------
 

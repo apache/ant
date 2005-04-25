@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -91,6 +91,9 @@ public class AntXMLContext {
     /** Keeps track of prefix -> uri mapping during parsing */
     private Map prefixMapping = new HashMap();
 
+
+    /** Keeps track of targets in files */
+    private Map currentTargets = null;
 
     /**
      * constructor
@@ -341,6 +344,23 @@ public class AntXMLContext {
         }
         return (String) list.get(list.size() - 1);
     }
+
+    /**
+     * Get the targets in the current source file.
+     * @return the current targets.
+     */
+    public Map getCurrentTargets() {
+        return currentTargets;
+    }
+
+    /**
+     * Set the map of the targets in the current source file.
+     * @param currentTargets a map of targets.
+     */
+    void setCurrentTargets(Map currentTargets) {
+        this.currentTargets = currentTargets;
+    }
+
 }
 
 
