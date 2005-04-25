@@ -90,6 +90,8 @@ Fixed bugs:
 
 * JavaTest testcases sometimes fail on windows. Bugzilla Report 34502.
 
+* Targets with identical name work in imported project. Bugzilla Report 34566.
+
 Other changes:
 --------------
 

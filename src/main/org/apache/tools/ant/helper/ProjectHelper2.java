@@ -24,7 +24,9 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Stack;
 
 import org.xml.sax.Locator;
@@ -117,20 +119,24 @@ public class ProjectHelper2 extends ProjectHelper {
             context.setIgnoreProjectTag(true);
             Target currentTarget = context.getCurrentTarget();
             Target currentImplicit = context.getImplicitTarget();
+            Map    currentTargets = context.getCurrentTargets();
             try {
                 Target newCurrent = new Target();
                 newCurrent.setProject(project);
                 newCurrent.setName("");
                 context.setCurrentTarget(newCurrent);
+                context.setCurrentTargets(new HashMap());
                 context.setImplicitTarget(newCurrent);
                 parse(project, source, new RootHandler(context, mainHandler));
                 newCurrent.execute();
             } finally {
                 context.setCurrentTarget(currentTarget);
                 context.setImplicitTarget(currentImplicit);
+                context.setCurrentTargets(currentTargets);
             }
         } else {
             // top level file
+            context.setCurrentTargets(new HashMap());
             parse(project, source, new RootHandler(context, mainHandler));
             // Execute the top-level target
             context.getImplicitTarget().execute();
@@ -819,8 +825,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
             // If the name has already been defined ( import for example )
             if (currentTargets.containsKey(name)) {
-                if (!context.isIgnoringProjectTag()) {
-                    // not in an import'ed file
+                if (context.getCurrentTargets().get(name) != null) {
                     throw new BuildException(
                         "Duplicate target '" + name + "'", target.getLocation());
                 }
@@ -841,6 +846,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
             if (name != null) {
                 target.setName(name);
+                context.getCurrentTargets().put(name, target);
                 project.addOrReplaceTarget(name, target);
             }
 

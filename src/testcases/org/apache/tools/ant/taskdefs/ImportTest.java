@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -89,6 +89,22 @@ public class ImportTest extends BuildFileTest {
             "src/etc/testcases/taskdefs/import/subdir/importinsequential.xml");
         expectPropertySet("within-imported", "foo", "bar");
         assertNotNull(getProject().getReference("baz"));
+    }
+
+    public void testImportSameTargets() {
+        try {
+            configureProject(
+                "src/etc/testcases/taskdefs/import/same_target.xml");
+        } catch (BuildException ex) {
+            String message = ex.getMessage();
+            if (message.indexOf("Duplicate target") == -1) {
+                assertTrue("Did not see 'Duplicate target' in '" + message +"'", false);
+            }
+            return;
+        }
+        assertTrue(
+            "Did not see build exception",
+            false);
     }
 
     public void testImportError() {
