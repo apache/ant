@@ -347,6 +347,28 @@
         </table>
       </subsection>
 
+      <subsection name="Ant Web Start Task">
+ 
+        <p>Ant Web Start Task is an Ant task allowing developers to
+        package a desktop application as a WAR (Web Application
+        Archive) to be distributed over the net via Java Web Start</p>
+ 
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ant-jnlp-war.sourceforge.net/">http://ant-jnlp-war.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Checkstyle">
 
         <p>Checkstyle is a development tool to help programmers write
