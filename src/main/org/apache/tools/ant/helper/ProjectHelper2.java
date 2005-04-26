@@ -168,12 +168,6 @@ public class ProjectHelper2 extends ProjectHelper {
             buildFileName = buildFile.toString();
 //         } else if (source instanceof InputStream ) {
         } else if (source instanceof URL) {
-            if (handler.getCurrentAntHandler() != elementHandler) {
-                throw new BuildException(
-                    "Source " + source.getClass().getName()
-                    + " not supported by this plugin for "
-                    + " non task xml");
-            }
             url = (URL) source;
             buildFileName = url.toString();
 //         } else if (source instanceof InputSource ) {
