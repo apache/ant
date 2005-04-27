@@ -4,6 +4,12 @@ Changes from Ant 1.6.3beta1 to current Ant 1.6 CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* The gcj compiler adapter used to include the Java runtime classes
+  even if includeJavaRuntime was set to false, unless the
+  bootclasspath has been specified as well.  It will now always adhere
+  to includeJavaRuntime, you may need to set it to true explicitly now
+  if you relied on the old behavior.
+
 Other changes:
 --------------
 
