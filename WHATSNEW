@@ -214,6 +214,12 @@ Changes that could break older environments:
   This means, the jikes compiler adapter now requires Jikes 1.15 or later.
   Bugzilla Reports 25868, 26404 and 32609.
 
+* The gcj compiler adapter used to include the Java runtime classes
+  even if includeJavaRuntime was set to false, unless the
+  bootclasspath has been specified as well.  It will now always adhere
+  to includeJavaRuntime, you may need to set it to true explicitly now
+  if you relied on the old behavior.
+
 Other changes:
 --------------
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,10 +61,6 @@ public class Gcj extends DefaultCompilerAdapter {
         // so we'll emulate it for compatibility and convenience.
         classpath.addExtdirs(extdirs);
 
-        if (bootclasspath == null || bootclasspath.size() == 0) {
-            // no bootclasspath, therefore, get one from the java runtime
-            includeJavaRuntime = true;
-        }
         classpath.append(getCompileClasspath());
 
         // Gcj has no option for source-path so we
