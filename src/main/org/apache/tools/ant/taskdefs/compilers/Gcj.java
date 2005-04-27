@@ -56,7 +56,7 @@ public class Gcj extends DefaultCompilerAdapter {
         if (p.size() > 0) {
             classpath.append(p);
         }
-        
+
         // gcj doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         classpath.addExtdirs(extdirs);
