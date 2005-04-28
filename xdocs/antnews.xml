@@ -25,6 +25,14 @@
   </properties>
 
 <body>
+  <section name="Ant 1.6.3">
+    <h3>April 28, 2005 - Ant 1.6.3 Available</h3>
+    <p>Apache Ant 1.6.3 is now available for <a
+    href="http://ant.apache.org/bindownload.cgi">download</a>.</p>
+    <p>There is a large list of fixed bugs and enhancements.</p>
+    <p>Some of the bugs affecting the embedded use of Ant are fixed.</p>
+  </section>
+
   <section name="Antidote Retired">
     <h3>April 4th, 2005 - The Apache Ant Project Retires Antidote, the
     Ant GUI</h3>
@@ -61,8 +69,8 @@
 
   <section name="Ant 1.6.2">
     <h3>July 16, 2004 - Ant 1.6.2 Available</h3>
-    <p>Apache Ant 1.6.2 is now available for <a
-    href="http://ant.apache.org/bindownload.cgi">download</a>.</p>
+    <p>Apache Ant 1.6.2 available for <a
+    href="http://archive.apache.org/dist/ant/">download</a>.</p>
     <p>Nested elements for namespaced tasks and types may belong to the
 Ant default namespace as well as the task's or type's namespace.</p>
     <p>All exceptions thrown by tasks are now wrapped in a

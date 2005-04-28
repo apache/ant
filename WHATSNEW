@@ -1,36 +1,5 @@
-Changes from Ant 1.6.3beta1 to current Ant 1.6 CVS version
-==========================================================
-
-Changes that could break older environments:
---------------------------------------------
-
-* The gcj compiler adapter used to include the Java runtime classes
-  even if includeJavaRuntime was set to false, unless the
-  bootclasspath has been specified as well.  It will now always adhere
-  to includeJavaRuntime, you may need to set it to true explicitly now
-  if you relied on the old behavior.
-
-Other changes:
---------------
-
-* <rpm> has new attributes failonerror and quiet.
-
-Fixed bugs:
------------
-
-* SQL task would try access result sets of statements that didn't
-  return any, causing problems with Informix IDS 9.2 and IBM DB2 8.1
-  FixPak 6 (or later). Bugzilla Reports 27162 and 29954.
-
-* make sure that Zip and its derivates call the createEmptyZip method when
- there are no resources to zip/jar/...
-
-* ant.bat was missing runAntNoClasspath label for goto.
-  Bugzilla 34510.
-
-
-Changes from Ant 1.6.2 to Ant 1.6.3beta1
-========================================
+Changes from Ant 1.6.2 to Ant 1.6.3
+===================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -57,6 +26,12 @@ Changes that could break older environments:
   Bugzilla Reports 25868, 26404 and 32609.
 
 * Targets with identical name work in imported project. Bugzilla Report 34566.
+
+* The gcj compiler adapter used to include the Java runtime classes
+  even if includeJavaRuntime was set to false, unless the
+  bootclasspath has been specified as well.  It will now always adhere
+  to includeJavaRuntime, you may need to set it to true explicitly now
+  if you relied on the old behavior.
 
 Other changes:
 --------------
@@ -172,7 +147,8 @@ Other changes:
   - beginner: introduction into Ant
   - task developers: using path, fileset etc
 
-  
+* <rpm> has new attributes failonerror and quiet.
+
 Fixed bugs:
 -----------
 
@@ -328,6 +304,17 @@ Fixed bugs:
 * minor performance update of Locator.fromUri. Bugzilla Report 34529.
 
 * The refid attribute of the I/O redirector was not functional.
+
+* SQL task would try access result sets of statements that didn't
+  return any, causing problems with Informix IDS 9.2 and IBM DB2 8.1
+  FixPak 6 (or later). Bugzilla Reports 27162 and 29954.
+
+* make sure that Zip and its derivates call the createEmptyZip method when
+ there are no resources to zip/jar/...
+
+* ant.bat was missing runAntNoClasspath label for goto.
+  Bugzilla 34510.
+
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
