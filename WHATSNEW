@@ -187,8 +187,8 @@ Other changes:
 
 * added "backtrace" attribute to macrodef. Bugzilla report 27219.
 
-Changes from Ant 1.6.2 to current Ant 1.6 CVS version
-=====================================================
+Changes from Ant 1.6.2 to Ant 1.6.3
+===================================
 
 Changes that could break older environments:
 --------------------------------------------
