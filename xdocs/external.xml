@@ -3335,15 +3335,15 @@
         </table>
       </subsection>
 
-      <subsection name="NetBeans / Sun ONE Studio">
+      <subsection name="NetBeans">
 
-        <p>A module that integrates Ant into the NetBeans or Sun Java Studio (formerly
-        Forte for Java and Sun ONE Studio) IDEs.</p>
+        <p>A module that integrates Ant into the NetBeans IDE, as well as derivative products such as Sun Java
+        Studio (formerly Forte for Java and Sun ONE Studio) and Sun Java Studio Creator.</p>
 
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.6.2 as of NetBeans 4.0</td>
+            <td>bundles Ant 1.6.2 as of NetBeans 4.1; 1.6.3 for NetBeans 4.2 (will be made available as a 4.1 update)</td>
           </tr>
           <tr>
             <th>URL:</th>
