@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 <title>Platform Issues</title>
 </head>
 
@@ -96,7 +96,7 @@ understand /cygdrive/c to mean c:\.
 <p>
 The utility cygpath (used industrially in the ant script to support cygwin) can 
 convert cygwin path names to Windows.
-You can use the <exec/> task in ant to convert cygwin paths to Windows path, for 
+You can use the <code>&lt;exec&gt;</code> task in ant to convert cygwin paths to Windows path, for 
 instance like that :
 <pre>
 &lt;property name=&quot;some.cygwin.path&quot; value=&quot;/cygdrive/h/somepath&quot;/&gt;
@@ -128,18 +128,18 @@ it is treated like any other Unix.
 <p>It is suggested that you create up an ant.ncf that sets up these parameters, and calls <code>perl ANT_HOME/dist/bin/runant.pl</code></p>
 <p>The following is an example of such an NCF file(assuming ant is installed in <nobr>'sys:/apache-ant/'):</nobr></p>
 <code>
-   &nbsp;&nbsp;&nbsp;envset CLASSPATH=SYS:/apache-ant/bootstrap/lib/ant.jar<br />
-   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/lib/xercesImpl.jar <br />
-   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/lib/xml-apis.jar <br />
-   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/lib/optional/junit.jar <br />
-   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/bootstrap/lib/optional.jar <br />
-<br />
-   &nbsp;&nbsp;&nbsp;setenv ANT_OPTS=-envCWD=sys:/apache-ant <br />
-   &nbsp;&nbsp;&nbsp;envset ANT_OPTS=-envCWD=sys:/apache-ant <br />
-   &nbsp;&nbsp;&nbsp;setenv ANT_HOME=sys:/apache-ant/dist/lib <br />
-   &nbsp;&nbsp;&nbsp;envset ANT_HOME=sys:/apache-ant/dist/lib <br />
-<br />
-   &nbsp;&nbsp;&nbsp;perl sys:/apache-ant/dist/bin/runant.pl <br />
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=SYS:/apache-ant/bootstrap/lib/ant.jar<br>
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/lib/xercesImpl.jar <br>
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/lib/xml-apis.jar <br>
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/lib/optional/junit.jar <br>
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/apache-ant/bootstrap/lib/optional.jar <br>
+<br>
+   &nbsp;&nbsp;&nbsp;setenv ANT_OPTS=-envCWD=sys:/apache-ant <br>
+   &nbsp;&nbsp;&nbsp;envset ANT_OPTS=-envCWD=sys:/apache-ant <br>
+   &nbsp;&nbsp;&nbsp;setenv ANT_HOME=sys:/apache-ant/dist/lib <br>
+   &nbsp;&nbsp;&nbsp;envset ANT_HOME=sys:/apache-ant/dist/lib <br>
+<br>
+   &nbsp;&nbsp;&nbsp;perl sys:/apache-ant/dist/bin/runant.pl <br>
 </code>
 
 <p>Ant works on JVM version 1.3 or higher.  You may have some luck running it on JVM 1.2, but serious problems have been found running Ant on JVM 1.1.7B.  These problems are caused by JVM bugs that will not be fixed.</p>

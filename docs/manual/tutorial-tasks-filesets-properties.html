@@ -1,6 +1,6 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
+  <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 <title>Tutorial: Tasks using Properties, Filesets &amp; Paths</title>
   <meta name="author" content="Jan Mat&egrave;rne">
   <style type="text/css">
@@ -31,14 +31,12 @@ nested filesets and paths. Finally it explains how to contribute tasks to Ant.</
 </ul></p>
 
 
-<a name="goal"/>
-<h2>The goal</h2>
+<h2><a name="goal">The goal</a></h2>
 <p>The goal is to write a task, which searchs in a path for a file and saves the
 location of that file in a property.</p>
 
 
-<a name="buildenvironment"/>
-<h2>Build environment</h2>
+<h2><a name="buildenvironment">Build environment</a></h2>
 <p>We can use the buildfile from the other tutorial and modify it a little bit.
 That's the advantage of using properties - we can reuse nearly the whole script. :-)</p>
 <pre class="code">
@@ -59,8 +57,7 @@ tutorial-tasks-filesets-properties.zip [2]</a> in <tt>/build.xml.01-propertyacce
 (future version saved as *.02..., final version as build.xml; same for sources).</p>
 
 
-<a name="propertyaccess"/>
-<h2>Property access</h2>
+<h2><a name="propertyaccess">Property access</a></h2>
 <p>Our first step is to set a property to a value and print the value of that property.
 So our scenario would be
 <pre class="code">
@@ -151,8 +148,7 @@ and all works fine.</p>
 
 
 
-<a name="filesets"/>
-<h2>Using filesets</h2>
+<h2><a name="filesets">Using filesets</a></h2>
 <p>Ant provides a common way of bundling files: the fileset. Because you are reading
 this tutorial I think you know them and I don't have to spend more explanations about
 their usage in buildfiles. Our goal is to search a file in path. And on this step the
@@ -331,8 +327,7 @@ Therefore we have do modify our buildfile:
 </pre>
 
 
-<a name="path"/>
-<h2>Using nested paths</h2>
+<h2><a name="path">Using nested paths</a></h2>
 <p>A task providing support for filesets is a very comfortable one. But there is another
 possibility of bundling files: the <code>&lt;path&gt;</code>. Fileset are easy if the files are all under
 a common base directory. But if this is not the case you have a problem. Another disadvantage
@@ -408,8 +403,7 @@ creating of the absolute path (was at 3).</p>
 
 
 
-<a name="returning-list"/>
-<h2>Returning a list</h2>
+<h2><a name="returning-list">Returning a list</a></h2>
 <p>So far so good. But could a file be on more than one place in the path? - Of course.<br>
 And would it be good to get all of them? - It depends on ...<p>
 
@@ -541,8 +535,7 @@ delimiter.</p>
 tune the performance of your own :-)</p>
 
 
-<a name="documentation"/>
-<h2>Documentation</h2>
+<h2><a name="documentation">Documentation</a></h2>
 <p>A task is useless if the only who is able to code the buildfile is the task developer
 (and he only the next few weeks :-). So documentation is also very important. In which
 form you do that depends on your favourite. But inside Ant there is a common format and
@@ -684,8 +677,7 @@ After that it prints out the result (e.g. C:/ant-1.5.4/bin/ant.jar;C:/ant-1.6/bi
 </pre>
 
 
-<a name="contribute"/>
-<h2>Contribute the new task</h2>
+<h2><a name="contribute">Contribute the new task</a></h2>
 If we decide to contribute our task, we should do some things:<ul>
 <li>is our task welcome? :-) Simply ask on the user list</li>
 <li>is the right package used? </li>
@@ -951,22 +943,21 @@ and the steps described there if you haven't one.</p>
 Now the new task is uploaded into the bug database.
 
 
-<a name="resources"/>
-<h2>Resources</h2>
-&nbsp;&nbsp;[1] <a href="tutorial-writing-tasks.html">tutorial-writing-tasks.html</a><br/>
-&nbsp;&nbsp;[2] <a href="tutorial-tasks-filesets-properties.zip">tutorial-tasks-filesets-properties.zip</a><br/>
-&nbsp;&nbsp;[3] <a href="using.html#built-in-props">using.html#built-in-props</a><br/>
-&nbsp;&nbsp;[4] <a href="http://ant-contrib.sourceforge.net/">http://ant-contrib.sourceforge.net/</a><br/>
-&nbsp;&nbsp;[5] <a href="CoreTasks/java.html">CoreTasks/java.html</a><br/>
-&nbsp;&nbsp;[6] <a href="CoreTasks/find.html">CoreTasks/find.html</a><br/>
-&nbsp;&nbsp;[7] <a href="../ant_task_guidelines.html">../ant_task_guidelines.html</a><br/>
-&nbsp;&nbsp;[8] <a href="http://ant.apache.org/cvs.html">http://ant.apache.org/cvs.html</a><br/>
-&nbsp;&nbsp;[9] <a href="http://java.sun.com/products/archive/index.html">http://java.sun.com/products/archive/index.html</a><br/>
-&nbsp;&nbsp;[10] <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</a><br/>
-&nbsp;&nbsp;[11] <a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a><br/>
-&nbsp;&nbsp;[12] <a href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</a><br/>
-&nbsp;&nbsp;[13] <a href="http://issues.apache.org/bugzilla/createaccount.cgi">http://issues.apache.org/bugzilla/createaccount.cgi</a><br/>
-&nbsp;&nbsp;[14] <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">http://issues.apache.org/bugzilla/enter_bug.cgi</a><br/>
+<h2><a name="resources">Resources</a></h2>
+&nbsp;&nbsp;[1] <a href="tutorial-writing-tasks.html">tutorial-writing-tasks.html</a><br>
+&nbsp;&nbsp;[2] <a href="tutorial-tasks-filesets-properties.zip">tutorial-tasks-filesets-properties.zip</a><br>
+&nbsp;&nbsp;[3] <a href="using.html#built-in-props">using.html#built-in-props</a><br>
+&nbsp;&nbsp;[4] <a href="http://ant-contrib.sourceforge.net/">http://ant-contrib.sourceforge.net/</a><br>
+&nbsp;&nbsp;[5] <a href="CoreTasks/java.html">CoreTasks/java.html</a><br>
+&nbsp;&nbsp;[6] <a href="CoreTasks/find.html">CoreTasks/find.html</a><br>
+&nbsp;&nbsp;[7] <a href="../ant_task_guidelines.html">../ant_task_guidelines.html</a><br>
+&nbsp;&nbsp;[8] <a href="http://ant.apache.org/cvs.html">http://ant.apache.org/cvs.html</a><br>
+&nbsp;&nbsp;[9] <a href="http://java.sun.com/products/archive/index.html">http://java.sun.com/products/archive/index.html</a><br>
+&nbsp;&nbsp;[10] <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</a><br>
+&nbsp;&nbsp;[11] <a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a><br>
+&nbsp;&nbsp;[12] <a href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</a><br>
+&nbsp;&nbsp;[13] <a href="http://issues.apache.org/bugzilla/createaccount.cgi">http://issues.apache.org/bugzilla/createaccount.cgi</a><br>
+&nbsp;&nbsp;[14] <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">http://issues.apache.org/bugzilla/enter_bug.cgi</a><br>
 
 
 <!--
