@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -558,9 +558,8 @@ public class Delete extends MatchingTask {
                 if (deleteOnExit) {
                     int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
                     log("Failed to delete " + f + ", calling deleteOnExit."
-                        + " This attempts to delete the file when the ant jvm"
-                        + " has exited and might not succeed."
-                        , level);
+                        + " This attempts to delete the file when the Ant jvm"
+                        + " has exited and might not succeed.", level);
                     f.deleteOnExit();
                     return true;
                 }
