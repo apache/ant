@@ -24,15 +24,17 @@ import java.util.Hashtable;
 import java.util.WeakHashMap;
 
 /**
- * Logs content written by a thread and forwards the buffers onto the project object which will forward the content to
- * the appropriate task.
+ * Logs content written by a thread and forwards the buffers onto the
+ * project object which will forward the content to the appropriate
+ * task.
  *
  * @since 1.4
  */
 public class DemuxOutputStream extends OutputStream {
 
     /**
-     * A data class to store information about a buffer. Such information is stored on a per-thread basis.
+     * A data class to store information about a buffer. Such information
+     * is stored on a per-thread basis.
      */
     private static class BufferInfo {
         /**
@@ -41,35 +43,25 @@ public class DemuxOutputStream extends OutputStream {
         private ByteArrayOutputStream buffer;
 
         /**
-         * Indicates we have just seen a carriage return. It may be part of a crlf pair or a single cr invoking
-         * processBuffer twice.
+         * Indicates we have just seen a carriage return. It may be part of
+         * a crlf pair or a single cr invoking processBuffer twice.
          */
-        private boolean crSeen = false;
+         private boolean crSeen = false;
     }
 
-    /**
-     * Maximum buffer size.
-     */
+    /** Maximum buffer size. */
     private static final int MAX_SIZE = 1024;
 
-    /**
-     * Initial buffer size.
-     */
+    /** Initial buffer size. */
     private static final int INTIAL_SIZE = 132;
 
-    /**
-     * Carriage return
-     */
+    /** Carriage return */
     private static final int CR = 0x0d;
 
-    /**
-     * Linefeed
-     */
+    /** Linefeed */
     private static final int LF = 0x0a;
 
-    /**
-     * Mapping from thread to buffer (Thread to BufferInfo).
-     */
+    /** Mapping from thread to buffer (Thread to BufferInfo). */
     private WeakHashMap buffers = new WeakHashMap();
 
     /**
@@ -85,10 +77,12 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Creates a new instance of this class.
      *
-     * @param project       The project instance for which output is being demultiplexed. Must not be
-     *                      <code>null</code>.
-     * @param isErrorStream <code>true</code> if this is the error string, otherwise a normal output stream. This is
-     *                      passed to the project so it knows which stream it is receiving.
+     * @param project The project instance for which output is being
+     *                demultiplexed. Must not be <code>null</code>.
+     * @param isErrorStream <code>true</code> if this is the error string,
+     *                      otherwise a normal output stream. This is
+     *                      passed to the project so it knows
+     *                      which stream it is receiving.
      */
     public DemuxOutputStream(Project project, boolean isErrorStream) {
         this.project = project;
@@ -132,15 +126,15 @@ public class DemuxOutputStream extends OutputStream {
      */
     private void removeBuffer() {
         Thread current = Thread.currentThread();
-        buffers.remove(current);
+        buffers.remove (current);
     }
 
     /**
-     * Writes the data to the buffer and flushes the buffer if a line separator is detected or if the buffer has reached
-     * its maximum size.
+     * Writes the data to the buffer and flushes the buffer if a line
+     * separator is detected or if the buffer has reached its maximum size.
      *
      * @param cc data to log (byte).
-     * @throws IOException if the data cannot be written to the stream
+     * @exception IOException if the data cannot be written to the stream
      */
     public void write(int cc) throws IOException {
         final byte c = (byte) cc;
@@ -168,7 +162,9 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Converts the buffer to a string and sends it to the project.
      *
-     * @param buffer the ByteArrayOutputStream used to collect the output until a line separator is seen.
+     * @param buffer the ByteArrayOutputStream used to collect the output
+     * until a line separator is seen.
+     *
      * @see Project#demuxOutput(String,boolean)
      */
     protected void processBuffer(ByteArrayOutputStream buffer) {
@@ -180,7 +176,9 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Converts the buffer to a string and sends it to the project.
      *
-     * @param buffer the ByteArrayOutputStream used to collect the output until a line separator is seen.
+     * @param buffer the ByteArrayOutputStream used to collect the output
+     * until a line separator is seen.
+     *
      * @see Project#demuxOutput(String,boolean)
      */
     protected void processFlush(ByteArrayOutputStream buffer) {
@@ -192,7 +190,8 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Equivalent to flushing the stream.
      *
-     * @throws IOException if there is a problem closing the stream.
+     * @exception IOException if there is a problem closing the stream.
+     *
      * @see #flush
      */
     public void close() throws IOException {
@@ -201,9 +200,10 @@ public class DemuxOutputStream extends OutputStream {
     }
 
     /**
-     * Writes all remaining data in the buffer associated with the current thread to the project.
+     * Writes all remaining data in the buffer associated
+     * with the current thread to the project.
      *
-     * @throws IOException if there is a problem flushing the stream.
+     * @exception IOException if there is a problem flushing the stream.
      */
     public void flush() throws IOException {
         BufferInfo bufferInfo = getBufferInfo();
@@ -215,9 +215,10 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Write a block of characters to the output stream
      *
-     * @param b   the array containing the data
+     * @param b the array containing the data
      * @param off the offset into the array where data starts
      * @param len the length of block
+     *
      * @throws IOException if the data cannot be written into the stream.
      */
     public void write(byte[] b, int off, int len) throws IOException {
