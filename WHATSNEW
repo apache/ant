@@ -92,6 +92,9 @@ Fixed bugs:
 
 * Targets with identical name work in imported project. Bugzilla Report 34566.
 
+* DemuxOutputStream now uses a WeakHashMap to store the thread-stream mapping,
+  to avoid holding on to thread references after they terminate. 
+
 Other changes:
 --------------
 
