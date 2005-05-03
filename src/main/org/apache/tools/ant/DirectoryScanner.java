@@ -956,6 +956,12 @@ public class DirectoryScanner
         try {
             synchronized (this) {
 
+                // set in/excludes to reasonable defaults if needed:
+                boolean nullIncludes = (includes == null);
+                includes = nullIncludes ? new String[] {"**"} : includes;
+                boolean nullExcludes = (excludes == null);
+                excludes = nullExcludes ? new String[0] : excludes;
+
                 String[] excl = new String[dirsExcluded.size()];
                 dirsExcluded.copyInto(excl);
         
@@ -974,6 +980,9 @@ public class DirectoryScanner
                                 notIncl[i] + File.separator, false);
                     }
                 }
+                clearCaches();
+                includes = nullIncludes ? null : includes;
+                excludes = nullExcludes ? null : excludes;
             }
         } finally {
             synchronized (slowScanLock) {
