@@ -357,7 +357,7 @@ public class AntXMLContext {
      * Set the map of the targets in the current source file.
      * @param currentTargets a map of targets.
      */
-    void setCurrentTargets(Map currentTargets) {
+    public void setCurrentTargets(Map currentTargets) {
         this.currentTargets = currentTargets;
     }
 
