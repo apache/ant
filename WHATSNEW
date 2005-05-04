@@ -207,6 +207,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+* AntXMLContext.setCurrentTargets() is now public. Bugzilla report 34680. 
+
 Changes from Ant 1.6.2 to Ant 1.6.3
 ===================================
 
