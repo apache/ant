@@ -141,6 +141,7 @@ public class CommandlineJava implements Cloneable {
                 p.putAll(mergePropertySets());
                 for (Enumeration e = variables.elements(); e.hasMoreElements();) {
                     Environment.Variable v = (Environment.Variable) e.nextElement();
+                    v.validate();
                     p.put(v.getKey(), v.getValue());
                 }
                 System.setProperties(p);

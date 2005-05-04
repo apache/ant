@@ -179,6 +179,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             throw new BuildException("Could not find " + classname + "."
                                      + " Make sure you have it in your"
                                      + " classpath");
+        } catch (BuildException e) {
+            throw e;
         } catch (SecurityException e) {
             throw e;
         } catch (ThreadDeath e) {

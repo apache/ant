@@ -109,13 +109,21 @@ public class Environment {
          * @throws BuildException if key or value are unassigned
          */
         public String getContent() throws BuildException {
+            validate();
+            StringBuffer sb = new StringBuffer(key.trim());
+            sb.append("=").append(value.trim());
+            return sb.toString();
+        }
+
+        /**
+         * checks whether all required attributes have been specified.
+         * @throws BuildException if key or value are unassigned
+         */
+        public void validate() {
             if (key == null || value == null) {
                 throw new BuildException("key and value must be specified "
                     + "for environment variables.");
             }
-            StringBuffer sb = new StringBuffer(key.trim());
-            sb.append("=").append(value.trim());
-            return sb.toString();
         }
     }
 
