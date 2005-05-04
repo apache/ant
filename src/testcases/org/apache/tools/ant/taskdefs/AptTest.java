@@ -45,6 +45,11 @@ public class AptTest extends BuildFileTest {
     public void testAptFork() {
         executeTarget("testAptFork");
     }
+ 
+    public void testAptForkFalse() {
+        executeTarget("testAptForkFalse");
+        assertLogContaining(Apt.WARNING_IGNORING_FORK);
+    }
 
     public void testListAnnotationTypes() {
         executeTarget("testListAnnotationTypes");

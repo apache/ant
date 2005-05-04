@@ -60,6 +60,12 @@ import java.util.Vector;
  * }
  * </pre>
  *
+ * This Adapter is designed to run Apt in-JVM, an option that is not actually
+ * exposed to end-users, because it was too brittle during beta testing; classpath
+ * problems being the core issue.
+ *
+ * 
+ *
  * @since Ant 1.7
  */
 public class AptCompilerAdapter extends DefaultCompilerAdapter {

@@ -59,6 +59,18 @@
   <assertAptExampleCompiled />
 </target>
 
+
+<target name="testAptForkFalse" depends="init">
+  <apt srcdir="${src}"
+       destdir="${classes.dir}"
+       debug="on"
+       compile="true"
+       fork="false"
+       preprocessdir="${preprocess.dir}">
+  </apt>
+  <assertAptExampleCompiled />
+</target>
+
 <target name="testListAnnotationTypes" depends="init">
   <apt srcdir="${src}"
        destdir="${classes.dir}"
@@ -102,6 +114,7 @@
   </apt>
   <assertAptExampleCompiled />
 </target>
+
 
 
 

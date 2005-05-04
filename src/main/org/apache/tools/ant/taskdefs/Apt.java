@@ -51,6 +51,12 @@ public class Apt
     /** A warning message if used with java < 1.5. */
     public static final String ERROR_WRONG_JAVA_VERSION
         = "Apt task requires Java 1.5+";
+ 
+    /**
+     * exposed for debug messages
+     */
+    public static final String WARNING_IGNORING_FORK =
+        "Apt only runs in its own JVM; fork=false option ignored";
 
     /**
      * The nested option element.
@@ -103,7 +109,7 @@ public class Apt
      */
     public Apt() {
         super();
-        super.setCompiler(AptCompilerAdapter.class.getName());
+        super.setCompiler(AptExternalCompilerAdapter.class.getName());
         setFork(true);
     }
 
@@ -126,16 +132,15 @@ public class Apt
     }
 
     /**
-     * Set the fork attribute (optional, default=true).
-     * If fork is true run the external apt command.
-     * If fork is false run the apt compiler in the same jvm as the task.
-     * @param fork if true use the external command.
+     * Set the fork attribute.
+     * Non-forking APT is highly classpath dependent and appears to be too
+     * brittle to work. The sole reason this attribute is retained
+     * is the superclass does it
+     * @param fork if false; warn the option is ignored.
      */
     public void setFork(boolean fork) {
-        if (fork) {
-            super.setCompiler(AptExternalCompilerAdapter.class.getName());
-        } else {
-            super.setCompiler(AptCompilerAdapter.class.getName());
+        if (!fork) {
+            log(WARNING_IGNORING_FORK,Project.MSG_WARN);
         }
     }
 
@@ -258,7 +263,6 @@ public class Apt
         if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
             throw new BuildException(ERROR_WRONG_JAVA_VERSION);
         }
-
         super.execute();
     }
 }
