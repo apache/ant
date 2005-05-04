@@ -190,6 +190,23 @@ Other changes:
 
 * added "backtrace" attribute to macrodef. Bugzilla report 27219.
 
+Changes from Ant 1.6.3 to current Ant 1.6 CVS version
+=====================================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* Sun javah failed with java.lang.NoClassDefFoundError. Bugzilla report
+  34681.
+
+* DirectoryScanner.slowScan() was broken. Bugzilla report 34722.
+
+Other changes:
+--------------
+
 Changes from Ant 1.6.2 to Ant 1.6.3
 ===================================
 
