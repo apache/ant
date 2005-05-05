@@ -782,14 +782,27 @@ public class ComponentHelper  {
         boolean jars = false;
         boolean definitions = false;
         boolean antTask;
+        String home = System.getProperty(Launcher.USER_HOMEDIR);
+        File libDir = new File(home,
+                Launcher.ANT_PRIVATEDIR +
+                File.separator +
+                Launcher.ANT_PRIVATELIB);
         //look up the name
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
             //not a known type
+            boolean isAntlib=componentName.indexOf("antlib:")==0;
             out.println("Cause: The name is undefined.");
             out.println("Action: Check the spelling.");
             out.println("Action: Check that any custom tasks/types have been declared");
             out.println("Action: Check that any <presetdef>/<macrodefs> declarations have taken place");
+            if(isAntlib) {
+                out.println();
+                out.println("This appears to be an antlib declaration. ");
+                out.println("Action: check that the implementing library exists "
+                        + "in ANT_HOME/lib or in ");
+                out.println("        " + libDir);
+            }
             definitions = true;
         } else {
             //we are defined, so it is an instantiation problem
@@ -797,11 +810,6 @@ public class ComponentHelper  {
             antTask = classname.startsWith("org.apache.tools.ant.");
             boolean optional = classname.startsWith("org.apache.tools.ant.taskdefs.optional");
             optional |= classname.startsWith("org.apache.tools.ant.types.optional");
-            String home = System.getProperty(Launcher.USER_HOMEDIR);
-            File libDir = new File(home,
-                    Launcher.ANT_PRIVATEDIR +
-                    File.separator +
-                    Launcher.ANT_PRIVATELIB);
 
             //start with instantiating the class.
             Class clazz = null;
