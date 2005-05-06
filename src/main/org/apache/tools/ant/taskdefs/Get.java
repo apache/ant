@@ -363,48 +363,51 @@ public class Get extends Task {
             int bits24;
             int bits6;
 
-            StringBuffer buf = new StringBuffer();
+            char[] out = new char[((octetString.length - 1) / 3 + 1) * 4];
+            int outIndex = 0;
             int i = 0;
 
             while ((i + 3) <= octetString.length) {
                 // store the octets
                 bits24 = (octetString[i++] & 0xFF) << 16;
                 bits24 |= (octetString[i++] & 0xFF) << 8;
+                bits24 |= octetString[i++];
 
                 bits6 = (bits24 & 0x00FC0000) >> 18;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
                 bits6 = (bits24 & 0x0003F000) >> 12;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
                 bits6  = (bits24 & 0x00000FC0) >> 6;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
                 bits6 = (bits24 & 0x0000003F);
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
             }
             if (octetString.length - i == 2) {
                 // store the octets
                 bits24 = (octetString[i] & 0xFF) << 16;
                 bits24 |= (octetString[i + 1] & 0xFF) << 8;
                 bits6 = (bits24 & 0x00FC0000) >> 18;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
                 bits6 = (bits24 & 0x0003F000) >> 12;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
                 bits6 = (bits24 & 0x00000FC0) >> 6;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
 
                 // padding
-                buf.append('=');
+                out[outIndex++] = '=';
             } else if (octetString.length - i == 1) {
                 // store the octets
                 bits24 = (octetString[i] & 0xFF) << 16;
                 bits6 = (bits24 & 0x00FC0000) >> 18;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
                 bits6 = (bits24 & 0x0003F000) >> 12;
-                buf.append(alphabet[bits6]);
+                out[outIndex++] = alphabet[bits6];
 
                 // padding
-                buf.append("==");
+                out[outIndex++] = '=';
+                out[outIndex++] = '=';
             }
-            return buf.toString();
+            return new String(out);
         }
     }
 
