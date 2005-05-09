@@ -132,7 +132,7 @@ containing third-party tasks to be used in the build. It also allows the main An
 Additional directories to be searched may be added by using the -lib option.
 The -lib option specifies a search path. Any jars or classes in the directories
 of the path will be added to Ant's classloader. The order in which jars are
-added to the classpath is as follows:-
+added to the classpath is as follows:
 </p>
 
 <ul>
@@ -145,7 +145,7 @@ added to the classpath is as follows:-
 Note that the CLASSPATH environment variable is passed to Ant using a -lib
 option. Ant itself is started with a very minimalistic classpath. 
 Ant should work perfectly well with an empty CLASSPATH environment variable,
-something the the -noclasspath option actually enforces. We get many more support calls related to classpath problems (especially quoting problems), than
+something the the -noclasspath option actually enforces. We get many more support calls related to classpath problems (especially quoting problems) than
 we like.
 
 </p>
@@ -219,7 +219,7 @@ set):</p>
 </ul>
 
 <h3><a name="sysprops">Java System Properties</a></h3>
-<p>Some of Ant's core classes ant tasks can be configured via system properties.</p>
+<p>Some of Ant's core classes can be configured via system properties.</p>
 <p>Here is the result of a search through the codebase. Because system properties are
 available via Project instance, I searched for them with a
 <pre>
@@ -442,26 +442,26 @@ org.apache.tools.ant.Executor implementation specified here.
 If new properties get added (it happens), expect them to appear under the
 "ant." and "org.apache.tools.ant" prefixes, unless the developers have a 
 very good reason to use another prefix. Accordingly, please avoid using 
-properties that begin with these prefixes, to reduce the risk that future
-Ant releases break your build file.
+properties that begin with these prefixes. This protects you from future
+Ant releases breaking your build file.
 </p>
 
 
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
-should not have any problems launching Ant form the Cygwin shell. It is important
-to note however, that once Ant is runing it is part of the JDK which operates as
-a native Windows application. The JDK is not a Cygwin executable, and it therefore
-has no knowledge of the Cygwin paths, etc. In particular when using the <code>&lt;exec&gt;</code>
-task, executable names such as &quot;/bin/sh&quot; will not work, even though these
-work from the Cygwin shell from which Ant was launched. You can use an executable
-name such as &quot;sh&quot; and rely on that command being available in the Windows
-path.
+should not have any problems launching Ant from the Cygwin shell. It is
+important to note, however, that once Ant is running it is part of the JDK
+which operates as a native Windows application. The JDK is not a Cygwin
+executable, and it therefore has no knowledge of Cygwin paths, etc. In
+particular when using the <code>&lt;exec&gt;</code> task, executable names such
+as &quot;/bin/sh&quot; will not work, even though these work from the Cygwin
+shell from which Ant was launched. You can use an executable name such as
+&quot;sh&quot; and rely on that command being available in the Windows path.
 </p>
 
 <h2><a name="os2">OS/2 Users</a></h2>
-<p>The OS/2 launch script was developed so as it can perform complex tasks. It has two parts:
-<code>ant.cmd</code> which calls Ant and <code>antenv.cmd</code> which sets environment for Ant.
+<p>The OS/2 launch script was developed to perform complex tasks. It has two parts:
+<code>ant.cmd</code> which calls Ant and <code>antenv.cmd</code> which sets the environment for Ant.
 Most often you will just call <code>ant.cmd</code> using the same command line options as described
 above. The behaviour can be modified by a number of ways explained below.</p>
 
@@ -470,13 +470,13 @@ requirements are:</p>
 <ol>
 <li>Environment variable <code>JAVA_HOME</code> is set.</li>
 <li>Environment variable <code>ANT_HOME</code> is set.</li>
-<li>environment variable <code>CLASSPATH</code> is set and contains at least one element from
+<li>Environment variable <code>CLASSPATH</code> is set and contains at least one element from
 <code>JAVA_HOME</code> and at least one element from <code>ANT_HOME</code>.</li>
 </ol>
 
 <p>If any of these conditions is violated, script <code>antenv.cmd</code> is called. This script
 first invokes configuration scripts if there exist: the system-wide configuration
-<code>antconf.cmd</code> from the <code>%ETC%</code> directory and then the user comfiguration
+<code>antconf.cmd</code> from the <code>%ETC%</code> directory and then the user configuration
 <code>antrc.cmd</code> from the <code>%HOME%</code> directory. At this moment both
 <code>JAVA_HOME</code> and <code>ANT_HOME</code> must be defined because <code>antenv.cmd</code>
 now adds <code>classes.zip</code> or <code>tools.jar</code> (depending on version of JVM) and
@@ -484,15 +484,15 @@ everything from <code>%ANT_HOME%\lib</code> except <code>ant-*.jar</code> to
 <code>CLASSPATH</code>. Finally <code>ant.cmd</code> calls per-directory configuration
 <code>antrc.cmd</code>. All settings made by <code>ant.cmd</code> are local and are undone when the
 script ends. The settings made by <code>antenv.cmd</code> are persistent during the lifetime of the
-shell (of course unless called automaticaly from <code>ant.cmd</code>). It is thus possible to call
+shell (of course unless called automatically from <code>ant.cmd</code>). It is thus possible to call
 <code>antenv.cmd</code> manually and modify some settings before calling <code>ant.cmd</code>.</p>
 
-<p>Scripts <code>envset.cmd</code> and <code>runrc.cmd</code> perform auxilliary tasks. All scripts
+<p>Scripts <code>envset.cmd</code> and <code>runrc.cmd</code> perform auxiliary tasks. All scripts
 have some documentation inside.</p>
 
 <h2><a name="viajava">Running Ant via Java</a></h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
-with two entry points:</p>
+from one of two entry points:</p>
 <blockquote>
   <pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
 </blockquote>
