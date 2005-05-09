@@ -189,14 +189,12 @@
 #macro (makeProject $menus)
 
   <div class="menucontainer">
-#*
     <div align="center">
-      <a href="http://ApacheCon.Com/2004/US/"><img width="170" height="100"
+      <a href="http://ApacheCon.Com/"><img width="135" height="50"
              border="0"
-             src="http://ApacheCon.Com/2004/US/logos/logo_only.gif"
+             src="http://apache.org/images/ac2005eu_135x50.gif"
              alt="ApacheCon!" title="Come to ApacheCon!"/></a>
     </div>
-*#
     <div class="menu">
       <ul>
       #foreach ( $menu in $menus )
