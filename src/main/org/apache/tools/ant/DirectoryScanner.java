@@ -872,7 +872,7 @@ public class DirectoryScanner
                 }
                 if ((myfile == null || !myfile.exists()) && !isCaseSensitive()) {
                     File f = findFile(basedir, currentelement, false);
-                    if (f.exists()) {
+                    if (f != null && f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
                         currentelement = FILE_UTILS.removeLeadingPath(basedir,
