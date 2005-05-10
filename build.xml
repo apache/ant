@@ -131,6 +131,8 @@
   <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
+  <property name="java-repository.dir" value="java-repository/ant/jars"/>
+
   <!--
        ===================================================================
          Set up selectors to be used by javac, junit and jar to exclude
@@ -1127,9 +1129,11 @@
   <target name="main_distribution"
           description="--> creates the zip and tar distributions">
     <delete dir="${dist.name}"/>
+    <delete dir="${java-repository.dir}"/>
     <mkdir dir="${dist.base}"/>
     <mkdir dir="${dist.base}/src"/>
     <mkdir dir="${dist.base}/bin"/>
+    <mkdir dir="${java-repository.dir}"/>
 
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
@@ -1170,8 +1174,29 @@
     <bzip2 destfile="${dist.base}/bin/${dist.name}-bin.tar.bz2"
            src="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete file="${dist.base}/bin/${dist.name}-bin.tar"/>
+
+    <copy todir="${java-repository.dir}">
+      <fileset dir="${dist.name}/lib">
+        <include name="ant*.jar"/>
+      </fileset>
+      <mapper type="glob" from="*.jar" to="*-${version}.jar"/>
+    </copy>
+    <checksum fileext=".md5">
+      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
+    </checksum>
+    <checksum fileext=".sha1" algorithm="SHA">
+      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
+    </checksum>
+    
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
+      <fileset dir="${dist.base}/bin/">
+        <include name="**/*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+      </fileset>
+    </checksum>
+    <checksum fileext=".sha1" algorithm="SHA">
       <fileset dir="${dist.base}/bin/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
@@ -1212,6 +1237,13 @@
     <delete file="${dist.base}/src/${dist.name}-src.tar"/>
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
+      <fileset dir="${dist.base}/src/">
+        <include name="**/*"/>
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+      </fileset>
+    </checksum>
+    <checksum fileext=".sha1" algorithm="SHA">
       <fileset dir="${dist.base}/src/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
