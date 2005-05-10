@@ -204,6 +204,9 @@ Fixed bugs:
 
 * DirectoryScanner.slowScan() was broken. Bugzilla report 34722.
 
+* DirectoryScanner.scan() could throw a NullPointerException on
+  case-insensitive filesystems (read Windows or MacOS X).
+
 Other changes:
 --------------
 
