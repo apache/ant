@@ -93,19 +93,19 @@ may not be available on all mirrors for a few days.</div>
 <li><code>.zip</code> archive: 
 <a href="[preferred]/ant/binaries/apache-ant-1.6.3-bin.zip">apache-ant-1.6.3-bin.zip</a>
 [<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.zip.asc">PGP</a>]
-<!--[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.zip.sha1">SHA1</a>]-->
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.zip.sha1">SHA1</a>]
 [<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.zip.md5">MD5</a>]</li>
 
 <li><code>.tar.gz</code> archive: 
 <a href="[preferred]/ant/binaries/apache-ant-1.6.3-bin.tar.gz">apache-ant-1.6.3-bin.tar.gz</a>
 [<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.gz.asc">PGP</a>]
-<!--[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.gz.sha1">SHA1</a>]-->
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.gz.sha1">SHA1</a>]
 [<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.gz.md5">MD5</a>]</li>
 
 <li><code>.tar.bz2</code> archive: 
 <a href="[preferred]/ant/binaries/apache-ant-1.6.3-bin.tar.bz2">apache-ant-1.6.3-bin.tar.bz2</a>
 [<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.bz2.asc">PGP</a>]
-<!--[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.bz2.sha1">SHA1</a>]-->
+[<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.bz2.sha1">SHA1</a>]
 [<a href="http://www.apache.org/dist/ant/binaries/apache-ant-1.6.3-bin.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </section>
