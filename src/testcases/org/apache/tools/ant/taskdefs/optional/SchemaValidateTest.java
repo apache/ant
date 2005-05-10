@@ -92,4 +92,7 @@ public class SchemaValidateTest extends BuildFileTest {
         executeTarget("testEqualsSchemasOK");
     }
 
+    public void testFileset() throws Exception {
+        executeTarget("testFileset");
+    }
 }

@@ -285,7 +285,7 @@ public class XMLValidateTask extends Task {
                 "Specify at least one source - " + "a file or a fileset.");
         }
 
-        initValidator();
+
 
         if (file != null) {
             if (file.exists() && file.canRead() && file.isFile()) {
@@ -518,7 +518,10 @@ public class XMLValidateTask extends Task {
     /**
      * parse the file
      */
-    protected void doValidate(File afile) {
+    protected boolean doValidate(File afile) {
+        //for every file, we have a new instance of the validator
+        initValidator();
+
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
@@ -526,6 +529,7 @@ public class XMLValidateTask extends Task {
             String uri = FILE_UTILS.toURI(afile.getAbsolutePath());
             is.setSystemId(uri);
             xmlReader.parse(is);
+            return true;
         } catch (SAXException ex) {
             log("Caught when validating: " + ex.toString(), Project.MSG_DEBUG);
             if (failOnError) {
@@ -548,6 +552,8 @@ public class XMLValidateTask extends Task {
                 log(afile + " is not a valid XML document", Project.MSG_ERR);
             }
         }
+        //if we got here. it was as a result of a caught and logged exception.
+        return false;
     }
 
     /**

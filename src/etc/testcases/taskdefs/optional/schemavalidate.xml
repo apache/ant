@@ -69,6 +69,15 @@
     </schemavalidate>
   </target>  
   
+  <target name="testFileset">
+    <schemavalidate noNamespaceFile="${doc.xsd}"
+      >
+      <schema namespace="${namespace}" file="${doc-in-ns.xsd}" />
+      <fileset dir="xml" 
+        includes="endpiece.xml, endpiece-ns-no-location.xml, endpiece-no-schema.xml" />
+    </schemavalidate>
+  </target>  
+  
   
   <target name="default" depends="testNoNamespace,testNSMapping" />
 </project>
