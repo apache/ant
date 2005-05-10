@@ -354,6 +354,14 @@
   &lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;
       </a></li>
+                <li><a href="#delegating-classloader-1.5">
+  &lt;style&gt; or &lt;junit&gt; ignores my
+      &lt;classpath&gt; - Ant 1.5.x version
+      </a></li>
+                <li><a href="#delegating-classloader-1.6">
+  &lt;style&gt; or &lt;junit&gt; ignores my
+      &lt;classpath&gt; - Ant 1.6.x version
+      </a></li>
                 <li><a href="#winxp-jdk14-ant14">
   When running Ant 1.4 on Windows XP and JDK 1.4, I get
       various errors when trying to <code>&lt;exec&gt;</code>, fork
@@ -1610,31 +1618,23 @@ mv /tmp/foo $ANT_HOME/bin/antRun
     </p>
                   <p>These tasks don't ignore your classpath setting, you
         are facing a common problem with delegating classloaders.</p>
-                        <p>First of all let's state that Ant adds all
-        <code>.jar</code> files from <code>ANT_HOME/lib</code> to
-        <code>CLASSPATH</code>, therefore "in
-        <code>CLASSPATH</code>" shall mean "either in your
-        <code>CLASSPATH</code> environment variable or
-        <code>ANT_HOME/lib</code>" for the rest of this
-        answer.</p>
-                        <p>Technically the sentence above isn't true for Ant 1.6
-        and later anymore, but the result is the same.  For the sake
-        of this discussion, <code>CLASSPATH</code> and
-        <code>ANT_HOME/lib</code> are identical.</p>
                         <p>This question collects a common type of problem: A task
         needs an external library and it has a nested classpath
         element so that you can point it to this external library, but
-        that doesn't work unless you put the external library into the
-        <code>CLASSPATH</code>.</p>
-                        <p>The root of the problem is that the class that needs the
-        external library is on the <code>CLASSPATH</code>.</p>
+        that doesn't work unless you put the external library
+        into the <code>CLASSPATH</code> or place it in
+        <code>ANT_HOME/lib</code>.</p>
+                        <p>Some background is necessary before we can discuss
+        solutions for <a href="#delegating-classloader-1.5">Ant
+        1.5.x</a> and <a href="#delegating-classloader-1.6">Ant
+        1.6.x</a>.</p>
                         <p>When you specify a nested <code>&lt;classpath&gt;</code> in
         Ant, Ant creates a new class loader that uses the path you
         have specified.  It then tries to load additional classes from
         this classloader.</p>
-                        <p>In most cases - for example the two cases above - Ant
-        doesn't load the external library directly, it is the loaded
-        class that does so.</p>
+                        <p>In most cases - for example using &lt;style&gt; or
+        &lt;junit&gt; - Ant doesn't load the external library
+        directly, it is the loaded class that does so.</p>
                         <p>In the case of <code>&lt;junit&gt;</code> it is the task
         implementation itself and in the case of
         <code>&lt;style&gt;</code> it is the implementation of the
@@ -1654,16 +1654,37 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         class loader, does not itself have a parent but may serve as
         the parent of a <code>ClassLoader</code>
         instance.</blockquote>
-                        <p>This means, Ant's class loader will consult the
+                        <p>The possible solutions depend on the version of Ant you
+        use, see the next sections.</p>
+                    <p class="faq">
+      <a name="delegating-classloader-1.5"></a>
+      &lt;style&gt; or &lt;junit&gt; ignores my
+      &lt;classpath&gt; - Ant 1.5.x version
+    </p>
+                  <p>Please read <a href="#delegating-classloader">the previous
+        entry</a> before you go ahead.</p>
+                        <p>First of all let's state that Ant's wrapper script
+        (<code>ant</code> or <code>ant.bat</code>) adds all
+        <code>.jar</code> files from <code>ANT_HOME/lib</code> to
+        <code>CLASSPATH</code>, therefore "in
+        <code>CLASSPATH</code>" shall mean "either in your
+        <code>CLASSPATH</code> environment variable or
+        <code>ANT_HOME/lib</code>" for the rest of this
+        answer.</p>
+                        <p>The root of the problem is that the class that needs the
+        external library is on the <code>CLASSPATH</code>.</p>
+                        <p>Let's see what happens when you load the &lt;junit&gt;
+        task.  Ant's class loader will consult the
         bootstrap class loader first, which tries to load classes from
         <code>CLASSPATH</code>.  The bootstrap class loader
         doesn't know anything about Ant's class loader or
         even the path you have specified.</p>
                         <p>If the bootstrap class loader can load the class Ant has
-        asked it to load, this class will try to load the external
-        library from <code>CLASSPATH</code> as well - it doesn't
-        know anything else - and will not find it unless the library
-        is in <code>CLASSPATH</code> as well.</p>
+        asked it to load (which it can if <code>optional.jar</code> is
+        part of <code>CLASSPATH</code>), this class will try to load
+        the external library from <code>CLASSPATH</code> as well - it
+        doesn't know anything else - and will not find it unless
+        the library is in <code>CLASSPATH</code> as well.</p>
                         <p>To solve this, you have two major options:</p>
                         <ol>
           <li>put all external libraries you need in
@@ -1673,8 +1694,6 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           <li>remove the class that loads the external library from
           the <code>CLASSPATH</code>.</li>
         </ol>
-                        <p><strong>Using The Second Option with Ant 1.5.4 and
-        Earlier:</strong></p>
                         <p>The easiest way to do this is to remove
         <code>optional.jar</code> from <code>ANT_HOME/lib</code>.  If
         you do so, you will have to <code>&lt;taskdef&gt;</code> all
@@ -1701,22 +1720,98 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         directory, in the <code>&lt;style&gt;</code> case it is one of
         the <code>*Liaison</code> classes in
         <code>org/apache/tools/ant/taskdefs/optional</code>.</p>
-                        <p><strong>Using The Second Option with Ant 1.6 and
-        later:</strong></p>
-                        <p>In Ant 1.6 <code>optional.jar</code> has been split into
-        multiple jars, each one containing classes with the same
-        dependencies on external libraries.  You can move the
-        "offending" jar out of ANT_HOME/lib.  For the
-        <code>&lt;junit&gt;</code> task it would be
-        <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
-        it would be <code>ant-trax.jar</code>,
-        <code>ant-xalan1.jar</code> or <code>ant-xslp.jar</code> -
-        depending on the processor you use.</p>
                         <p>If you use the option to break up <code>optional.jar</code>
         for <code>&lt;junit&gt;</code> or remove
         <code>ant-junit.jar</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
+                    <p class="faq">
+      <a name="delegating-classloader-1.6"></a>
+      &lt;style&gt; or &lt;junit&gt; ignores my
+      &lt;classpath&gt; - Ant 1.6.x version
+    </p>
+                  <p>Please read <a href="#delegating-classloader">the general
+        entry</a> before you go ahead.</p>
+                        <p>The wrapper script of Ant 1.6.x no longer adds the contents
+        of <code>ANT_HOME/lib</code> to <code>CLASSPATH</code>,
+        instead Ant will create a classloader on top of the bootstrap
+        classloader - let's call it the coreloader for the rest of
+        this answer - which holds the contents of
+        <code>ANT_HOME/lib</code>.  Ant's core and its tasks will be
+        loaded through this classloader and not the bootstrap
+        classloader.</p>
+                        <p>This causes some small but notable differences between Ant
+        1.5.x and 1.6.x.  Most importantly, a third-party task that is
+        part of <code>CLASSPATH</code> will no longer work in Ant
+        1.6.x since the task now can't find Ant's classes.  In a sense
+        this is the same problem this entry is about, only
+        <code>ant.jar</code> has become the external library in
+        question now.</p>
+                        <p>This coreloader also holds the contents of
+        <code>~/.ant/lib</code> and any file or directory that has
+        been specified using Ant's <code>-lib</code> command line
+        argument.</p>
+                        <p>Let's see what happens when you load the &lt;junit&gt;
+        task.  Ant's class loader will consult the bootstrap
+        class loader first, which tries to load classes from
+        <code>CLASSPATH</code>.  The bootstrap class loader
+        doesn't know anything about Ant's class loader or
+        even the path you have specified.  If it fails to find the
+        class using the bootstrap classloader it will try the
+        coreloader next.  Again, the coreloader doesn't know anything
+        about your path.</p>
+                        <p>If the coreloader can load the class Ant has asked it to
+        load (which it can if <code>ant-junit.jar</code> is in
+        <code>ANT_HOME/lib</code>), this class will try to load the
+        external library from coreloader as well - it doesn't
+        know anything else - and will not find it unless the library
+        is in <code>CLASSPATH</code> or the coreloader as well.</p>
+                        <p>To solve this, you have the following major options:</p>
+                        <ol>
+          <li>put all external libraries you need in
+          <code>CLASSPATH</code> as well this is not what you want,
+          otherwise you wouldn't have found this FAQ entry.</li>
+
+          <li>put all external libraries you need in
+          <code>ANT_HOME/lib</code> or <code>.ant/lib</code>.  This
+          probably still isn't what you want, but you might reconsider
+          the <code>.ant/lib</code> option.</li>
+
+          <li>Always start Ant with the <code>-lib</code> command line
+          switch and point to your external libraries (or the
+          directories holding them).</li>
+
+          <li>remove the class that loads the external library from
+          the coreloader.</li>
+        </ol>
+                        <p>In Ant 1.6 <code>optional.jar</code> has been split into
+        multiple jars, each one containing classes with the same
+        dependencies on external libraries.  You can move the
+        "offending" jar out of <code>ANT_HOME/lib</code>.  For the
+        <code>&lt;junit&gt;</code> task it would be
+        <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
+        it would be <code>ant-trax.jar</code>,
+        <code>ant-xalan1.jar</code> or <code>ant-xslp.jar</code> -
+        depending on the processor you use.</p>
+                        <p>If you do so, you will have to <code>&lt;taskdef&gt;</code>
+        all optional tasks that need the external libary and use
+        nested <code>&lt;classpath&gt;</code> elements in the
+        <code>&lt;taskdef&gt;</code> tasks that point to the new
+        location of <code>ant-*.jar</code>.  Also, don't forget
+        to add the new location of <code>ant-*.jar</code> to the
+        <code>&lt;classpath&gt;</code> of your
+        <code>&lt;style&gt;</code> or <code>&lt;junit&gt;</code>
+        task.</p>
+                        <p>For example</p>
+                        <pre class="code">
+    &lt;taskdef name=&quot;junit&quot;
+            class=&quot;org.apache.tools.ant.taskdefs.optional.junit.JUnitTask&quot;&gt;
+      &lt;classpath&gt;
+        &lt;pathelement location=&quot;HOME-OF/junit.jar&quot;/&gt;
+        &lt;pathelement location=&quot;NEW-HOME-OF/ant-junit.jar&quot;/&gt;
+      &lt;/classpath&gt;
+    &lt;/taskdef&gt;
+</pre>
                     <p class="faq">
       <a name="winxp-jdk14-ant14"></a>
       When running Ant 1.4 on Windows XP and JDK 1.4, I get
