@@ -199,13 +199,19 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* Sun javah failed with java.lang.NoClassDefFoundError. Bugzilla report
-  34681.
+* Sun javah failed with java.lang.NoClassDefFoundError.
+  Bugzilla report 34681.
 
 * DirectoryScanner.slowScan() was broken. Bugzilla report 34722.
 
 * DirectoryScanner.scan() could throw a NullPointerException on
   case-insensitive filesystems (read Windows or MacOS X).
+
+* Get w/authentication failed with ArrayOutOfBoundsExceptions.
+  Bugzilla report 34734.
+
+* Granularity attribute for <sync> task was undocumented.
+  Bugzilla report 34871.
 
 Other changes:
 --------------
