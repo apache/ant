@@ -17,6 +17,7 @@
 package org.apache.tools.ant.taskdefs.optional.net;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import java.io.BufferedInputStream;
@@ -109,6 +110,13 @@ public class FTP
     private boolean preserveLastModified = false;
     private String chmod = null;
     private String umask = null;
+    private String systemKeyConfig = null;
+    private String defaultDateFormatConfig = null;
+    private String recentDateFormatConfig = null;
+    private String serverLanguageCodeConfig = null;
+    private String serverTimeZoneConfig = null;
+    private String shortMonthNamesConfig = null;
+    private boolean isConfigurationSet = false;
 
     protected static final String[] ACTION_STRS = {
         "sending",
@@ -1243,6 +1251,76 @@ public class FTP
         this.ignoreNoncriticalErrors = ignoreNoncriticalErrors;
     }
 
+    private void configurationHasBeenSet() {
+        this.isConfigurationSet = true;
+    }
+
+    /**
+     * Method for setting <code>FTPClientConfig</code> remote system key.
+     * 
+     * @param systemKeyConfig
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    public void setSystemKeyConfig(String systemKey) {
+        this.systemKeyConfig = systemKey;
+        configurationHasBeenSet();
+    }
+
+    /**
+     * Delegate method for <code>FTPClientConfig.setDefaultDateFormatStr(String)</code>.
+     * 
+     * @param defaultDateFormatConfig
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    public void setDefaultDateFormatConfig(String defaultDateFormat) {
+        this.defaultDateFormatConfig = defaultDateFormat;
+        configurationHasBeenSet();
+    }
+
+    /**
+     * Delegate method for <code>FTPClientConfig.setRecentDateFormatStr(String)</code>.
+     * 
+     * @param recentDateFormatConfig
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    public void setRecentDateFormatConfig(String recentDateFormat) {
+        this.recentDateFormatConfig = recentDateFormat;
+        configurationHasBeenSet();
+    }
+
+    /**
+     * Delegate method for <code>FTPClientConfig.setServerLanguageCode(String)</code>.
+     * 
+     * @param serverLanguageCodeConfig
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    public void setServerLanguageCodeConfig(String serverLanguageCode) {
+        this.serverLanguageCodeConfig = serverLanguageCode;
+        configurationHasBeenSet();
+    }
+
+    /**
+     * Delegate method for <code>FTPClientConfig.setServerTimeZoneId(String)</code>.
+     * 
+     * @param serverTimeZoneConfig
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    public void setServerTimeZoneConfig(String serverTimeZoneId) {
+        this.serverTimeZoneConfig = serverTimeZoneId;
+        configurationHasBeenSet();
+    }
+
+    /**
+     * Delegate method for <code>FTPClientConfig.setShortMonthNames(String)</code>.
+     * 
+     * @param shortMonthNamesConfig
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    public void setShortMonthNamesConfig(String shortMonthNames) {
+        this.shortMonthNamesConfig = shortMonthNames;
+        configurationHasBeenSet();
+    }
+
 
     /**
      * Checks to see that all required parameters are set.
@@ -1945,6 +2023,45 @@ public class FTP
         }
     }
 
+    private void configure(FTPClient ftp) {
+        if (this.isConfigurationSet) {
+            FTPClientConfig config;
+            if (this.systemKeyConfig != null) {
+                config = new FTPClientConfig(this.systemKeyConfig);
+                log("custom config: system key = " 
+                        + this.systemKeyConfig, Project.MSG_VERBOSE);
+            } else {
+                config = new FTPClientConfig();
+            }
+            if (this.defaultDateFormatConfig != null) {
+                config.setDefaultDateFormatStr(this.defaultDateFormatConfig);
+                log("custom config: default date format = " 
+                        + this.defaultDateFormatConfig, Project.MSG_VERBOSE);
+            }
+            if (this.recentDateFormatConfig != null) {
+                config.setRecentDateFormatStr(this.recentDateFormatConfig);
+                log("custom config: recent date format = " 
+                        + this.recentDateFormatConfig, Project.MSG_VERBOSE);
+            }
+            if (this.serverLanguageCodeConfig != null) {
+                config.setServerLanguageCode(this.serverLanguageCodeConfig);
+                log("custom config: server language code = " 
+                        + this.serverLanguageCodeConfig, Project.MSG_VERBOSE);
+            }
+            if (this.serverTimeZoneConfig != null) {
+                config.setServerTimeZoneId(this.serverTimeZoneConfig);
+                log("custom config: server time zone ID = " 
+                        + this.serverTimeZoneConfig, Project.MSG_VERBOSE);
+            }
+            if (this.shortMonthNamesConfig != null) {
+                config.setShortMonthNames(this.shortMonthNamesConfig);
+                log("custom config: short month names = " 
+                        + this.shortMonthNamesConfig, Project.MSG_VERBOSE);
+            }
+            ftp.configure(config);
+        }
+    }
+
     /**
      * Runs the task.
      *
@@ -1960,6 +2077,7 @@ public class FTP
             log("Opening FTP connection to " + server, Project.MSG_VERBOSE);
 
             ftp = new FTPClient();
+            configure(ftp);
 
             ftp.connect(server, port);
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
