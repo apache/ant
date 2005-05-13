@@ -74,7 +74,7 @@ Fixed bugs:
   did not always do so.
   
 * <ftp> failed to retrieve a file when the path towards the file contained
-  an element starting with . . Bugzilla report 33770
+  an element starting with . Bugzilla report 33770
   
 * "<rmic> always compiles on Java1.5" bugzilla report=33862. Fixed default
   stub version to always be "compat", even on Java1.5+. 
@@ -93,7 +93,10 @@ Fixed bugs:
 * Targets with identical name work in imported project. Bugzilla Report 34566.
 
 * DemuxOutputStream now uses a WeakHashMap to store the thread-stream mapping,
-  to avoid holding on to thread references after they terminate. 
+  to avoid holding on to thread references after they terminate.
+
+* <xmlvalidate> and <schemavalidate> create a new parser for every file in a
+  fileset, and so validate multiple files properly. Bugzilla Report 32791
 
 Other changes:
 --------------
@@ -182,13 +185,20 @@ Other changes:
   negate attribute to select lines -not- containing specified text.
   Bugzilla Report 34374.
 
-* <os> condition adds "nt" as a family which can be tested. This is
+* <os> condition adds "winnt" as a family which can be tested. This is
   all windows platforms other than the Win9x line, and windows CE.  
 
-* <exec> (and hence, <apply>) have an OsFamily attribute, which can restrict
-  execution to a single OS family.
+* <exec> (and hence, <apply> and any other derived classes) have an OsFamily
+  attribute, which can restrict execution to a single OS family.
 
 * added "backtrace" attribute to macrodef. Bugzilla report 27219.
+
+* Ant main provides some diagnostics if it ever sees a -cp or -lib option,
+  as this is indicative of a script mismatch. Bugzilla report 34860
+
+* <junitreport> prints a special message if supplied an empty XML File. This
+  can be caused by the test JVM exiting during a test, either via a System.exit()
+  call or a JVM crash.
 
 Changes from Ant 1.6.3 to current Ant 1.6 CVS version
 =====================================================
