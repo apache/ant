@@ -21,6 +21,9 @@ Fixed bugs:
 * Granularity attribute for <sync> task was undocumented.
   Bugzilla report 34871.
 
+* <unzip> and <untar> could leave file handles open on invalid
+  archives.  Bugzilla report 34893.
+
 Other changes:
 --------------
 

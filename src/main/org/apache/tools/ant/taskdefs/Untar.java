@@ -88,13 +88,13 @@ public class Untar extends Expand {
      * @see Expand#expandFile(FileUtils, File, File)
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
+        FileInputStream fis = null;
         TarInputStream tis = null;
         try {
             log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
+            fis = new FileInputStream(srcF);
             tis = new TarInputStream(
-                compression.decompress(srcF,
-                    new BufferedInputStream(
-                        new FileInputStream(srcF))));
+                compression.decompress(srcF, new BufferedInputStream(fis)));
             TarEntry te = null;
 
             while ((te = tis.getNextEntry()) != null) {
@@ -110,6 +110,12 @@ public class Untar extends Expand {
             if (tis != null) {
                 try {
                     tis.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            } else if (fis != null) {
+                try {
+                    fis.close();
                 } catch (IOException e) {
                     // ignore
                 }
