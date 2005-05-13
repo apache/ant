@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
 /**
@@ -82,34 +83,10 @@ public class BUnzip2 extends Unpack {
                 String msg = "Problem expanding bzip2 " + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
             } finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (IOException ioex) {
-                        // ignore
-                    }
-                }
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException ioex) {
-                        // ignore
-                    }
-                }
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException ioex) {
-                        // ignore
-                    }
-                }
-                if (zIn != null) {
-                    try {
-                        zIn.close();
-                    } catch (IOException ioex) {
-                        // ignore
-                    }
-                }
+                FileUtils.close(bis);
+                FileUtils.close(fis);
+                FileUtils.close(out);
+                FileUtils.close(zIn);
             }
         }
     }
