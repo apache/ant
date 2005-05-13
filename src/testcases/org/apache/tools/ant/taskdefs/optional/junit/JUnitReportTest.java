@@ -52,5 +52,41 @@ public class JUnitReportTest extends BuildFileTest {
         }
     }
 
+    public void assertIndexCreated() {
+        if (!new File(System.getProperty("root"),
+                "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html").exists()) {
+            fail("No file index file found");
+        }
+
+    }
+
+    /**
+     * run a target, assert the index file is there, look for text in the log
+     * @param targetName target
+     * @param text optional text to look for
+     */
+    private void expectReportWithText(String targetName, String text) {
+        executeTarget(targetName);
+        assertIndexCreated();
+        if(text!=null) {
+            assertLogContaining(text);
+        }
+    }
+
+
+    public void testEmptyFile() throws Exception {
+        expectReportWithText("testEmptyFile",
+                XMLResultAggregator.WARNING_EMPTY_FILE);
+    }
+
+    public void testIncompleteFile() throws Exception {
+        expectReportWithText("testIncompleteFile",
+                XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED);
+    }
+    public void testWrongElement() throws Exception {
+        expectReportWithText("testWrongElement",
+                XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT);
+    }
+
 }
 

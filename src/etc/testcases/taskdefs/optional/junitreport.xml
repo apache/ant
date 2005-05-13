@@ -18,6 +18,50 @@
             <report todir="${outputdir}/html"/>
         </junitreport>
     </target>
+
+    <target name="testEmptyFile">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="ZEROBYTES-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"/>
+        </junitreport>
+    </target>
+    
+    <target name="testIncompleteFile">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="INCOMPLETE-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"/>
+        </junitreport>
+    </target>
+    
+    <target name="testWrongElement">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="WRONGELEMENT-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"/>
+        </junitreport>
+    </target>    
+
+    <target name="testNamespace">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="NAMESPACE-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"/>
+        </junitreport>
+    </target>        
     
     <target name="clean">
         <delete dir="${outputdir}"/>
