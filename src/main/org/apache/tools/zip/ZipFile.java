@@ -138,8 +138,17 @@ public class ZipFile {
     public ZipFile(File f, String encoding) throws IOException {
         this.encoding = encoding;
         archive = new RandomAccessFile(f, "r");
-        populateFromCentralDirectory();
-        resolveLocalFileHeaderData();
+        try {
+            populateFromCentralDirectory();
+            resolveLocalFileHeaderData();
+        } catch (IOException e) {
+            try {
+                archive.close();
+            } catch (IOException e2) {
+                // swallow, throw the original exception instead
+            }
+            throw e;
+        }
     }
 
     /**
