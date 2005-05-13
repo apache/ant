@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!--
-   Copyright 2001-2004 The Apache Software Foundation
+   Copyright 2001-2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -89,8 +89,61 @@
 
 
     <section name="Books">
-      <p>Listed by descending publication date.</p>
-      <!-- TODO: reorganize as a table? -->
+      <p>The most recent books come first</p>
+
+      <subsection name="Ant: The Definitive Guide, 2nd edition">
+        <p>Published April 2005, and covers Ant release 1.6.1.</p>
+
+        <p>This is a complete rewrite of the first edition; this book is
+        now 290 pages and so covers Ant in more depth than its predecessor.
+        </p>
+
+        <p>It also mixes reference information (tables) with text explanation
+        on how to use the tasks. Contents includes JUnit, CVS, execution, basic
+        deployment, Web application development and XDoclet. There is also coverage
+        of XDoclet, and a chapter on how to extend Ant in Java.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Steve Holzner</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.oreilly.com/catalog/anttdg2/">http://www.oreilly.com/catalog/anttdg2/</a>
+            </td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Pragmatic Project Automation">
+        <p>
+
+        How to Build, Deploy, and Monitor Java Applications.
+        Published: July 2004 ISBN:	0-9745140-3-9
+        </p>
+        <p>
+          This is not a reference guide to Ant, but a book on how to automate the build process.
+          The core build, continuous integration, reporting and release management
+          are all covered. Ant is of course central to this. This is a fun read!
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Mike Clark</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.pragmaticprogrammer.com/sk/auto/">http://www.pragmaticprogrammer.com/sk/auto//</a>
+            </td>
+          </tr>
+        </table>
+      </subsection>
+
+
+
       <subsection name="Extreme Programming with Ant">
          <p> This book shows how to implement an XP project using Ant 1.5.3, and many other 3rd party tools.  Covers:</p>
             <ul>
@@ -134,6 +187,7 @@
                 <li>file operation</li>
                 <li>source code control systems</li>
             </ul>
+        <p>The book is available in English as "Ant: The Java Build Tool in Practice"</p>
         <table class="externals">
           <tr>
             <th>Authors:</th>
@@ -147,7 +201,7 @@
       </subsection>
 
       <subsection name="Java Development with Ant">
-        <p>Covers Ant 1.5, including:</p>
+        <p>Published 2002. This book covers Ant 1.5, including:</p>
             <ul>
                 <li>The new Ant 1.5 features</li>
                 <li>Ant's datatypes and property handling</li>
@@ -167,6 +221,7 @@
                     </ul>
                 </li>
             </ul>
+        <p>Also available in Korean and German editions</p>
 
         <table class="externals">
           <tr>
@@ -180,9 +235,9 @@
         </table>
       </subsection>
 
-      <subsection name="Ant: The Definitive Guide">
+      <subsection name="Ant: The Definitive Guide, 1st edition">
           <!-- a soon as somebody submits a description, let's add it -->
-        <p>Covers Ant release 1.4.1.</p>
+        <p>Published 2002, Covers Ant release 1.4.1.</p>
         <table class="externals">
           <tr>
             <th>Authors:</th>
@@ -346,7 +401,7 @@
         </table>
       </subsection>
 
-      <subsection name="Programmieren für Ant">
+      <subsection name="Programmieren fï¿½r Ant">
         <p>This article describes the main topics of programming your own tasks.
         Description is done on five examples.</p>
         <p>This article is written in German and published in
@@ -372,7 +427,7 @@
         <table class="externals">
           <tr>
             <th>Author:</th>
-            <td><a href="mailto:steve_l@iseran.com">Steve Loughran</a></td>
+            <td>Steve Loughran</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -388,7 +443,7 @@
         <table class="externals">
           <tr>
             <th>Author:</th>
-            <td><a href="mailto:steve_l@iseran.com">Steve Loughran</a></td>
+            <td>Steve Loughran</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -649,14 +704,14 @@
       </subsection>
 
       <subsection name="Modern Development Crises">
-        <p>This presentation is an overview of the current state of software
-        development today.  There are a couple of slides that briefly cover
+        <p>This presentation is an overview of the state of software
+        development in 2001.  There are a couple of slides that briefly cover
         Ant.</p>
 
         <table class="externals">
           <tr>
             <th>Author:</th>
-            <td><a href="mailto:steve_l@iseran.com">Steve Loughran</a></td>
+            <td>Steve Loughran</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -673,7 +728,7 @@
         <table class="externals">
           <tr>
             <th>Author:</th>
-            <td><a href="mailto:steve_l@iseran.com">Steve Loughran</a></td>
+            <td>Steve Loughran</td>
           </tr>
           <tr>
             <th>URL:</th>
