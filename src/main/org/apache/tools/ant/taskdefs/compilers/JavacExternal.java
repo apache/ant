@@ -36,6 +36,8 @@ public class JavacExternal extends DefaultCompilerAdapter {
 
     /**
      * Performs a compile using the Javac externally.
+     * @return true if the compilation succeeded
+     * @throws BuildException on error
      */
     public boolean execute() throws BuildException {
         attributes.log("Using external javac compiler", Project.MSG_VERBOSE);

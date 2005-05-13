@@ -33,6 +33,8 @@ public class Gcj extends DefaultCompilerAdapter {
 
     /**
      * Performs a compile using the gcj compiler.
+     * @return true if the compilation succeeded
+     * @throws BuildException on error
      */
     public boolean execute() throws BuildException {
         Commandline cmd;
@@ -46,6 +48,10 @@ public class Gcj extends DefaultCompilerAdapter {
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
+    /**
+     * Set up the gcj commandline.
+     * @return the command line
+     */
     protected Commandline setupGCJCommand() {
         Commandline cmd = new Commandline();
         Path classpath = new Path(project);
@@ -113,7 +119,7 @@ public class Gcj extends DefaultCompilerAdapter {
     /**
      * Whether any of the arguments given via &lt;compilerarg&gt;
      * implies that compilation to native code is requested.
-     *
+     * @return true if compilation to native code is requested
      * @since Ant 1.6.2
      */
     public boolean isNativeBuild() {

@@ -27,7 +27,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  * @since Ant 1.3
  */
-public class CompilerAdapterFactory {
+public final class CompilerAdapterFactory {
     private static final String MODERN_COMPILER = "com.sun.tools.javac.Main";
 
     /** This is a singleton -- can't create instances!! */
@@ -55,6 +55,7 @@ public class CompilerAdapterFactory {
      * @param compilerType either the name of the desired compiler, or the
      * full classname of the compiler's adapter.
      * @param task a task to log through.
+     * @return the compiler adapter
      * @throws BuildException if the compiler type could not be resolved into
      * a compiler adapter.
      */
@@ -145,6 +146,7 @@ public class CompilerAdapterFactory {
                     return true;
                 }
             } catch (ClassNotFoundException cnfe2) {
+                // Ignore Exception
             }
         }
         return false;

@@ -39,7 +39,9 @@ public class Jikes extends DefaultCompilerAdapter {
      * there is no option in jikes and I don't understand
      * what they should do.
      *
-     * It has been successfully tested with jikes &gt;1.10
+     * It has been successfully tested with jikes &gt;1.10.
+     * @return true if the compilation succeeded
+     * @throws BuildException on error
      */
     public boolean execute() throws BuildException {
         attributes.log("Using jikes compiler", Project.MSG_VERBOSE);
@@ -88,7 +90,7 @@ public class Jikes extends DefaultCompilerAdapter {
         String exec = getJavac().getExecutable();
         cmd.setExecutable(exec == null ? "jikes" : exec);
 
-        if (deprecation == true) {
+        if (deprecation) {
             cmd.createArgument().setValue("-deprecation");
         }
 

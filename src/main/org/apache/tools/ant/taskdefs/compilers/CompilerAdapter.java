@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ public interface CompilerAdapter {
 
     /**
      * Sets the compiler attributes, which are stored in the Javac task.
+     * @param attributes the compiler attributes
      */
     void setJavac(Javac attributes);
 
@@ -44,6 +45,7 @@ public interface CompilerAdapter {
      * Executes the task.
      *
      * @return has the compilation been successful
+     * @throws BuildException on error
      */
     boolean execute() throws BuildException;
 }

@@ -31,6 +31,8 @@ public class Sj extends DefaultCompilerAdapter {
 
     /**
      * Performs a compile using the sj compiler from Symantec.
+     * @return true if the compilation succeeded
+     * @throws BuildException on error
      */
     public boolean execute() throws BuildException {
         attributes.log("Using symantec java compiler", Project.MSG_VERBOSE);

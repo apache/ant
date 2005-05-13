@@ -34,7 +34,7 @@ public class Kjc extends DefaultCompilerAdapter {
 
     /**
      * Run the compilation.
-     *
+     * @return true if the compilation succeeded
      * @exception BuildException if the compilation has problems.
      */
     public boolean execute() throws BuildException {
@@ -48,6 +48,7 @@ public class Kjc extends DefaultCompilerAdapter {
 
     /**
      * setup kjc command arguments.
+     * @return the command line
      */
     protected Commandline setupKjcCommand() {
         Commandline cmd = new Commandline();
@@ -55,7 +56,7 @@ public class Kjc extends DefaultCompilerAdapter {
         // generate classpath, because kjc doesn't support sourcepath.
         Path classpath = getCompileClasspath();
 
-        if (deprecation == true) {
+        if (deprecation) {
             cmd.createArgument().setValue("-deprecation");
         }
 
