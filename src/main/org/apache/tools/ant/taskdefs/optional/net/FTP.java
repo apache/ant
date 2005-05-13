@@ -17,7 +17,6 @@
 package org.apache.tools.ant.taskdefs.optional.net;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import java.io.BufferedInputStream;
@@ -1323,11 +1322,47 @@ public class FTP
 
 
     /**
+     * @return Returns the systemKeyConfig.
+     */
+    String getSystemKeyConfig() {
+        return systemKeyConfig;
+    }
+    /**
+     * @return Returns the defaultDateFormatConfig.
+     */
+    String getDefaultDateFormatConfig() {
+        return defaultDateFormatConfig;
+    }
+    /**
+     * @return Returns the recentDateFormatConfig.
+     */
+    String getRecentDateFormatConfig() {
+        return recentDateFormatConfig;
+    }
+    /**
+     * @return Returns the serverLanguageCodeConfig.
+     */
+    String getServerLanguageCodeConfig() {
+        return serverLanguageCodeConfig;
+    }
+    /**
+     * @return Returns the serverTimeZoneConfig.
+     */
+    String getServerTimeZoneConfig() {
+        return serverTimeZoneConfig;
+    }
+    /**
+     * @return Returns the shortMonthNamesConfig.
+     */
+    String getShortMonthNamesConfig() {
+        return shortMonthNamesConfig;
+    }
+    /**
      * Checks to see that all required parameters are set.
      *
      * @throws BuildException if the configuration is not valid.
      */
-    protected void checkConfiguration() throws BuildException {
+    protected void checkAttributes() throws BuildException {
         if (server == null) {
             throw new BuildException("server attribute must be set!");
         }
@@ -1351,6 +1386,15 @@ public class FTP
         if (action == CHMOD && chmod == null) {
             throw new BuildException("chmod attribute must be set for chmod "
                  + "action!");
+        }
+        
+        if (this.isConfigurationSet) {
+            try {
+                Class.forName("org.apache.commons.net.ftp.FTPClientConfig");
+            } catch (ClassNotFoundException e) {
+                throw new BuildException(
+                 "commons-net.jar >= 1.4.0 is required for at least one of the attributes specified.");
+            }
         }
     }
 
@@ -2025,40 +2069,7 @@ public class FTP
 
     private void configure(FTPClient ftp) {
         if (this.isConfigurationSet) {
-            FTPClientConfig config;
-            if (this.systemKeyConfig != null) {
-                config = new FTPClientConfig(this.systemKeyConfig);
-                log("custom config: system key = " 
-                        + this.systemKeyConfig, Project.MSG_VERBOSE);
-            } else {
-                config = new FTPClientConfig();
-            }
-            if (this.defaultDateFormatConfig != null) {
-                config.setDefaultDateFormatStr(this.defaultDateFormatConfig);
-                log("custom config: default date format = " 
-                        + this.defaultDateFormatConfig, Project.MSG_VERBOSE);
-            }
-            if (this.recentDateFormatConfig != null) {
-                config.setRecentDateFormatStr(this.recentDateFormatConfig);
-                log("custom config: recent date format = " 
-                        + this.recentDateFormatConfig, Project.MSG_VERBOSE);
-            }
-            if (this.serverLanguageCodeConfig != null) {
-                config.setServerLanguageCode(this.serverLanguageCodeConfig);
-                log("custom config: server language code = " 
-                        + this.serverLanguageCodeConfig, Project.MSG_VERBOSE);
-            }
-            if (this.serverTimeZoneConfig != null) {
-                config.setServerTimeZoneId(this.serverTimeZoneConfig);
-                log("custom config: server time zone ID = " 
-                        + this.serverTimeZoneConfig, Project.MSG_VERBOSE);
-            }
-            if (this.shortMonthNamesConfig != null) {
-                config.setShortMonthNames(this.shortMonthNamesConfig);
-                log("custom config: short month names = " 
-                        + this.shortMonthNamesConfig, Project.MSG_VERBOSE);
-            }
-            ftp.configure(config);
+            FTPConfigurator.configure(ftp, this);
         }
     }
 
@@ -2069,7 +2080,7 @@ public class FTP
      *         correctly.
      */
     public void execute() throws BuildException {
-        checkConfiguration();
+        checkAttributes();
 
         FTPClient ftp = null;
 
