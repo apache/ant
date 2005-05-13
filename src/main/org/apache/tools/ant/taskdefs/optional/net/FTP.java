@@ -2067,12 +2067,6 @@ public class FTP
         }
     }
 
-    private void configure(FTPClient ftp) {
-        if (this.isConfigurationSet) {
-            FTPConfigurator.configure(ftp, this);
-        }
-    }
-
     /**
      * Runs the task.
      *
@@ -2088,7 +2082,9 @@ public class FTP
             log("Opening FTP connection to " + server, Project.MSG_VERBOSE);
 
             ftp = new FTPClient();
-            configure(ftp);
+            if (this.isConfigurationSet) {
+                ftp = FTPConfigurator.configure(ftp, this);
+            }
 
             ftp.connect(server, port);
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
