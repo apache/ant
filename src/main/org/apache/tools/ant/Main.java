@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
+import org.apache.tools.ant.util.FileUtils;
 
 
 /**
@@ -212,20 +213,8 @@ public class Main implements AntMain {
      */
     private static void handleLogfile() {
         if (isLogFileUsed) {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (final Exception e) {
-                    //ignore
-                }
-            }
-            if (err != null) {
-                try {
-                    err.close();
-                } catch (final Exception e) {
-                    //ignore
-                }
-            }
+            FileUtils.close(out);
+            FileUtils.close(err);
         }
     }
 
@@ -424,6 +413,15 @@ public class Main implements AntMain {
                     throw new BuildException(
                             "Niceness value is out of the range 1-10");
                 }
+            } else if (arg.equals("-cp") || arg.equals("-lib")) {
+                //catch script/ant mismatch with a meaningful message
+                //we could ignore it, but there are likely to be other
+                //version problems, so we stamp down on the configuration now
+                String msg = "Ant's Main method is being handed "
+                        + "an option "+arg+" that is only for the launcher class."
+                        + "\nThis can be caused by a version mismatch between "
+                        + "the ant script/.bat file and Ant itself.";
+                throw new BuildException(msg);
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
@@ -476,13 +474,7 @@ public class Main implements AntMain {
                 System.out.println("Could not load property file "
                    + filename + ": " + e.getMessage());
             } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
+                FileUtils.close(fis);
             }
 
             // ensure that -D properties take precedence
