@@ -109,7 +109,7 @@ public class FTP
     private boolean preserveLastModified = false;
     private String chmod = null;
     private String umask = null;
-    private String systemKeyConfig = null;
+    private String systemTypeKey = null;
     private String defaultDateFormatConfig = null;
     private String recentDateFormatConfig = null;
     private String serverLanguageCodeConfig = null;
@@ -1257,11 +1257,11 @@ public class FTP
     /**
      * Method for setting <code>FTPClientConfig</code> remote system key.
      * 
-     * @param systemKeyConfig
+     * @param systemTypeKey
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
-    public void setSystemKeyConfig(String systemKey) {
-        this.systemKeyConfig = systemKey;
+    public void setSystemTypeKey(String systemKey) {
+        this.systemTypeKey = systemKey;
         configurationHasBeenSet();
     }
 
@@ -1322,10 +1322,10 @@ public class FTP
 
 
     /**
-     * @return Returns the systemKeyConfig.
+     * @return Returns the systemTypeKey.
      */
-    String getSystemKeyConfig() {
-        return systemKeyConfig;
+    String getSystemTypeKey() {
+        return systemTypeKey;
     }
     /**
      * @return Returns the defaultDateFormatConfig.

@@ -38,11 +38,11 @@ class FTPConfigurator {
      */
     static FTPClient configure(FTPClient client, FTP task) {
         FTPClientConfig config;
-        String systemKeyConfig = task.getSystemKeyConfig(); 
-        if (systemKeyConfig != null) {
-            config = new FTPClientConfig(systemKeyConfig);
+        String systemTypeKey = task.getSystemTypeKey(); 
+        if (systemTypeKey != null) {
+            config = new FTPClientConfig(systemTypeKey);
             task.log("custom config: system key = " 
-                    + systemKeyConfig, Project.MSG_VERBOSE);
+                    + systemTypeKey, Project.MSG_VERBOSE);
         } else {
             config = new FTPClientConfig();
         }

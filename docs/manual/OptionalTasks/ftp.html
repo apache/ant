@@ -172,6 +172,115 @@ coming from your ftp server (ls -l on the ftp prompt).
       (<em>Note</em>: Ignored on Java 1.1)</td>
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
+
+    <tr>
+    <td colspan="3">
+    <p><b>The following attributes require <a href=
+    "http://jakarta.apache.org/commons/net/download.html">
+    jakarta-commons-net-1.4.0 or greater</a>.</b></p>
+    <p>
+    Use these options when the standard options don't work, because
+    <ul><li>the server is in a different timezone and you need timestamp
+    dependency checking</li>
+    <li>the default timestamp formatting doesn't match the server display and
+    list parsing therefore fails</li></ul>
+    </p><p>
+    If none of these is specified, the default mechanism of letting the system
+    auto-detect the server OS type based on the FTP SYST command and assuming
+    standard formatting for that OS type will be used.</p>
+    </td>
+    </tr>
+  <tr>
+    <td valign="top">systemTypeKey</td>
+    <td valign="top">Specifies the type of system in use on the server.
+      Supported values are "UNIX", "VMS", "WINDOWS", "OS/2", "OS/400", "MVS".
+      If not specified, and no other xxxConfig attributes are specified, the
+      autodectection mechanism based on the FTP SYST command will be used.
+    </td>
+    <td valign="top" align="center">No, but if any of the following xxxConfig
+        attributes is specified, UNIX will be assumed.
+    </td>
+   </tr>
+   <tr>
+    <td valign="top">serverTimeZoneConfig</td>
+    <td valign="top">Specify as a <code>java.util.Timezone</code> identifier
+    (e.g. <code>GMT</code>, <code>America/Chicago</code> or
+    <code>Asia/Jakarta</code>) the timezone
+      used by the server for timestamps.  This enables Ant timestamp dependency
+      checking even when the server is in a different timezone than the client.
+      If not specified, the timezone of the client is assumed.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultDateFormatConfig</td>
+    <td valign="top">Specify in java.text.SimpleDateFormat notation, (e.g.
+    <code>yyyy-MM-dd</code>) the date format generally used by the FTP server
+      to parse dates.  In some cases this will be the only date format used.
+      In others, (unix for example) this will be used for dates
+      older than a year old. (See recentDateFormatConfig).  If not specified,
+      the default date format for the system type indicated by the
+      systemTypeKey attribute will be used.
+    </td>
+    <td valign="top" align="center">
+    No.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">recentDateFormatConfig</td>
+    <td valign="top">Specify in java.text.SimpleDateFormat notation, the date
+      format used by the FTP server to parse dates less than a year old,
+      (e.g. <code>MMM dd hh:mm</code>
+      If not specified, and if the system type indicated by the system key
+      uses a recent date format, its standard format will be used.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">serverLanguageCodeConfig</td>
+    <td valign="top">a <a href="http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt">
+      two-letter ISO-639 language code</a> used to specify the
+      language used by the server to format month names.  This only needs to be
+      specified when the server uses non-numeric abbreviations for months in its
+      date listings in a language other than English.  This appears to be
+      becoming rarer and rarer, as commonly distributed ftp servers seem
+      increasingly to use English or all-numeric formats.
+      Languages supported are:
+      <ul>
+      	<li>en - English</li>
+      	<li>fr - French</li>
+      	<li>de - German</li>
+      	<li>it - Italian</li>
+      	<li>es - Spanish</li>
+      	<li>pt - Portuguese</li>
+      	<li>da - Danish</li>
+      	<li>sv - Swedish</li>
+      	<li>no - Norwegian</li>
+      	<li>nl - Dutch</li>
+      	<li>ro - Romanian</li>
+      	<li>sq - Albanian</li>
+      	<li>sh - Serbo-croatian</li>
+      	<li>sk - Slovak</li>
+      	<li>sl - Slovenian</li>
+      </ul>
+      If you require a language other than the above, see also the
+      shortMonthNamesConfig attribute.
+    </td>
+
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">shortMonthNamesConfig</td>
+    <td valign="top">specify the month abbreviations used on the server in file
+      timestamp dates as a pipe-delimited string for each month. For example,
+      a set of month names used by a hypothetical
+      Icelandic FTP server might conceivably be specified as
+      <code>"jan|feb|mar|apr|ma&#xED;|j&#xFA;n|j&#xFA;l|&#xE1;g&#xFA;|sep|okt|n&#xF3;v|des"</code>.
+      This attribute exists primarily to support languages not supported by
+      the serverLanguageCode attribute.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Note about remotedir attribute</h3>
 <table  border="1" cellpadding="2" cellspacing="0"
@@ -294,7 +403,7 @@ to the default directory for that user.</p>
        depends=&quot;yes&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
   &lt;/ftp&gt;</pre>
-<p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
+<p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and
 uploads all new or changed files in the <code>htdocs/manual</code> directory 
 to the <code>incoming</code> directory relative to the default directory
 for <code>anonymous</code>.</p>
@@ -303,16 +412,37 @@ for <code>anonymous</code>.</p>
        remotedir=&quot;/pub/incoming&quot;
        userid=&quot;coder&quot;
        password=&quot;java1&quot;
+       passive=&quot;yes&quot;
        depends=&quot;yes&quot;
        binary=&quot;no&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
       &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;</pre>
-<p>Logs in to <code>ftp.apache.org</code> at port <code>2121</code> as 
-<code>coder</code> with password <code>java1</code> and uploads all new or 
-changed HTML files in the <code>htdocs/manual</code> directory to the 
-<code>/pub/incoming</code> directory. The files are transferred in text mode. Passive mode has been switched on to send files from behind a firewall.</p>
+<p>Logs in to <code>ftp.apache.org</code> at port <code>2121</code> as
+<code>coder</code> with password <code>java1</code> and uploads all new or
+changed HTML files in the <code>htdocs/manual</code> directory to the
+<code>/pub/incoming</code> directory. The files are transferred in text mode.
+Passive mode has been switched on to send files from behind a firewall.</p>
+<pre>  &lt;ftp server=&quot;ftp.hypothetical.india.org&quot;
+       port=&quot;2121&quot;
+       remotedir=&quot;/pub/incoming&quot;
+       userid=&quot;coder&quot;
+       password=&quot;java1&quot;
+       depends=&quot;yes&quot;
+       binary=&quot;no&quot;
+       systemTypeKey=&quot;Windows&quot;
+       serverTimeZoneConfig=&quot;India/Calcutta&quot;&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
+      &lt;include name=&quot;**/*.html&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/ftp&gt;</pre>
+<p>Logs in to a Windows server at <code>ftp.hypothetical.india.org</code>
+at port <code>2121</code> as <code>coder</code> with password <code>java1</code>
+and uploads all new or changed (accounting for timezone differences)
+HTML files in the <code>htdocs/manual</code>
+directory to the <code>/pub/incoming</code> directory. The files are transferred
+in text mode.</p>
 <pre>  &lt;ftp server=&quot;ftp.nt.org&quot;
        remotedir=&quot;c:\uploads&quot;
        userid=&quot;coder&quot;
@@ -346,7 +476,42 @@ into.  The file structure from the FTP site is preserved on the local machine.</
 <p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
 recursively downloads all .html files from default directory for that user 
 into the <code>htdocs/manual</code> directory on the local machine.</p>
-. 
+<pre>
+  &lt;ftp action=&quot;get&quot;
+       server=&quot;ftp.apache.org&quot;
+       userid=&quot;anonymous&quot;
+       password=&quot;me@myorg.com&quot;
+       systemTypeKey="UNIX"
+       defaultDateFormatConfig=&quot;yyyy-MM-dd HH:mm&quot;&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
+      &lt;include name=&quot;**/*.html&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/ftp&gt;
+</pre>
+<p>If apache.org ever switches to a unix FTP server that uses the new all-numeric
+format for timestamps, this version would become necessary.  It would accomplish
+the same functionality as the previous example but would successfully handle the
+numeric timestamps.
+The <code>systemTypeKey</code> is not necessary here but helps clarify what is
+going on.</p>
+<pre>
+  &lt;ftp action=&quot;get&quot;
+       server=&quot;ftp.hypthetical.fr&quot;
+       userid=&quot;anonymous&quot;
+       password=&quot;me@myorg.com&quot;
+       defaultDateFormatConfig=&quot;d MMM yyyy&quot;
+       recentDateFormatConfig=&quot;d MMM HH:mm&quot;
+       serverLanguageCodeConfig=&quot;fr&quot;&gt;
+     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
+      &lt;include name=&quot;**/*.html&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/ftp&gt;
+</pre>
+<p>Logs into a UNIX FTP server at <code>ftp.hypothetical.fr</code> which displays
+dates with French names in Standard European format, as <code>anonymous</code>, and
+recursively downloads all .html files from default directory for that user
+into the <code>htdocs/manual</code> directory on the local machine.</p>
+
 <h3>Deleting Files</h3>
 As you've probably guessed by now, you use nested fileset elements to 
 select the files to delete from the remote FTP server.  Again, the 
