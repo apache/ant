@@ -13,7 +13,7 @@
 
 <p><em>since Ant 1.6</em></p>
 
-<p>Copies a file or FileSet to or from a remote machine running SSH daemon.
+<p>Copies a file or FileSet to or from a (remote) machine running an SSH daemon.
 FileSet <i>only</i> works for copying files from the local machine to a
 remote machine.</p>
 
@@ -210,15 +210,22 @@ authentication.</b></p>
 
 <p><strong>Security Note:</strong>  Hard coding passwords and/or usernames
 in scp task can be a serious security hole.  Consider using variable
-substitution and include the password on the command line.  For example:<br>
+substitution and include the password on the command line.  For example:
+<p>
 <pre>
     &lt;scp todir=&quot;${username}:${password}@host:/dir&quot; ...&gt;
 </pre>
-Invoke ant with the following command line:
+Invoking ant with the following command line:
 <pre>
     ant -Dusername=me -Dpassword=mypassword target1 target2
 </pre>
-</p>
+
+Is slightly better, but the username/password is exposed to all users on an Unix
+system (via the ps command). The best approach is to use the
+<code>&lt;input&gt;</code> task and/or retrieve the password from a (secured)
+.properties file.
+
+<p>
 
 <p><strong>Unix Note:</strong> File permissions are not retained when files
 are copied; they end up with the default <code>UMASK</code> permissions
