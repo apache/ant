@@ -163,4 +163,9 @@ public class ImportTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/import/importtargetfirst.xml");
         assertLogContaining("Importing targetfirstAfter target firstAfter importing");
     }
+
+    public void testTargetName() {
+        configureProject("src/etc/testcases/taskdefs/import/c.xml");
+    }
+
 }

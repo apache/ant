@@ -52,9 +52,25 @@ public class Target implements TaskContainer {
     /** Description of this target, if any. */
     private String description = null;
 
-    /** Sole constructor. */
+    /** Default constructor. */
     public Target() {
         //empty
+    }
+
+    /**
+     * Cloning constructor.
+     * @param other the Target to clone.
+     */
+    public Target(Target other) {
+        this.name = other.name;
+        this.ifCondition = other.ifCondition;
+        this.unlessCondition = other.unlessCondition;
+        this.dependencies = other.dependencies;
+        this.location = other.location;
+        this.project = other.project;
+        this.description = other.description;
+        // The children are added to after this cloning
+        this.children = other.children;
     }
 
     /**
@@ -209,7 +225,7 @@ public class Target implements TaskContainer {
      * @return an enumeration of the dependencies of this target
      */
     public Enumeration getDependencies() {
-        return (dependencies != null ? Collections.enumeration(dependencies) 
+        return (dependencies != null ? Collections.enumeration(dependencies)
                                      : new CollectionUtils.EmptyEnumeration());
     }
 
@@ -222,7 +238,7 @@ public class Target implements TaskContainer {
     public boolean dependsOn(String other) {
         Project p = getProject();
         Hashtable t = (p == null) ? null : p.getTargets();
-        return (p != null 
+        return (p != null
                 && p.topoSort(getName(), t, false).contains(t.get(other)));
     }
 

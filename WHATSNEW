@@ -200,6 +200,9 @@ Other changes:
   can be caused by the test JVM exiting during a test, either via a System.exit()
   call or a JVM crash.
 
+* project name is now used for *all* targets so one can write consistent import
+  build file. bugzilla report 28444.
+
 Changes from Ant 1.6.3 to current Ant 1.6 CVS version
 =====================================================
 

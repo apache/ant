@@ -815,38 +815,39 @@ public class ProjectHelper2 extends ProjectHelper {
                     + "a name attribute", context.getLocator());
             }
 
-            Hashtable currentTargets = project.getTargets();
-
-            // If the name has already been defined ( import for example )
-            if (currentTargets.containsKey(name)) {
-                if (context.getCurrentTargets().get(name) != null) {
-                    throw new BuildException(
-                        "Duplicate target '" + name + "'", target.getLocation());
-                }
-                // Alter the name.
-                if (context.getCurrentProjectName() != null) {
-                    String newName = context.getCurrentProjectName()
-                        + "." + name;
-                    project.log("Already defined in main or a previous import, "
-                        + "define " + name + " as " + newName,
-                                Project.MSG_VERBOSE);
-                    name = newName;
-                } else {
-                    project.log("Already defined in main or a previous import, "
-                        + "ignore " + name, Project.MSG_VERBOSE);
-                    name = null;
-                }
+            // Check if this target is in the current build file
+            if (context.getCurrentTargets().get(name) != null) {
+                throw new BuildException(
+                    "Duplicate target '" + name + "'", target.getLocation());
             }
 
-            if (name != null) {
+            if (depends.length() > 0) {
+                target.setDepends(depends);
+            }
+
+            Hashtable projectTargets = project.getTargets();
+            boolean   usedTarget = false;
+            // If the name has not already been defined define it
+            if (projectTargets.containsKey(name)) {
+                project.log("Already defined in main or a previous import, "
+                            + "ignore " + name, Project.MSG_VERBOSE);
+            } else {
                 target.setName(name);
                 context.getCurrentTargets().put(name, target);
                 project.addOrReplaceTarget(name, target);
+                usedTarget = true;
             }
 
-            // take care of dependencies
-            if (depends.length() > 0) {
-                target.setDepends(depends);
+            if (context.isIgnoringProjectTag() && context.getCurrentProjectName() != null
+                && context.getCurrentProjectName().length() != 0) {
+                // In an impored file (and not completely
+                // ignoring the project tag)
+                String newName = context.getCurrentProjectName()
+                    + "." + name;
+                Target newTarget = usedTarget ? new Target(target) : target;
+                newTarget.setName(newName);
+                context.getCurrentTargets().put(newName, newTarget);
+                project.addOrReplaceTarget(newName, newTarget);
             }
         }
 
