@@ -91,6 +91,7 @@ public class ComponentHelper  {
     private static final String ERROR_NO_TASK_LIST_LOAD = "Can't load default task list";
     private static final String ERROR_NO_TYPE_LIST_LOAD = "Can't load default type list";
     public static final String COMPONENT_HELPER_REFERENCE = "ant.ComponentHelper";
+    private static final String ANTLIB_PREFIX = "antlib:";
 
     /**
      * Find a project component for a specific project, creating
@@ -759,7 +760,7 @@ public class ComponentHelper  {
         definer.setProject(project);
         definer.setURI(uri);
         definer.setResource(
-            uri.substring("antlib:".length()).replace('.', '/')
+            uri.substring(ANTLIB_PREFIX.length()).replace('.', '/')
             + "/antlib.xml");
         // a fishing expedition :- ignore errors if antlib not present
         definer.setOnError(new Typedef.OnError("ignore"));
@@ -791,7 +792,7 @@ public class ComponentHelper  {
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
             //not a known type
-            boolean isAntlib=componentName.indexOf("antlib:")==0;
+            boolean isAntlib=componentName.indexOf(ANTLIB_PREFIX)==0;
             out.println("Cause: The name is undefined.");
             out.println("Action: Check the spelling.");
             out.println("Action: Check that any custom tasks/types have been declared");
