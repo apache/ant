@@ -173,10 +173,10 @@ public class CopyPath extends Task {
                             preserveLastModified, null,
                             null, getProject());
                 } catch (IOException ioe) {
-                    String msg = "Failed to copy " +
-                            sourceFile +
-                            " to " +
-                            destFile
+                    String msg = "Failed to copy "
+                            + sourceFile 
+                            + " to "
+                            + destFile
                             + " due to " + ioe.getMessage();
                     if (destFile.exists() && !destFile.delete()) {
                         msg += " and I couldn't delete the corrupt " + destFile;
