@@ -98,6 +98,9 @@ Fixed bugs:
 * <xmlvalidate> and <schemavalidate> create a new parser for every file in a
   fileset, and so validate multiple files properly. Bugzilla Report 32791
 
+* New mapper, <scriptmapper>, supports scripted mapping of source files/strings to
+  destination strings.
+
 Other changes:
 --------------
 
@@ -202,6 +205,8 @@ Other changes:
 
 * project name is now used for *all* targets so one can write consistent import
   build file. bugzilla report 28444.
+
+
 
 Changes from Ant 1.6.3 to current Ant 1.6 CVS version
 =====================================================

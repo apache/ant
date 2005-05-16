@@ -1,0 +1,41 @@
+<project name="scriptmapper">
+  <import file="define.mapperresult.xml"/>
+
+  
+  <target name="testSetSingle">
+    <mapperresult input="" output="a">
+      <scriptmapper language="javascript">
+        self.addMappedName("a");
+      </scriptmapper>
+    </mapperresult>
+  </target>
+
+  <target name="testClear">
+    <mapperresult input="" output="${no-results}">
+      <scriptmapper language="javascript">
+        self.addMappedName("a");
+        self.clear();
+      </scriptmapper>
+    </mapperresult>
+  </target>
+
+  <target name="testSetMultiple">
+    <mapperresult input="" output="a|b">
+      <scriptmapper language="javascript">
+        self.addMappedName("a");
+        self.addMappedName("b");
+      </scriptmapper>
+    </mapperresult>
+  </target>
+
+  <target name="testPassthrough">
+    <mapperresult input="a" output="A|a">
+      <scriptmapper language="javascript">
+        //relying on "a" to map to "A" on all locales.
+        self.addMappedName(source.toUpperCase());
+        self.addMappedName(source.toLowerCase());
+      </scriptmapper>
+    </mapperresult>
+  </target>
+  
+</project>

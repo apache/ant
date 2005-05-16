@@ -683,6 +683,106 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
   <p>The filtermapper has no corresponding
     <code>&lt;mapper <b>type</b>&gt;</code> attribute.
   </p>
+
+    <!--                                        -->
+    <!--             Script Mapper              -->
+    <!--                                        -->
+
+<h4><a name="script-mapper">scriptmapper (since ant 1.7)</a></h4>
+<p>
+This mapper executes a script written in <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+supported language, once per file to map.</p>
+The script can be declared inline or in a specified file.
+</p>
+<p>
+See the <a href="../OptionalTasks/script.html">Script</a> task for
+an explanation of scripts and dependencies.
+</p>
+
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">language</td>
+      <td valign="top">
+        Scripting language
+      </td>
+      <td align="center" valign="top">Yes</td>
+    </tr>
+    <tr>
+      <td valign="top">src</td>
+      <td valign="top">
+        File containing the script
+      </td>
+      <td align="center" valign="top">No</td>
+    </tr>
+    </table>
+
+<p>
+Example
+</p>
+<blockquote><pre>
+&lt;scriptmapper language="javascript"&gt;
+  self.addMappedName(source.toUpperCase());
+  self.addMappedName(source.toLowerCase());
+&lt;/scriptmapper&gt;
+</pre></blockquote>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file names</b></td>
+  </tr>
+  <tr>
+    <td valign="center"><code>foo\bar\A.java</code></td>
+    <td valign="top"><code>FOO\BAR\A.JAVA foo\bar\a.java</code></td>
+  </tr>
+</table>
+
+<p>
+To use this mapper, the scripts need access to the source file,
+and the ability to return multiple mappings. Here are the relevant beans and
+their methods. The script is called once for every source file, with the
+list of mapped names reset after every invocation.
+
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Script bean</b></td>
+      <td valign="top"><b>Description</b></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>source: String</code></td>
+      <td valign="top">
+        The file/path to map
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">self</td>
+      <td valign="top">
+        the scriptmapper itself
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>self.addMappedName(String name)</code></td>
+      <td valign="top">
+        Add a new mapping
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>self.clear()</code></td>
+      <td valign="top">
+        Reset the list of files.
+      </td>
+    </tr>
+    </table>
+
+  <p>The scriptmapper has no corresponding
+    <code>&lt;mapper <b>type</b>&gt;</code> attribute.
+  </p>
+
 <hr>
 <p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>

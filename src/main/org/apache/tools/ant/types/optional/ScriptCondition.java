@@ -25,48 +25,16 @@ import java.io.File;
 
 /**
  * A condition that lets you include script.
- * The condition component sets a bean "self", whose attribute "result"
+ * The condition component sets a bean "self", whose attribute "value"
  * must be set to true for the condition to succeed, false to fail.
  * The default is 'false'
  */
-public class ScriptCondition extends ProjectComponent implements Condition {
-
-    /**
-     * script runner
-     */
-    private ScriptRunner runner = new ScriptRunner();
+public class ScriptCondition extends AbstractScriptComponent implements Condition {
 
     /**
      * result field
      */
     private boolean value = false;
-
-    /**
-     * Load the script from an external file ; optional.
-     *
-     * @param file the file containing the script source.
-     */
-    public void setSrc(File file) {
-        runner.setSrc(file);
-    }
-
-    /**
-     * The script text.
-     *
-     * @param text a component of the script text to be added.
-     */
-    public void addText(String text) {
-        runner.addText(text);
-    }
-
-    /**
-     * Defines the language (required).
-     *
-     * @param language the scripting language name for the script.
-     */
-    public void setLanguage(String language) {
-        runner.setLanguage(language);
-    }
 
 
     /**
@@ -78,8 +46,8 @@ public class ScriptCondition extends ProjectComponent implements Condition {
      *          if an error occurs
      */
     public boolean eval() throws BuildException {
-        runner.bindToComponent(this);
-        runner.executeScript("ant_condition");
+        initScriptRunner();
+        executeScript("ant_condition");
         return getValue();
     }
 
