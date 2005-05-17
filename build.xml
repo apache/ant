@@ -119,6 +119,8 @@
   -->
   <property name="dist.name" value="apache-${name}-${version}"/>
   <property name="dist.base" value="distribution"/>
+  <property name="dist.base.source" value="${dist.base}/source"/>
+  <property name="dist.base.binaries" value="${dist.base}/binaries"/>
   <property name="dist.dir" value="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
@@ -1131,14 +1133,14 @@
     <delete dir="${dist.name}"/>
     <delete dir="${java-repository.dir}"/>
     <mkdir dir="${dist.base}"/>
-    <mkdir dir="${dist.base}/src"/>
-    <mkdir dir="${dist.base}/bin"/>
+    <mkdir dir="${dist.base.source}"/>
+    <mkdir dir="${dist.base.binaries}"/>
     <mkdir dir="${java-repository.dir}"/>
 
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
     </antcall>
-    <zip destfile="${dist.base}/bin/${dist.name}-bin.zip">
+    <zip destfile="${dist.base.binaries}/${dist.name}-bin.zip">
       <zipfileset dir="${dist.name}/.." filemode="755">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
@@ -1154,7 +1156,7 @@
       </fileset>
     </zip>
     <tar longfile="gnu"
-         destfile="${dist.base}/bin/${dist.name}-bin.tar">
+         destfile="${dist.base.binaries}/${dist.name}-bin.tar">
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
@@ -1169,11 +1171,11 @@
         <exclude name="${dist.name}/bin/*.py"/>
       </tarfileset>
     </tar>
-    <gzip destfile="${dist.base}/bin/${dist.name}-bin.tar.gz"
-          src="${dist.base}/bin/${dist.name}-bin.tar"/>
-    <bzip2 destfile="${dist.base}/bin/${dist.name}-bin.tar.bz2"
-           src="${dist.base}/bin/${dist.name}-bin.tar"/>
-    <delete file="${dist.base}/bin/${dist.name}-bin.tar"/>
+    <gzip destfile="${dist.base.binaries}/${dist.name}-bin.tar.gz"
+          src="${dist.base.binaries}/${dist.name}-bin.tar"/>
+    <bzip2 destfile="${dist.base.binaries}/${dist.name}-bin.tar.bz2"
+           src="${dist.base.binaries}/${dist.name}-bin.tar"/>
+    <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
 
     <copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
@@ -1190,14 +1192,14 @@
     
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
-      <fileset dir="${dist.base}/bin/">
+      <fileset dir="${dist.base.binaries}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
       </fileset>
     </checksum>
     <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${dist.base}/bin/">
+      <fileset dir="${dist.base.binaries}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
@@ -1207,7 +1209,7 @@
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}"/>
     </antcall>
-    <zip destfile="${dist.base}/src/${dist.name}-src.zip">
+    <zip destfile="${dist.base.source}/${dist.name}-src.zip">
       <zipfileset dir="${dist.name}/.." filemode="755">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>
@@ -1219,7 +1221,7 @@
       </fileset>
     </zip>
     <tar longfile="gnu"
-         destfile="${dist.base}/src/${dist.name}-src.tar" >
+         destfile="${dist.base.source}/${dist.name}-src.tar" >
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>
@@ -1230,21 +1232,21 @@
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
     </tar>
-    <gzip destfile="${dist.base}/src/${dist.name}-src.tar.gz"
-          src="${dist.base}/src/${dist.name}-src.tar"/>
-    <bzip2 destfile="${dist.base}/src/${dist.name}-src.tar.bz2"
-           src="${dist.base}/src/${dist.name}-src.tar"/>
-    <delete file="${dist.base}/src/${dist.name}-src.tar"/>
+    <gzip destfile="${dist.base.source}/${dist.name}-src.tar.gz"
+          src="${dist.base.source}/${dist.name}-src.tar"/>
+    <bzip2 destfile="${dist.base.source}/${dist.name}-src.tar.bz2"
+           src="${dist.base.source}/${dist.name}-src.tar"/>
+    <delete file="${dist.base.source}/${dist.name}-src.tar"/>
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
-      <fileset dir="${dist.base}/src/">
+      <fileset dir="${dist.base.source}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
       </fileset>
     </checksum>
     <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${dist.base}/src/">
+      <fileset dir="${dist.base.source}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
