@@ -81,47 +81,64 @@
     </fail>
     <echo>Downloading to ${dest.dir}</echo>
   </target>
+
   
-  <!-- any init stuff -->
-  <target name="init" depends="setproxy,pick-dest" >
-    
-    <macrodef name="f">
-      <attribute name="project" />
-      <sequential>
-        <fail>
-        Unknown project @{project}
-          <condition>
-            <not>
-            <isset property="@{project}.version"/>
-            </not>
-          </condition>
-        </fail>
-        <libraries destDir="${dest.dir}" flatten="true" >
-          <library project="@{project}" version="${@{project}.version}" />
-        </libraries>
-      </sequential>
-    </macrodef> 
+  <target name="probe-m2" >
+    <!-- Look for M2 ant tasks in our classpath-->
+    <available property="m2.antlib.found"
+      resource="org/apache/maven/artifact/ant/antlib.xml" />
+    <condition property="m2.antlib.typefound">
+      <typefound name="antlib:org.apache.maven.artifact.ant:artifact" />
+    </condition>
+  </target>
+  
+
+  <target name="get-m2" depends="setproxy,probe-m2" unless="m2.antlib.found">
+    <!-- fetch M2 ant tasks into our repository, if it is not there-->
+    <!-- <property name="" /> -->
+    <fail>
+    Fetch the ant task JAR from http://maven.apache.org/maven2/ant-tasks.html
+    </fail>
+  </target>  
+  
+  
+  <target name="macros" depends="get-m2"
+    xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
     <macrodef name="f2">
       <attribute name="project" />
-      <attribute name="archive" />
+      <attribute name="archive" default="@{project}"/>
       <sequential>
         <fail>
-        Unknown file @{archive}/
+        Unknown archive @{archive}
           <condition>
             <not>
             <isset property="@{archive}.version"/>
             </not>
           </condition>
-        </fail>      
-        <libraries destDir="${dest.dir}" flatten="true" >
-          <library project="@{project}"
-            archive="archive"
-            version="${@{archive}.version}" />
-        </libraries>
+        </fail>
+        <artifact:dependencies pathID="@{archive}.path">
+          <dependency groupID="@{project}"
+            artifactID="@{archive}"
+            version="${@{archive}.version}"/>        
+        </artifact:dependencies>
+        <!-- now we are left with the problem of getting the files 
+             into our directory -->
+        <copypath destdir="${dest.dir}" pathref="@{archive}.path">
+          <flattenmapper/>
+        </copypath>
       </sequential>
     </macrodef> 
   </target>
+  
+
+  
+  <!-- any init stuff -->
+  <target name="init" depends="setproxy,pick-dest,macros" >
+
+  </target>
+  
+
   
   <target name="diag" depends="init">
     <echoproperties />
@@ -130,65 +147,65 @@
   <target name="logging" 
     description="load logging libraries"
     depends="init">
-    <f project="log4j" />
-    <f project="commons-logging" />
+    <f2 project="log4j" />
+    <f2 project="commons-logging" archive="commons-logging-api" />
   </target>
     
   <target name="junit" 
     description="load junit libraries"
     depends="init">
-    <f project="junit" />
+    <f2 project="junit" />
   </target>
   
   <target name="xml" 
     description="load full XML libraries (xalan, resolver)"
     depends="init">
-    <f project="xalan" />
-    <f project="xml-resolver" />
+    <f2 project="xalan" />
+    <f2 project="xml-resolver" />
   </target>
 
   <target name="networking" 
     description="load networking libraries (commons-net; jsch)"
     depends="init">
-    <f project="commons-net" />
-    <f project="jsch" />
+    <f2 project="commons-net" />
+    <f2 project="jsch" />
   </target>  
 
   <target name="regexp" 
     description="load regexp libraries"
     depends="init">
-    <f project="regexp" />
-    <f project="oro" />
+    <f2 project="regexp" />
+    <f2 project="oro" />
   </target>  
  
   <target name="antlr" 
     description="load antlr libraries"
     depends="init">
-    <f project="antlr" />
+    <f2 project="antlr" />
   </target>  
 
   <target name="bcel" 
     description="load bcel libraries"
     depends="init">
-    <f project="bcel" />
+    <f2 project="bcel" />
   </target>  
 
   <target name="jdepend" 
     description="load jdepend libraries"
     depends="init">
-    <f project="jdepend" />
+    <f2 project="jdepend" />
   </target>  
 
   <target name="bsf" 
     description="load bsf libraries"
     depends="init">
-    <f project="bsf" />
+    <f2 project="bsf" />
   </target>
 
   <target name="debugging" 
     description="internal ant debugging"
     depends="init">
-    <f project="which" />
+    <f2 project="which" />
   </target>
   
   <target name="all"
