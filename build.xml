@@ -248,7 +248,7 @@
     <or>
       <filename name="${optional.package}/Script*"/>
       <filename name="${optional.package}/script/**/*"/>
-      <filename name="${optional.type.package}/Script*"/>
+      <filename name="${optional.type.package}/*Script*"/>
       <filename name="${util.package}/Script*"/>
     </or>
   </selector>
