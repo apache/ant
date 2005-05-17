@@ -311,10 +311,7 @@ public class ScriptDef extends DefBase {
      * @deprecated use executeScript(attribute, elements, instance) instead
      */
     public void executeScript(Map attributes, Map elements) {
-        runner.addBean("attributes", attributes);
-        runner.addBean("elements", elements);
-        runner.addBean("project", getProject());
-        runner.executeScript("scriptdef_" + name);
+        executeScript(attributes, elements,null);
     }
 
     /**
@@ -330,7 +327,9 @@ public class ScriptDef extends DefBase {
         runner.addBean("attributes", attributes);
         runner.addBean("elements", elements);
         runner.addBean("project", getProject());
-        runner.addBean("self", instance);
+        if(instance!=null) {
+            runner.addBean("self", instance);
+        }
         runner.executeScript("scriptdef_" + name);
     }
 
