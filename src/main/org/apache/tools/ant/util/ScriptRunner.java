@@ -47,17 +47,6 @@ public class ScriptRunner {
             new String[] {"groovy", "gy"});
     }
 
-    // Register Jruby ourselves, since BSF does not
-    // natively support it (yet).
-    // This "hack" can be removed once BSF has been
-    // modified to support Jruby or more dynamic
-    // registration.
-    static {
-        BSFManager.registerScriptingEngine("ruby",
-                "org.jruby.javasupport.bsf.JRubyEngine",
-                new String[]{"ruby","rb"});
-    }
-
     /** Script language */
     private String language;
 
