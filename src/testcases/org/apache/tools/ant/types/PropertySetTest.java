@@ -36,4 +36,12 @@ public class PropertySetTest extends BuildFileTest {
     public void testReferenceToTwoReferences() {
         executeTarget("reference-to-two-references");
     }
+
+    public void testNestedMapped() {
+        executeTarget("nested-mapped");
+    }
+
+    public void testNestedMappedMapped() {
+        executeTarget("nested-mapped-mapped");
+    }
 }

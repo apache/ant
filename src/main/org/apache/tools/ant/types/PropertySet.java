@@ -282,6 +282,12 @@ public class PropertySet extends DataType {
         Hashtable props =
             prj == null ? getAllSystemProperties() : prj.getProperties();
 
+        //quick & dirty, to make nested mapped p-sets work:
+        for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
+            PropertySet set = (PropertySet) e.nextElement();
+            props.putAll(set.getProperties());
+        }
+
         if (getDynamic() || cachedNames == null) {
             names = new HashSet();
             addPropertyNames(names, props);
@@ -382,20 +388,7 @@ public class PropertySet extends DataType {
      * @return the referenced PropertySet.
      */
     protected PropertySet getRef() {
-        if (!isChecked()) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, getProject());
-        }
-
-        Object o = getRefid().getReferencedObject(getProject());
-        if (!(o instanceof PropertySet)) {
-            String msg = getRefid().getRefId()
-                + " doesn\'t denote a propertyset";
-            throw new BuildException(msg);
-        } else {
-            return (PropertySet) o;
-        }
+        return (PropertySet) getCheckedRef(PropertySet.class, "propertyset");
     }
 
     /**
@@ -469,4 +462,5 @@ public class PropertySet extends DataType {
         }
         return b.toString();
     }
+
 }

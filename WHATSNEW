@@ -234,6 +234,8 @@ Fixed bugs:
 * <unzip> and <untar> could leave file handles open on invalid
   archives.  Bugzilla report 34893.
 
+* propertyset threw NPE with nested, mapped propertysets.
+
 Other changes:
 --------------
 
