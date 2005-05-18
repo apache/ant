@@ -2081,6 +2081,37 @@
         </table>
       </subsection>
 
+      <subsection name="Orangevolt Ant Tasks">
+
+        <p>Orangevolt ANT Tasks is a collection of Tasks for Apache
+        Ant.</p>
+
+        <p>The Orangevolt Ant Tasks collections provides a bunch of
+        Appplication Deployment related Tasks from windows specific
+        tasks (registry access, executable generation), *nix specific
+        tasks (kde/gnome shortcut generation) to many useful utility
+        tasks like jnlp generation.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/ovanttasks">http://sourceforge.net/projects/ovanttasks</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:info@roxes.com">info@roxes.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="pack">
 
         <p>pack is a task to build the smallest possible JAR to link
@@ -2281,32 +2312,6 @@
           <tr>
             <th>License:</th>
             <td>The Apache Software License</td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="Roxes Ant Tasks">
-
-        <p>The collections contain 3 Tasks for simplifying application
-        deployment: <i>sfx</i> creates native self extracting executables
-        out of ZIP archives; <i>jstub</i> creates native executables;
-        <i>jnlp</i> simplifies the creation of JNLP files for Java Web Start.</p>
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.5 or above</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.roxes.com/produkte/rat.html">http://www.roxes.com/produkte/rat.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:info@roxes.com">info@roxes.com</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GNU General Public License (GPL)</td>
           </tr>
         </table>
       </subsection>
