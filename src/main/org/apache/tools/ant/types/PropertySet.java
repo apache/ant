@@ -166,11 +166,11 @@ public class PropertySet extends DataType {
      * @param to output pattern.
      */
     public void setMapper(String type, String from, String to) {
-        Mapper mapper = createMapper();
+        Mapper m = createMapper();
         Mapper.MapperType mapperType = new Mapper.MapperType();
         mapperType.setValue(type);
-        mapper.setFrom(from);
-        mapper.setTo(to);
+        m.setFrom(from);
+        m.setTo(to);
     }
 
     /**
@@ -282,6 +282,12 @@ public class PropertySet extends DataType {
         Hashtable props =
             prj == null ? getAllSystemProperties() : prj.getProperties();
 
+        //quick & dirty, to make nested mapped p-sets work:
+        for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
+            PropertySet set = (PropertySet) e.nextElement();
+            props.putAll(set.getProperties());
+        }
+
         if (getDynamic() || cachedNames == null) {
             names = new HashSet();
             addPropertyNames(names, props);
@@ -302,19 +308,19 @@ public class PropertySet extends DataType {
         } else {
             names = cachedNames;
         }
-        FileNameMapper mapper = null;
+        FileNameMapper m = null;
         Mapper myMapper = getMapper();
         if (myMapper != null) {
-            mapper = myMapper.getImplementation();
+            m = myMapper.getImplementation();
         }
         Properties properties = new Properties();
         //iterate through the names, get the matching values
         for (Iterator iter = names.iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             String value = (String) props.get(name);
-            if (mapper != null) {
+            if (m != null) {
                 //map the names
-                String[] newname = mapper.mapFileName(name);
+                String[] newname = m.mapFileName(name);
                 if (newname != null) {
                     name = newname[0];
                 }
@@ -382,20 +388,7 @@ public class PropertySet extends DataType {
      * @return the referenced PropertySet.
      */
     protected PropertySet getRef() {
-        if (!isChecked()) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, getProject());
-        }
-
-        Object o = getRefid().getReferencedObject(getProject());
-        if (!(o instanceof PropertySet)) {
-            String msg = getRefid().getRefId()
-                + " doesn\'t denote a propertyset";
-            throw new BuildException(msg);
-        } else {
-            return (PropertySet) o;
-        }
+        return (PropertySet) getCheckedRef(PropertySet.class, "propertyset");
     }
 
     /**
@@ -469,4 +462,5 @@ public class PropertySet extends DataType {
         }
         return b.toString();
     }
+
 }
