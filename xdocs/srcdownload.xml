@@ -109,9 +109,14 @@ may not be available on all mirrors for a few days.</div>
 
 <section name="Nightly Builds">
 
-<p>If you wish to use the latest Ant features, you can try downloading a
+<p>Are currently not available, we hope to restore that service soon.</p>
+
+<!--p>If you wish to use the latest Ant features, you can try downloading a
 <a href="http://brutus.apache.org/~nightlybuild/builds/ant/">nightly build</a>.
-</p>
+</p-->
+
+<p>If you want to build Ant from sources, you can use a <a
+href="http://cvs.apache.org/snapshots/ant/">CVS snapshot</a>.</p>
 
 </section>
 

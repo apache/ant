@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2002-2004 The Apache Software Foundation
+   Copyright 2002-2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -169,10 +169,10 @@ D:\src\java\Unset.java<br></br>
             problem you are having is caused by Ant, chances are that someone
             else may have already encountered this problem, and perhaps it has
             been fixed. The next step, therefore, may be to try a nightly build
-            of Ant to see if the problem has been fixed. Nightly builds for Ant
+            of Ant to see if the problem has been fixed. <!--Nightly builds for Ant
             are available from the 
             <a href="http://brutus.apache.org/~nightlybuild/builds/ant/">
-            Ant web site</a>. While Ant nightly builds are typically quite
+            Ant web site</a>.--> While Ant nightly builds are typically quite
             stable and are used by
             <a href="http://brutus.apache.org/gump/public/">Gump</a>
             to build many other Jakarta projects, these builds should
