@@ -40,7 +40,7 @@ with the following attributes:</p>
     <td valign="top">specifies the implementation by class name.</td>
   </tr>
   <tr>
-    <td valign="top">classpath</td> 
+    <td valign="top">classpath</td>
     <td valign="top">the classpath to use when looking up
       <code>classname</code>.</td>
     <td align="center" valign="top">No</td>
@@ -52,13 +52,13 @@ with the following attributes:</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">from</td> 
+    <td valign="top">from</td>
     <td valign="top">the <code>from</code> attribute for the given
       implementation.</td>
     <td align="center" valign="top">Depends on implementation.</td>
   </tr>
   <tr>
-    <td valign="top">to</td> 
+    <td valign="top">to</td>
     <td valign="top">the <code>to</code> attribute for the given
       implementation.</td>
     <td align="center" valign="top">Depends on implementation.</td>
@@ -497,7 +497,7 @@ jakarta-ORO and finally try jakarta-regexp.</li>
         &lt;path path="Aj.Java"/&gt;
         &lt;chainedmapper&gt;
           &lt;flattenmapper/&gt;
-          &lt;globmapper from="a(*.)java" to="\1.java.bak" casesensitive="no"/&gt;
+          &lt;regexpmapper from="a(*.)java" to="\1.java.bak" casesensitive="no"/&gt;
         &lt;/chainedmapper&gt;
       &lt;/pathconvert&gt;
       &lt;echo&gt;x is ${x}&lt;/echo&gt;
@@ -689,4 +689,3 @@ Reserved.</p>
 
 </body>
 </html>
-
