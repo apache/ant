@@ -27,6 +27,14 @@ href="http://jce.iaik.tugraz.at/products/01_jce/index.php">the
 Technical University Graz</a> offer more digest algorithms than those
 built-in into your JDK.</p>
 
+<p>
+Warning: the case of the extension is that of the algorithm used.
+If you ask for "SHA1", you get a .SHA1 extension; if you ask for "sha1", you
+get a file ending in .sha1. The Java Crypto Engines are case-insensitive
+in matching algorithms, so choose a name to match your desired output extension,
+or set the <tt>fileext</tt> attribute.
+</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
