@@ -1722,9 +1722,9 @@ public class FTP
         long localTimestamp = localFile.lastModified();
 
         if (this.action == SEND_FILES) {
-            return remoteTimestamp + timeDiffMillis > localTimestamp;
+            return remoteTimestamp + timeDiffMillis >= localTimestamp;
         } else {
-            return localTimestamp > remoteTimestamp + timeDiffMillis;
+            return localTimestamp >= remoteTimestamp + timeDiffMillis;
         }
     }
 
