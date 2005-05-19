@@ -1,3 +1,15 @@
+Changes from Ant 1.6.4 to current Ant 1.6 CVS version
+=====================================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* <move> was unable to replace existing files or write into
+  existing directories.  Bugzilla report 34962.
+
 Changes from Ant 1.6.3 to Ant 1.6.4
 ===================================
 
@@ -28,9 +40,6 @@ Fixed bugs:
 
 * <ftp> up to date calculations were wrong.
   Bugzilla report 34941.
-
-* <move> was unable to replace existing files or write into
-  existing directories.  Bugzilla report 34962.
 
 Other changes:
 --------------
