@@ -1319,6 +1319,22 @@
     description="--> creates the full Apache Ant distribution">
   </target>
 
+  <!--
+       ===================================================================
+         Upload the distribution to cvs.apache.org for final releases
+       ===================================================================
+  -->
+  <target name="upload" description="upload distribution">
+    <fail unless="apache.user" message="set a property apache.user with your apache user"/>
+    <fail unless="ssh.passphrase" message="set a property with your ssh passphrase"/>
+    <fail unless="ssh.keyfile" message="set a property with your ssh keyfile"/>
+    <fail unless="ssh.knownhosts" message="set a property with your ssh knownhosts"/>
+    <scp todir="${apache.user}@cvs.apache.org:/www/www.apache.org/dist/ant" keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}" knownhosts="${ssh.knownhosts}">
+      <fileset dir="${dist.base}">
+        <include name="**/*"/>
+      </fileset>
+     </scp>
+  </target>
 
   <!--
        ===================================================================
