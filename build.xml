@@ -25,8 +25,8 @@
   -->
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
-  <property name="version" value="1.6.3"/>
-  <property name="manifest-version" value="1.6.3"/>
+  <property name="version" value="1.6.4"/>
+  <property name="manifest-version" value="1.6.4"/>
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>
@@ -1257,8 +1257,22 @@
   <target name="distribution" depends="main_distribution"
           description="--> creates the full Apache Ant distribution">
   </target>
-
-
+  <!--
+       ===================================================================
+         Upload the distribution to cvs.apache.org for final releases
+       ===================================================================
+  -->
+  <target name="upload" description="upload distribution">
+    <fail unless="apache.user" message="set a property apache.user with your apache user"/>
+    <fail unless="ssh.passphrase" message="set a property with your ssh passphrase"/>
+    <fail unless="ssh.keyfile" message="set a property with your ssh keyfile"/>
+    <fail unless="ssh.knownhosts" message="set a property with your ssh knownhosts"/>
+    <scp todir="${apache.user}@cvs.apache.org:/www/www.apache.org/dist/ant" keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}" knownhosts="${ssh.knownhosts}">
+      <fileset dir="${dist.base}">
+        <include name="**/*"/>
+      </fileset>
+     </scp>
+  </target>
   <!--
        ===================================================================
          Cleans up build and distribution directories

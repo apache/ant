@@ -58,6 +58,7 @@ Note: This document was updated in the context of releasing Ant 1.6.
 
         On the branch and on the main trunk (*):
 
+            * WHATSNEW
             * xdocs/antnews.xml (Announcement)
             * xdocs/faq.xml (Ant's history details - not for betas)
             * xdocs/index.xml (Announcement, latest release details, link to
@@ -164,7 +165,8 @@ Note: This document was updated in the context of releasing Ant 1.6.
     you'll have to do some house-keeping for the old release:
 
     * upload the new release files to
-      /www/www.apache.org/dist/ant/[source|binary].
+      /www/www.apache.org/dist/ant/[source|binaries].
+      this can be done using the target upload of the build.xml
 
     * remove the symbolic links from /www/www.apache.org/dist/ant.
 
