@@ -59,38 +59,129 @@
     </move>
   </target>
 
+  <target name="testMoveFileAndFileset">
+    <mkdir dir="A" />
+    <touch>
+      <filelist dir="A" files="1,2,3" />
+    </touch>
+    <move todir="E" file="A/1">
+      <fileset dir="A" includes="2,3" />
+    </move>
+    <fail message="A unavailable">
+      <condition>
+        <not>
+          <available file="A" type="dir" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="A/1 not moved">
+      <condition>
+        <or>
+          <available file="A/1" type="file" />
+          <not>
+            <available file="E/1" type="file" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+    <fail message="A/2 not moved">
+      <condition>
+        <or>
+          <available file="A/2" type="file" />
+          <not>
+            <available file="E/2" type="file" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+    <fail message="A/3 not moved">
+      <condition>
+        <or>
+          <available file="A/3" type="file" />
+          <not>
+            <available file="E/3" type="file" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <macrodef name="verifymove">
+    <attribute name="newfile" />
+    <attribute name="olddir" />
+    <sequential>
+        <fail message="@{newfile} not available">
+          <condition>
+            <not>
+              <available file="@{newfile}" type="file" />
+            </not>
+          </condition>
+        </fail>
+        <fail message="@{olddir} remains">
+          <condition>
+            <available file="@{olddir}" type="dir" />
+          </condition>
+        </fail>
+    </sequential>
+  </macrodef>
+
+  <target name="testCompleteDirectoryMoveToExistingDir">
+    <mkdir dir="A" />
+    <touch file="A/1" />
+    <mkdir dir="E" />
+    <touch file="E/2" />
+    <move todir="E">
+      <fileset dir="A" />
+    </move>
+    <verifymove newfile="E/1" olddir="A" />
+    <fail message="E/2 unavailable">
+      <condition>
+        <not>
+          <available file="E/2" type="file" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="testCompleteDirectoryMoveFileToFile">
     <mkdir dir="A"/>
     <touch file="A/1"/>
     <move file="A" tofile="E" />
-    <fail message="E/1 not available">
-      <condition>
-        <not>
-          <available file="E/1" type="file" />
-        </not>
-      </condition>
-    </fail>
-    <fail message="A remains">
-      <condition>
-        <available file="A" type="dir" />
-      </condition>
-    </fail>
+    <verifymove newfile="E/1" olddir="A" />
   </target>
 
   <target name="testCompleteDirectoryMoveFileToDir">
     <mkdir dir="A"/>
     <touch file="A/1"/>
     <move file="A" todir="E" />
-    <fail message="E/A/1 not available">
+    <verifymove newfile="E/A/1" olddir="A" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileAndFileset">
+    <mkdir dir="A/1" />
+    <touch file="A/2" />
+    <move file="A/1" todir="E">
+      <fileset dir="A" includes="2" />
+    </move>
+    <fail message="A unavailable">
       <condition>
         <not>
-          <available file="E/A/1" type="file" />
+          <available file="A" type="dir" />
         </not>
       </condition>
     </fail>
-    <fail message="A remains">
+    <fail message="E/1 unavailable">
       <condition>
-        <available file="A" type="dir" />
+        <not>
+          <available file="E/1" type="dir" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="E/2 unavailable">
+      <condition>
+        <not>
+          <available file="E/2" type="file" />
+        </not>
       </condition>
     </fail>
   </target>
@@ -98,8 +189,8 @@
   <target name="testCompleteDirectoryMoveFileToExistingFile">
     <mkdir dir="A"/>
     <touch file="A/1"/>
-    <touch file="B"/>
-    <move file="A" tofile="B" />
+    <touch file="E"/>
+    <move file="A" tofile="E" />
   </target>
 
   <target name="testCompleteDirectoryMoveFileToExistingDir">
@@ -107,6 +198,7 @@
     <touch file="A/1"/>
     <mkdir dir="E"/>
     <move file="A" tofile="E" />
+    <verifymove newfile="E/1" olddir="A" />
   </target>
 
   <target name="testCompleteDirectoryMoveFileToDirWithExistingFile">
@@ -123,6 +215,7 @@
     <mkdir dir="E"/>
     <mkdir dir="E/A"/>
     <move file="A" todir="E" />
+    <verifymove newfile="E/A/1" olddir="A" />
   </target>
 
   <target name="cleanup"> 

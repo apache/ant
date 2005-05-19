@@ -89,6 +89,14 @@ public class MoveTest extends BuildFileTest {
         assertTrue(!getProject().resolveFile("A").exists());
     }
 
+    public void testMoveFileAndFileset() {
+        executeTarget("testMoveFileAndFileset");
+    }
+
+    public void testCompleteDirectoryMoveToExistingDir() {
+        executeTarget("testCompleteDirectoryMoveToExistingDir");
+    }
+
     public void testCompleteDirectoryMoveFileToFile() {
         executeTarget("testCompleteDirectoryMoveFileToFile");
     }
@@ -97,24 +105,24 @@ public class MoveTest extends BuildFileTest {
         executeTarget("testCompleteDirectoryMoveFileToDir");
     }
 
+    public void testCompleteDirectoryMoveFileAndFileset() {
+        executeTarget("testCompleteDirectoryMoveFileAndFileset");
+    }
+
     public void testCompleteDirectoryMoveFileToExistingFile() {
-        expectBuildExceptionContaining("testCompleteDirectoryMoveFileToExistingFile",
-                                       "", "Cannot replace file");
+        executeTarget("testCompleteDirectoryMoveFileToExistingFile");
     }
 
     public void testCompleteDirectoryMoveFileToExistingDir() {
-        expectBuildExceptionContaining("testCompleteDirectoryMoveFileToExistingDir",
-                                       "", "Cannot replace directory");
+        executeTarget("testCompleteDirectoryMoveFileToExistingDir");
     }
 
     public void testCompleteDirectoryMoveFileToDirWithExistingFile() {
-        expectBuildExceptionContaining("testCompleteDirectoryMoveFileToDirWithExistingFile",
-                                       "", "Cannot replace file");
+        executeTarget("testCompleteDirectoryMoveFileToDirWithExistingFile");
     }
 
     public void testCompleteDirectoryMoveFileToDirWithExistingDir() {
-        expectBuildExceptionContaining("testCompleteDirectoryMoveFileToDirWithExistingDir",
-                                       "", "Cannot replace directory");
+        executeTarget("testCompleteDirectoryMoveFileToDirWithExistingDir");
     }
 
 }

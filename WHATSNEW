@@ -29,6 +29,9 @@ Fixed bugs:
 * <ftp> up to date calculations were wrong.
   Bugzilla report 34941.
 
+* <move> was unable to replace existing files or write into
+  existing directories.  Bugzilla report 34962.
+
 Other changes:
 --------------
 
