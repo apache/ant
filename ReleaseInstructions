@@ -165,7 +165,15 @@ Note: This document was updated in the context of releasing Ant 1.6.
     you'll have to do some house-keeping for the old release:
 
     * upload the new release files to
-      /www/www.apache.org/dist/ant/[source|binaries].
+
+      from distribution
+      to   /www/www.apache.org/dist/ant/[source|binaries].
+      
+      and 
+
+      from java-repository/ant/jars
+      to   /www/www.apache.org/dist/java-repository/ant/jars
+
       this can be done using the target upload of the build.xml
 
     * remove the symbolic links from /www/www.apache.org/dist/ant.
@@ -188,7 +196,7 @@ Note: This document was updated in the context of releasing Ant 1.6.
 19. Clean up.
 
     * remove the remaining files of the previous release from
-      /www/www.apache.org/dist/ant/[source|binary].
+      /www/www.apache.org/dist/ant/[source|binaries].
       This includes the old release notes.
 
 20. Now and perhaps during previous betas any changes on the branch must
