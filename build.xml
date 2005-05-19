@@ -1269,7 +1269,12 @@
     <fail unless="ssh.knownhosts" message="set a property with your ssh knownhosts"/>
     <scp todir="${apache.user}@cvs.apache.org:/www/www.apache.org/dist/ant" keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}" knownhosts="${ssh.knownhosts}">
       <fileset dir="${dist.base}">
-        <include name="**/*"/>
+        <include name="**/*${version}*"/>
+      </fileset>
+     </scp>
+    <scp todir="${apache.user}@cvs.apache.org:/www/www.apache.org/dist/java-repository/ant/jars" keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}" knownhosts="${ssh.knownhosts}">
+      <fileset dir="java-repository/ant/jars">
+        <include name="*${version}*"/>
       </fileset>
      </scp>
   </target>
