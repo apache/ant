@@ -211,6 +211,7 @@ Other changes:
   As it tests for the implementation, it can be used to check for optional
   tasks being available. 
 
+* check for 1.5.* ant main class. (weblogic.jar in classpath reports)
 
 Changes from Ant 1.6.3 to Ant 1.6.4
 ===================================

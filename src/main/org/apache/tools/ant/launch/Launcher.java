@@ -243,10 +243,17 @@ public class Launcher {
 
         URLClassLoader loader = new URLClassLoader(jars);
         Thread.currentThread().setContextClassLoader(loader);
+        Class mainClass = null;
         try {
-            Class mainClass = loader.loadClass(MAIN_CLASS);
+            mainClass = loader.loadClass(MAIN_CLASS);
             AntMain main = (AntMain) mainClass.newInstance();
             main.startAnt(newArgs, null, null);
+        } catch (InstantiationException ex) {
+            System.out.println(
+                "Incompatible version of org.apache.tools.ant detected");
+            File mainJar = Locator.getClassSource(mainClass);
+            System.out.println(
+                "Location of this class " + mainJar);
         } catch (Throwable t) {
             t.printStackTrace();
         }
