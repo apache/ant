@@ -44,7 +44,7 @@ public class TypeFound extends ProjectComponent implements Condition {
     /**
      * The URI for this definition.
      * @param uri the namespace URI. If this is not set, use the
-     *            default namespace.
+     *            default ant namespace.
      */
     public void setURI(String uri) {
         this.uri = uri;
