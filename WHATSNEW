@@ -206,6 +206,10 @@ Other changes:
 * project name is now used for *all* targets so one can write consistent import
   build file. bugzilla report 28444.
 
+* New condition <typefound> that can be used to probe for the declaration 
+  and implementation of a task, type, preset, macro, scriptdef, whatever. 
+  As it tests for the implementation, it can be used to check for optional
+  tasks being available. 
 
 
 Changes from Ant 1.6.3 to Ant 1.6.4
@@ -869,11 +873,6 @@ Other changes:
    won't attempt to check it out again.
  - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
   Bugzilla Report 26253.
-
-* New condition <typefound> that can be used to probe for the declaration 
-  and implementation of a task, type, preset, macro, scriptdef, whatever. 
-  As it tests for the implementation, it can be used to check for optional
-  tasks being available. 
 
 * added nested text support to <macrodef>
   
