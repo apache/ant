@@ -26,8 +26,8 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Offers some helper methods on the Path structure in ant.
  *
- * <p>Basic idea behind this utility class is to use it from inside the
- * different ant objects (and user defined objects) that need classLoading
+ * <p>The basic idea behind this utility class is to use it from inside the
+ * different Ant objects (and user defined objects) that need classLoading
  * for their operation.
  * Normally those would have a setClasspathRef() {for the @classpathref}
  * and/or a createClasspath() {for the nested &lt;classpath&gt;}
@@ -91,12 +91,12 @@ public class ClasspathUtils {
      * String, boolean)}.
      *
      * <p>Delegates to the other one after extracting the referenced
-     * Path from the Project This checks also that the passed
+     * Path from the Project. This checks also that the passed
      * Reference is pointing to a Path all right.</p>
-     * @param p current ant project
+     * @param p current Ant project
      * @param ref Reference to Path structure
      * @param reverseLoader if set to true this new loader will take
-     * precedence over it's parent (which is contra the regular
+     * precedence over its parent (which is contra the regular
      * classloader behaviour)
      * @return The class loader
      */
@@ -121,7 +121,7 @@ public class ClasspathUtils {
      *
      * <p>Assumes the logical 'false' for the reverseLoader.</p>
      *
-     * @param p current ant project
+     * @param p current Ant project
      * @param path the path
      * @param loaderId the loader id string
      * @return The class loader
@@ -143,7 +143,7 @@ public class ClasspathUtils {
      * @param path the path
      * @param loaderId the loader id string
      * @param reverseLoader if set to true this new loader will take
-     * precedence over it's parent (which is contra the regular
+     * precedence over its parent (which is contra the regular
      * classloader behaviour)
      * @return The class loader
      */
@@ -158,14 +158,14 @@ public class ClasspathUtils {
      * defined in the path argument.
      *
      * <p>Based on the setting of the magic property
-     * 'ant.reuse.loader' this will try to reuse the perviously
+     * 'ant.reuse.loader' this will try to reuse the previously
      * created loader with that id, and of course store it there upon
      * creation.</p>
      * @param p             Ant Project where the handled components are living in.
      * @param path          Path object to be used as classpath for this classloader
      * @param loaderId      identification for this Loader,
      * @param reverseLoader if set to true this new loader will take
-     *                      precedence over it's parent (which is contra the regular
+     *                      precedence over its parent (which is contra the regular
      *                      classloader behaviour)
      * @param reuseLoader   if true reuse the loader if it is found
      * @return              ClassLoader that uses the Path as its classpath.
@@ -198,17 +198,17 @@ public class ClasspathUtils {
     }
 
     /**
-     * Gets a fresh, different, not used before classloader that uses the
-     * passed path as it's classpath.
+     * Gets a fresh, different, previously unused classloader that uses the
+     * passed path as its classpath.
      *
      * <p>This method completely ignores the ant.reuse.loader magic
      * property and should be used with caution.</p>
      * @param p             Ant Project where the handled components are living in.
      * @param path          the classpath for this loader
      * @param reverseLoader if set to true this new loader will take
-     *                      precedence over it's parent (which is contra the regular
+     *                      precedence over its parent (which is contra the regular
      *                      classloader behaviour)
-     * @return The fresh, different, not used before class loader.
+     * @return The fresh, different, previously unused class loader.
      */
     public static ClassLoader getUniqueClassLoaderForPath(
         Project p,
@@ -227,7 +227,7 @@ public class ClasspathUtils {
      * Creates a fresh object instance of the specified classname.
      *
      * <p> This uses the userDefinedLoader to load the specified class,
-     * and then makes an instance using the default no-argument constructor
+     * and then makes an instance using the default no-argument constructor.
      * </p>
      *
      * @param className the full qualified class name to load.
@@ -298,7 +298,7 @@ public class ClasspathUtils {
      *
      * <p> This class functions as a delegate handling the configuration
      * issues for this recuring pattern.  Its usage pattern, as the name
-     * suggests is delegation, not inheritance. </p>
+     * suggests, is delegation rather than inheritance. </p>
      *
      * @since Ant 1.6
      */
@@ -311,7 +311,7 @@ public class ClasspathUtils {
         private boolean reverseLoader = false;
 
         /**
-         * Constructs Delegate
+         * Construct a Delegate
          * @param component the ProjectComponent this delegate is for.
          */
         Delegate(ProjectComponent component) {
