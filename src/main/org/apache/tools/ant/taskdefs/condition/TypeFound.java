@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.condition;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.AntTypeDefinition;
 
 /**
@@ -30,6 +31,7 @@ import org.apache.tools.ant.AntTypeDefinition;
 public class TypeFound extends ProjectComponent implements Condition {
 
     private String name;
+    private String uri;
 
     /**
      * the task or other type to look for
@@ -37,6 +39,15 @@ public class TypeFound extends ProjectComponent implements Condition {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * The URI for this definition.
+     * @param uri the namespace URI. If this is not set, use the
+     *            default namespace.
+     */
+    public void setURI(String uri) {
+        this.uri = uri;
     }
 
     /**
@@ -48,7 +59,8 @@ public class TypeFound extends ProjectComponent implements Condition {
 
         ComponentHelper helper =
             ComponentHelper.getComponentHelper(getProject());
-        AntTypeDefinition def = helper.getDefinition(typename);
+        AntTypeDefinition def = helper.getDefinition(
+            ProjectHelper.genComponentName(uri, typename));
         if (def == null) {
             return false;
         }

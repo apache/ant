@@ -425,6 +425,13 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
     <td valign="top">name of the type</td>
     <td valign="top" align="center">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">uri</td>
+    <td valign="top">
+      The uri that this type lives in.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 
   <p>
@@ -433,7 +440,7 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
   <blockquote>
   <pre>
     &lt;typefound name="junit"/&gt;
-    &lt;typefound name="antlib:org.apache.maven.artifact.ant:artifact"/&gt;
+    &lt;typefound uri="antlib:org.apache.maven.artifact.ant" name="artifact"/&gt;
   </pre></blockquote>
 
 <h4>scriptcondition</h4>
