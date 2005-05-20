@@ -332,7 +332,7 @@ public class XMLValidateTask extends Task {
      */
     protected void initValidator() {
 
-        xmlReader=createXmlReader();
+        xmlReader = createXmlReader();
 
         xmlReader.setEntityResolver(getEntityResolver());
         xmlReader.setErrorHandler(errorHandler);
@@ -348,7 +348,6 @@ public class XMLValidateTask extends Task {
                 setFeature(feature.getName(), feature.getValue());
 
             }
-
             // Sets properties
             for (int i = 0; i < propertyList.size(); i++) {
                 final Property prop = (Property) propertyList.elementAt(i);
@@ -521,7 +520,7 @@ public class XMLValidateTask extends Task {
     protected boolean doValidate(File afile) {
         //for every file, we have a new instance of the validator
         initValidator();
-
+        boolean result = true;
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
@@ -529,31 +528,28 @@ public class XMLValidateTask extends Task {
             String uri = FILE_UTILS.toURI(afile.getAbsolutePath());
             is.setSystemId(uri);
             xmlReader.parse(is);
-            return true;
         } catch (SAXException ex) {
             log("Caught when validating: " + ex.toString(), Project.MSG_DEBUG);
             if (failOnError) {
                 throw new BuildException(
                     "Could not validate document " + afile);
-            } else {
-                log("Could not validate document " + afile + ": " + ex.toString());
             }
+            log("Could not validate document " + afile + ": " + ex.toString());
+            result = false;
         } catch (IOException ex) {
             throw new BuildException(
                 "Could not validate document " + afile,
                 ex);
         }
-
         if (errorHandler.getFailure()) {
             if (failOnError) {
                 throw new BuildException(
                     afile + " is not a valid XML document.");
-            } else {
-                log(afile + " is not a valid XML document", Project.MSG_ERR);
             }
+            result = false;
+            log(afile + " is not a valid XML document", Project.MSG_ERR);
         }
-        //if we got here. it was as a result of a caught and logged exception.
-        return false;
+        return result;
     }
 
     /**
