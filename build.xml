@@ -1543,6 +1543,7 @@
     </condition>
 
     <property name="includetests" value="**/*Test*" />
+    <property name="excludetests" value="" />
 
     <junit printsummary="${junit.summary}" haltonfailure="${test.haltonfailure}"
       filtertrace="${junit.filtertrace}"
@@ -1563,7 +1564,8 @@
       <formatter type="brief" usefile="false"/>
 
       <batchtest>
-        <fileset dir="${tests.dir}" includes="${includetests}">
+        <fileset dir="${tests.dir}"
+                 includes="${includetests}" excludes="${excludetests}">
 
           <!-- abstract classes, not testcases -->
           <exclude name="${taskdefs.package}/TaskdefsTest.java"/>
