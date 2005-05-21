@@ -81,6 +81,7 @@ public class IsReachable extends ProjectComponent implements Condition {
     public static final String MSG_NO_REACHABLE_TEST = "cannot do a proper reachability test on this Java version";
     public static final String ERROR_BAD_URL = "Bad URL ";
     public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
+    private static final String METHOD_NAME = "isReachable";
 
     /**
      * The host to ping.
@@ -168,7 +169,7 @@ public class IsReachable extends ProjectComponent implements Condition {
         //Java1.5: reachable = address.isReachable(timeout * 1000);
         Method reachableMethod = null;
         try {
-            reachableMethod = InetAddress.class.getMethod("reachable",
+            reachableMethod = InetAddress.class.getMethod(METHOD_NAME,
                     parameterTypes);
             Object[] params = new Object[1];
             params[0] = new Integer(timeout * 1000);
@@ -187,6 +188,7 @@ public class IsReachable extends ProjectComponent implements Condition {
             }
         } catch (NoSuchMethodException e) {
             //java1.4 or earlier
+            log("Not found: InetAddress."+METHOD_NAME,Project.MSG_VERBOSE);
             log(MSG_NO_REACHABLE_TEST);
             reachable = true;
 
