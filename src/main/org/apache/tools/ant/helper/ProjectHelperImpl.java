@@ -162,13 +162,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             throw new BuildException("Error reading project file: "
                                      + exc.getMessage(), exc);
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException ioe) {
-                    // ignore this
-                }
-            }
+            FileUtils.close(inputStream);
         }
     }
 

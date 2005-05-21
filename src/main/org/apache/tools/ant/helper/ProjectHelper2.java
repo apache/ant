@@ -244,13 +244,7 @@ public class ProjectHelper2 extends ProjectHelper {
                                      + buildFileName + ": " + exc.getMessage(),
                                      exc);
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException ioe) {
-                    // ignore this
-                }
-            }
+            FileUtils.close(inputStream);
         }
     }
 
