@@ -187,18 +187,33 @@ coming from your ftp server (ls -l on the ftp prompt).
     </p><p>
     If none of these is specified, the default mechanism of letting the system
     auto-detect the server OS type based on the FTP SYST command and assuming
-    standard formatting for that OS type will be used.</p>
-    </td>
+    standard formatting for that OS type will be used.
+    </p><p>
+    To aid in property-file-based development where a build script is configured
+    with property files, for any of these attributes, a value of <code>""</code>
+    is equivalent to not specifying it.
+    </p><p>
+    Please understand that these options are incompatible with the autodetection
+    scheme.  If any of these options is specified, (other than with a value of
+    <code>""</code> ) a system type must be chosen and if systemTypeKey is not
+    specified, UNIX will be assumed. The philosophy behind this is that these
+    options are for setting non-standard formats, and a build-script author who
+    knows what system he is dealing with will know what options to need to be
+    set. Otherwise, these options should be left alone and the default
+    autodetection scheme can be used and will work in the majority of cases.
+    </p></td>
     </tr>
   <tr>
     <td valign="top">systemTypeKey</td>
     <td valign="top">Specifies the type of system in use on the server.
-      Supported values are "UNIX", "VMS", "WINDOWS", "OS/2", "OS/400", "MVS".
-      If not specified, and no other xxxConfig attributes are specified, the
-      autodectection mechanism based on the FTP SYST command will be used.
+      Supported values are <code>"UNIX", "VMS", "WINDOWS", "OS/2", "OS/400",
+      "MVS".</code>  If not specified, (or specified as <code>""</code>) and if
+      no other xxxConfig attributes are specified, the autodectection mechanism
+      based on the FTP SYST command will be used.
     </td>
     <td valign="top" align="center">No, but if any of the following xxxConfig
-        attributes is specified, UNIX will be assumed.
+        attributes is specified, UNIX will be assumed, even if <code>""</code>
+        is specified here.
     </td>
    </tr>
    <tr>
@@ -208,7 +223,8 @@ coming from your ftp server (ls -l on the ftp prompt).
     <code>Asia/Jakarta</code>) the timezone
       used by the server for timestamps.  This enables Ant timestamp dependency
       checking even when the server is in a different timezone than the client.
-      If not specified, the timezone of the client is assumed.
+      If not specified, (or specified as <code>""</code>), the timezone of the
+      client is assumed.
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -219,8 +235,8 @@ coming from your ftp server (ls -l on the ftp prompt).
       to parse dates.  In some cases this will be the only date format used.
       In others, (unix for example) this will be used for dates
       older than a year old. (See recentDateFormatConfig).  If not specified,
-      the default date format for the system type indicated by the
-      systemTypeKey attribute will be used.
+      (or specified as <code>""</code>), the default date format for the system
+      type indicated by the systemTypeKey attribute will be used.
     </td>
     <td valign="top" align="center">
     No.
@@ -230,9 +246,9 @@ coming from your ftp server (ls -l on the ftp prompt).
     <td valign="top">recentDateFormatConfig</td>
     <td valign="top">Specify in java.text.SimpleDateFormat notation,
       (e.g. <code>MMM dd hh:mm</code>) the date format used by the FTP server
-      to parse dates less than a year old.  If not specified, and if the system
-      type indicated by the system key uses a recent date format, its standard
-      format will be used.
+      to parse dates less than a year old.  If not specified (or specified as
+      <code>""</code>), and if the system type indicated by the system key uses
+      a recent date format, its standard format will be used.
     </td>
     <td valign="top" align="center">No</td>
   </tr>

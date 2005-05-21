@@ -1257,67 +1257,96 @@ public class FTP
     /**
      * Method for setting <code>FTPClientConfig</code> remote system key.
      * 
-     * @param systemTypeKey
+     * @param systemTypeKey the key to be set - BUT if blank 
+     * the default value of null will be kept.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setSystemTypeKey(String systemKey) {
-        this.systemTypeKey = systemKey;
-        configurationHasBeenSet();
+        if (systemKey != null && !systemKey.equals(""))
+        {
+            this.systemTypeKey = systemKey;
+            configurationHasBeenSet();
+        }
     }
 
     /**
-     * Delegate method for <code>FTPClientConfig.setDefaultDateFormatStr(String)</code>.
+     * Delegate method for
+     * <code>FTPClientConfig.setDefaultDateFormatStr(String)</code>.
      * 
-     * @param defaultDateFormatConfig
+     * @param defaultDateFormatConfig configuration to be set, unless it is
+     * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setDefaultDateFormatConfig(String defaultDateFormat) {
-        this.defaultDateFormatConfig = defaultDateFormat;
-        configurationHasBeenSet();
+        if (defaultDateFormat != null && !defaultDateFormat.equals(""))
+        {
+            this.defaultDateFormatConfig = defaultDateFormat;
+            configurationHasBeenSet();
+        }
     }
 
     /**
-     * Delegate method for <code>FTPClientConfig.setRecentDateFormatStr(String)</code>.
+     * Delegate method for
+     * <code>FTPClientConfig.setRecentDateFormatStr(String)</code>.
      * 
-     * @param recentDateFormatConfig
+     * @param recentDateFormatConfig configuration to be set, unless it is
+     * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setRecentDateFormatConfig(String recentDateFormat) {
-        this.recentDateFormatConfig = recentDateFormat;
-        configurationHasBeenSet();
+        if (recentDateFormat != null && !recentDateFormat.equals(""))
+        {
+            this.recentDateFormatConfig = recentDateFormat;
+            configurationHasBeenSet();
+        }
     }
 
     /**
-     * Delegate method for <code>FTPClientConfig.setServerLanguageCode(String)</code>.
+     * Delegate method for
+     * <code>FTPClientConfig.setServerLanguageCode(String)</code>.
      * 
-     * @param serverLanguageCodeConfig
+     * @param serverLanguageCodeConfig configuration to be set, unless it is
+     * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(String serverLanguageCode) {
-        this.serverLanguageCodeConfig = serverLanguageCode;
-        configurationHasBeenSet();
+        if (serverLanguageCode != null && !serverLanguageCode.equals(""))
+        {
+            this.serverLanguageCodeConfig = serverLanguageCode;
+            configurationHasBeenSet();
+        }
     }
 
     /**
-     * Delegate method for <code>FTPClientConfig.setServerTimeZoneId(String)</code>.
+     * Delegate method for
+     * <code>FTPClientConfig.setServerTimeZoneId(String)</code>.
      * 
-     * @param serverTimeZoneConfig
+     * @param serverTimeZoneConfig configuration to be set, unless it is
+     * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerTimeZoneConfig(String serverTimeZoneId) {
-        this.serverTimeZoneConfig = serverTimeZoneId;
-        configurationHasBeenSet();
+        if (serverTimeZoneId != null && !serverTimeZoneId.equals(""))
+        {
+            this.serverTimeZoneConfig = serverTimeZoneId;
+            configurationHasBeenSet();
+        }
     }
 
     /**
-     * Delegate method for <code>FTPClientConfig.setShortMonthNames(String)</code>.
+     * Delegate method for
+     * <code>FTPClientConfig.setShortMonthNames(String)</code>.
      * 
-     * @param shortMonthNamesConfig
+     * @param shortMonthNamesConfig configuration to be set, unless it is
+     * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setShortMonthNamesConfig(String shortMonthNames) {
-        this.shortMonthNamesConfig = shortMonthNames;
-        configurationHasBeenSet();
+        if (shortMonthNames != null && !shortMonthNames.equals(""))
+        {
+            this.shortMonthNamesConfig = shortMonthNames;
+            configurationHasBeenSet();
+        }
     }
 
 
