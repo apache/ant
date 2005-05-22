@@ -17,8 +17,6 @@
 
 package org.apache.tools.zip;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Vector;
 import java.util.zip.ZipException;
 
@@ -54,29 +52,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @throws ZipException on error
      */
     public ZipEntry(java.util.zip.ZipEntry entry) throws ZipException {
-        /*
-         * REVISIT: call super(entry) instead of this stuff in Ant2,
-         *          "copy constructor" has not been available in JDK 1.1
-         */
-        super(entry.getName());
-
-        setComment(entry.getComment());
-        setMethod(entry.getMethod());
-        setTime(entry.getTime());
-
-        long size = entry.getSize();
-        if (size > 0) {
-            setSize(size);
-        }
-        long cSize = entry.getCompressedSize();
-        if (cSize > 0) {
-            setComprSize(cSize);
-        }
-        long crc = entry.getCrc();
-        if (crc > 0) {
-            setCrc(crc);
-        }
-
+        super(entry);
         byte[] extra = entry.getExtra();
         if (extra != null) {
             setExtraFields(ExtraFieldUtils.parse(extra));
@@ -112,34 +88,18 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public Object clone() {
-            ZipEntry e = (ZipEntry) super.clone();
+        ZipEntry e = (ZipEntry) super.clone();
 
-            e.setName(getName());
-            e.setComment(getComment());
-            e.setMethod(getMethod());
-            e.setTime(getTime());
-            long size = getSize();
-            if (size > 0) {
-                e.setSize(size);
-            }
-            long cSize = getCompressedSize();
-            if (cSize > 0) {
-                e.setComprSize(cSize);
-            }
-            long crc = getCrc();
-            if (crc > 0) {
-                e.setCrc(crc);
-            }
-
-            e.extraFields = (Vector) extraFields.clone();
-            e.setInternalAttributes(getInternalAttributes());
-            e.setExternalAttributes(getExternalAttributes());
-            e.setExtraFields(getExtraFields());
-            return e;
+        e.extraFields = (Vector) extraFields.clone();
+        e.setInternalAttributes(getInternalAttributes());
+        e.setExternalAttributes(getExternalAttributes());
+        e.setExtraFields(getExtraFields());
+        return e;
     }
 
     /**
      * Retrieves the internal file attributes.
+     * 
      * @return the internal file attributes
      * @since 1.1
      */
@@ -331,39 +291,16 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
-     * Helper for JDK 1.1 <-> 1.2 incompatibility.
-     *
-     * @since 1.2
-     */
-    private Long compressedSize = null;
-
-    /**
      * Make this class work in JDK 1.1 like a 1.2 class.
      *
      * <p>This either stores the size for later usage or invokes
      * setCompressedSize via reflection.</p>
      * @param size the size to use
+     * @deprecated use setCompressedSize directly. 
      * @since 1.2
      */
     public void setComprSize(long size) {
-        if (haveSetCompressedSize()) {
-            performSetCompressedSize(this, size);
-        } else {
-            compressedSize = new Long(size);
-        }
-    }
-
-    /**
-     * Override to make this class work in JDK 1.1 like a 1.2 class.
-     * @return the compressed size
-     * @since 1.2
-     */
-    public long getCompressedSize() {
-        if (compressedSize != null) {
-            // has been set explicitly and we are running in a 1.1 VM
-            return compressedSize.longValue();
-        }
-        return super.getCompressedSize();
+        setCompressedSize(size);
     }
 
     /**
@@ -410,106 +347,11 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * The equality method. In this case, the implementation returns 'this == o'
      * which is basically the equals method of the Object class.
      * @param o the object to compare to
-     * @return true if this object has the same name as <code>o</code>
+     * @return true if this object is the same as <code>o</code>
      * @since Ant 1.7
      */
     public boolean equals(Object o) {
         return (this == o);
-    }
-
-    /**
-     * Helper for JDK 1.1
-     *
-     * @since 1.2
-     */
-    private static Method setCompressedSizeMethod = null;
-    /**
-     * Helper for JDK 1.1
-     *
-     * @since 1.2
-     */
-    private static Object lockReflection = new Object();
-    /**
-     * Helper for JDK 1.1
-     *
-     * @since 1.2
-     */
-    private static boolean triedToGetMethod = false;
-
-    /**
-     * Are we running JDK 1.2 or higher?
-     *
-     * @since 1.2
-     */
-    private static boolean haveSetCompressedSize() {
-        checkSCS();
-        return setCompressedSizeMethod != null;
-    }
-
-    /**
-     * Invoke setCompressedSize via reflection.
-     *
-     * @since 1.2
-     */
-    private static void performSetCompressedSize(ZipEntry ze, long size) {
-        Long[] s = {new Long(size)};
-        try {
-            setCompressedSizeMethod.invoke(ze, (Object[]) s);
-        } catch (InvocationTargetException ite) {
-            Throwable nested = ite.getTargetException();
-            String msg = getDisplayableMessage(nested);
-            if (msg == null) {
-                msg = getDisplayableMessage(ite);
-            }
-            if (nested != null) {
-                nested.printStackTrace();
-            } else {
-                ite.printStackTrace();
-            }
-            throw new RuntimeException("InvocationTargetException setting the "
-                                       + "compressed size of " + ze + ": "
-                                       + msg);
-        } catch (Exception other) {
-            throw new RuntimeException("Exception setting the compressed size "
-                                       + "of " + ze + ": "
-                                       + getDisplayableMessage(other));
-        }
-    }
-
-    /**
-     * Try to get a handle to the setCompressedSize method.
-     *
-     * @since 1.2
-     */
-    private static void checkSCS() {
-        if (!triedToGetMethod) {
-            synchronized (lockReflection) {
-                triedToGetMethod = true;
-                try {
-                    setCompressedSizeMethod =
-                        java.util.zip.ZipEntry.class.getMethod("setCompressedSize",
-                                                               new Class[] {Long.TYPE});
-                } catch (NoSuchMethodException nse) {
-                    // Ignore the exception
-                }
-            }
-        }
-    }
-
-    /**
-     * try to get as much single-line information out of the exception
-     * as possible.
-     */
-    private static String getDisplayableMessage(Throwable e) {
-        String msg = null;
-        if (e != null) {
-            if (e.getMessage() != null) {
-                msg = e.getClass().getName() + ": " + e.getMessage();
-            } else {
-                msg = e.getClass().getName();
-            }
-        }
-        return msg;
     }
 
 }

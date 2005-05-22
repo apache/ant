@@ -336,7 +336,7 @@ public class ZipOutputStream extends FilterOutputStream {
             }
 
             entry.setSize(adjustToLong(def.getTotalIn()));
-            entry.setComprSize(adjustToLong(def.getTotalOut()));
+            entry.setCompressedSize(adjustToLong(def.getTotalOut()));
             entry.setCrc(realCrc);
 
             def.reset();
@@ -362,7 +362,7 @@ public class ZipOutputStream extends FilterOutputStream {
             long size = written - dataStart;
 
             entry.setSize(size);
-            entry.setComprSize(size);
+            entry.setCompressedSize(size);
             entry.setCrc(realCrc);
         }
 
@@ -413,7 +413,7 @@ public class ZipOutputStream extends FilterOutputStream {
                 throw new ZipException("crc checksum is required for STORED"
                                        + " method when not writing to a file");
             }
-            entry.setComprSize(entry.getSize());
+            entry.setCompressedSize(entry.getSize());
         }
 
         if (entry.getMethod() == DEFLATED && hasCompressionLevelChanged) {
