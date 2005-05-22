@@ -112,7 +112,6 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public Object clone() {
-        try {
             ZipEntry e = (ZipEntry) super.clone();
 
             e.setName(getName());
@@ -137,12 +136,6 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             e.setExternalAttributes(getExternalAttributes());
             e.setExtraFields(getExtraFields());
             return e;
-        } catch (Throwable t) {
-            // in JDK 1.1 ZipEntry is not Cloneable, so super.clone declares
-            // to throw CloneNotSupported - since JDK 1.2 it is overridden to
-            // not throw that exception
-            return null;
-        }
     }
 
     /**
