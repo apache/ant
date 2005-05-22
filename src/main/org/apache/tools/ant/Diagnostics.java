@@ -362,7 +362,7 @@ public final class Diagnostics {
                     } catch (NoClassDefFoundError e) {
                         String pkg = e.getMessage().replace('/', '.');
                         out.println(key + " : Missing dependency " + pkg);
-                    } catch (Error e) {
+                    } catch (LinkageError e) {
                         out.println(key + " : Initialization error");
                     }
                 }
