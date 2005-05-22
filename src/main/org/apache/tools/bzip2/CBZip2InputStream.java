@@ -190,10 +190,10 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             return -1;
 
         case START_BLOCK_STATE:
-            throw new Error();
+            throw new IllegalStateException();
 
         case RAND_PART_A_STATE:
-            throw new Error();
+            throw new IllegalStateException();
 
         case RAND_PART_B_STATE:
             setupRandPartB();
@@ -204,7 +204,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             break;
 
         case NO_RAND_PART_A_STATE:
-            throw new Error();
+            throw new IllegalStateException();
 
         case NO_RAND_PART_B_STATE:
             setupNoRandPartB();
@@ -215,7 +215,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             break;
 
         default:
-            throw new Error();
+            throw new IllegalStateException();
         }
 
         return retChar;

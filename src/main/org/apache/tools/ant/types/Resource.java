@@ -201,8 +201,9 @@ public class Resource implements Cloneable, Comparable {
         try {
             return super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new Error("CloneNotSupportedException for a "
-                            + "Clonable Resource caught?");
+            throw new UnsupportedOperationException(
+                    "CloneNotSupportedException for a Resource caught. "+
+                    "Derived classes must support cloning.");
         }
     }
 
