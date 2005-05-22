@@ -570,12 +570,7 @@ public class ExecuteOnTest extends BuildFileTest {
             reader = new FileReader(getProject().resolveFile(filename));
             result = FileUtils.readFully(reader);
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Throwable ignore) {
-                }
-            }
+            FileUtils.close(reader);
         }
         return result;
     }

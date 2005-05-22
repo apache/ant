@@ -523,13 +523,8 @@ public class Concat extends Task {
                 in = null;
             }
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (Throwable t) {
-                    // Ignore
-                }
-            }
+            FileUtils.close(in);
+
             if (out != null) {
                 try {
                     out.close();
@@ -730,13 +725,7 @@ public class Concat extends Task {
             } catch (IOException ex) {
                 throw new BuildException(ex);
             } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (Throwable t) {
-                        // ignore
-                    }
-                }
+                FileUtils.close(reader);
             }
         }
 

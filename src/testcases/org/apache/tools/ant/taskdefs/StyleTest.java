@@ -124,7 +124,7 @@ public class StyleTest extends BuildFileTest {
             return  FileUtils.readFully(r);
         }
         finally {
-            try {r.close();} catch (Throwable ignore) {}
+            FileUtils.close(r);
         }
 
     }

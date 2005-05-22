@@ -482,12 +482,7 @@ public class ExecTaskTest extends BuildFileTest {
             result = FileUtils.readFully(reader);
         } catch (IOException eyeOhEx) {
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Throwable ignore) {
-                }
-            }
+            FileUtils.close(reader);
         }
         return result;
     }

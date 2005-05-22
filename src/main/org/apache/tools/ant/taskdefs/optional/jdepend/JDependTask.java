@@ -37,6 +37,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 
 /**
@@ -551,13 +552,7 @@ public class JDependTask extends Task {
 
             jdepend.analyze();
         } finally {
-            if (fw != null) {
-                try {
-                    fw.close();
-                } catch (Throwable t) {
-                    // Ignore
-                }
-            }
+            FileUtils.close(fw);
         }
         return SUCCESS;
     }

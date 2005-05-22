@@ -21,8 +21,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Encapsulates a Jikes compiler, by directly executing an external
@@ -94,13 +96,7 @@ public class Jikes {
                     throw new BuildException("Error creating temporary file",
                                              e);
                 } finally {
-                    if (out != null) {
-                        try {
-                            out.close();
-                        } catch (Throwable t) {
-                            // ignore
-                        }
-                    }
+                    FileUtils.close(out);
                 }
             } else {
                 commandArray = new String[args.length + 1];

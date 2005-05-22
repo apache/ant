@@ -246,7 +246,7 @@ public class ConcatTest
             return  FileUtils.readFully(r);
         }
         finally {
-            try {r.close();} catch (Throwable ignore) {}
+            FileUtils.close(r);
         }
 
     }
