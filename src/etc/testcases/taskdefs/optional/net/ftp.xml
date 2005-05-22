@@ -142,10 +142,10 @@
 
     <target name="timed.test.put.older">
         <tstamp>
-            <format property="five.minutes.older" pattern="${tstamp.format}" offset="-5" unit="minute"/>
+            <format property="one.minute.older" pattern="${tstamp.format}" offset="-60" unit="second"/>
         </tstamp>
 
-        <touch datetime="${five.minutes.older}" pattern="${tstamp.format}" verbose="true">
+        <touch datetime="${one.minute.older}" pattern="${tstamp.format}" verbose="true">
             <fileset dir="${tmp.remote}">
                 <include name="A.timed"/>
             </fileset>
@@ -156,7 +156,6 @@
             password="${ftp.password}"
             separator="${ftp.filesep}"
             remotedir="${tmp.remote}"
-            timediffmillis="${server.timestamp.granularity.millis}" 
             newer="true"
             serverTimeZoneConfig="${ftp.server.timezone}"
             >

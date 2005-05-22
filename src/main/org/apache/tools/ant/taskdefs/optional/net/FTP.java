@@ -81,6 +81,11 @@ public class FTP
     protected static final int RM_DIR = 6;
     /** return code of ftp - not implemented in commons-net version 1.0 */
     private static final int CODE_521 = 521;
+    
+    /** adjust uptodate calculations where server timestamps are HH:mm and client's
+     * are HH:mm:ss */
+    private static final long GRANULARITY_MINUTE = 60000L;
+    
     /** Default port for FTP */
     public static final int DEFAULT_FTP_PORT = 21;
 
@@ -115,6 +120,8 @@ public class FTP
     private String serverLanguageCodeConfig = null;
     private String serverTimeZoneConfig = null;
     private String shortMonthNamesConfig = null;
+    private String timestampGranularity = null;
+    private long serverTimestampGranularity = 0L;
     private boolean isConfigurationSet = false;
 
     protected static final String[] ACTION_STRS = {
@@ -1387,6 +1394,21 @@ public class FTP
         return shortMonthNamesConfig;
     }
     /**
+     * @return Returns the timestampGranularity.
+     */
+    String getTimestampGranularity() {
+        return timestampGranularity;
+    }
+    /**
+     * @param timestampGranularity The timestampGranularity to set.
+     */
+    public void setTimestampGranularity(String timestampGranularity) {
+        if (null == timestampGranularity || "".equals(timestampGranularity)) {
+            return;
+        }
+        this.timestampGranularity = timestampGranularity;
+     }
+    /**
      * Checks to see that all required parameters are set.
      *
      * @throws BuildException if the configuration is not valid.
@@ -1493,7 +1515,32 @@ public class FTP
                 for (int i = dsfiles.length - 1; i >= 0; i--) {
                     rmDir(ftp, dsfiles[i]);
                 }
-            }   else {
+            } else {
+                if (this.newerOnly) {
+	                if (action == SEND_FILES) {
+	                    if ("NONE".equalsIgnoreCase(this.timestampGranularity)) 
+	                    {
+	                        this.serverTimestampGranularity = 0L;
+	                    }
+	                    else if ("MINUTE".equalsIgnoreCase(this.timestampGranularity)) 
+	                    {
+	                        this.serverTimestampGranularity = GRANULARITY_MINUTE;
+	                    } 
+	                    else 
+	                    {
+	                        this.serverTimestampGranularity = GRANULARITY_MINUTE;
+	                    }
+	                } else if (action == GET_FILES) {
+	                    if ("MINUTE".equalsIgnoreCase(this.timestampGranularity)) 
+	                    {
+	                        this.serverTimestampGranularity = GRANULARITY_MINUTE;
+ 	                    }
+	                    else 
+	                    {
+	                        this.serverTimestampGranularity = 0L;
+	                    }
+	                }
+                }
                 for (int i = 0; i < dsfiles.length; i++) {
                     switch (action) {
                         case SEND_FILES:
@@ -1749,11 +1796,16 @@ public class FTP
 
         long remoteTimestamp = files[0].getTimestamp().getTime().getTime();
         long localTimestamp = localFile.lastModified();
-
         if (this.action == SEND_FILES) {
-            return remoteTimestamp + timeDiffMillis >= localTimestamp;
+            return remoteTimestamp 
+            		+ this.timeDiffMillis 
+            		+ this.serverTimestampGranularity 
+            	>= localTimestamp;
         } else {
-            return localTimestamp >= remoteTimestamp + timeDiffMillis;
+            return localTimestamp 
+            	>= remoteTimestamp 
+                	+ this.timeDiffMillis
+                	+ this.serverTimestampGranularity;
         }
     }
 
