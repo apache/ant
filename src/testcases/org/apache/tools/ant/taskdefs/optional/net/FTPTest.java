@@ -16,16 +16,23 @@
  */
 package org.apache.tools.ant.taskdefs.optional.net;
 
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.BuildLogger;
+import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.optional.net.FTP;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.regexp.RegexpMatcher;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Vector;
 
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -537,6 +544,82 @@ public class FTPTest extends BuildFileTest{
                      new String[] {"alpha/beta", "alpha/beta/gamma", "delta"});
 
     }
+    
+    /**
+     * This class enables the use of the log messages as a way of testing 
+     * the number of files actually transferred.
+     * It uses the ant regular expression mechanism to get a regex parser
+     * to parse the log output.
+     */
+    private class CountLogListener extends DefaultLogger {
+        private Vector lastMatchGroups = null;
+        private RegexpMatcher matcher = new RegexpMatcherFactory().newRegexpMatcher();
+
+        /**
+         * The only constructor for a CountLogListener
+         * @param pattern a regular expression pattern.  It should have 
+         * one parenthesized group and that group should contain the
+         * number desired.
+         */
+        public CountLogListener(String pattern) {
+            super();
+            this.matcher.setPattern(pattern);
+        }
+        
+        
+        /* 
+         * @param event the build event that is being logged.
+         */
+        public void messageLogged(BuildEvent event) {
+            String message = event.getMessage();
+            if (this.matcher.matches(message)) {
+                lastMatchGroups = this.matcher.getGroups(message);
+            }
+            super.messageLogged(event);
+        }
+        
+        /**
+         * returns the desired number that results from parsing the log
+         * message
+         * @return the number of files indicated in the desired message or -1
+         * if a matching log message was never found.
+         */
+        public int getCount() {
+            if (this.lastMatchGroups == null) {
+                return -1;
+            }
+            return Integer.parseInt((String) this.lastMatchGroups.get(1));
+        }
+    }
+    
+    /**
+     * Tests the combination of the newer parameter and the 
+     * serverTimezoneConfig  parameter in the PUT action.  The default 
+     * configuration is an ftp server on localhost which formats 
+     * timestamps as GMT.
+     */
+    public void testTimezonePut() {
+        CountLogListener log = new CountLogListener("(\\d+) files? sent");
+        getProject().executeTarget("timed.test.setup");
+        getProject().addBuildListener(log);
+        getProject().executeTarget("timed.test.put.older");
+        assertEquals(1, log.getCount());
+    }
+
+    /**
+     * Tests the combination of the newer parameter and the 
+     * serverTimezoneConfig  parameter in the GET action.  The default 
+     * configuration is an ftp server on localhost which formats 
+     * timestamps as GMT.
+     */
+    public void testTimezoneGet() {
+        CountLogListener log = new CountLogListener("(\\d+) files? retrieved");
+        getProject().executeTarget("timed.test.setup");
+        getProject().addBuildListener(log);
+        getProject().executeTarget("timed.test.get.older");
+        assertEquals(3, log.getCount());
+    }
+
     /**
      *  this test is inspired by a user reporting that deletions of directories with the ftp task do not work
      */

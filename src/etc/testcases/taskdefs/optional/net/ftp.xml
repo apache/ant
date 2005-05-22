@@ -9,6 +9,12 @@
     <property name="ftp.filesep" value="/"/>
     <property name="tmp.dir" location="tmp"/>
     <property name="tmp.get.dir" location="tmp.get"/>
+    <property name="tmp.local" location="${tmp.get.dir}"/>
+    <property name="tmp.remote" location="${tmp.dir}"/>
+    <property name="tstamp.format" value="yyyy-MM-dd HH:mm"/>
+    <property name="server.timestamp.granularity.millis" value="60000"/>
+    <property name="ftp.server.timezone" value="GMT"/>
+
     <fileset dir="${tmp.get.dir}" id="fileset-destination-with-selector">
         <include name="alpha/**"/>
         <filename name="**/alpha.xml" />
@@ -25,12 +31,23 @@
     <fileset dir="${tmp.get.dir}" id="fileset-destination-nofollowsymlinks" followsymlinks="false">
         <include name="alpha/**"/>
     </fileset>
+
+    <filelist dir="${tmp.local}" id="timed-files" files="A.timed,B.timed,C.timed,D.timed"/>
+
+    <patternset id="timed-test-files">
+        <include name="A.timed"/>
+        <include name="B.timed"/>
+        <include name="C.timed"/>
+        <include name="D.timed"/>
+    </patternset>
+
     <target name="setup">
         <mkdir dir="${tmp.get.dir}"/>
         <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
         <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
         <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
     </target>
+
     <target name="ftp-get-with-selector">
         <ftp action="get"
             server="${ftp.host}"
@@ -104,5 +121,76 @@
                 <include name="**"/>
             </fileset>
         </ftp>
+    </target>   
+
+    <target name="timed.test.setup">
+        <touch>
+            <filelist refid="timed-files"/>
+        </touch>    
+        <ftp action="put"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
     </target>
+
+    <target name="timed.test.put.older">
+        <tstamp>
+            <format property="five.minutes.older" pattern="${tstamp.format}" offset="-5" unit="minute"/>
+        </tstamp>
+
+        <touch datetime="${five.minutes.older}" pattern="${tstamp.format}" verbose="true">
+            <fileset dir="${tmp.remote}">
+                <include name="A.timed"/>
+            </fileset>
+        </touch>
+        <ftp action="put"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            timediffmillis="${server.timestamp.granularity.millis}" 
+            newer="true"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
+    </target>
+    <target name="timed.test.get.older">
+        <tstamp>
+            <format property="five.minutes.older" pattern="${tstamp.format}" offset="-5" unit="minute"/>
+        </tstamp>
+
+        <touch datetime="${five.minutes.older}" pattern="${tstamp.format}" verbose="true">
+            <fileset dir="${tmp.local}">
+                <include name="A.timed"/>
+                <include name="C.timed"/>
+                <include name="D.timed"/>
+            </fileset>
+        </touch>
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            preservelastmodified="true"
+            newer="true"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
+    </target>
+
 </project>
