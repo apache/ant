@@ -31,13 +31,11 @@ import java.util.HashSet;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.Executor;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.helper.SingleCheckExecutor;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -389,18 +387,18 @@ public class Ant extends Task {
 
             if (locals.size() > 0 && !(locals.size() == 1 
                                        && locals.get(0) == "")) {
-                Throwable t = null;
+                BuildException be = null;
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.fireSubBuildStarted();
                     newProject.executeTargets(locals);
                 } catch (BuildException ex) {
-                    t = ProjectHelper
+                    be = ProjectHelper
                         .addLocationToBuildException(ex, getLocation());
-                    throw (BuildException) t;
+                    throw be;
                 } finally {
                     log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
-                    newProject.fireSubBuildFinished(t);
+                    newProject.fireSubBuildFinished(be);
                 }
             }
         } finally {
@@ -593,7 +591,7 @@ public class Ant extends Task {
     /**
      * The build file to use. Defaults to "build.xml". This file is expected
      * to be a filename relative to the dir attribute given.
-     * @param s the <code>String</code> build file name.
+     * @param antFile the <code>String</code> build file name.
      */
     public void setAntfile(String antFile) {
         // @note: it is a string and not a file to handle relative/absolute
