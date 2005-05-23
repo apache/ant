@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.io.File;
 
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.ScriptRunner;
 
 /**
@@ -272,27 +273,13 @@ public class ScriptDef extends DefBase {
             */
             ClassLoader loader = createLoader();
 
-            Class instanceClass = null;
-            try {
-                instanceClass = Class.forName(classname, true, loader);
-            } catch (Throwable e) {
-                // try normal method
-                try {
-                    instanceClass = Class.forName(classname);
-                } catch (Throwable e2) {
-                    throw new BuildException("scriptdef: Unable to load "
-                        + "class " + classname + " for nested element <"
-                        + elementName + ">", e2);
-                }
+            try
+            {
+                instance = ClasspathUtils.newInstance(classname, loader);
+            } catch (BuildException e) {
+                instance = ClasspathUtils.newInstance(classname, ScriptDef.class.getClassLoader());
             }
 
-            try {
-                instance = instanceClass.newInstance();
-            } catch (Throwable e) {
-                throw new BuildException("scriptdef: Unable to create "
-                    + "element of class " + classname + " for nested "
-                    + "element <" + elementName + ">", e);
-            }
             getProject().setProjectReference(instance);
         }
 

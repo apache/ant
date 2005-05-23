@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -162,21 +163,9 @@ public final class CompilerAdapterFactory {
      */
     private static CompilerAdapter resolveClassName(String className)
         throws BuildException {
-        try {
-            Class c = Class.forName(className);
-            Object o = c.newInstance();
-            return (CompilerAdapter) o;
-        } catch (ClassNotFoundException cnfe) {
-            throw new BuildException("Compiler Adapter '" + className
-                    + "' can\'t be found.", cnfe);
-        } catch (ClassCastException cce) {
-            throw new BuildException(className + " isn\'t the classname of "
-                    + "a compiler adapter.", cce);
-        } catch (Throwable t) {
-            // for all other possibilities
-            throw new BuildException("Compiler Adapter " + className
-                    + " caused an interesting exception.", t);
-        }
+        return (CompilerAdapter) ClasspathUtils.newInstance(className,
+                CompilerAdapterFactory.class.getClassLoader(),
+                CompilerAdapter.class);
     }
 
 }

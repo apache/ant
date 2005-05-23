@@ -27,11 +27,13 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.email.EmailAddress;
 import org.apache.tools.ant.taskdefs.email.Message;
 import org.apache.tools.ant.taskdefs.email.Mailer;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
@@ -239,14 +241,15 @@ public class MailLogger extends DefaultLogger {
                               String message)  {
         // convert the replyTo string into a vector of emailaddresses
         Mailer mailer = null;
-            try {
-                mailer =
-                    (Mailer) Class.forName("org.apache.tools.ant.taskdefs.email.MimeMailer")
-                    .newInstance();
-            } catch (Throwable e) {
-                log("Failed to initialise MIME mail: " + e.getMessage());
-                return;
-            }
+        try {
+            mailer = (Mailer) ClasspathUtils.newInstance(
+                    "org.apache.tools.ant.taskdefs.email.MimeMailer",
+                    MailLogger.class.getClassLoader(), Mailer.class);
+        } catch (BuildException e) {
+            Throwable t = e.getCause() == null ? e : e.getCause();
+            log("Failed to initialise MIME mail: " + t.getMessage());
+            return;
+        }
         Vector replyToList = vectorizeEmailAddresses(replyToString);
         mailer.setHost(host);
         mailer.setPort(port);

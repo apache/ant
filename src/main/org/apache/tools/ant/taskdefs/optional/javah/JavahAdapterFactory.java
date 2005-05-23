@@ -18,6 +18,7 @@ package org.apache.tools.ant.taskdefs.optional.javah;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -77,20 +78,8 @@ public class JavahAdapterFactory {
      * isn't an instance of JavahAdapter.
      */
     private static JavahAdapter resolveClassName(String className)
-        throws BuildException {
-        try {
-            Class c = Class.forName(className);
-            Object o = c.newInstance();
-            return (JavahAdapter) o;
-        } catch (ClassNotFoundException cnfe) {
-            throw new BuildException("Can't load " + className, cnfe);
-        } catch (ClassCastException cce) {
-            throw new BuildException(className 
-                                     + " is not a Javah adapter", cce);
-        } catch (Throwable t) {
-            // for all other possibilities
-            throw new BuildException(className + " caused an interesting "
-                                     + "exception.", t);
-        }
+            throws BuildException {
+        return (JavahAdapter) ClasspathUtils.newInstance(className,
+                JavahAdapterFactory.class.getClassLoader(), JavahAdapter.class);
     }
 }

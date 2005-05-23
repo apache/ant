@@ -25,8 +25,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.listener.MailLogger;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
  * A task to send SMTP email. This is a refactoring of the SendMail and
@@ -399,14 +401,16 @@ public class EmailTask extends Task {
             if (encoding.equals(MIME)
                  || (encoding.equals(AUTO) && !autoFound)) {
                 try {
-                    mailer = (Mailer) Class.forName(
-                        "org.apache.tools.ant.taskdefs.email.MimeMailer")
-                        .newInstance();
+                    mailer = (Mailer) ClasspathUtils.newInstance(
+                            "org.apache.tools.ant.taskdefs.email.MimeMailer",
+                            EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
                     log("Using MIME mail", Project.MSG_VERBOSE);
-                } catch (Throwable e) {
-                    log("Failed to initialise MIME mail: "
-                        + e.getMessage(), Project.MSG_WARN);
+                } catch (BuildException e) {
+                    Throwable t = e.getCause() == null ? e : e.getCause();
+                    log("Failed to initialise MIME mail: " + t.getMessage(),
+                            Project.MSG_WARN);
+                    return;
                 }
             }
             // SMTP auth only allowed with MIME mail
@@ -423,13 +427,16 @@ public class EmailTask extends Task {
             if (encoding.equals(UU)
                  || (encoding.equals(AUTO) && !autoFound)) {
                 try {
-                    mailer =
-                        (Mailer) Class.forName("org.apache.tools.ant.taskdefs.email.UUMailer")
-                        .newInstance();
+                    mailer = (Mailer) ClasspathUtils.newInstance(
+                            "org.apache.tools.ant.taskdefs.email.UUMailer",
+                            EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
                     log("Using UU mail", Project.MSG_VERBOSE);
-                } catch (Throwable e) {
-                    log("Failed to initialise UU mail", Project.MSG_WARN);
+                } catch (BuildException e) {
+                    Throwable t = e.getCause() == null ? e : e.getCause();
+                    log("Failed to initialise UU mail: " + t.getMessage(),
+                            Project.MSG_WARN);
+                    return;
                 }
             }
             // try plain format

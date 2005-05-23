@@ -19,6 +19,7 @@ package org.apache.tools.ant.util.regexp;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
  * Simple Factory Class that produces an implementation of
@@ -99,13 +100,10 @@ public class RegexpMatcherFactory {
      * @exception BuildException if an error occurs
      */
     protected RegexpMatcher createInstance(String className)
-        throws BuildException {
-        try {
-            Class implClass = Class.forName(className);
-            return (RegexpMatcher) implClass.newInstance();
-        } catch (Throwable t) {
-            throw new BuildException(t);
-        }
+        throws BuildException 
+    {
+        return (RegexpMatcher) ClasspathUtils.newInstance(className,
+                RegexpMatcherFactory.class.getClassLoader(), RegexpMatcher .class);
     }
 
     /**

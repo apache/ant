@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 
 /**
@@ -28,10 +29,10 @@ import org.apache.tools.ant.Task;
  */
 public final class RmicAdapterFactory {
     /** The error message to be used when the compiler cannot be found. */
-    public static final String ERROR_UNKNOWN_COMPILER = "Cannot find the compiler or class: ";
+    public static final String ERROR_UNKNOWN_COMPILER = "Class not found: ";
 
     /** The error message to be used when the class is not an rmic adapter. */
-    public static final String ERROR_NOT_RMIC_ADAPTER = "Not an rmic adapter: ";
+    public static final String ERROR_NOT_RMIC_ADAPTER = "Class of unexpected Type: ";
 
     /** If the compiler has this name use a default compiler. */
     public static final String DEFAULT_COMPILER = "default";
@@ -93,20 +94,7 @@ public final class RmicAdapterFactory {
      */
     private static RmicAdapter resolveClassName(String className)
         throws BuildException {
-        try {
-            Class c = Class.forName(className);
-            Object o = c.newInstance();
-            return (RmicAdapter) o;
-        } catch (ClassNotFoundException cnfe) {
-            throw new BuildException(ERROR_UNKNOWN_COMPILER + className,
-                    cnfe);
-        } catch (ClassCastException cce) {
-            throw new BuildException(ERROR_NOT_RMIC_ADAPTER + className,
-                    cce);
-        } catch (Throwable t) {
-            // for all other possibilities
-            throw new BuildException(className + " caused an interesting "
-                                     + "exception.", t);
-        }
+    return (RmicAdapter) ClasspathUtils.newInstance(className,
+            RmicAdapterFactory.class.getClassLoader(), RmicAdapter.class);
     }
 }

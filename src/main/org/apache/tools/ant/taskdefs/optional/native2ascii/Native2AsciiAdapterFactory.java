@@ -18,6 +18,7 @@ package org.apache.tools.ant.taskdefs.optional.native2ascii;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -77,20 +78,10 @@ public class Native2AsciiAdapterFactory {
      * isn't an instance of Native2AsciiAdapter.
      */
     private static Native2AsciiAdapter resolveClassName(String className)
-        throws BuildException {
-        try {
-            Class c = Class.forName(className);
-            Object o = c.newInstance();
-            return (Native2AsciiAdapter) o;
-        } catch (ClassNotFoundException cnfe) {
-            throw new BuildException("Can't load " + className, cnfe);
-        } catch (ClassCastException cce) {
-            throw new BuildException(className 
-                                     + " is not a Native2Ascii adapter", cce);
-        } catch (Throwable t) {
-            // for all other possibilities
-            throw new BuildException(className + " caused an interesting "
-                                     + "exception.", t);
-        }
+        throws BuildException 
+    {
+        return (Native2AsciiAdapter) ClasspathUtils.newInstance(className,
+            Native2AsciiAdapterFactory.class.getClassLoader(), 
+            Native2AsciiAdapter.class);
     }
 }

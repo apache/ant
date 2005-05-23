@@ -236,17 +236,49 @@ public class ClasspathUtils {
      * @throws BuildException when loading or instantiation failed.
      */
     public static Object newInstance(
+            String className,
+            ClassLoader userDefinedLoader) {
+        return newInstance(className, userDefinedLoader, Object.class);
+    }
+
+        
+        
+    /**
+     * Creates a fresh object instance of the specified classname.
+     *
+     * <p> This uses the userDefinedLoader to load the specified class,
+     * and then makes an instance using the default no-argument constructor.
+     * </p>
+     *
+     * @param className the full qualified class name to load.
+     * @param userDefinedLoader the classloader to use.
+     * @param expectedType the Class that the result should be assignment
+     * compatible with. (No ClassCastException will be thrown in case
+     * the result of this method is casted to the expectedType) 
+     * @return The fresh object instance
+     * @throws BuildException when loading or instantiation failed.
+     * @since Ant 1.7
+     */
+    public static Object newInstance(
         String className,
-        ClassLoader userDefinedLoader) {
+        ClassLoader userDefinedLoader,
+        Class expectedType) {
         try {
-            Class clazz = userDefinedLoader.loadClass(className);
+            Class clazz = Class.forName(className, true, userDefinedLoader); 
             Object o = clazz.newInstance();
+            if (!expectedType.isInstance(o))
+            {
+                throw new BuildException(
+                    "Class of unexpected Type: " 
+                        + className
+                        + " expected :" 
+                        + expectedType);
+            }
             return o;
         } catch (ClassNotFoundException e) {
             throw new BuildException(
-                "Class "
-                    + className
-                    + " not found by the specific classLoader.",
+                "Class not found: "
+                    + className,
                 e);
         } catch (InstantiationException e) {
             throw new BuildException(
@@ -262,9 +294,32 @@ public class ClasspathUtils {
                     + ". Specified class should have a "
                     + "public constructor.",
                 e);
+        } catch (LinkageError e) {
+            throw new BuildException(
+                "Class "
+                    + className
+                    + " could not be loaded because of an invalid dependency.", 
+                e);
         }
     }
 
+    /**
+     * Creates a fresh object instance of the specified classname.
+     *
+     * <p> This uses the userDefinedLoader to load the specified class,
+     * and then makes an instance using the default no-argument constructor.
+     * </p>
+     *
+     * @param className the full qualified class name to load.
+     * @param userDefinedLoader the classloader to use.
+     * @param expectedType the Class that the result should be assignment
+     * compatible with. (No ClassCastException will be thrown in case
+     * the result of this method is casted to the expectedType) 
+     * @return The fresh object instance
+     * @throws BuildException when loading or instantiation failed.
+     */
+
+    
     /**
      * Obtains a delegate that helps out with classic classpath configuration.
      *

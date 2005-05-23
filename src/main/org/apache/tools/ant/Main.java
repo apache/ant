@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 
@@ -698,17 +699,13 @@ public class Main implements AntMain {
 
         for (int i = 0; i < listeners.size(); i++) {
             String className = (String) listeners.elementAt(i);
-            try {
-                BuildListener listener =
-                    (BuildListener) Class.forName(className).newInstance();
-                if (project != null) {
-                    project.setProjectReference(listener);
-                }
-                project.addBuildListener(listener);
-            } catch (Throwable exc) {
-                throw new BuildException("Unable to instantiate listener "
-                    + className, exc);
+            BuildListener listener =
+                    (BuildListener) ClasspathUtils.newInstance(className,
+                            Main.class.getClassLoader(), BuildListener.class);
+            if (project != null) {
+                project.setProjectReference(listener);
             }
+            project.addBuildListener(listener);
         }
     }
 
@@ -725,22 +722,11 @@ public class Main implements AntMain {
         if (inputHandlerClassname == null) {
             handler = new DefaultInputHandler();
         } else {
-            try {
-                handler = (InputHandler)
-                    (Class.forName(inputHandlerClassname).newInstance());
-                if (project != null) {
-                    project.setProjectReference(handler);
-                }
-            } catch (ClassCastException e) {
-                String msg = "The specified input handler class "
-                    + inputHandlerClassname
-                    + " does not implement the InputHandler interface";
-                throw new BuildException(msg);
-            } catch (Exception e) {
-                String msg = "Unable to instantiate specified input handler "
-                    + "class " + inputHandlerClassname + " : "
-                    + e.getClass().getName();
-                throw new BuildException(msg);
+            handler = (InputHandler) ClasspathUtils.newInstance(
+                    inputHandlerClassname, Main.class.getClassLoader(),
+                    InputHandler.class);
+            if (project != null) {
+                project.setProjectReference(handler);
             }
         }
         project.setInputHandler(handler);
@@ -760,17 +746,13 @@ public class Main implements AntMain {
         BuildLogger logger = null;
         if (loggerClassname != null) {
             try {
-                Class loggerClass = Class.forName(loggerClassname);
-                logger = (BuildLogger) (loggerClass.newInstance());
-            } catch (ClassCastException e) {
+                logger = (BuildLogger) ClasspathUtils.newInstance(
+                        loggerClassname, Main.class.getClassLoader(),
+                        BuildLogger.class);
+            } catch (BuildException e) {
                 System.err.println("The specified logger class "
                     + loggerClassname
-                    + " does not implement the BuildLogger interface");
-                throw new RuntimeException();
-            } catch (Exception e) {
-                System.err.println("Unable to instantiate specified logger "
-                    + "class " + loggerClassname + " : "
-                    + e.getClass().getName());
+                    + " could not be used because " + e.getMessage());
                 throw new RuntimeException();
             }
         } else {
