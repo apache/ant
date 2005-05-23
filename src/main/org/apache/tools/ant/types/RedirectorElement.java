@@ -27,22 +27,23 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Redirector;
 
 /**
- * Element representation of a <CODE>Redirector</CODE>.
+ * Element representation of a <code>Redirector</code>.
+ * @since Ant 1.6.2
  */
 public class RedirectorElement extends DataType {
 
     /**
-     * Whether the input mapper was set via <CODE>setOutput</CODE>.
+     * Whether the input mapper was set via <code>setOutput</code>.
      */
     private boolean usingInput = false;
 
     /**
-     * Whether the output mapper was set via <CODE>setOutput</CODE>.
+     * Whether the output mapper was set via <code>setOutput</code>.
      */
     private boolean usingOutput = false;
 
     /**
-     * Whether the error mapper was set via <CODE>setError</CODE>.
+     * Whether the error mapper was set via <code>setError</code>.
      */
     private boolean usingError = false;
 
@@ -103,7 +104,7 @@ public class RedirectorElement extends DataType {
 
     /**
      * Add the input file mapper.
-     * @param inputMapper   <CODE>Mapper</CODE>.
+     * @param inputMapper   <code>Mapper</code>.
      */
     public void addConfiguredInputMapper(Mapper inputMapper) {
         if (isReference()) {
@@ -122,7 +123,7 @@ public class RedirectorElement extends DataType {
 
     /**
      * Add the output file mapper.
-     * @param outputMapper   <CODE>Mapper</CODE>.
+     * @param outputMapper   <code>Mapper</code>.
      */
     public void addConfiguredOutputMapper(Mapper outputMapper) {
         if (isReference()) {
@@ -141,7 +142,7 @@ public class RedirectorElement extends DataType {
 
     /**
      * Add the error file mapper.
-     * @param errorMapper   <CODE>Mapper</CODE>.
+     * @param errorMapper   <code>Mapper</code>.
      */
     public void addConfiguredErrorMapper(Mapper errorMapper) {
         if (isReference()) {
@@ -159,12 +160,12 @@ public class RedirectorElement extends DataType {
     }
 
     /**
-     * Makes this instance in effect a reference to another instance.
+     * Make this instance in effect a reference to another instance.
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
-     * @param r the reference to use
-     * @throws BuildException on error
+     * @param r the reference to use.
+     * @throws BuildException on error.
      */
     public void setRefid(Reference r) throws BuildException {
         if (usingInput
@@ -178,14 +179,15 @@ public class RedirectorElement extends DataType {
             || outputEncoding != null
             || errorEncoding != null
             || outputProperty != null
-            || errorProperty != null) {
+            || errorProperty != null
+            || logInputString != null) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
     }
 
     /**
-     * Set the input to use for the task
+     * Set the input to use for the task.
      * @param input the file from which input is read.
      */
     public void setInput(File input) {
@@ -230,9 +232,9 @@ public class RedirectorElement extends DataType {
 
     /**
      * File the output of the process is redirected to. If error is not
-     * redirected, it too will appear in the output
+     * redirected, it too will appear in the output.
      *
-     * @param out the file to which output stream is written
+     * @param out the file to which output stream is written.
      */
     public void setOutput(File out) {
         if (isReference()) {
@@ -247,7 +249,7 @@ public class RedirectorElement extends DataType {
 
     /**
      * Set the output encoding.
-     * @param outputEncoding   <CODE>String</CODE>.
+     * @param outputEncoding   <code>String</code>.
      */
     public void setOutputEncoding(String outputEncoding) {
         if (isReference()) {
@@ -259,7 +261,7 @@ public class RedirectorElement extends DataType {
     /**
      * Set the error encoding.
      *
-     * @param errorEncoding   <CODE>String</CODE>.
+     * @param errorEncoding   <code>String</code>.
      */
     public void setErrorEncoding(String errorEncoding) {
         if (isReference()) {
@@ -270,7 +272,7 @@ public class RedirectorElement extends DataType {
 
     /**
      * Set the input encoding.
-     * @param inputEncoding   <CODE>String</CODE>.
+     * @param inputEncoding   <code>String</code>.
      */
     public void setInputEncoding(String inputEncoding) {
         if (isReference()) {
@@ -282,7 +284,7 @@ public class RedirectorElement extends DataType {
     /**
      * Controls whether error output of exec is logged. This is only useful
      * when output is being redirected and error output is desired in the
-     * Ant log
+     * Ant log.
      * @param logError if true the standard error is sent to the Ant log system
      *        and not sent to output.
      */
@@ -295,7 +297,7 @@ public class RedirectorElement extends DataType {
 
     /**
      * Set the file to which standard error is to be redirected.
-     * @param error the file to which error is to be written
+     * @param error the file to which error is to be written.
      */
     public void setError(File error) {
         if (isReference()) {
@@ -351,7 +353,7 @@ public class RedirectorElement extends DataType {
     /**
      * Whether output and error files should be created even when empty.
      * Defaults to true.
-     * @param createEmptyFiles <CODE>boolean</CODE>.
+     * @param createEmptyFiles <code>boolean</code>.
      */
     public void setCreateEmptyFiles(boolean createEmptyFiles) {
         if (isReference()) {
@@ -375,8 +377,8 @@ public class RedirectorElement extends DataType {
     }
 
     /**
-     * Create a nested input <CODE>FilterChain</CODE>.
-     * @return <CODE>FilterChain</CODE>.
+     * Create a nested input <code>FilterChain</code>.
+     * @return <code>FilterChain</code>.
      */
     public FilterChain createInputFilterChain() {
         if (isReference()) {
@@ -389,8 +391,8 @@ public class RedirectorElement extends DataType {
     }
 
     /**
-     * Create a nested output <CODE>FilterChain</CODE>.
-     * @return <CODE>FilterChain</CODE>.
+     * Create a nested output <code>FilterChain</code>.
+     * @return <code>FilterChain</code>.
      */
     public FilterChain createOutputFilterChain() {
         if (isReference()) {
@@ -403,8 +405,8 @@ public class RedirectorElement extends DataType {
     }
 
     /**
-     * Create a nested error <CODE>FilterChain</CODE>.
-     * @return <CODE>FilterChain</CODE>.
+     * Create a nested error <code>FilterChain</code>.
+     * @return <code>FilterChain</code>.
      */
     public FilterChain createErrorFilterChain() {
         if (isReference()) {
@@ -417,18 +419,18 @@ public class RedirectorElement extends DataType {
     }
 
     /**
-     * Configure the specified <CODE>Redirector</CODE>.
-     * @param redirector   <CODE>Redirector</CODE>.
+     * Configure the specified <code>Redirector</code>.
+     * @param redirector   <code>Redirector</code>.
      */
     public void configure(Redirector redirector) {
         configure(redirector, null);
     }
 
     /**
-     * Configure the specified <CODE>Redirector</CODE>
+     * Configure the specified <code>Redirector</code>
      * for the specified sourcefile.
-     * @param redirector   <CODE>Redirector</CODE>.
-     * @param sourcefile   <CODE>String</CODE>.
+     * @param redirector   <code>Redirector</code>.
+     * @param sourcefile   <code>String</code>.
      */
     public void configure(Redirector redirector, String sourcefile) {
         if (isReference()) {
@@ -523,8 +525,8 @@ public class RedirectorElement extends DataType {
 
     /**
      * Create a merge mapper pointing to the specified destination file.
-     * @param destfile   <CODE>File</CODE>
-     * @return <CODE>Mapper</CODE>.
+     * @param destfile   <code>File</code>
+     * @return <code>Mapper</code>.
      */
     protected Mapper createMergeMapper(File destfile) {
         Mapper result = new Mapper(getProject());
@@ -535,9 +537,9 @@ public class RedirectorElement extends DataType {
     }
 
     /**
-     * Return a <CODE>File[]</CODE> from the specified set of filenames.
-     * @param name   <CODE>String[]</CODE>
-     * @return <CODE>File[]</CODE>.
+     * Return a <code>File[]</code> from the specified set of filenames.
+     * @param name   <code>String[]</code>
+     * @return <code>File[]</code>.
      */
     protected File[] toFileArray(String[] name) {
         if (name == null) {
@@ -551,19 +553,6 @@ public class RedirectorElement extends DataType {
             }
         }
         return (File[]) (list.toArray(new File[list.size()]));
-    }
-
-    /**
-     * Convenience method.
-     * @throws BuildException on error.
-     */
-    protected void dieOnCircularReference() throws BuildException {
-        if (isChecked()) {
-            return;
-        }
-        Stack s = new Stack();
-        s.push(this);
-        dieOnCircularReference(s, getProject());
     }
 
     /**
@@ -607,17 +596,11 @@ public class RedirectorElement extends DataType {
 
     /**
      * Perform the check for circular references, returning the
-     * referenced RedirectorElement
+     * referenced RedirectorElement.
      * @return the referenced RedirectorElement.
      */
     private RedirectorElement getRef() {
-        dieOnCircularReference();
-        Object o = getRefid().getReferencedObject(getProject());
-        if (!(o instanceof RedirectorElement)) {
-            throw new BuildException(getRefid().getRefId()
-                + " doesn\'t denote a RedirectorElement");
-        }
-        return (RedirectorElement) o;
+        return (RedirectorElement) getCheckedRef();
     }
 
 }

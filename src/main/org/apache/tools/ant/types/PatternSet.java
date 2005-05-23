@@ -414,19 +414,7 @@ public class PatternSet extends DataType implements Cloneable {
      * referenced PatternSet.
      */
     private PatternSet getRef(Project p) {
-        if (!isChecked()) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
-
-        Object o = getRefid().getReferencedObject(p);
-        if (!(o instanceof PatternSet)) {
-            String msg = getRefid().getRefId() + " doesn\'t denote a patternset";
-            throw new BuildException(msg);
-        } else {
-            return (PatternSet) o;
-        }
+        return (PatternSet) getCheckedRef(p);
     }
 
     /**

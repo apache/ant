@@ -394,12 +394,7 @@ public class XMLCatalog extends DataType
             return getRef().resolveEntity(publicId, systemId);
         }
 
-        if (!isChecked()) {
-            // make sure we don't have a circular reference here
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, getProject());
-        }
+        dieOnCircularReference();
 
         log("resolveEntity: '" + publicId + "': '" + systemId + "'",
             Project.MSG_DEBUG);
@@ -427,12 +422,7 @@ public class XMLCatalog extends DataType
             return getRef().resolve(href, base);
         }
 
-        if (!isChecked()) {
-            // make sure we don't have a circular reference here
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, getProject());
-        }
+        dieOnCircularReference();
 
         SAXSource source = null;
 
