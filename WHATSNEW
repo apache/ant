@@ -213,7 +213,8 @@ Other changes:
 
 * New condition <isfailure> that tests the return-code of an executable.
 
-* Added Resource Collections.
+* Added initial support for Resource Collections, including the
+  resourcecount task.
 
 Changes from Ant 1.6.3 to Ant 1.6.4
 ===================================
