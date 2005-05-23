@@ -141,8 +141,6 @@ Other changes:
 * Added preserveLastModified attribute to signjar task.
   Bugzilla report 30987.
 
-* Added clone task. Bugzilla report 32631.
-
 * Added <scriptcondition> condition, for inline scripted conditions
 
 * Added <xor> condition for exclusive-or combining of nested conditions.
