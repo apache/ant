@@ -24,8 +24,8 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.TimeComparison;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -42,8 +42,9 @@ public class DateSelector extends BaseExtendSelector {
     private String dateTime = null;
     private boolean includeDirs = false;
     private long granularity = 0;
-    private int cmp = 2;
     private String pattern;
+    private TimeComparison when = TimeComparison.EQUAL;
+
     /** Key to used for parameterized custom selector */
     public static final String MILLIS_KEY = "millis";
     /** Key to used for parameterized custom selector */
@@ -71,14 +72,7 @@ public class DateSelector extends BaseExtendSelector {
     public String toString() {
         StringBuffer buf = new StringBuffer("{dateselector date: ");
         buf.append(dateTime);
-        buf.append(" compare: ");
-        if (cmp == 0) {
-            buf.append("before");
-        } else if (cmp == 1) {
-            buf.append("after");
-        } else {
-            buf.append("equal");
-        }
+        buf.append(" compare: ").append(when.getValue());
         buf.append(" granularity: ");
         buf.append(granularity);
         if (pattern != null) {
@@ -117,6 +111,7 @@ public class DateSelector extends BaseExtendSelector {
      */
     public void setDatetime(String dateTime) {
         this.dateTime = dateTime;
+        millis = -1;
     }
 
     /**
@@ -144,7 +139,15 @@ public class DateSelector extends BaseExtendSelector {
      * @param tcmp The comparison to perform, an EnumeratedAttribute.
      */
     public void setWhen(TimeComparisons tcmp) {
-        this.cmp = tcmp.getIndex();
+        setWhen((TimeComparison) tcmp);
+    }
+
+    /**
+     * Set the comparison type.
+     * @param t TimeComparison object.
+     */
+    public void setWhen(TimeComparison t) {
+        when = t;
     }
 
     /**
@@ -188,9 +191,7 @@ public class DateSelector extends BaseExtendSelector {
                             + parameters[i].getValue());
                     }
                 } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
-                    TimeComparisons tcmp = new TimeComparisons();
-                    tcmp.setValue(parameters[i].getValue());
-                    setWhen(tcmp);
+                    setWhen(new TimeComparison(parameters[i].getValue()));
                 } else if (PATTERN_KEY.equalsIgnoreCase(paramname)) {
                     setPattern(parameters[i].getValue());
                 } else {
@@ -244,29 +245,15 @@ public class DateSelector extends BaseExtendSelector {
 
         validate();
 
-        if (file.isDirectory() && (!includeDirs)) {
-            return true;
-        }
-        if (cmp == 0) {
-            return ((file.lastModified() - granularity) < millis);
-        } else if (cmp == 1) {
-            return ((file.lastModified() + granularity) > millis);
-        } else {
-            return (Math.abs(file.lastModified() - millis) <= granularity);
-        }
+        return (file.isDirectory() && !includeDirs)
+            || when.evaluate(file.lastModified(), millis, granularity);
     }
 
     /**
      * Enumerated attribute with the values for time comparison.
      * <p>
      */
-    public static class TimeComparisons extends EnumeratedAttribute {
-        /**
-         * @return the values as an array of strings
-         */
-        public String[] getValues() {
-            return new String[]{"before", "after", "equal"};
-        }
+    public static class TimeComparisons extends TimeComparison {
     }
 
 }
