@@ -13,17 +13,17 @@
       <h3>Description</h3>
 
       <p>
-        Concatenates a file, or a series of files, to a single file or
-        the console. The destination file will be created if it does
-        not exist.
+        Concatenates one or more 
+        <a href="../CoreTypes/resources.html">resource</a>s
+        to a single file or to the console. The destination
+        file will be created if it does not exist.
       </p>
 
       <p>
-          <a href="../using.html#path">Path</a>s and/or
-        <a href="../CoreTypes/fileset.html">FileSet</a>s and/or <a
-        href="../CoreTypes/filelist.html">FileList</a>s are used to
-        select which files are to be concatenated. There is no
-        singular 'file' attribute to specify a single file to cat.
+        <a href="../CoreTypes/resources.html#collection">
+Resource Collection</a>s are used to
+        select which resources are to be concatenated. There is no
+        singular attribute to specify a single resource to cat.
       </p>
 
       <h3>Parameters</h3>
@@ -127,7 +127,7 @@
         <tr>
           <td valign="top">binary</td>
           <td valign="top">
-            <em>since ant 1.6.2</em>
+            <em>since Ant 1.6.2</em>
             If this attribute is set to true, the task concatenates the files
             in a byte by byte fashion. If this attribute is false, concat will
             not normally work for binary files due to character encoding
@@ -144,33 +144,15 @@
       </table>
 
       <h3>Parameters specified as nested elements</h3>
-        <h4>path</h4>
-        <p><em>since Ant 1.6</em>.</p>
+        <h4>Resource Collection</h4>
+        <p><em>since Ant 1.7</em>.</p>
 
       <p>
-        This is a <a href="../using.html#path">Path</a>. This is
-        used to select file files to be concatenated. Note that
-        a file can only appear once in a path. If this is
-        an issue consider using multiple paths.
+        Any of the various <a href="../CoreTypes/resources.html#collection">
+        Resource Collection</a> types can specify the resources to be
+        concatenated.
       </p>
 
-      <h4>fileset</h4>
-
-      <p>
-        <a href="../CoreTypes/fileset.html">FileSet</a>s are used to
-        select files to be concatenated. Note that the order in which
-        the files selected from a fileset are concatenated is
-        <i>not</i> guaranteed. If this is an issue, use multiple
-        filesets or consider using filelists.
-      </p>
-      <h4>filelist</h4>
-
-      <p>
-        <a href="../CoreTypes/filelist.html">FileList</a>s are used to
-        select files to be concatenated. The file ordering in the
-        <var>files</var> attribute will be the same order in which the
-        files are concatenated.
-      </p>
       <h4>filterchain</h4>
         <p><em>since Ant 1.6</em>.</p>
       <p>The concat task supports nested
