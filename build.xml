@@ -75,6 +75,7 @@
   <property name="tests.dir" value="src/testcases"/>
   <property name="tests.etc.dir" value="src/etc/testcases"/>
   <property name="manifest" value="src/etc/manifest"/>
+  <property name="resource.dir" value="${src.dir}/resources"/>
 
   <!--
        ===================================================================
@@ -715,6 +716,7 @@
         <include name="**/*.properties"/>
         <include name="**/*.dtd"/>
       </fileset>
+      <fileset dir="${resource.dir}" />
     </copy>
 
     <copy todir="${build.classes}"
