@@ -219,15 +219,7 @@ public class ProjectHelper {
         if (helper != null) {
             return helper;
         } else {
-            try {
-                // Default
-                // return new ProjectHelperImpl();
-                return new ProjectHelper2();
-            } catch (Throwable e) {
-                String message = "Unable to load default ProjectHelper due to "
-                    + e.getClass().getName() + ": " + e.getMessage();
-                throw new BuildException(message, e);
-            }
+            return new ProjectHelper2();
         }
     }
 
