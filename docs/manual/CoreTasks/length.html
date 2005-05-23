@@ -11,8 +11,9 @@
 <h2>Length</h2>
 <h3>Description</h3>
 <p>Display or set a property containing length information for
-   a string, a file, or one or more nested filesets. Can also
-   be used as a condition. <b>Since Ant 1.6.3</b></p>
+   a string, a file, or one or more nested
+   <a href="../CoreTypes/resources.html#collection">Resource Collection</a>s.
+   Can also be used as a condition. <b>Since Ant 1.6.3</b></p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -40,8 +41,8 @@
   <tr>
     <td valign="top">mode</td>
     <td valign="top">File length mode; when &quot;all&quot; the resulting
-      value is the sum of all included files' lengths; when &quot;each&quot;
-      the task outputs the absolute path and length of each included file,
+      value is the sum of all included resources' lengths; when &quot;each&quot;
+      the task outputs the absolute path and length of each included resource,
       one per line. Ignored when processing as a condition.</td>
     <td valign="top" align="center">No; default is &quot;all&quot;</td>
   </tr>
@@ -57,14 +58,16 @@
   </tr>
   <tr>
     <td valign="top">when</td>
-    <td valign="top">Comparison type: "equal", "greater", "less"
-                     for use when operating as a condition.</td>
+    <td valign="top">Comparison type: "equal", "eq", "greater", "gt", "less",
+      "lt", "ge" (greater or equal), "ne" (not equal), "le" (less or equal)
+      for use when operating as a condition.</td>
     <td valign="top" align="center">No; default is "equal"</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>fileset</h4><p>You can include files via nested
-  <a href="../CoreTypes/fileset.html">fileset</a>s.</p>
+<h4>Resource Collections</h4>
+<p>You can include resources via nested
+  <a href="../CoreTypes/resources.html#collection">Resource Collection</a>s.</p>
 <h3>Examples</h3>
 <pre>&lt;length string=&quot;foo&quot; property=&quot;length.foo&quot; /&gt;
 </pre>
