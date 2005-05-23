@@ -44,6 +44,18 @@ Changes that could break older environments:
   as an attribute, printing a warning message; now it signs files in the
   fileset.
 
+* An improved method of handling timestamp granularity differences between 
+  client and server was added to the <ftp> task.  FTP servers typically
+  have HH:mm timestamps whereas local filesystems have HH:mm:ss timestamps.
+  Previously, this required tweaking with the timediffmillis attribute 
+  which also was used to handle timezone differences.  Now, there is a new 
+  timestampgranularity attribute.  The default value for get operations is 0
+  since the user has the more powerful preservelastmodified attribute to work 
+  with.  Since this is not available on put operations the default value 
+  adds a minute to the server timestamp in order to account for this,
+  Scripts which previously used timediffmillis to do this compensation may 
+  need to be rewritten.  timediffmillis has now been deprecated.
+
 
 Fixed bugs:
 -----------
@@ -221,6 +233,12 @@ Changes from Ant 1.6.3 to Ant 1.6.4
 
 Changes that could break older environments:
 --------------------------------------------
+* <ftp> task has had a number of changes.  Uptodate calculation previously 
+  did not call a file uptodate if the source timestamp and the destination 
+  timestamp were equal. Bugzilla report 34941.  Any script that attempted
+  to compensate for this by using the timediffmillis attribute might need
+  to be tweaked.  
+  
 
 Fixed bugs:
 -----------
@@ -412,6 +430,10 @@ Other changes:
 * Added two tutorials
   - beginner: introduction into Ant
   - task developers: using path, fileset etc
+
+* a number of new attributes that allow the user to handle non-standard 
+  server listing formats and time zone differences have been added in 
+  the <ftp> task.
 
 
 Fixed bugs:
