@@ -10,12 +10,12 @@
 
 <h2><a name="pathconvert">Pathconvert</a></h2>
 <h3>Description</h3>
-<p>Converts a nested <code>&lt;path&gt;</code> or reference to a Path,
-FileSet, DirSet, or FileList into a path
-form for a particular platform, and stores the result in a given property.
-It can also be used when you need
-to convert a Path, FileSet, or DirSet into a list, separated by a given
-character, such as a comma or space, or, conversely, to convert a list
+<p>Converts a nested <a href="../CoreTypes/resources.html#collection">
+ResourceCollection</a>, or a reference to one, into a path
+form for a particular platform, optionally storing the result into
+a given property. It can also be used when you need
+to convert a Resource Collection into a list, separated by a given
+character, such as a comma or space, or, conversely, e.g. to convert a list
 of files in a FileList into a path.
 </p>
 <p>Nested <code>&lt;map&gt;</code> elements can be specified to map Windows
@@ -62,7 +62,7 @@ drive letters to Unix paths, and vice-versa.</p>
   <tr>
     <td valign="top">property</td>
     <td valign="top">The name of the property in which to place the converted path.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">No, result will be logged if unset</td>
   </tr>
   <tr>
     <td valign="top">refid</td>
@@ -112,10 +112,10 @@ and only the first matching map element is applied.  So, the ordering of
 your map elements can be important, if any <code>from</code> values are
 prefixes of other <code>from</code> values.</i>
 </p>   
-<h4>path</h4>
-<p>If the <code>refid</code> attribute is not specified, then a
-   nested <code>&lt;path&gt;</code> element must be supplied.  See
-   <a href="../using.html#path">Path-like Structures</a> for details.</p>
+<h4>Resource Collections</h4>
+<p>If the <code>refid</code> attribute is not specified, then one or more
+   nested <a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s must be supplied.</p>
 <h4>mapper</h4>
 <p>A single nested <a href="../CoreTypes/mapper.html">
 <code>&lt;mapper&gt;</code></a> element can be specified
