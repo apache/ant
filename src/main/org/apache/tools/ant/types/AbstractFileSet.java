@@ -393,27 +393,6 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Gets as descriptive as possible a name used for this datatype instance.
-     * @return <code>String</code> name.
-     */
-    protected String getDataTypeName() {
-        // look up the types in project and see if they match this class
-        Project p = getProject();
-        if (p != null) {
-            Hashtable typedefs = p.getDataTypeDefinitions();
-            for (Enumeration e = typedefs.keys(); e.hasMoreElements();) {
-                String typeName = (String) e.nextElement();
-                Class typeClass = (Class) typedefs.get(typeName);
-                if (typeClass == getClass()) {
-                    return typeName;
-                }
-            }
-        }
-        String classname = getClass().getName();
-        return classname.substring(classname.lastIndexOf('.') + 1);
-    }
-
-    /**
      * Returns the directory scanner needed to access the files to process.
      * @return a <code>DirectoryScanner</code> instance.
      */
@@ -504,17 +483,7 @@ public abstract class AbstractFileSet extends DataType
      * @return the referenced FileSet
      */
     protected AbstractFileSet getRef(Project p) {
-        if (!isChecked()) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
-        Object o = getRefid().getReferencedObject(p);
-        if (!getClass().isAssignableFrom(o.getClass())) {
-            throw new BuildException(getRefid().getRefId()
-                + " doesn\'t denote a " + getDataTypeName());
-        }
-        return (AbstractFileSet) o;
+        return (AbstractFileSet) getCheckedRef(p);
     }
 
     // SelectorContainer methods
