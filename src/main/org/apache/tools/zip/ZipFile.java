@@ -370,27 +370,29 @@ public class ZipFile {
      */
     private void positionAtCentralDirectory()
         throws IOException {
-        long off = archive.length() - MIN_EOCD_SIZE;
-        archive.seek(off);
-        byte[] sig = ZipOutputStream.EOCD_SIG;
-        int curr = archive.read();
         boolean found = false;
-        while (curr != -1) {
-            if (curr == sig[0]) {
-                curr = archive.read();
-                if (curr == sig[1]) {
+        long off = archive.length() - MIN_EOCD_SIZE;
+        if (off >= 0) {
+            archive.seek(off);
+            byte[] sig = ZipOutputStream.EOCD_SIG;
+            int curr = archive.read();
+            while (curr != -1) {
+                if (curr == sig[0]) {
                     curr = archive.read();
-                    if (curr == sig[2]) {
+                    if (curr == sig[1]) {
                         curr = archive.read();
-                        if (curr == sig[3]) {
-                            found = true;
-                            break;
+                        if (curr == sig[2]) {
+                            curr = archive.read();
+                            if (curr == sig[3]) {
+                                found = true;
+                                break;
+                            }
                         }
                     }
                 }
+                archive.seek(--off);
+                curr = archive.read();
             }
-            archive.seek(--off);
-            curr = archive.read();
         }
         if (!found) {
             throw new ZipException("archive is not a ZIP archive");

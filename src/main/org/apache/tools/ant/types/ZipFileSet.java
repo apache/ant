@@ -18,6 +18,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.Stack;
+import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -62,6 +63,8 @@ public class ZipFileSet extends FileSet {
     private boolean fileModeHasBeenSet = false;
     private boolean dirModeHasBeenSet  = false;
 
+    private String encoding = null;
+
     /** Constructor for ZipFileSet */
     public ZipFileSet() {
         super();
@@ -89,6 +92,7 @@ public class ZipFileSet extends FileSet {
         dirMode = fileset.dirMode;
         fileModeHasBeenSet = fileset.fileModeHasBeenSet;
         dirModeHasBeenSet = fileset.dirModeHasBeenSet;
+        encoding = fileset.encoding;
     }
 
     /**
@@ -98,9 +102,7 @@ public class ZipFileSet extends FileSet {
      * @throws BuildException on error
      */
     public void setDir(File dir) throws BuildException {
-        if (isReference()) {
-             throw tooManyAttributes();
-         }
+        checkAttributesAllowed();
         if (srcFile != null) {
             throw new BuildException("Cannot set both dir and src attributes");
         } else {
@@ -116,9 +118,7 @@ public class ZipFileSet extends FileSet {
      * @param srcFile The zip file from which to extract entries.
      */
     public void setSrc(File srcFile) {
-        if (isReference()) {
-             throw tooManyAttributes();
-         }
+        checkAttributesAllowed();
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
         }
@@ -190,6 +190,24 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
+     * Set the encoding used for this ZipFileSet.
+     * @param enc encoding as String.
+     * @since Ant 1.7
+     */
+    public void setEncoding(String enc) {
+        this.encoding = enc;
+    }
+
+    /**
+     * Get the encoding used for this ZipFileSet.
+     * @return String encoding.
+     * @since Ant 1.7
+     */
+    public String getEncoding() {
+        return encoding;
+    }
+
+    /**
      * Return the DirectoryScanner associated with this FileSet.
      * If the ZipFileSet defines a source Zip file, then a ZipScanner
      * is returned instead.
@@ -200,16 +218,60 @@ public class ZipFileSet extends FileSet {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
-        if (srcFile != null) {
-            ZipScanner zs = new ZipScanner();
-            zs.setSrc(srcFile);
-            super.setDir(p.getBaseDir());
-            setupDirectoryScanner(zs, p);
-            zs.init();
-            return zs;
-        } else {
+        if (srcFile == null) {
             return super.getDirectoryScanner(p);
         }
+        ZipScanner zs = new ZipScanner();
+        zs.setSrc(srcFile);
+        super.setDir(p.getBaseDir());
+        setupDirectoryScanner(zs, p);
+        zs.init();
+        zs.setEncoding(encoding);
+        return zs;
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return Iterator of Resources.
+     * @since Ant 1.7
+     */
+    public Iterator iterator() {
+        if (isReference()) {
+            return ((ResourceCollection) (getRef(getProject()))).iterator();
+        }
+        if (srcFile == null) {
+            return super.iterator();
+        }
+        ZipScanner zs = (ZipScanner) getDirectoryScanner(getProject());
+        return zs.getResourceFiles();
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return size of the collection as int.
+     * @since Ant 1.7
+     */
+    public int size() {
+        if (isReference()) {
+            return ((ResourceCollection) (getRef(getProject()))).size();
+        }
+        if (srcFile == null) {
+            return super.size();
+        }
+        ZipScanner zs = (ZipScanner) getDirectoryScanner(getProject());
+        return zs.getIncludedFilesCount();
+    }
+
+    /**
+     * Indicate whether this ResourceCollection is composed entirely of
+     * Resources accessible via local filesystem conventions.  If true,
+     * all Resources returned from this ResourceCollection should be
+     * instances of FileResource.
+     * @return whether this is a filesystem-only resource collection.
+     * @since Ant 1.7
+     */
+    public boolean isFilesystemOnly() {
+        return srcFile == null;
     }
 
     /**
@@ -297,11 +359,7 @@ public class ZipFileSet extends FileSet {
      * @return the abstract fileset instance
      */
     protected AbstractFileSet getRef(Project p) {
-        if (!isChecked()) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
+        dieOnCircularReference(p);
         Object o = getRefid().getReferencedObject(p);
         if (o instanceof ZipFileSet) {
             return (AbstractFileSet) o;
@@ -319,6 +377,7 @@ public class ZipFileSet extends FileSet {
             throw new BuildException(msg);
         }
     }
+
     /**
      * Return a ZipFileSet that has the same properties
      * as this one.

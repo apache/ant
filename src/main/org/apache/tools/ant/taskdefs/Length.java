@@ -21,18 +21,21 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Vector;
 import java.util.Iterator;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.Comparison;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.resources.Resources;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.PropertyOutputStream;
 
 /**
  * Gets lengths:  of files/resources, byte size; of strings, length (optionally trimmed).
@@ -52,9 +55,9 @@ public class Length extends Task implements Condition {
     private String string;
     private Boolean trim;
     private String mode = ALL;
-    private When when = When.EQUAL;
+    private Comparison when = Comparison.EQUAL;
     private Long length;
-    private Vector filesets;
+    private Resources resources;
 
     /**
      * The property in which the length will be stored.
@@ -69,9 +72,7 @@ public class Length extends Task implements Condition {
      * @param file the <code>File</code> whose length to retrieve.
      */
     public synchronized void setFile(File file) {
-        FileSet fs = new FileSet();
-        fs.setFile(file);
-        add(fs);
+        add(new FileResource(file));
     }
 
     /**
@@ -79,11 +80,20 @@ public class Length extends Task implements Condition {
      * @param fs the <code>FileSet</code> to add.
      */
     public synchronized void add(FileSet fs) {
-        if (fs == null) {
+        add((ResourceCollection) fs);
+    }
+
+    /**
+     * Add a ResourceCollection.
+     * @param c the <code>ResourceCollection</code> to add.
+     * @since Ant 1.7
+     */
+    public synchronized void add(ResourceCollection c) {
+        if (c == null) {
             return;
         }
-        filesets = (filesets == null) ? new Vector() : filesets;
-        filesets.add(fs);
+        resources = (resources == null) ? new Resources() : resources;
+        resources.add(c);
     }
 
     /**
@@ -95,12 +105,22 @@ public class Length extends Task implements Condition {
     }
 
     /**
-     * Set the comparison criteria for use as a Condition:
-     * "equal", "greater", "less". Default is "equal".
+     * Set the comparison for use as a Condition.
      * @param w EnumeratedAttribute When.
+     * @see org.apache.tools.ant.types.Comparison
      */
     public synchronized void setWhen(When w) {
-        when = w;
+        setWhen((Comparison) w);
+    }
+
+    /**
+     * Set the comparison for use as a Condition.
+     * @param c Comparison.
+     * @see org.apache.tools.ant.types.Comparison
+     * @since Ant 1.7
+     */
+    public synchronized void setWhen(Comparison c) {
+        when = c;
     }
 
     /**
@@ -142,7 +162,7 @@ public class Length extends Task implements Condition {
     public void execute() {
         validate();
         PrintStream ps = new PrintStream((property != null)
-            ? (OutputStream) new PropertyOutputStream()
+            ? (OutputStream) new PropertyOutputStream(getProject(), property)
             : (OutputStream) new LogOutputStream(this, Project.MSG_INFO));
 
         if (STRING.equals(mode)) {
@@ -173,27 +193,23 @@ public class Length extends Task implements Condition {
             handleResources(h);
             ell = new Long(h.getLength());
         }
-        int w = when.getIndex();
-        int comp = ell.compareTo(length);
-        return (w == 0 && comp == 0)
-            || (w == 1 && comp > 0)
-            || (w == 2 && comp < 0);
+        return when.evaluate(ell.compareTo(length));
     }
 
     private void validate() {
         if (string != null) {
-            if (filesets != null && filesets.size() > 0) {
+            if (resources != null) {
                 throw new BuildException("the string length function"
-                    + " is incompatible with the file length function");
+                    + " is incompatible with the file/resource length function");
             }
             if (!(STRING.equals(mode))) {
                 throw new BuildException("the mode attribute is for use"
                     + " with the file/resource length function");
             }
-        } else if (filesets != null) {
+        } else if (resources != null) {
             if (!(EACH.equals(mode) || ALL.equals(mode))) {
                 throw new BuildException("invalid mode setting for"
-                    + " file length function: \"" + mode + "\"");
+                    + " file/resource length function: \"" + mode + "\"");
             } else if (trim != null) {
                 throw new BuildException("the trim attribute is"
                     + " for use with the string length function only");
@@ -201,30 +217,20 @@ public class Length extends Task implements Condition {
         } else {
             throw new BuildException("you must set either the string attribute"
                 + " or specify one or more files using the file attribute or"
-                + " nested filesets");
+                + " nested resource collections");
         }
     }
 
     private void handleResources(Handler h) {
-        for (Iterator i = filesets.iterator(); i.hasNext();) {
-            FileSet fs = (FileSet) i.next();
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] f = ds.getIncludedFiles();
-            for (int j = 0; j < f.length; j++) {
-                Resource r = ds.getResource(f[j]);
-                if (!r.isExists()) {
-                    log(r.getName() + " does not exist", Project.MSG_ERR);
-                } else if (r.isDirectory()) {
-                    log(r.getName() + " is a directory; length unspecified",
-                        Project.MSG_ERR);
-                } else {
-                    //force a full path:
-                    File basedir = ds.getBasedir();
-                    String s = FileUtils.getFileUtils().resolveFile(
-                        basedir, r.getName()).getAbsolutePath();
-                    h.handle(new Resource(s, true,
-                        r.getLastModified(), false, r.getSize()));
-                }
+        for (Iterator i = resources.iterator(); i.hasNext();) {
+            Resource r = (Resource) i.next();
+            if (!r.isExists()) {
+                log(r + " does not exist", Project.MSG_ERR);
+            } else if (r.isDirectory()) {
+                log(r + " is a directory; length unspecified",
+                    Project.MSG_ERR);
+            } else {
+                h.handle(r);
             }
         }
         h.complete();
@@ -251,27 +257,8 @@ public class Length extends Task implements Condition {
     /**
      * EnumeratedAttribute for the when attribute.
      */
-    public static class When extends EnumeratedAttribute {
-        private static final String[] VALUES
-            = new String[] {"equal", "greater", "less"};
-
-        private static final When EQUAL = new When("equal");
-
-        public When() {
-        }
-        public When(String value) {
-            setValue(value);
-        }
-            public String[] getValues() {
-            return VALUES;
-        }
-    }
-
-    private class PropertyOutputStream extends ByteArrayOutputStream {
-        public void close() {
-            getProject().setNewProperty(
-                property, new String(toByteArray()).trim());
-        }
+    public static class When extends Comparison {
+        //extend Comparison; retain for BC only
     }
 
     private abstract class Handler {
@@ -292,7 +279,7 @@ public class Length extends Task implements Condition {
             super(ps);
         }
         protected void handle(Resource r) {
-            ps.print(r.getName());
+            ps.print(r.toString());
             ps.print(" : ");
             //when writing to the log, we'll see what's happening:
             long size = r.getSize();
@@ -312,7 +299,7 @@ public class Length extends Task implements Condition {
         protected synchronized void handle(Resource r) {
             long size = r.getSize();
             if (size == Resource.UNKNOWN_SIZE) {
-                log("Size unknown for " + r.getName(), Project.MSG_WARN);
+                log("Size unknown for " + r.toString(), Project.MSG_WARN);
             } else {
                 accum += size;
             }

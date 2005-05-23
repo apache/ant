@@ -1,0 +1,24 @@
+<antlib>
+  <typedef name="name"
+    classname="org.apache.tools.ant.types.resources.selectors.Name" />
+  <typedef name="not"
+    classname="org.apache.tools.ant.types.resources.selectors.Not" />
+  <typedef name="none"
+    classname="org.apache.tools.ant.types.resources.selectors.None" />
+  <typedef name="and"
+    classname="org.apache.tools.ant.types.resources.selectors.And" />
+  <typedef name="or"
+    classname="org.apache.tools.ant.types.resources.selectors.Or" />
+  <typedef name="exists"
+    classname="org.apache.tools.ant.types.resources.selectors.Exists" />
+  <typedef name="type"
+    classname="org.apache.tools.ant.types.resources.selectors.Type" />
+  <typedef name="majority"
+    classname="org.apache.tools.ant.types.resources.selectors.Majority" />
+  <typedef name="instanceof"
+    classname="org.apache.tools.ant.types.resources.selectors.InstanceOf" />
+  <typedef name="size"
+    classname="org.apache.tools.ant.types.resources.selectors.Size" />
+  <typedef name="date"
+    classname="org.apache.tools.ant.types.resources.selectors.Date" />
+</antlib>

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,8 +21,11 @@ import java.io.File;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import java.util.Iterator;
+
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.resources.FileResourceIterator;
 
 /**
  * FileList represents an explicitly named list of files.  FileLists
@@ -31,7 +34,7 @@ import org.apache.tools.ant.Project;
  * filter, only returning the name of a matched file if it currently
  * exists in the file system.
  */
-public class FileList extends DataType {
+public class FileList extends DataType implements ResourceCollection {
 
     private Vector filenames = new Vector();
     private File dir;
@@ -78,9 +81,7 @@ public class FileList extends DataType {
      * @exception BuildException if an error occurs
      */
     public void setDir(File dir) throws BuildException {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
+        checkAttributesAllowed();
         this.dir = dir;
     }
 
@@ -102,9 +103,7 @@ public class FileList extends DataType {
      *        by whitespace.
      */
     public void setFiles(String filenames) {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
+        checkAttributesAllowed();
         if (filenames != null && filenames.length() > 0) {
             StringTokenizer tok = new StringTokenizer(
                 filenames, ", \t\n\r\f", false);
@@ -144,19 +143,7 @@ public class FileList extends DataType {
      * @return the FileList represented by a referenced filelist.
      */
     protected FileList getRef(Project p) {
-        if (!isChecked()) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
-
-        Object o = getRefid().getReferencedObject(p);
-        if (!(o instanceof FileList)) {
-            String msg = getRefid().getRefId() + " doesn\'t denote a filelist";
-            throw new BuildException(msg);
-        } else {
-            return (FileList) o;
-        }
+        return (FileList) getCheckedRef(p);
     }
 
     /**
@@ -194,4 +181,39 @@ public class FileList extends DataType {
         }
         filenames.addElement(name.getName());
     }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return an Iterator of Resources.
+     * @since Ant 1.7
+     */
+    public Iterator iterator() {
+        if (isReference()) {
+            return ((FileList) getRef(getProject())).iterator();
+        }
+        return new FileResourceIterator(dir,
+            (String[]) (filenames.toArray(new String[filenames.size()])));
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return number of elements as int.
+     * @since Ant 1.7
+     */
+    public int size() {
+        if (isReference()) {
+            return ((FileList) getRef(getProject())).size();
+        }
+        return filenames.size();
+    }
+
+    /**
+     * Always returns true.
+     * @return true indicating that all elements will be FileResources.
+     * @since Ant 1.7
+     */
+    public boolean isFilesystemOnly() {
+        return true;
+    }
+
 }

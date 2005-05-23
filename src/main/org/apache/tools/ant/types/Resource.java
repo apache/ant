@@ -16,24 +16,51 @@
  */
 package org.apache.tools.ant.types;
 
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.util.Stack;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import org.apache.tools.ant.BuildException;
+
 /**
- * Describes a File or a ZipEntry.
+ * Describes a "File-like" resource (File, ZipEntry, etc.).
  *
  * This class is meant to be used by classes needing to record path
  * and date/time information about a file, a zip entry or some similar
  * resource (URL, archive in a version control repository, ...).
  *
  * @since Ant 1.5.2
+ * @see org.apache.tools.ant.types.resources.Touchable
  */
-public class Resource implements Cloneable, Comparable {
+public class Resource extends DataType
+    implements Cloneable, Comparable, ResourceCollection {
+
     /** Constant unknown size */
     public static final long UNKNOWN_SIZE = -1;
 
+    /** Magic number */
+    protected static final int MAGIC = getMagicNumber("Resource".getBytes());
+
+    private static final int NULL_NAME = getMagicNumber("null name".getBytes());
+
+    /**
+     * Create a "magic number" for use in hashCode calculations.
+     * @param seed byte[] to seed with.
+     * @return a magic number as int.
+     */
+    protected static int getMagicNumber(byte[] seed) {
+        return new BigInteger(seed).intValue();
+    }
+
     private String name = null;
-    private boolean exists = true;
-    private long lastmodified = 0;
-    private boolean directory = false;
-    private long size = UNKNOWN_SIZE;
+    private Boolean exists = null;
+    private Long lastmodified = null;
+    private Boolean directory = null;
+    private Long size = null;
 
     /**
      * Default constructor.
@@ -112,7 +139,7 @@ public class Resource implements Cloneable, Comparable {
      * @return the name of this resource.
      */
     public String getName() {
-        return name;
+        return isReference() ? ((Resource) getCheckedRef()).getName() : name;
     }
 
     /**
@@ -121,6 +148,7 @@ public class Resource implements Cloneable, Comparable {
      * &quot;/&quot; to be used as the directory separator.
      */
     public void setName(String name) {
+        checkAttributesAllowed();
         this.name = name;
     }
 
@@ -129,7 +157,11 @@ public class Resource implements Cloneable, Comparable {
      * @return true if this resource exists.
      */
     public boolean isExists() {
-        return exists;
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).isExists();
+        }
+        //default true:
+        return exists == null || exists.booleanValue();
     }
 
     /**
@@ -137,7 +169,8 @@ public class Resource implements Cloneable, Comparable {
      * @param exists if true, this resource exists.
      */
     public void setExists(boolean exists) {
-        this.exists = exists;
+        checkAttributesAllowed();
+        this.exists = exists ? Boolean.TRUE : Boolean.FALSE;
     }
 
     /**
@@ -147,7 +180,14 @@ public class Resource implements Cloneable, Comparable {
      * of {@link java.io.File File}.
      */
     public long getLastModified() {
-        return !exists || lastmodified < 0 ? 0L : lastmodified;
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).getLastModified();
+        }
+        if (!isExists() || lastmodified == null) {
+            return 0L;
+        }
+        long result = lastmodified.longValue();
+        return result < 0L ? 0L : result;
     }
 
     /**
@@ -155,7 +195,8 @@ public class Resource implements Cloneable, Comparable {
      * @param lastmodified the modification time in milliseconds since 01.01.1970.
      */
     public void setLastModified(long lastmodified) {
-        this.lastmodified = lastmodified;
+        checkAttributesAllowed();
+        this.lastmodified = new Long(lastmodified);
     }
 
     /**
@@ -163,7 +204,11 @@ public class Resource implements Cloneable, Comparable {
      * @return boolean flag indicating if the resource is a directory.
      */
     public boolean isDirectory() {
-        return directory;
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).isDirectory();
+        }
+        //default false:
+        return directory != null && directory.booleanValue();
     }
 
     /**
@@ -171,26 +216,31 @@ public class Resource implements Cloneable, Comparable {
      * @param directory if true, this resource is a directory.
      */
     public void setDirectory(boolean directory) {
-        this.directory = directory;
+        checkAttributesAllowed();
+        this.directory = directory ? Boolean.TRUE : Boolean.FALSE;
     }
 
     /**
      * Set the size of this Resource.
      * @param size the size, as a long.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public void setSize(long size) {
-        this.size = (size > UNKNOWN_SIZE) ? size : UNKNOWN_SIZE;
+        checkAttributesAllowed();
+        this.size = new Long(size > UNKNOWN_SIZE ? size : UNKNOWN_SIZE);
     }
 
     /**
      * Get the size of this Resource.
      * @return the size, as a long, 0 if the Resource does not exist (for
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public long getSize() {
-        return (exists) ? size : 0L;
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).getSize();
+        }
+        return isExists() && size != null ? size.longValue() : 0L;
     }
 
     /**
@@ -215,12 +265,168 @@ public class Resource implements Cloneable, Comparable {
      * @since Ant 1.6
      */
     public int compareTo(Object other) {
+        if (isReference()) {
+            return ((Comparable) getCheckedRef()).compareTo(other);
+        }
         if (!(other instanceof Resource)) {
-            throw new IllegalArgumentException("Can only be compared with "
-                                               + "Resources");
+            throw new IllegalArgumentException(
+                "Can only be compared with Resources");
         }
         Resource r = (Resource) other;
-        return getName().compareTo(r.getName());
+        String name = getName();
+        String oname = r.getName();
+        if (name == null && oname == null) {
+            return 0;
+        }
+        if (name == null) {
+            return -1;
+        }
+        return oname == null ? 1 : name.compareTo(oname);
+    }
+
+    /**
+     * Implement basic Resource equality.
+     * @return true if the specified Object is equal to this Resource.
+     * @since Ant 1.7
+     */
+    public boolean equals(Object other) {
+        if (isReference()) {
+            return getCheckedRef().equals(other);
+        }
+        return other.getClass().equals(getClass()) && compareTo(other) == 0;
+    }
+
+    /**
+     * Get the hash code for this Resource.
+     * @return hash code as int.
+     * @since Ant 1.7
+     */
+    public int hashCode() {
+        if (isReference()) {
+            return getCheckedRef().hashCode();
+        }
+        String name = getName();
+        return MAGIC * (name == null ? name.hashCode() : NULL_NAME);
+    }
+
+    /**
+     * Get an InputStream for the Resource.
+     * @return an InputStream containing this Resource's content.
+     * @throws IOException if unable to provide the content of this
+     *         Resource as a stream.
+     * @throws UnsupportedOperationException if InputStreams are not
+     *         supported for this Resource type.
+     * @since Ant 1.7
+     */
+    public InputStream getInputStream() throws IOException {
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).getInputStream();
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Get an OutputStream for the Resource.
+     * @return an OutputStream to which content can be written.
+     * @throws IOException if unable to provide the content of this
+     *         Resource as a stream.
+     * @throws UnsupportedOperationException if OutputStreams are not
+     *         supported for this Resource type.
+     * @since Ant 1.7
+     */
+    public OutputStream getOutputStream() throws IOException {
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).getOutputStream();
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return an Iterator of Resources.
+     * @since Ant 1.7
+     */
+    public Iterator iterator() {
+        return isReference() ? ((Resource) getCheckedRef()).iterator()
+            : new Iterator() {
+            boolean done = false;
+            public boolean hasNext() {
+                return !done;
+            }
+            public Object next() {
+                if (done) {
+                    throw new NoSuchElementException();
+                }
+                done = true;
+                return Resource.this;
+            }
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return the size of this ResourceCollection.
+     * @since Ant 1.7
+     */
+    public int size() {
+        return isReference() ? ((Resource) getCheckedRef()).size() : 1;
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return whether this Resource is a FileResource.
+     * @since Ant 1.7
+     */
+    public boolean isFilesystemOnly() {
+        //default false:
+        return isReference() && ((Resource) getCheckedRef()).isFilesystemOnly();
+    }
+
+    /**
+     * Get the string representation of this Resource.
+     * @return this Resource formatted as a String.
+     * @since Ant 1.7
+     */
+    public String toString() {
+        if (isReference()) {
+            return getCheckedRef().toString();
+        }
+        String n = getName();
+        if (n != null) {
+            return n;
+        }
+        String classname = getClass().getName();
+        return "anonymous " + classname.substring(classname.lastIndexOf('.') + 1);
+    }
+
+    /**
+     * Get a long String representation of this Resource.
+     * This typically should be the value of <code>toString()</code>
+     * prefixed by a type description.
+     * @return this Resource formatted as a long String.
+     * @since Ant 1.7
+     */
+    public final String toLongString() {
+        return isReference() ? ((Resource) getCheckedRef()).toLongString()
+            : getDataTypeName() + " \"" + toString() + '"';
+    }
+
+    /**
+     * Overrides the base version.
+     * @param r the Reference to set.
+     */
+    public void setRefid(Reference r) {
+        if (name != null
+            || exists != null
+            || lastmodified != null
+            || directory != null
+            || size != null) {
+            throw tooManyAttributes();
+        }
+        super.setRefid(r);
     }
 
 }

@@ -15,6 +15,7 @@
     <delete file="concat.noeol"/>
     <delete file="concat.linecr"/>
     <delete file="concat.utf8"/>
+    <delete file="concat.urls"/>
   </target>
 
   <target name="test1">
@@ -183,6 +184,32 @@
             encoding="ISO8859_1" outputencoding="UTF8">
       <path path="copy/input/iso8859-1"/>
     </concat>
+  </target>
+
+  <target name="testResources" unless="offline">
+    <concat destfile="concat.urls" binary="true">
+      <url url="http://ant.apache.org" />
+      <url url="http://ant.apache.org" />
+    </concat>
+    <length property="expected" includeduplicates="true">
+      <resources>
+        <url url="http://ant.apache.org" />
+        <url url="http://ant.apache.org" />
+      </resources>
+    </length>
+    <length property="actual">
+      <fileset file="concat.urls" />
+    </length>
+    <fail>
+      <condition>
+        <or>
+          <equals arg1="${actual}" arg2="0" />
+          <not>
+            <equals arg1="${actual}" arg2="${expected}" />
+          </not>
+        </or>
+      </condition>
+    </fail>
   </target>
 
 </project>

@@ -18,16 +18,21 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Locale;
+import java.util.Set;
 import java.util.Stack;
+import java.util.Locale;
 import java.util.Vector;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Collection;
+import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.types.resources.FileResourceIterator;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
-
 
 /**
  * This object represents a path as used by CLASSPATH or PATH
@@ -56,28 +61,25 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  */
 
-public class Path extends DataType implements Cloneable {
+public class Path extends Union {
 
-    private Vector elements;
-
-    /** The system classspath as a Path object */
+    /** The system classpath as a Path object */
     public static Path systemClasspath =
         new Path(null, System.getProperty("java.class.path"));
 
 
     /**
-     * The system bootclassspath as a Path object.
+     * The system bootclasspath as a Path object.
      *
      * @since Ant 1.6.2
      */
     public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
 
-
     /**
      * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
      */
-    public class PathElement {
+    public class PathElement implements ResourceCollection {
         private String[] parts;
 
         /**
@@ -106,6 +108,19 @@ public class Path extends DataType implements Cloneable {
         public String[] getParts() {
             return parts;
         }
+
+        public Iterator iterator() {
+            return new FileResourceIterator(null, parts);
+        }
+    
+        public boolean isFilesystemOnly() {
+            return true;
+        }
+
+        public int size() {
+            return parts == null ? 0 : parts.length;
+        }
+
     }
 
     /**
@@ -125,7 +140,6 @@ public class Path extends DataType implements Cloneable {
      */
     public Path(Project project) {
         setProject(project);
-        elements = new Vector();
     }
 
     /**
@@ -135,12 +149,9 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public void setLocation(File location) throws BuildException {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
+        checkAttributesAllowed();
         createPathElement().setLocation(location);
     }
-
 
     /**
      * Parses a path definition and creates single PathElements.
@@ -148,9 +159,7 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public void setPath(String path) throws BuildException {
-        if (isReference()) {
-            throw tooManyAttributes();
-        }
+        checkAttributesAllowed();
         createPathElement().setPath(path);
     }
 
@@ -163,10 +172,9 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public void setRefid(Reference r) throws BuildException {
-        if (!elements.isEmpty()) {
+        if (!getResourceCollections().isEmpty()) {
             throw tooManyAttributes();
         }
-        elements.addElement(r);
         super.setRefid(r);
     }
 
@@ -180,7 +188,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         PathElement pe = new PathElement();
-        elements.addElement(pe);
+        add(pe);
         return pe;
     }
 
@@ -190,11 +198,7 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public void addFileset(FileSet fs) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        elements.addElement(fs);
-        setChecked(false);
+        add(fs);
     }
 
     /**
@@ -203,11 +207,7 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public void addFilelist(FileList fl) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        elements.addElement(fl);
-        setChecked(false);
+        add(fl);
     }
 
     /**
@@ -216,11 +216,7 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public void addDirset(DirSet dset) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        elements.addElement(dset);
-        setChecked(false);
+        add(dset);
     }
 
     /**
@@ -230,12 +226,7 @@ public class Path extends DataType implements Cloneable {
      * @since Ant 1.6
      */
     public void add(Path path) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        elements.addElement(path);
-        setChecked(false);
-
+        add((ResourceCollection) path);
     }
 
     /**
@@ -244,12 +235,8 @@ public class Path extends DataType implements Cloneable {
      * @throws BuildException on error
      */
     public Path createPath() throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
         Path p = new Path(getProject());
-        elements.addElement(p);
-        setChecked(false);
+        add(p);
         return p;
     }
 
@@ -261,17 +248,12 @@ public class Path extends DataType implements Cloneable {
         if (other == null) {
             return;
         }
-        String[] l = other.list();
-        for (int i = 0; i < l.length; i++) {
-            if (elements.indexOf(l[i]) == -1) {
-                elements.addElement(l[i]);
-            }
-        }
+        add(other);
     }
 
-     /**
+    /**
      * Adds the components on the given path which exist to this
-     * Path. Components that don't exist, aren't added.
+     * Path. Components that don't exist aren't added.
      *
      * @param source - source path whose components are examined for existence
      */
@@ -309,92 +291,29 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Returns all path elements defined by this and nested path objects.
-     * @return list of path elements.
+     * Override <code>Union.getCollection()</code>
+     * so we can check our children first.
+     * @return a Collection.
      */
-    public String[] list() {
-        if (!isChecked()) {
-            // make sure we don't have a circular reference here
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, getProject());
-        }
-
-        Vector result = new Vector(2 * elements.size());
-        for (int i = 0; i < elements.size(); i++) {
-            Object o = elements.elementAt(i);
-            if (o instanceof Reference) {
-                Reference r = (Reference) o;
-                o = r.getReferencedObject(getProject());
-                // we only support references to paths right now
-                if (!(o instanceof Path)) {
-                    String msg = r.getRefId() + " doesn\'t denote a path " + o;
-                    throw new BuildException(msg);
-                }
+    protected Collection getCollection() {
+        for (Iterator i = getResourceCollections().iterator(); i.hasNext();) {
+            ResourceCollection rc = (ResourceCollection) i.next();
+            if (!(rc.isFilesystemOnly())) {
+                throw new BuildException(getDataTypeName()
+                    + " allows only filesystem resources.");
             }
-
-            if (o instanceof String) {
-                // obtained via append
-                addUnlessPresent(result, (String) o);
-            } else if (o instanceof PathElement) {
-                String[] parts = ((PathElement) o).getParts();
-                if (parts == null) {
-                    throw new BuildException("You must either set location or"
-                        + " path on <pathelement>");
-                }
-                for (int j = 0; j < parts.length; j++) {
-                    addUnlessPresent(result, parts[j]);
-                }
-            } else if (o instanceof Path) {
-                Path p = (Path) o;
+            if (rc instanceof PathElement
+                && ((PathElement) rc).getParts() == null) {
+                throw new BuildException(
+                    "Either location or path must be set on a pathelement.");
+            } else if (rc instanceof Path) {
+                Path p = (Path) rc;
                 if (p.getProject() == null) {
                     p.setProject(getProject());
                 }
-                String[] parts = p.list();
-                for (int j = 0; j < parts.length; j++) {
-                    addUnlessPresent(result, parts[j]);
-                }
-            } else if (o instanceof DirSet) {
-                DirSet dset = (DirSet) o;
-                addUnlessPresent(result, dset.getDir(getProject()),
-                    dset.getDirectoryScanner(getProject()).getIncludedDirectories());
-            } else if (o instanceof FileSet) {
-                FileSet fs = (FileSet) o;
-                addUnlessPresent(result, fs.getDir(getProject()),
-                    fs.getDirectoryScanner(getProject()).getIncludedFiles());
-            } else if (o instanceof FileList) {
-                FileList fl = (FileList) o;
-                addUnlessPresent(result,
-                    fl.getDir(getProject()), fl.getFiles(getProject()));
             }
         }
-        String[] res = new String[result.size()];
-        result.copyInto(res);
-        return res;
-    }
-
-
-    /**
-     * Returns a textual representation of the path, which can be used as
-     * CLASSPATH or PATH environment variable definition.
-     * @return a textual representation of the path.
-     */
-    public String toString() {
-        final String[] list = list();
-
-        // empty path return empty string
-        if (list.length == 0) {
-            return "";
-        }
-
-        // path containing one or more elements
-        final StringBuffer result = new StringBuffer(list[0].toString());
-        for (int i = 1; i < list.length; i++) {
-            result.append(File.pathSeparatorChar);
-            result.append(list[i]);
-        }
-
-        return result.toString();
+        return super.getCollection();
     }
 
     /**
@@ -467,88 +386,11 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * How many parts does this Path instance consist of.
-     * @return the number of parts
-     */
-    public int size() {
-        return list().length;
-    }
-
-    /**
-     * Return a Path that holds the same elements as this instance.
-     * @return a copy of the path
-     */
-    public Object clone() {
-        try {
-            Path p = (Path) super.clone();
-            p.elements = (Vector) elements.clone();
-            return p;
-        } catch (CloneNotSupportedException e) {
-            throw new BuildException(e);
-        }
-    }
-
-    /**
-     * Overrides the version of DataType to recurse on all DataType
-     * child elements that may have been added.
-     * @param stk the stack of data types to use (recursively)
-     * @param p   the project to use to dereference the references
-     * @throws BuildException on error
-     */
-    protected void dieOnCircularReference(Stack stk, Project p)
-        throws BuildException {
-
-        if (isChecked()) {
-            return;
-        }
-
-        Enumeration e = elements.elements();
-        while (e.hasMoreElements()) {
-            Object o = e.nextElement();
-            if (o instanceof Reference) {
-                o = ((Reference) o).getReferencedObject(p);
-            }
-
-            if (o instanceof DataType) {
-                if (stk.contains(o)) {
-                    throw circularReference();
-                } else {
-                    stk.push(o);
-                    ((DataType) o).dieOnCircularReference(stk, p);
-                    stk.pop();
-                }
-            }
-        }
-        setChecked(true);
-    }
-
-    /**
      * Resolve a filename with Project's help - if we know one that is.
      */
     private static File resolveFile(Project project, String relativeName) {
         return FileUtils.getFileUtils().resolveFile(
             (project == null) ? null : project.getBaseDir(), relativeName);
-    }
-
-    /**
-     * Adds a String to the Vector if it isn't already included.
-     */
-    private static void addUnlessPresent(Vector v, String s) {
-        if (v.indexOf(s) == -1) {
-            v.addElement(s);
-        }
-    }
-
-    /**
-     * Adds absolute path names of listed files in the given directory
-     * to the Vector if they are not already included.
-     */
-    private static void addUnlessPresent(Vector v, File dir, String[] s) {
-        for (int j = 0; j < s.length; j++) {
-            File d = new File(dir, s[j]);
-            String absolutePath = d.getAbsolutePath();
-            addUnlessPresent(v, translateFile(absolutePath));
-        }
     }
 
     /**
@@ -737,4 +579,5 @@ public class Path extends DataType implements Cloneable {
             }
         }
     }
+
 }

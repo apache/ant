@@ -1,0 +1,410 @@
+<project default="all"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+  <target name="testname1">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                <resource name="foo" />
+                <resource name="bar" />
+                <resource name="baz" />
+                <resource name="boo" />
+                <resource name="bang" />
+              </resources>
+              <rsel:name name="ba?" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testname2">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                <file file="foo" />
+                <resource name="foo" />
+                <file file="foo" base="${basedir}" />
+              </resources>
+              <rsel:name name="foo" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="name" depends="testname1,testname2" />
+
+  <target name="testexists">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="1">
+            <restrict>
+              <resources>
+                <file file="idonotexist" />
+                <resource name="foo" />
+                <resource name="foo" exists="false" />
+              </resources>
+              <rsel:exists />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testinstanceoftype1">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                <file file="foo" />
+                <url url="http://ant.apache.org/index.html" />
+                <resource name="foo" />
+                <string value="foo" />
+                <file file="bar" />
+              </resources>
+              <rsel:instanceof type="file" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testinstanceoftype2">
+    <typedef name="file" uri="test"
+             classname="org.apache.tools.ant.types.resources.FileResource" />
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="1">
+            <restrict>
+              <resources>
+                <url file="foo" />
+                <file file="bar" xmlns="test" />
+              </resources>
+              <rsel:instanceof type="test:file" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testinstanceoftype3">
+    <typedef name="file" uri="test"
+             classname="org.apache.tools.ant.types.resources.FileResource" />
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="1">
+            <restrict>
+              <resources>
+                <url file="foo" />
+                <file file="bar" xmlns="test" />
+              </resources>
+              <rsel:instanceof type="file" uri="test" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testinstanceoftype"
+    depends="testinstanceoftype1,testinstanceoftype2,testinstanceoftype3" />
+
+  <target name="testinstanceofclass">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="7">
+            <restrict>
+              <resources>
+                <filelist dir="${basedir}" files="a,b,c,d,e,f,g" />
+              </resources>
+              <rsel:instanceof class="org.apache.tools.ant.types.Resource" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="instanceof" depends="testinstanceoftype,testinstanceofclass" />
+
+  <target name="testtype">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                 <file file="${basedir}" />
+                 <file file="${ant.file}" />
+                 <resource directory="true" />
+                 <resource directory="false" />
+              </resources>
+              <rsel:type type="dir" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testdate">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="3">
+            <restrict>
+              <resources>
+                 <resource lastmodified="4" />
+                 <resource lastmodified="5" />
+                 <resource lastmodified="6" />
+                 <resource lastmodified="7" />
+                 <resource lastmodified="8" />
+              </resources>
+              <rsel:date when="after" millis="5" granularity="0" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testsize">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="4">
+            <restrict>
+              <resources>
+                 <resource size="4" />
+                 <resource size="5" />
+                 <resource size="6" />
+                 <resource size="7" />
+                 <resource size="8" />
+              </resources>
+              <rsel:size when="le" size="7" />
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testand">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="1">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <and xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+              </and>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testor">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="3">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <or xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+              </or>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testnot">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <not xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <size size="3" />
+              </not>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testnone">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="1">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <none xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+              </none>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testmajority1">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <majority xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+                <instanceof type="string" />
+              </majority>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testmajority2">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="3">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <majority xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+                <instanceof type="resource" />
+              </majority>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testmajority3">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="3">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <majority allowtie="true"
+                  xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+                <instanceof type="string" />
+                <exists />
+              </majority>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testmajority4">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount when="equal" count="2">
+            <restrict>
+              <resources>
+                <string value="fee" />
+                <resource name="fi" size="3" />
+                <resource name="fo" />
+                <resource name="fum" />
+              </resources>
+              <majority allowtie="false"
+                  xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+                <name name="f?" />
+                <size size="3" />
+                <instanceof type="string" />
+                <exists />
+              </majority>
+            </restrict>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="majority"
+          depends="testmajority1,testmajority2,testmajority3,testmajority4" />
+
+  <target name="logical"
+          depends="testand,testor,testnone,testnot,majority" />
+
+  <target name="all"
+    depends="name,testexists,instanceof,testtype,testdate,testsize,logical" />
+
+</project>

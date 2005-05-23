@@ -17,34 +17,46 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.Reader;
+import java.io.Writer;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.Writer;
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.Vector;
+import java.util.Iterator;
+import java.util.Enumeration;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
-import org.apache.tools.ant.types.FileList;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Restrict;
+import org.apache.tools.ant.types.resources.Resources;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.StringResource;
+import org.apache.tools.ant.types.resources.selectors.Not;
+import org.apache.tools.ant.types.resources.selectors.Exists;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ConcatResourceInputStream;
 
 /**
  * This class contains the 'concat' task, used to concatenate a series
@@ -68,32 +80,36 @@ public class Concat extends Task {
     // The size of buffers to be used
     private static final int BUFFER_SIZE = 8192;
 
-    private static final FileUtils     FILE_UTILS = FileUtils.getFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    private static final ResourceSelector EXISTS = new Exists();
+    private static final ResourceSelector NOT_EXISTS = new Not(EXISTS);
+
     // Attributes.
 
     /**
      * The destination of the stream. If <code>null</code>, the system
      * console is used.
      */
-    private File destinationFile = null;
+    private File destinationFile;
 
     /**
      * Whether or not the stream should be appended if the destination file
      * exists.
      * Defaults to <code>false</code>.
      */
-    private boolean append = false;
+    private boolean append;
 
     /**
      * Stores the input file encoding.
      */
-    private String encoding = null;
+    private String encoding;
 
     /** Stores the output file encoding. */
-    private String outputEncoding = null;
+    private String outputEncoding;
 
     /** Stores the binary attribute */
-    private boolean binary = false;
+    private boolean binary;
 
     // Child elements.
 
@@ -106,25 +122,49 @@ public class Concat extends Task {
      * Stores a collection of file sets and/or file lists, used to
      * select multiple files for concatenation.
      */
-    private Vector sources = new Vector();
+    private Resources rc;
 
     /** for filtering the concatenated */
-    private Vector        filterChains = null;
+    private Vector filterChains;
     /** ignore dates on input files */
-    private boolean       forceOverwrite = true;
+    private boolean forceOverwrite = true;
     /** String to place at the start of the concatented stream */
-    private TextElement   footer;
+    private TextElement footer;
     /** String to place at the end of the concatented stream */
-    private TextElement   header;
+    private TextElement header;
     /** add missing line.separator to files **/
-    private boolean       fixLastLine = false;
+    private boolean fixLastLine = false;
     /** endofline for fixlast line */
-    private String       eolString = System.getProperty("line.separator");
+    private String eolString;
     /** outputwriter */
-    private Writer       outputWriter = null;
+    private Writer outputWriter = null;
 
-    /** internal variable - used to collect the source files from sources */
-    private Vector        sourceFiles = new Vector();
+    /**
+     * Construct a new Concat task.
+     */
+    public Concat() {
+        reset();
+    }
+
+    /**
+     * Reset state to default.
+     */
+    public void reset() {
+        append = false;
+        forceOverwrite = true;
+        destinationFile = null;
+        encoding = null;
+        outputEncoding = null;
+        fixLastLine = false;
+        filterChains = null;
+        footer = null;
+        header = null;
+        binary = false;
+        outputWriter = null;
+        textBuffer = null;
+        eolString = System.getProperty("line.separator");
+        rc = null;
+    }
 
     // Attribute setters.
 
@@ -187,7 +227,7 @@ public class Concat extends Task {
      */
      public Path createPath() {
         Path path = new Path(getProject());
-        sources.addElement(path);
+        add(path);
         return path;
     }
 
@@ -196,7 +236,7 @@ public class Concat extends Task {
      * @param set the set of files
      */
     public void addFileset(FileSet set) {
-        sources.addElement(set);
+        add(set);
     }
 
     /**
@@ -204,7 +244,17 @@ public class Concat extends Task {
      * @param list the list of files
      */
     public void addFilelist(FileList list) {
-        sources.addElement(list);
+        add(list);
+    }
+
+    /**
+     * Add an arbitrary ResourceCollection.
+     * @param c the ResourceCollection to add.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection c) {
+        rc = (rc == null) ? new Resources() : rc;
+        rc.add(c);
     }
 
     /**
@@ -284,9 +334,9 @@ public class Concat extends Task {
     }
 
     /**
-     * set the output writer, this is to allow
-     * concat to be used as a nested element
-     * @param outputWriter the output writer
+     * Set the output writer. This is to allow
+     * concat to be used as a nested element.
+     * @param outputWriter the output writer.
      * @since Ant 1.6
      */
     public void setWriter(Writer outputWriter) {
@@ -294,23 +344,20 @@ public class Concat extends Task {
     }
 
     /**
-     * set the binary attribute.
-     * if true, concat will concatenate the files
-     * byte for byte. This mode does not allow
-     * any filtering, or other modifications
-     * to the input streams.
-     * The default value is false.
-     * @since ant 1.6.2
-     * @param binary if true, enable binary mode
+     * Set the binary attribute. If true, concat will concatenate the files
+     * byte for byte. This mode does not allow any filtering or other
+     * modifications to the input streams. The default value is false.
+     * @since Ant 1.6.2
+     * @param binary if true, enable binary mode.
      */
     public void setBinary(boolean binary) {
         this.binary = binary;
     }
 
     /**
-     * This method checks the attributes and performs the concatenation.
+     * Validate configuration options.
      */
-    private void checkAndExecute() {
+    private ResourceCollection validate() {
 
         // treat empty nested text as no text
         sanitizeText();
@@ -319,9 +366,8 @@ public class Concat extends Task {
         if (binary) {
             if (destinationFile == null) {
                 throw new BuildException(
-                    "DestFile attribute is required for binary concatenation");
+                    "destfile attribute is required for binary concatenation");
             }
-
             if (textBuffer != null) {
                 throw new BuildException(
                     "Nested text is incompatible with binary concatenation");
@@ -344,187 +390,117 @@ public class Concat extends Task {
                     "Nested header or footer is incompatible with binary concatenation");
             }
         }
-
         if (destinationFile != null && outputWriter != null) {
             throw new BuildException(
                 "Cannot specify both a destination file and an output writer");
         }
-
         // Sanity check our inputs.
-        if (sources.size() == 0 && textBuffer == null) {
+        if (rc == null && textBuffer == null) {
             // Nothing to concatenate!
             throw new BuildException(
-                "At least one file must be provided, or some text.");
+                "At least one resource must be provided, or some text.");
         }
-
-        // If using filesets, disallow inline text. This is similar to
-        // using GNU 'cat' with file arguments -- stdin is simply
-        // ignored.
-        if (sources.size() > 0 && textBuffer != null) {
-            throw new BuildException(
-                "Cannot include inline text when using filesets.");
-        }
-
-        // Iterate thru the sources - paths, filesets and filelists
-        for (Enumeration e = sources.elements(); e.hasMoreElements();) {
-            Object o = e.nextElement();
-            if (o instanceof Path) {
-                Path path = (Path) o;
-                checkAddFiles(null, path.list());
-
-            } else if (o instanceof FileSet) {
-                FileSet fileSet = (FileSet) o;
-                DirectoryScanner scanner =
-                    fileSet.getDirectoryScanner(getProject());
-                checkAddFiles(fileSet.getDir(getProject()),
-                              scanner.getIncludedFiles());
-
-            } else if (o instanceof FileList) {
-                FileList fileList = (FileList) o;
-                checkAddFiles(fileList.getDir(getProject()),
-                              fileList.getFiles(getProject()));
+        if (rc != null) {
+            // If using resources, disallow inline text. This is similar to
+            // using GNU 'cat' with file arguments -- stdin is simply
+            // ignored.
+            if (textBuffer != null) {
+                throw new BuildException(
+                    "Cannot include inline text when using resources.");
             }
-        }
-
-        // check if the files are outofdate
-        if (destinationFile != null && !forceOverwrite
-            && (sourceFiles.size() > 0) && destinationFile.exists()) {
-            boolean outofdate = false;
-            for (int i = 0; i < sourceFiles.size(); ++i) {
-                File file = (File) sourceFiles.elementAt(i);
-                if (file.lastModified() > destinationFile.lastModified()) {
-                    outofdate = true;
-                    break;
+            Restrict noexistRc = new Restrict();
+            noexistRc.add(NOT_EXISTS);
+            noexistRc.add(rc);
+            for (Iterator i = noexistRc.iterator(); i.hasNext();) {
+                log(i.next() + " does not exist.", Project.MSG_ERR);
+            }
+            if (destinationFile != null) {
+                for (Iterator i = rc.iterator(); i.hasNext();) {
+                    Object o = i.next();
+                    if (o instanceof FileResource) {
+                        File f = ((FileResource) o).getFile();
+                        if (FILE_UTILS.fileNameEquals(f, destinationFile)) {
+                            throw new BuildException("Input file \""
+                                + f + "\" is the same as the output file.");
+                        }
+                    }
+                }
+            }
+            Restrict existRc = new Restrict();
+            existRc.add(EXISTS);
+            existRc.add(rc);
+            boolean outofdate = destinationFile == null || forceOverwrite;
+            if (!outofdate) {
+                for (Iterator i = existRc.iterator(); !outofdate && i.hasNext();) {
+                    Resource r = (Resource) i.next();
                 }
             }
             if (!outofdate) {
                 log(destinationFile + " is up-to-date.", Project.MSG_VERBOSE);
-                return; // no need to do anything
+                return null; // no need to do anything
             }
+            return existRc;
+        } else {
+            StringResource s = new StringResource();
+            s.setProject(getProject());
+            s.setValue(textBuffer.toString());
+            return s;
         }
+    }
 
-        // Do nothing if all the sources are not present
-        // And textBuffer is null
-        if (textBuffer == null && sourceFiles.size() == 0
-            && header == null && footer == null) {
-            log("No existing files and no nested text, doing nothing",
+    /**
+     * Execute the concat task.
+     */
+    public void execute() {
+        ResourceCollection c = validate();
+        if (c == null) {
+            return;
+        }
+        // Do nothing if no resources (including nested text)
+        if (c.size() < 1 && header == null && footer == null) {
+            log("No existing resources and no nested text, doing nothing",
                 Project.MSG_INFO);
             return;
         }
-
         if (binary) {
-            binaryCat();
+            binaryCat(c);
         } else {
-            cat();
-        }
-    }
-
-    /**
-     * execute the concat task.
-     */
-    public void execute() {
-        try {
-            checkAndExecute();
-        } finally {
-            resetTask();
-        }
-    }
-
-    /**
-     * Reset state to default.
-     */
-    public void reset() {
-        append = false;
-        forceOverwrite = true;
-        destinationFile = null;
-        encoding = null;
-        outputEncoding = null;
-        fixLastLine = false;
-        sources.removeAllElements();
-        sourceFiles.removeAllElements();
-        filterChains = null;
-        footer = null;
-        header = null;
-    }
-
-    /**
-     * reset the used variables to allow the same task
-     * instance to be used again.
-     */
-    private void resetTask() {
-        sourceFiles.clear();
-    }
-
-    private void checkAddFiles(File base, String[] filenames) {
-        for (int i = 0; i < filenames.length; ++i) {
-            File file = new File(base, filenames[i]);
-            if (!file.exists()) {
-                log("File " + file + " does not exist.", Project.MSG_ERR);
-                continue;
-            }
-            if (destinationFile != null
-                && FILE_UTILS.fileNameEquals(destinationFile, file)) {
-                throw new BuildException("Input file \""
-                                         + file + "\" "
-                                         + "is the same as the output file.");
-            }
-            sourceFiles.addElement(file);
+            cat(c);
         }
     }
 
     /** perform the binary concatenation */
-    private void binaryCat() {
-        log("Binary concatenation of " + sourceFiles.size()
-            + " files to " + destinationFile);
+    private void binaryCat(ResourceCollection c) {
+        log("Binary concatenation of " + c.size()
+            + " resources to " + destinationFile);
         FileOutputStream out = null;
-        FileInputStream in = null;
+        InputStream in = null;
         byte[] buffer = new byte[BUFFER_SIZE];
         try {
             try {
                 out = new FileOutputStream(destinationFile);
             } catch (Exception t) {
-                throw new BuildException(
-                    "Unable to open " + destinationFile
-                    + " for writing", t);
+                throw new BuildException("Unable to open "
+                    + destinationFile + " for writing", t);
             }
-            for (Iterator i = sourceFiles.iterator(); i.hasNext();) {
-                File sourceFile = (File) i.next();
+            try {
+                in = new ConcatResourceInputStream(c);
+                ((ConcatResourceInputStream) in).setManagingComponent(this);
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+            Thread t = new Thread(new StreamPumper(in, out));
+            t.start();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
                 try {
-                    in = new FileInputStream(sourceFile);
-                } catch (Exception t) {
-                    throw new BuildException(
-                        "Unable to open input file " + sourceFile,
-                        t);
+                    t.join();
+                } catch (InterruptedException ee) {
                 }
-                int count = 0;
-                do {
-                    try {
-                        count = in.read(buffer, 0, buffer.length);
-                    } catch (Exception t) {
-                        throw new BuildException(
-                            "Unable to read from " + sourceFile, t);
-                    }
-                    try {
-                        if (count > 0) {
-                            out.write(buffer, 0, count);
-                        }
-                    } catch (Exception t) {
-                        throw new BuildException(
-                            "Unable to write to " + destinationFile, t);
-                    }
-                } while (count > 0);
-
-                try {
-                    in.close();
-                } catch (Exception t) {
-                    throw new BuildException(
-                        "Unable to close " + sourceFile, t);
-                }
-                in = null;
             }
         } finally {
             FileUtils.close(in);
-
             if (out != null) {
                 try {
                     out.close();
@@ -537,13 +513,11 @@ public class Concat extends Task {
     }
 
     /** perform the concatenation */
-    private void cat() {
+    private void cat(ResourceCollection c) {
         OutputStream os = null;
-        Reader       reader = null;
-        char[]       buffer = new char[BUFFER_SIZE];
+        char[] buffer = new char[BUFFER_SIZE];
 
         try {
-
             PrintWriter writer = null;
 
             if (outputWriter != null) {
@@ -558,11 +532,9 @@ public class Concat extends Task {
                     if (!parent.exists()) {
                         parent.mkdirs();
                     }
-
                     os = new FileOutputStream(destinationFile.getAbsolutePath(),
                                               append);
                 }
-
                 if (outputEncoding == null) {
                     writer = new PrintWriter(
                         new BufferedWriter(
@@ -573,7 +545,6 @@ public class Concat extends Task {
                             new OutputStreamWriter(os, outputEncoding)));
                 }
             }
-
             if (header != null) {
                 if (header.getFiltering()) {
                     concatenate(
@@ -582,16 +553,9 @@ public class Concat extends Task {
                     writer.print(header.getValue());
                 }
             }
-
-            if (textBuffer != null) {
-                reader = new StringReader(
-                    getProject().replaceProperties(textBuffer.substring(0)));
-            } else {
-                reader =  new MultiReader();
+            if (c.size() > 0) {
+                concatenate(buffer, writer, new MultiReader(c));
             }
-
-            concatenate(buffer, writer, reader);
-
             if (footer != null) {
                 if (footer.getFiltering()) {
                     concatenate(
@@ -600,33 +564,17 @@ public class Concat extends Task {
                     writer.print(footer.getValue());
                 }
             }
-
             writer.flush();
             if (os != null) {
                 os.flush();
             }
-
         } catch (IOException ioex) {
             throw new BuildException("Error while concatenating: "
                                      + ioex.getMessage(), ioex);
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ignore) {
-                    // ignore
-                }
-            }
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException ignore) {
-                    // ignore
-                }
-            }
+            FILE_UTILS.close(os);
         }
     }
-
 
     /** Concatenate a single reader to the writer using buffer */
     private void concatenate(char[] buffer, Writer writer, Reader in)
@@ -639,7 +587,6 @@ public class Concat extends Task {
             helper.setProject(getProject());
             in = new BufferedReader(helper.getAssembledReader());
         }
-
         while (true) {
             int nRead = in.read(buffer, 0, buffer.length);
             if (nRead == -1) {
@@ -647,7 +594,6 @@ public class Concat extends Task {
             }
             writer.write(buffer, 0, nRead);
         }
-
         writer.flush();
     }
 
@@ -796,32 +742,32 @@ public class Concat extends Task {
      * a single stream.
      */
     private class MultiReader extends Reader {
-        private int    pos = 0;
         private Reader reader = null;
         private int    lastPos = 0;
         private char[] lastChars = new char[eolString.length()];
         private boolean needAddSeparator = false;
+        private Iterator i;
+
+        private MultiReader(ResourceCollection c) {
+            i = c.iterator();
+        }
 
         private Reader getReader() throws IOException {
-            if (reader == null) {
-                log("Concating file " + sourceFiles.elementAt(pos),
-                    Project.MSG_VERBOSE);
-                if (encoding == null) {
-                    reader = new BufferedReader(
-                        new FileReader((File) sourceFiles.elementAt(pos)));
-                } else {
-                    // invoke the zoo of io readers
-                    reader = new BufferedReader(
-                        new InputStreamReader(
-                            new FileInputStream(
-                                (File) sourceFiles.elementAt(pos)),
-                            encoding));
-                }
-                for (int i = 0; i < lastChars.length; ++i) {
-                    lastChars[i] = 0;
-                }
+            if (reader == null && i.hasNext()) {
+                Resource r = (Resource) i.next();
+                log("Concating " + r.toLongString(), Project.MSG_VERBOSE);
+                InputStream is = r.getInputStream();
+                reader = new BufferedReader(encoding == null
+                    ? new InputStreamReader(is)
+                    : new InputStreamReader(is, encoding));
+                Arrays.fill(lastChars, (char) 0);
             }
             return reader;
+        }
+
+        private void nextReader() throws IOException {
+            close();
+            reader = null;
         }
 
         /**
@@ -840,12 +786,10 @@ public class Concat extends Task {
                 }
                 return ret;
             }
-
-            while (pos < sourceFiles.size()) {
+            while (getReader() != null) {
                 int ch = getReader().read();
                 if (ch == -1) {
-                    reader.close();
-                    reader = null;
+                    nextReader();
                     if (fixLastLine && isMissingEndOfLine()) {
                         needAddSeparator = true;
                         lastPos = 0;
@@ -854,7 +798,6 @@ public class Concat extends Task {
                     addLastChar((char) ch);
                     return ch;
                 }
-                pos++;
             }
             return -1;
         }
@@ -871,13 +814,12 @@ public class Concat extends Task {
             throws IOException {
 
             int amountRead = 0;
-            while (pos < sourceFiles.size() || (needAddSeparator)) {
+            while (getReader() != null || needAddSeparator) {
                 if (needAddSeparator) {
                     cbuf[off] = eolString.charAt(lastPos++);
                     if (lastPos >= eolString.length()) {
                         lastPos = 0;
                         needAddSeparator = false;
-                        pos++;
                     }
                     len--;
                     off++;
@@ -889,13 +831,10 @@ public class Concat extends Task {
                 }
                 int nRead = getReader().read(cbuf, off, len);
                 if (nRead == -1 || nRead == 0) {
-                    reader.close();
-                    reader = null;
+                    nextReader();
                     if (fixLastLine && isMissingEndOfLine()) {
                         needAddSeparator = true;
                         lastPos = 0;
-                    } else {
-                        pos++;
                     }
                 } else {
                     if (fixLastLine) {
@@ -931,6 +870,7 @@ public class Concat extends Task {
                 reader.close();
             }
         }
+
         /**
          * if checking for end of line at end of file
          * add a character to the lastchars buffer

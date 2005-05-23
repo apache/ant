@@ -17,13 +17,17 @@
 
 package org.apache.tools.ant.types;
 
+import java.util.Iterator;
+
+import org.apache.tools.ant.types.resources.FileResourceIterator;
+
 /**
  * Subclass as hint for supporting tasks that the included directories
  * instead of files should be used.
  *
  * @since Ant 1.5
  */
-public class DirSet extends AbstractFileSet {
+public class DirSet extends AbstractFileSet implements ResourceCollection {
 
     /**
      * Constructor for DirSet.
@@ -51,6 +55,40 @@ public class DirSet extends AbstractFileSet {
         } else {
             return super.clone();
         }
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return an Iterator of Resources.
+     * @since Ant 1.7
+     */
+    public Iterator iterator() {
+        if (isReference()) {
+            return ((DirSet) getRef(getProject())).iterator();
+        }
+        return new FileResourceIterator(getDir(getProject()),
+            getDirectoryScanner(getProject()).getIncludedDirectories());
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return number of elements as int.
+     * @since Ant 1.7
+     */
+    public int size() {
+        if (isReference()) {
+            return ((DirSet) getRef(getProject())).size();
+        }
+        return getDirectoryScanner(getProject()).getIncludedDirsCount();
+    }
+
+    /**
+     * Always returns true.
+     * @return true indicating that all elements will be FileResources.
+     * @since Ant 1.7
+     */
+    public boolean isFilesystemOnly() {
+        return true;
     }
 
 }

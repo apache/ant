@@ -172,4 +172,9 @@ public class ClassFileSetTest extends BuildFileTest {
         assertTrue("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
             files.containsKey("test" + File.separator + "MethodParam.class"));
     }
+
+    public void testResourceCollection() {
+        executeTarget("testresourcecollection");
+    }
+
 }

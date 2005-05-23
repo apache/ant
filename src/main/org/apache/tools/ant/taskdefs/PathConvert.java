@@ -17,21 +17,23 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.List;
+import java.util.Vector;
 import java.util.ArrayList;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+import java.util.StringTokenizer;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.DirSet;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.FileList;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
 
 /**
@@ -43,11 +45,16 @@ import org.apache.tools.ant.util.FileNameMapper;
  */
 public class PathConvert extends Task {
 
+    /**
+     * Set if we're running on windows
+     */
+    private static boolean onWindows = Os.isFamily("dos");
+
     // Members
     /**
      * Path to be converted
      */
-    private Path path = null;
+    private Union path = null;
     /**
      * Reference to path/fileset to convert
      */
@@ -60,10 +67,6 @@ public class PathConvert extends Task {
      * Set when targetOS is set to windows
      */
     private boolean targetWindows = false;
-    /**
-     * Set if we're running on windows
-     */
-    private boolean onWindows = false;
     /**
      * Set if we should create a new property even if the result is empty
      */
@@ -92,7 +95,6 @@ public class PathConvert extends Task {
      * Construct a new instance of the PathConvert task.
      */
     public PathConvert() {
-        onWindows = Os.isFamily("dos");
     }
 
     /**
@@ -164,17 +166,36 @@ public class PathConvert extends Task {
     }
 
     /**
-     * Create a nested PATH element.
+     * Create a nested path element.
      * @return a Path to be used by Ant reflection.
      */
     public Path createPath() {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        if (path == null) {
-            path = new Path(getProject());
+        Path result = new Path(getProject());
+        add(result);
+        return result;
+    }
+
+    /**
+     * Add an arbitrary ResourceCollection.
+     * @param rc the ResourceCollection to add.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        if (isReference()) {
+            throw noChildrenAllowed();
         }
-        return path.createPath();
+        getPath().add(rc);
+    }
+
+    private synchronized Union getPath() {
+        if (path == null) {
+            path = new Union();
+            path.setProject(getProject());
+        }
+        return path;
     }
 
     /**
@@ -283,28 +304,19 @@ public class PathConvert extends Task {
      * @throws BuildException if something is invalid.
      */
     public void execute() throws BuildException {
-        Path savedPath = path;
+        Union savedPath = path;
         String savedPathSep = pathSep; // may be altered in validateSetup
         String savedDirSep = dirSep; // may be altered in validateSetup
 
         try {
             // If we are a reference, create a Path from the reference
             if (isReference()) {
-                path = new Path(getProject()).createPath();
-                Object obj = refid.getReferencedObject(getProject());
-
-                if (obj instanceof Path) {
-                    path.setRefid(refid);
-                } else if (obj instanceof FileSet) {
-                    path.addFileset((FileSet) obj);
-                } else if (obj instanceof DirSet) {
-                    path.addDirset((DirSet) obj);
-                } else if (obj instanceof FileList) {
-                    path.addFilelist((FileList) obj);
-                } else {
-                    throw new BuildException("'refid' does not refer to a "
-                         + "path, fileset, dirset, or filelist.");
+                Object o = refid.getReferencedObject(getProject());
+                if (!(o instanceof ResourceCollection)) {
+                    throw new BuildException("refid '" + refid.getRefId()
+                        + "' does not refer to a resource collection.");
                 }
+                getPath().add((ResourceCollection) o);
             }
             validateSetup(); // validate our setup
 
@@ -355,9 +367,13 @@ public class PathConvert extends Task {
             // unless setonempty == false
             if (setonempty || rslt.length() > 0) {
                 String value = rslt.toString();
-                log("Set property " + property + " = " + value,
-                    Project.MSG_VERBOSE);
-                getProject().setNewProperty(property, value);
+                if (property == null) {
+                    log(value);
+                } else {
+                    log("Set property " + property + " = " + value,
+                        Project.MSG_VERBOSE);
+                    getProject().setNewProperty(property, value);
+                }
             }
         } finally {
             path = savedPath;
@@ -423,7 +439,6 @@ public class PathConvert extends Task {
         addMapper(m);
     }
 
-
     /**
      * Validate that all our parameters have been properly initialized.
      *
@@ -433,9 +448,6 @@ public class PathConvert extends Task {
 
         if (path == null) {
             throw new BuildException("You must specify a path to convert");
-        }
-        if (property == null) {
-            throw new BuildException("You must specify a property");
         }
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.
@@ -464,7 +476,7 @@ public class PathConvert extends Task {
      * @return BuildException.
      */
     private BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested <path> "
+        return new BuildException("You must not specify nested "
              + "elements when using the refid attribute.");
     }
 

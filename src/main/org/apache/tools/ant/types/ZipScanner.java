@@ -19,14 +19,20 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Comparator;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.zip.ZipException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.resources.ZipResource;
+import org.apache.tools.ant.types.resources.FileResourceIterator;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
@@ -44,14 +50,31 @@ public class ZipScanner extends DirectoryScanner {
      * The zip file which should be scanned.
      */
     protected File srcFile;
+
     /**
      * to record the last scanned zip file with its modification date
      */
     private Resource lastScannedResource;
+
     /**
-     * record list of all zip entries
+     * record list of all file zip entries
      */
-    private Hashtable myentries;
+    private TreeMap fileEntries = new TreeMap();
+
+    /**
+     * record list of all directory zip entries
+     */
+    private TreeMap dirEntries = new TreeMap();
+
+    /**
+     * record list of matching file zip entries
+     */
+    private TreeMap matchFileEntries = new TreeMap();
+
+    /**
+     * record list of matching directory zip entries
+     */
+    private TreeMap matchDirEntries = new TreeMap();
 
     /**
      * encoding of file names.
@@ -59,6 +82,17 @@ public class ZipScanner extends DirectoryScanner {
      * @since Ant 1.6
      */
     private String encoding;
+
+    /**
+     * Don't scan when we have no zipfile.
+     * @since Ant 1.7
+     */
+    public void scan() {
+        if (srcFile == null) {
+            return;
+        }
+        super.scan();
+    }
 
     /**
      * Sets the srcFile for scanning. This is the jar or zip file that
@@ -88,23 +122,25 @@ public class ZipScanner extends DirectoryScanner {
      *         include patterns and none of the exclude patterns.
      */
     public String[] getIncludedFiles() {
-        if (srcFile != null) {
-            Vector myvector = new Vector();
-            // first check if the archive needs to be scanned again
-            scanme();
-            for (Enumeration e = myentries.elements(); e.hasMoreElements();) {
-                Resource myresource = (Resource) e.nextElement();
-                if (!myresource.isDirectory() && match(myresource.getName())) {
-                    myvector.addElement(myresource.getName());
-                }
-            }
-            String[] files = new String[myvector.size()];
-            myvector.copyInto(files);
-            Arrays.sort(files);
-            return files;
-        } else {
+        if (srcFile == null) {
             return super.getIncludedFiles();
         }
+        scanme();
+        Set s = matchFileEntries.keySet();
+        return (String[]) (s.toArray(new String[s.size()]));
+    }
+
+    /**
+     * Override parent implementation.
+     * @return count of included files.
+     * @since Ant 1.7
+     */
+    public int getIncludedFilesCount() {
+        if (srcFile == null) {
+            return super.getIncludedFilesCount();
+        }
+        scanme();
+        return matchFileEntries.size();
     }
 
     /**
@@ -116,23 +152,51 @@ public class ZipScanner extends DirectoryScanner {
      * include patterns and none of the exclude patterns.
      */
     public String[] getIncludedDirectories() {
-        if (srcFile != null) {
-            Vector myvector = new Vector();
-            // first check if the archive needs to be scanned again
-            scanme();
-            for (Enumeration e = myentries.elements(); e.hasMoreElements();) {
-                Resource myresource = (Resource) e.nextElement();
-                if (myresource.isDirectory() && match(myresource.getName())) {
-                    myvector.addElement(myresource.getName());
-                }
-            }
-            String[] files = new String[myvector.size()];
-            myvector.copyInto(files);
-            Arrays.sort(files);
-            return files;
-        } else {
+        if (srcFile == null) {
             return super.getIncludedDirectories();
         }
+        scanme();
+        Set s = matchDirEntries.keySet();
+        return (String[]) (s.toArray(new String[s.size()]));
+    }
+
+    /**
+     * Override parent implementation.
+     * @return count of included directories.
+     * @since Ant 1.7
+     */
+    public int getIncludedDirsCount() {
+        if (srcFile == null) {
+            return super.getIncludedDirsCount();
+        }
+        scanme();
+        return matchDirEntries.size();
+    }
+
+    /**
+     * Get the set of Resources that represent files.
+     * @return an Iterator of Resources.
+     * @since Ant 1.7
+     */
+    /* package-private for now */ Iterator getResourceFiles() {
+        if (srcFile == null) {
+            return new FileResourceIterator(getBasedir(), getIncludedFiles());
+        }
+        scanme();
+        return matchFileEntries.values().iterator();
+    }
+
+    /**
+     * Get the set of Resources that represent directories.
+     * @return an Iterator of Resources.
+     * @since Ant 1.7
+     */
+    /* package-private for now */  Iterator getResourceDirectories() {
+        if (srcFile == null) {
+            return new FileResourceIterator(getBasedir(), getIncludedDirectories());
+        }
+        scanme();
+        return matchDirEntries.values().iterator();
     }
 
     /**
@@ -165,6 +229,7 @@ public class ZipScanner extends DirectoryScanner {
     }
 
     /**
+     * Get the named Resource.
      * @param name path name of the file sought in the archive
      * @return the resource
      * @since Ant 1.5.2
@@ -172,34 +237,35 @@ public class ZipScanner extends DirectoryScanner {
     public Resource getResource(String name) {
         if (srcFile == null) {
             return super.getResource(name);
-        } else if (name.equals("")) {
+        }
+        if (name.equals("")) {
             // special case in ZIPs, we do not want this thing included
             return new Resource("", true, Long.MAX_VALUE, true);
         }
-
         // first check if the archive needs to be scanned again
         scanme();
-        if (myentries.containsKey(name)) {
-            return (Resource) myentries.get(name);
-        } else if (myentries.containsKey(name + "/")) {
-            return (Resource) myentries.get(name + "/");
-        } else {
-            return new Resource(name);
+        if (fileEntries.containsKey(name)) {
+            return (Resource) fileEntries.get(name);
         }
+        name = trimSeparator(name);
+
+        if (dirEntries.containsKey(name)) {
+            return (Resource) dirEntries.get(name);
+        }
+        return new Resource(name);
     }
 
     /**
      * if the datetime of the archive did not change since
      * lastScannedResource was initialized returns immediately else if
      * the archive has not been scanned yet, then all the zip entries
-     * are put into the vector myentries as a vector of the resource
-     * type
+     * are put into the appropriate tables.
      */
     private void scanme() {
+        //do not use a FileResource b/c it pulls File info from the filesystem:
         Resource thisresource = new Resource(srcFile.getAbsolutePath(),
                                              srcFile.exists(),
                                              srcFile.lastModified());
-
         // spare scanning again and again
         if (lastScannedResource != null
             && lastScannedResource.getName().equals(thisresource.getName())
@@ -207,10 +273,15 @@ public class ZipScanner extends DirectoryScanner {
             == thisresource.getLastModified()) {
             return;
         }
-
+        init();
         ZipEntry entry = null;
         ZipFile zf = null;
-        myentries = new Hashtable();
+
+        fileEntries.clear();
+        dirEntries.clear();
+        matchFileEntries.clear();
+        matchDirEntries.clear();
+
         try {
             try {
                 zf = new ZipFile(srcFile, encoding);
@@ -219,15 +290,23 @@ public class ZipScanner extends DirectoryScanner {
             } catch (IOException ex) {
                 throw new BuildException("problem opening " + srcFile, ex);
             }
-
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
                 entry = (ZipEntry) e.nextElement();
-                myentries.put(new String(entry.getName()),
-                              new Resource(entry.getName(), true,
-                                           entry.getTime(),
-                                           entry.isDirectory(),
-                                           entry.getSize()));
+                Resource r = new ZipResource(srcFile, encoding, entry);
+                String name = entry.getName();
+                if (entry.isDirectory()) {
+                    name = trimSeparator(name);
+                    dirEntries.put(name, r);
+                    if (match(name)) {
+                        matchDirEntries.put(name, r);
+                    }
+                } else {
+                    fileEntries.put(name, r);
+                    if (match(name)) {
+                        matchFileEntries.put(name, r);
+                    }
+                }
             }
         } finally {
             if (zf != null) {
@@ -241,4 +320,9 @@ public class ZipScanner extends DirectoryScanner {
         // record data about the last scanned resource
         lastScannedResource = thisresource;
     }
+
+    private static String trimSeparator(String s) {
+        return s.endsWith("/") ? s.substring(0, s.length() - 1) : s;
+    }
+
 }

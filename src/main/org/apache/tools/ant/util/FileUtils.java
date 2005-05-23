@@ -45,7 +45,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.resources.Touchable;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.launch.Locator;
 
 /**
@@ -521,138 +524,203 @@ public class FileUtils {
                          String inputEncoding, String outputEncoding,
                          Project project)
         throws IOException {
+        copyResource(new FileResource(sourceFile), new FileResource(destFile),
+            filters, filterChains, overwrite, preserveLastModified,
+            inputEncoding, outputEncoding, project);
+    }
 
-        if (overwrite || !destFile.exists()
-            || destFile.lastModified() < sourceFile.lastModified()) {
+    /**
+     * Convenience method to copy content from one Resource to another.
+     * No filtering is performed.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.7
+     */
+    public void copyResource(Resource source, Resource dest) throws IOException {
+        copyResource(source, dest, null);
+    }
 
-            if (destFile.exists() && destFile.isFile()) {
-                destFile.delete();
+    /**
+     * Convenience method to copy content from one Resource to another.
+     * No filtering is performed.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param project the project instance.
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.7
+     */
+    public void copyResource(Resource source, Resource dest, Project project)
+        throws IOException {
+        copyResource(source, dest, null, null, false,
+                     false, null, null, project);
+    }
+
+    /**
+     * Convenience method to copy content from one Resource to another
+     * specifying whether token filtering must be used, whether filter chains
+     * must be used, whether newer destination files may be overwritten and
+     * whether the last modified time of <code>dest</code> file should be made
+     * equal to the last modified time of <code>source</code>.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination Resource should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the destination Resource should be set to that
+     *                             of the source.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.7
+     */
+    public void copyResource(Resource source, Resource dest,
+                             FilterSetCollection filters, Vector filterChains,
+                             boolean overwrite, boolean preserveLastModified,
+                             String inputEncoding, String outputEncoding,
+                             Project project)
+        throws IOException {
+        if (!overwrite) {
+            long slm = source.getLastModified();
+            if (dest.isExists() && slm != 0
+                && dest.getLastModified() > slm) {
+                return;
             }
-            // ensure that parent dir of dest file exists!
-            // not using getParentFile method to stay 1.1 compat
-            File parent = destFile.getParentFile();
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
-            }
-            final boolean filterSetsAvailable = (filters != null
-                                                 && filters.hasFilters());
-            final boolean filterChainsAvailable = (filterChains != null
-                                                   && filterChains.size() > 0);
-            if (filterSetsAvailable) {
-                BufferedReader in = null;
-                BufferedWriter out = null;
-                try {
-                    if (inputEncoding == null) {
-                        in = new BufferedReader(new FileReader(sourceFile));
-                    } else {
-                        InputStreamReader isr
-                            = new InputStreamReader(new FileInputStream(sourceFile),
-                                                    inputEncoding);
-                        in = new BufferedReader(isr);
-                    }
-                    if (outputEncoding == null) {
-                        out = new BufferedWriter(new FileWriter(destFile));
-                    } else {
-                        OutputStreamWriter osw
-                            = new OutputStreamWriter(new FileOutputStream(destFile),
-                                                     outputEncoding);
-                        out = new BufferedWriter(osw);
-                    }
-                    if (filterChainsAvailable) {
-                        ChainReaderHelper crh = new ChainReaderHelper();
-                        crh.setBufferSize(BUF_SIZE);
-                        crh.setPrimaryReader(in);
-                        crh.setFilterChains(filterChains);
-                        crh.setProject(project);
-                        Reader rdr = crh.getAssembledReader();
-                        in = new BufferedReader(rdr);
-                    }
-                    LineTokenizer lineTokenizer = new LineTokenizer();
-                    lineTokenizer.setIncludeDelims(true);
-                    String newline = null;
-                    String line = lineTokenizer.getToken(in);
-                    while (line != null) {
-                        if (line.length() == 0) {
-                            // this should not happen, because the lines are
-                            // returned with the end of line delimiter
-                            out.newLine();
-                        } else {
-                            newline = filters.replaceTokens(line);
-                            out.write(newline);
-                        }
-                        line = lineTokenizer.getToken(in);
-                    }
-                } finally {
-                    close(out);
-                    close(in);
+        }
+        final boolean filterSetsAvailable = (filters != null
+                                             && filters.hasFilters());
+        final boolean filterChainsAvailable = (filterChains != null
+                                               && filterChains.size() > 0);
+        if (filterSetsAvailable) {
+            BufferedReader in = null;
+            BufferedWriter out = null;
+            try {
+                InputStreamReader isr = null;
+                if (inputEncoding == null) {
+                    isr = new InputStreamReader(source.getInputStream());
+                } else {
+                    isr = new InputStreamReader(source.getInputStream(),
+                                                inputEncoding);
                 }
-            } else if (filterChainsAvailable
-                       || (inputEncoding != null
-                           && !inputEncoding.equals(outputEncoding))
-                       || (inputEncoding == null && outputEncoding != null)) {
-                BufferedReader in = null;
-                BufferedWriter out = null;
-                 try {
-                     if (inputEncoding == null) {
-                         in = new BufferedReader(new FileReader(sourceFile));
-                     } else {
-                         in =
-                             new BufferedReader(
-                                 new InputStreamReader(
-                                     new FileInputStream(sourceFile),
-                                     inputEncoding));
-                     }
-                     if (outputEncoding == null) {
-                         out = new BufferedWriter(new FileWriter(destFile));
-                     } else {
-                         out =
-                             new BufferedWriter(
-                                 new OutputStreamWriter(
-                                     new FileOutputStream(destFile),
-                                     outputEncoding));
-                     }
-                     if (filterChainsAvailable) {
-                         ChainReaderHelper crh = new ChainReaderHelper();
-                         crh.setBufferSize(BUF_SIZE);
-                         crh.setPrimaryReader(in);
-                         crh.setFilterChains(filterChains);
-                         crh.setProject(project);
-                         Reader rdr = crh.getAssembledReader();
-                         in = new BufferedReader(rdr);
-                     }
-                     char[] buffer = new char[BUF_SIZE];
-                     while (true) {
-                         int nRead = in.read(buffer, 0, buffer.length);
-                         if (nRead == -1) {
-                             break;
-                         }
-                         out.write(buffer, 0, nRead);
-                      }
-                 } finally {
-                     close(out);
-                     close(in);
-                 }
-            } else {
-                FileInputStream in = null;
-                FileOutputStream out = null;
-                try {
-                    in = new FileInputStream(sourceFile);
-                    out = new FileOutputStream(destFile);
-
-                    byte[] buffer = new byte[BUF_SIZE];
-                    int count = 0;
-                    do {
-                        out.write(buffer, 0, count);
-                        count = in.read(buffer, 0, buffer.length);
-                    } while (count != -1);
-                } finally {
-                    close(out);
-                    close(in);
+                in = new BufferedReader(isr);
+                OutputStreamWriter osw = null;
+                if (outputEncoding == null) {
+                    osw = new OutputStreamWriter(dest.getOutputStream());
+                } else {
+                    osw = new OutputStreamWriter(dest.getOutputStream(),
+                                                 outputEncoding);
                 }
+                out = new BufferedWriter(osw);
+                if (filterChainsAvailable) {
+                    ChainReaderHelper crh = new ChainReaderHelper();
+                    crh.setBufferSize(BUF_SIZE);
+                    crh.setPrimaryReader(in);
+                    crh.setFilterChains(filterChains);
+                    crh.setProject(project);
+                    Reader rdr = crh.getAssembledReader();
+                    in = new BufferedReader(rdr);
+                }
+                LineTokenizer lineTokenizer = new LineTokenizer();
+                lineTokenizer.setIncludeDelims(true);
+                String newline = null;
+                String line = lineTokenizer.getToken(in);
+                while (line != null) {
+                    if (line.length() == 0) {
+                        // this should not happen, because the lines are
+                        // returned with the end of line delimiter
+                        out.newLine();
+                    } else {
+                        newline = filters.replaceTokens(line);
+                        out.write(newline);
+                    }
+                    line = lineTokenizer.getToken(in);
+                }
+            } finally {
+                close(out);
+                close(in);
             }
-            if (preserveLastModified) {
-                setFileLastModified(destFile, sourceFile.lastModified());
+        } else if (filterChainsAvailable
+                   || (inputEncoding != null
+                       && !inputEncoding.equals(outputEncoding))
+                   || (inputEncoding == null && outputEncoding != null)) {
+            BufferedReader in = null;
+            BufferedWriter out = null;
+            try {
+                InputStreamReader isr = null;
+                if (inputEncoding == null) {
+                    isr = new InputStreamReader(source.getInputStream());
+                } else {
+                    isr = new InputStreamReader(source.getInputStream(),
+                                                inputEncoding);
+                }
+                in = new BufferedReader(isr);
+                OutputStreamWriter osw = null;
+                if (outputEncoding == null) {
+                    osw = new OutputStreamWriter(dest.getOutputStream());
+                } else {
+                    osw = new OutputStreamWriter(dest.getOutputStream(),
+                                                 outputEncoding);
+                }
+                out = new BufferedWriter(osw);
+                if (filterChainsAvailable) {
+                    ChainReaderHelper crh = new ChainReaderHelper();
+                    crh.setBufferSize(BUF_SIZE);
+                    crh.setPrimaryReader(in);
+                    crh.setFilterChains(filterChains);
+                    crh.setProject(project);
+                    Reader rdr = crh.getAssembledReader();
+                    in = new BufferedReader(rdr);
+                }
+                char[] buffer = new char[BUF_SIZE];
+                while (true) {
+                    int nRead = in.read(buffer, 0, buffer.length);
+                    if (nRead == -1) {
+                        break;
+                    }
+                    out.write(buffer, 0, nRead);
+                }
+            } finally {
+                close(out);
+                close(in);
             }
+        } else {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = source.getInputStream();
+                out = dest.getOutputStream();
+
+                byte[] buffer = new byte[BUF_SIZE];
+                int count = 0;
+                do {
+                    out.write(buffer, 0, count);
+                    count = in.read(buffer, 0, buffer.length);
+                } while (count != -1);
+            } finally {
+                close(out);
+                close(in);
+            }
+        }
+        if (preserveLastModified && dest instanceof Touchable) {
+            setLastModified((Touchable) dest, source.getLastModified());
         }
     }
 
@@ -665,7 +733,19 @@ public class FileUtils {
      *             if this is -1, the current time is used.
      */
     public void setFileLastModified(File file, long time) {
-        file.setLastModified((time < 0) ? System.currentTimeMillis() : time);
+        setLastModified(new FileResource(file), time);
+    }
+
+    /**
+     * Set the last modified time of an object implementing
+     * org.apache.tools.ant.types.resources.Touchable .
+     *
+     * @param t the Touchable whose modified time is to be set.
+     * @param time the time to which the last modified time is to be set.
+     *             if this is -1, the current time is used.
+     */
+    public void setLastModified(Touchable t, long time) {
+        t.touch((time < 0) ? System.currentTimeMillis() : time);
     }
 
     /**
@@ -987,62 +1067,108 @@ public class FileUtils {
      * @since Ant 1.6.3
      */
     public boolean contentEquals(File f1, File f2, boolean textfile) throws IOException {
-        if (f1.exists() != f2.exists()) {
-            return false;
-        }
-        if (!f1.exists()) {
-            // two not existing files are equal
-            return true;
-        }
-        // should the following two be switched?  If f1 and f2 refer to the same file,
-        // isn't their content equal regardless of whether that file is a directory?
-        if (f1.isDirectory() || f2.isDirectory()) {
-            // don't want to compare directory contents for now
-            return false;
-        }
-        if (fileNameEquals(f1, f2)) {
-            // same filename => true
-            return true;
-        }
-        return textfile ? textEquals(f1, f2) : binaryEquals(f1, f2);
+        return contentEquals(new FileResource(f1), new FileResource(f2), textfile);
     }
 
     /**
-     * Binary compares the contents of two files.
+     * Compares the contents of two Resources.
+     *
+     * @param r1 the Resource whose content is to be compared.
+     * @param r2 the other Resource whose content is to be compared.
+     * @param text true if the content is to be treated as text and
+     *        differences in kind of line break are to be ignored.
+     *
+     * @return true if the content of the Resources is the same.
+     *
+     * @throws IOException if the Resources cannot be read.
+     * @since Ant 1.6.3
+     */
+    public boolean contentEquals(Resource r1, Resource r2, boolean text) throws IOException {
+        if (r1.isExists() != r2.isExists()) {
+            return false;
+        }
+        if (!r1.isExists()) {
+            // two not existing files are equal
+            return true;
+        }
+        // should the following two be switched?  If r1 and r2 refer to the same file,
+        // isn't their content equal regardless of whether that file is a directory?
+        if (r1.isDirectory() || r2.isDirectory()) {
+            // don't want to compare directory contents for now
+            return false;
+        }
+        if (r1.equals(r2)) {
+            return true;
+        }
+        if (!text && r1.getSize() != r2.getSize()) {
+            return false;
+        }
+        return compareContent(r1, r2, text) == 0;
+    }
+
+    /**
+     * Compare the content of two Resources. A nonexistent Resource's
+     * content is "less than" that of an existing Resource; a directory-type
+     * Resource's content is "less than" that of a file-type Resource.
+     * @param r1 the Resource whose content is to be compared.
+     * @param r2 the other Resource whose content is to be compared.
+     * @param text true if the content is to be treated as text and
+     *        differences in kind of line break are to be ignored.
+     * @return a negative integer, zero, or a positive integer as the first
+     *         argument is less than, equal to, or greater than the second.
+     * @throws IOException if the Resources cannot be read.
+     */
+    public int compareContent(Resource r1, Resource r2, boolean text) throws IOException {
+        if (r1.equals(r2)) {
+            return 0;
+        }
+        boolean e1 = r1.isExists();
+        boolean e2 = r2.isExists();
+        if (!(e1 || e2)) {
+            return 0;
+        }
+        if (e1 != e2) {
+            return e1 ? 1 : -1;
+        }
+        boolean d1 = r1.isDirectory();
+        boolean d2 = r2.isDirectory();
+        if (d1 && d2) {
+            return 0;
+        }
+        if (d1 || d2) {
+            return d1 ? -1 : 1;
+        }
+        return text ? textCompare(r1, r2) : binaryCompare(r1, r2);
+    }
+
+    /**
+     * Binary compares the contents of two Resources.
      * <p>
      * simple but sub-optimal comparision algorithm. written for working
      * rather than fast. Better would be a block read into buffers followed
      * by long comparisions apart from the final 1-7 bytes.
      * </p>
      *
-     * @param f1 the file whose content is to be compared.
-     * @param f2 the other file whose content is to be compared.
-     * @return true if the content of the files is the same.
-     * @throws IOException if the files cannot be read.
+     * @param r1 the Resource whose content is to be compared.
+     * @param r2 the other Resource whose content is to be compared.
+     * @return a negative integer, zero, or a positive integer as the first
+     *         argument is less than, equal to, or greater than the second.
+     * @throws IOException if the Resources cannot be read.
      */
-    private boolean binaryEquals(File f1, File f2) throws IOException {
-        if (f1.length() != f2.length()) {
-            // different size =>false
-            return false;
-        }
-
+    private int binaryCompare(Resource r1, Resource r2) throws IOException {
         InputStream in1 = null;
         InputStream in2 = null;
         try {
-            in1 = new BufferedInputStream(new FileInputStream(f1));
-            in2 = new BufferedInputStream(new FileInputStream(f2));
+            in1 = new BufferedInputStream(r1.getInputStream());
+            in2 = new BufferedInputStream(r2.getInputStream());
 
-            int expectedByte = in1.read();
-            while (expectedByte != -1) {
-                if (expectedByte != in2.read()) {
-                    return false;
+            for (int b1 = in1.read(); b1 != -1; b1 = in1.read()) {
+                int b2 = in2.read();
+                if (b1 != b2) {
+                    return b1 > b2 ? 1 : -1;
                 }
-                expectedByte = in1.read();
             }
-            if (in2.read() != -1) {
-                return false;
-            }
-            return true;
+            return in2.read() == -1 ? 0 : -1;
         } finally {
             close(in1);
             close(in2);
@@ -1050,33 +1176,30 @@ public class FileUtils {
     }
 
     /**
-     * Text compares the contents of two files.
-     *
+     * Text compares the contents of two Resources.
      * Ignores different kinds of line endings.
-     *
-     * @param f1 the file whose content is to be compared.
-     * @param f2 the other file whose content is to be compared.
-     * @return true if the content of the files is the same.
-     * @throws IOException if the files cannot be read.
+     * @param r1 the Resource whose content is to be compared.
+     * @param r2 the other Resource whose content is to be compared.
+     * @return a negative integer, zero, or a positive integer as the first
+     *         argument is less than, equal to, or greater than the second.
+     * @throws IOException if the Resources cannot be read.
      */
-    private boolean textEquals(File f1, File f2) throws IOException {
+    private int textCompare(Resource r1, Resource r2) throws IOException {
         BufferedReader in1 = null;
         BufferedReader in2 = null;
         try {
-            in1 = new BufferedReader(new FileReader(f1));
-            in2 = new BufferedReader(new FileReader(f2));
+            in1 = new BufferedReader(new InputStreamReader(r1.getInputStream()));
+            in2 = new BufferedReader(new InputStreamReader(r2.getInputStream()));
 
             String expected = in1.readLine();
             while (expected != null) {
-                if (!expected.equals(in2.readLine())) {
-                    return false;
+                String actual = in2.readLine();
+                if (!expected.equals(actual)) {
+                    return expected.compareTo(actual);
                 }
                 expected = in1.readLine();
             }
-            if (in2.readLine() != null) {
-                return false;
-            }
-            return true;
+            return in2.readLine() == null ? 0 : -1;
         } finally {
             close(in1);
             close(in2);
@@ -1383,7 +1506,6 @@ public class FileUtils {
         long destTime = dest.lastModified();
         return isUpToDate(sourceTime, destTime, granularity);
     }
-
 
     /**
      * Returns true if the source is older than the dest.

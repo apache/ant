@@ -30,6 +30,8 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.PropertyResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
@@ -39,7 +41,7 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  *
  * @since Ant 1.6
  */
-public class PropertySet extends DataType {
+public class PropertySet extends DataType implements ResourceCollection {
 
     private boolean dynamic = true;
     private boolean negate = false;
@@ -461,6 +463,42 @@ public class PropertySet extends DataType {
             b.append(e.getValue().toString());
         }
         return b.toString();
+    }
+
+    /**
+     * Fulfill the ResourceCollection interface.
+     * @return an Iterator of Resources.
+     * @since Ant 1.7
+     */
+    public Iterator iterator() {
+        final Enumeration e = getProperties().propertyNames();
+        return new Iterator() {
+            public boolean hasNext() {
+                return e.hasMoreElements();
+            }
+            public Object next() {
+                return new PropertyResource(getProject(), (String) e.nextElement());
+            }
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return the size of this ResourceCollection.
+     */
+    public int size() {
+        return isReference() ? getRef().size() : getProperties().size();
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return whether this is a filesystem-only resource collection.
+     */
+    public boolean isFilesystemOnly() {
+        return isReference() && getRef().isFilesystemOnly();
     }
 
 }
