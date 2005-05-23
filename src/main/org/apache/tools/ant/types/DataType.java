@@ -17,11 +17,13 @@
 
 package org.apache.tools.ant.types;
 
-
 import java.util.Stack;
-import org.apache.tools.ant.BuildException;
+
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.IdentityStack;
 
 /**
  * Base class for those classes that can appear inside the build file
@@ -35,6 +37,7 @@ import org.apache.tools.ant.ProjectComponent;
  *
  */
 public abstract class DataType extends ProjectComponent {
+
     /**
      * The description the user has set.
      *
@@ -106,6 +109,40 @@ public abstract class DataType extends ProjectComponent {
     }
 
     /**
+     * Gets as descriptive as possible a name used for this datatype instance.
+     * @return <code>String</code> name.
+     */
+    protected String getDataTypeName() {
+        Project p = getProject();
+        if (p != null) {
+            return ComponentHelper.getComponentHelper(p)
+                .getElementName(this, true);
+        }
+        String classname = getClass().getName();
+        return classname.substring(classname.lastIndexOf('.') + 1);
+    }
+
+    /**
+     * Convenience method.
+     * @since Ant 1.7
+     */
+    protected void dieOnCircularReference() {
+        dieOnCircularReference(getProject());
+    }
+
+    /**
+     * Convenience method.
+     * @param p the Ant Project instance against which to resolve references.
+     * @since Ant 1.7
+     */
+    protected void dieOnCircularReference(Project p) {
+        if (checked || !isReference()) {
+            return;
+        }
+        dieOnCircularReference(new IdentityStack(this), p);
+    }
+
+    /**
      * Check to see whether any DataType we hold references to is
      * included in the Stack (which holds all DataType instances that
      * directly or indirectly reference this instance, including this
@@ -120,9 +157,9 @@ public abstract class DataType extends ProjectComponent {
      * <p>The general contract of this method is that it shouldn't do
      * anything if {@link #checked <code>checked</code>} is true and
      * set it to true on exit.</p>
-     * @param stack the stack of references to check
-     * @param project the project to use to dereference the references
-     * @throws BuildException on error
+     * @param stack the stack of references to check.
+     * @param project the project to use to dereference the references.
+     * @throws BuildException on error.
      */
     protected void dieOnCircularReference(final Stack stack,
                                           final Project project)
@@ -134,43 +171,96 @@ public abstract class DataType extends ProjectComponent {
         Object o = ref.getReferencedObject(project);
 
         if (o instanceof DataType) {
-            if (stack.contains(o)) {
+            IdentityStack id = IdentityStack.getInstance(stack);
+
+            if (id.contains(o)) {
                 throw circularReference();
             } else {
-                stack.push(o);
-                ((DataType) o).dieOnCircularReference(stack, project);
-                stack.pop();
+                id.push(o);
+                ((DataType) o).dieOnCircularReference(id, project);
+                id.pop();
             }
         }
         checked = true;
     }
 
     /**
+     * Allow DataTypes outside org.apache.tools.ant.types to indirectly call
+     * dieOnCircularReference on nested DataTypes.
+     * @param dt the DataType to check.
+     * @param stack the stack of references to check.
+     * @param project the project to use to dereference the references.
+     * @throws BuildException on error.
+     * @since Ant 1.7
+     */
+    public static void invokeCircularReferenceCheck(DataType dt, Stack stk,
+                                                    Project p) {
+        dt.dieOnCircularReference(stk, p);
+    }
+
+    /**
      * Performs the check for circular references and returns the
      * referenced object.
-     * @param requiredClass the class that this reference should be a subclass of
-     * @param dataTypeName  the name of the datatype that the reference should be (error message
-     *                      use only)
-     * @return the derefenced object
+     * @return the dereferenced object.
+     * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
+     * @since Ant 1.7
+     */
+    protected Object getCheckedRef() {
+        return getCheckedRef(getProject());
+    }
+
+    /**
+     * Performs the check for circular references and returns the
+     * referenced object.
+     * @param project the Ant Project instance against which to resolve references.
+     * @return the dereferenced object.
+     * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
+     * @since Ant 1.7
+     */
+    protected Object getCheckedRef(Project p) {
+        return getCheckedRef(getClass(), getDataTypeName(), p);
+    }
+
+    /**
+     * Performs the check for circular references and returns the
+     * referenced object.
+     * @param requiredClass the class that this reference should be a subclass of.
+     * @param dataTypeName  the name of the datatype that the reference should be
+     *                      (error message use only).
+     * @return the dereferenced object.
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      */
     protected Object getCheckedRef(final Class requiredClass,
                                    final String dataTypeName) {
-        if (!checked) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, getProject());
-        }
+        return getCheckedRef(requiredClass, dataTypeName, getProject());
+    }
 
-        Object o = ref.getReferencedObject(getProject());
+    /**
+     * Performs the check for circular references and returns the
+     * referenced object.  This version allows the fallback Project instance to be specified.
+     * @param requiredClass the class that this reference should be a subclass of.
+     * @param dataTypeName  the name of the datatype that the reference should be
+     *                      (error message use only).
+     * @param project       the fallback Project instance for dereferencing.
+     * @return the dereferenced object.
+     * @throws BuildException if the reference is invalid (circular ref, wrong class, etc),
+     *                        or if <code>project</code> is <code>null</code>.
+     * @since Ant 1.7
+     */
+    protected Object getCheckedRef(final Class requiredClass,
+                                   final String dataTypeName, final Project project) {
+        dieOnCircularReference(project);
+        if (project == null) {
+            throw new BuildException("No Project specified");
+        }
+        Object o = ref.getReferencedObject(project);
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
             log("Class " + o.getClass() + " is not a subclass of " + requiredClass,
                     Project.MSG_VERBOSE);
             String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
-        } else {
-            return o;
         }
+        return o;
     }
 
     /**
@@ -223,7 +313,7 @@ public abstract class DataType extends ProjectComponent {
      * get the reference set on this object
      * @return the reference or null
      */
-    protected Reference getRefid() {
+    public Reference getRefid() {
         return ref;
     }
 
