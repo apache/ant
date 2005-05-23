@@ -555,24 +555,42 @@ public class ComponentHelper  {
      * @since Ant 1.6
      */
     public String getElementName(Object element) {
+        return getElementName(element, false);
+    }
+
+    /**
+     * Returns a description of the type of the given element.
+     * <p>
+     * This is useful for logging purposes.
+     *
+     * @param element The element to describe.
+     *                Must not be <code>null</code>.
+     * @param brief   whether to use a brief description.
+     * @return a description of the element type.
+     *
+     * @since Ant 1.7
+     */
+    public String getElementName(Object element, boolean brief) {
         //  PR: I do not know what to do if the object class
         //      has multiple defines
         //      but this is for logging only...
+        String name = null;
         Class elementClass = element.getClass();
         for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
             if (elementClass == def.getExposedClass(project)) {
-                return "The <" + def.getName() + "> type";
+                name = def.getName();
+                return brief ? name : "The <" + name + "> type";
             }
         }
-        return "Class " + elementClass.getName();
+        name = elementClass.getName();
+        return brief
+            ? name.substring(name.lastIndexOf('.') + 1) : "Class " + name;
     }
 
-
     /**
-     * Check if definition is a valid definition - it
-     * may be a definition of an optional task that
-     * does not exist.
+     * Check if definition is a valid definition--it may be a
+     * definition of an optional task that does not exist.
      * @param def the definition to test.
      * @return true if exposed type of definition is present.
      */
