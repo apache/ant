@@ -35,6 +35,7 @@ import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -555,11 +556,11 @@ public class DirectoryScanner
      * <code>File.separatorChar</code>.
      *
      * @param basedir The base directory to scan.
-     *                Must not be <code>null</code>.
      */
     public void setBasedir(String basedir) {
-        setBasedir(new File(basedir.replace('/', File.separatorChar).replace(
-                '\\', File.separatorChar)));
+        setBasedir(basedir == null ? (File) null
+            : new File(basedir.replace('/', File.separatorChar).replace(
+            '\\', File.separatorChar)));
     }
 
     /**
@@ -567,7 +568,6 @@ public class DirectoryScanner
      * scanned recursively.
      *
      * @param basedir The base directory for scanning.
-     *                Should not be <code>null</code>.
      */
     public synchronized void setBasedir(File basedir) {
         this.basedir = basedir;
@@ -577,7 +577,7 @@ public class DirectoryScanner
      * Return the base directory to be scanned.
      * This is the directory which is scanned recursively.
      *
-     * @return the base directory to be scanned
+     * @return the base directory to be scanned.
      */
     public synchronized File getBasedir() {
         return basedir;
@@ -741,13 +741,14 @@ public class DirectoryScanner
     }
 
     /**
-     * Scan the base directory for files which match at least one include
-     * pattern and don't match any exclude patterns. If there are selectors
-     * then the files must pass muster there, as well.
+     * Scan for files which match at least one include pattern and don't match
+     * any exclude patterns. If there are selectors then the files must pass
+     * muster there, as well.  Scans under basedir, if set; otherwise the
+     * include patterns without leading wildcards specify the absolute paths of
+     * the files that may be included.
      *
      * @exception IllegalStateException if the base directory was set
-     *            incorrectly (i.e. if it is <code>null</code>, doesn't exist,
-     *            or isn't a directory).
+     *            incorrectly (i.e. if it doesn't exist or isn't a directory).
      */
     public void scan() throws IllegalStateException {
         synchronized (scanLock) {
@@ -778,19 +779,22 @@ public class DirectoryScanner
                 excludes = nullExcludes ? new String[0] : excludes;
 
                 if (basedir == null) {
-                    illegal = new IllegalStateException("No basedir set");
+                    // if no basedir and no includes, nothing to do:
+                    if (nullIncludes) {
+                        return;
+                    }
                 } else {
                     if (!basedir.exists()) {
                         illegal = new IllegalStateException("basedir " + basedir
-                                                        + " does not exist");
+                                                            + " does not exist");
                     }
                     if (!basedir.isDirectory()) {
                         illegal = new IllegalStateException("basedir " + basedir
-                                                        + " is not a directory");
+                                                            + " is not a directory");
                     }
-                }
-                if (illegal != null) {
-                    throw illegal;
+                    if (illegal != null) {
+                        throw illegal;
+                    }
                 }
                 if (isIncluded("")) {
                     if (!isExcluded("")) {
@@ -828,10 +832,21 @@ public class DirectoryScanner
         // put in the newroots vector the include patterns without
         // wildcard tokens
         for (int icounter = 0; icounter < includes.length; icounter++) {
+            if (FileUtils.isAbsolutePath(includes[icounter])) {
+                //skip abs. paths not under basedir, if set:
+                if (basedir != null
+                    && !SelectorUtils.matchPatternStart(includes[icounter],
+                    basedir.getAbsolutePath(), isCaseSensitive())) {
+                    continue;
+                }
+            } else if (basedir == null) {
+                //skip non-abs. paths if basedir == null:
+                continue;
+            }
             newroots.put(SelectorUtils.rtrimWildcardTokens(
                 includes[icounter]), includes[icounter]);
         }
-        if (newroots.containsKey("")) {
+        if (newroots.containsKey("") && basedir != null) {
             // we are going to scan everything anyway
             scandir(basedir, "", true);
         } else {
@@ -840,13 +855,18 @@ public class DirectoryScanner
             Enumeration enum2 = newroots.keys();
 
             File canonBase = null;
-            try {
-                canonBase = basedir.getCanonicalFile();
-            } catch (IOException ex) {
-                throw new BuildException(ex);
+            if (basedir != null) {
+                try {
+                    canonBase = basedir.getCanonicalFile();
+                } catch (IOException ex) {
+                    throw new BuildException(ex);
+                }
             }
             while (enum2.hasMoreElements()) {
                 String currentelement = (String) enum2.nextElement();
+                if (basedir == null && !FileUtils.isAbsolutePath(currentelement)) {
+                    continue;
+                }
                 String originalpattern = (String) newroots.get(currentelement);
                 File myfile = new File(basedir, currentelement);
 
@@ -855,15 +875,15 @@ public class DirectoryScanner
                     // the results to show what's really on the disk, so
                     // we need to double check.
                     try {
-                        File canonFile = myfile.getCanonicalFile();
-                        String path = FILE_UTILS.removeLeadingPath(canonBase,
-                                                                  canonFile);
+                        String path = (basedir == null)
+                            ? myfile.getCanonicalPath()
+                            : FILE_UTILS.removeLeadingPath(canonBase,
+                            myfile.getCanonicalFile());
                         if (!path.equals(currentelement) || ON_VMS) {
                             myfile = findFile(basedir, currentelement, true);
-                            if (myfile != null) {
-                                currentelement =
-                                    FILE_UTILS.removeLeadingPath(basedir,
-                                                                 myfile);
+                            if (myfile != null && basedir != null) {
+                                currentelement = FILE_UTILS.removeLeadingPath(
+                                    basedir, myfile);
                             }
                         }
                     } catch (IOException ex) {
@@ -875,8 +895,9 @@ public class DirectoryScanner
                     if (f != null && f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
-                        currentelement = FILE_UTILS.removeLeadingPath(basedir,
-                                                                     f);
+                        currentelement = (basedir == null)
+                            ? f.getAbsolutePath()
+                            : FILE_UTILS.removeLeadingPath(basedir, f);
                         myfile = f;
                     }
                 }
@@ -1475,9 +1496,7 @@ public class DirectoryScanner
      * @since Ant 1.5.2
      */
     public synchronized Resource getResource(String name) {
-        File f = FILE_UTILS.resolveFile(basedir, name);
-        return new Resource(name, f.exists(), f.lastModified(),
-                            f.isDirectory(), f.length());
+        return new FileResource(basedir, name);
     }
 
     /**
@@ -1510,6 +1529,21 @@ public class DirectoryScanner
      * @since Ant 1.6.3
      */
     private File findFile(File base, String path, boolean cs) {
+        if (FileUtils.isAbsolutePath(path)) {
+            if (base == null) {
+                String[] s = FILE_UTILS.dissect(path);
+                base = new File(s[0]);
+                path = s[1];
+            } else {
+                File f = FILE_UTILS.normalize(path);
+                String s = FILE_UTILS.removeLeadingPath(base, f);
+                if (s.equals(f.getAbsolutePath())) {
+                    //removing base from path yields no change; path not child of base
+                    return null;
+                }
+                path = s;
+            }
+        }
         return findFile(base, SelectorUtils.tokenizePath(path), cs);
     }
 
@@ -1528,6 +1562,10 @@ public class DirectoryScanner
         if (pathElements.size() == 0) {
             return base;
         }
+        String current = (String) pathElements.remove(0);
+        if (base == null) {
+            return findFile(new File(current), pathElements, cs);
+        }
         if (!base.isDirectory()) {
             return null;
         }
@@ -1536,8 +1574,6 @@ public class DirectoryScanner
             throw new BuildException("IO error scanning directory "
                                      + base.getAbsolutePath());
         }
-        String current = (String) pathElements.remove(0);
-
         boolean[] matchCase = cs ? CS_SCAN_ONLY : CS_THEN_NON_CS;
         for (int i = 0; i < matchCase.length; i++) {
             for (int j = 0; j < files.length; j++) {

@@ -22,6 +22,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * <p>This is a utility class used by selectors and DirectoryScanner. The
@@ -36,6 +37,7 @@ import org.apache.tools.ant.types.Resource;
 public final class SelectorUtils {
 
     private static SelectorUtils instance = new SelectorUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Private Constructor
@@ -164,15 +166,6 @@ public final class SelectorUtils {
      */
     public static boolean matchPath(String pattern, String str,
                                     boolean isCaseSensitive) {
-        // When str starts with a File.separator, pattern has to start with a
-        // File.separator.
-        // When pattern starts with a File.separator, str has to start with a
-        // File.separator.
-        if (str.startsWith(File.separator)
-                != pattern.startsWith(File.separator)) {
-            return false;
-        }
-
         String[] patDirs = tokenizePathAsArray(pattern);
         String[] strDirs = tokenizePathAsArray(str);
 
@@ -502,6 +495,11 @@ public final class SelectorUtils {
      */
     public static Vector tokenizePath (String path, String separator) {
         Vector ret = new Vector();
+        if (FileUtils.isAbsolutePath(path)) {
+            String[] s = FILE_UTILS.dissect(path);
+            ret.add(s[0]);
+            path = s[1];
+        }
         StringTokenizer st = new StringTokenizer(path, separator);
         while (st.hasMoreTokens()) {
             ret.addElement(st.nextToken());
@@ -513,6 +511,12 @@ public final class SelectorUtils {
      * Same as {@link #tokenizePath tokenizePath} but hopefully faster.
      */
     private static String[] tokenizePathAsArray(String path) {
+        String root = null;
+        if (FileUtils.isAbsolutePath(path)) {
+            String[] s = FILE_UTILS.dissect(path);
+            root = s[0];
+            path = s[1];
+        }
         char sep = File.separatorChar;
         int start = 0;
         int len = path.length();
@@ -528,8 +532,14 @@ public final class SelectorUtils {
         if (len != start) {
             count++;
         }
-        String[] l = new String[count];
-        count = 0;
+        String[] l = new String[count + ((root == null) ? 0 : 1)];
+
+        if (root != null) {
+            l[0] = root;
+            count = 1;
+        } else {
+            count = 0;
+        }
         start = 0;
         for (int pos = 0; pos < len; pos++) {
             if (path.charAt(pos) == sep) {
@@ -643,7 +653,7 @@ public final class SelectorUtils {
             if (hasWildcards((String) v.elementAt(counter))) {
                 break;
             }
-            if (counter > 0) {
+            if (counter > 0 && sb.charAt(sb.length() - 1) != File.separatorChar) {
                 sb.append(File.separator);
             }
             sb.append((String) v.elementAt(counter));

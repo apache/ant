@@ -415,6 +415,75 @@ public class DirectoryScannerTest extends BuildFileTest {
         assertFalse("scanned " + s, set.contains(s));
     }
 
+    public void testAbsolute1() {
+        getProject().executeTarget("extended-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        String tmpdir = getProject().getBaseDir().getAbsolutePath().replace(
+            File.separatorChar, '/') + "/tmp";
+        ds.setIncludes(new String[] {tmpdir + "/**/*"});
+        ds.scan();
+        compareFiles(ds, new String[] {tmpdir + "/alpha/beta/beta.xml",
+                                       tmpdir + "/alpha/beta/gamma/gamma.xml",
+                                       tmpdir + "/delta/delta.xml"},
+                     new String[] {tmpdir + "/alpha",
+                                   tmpdir + "/alpha/beta",
+                                   tmpdir + "/alpha/beta/gamma",
+                                   tmpdir + "/delta"});
+    }
+
+    public void testAbsolute2() {
+        getProject().executeTarget("setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setIncludes(new String[] {"alpha/**", "alpha/beta/gamma/**"});
+        ds.scan();
+        String[] mt = new String[0];
+        compareFiles(ds, mt, mt);
+    }
+
+    public void testAbsolute3() {
+        getProject().executeTarget("extended-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        String tmpdir = getProject().getBaseDir().getAbsolutePath().replace(
+            File.separatorChar, '/') + "/tmp";
+        ds.setIncludes(new String[] {tmpdir + "/**/*"});
+        ds.setExcludes(new String[] {"**/alpha",
+                                     "**/delta/*"});
+        ds.scan();
+        compareFiles(ds, new String[] {tmpdir + "/alpha/beta/beta.xml",
+                                       tmpdir + "/alpha/beta/gamma/gamma.xml"},
+                     new String[] {tmpdir + "/alpha/beta",
+                                   tmpdir + "/alpha/beta/gamma",
+                                   tmpdir + "/delta"});
+    }
+
+    public void testAbsolute4() {
+        getProject().executeTarget("extended-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        String tmpdir = getProject().getBaseDir().getAbsolutePath().replace(
+            File.separatorChar, '/') + "/tmp";
+        ds.setIncludes(new String[] {tmpdir + "/alpha/beta/**/*",
+                                     tmpdir + "/delta/*"});
+        ds.setExcludes(new String[] {"**/beta.xml"});
+        ds.scan();
+        compareFiles(ds, new String[] {tmpdir + "/alpha/beta/gamma/gamma.xml",
+                                       tmpdir + "/delta/delta.xml"},
+                     new String[] {tmpdir + "/alpha/beta/gamma"});
+    }
+
+    public void testAbsolute5() {
+        //testing drive letter search from root:
+        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+            return;
+        }
+        DirectoryScanner ds = new DirectoryScanner();
+        String pattern = new File(File.separator).getAbsolutePath().toUpperCase() + "*";
+        ds.setIncludes(new String[] {pattern});
+        ds.scan();
+        //if this is our context we assume there must be something here:
+        assertTrue("should have at least one resident file",
+            ds.getIncludedFilesCount() + ds.getIncludedDirsCount() > 0);
+    }
+
     private void compareFiles(DirectoryScanner ds, String[] expectedFiles,
                               String[] expectedDirectories) {
         String includedFiles[] = ds.getIncludedFiles();
