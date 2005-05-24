@@ -442,6 +442,33 @@
         </table>
       </subsection>
 
+      <subsection name="Parabuild">
+
+        <p>Parabuild is an automated multiplatform build management server.
+        Parabuild helps software teams and organizations of all sizes reduce
+        risks of project failures and increase productivity by providing provides
+        automatic continuous integration builds and stable scheduled builds.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.viewtier.com/products/parabuild.htm">http://www.viewtier.com/products/parabuild.htm</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.viewtier.com/about_us.htm">http://www.viewtier.com/about_us.htm</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Rant">
 
         <p>Rant stands for Remote Ant. It is a distributed build
