@@ -77,67 +77,67 @@ public class DOMElementWriter {
                       String indentWith)
         throws IOException {
 
-        openElement(element, out, indent, indentWith);
-
         // Write child elements and text
-        boolean hasChildren = false;
         NodeList children = element.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
+        boolean hasChildren = (children.getLength() > 0);
+        openElement(element, out, indent, indentWith, hasChildren);
 
-            switch (child.getNodeType()) {
-
-            case Node.ELEMENT_NODE:
-                if (!hasChildren) {
-                    out.write(lSep);
-                    hasChildren = true;
+        if (hasChildren) {
+            for (int i = 0; i < children.getLength(); i++) {
+                Node child = children.item(i);
+    
+                switch (child.getNodeType()) {
+    
+                case Node.ELEMENT_NODE:
+                    if (i == 0) {
+                        out.write(lSep);
+                    }
+                    write((Element) child, out, indent + 1, indentWith);
+                    break;
+    
+                case Node.TEXT_NODE:
+                    out.write(encode(child.getNodeValue()));
+                    break;
+    
+                case Node.COMMENT_NODE:
+                    out.write("<!--");
+                    out.write(encode(child.getNodeValue()));
+                    out.write("-->");
+                    break;
+    
+                case Node.CDATA_SECTION_NODE:
+                    out.write("<![CDATA[");
+                    out.write(encodedata(((Text) child).getData()));
+                    out.write("]]>");
+                    break;
+    
+                case Node.ENTITY_REFERENCE_NODE:
+                    out.write('&');
+                    out.write(child.getNodeName());
+                    out.write(';');
+                    break;
+    
+                case Node.PROCESSING_INSTRUCTION_NODE:
+                    out.write("<?");
+                    out.write(child.getNodeName());
+                    String data = child.getNodeValue();
+                    if (data != null && data.length() > 0) {
+                        out.write(' ');
+                        out.write(data);
+                    }
+                    out.write("?>");
+                    break;
+                default:
+                    // Do nothing
                 }
-                write((Element) child, out, indent + 1, indentWith);
-                break;
-
-            case Node.TEXT_NODE:
-                out.write(encode(child.getNodeValue()));
-                break;
-
-            case Node.COMMENT_NODE:
-                out.write("<!--");
-                out.write(encode(child.getNodeValue()));
-                out.write("-->");
-                break;
-
-            case Node.CDATA_SECTION_NODE:
-                out.write("<![CDATA[");
-                out.write(encodedata(((Text) child).getData()));
-                out.write("]]>");
-                break;
-
-            case Node.ENTITY_REFERENCE_NODE:
-                out.write('&');
-                out.write(child.getNodeName());
-                out.write(';');
-                break;
-
-            case Node.PROCESSING_INSTRUCTION_NODE:
-                out.write("<?");
-                out.write(child.getNodeName());
-                String data = child.getNodeValue();
-                if (data != null && data.length() > 0) {
-                    out.write(' ');
-                    out.write(data);
-                }
-                out.write("?>");
-                break;
-            default:
-                // Do nothing
             }
+            closeElement(element, out, indent, indentWith, true);
         }
-
-        closeElement(element, out, indent, indentWith, hasChildren);
     }
 
     /**
      * Writes the opening tag - including all attributes -
-     * correspondong to a DOM element.
+     * corresponding to a DOM element.
      *
      * @param element the DOM element to write
      * @param out where to send the output
@@ -148,6 +148,25 @@ public class DOMElementWriter {
      */
     public void openElement(Element element, Writer out, int indent,
                             String indentWith)
+        throws IOException {
+        openElement(element, out, indent, indentWith, true);
+    }
+
+    /**
+     * Writes the opening tag - including all attributes -
+     * corresponding to a DOM element.
+     *
+     * @param element the DOM element to write
+     * @param out where to send the output
+     * @param indent number of
+     * @param indentWith string that should be used to indent the
+     * corresponding tag.
+     * @param hasChildren whether this element has children.
+     * @throws IOException if an error happens while writing to the stream.
+     * @since Ant 1.7
+     */
+    public void openElement(Element element, Writer out, int indent,
+                            String indentWith, boolean hasChildren)
         throws IOException {
         // Write indent characters
         for (int i = 0; i < indent; i++) {
@@ -168,7 +187,13 @@ public class DOMElementWriter {
             out.write(encode(attr.getValue()));
             out.write("\"");
         }
-        out.write(">");
+        if (hasChildren) {
+            out.write(">");
+        } else {
+            out.write(" />");
+            out.write(lSep);
+            out.flush();
+        }
     }
 
     /**

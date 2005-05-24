@@ -114,7 +114,7 @@ public class EchoPropertiesTest extends BuildFileTest {
             BufferedReader br = new BufferedReader( fr );
             String read = null;
             while ( (read = br.readLine()) != null) {
-                if (read.indexOf("<property name=\"test.property\" value=\""+TEST_VALUE+"\"></property>") >= 0) {
+                if (read.indexOf("<property name=\"test.property\" value=\""+TEST_VALUE+"\" />") >= 0) {
                     // found the property we set - it's good.
                     return;
                 }
