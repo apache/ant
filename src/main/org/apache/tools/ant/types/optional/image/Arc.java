@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,12 +48,12 @@ public class Arc extends BasicShape implements DrawOperation {
     /**
      * @todo refactor using an EnumeratedAttribute
      */
-    public void setType(String str_type) {
-        if (str_type.toLowerCase().equals("open")) {
+    public void setType(String strType) {
+        if (strType.toLowerCase().equals("open")) {
             type = Arc2D.OPEN;
-        } else if (str_type.toLowerCase().equals("pie")) {
+        } else if (strType.toLowerCase().equals("pie")) {
             type = Arc2D.PIE;
-        } else if (str_type.toLowerCase().equals("chord")) {
+        } else if (strType.toLowerCase().equals("chord")) {
             type = Arc2D.CHORD;
         }
     }
@@ -65,9 +65,9 @@ public class Arc extends BasicShape implements DrawOperation {
         Graphics2D graphics = (Graphics2D) bi.getGraphics();
 
         if (!stroke.equals("transparent")) {
-            BasicStroke b_stroke = new BasicStroke(stroke_width);
+            BasicStroke bStroke = new BasicStroke(stroke_width);
             graphics.setColor(ColorMapper.getColorByName(stroke));
-            graphics.setStroke(b_stroke);
+            graphics.setStroke(bStroke);
             graphics.draw(new Arc2D.Double(stroke_width, stroke_width, width,
                 height, start, stop, type));
         }
@@ -86,7 +86,8 @@ public class Arc extends BasicShape implements DrawOperation {
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);
             } else if (instr instanceof TransformOperation) {
                 graphics = (Graphics2D) bi.getGraphics();
-                PlanarImage image = ((TransformOperation) instr).executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
+                PlanarImage image = ((TransformOperation) instr)
+                    .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
             }
         }

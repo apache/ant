@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,55 +23,71 @@ import java.awt.Color;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public final class ColorMapper {
+    /** black string */
     public static final String COLOR_BLACK = "black";
+    /** blue string */
     public static final String COLOR_BLUE = "blue";
+    /** cyan string */
     public static final String COLOR_CYAN = "cyan";
+    /** black string */
     public static final String COLOR_DARKGRAY = "darkgray";
+    /** gray string */
     public static final String COLOR_GRAY = "gray";
+    /** lightgray string */
     public static final String COLOR_LIGHTGRAY = "lightgray";
     // Gotta atleast put in the proper spelling :-P
+    /** darkgrey string */
     public static final String COLOR_DARKGREY = "darkgrey";
+    /** grey string */
     public static final String COLOR_GREY = "grey";
+    /** lightgrey string */
     public static final String COLOR_LIGHTGREY = "lightgrey";
+    /** green string */
     public static final String COLOR_GREEN = "green";
+    /** magenta string */
     public static final String COLOR_MAGENTA = "magenta";
+    /** orange string */
     public static final String COLOR_ORANGE = "orange";
+    /** pink string */
     public static final String COLOR_PINK = "pink";
+    /** reg string */
     public static final String COLOR_RED = "red";
+    /** white string */
     public static final String COLOR_WHITE = "white";
+    /** yellow string */
     public static final String COLOR_YELLOW = "yellow";
 
     /**
      * @todo refactor to use an EnumeratedAttribute (maybe?)
      */
-    public static final Color getColorByName(String color_name) {
-        color_name = color_name.toLowerCase();
+    public static Color getColorByName(String colorName) {
+        colorName = colorName.toLowerCase();
 
-        if (color_name.equals(COLOR_BLACK)) {
+        if (colorName.equals(COLOR_BLACK)) {
             return Color.black;
-        } else if (color_name.equals(COLOR_BLUE)) {
+        } else if (colorName.equals(COLOR_BLUE)) {
             return Color.blue;
-        } else if (color_name.equals(COLOR_CYAN)) {
+        } else if (colorName.equals(COLOR_CYAN)) {
             return Color.cyan;
-        } else if (color_name.equals(COLOR_DARKGRAY) || color_name.equals(COLOR_DARKGREY)) {
+        } else if (colorName.equals(COLOR_DARKGRAY) || colorName.equals(COLOR_DARKGREY)) {
             return Color.darkGray;
-        } else if (color_name.equals(COLOR_GRAY) || color_name.equals(COLOR_GREY)) {
+        } else if (colorName.equals(COLOR_GRAY) || colorName.equals(COLOR_GREY)) {
             return Color.gray;
-        } else if (color_name.equals(COLOR_LIGHTGRAY) || color_name.equals(COLOR_LIGHTGREY)) {
+        } else if (colorName.equals(COLOR_LIGHTGRAY) || colorName.equals(COLOR_LIGHTGREY)) {
             return Color.lightGray;
-        } else if (color_name.equals(COLOR_GREEN)) {
+        } else if (colorName.equals(COLOR_GREEN)) {
             return Color.green;
-        } else if (color_name.equals(COLOR_MAGENTA)) {
+        } else if (colorName.equals(COLOR_MAGENTA)) {
             return Color.magenta;
-        } else if (color_name.equals(COLOR_ORANGE)) {
+        } else if (colorName.equals(COLOR_ORANGE)) {
             return Color.orange;
-        } else if (color_name.equals(COLOR_PINK)) {
+        } else if (colorName.equals(COLOR_PINK)) {
             return Color.pink;
-        } else if (color_name.equals(COLOR_RED)) {
+        } else if (colorName.equals(COLOR_RED)) {
             return Color.red;
-        } else if (color_name.equals(COLOR_WHITE)) {
+        } else if (colorName.equals(COLOR_WHITE)) {
             return Color.white;
-        } else if (color_name.equals(COLOR_YELLOW)) {
+        } else if (colorName.equals(COLOR_YELLOW)) {
             return Color.yellow;
         }
         return Color.black;

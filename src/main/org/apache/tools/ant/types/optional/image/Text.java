@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.awt.image.BufferedImage;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Text extends ImageOperation implements DrawOperation {
-    private String str_text = "";
+    private String strText = "";
     private String font = "Arial";
     private int point = 10;
     private boolean bold = false;
@@ -37,7 +37,7 @@ public class Text extends ImageOperation implements DrawOperation {
     private String color = "black";
 
     public void setString(String str) {
-        str_text = str;
+        strText = str;
     }
 
     public void setFont(String f) {
@@ -67,7 +67,7 @@ public class Text extends ImageOperation implements DrawOperation {
     }
 
     public PlanarImage executeDrawOperation() {
-        log("\tCreating Text \"" + str_text + "\"");
+        log("\tCreating Text \"" + strText + "\"");
 
         Color couloir = ColorMapper.getColorByName(color);
         int width = 1;
@@ -75,23 +75,27 @@ public class Text extends ImageOperation implements DrawOperation {
 
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
         Graphics2D graphics = (Graphics2D) bi.getGraphics();
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        graphics.setRenderingHint(
+            RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(
+            RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         Font f = new Font(font, Font.PLAIN, point);
         FontMetrics fmetrics = graphics.getFontMetrics(f);
         height = fmetrics.getMaxAscent() + fmetrics.getMaxDescent();
-        width = fmetrics.stringWidth(str_text);
+        width = fmetrics.stringWidth(strText);
 
 
         bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
         graphics = (Graphics2D) bi.getGraphics();
 
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        graphics.setRenderingHint(
+            RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(
+            RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
         graphics.setFont(f);
         graphics.setColor(couloir);
-        graphics.drawString(str_text, 0, height - fmetrics.getMaxDescent());
+        graphics.drawString(strText, 0, height - fmetrics.getMaxDescent());
         PlanarImage image = PlanarImage.wrapRenderedImage(bi);
         return image;
     }

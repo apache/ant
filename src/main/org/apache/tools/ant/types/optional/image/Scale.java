@@ -29,10 +29,10 @@ import java.awt.image.renderable.ParameterBlock;
  */
 public class Scale extends TransformOperation implements DrawOperation {
 
-    private String width_str = "100%";
-    private String height_str = "100%";
-    private boolean x_percent = true;
-    private boolean y_percent = true;
+    private String widthStr = "100%";
+    private String heightStr = "100%";
+    private boolean xPercent = true;
+    private boolean yPercent = true;
     private String proportions = "ignore";
 
     public static class ProportionsAttribute extends EnumeratedAttribute {
@@ -52,68 +52,70 @@ public class Scale extends TransformOperation implements DrawOperation {
      *  Sets the width of the image, either as an integer or a %.  Defaults to 100%.
      */
     public void setWidth(String width) {
-        width_str = width;
+        widthStr = width;
     }
 
     /**
      *  Sets the height of the image, either as an integer or a %.  Defaults to 100%.
      */
     public void setHeight(String height) {
-        height_str = height;
+        heightStr = height;
     }
 
     public float getWidth() {
         float width = 0.0F;
-        int perc_index = width_str.indexOf('%');
-        if (perc_index > 0) {
-            width = Float.parseFloat(width_str.substring(0, perc_index));
-            x_percent = true;
+        int percIndex = widthStr.indexOf('%');
+        if (percIndex > 0) {
+            width = Float.parseFloat(widthStr.substring(0, percIndex));
+            xPercent = true;
             return width / 100;
         } else {
-            x_percent = false;
-            return Float.parseFloat(width_str);
+            xPercent = false;
+            return Float.parseFloat(widthStr);
         }
     }
 
     public float getHeight() {
-        int perc_index = height_str.indexOf('%');
-        if (perc_index > 0) {
-            float height = Float.parseFloat(height_str.substring(0, perc_index));
-            y_percent = true;
+        int percIndex = heightStr.indexOf('%');
+        if (percIndex > 0) {
+            float height = Float.parseFloat(heightStr.substring(0, percIndex));
+            yPercent = true;
             return height / 100;
         } else {
-            y_percent = false;
-            return Float.parseFloat(height_str);
+            yPercent = false;
+            return Float.parseFloat(heightStr);
         }
     }
 
     public PlanarImage performScale(PlanarImage image) {
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);
-        float x_fl = getWidth();
-        float y_fl = getHeight();
+        float xFl = getWidth();
+        float yFl = getHeight();
 
-        if (!x_percent) {
-            x_fl = (x_fl / image.getWidth());
+        if (!xPercent) {
+            xFl = (xFl / image.getWidth());
         }
-        if (!y_percent) {
-            y_fl = (y_fl / image.getHeight());
+        if (!yPercent) {
+            yFl = (yFl / image.getHeight());
         }
 
         if ("width".equals(proportions)) {
-            y_fl = x_fl;
+            yFl = xFl;
         } else if ("height".equals(proportions)) {
-            x_fl = y_fl;
+            xFl = yFl;
         } else if ("fit".equals(proportions)) {
-            x_fl = y_fl = Math.min(x_fl, y_fl);
+            yFl = Math.min(xFl, yFl);
+            xFl = yFl;
         } else if ("cover".equals(proportions)) {
-            x_fl = y_fl = Math.max(x_fl, y_fl);
+            yFl = Math.max(xFl, yFl);
+            xFl = yFl;
         }
 
-        pb.add(new Float(x_fl));
-        pb.add(new Float(y_fl));
+        pb.add(new Float(xFl));
+        pb.add(new Float(yFl));
 
-        log("\tScaling to " + (x_fl * 100) + "% x " + (y_fl * 100) + "%");
+        log("\tScaling to " + (xFl * 100) + "% x " + (yFl * 100) + "%");
 
         return JAI.create("scale", pb);
     }
@@ -127,7 +129,8 @@ public class Scale extends TransformOperation implements DrawOperation {
                 return performScale(image);
             } else if (instr instanceof TransformOperation) {
                 bi = image.getAsBufferedImage();
-                image = ((TransformOperation) instr).executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
+                image = ((TransformOperation) instr)
+                    .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
             }
         }

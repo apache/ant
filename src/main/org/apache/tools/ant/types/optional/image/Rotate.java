@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,12 +41,12 @@ public class Rotate extends TransformOperation implements DrawOperation {
 
 
     public PlanarImage performRotate(PlanarImage image) {
-        float t_angle = (float) (angle * (Math.PI / 180.0F));
+        float tAngle = (float) (angle * (Math.PI / 180.0F));
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);
         pb.add(0.0F);
         pb.add(0.0F);
-        pb.add(t_angle);
+        pb.add(tAngle);
         pb.add(new InterpolationNearest());
         return JAI.create("Rotate", pb, null);
     }
@@ -72,7 +72,8 @@ public class Rotate extends TransformOperation implements DrawOperation {
                 bi = image.getAsBufferedImage();
                 graphics = (Graphics2D) bi.getGraphics();
                 System.out.println("Execing Transforms");
-                image = ((TransformOperation) instr).executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
+                image = ((TransformOperation) instr)
+                    .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,9 +44,9 @@ public class Ellipse extends BasicShape implements DrawOperation {
         Graphics2D graphics = (Graphics2D) bi.getGraphics();
 
         if (!stroke.equals("transparent")) {
-            BasicStroke b_stroke = new BasicStroke(stroke_width);
+            BasicStroke bStroke = new BasicStroke(stroke_width);
             graphics.setColor(ColorMapper.getColorByName(stroke));
-            graphics.setStroke(b_stroke);
+            graphics.setStroke(bStroke);
             graphics.draw(new Ellipse2D.Double(0, 0, width, height));
         }
 
@@ -63,7 +63,8 @@ public class Ellipse extends BasicShape implements DrawOperation {
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);
             } else if (instr instanceof TransformOperation) {
                 graphics = (Graphics2D) bi.getGraphics();
-                PlanarImage image = ((TransformOperation) instr).executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
+                PlanarImage image = ((TransformOperation) instr)
+                    .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
             }
         }

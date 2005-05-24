@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ public interface DrawOperation {
      * Abstract method which is intended to create an image buffer
      * and return it so it can be drawn into another object.  Use
      * an Alpha channel for a "transparent" background.
+     * @return a planar image
      */
-    public PlanarImage executeDrawOperation();
+    PlanarImage executeDrawOperation();
 }
