@@ -110,9 +110,6 @@ Fixed bugs:
 * <xmlvalidate> and <schemavalidate> create a new parser for every file in a
   fileset, and so validate multiple files properly. Bugzilla Report 32791
 
-* New mapper, <scriptmapper>, supports scripted mapping of source files/strings to
-  destination strings.
-
 Other changes:
 --------------
 
@@ -227,6 +224,11 @@ Other changes:
 
 * Added initial support for Resource Collections, including the
   resourcecount task.
+
+* New mapper, <scriptmapper>, supports scripted mapping of source files/strings
+  to destination strings.
+
+* Add the echoxml task.
 
 Changes from Ant 1.6.3 to Ant 1.6.4
 ===================================
