@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,37 +41,57 @@ public class Attrib extends ExecuteOn {
 
     private boolean haveAttr = false;
 
+    /** Constructor for Attrib. */
     public Attrib() {
         super.setExecutable("attrib");
         super.setParallel(false);
     }
 
+    /**
+     * A file to be attribed.
+     * @param src a file
+     */
     public void setFile(File src) {
         FileSet fs = new FileSet();
         fs.setFile(src);
         addFileset(fs);
     }
 
-    /** set the ReadOnly file attribute */
+    /**
+     * Set the ReadOnly file attribute.
+     * @param value a <code>boolean</code> value
+     */
     public void setReadonly(boolean value) {
         addArg(value, ATTR_READONLY);
     }
 
-    /** set the Archive file attribute */
+    /**
+     * Set the Archive file attribute.
+     * @param value a <code>boolean</code> value
+     */
     public void setArchive(boolean value) {
         addArg(value, ATTR_ARCHIVE);
     }
 
-    /** set the System file attribute */
+    /**
+     * Set the System file attribute.
+     * @param value a <code>boolean</code> value
+     */
     public void setSystem(boolean value) {
         addArg(value, ATTR_SYSTEM);
     }
 
-    /** set the Hidden file attribute */
+    /**
+     * Set the Hidden file attribute.
+     * @param value a <code>boolean</code> value
+     */
     public void setHidden(boolean value) {
         addArg(value, ATTR_HIDDEN);
     }
 
+    /**
+     * Check the attributes.
+     */
     protected void checkConfiguration() {
         if (!haveAttr()) {
             throw new BuildException("Missing attribute parameter",
@@ -81,6 +101,9 @@ public class Attrib extends ExecuteOn {
     }
 
     /**
+     * Set the executable.
+     * This is not allowed, and it always throws a BuildException.
+     * @param e ignored
      * @ant.attribute ignore="true"
      */
     public void setExecutable(String e) {
@@ -89,6 +112,9 @@ public class Attrib extends ExecuteOn {
     }
 
     /**
+     * Set the executable.
+     * This is not allowed, and it always throws a BuildException.
+     * @param e ignored
      * @ant.attribute ignore="true"
      */
     public void setCommand(String e) {
@@ -97,6 +123,9 @@ public class Attrib extends ExecuteOn {
     }
 
     /**
+     * Add source file.
+     * This is not allowed, and it always throws a BuildException.
+     * @param b ignored
      * @ant.attribute ignore="true"
      */
     public void setAddsourcefile(boolean b) {
@@ -105,6 +134,9 @@ public class Attrib extends ExecuteOn {
     }
 
     /**
+     * Set skip empty file sets.
+     * This is not allowed, and it always throws a BuildException.
+     * @param skip ignored
      * @ant.attribute ignore="true"
      */
     public void setSkipEmptyFilesets(boolean skip) {
@@ -114,6 +146,9 @@ public class Attrib extends ExecuteOn {
     }
 
     /**
+     * Set parallel.
+     * This is not allowed, and it always throws a BuildException.
+     * @param parallel ignored
      * @ant.attribute ignore="true"
      */
     public void setParallel(boolean parallel) {
@@ -123,6 +158,9 @@ public class Attrib extends ExecuteOn {
     }
 
     /**
+     * Set max parallel.
+     * This is not allowed, and it always throws a BuildException.
+     * @param max ignored
      * @ant.attribute ignore="true"
      */
     public void setMaxParallel(int max) {
@@ -131,12 +169,17 @@ public class Attrib extends ExecuteOn {
                                  getLocation());
     }
 
+    /**
+     * Check if the os is valid.
+     * Always include windows
+     * @return true if the os is valid.
+     */
     protected boolean isValidOs() {
         return Os.isFamily("windows") && super.isValidOs();
     }
 
     private static String getSignString(boolean attr) {
-        return (attr == true ? SET : UNSET);
+        return (attr ? SET : UNSET);
     }
 
     private void addArg(boolean sign, String attribute) {
