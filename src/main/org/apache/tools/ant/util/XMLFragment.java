@@ -23,8 +23,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import org.apache.tools.ant.DynamicConfiguratorNS;
 import org.apache.tools.ant.DynamicElementNS;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.DynamicConfiguratorNS;
 
 /**
  * Use this class as a nested element if you want to get a literal DOM
@@ -37,7 +38,7 @@ import org.apache.tools.ant.DynamicElementNS;
  *
  * @since Ant 1.7
  */
-public class XMLFragment implements DynamicElementNS {
+public class XMLFragment extends ProjectComponent implements DynamicElementNS {
 
     private Document doc;
     private DocumentFragment fragment;
