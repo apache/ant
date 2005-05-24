@@ -45,8 +45,8 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
 
     /**
      * exec by creating a new command
-     * @return
-     * @throws BuildException
+     * @return true if the command ran successfully
+     * @throws BuildException on error
      */
     public boolean execute() throws BuildException {
         Rmic owner = getRmic();
