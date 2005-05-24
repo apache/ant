@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ public abstract class AbstractAccessTask
 
     /**
      * Set the file which should have its access attributes modified.
+     * @param src the file to modify
      */
     public void setFile(File src) {
         FileSet fs = new FileSet();
@@ -98,6 +99,8 @@ public abstract class AbstractAccessTask
 
     /**
      * Automatically approve Unix OS's.
+     * @return true if a valid OS, for unix this is always true, otherwise
+     *              use the superclasses' test (user set).
      */
     protected boolean isValidOs() {
         return Os.isFamily("unix") && super.isValidOs();
