@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -121,7 +121,9 @@ public class CovReport extends CovBase {
     private Reference reference = null;
 
 
+    /** Enumerated type for format attribute. */
     public static class ReportFormat extends EnumeratedAttribute {
+        /** @see EnumeratedAttribute@getValues() */
         public String[] getValues() {
             return new String[]{"html", "text", "xml"};
         }
@@ -129,12 +131,15 @@ public class CovReport extends CovBase {
 
     /**
      * set the format of the report: "html", "text", or "xml"
+     * @param value an enumerated <code>ReportFormat</code> value
      */
     public void setFormat(ReportFormat value) {
         this.format = value.getValue();
     }
 
+    /** Enumerated type for type attribute. */
     public static class ReportType extends EnumeratedAttribute {
+        /** @see EnumeratedAttribute@getValues() */
         public String[] getValues() {
             return new String[]{"executive", "summary", "detailed", "verydetailed"};
         }
@@ -143,6 +148,7 @@ public class CovReport extends CovBase {
     /**
      * The type of report to be generated: "executive", "summary",
      * "detailed" or "verydetailed".
+     * @param value an enumerated <code>ReportType</code> value
      */
     public void setType(ReportType value) {
         this.type = value.getValue();
@@ -151,6 +157,7 @@ public class CovReport extends CovBase {
     /**
      * If true, include text of the source code lines.
      * Only applies to format="xml" and type="verydetailed"
+     * @param value a <code>boolean</code> value
      */
     public void setIncludesource(boolean value) {
         this.includeSource = value;
@@ -159,6 +166,7 @@ public class CovReport extends CovBase {
     /**
      * A numeric value for the threshold for printing methods.
      * Must be between 0 and 100.
+     * @param value an <code>Integer</code> value
      */
     public void setPercent(Integer value) {
         this.percent = value;
@@ -166,6 +174,7 @@ public class CovReport extends CovBase {
 
     /**
      * set the filters
+     * @param values a <code>String</code> value
      * @ant.attribute ignore="true"
      */
     public void setFilters(String values) {
@@ -174,6 +183,7 @@ public class CovReport extends CovBase {
 
     /**
      * Adds a path to source files.
+     * @return a path to be configured
      */
     public Path createSourcepath() {
         if (sourcePath == null) {
@@ -184,6 +194,7 @@ public class CovReport extends CovBase {
 
     /**
      * The name of the snapshot file that is the source to the report.
+     * @param value the snapshot file
      */
     public void setSnapshot(File value) {
         this.snapshot = value;
@@ -191,12 +202,14 @@ public class CovReport extends CovBase {
 
     /**
      * The name of the generated output file.
+     * @param value the output file
      */
     public void setTofile(File value) {
         this.tofile = value;
     }
 
     /**
+     * @return a path to be configured
      * @todo needs to be removed
      * @ant.element ignore="true"
      */
@@ -210,6 +223,7 @@ public class CovReport extends CovBase {
     /**
      * Adds a set of classes whose coverage information will be
      * checked against.
+     * @return a <code>CovReport.Reference</code> object to be configured
      */
     public Reference createReference() {
         if (reference == null) {
@@ -219,10 +233,14 @@ public class CovReport extends CovBase {
     }
 
 
+    /** Constructor for CovReport. */
     public CovReport() {
     }
 
-    /** check for mandatory options */
+    /**
+     * Check for mandatory options.
+     * @throws BuildException on error
+     */
     protected void checkOptions() throws BuildException {
         if (tofile == null) {
             throw new BuildException("'tofile' attribute must be set.");
@@ -244,6 +262,10 @@ public class CovReport extends CovBase {
 
     }
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         checkOptions();
         try {
@@ -278,6 +300,10 @@ public class CovReport extends CovBase {
     }
 
 
+    /**
+     * Get the parameters for the executable.
+     * @return an array of parameters
+     */
     protected String[] getParameters() {
         Vector v = new Vector();
         if (format != null) {
@@ -311,10 +337,17 @@ public class CovReport extends CovBase {
     }
 
 
+    /**
+     * An inner class for the reference element.
+     */
     public class Reference {
         protected Path classPath;
         protected ReportFilters filters;
 
+        /**
+         * Create a path for the reference.
+         * @return a path to be configured
+         */
         public Path createClasspath() {
             if (classPath == null) {
                 classPath = new Path(CovReport.this.getProject());
@@ -322,6 +355,10 @@ public class CovReport extends CovBase {
             return classPath.createPath();
         }
 
+        /**
+         * An nested element to include/exclude classes/methods.
+         * @return ReportFilters to be configured
+         */
         public ReportFilters createFilters() {
             if (filters == null) {
                 filters = new ReportFilters();
@@ -329,6 +366,10 @@ public class CovReport extends CovBase {
             return filters;
         }
 
+        /**
+         * Create the xml report.
+         * @throws BuildException on error
+         */
         protected void createEnhancedXMLReport() throws BuildException {
             // we need a classpath element
             if (classPath == null) {
@@ -337,7 +378,8 @@ public class CovReport extends CovBase {
             // and a valid one...
             String[] paths = classPath.list();
             if (paths.length == 0) {
-                throw new BuildException("Coverage path is invalid. It does not contain any existing path.");
+                throw new BuildException(
+                    "Coverage path is invalid. It does not contain any existing path.");
             }
             // and we need at least one filter include/exclude.
             if (filters == null || filters.size() == 0) {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,17 +33,30 @@ public class ReportFilters {
     /** cached matcher for each filter */
     protected Vector matchers = null;
 
+    /** Constructor for ReportFilters. */
     public ReportFilters() {
     }
 
+    /**
+     * Add an include nested element.
+     * @param incl an include filter element
+     */
     public void addInclude(Include incl) {
         filters.addElement(incl);
     }
 
+    /**
+     * Add an exclude nested element.
+     * @param excl an exclude filter element
+     */
     public void addExclude(Exclude excl) {
         filters.addElement(excl);
     }
 
+    /**
+     * Get the number of nested filters.
+     * @return the number
+     */
     public int size() {
         return filters.size();
     }
@@ -52,6 +65,7 @@ public class ReportFilters {
      * Check whether a given &lt;classname&gt;&lt;method&gt;() is accepted by the list
      * of filters or not.
      * @param methodname the full method name in the format &lt;classname&gt;&lt;method&gt;()
+     * @return true if the methodname passes the list of filters
      */
     public boolean accept(String methodname) {
         // I'm deferring matcher instantiations at runtime to avoid computing
@@ -98,14 +112,28 @@ public class ReportFilters {
         protected String clazz = "*"; // default is all classes
         protected String method = "*"; // default is all methods
 
+        /**
+         * Set the class name to match
+         * Default is match all classes
+         * @param value the classname to match
+         */
         public void setClass(String value) {
             clazz = value;
         }
 
+        /**
+         * Set the method name to match.
+         * Default is "*", match all methods
+         * @param value the method name to match
+         */
         public void setMethod(String value) {
             method = value;
         }
 
+        /**
+         * Get a regular expression matching this filter.
+         * @return a regular expression pattern matching this filer.
+         */
         public String getAsPattern() {
             StringBuffer buf = new StringBuffer(toString());
             StringUtil.replace(buf, ".", "\\.");
@@ -115,6 +143,11 @@ public class ReportFilters {
             return buf.toString();
         }
 
+        /**
+         * Get this object as a string.
+         * The form is ClassName.method().
+         * @return this filter as a string.
+         */
         public String toString() {
             return clazz + "." + method + "()";
         }

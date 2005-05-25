@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,12 +34,14 @@ public class Filters {
     /** user defined filters */
     protected Vector filters = new Vector();
 
+    /** Constructor for Filters. */
     public Filters() {
     }
 
     /**
      * Automatically exclude all classes and methods
      * unless included in nested elements; optional, default true.
+     * @param value a <code>boolean</code> value
      */
     public void setDefaultExclude(boolean value) {
         defaultExclude = value;
@@ -47,6 +49,7 @@ public class Filters {
 
     /**
      * include classes and methods in the analysis
+     * @param incl an nested Include object
      */
     public void addInclude(Include incl) {
         filters.addElement(incl);
@@ -54,11 +57,16 @@ public class Filters {
 
     /**
      * exclude classes and methods from the analysis
+     * @param excl an nested Exclude object
      */
     public void addExclude(Exclude excl) {
         filters.addElement(excl);
     }
 
+    /**
+     * Get a comma separated list of filters.
+     * @return a comma separated list of filters
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer();
         final int size = filters.size();
@@ -87,6 +95,7 @@ public class Filters {
 
         /**
          * this one is deprecated.
+         * @param value a <code>String</code> value
          * @ant.task ignore="true"
          */
 
@@ -97,6 +106,7 @@ public class Filters {
         /**
          * The classname mask as a simple regular expression;
          * optional, defaults to "*"
+         * @param value a <code>String</code> value
          */
         public void setClass(String value) {
             clazz = value;
@@ -105,6 +115,7 @@ public class Filters {
         /**
          * The method mask as a simple regular expression;
          * optional, defaults to "*"
+         * @param value a <code>String</code> value
          */
         public void setMethod(String value) {
             method = value;
@@ -112,24 +123,45 @@ public class Filters {
 
         /**
          * enable or disable the filter; optional, default true
+         * @param value a <code>boolean</code> value
          */
 
         public void setEnabled(boolean value) {
             enabled = value;
         }
 
+        /**
+         * The classname and the method.
+         * @return the classname and the method - "class.method()"
+         */
         public String toString() {
             return clazz + "." + method + "()";
         }
     }
 
+    /**
+     * A class for the nested include element.
+     */
     public static class Include extends FilterElement {
+        /**
+         * The classname and method postfixed with ":I" and (#) if not
+         * enabled.
+         * @return a string version of this filter that can be used on the commandline
+         */
         public String toString() {
             return super.toString() + ":I" + (enabled ? "" : "#");
         }
     }
 
+    /**
+     * A class for the nested exclude element.
+     */
     public static class Exclude extends FilterElement {
+        /**
+         * The classname and method postfixed with ":E" and (#) if not
+         * enabled.
+         * @return a string version of this filter that can be used on the commandline
+         */
         public String toString() {
             return super.toString() + ":E" + (enabled ? "" : "#");
         }

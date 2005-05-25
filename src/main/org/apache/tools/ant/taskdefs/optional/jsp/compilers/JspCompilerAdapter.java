@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ public interface JspCompilerAdapter {
 
     /**
      * Sets the compiler attributes, which are stored in the Jspc task.
+     * @param attributes the jsp compiler attributes
      */
     void setJspc(JspC attributes);
 
@@ -43,6 +44,7 @@ public interface JspCompilerAdapter {
      * Executes the task.
      *
      * @return has the compilation been successful
+     * @throws BuildException on error
      */
     boolean execute() throws BuildException;
 

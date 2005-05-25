@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ public class CovMerge extends CovBase {
 
     /**
      * Set the output snapshot file.
+     * @param value the snapshot file
      */
     public void setTofile(File value) {
         this.tofile = value;
@@ -55,6 +56,7 @@ public class CovMerge extends CovBase {
     /**
      * If true, perform the merge in verbose mode giving details
      * about the snapshot processing.
+     * @param flag if true perform the merge in verbose mode
      */
     public void setVerbose(boolean flag) {
         this.verbose = flag;
@@ -62,6 +64,7 @@ public class CovMerge extends CovBase {
 
     /**
      * add a fileset containing the snapshots to include.
+     * @param fs nested fileset element
      */
     public void addFileset(FileSet fs) {
         filesets.addElement(fs);
@@ -69,10 +72,14 @@ public class CovMerge extends CovBase {
 
     //---------------- the tedious job begins here
 
+    /** Constructor for CovMerge. */
     public CovMerge() {
     }
 
-    /** execute the jpcovmerge by providing a parameter file */
+    /**
+     * Execute the jpcovmerge by providing a parameter file.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         checkOptions();
 
@@ -112,7 +119,10 @@ public class CovMerge extends CovBase {
         }
     }
 
-    /** check for mandatory options */
+    /**
+     * Check for mandatory options.
+     * @throws BuildException on error
+     */
     protected void checkOptions() throws BuildException {
         if (tofile == null) {
             throw new BuildException("'tofile' attribute must be set.");
@@ -128,7 +138,10 @@ public class CovMerge extends CovBase {
         }
     }
 
-    /** get the snapshots from the filesets */
+    /**
+     * Get the snapshots from the filesets.
+     * @return an array of snapshot files
+     */
     protected File[] getSnapshots() {
         Vector v = new Vector();
         final int size = filesets.size();
@@ -152,8 +165,10 @@ public class CovMerge extends CovBase {
 
 
     /**
-     * create the parameters file that contains all file to merge
+     * Create the parameters file that contains all file to merge
      * and the output filename.
+     * @return the parameters file
+     * @throws BuildException on error
      */
     protected File createParamFile() throws BuildException {
         File[] snapshots = getSnapshots();
@@ -179,6 +194,7 @@ public class CovMerge extends CovBase {
                 try {
                     fw.close();
                 } catch (IOException ignored) {
+                    // Ignore Exception
                 }
             }
         }

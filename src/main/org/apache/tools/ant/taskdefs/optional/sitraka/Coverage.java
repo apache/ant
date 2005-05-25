@@ -90,12 +90,17 @@ public class Coverage extends CovBase {
 
     //--------- setters used via reflection --
 
-    /** seed name for snapshot file. Can be null, default to snap */
+    /**
+     * Set the seed name for snapshot file. Can be null, default to snap.
+     * @param value a <code>String</code> value
+     */
     public void setSeedname(String value) {
         seedName = value;
     }
 
     /**
+     * Set the input file.
+     * @param value a <code>File</code> value
      * @ant.attribute ignore="true"
      */
     public void setInputfile(File value) {
@@ -104,12 +109,20 @@ public class Coverage extends CovBase {
 
     /**
      * Path to the java executable.
+     * @param value the path to the java executable
      */
     public void setJavaexe(File value) {
         javaExe = value;
     }
 
+    /**
+     * Enumerated type corresponding to the javavms known by the task.
+     */
     public static class Javavm extends EnumeratedAttribute {
+        /**
+         * Get the valid javavms names.
+         * @return an array of strings = "java2", "jdk118", and "jdk117"
+         */
         public String[] getValues() {
             return new String[]{"java2", "jdk118", "jdk117"};
         }
@@ -117,13 +130,16 @@ public class Coverage extends CovBase {
 
     /**
      * Indicates which virtual machine to run: "jdk117", "jdk118" or "java2".
-     * Can be null, default to "java2". */
+     * Can be null, default to "java2".
+     * @param value an enumerated value
+     */
     public void setVm(Javavm value) {
         vm = value.getValue();
     }
 
     /**
      * If true, run an applet.
+     * @param value a <code>boolean</code> value
      */
     public void setApplet(boolean value) {
         applet = value;
@@ -131,6 +147,7 @@ public class Coverage extends CovBase {
 
     /**
      * Toggles display of the console prompt: always, error, never
+     * @param value when to display the prompt - "always", "error" or "never"
      */
     public void setExitprompt(String value) {
         exitPrompt = value;
@@ -139,6 +156,7 @@ public class Coverage extends CovBase {
     /**
      * Defines class/method filters based on pattern matching.
      * The syntax is filters is similar to a fileset.
+     * @return the filters to be configured
      */
     public Filters createFilters() {
         return filters;
@@ -151,6 +169,7 @@ public class Coverage extends CovBase {
      * For example you may run a whole application but only decide
      * to collect data once it reaches a certain method and once it
      * exits another one.
+     * @return the triggers to be configured
      */
     public Triggers createTriggers() {
         if (triggers == null) {
@@ -162,6 +181,7 @@ public class Coverage extends CovBase {
     /**
      * Define a host and port to connect to if you want to do
      * remote viewing.
+     * @return the socket to be configured
      */
     public Socket createSocket() {
         if (socket == null) {
@@ -170,7 +190,14 @@ public class Coverage extends CovBase {
         return socket;
     }
 
+    /**
+     * Enumerated type for finalsnapshot attribute.
+     */
     public static class Finalsnapshot extends EnumeratedAttribute {
+        /**
+         * Get the valid strings for the attribute.
+         * @return an array of strings - "coverage", "none" and "all"
+         */
         public String[] getValues() {
             return new String[]{"coverage", "none", "all"};
         }
@@ -179,19 +206,29 @@ public class Coverage extends CovBase {
     /**
      * Type of snapshot to send at program termination: none, coverage, all.
      * Can be null, default to none
+     * @param value a <code>String</code> value
      */
     public void setFinalsnapshot(String value) {
         finalSnapshot = value;
     }
 
+    /**
+     * Enumerated type for recordfromstart attribute.
+     */
     public static class Recordfromstart extends EnumeratedAttribute {
+        /**
+         * Get the valid strings for the attribute.
+         * @return an array of strings - "coverage", "none" and "all"
+         */
         public String[] getValues() {
             return new String[]{"coverage", "none", "all"};
         }
     }
 
     /**
+     * Set the recordfromstart attribute, valid values are
      * "all", "coverage",  or "none".
+     * @param value an enumerated type having the correct values.
      */
     public void setRecordfromstart(Recordfromstart value) {
         recordFromStart = value.getValue();
@@ -199,6 +236,7 @@ public class Coverage extends CovBase {
 
     /**
      * Set warning level (0-3, where 0 is the least amount of warnings).
+     * @param value an <code>Integer</code> value
      */
     public void setWarnlevel(Integer value) {
         warnLevel = value.intValue();
@@ -209,6 +247,7 @@ public class Coverage extends CovBase {
      * Choose a directory that is reachable by both the remote
      * and local computers, and enter the same path on the command-line
      * and in the viewer.
+     * @param value the snapshot directory
      */
     public void setSnapshotdir(File value) {
         snapshotDir = value;
@@ -216,6 +255,7 @@ public class Coverage extends CovBase {
 
     /**
      * The physical path to the working directory for the VM.
+     * @param value the working directory
      */
     public void setWorkingdir(File value) {
         workingDir = value;
@@ -223,6 +263,7 @@ public class Coverage extends CovBase {
 
     /**
      * If true, track native methods.
+     * @param value a <code>boolean</code> value
      */
     public void setTracknatives(boolean value) {
         trackNatives = value;
@@ -232,6 +273,7 @@ public class Coverage extends CovBase {
 
     /**
      * Adds a JVM argument.
+     * @return a command line argument to configure
      */
     public Commandline.Argument createJvmarg() {
         return cmdlJava.createVmArgument();
@@ -239,6 +281,7 @@ public class Coverage extends CovBase {
 
     /**
      * Adds a command argument.
+     * @return a command line argument to configure
      */
     public Commandline.Argument createArg() {
         return cmdlJava.createArgument();
@@ -246,6 +289,7 @@ public class Coverage extends CovBase {
 
     /**
      * classpath to run the files.
+     * @return a Path to configure
      */
     public Path createClasspath() {
         return cmdlJava.createClasspath(getProject()).createPath();
@@ -253,6 +297,7 @@ public class Coverage extends CovBase {
 
     /**
      * classname to run as standalone or runner for filesets.
+     * @param value a <code>String</code> value for the classname
      */
     public void setClassname(String value) {
         cmdlJava.setClassname(value);
@@ -260,6 +305,7 @@ public class Coverage extends CovBase {
 
     /**
      * the classnames to execute.
+     * @param fs a nested fileset element
      */
     public void addFileset(FileSet fs) {
         filesets.addElement(fs);
@@ -268,10 +314,16 @@ public class Coverage extends CovBase {
 
     //---------------- the tedious job begins here
 
+    /**
+     * Constructor for Coverage.
+     */
     public Coverage() {
     }
 
-    /** execute the jplauncher by providing a parameter file */
+    /**
+     * Execute the jplauncher by providing a parameter file.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         File paramfile = null;
         // if an input file is used, all other options are ignored...
@@ -305,7 +357,10 @@ public class Coverage extends CovBase {
         }
     }
 
-    /** wheck what is necessary to check, Coverage will do the job for us */
+    /**
+     * Check what is necessary to check, Coverage will do the job for us.
+     * @throws BuildException on error
+     */
     protected void checkOptions() throws BuildException {
         // check coverage home
         if (getHome() == null || !getHome().isDirectory()) {
@@ -343,6 +398,7 @@ public class Coverage extends CovBase {
      * return the command line parameters. Parameters can either be passed
      * to the command line and stored to a file (then use the -jp_input=&lt;filename&gt;)
      * if they are too numerous.
+     * @return the command line parameters
      */
     protected String[] getParameters() {
         Vector params = new Vector();
@@ -435,6 +491,7 @@ public class Coverage extends CovBase {
                 try {
                     fw.close();
                 } catch (IOException ignored) {
+                    // Ignore Exception
                 }
             }
         }
@@ -457,6 +514,7 @@ public class Coverage extends CovBase {
             try {
                 os.close();
             } catch (IOException ignored) {
+                // Ignore exception
             }
         }
     }

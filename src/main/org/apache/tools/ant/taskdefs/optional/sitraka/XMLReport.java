@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,23 +71,36 @@ public class XMLReport {
     /** method filters */
     private ReportFilters filters;
 
-    /** create a new XML report, logging will be on stdout */
+    /**
+     * Create a new XML report, logging will be on stdout.
+     * @param file the file to place the report in
+     */
     public XMLReport(File file) {
         this(null, file);
     }
 
-    /** create a new XML report, logging done on the task */
+    /**
+     * Create a new XML report, logging done on the task.
+     * @param task the task to use for logging
+     * @param file the file to place the report in
+     */
     public XMLReport(Task task, File file) {
         this.file = file;
         this.task = task;
     }
 
-    /** set the JProbe home path. Used to get the DTD */
+    /**
+     * Set the JProbe home path. Used to get the DTD.
+     * @param home the JProbe directory
+     */
     public void setJProbehome(File home) {
         jprobeHome = home;
     }
 
-    /** set the  */
+    /**
+     * set the  filters attribute.
+     * @param filters a filtersreport value
+     */
     public void setReportFilters(ReportFilters filters) {
         this.filters = filters;
     }
@@ -154,7 +167,12 @@ public class XMLReport {
         log("Indexed " + classMap.size() + " classes in " + pkgMap.size() + " packages");
     }
 
-    /** create the whole new document */
+    /**
+     * Create the whole new document.
+     * @param classPath the classpath
+     * @return a dom document
+     * @throws Exception on error
+     */
     public Document createDocument(String[] classPath) throws Exception {
 
         // Iterate over the classpath to identify reference classes
@@ -199,6 +217,9 @@ public class XMLReport {
      * JProbe does not put the java.lang prefix for classes
      * in this package, so used this nice method so that
      * I have the same signature for methods
+     * @param method info on a method
+     * @return a method signature with the "java.lang" prefixes removed from
+     *         the method arguments
      */
     protected String getMethodSignature(MethodInfo method) {
         StringBuffer buf = new StringBuffer(method.getName());
@@ -224,6 +245,9 @@ public class XMLReport {
 
     /**
      * Convert to a CovReport-like signature - &lt;classname&gt;&#046;&lt;method&gt;().
+     * @param clazz the class to use
+     * @param method the method to use
+     * @return the CovReport-like signature
      */
     protected String getMethodSignature(ClassFile clazz, MethodInfo method) {
         StringBuffer buf = new StringBuffer(clazz.getFullName());
@@ -236,6 +260,8 @@ public class XMLReport {
     /**
      * Do additional work on an element to remove abstract methods that
      * are reported by JProbe 3.0
+     * @param classFile the class to use
+     * @param classNode information on the class
      */
     protected void removeAbstractMethods(ClassFile classFile, Element classNode) {
         MethodInfo[] methods = classFile.getMethods();
@@ -254,7 +280,11 @@ public class XMLReport {
         }
     }
 
-    /** create an empty method element with its cov.data values */
+    /**
+     * Create an empty method element with its cov.data values.
+     * @param method jprobe info on a method
+     * @return the method element
+     */
     protected Element createMethodElement(MethodInfo method) {
         String methodsig = getMethodSignature(method);
         Element methodElem = report.createElement("method");
@@ -268,7 +298,11 @@ public class XMLReport {
         return methodElem;
     }
 
-    /** create an empty package element with its default cov.data (0) */
+    /**
+     * Create an empty package element with its default cov.data (0).
+     * @param pkgname the packet name
+     * @return the package element
+     */
     protected Element createPackageElement(String pkgname) {
         Element pkgElem = report.createElement("package");
         pkgElem.setAttribute("name", pkgname);
@@ -284,7 +318,11 @@ public class XMLReport {
         return pkgElem;
     }
 
-    /** create an empty class element with its default cov.data (0) */
+    /**
+     * Create an empty class element with its default cov.data (0).
+     * @param classFile jprobe class info
+     * @return an class element
+     */
     protected Element createClassElement(ClassFile classFile) {
         // create the class element
         Element classElem = report.createElement("class");
@@ -305,7 +343,10 @@ public class XMLReport {
         return classElem;
     }
 
-    /** serialize a classfile into XML */
+    /**
+     * serialize a classfile into XML.
+     * @param classFile the class file to serialize
+     */
     protected void serializeClass(ClassFile classFile) {
         // the class already is reported so ignore it
         String fullclassname = classFile.getFullName();
@@ -368,6 +409,11 @@ public class XMLReport {
         classMap.put(fullclassname, classElem);
     }
 
+    /**
+     * Get the methods from a classFile that pass the filters.
+     * @param classFile the class file to get the methods from
+     * @return the list of methods
+     */
     protected Vector getFilteredMethods(ClassFile classFile) {
         MethodInfo[] methodlist = classFile.getMethods();
         Vector methods = new Vector(methodlist.length);
@@ -449,6 +495,13 @@ public class XMLReport {
         covdata.setAttribute("total_lines", String.valueOf(total_lines));
     }
 
+    /**
+     * Search for an element with the tag "cov.data" in the children
+     * of the parent element and return it.
+     * @param parent the parent element to search in
+     * @return the "cov.data" element
+     * @throws NoSuchElementException if unable to find a cov.data element
+     */
     protected Element getCovDataChild(Element parent) {
         NodeList children = parent.getChildNodes();
         int len = children.getLength();
@@ -465,6 +518,11 @@ public class XMLReport {
             + "element in parent '" + parent.getNodeName() + "'");
     }
 
+    /**
+     * Get the method elements of an class element.
+     * @param clazz the element to search it
+     * @return a name to element map of methods
+     */
     protected Hashtable getMethods(Element clazz) {
         Hashtable map = new Hashtable();
         NodeList children = clazz.getChildNodes();
@@ -482,6 +540,11 @@ public class XMLReport {
         return map;
     }
 
+    /**
+     * Get the class elements of an package element.
+     * @param pkg the element to search it
+     * @return an array of class elements
+     */
     protected Element[] getClasses(Element pkg) {
         Vector v = new Vector();
         NodeList children = pkg.getChildNodes();
@@ -501,6 +564,11 @@ public class XMLReport {
 
     }
 
+    /**
+     * Get the package elements of an snapshot element.
+     * @param snapshot the element to search it
+     * @return an array of package elements
+     */
     protected Element[] getPackages(Element snapshot) {
         Vector v = new Vector();
         NodeList children = snapshot.getChildNodes();
@@ -530,6 +598,10 @@ public class XMLReport {
         }
     }
 
+    /**
+     * Log a message to the associated task.
+     * @param message a <code>String</code> attribute
+     */
     public void log(String message) {
         if (task == null) {
             //System.out.println(message);

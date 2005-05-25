@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
  * Utilities mostly to manipulate methods and access flags.
  *
  */
-public class Utils {
+public final class Utils {
     /** public access flag */
     public static final short ACC_PUBLIC = 1;
     /** private access flag */
@@ -98,7 +98,7 @@ public class Utils {
 
     /**
      * return the object type of a return type.
-     * @param descriptor
+     * @param descriptor the description symbol
      * @return get the return type objet of a given descriptor
      */
     public static String getMethodReturnType(String descriptor) {
@@ -172,143 +172,157 @@ public class Utils {
 
     /**
      * check for abstract access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is abstact access
      */
-    public static boolean isAbstract(int access_flags) {
-        return (access_flags & ACC_ABSTRACT) != 0;
+    public static boolean isAbstract(int accessFlags) {
+        return (accessFlags & ACC_ABSTRACT) != 0;
     }
 
     /**
      * check for public access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is public access
      */
-    public static boolean isPublic(int access_flags) {
-        return (access_flags & ACC_PUBLIC) != 0;
+    public static boolean isPublic(int accessFlags) {
+        return (accessFlags & ACC_PUBLIC) != 0;
     }
 
     /**
      * check for a static access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is static access
      */
-    public static boolean isStatic(int access_flags) {
-        return (access_flags & ACC_STATIC) != 0;
+    public static boolean isStatic(int accessFlags) {
+        return (accessFlags & ACC_STATIC) != 0;
     }
 
     /**
-     *  check for native access
-     * @param access_flags access flags
+     * check for native access
+     * @param accessFlags access flags
+     * @return true if there is native access
      */
-    public static boolean isNative(int access_flags) {
-        return (access_flags & ACC_NATIVE) != 0;
+    public static boolean isNative(int accessFlags) {
+        return (accessFlags & ACC_NATIVE) != 0;
     }
 
     /**
      * check for class access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is class access
      */
-    public static boolean isClass(int access_flags) {
-        return !isInterface(access_flags);
+    public static boolean isClass(int accessFlags) {
+        return !isInterface(accessFlags);
     }
 
     /**
      * check for strict access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is strict access
      */
-    public static boolean isStrict(int access_flags) {
-        return (access_flags & ACC_STRICT) != 0;
+    public static boolean isStrict(int accessFlags) {
+        return (accessFlags & ACC_STRICT) != 0;
     }
 
     /**
      * check for interface access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is interface access
      */
-    public static boolean isInterface(int access_flags) {
-        return (access_flags & ACC_INTERFACE) != 0;
+    public static boolean isInterface(int accessFlags) {
+        return (accessFlags & ACC_INTERFACE) != 0;
     }
 
     /**
      * check for private access
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is private access
      */
-    public static boolean isPrivate(int access_flags) {
-        return (access_flags & ACC_PRIVATE) != 0;
+    public static boolean isPrivate(int accessFlags) {
+        return (accessFlags & ACC_PRIVATE) != 0;
     }
 
     /**
      * check for transient flag
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is transient access
      */
-    public static boolean isTransient(int access_flags) {
-        return (access_flags & ACC_TRANSIENT) != 0;
+    public static boolean isTransient(int accessFlags) {
+        return (accessFlags & ACC_TRANSIENT) != 0;
     }
 
     /**
      * check for volatile flag
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is volatile access
      */
-    public static boolean isVolatile(int access_flags) {
-        return (access_flags & ACC_VOLATILE) != 0;
+    public static boolean isVolatile(int accessFlags) {
+        return (accessFlags & ACC_VOLATILE) != 0;
     }
 
     /**
      * check for super flag
-     * @param access_flags access flag
+     * @param accessFlags access flag
+     * @return true if there the super flag is set
      */
-    public static boolean isSuper(int access_flags) {
-        return (access_flags & ACC_SUPER) != 0;
+    public static boolean isSuper(int accessFlags) {
+        return (accessFlags & ACC_SUPER) != 0;
     }
 
     /**
      * check for protected flag
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there is protected access
      */
-    public static boolean isProtected(int access_flags) {
-        return (access_flags & ACC_PROTECTED) != 0;
+    public static boolean isProtected(int accessFlags) {
+        return (accessFlags & ACC_PROTECTED) != 0;
     }
 
     /**
      * chck for final flag
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there the final flag is set
      */
-    public static boolean isFinal(int access_flags) {
-        return (access_flags & ACC_FINAL) != 0;
+    public static boolean isFinal(int accessFlags) {
+        return (accessFlags & ACC_FINAL) != 0;
     }
 
     /**
      * check for synchronized flag
-     * @param access_flags access flags
+     * @param accessFlags access flags
+     * @return true if there the synchronized flag is set
      */
-    public static boolean isSynchronized(int access_flags) {
-        return (access_flags & ACC_SYNCHRONIZED) != 0;
+    public static boolean isSynchronized(int accessFlags) {
+        return (accessFlags & ACC_SYNCHRONIZED) != 0;
     }
 
     /**
      * return the method access flag as java modifiers
-     * @param access_flags access flags
+     * @param accessFlags access flags
      * @return the access flags as modifier strings
      */
-    public static String getMethodAccess(int access_flags) {
+    public static String getMethodAccess(int accessFlags) {
         StringBuffer sb = new StringBuffer();
-        if (isPublic(access_flags)) {
+        if (isPublic(accessFlags)) {
             sb.append("public ");
-        } else if (isPrivate(access_flags)) {
+        } else if (isPrivate(accessFlags)) {
             sb.append("private ");
-        } else if (isProtected(access_flags)) {
+        } else if (isProtected(accessFlags)) {
             sb.append("protected ");
         }
-        if (isFinal(access_flags)) {
+        if (isFinal(accessFlags)) {
             sb.append("final ");
         }
-        if (isStatic(access_flags)) {
+        if (isStatic(accessFlags)) {
             sb.append("static ");
         }
-        if (isSynchronized(access_flags)) {
+        if (isSynchronized(accessFlags)) {
             sb.append("synchronized ");
         }
-        if (isNative(access_flags)) {
+        if (isNative(accessFlags)) {
             sb.append("native ");
         }
-        if (isAbstract(access_flags)) {
+        if (isAbstract(accessFlags)) {
             sb.append("abstract ");
         }
         return sb.toString().trim();
@@ -316,28 +330,28 @@ public class Utils {
 
     /**
      * return the field access flag as java modifiers
-     * @param access_flags access flags
+     * @param accessFlags access flags
      * @return the access flags as modifier strings
      */
-    public static String getFieldAccess(int access_flags) {
+    public static String getFieldAccess(int accessFlags) {
         StringBuffer sb = new StringBuffer();
-        if (isPublic(access_flags)) {
+        if (isPublic(accessFlags)) {
             sb.append("public ");
-        } else if (isPrivate(access_flags)) {
+        } else if (isPrivate(accessFlags)) {
             sb.append("private ");
-        } else if (isProtected(access_flags)) {
+        } else if (isProtected(accessFlags)) {
             sb.append("protected ");
         }
-        if (isFinal(access_flags)) {
+        if (isFinal(accessFlags)) {
             sb.append("final ");
         }
-        if (isStatic(access_flags)) {
+        if (isStatic(accessFlags)) {
             sb.append("static ");
         }
-        if (isVolatile(access_flags)) {
+        if (isVolatile(accessFlags)) {
             sb.append("volatile ");
         }
-        if (isTransient(access_flags)) {
+        if (isTransient(accessFlags)) {
             sb.append("transient ");
         }
         return sb.toString().trim();
@@ -345,31 +359,31 @@ public class Utils {
 
     /**
      * return the class access flag as java modifiers
-     * @param access_flags access flags
+     * @param accessFlags access flags
      * @return the access flags as modifier strings
      */
-    public static String getClassAccess(int access_flags) {
+    public static String getClassAccess(int accessFlags) {
         StringBuffer sb = new StringBuffer();
-        if (isPublic(access_flags)) {
+        if (isPublic(accessFlags)) {
             sb.append("public ");
-        } else if (isProtected(access_flags)) {
+        } else if (isProtected(accessFlags)) {
             sb.append("protected ");
-        } else if (isPrivate(access_flags)) {
+        } else if (isPrivate(accessFlags)) {
             sb.append("private ");
         }
-        if (isFinal(access_flags)) {
+        if (isFinal(accessFlags)) {
             sb.append("final ");
         }
-        if (isSuper(access_flags)) {
+        if (isSuper(accessFlags)) {
             sb.append("/*super*/ ");
         }
-        if (isInterface(access_flags)) {
+        if (isInterface(accessFlags)) {
             sb.append("interface ");
         }
-        if (isAbstract(access_flags)) {
+        if (isAbstract(accessFlags)) {
             sb.append("abstract ");
         }
-        if (isClass(access_flags)) {
+        if (isClass(accessFlags)) {
             sb.append("class ");
         }
         return sb.toString().trim();

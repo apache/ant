@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,16 +27,23 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.Attrib
  *
  */
 public final class MethodInfo {
-    private int access_flags;
+    private int accessFlags;
     private int loc = -1;
     private String name;
     private String descriptor;
 
+    /** Constructor for MethodInfo. */
     public MethodInfo() {
     }
 
+    /**
+     * Read the method info from a data input stream.
+     * @param constantPool a constant pool
+     * @param dis          the data input stream
+     * @throws IOException on error
+     */
     public void read(ConstantPool constantPool, DataInputStream dis) throws IOException {
-        access_flags = dis.readShort();
+        accessFlags = dis.readShort();
 
         int name_index = dis.readShort();
         name = Utils.getUTF8Value(constantPool, name_index);
@@ -58,6 +65,12 @@ public final class MethodInfo {
 
     }
 
+    /**
+     * Read a code from a data input stream.
+     * @param constantPool a constant pool
+     * @param dis          the data input stream
+     * @throws IOException on error
+     */
     protected void readCode(ConstantPool constantPool, DataInputStream dis) throws IOException {
         // skip max_stack (short), max_local (short)
         dis.skipBytes(2 * 2);
@@ -87,22 +100,44 @@ public final class MethodInfo {
         }
     }
 
+    /**
+     * Get the access flags.
+     * @return the access flags
+     */
     public int getAccessFlags() {
-        return access_flags;
+        return accessFlags;
     }
 
+    /**
+     * Get the name.
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the descriptor.
+     * @return the descriptor
+     */
     public String getDescriptor() {
         return descriptor;
     }
 
+    /**
+     * Get the full signature of the method.
+     * This is the return type, the name and the parameters.
+     * @return the full signature
+     */
     public String getFullSignature() {
         return getReturnType() + " " + getShortSignature();
     }
 
+    /**
+     * Get the short signature of the method.
+     * This is just the name and the parameters.
+     * @return the short signature
+     */
     public String getShortSignature() {
         StringBuffer buf = new StringBuffer(getName());
         buf.append("(");
@@ -117,22 +152,42 @@ public final class MethodInfo {
         return buf.toString();
     }
 
+    /**
+     * Get the return type.
+     * @return the return type
+     */
     public String getReturnType() {
         return Utils.getMethodReturnType(getDescriptor());
     }
 
+    /**
+     * Get the paramaters types.
+     * @return an array of types
+     */
     public String[] getParametersType() {
         return Utils.getMethodParams(getDescriptor());
     }
 
+    /**
+     * Get the number of lines in the method.
+     * @return the number of lines
+     */
     public int getNumberOfLines() {
         return loc;
     }
 
+    /**
+     * Get the access flags as a string.
+     * @return the access flags.
+     */
     public String getAccess() {
-        return Utils.getMethodAccess(access_flags);
+        return Utils.getMethodAccess(accessFlags);
     }
 
+    /**
+     * Return a string represention of this object.
+     * @return the access, and the full signature
+     */
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Method: ").append(getAccess()).append(" ");
@@ -140,5 +195,3 @@ public final class MethodInfo {
         return sb.toString();
     }
 }
-
-

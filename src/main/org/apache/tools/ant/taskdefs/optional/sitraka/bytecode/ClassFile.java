@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,6 +44,11 @@ public final class ClassFile {
 
     private int access_flags;
 
+    /**
+     * Constructor for ClassFile.
+     * @param is the input stream containing the class.
+     * @throws IOException on error
+     */
     public ClassFile(InputStream is) throws IOException {
         DataInputStream dis = new DataInputStream(is);
         ConstantPool constantPool = new ConstantPool();
@@ -57,8 +62,9 @@ public final class ClassFile {
 
         // class information
         access_flags = dis.readShort();
-        int this_class = dis.readShort();
-        fullname = ((ClassCPInfo) constantPool.getEntry(this_class)).getClassName().replace('/', '.');
+        int thisClass = dis.readShort();
+        fullname = ((ClassCPInfo) constantPool.getEntry(
+                        thisClass)).getClassName().replace('/', '.');
         /* int super_class = */ dis.readShort();
 
         // skip interfaces...
@@ -71,8 +77,8 @@ public final class ClassFile {
             // 3 short: access flags, name index, descriptor index
             dis.skip(2 * 3);
             // attribute list...
-            int attributes_count = dis.readUnsignedShort();
-            for (int j = 0; j < attributes_count; j++) {
+            int attributesCount = dis.readUnsignedShort();
+            for (int j = 0; j < attributesCount; j++) {
                 dis.skipBytes(2); // skip attr_id (short)
                 int len = dis.readInt();
                 dis.skipBytes(len);
@@ -80,44 +86,64 @@ public final class ClassFile {
         }
 
         // read methods
-        int method_count = dis.readShort();
-        methods = new MethodInfo[method_count];
-        for (int i = 0; i < method_count; i++) {
+        int methodCount = dis.readShort();
+        methods = new MethodInfo[methodCount];
+        for (int i = 0; i < methodCount; i++) {
             methods[i] = new MethodInfo();
             methods[i].read(constantPool, dis);
         }
 
         // get interesting attributes.
-        int attributes_count = dis.readUnsignedShort();
-        for (int j = 0; j < attributes_count; j++) {
-            int attr_id = dis.readShort();
+        int attributesCount = dis.readUnsignedShort();
+        for (int j = 0; j < attributesCount; j++) {
+            int attrId = dis.readShort();
             int len = dis.readInt();
-            String attr_name = Utils.getUTF8Value(constantPool, attr_id);
-            if (AttributeInfo.SOURCE_FILE.equals(attr_name)) {
-                int name_index = dis.readShort();
-                sourceFile = ((Utf8CPInfo) constantPool.getEntry(name_index)).getValue();
+            String attrName = Utils.getUTF8Value(constantPool, attrId);
+            if (AttributeInfo.SOURCE_FILE.equals(attrName)) {
+                int nameIndex = dis.readShort();
+                sourceFile = ((Utf8CPInfo) constantPool.getEntry(nameIndex)).getValue();
             } else {
                 dis.skipBytes(len);
             }
         }
     }
 
+    /**
+     * Get the access flags of the class.
+     * @return the flags
+     */
     public int getAccess() {
         return access_flags;
     }
 
+    /**
+     * Get the source filename
+     * @return the source filename
+     */
     public String getSourceFile() {
         return sourceFile;
     }
 
+    /**
+     * Get the methods of the class.
+     * @return the methods
+     */
     public MethodInfo[] getMethods() {
         return methods;
     }
 
+    /**
+     * Get the full name of the class.
+     * @return the full name
+     */
     public String getFullName() {
         return fullname;
     }
 
+    /**
+     * Get the name of the class (minus package name)
+     * @return the name
+     */
     public String getName() {
         String name = getFullName();
         int pos = name.lastIndexOf('.');
@@ -127,6 +153,10 @@ public final class ClassFile {
         return name.substring(pos + 1);
     }
 
+    /**
+     * Get the package name of the class.
+     * @return the package name
+     */
     public String getPackage() {
         String name = getFullName();
         int pos = name.lastIndexOf('.');
@@ -137,8 +167,3 @@ public final class ClassFile {
     }
 
 }
-
-
-
-
-

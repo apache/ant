@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,18 +30,24 @@ public class Triggers {
 
     protected Vector triggers = new Vector();
 
+    /** Constructor of Triggers. */
     public Triggers() {
     }
 
 
     /**
      * add a method trigger
+     * @param method a method to trigger on
      */
     public void addMethod(Method method) {
         triggers.addElement(method);
     }
 
-    // -jp_trigger=ClassName.*():E:S,ClassName.MethodName():X:X
+    /**
+     * Get the command line option of the form
+     * -jp_trigger=ClassName.*():E:S,ClassName.MethodName():X:X
+     * @return a trigger option
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer();
         final int size = triggers.size();
@@ -68,6 +74,7 @@ public class Triggers {
          * The name of the method(s) as a regular expression. The name
          * is the fully qualified name on the form <tt>package.classname.method</tt>
          *  required.
+         * @param value the fully qualified name
          */
         public void setName(String value) {
             name = value;
@@ -77,10 +84,11 @@ public class Triggers {
          * the event on the method that will trigger the action. Must be
          * &quot;enter&quot; or &quot;exit&quot;
          *  required.
+         * @param value the event - either "enter" or "exit"
          */
         public void setEvent(String value) {
-            if (eventMap.get(value) == null) {
-                throw new BuildException("Invalid event, must be one of " + eventMap);
+            if (EVENT_MAP.get(value) == null) {
+                throw new BuildException("Invalid event, must be one of " + EVENT_MAP);
             }
             event = value;
         }
@@ -90,27 +98,33 @@ public class Triggers {
          * &quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
          * or &quot;exit&quot;. They respectively clear recording, pause recording,
          * resume recording, take a snapshot, suspend the recording and exit the program.
+         * @param value the action - "clear", "pause", "resume", "snapshot", "suspend"
+         *              or "exit"
+         * @throws BuildException on error
          */
         public void setAction(String value) throws BuildException {
-            if (actionMap.get(value) == null) {
-                throw new BuildException("Invalid action, must be one of " + actionMap);
+            if (ACTION_MAP.get(value) == null) {
+                throw new BuildException("Invalid action, must be one of " + ACTION_MAP);
             }
             action = value;
         }
 
         /**
          * A alphanumeric custom name for the snapshot; optional.
+         * @param value the custom name for the snapshot
          */
         public void setParam(String value) {
             param = value;
         }
 
-        // return <name>:<event>:<action>[:param]
+        /**
+         * @return <name>:<event>:<action>[:param]
+         */
         public String toString() {
             StringBuffer buf = new StringBuffer();
             buf.append(name).append(":"); //@todo name must not be null, check for it
-            buf.append(eventMap.get(event)).append(":");
-            buf.append(actionMap.get(action));
+            buf.append(EVENT_MAP.get(event)).append(":");
+            buf.append(ACTION_MAP.get(action));
             if (param != null) {
                 buf.append(":").append(param);
             }
@@ -119,21 +133,21 @@ public class Triggers {
     }
 
     /** mapping of actions to cryptic command line mnemonics */
-    private static final Hashtable actionMap = new Hashtable(3);
+    private static final Hashtable ACTION_MAP = new Hashtable(3);
 
     /** mapping of events to cryptic command line mnemonics */
-    private static final Hashtable eventMap = new Hashtable(3);
+    private static final Hashtable EVENT_MAP = new Hashtable(3);
 
     static {
-        actionMap.put("enter", "E");
-        actionMap.put("exit", "X");
+        ACTION_MAP.put("enter", "E");
+        ACTION_MAP.put("exit", "X");
         // clear|pause|resume|snapshot|suspend|exit
-        eventMap.put("clear", "C");
-        eventMap.put("pause", "P");
-        eventMap.put("resume", "R");
-        eventMap.put("snapshot", "S");
-        eventMap.put("suspend", "A");
-        eventMap.put("exit", "X");
+        EVENT_MAP.put("clear", "C");
+        EVENT_MAP.put("pause", "P");
+        EVENT_MAP.put("resume", "R");
+        EVENT_MAP.put("snapshot", "S");
+        EVENT_MAP.put("suspend", "A");
+        EVENT_MAP.put("exit", "X");
     }
 
 }

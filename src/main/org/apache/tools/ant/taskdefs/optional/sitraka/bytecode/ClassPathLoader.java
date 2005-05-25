@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import java.util.zip.ZipFile;
  */
 public class ClassPathLoader {
 
+    /** A null loader */
     public static final FileLoader NULL_LOADER = new NullLoader();
 
     /** the list of files to look for */
@@ -80,10 +81,17 @@ public class ClassPathLoader {
 
     /** the interface to implement to look up for specific resources */
     public interface FileLoader {
-        /** the file url that is looked for .class files */
+        /**
+         * the file url that is looked for .class files.
+         * @return the file
+         */
         File getFile();
 
-        /** return the set of classes found in the file */
+        /**
+         * Return the set of classes found in the file.
+         * @return the list of classes
+         * @throws IOException on error
+         */
         ClassFile[] getClasses() throws IOException;
     }
 
@@ -104,6 +112,7 @@ public class ClassPathLoader {
      * @return the hashtable containing ALL classes that are found in the given
      * classpath. Note that the first entry of a given classname will shadow
      * classes with the same name (as a classloader does)
+     * @throws IOException on error
      */
     public Hashtable getClasses() throws IOException {
         Hashtable map = new Hashtable();
@@ -159,6 +168,9 @@ public class ClassPathLoader {
      * useful methods to read the whole input stream in memory so that
      * it can be accessed faster. Processing rt.jar and tools.jar from JDK 1.3.1
      * brings time from 50s to 7s.
+     * @param is the inout stream to cache
+     * @return the cached input stream
+     * @throws IOException on error
      */
     public static InputStream getCachedStream(InputStream is) throws IOException {
         final InputStream bis = new BufferedInputStream(is);
@@ -266,6 +278,7 @@ final class DirectoryLoader implements ClassPathLoader.FileLoader {
                     try {
                         is.close();
                     } catch (IOException ignored) {
+                        // Ignore Exception
                     }
                 }
             }

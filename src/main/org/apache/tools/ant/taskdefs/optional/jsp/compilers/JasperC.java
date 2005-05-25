@@ -41,12 +41,18 @@ public class JasperC extends DefaultJspCompilerAdapter {
      */
     JspMangler mangler;
 
+    /**
+     * Constructor for JasperC.
+     * @param mangler a filename converter
+     */
     public JasperC(JspMangler mangler) {
         this.mangler = mangler;
     }
 
     /**
-     * our execute method
+     * Our execute method.
+     * @return true if successful
+     * @throws BuildException on error
      */
     public boolean execute()
         throws BuildException {
@@ -69,7 +75,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
             java.setDir(getProject().getBaseDir());
             java.setClassname("org.apache.jasper.JspC");
             //this is really irritating; we need a way to set stuff
-            String args[] = cmd.getJavaCommand().getArguments();
+            String []args = cmd.getJavaCommand().getArguments();
             for (int i = 0; i < args.length; i++) {
                 java.createArg().setValue(args[i]);
             }

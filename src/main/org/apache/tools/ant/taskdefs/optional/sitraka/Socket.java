@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ public class Socket {
     /**
      * the host name/ip of the machine on which the Viewer is running;
      * defaults to localhost.
+     * @param value the home name/ip
      */
     public void setHost(String value) {
         host = value;
@@ -43,12 +44,16 @@ public class Socket {
 
     /**
      * Optional port number for the viewer; default is 4444
+     * @param value the port number
      */
     public void setPort(Integer value) {
         port = value.intValue();
     }
 
-    /** if no host is set, returning ':&lt;port&gt;', will take localhost */
+    /**
+     * if no host is set, returning ':&lt;port&gt;', will take localhost
+     * @return "host:port"
+     */
     public String toString() {
         return host + ":" + port;
     }

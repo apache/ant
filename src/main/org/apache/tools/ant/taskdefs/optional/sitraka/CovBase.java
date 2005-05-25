@@ -36,15 +36,24 @@ public abstract class CovBase extends Task {
 
     /**
      * The directory where JProbe is installed.
+     * @param value the JProbe directory
      */
     public void setHome(File value) {
         this.home = value;
     }
 
+    /**
+     * Get the JProbe directory.
+     * @return the JProbe directory
+     */
     protected File getHome() {
         return home;
     }
 
+    /**
+     * Get the location of the JProbe coverage jar file.
+     * @return the location of the JProbe coverage jar file
+     */
     protected File findCoverageJar() {
         File loc = null;
         if (isJProbe4) {
@@ -63,6 +72,11 @@ public abstract class CovBase extends Task {
         return loc;
     }
 
+    /**
+     * Find the JProbe executable.
+     * @param relativePath the name of the executuable without the trailing .exe on dos
+     * @return the absolute path to the executable
+     */
     protected String findExecutable(String relativePath) {
         if (isDos) {
             relativePath += ".exe";
@@ -84,16 +98,28 @@ public abstract class CovBase extends Task {
         return loc.getAbsolutePath();
     }
 
+    /**
+     * Create a temporary file.
+     * @param prefix a prefix to use in the filename
+     * @return a File reference to the temporary file
+     */
     protected File createTempFile(String prefix) {
         return FILE_UTILS.createTempFile(prefix, ".tmp", null);
     }
 
+    /**
+     * Get the param file arguement.
+     * This checks the version of jprobe to return the correct name of
+     * the parameter.
+     * @return the name of the argument
+     */
     protected String getParamFileArgument() {
         return "-" + (!isJProbe4 ? "jp_" : "") + "paramfile=";
     }
 
     /**
      * Are we running on a version of JProbe 4.x or higher?
+     * @return true if we are running JProbe 4 or higher
      */
     protected boolean isJProbe4Plus() {
         return isJProbe4;
